@@ -13,13 +13,16 @@ import * as KV from '../../../../../kodeverk';
 import * as MPT from '../../../../../proptypes';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
+import VedtaktypeSkjema from '../../vedtaktypeskjema';
+import VedtaketypeBegrunnelseSkjema from '../../vedtaktypebegrunnelseskjema';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
+import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
 import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadSelectors } from '../../../../../ducks/soknad';
 
-import './vurderingArtikkel13_1_vedtak.css';
+import './vurderingArtikkel13_1b_UtpekLand.css';
 
 export const VurderingArtikkel13_1b_UtpekLand = props => {
   const {
@@ -35,6 +38,7 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
     tilstand: { overskrift },
     lagreLovvalgsperioder,
     byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
+    behandlingstype,
   } = props;
 
   const vedCheck = e => {
@@ -45,6 +49,8 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
 
   const validerForm = () => {
     touch('tomDato');
+    touch('vedtakstype');
+    touch('vedtakstypebegrunnelse');
     return formIsValid;
   };
 
@@ -57,7 +63,14 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
       await forkortLovvalgsperiode();
     }
 
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
+
+    lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: null,
+      mottakerinstitusjon: null,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
+    });
   };
 
   const vedKlikkForhandsvis = async () => {
@@ -82,13 +95,16 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
 
   const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
+
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+
   return (
     <Fragment>
       <Nav.Undertittel>{overskrift}</Nav.Undertittel>
       <Nav.Undertittel>
         <Nav.Element className="undertittel">Lovvalgsland:</Nav.Element>
       </Nav.Undertittel>
-      <Nav.Row className="lovvalgsperiodeRow">
+      <Nav.Row>
         <Nav.Column xs="6">
           <div>{lovvalgsland && lovvalgsland.term}</div>
         </Nav.Column>
@@ -96,12 +112,12 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
       <Nav.Undertittel>
         <Nav.Element className="undertittel">Lovvalgsperiode</Nav.Element>
       </Nav.Undertittel>
-      <Nav.Row className="lovvalgsperiodeRow">
+      <Nav.Row className="lovvalgsperiode">
         <Nav.Column xs="6">
           {fom} - {tom}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row className="checkboxRow">
+      <Nav.Row>
         <Nav.Column xs="6">
           <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalget innvilges for en kortere periode" disabled={!redigerbart} onClick={vedCheck} />
         </Nav.Column>
@@ -124,6 +140,19 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
               disabled={!redigerbart}
               feltNavn="tomDato"
               datoFelt
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
+      {
+        erNyVurdering &&
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <VedtaktypeSkjema
+              redigerbart={redigerbart}
+            />
+            <VedtaketypeBegrunnelseSkjema
+              redigerbart={redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -152,12 +181,14 @@ VurderingArtikkel13_1b_UtpekLand.propTypes = {
   endreLovvalgsPeriode: PT.func.isRequired,
   byggLovvalgsperioder: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
+  behandlingstype: PT.string.isRequired,
 };
 VurderingArtikkel13_1b_UtpekLand.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
 };
 const mapStateToProps = (state, ownProps) => ({
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
@@ -172,6 +203,8 @@ const mapStateToProps = (state, ownProps) => ({
     ) !== 0,
     tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
     fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
+    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   },
 });
 
@@ -188,6 +221,7 @@ const VurderingArtikkel13_1b_UtpeklLand_form = reduxForm({
   validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_vedtak, {
     context: {
       lovvalgsperiode: props.lovvalgsperiode,
+      behandlingstype: props.behandlingstype,
     },
   })(values),
 })(VurderingArtikkel13_1b_UtpekLand);
