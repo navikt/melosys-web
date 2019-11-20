@@ -22,8 +22,6 @@ import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadSelectors } from '../../../../../ducks/soknad';
 
-import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
-
 import './vurderingArtikkel13_1_vedtak.css';
 
 export const VurderingArtikkel13_1_Vedtak = ({
@@ -39,10 +37,7 @@ export const VurderingArtikkel13_1_Vedtak = ({
   lagreLovvalgsperioder,
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
-  lagretFritekst,
 }) => {
-  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState(lagretFritekst || '');
-
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const vedCheck = e => {
@@ -69,7 +64,7 @@ export const VurderingArtikkel13_1_Vedtak = ({
 
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      fritekst: vedtaksbrevFritekst,
+      fritekst: formValues.vedtaksbrevFritekst,
       mottakerinstitusjon: null,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
@@ -94,7 +89,7 @@ export const VurderingArtikkel13_1_Vedtak = ({
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
-        fritekst: vedtaksbrevFritekst,
+        fritekst: formValues.vedtaksbrevFritekst,
       },
     },
     {
@@ -172,12 +167,12 @@ export const VurderingArtikkel13_1_Vedtak = ({
       }
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
-          <Nav.Textarea
+          <Skjema.Textarea
+            feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            value={vedtaksbrevFritekst}
-            onChange={setVedtaksbrevFritekst}
             maxLength={500}
+            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>
@@ -207,17 +202,14 @@ VurderingArtikkel13_1_Vedtak.propTypes = {
   byggLovvalgsperioder: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
   behandlingstype: PT.string.isRequired,
-  lagretFritekst: PT.string,
 };
 
 VurderingArtikkel13_1_Vedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
-  lagretFritekst: '',
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -234,6 +226,7 @@ const mapStateToProps = (state, ownProps) => ({
     fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
   },
 });
 
