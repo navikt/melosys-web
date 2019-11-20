@@ -313,7 +313,7 @@ class VurderingArtikkel16Anmodning extends Component {
     /* eslint-disable max-len */
     return (
       <div>
-        <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
+        <Nav.typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.typo.Undertittel>
         <div className="artikkel16">
           {
             erIDirekteTilArtikkel16Flyt &&
@@ -335,12 +335,12 @@ class VurderingArtikkel16Anmodning extends Component {
           }
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.Element>
-              <Nav.Normaltekst>{landSomTekstListe}</Nav.Normaltekst>
+              <Nav.typo.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{landSomTekstListe}</Nav.typo.Normaltekst>
             </Nav.Column>
             <Nav.Column xs="6">
-              <Nav.Element type="element">Antall måneder:</Nav.Element>
-              <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
+              <Nav.typo.Element type="element">Antall måneder:</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{antallManeder}</Nav.typo.Normaltekst>
               <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
             </Nav.Column>
           </Nav.Row>

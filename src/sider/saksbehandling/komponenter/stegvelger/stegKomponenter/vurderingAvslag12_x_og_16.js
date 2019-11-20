@@ -79,9 +79,9 @@ const VurderingAvslag12_x_og_16 = ({
 
   return (
     <div>
-      <Nav.Undertittel>
+      <Nav.typo.Undertittel>
         Avslag
-      </Nav.Undertittel>
+      </Nav.typo.Undertittel>
       {valgte_art_12_1_begrunnelser.length > 0 &&
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"

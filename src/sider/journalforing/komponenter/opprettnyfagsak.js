@@ -77,7 +77,7 @@ class OpprettNyFagSak extends Component {
 
     return (
       <div className="opprettnysak">
-        <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
+        <Nav.typo.Systemtittel>Opprett ny sak</Nav.typo.Systemtittel>
         <Nav.Row>
           <Nav.Column xs="6">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype" disabled>

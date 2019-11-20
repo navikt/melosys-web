@@ -15,7 +15,7 @@ import { erOrgnrGyldig } from '../../../../felleskomponenter/skjema/validering/g
  */
 const FunnetOrganisasjon = ({ leggTil, organisasjon }) => (
   <Nav.Panel border>
-    <Nav.Undertittel>Fant følgende organisasjon:</Nav.Undertittel>
+    <Nav.typo.Undertittel>Fant følgende organisasjon:</Nav.typo.Undertittel>
     <OrganisasjonsAdresse className="adresse" organisasjon={organisasjon} />
     <Nav.Knapp onClick={() => leggTil(organisasjon.orgnr)} className="knapp">Legg til</Nav.Knapp>
   </Nav.Panel>

@@ -27,7 +27,7 @@ const TimerTimelonnet = ({ timerTimelonnet }) => {
 
   return timerTimelonnet.length > 0 ? (
     <div>
-      <Nav.Undertittel>Antall timer timelønnet</Nav.Undertittel>
+      <Nav.typo.Undertittel>Antall timer timelønnet</Nav.typo.Undertittel>
       <Tabell
         kolonneNavn={['Startdato', 'Sluttdato', 'Rapporteringsperiode', 'Antall timer']}
         tabellData={timelonnetArrayed}
