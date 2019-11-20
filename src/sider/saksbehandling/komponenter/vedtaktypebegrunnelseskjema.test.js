@@ -1,5 +1,4 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
@@ -35,5 +34,5 @@ describe('VedtaketypebegrunnelseSkjema', () => {
 
       expect(select.props().disabled).toBe(true);
     });
-  })
+  });
 });
