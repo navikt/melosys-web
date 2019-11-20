@@ -62,11 +62,11 @@ export const VurderingArtikkel16MottaSvar = props => {
 
   return (
     <Fragment>
-      <Nav.Undertittel>Svar på anmodning om unntak, etter artikkel 16, nr. 1</Nav.Undertittel>
+      <Nav.typo.Undertittel>Svar på anmodning om unntak, etter artikkel 16, nr. 1</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.Element>Land:</Nav.Element>
-          <Nav.Normaltekst>{gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ')}</Nav.Normaltekst>
+          <Nav.typo.Element>Land:</Nav.typo.Element>
+          <Nav.typo.Normaltekst>{gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ')}</Nav.typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="soknadsperiodeRow">
