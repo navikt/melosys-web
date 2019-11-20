@@ -52,16 +52,10 @@ const behandlingsstatusMap = {
 class Saksbehandling extends Component {
   state = {
     behandlingID: -1,
-    retryCount: 0,
   };
 
-  async componentDidMount() {
-    const loadedSuccessfully = await this.lastInnSaksopplysninger();
-    if (!loadedSuccessfully) { // Retry
-      if (this.state.retryCount > 2) return;
-      await this.lastInnSaksopplysninger();
-      this.updateRetryCount();
-    }
+  componentDidMount() {
+    this.lastInnSaksopplysninger();
   }
   componentWillUnmount() {
     this.props.resetFagsakState();
@@ -72,11 +66,6 @@ class Saksbehandling extends Component {
     this.props.resetSoknadState();
     this.props.resetBehandlingsPerioderState();
   }
-
-  updateRetryCount = () => {
-    const retryCount = this.state.retryCount + 1;
-    this.setState({ retryCount });
-  };
 
   lastInnSaksopplysninger = async () => {
     const { match, location } = this.props;
@@ -91,6 +80,7 @@ class Saksbehandling extends Component {
 
     try {
       await hentFagsaker(snr);
+      // TODO Fjern: logger Henter fagsak fra redux store og logger
       Utils.logger.info({
         loaded: true,
         srcfile: 'saksbehandling.js@86',
@@ -98,9 +88,6 @@ class Saksbehandling extends Component {
         jira: 'MELOSYS-3385',
         stack: this.props.fagsak,
       });
-      const fagsakerResponse = await hentFagsaker(snr);
-      if (!fagsakerResponse.data) return false; // Then neither PENDING nor ERROR, has .data object
-
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
