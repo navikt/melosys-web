@@ -8,6 +8,7 @@ import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
 import * as KV from '../../../../../kodeverk';
 import * as Validering from '../../../../../felleskomponenter/skjema/validering';
+import * as Skjema from '../../../../../felleskomponenter/skjema/';
 
 import Begrunnelser from '../../begrunnelser';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
@@ -20,8 +21,6 @@ import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsre
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../../../ducks/anmodningsperiodesvar';
 import { vilkarSelectors } from '../../../../../ducks/vilkar';
-
-import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
 
 import './vurderingArtikkel16Vedtak.css';
 
@@ -259,10 +258,7 @@ export const VurderingArtikkel16Vedtak = ({
   vilkarBegrunnelser,
   behandlingstype,
   touch,
-  lagretFritekst,
 }) => {
-  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState(lagretFritekst || '');
-
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
   const validerForm = () => {
@@ -276,7 +272,7 @@ export const VurderingArtikkel16Vedtak = ({
 
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      fritekst: vedtaksbrevFritekst,
+      fritekst: formValues.vedtaksbrevFritekst,
       mottakerinstitusjon: null,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
@@ -296,16 +292,16 @@ export const VurderingArtikkel16Vedtak = ({
   ]);
 
   const renderFritekstFelt = useCallback(() => (
-    <Nav.Textarea
+    <Skjema.Textarea
+      feltNavn="vedtaksbrevFritekst"
       label="Fritekst til vedtaksbrev"
       placeholder="Skriv inn tekst til vedtaksbrevet..."
-      value={vedtaksbrevFritekst}
-      onChange={setVedtaksbrevFritekst}
       maxLength={500}
+      visTellerFra={500}
       disabled={!redigerbart}
     />
   ), [
-    vedtaksbrevFritekst,
+    formValues.vedtaksbrevFritekst,
     redigerbart,
   ]);
 
@@ -316,7 +312,7 @@ export const VurderingArtikkel16Vedtak = ({
           redigerbart={redigerbart}
           behandlingID={behandlingID}
           renderFritekstFelt={renderFritekstFelt}
-          vedtaksbrevFritekst={vedtaksbrevFritekst}
+          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
@@ -324,7 +320,7 @@ export const VurderingArtikkel16Vedtak = ({
           redigerbart={redigerbart}
           behandlingID={behandlingID}
           renderFritekstFelt={renderFritekstFelt}
-          vedtaksbrevFritekst={vedtaksbrevFritekst}
+          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={endretPeriode}
           renderBegrunnelser={renderBegrunnelser}
         />;
@@ -333,7 +329,7 @@ export const VurderingArtikkel16Vedtak = ({
           redigerbart={redigerbart}
           behandlingID={behandlingID}
           renderFritekstFelt={renderFritekstFelt}
-          vedtaksbrevFritekst={vedtaksbrevFritekst}
+          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           renderBegrunnelser={renderBegrunnelser}
         />;
       default:
@@ -377,7 +373,6 @@ VurderingArtikkel16Vedtak.propTypes = {
   behandlingstype: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
-  lagretFritekst: PT.string,
   redigerbart: PT.bool.isRequired,
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
   art_12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,
@@ -389,7 +384,6 @@ VurderingArtikkel16Vedtak.propTypes = {
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
-  lagretFritekst: '',
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
@@ -419,6 +413,7 @@ const mapStateToProps = state => ({
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
   },
 });
 
