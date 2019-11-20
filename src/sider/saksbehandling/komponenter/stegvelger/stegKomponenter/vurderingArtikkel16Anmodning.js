@@ -397,7 +397,7 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Column>
           </Nav.Row>
           {
-            skalSendeSed &&
+            skalSendeSed && redigerbart &&
             <Nav.Row className="mottakerinstitusjoner">
               <Nav.Column xs="7">
                 <Nav.Select label="Velg utenlandsk institusjon som skal motta SED" onChange={this.valgtMottakerinstitusjonHandler}>
