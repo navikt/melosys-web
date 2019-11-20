@@ -4,8 +4,6 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
-import './vedtaktype.css';
-
 const VedtaktypebegrunnelseSkjema = ({
   className,
   redigerbart,
