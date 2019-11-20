@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -41,101 +41,100 @@ import { formSelectors } from '../../../../ducks/form';
 import { formatterDatoTilNorsk } from '../../../../utils/dato';
 
 
-class Saksopplysninger extends Component {
-  lagreSoknadHandler = async () => {
+const Saksopplysninger = props => {
+  const lagreSoknadHandler = async () => {
     const {
       behandlingID, valid, sendSoknad, soknad,
-    } = this.props;
+    } = props;
     if (valid) {
       await sendSoknad(behandlingID, soknad);
     }
   };
 
-  overstyrSubmit = event => {
+  const overstyrSubmit = event => {
     event.preventDefault();
   };
 
-  oppdaterLokalSoknadHandler = () => {
-    this.props.oppdaterSoknad();
+  const oppdaterLokalSoknadHandler = () => {
+    props.oppdaterSoknad();
   };
 
-  lagreSoknadOgOppfriskSaksopplysninger = async () => {
+  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
     const {
       behandlingID, oppfriskSaksopplysninger, sendSoknad, soknad,
-    } = this.props;
+    } = props;
     await sendSoknad(behandlingID, soknad);
     await oppfriskSaksopplysninger(behandlingID);
-    this.props.blokkerInnholdMedOppfriskSpinner();
+    props.blokkerInnholdMedOppfriskSpinner();
   };
 
-  render () {
-    const {
-      redigerbart,
-      behandlingID,
-      medlemskap,
-      soknadArbeidsinntekt,
-      soknadForm,
-      soknad,
-      behandlingsresultat,
-      fagsakStatusKode,
-    } = this.props;
+  const {
+    redigerbart,
+    behandlingID,
+    medlemskap,
+    soknadArbeidsinntekt,
+    soknadForm,
+    soknad,
+    behandlingsresultat,
+    fagsakStatusKode,
+    fagsaker,
+  } = props;
 
-    if (Utils._isNil(redigerbart)) return null;
-    if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
-    const { values: soknadVerdier } = soknadForm;
 
-    if (!behandlingID) {
-      return null;
-    }
+  if (Utils._isNil(redigerbart)) return null;
+  if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
+  const { values: soknadVerdier } = soknadForm;
 
-    const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
-    const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-    const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
-
-    return (
-      <Fragment>
-        { erHenlagtSak &&
-          <HenlagtSak behandlingsresultat={behandlingsresultat} />
-        }
-        {
-          visAvslaattSoknad &&
-          <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
-        }
-        { visStegVelger &&
-          <Stegvelger
-            behandlingID={behandlingID}
-            lagreVilkarHandler={this.props.lagreVilkarHandler}
-            lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
-            lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
-            lagreAnmodningsperioderHandler={this.props.lagreAnmodningsperioderHandler}
-            oppdaterOgLagreBehandlingerHandler={this.props.oppdaterOgLagreBehandlingerHandler}
-            lagreAllData={this.props.lagreAllData}
-            fatteVedtakHandler={this.fatteVedtakHandler}
-            lagreSoknadHandler={this.lagreSoknadHandler}
-            oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
-            begrunnelser={MKV.KTObjects.begrunnelser}
-            landkoder={MKV.KTObjects.landkoder}
-          />
-        }
-        <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
-          <Personopplysninger />
-          <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
-          <ArbeidsgivereNorge />
-          <ForetakUtland />
-          <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-          <FullmektigPanel />
-          <ArbeidUtland />
-          <VirksomhetNorge />
-          <MaritimtArbeid />
-          {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-          <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
-          <Kontantytelser />
-        </form>
-      </Fragment>
-    );
+  if (!behandlingID) {
+    return null;
   }
-}
+
+  const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+  const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
+  return (
+    <Fragment>
+      { erHenlagtSak &&
+      <HenlagtSak behandlingsresultat={behandlingsresultat} />
+      }
+      {
+        visAvslaattSoknad &&
+        <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
+      }
+      { visStegVelger &&
+      <Stegvelger
+        behandlingID={behandlingID}
+        lagreVilkarHandler={props.lagreVilkarHandler}
+        lagreAvklartefaktaHandler={props.lagreAvklartefaktaHandler}
+        lagreLovvalgsperioderHandler={props.lagreLovvalgsperioderHandler}
+        lagreAnmodningsperioderHandler={props.lagreAnmodningsperioderHandler}
+        oppdaterOgLagreBehandlingerHandler={props.oppdaterOgLagreBehandlingerHandler}
+        lagreAllData={props.lagreAllData}
+        // fatteVedtakHandler={props.fatteVedtakHandler} // TODO; Denne er ikke synlig uten this.
+        lagreSoknadHandler={lagreSoknadHandler}
+        oppdaterLokalSoknadHandler={oppdaterLokalSoknadHandler}
+        begrunnelser={MKV.KTObjects.begrunnelser}
+        landkoder={MKV.KTObjects.landkoder}
+      />
+      }
+      <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
+        <Personopplysninger />
+        <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+        <ArbeidsgivereNorge />
+        <ForetakUtland />
+        <SelvstendigArbeid soknadVerdier={soknadVerdier} />
+        {fagsaker && fagsaker.saksnummer && <FullmektigPanel />}
+        <ArbeidUtland />
+        <VirksomhetNorge />
+        <MaritimtArbeid />
+        {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+        <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
+        <Kontantytelser />
+      </form>
+    </Fragment>
+  );
+};
 
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool,
@@ -145,6 +144,7 @@ Saksopplysninger.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
+  fagsaker: MPT.Fagsak.isRequired,
   handleSubmit: PT.func.isRequired,
   match: PT.object.isRequired,
   medlemskap: MPT.Medlemskap,
@@ -185,6 +185,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
+  fagsaker: fagsakSelectors.FagsakSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
