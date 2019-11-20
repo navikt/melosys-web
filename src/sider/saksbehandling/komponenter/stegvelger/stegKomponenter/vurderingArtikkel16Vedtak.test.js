@@ -23,6 +23,11 @@ describe('VurderingArtikkel16Vedtak', () => {
       formIsValid: true,
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       touch: jest.fn(),
+      formValues: {
+        vedtakstypebegrunnelse: MKV.Koder.begrunnelser.nyvurderingbakgrunner.SAKSBEHANDLER_OPPDAGET_FEIL,
+        vedtakstype: MKV.Koder.vedtakstyper.KORRIGERINGSVEDTAK,
+        vedtaksbrevFritekst: 'Test',
+      },
     };
   });
 
