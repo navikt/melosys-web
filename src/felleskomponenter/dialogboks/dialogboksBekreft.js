@@ -23,8 +23,8 @@ class DialogboksBekreft extends Component {
         closeButton={false}
         shouldCloseOnOverlayClick>
         <div>
-          <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
-          <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
+          <Nav.typo.Systemtittel>{tittel}</Nav.typo.Systemtittel>
+          <Nav.typo.Normaltekst>{tekst}</Nav.typo.Normaltekst>
           <div className="knapperadcontainer">
             <Knapperad
               bekreft={bekreft}

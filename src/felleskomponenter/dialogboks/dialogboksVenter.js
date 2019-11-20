@@ -36,7 +36,7 @@ class DialogboksVenter extends Component {
     } = this.props;
 
     const venteTekst = this.state.venteTid < this.MAKS_VENTETID ?
-      <Nav.Normaltekst className="tekst">{tekst}</Nav.Normaltekst>
+      <Nav.typo.Normaltekst className="tekst">{tekst}</Nav.typo.Normaltekst>
       :
       <Nav.AlertStripe className="alertStripe" type="advarsel">
         Dette tar lengre tid enn normalt. Du kan velge å gå tilbake til forsiden for å behandle en annen sak i mellomtiden.
@@ -52,7 +52,7 @@ class DialogboksVenter extends Component {
         shouldCloseOnOverlayClick={false}>
         <div>
           <Nav.NavFrontendSpinner className="spinner" />
-          <Nav.Systemtittel className="overskrift">{tittel}</Nav.Systemtittel>
+          <Nav.typo.Systemtittel className="overskrift">{tittel}</Nav.typo.Systemtittel>
           {venteTekst}
           <div className="dialogboksVenter__container__knapperad">
             <Nav.Knapp onClick={tilForsiden}>Til forsiden</Nav.Knapp>
