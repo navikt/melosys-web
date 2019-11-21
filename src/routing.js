@@ -147,7 +147,7 @@ const Routing = ({
       const res = await Api.Saksflyt.Vedtak.revurder(behandlingID);
       const { behandlingID: nyBehandlingID } = res;
 
-      history.push(`${location.pathname}/${stringify({ behandlingID: nyBehandlingID })}`);
+      history.push(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
       lastInnSaksopplysninger(saksnummer, nyBehandlingID);
     } catch (e) {
       Utils.logger.error(e);
