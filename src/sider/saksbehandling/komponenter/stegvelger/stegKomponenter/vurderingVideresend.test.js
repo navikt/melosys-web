@@ -13,6 +13,7 @@ describe('Vurderingvideresend', () => {
       redigerbart: true,
       behandlingID: 4,
       videresendSoknad: jest.fn(),
+      bostedsland: { kode: 'SE', term: 'Sverige' },
     };
   });
 

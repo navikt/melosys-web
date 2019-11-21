@@ -132,7 +132,7 @@ const VurderingVedtak = ({
           skalSendeSed &&
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
-              <Nav.Select label="Velg utenlandsk institusjon som skal motta SED" onChange={valgtMottakerinstitusjonHandler}>
+              <Nav.Select label="Velg utenlandsk institusjon som skal motta SED" onChange={valgtMottakerinstitusjonHandler} disabled={!redigerbart}>
                 <option key={uuid()} value="" disabled>Velg...</option>
                 {mottakerinstitusjoner.map(institusjon => <option key={institusjon.id} value={institusjon.id}>{institusjon.navn}</option>)}
               </Nav.Select>
