@@ -49,7 +49,6 @@ const JournalforingForm = ({
     />
     <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
     <SendForvaltningsMelding />
-    <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
     <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
   </form>
 );
@@ -80,7 +79,7 @@ const mapStateToProps = state => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   initialValues: {
-    avsenderType: journalforingSelectors.AvsenderTypeSelector(state),
+    avsenderType: journalforingSelectors.AvsenderTypeSelector(state), // ["string", "null"]
     behandlingstype: null,
     saksnummer: '',
     brukerID: journalforingSelectors.BrukerIDSelector(state),

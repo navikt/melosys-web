@@ -9,27 +9,9 @@ import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
 import { journalforingSelectors } from '../../../ducks/journalforing';
+import PreutfyltAvsender from './preutfyltAvsender';
 
 import './avsendervelger.css';
-
-const PreutfyltAvsender = ({
-  className,
-  avsenderID,
-  avsenderNavn,
-}) => (
-  <div className={className}>
-    <Nav.typo.Element className="linje">Avsender ID</Nav.typo.Element>
-    <Nav.typo.Normaltekst className="linje">{avsenderID}</Nav.typo.Normaltekst>
-    <Nav.typo.Element className="linje">Avsenders navn</Nav.typo.Element>
-    <Nav.typo.Normaltekst className="linje">{avsenderNavn}</Nav.typo.Normaltekst>
-  </div>
-);
-
-PreutfyltAvsender.propTypes = {
-  className: PT.string.isRequired,
-  avsenderID: PT.string.isRequired,
-  avsenderNavn: PT.string.isRequired,
-};
 
 const AvsenderVelger = ({
   className,
@@ -97,6 +79,12 @@ const AvsenderVelger = ({
           label="Fullmektig"
           value="FULLMEKTIG"
         />
+        {
+          formValues.avsenderType === 'FULLMEKTIG' &&
+          <Fragment>
+            <p>FULLMEKTIG</p>
+          </Fragment>
+        }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver"
@@ -112,42 +100,42 @@ const AvsenderVelger = ({
           label="Utenlandsk trygdemyndighet"
           value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
         />
+        {
+          formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET &&
+          <Fragment>
+            <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
+            {
+              formValues.utenlandskTrygdemyndighetLandkode &&
+              <Fragment>
+                <Nav.typo.Element>Avsender</Nav.typo.Element>
+                <Nav.typo.Normaltekst>Trygdemyndighet i {KV.kodeTilTerm(formValues.utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
+              </Fragment>
+            }
+          </Fragment>
+        }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Annet"
           value={MKV.Koder.avsendertyper.ORGANISASJON}
         />
+        {
+          formValues.avsenderType === MKV.Koder.avsendertyper.ORGANISASJON &&
+          <Fragment>
+            <Skjema.Input
+              feltNavn="avsenderID"
+              label="Oppgi avsenders org.nr.:"
+              placeholder="Skriv inn..."
+            />
+            {
+              formValues.avsenderNavn &&
+              <Fragment>
+                <Nav.typo.Element>Avsenders firmanavn</Nav.typo.Element>
+                <Nav.typo.Normaltekst>{formValues.avsenderNavn}{visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}</Nav.typo.Normaltekst>
+              </Fragment>
+            }
+          </Fragment>
+        }
       </Skjema.RadioGruppe>
-      {
-        formValues.avsenderType === MKV.Koder.avsendertyper.ORGANISASJON &&
-        <Fragment>
-          <Skjema.Input
-            feltNavn="avsenderID"
-            label="Oppgi avsenders org.nr.:"
-            placeholder="Skriv inn..."
-          />
-          {
-            formValues.avsenderNavn &&
-            <Fragment>
-              <Nav.typo.Element>Avsenders firmanavn</Nav.typo.Element>
-              <Nav.typo.Normaltekst>{formValues.avsenderNavn}{visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}</Nav.typo.Normaltekst>
-            </Fragment>
-          }
-        </Fragment>
-      }
-      {
-        formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET &&
-        <Fragment>
-          <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
-          {
-            formValues.utenlandskTrygdemyndighetLandkode &&
-            <Fragment>
-              <Nav.typo.Element>Avsender</Nav.typo.Element>
-              <Nav.typo.Normaltekst>Trygdemyndighet i {KV.kodeTilTerm(formValues.utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
-            </Fragment>
-          }
-        </Fragment>
-      }
     </div>
   );
 };

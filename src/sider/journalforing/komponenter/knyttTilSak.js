@@ -10,6 +10,8 @@ import * as Ikoner from '../../../resources/images';
 import * as Skjema from '../../../felleskomponenter/skjema';
 import { Elementskrift } from './overskrift';
 
+import './knyttTilSak.css';
+
 const KnyttTilSak = props => {
   const { sak, behandlingstyper, opprettBehandling } = props;
   const { saksstatus } = sak;
@@ -48,7 +50,9 @@ const KnyttTilSak = props => {
     );
   }
   return (
-    <div />
+    <div className="behandlingspanel">
+      <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
+    </div>
   );
 };
 KnyttTilSak.propTypes = {
