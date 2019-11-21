@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';

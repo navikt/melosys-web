@@ -1,8 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import * as EKV from 'eessi-kodeverk';
+
+import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
