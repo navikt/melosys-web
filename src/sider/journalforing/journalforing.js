@@ -367,11 +367,11 @@ class Journalforing extends Component {
     if (journalforSEDSkjemaVerdier.brukerID) {
       this.journalforSed();
     } else {
-      console.log('journalforing', journalforing);
+      /*console.log('journalforing', journalforing);
       console.log('fagsakListe', fagsakListe);
-      console.log('journalforingSkjemaVerdier', journalforingSkjemaVerdier);
+      console.log('journalforingSkjemaVerdier', journalforingSkjemaVerdier);*/
       const { saksnummer } = journalforingSkjemaVerdier;
-      console.log('valgtSaksnummer', saksnummer);
+      // console.log('valgtSaksnummer', saksnummer);
       if (saksnummer === '-1') {
         this.opprettFagsak();
       } else {

@@ -8,6 +8,8 @@ import EnkeltSak from './enkeltSak';
 import KnyttTilSak from './knyttTilSak';
 import OpprettSak, { OpprettSakTittel } from './opprettSak';
 
+import './fagsakVelger.css';
+
 const FagsakVelger = props => {
   const {
     sakstyper, behandlingstyper, fagsakListe,
