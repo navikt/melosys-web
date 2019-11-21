@@ -13,6 +13,56 @@ import PreutfyltAvsender from './preutfyltAvsender';
 
 import './avsendervelger.css';
 
+const clsBehandlingsPanel = {
+  background: 'lightgray',
+  border: '1px solid #b7b1a9',
+  borderRadius: '3px',
+  margin: '0.5em 0.5em 0.5em 1.5em',
+  padding: '0.25em 1.25em 0 1.25em',
+};
+
+const AvsenderOrganisasjon = () => (
+  <div style={clsBehandlingsPanel}>
+    <Skjema.Input
+      feltNavn="avsenderID"
+      label="Oppgi avsenders org.nr.:"
+      placeholder="Skriv inn..."
+    />
+    <Nav.typo.Element>Avsender firmanavn</Nav.typo.Element>
+    <p>TODO; Lookup</p>
+  </div>
+);
+const AvsenderUtenlanskTrygdemyndighet = ({
+  utenlandskTrygdemyndighetLandkode, fullmektigLandEndret,
+}) => (
+  <div style={clsBehandlingsPanel}>
+    <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
+    {
+      utenlandskTrygdemyndighetLandkode &&
+      <Fragment>
+        <Nav.typo.Element>Avsender</Nav.typo.Element>
+        <Nav.typo.Normaltekst>Trygdemyndighet i {KV.kodeTilTerm(utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
+      </Fragment>
+    }
+  </div>
+);
+
+AvsenderUtenlanskTrygdemyndighet.propTypes = {
+  utenlandskTrygdemyndighetLandkode: PT.string,
+  fullmektigLandEndret: PT.func.isRequired,
+};
+AvsenderUtenlanskTrygdemyndighet.defaultProps = {
+  utenlandskTrygdemyndighetLandkode: '',
+};
+const AvsenderAnnet = () => (
+  <div style={clsBehandlingsPanel}>
+    <Skjema.Input
+      feltNavn="avsenderNavn"
+      label="Oppgi avsenders navn"
+      placeholder="Skriv inn..."
+    />
+  </div>
+);
 const AvsenderVelger = ({
   className,
   kopierBrukerTilAvsender,
@@ -82,7 +132,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === 'FULLMEKTIG' &&
           <Fragment>
-            <p>FULLMEKTIG</p>
+            <AvsenderOrganisasjon />
           </Fragment>
         }
         <Skjema.Radio
@@ -90,11 +140,23 @@ const AvsenderVelger = ({
           label="Arbeidsgiver"
           value="ARBEIDSGIVER"
         />
+        {
+          formValues.avsenderType === 'ARBEIDSGIVER' &&
+          <Fragment>
+            <AvsenderOrganisasjon />
+          </Fragment>
+        }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver som er fullmektig"
           value="ARBEIDSGIVER_FULLMEKTIG"
         />
+        {
+          formValues.avsenderType === 'ARBEIDSGIVER_FULLMEKTIG' &&
+          <Fragment>
+            <AvsenderOrganisasjon />
+          </Fragment>
+        }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Utenlandsk trygdemyndighet"
@@ -103,14 +165,10 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET &&
           <Fragment>
-            <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
-            {
-              formValues.utenlandskTrygdemyndighetLandkode &&
-              <Fragment>
-                <Nav.typo.Element>Avsender</Nav.typo.Element>
-                <Nav.typo.Normaltekst>Trygdemyndighet i {KV.kodeTilTerm(formValues.utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
-              </Fragment>
-            }
+            <AvsenderUtenlanskTrygdemyndighet
+              utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
+              fullmektigLandEndret={fullmektigLandEndret}
+            />
           </Fragment>
         }
         <Skjema.Radio
@@ -121,18 +179,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === MKV.Koder.avsendertyper.ORGANISASJON &&
           <Fragment>
-            <Skjema.Input
-              feltNavn="avsenderID"
-              label="Oppgi avsenders org.nr.:"
-              placeholder="Skriv inn..."
-            />
-            {
-              formValues.avsenderNavn &&
-              <Fragment>
-                <Nav.typo.Element>Avsenders firmanavn</Nav.typo.Element>
-                <Nav.typo.Normaltekst>{formValues.avsenderNavn}{visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}</Nav.typo.Normaltekst>
-              </Fragment>
-            }
+            <AvsenderAnnet />
           </Fragment>
         }
       </Skjema.RadioGruppe>
