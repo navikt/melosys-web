@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getFormValues } from 'redux-form';
 import PT from 'prop-types';
-import MKV from 'melosys-kodeverk';
+import MKV from '../../../melosyskodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as Nav from '../../../utils/navFrontend';

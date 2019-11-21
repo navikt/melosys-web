@@ -1,4 +1,4 @@
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../../../../melosyskodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingNormaltDriverVirksomhet from '../../stegKomponenter/vurderingNormaltDriverVirksomhet';

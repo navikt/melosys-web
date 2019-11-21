@@ -3,7 +3,8 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../melosyskodeverk';
 import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
 import * as Validering from '../../../../felleskomponenter/skjema/validering';
