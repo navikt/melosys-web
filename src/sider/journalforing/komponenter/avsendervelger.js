@@ -50,6 +50,9 @@ const AvsenderVelger = ({
         kopierBrukerTilAvsender();
         break;
       }
+      case 'FULLMEKTIG':
+      case 'ARBEIDSGIVER':
+      case 'ARBEIDSGIVER_FULLMEKTIG':
       case MKV.Koder.avsendertyper.ORGANISASJON:
       case MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET: {
         tomAvsender();
@@ -91,13 +94,28 @@ const AvsenderVelger = ({
         />
         <Skjema.Radio
           feltNavn="avsenderType"
-          label="Arbeidsgiver/fullmektig"
-          value={MKV.Koder.avsendertyper.ORGANISASJON}
+          label="Fullmektig"
+          value="FULLMEKTIG"
+        />
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Arbeidsgiver"
+          value="ARBEIDSGIVER"
+        />
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Arbeidsgiver som er fullmektig"
+          value="ARBEIDSGIVER_FULLMEKTIG"
         />
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Utenlandsk trygdemyndighet"
           value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
+        />
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Annet"
+          value={MKV.Koder.avsendertyper.ORGANISASJON}
         />
       </Skjema.RadioGruppe>
       {
