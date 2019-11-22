@@ -21,6 +21,14 @@ describe('VurderingArtikkel16Vedtak', () => {
       vilkarBegrunnelser: [],
       art_12_1_begrunnelser: [],
       art_12_2_begrunnelser: [],
+      formIsValid: true,
+      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      touch: jest.fn(),
+      formValues: {
+        vedtakstypebegrunnelse: MKV.Koder.begrunnelser.nyvurderingbakgrunner.SAKSBEHANDLER_OPPDAGET_FEIL,
+        vedtakstype: MKV.Koder.vedtakstyper.KORRIGERINGSVEDTAK,
+        vedtaksbrevFritekst: 'Test',
+      },
     };
   });
 
@@ -45,7 +53,7 @@ describe('VurderingArtikkel16Vedtak', () => {
     expect(vurderingArtikkel16Vedtak.find(Avslag)).toHaveLength(1);
   });
 
-  it('viser en knapp', () => {
+  it('viser en knapp for å fatte vedtak', () => {
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
     expect(vurderingArtikkel16Vedtak.find('Hovedknapp')).toHaveLength(1);

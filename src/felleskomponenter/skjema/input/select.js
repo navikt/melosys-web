@@ -2,6 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
+import * as SkjemaUtils from '../utils';
+
 import '../skjema.css';
 
 function SelectWrappedComponent({
@@ -12,7 +14,9 @@ function SelectWrappedComponent({
   emptyFieldDisabled,
   ...rest
 }) {
-  const feil = meta.error ? { feilmelding: meta.error } : undefined;
+  const { touched, active } = meta;
+  const feil = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
+
   const inputProps = {
     ...input,
     ...rest,
