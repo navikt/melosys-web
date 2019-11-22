@@ -128,6 +128,10 @@ const Routing = ({
     history.push('/');
   };
 
+  const tilOpprettNySak = () => {
+    history.push('/opprettnysak');
+  };
+
   const skjulOppfriskBekreftelseOgNavigerTilForside = () => {
     skjulOppfriskBekreftelse();
     tilForsiden();
@@ -218,13 +222,14 @@ const Routing = ({
     apneTidligereBehandlinger,
     blokkerInnholdMedOppfriskSpinner,
     tilForsiden,
+    tilOpprettNySak,
     visRevurderVedtakDialogHandle,
   };
 
   return (
     <ErrorBoundary message={SideLoadingFailMessage}>
       <Switch location={location}>
-        <Route exact path="/" component={ForsideLoadable} />
+        <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />
