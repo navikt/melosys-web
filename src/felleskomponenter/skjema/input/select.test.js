@@ -51,6 +51,8 @@ describe('SelectWrappedComponent', () => {
   });
 
   it('setter feil-prop dersom meta.error prop finnes', () => {
+    props.meta.touched = true;
+    props.meta.active = false;
     props.meta.error = 'err';
     const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
 

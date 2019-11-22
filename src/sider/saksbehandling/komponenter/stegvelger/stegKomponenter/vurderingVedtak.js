@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
@@ -10,16 +11,19 @@ import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
 import * as Api from '../../../../../services/api';
 import * as Utils from '../../../../../utils';
+import * as Skjema from '../../../../../felleskomponenter/skjema';
+import * as Validering from '../../../../../felleskomponenter/skjema/validering';
 
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
+import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
 
 import { datoDiffMenneskelig } from '../../../../../utils/dato';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
-
-import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
+import VedtaktypeSkjema from '../../vedtaktypeskjema';
+import VedtaketypeBegrunnelseSkjema from '../../vedtaktypebegrunnelseskjema';
 
 import './vurderingVedtak.css';
 
@@ -37,6 +41,10 @@ const VurderingVedtak = ({
   redigerbart,
   behandlingID,
   lagreOgFatteVedtak,
+  behandlingstype,
+  touch,
+  formIsValid,
+  formValues,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -64,8 +72,6 @@ const VurderingVedtak = ({
 
   const valgtMottakerinstitusjonHandler = e => setValgtMottakerinstitusjon(e.target.value);
 
-  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
-
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
@@ -75,6 +81,7 @@ const VurderingVedtak = ({
   const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
   const skalSendeSed = mottakerinstitusjoner.length > 0;
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const pdfDokumenter = [
     {
@@ -82,7 +89,7 @@ const VurderingVedtak = ({
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
-        fritekst: vedtaksbrevFritekst,
+        fritekst: formValues.vedtaksbrevFritekst,
       },
     },
   ];
@@ -100,7 +107,24 @@ const VurderingVedtak = ({
     pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
   }
 
-  const fattVedtak = () => lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst, valgtMottakerinstitusjon);
+  const validerForm = () => {
+    touch('tomDato');
+    touch('vedtakstype');
+    touch('vedtakstypebegrunnelse');
+    return formIsValid;
+  };
+
+  const fattVedtak = async () => {
+    if (!validerForm()) return;
+
+    lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: formValues.vedtaksbrevFritekst,
+      mottakerinstitusjon: valgtMottakerinstitusjon,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
+    });
+  };
 
   return (
     <div className="vedtak">
@@ -117,14 +141,27 @@ const VurderingVedtak = ({
             <Nav.typo.Normaltekst>{antallManeder}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
+        {
+          erNyVurdering &&
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <VedtaktypeSkjema
+                redigerbart={redigerbart}
+              />
+              <VedtaketypeBegrunnelseSkjema
+                redigerbart={redigerbart}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         <Nav.Row className="fritekst">
           <Nav.Column xs="8">
-            <Nav.Textarea
+            <Skjema.Textarea
+              feltNavn="vedtaksbrevFritekst"
               label="Fritekst til vedtaksbrev"
               placeholder="Skriv inn tekst til vedtaksbrevet..."
-              value={vedtaksbrevFritekst}
-              onChange={setVedtaksbrevFritekst}
               maxLength={500}
+              visTellerFra={500}
               disabled={!redigerbart}
             />
           </Nav.Column>
@@ -162,17 +199,43 @@ VurderingVedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
+  behandlingstype: PT.string.isRequired,
+  formIsValid: PT.bool.isRequired,
+  formValues: PT.object,
+  touch: PT.func.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
   lovvalgsland: '',
+  formValues: {},
 };
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
+  initialValues: {
+    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+  },
 });
 
-export default connect(mapStateToProps)(VurderingVedtak);
+const VurderingVedtakForm = reduxForm({
+  form: KV.Form.ARTIKKEL_12_VEDTAK,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel12_vedtak, {
+    context: {
+      behandlingstype: props.behandlingstype,
+    },
+  })(values),
+})(VurderingVedtak);
+
+export default connect(mapStateToProps)(VurderingVedtakForm);
