@@ -59,7 +59,7 @@ const BehandlingsStatus = ({
             koder={endreBehandlingsStatusValg}
             value={behandlingsstatus}
             onChange={onChange}
-            label="Endre status på behandlingen:"
+            label="Endre behandlingsstatus:"
             redigerbar={redigerbart}
           />
           <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>Oppdater</Nav.Hovedknapp>
