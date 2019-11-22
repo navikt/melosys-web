@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import classnames from 'classnames';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';

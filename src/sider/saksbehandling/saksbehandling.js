@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';

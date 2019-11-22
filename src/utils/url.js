@@ -1,4 +1,4 @@
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../melosyskodeverk';
 
 export const lagUrl = (saksnummer, behandlingID, behandlingstypeKode) => {
   switch (behandlingstypeKode) {
