@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, getFormValues } from 'redux-form';
@@ -18,41 +18,52 @@ import Informasjon from '../komponenter/informasjon';
 import FagsakVelger from './fagsakVelger';
 import SendForvaltningsMelding from './sendForvaltningsMelding';
 
-const JournalforingForm = ({
-  journalpostID,
-  hoveddokumentID,
-  hoveddokumentTittel,
-  vedlegg,
-  hentOgVisAvsender,
-  hentOgVisBruker,
-  fagsakListe,
-  // knyttTilEksisterendeSak,
-  // opprettFagsak,
-  hentOgVisRepresentant,
-  overstyrSubmit,
-  behandlingstyper,
-}) => (
-  <form onSubmit={overstyrSubmit}>
-    <Informasjon
-      journalpostID={journalpostID}
-      dokumentID={hoveddokumentID}
-      dokumentTittel={hoveddokumentTittel}
-      vedlegg={vedlegg}
-      hentOgVisAvsender={hentOgVisAvsender}
-      hentOgVisBruker={hentOgVisBruker}
-      hentOgVisRepresentant={hentOgVisRepresentant}
-    />
-    <Overskrift tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
-    <FagsakVelger
-      sakstyper={MKV.KTObjects.sakstyper}
-      behandlingstyper={behandlingstyper}
-      fagsakListe={fagsakListe}
-    />
-    <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
-    <SendForvaltningsMelding />
-    <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
-  </form>
-);
+const JournalforingForm = props => {
+  const {
+    journalpostID,
+    hoveddokumentID,
+    hoveddokumentTittel,
+    vedlegg,
+    hentOgVisAvsender,
+    hentOgVisBruker,
+    fagsakListe,
+    // knyttTilEksisterendeSak,
+    // opprettFagsak,
+    hentOgVisRepresentant,
+    overstyrSubmit,
+    behandlingstyper,
+    formValues,
+  } = props;
+  const visForvaltningsMelding = formValues.saksnummer === '-1' && formValues.opprettnysak_behandlingstype === 'SOEKNAD';
+
+  return (
+    <form onSubmit={overstyrSubmit}>
+      <Informasjon
+        journalpostID={journalpostID}
+        dokumentID={hoveddokumentID}
+        dokumentTittel={hoveddokumentTittel}
+        vedlegg={vedlegg}
+        hentOgVisAvsender={hentOgVisAvsender}
+        hentOgVisBruker={hentOgVisBruker}
+        hentOgVisRepresentant={hentOgVisRepresentant}
+      />
+      <Overskrift tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
+      <FagsakVelger
+        sakstyper={MKV.KTObjects.sakstyper}
+        behandlingstyper={behandlingstyper}
+        fagsakListe={fagsakListe}
+      />
+      {
+        visForvaltningsMelding &&
+        <Fragment>
+          <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
+          <SendForvaltningsMelding />
+        </Fragment>
+      }
+      <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
+    </form>
+  );
+};
 
 JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,
