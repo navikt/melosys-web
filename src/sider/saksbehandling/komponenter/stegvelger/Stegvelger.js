@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import TrackVisibility from 'react-on-screen';
+
+import MKV from '../../../../melosyskodeverk';
 
 import * as MPT from '../../../../proptypes';
 import * as Api from '../../../../services/api';

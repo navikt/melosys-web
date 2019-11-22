@@ -3,8 +3,9 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray, reduxForm } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import * as EKV from 'eessi-kodeverk';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';

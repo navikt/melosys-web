@@ -1,4 +1,4 @@
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../melosyskodeverk';
 
 const harBlankMelding = (verdi, melding = 'Velg et element i nedtrekkslisten') => ((verdi === '') ? melding : false);
 const harTekstMelding = (tekst, melding = 'Tekstfeltet må fylles ut') => ((tekst && tekst.length > 0) ? false : melding);

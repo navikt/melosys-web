@@ -1,5 +1,5 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../../../melosyskodeverk';
 
 import { VurderingArtikkel16MottaSvar } from './vurderingArtikkel16MottaSvar';
 import { DatoOmradeMedVarighet } from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
