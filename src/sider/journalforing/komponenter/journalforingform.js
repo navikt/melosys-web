@@ -28,7 +28,7 @@ const JournalforingForm = ({
   fagsakListe,
   // knyttTilEksisterendeSak,
   // opprettFagsak,
-  // hentOgVisRepresentant,
+  hentOgVisRepresentant,
   overstyrSubmit,
   behandlingstyper,
 }) => (
@@ -40,6 +40,7 @@ const JournalforingForm = ({
       vedlegg={vedlegg}
       hentOgVisAvsender={hentOgVisAvsender}
       hentOgVisBruker={hentOgVisBruker}
+      hentOgVisRepresentant={hentOgVisRepresentant}
     />
     <Overskrift tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
     <FagsakVelger
@@ -63,7 +64,7 @@ JournalforingForm.propTypes = {
   fagsakListe: PT.array.isRequired,
   // knyttTilEksisterendeSak: PT.func.isRequired,
   // opprettFagsak: PT.func.isRequired,
-  // hentOgVisRepresentant: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
   overstyrSubmit: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
