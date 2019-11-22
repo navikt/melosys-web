@@ -111,7 +111,6 @@ const Saksopplysninger = props => {
         lagreAnmodningsperioderHandler={props.lagreAnmodningsperioderHandler}
         oppdaterOgLagreBehandlingerHandler={props.oppdaterOgLagreBehandlingerHandler}
         lagreAllData={props.lagreAllData}
-        // fatteVedtakHandler={props.fatteVedtakHandler} // TODO; Denne er ikke synlig uten this.
         lagreSoknadHandler={lagreSoknadHandler}
         oppdaterLokalSoknadHandler={oppdaterLokalSoknadHandler}
         begrunnelser={MKV.KTObjects.begrunnelser}
