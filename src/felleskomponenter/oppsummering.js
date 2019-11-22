@@ -22,6 +22,7 @@ const Oppsummering = props => {
 
   const {
     behandlingsstatus,
+    endretDato,
     sisteOpplysningerHentetDato,
   } = oppsummering;
 
@@ -73,6 +74,8 @@ const Oppsummering = props => {
         </Fragment>
       }
       <dt>Behandling sist oppdatert:</dt>
+      <dd><EnkeltDato dato={endretDato} visTidspunkt /></dd>
+      <dt>Opplysninger sist hentet</dt>
       <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
       <dt>Behandling registrert dato:</dt>
       <dd><EnkeltDato dato={registrertDato} /></dd>
