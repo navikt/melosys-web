@@ -20,7 +20,6 @@ import { behandlingsperioderSelectors } from '../../../../../ducks/behandlingspe
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../../../utils/dato';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import * as Mui from '../../../../../felleskomponenter/ui';
 
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../../../regler/vilkar';
@@ -222,8 +221,7 @@ class VurderingArtikkel16Anmodning extends Component {
     this.setState({ begrunnelserFeilmelding: undefined });
 
     const { oppdaterData } = this.props;
-
-    await oppdaterData(lagBegrunnelse('art16_1_anmodning', event.value));
+    await oppdaterData(lagBegrunnelse('art16_1_anmodning', [event.target.value]));
     this.lagreVilkar();
   };
 
@@ -306,6 +304,8 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const { art16_1: { begrunnelseFritekst, begrunnelseKoder }, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt } = tilstand;
 
+    const begrunnelseKode = begrunnelseKoder ? begrunnelseKoder[0] : '';
+
     const visFritekstfelt = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
     const art16fritekst = begrunnelseFritekst || '';
@@ -360,15 +360,16 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Mui.ListevelgerFlervalg
-                disabled={!redigerbart}
+              <Nav.Select
                 feil={begrunnelserFeilmelding}
-                muligeValg={muligeBegrunnelseValg}
-                tillatFritekst={false}
-                label="Legg til begrunnelse:"
                 onChange={begrunnelserEndringHandler}
-                defaultElementer={begrunnelseKoder}
-              />
+                value={begrunnelseKode}
+                disabled={!redigerbart}
+                label="Legg til begrunnelse:"
+              >
+                <option key={uuid()} value="">Velg...</option>
+                { muligeBegrunnelseValg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+              </Nav.Select>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
