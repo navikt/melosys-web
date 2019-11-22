@@ -3,8 +3,8 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import loadable from '@loadable/component';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
+import MKV from './melosyskodeverk';
 import * as Utils from './utils';
 import * as Api from './services/api';
 
