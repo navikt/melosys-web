@@ -79,6 +79,7 @@ class Saksopplysninger extends Component {
       soknad,
       behandlingsresultat,
       fagsakStatusKode,
+      fagsaker,
     } = this.props;
 
     if (Utils._isNil(redigerbart)) return null;
@@ -125,7 +126,7 @@ class Saksopplysninger extends Component {
           <ArbeidsgivereNorge />
           <ForetakUtland />
           <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-          <FullmektigPanel />
+          {fagsaker && fagsaker.saksnummer && <FullmektigPanel />}
           <ArbeidUtland />
           <VirksomhetNorge />
           <MaritimtArbeid />
@@ -146,6 +147,7 @@ Saksopplysninger.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
+  fagsaker: MPT.Fagsak.isRequired,
   handleSubmit: PT.func.isRequired,
   match: PT.object.isRequired,
   medlemskap: MPT.Medlemskap,
@@ -186,6 +188,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
+  fagsaker: fagsakSelectors.FagsakSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
