@@ -7,7 +7,7 @@
  *
  */
 
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../melosyskodeverk';
 
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
