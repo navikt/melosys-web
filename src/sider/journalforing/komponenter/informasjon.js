@@ -160,6 +160,7 @@ class Informasjon extends Component {
       mottattDato,
       vedlegg,
       settFeltInnhold,
+      hentOgVisRepresentant,
       journalforingSkjemaVerdier,
     } = this.props;
     const { hoveddokumentTittel, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
@@ -183,6 +184,7 @@ class Informasjon extends Component {
           tomAvsender={this.tomAvsender}
           settFeltInnhold={settFeltInnhold}
           visAvsenderSpinner={visAvsenderSpinner}
+          hentOgVisRepresentant={hentOgVisRepresentant}
         />
         <Overskrift tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
         <Nav.Input
@@ -235,6 +237,7 @@ Informasjon.propTypes = {
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
   dokumentTittel: PT.string,

@@ -12,6 +12,7 @@ import { journalforingSelectors } from '../../../ducks/journalforing';
 import PreutfyltAvsender from './preutfyltAvsender';
 
 import './avsendervelger.css';
+import * as Konstanter from '../../../constants';
 
 const clsBehandlingsPanel = {
   background: 'lightgray',
@@ -21,17 +22,34 @@ const clsBehandlingsPanel = {
   padding: '0.25em 1.25em 0 1.25em',
 };
 
-const AvsenderOrganisasjon = () => (
-  <div style={clsBehandlingsPanel}>
-    <Skjema.Input
-      feltNavn="avsenderID"
-      label="Oppgi avsenders org.nr.:"
-      placeholder="Skriv inn..."
-    />
-    <Nav.typo.Element>Avsender firmanavn</Nav.typo.Element>
-    <p>TODO; Lookup</p>
-  </div>
-);
+const AvsenderOrganisasjon = props => {
+  const erGyldigOrgnummer = verdi => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
+  const sjekkArbeidsgiver = async verdi => {
+    const { settFeltInnhold, hentOgVisRepresentant } = props;
+    if (erGyldigOrgnummer(verdi)) {
+      // TODO await this.spinner('representantNavn');
+      await hentOgVisRepresentant(verdi);
+    } else {
+      await settFeltInnhold('representantNavn', '');
+    }
+  };
+  const IDFeltTastOppHandler = async event => {
+    const { id: opprinneligFeltID, value } = event.target;
+    if (opprinneligFeltID === 'representantID') { await sjekkArbeidsgiver(value); }
+  };
+  return (
+    <div style={clsBehandlingsPanel}>
+      <Nav.typo.Element>Avsender firmanavn</Nav.typo.Element>
+      <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={IDFeltTastOppHandler} />
+      <Skjema.Input feltNavn="representantNavn" label="Organisasjonsnavn" disabled />
+    </div>
+  );
+};
+AvsenderOrganisasjon.propTypes = {
+  settFeltInnhold: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
+};
+
 const AvsenderUtenlanskTrygdemyndighet = ({
   utenlandskTrygdemyndighetLandkode, fullmektigLandEndret,
 }) => (
@@ -63,12 +81,16 @@ const AvsenderAnnet = () => (
     />
   </div>
 );
+
+// ===================================================
+
 const AvsenderVelger = ({
   className,
   kopierBrukerTilAvsender,
   tomAvsender,
   formValues,
   settFeltInnhold,
+  hentOgVisRepresentant,
   visAvsenderSpinner,
   journalforingAvsenderID,
   journalforingAvsenderNavn,
@@ -132,7 +154,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === 'FULLMEKTIG' &&
           <Fragment>
-            <AvsenderOrganisasjon />
+            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
           </Fragment>
         }
         <Skjema.Radio
@@ -143,7 +165,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === 'ARBEIDSGIVER' &&
           <Fragment>
-            <AvsenderOrganisasjon />
+            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
           </Fragment>
         }
         <Skjema.Radio
@@ -154,7 +176,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === 'ARBEIDSGIVER_FULLMEKTIG' &&
           <Fragment>
-            <AvsenderOrganisasjon />
+            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
           </Fragment>
         }
         <Skjema.Radio
@@ -194,6 +216,7 @@ AvsenderVelger.propTypes = {
   formValues: PT.object,
   settFeltInnhold: PT.func.isRequired,
   visAvsenderSpinner: PT.bool,
+  hentOgVisRepresentant: PT.func.isRequired,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
   erAvsenderPreutfylt: PT.bool.isRequired,
