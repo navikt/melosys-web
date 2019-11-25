@@ -11,8 +11,8 @@ import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Ikoner from '../../../resources/images';
+import * as Mui from '../../../felleskomponenter/ui';
 
-import { Overskrift } from './overskrift';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import './journalforingsed.css';
@@ -58,7 +58,7 @@ const JournalforingSED = ({
 
   return (
     <form>
-      <Overskrift tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
+      <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
       <Nav.Row>
         <Nav.Column xs="6">
           <Skjema.Input onBlur={hentBrukerMedID} className="fetTekst" label="Brukers f.nr eller d.nr" feltNavn="brukerID" />
@@ -69,7 +69,7 @@ const JournalforingSED = ({
           </Nav.typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-      <Overskrift tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
+      <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
       <Nav.Row>
         <Nav.Column xs="6">
           <Nav.typo.Element>Avsender ID</Nav.typo.Element>
@@ -78,7 +78,7 @@ const JournalforingSED = ({
           <Nav.typo.Normaltekst>{avsenderNavn}</Nav.typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-      <Overskrift tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" />
+      <Mui.Undertittel tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" />
       <Nav.Row>
         <Nav.Column xs="5">
           <Nav.typo.Element>Sakstype</Nav.typo.Element>

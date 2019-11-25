@@ -11,10 +11,10 @@ import * as Konstanter from '../../../constants';
 import * as Api from '../../../services/api';
 import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
+import * as Mui from '../../../felleskomponenter/ui';
 import AvsenderVelger from './avsendervelger';
 import LenkeListeVelger from './lenkelistevelger';
 
-import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
 import { formSelectors } from '../../../ducks/form';
@@ -185,7 +185,7 @@ class Informasjon extends Component {
           settFeltInnhold={settFeltInnhold}
           visAvsenderSpinner={visAvsenderSpinner}
         />
-        <Overskrift tekst="Dokumenter" ikon={Ikoner.IkonSak} className="undertittel oversteUndertittel" />
+        <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.IkonSak} className="undertittel oversteUndertittel" />
         <Nav.Input
           label="Mottatt dato"
           type="dato"
