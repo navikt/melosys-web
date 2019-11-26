@@ -11,7 +11,6 @@ import { doThenDispatch } from '../../services/utils';
 import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
-import * as Validering from '../../felleskomponenter/skjema/validering';
 
 /**
  * Henter registerinformasjon som allerede er importert backend i forbindelse
@@ -27,24 +26,6 @@ export function hent(snr) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
-}
-
-/**
- * Oppretter en ny fagsak dersom dette ikke er gjort tidligere. Backend henter registerdata fra
- * TPS, Aa-reg etc og lagrer i Melosys-databasen før frontend mottar JSON med fagsaken.
- * @param fnr String Fødselsnummeret til vedkommende som det skal opprettes ny fagsak på.
- * @returns {*}
- */
-
-export function opprett(fnr) {
-  return doThenDispatch(
-    () => Api.Fagsaker.fagsak.opprett(fnr), {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
-  );
 }
 
 export function resetFagsakState() {

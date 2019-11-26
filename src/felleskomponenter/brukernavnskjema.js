@@ -21,15 +21,17 @@ export const Brukernavnskjema = ({
   const hentBruker = async fnrdnr => {
     setBrukerSpinner(true);
 
-    try {
-      const brukerRespons = await Api.Personer.hentPerson(fnrdnr);
-      settFormBruker(brukerRespons);
-    } catch (e) {
-      settFormBruker('');
-      Utils.logger.error(e);
-    } finally {
-      setBrukerSpinner(false);
+    if (fnrdnr) {
+      try {
+        const brukerRespons = await Api.Personer.hentPerson(fnrdnr);
+        settFormBruker(brukerRespons);
+      } catch (e) {
+        settFormBruker('');
+        Utils.logger.error(e);
+      }
     }
+
+    setBrukerSpinner(false);
   };
 
   const hentBrukerMedID = () => {

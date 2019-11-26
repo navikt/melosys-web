@@ -7,3 +7,4 @@ export { artikkel16_vedtak } from './artikkel16vedtak';
 export { artikkel13_1_vedtak } from './artikkel13_1_vedtak';
 export { journalforing } from './journalforing';
 export { journalforingSED } from './journalforingsed';
+export { opprettnysak } from './opprettnysak';
