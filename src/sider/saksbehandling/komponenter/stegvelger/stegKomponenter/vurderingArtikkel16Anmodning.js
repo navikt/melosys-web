@@ -11,8 +11,8 @@ import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
 import * as Utils from '../../../../../utils';
 import * as KV from '../../../../../kodeverk';
-import * as Api from '../../../../../services/api';
 
+import { soknadSelectors } from '../../../../../ducks/soknad';
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
@@ -21,7 +21,7 @@ import { behandlingsperioderSelectors } from '../../../../../ducks/behandlingspe
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../../../utils/dato';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-
+import Mottakerinstitusjonvelger from '../../../../../felleskomponenter/mottakerinstitusjonvelger';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../../../regler/vilkar';
 import { konverterLovvalgsbestemmelseTilStegData } from '../../../../../regler/lovvalgsbestemmelser';
@@ -133,8 +133,8 @@ class VurderingArtikkel16Anmodning extends Component {
     lovvalgFeilmelding: undefined,
     begrunnelserFeilmelding: undefined,
     fritekstFeilmelding: undefined,
-    mottakerinstitusjoner: [],
-    valgtMottakerinstitusjon: null,
+    kreverMottakerinstitusjon: false,
+    valgtMottakerinstitusjon: '',
   };
 
   async componentDidMount() {
@@ -142,29 +142,11 @@ class VurderingArtikkel16Anmodning extends Component {
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
     oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1));
     oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
-
-    this.hentMottakerinstitusjoner();
   }
 
   componentWillUnmount() {
     this.props.slettData();
   }
-
-  hentMottakerinstitusjoner = async () => {
-    try {
-      const soknadsland = this.props.gyldigeSoknadsland[0].kode;
-      const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_01, soknadsland);
-      this.setState({ mottakerinstitusjoner: institusjoner });
-
-      if (institusjoner.length > 0) {
-        this.setState({ valgtMottakerinstitusjon: institusjoner[0].id });
-      }
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-  };
-
-  valgtMottakerinstitusjonHandler = e => this.setState({ valgtMottakerinstitusjon: e.target.value });
 
   lagreBehandlingerOgBestillAnmodningsperioder = async () => {
     const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder } = this.props;
@@ -251,8 +233,9 @@ class VurderingArtikkel16Anmodning extends Component {
     const lovvalgValid = this.validerUnntakFraBestemmelse();
     const begrunnelserValid = this.validerBegrunnelser();
     const fritekstValid = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
+    const mottakerinstitusjonValid = !(this.state.kreverMottakerinstitusjon && !this.state.valgtMottakerinstitusjon);
 
-    return lovvalgValid && begrunnelserValid && fritekstValid;
+    return lovvalgValid && begrunnelserValid && fritekstValid && mottakerinstitusjonValid;
   };
 
   validerOgLagreBehandling = async () => {
@@ -271,6 +254,7 @@ class VurderingArtikkel16Anmodning extends Component {
       redigerbart,
       tilstand,
       unntakFraBestemmelse,
+      soknadsland,
     } = this.props;
 
     const {
@@ -286,16 +270,15 @@ class VurderingArtikkel16Anmodning extends Component {
       begrunnelserFeilmelding,
       fritekstFeilmelding,
       lovvalgFeilmelding,
-      mottakerinstitusjoner,
+      valgtMottakerinstitusjon,
+      kreverMottakerinstitusjon,
     } = this.state;
 
     const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
 
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
-    const skalSendeSed = mottakerinstitusjoner.length > 0;
-
-    const pdfDokumenter = skalSendeSed ? [
+    const pdfDokumenter = kreverMottakerinstitusjon ? [
       { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
     ] : [
@@ -399,17 +382,18 @@ class VurderingArtikkel16Anmodning extends Component {
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
-          {
-            skalSendeSed &&
-            <Nav.Row className="mottakerinstitusjoner">
-              <Nav.Column xs="7">
-                <Nav.Select label="Velg utenlandsk institusjon som skal motta SED" onChange={this.valgtMottakerinstitusjonHandler}>
-                  <option key={uuid()} value="" disabled>Velg...</option>
-                  {mottakerinstitusjoner.map(institusjon => <option key={institusjon.id} value={institusjon.id}>{institusjon.navn}</option>)}
-                </Nav.Select>
-              </Nav.Column>
-            </Nav.Row>
-          }
+          <Nav.Row className="mottakerinstitusjoner">
+            <Nav.Column xs="7">
+              <Mottakerinstitusjonvelger
+                redigerbart={redigerbart}
+                landkode={soknadsland[0]}
+                bucType={EKV.Koder.buctyper.legislation.LA_BUC_01}
+                valgtMottakerinstitusjon={valgtMottakerinstitusjon}
+                valgtMottakerinstitusjonHandler={institusjon => this.setState({ valgtMottakerinstitusjon: institusjon })}
+                kreverMottakerinstitusjonHandler={kreverInstitusjon => this.setState({ kreverMottakerinstitusjon: kreverInstitusjon })}
+              />
+            </Nav.Column>
+          </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="6">
               {redigerbart && <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
@@ -433,6 +417,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
+  soknadsland: PT.arrayOf(PT.string).isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -459,6 +444,7 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  soknadsland: soknadSelectors.SoknadslandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
