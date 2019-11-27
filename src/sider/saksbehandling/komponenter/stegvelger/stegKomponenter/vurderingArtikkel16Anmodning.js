@@ -13,6 +13,7 @@ import * as Utils from '../../../../../utils';
 import * as KV from '../../../../../kodeverk';
 import * as Api from '../../../../../services/api';
 
+import { soknadSelectors } from '../../../../../ducks/soknad';
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
@@ -152,8 +153,9 @@ class VurderingArtikkel16Anmodning extends Component {
 
   hentMottakerinstitusjoner = async () => {
     try {
-      const soknadsland = this.props.gyldigeSoknadsland[0].kode;
-      const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_01, soknadsland);
+      const { soknadsland } = this.props;
+
+      const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_01, soknadsland[0]);
       this.setState({ mottakerinstitusjoner: institusjoner });
 
       if (institusjoner.length > 0) {
@@ -400,7 +402,7 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Column>
           </Nav.Row>
           {
-            skalSendeSed &&
+            skalSendeSed && redigerbart &&
             <Nav.Row className="mottakerinstitusjoner">
               <Nav.Column xs="7">
                 <Nav.Select label="Velg utenlandsk institusjon som skal motta SED" onChange={this.valgtMottakerinstitusjonHandler}>
@@ -433,6 +435,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
+  soknadsland: PT.arrayOf(PT.string).isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -459,6 +462,7 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  soknadsland: soknadSelectors.SoknadslandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
