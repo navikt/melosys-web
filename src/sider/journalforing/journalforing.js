@@ -362,16 +362,12 @@ class Journalforing extends Component {
 
   submitJournalforing = () => {
     const {
-      journalforing, fagsakListe, journalforingSkjemaVerdier, journalforSEDSkjemaVerdier,
+      journalforingSkjemaVerdier, journalforSEDSkjemaVerdier,
     } = this.props;
     if (journalforSEDSkjemaVerdier.brukerID) {
       this.journalforSed();
     } else {
-      /*console.log('journalforing', journalforing);
-      console.log('fagsakListe', fagsakListe);
-      console.log('journalforingSkjemaVerdier', journalforingSkjemaVerdier);*/
       const { saksnummer } = journalforingSkjemaVerdier;
-      // console.log('valgtSaksnummer', saksnummer);
       if (saksnummer === '-1') {
         this.opprettFagsak();
       } else {
