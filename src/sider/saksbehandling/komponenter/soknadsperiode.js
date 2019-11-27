@@ -50,7 +50,7 @@ export const SoknadsperiodeEndring = props => {
               />
             </Nav.Column>
             <Nav.Column xs="12">
-              <Nav.Hovedknapp disabled={!erDatoerGyldig} onClick={oppdaterPeriode}>Oppdater saksopplysningene</Nav.Hovedknapp>
+              <Nav.Hovedknapp disabled={!erDatoerGyldig} onClick={oppdaterPeriode}>Oppdater registeropplysningene</Nav.Hovedknapp>
               <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
             </Nav.Column>
           </Nav.Row>
