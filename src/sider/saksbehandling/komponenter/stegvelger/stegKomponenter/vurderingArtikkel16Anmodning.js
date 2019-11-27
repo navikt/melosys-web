@@ -381,8 +381,8 @@ class VurderingArtikkel16Anmodning extends Component {
                 visFritekstfelt &&
                 <Nav.Textarea
                   id="art16_1_anmodning"
-                  label="Utdyp særlig grunn i fritekstfeltet. Teksten vil også vises i SED, så unngå om mulig direkte tiltale med du/deg."
-                  placeholder="Vi har bedt trygdemyndighetene i [land] om en avtale for deg, fordi [fullfør setningen]"
+                  label="Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land] om en avtale for deg, fordi», og slutter med teksten du har tilføyd."
+                  placeholder="Skriv begrunnelsen her. Teksten vil også vises i SED A001, og du bør derfor unngå å bruke direkte tiltale med du/deg/din."
                   disabled={!redigerbart}
                   onBlur={fritekstFokusFlyttetHandler}
                   onChange={fritekstEndretHandler}
