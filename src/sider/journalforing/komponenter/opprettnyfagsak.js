@@ -13,8 +13,6 @@ import * as Konstanter from '../../../constants';
 import * as KV from '../../../kodeverk';
 import { formSelectors } from '../../../ducks/form';
 
-import LandVelger from '../../../felleskomponenter/skjema/landvelger';
-
 import './opprettnyfagsak.css';
 
 const uuid = require('uuid/v4');
@@ -119,7 +117,7 @@ class OpprettNyFagSak extends Component {
           <Nav.Fieldset legend="Land:">
             <Nav.Row>
               <Nav.Column xs="12">
-                <LandVelger feltNavn="journalforingSoknadsland" multiLand />
+                <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand />
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>
@@ -128,7 +126,7 @@ class OpprettNyFagSak extends Component {
               <Nav.Fieldset legend="Unntak fra lovvalgsland:">
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <LandVelger label="Velg ett land:" feltNavn="journalforingUnntakFraLovvalgsland" multiLand={false} />
+                    <Skjema.LandVelger label="Velg ett land:" feltNavn="journalforingUnntakFraLovvalgsland" multiLand={false} />
                   </Nav.Column>
                 </Nav.Row>
               </Nav.Fieldset>

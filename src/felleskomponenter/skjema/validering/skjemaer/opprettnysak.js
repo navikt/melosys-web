@@ -3,7 +3,7 @@ import * as Utils from '../../../../utils';
 import MKV from '../../../../melosyskodeverk';
 
 const {
-  object, string, mixed,
+  object, string, mixed, array,
 } = Utils.yup;
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: 'Skriv inn f.nr eller d.nr' };
@@ -23,8 +23,10 @@ const soknadsinfo = object().shape({
   tom: string()
     .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
     .required(TAST_INN_DATO),
-  land: string()
-    .required(VELG_LAND),
+  land: array()
+    .of(string())
+    .required({ _error: VELG_LAND })
+    .min(1, { _error: VELG_LAND }),
 });
 
 const opprettnysak = object().shape({

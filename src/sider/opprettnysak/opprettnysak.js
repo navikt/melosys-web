@@ -76,7 +76,7 @@ const OpprettNySak = ({
                               <Skjema.Input feltNavn="tom" label="Til" />
                             </Nav.Column>
                           </Nav.Row>
-                          <Skjema.LandVelger feltNavn="land" label="Land" />
+                          <Skjema.LandVelger multiLand feltNavn="land" label="Land" errorConfig={{ submitFailed: true }} />
                         </FormSection>
                       </Fragment>
                     }

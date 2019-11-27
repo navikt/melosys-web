@@ -5,6 +5,7 @@ import { FieldArray } from 'redux-form';
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
+import * as SkjemaUtils from '../utils';
 
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 
@@ -32,7 +33,7 @@ MultiLandEnkelt.propTypes = {
 
 function MultiLand(props) {
   const [inputVerdi, setInputVerdi] = useState('');
-  const [error, setError] = useState('');
+  const [internError, setInternError] = useState('');
 
   const reduxLeggTilLand = landkode => {
     const valgteLand = props.fields.getAll() || [];
@@ -67,7 +68,7 @@ function MultiLand(props) {
   };
 
   const tomFeilmelding = () => {
-    setError({});
+    setInternError('');
   };
 
   const dynamiskTittel = () => {
@@ -97,7 +98,7 @@ function MultiLand(props) {
       tomFeilmelding();
       setInputVerdi('');
     } else {
-      setError('Finner ikke landet du har skrevet inn.');
+      setInternError('Finner ikke landet du har skrevet inn.');
     }
   };
 
@@ -112,11 +113,10 @@ function MultiLand(props) {
     setInputVerdi(e.target.value);
   };
 
-  let { error: skjemaError = '' } = props.meta;
-  const { internLandError = '' } = error;
-  /* Vi forventer at meta.error er en string eller et objekt */
-  if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
-  const feilObjekt = skjemaError || internLandError ? { feilmelding: `${skjemaError} ${internLandError}` } : null;
+  const { meta, errorConfig } = props;
+  const skjemaError = SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig);
+
+  const feilObjekt = skjemaError || internError ? { feilmelding: `${(skjemaError && skjemaError.feilmelding) || ''} ${internError}` } : null;
   const valgteLand = props.fields.getAll() || [];
   const dynamiskFeltTittel = props.label || dynamiskTittel();
 
@@ -139,7 +139,7 @@ function MultiLand(props) {
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
         />
-        <Nav.Knapp mini className="landliste__linje__knapp">Legg til</Nav.Knapp>
+        <Nav.Knapp htmlType="button" mini className="landliste__linje__knapp">Legg til</Nav.Knapp>
       </div>
     </div>
   );
@@ -154,6 +154,7 @@ MultiLand.propTypes = {
   meta: PT.object.isRequired,
   disabled: PT.bool,
   bredde: PT.string,
+  errorConfig: PT.object,
 };
 
 MultiLand.defaultProps = {
@@ -161,6 +162,7 @@ MultiLand.defaultProps = {
   feil: {},
   disabled: false,
   bredde: 'XL',
+  errorConfig: {},
 };
 
 export { MultiLand };

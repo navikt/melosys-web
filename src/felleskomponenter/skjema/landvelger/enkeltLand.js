@@ -127,7 +127,7 @@ export class EnkeltLand extends Component {
     const skjemaError = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
     const { error: internError = '' } = this.state;
-    const feilObjekt = skjemaError || internError ? { feilmelding: `${skjemaError.feilmelding || ''} ${internError || ''}` } : null;
+    const feilObjekt = skjemaError || internError ? { feilmelding: `${(skjemaError && skjemaError.feilmelding) || ''} ${internError || ''}` } : null;
 
     return (
       <div>
