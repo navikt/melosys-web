@@ -8,13 +8,17 @@ import EnkeltSak from './enkeltSak';
 import KnyttTilSak from './knyttTilSak';
 import OpprettSak, { OpprettSakTittel } from './opprettSak';
 
+import { JOURNALFORING_HENSIKT } from '../../../constants';
 import './fagsakVelger.css';
 
 const FagsakVelger = props => {
   const {
-    sakstyper, behandlingstyper, fagsakListe,
+    sakstyper, behandlingstyper, fagsakListe, settJournalforingHensikt,
   } = props;
-
+  const notifier = async saksnummer => {
+    const hensikt = (saksnummer === '-1') ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
+    await settJournalforingHensikt(hensikt);
+  };
   const radioValg = fagsakListe.reduce((samling, sak) =>
     ([...samling, {
       value: sak.saksnummer,
@@ -32,6 +36,7 @@ const FagsakVelger = props => {
         {<Skjema.CustomRadioPanelGruppe
           feltNavn="saksnummer"
           radios={radioValg}
+          notify={notifier}
         />}
         { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
       </div>
@@ -43,6 +48,7 @@ FagsakVelger.propTypes = {
   sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   fagsakListe: PT.array.isRequired,
+  settJournalforingHensikt: PT.func.isRequired,
 };
 
 
