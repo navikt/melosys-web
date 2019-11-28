@@ -70,10 +70,10 @@ const OpprettNySak = ({
                         <FormSection name="soknadsinfo">
                           <Nav.Row>
                             <Nav.Column xs="5">
-                              <Skjema.Input feltNavn="fom" label="Fra" />
+                              <Skjema.Input datoFelt feltNavn="fom" label="Fra" />
                             </Nav.Column>
                             <Nav.Column xs="5">
-                              <Skjema.Input feltNavn="tom" label="Til" />
+                              <Skjema.Input datoFelt feltNavn="tom" label="Til" />
                             </Nav.Column>
                           </Nav.Row>
                           <Skjema.LandVelger multiLand feltNavn="land" label="Land" errorConfig={{ submitFailed: true }} />
