@@ -35,8 +35,8 @@ export const AvsenderOrganisasjon = props => {
   return (
     <div style={clsBehandlingsPanel}>
       <Nav.typo.Element>Avsender firmanavn</Nav.typo.Element>
-      <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={IDFeltTastOppHandler} />
-      <Skjema.Input feltNavn="representantNavn" label="Organisasjonsnavn" disabled />
+      <Skjema.Input feltNavn="avsenderID" label="Fullmektigens organisasjonsnummer" onKeyUp={IDFeltTastOppHandler} />
+      <Skjema.Input feltNavn="avsenderNavn" label="Organisasjonsnavn" disabled />
     </div>
   );
 };

@@ -34,7 +34,10 @@ const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
   behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
-const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => MKV.Koder.avsendertyper.ORGANISASJON === avsenderType && !erAvsenderPreutfylt;
+const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
+  const organisasjonAliasTyper = ['FULLMEKTIG', 'ARBEIDSGIVER', 'ARBEIDSGIVER_FULLMEKTIG'];
+  return organisasjonAliasTyper.includes(avsenderType) && !erAvsenderPreutfylt;
+};
 
 const journalforing = object().shape({
   brukerID: string()

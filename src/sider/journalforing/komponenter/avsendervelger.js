@@ -32,6 +32,7 @@ const AvsenderVelger = ({
         kopierBrukerTilAvsender();
         break;
       }
+      case 'ANNET':
       case 'FULLMEKTIG':
       case 'ARBEIDSGIVER':
       case 'ARBEIDSGIVER_FULLMEKTIG':
@@ -124,10 +125,10 @@ const AvsenderVelger = ({
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Annet"
-          value={MKV.Koder.avsendertyper.ORGANISASJON}
+          value="ANNET"
         />
         {
-          formValues.avsenderType === MKV.Koder.avsendertyper.ORGANISASJON &&
+          formValues.avsenderType === 'ANNET' &&
           <Fragment>
             <AvsenderAnnet />
           </Fragment>
