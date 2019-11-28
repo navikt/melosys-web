@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { reduxForm, getFormValues } from 'redux-form';
+import { reduxForm, getFormValues, change } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Ikoner from '../../../resources/images';
@@ -31,6 +31,7 @@ const JournalforingForm = props => {
     overstyrSubmit,
     behandlingstyper,
     formValues,
+    settJournalforingHensikt,
   } = props;
   const visForvaltningsMelding = formValues.saksnummer === '-1' && formValues.opprettnysak_behandlingstype === 'SOEKNAD';
 
@@ -50,6 +51,7 @@ const JournalforingForm = props => {
         sakstyper={MKV.KTObjects.sakstyper}
         behandlingstyper={behandlingstyper}
         fagsakListe={fagsakListe}
+        settJournalforingHensikt={settJournalforingHensikt}
       />
       {
         visForvaltningsMelding &&
@@ -74,6 +76,7 @@ JournalforingForm.propTypes = {
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
   overstyrSubmit: PT.func.isRequired,
+  settJournalforingHensikt: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
@@ -113,7 +116,9 @@ const mapStateToProps = state => ({
     submittable: false,
   },
 });
-
+const mapDispatchToProps = dispatch => ({
+  settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
+});
 const form = {
   form: KV.Form.JOURNALFORING,
   enableReinitialize: true,
@@ -133,4 +138,4 @@ const form = {
   onSubmit: () => {},
 };
 
-export default connect(mapStateToProps)(reduxForm(form)(JournalforingForm));
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(JournalforingForm));
