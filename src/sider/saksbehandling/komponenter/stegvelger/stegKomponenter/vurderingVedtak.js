@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { getFormValues, isValid, reduxForm } from 'redux-form';
+import { getFormValues, isValid, reduxForm, change } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
@@ -40,12 +40,12 @@ const VurderingVedtak = ({
   touch,
   formIsValid,
   formValues,
+  oppdaterMottakerinstitusjon,
+  oppdaterKreverMottakerinstitusjon,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
   // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og avklartefakta)
-  const [kreverMottakerinstitusjon, setKreverMottakerinstitusjon] = useState(false);
-  const [valgtMottakerinstitusjon, setValgtMottakerinstitusjon] = useState('');
 
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -77,17 +77,16 @@ const VurderingVedtak = ({
     pdfDokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
   }
 
-  if (kreverMottakerinstitusjon) {
+  if (formValues.kreverMottakerinstitusjon) {
     pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
   }
-
-  const validertMottakerinstitusjon = () => !(kreverMottakerinstitusjon && !valgtMottakerinstitusjon);
 
   const validerForm = () => {
     touch('tomDato');
     touch('vedtakstype');
     touch('vedtakstypebegrunnelse');
-    return formIsValid && validertMottakerinstitusjon();
+    touch('mottakerinstitusjon');
+    return formIsValid;
   };
 
   const fattVedtak = async () => {
@@ -96,7 +95,7 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
-      mottakerinstitusjon: valgtMottakerinstitusjon,
+      mottakerinstitusjon: formValues.mottakerinstitusjon,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
@@ -145,12 +144,12 @@ const VurderingVedtak = ({
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="7">
             <Mottakerinstitusjonvelger
+              feltNavn="mottakerinstitusjon"
               redigerbart={redigerbart}
               landkode={soknadsland[0]}
               bucType={EKV.Koder.buctyper.legislation.LA_BUC_04}
-              valgtMottakerinstitusjon={valgtMottakerinstitusjon}
-              valgtMottakerinstitusjonHandler={setValgtMottakerinstitusjon}
-              kreverMottakerinstitusjonHandler={setKreverMottakerinstitusjon}
+              mottakerinstitusjonHandler={oppdaterMottakerinstitusjon}
+              kreverMottakerinstitusjonHandler={oppdaterKreverMottakerinstitusjon}
             />
           </Nav.Column>
         </Nav.Row>
@@ -180,6 +179,8 @@ VurderingVedtak.propTypes = {
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
+  oppdaterMottakerinstitusjon: PT.func.isRequired,
+  oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -199,7 +200,14 @@ const mapStateToProps = state => ({
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    mottakerinstitusjon: '',
+    kreverMottakerinstitusjon: false,
   },
+});
+
+const mapDispatchToProps = dispatch => ({
+  oppdaterMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.ARTIKKEL_12_VEDTAK, 'mottakerinstitusjon', mottakerinstitusjon)),
+  oppdaterKreverMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.ARTIKKEL_12_VEDTAK, 'kreverMottakerinstitusjon', mottakerinstitusjon)),
 });
 
 const VurderingVedtakForm = reduxForm({
@@ -215,4 +223,4 @@ const VurderingVedtakForm = reduxForm({
   })(values),
 })(VurderingVedtak);
 
-export default connect(mapStateToProps)(VurderingVedtakForm);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingVedtakForm);
