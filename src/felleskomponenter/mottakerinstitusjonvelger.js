@@ -16,14 +16,14 @@ export const MottakerinstitusjonvelgerSchema = ({
   redigerbart,
   bucType,
   landkode,
-  kreverMottakerinstitusjonHandler,
+  oppdaterKreverMottakerinstitusjon,
   ...rest
 }) => {
   const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, landkode);
   const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, []);
 
   useEffect(() => {
-    kreverMottakerinstitusjonHandler(!Utils._isEmpty(mottakerinstitusjoner));
+    oppdaterKreverMottakerinstitusjon(!Utils._isEmpty(mottakerinstitusjoner));
   }, [mottakerinstitusjoner]);
 
   if (Utils._isEmpty(mottakerinstitusjoner) || !redigerbart) {
@@ -46,11 +46,10 @@ MottakerinstitusjonvelgerSchema.propTypes = {
   redigerbart: PT.bool.isRequired,
   bucType: PT.string.isRequired,
   landkode: PT.string.isRequired,
-  kreverMottakerinstitusjonHandler: PT.func.isRequired,
+  oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
 };
 
 const Mottakerinstitusjonvelger = ({
-  form,
   redigerbart,
   landkode,
   bucType,
@@ -63,7 +62,7 @@ const Mottakerinstitusjonvelger = ({
       redigerbart,
       landkode,
       bucType,
-      kreverMottakerinstitusjonHandler: oppdaterKreverMottakerinstitusjon(form),
+      oppdaterKreverMottakerinstitusjon,
     }}
   />
 );
@@ -78,8 +77,8 @@ Mottakerinstitusjonvelger.propTypes = {
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = dispatch => ({
-  oppdaterKreverMottakerinstitusjon: form => kreverMottakerinstitusjon => dispatch(change(form, KREVER_MOTTAKERINSTITUSJON, kreverMottakerinstitusjon)),
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  oppdaterKreverMottakerinstitusjon: kreverMottakerinstitusjon => dispatch(change(ownProps.form, KREVER_MOTTAKERINSTITUSJON, kreverMottakerinstitusjon)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mottakerinstitusjonvelger);
