@@ -54,7 +54,6 @@ const Mottakerinstitusjonvelger = ({
   redigerbart,
   landkode,
   bucType,
-  oppdaterMottakerinstitusjon,
   oppdaterKreverMottakerinstitusjon,
 }) => (
   <Field
@@ -64,7 +63,6 @@ const Mottakerinstitusjonvelger = ({
       redigerbart,
       landkode,
       bucType,
-      onChange: e => oppdaterMottakerinstitusjon(form)(e.target.value),
       kreverMottakerinstitusjonHandler: oppdaterKreverMottakerinstitusjon(form),
     }}
   />
@@ -75,14 +73,12 @@ Mottakerinstitusjonvelger.propTypes = {
   redigerbart: PT.bool.isRequired,
   landkode: PT.string.isRequired,
   bucType: PT.string.isRequired,
-  oppdaterMottakerinstitusjon: PT.func.isRequired,
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
 };
 
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterMottakerinstitusjon: form => mottakerinstitusjon => dispatch(change(form, MOTTAKERINSTITUSJON, mottakerinstitusjon)),
   oppdaterKreverMottakerinstitusjon: form => kreverMottakerinstitusjon => dispatch(change(form, KREVER_MOTTAKERINSTITUSJON, kreverMottakerinstitusjon)),
 });
 
