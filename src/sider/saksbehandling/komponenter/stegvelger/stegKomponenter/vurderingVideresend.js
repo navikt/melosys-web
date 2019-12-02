@@ -1,5 +1,5 @@
 import React from 'react';
-import { change, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
@@ -24,8 +24,7 @@ export const VurderingVideresend = ({
   behandlingID,
   bostedsland,
   handleSubmit,
-  oppdaterMottakerinstitusjon,
-  oppdaterKreverMottakerinstitusjon,
+  form,
 }) => {
   const pdfDokumenter = [
     {
@@ -49,12 +48,10 @@ export const VurderingVideresend = ({
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="7">
             <Mottakerinstitusjonvelger
-              feltNavn="mottakerinstitusjon"
+              form={form}
               redigerbart={redigerbart}
               landkode={bostedsland.kode}
               bucType={EKV.Koder.buctyper.legislation.LA_BUC_03}
-              mottakerinstitusjonHandler={oppdaterMottakerinstitusjon}
-              kreverMottakerinstitusjonHandler={oppdaterKreverMottakerinstitusjon}
             />
           </Nav.Column>
         </Nav.Row>
@@ -87,8 +84,7 @@ VurderingVideresend.propTypes = {
   videresendSoknad: PT.func.isRequired,
   bostedsland: MPT.Kodeverk.isRequired,
   handleSubmit: PT.func.isRequired,
-  oppdaterMottakerinstitusjon: PT.func.isRequired,
-  oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
+  form: PT.string.isRequired,
 };
 
 const videresendSoknad = (values, dispatch, props) => props.videresendSoknad(values.mottakerinstitusjon);
@@ -111,9 +107,4 @@ const mapStateToProps = state => ({
   },
 });
 
-const mapDispatchToProps = dispatch => ({
-  oppdaterMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.VURDERING_VIDERESEND, 'mottakerinstitusjon', mottakerinstitusjon)),
-  oppdaterKreverMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.VURDERING_VIDERESEND, 'kreverMottakerinstitusjon', mottakerinstitusjon)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingVideresendForm);
+export default connect(mapStateToProps)(VurderingVideresendForm);

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Field } from 'redux-form';
+import { connect } from 'react-redux';
+import { change, Field } from 'redux-form';
 import * as PT from 'prop-types';
 
 import * as Api from '../services/api';
@@ -7,6 +8,9 @@ import * as Utils from '../utils';
 
 import { useAsyncCallbackState } from '../hooks/useCallbackState';
 import { SelectWrappedComponent } from './skjema/input/select';
+
+const MOTTAKERINSTITUSJON = 'mottakerinstitusjon';
+const KREVER_MOTTAKERINSTITUSJON = 'kreverMottakerinstitusjon';
 
 export const MottakerinstitusjonvelgerSchema = ({
   redigerbart,
@@ -46,33 +50,40 @@ MottakerinstitusjonvelgerSchema.propTypes = {
 };
 
 const Mottakerinstitusjonvelger = ({
-  feltNavn,
+  form,
   redigerbart,
   landkode,
   bucType,
-  mottakerinstitusjonHandler,
-  kreverMottakerinstitusjonHandler,
+  oppdaterMottakerinstitusjon,
+  oppdaterKreverMottakerinstitusjon,
 }) => (
   <Field
-    name={feltNavn}
+    name={MOTTAKERINSTITUSJON}
     component={MottakerinstitusjonvelgerSchema}
     props={{
       redigerbart,
       landkode,
       bucType,
-      onChange: e => mottakerinstitusjonHandler(e.target.value),
-      kreverMottakerinstitusjonHandler,
+      onChange: e => oppdaterMottakerinstitusjon(form)(e.target.value),
+      kreverMottakerinstitusjonHandler: oppdaterKreverMottakerinstitusjon(form),
     }}
   />
 );
 
 Mottakerinstitusjonvelger.propTypes = {
-  feltNavn: PT.string.isRequired,
+  form: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   landkode: PT.string.isRequired,
   bucType: PT.string.isRequired,
-  mottakerinstitusjonHandler: PT.func.isRequired,
-  kreverMottakerinstitusjonHandler: PT.func.isRequired,
+  oppdaterMottakerinstitusjon: PT.func.isRequired,
+  oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
 };
 
-export default Mottakerinstitusjonvelger;
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = dispatch => ({
+  oppdaterMottakerinstitusjon: form => mottakerinstitusjon => dispatch(change(form, MOTTAKERINSTITUSJON, mottakerinstitusjon)),
+  oppdaterKreverMottakerinstitusjon: form => kreverMottakerinstitusjon => dispatch(change(form, KREVER_MOTTAKERINSTITUSJON, kreverMottakerinstitusjon)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Mottakerinstitusjonvelger);
