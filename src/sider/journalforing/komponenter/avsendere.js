@@ -9,6 +9,14 @@ import * as KV from '../../../kodeverk';
 
 import './avsendervelger.css';
 
+const clsBehandlingsPanel = {
+  background: 'lightgray',
+  border: '1px solid #b7b1a9',
+  borderRadius: '3px',
+  margin: '0.5em 0.5em 0.5em 1.5em',
+  padding: '0.25em 1.25em 0 1.25em',
+};
+
 export const AvsenderOrganisasjon = props => {
   const erGyldigOrgnummer = verdi => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
   const sjekkArbeidsgiver = async verdi => {
@@ -25,7 +33,7 @@ export const AvsenderOrganisasjon = props => {
     if (opprinneligFeltID === 'representantID') { await sjekkArbeidsgiver(value); }
   };
   return (
-    <div className="behandlingPanel">
+    <div style={clsBehandlingsPanel}>
       <Nav.typo.Element>Avsender firmanavn</Nav.typo.Element>
       <Skjema.Input feltNavn="avsenderID" label="Fullmektigens organisasjonsnummer" onKeyUp={IDFeltTastOppHandler} />
       <Skjema.Input feltNavn="avsenderNavn" label="Organisasjonsnavn" disabled />
@@ -40,7 +48,7 @@ AvsenderOrganisasjon.propTypes = {
 export const AvsenderUtenlanskTrygdemyndighet = ({
   utenlandskTrygdemyndighetLandkode, fullmektigLandEndret,
 }) => (
-  <div className="behandlingPanel">
+  <div style={clsBehandlingsPanel}>
     <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
     {
       utenlandskTrygdemyndighetLandkode &&
@@ -61,7 +69,7 @@ AvsenderUtenlanskTrygdemyndighet.defaultProps = {
 };
 
 export const AvsenderAnnet = () => (
-  <div className="behandlingPanel">
+  <div style={clsBehandlingsPanel}>
     <Skjema.Input
       feltNavn="avsenderNavn"
       label="Oppgi avsenders navn"
