@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getFormValues, isValid, reduxForm, change } from 'redux-form';
+import { getFormValues, isValid, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
@@ -40,8 +40,7 @@ const VurderingVedtak = ({
   touch,
   formIsValid,
   formValues,
-  oppdaterMottakerinstitusjon,
-  oppdaterKreverMottakerinstitusjon,
+  form,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -144,12 +143,10 @@ const VurderingVedtak = ({
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="7">
             <Mottakerinstitusjonvelger
-              feltNavn="mottakerinstitusjon"
+              form={form}
               redigerbart={redigerbart}
               landkode={soknadsland[0]}
               bucType={EKV.Koder.buctyper.legislation.LA_BUC_04}
-              mottakerinstitusjonHandler={oppdaterMottakerinstitusjon}
-              kreverMottakerinstitusjonHandler={oppdaterKreverMottakerinstitusjon}
             />
           </Nav.Column>
         </Nav.Row>
@@ -179,8 +176,7 @@ VurderingVedtak.propTypes = {
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
-  oppdaterMottakerinstitusjon: PT.func.isRequired,
-  oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
+  form: PT.string.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -205,11 +201,6 @@ const mapStateToProps = state => ({
   },
 });
 
-const mapDispatchToProps = dispatch => ({
-  oppdaterMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.ARTIKKEL_12_VEDTAK, 'mottakerinstitusjon', mottakerinstitusjon)),
-  oppdaterKreverMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.ARTIKKEL_12_VEDTAK, 'kreverMottakerinstitusjon', mottakerinstitusjon)),
-});
-
 const VurderingVedtakForm = reduxForm({
   form: KV.Form.ARTIKKEL_12_VEDTAK,
   enableReinitialize: true,
@@ -223,4 +214,4 @@ const VurderingVedtakForm = reduxForm({
   })(values),
 })(VurderingVedtak);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingVedtakForm);
+export default connect(mapStateToProps)(VurderingVedtakForm);

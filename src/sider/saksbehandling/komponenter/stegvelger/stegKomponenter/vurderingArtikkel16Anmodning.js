@@ -255,8 +255,7 @@ class VurderingArtikkel16Anmodning extends Component {
       unntakFraBestemmelse,
       soknadsland,
       formValues,
-      oppdaterMottakerinstitusjon,
-      oppdaterKreverMottakerinstitusjon,
+      form,
     } = this.props;
 
     const {
@@ -385,12 +384,10 @@ class VurderingArtikkel16Anmodning extends Component {
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
               <Mottakerinstitusjonvelger
-                feltNavn="mottakerinstitusjon"
+                form={form}
                 redigerbart={redigerbart}
                 landkode={soknadsland[0]}
                 bucType={EKV.Koder.buctyper.legislation.LA_BUC_01}
-                mottakerinstitusjonHandler={oppdaterMottakerinstitusjon}
-                kreverMottakerinstitusjonHandler={oppdaterKreverMottakerinstitusjon}
               />
             </Nav.Column>
           </Nav.Row>
@@ -436,8 +433,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   touch: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
-  oppdaterMottakerinstitusjon: PT.func.isRequired,
-  oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
+  form: PT.string.isRequired,
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
@@ -472,9 +468,4 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
   validate: values => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_anmodning)(values),
 })(VurderingArtikkel16Anmodning);
 
-const mapDispatchToProps = dispatch => ({
-  oppdaterMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.ARTIKKEL_16_ANMODNING, 'mottakerinstitusjon', mottakerinstitusjon)),
-  oppdaterKreverMottakerinstitusjon: mottakerinstitusjon => dispatch(change(KV.Form.ARTIKKEL_16_ANMODNING, 'kreverMottakerinstitusjon', mottakerinstitusjon)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16AnmodningForm);
+export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);
