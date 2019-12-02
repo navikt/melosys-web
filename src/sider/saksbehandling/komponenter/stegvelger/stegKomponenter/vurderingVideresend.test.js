@@ -17,8 +17,7 @@ describe('Vurderingvideresend', () => {
       videresendSoknad: jest.fn(),
       bostedsland: { kode: 'SE', term: 'Sverige' },
       handleSubmit: jest.fn(),
-      oppdaterMottakerinstitusjon: () => {},
-      oppdaterKreverMottakerinstitusjon: () => {},
+      form: 'form',
     };
   });
 
