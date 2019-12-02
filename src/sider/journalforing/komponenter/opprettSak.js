@@ -12,6 +12,7 @@ import * as KV from '../../../kodeverk';
 import { formSelectors } from '../../../ducks/form';
 
 import LandVelger from '../../../felleskomponenter/skjema/landvelger';
+import './opprettSak.css';
 
 export const OpprettSakTittel = () => (
   <div className="enkeltSak__meta">
@@ -20,13 +21,6 @@ export const OpprettSakTittel = () => (
 );
 const OpprettFagsak = props => {
   const { sakstyper, behandlingstyper } = props;
-  const clsBehandlingsPanel = {
-    background: 'lightgray',
-    border: '1px solid #b7b1a9',
-    borderRadius: '3px',
-    margin: '0.5em 0',
-    padding: '0.5em 0.5em 0 1.25em',
-  };
   const { journalforingSkjemaVerdier } = props;
   const { opprettnysak_behandlingstype: valgtBehandlingstype } = journalforingSkjemaVerdier;
   const alleLovvalg = [
@@ -50,7 +44,7 @@ const OpprettFagsak = props => {
   ].includes(behandlingstype);
 
   return (
-    <div style={clsBehandlingsPanel}>
+    <div className="panelramme">
       <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
         { sakstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
       </Skjema.Select>
