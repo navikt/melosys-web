@@ -15,11 +15,19 @@ import './knyttTilSak.css';
 const KnyttTilSak = props => {
   const { sak, behandlingstyper, opprettBehandling } = props;
   const { saksstatus } = sak;
-  const clsElementskrift = { 'border-bottom': 'none' };
-
+  const clsBehandlingsPanel = {
+    background: 'lightgray',
+    border: '1px solid #b7b1a9',
+    borderRadius: '3px',
+    margin: '0.5em 0',
+    padding: '0.5em',
+  };
+  const clsElementskrift = {
+    'border-bottom': 'none',
+  };
   if (saksstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
-      <div className="panelramme">
+      <div style={clsBehandlingsPanel}>
         <Elementskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.InformationCircle} className="elementTittel oversteUndertittel" style={clsElementskrift} />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
