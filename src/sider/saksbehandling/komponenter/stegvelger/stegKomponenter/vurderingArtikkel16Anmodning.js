@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { change, FieldArray, getFormValues, isValid, reduxForm } from 'redux-form';
+import { FieldArray, getFormValues, isValid, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 

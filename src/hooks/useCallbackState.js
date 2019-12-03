@@ -6,10 +6,12 @@ export const useCallbackState = (callback, defaultState = null, errorHandler = U
   const [state, setState] = useState(defaultState);
 
   useEffect(() => {
-    try {
-      setState(callback());
-    } catch (e) {
-      errorHandler(e);
+    if (deps.every(dep => !Utils._isEmpty(dep))) {
+      try {
+        setState(callback());
+      } catch (e) {
+        errorHandler(e);
+      }
     }
   }, deps);
 
@@ -20,10 +22,12 @@ export const useAsyncCallbackState = (asyncCallback, defaultState = null, errorH
   const [state, setState] = useState(defaultState);
 
   useEffect(() => {
-    try {
-      (async () => setState(await asyncCallback()))();
-    } catch (e) {
-      errorHandler(e);
+    if (deps.every(dep => !Utils._isEmpty(dep))) {
+      try {
+        (async () => setState(await asyncCallback()))();
+      } catch (e) {
+        errorHandler(e);
+      }
     }
   }, deps);
 
