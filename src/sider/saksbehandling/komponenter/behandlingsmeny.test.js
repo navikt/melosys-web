@@ -19,6 +19,7 @@ describe('behandlingsmeny', () => {
       redigerbart: true,
       visHenleggSak: true,
       visAvslagManglendeOpplysninger: true,
+      visRevurderVedtak: true,
     };
   });
 
