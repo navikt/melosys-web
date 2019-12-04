@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getFormValues } from 'redux-form';
 import PT from 'prop-types';
-import MKV from 'melosys-kodeverk';
+import MKV from '../../../melosyskodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as KV from '../../../kodeverk';
@@ -32,10 +32,10 @@ const AvsenderVelger = ({
         kopierBrukerTilAvsender();
         break;
       }
-      case 'ANNET':
-      case 'FULLMEKTIG':
-      case 'ARBEIDSGIVER':
-      case 'ARBEIDSGIVER_FULLMEKTIG':
+      case KV.AvsenderTyper.ANNET:
+      case KV.AvsenderTyper.FULLMEKTIG:
+      case KV.AvsenderTyper.ARBEIDSGIVER:
+      case KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG:
       case MKV.Koder.avsendertyper.ORGANISASJON:
       case MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET: {
         tomAvsender();

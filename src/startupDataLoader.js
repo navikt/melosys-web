@@ -8,7 +8,7 @@ export default async function loadInitialData(store) {
     window.frontendlogger.info(Utils.buildinfo());
     res = await store.dispatch(saksbehandlerOperations.hent());
     if (res && res.type === saksbehandlerTypes.OK) {
-      window.frontendlogger.info(res.data);
+      window.frontendlogger.info({ saksbehandler: res.data.brukernavn });
       await store.dispatch(oppgaverOperations.oversikt());
     }
   } catch (e) {

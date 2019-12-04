@@ -1,6 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as types from './types';
 import * as operations from './operations';
