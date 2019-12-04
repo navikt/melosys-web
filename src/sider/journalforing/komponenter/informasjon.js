@@ -160,6 +160,7 @@ class Informasjon extends Component {
       mottattDato,
       vedlegg,
       settFeltInnhold,
+      hentOgVisRepresentant,
       journalforingSkjemaVerdier,
     } = this.props;
     const { hoveddokumentTittel, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
@@ -171,21 +172,21 @@ class Informasjon extends Component {
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
-        <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
-          { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-        </Nav.Fieldset>
+        <Overskrift tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
+        <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+        <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
+        { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
 
-        <Nav.typo.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.typo.Element>
+        <Overskrift tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
         <AvsenderVelger
           className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
           tomAvsender={this.tomAvsender}
           settFeltInnhold={settFeltInnhold}
           visAvsenderSpinner={visAvsenderSpinner}
+          hentOgVisRepresentant={hentOgVisRepresentant}
         />
-        <Overskrift tekst="Dokumenter" ikon={Ikoner.IkonSak} className="undertittel oversteUndertittel" />
+        <Overskrift tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
         <Nav.Input
           label="Mottatt dato"
           type="dato"
@@ -236,6 +237,7 @@ Informasjon.propTypes = {
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
   dokumentTittel: PT.string,
