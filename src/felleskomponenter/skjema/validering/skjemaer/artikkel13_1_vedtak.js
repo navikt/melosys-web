@@ -1,6 +1,11 @@
+import * as MKV from 'melosys-kodeverk';
+
 import * as Utils from '../../../../utils';
 
 const { object, string, bool } = Utils.yup;
+
+const VELG_EN_VEDTAKSTYPE = { melding: 'Velg en vedtakstype' };
+const OPPGI_BEGRUNNELSE = { melding: 'Oppgi begrunnelse' };
 
 const artikkel13_1_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
@@ -11,6 +16,19 @@ const artikkel13_1_vedtak = object().shape({
         .required({ melding: 'Dato kreves' })
         .erGyldigDato({ melding: 'Dato kreves' })
         .periodeErGyldig({ melding: 'Ugyldig periode' }),
+    }),
+  vedtakstype: string()
+    .when('$behandlingstype', {
+      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: string()
+        .nullable()
+        .required(VELG_EN_VEDTAKSTYPE),
+    }),
+  vedtakstypebegrunnelse: string()
+    .when('$behandlingstype', {
+      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: string()
+        .required(OPPGI_BEGRUNNELSE),
     }),
 });
 

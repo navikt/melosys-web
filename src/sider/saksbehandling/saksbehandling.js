@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
@@ -14,7 +15,6 @@ import SideOppsummering from '../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
-import { saksbehandlerSelectors } from '../../ducks/saksbehandler';
 import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingsresultatOperations } from '../../ducks/behandlingsresultat';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
@@ -80,14 +80,6 @@ class Saksbehandling extends Component {
 
     try {
       await hentFagsaker(snr);
-      // TODO Fjern: logger Henter fagsak fra redux store og logger
-      Utils.logger.info({
-        loaded: true,
-        srcfile: 'saksbehandling.js@86',
-        saksbehandler: this.props.saksbehandler.brukernavn,
-        jira: 'MELOSYS-3385',
-        stack: this.props.fagsak,
-      });
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -177,6 +169,7 @@ class Saksbehandling extends Component {
       arbeidsland,
       soknadsperiodeFom,
       soknadsperiodeTom,
+      visRevurderVedtakDialogHandle,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -220,8 +213,10 @@ class Saksbehandling extends Component {
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
                   visHenleggSak
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                  visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                  visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
                 />}
                 renderBehandlingsstatus={() => <Behandlingsstatus
                   behandlingID={behandlingID}
@@ -249,7 +244,6 @@ Saksbehandling.propTypes = {
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
-  saksbehandler: MPT.Saksbehandler.isRequired,
   fagsak: MPT.Fagsak,
   soknad: MPT.Soknad,
   vilkar: PT.array, // TODO lag proptype
@@ -309,6 +303,7 @@ Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
+  visRevurderVedtakDialogHandle: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -329,7 +324,6 @@ Saksbehandling.defaultProps = {
  * @param state
  */
 const mapStateToProps = state => ({
-  saksbehandler: saksbehandlerSelectors.SaksbehandlerSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),

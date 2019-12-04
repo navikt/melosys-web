@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import { reduxForm, formValueSelector } from 'redux-form';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as Nav from '../../../../../utils/navFrontend';
@@ -62,11 +63,11 @@ export const VurderingArtikkel16MottaSvar = props => {
 
   return (
     <Fragment>
-      <Nav.Undertittel>Svar på anmodning om unntak, etter artikkel 16, nr. 1</Nav.Undertittel>
+      <Nav.typo.Undertittel>Svar på anmodning om unntak, etter artikkel 16, nr. 1</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.Element>Land:</Nav.Element>
-          <Nav.Normaltekst>{gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ')}</Nav.Normaltekst>
+          <Nav.typo.Element>Land:</Nav.typo.Element>
+          <Nav.typo.Normaltekst>{gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ')}</Nav.typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="soknadsperiodeRow">

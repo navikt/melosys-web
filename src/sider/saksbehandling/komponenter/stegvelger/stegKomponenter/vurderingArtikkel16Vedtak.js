@@ -1,21 +1,34 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
+import * as KV from '../../../../../kodeverk';
+import * as Validering from '../../../../../felleskomponenter/skjema/validering';
+import * as Skjema from '../../../../../felleskomponenter/skjema/';
 
 import Begrunnelser from '../../begrunnelser';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
+import VedtaktypeSkjema from '../../vedtaktypeskjema';
+import VedtaketypeBegrunnelseSkjema from '../../vedtaktypebegrunnelseskjema';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
+import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../../../ducks/anmodningsperiodesvar';
 import { vilkarSelectors } from '../../../../../ducks/vilkar';
 
-export const VurderingArtikkel16VedtakBegrunnelser = ({ art12_1_begrunnelser, art12_2_begrunnelser, vilkarBegrunnelser }) => {
+import './vurderingArtikkel16Vedtak.css';
+
+export const VurderingArtikkel16VedtakBegrunnelser = ({
+  art12_1_begrunnelser,
+  art12_2_begrunnelser,
+  vilkarBegrunnelser,
+}) => {
   const muligeVirksomhetBegrunnelser = [
     ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
     ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
@@ -60,20 +73,19 @@ VurderingArtikkel16VedtakBegrunnelser.propTypes = {
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
 };
 
-export const Innvilgelse = props => {
-  const {
-    redigerbart,
-    behandlingID,
-    gjeldendePeriode,
-    begrunnelseFritekst,
-  } = props;
-
+export const Innvilgelse = ({
+  redigerbart,
+  behandlingID,
+  gjeldendePeriode,
+  renderFritekstFelt,
+  vedtaksbrevFritekst,
+}) => {
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
-        begrunnelseFritekst,
+        fritekst: vedtaksbrevFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -81,7 +93,6 @@ export const Innvilgelse = props => {
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
-        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -89,10 +100,15 @@ export const Innvilgelse = props => {
 
   return (
     <Fragment>
-      <Nav.Undertittel>Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.</Nav.Undertittel>
+      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
+          { renderFritekstFelt() }
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -108,28 +124,24 @@ Innvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
-  begrunnelseFritekst: PT.string,
+  vedtaksbrevFritekst: PT.string.isRequired,
+  renderFritekstFelt: PT.func.isRequired,
 };
 
-Innvilgelse.defaultProps = {
-  begrunnelseFritekst: '',
-};
-
-export const DelvisInnvilgelse = props => {
-  const {
-    redigerbart,
-    behandlingID,
-    gjeldendePeriode,
-    begrunnelseFritekst,
-    renderBegrunnelser,
-  } = props;
-
+export const DelvisInnvilgelse = ({
+  redigerbart,
+  behandlingID,
+  gjeldendePeriode,
+  vedtaksbrevFritekst,
+  renderFritekstFelt,
+  renderBegrunnelser,
+}) => {
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
-        begrunnelseFritekst,
+        fritekst: vedtaksbrevFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -137,7 +149,6 @@ export const DelvisInnvilgelse = props => {
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
-        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -145,7 +156,7 @@ export const DelvisInnvilgelse = props => {
 
   return (
     <Fragment>
-      <Nav.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden</Nav.Undertittel>
+      <Nav.typo.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
@@ -154,6 +165,11 @@ export const DelvisInnvilgelse = props => {
       <Nav.Row>
         <Nav.Column xs="7">
           { renderBegrunnelser() }
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
+          { renderFritekstFelt() }
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -169,28 +185,24 @@ DelvisInnvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
-  begrunnelseFritekst: PT.string,
+  vedtaksbrevFritekst: PT.string.isRequired,
+  renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
 };
 
-DelvisInnvilgelse.defaultProps = {
-  begrunnelseFritekst: '',
-};
-
-export const Avslag = props => {
-  const {
-    redigerbart,
-    behandlingID,
-    begrunnelseFritekst,
-    renderBegrunnelser,
-  } = props;
-
+export const Avslag = ({
+  redigerbart,
+  behandlingID,
+  vedtaksbrevFritekst,
+  renderFritekstFelt,
+  renderBegrunnelser,
+}) => {
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
-        begrunnelseFritekst,
+        fritekst: vedtaksbrevFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -198,7 +210,6 @@ export const Avslag = props => {
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
-        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -206,10 +217,15 @@ export const Avslag = props => {
 
   return (
     <Fragment>
-      <Nav.Undertittel>Avslag</Nav.Undertittel>
+      <Nav.typo.Undertittel>Avslag</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           { renderBegrunnelser() }
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
+          { renderFritekstFelt() }
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -224,32 +240,70 @@ export const Avslag = props => {
 Avslag.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  begrunnelseFritekst: PT.string,
+  vedtaksbrevFritekst: PT.string.isRequired,
+  renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
 };
 
-Avslag.defaultProps = {
-  begrunnelseFritekst: '',
-};
+export const VurderingArtikkel16Vedtak = ({
+  lagreOgFatteVedtak,
+  redigerbart,
+  behandlingID,
+  anmodningsperiodesvar,
+  anmodningsperiode,
+  art_12_1_begrunnelser,
+  art_12_2_begrunnelser,
+  formIsValid,
+  formValues,
+  vilkarBegrunnelser,
+  behandlingstype,
+  touch,
+}) => {
+  const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
-export const VurderingArtikkel16Vedtak = props => {
-  const {
-    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodesvar, anmodningsperiode, art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser,
-  } = props;
-
-  const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
-
-  const vedKlikk = () => {
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
+  const validerForm = () => {
+    touch('vedtakstype');
+    touch('vedtakstypebegrunnelse');
+    return formIsValid;
   };
 
-  const renderBegrunnelser = () => (
+  const vedKlikk = () => {
+    if (!validerForm()) return;
+
+    lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: formValues.vedtaksbrevFritekst,
+      mottakerinstitusjon: null,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
+    });
+  };
+
+  const renderBegrunnelser = useCallback(() => (
     <VurderingArtikkel16VedtakBegrunnelser
       art12_1_begrunnelser={art_12_1_begrunnelser}
       art12_2_begrunnelser={art_12_2_begrunnelser}
       vilkarBegrunnelser={vilkarBegrunnelser}
     />
-  );
+  ), [
+    art_12_1_begrunnelser,
+    art_12_2_begrunnelser,
+    vilkarBegrunnelser,
+  ]);
+
+  const renderFritekstFelt = useCallback(() => (
+    <Skjema.Textarea
+      feltNavn="vedtaksbrevFritekst"
+      label="Fritekst til vedtaksbrev"
+      placeholder="Skriv inn tekst til vedtaksbrevet..."
+      maxLength={500}
+      visTellerFra={500}
+      disabled={!redigerbart}
+    />
+  ), [
+    formValues.vedtaksbrevFritekst,
+    redigerbart,
+  ]);
 
   const finnVedtakInnhold = svarType => {
     switch (svarType) {
@@ -257,14 +311,16 @@ export const VurderingArtikkel16Vedtak = props => {
         return <Innvilgelse
           redigerbart={redigerbart}
           behandlingID={behandlingID}
-          begrunnelseFritekst={begrunnelseFritekst}
+          renderFritekstFelt={renderFritekstFelt}
+          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
         return <DelvisInnvilgelse
           redigerbart={redigerbart}
           behandlingID={behandlingID}
-          begrunnelseFritekst={begrunnelseFritekst}
+          renderFritekstFelt={renderFritekstFelt}
+          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={endretPeriode}
           renderBegrunnelser={renderBegrunnelser}
         />;
@@ -272,7 +328,8 @@ export const VurderingArtikkel16Vedtak = props => {
         return <Avslag
           redigerbart={redigerbart}
           behandlingID={behandlingID}
-          begrunnelseFritekst={begrunnelseFritekst}
+          renderFritekstFelt={renderFritekstFelt}
+          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           renderBegrunnelser={renderBegrunnelser}
         />;
       default:
@@ -282,11 +339,26 @@ export const VurderingArtikkel16Vedtak = props => {
 
   const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType);
 
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+
   return (
     <Fragment>
       { vedtakInnhold }
       <Nav.Row>
-        <Nav.Column xs="7">
+        <Nav.Column xs="7" className="fane__fot">
+          {
+            erNyVurdering &&
+            <Nav.Row className="vedtakstype">
+              <Nav.Column xs="6">
+                <VedtaktypeSkjema
+                  redigerbart={redigerbart}
+                />
+                <VedtaketypeBegrunnelseSkjema
+                  redigerbart={redigerbart}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          }
           <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
         </Nav.Column>
       </Nav.Row>
@@ -298,24 +370,51 @@ VurderingArtikkel16Vedtak.propTypes = {
   anmodningsperiode: MPT.Periode.isRequired,
   anmodningsperiodesvar: PT.object,
   behandlingID: PT.number.isRequired,
+  behandlingstype: PT.string.isRequired,
+  formIsValid: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
   art_12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,
   art_12_2_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  touch: PT.func.isRequired,
+  formValues: PT.object,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
+  formValues: {},
   anmodningsperiodesvar: {},
 };
+
+const VurderingArtikkel16VedtakForm = reduxForm({
+  form: KV.Form.ARTIKKEL_16_1_VEDTAK,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_vedtak, {
+    context: {
+      behandlingstype: props.behandlingstype,
+    },
+  })(values),
+})(VurderingArtikkel16Vedtak);
 
 const mapStateToProps = state => ({
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
   anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
   vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
   art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
   art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
+  initialValues: {
+    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+  },
 });
 
-export default connect(mapStateToProps)(VurderingArtikkel16Vedtak);
+export default connect(mapStateToProps)(VurderingArtikkel16VedtakForm);

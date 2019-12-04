@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
@@ -88,7 +89,7 @@ class VurderingArtikkel11_4 extends Component {
 
     return (
       <div className="vurderingArtikkel11_4">
-        <Nav.Undertittel>Vurdering av artikkel 11.4</Nav.Undertittel>
+        <Nav.typo.Undertittel>Vurdering av artikkel 11.4</Nav.typo.Undertittel>
         <div>
           <Nav.Row>
             <Nav.Column xs="12">

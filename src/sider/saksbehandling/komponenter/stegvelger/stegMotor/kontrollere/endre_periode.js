@@ -1,4 +1,4 @@
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../../../../melosyskodeverk';
 
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
@@ -24,7 +24,7 @@ class EndrePeriode extends Steg {
     });
     this.handlers = {
       tilForsiden: this._propsLight.tilgjengeligeHandlers.tilForsiden,
-      vedtaEndretPeriode: this._propsLight.tilgjengeligeHandlers.vedtaEndretPeriode,
+      endreVedtak: this._propsLight.tilgjengeligeHandlers.endreVedtak,
       endreDatoOgSendLovvalgsperioderHandler: this._propsLight.tilgjengeligeHandlers.endreDatoOgSendLovvalgsperioderHandler,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),

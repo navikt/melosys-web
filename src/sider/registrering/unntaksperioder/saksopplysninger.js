@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
@@ -266,12 +267,12 @@ const Saksopplysninger = ({
       <form name="registrering" id="registrering" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.Systemtittel>Registrering av unntaksperioder</Nav.Systemtittel>
+            <Nav.typo.Systemtittel>Registrering av unntaksperioder</Nav.typo.Systemtittel>
             <br />
             <div className="vurderingEndrePeriode">
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Element>Treff ved automatisk kontroll</Nav.Element>
+                  <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
                   {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
                     <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
                 </Nav.Column>

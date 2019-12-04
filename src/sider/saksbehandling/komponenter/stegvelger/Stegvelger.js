@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import TrackVisibility from 'react-on-screen';
+
+import MKV from '../../../../melosyskodeverk';
 
 import * as MPT from '../../../../proptypes';
 import * as Api from '../../../../services/api';
@@ -157,9 +158,16 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = async (behandlingsresultatTypeKode, mottakerinstitusjon = null) => {
+  fatteVedtakHandler = async data => {
     const { behandlingID, fattVedtak } = this.props;
-    const vedtakBody = { behandlingsresultatTypeKode, mottakerinstitusjon };
+    const vedtakBody = {
+      behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
+      fritekst: data.fritekst || null,
+      mottakerinstitusjon: data.mottakerinstitusjon || null,
+      vedtakstype: data.vedtakstype,
+      revurderBegrunnelse: data.revurderBegrunnelse || null,
+    };
+
     try {
       await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
@@ -168,10 +176,10 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = (behandlingsresultatTypeKode, mottakerinstitusjon) => {
+  lagreOgFatteVedtak = data => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.fatteVedtakHandler(behandlingsresultatTypeKode, mottakerinstitusjon);
+      this.fatteVedtakHandler(data);
     });
   };
 
@@ -193,17 +201,12 @@ class Stegvelger extends Component {
     });
   };
 
-  videresendSoknad = async () => {
-    const { saksnummer } = this.props;
-
-    return Api.Fagsaker.fagsak.videresend(saksnummer);
-  };
-
-  lagreAvklartefaktaOgVideresendSoknad = () => {
+  videresendSoknad = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       try {
-        await this.props.lagreAvklartefaktaHandler();
-        await this.videresendSoknad();
+        const { saksnummer } = this.props;
+        const body = { mottakerinstitusjon };
+        await Api.Fagsaker.fagsak.videresend(saksnummer, body);
       } catch (e) {
         Utils.logger.error(e);
       } finally {
@@ -248,10 +251,16 @@ class Stegvelger extends Component {
     Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
-  vedtaEndretPeriode = begrunnelseKode => {
+  endreVedtak = data => {
     const { behandlingID } = this.props;
 
-    Api.Saksflyt.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
+    const utfyltData = {
+      behandlingstype: data.behandlingstype || null,
+      begrunnelseKode: data.begrunnelseKode || null,
+      fritekst: data.fritekst || null,
+    };
+
+    return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);
   };
 
   tilForsiden = () => {
@@ -273,13 +282,12 @@ class Stegvelger extends Component {
       slettStegData: this.slettStegData,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreAnmodningsperioderHandler: this.props.lagreAnmodningsperioderHandler,
-      vedtaEndretPeriode: this.vedtaEndretPeriode,
+      endreVedtak: this.endreVedtak,
       endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
       tilForsiden: this.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
-      lagreAvklartefakta: this.props.lagreAvklartefaktaHandler,
-      lagreAvklartefaktaOgVideresendSoknad: this.lagreAvklartefaktaOgVideresendSoknad,
+      videresendSoknad: this.videresendSoknad,
       byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
     };

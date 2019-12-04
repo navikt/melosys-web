@@ -2,7 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../melosyskodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as Nav from '../../../utils/navFrontend';
@@ -77,7 +78,7 @@ class OpprettNyFagSak extends Component {
 
     return (
       <div className="opprettnysak">
-        <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
+        <Nav.typo.Systemtittel>Opprett ny sak</Nav.typo.Systemtittel>
         <Nav.Row>
           <Nav.Column xs="6">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype" disabled>

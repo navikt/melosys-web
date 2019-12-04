@@ -21,7 +21,7 @@ export const DialogboksAvsluttSakSomBortfalt = ({
     closeButton={false}
     shouldCloseOnOverlayClick
     ariaHideApp={ariaHideApp}>
-    <Nav.Systemtittel className="overskrift">Avslutt sak som bortfalt</Nav.Systemtittel>
+    <Nav.typo.Systemtittel className="overskrift">Avslutt sak som bortfalt</Nav.typo.Systemtittel>
     <Knapperad
       bekreft={avsluttSakSomBortfalt}
       bekreftTekst="AVSLUTT SAK"

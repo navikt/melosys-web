@@ -2,7 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, getFormValues } from 'redux-form';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Validering from '../../../felleskomponenter/skjema/validering';

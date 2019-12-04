@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
@@ -39,7 +40,7 @@ class Behandling extends Component {
   render() {
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
-        <Nav.Systemtittel>Behandle sak</Nav.Systemtittel>
+        <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
         <p>Velg sakstype og behandlingstype for å få tildelt en sak.</p>
         <form className="behandling__skjema" onSubmit={this.submitOgVideresend}>
           <Nav.Row>
