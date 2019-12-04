@@ -316,7 +316,6 @@ class Journalforing extends Component {
 
   resetSkjemaFelterForEksisterendeSaker = () => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold('saksnummer', '');
     settFeltInnhold('behandlingstype', '');
   };
 
