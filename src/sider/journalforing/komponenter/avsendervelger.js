@@ -32,10 +32,10 @@ const AvsenderVelger = ({
         kopierBrukerTilAvsender();
         break;
       }
-      case 'ANNET':
-      case 'FULLMEKTIG':
-      case 'ARBEIDSGIVER':
-      case 'ARBEIDSGIVER_FULLMEKTIG':
+      case KV.AvsenderTyper.ANNET:
+      case KV.AvsenderTyper.FULLMEKTIG:
+      case KV.AvsenderTyper.ARBEIDSGIVER:
+      case KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG:
       case MKV.Koder.avsendertyper.ORGANISASJON:
       case MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET: {
         tomAvsender();
