@@ -6,6 +6,7 @@ export const useCallbackState = (callback, defaultState = null, errorHandler = U
   const [state, setState] = useState(defaultState);
 
   useEffect(() => {
+    // Kaller callback og oppdaterer state dersom alle dependencies finnes
     if (deps.every(dep => !Utils._isEmpty(dep))) {
       try {
         setState(callback());
@@ -22,6 +23,7 @@ export const useAsyncCallbackState = (asyncCallback, defaultState = null, errorH
   const [state, setState] = useState(defaultState);
 
   useEffect(() => {
+    // Kaller callback og oppdaterer state dersom alle dependencies finnes
     if (deps.every(dep => !Utils._isEmpty(dep))) {
       try {
         (async () => setState(await asyncCallback()))();
