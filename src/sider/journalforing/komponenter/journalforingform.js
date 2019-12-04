@@ -33,7 +33,7 @@ const JournalforingForm = props => {
     formValues,
     settJournalforingHensikt,
   } = props;
-  const visForvaltningsMelding = formValues.saksnummer === '-1' && formValues.opprettnysak_behandlingstype === 'SOEKNAD';
+  const visForvaltningsMelding = formValues.saksnummer === '-1' && formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
 
   return (
     <form onSubmit={overstyrSubmit}>
