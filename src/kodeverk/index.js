@@ -1,3 +1,4 @@
+import * as AvsenderTyper from './avsendertyper';
 import * as Koder from './koder';
 import * as Form from './form';
 import * as Paneltitler from './paneltitler';
@@ -31,6 +32,7 @@ const termTilKode = (verdi, muligeValg) => {
 };
 
 export {
+  AvsenderTyper,
   Koder,
   Form,
   objektTilTerm,
