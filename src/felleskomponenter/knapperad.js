@@ -6,10 +6,16 @@ import * as Nav from '../utils/navFrontend';
 import './knapperad.css';
 
 const Knapperad = ({
-  bekreft, bekreftTekst, avbryt, avbrytTekst, redigerbart, bekreftRedigerbart,
+  bekreft,
+  bekreftTekst,
+  avbryt,
+  avbrytTekst,
+  redigerbart,
+  bekreftRedigerbart,
+  spinner,
 }) => (
   <div className="container__knapperad">
-    <Nav.Hovedknapp onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart}>{ bekreftTekst }</Nav.Hovedknapp>
+    <Nav.Hovedknapp onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart} spinner={spinner}>{ bekreftTekst }</Nav.Hovedknapp>
     <Nav.Knapp onClick={avbryt} disabled={!redigerbart}>{avbrytTekst}</Nav.Knapp>
   </div>
 );
@@ -21,10 +27,12 @@ Knapperad.propTypes = {
   avbrytTekst: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   bekreftRedigerbart: PT.bool,
+  spinner: PT.bool,
 };
 
 Knapperad.defaultProps = {
   bekreftRedigerbart: true,
+  spinner: false,
 };
 
 export default Knapperad;

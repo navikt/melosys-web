@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import TrackVisibility from 'react-on-screen';
+
+import MKV from '../../../../melosyskodeverk';
 
 import * as MPT from '../../../../proptypes';
 import * as Api from '../../../../services/api';
@@ -157,9 +158,16 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = async (behandlingsresultatTypeKode, fritekst, mottakerinstitusjon = null) => {
+  fatteVedtakHandler = async data => {
     const { behandlingID, fattVedtak } = this.props;
-    const vedtakBody = { behandlingsresultatTypeKode, fritekst, mottakerinstitusjon };
+    const vedtakBody = {
+      behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
+      fritekst: data.fritekst || null,
+      mottakerinstitusjon: data.mottakerinstitusjon || null,
+      vedtakstype: data.vedtakstype,
+      revurderBegrunnelse: data.revurderBegrunnelse || null,
+    };
+
     try {
       await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
@@ -168,10 +176,10 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = (behandlingsresultatTypeKode, fritekst, mottakerinstitusjon) => {
+  lagreOgFatteVedtak = data => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.fatteVedtakHandler(behandlingsresultatTypeKode, fritekst, mottakerinstitusjon);
+      this.fatteVedtakHandler(data);
     });
   };
 
@@ -193,11 +201,12 @@ class Stegvelger extends Component {
     });
   };
 
-  videresendSoknad = () => {
+  videresendSoknad = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       try {
         const { saksnummer } = this.props;
-        await Api.Fagsaker.fagsak.videresend(saksnummer);
+        const body = { mottakerinstitusjon };
+        await Api.Fagsaker.fagsak.videresend(saksnummer, body);
       } catch (e) {
         Utils.logger.error(e);
       } finally {

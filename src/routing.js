@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { stringify } from 'qs';
 import loadable from '@loadable/component';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
+import MKV from './melosyskodeverk';
 import * as Utils from './utils';
 import * as Api from './services/api';
 
@@ -13,6 +14,7 @@ import DialogboksVenter from './felleskomponenter/dialogboks/dialogboksVenter';
 import DialogboksHenlegg from './felleskomponenter/dialogboks/dialogboksHenlegg';
 import DialogboksAvsluttSakSomBortfalt from './felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
 import DialogboksAvslagSoknad from './felleskomponenter/dialogboks/dialogboksAvslagSoknad';
+import DialogboksRevurderVedtak from './felleskomponenter/dialogboks/dialogboksRevurderVedtak';
 import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 
 import { oppgaverOperations } from './ducks/oppgaver';
@@ -53,7 +55,9 @@ const Routing = ({
   const [visAvsluttSakSomBortfaltDialog, setVisAvsluttSakSomBortfaltDialog] = useState(false);
   const [visAvslagSoknadDialog, setVisAvslagSoknadDialog] = useState(false);
   const [visOppfriskDialog, setVisOppfriskDialog] = useState(false);
+  const [visRevurderVedtak, setVisRevurderVedtak] = useState(false);
   const [oppfriskningBlokkererInnhold, setOppfriskningBlokkererInnhold] = useState(false);
+  const [venterPaRevurderVedtak, setVenterPaRevurderVedtak] = useState(false);
 
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
@@ -88,6 +92,14 @@ const Routing = ({
   const skjulOppfriskBekreftelse = () => {
     setVisOppfriskDialog(false);
     setOppfriskningBlokkererInnhold(false);
+  };
+
+  const visRevurderVedtakDialogHandle = () => {
+    setVisRevurderVedtak(true);
+  };
+
+  const skjulRevurderVedtakDialogHandle = () => {
+    setVisRevurderVedtak(false);
   };
 
   const hentBehandlingStatus = async () => {
@@ -126,6 +138,26 @@ const Routing = ({
     tilForsiden();
   };
 
+  const debouncedSetVenterPaVurderVedtak = Utils._debounce(() => setVenterPaRevurderVedtak(true), 500);
+
+  const revurderVedtak = async () => {
+    debouncedSetVenterPaVurderVedtak();
+
+    try {
+      const res = await Api.Saksflyt.Vedtak.revurder(behandlingID);
+      const { behandlingID: nyBehandlingID } = res;
+
+      history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
+      lastInnSaksopplysninger(saksnummer, nyBehandlingID);
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+
+    debouncedSetVenterPaVurderVedtak.cancel();
+    setVenterPaRevurderVedtak(false);
+    skjulRevurderVedtakDialogHandle();
+  };
+
   const tilbakeleggOppgave = async () => {
     const venterPaaDokumentasjon = true;
 
@@ -146,7 +178,13 @@ const Routing = ({
     }
   };
 
-  const avslaaSoknad = () => fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL });
+  const avslaaSoknad = () => fattVedtak(behandlingID, {
+    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
+    fritekst: null,
+    mottakerinstitusjon: null,
+    vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    revurderBegrunnelse: null,
+  });
 
   const avslaaSoknadHandle = async () => {
     try {
@@ -180,6 +218,7 @@ const Routing = ({
     apneTidligereBehandlinger,
     blokkerInnholdMedOppfriskSpinner,
     tilForsiden,
+    visRevurderVedtakDialogHandle,
   };
 
   return (
@@ -232,6 +271,14 @@ const Routing = ({
         <DialogboksAvsluttSakSomBortfalt
           avbryt={skjulAvsluttSakSomBortfaltDialogHandle}
           avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+        />
+      }
+      {
+        visRevurderVedtak &&
+        <DialogboksRevurderVedtak
+          avbryt={skjulRevurderVedtakDialogHandle}
+          bekreft={revurderVedtak}
+          spinner={venterPaRevurderVedtak}
         />
       }
     </ErrorBoundary>

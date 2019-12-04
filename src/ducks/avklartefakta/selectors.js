@@ -7,7 +7,8 @@
  */
 
 import { createSelector } from 'reselect';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as KV from '../../kodeverk';
 
