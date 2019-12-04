@@ -19,7 +19,6 @@ const AvsenderVelger = ({
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-  visAvsenderSpinner,
   journalforingAvsenderID,
   journalforingAvsenderNavn,
   erAvsenderPreutfylt,
