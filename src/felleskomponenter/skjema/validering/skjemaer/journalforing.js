@@ -23,12 +23,12 @@ const VELG_EN_AVSENDER = { melding: 'Velg en avsender' };
 const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
 const DATO_MA_VAERE_ETTER_FOM = { melding: 'Dato må være lik eller senere enn fra.' };
 
-const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) => {
-  return journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
+const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) => (
+  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
     MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
     MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
-  ].includes(behandlingstype);
-};
+  ].includes(behandlingstype)
+);
 
 const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
   kreverPeriodeOgLand(journalforingHensikt, behandlingstype) &&

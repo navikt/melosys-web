@@ -35,6 +35,7 @@ class Behandling extends Component {
     MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL,
     MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
     MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
+    MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
   ];
 
   render() {
