@@ -1,4 +1,5 @@
 import moment from 'moment';
+import momentTZ from 'moment-timezone';
 
 /**
  * Saksbehandlere har forskjellig måte å taste inn datoer på. Denne funksjonen forsøker å
@@ -76,7 +77,7 @@ function formatterDatoTilNorsk(dato, visTidspunkt) {
   const inputFormat = ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm:ss', 'DD-MM-YYYY', 'DD-MM-YYYY HH:mm'];
   const momentFormat = visTidspunkt ? 'DD.MM.YYYY HH:mm' : 'DD.MM.YYYY';
   const momentDato = moment.utc(dato, inputFormat);
-  return momentDato.isValid() ? momentDato.local().format(momentFormat) : '';
+  return momentDato.isValid() ? momentTZ(momentDato).tz('Europe/Oslo').format(momentFormat) : '';
 }
 
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare

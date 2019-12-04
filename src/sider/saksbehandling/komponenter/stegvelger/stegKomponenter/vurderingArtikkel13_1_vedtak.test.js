@@ -1,4 +1,5 @@
 import React from 'react';
+import * as MKV from 'melosys-kodeverk';
 
 import { VurderingArtikkel13_1_Vedtak } from './vurderingArtikkel13_1_vedtak';
 
@@ -19,6 +20,7 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       touch: jest.fn(),
       byggLovvalgsperioder: jest.fn(),
       lagreLovvalgsperioder: jest.fn(),
+      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     };
 
     shallow(<VurderingArtikkel13_1_Vedtak {...props} />);

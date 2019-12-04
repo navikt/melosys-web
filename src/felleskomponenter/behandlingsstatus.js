@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import moment from 'moment/moment';
 
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../melosyskodeverk';
 import * as KV from '../kodeverk';
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -59,7 +59,7 @@ const BehandlingsStatus = ({
             koder={endreBehandlingsStatusValg}
             value={behandlingsstatus}
             onChange={onChange}
-            label="Endre status på behandlingen:"
+            label="Endre behandlingsstatus:"
             redigerbar={redigerbart}
           />
           <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>Oppdater</Nav.Hovedknapp>

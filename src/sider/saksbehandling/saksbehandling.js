@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
@@ -56,7 +57,6 @@ class Saksbehandling extends Component {
   componentDidMount() {
     this.lastInnSaksopplysninger();
   }
-
   componentWillUnmount() {
     this.props.resetFagsakState();
     this.props.resetBehandlingerState();
@@ -80,7 +80,6 @@ class Saksbehandling extends Component {
 
     try {
       await hentFagsaker(snr);
-
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -170,6 +169,7 @@ class Saksbehandling extends Component {
       arbeidsland,
       soknadsperiodeFom,
       soknadsperiodeTom,
+      visRevurderVedtakDialogHandle,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -213,8 +213,10 @@ class Saksbehandling extends Component {
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
                   visHenleggSak
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                  visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                  visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
                 />}
                 renderBehandlingsstatus={() => <Behandlingsstatus
                   behandlingID={behandlingID}
@@ -301,6 +303,7 @@ Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
+  visRevurderVedtakDialogHandle: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
