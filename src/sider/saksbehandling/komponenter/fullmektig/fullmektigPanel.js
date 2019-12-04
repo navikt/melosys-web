@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../melosyskodeverk';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Ikoner from '../../../../resources/images';
@@ -13,10 +14,10 @@ import * as MPT from '../../../../proptypes';
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import Fullmektig from './fullmektig';
-
 import './fullmektig.css';
 
 const aktoerTemplate = {
@@ -34,9 +35,8 @@ class FullmektigPanel extends Component {
     fullmektige: [],
     disableLeggTilFullmektig: false,
   };
-
-  componentDidMount() {
-    this.hentFullmektige();
+  async componentDidMount() {
+    await this.hentFullmektige();
   }
 
   settRepresentant = (endretIndex, representererKode) => {
@@ -84,10 +84,9 @@ class FullmektigPanel extends Component {
   hentFullmektige = async () => {
     const { hentAktoer, fagsak } = this.props;
     const { saksnummer } = fagsak;
-
     try {
       if (!saksnummer) {
-        throw new Error('fagsak.saksnummer er undefined', 'fullmektigPanel', '80');
+        throw new Error('fagsak.saksnummer er undefined', 'fullmektigPanel', '89');
       }
       const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
       this.setState({ fullmektige });
