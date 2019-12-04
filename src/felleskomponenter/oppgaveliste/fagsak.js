@@ -26,11 +26,11 @@ const Fagsak = ({ sak }) => {
     saksnummer,
     behandlingOversikter,
   } = sak;
-
+  const VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND = 0;
   const {
     periode,
     land,
-  } = behandlingOversikter[0];
+  } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
   const tittel = `${KV.objektTilTerm(sakstype)}`;
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const customMargin = { marginLeft: '1em' };
