@@ -7,7 +7,8 @@
  */
 
 import { createSelector } from 'reselect';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as KV from '../../kodeverk';
 
@@ -294,6 +295,9 @@ export const ErIArtikkel13_1FlytSelector = createSelector(
 export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
   AvklartefaktaSelector,
   avklarteFakta => (
-    avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12))
+    avklarteFakta.some(avklartFakta => {
+      if (!avklartFakta.fakta) return false;
+      return avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
+    })
   )
 );

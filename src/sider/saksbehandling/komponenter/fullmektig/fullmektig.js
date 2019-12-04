@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../melosyskodeverk';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
@@ -64,7 +65,7 @@ function Fullmektig(props) {
         {
           org &&
           <Fragment>
-            <Nav.Element>Juridisk enhet</Nav.Element>
+            <Nav.typo.Element>Juridisk enhet</Nav.typo.Element>
             <OrganisasjonsAdresse organisasjon={org} className="adresse" />
           </Fragment>
         }

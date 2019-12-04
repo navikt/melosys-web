@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import EnkeltDato from '../../../felleskomponenter/datoOmrade/enkeltDato';
@@ -64,7 +65,7 @@ const EksisterendeSaker = props => {
 
   return (
     <div className="eksisterendeSaker">
-      <Nav.Systemtittel>Knytt til brukers eksisterende sak</Nav.Systemtittel>
+      <Nav.typo.Systemtittel>Knytt til brukers eksisterende sak</Nav.typo.Systemtittel>
       {<Skjema.CustomRadioPanelGruppe
         feltNavn="saksnummer"
         legend="Velg fra listen over saker:"

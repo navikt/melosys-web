@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../../utils/navFrontend';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar, slettVilkar } from '../../../../../../regler/vilkar';
@@ -63,7 +64,7 @@ class MultiVilkaar extends Component {
 
     return (
       <div>
-        <Nav.Undertittel>{`Fyller søker kriteriene for artikkel ${vilkaarNavn12}?`}</Nav.Undertittel>
+        <Nav.typo.Undertittel>{`Fyller søker kriteriene for artikkel ${vilkaarNavn12}?`}</Nav.typo.Undertittel>
         <div>
           <Nav.Row>
             <Nav.Column xs="12">

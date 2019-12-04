@@ -1,43 +1,49 @@
-import Ubehandlet from './ikon-steg-ubehandlet.svg';
-import Ferdig from './ikon-steg-ferdig.svg';
-import Varsel from './ikon-steg-varsel.svg';
-import Feil from './ikon-steg-feil.svg';
-import VedtakAvslatt from './ikon-vedtak-avslatt.svg';
-import VedakUbehandlet from './ikon-vedtak-ubehandlet.svg';
-import VedtakGodkjent from './ikon-vedtak-godkjent.svg';
-import Mann from './ikon-mann.svg';
-import Kvinne from './ikon-kvinne.svg';
-import Ukjentkjoenn from './ikon-ukjentkjonn.svg';
-import IkonSak from './ikon-sak.svg';
+import AccountCircle from './line-version-account-circle.svg';
 import Arbeidsgiver from './ikon-arbeidsgiver.svg';
 import Arbeidsforhold from './ikon-arbeidsforhold.svg';
-import Medlemskap from './ikon-medlemsskap.svg';
-import Inntekt from './ikon-inntekt.svg';
 import Binders from './paperclip.svg';
-import Svar from './reply.svg';
 import BrevSendt from './emailsend.svg';
-import AccountCircle from './line-version-account-circle.svg';
+import Ferdig from './ikon-steg-ferdig.svg';
+import Feil from './ikon-steg-feil.svg';
+import Filenew from './line-version-file-new-1.svg';
+import Varsel from './ikon-steg-varsel.svg';
 import Globe from './line-version-globe-1.svg';
+import IkonSak from './ikon-sak.svg';
+import Inntekt from './ikon-inntekt.svg';
+import Kvinne from './ikon-kvinne.svg';
+import Mann from './ikon-mann.svg';
+import Medlemskap from './ikon-medlemsskap.svg';
+import Pencil from './pencil-2.svg';
 import ParagraphTwoColumns from './line-version-paragraph-two-columns.svg';
+import Svar from './reply.svg';
+import Ubehandlet from './ikon-steg-ubehandlet.svg';
+import VedtakAvslatt from './ikon-vedtak-avslatt.svg';
+import VedtakGodkjent from './ikon-vedtak-godkjent.svg';
+import VedakUbehandlet from './ikon-vedtak-ubehandlet.svg';
+import Ukjentkjoenn from './ikon-ukjentkjonn.svg';
 
-export { Ubehandlet };
-export { Ferdig };
-export { Varsel };
-export { Feil };
-export { VedtakAvslatt };
-export { VedakUbehandlet };
-export { VedtakGodkjent };
-export { Mann };
-export { Kvinne };
-export { Ukjentkjoenn };
-export { Arbeidsgiver };
-export { Arbeidsforhold };
-export { Medlemskap };
-export { Inntekt };
-export { IkonSak };
-export { Binders };
-export { Svar };
-export { BrevSendt as InnBrev };
-export { AccountCircle };
-export { Globe };
-export { ParagraphTwoColumns };
+export {
+  AccountCircle,
+  Arbeidsgiver,
+  Arbeidsforhold,
+  Binders,
+  BrevSendt as InnBrev,
+  Feil,
+  Ferdig,
+  Filenew,
+  Globe,
+  IkonSak,
+  Inntekt,
+  Kvinne,
+  Mann,
+  Medlemskap,
+  Pencil,
+  ParagraphTwoColumns,
+  Svar,
+  Varsel,
+  Ubehandlet,
+  VedtakAvslatt,
+  VedtakGodkjent,
+  VedakUbehandlet,
+  Ukjentkjoenn,
+};

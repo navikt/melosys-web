@@ -8,6 +8,7 @@ const OppsummeringPropType = PT.shape({
   sakstype: Kodeverk,
   status: Kodeverk,
   registrertDato: PT.string,
+  endretDato: PT.string,
   sisteOpplysningerHentetDato: PT.string,
 });
 

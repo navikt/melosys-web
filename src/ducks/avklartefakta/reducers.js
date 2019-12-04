@@ -4,7 +4,7 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../melosyskodeverk';
 
 import { STATUS } from '../../services/utils';
 import * as Utils from '../../utils';
@@ -59,7 +59,6 @@ export default function reducer(state = initialState, action) {
         ARBEIDSLAND,
         ARBEID_SOKKEL_SKIP,
         AARSAK_ENDRING_PERIODE,
-        IKKE_BOSATT_NORGE,
       } = MKV.Koder.avklartefaktatyper;
 
       const {
@@ -96,7 +95,6 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND_TYPE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_SOKKEL_SKIP], ARBEID_SOKKEL_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AARSAK_ENDRING_PERIODE], AARSAK_ENDRING_PERIODE),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[IKKE_BOSATT_NORGE], IKKE_BOSATT_NORGE),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };

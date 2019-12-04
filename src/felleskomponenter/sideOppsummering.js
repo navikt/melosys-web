@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../melosyskodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
@@ -42,7 +43,7 @@ const SideOppsummering = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="12">
-            <Nav.Undertittel className="soknadSammendrag__header">{tittel}</Nav.Undertittel>
+            <Nav.typo.Undertittel className="soknadSammendrag__header">{tittel}</Nav.typo.Undertittel>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
