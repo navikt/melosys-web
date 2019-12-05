@@ -1,4 +1,6 @@
 import React from 'react';
+import { combineReducers, createStore } from 'redux';
+import { reducer as formReducer } from 'redux-form';
 
 import * as Nav from '../../../../../utils/navFrontend';
 
@@ -14,6 +16,8 @@ describe('Vurderingvideresend', () => {
       behandlingID: 4,
       videresendSoknad: jest.fn(),
       bostedsland: { kode: 'SE', term: 'Sverige' },
+      handleSubmit: jest.fn(),
+      form: 'form',
     };
   });
 
@@ -36,9 +40,13 @@ describe('Vurderingvideresend', () => {
 
   describe('viser en hovedknapp', () => {
     let hovedknapp = null;
+    let form = null;
 
     beforeEach(() => {
-      const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
+      const store = createStore(combineReducers({ form: formReducer }));
+      const vurderingVideresend = shallow(<VurderingVideresend {...props} store={store} />);
+
+      form = vurderingVideresend.find('form');
       hovedknapp = vurderingVideresend.find(Nav.Hovedknapp);
     });
 
@@ -50,9 +58,8 @@ describe('Vurderingvideresend', () => {
     });
 
     it('kaller videresendSoknad-prop ved klikk', () => {
-      hovedknapp.simulate('click');
-
-      expect(props.videresendSoknad).toHaveBeenCalledTimes(1);
+      form.simulate('submit');
+      expect(props.handleSubmit).toHaveBeenCalledTimes(1);
     });
   });
 });

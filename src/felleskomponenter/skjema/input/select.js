@@ -12,6 +12,7 @@ function SelectWrappedComponent({
   children,
   meta,
   emptyFieldDisabled,
+  emptyFieldText,
   ...rest
 }) {
   const { touched, active } = meta;
@@ -23,7 +24,7 @@ function SelectWrappedComponent({
   };
   return (
     <Nav.Select label={label} feil={feil} {...inputProps}>
-      <option disabled={emptyFieldDisabled} />
+      <option disabled={emptyFieldDisabled} value="">{emptyFieldText}</option>
       {children}
     </Nav.Select>
   );
@@ -34,6 +35,7 @@ SelectWrappedComponent.defaultProps = {
   input: undefined,
   meta: undefined,
   emptyFieldDisabled: true,
+  emptyFieldText: '',
 };
 
 SelectWrappedComponent.propTypes = {
@@ -42,6 +44,7 @@ SelectWrappedComponent.propTypes = {
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   emptyFieldDisabled: PT.bool,
+  emptyFieldText: PT.string,
 };
 
 function Select({

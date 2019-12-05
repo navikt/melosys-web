@@ -23,18 +23,22 @@ const VELG_EN_AVSENDER = { melding: 'Velg en avsender' };
 const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
 const DATO_MA_VAERE_ETTER_FOM = { melding: 'Dato må være lik eller senere enn fra.' };
 
-const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) =>
+const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) => (
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
     MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
     MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
-  ].includes(behandlingstype);
+  ].includes(behandlingstype)
+);
 
 const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
   kreverPeriodeOgLand(journalforingHensikt, behandlingstype) &&
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
   behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
-const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => MKV.Koder.avsendertyper.ORGANISASJON === avsenderType && !erAvsenderPreutfylt;
+const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
+  const organisasjonAliasTyper = ['FULLMEKTIG', 'ARBEIDSGIVER', 'ARBEIDSGIVER_FULLMEKTIG'];
+  return organisasjonAliasTyper.includes(avsenderType) && !erAvsenderPreutfylt;
+};
 
 const journalforing = object().shape({
   brukerID: string()
