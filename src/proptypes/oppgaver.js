@@ -20,6 +20,9 @@ const SaksbehandlingOppgavePropType = PT.shape({
     behandlingType: MPT.Kodeverk,
     behandlingsstatus: MPT.Kodeverk,
     endretDato: PT.string,
+    erUnderOppdatering: PT.bool,
+    registrertDato: PT.string,
+    svarFrist: PT.string,
   }),
   aktivTil: PT.string,
   periode: MPT.Periode,
@@ -28,7 +31,6 @@ const SaksbehandlingOppgavePropType = PT.shape({
   versjon: PT.number,
   ansvarligID: PT.string,
   sistOppdatert: PT.string,
-  erUnderOppdatering: PT.bool,
 });
 const MineOppgaverPropType = PT.shape({
   journalforing: PT.arrayOf(JournalforingOppgavePropType),
