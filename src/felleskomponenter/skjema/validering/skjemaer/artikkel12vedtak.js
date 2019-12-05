@@ -2,10 +2,11 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../../../utils';
 
-const { object, string } = Utils.yup;
+const { object, string, bool } = Utils.yup;
 
 const VELG_EN_VEDTAKSTYPE = { melding: 'Velg en vedtakstype' };
 const OPPGI_BEGRUNNELSE = { melding: 'Oppgi begrunnelse' };
+const MOTTAKERINSTITUSJON_KREVES = { melding: 'Mottakerinstitusjon kreves' };
 
 const artikkel12_vedtak = object().shape({
   vedtakstype: string()
@@ -21,6 +22,11 @@ const artikkel12_vedtak = object().shape({
       then: string()
         .required(OPPGI_BEGRUNNELSE),
     }),
+  kreverMottakerinstitusjon: bool().required(),
+  mottakerinstitusjon: string().when('kreverMottakerinstitusjon', {
+    is: true,
+    then: string().required(MOTTAKERINSTITUSJON_KREVES),
+  }),
 });
 
 export { artikkel12_vedtak };
