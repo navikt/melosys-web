@@ -1,0 +1,14 @@
+version: '3'
+services:
+  frontend:
+    image: melosys-fe:test
+    # build: .
+    ports:
+      - 8080:8080
+    links:
+      - redis
+    volumes:
+      - ./build:/app
+
+  redis:
+    image: redis
