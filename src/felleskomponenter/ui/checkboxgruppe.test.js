@@ -1,5 +1,5 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../melosyskodeverk';
 import * as Nav from '../../utils/navFrontend';
 
 import Checkboxgruppe from './checkboxgruppe';

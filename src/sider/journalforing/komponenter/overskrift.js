@@ -8,9 +8,9 @@ export const Overskrift = ({
   tekst,
   className,
 }) => (
-  <Nav.Undertittel className={className}>
+  <Nav.typo.Undertittel className={className}>
     <img src={ikon} height={25} alt={tekst} />{tekst}
-  </Nav.Undertittel>
+  </Nav.typo.Undertittel>
 );
 
 Overskrift.propTypes = {
@@ -20,5 +20,24 @@ Overskrift.propTypes = {
 };
 
 Overskrift.defaultProps = {
+  className: undefined,
+};
+
+export const Elementskrift = ({
+  ikon,
+  tekst,
+  className,
+}) => (
+  <Nav.typo.Element className={className}>
+    <img src={ikon} height={20} alt={tekst} />{tekst}
+  </Nav.typo.Element>
+);
+
+Elementskrift.propTypes = {
+  ikon: PT.any.isRequired,
+  tekst: PT.string.isRequired,
+  className: PT.string,
+};
+Elementskrift.defaultProps = {
   className: undefined,
 };

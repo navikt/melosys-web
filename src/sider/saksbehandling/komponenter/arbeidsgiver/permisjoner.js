@@ -31,7 +31,7 @@ const Permisjoner = ({ permisjoner }) => {
 
   return permisjoner.length > 0 ? (
     <div className="permisjoner">
-      <Nav.Undertittel>Permisjoner</Nav.Undertittel>
+      <Nav.typo.Undertittel>Permisjoner</Nav.typo.Undertittel>
       <Tabell
         kolonneNavn={['Startdato', 'Sluttdato', 'Type', 'Prosent']}
         tabellData={permisjonerArrayed}

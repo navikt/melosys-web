@@ -1,8 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import * as EKV from 'eessi-kodeverk';
+
+import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
@@ -246,13 +247,13 @@ const Saksopplysninger = ({
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.Systemtittel>Behandle anmodning om unntak</Nav.Systemtittel>
+            <Nav.typo.Systemtittel>Behandle anmodning om unntak</Nav.typo.Systemtittel>
             <br />
             <div className="vurderUnntaksperiode">
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Element>Land:</Nav.Element>
-                  <Nav.Normaltekst>{KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})</Nav.Normaltekst>
+                  <Nav.typo.Element>Land:</Nav.typo.Element>
+                  <Nav.typo.Normaltekst>{KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})</Nav.typo.Normaltekst>
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
@@ -262,7 +263,7 @@ const Saksopplysninger = ({
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Element>Treff ved automatisk kontroll</Nav.Element>
+                  <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
                   {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
                     <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
                 </Nav.Column>

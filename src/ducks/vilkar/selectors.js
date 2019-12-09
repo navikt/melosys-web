@@ -6,7 +6,8 @@
  */
 
 import { createSelector } from 'reselect';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 // selector(s)
 export const VilkarSelector = createSelector(

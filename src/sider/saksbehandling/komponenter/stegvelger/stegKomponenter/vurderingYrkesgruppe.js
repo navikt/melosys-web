@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
@@ -59,7 +60,7 @@ const VurderingYrkesgruppe = props => {
   const fakta = hentFaktaVerdi(yrkesgruppe);
   return (
     <div>
-      <Nav.Undertittel>Hva er søkerens yrkessituasjon?</Nav.Undertittel>
+      <Nav.typo.Undertittel>Hva er søkerens yrkessituasjon?</Nav.typo.Undertittel>
       <Nav.Fieldset legend="">
         <Nav.Radio
           name="yrkesgruppe"

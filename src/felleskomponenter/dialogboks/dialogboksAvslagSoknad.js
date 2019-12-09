@@ -1,7 +1,8 @@
 import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Ikon from '../../resources/images';
@@ -48,7 +49,7 @@ export const DialogboksAvslagSoknad = props => {
           style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
         />
         <div>
-          <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
+          <Nav.typo.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.typo.Systemtittel>
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
           }

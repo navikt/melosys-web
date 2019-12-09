@@ -1,4 +1,6 @@
 import React from 'react';
+import { combineReducers, createStore } from 'redux';
+import { reducer as formReducer } from 'redux-form';
 
 import * as Nav from '../../../../../utils/navFrontend';
 
@@ -12,32 +14,11 @@ describe('Vurderingvideresend', () => {
     props = {
       redigerbart: true,
       behandlingID: 4,
-      tilstand: {
-        bostedslandFakta: {
-          avklartefaktaKode: 'IKKE_BOSATT_NORGE',
-          begrunnelseFritekst: 'Søknad skal ikke behandles i Norge',
-          begrunnelseKoder: [],
-          fakta: null,
-          referanse: 'IKKE_BOSATT_NORGE',
-          subjektID: null,
-        },
-      },
-      oppdaterData: jest.fn(),
-      slettData: jest.fn(),
-      lagreAvklartefaktaOgVideresendSoknad: jest.fn(),
-      lagreAvklartefakta: jest.fn(),
+      videresendSoknad: jest.fn(),
+      bostedsland: { kode: 'SE', term: 'Sverige' },
+      handleSubmit: jest.fn(),
+      form: 'form',
     };
-  });
-
-  it('viser en Nav textarea med korrekte props', () => {
-    const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
-
-    const textarea = vurderingVideresend.find(Nav.Textarea);
-    const textareaProps = textarea.props();
-
-    expect(textarea).toHaveLength(1);
-    expect(textareaProps.disabled).toBe(!props.redigerbart);
-    expect(textareaProps.value).toBe(props.tilstand.bostedslandFakta.begrunnelseFritekst);
   });
 
   it('viser en PdfLenkeListe med korrekte props', () => {
@@ -48,7 +29,6 @@ describe('Vurderingvideresend', () => {
 
     expect(pdfLenkeListe).toHaveLength(1);
     expect(pdfLenkeListeProps.behandlingID).toBe(props.behandlingID);
-    expect(pdfLenkeListeProps.vedKlikk).toBe(props.lagreAvklartefakta);
   });
 
   it('viser ikke pdfLenkeListe dersom ikke redigerbart', () => {
@@ -58,14 +38,28 @@ describe('Vurderingvideresend', () => {
     expect(vurderingVideresend.find(PdfLenkeListe)).toHaveLength(0);
   });
 
-  it('viser en Nav hovedknapp med korrekte props', () => {
-    const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
+  describe('viser en hovedknapp', () => {
+    let hovedknapp = null;
+    let form = null;
 
-    const hovedknapp = vurderingVideresend.find(Nav.Hovedknapp);
-    const hovedknappProps = hovedknapp.props();
+    beforeEach(() => {
+      const store = createStore(combineReducers({ form: formReducer }));
+      const vurderingVideresend = shallow(<VurderingVideresend {...props} store={store} />);
 
-    expect(hovedknapp).toHaveLength(1);
-    expect(hovedknappProps.disabled).toBe(!props.redigerbart);
-    expect(hovedknappProps.onClick).toBe(props.lagreAvklartefaktaOgVideresendSoknad);
+      form = vurderingVideresend.find('form');
+      hovedknapp = vurderingVideresend.find(Nav.Hovedknapp);
+    });
+
+    it('har korrekte props', () => {
+      const hovedknappProps = hovedknapp.props();
+
+      expect(hovedknapp).toHaveLength(1);
+      expect(hovedknappProps.disabled).toBe(!props.redigerbart);
+    });
+
+    it('kaller videresendSoknad-prop ved klikk', () => {
+      form.simulate('submit');
+      expect(props.handleSubmit).toHaveBeenCalledTimes(1);
+    });
   });
 });

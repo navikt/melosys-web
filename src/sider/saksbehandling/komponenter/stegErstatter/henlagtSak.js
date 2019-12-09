@@ -1,5 +1,6 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../../../melosyskodeverk';
 
 import * as KV from '../../../../kodeverk';
 import * as MPT from '../../../../proptypes';

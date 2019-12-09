@@ -1,16 +1,18 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { FieldArray, reduxForm } from 'redux-form';
+import { FieldArray, getFormValues, isValid, reduxForm } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import * as EKV from 'eessi-kodeverk';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
 import * as Utils from '../../../../../utils';
 import * as KV from '../../../../../kodeverk';
 
+import { soknadSelectors } from '../../../../../ducks/soknad';
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
@@ -19,8 +21,7 @@ import { behandlingsperioderSelectors } from '../../../../../ducks/behandlingspe
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../../../utils/dato';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import * as Mui from '../../../../../felleskomponenter/ui';
-
+import Mottakerinstitusjonvelger from '../../../../../felleskomponenter/mottakerinstitusjonvelger';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../../../regler/vilkar';
 import { konverterLovvalgsbestemmelseTilStegData } from '../../../../../regler/lovvalgsbestemmelser';
@@ -30,6 +31,7 @@ import {
 } from '../../../../../regler/unntakfrabestemmelse';
 
 import './vurderingArtikkel16Anmodning.css';
+import * as Validering from '../../../../../felleskomponenter/skjema/validering';
 
 const uuid = require('uuid/v4');
 
@@ -146,10 +148,10 @@ class VurderingArtikkel16Anmodning extends Component {
   }
 
   lagreBehandlingerOgBestillAnmodningsperioder = async () => {
-    const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder } = this.props;
+    const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder, formValues } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgBestillAnmodningsperioder();
+      lagreOgBestillAnmodningsperioder(formValues.mottakerinstitusjon);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -200,8 +202,7 @@ class VurderingArtikkel16Anmodning extends Component {
     this.setState({ begrunnelserFeilmelding: undefined });
 
     const { oppdaterData } = this.props;
-
-    await oppdaterData(lagBegrunnelse('art16_1_anmodning', event.value));
+    await oppdaterData(lagBegrunnelse('art16_1_anmodning', [event.target.value]));
     this.lagreVilkar();
   };
 
@@ -226,12 +227,14 @@ class VurderingArtikkel16Anmodning extends Component {
 
   validerAlt = () => {
     const { begrunnelseKoder } = this.props.tilstand.art16_1;
+    const { touch, formIsValid } = this.props;
 
     const lovvalgValid = this.validerUnntakFraBestemmelse();
     const begrunnelserValid = this.validerBegrunnelser();
     const fritekstValid = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
+    touch('mottakerinstitusjon');
 
-    return lovvalgValid && begrunnelserValid && fritekstValid;
+    return lovvalgValid && begrunnelserValid && fritekstValid && formIsValid;
   };
 
   validerOgLagreBehandling = async () => {
@@ -250,6 +253,9 @@ class VurderingArtikkel16Anmodning extends Component {
       redigerbart,
       tilstand,
       unntakFraBestemmelse,
+      soknadsland,
+      formValues,
+      form,
     } = this.props;
 
     const {
@@ -271,13 +277,17 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
-    const pdfDokumenter = [
+    const pdfDokumenter = formValues.kreverMottakerinstitusjon ? [
+      { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
+    ] : [
       { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
-      { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
     ];
 
     const { art16_1: { begrunnelseFritekst, begrunnelseKoder }, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt } = tilstand;
+
+    const begrunnelseKode = begrunnelseKoder ? begrunnelseKoder[0] : '';
 
     const visFritekstfelt = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
@@ -286,7 +296,7 @@ class VurderingArtikkel16Anmodning extends Component {
     /* eslint-disable max-len */
     return (
       <div>
-        <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
+        <Nav.typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.typo.Undertittel>
         <div className="artikkel16">
           {
             erIDirekteTilArtikkel16Flyt &&
@@ -308,12 +318,12 @@ class VurderingArtikkel16Anmodning extends Component {
           }
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.Element>
-              <Nav.Normaltekst>{landSomTekstListe}</Nav.Normaltekst>
+              <Nav.typo.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{landSomTekstListe}</Nav.typo.Normaltekst>
             </Nav.Column>
             <Nav.Column xs="6">
-              <Nav.Element type="element">Antall måneder:</Nav.Element>
-              <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
+              <Nav.typo.Element type="element">Antall måneder:</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{antallManeder}</Nav.typo.Normaltekst>
               <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
             </Nav.Column>
           </Nav.Row>
@@ -334,16 +344,17 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Mui.ListevelgerFlervalg
-                disabled={!redigerbart}
+              <Nav.Select
                 feil={begrunnelserFeilmelding}
-                muligeValg={muligeBegrunnelseValg}
-                tillatFritekst
-                label="Legg til begrunnelse:"
                 onChange={begrunnelserEndringHandler}
-                defaultElementer={begrunnelseKoder}
-                data_cy="begrunnelse"
-              />
+                value={begrunnelseKode}
+                disabled={!redigerbart}
+                label="Legg til begrunnelse:"
+                data-cy="begrunnelse"
+              >
+                <option key={uuid()} value="">Velg...</option>
+                { muligeBegrunnelseValg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+              </Nav.Select>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -352,8 +363,8 @@ class VurderingArtikkel16Anmodning extends Component {
                 visFritekstfelt &&
                 <Nav.Textarea
                   id="art16_1_anmodning"
-                  label="Utdyp særlig grunn i fritekstfeltet. Teksten vil også vises i SED, så unngå om mulig direkte tiltale med du/deg."
-                  placeholder="Vi har bedt trygdemyndighetene i [land] om en avtale for deg, fordi [fullfør setningen]"
+                  label="Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land] om en avtale for deg, fordi», og slutter med teksten du har tilføyd."
+                  placeholder="Skriv begrunnelsen her. Teksten vil også vises i SED A001, og du bør derfor unngå å bruke direkte tiltale med du/deg/din."
                   disabled={!redigerbart}
                   onBlur={fritekstFokusFlyttetHandler}
                   onChange={fritekstEndretHandler}
@@ -370,6 +381,16 @@ class VurderingArtikkel16Anmodning extends Component {
               <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
                 <TidligereMedlemskap oppdaterOgLagreBehandlinger={this.props.oppdaterOgLagreBehandlinger} redigerbart={redigerbart} medlemskap={medlemskap} />
               </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="mottakerinstitusjoner">
+            <Nav.Column xs="7">
+              <Mottakerinstitusjonvelger
+                form={form}
+                redigerbart={redigerbart}
+                landkode={soknadsland[0]}
+                bucType={EKV.Koder.buctyper.legislation.LA_BUC_01}
+              />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -395,6 +416,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
+  soknadsland: PT.arrayOf(PT.string).isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -410,22 +432,32 @@ VurderingArtikkel16Anmodning.propTypes = {
     art16_1: PT.object.isRequired,
   }).isRequired,
   byggAnmodningsperioderHandler: PT.func.isRequired,
+  touch: PT.func.isRequired,
+  formIsValid: PT.bool.isRequired,
+  formValues: PT.object,
+  form: PT.string.isRequired,
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
   unntakFraBestemmelse: '',
   anmodningsperiode: {},
+  formValues: {},
 };
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  soknadsland: soknadSelectors.SoknadslandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_16_ANMODNING)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   initialValues: {
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
+    mottakerinstitusjon: '',
+    kreverMottakerinstitusjon: false,
   },
 });
 
@@ -435,6 +467,7 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  validate: values => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_anmodning)(values),
 })(VurderingArtikkel16Anmodning);
 
 export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);

@@ -6,7 +6,7 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../melosyskodeverk';
 
 import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';

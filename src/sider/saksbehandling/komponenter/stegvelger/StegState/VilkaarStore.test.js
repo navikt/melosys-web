@@ -1,4 +1,4 @@
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../../../melosyskodeverk';
 import VilkaarStore from './VilkaarStore';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../../../regler/vilkar';
 

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import classnames from 'classnames';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
@@ -96,7 +97,7 @@ const VurderingBostedsland = props => {
 
   return (
     <div className="vurderingBostedsland">
-      <Nav.Undertittel>Vurdering av bosted</Nav.Undertittel>
+      <Nav.typo.Undertittel>Vurdering av bosted</Nav.typo.Undertittel>
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">
