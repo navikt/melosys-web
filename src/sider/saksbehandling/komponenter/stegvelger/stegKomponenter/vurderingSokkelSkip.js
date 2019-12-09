@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import uuid from 'uuid';
+
+import MKV from '../../../../../melosyskodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
@@ -280,7 +281,7 @@ class VurderingSokkelSkip extends React.Component {
     /* eslint-disable max-len */
     return (
       <div className="vurderingSokkelSkip">
-        <Nav.Undertittel>Vurdering av sokkel eller skip</Nav.Undertittel>
+        <Nav.typo.Undertittel>Vurdering av sokkel eller skip</Nav.typo.Undertittel>
         <SokkelSkipListe
           sokkelEllerSkipListe={sokkelEllerSkipListe}
           installasjonArbeidslandListe={installasjonArbeidslandListe}

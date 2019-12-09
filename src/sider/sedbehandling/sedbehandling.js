@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../melosyskodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils';

@@ -27,7 +27,7 @@ const VurderingYrkesaktivitet = props => {
   const fakta = hentFaktaVerdi(yrkesaktivitet);
   return (
     <div>
-      <Nav.Undertittel>Hva slags type yrkesaktivitet skal søkeren utøve?</Nav.Undertittel>
+      <Nav.typo.Undertittel>Hva slags type yrkesaktivitet skal søkeren utøve?</Nav.typo.Undertittel>
       <Nav.Fieldset legend="">
         <Nav.Radio
           name="yrkesaktivitet"

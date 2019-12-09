@@ -18,16 +18,16 @@ const GeneriskAdresse = ({ adresse }) => {
   } = adresse;
 
   const {
-    gatenavn, gatenummer, husnummer, husbokstav,
+    gatenavn, husnummer, husbokstav,
   } = gateadresse;
 
   const landNavn = (typeof land === 'string' ? land : KV.objektTilTermUtenFeilmelding(land));
-  const visGate = gatenavn || gatenummer || husnummer || husbokstav;
+  const visGate = gatenavn || husnummer || husbokstav;
 
-  return (gatenavn || gatenummer || husnummer || husbokstav || land || postnr || poststed) ? (
+  return (gatenavn || husnummer || husbokstav || land || postnr || poststed) ? (
     <address className="generiskadresse">
       { visGate &&
-        <div>{gatenavn} {gatenummer} {husnummer} {husbokstav}</div>
+        <div>{gatenavn} {husnummer} {husbokstav}</div>
       }
       {
         (postnr || poststed) &&

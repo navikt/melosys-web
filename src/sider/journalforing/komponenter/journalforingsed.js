@@ -62,31 +62,31 @@ const JournalforingSED = ({
       <Nav.Row>
         <Nav.Column xs="6">
           <Skjema.Input onBlur={hentBrukerMedID} className="fetTekst" label="Brukers f.nr eller d.nr" feltNavn="brukerID" />
-          <Nav.Element>Brukers fulle navn</Nav.Element>
-          <Nav.Normaltekst>
+          <Nav.typo.Element>Brukers fulle navn</Nav.typo.Element>
+          <Nav.typo.Normaltekst>
             { brukerSpinner && <Nav.NavFrontendSpinner /> }
             { sammensattNavn }
-          </Nav.Normaltekst>
+          </Nav.typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Overskrift tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
       <Nav.Row>
         <Nav.Column xs="6">
-          <Nav.Element>Avsender ID</Nav.Element>
-          <Nav.Normaltekst>{avsenderID}</Nav.Normaltekst>
-          <Nav.Element>Avsenders navn</Nav.Element>
-          <Nav.Normaltekst>{avsenderNavn}</Nav.Normaltekst>
+          <Nav.typo.Element>Avsender ID</Nav.typo.Element>
+          <Nav.typo.Normaltekst>{avsenderID}</Nav.typo.Normaltekst>
+          <Nav.typo.Element>Avsenders navn</Nav.typo.Element>
+          <Nav.typo.Normaltekst>{avsenderNavn}</Nav.typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Overskrift tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" />
       <Nav.Row>
         <Nav.Column xs="5">
-          <Nav.Element>Sakstype</Nav.Element>
-          <Nav.Normaltekst>{sakstype.term}</Nav.Normaltekst>
+          <Nav.typo.Element>Sakstype</Nav.typo.Element>
+          <Nav.typo.Normaltekst>{sakstype.term}</Nav.typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="7">
-          <Nav.Element>Behandlingstype</Nav.Element>
-          <Nav.Normaltekst>{behandlingstype.term}</Nav.Normaltekst>
+          <Nav.typo.Element>Behandlingstype</Nav.typo.Element>
+          <Nav.typo.Normaltekst>{behandlingstype.term}</Nav.typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
     </form>
@@ -117,6 +117,7 @@ const form = {
 const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING_SED)(state),
   initialValues: {
+    submittable: true,
     brukerID: journalforingSelectors.BrukerIDSelector(state),
   },
 });

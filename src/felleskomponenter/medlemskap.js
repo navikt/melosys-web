@@ -81,7 +81,7 @@ function MedlemskapGruppe(props) {
 
   return (
     <div>
-      <Nav.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.Undertittel>
+      <Nav.typo.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
       <section aria-label="Panel for medlemskap">
         { perioder.map(enkeltPeriode => <MedlemskapEnkeltPeriode key={uuid()} enkeltPeriode={enkeltPeriode} />) }
         { perioder.length === 0 && '(ingen funnet)'}

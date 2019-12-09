@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
@@ -13,7 +13,7 @@ const UnntakPeriodeBegrunnelse = kode => {
 const RegisterkontrollTreff = ({ begrunnelseKode }) => (
   <div className="registerkontroll-listeelement">
     <Nav.Ikoner kind="advarsel-sirkel-fyll" size="24" />
-    <Nav.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.Normaltekst>
+    <Nav.typo.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.typo.Normaltekst>
   </div>
 );
 

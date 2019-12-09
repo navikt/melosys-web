@@ -4,7 +4,7 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../melosyskodeverk';
 
 import { STATUS } from '../../services/utils';
 

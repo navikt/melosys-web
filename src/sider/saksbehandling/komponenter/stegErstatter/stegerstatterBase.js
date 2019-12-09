@@ -9,7 +9,7 @@ const StegerstatterBase = ({ tittel, beskrivelse }) => (
   <section className="panelSeksjon stegerstatter">
     <Nav.Panel>
       <Nav.Row>
-        <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
+        <Nav.typo.Systemtittel>{tittel}</Nav.typo.Systemtittel>
       </Nav.Row>
       <p>{ beskrivelse }</p>
     </Nav.Panel>

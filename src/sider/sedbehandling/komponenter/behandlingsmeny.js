@@ -22,7 +22,7 @@ const Behandlingsmeny = ({
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp> }
       <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
       { visOppfriskSaksopplysninger &&
-        <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppdater saksopplysninger</Nav.Knapp>}
+        <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppdater registeropplysninger</Nav.Knapp>}
       { redigerbart && visHenleggSak && <Nav.Knapp mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvsluttSakSomBortfaltDialogHandle}>Avslutt sak som bortfalt</Nav.Knapp>}
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvslagSoknadDialogHandle}>Avslå søknad pga. manglende opplysninger</Nav.Knapp>}

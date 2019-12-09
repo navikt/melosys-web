@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../../../melosyskodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
 import * as MPT from '../../../../../proptypes';
@@ -180,7 +180,7 @@ const VurderingForretningssted = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av artikkel 13.1b)</Nav.Undertittel>
+      <Nav.typo.Undertittel>Vurdering av artikkel 13.1b)</Nav.typo.Undertittel>
       <Nav.Fieldset legend="Vurder hvor virksomhetene har forretningssted">
         <Forretningssteder {...tilstand}{...props} />
       </Nav.Fieldset>
