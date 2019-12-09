@@ -89,9 +89,11 @@ describe('16.1 anmodning om unntak flyt', () => {
       .select(MKV.Terms.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1);
     cy.get(aktivtStegSelector(8))
       .find('[data-cy="begrunnelse"]')
-      .find('input')
-      .type(MKV.Terms.begrunnelser.art16_1_anmodning.KORT_OPPDRAG_RETUR_NORSK_AG)
-      .type('{enter}');
+      .select(MKV.Terms.begrunnelser.art16_1_anmodning.KORT_OPPDRAG_RETUR_NORSK_AG);
+    cy.get(aktivtStegSelector(8))
+      .find('select')
+      .last()
+      .selectNth(1);
     cy.get(aktivtStegSelector(8))
       .contains('Send brevene')
       .click();
