@@ -5,8 +5,6 @@ import PT from 'prop-types';
 import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
 
-// import Statistikk from '../felles-komponenter/forside/statistikk';
-import Journalforing from './komponenter/journalforing';
 import Behandling from './komponenter/behandling';
 import MineOppgaver from './komponenter/mineoppgaver';
 import SokSkjema from './komponenter/sokskjema';
@@ -25,7 +23,6 @@ const Forside = props => {
           </Nav.Column>
           <Nav.Column className="hoyrekolonne" xs="5">
             <SokSkjema />
-            <Journalforing />
             <Behandling />
           </Nav.Column>
         </Nav.Row>
