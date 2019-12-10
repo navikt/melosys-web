@@ -2,12 +2,11 @@ FROM navikt/nginx-oidc:latest
 
 ENV APP_DIR="/app" \
   APP_CALLBACK_PATH="/openid_connect_login" \
-  APP_PATH_PREFIX="/" \
-  APP_URL_MELOSYS="http://localhost:3002" \
-  APP_PORT="8080" \
-  REDIS_HOST="redis"
+  APP_PATH_PREFIX="/melosys" \
+  APP_URL_MELOSYS="http://melosys" \
+  APP_PORT="3000"
 
-COPY /build /app
-COPY proxy.nginx /nginx/proxy.nginx
+COPY ./build /app/melosys
+COPY ./nais/proxy.nginx /nginx/proxy.nginx
 
-EXPOSE 9000 8080
+EXPOSE 3000
