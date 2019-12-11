@@ -38,9 +38,14 @@ jobs:
           CI: true
 
       - name: build
-        run: npm run build
+        env:
+          BRANCH_NAME: ${{ GITHUB_REF }}
+        run: |
+          BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
+          npm run build
 
       - name: Upload bundle
+        if: contains(github.ref, 'SPRINT-')
         uses: actions/upload-artifact@v1
         with:
           name: bundle
@@ -66,7 +71,7 @@ jobs:
           NAME: melosys-web
         run: |
           echo "docker.pkg.github.com"/"$GITHUB_REPOSITORY"/"$NAME" > .docker_image
-          echo "$(node -p "require('./package.json').version")-$(git rev-parse --short HEAD)" > .docker_tag
+          echo "$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)" > .docker_tag
 
       - name: Build docker image
         run: docker build -t $(cat .docker_image):$(cat .docker_tag) .
@@ -79,7 +84,7 @@ jobs:
       - name: Push Docker image
         run: docker push $(cat .docker_image):$(cat .docker_tag)
 
-      - name: Deploy til t8
+      - name: Deploy to t8
         uses: navikt/deployment-cli/action@0.4.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -88,3 +93,22 @@ jobs:
           cluster: dev-fss
           team: teammelosys
           resources: nais/t8/app.yaml
+
+      - name: Slack Notification (deploy success)
+        if: success()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':clap: melosys-web ble deployet til t8 :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Slack Notification (deploy failure)
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_COLOR: danger
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':crying_cat_face: melosys-web kunne ikke deployes til t8'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

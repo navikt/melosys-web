@@ -221,12 +221,12 @@ const Routing = ({
     visRevurderVedtakDialogHandle,
   };
 
-  const utenPrefix = props => ({ pathname: props.location.pathname.replace('/melosys', '') });
+  const pathUtenPrefix = props => ({ pathname: props.location.pathname.replace('/melosys', '') });
 
   return (
     <ErrorBoundary message={SideLoadingFailMessage}>
       <Switch location={location}>
-        <Route path="/melosys" render={props => <Redirect to={utenPrefix(props)} />} />
+        <Route path="/melosys" render={props => <Redirect to={pathUtenPrefix(props)} />} />
         <Route exact path="/" component={ForsideLoadable} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
