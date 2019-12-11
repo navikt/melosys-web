@@ -92,6 +92,7 @@
     "yup": "^0.27.0"
   },
   "disabled-homepage": "http://eesi2.no/melosys",
+  "homepage": "http://./melosys",
   "scripts": {
     "echo:env": "node ./scripts/echoenv.js",
     "patch:init": "node ./scripts/patchinit.js",
