@@ -47,9 +47,7 @@ jobs:
           path: ./build
 
   deploy-t8:
-    # if: github.ref == 'refs/heads/SPRINT-*'
-    # if: github.ref == 'refs/heads/MELOSYS-3414_*'
-    if: contains(github.ref, 'MELOSYS-3414')
+    if: contains(github.ref, 'SPRINT-')
     needs: build
     runs-on: ubuntu-latest
 
