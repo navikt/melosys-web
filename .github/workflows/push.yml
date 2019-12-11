@@ -38,9 +38,8 @@ jobs:
           CI: true
 
       - name: build
-        env:
-          BRANCH_NAME: ${{ GITHUB_REF }}
         run: |
+          BRANCH_NAME=$GITHUB_REF
           BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
           npm run build
 
