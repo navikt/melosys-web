@@ -19,8 +19,9 @@ export const MottakerinstitusjonvelgerSchema = ({
   oppdaterKreverMottakerinstitusjon,
   ...rest
 }) => {
-  const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, landkode);
-  const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [landkode, bucType]);
+  const landkodeIkkeNorge = landkode === 'NO' ? '' : landkode;
+  const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, landkodeIkkeNorge);
+  const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [landkodeIkkeNorge, bucType]);
 
   useEffect(() => {
     oppdaterKreverMottakerinstitusjon(!Utils._isEmpty(mottakerinstitusjoner));
