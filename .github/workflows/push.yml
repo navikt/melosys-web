@@ -91,7 +91,7 @@ jobs:
         with:
           cluster: dev-fss
           team: teammelosys
-          resources: nais/t8/redis.yaml, nais/t8/app.yaml
+          resources: ['nais/t8/redis.yaml', 'nais/t8/app.yaml']
 
       - name: Slack Notification (deploy success)
         if: success()
