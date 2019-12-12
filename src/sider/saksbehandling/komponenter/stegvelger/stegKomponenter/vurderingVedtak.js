@@ -129,7 +129,7 @@ const VurderingVedtak = ({
           </Nav.Row>
         }
         <Nav.Row className="fritekst">
-          <Nav.Column xs="8">
+          <Nav.Column xs="12">
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekst til vedtaksbrev"
