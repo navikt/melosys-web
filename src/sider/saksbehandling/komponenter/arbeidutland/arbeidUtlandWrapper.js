@@ -15,7 +15,19 @@ import './arbeidUtland.css';
 
 class ArbeidUtlandWrapper extends Component {
   leggTilArbeidHandler = () => {
-    this.props.fields.push({});
+    this.props.fields.push({
+      adresse: {
+        gatenavn: '',
+        husnummer: '',
+        landkode: '',
+        postnummer: '',
+        poststed: '',
+        region: '',
+      },
+      foretakNavn: '',
+      foretakOrgnr: '',
+      arbeidUtlandHjemmekontor: '',
+    });
   };
 
   slettArbeidHandler = indeks => {
