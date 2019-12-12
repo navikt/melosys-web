@@ -12,6 +12,7 @@ const saksopplysninger = object().shape({
       postnummer: string().nullable().required({ melding: 'Postnummer kreves', panel: KV.Paneltitler.arbeidUtland }),
       landkode: string().nullable().required({ melding: 'Land kreves', panel: KV.Paneltitler.arbeidUtland }),
       poststed: string().nullable().required({ melding: 'Poststed kreves', panel: KV.Paneltitler.arbeidUtland }),
+      gatenavn: string().nullable().required({ melding: 'Gatenavn kreves' }),
     }),
   })),
   maritimtArbeid: array().of(object().shape({

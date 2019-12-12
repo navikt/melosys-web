@@ -43,15 +43,6 @@ import { formatterDatoTilNorsk } from '../../../../utils/dato';
 
 
 const Saksopplysninger = props => {
-  const lagreSoknadHandler = async () => {
-    const {
-      behandlingID, valid, sendSoknad, soknad,
-    } = props;
-    if (valid) {
-      await sendSoknad(behandlingID, soknad);
-    }
-  };
-
   const overstyrSubmit = event => {
     event.preventDefault();
   };
@@ -112,7 +103,6 @@ const Saksopplysninger = props => {
         lagreAnmodningsperioderHandler={props.lagreAnmodningsperioderHandler}
         oppdaterOgLagreBehandlingerHandler={props.oppdaterOgLagreBehandlingerHandler}
         lagreAllData={props.lagreAllData}
-        lagreSoknadHandler={lagreSoknadHandler}
         oppdaterLokalSoknadHandler={oppdaterLokalSoknadHandler}
         begrunnelser={MKV.KTObjects.begrunnelser}
         landkoder={MKV.KTObjects.landkoder}
