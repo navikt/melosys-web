@@ -83,7 +83,7 @@ jobs:
       - name: Push Docker image
         run: docker push $(cat .docker_image):$(cat .docker_tag)
 
-      - name: Deploy to t8
+      - name: Deploy redis to t8
         uses: navikt/deployment-cli/action@0.4.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -91,16 +91,28 @@ jobs:
         with:
           cluster: dev-fss
           team: teammelosys
-          resources: ['nais/t8/redis.yaml', 'nais/t8/app.yaml']
+          resources: nais/t8/redis.yaml
+
+      - name: Deploy melosys-web to t8
+        uses: navikt/deployment-cli/action@0.4.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWAIT_SECONDS: 0
+        with:
+          cluster: dev-fss
+          team: teammelosys
+          resources: nais/t8/app.yaml
 
       - name: Slack Notification (deploy success)
         if: success()
         uses: rtCamp/action-slack-notify@v1.0.0
         env:
+          SLACK_COLOR: good
           SLACK_USERNAME: Github Actions
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ':clap: melosys-web ble deployet til t8 :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
 
       - name: Slack Notification (deploy failure)
         if: failure()
@@ -111,3 +123,4 @@ jobs:
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ':crying_cat_face: melosys-web kunne ikke deployes til t8'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
