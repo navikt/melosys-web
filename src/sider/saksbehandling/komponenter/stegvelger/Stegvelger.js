@@ -25,6 +25,7 @@ import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
+import { soknadOperations } from '../../../../ducks/soknad';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
@@ -138,19 +139,17 @@ class Stegvelger extends Component {
       unntakfrabestemmelse,
     } = stegStores;
 
+    const bestemmelser = {
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
+    };
+
     await Promise.all([
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder({
-        lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-        tilleggbestemmelse: tilleggbestemmelse.hent(),
-        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-      }),
-      this.props.oppdaterAnmodningsPerioder({
-        lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-        tilleggbestemmelse: tilleggbestemmelse.hent(),
-        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-      }),
+      this.props.oppdaterLovvalgperioder(bestemmelser),
+      this.props.oppdaterAnmodningsPerioder(bestemmelser),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -348,7 +347,6 @@ class Stegvelger extends Component {
       artikkel16_anmodning_skjema,
       soknad_skjema,
       oppdaterPerioderState,
-      oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
       redigerbart,
       lagreVilkarHandler,
@@ -360,7 +358,6 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
-      await oppdaterLokalSoknadHandler();
       await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler();
@@ -500,6 +497,7 @@ const mapDispatchToProps = dispatch => ({
   hentAnmodningsperioder: behandlingID => dispatch(anmodningsperioderOperations.hent(behandlingID)),
   oppdaterAnmodningsPerioder: lovvalgsbestemmelse => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(lovvalgsbestemmelse)),
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
+  lagreSoknadHandler: () => dispatch(soknadOperations.lagre()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

@@ -100,7 +100,19 @@ export default function reducer(state = initialState, action) {
           fullmektigRegion: dokument.fullmektigRegion,
           fullmektigLandkode: dokument.fullmektigLand,
         },
-        arbeidUtland: dokument.arbeidUtland,
+        arbeidUtland: dokument.arbeidUtland.map(arbeidUtland => ({
+          adresse: {
+            gatenavn: arbeidUtland.adresse.gatenavn,
+            husnummer: arbeidUtland.adresse.husnummer || null,
+            landkode: arbeidUtland.adresse.landkode,
+            postnummer: arbeidUtland.adresse.postnummer,
+            poststed: arbeidUtland.adresse.poststed,
+            region: arbeidUtland.adresse.region || null,
+          },
+          foretakNavn: arbeidUtland.foretakNavn || null,
+          foretakOrgnr: arbeidUtland.foretakOrgnr || null,
+          arbeidUtlandHjemmekontor: arbeidUtland.arbeidUtlandHjemmekontor || null,
+        })),
         juridiskArbeidsgiverNorge: {
           antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
           utsendteNeste12Mnd: dokument.utsendteNeste12Mnd ? strengTilInt(dokument.utsendteNeste12Mnd) : null,
