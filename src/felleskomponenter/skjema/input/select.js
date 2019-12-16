@@ -2,6 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
+import * as SkjemaUtils from '../utils';
+
 import '../skjema.css';
 
 function SelectWrappedComponent({
@@ -10,16 +12,19 @@ function SelectWrappedComponent({
   children,
   meta,
   emptyFieldDisabled,
+  emptyFieldText,
   ...rest
 }) {
-  const feil = meta.error ? { feilmelding: meta.error } : undefined;
+  const { touched, active } = meta;
+  const feil = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
+
   const inputProps = {
     ...input,
     ...rest,
   };
   return (
     <Nav.Select label={label} feil={feil} {...inputProps}>
-      <option disabled={emptyFieldDisabled} />
+      <option disabled={emptyFieldDisabled} value="">{emptyFieldText}</option>
       {children}
     </Nav.Select>
   );
@@ -30,6 +35,7 @@ SelectWrappedComponent.defaultProps = {
   input: undefined,
   meta: undefined,
   emptyFieldDisabled: true,
+  emptyFieldText: '',
 };
 
 SelectWrappedComponent.propTypes = {
@@ -38,6 +44,7 @@ SelectWrappedComponent.propTypes = {
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   emptyFieldDisabled: PT.bool,
+  emptyFieldText: PT.string,
 };
 
 function Select({

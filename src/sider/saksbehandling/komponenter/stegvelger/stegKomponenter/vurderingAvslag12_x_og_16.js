@@ -1,16 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+import MKV from '../../../../../melosyskodeverk';
 
+import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
+import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as VilkarSelectors from '../../../../../ducks/vilkar/selectors';
+import * as Validering from '../../../../../felleskomponenter/skjema/validering';
+
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
+import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import Begrunnelser from '../../begrunnelser';
-
-import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
+import VedtaktypeSkjema from '../../vedtaktypeskjema';
+import VedtaketypeBegrunnelseSkjema from '../../vedtaktypebegrunnelseskjema';
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
@@ -19,18 +25,20 @@ const VurderingAvslag12_x_og_16 = ({
   art16_1_fritekst,
   vilkarBegrunnelser,
   behandlingID,
-  fattVedtak,
+  lagreOgFatteVedtak,
   redigerbart,
+  behandlingstype,
+  touch,
+  formIsValid,
+  formValues,
 }) => {
-  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
-
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
-        fritekst: vedtaksbrevFritekst,
+        fritekst: formValues.vedtaksbrevFritekst,
       },
     },
     {
@@ -48,6 +56,26 @@ const VurderingAvslag12_x_og_16 = ({
     ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
     ...MKV.KTObjects.begrunnelser.bosted,
   ];
+
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+
+  const validerForm = () => {
+    touch('vedtakstype');
+    touch('vedtakstypebegrunnelse');
+    return formIsValid;
+  };
+
+  const avslaa = () => {
+    if (!validerForm()) return;
+
+    lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: formValues.vedtaksbrevFritekst,
+      mottakerinstitusjon: null,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
+    });
+  };
 
   return (
     <div>
@@ -84,18 +112,31 @@ const VurderingAvslag12_x_og_16 = ({
       }
       <Nav.Row>
         <Nav.Column xs="8">
-          <Nav.Textarea
+          <Skjema.Textarea
+            feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            value={vedtaksbrevFritekst}
-            onChange={setVedtaksbrevFritekst}
             maxLength={500}
+            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>
+      {
+        erNyVurdering &&
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <VedtaktypeSkjema
+              redigerbart={redigerbart}
+            />
+            <VedtaketypeBegrunnelseSkjema
+              redigerbart={redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst)}>
+      <Nav.Hovedknapp disabled={!redigerbart} onClick={avslaa}>
         Fatt vedtak
       </Nav.Hovedknapp>
     </div>
@@ -109,14 +150,32 @@ VurderingAvslag12_x_og_16.propTypes = {
   art16_1_fritekst: PT.string,
   vilkarBegrunnelser: PT.array.isRequired,
   behandlingID: PT.number.isRequired,
-  fattVedtak: PT.func.isRequired,
+  lagreOgFatteVedtak: PT.func.isRequired,
   redigerbart: PT.bool,
+  behandlingstype: PT.string.isRequired,
+  formIsValid: PT.bool.isRequired,
+  touch: PT.func.isRequired,
+  formValues: PT.object,
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {
   art16_1_fritekst: '',
   redigerbart: true,
+  formValues: {},
 };
+
+const VurderingAvslagArtikkel12Og16Form = reduxForm({
+  form: KV.Form.AVSLAG_ARTIKKEL_12_OG_16,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.avslag_artikkel_12_og_16, {
+    context: {
+      behandlingstype: props.behandlingstype,
+    },
+  })(values),
+})(VurderingAvslag12_x_og_16);
 
 const mapStateToProps = state => ({
   valgte_art_12_1_begrunnelser: VilkarSelectors.art12_1_begrunnelserSelector(state),
@@ -125,6 +184,14 @@ const mapStateToProps = state => ({
   art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
   vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  formIsValid: isValid(KV.Form.AVSLAG_ARTIKKEL_12_OG_16)(state),
+  formValues: getFormValues(KV.Form.AVSLAG_ARTIKKEL_12_OG_16)(state),
+  initialValues: {
+    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+  },
 });
 
-export default connect(mapStateToProps)(VurderingAvslag12_x_og_16);
+export default connect(mapStateToProps)(VurderingAvslagArtikkel12Og16Form);

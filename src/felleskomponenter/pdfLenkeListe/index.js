@@ -54,7 +54,15 @@ class PdfLenkeListe extends Component {
   };
 
   lagDokumentLenke(dokument) {
-    return (<button onClick={() => this.klikk(dokument)} key={uuid()}>{dokument.navn}</button>);
+    return (
+      <button
+        onClick={() => this.klikk(dokument)}
+        key={uuid()}
+        type="button"
+      >
+        {dokument.navn}
+      </button>
+    );
   }
 
   featureToggleLenker = dokumenter => dokumenter.filter(dokument => !(dokument.erSed && !this.state.kanForhandsviseSed));

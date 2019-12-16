@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { autofill, setSubmitFailed, change, getFormSyncErrors, touch, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+
+import MKV from '../../melosyskodeverk';
 
 import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
@@ -145,13 +146,13 @@ class Journalforing extends Component {
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
-
+    const organisasjonAliaser = ['FULLMEKTIG', 'ARBEIDSGIVER', 'ARBEIDSGIVER_FULLMEKTIG', MKV.Koder.avsendertyper.ORGANISASJON];
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
       saksnummer,
       behandlingstypeKode,
       ingenVurdering,
-      avsenderType,
+      avsenderType: organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
       ...vasketJournalforing,
     };
 
@@ -316,7 +317,6 @@ class Journalforing extends Component {
 
   resetSkjemaFelterForEksisterendeSaker = () => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold('saksnummer', '');
     settFeltInnhold('behandlingstype', '');
   };
 
@@ -360,14 +360,38 @@ class Journalforing extends Component {
     }
   };
 
-  behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
-    .filter(({ kode }) =>
-      kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED);
+  submitJournalforing = () => {
+    const {
+      journalforingSkjemaVerdier, journalforSEDSkjemaVerdier,
+    } = this.props;
+    if (journalforSEDSkjemaVerdier.brukerID) {
+      this.journalforSed();
+    } else {
+      const { saksnummer } = journalforingSkjemaVerdier;
+      if (saksnummer === '-1') {
+        this.opprettFagsak();
+      } else {
+        this.knyttTilEksisterendeSak();
+      }
+    }
+  };
+  erikkeSubmittable = () => {
+    const { journalforSEDSkjemaVerdier } = this.props;
+    if (journalforSEDSkjemaVerdier.brukerID) {
+      return false;
+    }
+    return Utils._isEmpty(this.props.journalforingSkjemaVerdier.saksnummer);
+  };
+  behandlingstyper = [
+    ...MKV.KTObjects.behandlinger.behandlingstyper
+      .filter(({ kode }) =>
+        kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED),
+  ];
 
   render() {
     const {
@@ -380,8 +404,9 @@ class Journalforing extends Component {
       },
       fagsakListe,
     } = this.props;
+
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant, journalforSed,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
@@ -398,7 +423,7 @@ class Journalforing extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="4">
-              <h1>Journalføring</h1>
+              <Nav.typo.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.typo.Sidetittel>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -433,14 +458,14 @@ class Journalforing extends Component {
                       />
                     }
                     <div className="journalforing__fotknapper">
-                      {
-                        /*
-                          TODO: Quick fix, viser denne knappen for Sed-journalføring.
-                          Denne knappen burde også brukes for det vanlige journalføringsbildet når vi skriver om journalføringen.
-                        */
-                        visSedJournalforing && <Nav.Hovedknapp onClick={journalforSed}>JOURNALFØR</Nav.Hovedknapp>
-                      }
-                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                      <Nav.Row>
+                        <Nav.Column xs="6">
+                          <Nav.Hovedknapp disabled={this.erikkeSubmittable()} onClick={this.submitJournalforing}>JOURNALFØR</Nav.Hovedknapp>
+                        </Nav.Column>
+                        <Nav.Column xs="6">
+                          <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt Journalføring</Nav.Knapp>
+                        </Nav.Column>
+                      </Nav.Row>
                     </div>
                   </div>
                 </Nav.Panel>

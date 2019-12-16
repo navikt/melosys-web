@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import TrackVisibility from 'react-on-screen';
+
+import MKV from '../../../../melosyskodeverk';
 
 import * as MPT from '../../../../proptypes';
 import * as Api from '../../../../services/api';
@@ -24,6 +25,7 @@ import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
+import { soknadOperations } from '../../../../ducks/soknad';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
@@ -137,19 +139,17 @@ class Stegvelger extends Component {
       unntakfrabestemmelse,
     } = stegStores;
 
+    const bestemmelser = {
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
+    };
+
     await Promise.all([
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder({
-        lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-        tilleggbestemmelse: tilleggbestemmelse.hent(),
-        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-      }),
-      this.props.oppdaterAnmodningsPerioder({
-        lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-        tilleggbestemmelse: tilleggbestemmelse.hent(),
-        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-      }),
+      this.props.oppdaterLovvalgperioder(bestemmelser),
+      this.props.oppdaterAnmodningsPerioder(bestemmelser),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -157,9 +157,16 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = async (behandlingsresultatTypeKode, fritekst, mottakerinstitusjon = null) => {
+  fatteVedtakHandler = async data => {
     const { behandlingID, fattVedtak } = this.props;
-    const vedtakBody = { behandlingsresultatTypeKode, fritekst, mottakerinstitusjon };
+    const vedtakBody = {
+      behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
+      fritekst: data.fritekst || null,
+      mottakerinstitusjon: data.mottakerinstitusjon || null,
+      vedtakstype: data.vedtakstype,
+      revurderBegrunnelse: data.revurderBegrunnelse || null,
+    };
+
     try {
       await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
@@ -168,10 +175,10 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = (behandlingsresultatTypeKode, fritekst, mottakerinstitusjon) => {
+  lagreOgFatteVedtak = data => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.fatteVedtakHandler(behandlingsresultatTypeKode, fritekst, mottakerinstitusjon);
+      this.fatteVedtakHandler(data);
     });
   };
 
@@ -193,11 +200,12 @@ class Stegvelger extends Component {
     });
   };
 
-  videresendSoknad = () => {
+  videresendSoknad = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       try {
         const { saksnummer } = this.props;
-        await Api.Fagsaker.fagsak.videresend(saksnummer);
+        const body = { mottakerinstitusjon };
+        await Api.Fagsaker.fagsak.videresend(saksnummer, body);
       } catch (e) {
         Utils.logger.error(e);
       } finally {
@@ -339,7 +347,6 @@ class Stegvelger extends Component {
       artikkel16_anmodning_skjema,
       soknad_skjema,
       oppdaterPerioderState,
-      oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
       redigerbart,
       lagreVilkarHandler,
@@ -351,7 +358,6 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
-      await oppdaterLokalSoknadHandler();
       await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler();
@@ -491,6 +497,7 @@ const mapDispatchToProps = dispatch => ({
   hentAnmodningsperioder: behandlingID => dispatch(anmodningsperioderOperations.hent(behandlingID)),
   oppdaterAnmodningsPerioder: lovvalgsbestemmelse => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(lovvalgsbestemmelse)),
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
+  lagreSoknadHandler: () => dispatch(soknadOperations.lagre()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
