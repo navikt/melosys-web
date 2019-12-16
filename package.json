@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "2.0.2",
+  "version": "2.1.1",
   "description": "Medlemsskap og lovvalgssystem",
   "author": {
     "name": "are.bjolseth@nav.no"
@@ -25,6 +25,7 @@
     "melosys-kodeverk": "5.14.16",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
+    "moment-timezone": "^0.5.27",
     "nav-frontend-alertstriper": "^3.0.7",
     "nav-frontend-alertstriper-style": "^2.0.6",
     "nav-frontend-chevron": "^1.0.10",
@@ -91,6 +92,7 @@
     "yup": "^0.27.0"
   },
   "disabled-homepage": "http://eesi2.no/melosys",
+  "homepage": "http://./melosys",
   "scripts": {
     "echo:env": "node ./scripts/echoenv.js",
     "patch:init": "node ./scripts/patchinit.js",

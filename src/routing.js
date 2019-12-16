@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { stringify } from 'qs';
 import loadable from '@loadable/component';
@@ -152,7 +152,7 @@ const Routing = ({
       const res = await Api.Saksflyt.Vedtak.revurder(behandlingID);
       const { behandlingID: nyBehandlingID } = res;
 
-      history.push(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
+      history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
       lastInnSaksopplysninger(saksnummer, nyBehandlingID);
     } catch (e) {
       Utils.logger.error(e);
@@ -227,9 +227,12 @@ const Routing = ({
     visRevurderVedtakDialogHandle,
   };
 
+  const pathUtenPrefix = props => ({ pathname: props.location.pathname.replace('/melosys', '') });
+
   return (
     <ErrorBoundary message={SideLoadingFailMessage}>
       <Switch location={location}>
+        <Route path="/melosys" render={props => <Redirect to={pathUtenPrefix(props)} />} />
         <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />

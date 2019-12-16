@@ -72,6 +72,7 @@ const form = {
 const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING_SED)(state),
   initialValues: {
+    submittable: true,
     brukerID: journalforingSelectors.BrukerIDSelector(state),
   },
 });

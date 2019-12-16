@@ -57,7 +57,6 @@ class Saksbehandling extends Component {
   componentDidMount() {
     this.lastInnSaksopplysninger();
   }
-
   componentWillUnmount() {
     this.props.resetFagsakState();
     this.props.resetBehandlingerState();
@@ -81,7 +80,6 @@ class Saksbehandling extends Component {
 
     try {
       await hentFagsaker(snr);
-
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -219,6 +217,7 @@ class Saksbehandling extends Component {
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
                   visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
+                  visRevurderVedtak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                 />}
                 renderBehandlingsstatus={() => <Behandlingsstatus
                   behandlingID={behandlingID}
