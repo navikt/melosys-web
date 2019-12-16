@@ -6,7 +6,7 @@ import Select from './input/select';
 import Textarea from './textarea/textarea';
 import { Fieldset } from '../../utils/navFrontend';
 import * as Validering from './validering';
-import CustomRadioPanelGruppe from './customRadioPanelGruppe';
+import CustomRadioPanelGruppe, { CustomRadioPanelElement } from './customRadioPanelGruppe';
 import ListeVelger from './listevelger';
 import LandVelger from './landvelger';
 
@@ -20,6 +20,7 @@ export {
   Validering,
   Fieldset,
   CustomRadioPanelGruppe,
+  CustomRadioPanelElement,
   ListeVelger,
   LandVelger,
 };

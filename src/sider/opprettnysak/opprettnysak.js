@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, getFormValues, FormSection } from 'redux-form';
@@ -14,6 +14,7 @@ import * as Utils from '../../utils';
 
 import Brukernavnskjema from '../../felleskomponenter/brukernavnskjema';
 import Knapperad from '../../felleskomponenter/knapperad';
+import EnkeltDato from '../../felleskomponenter/datoOmrade/enkeltDato';
 
 import MKV from '../../melosyskodeverk';
 
@@ -25,8 +26,45 @@ const OpprettNySak = ({
   tilForsiden,
   handleSubmit,
 }) => {
+  const [oppgaver, setOppgaver] = useState([]);
+
   const { behandlingstype } = formValues;
   const soknadErValgt = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
+
+  const hentOppgaver = async event => {
+    const brukerID = event.target.value;
+
+    if (Validering.erGyldigFnr(brukerID) || Validering.erGyldigDnr(brukerID)) {
+      try {
+        const oppgaverResponse = await Api.Oppgaver.sok(brukerID);
+        setOppgaver(oppgaverResponse);
+      } catch (e) {
+        Utils.logger.error(e);
+        setOppgaver([]);
+      }
+    } else {
+      setOppgaver([]);
+    }
+  };
+
+  const radioValg = oppgaver.map(oppgave => {
+    const innhold = <Skjema.CustomRadioPanelElement
+      tittel={oppgave.tema}
+      data={[
+        { term: 'Oppgavetype:', description: oppgave.oppgavetype },
+        { term: 'Registrert dato:', description: <EnkeltDato dato={oppgave.registrertDato} /> },
+        { term: 'Frist:', description: <EnkeltDato dato={oppgave.frist} /> },
+        { term: 'Saksid:', description: oppgave.sakID },
+      ]}
+    />;
+
+    return {
+      value: oppgave.oppgaveID,
+      innhold,
+    };
+  });
+
+  const oppgaverFinnes = radioValg.length > 0;
 
   return (
     <form className="opprettnysak" onSubmit={handleSubmit}>
@@ -45,10 +83,10 @@ const OpprettNySak = ({
                   <Brukernavnskjema
                     className="brukernavnskjema innrykk"
                     form={form}
+                    onChange={hentOppgaver}
                   />
                   <Mui.Undertittel tekst="Informasjon om sak" ikon={Ikoner.Filenew} className="undertittel" />
                   <div className="innrykk">
-                    <Skjema.Input feltNavn="mottaksdato" label="Mottaksdato" bredde="S" disabled />
                     <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
                       {
                         MKV.KTObjects.sakstyper.map(({ kode, term }) => (
@@ -79,6 +117,20 @@ const OpprettNySak = ({
                           <Skjema.LandVelger multiLand feltNavn="land" label="Land" errorConfig={{ submitFailed: true }} />
                         </FormSection>
                       </Fragment>
+                    }
+                  </div>
+                  <Mui.Undertittel tekst="Knytt oppgave fra Gosys til saken" ikon={Ikoner.CheckList} className="undertittel" />
+                  <div className="innrykk">
+                    {
+                      oppgaverFinnes &&
+                      <Skjema.CustomRadioPanelGruppe
+                        feltNavn="oppgaveID"
+                        radios={radioValg}
+                      />
+                    }
+                    {
+                      !oppgaverFinnes &&
+                      <Nav.AlertStripeInfo>Skriv inn brukers f.nr eller d.nr for å hente oppgaver.</Nav.AlertStripeInfo>
                     }
                     <Skjema.Checkbox
                       className="skalTilordnes"
@@ -126,7 +178,7 @@ const opprettNySak = async (values, dispatch, props) => {
       fom: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null,
       tom: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null,
     },
-    land: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? values.soknadsinfo.land : null,
+    land: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? values.soknadsinfo.land : [],
   };
 
   const data = {
@@ -135,6 +187,7 @@ const opprettNySak = async (values, dispatch, props) => {
     behandlingstype: values.behandlingstype,
     soknadDto,
     skalTilordnes: values.skalTilordnes,
+    oppgaveID: values.oppgaveID,
   };
 
   try {

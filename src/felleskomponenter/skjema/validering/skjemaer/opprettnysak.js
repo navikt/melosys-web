@@ -15,6 +15,7 @@ const SKRIV_INN_EN_GYLDIG_DATO = { melding: 'Skriv inn en gyldig dato' };
 const VELG_SAKSTYPE = { melding: 'Velg sakstype' };
 const VELG_BEHANDLINGSTYPE = { melding: 'Velg behandlingstype' };
 const VELG_LAND = { melding: 'Velg land' };
+const VELG_EN_OPPGAVE = { melding: 'Velg en oppgave' };
 
 const soknadsinfo = object().shape({
   fom: string()
@@ -49,6 +50,8 @@ const opprettnysak = object().shape({
       is: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       then: soknadsinfo,
     }),
+  oppgaveID: string()
+    .required(VELG_EN_OPPGAVE),
 
   bruker: mixed(),
 });

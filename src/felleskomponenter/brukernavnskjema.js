@@ -14,6 +14,7 @@ export const Brukernavnskjema = ({
   formValues,
   settFormBruker,
   className,
+  onChange,
 }) => {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
   const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
@@ -55,6 +56,7 @@ export const Brukernavnskjema = ({
         className="fetTekst"
         label="Brukers f.nr eller d.nr"
         feltNavn="brukerID"
+        onChange={onChange}
       />
       {
         sammensattNavn &&
@@ -75,11 +77,13 @@ Brukernavnskjema.propTypes = {
   formValues: PT.object,
   settFormBruker: PT.func.isRequired,
   className: PT.string,
+  onChange: PT.func,
 };
 
 Brukernavnskjema.defaultProps = {
   formValues: {},
   className: undefined,
+  onChange: undefined,
 };
 
 const mapStateToProps = (state, ownProps) => ({
