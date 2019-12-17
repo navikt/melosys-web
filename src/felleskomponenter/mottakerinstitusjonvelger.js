@@ -5,6 +5,7 @@ import * as PT from 'prop-types';
 
 import * as Api from '../services/api';
 import * as Utils from '../utils';
+import MKV from '../melosyskodeverk';
 
 import { useAsyncCallbackState } from '../hooks/useCallbackState';
 import { SelectWrappedComponent } from './skjema/input/select';
@@ -19,8 +20,9 @@ export const MottakerinstitusjonvelgerSchema = ({
   oppdaterKreverMottakerinstitusjon,
   ...rest
 }) => {
-  const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, landkode);
-  const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [landkode, bucType]);
+  const landkodeIkkeNorge = landkode === MKV.Koder.landkoder.NO ? '' : landkode;
+  const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, landkodeIkkeNorge);
+  const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [landkodeIkkeNorge, bucType]);
 
   useEffect(() => {
     oppdaterKreverMottakerinstitusjon(!Utils._isEmpty(mottakerinstitusjoner));
