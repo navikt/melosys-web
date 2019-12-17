@@ -35,7 +35,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   componentDidMount() {
     const {
-      behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta }, soknadsland
+      behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta }, soknadsland,
     } = this.props;
 
     oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
