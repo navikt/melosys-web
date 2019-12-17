@@ -13,6 +13,7 @@ import './sideOppsummering.css';
 
 const SideOppsummering = ({
   arbeidsland,
+  oppholdsland,
   behandlingstype,
   fagsak,
   oppsummering,
@@ -50,6 +51,7 @@ const SideOppsummering = ({
           <Nav.Column xs="12">
             {oppsummering && <Oppsummering
               arbeidsland={arbeidsland}
+              oppholdsland={oppholdsland}
               lovvalgsland={lovvalgsland}
               fagsak={fagsak}
               oppsummering={oppsummering}
@@ -86,6 +88,7 @@ SideOppsummering.propTypes = {
   renderBehandlingsmeny: PT.func.isRequired,
   renderBehandlingsstatus: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
+  oppholdsland: PT.arrayOf(MPT.Kodeverk),
   soknadsperiodeFom: PT.string,
   soknadsperiodeTom: PT.string,
 };
@@ -93,6 +96,7 @@ SideOppsummering.propTypes = {
 SideOppsummering.defaultProps = {
   lovvalgsland: {},
   arbeidsland: [],
+  oppholdsland: [],
   redigerbart: false,
   fagsak: undefined,
   oppsummering: undefined,
