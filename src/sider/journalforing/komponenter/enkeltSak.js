@@ -6,8 +6,6 @@ import * as MPT from '../../../proptypes/';
 import * as Skjema from '../../../felleskomponenter/skjema';
 import EnkeltDato from '../../../felleskomponenter/datoOmrade/enkeltDato';
 
-import './enkeltSak.css';
-
 const hentAktiveBehandlinger = behandlinger => behandlinger.filter(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET);
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
