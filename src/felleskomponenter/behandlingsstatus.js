@@ -14,6 +14,7 @@ import './behandlingsstatus.css';
 
 const BehandlingsStatus = ({
   oppdaterBehandlingsStatus,
+  oppdaterStatus,
   behandlingID,
   redigerbart,
   oppsummering,
@@ -39,7 +40,7 @@ const BehandlingsStatus = ({
     }
     const term = KV.kodeTilTerm(behandlingsstatus, MKV.KTObjects.behandlinger.behandlingsstatus);
     const nyBehandlingsStatus = { kode: behandlingsstatus, term };
-    Api.Behandlinger.status.oppdaterStatus(behandlingID, behandlingsstatus).then(() => {
+    oppdaterStatus(behandlingID, behandlingsstatus).then(() => {
       oppdaterBehandlingsStatus(nyBehandlingsStatus);
       oppdaterStatusMelding();
     }).catch(Utils.logger.error);
@@ -75,6 +76,7 @@ BehandlingsStatus.propTypes = {
   redigerbart: PT.bool,
   oppsummering: MPT.Behandlinger.Oppsummering,
   oppdaterBehandlingsStatus: PT.func.isRequired,
+  oppdaterStatus: PT.func,
   behandlingsstatusMap: PT.shape({
     [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: PT.arrayOf(MPT.Kodeverk).isRequired,
     [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -86,6 +88,7 @@ BehandlingsStatus.propTypes = {
 BehandlingsStatus.defaultProps = {
   redigerbart: false,
   oppsummering: undefined,
+  oppdaterStatus: Api.Behandlinger.status.oppdaterStatus,
 };
 
 export default BehandlingsStatus;

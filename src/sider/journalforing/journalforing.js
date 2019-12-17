@@ -386,6 +386,7 @@ class Journalforing extends Component {
     ...MKV.KTObjects.behandlinger.behandlingstyper
       .filter(({ kode }) =>
         kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
         kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
         kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
         kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
