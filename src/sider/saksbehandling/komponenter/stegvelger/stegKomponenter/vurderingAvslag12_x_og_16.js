@@ -32,7 +32,9 @@ const VurderingAvslag12_x_og_16 = ({
   formIsValid,
   formValues,
 }) => {
-  const pdfDokumenter = [
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+
+  let pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
@@ -41,14 +43,20 @@ const VurderingAvslag12_x_og_16 = ({
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },
-    {
-      navn: 'Orientering til arbeidsgiver om avslag',
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    },
   ];
+
+  if (!erNyVurdering) {
+    pdfDokumenter = [
+      ...pdfDokumenter,
+      {
+        navn: 'Orientering til arbeidsgiver om avslag',
+        type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+        data: {
+          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        },
+      },
+    ];
+  }
 
   const muligeVirksomhetBegrunnelser = [
     ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
@@ -56,8 +64,6 @@ const VurderingAvslag12_x_og_16 = ({
     ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
     ...MKV.KTObjects.begrunnelser.bosted,
   ];
-
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const validerForm = () => {
     touch('vedtakstype');

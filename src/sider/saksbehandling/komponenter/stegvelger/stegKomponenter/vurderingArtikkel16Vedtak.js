@@ -79,8 +79,9 @@ export const Innvilgelse = ({
   gjeldendePeriode,
   renderFritekstFelt,
   vedtaksbrevFritekst,
+  erNyVurdering,
 }) => {
-  const pdfDokumenter = [
+  let pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -89,14 +90,20 @@ export const Innvilgelse = ({
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
-    {
-      navn: 'Brev til arbeidsgiver',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    },
   ];
+
+  if (!erNyVurdering) {
+    pdfDokumenter = [
+      ...pdfDokumenter,
+      {
+        navn: 'Brev til arbeidsgiver',
+        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+        data: {
+          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        },
+      },
+    ];
+  }
 
   return (
     <Fragment>
@@ -126,6 +133,7 @@ Innvilgelse.propTypes = {
   gjeldendePeriode: MPT.Periode.isRequired,
   vedtaksbrevFritekst: PT.string.isRequired,
   renderFritekstFelt: PT.func.isRequired,
+  erNyVurdering: PT.bool.isRequired,
 };
 
 export const DelvisInnvilgelse = ({
@@ -135,8 +143,9 @@ export const DelvisInnvilgelse = ({
   vedtaksbrevFritekst,
   renderFritekstFelt,
   renderBegrunnelser,
+  erNyVurdering,
 }) => {
-  const pdfDokumenter = [
+  let pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -145,14 +154,20 @@ export const DelvisInnvilgelse = ({
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
-    {
-      navn: 'Brev til arbeidsgiver',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    },
   ];
+
+  if (!erNyVurdering) {
+    pdfDokumenter = [
+      ...pdfDokumenter,
+      {
+        navn: 'Brev til arbeidsgiver',
+        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+        data: {
+          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        },
+      },
+    ];
+  }
 
   return (
     <Fragment>
@@ -188,6 +203,7 @@ DelvisInnvilgelse.propTypes = {
   vedtaksbrevFritekst: PT.string.isRequired,
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
+  erNyVurdering: PT.bool.isRequired,
 };
 
 export const Avslag = ({
@@ -196,8 +212,9 @@ export const Avslag = ({
   vedtaksbrevFritekst,
   renderFritekstFelt,
   renderBegrunnelser,
+  erNyVurdering,
 }) => {
-  const pdfDokumenter = [
+  let pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
@@ -206,14 +223,20 @@ export const Avslag = ({
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
-    {
-      navn: 'Brev til arbeidsgiver',
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    },
   ];
+
+  if (!erNyVurdering) {
+    pdfDokumenter = [
+      ...pdfDokumenter,
+      {
+        navn: 'Brev til arbeidsgiver',
+        type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+        data: {
+          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+        },
+      },
+    ];
+  }
 
   return (
     <Fragment>
@@ -243,6 +266,7 @@ Avslag.propTypes = {
   vedtaksbrevFritekst: PT.string.isRequired,
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
+  erNyVurdering: PT.bool.isRequired,
 };
 
 export const VurderingArtikkel16Vedtak = ({
@@ -305,6 +329,8 @@ export const VurderingArtikkel16Vedtak = ({
     redigerbart,
   ]);
 
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+
   const finnVedtakInnhold = svarType => {
     switch (svarType) {
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
@@ -314,6 +340,7 @@ export const VurderingArtikkel16Vedtak = ({
           renderFritekstFelt={renderFritekstFelt}
           vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
+          erNyVurdering={erNyVurdering}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
         return <DelvisInnvilgelse
@@ -323,6 +350,7 @@ export const VurderingArtikkel16Vedtak = ({
           vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={endretPeriode}
           renderBegrunnelser={renderBegrunnelser}
+          erNyVurdering={erNyVurdering}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
         return <Avslag
@@ -331,6 +359,7 @@ export const VurderingArtikkel16Vedtak = ({
           renderFritekstFelt={renderFritekstFelt}
           vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           renderBegrunnelser={renderBegrunnelser}
+          erNyVurdering={erNyVurdering}
         />;
       default:
         throw new Error('AnmodningsperiodeSvarType må være satt');
@@ -338,8 +367,6 @@ export const VurderingArtikkel16Vedtak = ({
   };
 
   const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType);
-
-  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   return (
     <Fragment>

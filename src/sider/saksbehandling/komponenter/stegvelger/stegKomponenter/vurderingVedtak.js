@@ -72,8 +72,16 @@ const VurderingVedtak = ({
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
   ];
 
-  if (lovvalgSomKodeTerm && visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode)) {
-    pdfDokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
+  if (lovvalgSomKodeTerm &&
+      visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
+      !erNyVurdering) {
+    pdfDokumenter.push({
+      navn: 'Orienteringsbrev til arbeidsgiver',
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+      },
+    });
   }
 
   if (formValues.kreverMottakerinstitusjon) {
