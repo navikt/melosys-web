@@ -10,7 +10,7 @@ const OpprettNySakKnapp = ({
   onClick,
 }) => (
   <div className="opprettNySak">
-    <Mui.Knapp onClick={onClick} type="flat" ikon={Ikoner.AddOne}>OPPRETT NY SAK</Mui.Knapp>
+    <Mui.Knapp onClick={onClick} type="flat" ikon={Ikoner.AddOne}>OPPRETT SAK</Mui.Knapp>
   </div>
 );
 

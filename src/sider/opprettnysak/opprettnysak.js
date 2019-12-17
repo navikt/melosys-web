@@ -76,7 +76,7 @@ const OpprettNySak = ({
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12">
-            <h1>Opprett ny sak</h1>
+            <h1>Opprett sak</h1>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -143,7 +143,7 @@ const OpprettNySak = ({
                       label="Legg behandlingen i mine oppgaver"
                     />
                     <Knapperad
-                      bekreftTekst="Opprett ny sak"
+                      bekreftTekst="Opprett sak"
                       avbryt={tilForsiden}
                       avbrytTekst="Avbryt"
                       redigerbart
