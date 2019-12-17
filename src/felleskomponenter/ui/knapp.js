@@ -8,10 +8,13 @@ import './knapp.css';
 const Knapp = ({
   ikon,
   children,
+  htmlType,
   ...rest
 }) => (
-  <Nav.Knapp {...rest} >
-    <img src={ikon} height={20} alt={ikon} className="ikon" />
+  <Nav.Knapp htmlType={htmlType} {...rest} >
+    {
+      ikon && <img src={ikon} height={20} alt={ikon} className="ikon" />
+    }
     {children}
   </Nav.Knapp>
 );
@@ -19,11 +22,13 @@ const Knapp = ({
 Knapp.propTypes = {
   ikon: PT.string,
   children: PT.node,
+  htmlType: PT.string,
 };
 
 Knapp.defaultProps = {
   ikon: undefined,
   children: undefined,
+  htmlType: 'button',
 };
 
 export default Knapp;
