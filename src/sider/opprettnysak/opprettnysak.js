@@ -66,6 +66,11 @@ const OpprettNySak = ({
 
   const oppgaverFinnes = radioValg.length > 0;
 
+  const filtrerteBehandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => ([
+    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV,
+  ].includes(kode)));
+
   return (
     <form className="opprettnysak" onSubmit={handleSubmit}>
       <Nav.Container fluid>
@@ -96,7 +101,7 @@ const OpprettNySak = ({
                     </Skjema.Select>
                     <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
                       {
-                        MKV.KTObjects.behandlinger.behandlingstyper.map(({ kode, term }) => (
+                        filtrerteBehandlingstyper.map(({ kode, term }) => (
                           <option key={kode} value={kode}>{term}</option>
                         ))
                       }
