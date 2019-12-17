@@ -11,10 +11,10 @@ import * as Konstanter from '../../../constants';
 import * as Api from '../../../services/api';
 import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
+import * as Mui from '../../../felleskomponenter/ui';
 import AvsenderVelger from './avsendervelger';
 import LenkeListeVelger from './lenkelistevelger';
 
-import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
 import { formSelectors } from '../../../ducks/form';
@@ -172,12 +172,12 @@ class Informasjon extends Component {
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
-        <Overskrift tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
+        <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
         <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
         <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
         { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
 
-        <Overskrift tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
+        <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
         <AvsenderVelger
           className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
@@ -186,7 +186,7 @@ class Informasjon extends Component {
           visAvsenderSpinner={visAvsenderSpinner}
           hentOgVisRepresentant={hentOgVisRepresentant}
         />
-        <Overskrift tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
+        <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
         <Nav.Input
           label="Mottatt dato"
           type="dato"

@@ -10,10 +10,10 @@ import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import { BOOLSK } from '../../../constants';
 import { journalforingSelectors } from '../../../ducks/journalforing';
-import { Overskrift } from './overskrift';
 import Informasjon from '../komponenter/informasjon';
 import FagsakVelger from './fagsakVelger';
 import SendForvaltningsMelding from './sendForvaltningsMelding';
@@ -46,7 +46,7 @@ const JournalforingForm = props => {
         hentOgVisBruker={hentOgVisBruker}
         hentOgVisRepresentant={hentOgVisRepresentant}
       />
-      <Overskrift tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
+      <Mui.Undertittel tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
       <FagsakVelger
         sakstyper={MKV.KTObjects.sakstyper}
         behandlingstyper={behandlingstyper}
@@ -56,7 +56,7 @@ const JournalforingForm = props => {
       {
         visForvaltningsMelding &&
         <Fragment>
-          <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
+          <Mui.Undertittel tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
           <SendForvaltningsMelding />
         </Fragment>
       }

@@ -1,4 +1,5 @@
 import AccountCircle from './line-version-account-circle.svg';
+import AddOne from './line-version-add-1.svg';
 import Arbeidsgiver from './ikon-arbeidsgiver.svg';
 import Arbeidsforhold from './ikon-arbeidsforhold.svg';
 import Binders from './paperclip.svg';
@@ -27,6 +28,7 @@ import Ukjentkjoenn from './ikon-ukjentkjonn.svg';
 
 export {
   AccountCircle,
+  AddOne,
   Arbeidsgiver,
   Arbeidsforhold,
   Binders,

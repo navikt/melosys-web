@@ -36,6 +36,7 @@ const JournalforingLoadable = loadable(() => import('./sider/journalforing'), { 
 const RegistreringUnntaksperioderLoadable = loadable(() => import('./sider/registrering/unntaksperioder'), { fallback: SideLoadingStatus });
 const RegistreringAnmodningunntakLoadable = loadable(() => import('./sider/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
 const SedBehandlingLoadable = loadable(() => import('./sider/sedbehandling'), { fallback: SideLoadingStatus });
+const OpprettNySakLoadable = loadable(() => import('./sider/opprettnysak'), { fallback: SideLoadingStatus });
 
 const Routing = ({
   location,
@@ -128,6 +129,10 @@ const Routing = ({
     history.push('/');
   };
 
+  const tilOpprettNySak = () => {
+    history.push('/opprettnysak');
+  };
+
   const skjulOppfriskBekreftelseOgNavigerTilForside = () => {
     skjulOppfriskBekreftelse();
     tilForsiden();
@@ -218,6 +223,7 @@ const Routing = ({
     apneTidligereBehandlinger,
     blokkerInnholdMedOppfriskSpinner,
     tilForsiden,
+    tilOpprettNySak,
     visRevurderVedtakDialogHandle,
   };
 
@@ -227,13 +233,14 @@ const Routing = ({
     <ErrorBoundary message={SideLoadingFailMessage}>
       <Switch location={location}>
         <Route path="/melosys" render={props => <Redirect to={pathUtenPrefix(props)} />} />
-        <Route exact path="/" component={ForsideLoadable} />
+        <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />
         <Route path="/sedbehandling/:snr" render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/saksbehandling/:snr" render={props => <SaksbehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" render={props => <JournalforingLoadable {...props} {...fellesHandlers} />} />
+        <Route path="/opprettnysak" render={props => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
         <Route component={UkjentSideLoadable} />
       </Switch>
       {

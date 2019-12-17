@@ -13,7 +13,7 @@ import '../skjema.css';
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
 function InnerInputComponent({
-  input, label, onBlur, ...rest
+  input, label, onBlur, onChange, ...rest
 }) {
   const { meta: { error, touched, active } } = rest;
 
@@ -26,10 +26,16 @@ function InnerInputComponent({
     input.onBlur(e);
   };
 
+  const innerChange = e => {
+    if (onChange) onChange(e);
+    input.onChange(e);
+  };
+
   const inputProps = {
     ...input,
     ...rest,
     onBlur: innerBlur,
+    onChange: innerChange,
   };
 
   return !rest.hidden && <Nav.Input label={label} feil={feil} {...inputProps} />;
@@ -41,6 +47,7 @@ InnerInputComponent.propTypes = {
   meta: PT.object,
   input: PT.object,
   onBlur: PT.func,
+  onChange: PT.func,
 };
 
 InnerInputComponent.defaultProps = {
@@ -48,6 +55,7 @@ InnerInputComponent.defaultProps = {
   meta: undefined,
   input: undefined,
   onBlur: undefined,
+  onChange: undefined,
 };
 
 

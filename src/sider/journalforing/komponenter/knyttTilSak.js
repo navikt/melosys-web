@@ -8,7 +8,7 @@ import { BOOLSK } from '../../../constants';
 import * as MPT from '../../../proptypes';
 import * as Ikoner from '../../../resources/images';
 import * as Skjema from '../../../felleskomponenter/skjema';
-import { Elementskrift } from './overskrift';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import './knyttTilSak.css';
 
@@ -20,7 +20,7 @@ const KnyttTilSak = props => {
   if (saksstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
       <div className="panelramme">
-        <Elementskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.InformationCircle} className="elementTittel oversteUndertittel" style={clsElementskrift} />
+        <Mui.Elementskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.InformationCircle} className="elementTittel oversteUndertittel" style={clsElementskrift} />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />
