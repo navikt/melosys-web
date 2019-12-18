@@ -27,6 +27,7 @@ const OpprettNySak = ({
   handleSubmit,
 }) => {
   const [oppgaver, setOppgaver] = useState([]);
+  const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
   const { behandlingstype } = formValues;
   const soknadErValgt = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
@@ -38,6 +39,7 @@ const OpprettNySak = ({
       try {
         const oppgaverResponse = await Api.Oppgaver.sok(brukerID);
         setOppgaver(oppgaverResponse);
+        setOppgaverForsoktHentetFraEksisterendePerson(true);
       } catch (e) {
         Utils.logger.error(e);
         setOppgaver([]);
@@ -134,8 +136,12 @@ const OpprettNySak = ({
                       />
                     }
                     {
-                      !oppgaverFinnes &&
+                      !oppgaverFinnes && !oppgaverForsoktHentetFraEksisterendePerson &&
                       <Nav.AlertStripeInfo>Skriv inn brukers f.nr eller d.nr for å hente oppgaver.</Nav.AlertStripeInfo>
+                    }
+                    {
+                      !oppgaverFinnes && oppgaverForsoktHentetFraEksisterendePerson &&
+                      <Nav.AlertStripeAdvarsel>Det finnes ingen saker på denne personen.</Nav.AlertStripeAdvarsel>
                     }
                     <Skjema.Checkbox
                       className="skalTilordnes"
