@@ -116,3 +116,13 @@ export const vilkarBegrunnelserSelector = createSelector(
     ...(forutgaendemedlemskap.begrunnelseKoder || []),
   ] || [])
 );
+
+export const Artikkel12OppfyltSelector = createSelector(
+  VilkarSelector,
+  vilkar => (
+    vilkar.some(enkeltVilkar => (
+      (enkeltVilkar.vilkaar === MKV.Koder.vilkaar.FO_883_2004_ART12_1 || enkeltVilkar.vilkaar === MKV.Koder.vilkaar.FO_883_2004_ART12_2) &&
+      enkeltVilkar.oppfylt === true
+    ))
+  )
+);
