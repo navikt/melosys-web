@@ -34,7 +34,7 @@ const VurderingAvslag12_x_og_16 = ({
 }) => {
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  let pdfDokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
@@ -46,16 +46,13 @@ const VurderingAvslag12_x_og_16 = ({
   ];
 
   if (!erNyVurdering) {
-    pdfDokumenter = [
-      ...pdfDokumenter,
-      {
-        navn: 'Orientering til arbeidsgiver om avslag',
-        type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-        data: {
-          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-        },
+    pdfDokumenter.push({
+      navn: 'Orientering til arbeidsgiver om avslag',
+      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
-    ];
+    });
   }
 
   const muligeVirksomhetBegrunnelser = [

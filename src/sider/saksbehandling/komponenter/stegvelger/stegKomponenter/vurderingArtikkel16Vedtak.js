@@ -81,7 +81,7 @@ export const Innvilgelse = ({
   vedtaksbrevFritekst,
   erNyVurdering,
 }) => {
-  let pdfDokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -93,16 +93,13 @@ export const Innvilgelse = ({
   ];
 
   if (!erNyVurdering) {
-    pdfDokumenter = [
-      ...pdfDokumenter,
-      {
-        navn: 'Brev til arbeidsgiver',
-        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-        data: {
-          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-        },
+    pdfDokumenter.push({
+      navn: 'Brev til arbeidsgiver',
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
-    ];
+    });
   }
 
   return (
@@ -145,7 +142,7 @@ export const DelvisInnvilgelse = ({
   renderBegrunnelser,
   erNyVurdering,
 }) => {
-  let pdfDokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -157,16 +154,13 @@ export const DelvisInnvilgelse = ({
   ];
 
   if (!erNyVurdering) {
-    pdfDokumenter = [
-      ...pdfDokumenter,
-      {
-        navn: 'Brev til arbeidsgiver',
-        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-        data: {
-          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-        },
+    pdfDokumenter.push({
+      navn: 'Brev til arbeidsgiver',
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
-    ];
+    });
   }
 
   return (
@@ -214,7 +208,7 @@ export const Avslag = ({
   renderBegrunnelser,
   erNyVurdering,
 }) => {
-  let pdfDokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
@@ -226,16 +220,13 @@ export const Avslag = ({
   ];
 
   if (!erNyVurdering) {
-    pdfDokumenter = [
-      ...pdfDokumenter,
-      {
-        navn: 'Brev til arbeidsgiver',
-        type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
-        data: {
-          mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-        },
+    pdfDokumenter.push({
+      navn: 'Brev til arbeidsgiver',
+      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
-    ];
+    });
   }
 
   return (
