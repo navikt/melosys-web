@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { stringify } from 'qs';
 import loadable from '@loadable/component';
@@ -227,12 +227,9 @@ const Routing = ({
     visRevurderVedtakDialogHandle,
   };
 
-  const pathUtenPrefix = props => ({ pathname: props.location.pathname.replace('/melosys', '') });
-
   return (
     <ErrorBoundary message={SideLoadingFailMessage}>
       <Switch location={location}>
-        <Route path="/melosys" render={props => <Redirect to={pathUtenPrefix(props)} />} />
         <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />

@@ -1,4 +1,5 @@
 import MKV from '../melosyskodeverk';
+import * as Constants from '../constants';
 
 export const lagUrl = (saksnummer, behandlingID, behandlingstypeKode) => {
   switch (behandlingstypeKode) {
@@ -18,4 +19,8 @@ export const lagUrl = (saksnummer, behandlingID, behandlingstypeKode) => {
     default:
       return null;
   }
+};
+
+export const nyFane = url => {
+  window.open(`${Constants.URL_BASENAME}/${url}`);
 };
