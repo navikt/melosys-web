@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
+import * as EKV from 'eessi-kodeverk';
 
 import MKV from '../../../../../melosyskodeverk';
 
@@ -15,7 +16,7 @@ import * as Mui from '../../../../../felleskomponenter/ui';
 
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
-import { soknadOperations } from '../../../../../ducks/soknad';
+import { soknadOperations, soknadSelectors } from '../../../../../ducks/soknad';
 
 import * as Api from '../../../../../services/api';
 
@@ -28,11 +29,12 @@ export class VurderingEndrePeriode extends React.Component {
     begrunnelse: hentFaktaVerdi(this.props.tilstand.aarsakEndringPeriodeAvklartfakta) || '',
     begrunnelseFeilmelding: undefined,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
+    erEessiReady: false,
   };
 
   componentDidMount() {
     const {
-      behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta },
+      behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta }, soknadsland,
     } = this.props;
 
     oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
@@ -40,7 +42,12 @@ export class VurderingEndrePeriode extends React.Component {
     this.hentOpprinneligPeriode(behandlingID);
 
     if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
+    this.setErEessiReady(soknadsland[0]);
   }
+
+  setErEessiReady = async landkode => this.setState({
+    erEessiReady: (await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_04, landkode)).length > 0,
+  });
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
 
@@ -149,6 +156,7 @@ export class VurderingEndrePeriode extends React.Component {
       begrunnelse,
       begrunnelseFeilmelding,
       opprinneligLovvalgsperiode: { fom, tom },
+      erEessiReady,
     } = this.state;
 
     const endretPeriodeBegrunnelse = begrunnelse;
@@ -163,15 +171,18 @@ export class VurderingEndrePeriode extends React.Component {
           begrunnelseKode: endretPeriodeBegrunnelse,
         },
       },
-      {
+    ];
+
+    if (!erEessiReady) {
+      pdfDokumenter.push({
         navn: 'Forhåndsvis A1',
         type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
         data: {
           mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
           begrunnelseKode: endretPeriodeBegrunnelse,
         },
-      },
-    ];
+      });
+    }
 
     const formattertOpprinneligFom = Utils.dato.formatterDatoTilNorsk(fom);
     const formattertOpprinneligTom = Utils.dato.formatterDatoTilNorsk(tom);
@@ -259,6 +270,7 @@ VurderingEndrePeriode.propTypes = {
   tilstand: PT.shape({
     aarsakEndringPeriodeAvklartfakta: MPT.Avklartefakta.isRequired,
   }).isRequired,
+  soknadsland: PT.arrayOf(PT.string).isRequired,
 };
 
 VurderingEndrePeriode.defaultProps = {
@@ -268,6 +280,7 @@ VurderingEndrePeriode.defaultProps = {
 const mapStateToProps = state => ({
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   redigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  soknadsland: soknadSelectors.SoknadslandSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -22,6 +22,7 @@ describe('vurderingEndrePeriode', () => {
       },
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
+      soknadsland: ['SE'],
     };
   });
 

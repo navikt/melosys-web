@@ -22,7 +22,6 @@ const JournalforingForm = props => {
   const {
     journalpostID,
     hoveddokumentID,
-    hoveddokumentTittel,
     vedlegg,
     hentOgVisAvsender,
     hentOgVisBruker,
@@ -40,7 +39,6 @@ const JournalforingForm = props => {
       <Informasjon
         journalpostID={journalpostID}
         dokumentID={hoveddokumentID}
-        dokumentTittel={hoveddokumentTittel}
         vedlegg={vedlegg}
         hentOgVisAvsender={hentOgVisAvsender}
         hentOgVisBruker={hentOgVisBruker}
@@ -68,7 +66,6 @@ const JournalforingForm = props => {
 JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,
   hoveddokumentID: PT.string,
-  hoveddokumentTittel: PT.string.isRequired,
   vedlegg: PT.array.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
   hentOgVisBruker: PT.func.isRequired,
@@ -100,7 +97,7 @@ const mapStateToProps = state => ({
     arbeidsgiverID: null,
     representantID: '',
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
-    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state),
+    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
     vedlegg: {
       pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
       logiskeTitler: [],
