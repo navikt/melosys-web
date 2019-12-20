@@ -45,8 +45,8 @@ class Informasjon extends Component {
   };
 
   async componentDidMount() {
-    const { hoveddokument, vedlegg } = this.props;
-    await this.oppdaterState('hoveddokumentTittel', hoveddokument.tittel);
+    const { vedlegg, journalforingSkjemaVerdier } = this.props;
+    await this.oppdaterState('hoveddokumentTittel', journalforingSkjemaVerdier.hoveddokumentTittel);
     await this.oppdaterState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
     await this.oppdaterFelter(this.props, true);
   }
@@ -237,7 +237,6 @@ Informasjon.propTypes = {
   dokumentID: PT.string,
   dokumentTittel: PT.string,
   mottattDato: PT.string.isRequired,
-  hoveddokument: PT.shape({ dokumentID: PT.string, tittel: PT.string }).isRequired,
   vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
 };
@@ -254,7 +253,6 @@ const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   mottattDato: journalforingSelectors.MottattDatoSelector(state),
-  hoveddokument: journalforingSelectors.JournalforingHovedDokument(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
