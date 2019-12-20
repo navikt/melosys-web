@@ -10,12 +10,14 @@ import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as Validering from '../../../../../felleskomponenter/skjema/validering';
+import * as Utils from '../../../../../utils';
+
 import { soknadSelectors } from '../../../../../ducks/soknad';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
+import { vilkarSelectors } from '../../../../../ducks/vilkar';
 
-import { datoDiffMenneskelig } from '../../../../../utils/dato';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import VedtaktypeSkjema from '../../vedtaktypeskjema';
@@ -41,6 +43,7 @@ const VurderingVedtak = ({
   formIsValid,
   formValues,
   form,
+  artikkel12ErOppfylt,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -52,9 +55,12 @@ const VurderingVedtak = ({
     fomDato, tomDato, lovvalgsbestemmelse,
   } = lovvalget;
 
-  const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
+  const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
+  const antallMaaneder = Math.ceil(Utils.dato.datoDiff(fomDato, tomDato, 'months'));
+  const periodeErOver24mnd = antallMaaneder > 24;
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const fattVedtakDisabled = !redigerbart || periodeErOver24mnd;
 
   const pdfDokumenter = [
     {
@@ -88,7 +94,7 @@ const VurderingVedtak = ({
     return formIsValid;
   };
 
-  const fattVedtak = async () => {
+  const fattVedtak = () => {
     if (!validerForm()) return;
 
     lagreOgFatteVedtak({
@@ -112,7 +118,11 @@ const VurderingVedtak = ({
         <Nav.Row className="vedtak__oppsummering">
           <Nav.Column xs="6">
             <Nav.typo.Element type="element">Antall måneder i utlandet</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{antallManeder}</Nav.typo.Normaltekst>
+            <Nav.typo.Normaltekst>{antallManederMenneskelig}</Nav.typo.Normaltekst>
+            {
+              artikkel12ErOppfylt && periodeErOver24mnd &&
+              <Nav.AlertStripeAdvarsel className="periode__advarsel">Perioden er over 24 måneder.</Nav.AlertStripeAdvarsel>
+            }
           </Nav.Column>
         </Nav.Row>
         {
@@ -157,7 +167,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp disabled={!redigerbart} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
+            <Nav.Hovedknapp disabled={fattVedtakDisabled} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -166,6 +176,7 @@ const VurderingVedtak = ({
 };
 
 VurderingVedtak.propTypes = {
+  artikkel12ErOppfylt: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   soknadsland: PT.arrayOf(PT.string).isRequired,
@@ -185,6 +196,7 @@ VurderingVedtak.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  artikkel12ErOppfylt: vilkarSelectors.Artikkel12OppfyltSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   soknadsland: soknadSelectors.SoknadslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
