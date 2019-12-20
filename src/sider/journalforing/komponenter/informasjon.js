@@ -46,8 +46,8 @@ class Informasjon extends Component {
 
   async componentDidMount() {
     const { hoveddokument, vedlegg } = this.props;
-    await this.oppdaterUndoState('hoveddokumentTittel', hoveddokument.tittel);
-    await this.oppdaterUndoState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
+    await this.oppdaterState('hoveddokumentTittel', hoveddokument.tittel);
+    await this.oppdaterState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
     await this.oppdaterFelter(this.props, true);
   }
 
@@ -55,7 +55,7 @@ class Informasjon extends Component {
     await this.oppdaterFelter(prevProps);
   }
 
-  oppdaterUndoState = async (stateNavn, verdi) => {
+  oppdaterState = async (stateNavn, verdi) => {
     await this.setState({ [stateNavn]: verdi });
   };
   oppdaterFelter = async (props, tvingOppdatering) => {
@@ -145,13 +145,10 @@ class Informasjon extends Component {
     await Utils.delay(ms);
     this.setState(this.toggleSpinn(navn, false));
   };
-  updateTittel = (feltnavn, verdi) => {
-    this.oppdaterUndoState(feltnavn, verdi);
-  };
   updateVedleggTittel = async (index, verdi) => {
     const tittler = [...this.state.vedleggPdfTittler];
     tittler[index] = verdi;
-    await this.oppdaterUndoState('vedleggPdfTittler', tittler);
+    await this.oppdaterState('vedleggPdfTittler', tittler);
   };
   render() {
     const {
@@ -202,7 +199,7 @@ class Informasjon extends Component {
             linkTo={dokumentURI(journalpostID, dokumentID)}
             dokumentTittel={hoveddokumentTittel}
             undoTittel={this.state.hoveddokumentTittel}
-            updateTittel={() => this.updateTittel('hoveddokumentTittel', hoveddokumentTittel)}
+            updateTittel={() => this.oppdaterState('hoveddokumentTittel', hoveddokumentTittel)}
           />
         </Nav.Fieldset>
         <p>Vedlegg</p>
