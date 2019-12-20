@@ -1,9 +1,10 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router as ReduxRouter } from 'react-router-dom';
+import { BrowserRouter as ReduxRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 
+import * as Constants from './constants';
 import './index.css';
 import App from './App';
 import loadInitialData from './startupDataLoader';
@@ -19,7 +20,7 @@ loadInitialData(store);
 
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <ReduxRouter history={routerHistory}>
+    <ReduxRouter basename={Constants.URL_BASENAME} history={routerHistory}>
       <App>
         <Routing />
       </App>
