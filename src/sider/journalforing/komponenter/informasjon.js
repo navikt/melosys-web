@@ -235,7 +235,6 @@ Informasjon.propTypes = {
   hentOgVisAvsender: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
-  dokumentTittel: PT.string,
   mottattDato: PT.string.isRequired,
   vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
@@ -245,7 +244,6 @@ Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
   journalpostID: '',
   dokumentID: '',
-  dokumentTittel: null,
   vedlegg: [],
 };
 
