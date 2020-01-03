@@ -99,6 +99,7 @@ class Journalforing extends Component {
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
       ikkeSendForvaltingsmelding,
+      mottattDato,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -115,6 +116,7 @@ class Journalforing extends Component {
       oppgaveID,
       vedlegg,
       skalTilordnes,
+      mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
     if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
       journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
