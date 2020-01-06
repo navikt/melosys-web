@@ -24,7 +24,7 @@ export class KontaktOpplysninger extends Component {
   async componentDidMount() {
     const kontaktopplysninger = await this.hentOgVisKontaktOpplysninger();
     this.kalkulerSynlighetVedMount(kontaktopplysninger);
-    this.finnOgVisOrganisasjon(kontaktopplysninger.kontaktorgnr);
+    if (kontaktopplysninger.kontaktorgnr) this.finnOgVisOrganisasjon(kontaktopplysninger.kontaktorgnr);
   }
 
   settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined });
