@@ -49,14 +49,6 @@ class Journalforing extends Component {
     this.setState({ valgtDokumentID });
   };
 
-  /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
-   * funksjoner. Allikevel trenger vi en default handler som Redux Form hekter på gjennom <form onsubmit="" .../>
-   * @param event
-   */
-  overstyrSubmit = event => {
-    event.preventDefault();
-  };
-
   /** Selv om saksbehandler velger å avbryte journalføringsoppgaven vil den fortsatt ligge
    * i "Mine Oppgaver"-listen. Vi trenger derfor ikke å gi noen melding til backend om at
    * noe er avbrutt - kun redirecte til forsiden.
@@ -99,6 +91,7 @@ class Journalforing extends Component {
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
       ikkeSendForvaltingsmelding,
+      mottattDato,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -115,6 +108,7 @@ class Journalforing extends Component {
       oppgaveID,
       vedlegg,
       skalTilordnes,
+      mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
     if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
       journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
@@ -375,13 +369,15 @@ class Journalforing extends Component {
       }
     }
   };
-  erikkeSubmittable = () => {
+
+  kanSubmittes = () => {
     const { journalforSEDSkjemaVerdier } = this.props;
     if (journalforSEDSkjemaVerdier.brukerID) {
-      return false;
+      return true;
     }
-    return Utils._isEmpty(this.props.journalforingSkjemaVerdier.saksnummer);
+    return !Utils._isEmpty(this.props.journalforingSkjemaVerdier.saksnummer);
   };
+
   behandlingstyper = [
     ...MKV.KTObjects.behandlinger.behandlingstyper
       .filter(({ kode }) =>
@@ -438,6 +434,9 @@ class Journalforing extends Component {
                         avsenderNavn={avsenderNavn}
                         behandlingstype={behandlingstype}
                         sakstype={sakstype}
+                        submitJournalforing={this.submitJournalforing}
+                        avbrytJournalforing={this.avbrytJournalforing}
+                        kanSubmittes={this.kanSubmittes()}
                       />
                     }
                     {
@@ -453,20 +452,12 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
-                        overstyrSubmit={this.overstyrSubmit}
                         behandlingstyper={this.behandlingstyper}
+                        submitJournalforing={this.submitJournalforing}
+                        avbrytJournalforing={this.avbrytJournalforing}
+                        kanSubmittes={this.kanSubmittes()}
                       />
                     }
-                    <div className="journalforing__fotknapper">
-                      <Nav.Row>
-                        <Nav.Column xs="6">
-                          <Nav.Hovedknapp disabled={this.erikkeSubmittable()} onClick={this.submitJournalforing}>JOURNALFØR</Nav.Hovedknapp>
-                        </Nav.Column>
-                        <Nav.Column xs="6">
-                          <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt Journalføring</Nav.Knapp>
-                        </Nav.Column>
-                      </Nav.Row>
-                    </div>
                   </div>
                 </Nav.Panel>
               </Sticky>

@@ -17,6 +17,7 @@ import { journalforingSelectors } from '../../../ducks/journalforing';
 import Informasjon from '../komponenter/informasjon';
 import FagsakVelger from './fagsakVelger';
 import SendForvaltningsMelding from './sendForvaltningsMelding';
+import Fotknapper from './fotknapper';
 
 const JournalforingForm = props => {
   const {
@@ -27,15 +28,17 @@ const JournalforingForm = props => {
     hentOgVisBruker,
     fagsakListe,
     hentOgVisRepresentant,
-    overstyrSubmit,
     behandlingstyper,
     formValues,
     settJournalforingHensikt,
+    avbrytJournalforing,
+    kanSubmittes,
+    handleSubmit,
   } = props;
   const visForvaltningsMelding = formValues.saksnummer === '-1' && formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
 
   return (
-    <form onSubmit={overstyrSubmit}>
+    <form onSubmit={handleSubmit}>
       <Informasjon
         journalpostID={journalpostID}
         dokumentID={hoveddokumentID}
@@ -59,6 +62,7 @@ const JournalforingForm = props => {
         </Fragment>
       }
       <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
+      <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
     </form>
   );
 };
@@ -72,9 +76,12 @@ JournalforingForm.propTypes = {
   fagsakListe: PT.array.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
-  overstyrSubmit: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  submitJournalforing: PT.func.isRequired,
+  avbrytJournalforing: PT.func.isRequired,
+  kanSubmittes: PT.bool.isRequired,
+  handleSubmit: PT.func.isRequired,
 };
 
 JournalforingForm.defaultProps = {
@@ -113,10 +120,13 @@ const mapStateToProps = state => ({
     submittable: false,
   },
 });
+
 const mapDispatchToProps = dispatch => ({
   settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
 });
+
 const form = {
+  onSubmit: (values, dispatch, props) => props.submitJournalforing(),
   form: KV.Form.JOURNALFORING,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -132,7 +142,6 @@ const form = {
 
     return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
   },
-  onSubmit: () => {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(JournalforingForm));

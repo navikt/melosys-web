@@ -11,6 +11,7 @@ import * as Ikoner from '../../../resources/images';
 import * as Mui from '../../../felleskomponenter/ui';
 
 import Brukernavnskjema from '../../../felleskomponenter/brukernavnskjema';
+import Fotknapper from './fotknapper';
 
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
@@ -22,8 +23,11 @@ const JournalforingSED = ({
   sakstype,
   behandlingstype,
   form,
+  kanSubmittes,
+  avbrytJournalforing,
+  handleSubmit,
 }) => (
-  <form>
+  <form onSubmit={handleSubmit}>
     <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
     <Nav.Row>
       <Nav.Column xs="6">
@@ -50,6 +54,7 @@ const JournalforingSED = ({
         <Nav.typo.Normaltekst>{behandlingstype.term}</Nav.typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
+    <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
   </form>
 );
 
@@ -59,6 +64,10 @@ JournalforingSED.propTypes = {
   sakstype: MPT.Kodeverk.isRequired,
   behandlingstype: MPT.Kodeverk.isRequired,
   form: PT.string.isRequired,
+  submitJournalforing: PT.func.isRequired,
+  avbrytJournalforing: PT.func.isRequired,
+  kanSubmittes: PT.bool.isRequired,
+  handleSubmit: PT.func.isRequired,
 };
 
 const form = {
@@ -70,6 +79,7 @@ const form = {
 };
 
 const mapStateToProps = state => ({
+  onSubmit: (values, dispatch, props) => props.submitJournalforing(),
   formValues: getFormValues(KV.Form.JOURNALFORING_SED)(state),
   initialValues: {
     submittable: true,

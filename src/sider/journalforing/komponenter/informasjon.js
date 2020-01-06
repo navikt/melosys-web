@@ -18,7 +18,6 @@ import LenkeListeVelger from './lenkelistevelger';
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
 import { formSelectors } from '../../../ducks/form';
-import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import './informasjon.css';
 
@@ -154,7 +153,6 @@ class Informasjon extends Component {
     const {
       journalpostID,
       dokumentID,
-      mottattDato,
       vedlegg,
       settFeltInnhold,
       hentOgVisRepresentant,
@@ -184,12 +182,12 @@ class Informasjon extends Component {
           hentOgVisRepresentant={hentOgVisRepresentant}
         />
         <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
-        <Nav.Input
+        <Skjema.Input
+          datoFelt
           label="Mottatt dato"
           type="dato"
           bredde="S"
-          disabled
-          value={Utils.dato.formatterDatoTilNorsk(mottattDato)}
+          feltNavn="mottattDato"
         />
 
         <Nav.Fieldset legend="Hoveddokument:">
@@ -237,7 +235,6 @@ Informasjon.propTypes = {
   hentOgVisRepresentant: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
-  mottattDato: PT.string.isRequired,
   vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
 };
@@ -252,7 +249,6 @@ Informasjon.defaultProps = {
 const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
-  mottattDato: journalforingSelectors.MottattDatoSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 

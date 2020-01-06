@@ -90,16 +90,16 @@ const journalforing = object().shape({
     .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
       is: kreverPeriodeOgLand,
       then: string()
-        .required(TAST_INN_DATO)
-        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO),
+        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+        .required(TAST_INN_DATO),
     }),
   journalforingPeriodeTilOgMed: string()
     .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
       is: kreverPeriodeOgLand,
       then: string()
-        .required(TAST_INN_DATO)
+        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
-        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO),
+        .required(TAST_INN_DATO),
     }),
   journalforingSoknadsland: array().of(string())
     .ensure()
@@ -135,6 +135,9 @@ const journalforing = object().shape({
         .ensure()
         .required(VELG_EN_AVSENDER),
     }),
+  mottattDato: string()
+    .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+    .required(TAST_INN_DATO),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
