@@ -70,6 +70,7 @@ const Saksopplysninger = props => {
     behandlingsresultat,
     fagsakStatusKode,
     fagsaker,
+    tilForsiden,
   } = props;
 
 
@@ -106,6 +107,7 @@ const Saksopplysninger = props => {
         oppdaterLokalSoknadHandler={oppdaterLokalSoknadHandler}
         begrunnelser={MKV.KTObjects.begrunnelser}
         landkoder={MKV.KTObjects.landkoder}
+        tilForsiden={tilForsiden}
       />
       }
       <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
@@ -156,6 +158,7 @@ Saksopplysninger.propTypes = {
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
+  tilForsiden: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {

@@ -170,6 +170,7 @@ class Saksbehandling extends Component {
       soknadsperiodeFom,
       soknadsperiodeTom,
       visRevurderVedtakDialogHandle,
+      tilForsiden,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -190,6 +191,7 @@ class Saksbehandling extends Component {
                 lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
                 oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                 lagreAllData={this.props.lagreAllData}
+                tilForsiden={tilForsiden}
               />
             </Nav.Column>
             <Nav.Column xs="5">
@@ -305,6 +307,7 @@ Saksbehandling.propTypes = {
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
   visRevurderVedtakDialogHandle: PT.func.isRequired,
+  tilForsiden: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
