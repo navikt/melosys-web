@@ -76,7 +76,6 @@ JournalforingForm.propTypes = {
   fagsakListe: PT.array.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
-  overstyrSubmit: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   submitJournalforing: PT.func.isRequired,

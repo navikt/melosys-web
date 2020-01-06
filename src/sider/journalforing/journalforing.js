@@ -452,7 +452,6 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
-                        overstyrSubmit={this.overstyrSubmit}
                         behandlingstyper={this.behandlingstyper}
                         submitJournalforing={this.submitJournalforing}
                         avbrytJournalforing={this.avbrytJournalforing}
