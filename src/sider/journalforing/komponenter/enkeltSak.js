@@ -24,7 +24,7 @@ const EnkeltSak = props => {
       tittel={KV.objektTilTerm(sakstype)}
       data={[
         { term: 'Behandlingstype:', description: KV.objektTilTerm(behandlingstype) },
-        { term: 'Søknadsperiode:', description: <Fragment><EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></Fragment> },
+        { term: 'Søknadsperiode:', description: <Fragment>{ periode && <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />}</Fragment> },
         { term: 'Saksstatus:', description: KV.objektTilTerm(saksstatus) },
         { term: 'Saksnummer:', description: saksnummer },
         { term: 'Land:', description: land ? land.join(', ') : '(ukjent)' },
