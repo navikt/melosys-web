@@ -53,7 +53,7 @@ Installer [kubefwd](https://github.com/txn2/kubefwd) eller [Kube Forwarder](http
 sudo -E kubefwd svc -n t8 -l app=melosys
 ```
 
-Legg inn OIDC-token fra [IDA](https://ida.adeo.no) i `scripts/patchkubefwd.js`, og start frontend med forwaring mot backend i miljø:
+Legg inn OIDC-token fra [IDA](https://ida.adeo.no) i `scripts/patchkubefwd.js`, og start frontend med forwarding mot backend i miljø:
 
 ```shell script
 npm run start:kubefwd
