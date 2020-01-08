@@ -37,26 +37,26 @@ export const sendResultatTilDispatch = (dispatch, action, validering) => (...dat
 
 export const handterFeil = (dispatch, action) => async error => {
   if (error.response) {
-    const data = await error.response.text();
+    const data = await error.response.json();
 
     window.frontendlogger.error({
       error,
       stack: error.stack,
-      data,
+      data: JSON.stringify(data),
     });
 
-    dispatch({
+    return dispatch({
       type: action,
       data: { response: error.response, data },
     });
-  } else {
-    window.frontendlogger.error({
-      error,
-      stack: error.stack,
-      data: error.toString(),
-    });
-    dispatch({ type: action, data: error.toString() });
   }
+
+  window.frontendlogger.error({
+    error,
+    stack: error.stack,
+    data: error.toString(),
+  });
+  return dispatch({ type: action, data: error.toString() });
 };
 
 export const getCookie = name => {

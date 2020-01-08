@@ -17,6 +17,7 @@ import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
 import { vilkarSelectors } from '../../../../../ducks/vilkar';
+import { vedtakSelectors } from '../../../../../ducks/vedtak';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
@@ -44,6 +45,7 @@ const VurderingVedtak = ({
   formValues,
   form,
   artikkel12ErOppfylt,
+  vedtakLastes,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -175,7 +177,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp disabled={fattVedtakDisabled} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
+            <Nav.Hovedknapp spinner={vedtakLastes} disabled={fattVedtakDisabled} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -196,6 +198,7 @@ VurderingVedtak.propTypes = {
   formValues: PT.object,
   touch: PT.func.isRequired,
   form: PT.string.isRequired,
+  vedtakLastes: PT.bool.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -210,6 +213,7 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
+  vedtakLastes: vedtakSelectors.ErPendingSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   initialValues: {

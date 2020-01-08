@@ -23,7 +23,7 @@ import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
-import { vedtakOperations } from '../../../../ducks/vedtak';
+import { vedtakOperations, vedtakTypes } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
 import { soknadOperations } from '../../../../ducks/soknad';
 
@@ -158,7 +158,13 @@ class Stegvelger extends Component {
   };
 
   fatteVedtakHandler = async data => {
-    const { behandlingID, fattVedtak, tilForsiden } = this.props;
+    const {
+      behandlingID,
+      fattVedtak,
+      tilForsiden,
+      visValideringModalDialogHandle,
+    } = this.props;
+
     const vedtakBody = {
       behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
       fritekst: data.fritekst || null,
@@ -168,8 +174,16 @@ class Stegvelger extends Component {
     };
 
     try {
-      await fattVedtak(behandlingID, vedtakBody);
-      tilForsiden();
+      const fattVedtakAction = await fattVedtak(behandlingID, vedtakBody);
+
+      if (fattVedtakAction.type === vedtakTypes.OK) {
+        tilForsiden();
+      } else if (fattVedtakAction.type === vedtakTypes.FEILET
+          && fattVedtakAction.data.data
+          && fattVedtakAction.data.data.feilkoder
+          && fattVedtakAction.data.data.feilkoder.length > 0) {
+        visValideringModalDialogHandle();
+      }
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -446,6 +460,7 @@ Stegvelger.propTypes = {
   saksnummer: PT.string.isRequired,
   erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
   tilForsiden: PT.func.isRequired,
+  visValideringModalDialogHandle: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {

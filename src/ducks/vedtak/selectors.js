@@ -1,7 +1,29 @@
-/**
- * Selectors
- * -----------------------------------------------------------------------------------------
- * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
- * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
- */
+import { createSelector } from 'reselect';
 
+import { STATUS } from '../../services/utils';
+
+export const VedtakSelector = createSelector(
+  state => state.vedtak.data,
+  vedtak => vedtak
+);
+
+export const StatusSelector = createSelector(
+  state => state.vedtak.status,
+  status => status
+);
+
+export const ErPendingSelector = createSelector(
+  StatusSelector,
+  status => status === STATUS.PENDING
+);
+
+export const FeilkoderSelector = createSelector(
+  VedtakSelector,
+  StatusSelector,
+  (vedtak, status) => {
+    if (status === STATUS.ERROR) {
+      return vedtak.data.feilkoder;
+    }
+    return [];
+  }
+);

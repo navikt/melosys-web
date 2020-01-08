@@ -71,6 +71,7 @@ const Saksopplysninger = props => {
     fagsakStatusKode,
     fagsaker,
     tilForsiden,
+    visValideringModalDialogHandle,
   } = props;
 
 
@@ -108,6 +109,7 @@ const Saksopplysninger = props => {
         begrunnelser={MKV.KTObjects.begrunnelser}
         landkoder={MKV.KTObjects.landkoder}
         tilForsiden={tilForsiden}
+        visValideringModalDialogHandle={visValideringModalDialogHandle}
       />
       }
       <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
@@ -159,6 +161,7 @@ Saksopplysninger.propTypes = {
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
+  visValideringModalDialogHandle: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {

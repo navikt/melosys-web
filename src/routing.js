@@ -15,12 +15,13 @@ import DialogboksHenlegg from './felleskomponenter/dialogboks/dialogboksHenlegg'
 import DialogboksAvsluttSakSomBortfalt from './felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
 import DialogboksAvslagSoknad from './felleskomponenter/dialogboks/dialogboksAvslagSoknad';
 import DialogboksRevurderVedtak from './felleskomponenter/dialogboks/dialogboksRevurderVedtak';
+import DialogboksValidering from './felleskomponenter/dialogboks/dialogboksValidering';
 import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 
 import { oppgaverOperations } from './ducks/oppgaver';
 import { soknadOperations } from './ducks/soknad';
 import { datalastingOperations } from './ducks/datalasting';
-import { vedtakOperations } from './ducks/vedtak';
+import { vedtakOperations, vedtakSelectors } from './ducks/vedtak';
 import { saksopplysningerOperations } from './ducks/saksopplysninger';
 import { fagsakSelectors } from './ducks/fagsaker';
 import { behandlingerOperations } from './ducks/behandlinger';
@@ -51,12 +52,14 @@ const Routing = ({
   lagreSoknad,
   saksnummer,
   apneTidligereBehandlinger,
+  vedtakfeilkoder,
 }) => {
   const [visHenleggDialog, setVisHenleggDialog] = useState(false);
   const [visAvsluttSakSomBortfaltDialog, setVisAvsluttSakSomBortfaltDialog] = useState(false);
   const [visAvslagSoknadDialog, setVisAvslagSoknadDialog] = useState(false);
   const [visOppfriskDialog, setVisOppfriskDialog] = useState(false);
   const [visRevurderVedtak, setVisRevurderVedtak] = useState(false);
+  const [visValideringModal, setVisValideringModal] = useState(false);
   const [oppfriskningBlokkererInnhold, setOppfriskningBlokkererInnhold] = useState(false);
   const [venterPaRevurderVedtak, setVenterPaRevurderVedtak] = useState(false);
 
@@ -101,6 +104,14 @@ const Routing = ({
 
   const skjulRevurderVedtakDialogHandle = () => {
     setVisRevurderVedtak(false);
+  };
+
+  const visValideringModalDialogHandle = () => {
+    setVisValideringModal(true);
+  };
+
+  const skjulValideringModalDialogHandle = () => {
+    setVisValideringModal(false);
   };
 
   const hentBehandlingStatus = async () => {
@@ -225,6 +236,7 @@ const Routing = ({
     tilForsiden,
     tilOpprettNySak,
     visRevurderVedtakDialogHandle,
+    visValideringModalDialogHandle,
   };
 
   return (
@@ -288,6 +300,13 @@ const Routing = ({
           spinner={venterPaRevurderVedtak}
         />
       }
+      {
+        visValideringModal &&
+        <DialogboksValidering
+          avbryt={skjulValideringModalDialogHandle}
+          valideringer={vedtakfeilkoder}
+        />
+      }
     </ErrorBoundary>
   );
 };
@@ -305,14 +324,17 @@ Routing.propTypes = {
   lagreSoknad: PT.func.isRequired,
   saksnummer: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
+  vedtakfeilkoder: PT.arrayOf(PT.string),
 };
 
 Routing.defaultProps = {
   saksnummer: undefined,
+  vedtakfeilkoder: [],
 };
 
 const mapStateToProps = state => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  vedtakfeilkoder: vedtakSelectors.FeilkoderSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
