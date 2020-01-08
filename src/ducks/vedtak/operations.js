@@ -13,9 +13,16 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function fatt(behandlingID, body) {
-  return doThenDispatch(() => Api.Saksflyt.Vedtak.fatt(behandlingID, body), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Saksflyt.Vedtak.fatt(behandlingID, body),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: dispatch => {},
+      error: dispatch => {},
+    }
+  );
 }

@@ -27,36 +27,34 @@ const toJson = async response => {
   }
 };
 
-export const sendResultatTilDispatch = (dispatch, action, validering) => (...data) => {
+export const sendResultatTilDispatch = (dispatch, action, callback) => (...data) => {
   const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-  if (validering && typeof validering === 'function') {
-    validering(dispatch, dataSomSkalDispatches);
+  if (callback && typeof callback === 'function') {
+    callback(dispatch, dataSomSkalDispatches);
   }
   return dispatch({ type: action, data: dataSomSkalDispatches });
 };
 
-export const handterFeil = (dispatch, action) => async error => {
-  if (error.response) {
-    const data = await error.response.json();
+export const handterFeil = (dispatch, action, callback) => async error => {
+  const data = error.response ? await error.response.json() : error.toString();
 
-    window.frontendlogger.error({
-      error,
-      stack: error.stack,
-      data: JSON.stringify(data),
-    });
-
-    return dispatch({
-      type: action,
-      data: { response: error.response, data },
-    });
+  if (callback && typeof callback === 'function') {
+    callback(dispatch, data);
   }
 
   window.frontendlogger.error({
     error,
     stack: error.stack,
-    data: error.toString(),
+    data: error.response ? JSON.stringify(data) : data,
   });
-  return dispatch({ type: action, data: error.toString() });
+
+  return dispatch({
+    type: action,
+    data: {
+      response: error.response,
+      data,
+    },
+  });
 };
 
 export const getCookie = name => {
@@ -284,13 +282,13 @@ export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) =
 
 export const getAsPDF = (url, extendResponse = false) => methodToJson('GET', url, null, extendResponse, 'application/pdf');
 
-export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
+export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
   return async (dispatch, getState) => {
     if (PENDING) {
       await dispatch({ type: PENDING });
     }
     return api(dispatch, getState)
-      .then(sendResultatTilDispatch(dispatch, OK, validering))
-      .catch(handterFeil(dispatch, FEILET));
+      .then(sendResultatTilDispatch(dispatch, OK, callbacks.success))
+      .catch(handterFeil(dispatch, FEILET, callbacks.error));
   };
 }
