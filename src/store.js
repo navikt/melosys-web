@@ -2,9 +2,9 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import freeze from 'redux-freeze';
-import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware } from 'connected-react-router';
 
-import reducer from './reducer';
+import createRootReducer from './reducer';
 
 /* eslint-disable no-underscore-dangle */
 function getStoreCompose(history) {
@@ -16,5 +16,5 @@ function getStoreCompose(history) {
 /* eslint-enable */
 
 export default function create(history) {
-  return getStoreCompose(history)(createStore)(reducer, {});
+  return getStoreCompose(history)(createStore)(createRootReducer(history), {});
 }

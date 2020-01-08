@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as ReduxRouter } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import * as Constants from './constants';
@@ -20,11 +20,11 @@ loadInitialData(store);
 
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <ReduxRouter basename={Constants.URL_BASENAME} history={routerHistory}>
+    <ConnectedRouter basename={Constants.URL_BASENAME} history={routerHistory}>
       <App>
         <Routing />
       </App>
-    </ReduxRouter>
+    </ConnectedRouter>
   </ReduxProvider>,
   document.getElementById('root')
 );

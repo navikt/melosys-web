@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import { connectRouter } from 'connected-react-router';
 
 import anmodningsperioderReducer from './ducks/anmodningsperioder/';
 import anmodningsperiodesvarReducer from './ducks/anmodningsperiodesvar';
@@ -23,8 +24,9 @@ import vedtakReducer from './ducks/vedtak';
 
 import customFormReducer from './ducks/form';
 
-export default combineReducers({
+const createRootReducer = history => combineReducers({
   form: formReducer.plugin({ forretningsValidering: customFormReducer }),
+  router: connectRouter(history),
   anmodningsperioder: anmodningsperioderReducer,
   anmodningsperiodesvar: anmodningsperiodesvarReducer,
   avklartefakta: avklartefaktaReducer,
@@ -45,3 +47,5 @@ export default combineReducers({
   vedtak: vedtakReducer,
   vilkar: vilkarReducer,
 });
+
+export default createRootReducer;

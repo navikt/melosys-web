@@ -6,6 +6,7 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
+import { push } from 'connected-react-router';
 
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
@@ -21,7 +22,7 @@ export function fatt(behandlingID, body) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {},
+      success: dispatch => dispatch(push('/')),
       error: dispatch => {},
     }
   );
