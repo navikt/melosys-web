@@ -9,7 +9,7 @@ import * as KV from '../../../kodeverk';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import PreutfyltAvsender from './preutfyltAvsender';
-import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderAnnet } from './avsendere';
+import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderAnnet, AvsenderFullmektig } from './avsendere';
 import './avsendervelger.css';
 
 const AvsenderVelger = ({
@@ -82,7 +82,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === 'FULLMEKTIG' &&
           <Fragment>
-            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
+            <AvsenderFullmektig settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
           </Fragment>
         }
         <Skjema.Radio
