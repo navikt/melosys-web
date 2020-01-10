@@ -50,8 +50,9 @@ const OpprettNySak = ({
   };
 
   const radioValg = oppgaver.map(oppgave => {
+    const tema = KV.Koder.Tema[oppgave.tema];
     const innhold = <Skjema.CustomRadioPanelElement
-      tittel={oppgave.tema}
+      tittel={tema}
       data={[
         { term: 'Oppgavetype:', description: oppgave.oppgavetype },
         { term: 'Registrert dato:', description: <EnkeltDato dato={oppgave.registrertDato} /> },
