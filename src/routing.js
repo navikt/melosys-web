@@ -1,22 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { stringify } from 'qs';
 import loadable from '@loadable/component';
 import PT from 'prop-types';
 
-import MKV from './melosyskodeverk';
 import * as Utils from './utils';
 import * as Api from './services/api';
 
-import DialogboksOppfriskSak from './felleskomponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from './felleskomponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from './felleskomponenter/dialogboks/dialogboksHenlegg';
-import DialogboksAvsluttSakSomBortfalt from './felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
-import DialogboksAvslagSoknad from './felleskomponenter/dialogboks/dialogboksAvslagSoknad';
-import DialogboksRevurderVedtak from './felleskomponenter/dialogboks/dialogboksRevurderVedtak';
-import DialogboksValidering from './felleskomponenter/dialogboks/dialogboksValidering';
-import ErrorBoundary from './felleskomponenter/ErrorBoundary';
+import Modals from './modals';
 
 import { oppgaverOperations } from './ducks/oppgaver';
 import { soknadOperations } from './ducks/soknad';
@@ -25,9 +17,9 @@ import { vedtakOperations, vedtakSelectors } from './ducks/vedtak';
 import { saksopplysningerOperations } from './ducks/saksopplysninger';
 import { fagsakSelectors } from './ducks/fagsaker';
 import { behandlingerOperations } from './ducks/behandlinger';
+import { modalerOperations } from './ducks/modaler';
 
 const SideLoadingStatus = <div>Laster inn side komponenten!</div>;
-const SideLoadingFailMessage = 'Beklager, kan ikke laste inn side komponenten.';
 
 const UkjentSideLoadable = loadable(() => import('./sider/ukjentSide'), { fallback: SideLoadingStatus });
 const ForsideLoadable = loadable(() => import('./sider/forside'), { fallback: SideLoadingStatus });
@@ -45,7 +37,6 @@ const Routing = ({
   lagreAllData,
   hentOppgaveOversikt,
   tilbakeleggeOppgave,
-  fattVedtak,
   sjekkOppfriskningStatus,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
@@ -53,65 +44,27 @@ const Routing = ({
   saksnummer,
   apneTidligereBehandlinger,
   vedtakfeilkoder,
+  avslaSoknad,
+  skjulOppfriskDialogHandle,
+  skjulHenleggDialogHandle,
+  skjulAvsluttSakSomBortfaltDialogHandle,
+  skjulRevurderVedtakDialogHandle,
+  skjulOppfriskningBlokkererInnhold,
+  visOppfriskDialogHandle,
+  visHenleggDialogHandle,
+  visAvslagSoknadDialogHandle,
+  visAvsluttSakSomBortfaltDialogHandle,
+  visRevurderVedtakDialogHandle,
+  visValideringModalDialogHandle,
+  visOppfriskningBlokkererInnhold,
 }) => {
-  const [visHenleggDialog, setVisHenleggDialog] = useState(false);
-  const [visAvsluttSakSomBortfaltDialog, setVisAvsluttSakSomBortfaltDialog] = useState(false);
-  const [visAvslagSoknadDialog, setVisAvslagSoknadDialog] = useState(false);
-  const [visOppfriskDialog, setVisOppfriskDialog] = useState(false);
-  const [visRevurderVedtak, setVisRevurderVedtak] = useState(false);
-  const [visValideringModal, setVisValideringModal] = useState(false);
-  const [oppfriskningBlokkererInnhold, setOppfriskningBlokkererInnhold] = useState(false);
   const [venterPaRevurderVedtak, setVenterPaRevurderVedtak] = useState(false);
 
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
-  const visHenleggDialogHandle = () => {
-    setVisHenleggDialog(true);
-  };
-
-  const visAvsluttSakSomBortfaltDialogHandle = () => {
-    setVisAvsluttSakSomBortfaltDialog(true);
-  };
-
-  const visAvslagSoknadDialogHandle = () => {
-    setVisAvslagSoknadDialog(true);
-  };
-
-  const skjulHenleggDialogHandle = () => {
-    setVisHenleggDialog(false);
-  };
-
-  const skjulAvsluttSakSomBortfaltDialogHandle = () => {
-    setVisAvsluttSakSomBortfaltDialog(false);
-  };
-
-  const skjulAvslagSoknadDialogHandle = () => {
-    setVisAvslagSoknadDialog(false);
-  };
-
-  const visOppfriskBekreftelse = () => {
-    setVisOppfriskDialog(true);
-  };
-
   const skjulOppfriskBekreftelse = () => {
-    setVisOppfriskDialog(false);
-    setOppfriskningBlokkererInnhold(false);
-  };
-
-  const visRevurderVedtakDialogHandle = () => {
-    setVisRevurderVedtak(true);
-  };
-
-  const skjulRevurderVedtakDialogHandle = () => {
-    setVisRevurderVedtak(false);
-  };
-
-  const visValideringModalDialogHandle = () => {
-    setVisValideringModal(true);
-  };
-
-  const skjulValideringModalDialogHandle = () => {
-    setVisValideringModal(false);
+    skjulOppfriskDialogHandle();
+    skjulOppfriskningBlokkererInnhold();
   };
 
   const hentBehandlingStatus = async () => {
@@ -126,7 +79,7 @@ const Routing = ({
   };
 
   const blokkerInnholdMedOppfriskSpinner = () => {
-    setOppfriskningBlokkererInnhold(true);
+    visOppfriskningBlokkererInnhold();
   };
 
   const lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -194,20 +147,10 @@ const Routing = ({
     }
   };
 
-  const avslaaSoknad = () => fattVedtak(behandlingID, {
-    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
-    fritekst: null,
-    mottakerinstitusjon: null,
-    vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    revurderBegrunnelse: null,
-  });
-
   const avslaaSoknadHandle = async () => {
     try {
       await lagreAllData();
-      await avslaaSoknad();
-      skjulAvslagSoknadDialogHandle();
-      tilForsiden();
+      avslaSoknad(behandlingID);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -229,7 +172,7 @@ const Routing = ({
     visHenleggDialogHandle,
     visAvsluttSakSomBortfaltDialogHandle,
     visAvslagSoknadDialogHandle,
-    visOppfriskBekreftelse,
+    visOppfriskBekreftelse: visOppfriskDialogHandle,
     skjulOppfriskBekreftelseOgNavigerTilForside,
     apneTidligereBehandlinger,
     blokkerInnholdMedOppfriskSpinner,
@@ -240,7 +183,7 @@ const Routing = ({
   };
 
   return (
-    <ErrorBoundary message={SideLoadingFailMessage}>
+    <Fragment>
       <Switch location={location}>
         <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
@@ -252,62 +195,19 @@ const Routing = ({
         <Route path="/opprettnysak" render={props => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
         <Route component={UkjentSideLoadable} />
       </Switch>
-      {
-        oppfriskningBlokkererInnhold &&
-        <DialogboksVenter
-          tittel="Oppdaterer registeropplysninger"
-          tekst="Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc."
-          synlig
-          tilForsiden={skjulOppfriskBekreftelseOgNavigerTilForside}
-          oppdater={hentBehandlingStatus}
-        />
-      }
-      {
-        visOppfriskDialog &&
-        <DialogboksOppfriskSak
-          bekreft={lagreSoknadOgOppfriskSaksopplysninger}
-          avbryt={skjulOppfriskBekreftelse}
-          tilForsiden={skjulOppfriskBekreftelseOgNavigerTilForside}
-          oppdater={hentBehandlingStatus}
-        />
-      }
-      {
-        visHenleggDialog &&
-        <DialogboksHenlegg
-          avbryt={skjulHenleggDialogHandle}
-          henleggHandle={henleggHandle}
-        />
-      }
-      {
-        visAvslagSoknadDialog &&
-        <DialogboksAvslagSoknad
-          avbryt={skjulAvslagSoknadDialogHandle}
-          avslaaSoknad={avslaaSoknadHandle}
-        />
-      }
-      {
-        visAvsluttSakSomBortfaltDialog &&
-        <DialogboksAvsluttSakSomBortfalt
-          avbryt={skjulAvsluttSakSomBortfaltDialogHandle}
-          avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-        />
-      }
-      {
-        visRevurderVedtak &&
-        <DialogboksRevurderVedtak
-          avbryt={skjulRevurderVedtakDialogHandle}
-          bekreft={revurderVedtak}
-          spinner={venterPaRevurderVedtak}
-        />
-      }
-      {
-        visValideringModal &&
-        <DialogboksValidering
-          avbryt={skjulValideringModalDialogHandle}
-          valideringer={vedtakfeilkoder}
-        />
-      }
-    </ErrorBoundary>
+      <Modals
+        skjulOppfriskBekreftelseOgNavigerTilForside={skjulOppfriskBekreftelseOgNavigerTilForside}
+        hentBehandlingStatus={hentBehandlingStatus}
+        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        henleggHandle={henleggHandle}
+        avslaaSoknadHandle={avslaaSoknadHandle}
+        avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+        revurderVedtak={revurderVedtak}
+        venterPaRevurderVedtak={venterPaRevurderVedtak}
+        vedtakfeilkoder={vedtakfeilkoder}
+        skjulOppfriskBekreftelse={skjulOppfriskBekreftelse}
+      />
+    </Fragment>
   );
 };
 
@@ -317,7 +217,6 @@ Routing.propTypes = {
   lagreAllData: PT.func.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
   tilbakeleggeOppgave: PT.func.isRequired,
-  fattVedtak: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
@@ -325,6 +224,19 @@ Routing.propTypes = {
   saksnummer: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
   vedtakfeilkoder: PT.arrayOf(PT.string),
+  avslaSoknad: PT.func.isRequired,
+  skjulOppfriskDialogHandle: PT.func.isRequired,
+  skjulHenleggDialogHandle: PT.func.isRequired,
+  skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
+  skjulRevurderVedtakDialogHandle: PT.func.isRequired,
+  skjulOppfriskningBlokkererInnhold: PT.func.isRequired,
+  visOppfriskDialogHandle: PT.func.isRequired,
+  visHenleggDialogHandle: PT.func.isRequired,
+  visAvslagSoknadDialogHandle: PT.func.isRequired,
+  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
+  visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visValideringModalDialogHandle: PT.func.isRequired,
+  visOppfriskningBlokkererInnhold: PT.func.isRequired,
 };
 
 Routing.defaultProps = {
@@ -342,11 +254,23 @@ const mapDispatchToProps = dispatch => ({
   lagreSoknad: () => dispatch(soknadOperations.lagre()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
+  avslaSoknad: behandlingID => dispatch(vedtakOperations.avslaSoknad(behandlingID)),
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
   apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
+  skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
+  skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
+  skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
+  skjulRevurderVedtakDialogHandle: () => dispatch(modalerOperations.skjulRevurderVedtak()),
+  skjulOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.skjulOppfriskningBlokkererInnhold()),
+  visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
+  visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
+  visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
+  visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
+  visRevurderVedtakDialogHandle: () => dispatch(modalerOperations.visRevurderVedtak()),
+  visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
+  visOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.visOppfriskningBlokkererInnhold()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Routing));

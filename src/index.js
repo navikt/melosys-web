@@ -12,7 +12,10 @@ import loadInitialData from './startupDataLoader';
 import createStore from './store';
 import routerHistory from './history';
 import Routing from './routing';
+import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 import { unregister } from './registerServiceWorker';
+
+const SideLoadingFailMessage = 'Beklager, kan ikke laste inn side komponenten.';
 
 const store = createStore(routerHistory);
 loadInitialData(store);
@@ -22,7 +25,9 @@ ReactDOM.render(
   <ReduxProvider store={store}>
     <ConnectedRouter basename={Constants.URL_BASENAME} history={routerHistory}>
       <App>
-        <Routing />
+        <ErrorBoundary message={SideLoadingFailMessage}>
+          <Routing />
+        </ErrorBoundary>
       </App>
     </ConnectedRouter>
   </ReduxProvider>,

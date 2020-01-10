@@ -12,6 +12,7 @@ import dokumenterReducer from './ducks/dokumenter/';
 import fagsakerReducer from './ducks/fagsaker/';
 import journalforingReducer from './ducks/journalforing';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
+import modalerReducer from './ducks/modaler';
 import oppgaverReducer from './ducks/oppgaver';
 import organisasjonerReducer from './ducks/organisasjoner';
 import personerReducer from './ducks/personer';
@@ -37,6 +38,7 @@ const createRootReducer = history => combineReducers({
   fagsaker: fagsakerReducer,
   journalforing: journalforingReducer,
   lovvalgsperioder: lovvalgsperioderReducer,
+  modaler: modalerReducer,
   oppgaver: oppgaverReducer,
   organisasjoner: organisasjonerReducer,
   personer: personerReducer,

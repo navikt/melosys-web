@@ -48,12 +48,19 @@ export const handterFeil = (dispatch, action, callback) => async error => {
     data: error.response ? JSON.stringify(data) : data,
   });
 
+  if (error.response) {
+    return dispatch({
+      type: action,
+      data: {
+        response: error.response,
+        data,
+      },
+    });
+  }
+
   return dispatch({
     type: action,
-    data: {
-      response: error.response,
-      data,
-    },
+    data,
   });
 };
 
