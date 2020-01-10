@@ -16,7 +16,6 @@ import { soknadSelectors } from '../../../../../ducks/soknad';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
-import { vilkarSelectors } from '../../../../../ducks/vilkar';
 import { vedtakSelectors } from '../../../../../ducks/vedtak';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
@@ -44,7 +43,6 @@ const VurderingVedtak = ({
   formIsValid,
   formValues,
   form,
-  artikkel12ErOppfylt,
   vedtakLastes,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
@@ -58,11 +56,9 @@ const VurderingVedtak = ({
   } = lovvalget;
 
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
-  const antallMaaneder = Math.ceil(Utils.dato.datoDiff(fomDato, tomDato, 'months'));
-  const periodeErOver24mnd = antallMaaneder > 24;
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const fattVedtakDisabled = !redigerbart || periodeErOver24mnd;
+  const fattVedtakDisabled = !redigerbart;
 
   const pdfDokumenter = [
     {
@@ -129,10 +125,6 @@ const VurderingVedtak = ({
           <Nav.Column xs="6">
             <Nav.typo.Element type="element">Antall måneder i utlandet</Nav.typo.Element>
             <Nav.typo.Normaltekst>{antallManederMenneskelig}</Nav.typo.Normaltekst>
-            {
-              artikkel12ErOppfylt && periodeErOver24mnd &&
-              <Nav.AlertStripeAdvarsel className="periode__advarsel">Perioden er over 24 måneder.</Nav.AlertStripeAdvarsel>
-            }
           </Nav.Column>
         </Nav.Row>
         {
@@ -186,7 +178,6 @@ const VurderingVedtak = ({
 };
 
 VurderingVedtak.propTypes = {
-  artikkel12ErOppfylt: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   soknadsland: PT.arrayOf(PT.string).isRequired,
@@ -207,7 +198,6 @@ VurderingVedtak.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  artikkel12ErOppfylt: vilkarSelectors.Artikkel12OppfyltSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   soknadsland: soknadSelectors.SoknadslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
