@@ -1,0 +1,172 @@
+name: Push and deploy
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'SPRINT-*'
+  pull_request:
+    branches:
+      - 'master'
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/melosys-web:${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Login to Github Package Registry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+
+      - name: Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.3.1'
+      - name: npm install
+        run: npm i
+      - name: build css
+        run: npm run build:css
+      - name: lint
+        run: npm run eslint
+      - name: test
+        run: npm run test:ci
+        env:
+          CI: true
+      - name: build
+        run: |
+          BRANCH_NAME=$GITHUB_REF
+          BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
+          npm run build
+
+      - name: Build docker image
+        run: docker build -t ${IMAGE} .
+
+      - name: Push Docker image
+        run: docker push ${IMAGE}
+
+  # Deploy til T8 ved push på SPRINT-branch
+  deploy_t8:
+    name: Deploy til T8
+    needs: build
+    if: contains(github.ref, 'SPRINT-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Deploy redis
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: nais/redis.yaml
+          VAR: namespace=t8
+      - name: Deploy melosys-web
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: nais/nais.yaml
+          VAR: namespace=t8,ingress=melosys-t8.nais.preprod.local
+      - name: Slack Notification (deploy success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v1.0.0
+        env:
+          SLACK_COLOR: good
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':clap: melosys-web ble deployet til t8 :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+
+  # Deploy til Q2 ved pull-request mot master
+  deploy_q2:
+    name: Deploy til Q2
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Deploy redis
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: nais/redis.yaml
+          VAR: namespace=q2
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: nais/nais.yaml
+          VAR: namespace=q2,ingress=melosys-q2.nais.preprod.local
+      - name: Slack Notification (deploy success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v1.0.0
+        env:
+          SLACK_COLOR: good
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':clap: melosys-web ble deployet til q2 :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+
+  # Deploy til prod ved push på master
+  deploy_prod:
+    name: Deploy til prod
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Deploy redis
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: nais/redis.yaml
+          VAR: namespace=default
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: nais/nais.yaml
+          VAR: namespace=default,ingress=melosys.nais.adeo.no
+      - name: Slack Notification (deploy success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v1.0.0
+        env:
+          SLACK_COLOR: good
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':clap: melosys-web ble deployet til prod :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+      - name: Slack Notification (deploy failure)
+        if: failure()
+        uses: rtCamp/action-slack-notify@v1.0.0
+        env:
+          SLACK_COLOR: danger
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':crying_cat_face: melosys-web kunne ikke deployes til prod!'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
