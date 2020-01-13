@@ -4,7 +4,7 @@ metadata:
   labels:
     team: teammelosys
   name: melosys-web-redis
-  namespace: t8
+  namespace: {{namespace}}
 spec:
   image: redis:5-alpine
   port: 6379

@@ -2,12 +2,11 @@ apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
   name: melosys-web
-  namespace: t8
+  namespace: {{namespace}}
   labels:
     team: teammelosys
 spec:
-  image: {{image}}:{{tag}}
-
+  image: {{image}}
   port: 3000
   replicas:
     min: 2
@@ -31,7 +30,7 @@ spec:
   vault:
     enabled: true
   ingresses:
-    - "https://melosys-t8.nais.preprod.local"
+    - {{ingress}}
   env:
     - name: REDIS_HOST
-      value: melosys-web-redis.t8.svc.nais.local
+      value: melosys-web-redis.{{namespace}}.svc.nais.local
