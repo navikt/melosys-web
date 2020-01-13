@@ -13,8 +13,8 @@ describe('DialogboksValidering', () => {
       avbryt: jest.fn(),
       ariaHideApp: false,
       valideringer: [
-        MKV.Koder.begrunnelser.unntak_periode_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
-        MKV.Koder.begrunnelser.unntak_periode_begrunnelser.TREDJELANDSBORGER_IKKE_AVTALELAND,
+        MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
+        MKV.Koder.begrunnelser.kontroll_begrunnelser.TREDJELANDSBORGER_IKKE_AVTALELAND,
       ],
     };
   });
