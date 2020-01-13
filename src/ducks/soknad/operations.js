@@ -34,7 +34,9 @@ export function send(bid, soknad) {
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
     },
-    (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
+    {
+      success: (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data),
+    }
   );
 }
 

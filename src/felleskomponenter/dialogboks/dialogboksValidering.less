@@ -1,0 +1,29 @@
+@import '../../constants';
+
+.dialogboksValidering {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+
+  #closeButton {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: 1px solid @black;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .validering {
+    margin-bottom: 25px;
+    width: 20em;
+
+    .valideringKode {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+  }
+}

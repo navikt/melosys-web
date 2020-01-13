@@ -23,7 +23,7 @@ import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
-import { vedtakOperations } from '../../../../ducks/vedtak';
+import { vedtakOperations, vedtakTypes } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
 import { soknadOperations } from '../../../../ducks/soknad';
 
@@ -158,7 +158,13 @@ class Stegvelger extends Component {
   };
 
   fatteVedtakHandler = async data => {
-    const { behandlingID, fattVedtak } = this.props;
+    const {
+      behandlingID,
+      fattVedtak,
+      tilForsiden,
+      visValideringModalDialogHandle,
+    } = this.props;
+
     const vedtakBody = {
       behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
       fritekst: data.fritekst || null,
@@ -168,8 +174,16 @@ class Stegvelger extends Component {
     };
 
     try {
-      await fattVedtak(behandlingID, vedtakBody);
-      this.tilForsiden();
+      const fattVedtakAction = await fattVedtak(behandlingID, vedtakBody);
+
+      if (fattVedtakAction.type === vedtakTypes.OK) {
+        tilForsiden();
+      } else if (fattVedtakAction.type === vedtakTypes.FEILET
+          && fattVedtakAction.data.data
+          && fattVedtakAction.data.data.feilkoder
+          && fattVedtakAction.data.data.feilkoder.length > 0) {
+        visValideringModalDialogHandle();
+      }
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -183,11 +197,11 @@ class Stegvelger extends Component {
   };
 
   bestillAnmodningsperioder = async (mottakerinstitusjon = null) => {
-    const { behandlingID } = this.props;
+    const { behandlingID, tilForsiden } = this.props;
     const bestillAnmodningsperioderBody = { mottakerinstitusjon };
     try {
       await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestillAnmodningsperioderBody);
-      this.tilForsiden();
+      tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -202,14 +216,15 @@ class Stegvelger extends Component {
 
   videresendSoknad = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      const { saksnummer, tilForsiden } = this.props;
+
       try {
-        const { saksnummer } = this.props;
         const body = { mottakerinstitusjon };
         await Api.Fagsaker.fagsak.videresend(saksnummer, body);
       } catch (e) {
         Utils.logger.error(e);
       } finally {
-        this.tilForsiden();
+        tilForsiden();
       }
     });
   };
@@ -262,10 +277,6 @@ class Stegvelger extends Component {
     return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);
   };
 
-  tilForsiden = () => {
-    this.props.history.push('/');
-  };
-
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
@@ -283,7 +294,7 @@ class Stegvelger extends Component {
       lagreAnmodningsperioderHandler: this.props.lagreAnmodningsperioderHandler,
       endreVedtak: this.endreVedtak,
       endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
-      tilForsiden: this.tilForsiden,
+      tilForsiden: this.props.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
       videresendSoknad: this.videresendSoknad,
@@ -448,6 +459,8 @@ Stegvelger.propTypes = {
   generiskStegRedigerbart: PT.bool.isRequired,
   saksnummer: PT.string.isRequired,
   erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
+  tilForsiden: PT.func.isRequired,
+  visValideringModalDialogHandle: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
