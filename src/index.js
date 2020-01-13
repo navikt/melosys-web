@@ -15,7 +15,7 @@ import Routing from './routing';
 import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 import { unregister } from './registerServiceWorker';
 
-const SideLoadingFailMessage = 'Beklager, kan ikke laste inn side komponenten.';
+const SideLoadingFailMessage = 'Beklager, kunne ikke laste inn siden.';
 
 const store = createStore(routerHistory);
 loadInitialData(store);

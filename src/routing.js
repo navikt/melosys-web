@@ -19,7 +19,7 @@ import { fagsakSelectors } from './ducks/fagsaker';
 import { behandlingerOperations } from './ducks/behandlinger';
 import { modalerOperations } from './ducks/modaler';
 
-const SideLoadingStatus = <div>Laster inn side komponenten!</div>;
+const SideLoadingStatus = <div>Laster inn siden...</div>;
 
 const UkjentSideLoadable = loadable(() => import('./sider/ukjentSide'), { fallback: SideLoadingStatus });
 const ForsideLoadable = loadable(() => import('./sider/forside'), { fallback: SideLoadingStatus });
