@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider as ReduxProvider } from 'react-redux';
 
-import * as Constants from './constants';
 import './index.css';
 import App from './App';
 import loadInitialData from './startupDataLoader';
@@ -23,7 +22,7 @@ loadInitialData(store);
 
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <ConnectedRouter basename={Constants.URL_BASENAME} history={routerHistory}>
+    <ConnectedRouter history={routerHistory}>
       <App>
         <ErrorBoundary message={SideLoadingFailMessage}>
           <Routing />
