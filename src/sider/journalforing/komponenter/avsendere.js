@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PT from 'prop-types';
 import MKV from 'melosys-kodeverk';
 
@@ -45,29 +45,21 @@ AvsenderOrganisasjon.defaultProps = {
 };
 
 export const AvsenderFullmektig = ({ settFeltInnhold, hentOgVisRepresentant }) => {
-  const fullmektigFor = [
-    {
-      kode: 'ARBEIDSGIVER',
-      term: 'Arbeidsgiver',
-    },
-    {
-      kode: 'ARBEIDSTAKER',
-      term: 'Arbeidstaker',
-    },
-    {
-      kode: 'ARBEIDSGIVER_OG_ARBEIDSTAKER',
-      term: 'Både arbeidsgiver og arbeidstaker',
-    },
-  ];
+  useEffect(() => () => {
+    settFeltInnhold('fullmektigRepresenterer', '');
+  }, []);
+
+  const representererMap = {
+    [MKV.Koder.representerer.ARBEIDSGIVER]: 'Arbeidsgiver',
+    [MKV.Koder.representerer.BRUKER]: 'Arbeidstaker',
+    [MKV.Koder.representerer.BEGGE]: 'Både arbeidsgiver og arbeidstaker',
+  };
 
   return (
     <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant}>
-      <Skjema.Select feltNavn="fullmektigFor" label="Hvem er dette fullmektig for">
-        {
-          fullmektigFor.map(({ kode, term }) => (
-            <option key={kode} value={kode}>{term}</option>
-          ))
-        }
+      <Skjema.Select feltNavn="fullmektigRepresenterer" label="Hvem er dette fullmektig for">
+        {MKV.KTObjects.representerer.map(({ kode }) =>
+          (<option key={kode} value={kode}>{representererMap[kode]}</option>))}
       </Skjema.Select>
     </AvsenderOrganisasjon>
   );

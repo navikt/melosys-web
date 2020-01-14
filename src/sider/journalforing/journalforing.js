@@ -88,7 +88,7 @@ class Journalforing extends Component {
     const {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
-      representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
+      representantID, representantKontaktPerson, fullmektigRepresenterer, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
       ikkeSendForvaltingsmelding,
       mottattDato,
@@ -120,6 +120,7 @@ class Journalforing extends Component {
         behandlingstypeKode,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        fullmektigRepresenterer,
         ikkeSendForvaltingsmelding,
       });
     }
