@@ -45,9 +45,10 @@ AvsenderOrganisasjon.defaultProps = {
 };
 
 export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepresentant }) => {
-  useEffect(() => () => {
-    settFeltInnhold('fullmektigRepresenterer', '');
-  }, []);
+  useEffect(() =>
+    () => {
+      settFeltInnhold('fullmektigRepresenterer', '');
+    }, []);
 
   useEffect(() => {
     settFeltInnhold('representantID', avsenderID);
