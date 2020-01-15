@@ -13,12 +13,11 @@ import Modals from './modals';
 import { oppgaverOperations } from './ducks/oppgaver';
 import { soknadOperations } from './ducks/soknad';
 import { datalastingOperations } from './ducks/datalasting';
-import { vedtakOperations, vedtakSelectors } from './ducks/vedtak';
+import { vedtakOperations } from './ducks/vedtak';
 import { saksopplysningerOperations } from './ducks/saksopplysninger';
 import { fagsakSelectors } from './ducks/fagsaker';
 import { behandlingerOperations } from './ducks/behandlinger';
 import { modalerOperations } from './ducks/modaler';
-import { utpekSelectors } from './ducks/utpek';
 
 const SideLoadingStatus = <div>Laster inn siden...</div>;
 

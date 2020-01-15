@@ -133,8 +133,6 @@ const mapStateToProps = state => ({
   },
 });
 
-const mapDispatchToProps = dispatch => ({});
-
 const VurderingArtikkel13_1b_UtpekLand_form = reduxForm({
   form: KV.Form.ARTIKKEL_13_1B_UTPEKLAND,
   enableReinitialize: true,
@@ -144,4 +142,4 @@ const VurderingArtikkel13_1b_UtpekLand_form = reduxForm({
   validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_b_utpek),
 })(VurderingArtikkel13_1b_UtpekLand);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_1b_UtpekLand_form);
+export default connect(mapStateToProps)(VurderingArtikkel13_1b_UtpekLand_form);
