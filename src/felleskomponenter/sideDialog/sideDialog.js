@@ -75,6 +75,7 @@ class SideDialog extends Component {
   async componentDidMount() {
     const skalVises = await Utils.feature.toggle([
       { namespace: 'default', cluster: 'prod-fss' },
+      { namespace: 'default', cluster: 'dev-fss' },
       { namespace: 'q2', cluster: 'dev-fss' },
       { namespace: 't8', cluster: 'dev-fss' },
     ]);

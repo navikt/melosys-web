@@ -18,6 +18,7 @@ class PdfLenkeListe extends Component {
   async componentDidMount() {
     this.oppdaterKanForhandsviseSed(await Utils.feature.toggle([
       { namespace: 'default', cluster: 'prod-fss' },
+      { namespace: 'default', cluster: 'dev-fss' },
       { namespace: 'q2', cluster: 'dev-fss' },
       { namespace: 't8', cluster: 'dev-fss' },
     ]));
