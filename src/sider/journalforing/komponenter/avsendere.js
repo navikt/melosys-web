@@ -47,7 +47,7 @@ AvsenderOrganisasjon.defaultProps = {
 export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepresentant }) => {
   useEffect(() =>
     () => {
-      settFeltInnhold('fullmektigRepresenterer', '');
+      settFeltInnhold('representantRepresenterer', '');
     }, []);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepre
 
   return (
     <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant}>
-      <Skjema.Select feltNavn="fullmektigRepresenterer" label="Hvem er dette fullmektig for">
+      <Skjema.Select feltNavn="representantRepresenterer" label="Hvem er dette fullmektig for">
         {MKV.KTObjects.representerer.map(({ kode }) =>
           (<option key={kode} value={kode}>{representererMap[kode]}</option>))}
       </Skjema.Select>

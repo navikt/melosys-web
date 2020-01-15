@@ -129,7 +129,7 @@ const journalforing = object().shape({
       is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
       then: string().required(VELG_ETT_LAND),
     }),
-  fullmektigRepresenterer: string()
+  representantRepresenterer: string()
     .when('avsenderType', {
       is: 'FULLMEKTIG',
       then: string().required(VELG_REPRESENTERER),
