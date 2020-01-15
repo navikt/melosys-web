@@ -196,6 +196,23 @@ class Stegvelger extends Component {
     });
   };
 
+  utpekHandler = async data => {
+    const { saksnummer } = this.props;
+
+    const utpekBody = {
+      mottakerinstitusjoner: data.mottakerinstitusjoner,
+    };
+
+    Api.Fagsaker.fagsak.utpek(saksnummer, utpekBody);
+  };
+
+  lagreOgUtpek = data => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      await this.props.lagreAllData();
+      this.utpekHandler(data);
+    });
+  };
+
   bestillAnmodningsperioder = async (mottakerinstitusjon = null) => {
     const { behandlingID, tilForsiden } = this.props;
     const bestillAnmodningsperioderBody = { mottakerinstitusjon };
@@ -287,6 +304,7 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
+      lagreOgUtpek: this.lagreOgUtpek,
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,

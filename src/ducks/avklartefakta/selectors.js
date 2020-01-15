@@ -301,3 +301,15 @@ export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
     })
   )
 );
+
+export const OmfattesILandFaktaSelector = createSelector(
+  AvklartefaktaSelector,
+  avklarteFakta => (
+    avklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND)
+  )
+);
+
+export const OmfattesILandSelector = createSelector(
+  OmfattesILandFaktaSelector,
+  omfattesILandFakta => hentFaktaVerdi(omfattesILandFakta)
+);
