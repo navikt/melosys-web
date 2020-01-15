@@ -35,6 +35,7 @@ const KnyttTilSak = props => {
               behandlingstyper &&
               behandlingstyper
                 .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED)
