@@ -12,12 +12,15 @@ import * as Mui from '../../../felleskomponenter/ui';
 
 import './knyttTilSak.css';
 
+const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET);
+
 const KnyttTilSak = props => {
   const { sak, behandlingstyper, opprettBehandling } = props;
-  const { saksstatus } = sak;
+  const { behandlingOversikter } = sak;
+  const aktivBehandling = hentAktivBehandling(behandlingOversikter);
   const clsElementskrift = { 'border-bottom': 'none' };
 
-  if (saksstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
+  if (aktivBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
       <div className="panelramme">
         <Mui.Elementskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.InformationCircle} className="elementTittel oversteUndertittel" style={clsElementskrift} />
