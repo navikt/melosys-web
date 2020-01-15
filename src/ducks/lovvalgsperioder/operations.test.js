@@ -18,6 +18,9 @@ describe('Lovvalgsperioder operations', () => {
     fetch.mockResponse(JSON.stringify({}));
 
     initialState = {
+      avklartefakta: {
+        data: [],
+      },
       behandlinger: {
         data: [
           {
@@ -173,7 +176,7 @@ describe('Lovvalgsperioder operations', () => {
       expect(store.getActions()).toMatchObject(expectedActions);
     });
 
-    it('lager OPPDATER_LOVVALGSPERIODER dersom lovvalgsbestemmelse er valgt', () => {
+    it.only('lager OPPDATER_LOVVALGSPERIODER dersom lovvalgsbestemmelse er valgt', () => {
       const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;
 
       const expectedActions = [
