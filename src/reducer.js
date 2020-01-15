@@ -20,6 +20,7 @@ import saksbehandlerReducer from './ducks/saksbehandler/';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
 import soknadReducer from './ducks/soknad/';
+import utpekReducer from './ducks/utpek';
 import vilkarReducer from './ducks/vilkar/';
 import vedtakReducer from './ducks/vedtak';
 
@@ -46,6 +47,7 @@ const createRootReducer = history => combineReducers({
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
   soknad: soknadReducer,
+  utpek: utpekReducer,
   vedtak: vedtakReducer,
   vilkar: vilkarReducer,
 });

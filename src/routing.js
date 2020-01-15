@@ -18,6 +18,7 @@ import { saksopplysningerOperations } from './ducks/saksopplysninger';
 import { fagsakSelectors } from './ducks/fagsaker';
 import { behandlingerOperations } from './ducks/behandlinger';
 import { modalerOperations } from './ducks/modaler';
+import { utpekSelectors } from './ducks/utpek';
 
 const SideLoadingStatus = <div>Laster inn siden...</div>;
 
@@ -43,7 +44,6 @@ const Routing = ({
   lagreSoknad,
   saksnummer,
   apneTidligereBehandlinger,
-  vedtakfeilkoder,
   avslaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
@@ -204,7 +204,6 @@ const Routing = ({
         avsluttSakSomBortfalt={avsluttSakSomBortfalt}
         revurderVedtak={revurderVedtak}
         venterPaRevurderVedtak={venterPaRevurderVedtak}
-        vedtakfeilkoder={vedtakfeilkoder}
         skjulOppfriskBekreftelse={skjulOppfriskBekreftelse}
       />
     </Fragment>
@@ -223,7 +222,6 @@ Routing.propTypes = {
   lagreSoknad: PT.func.isRequired,
   saksnummer: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
-  vedtakfeilkoder: PT.arrayOf(PT.string),
   avslaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
@@ -241,12 +239,10 @@ Routing.propTypes = {
 
 Routing.defaultProps = {
   saksnummer: undefined,
-  vedtakfeilkoder: [],
 };
 
 const mapStateToProps = state => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  vedtakfeilkoder: vedtakSelectors.FeilkoderSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

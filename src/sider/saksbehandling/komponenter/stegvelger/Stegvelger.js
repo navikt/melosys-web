@@ -26,6 +26,7 @@ import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { vedtakOperations, vedtakTypes } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
 import { soknadOperations } from '../../../../ducks/soknad';
+import { utpekOperations } from '../../../../ducks/utpek';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
@@ -196,14 +197,14 @@ class Stegvelger extends Component {
     });
   };
 
-  utpekHandler = async data => {
-    const { saksnummer } = this.props;
+  utpekHandler = data => {
+    const { saksnummer, utpek } = this.props;
 
     const utpekBody = {
       mottakerinstitusjoner: data.mottakerinstitusjoner,
     };
 
-    Api.Fagsaker.fagsak.utpek(saksnummer, utpekBody);
+    utpek(saksnummer, utpekBody);
   };
 
   lagreOgUtpek = data => {
@@ -479,6 +480,7 @@ Stegvelger.propTypes = {
   erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
+  utpek: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -529,6 +531,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterAnmodningsPerioder: lovvalgsbestemmelse => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(lovvalgsbestemmelse)),
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
   lagreSoknadHandler: () => dispatch(soknadOperations.lagre()),
+  utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
