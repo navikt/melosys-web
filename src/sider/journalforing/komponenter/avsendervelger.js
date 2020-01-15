@@ -82,7 +82,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === 'FULLMEKTIG' &&
           <Fragment>
-            <AvsenderFullmektig settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
+            <AvsenderFullmektig avsenderID={formValues.avsenderID} settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
           </Fragment>
         }
         <Skjema.Radio

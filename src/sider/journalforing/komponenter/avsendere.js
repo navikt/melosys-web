@@ -44,10 +44,17 @@ AvsenderOrganisasjon.defaultProps = {
   children: null,
 };
 
-export const AvsenderFullmektig = ({ settFeltInnhold, hentOgVisRepresentant }) => {
+export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepresentant }) => {
   useEffect(() => () => {
     settFeltInnhold('fullmektigRepresenterer', '');
   }, []);
+
+  useEffect(() => {
+    settFeltInnhold('representantID', avsenderID);
+    return () => {
+      settFeltInnhold('representantID', '');
+    };
+  }, [avsenderID]);
 
   const representererMap = {
     [MKV.Koder.representerer.ARBEIDSGIVER]: 'Arbeidsgiver',
@@ -66,8 +73,13 @@ export const AvsenderFullmektig = ({ settFeltInnhold, hentOgVisRepresentant }) =
 };
 
 AvsenderFullmektig.propTypes = {
+  avsenderID: PT.string,
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
+};
+
+AvsenderFullmektig.defaultProps = {
+  avsenderID: '',
 };
 
 export const AvsenderUtenlanskTrygdemyndighet = ({
