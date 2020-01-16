@@ -14,10 +14,11 @@ import './knyttTilSak.css';
 
 const KnyttTilSak = props => {
   const { sak, behandlingstyper, opprettBehandling } = props;
-  const { saksstatus } = sak;
+  const { behandlingOversikter } = sak;
+  const sisteBehandling = behandlingOversikter[0];
   const clsElementskrift = { 'border-bottom': 'none' };
 
-  if (saksstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
+  if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
       <div className="panelramme">
         <Mui.Elementskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.InformationCircle} className="elementTittel oversteUndertittel" style={clsElementskrift} />
@@ -32,6 +33,7 @@ const KnyttTilSak = props => {
               behandlingstyper &&
               behandlingstyper
                 .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED)
