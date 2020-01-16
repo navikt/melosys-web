@@ -49,7 +49,7 @@ export const VurderingArtikkel13_1b_UtpekLand = ({
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis orienteringsbrev',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, //TODO: Hvilken brevkode?
+      type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
     },
     {
       navn: 'Forhåndsvis SED A003',
