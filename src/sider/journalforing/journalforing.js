@@ -88,7 +88,7 @@ class Journalforing extends Component {
     const {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
-      representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
+      representantID, representantKontaktPerson, representantRepresenterer, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
       ikkeSendForvaltingsmelding,
       mottattDato,
@@ -120,6 +120,7 @@ class Journalforing extends Component {
         behandlingstypeKode,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        representererKode: representantRepresenterer,
         ikkeSendForvaltingsmelding,
       });
     }
@@ -228,13 +229,25 @@ class Journalforing extends Component {
       ...vasketJournalforing,
       fagsak,
       anmodningOmUnntak,
-      avsenderType,
+      avsenderType: this.mapAvsenderType(avsenderType),
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
       tilForsiden();
     }
   };
+
+  mapAvsenderType = avsenderType => {
+    switch (avsenderType) {
+      case 'ARBEIDSGIVER':
+      case 'ARBEIDSGIVER_FULLMEKTIG':
+      case 'FULLMEKTIG':
+        return MKV.Koder.avsendertyper.ORGANISASJON;
+      default:
+        return avsenderType;
+    }
+  };
+
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
    * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.

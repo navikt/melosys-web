@@ -22,6 +22,7 @@ const VELG_ETT_LAND = { melding: 'Velg ett land.' };
 const VELG_EN_AVSENDER = { melding: 'Velg en avsender' };
 const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
 const DATO_MA_VAERE_ETTER_FOM = { melding: 'Dato må være lik eller senere enn fra.' };
+const VELG_REPRESENTERER = { melding: 'Velg hvem fullmektig representerer' };
 
 const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) => (
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
@@ -127,6 +128,11 @@ const journalforing = object().shape({
     .when('avsenderType', {
       is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
       then: string().required(VELG_ETT_LAND),
+    }),
+  representantRepresenterer: string()
+    .when('avsenderType', {
+      is: 'FULLMEKTIG',
+      then: string().required(VELG_REPRESENTERER),
     }),
   avsenderType: string()
     .when('$erAvsenderPreutfylt', {
