@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
-import * as Utils from '../../utils';
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogOpprettNyBuc from './sideDialogOpprettNyBuc';
@@ -63,6 +62,8 @@ class SideDialog extends Component {
     faner: [
       { navn: 'dokumenter', tittel: 'Dokumenter' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
+      { navn: 'sedbestilling', tittel: 'Opprett ny BUC' },
+      { navn: 'besvarsed', tittel: 'SED-utveksling' },
     ],
   };
 
@@ -71,19 +72,6 @@ class SideDialog extends Component {
     aktivFane: this.props.faner[0].navn,
     faner: this.props.faner,
   };
-
-  async componentDidMount() {
-    const skalVises = await Utils.feature.toggle([
-      { namespace: 'default', cluster: 'prod-fss' },
-      { namespace: 'q2', cluster: 'dev-fss' },
-      { namespace: 't8', cluster: 'dev-fss' },
-    ]);
-
-    if (skalVises) {
-      this.leggTilFane({ navn: 'sedbestilling', tittel: 'Opprett ny BUC' });
-      this.leggTilFane({ navn: 'besvarsed', tittel: 'SED-utveksling' });
-    }
-  }
 
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
