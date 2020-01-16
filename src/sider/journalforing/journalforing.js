@@ -120,7 +120,7 @@ class Journalforing extends Component {
         behandlingstypeKode,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
-        representantRepresenterer,
+        representererKode: representantRepresenterer,
         ikkeSendForvaltingsmelding,
       });
     }
