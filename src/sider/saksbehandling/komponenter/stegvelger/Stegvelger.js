@@ -27,6 +27,7 @@ import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
 import { soknadOperations } from '../../../../ducks/soknad';
 import { utpekOperations } from '../../../../ducks/utpek';
+import { utpekningsperioderOperations, utpekningsperioderSelectors } from '../../../../ducks/utpekningsperioder';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
@@ -61,6 +62,7 @@ class Stegvelger extends Component {
       this.props.hentAvklartefakta(behandlingID),
       this.props.hentLovvalgsperioder(behandlingID),
       this.props.hentAnmodningsperioder(behandlingID),
+      this.props.hentUtpekningsperioder(behandlingID),
     ]);
 
     this.oppdaterAktuelleSteg(aktivtStegNummer);
@@ -151,6 +153,7 @@ class Stegvelger extends Component {
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
       this.props.oppdaterLovvalgperioder(bestemmelser),
       this.props.oppdaterAnmodningsPerioder(bestemmelser),
+      this.props.oppdaterUtpekningsperioder(bestemmelser),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -321,6 +324,8 @@ class Stegvelger extends Component {
       behandlingstype: props.oppsummering.behandlingstype,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
+      utpekningsperioder: props.utpekningsperioder,
+      omfattesIAnnetLand: props.omfattesIAnnetLand,
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
       artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
       soknad_skjema: props.soknad_skjema,
@@ -368,6 +373,7 @@ class Stegvelger extends Component {
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
       lagreAnmodningsperioderHandler,
+      lagreUtpekningsperioderHandler,
     } = this.props;
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
@@ -378,6 +384,7 @@ class Stegvelger extends Component {
       await lagreVilkarHandler();
       await lagreLovvalgsperioderHandler();
       await lagreAnmodningsperioderHandler();
+      await lagreUtpekningsperioderHandler();
 
       if (this.erSisteSteg(nyttStegNummer)) {
         await lagreSoknadHandler();
@@ -458,6 +465,7 @@ Stegvelger.propTypes = {
   anmodningsperioder: PT.array.isRequired,
   oppdaterAnmodningsPerioder: PT.func.isRequired,
   lagreAnmodningsperioderHandler: PT.func.isRequired,
+  lagreUtpekningsperioderHandler: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterAnmodningsperiodesvar: PT.func.isRequired,
   generiskStegRedigerbart: PT.bool.isRequired,
@@ -465,6 +473,10 @@ Stegvelger.propTypes = {
   erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
   tilForsiden: PT.func.isRequired,
   utpek: PT.func.isRequired,
+  hentUtpekningsperioder: PT.func.isRequired,
+  oppdaterUtpekningsperioder: PT.func.isRequired,
+  utpekningsperioder: MPT.Utpekningsperioder.isRequired,
+  omfattesIAnnetLand: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -498,6 +510,8 @@ const mapStateToProps = state => ({
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   erIDirekteTilArtikkel16Flyt: avklartefaktaSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
+  utpekningsperioder: utpekningsperioderSelectors.UtpekningsperioderSelector(state),
+  omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
 });
 
 /* eslint no-alert:off */
@@ -509,13 +523,16 @@ const mapDispatchToProps = dispatch => ({
   oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
-  oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
+  oppdaterLovvalgperioder: stegState => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(stegState)),
   hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
   hentAnmodningsperioder: behandlingID => dispatch(anmodningsperioderOperations.hent(behandlingID)),
-  oppdaterAnmodningsPerioder: lovvalgsbestemmelse => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(lovvalgsbestemmelse)),
+  oppdaterAnmodningsPerioder: stegState => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(stegState)),
+  hentUtpekningsperioder: behandlingID => dispatch(utpekningsperioderOperations.hent(behandlingID)),
+  oppdaterUtpekningsperioder: stegState => dispatch(utpekningsperioderOperations.oppdaterUtpekningsperioderState(stegState)),
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
   lagreSoknadHandler: () => dispatch(soknadOperations.lagre()),
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
+  lagreUtpekningsperioderHandler: () => dispatch(utpekningsperioderOperations.lagre()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

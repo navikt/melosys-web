@@ -176,27 +176,26 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => 
   }
 };
 
-const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
+const bestemLovvalgsland = lovvalgsbestemmelse => {
   switch (lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
       return MKV.Koder.landkoder.NO;
-    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1:
-    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2:
-    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3:
-    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4:
-    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11:
-      return avklartefaktaSelectors.OmfattesILandSelector(reduxState);
     default:
       return null;
   }
 };
 
+const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
+  lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
+  avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState)
+);
+
 const byggLovvalgsPerioder = (stegState, reduxState) => {
-  if (stegState.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1) return [];
+  if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
-  const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse, reduxState);
+  const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
