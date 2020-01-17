@@ -1,9 +1,8 @@
 import { createBrowserHistory } from 'history';
-
-const NO_CONTEXT_PATH = '/';
+import * as Constants from './constants';
 
 const routerHistory = createBrowserHistory({
-  basename: NO_CONTEXT_PATH,
+  basename: Constants.URL_BASENAME,
 });
 export default routerHistory;
 

@@ -1,12 +1,10 @@
 import React, { Fragment } from 'react';
 
-import * as MKV from 'melosys-kodeverk';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes/';
 import * as Skjema from '../../../felleskomponenter/skjema';
 import EnkeltDato from '../../../felleskomponenter/datoOmrade/enkeltDato';
 
-const hentAktiveBehandlinger = behandlinger => behandlinger.filter(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET);
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = props => {
@@ -14,11 +12,9 @@ const EnkeltSak = props => {
     opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer,
   } = props.sak;
 
-  const aktiveBehandlinger = hentAktiveBehandlinger(behandlingOversikter);
-  const aktivBehandling = aktiveBehandlinger.pop(); // Hent siste element i array.
   const {
     land, behandlingstype, periode, behandlingsstatus,
-  } = aktivBehandling;
+  } = behandlingOversikter[0];
   return (
     <Skjema.CustomRadioPanelElement
       tittel={KV.objektTilTerm(sakstype)}

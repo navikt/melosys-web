@@ -9,7 +9,7 @@ import * as KV from '../../../kodeverk';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import PreutfyltAvsender from './preutfyltAvsender';
-import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderAnnet } from './avsendere';
+import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from './avsendere';
 import './avsendervelger.css';
 
 const AvsenderVelger = ({
@@ -82,7 +82,7 @@ const AvsenderVelger = ({
         {
           formValues.avsenderType === 'FULLMEKTIG' &&
           <Fragment>
-            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
+            <AvsenderFullmektig avsenderID={formValues.avsenderID} settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
           </Fragment>
         }
         <Skjema.Radio
@@ -121,6 +121,7 @@ const AvsenderVelger = ({
             />
           </Fragment>
         }
+        {/* TODO: Legges inn igjen i SPRINT-41 (etter endringer er avklart hos fag)
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Annet"
@@ -132,6 +133,7 @@ const AvsenderVelger = ({
             <AvsenderAnnet />
           </Fragment>
         }
+        */}
       </Skjema.RadioGruppe>
     </div>
   );

@@ -27,19 +27,31 @@ const behandlingsstatusMap = {
     { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
     { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
     { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET, term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT, term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
     { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
     { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
     { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET, term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT, term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
     { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
     { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
     { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET, term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT, term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
     { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET, term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT, term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET, term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
   ],
 };
 
