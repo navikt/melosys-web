@@ -14,4 +14,5 @@ export const ARTIKKEL_16_MOTTA_SVAR = 'artikkel_16_motta_svar';
 export const ARTIKKEL_16_1_VEDTAK = 'artikkel_16_1_vedtak';
 export const ARTIKKEL_13_1_VEDTAK = 'artikkel_13_1_vedtak';
 export const ARTIKKEL_13_1B_UTPEKLAND = 'artikkel_13_1b_utpekland';
+export const OPPRETT_NY_SAK = 'opprett_ny_sak';
 export const VURDERING_VIDERESEND = 'vurdering_videresend';

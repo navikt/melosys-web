@@ -29,7 +29,6 @@ export class VurderingEndrePeriode extends React.Component {
     begrunnelse: hentFaktaVerdi(this.props.tilstand.aarsakEndringPeriodeAvklartfakta) || '',
     begrunnelseFeilmelding: undefined,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
-    vedtaksbrevFritekst: '',
     erEessiReady: false,
   };
 
@@ -51,8 +50,6 @@ export class VurderingEndrePeriode extends React.Component {
   });
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
-
-  settVedtaksbrevFritekst = event => this.setState({ vedtaksbrevFritekst: event.target.value });
 
   hentOpprinneligPeriode = async behandlingID => {
     const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID).catch(Utils.logger.error);
@@ -109,14 +106,14 @@ export class VurderingEndrePeriode extends React.Component {
   vedKlikkEndrePeriode = async () => {
     const { endreVedtak, tilForsiden } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
-    const { begrunnelse, vedtaksbrevFritekst } = this.state;
+    const { begrunnelse } = this.state;
 
     if (validerAlt()) {
       await sendEndretLovvalgsPeriode();
 
       const data = {
         begrunnelseKode: begrunnelse,
-        fritekst: vedtaksbrevFritekst,
+        fritekst: null,
         behandlingstype: MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
       };
       await endreVedtak(data);
@@ -151,7 +148,6 @@ export class VurderingEndrePeriode extends React.Component {
       vedKlikkEndrePeriode,
       vedKlikkPdf,
       lagrePeriodeForForhandsvisning,
-      settVedtaksbrevFritekst,
     } = this;
 
     const {
@@ -160,7 +156,6 @@ export class VurderingEndrePeriode extends React.Component {
       begrunnelse,
       begrunnelseFeilmelding,
       opprinneligLovvalgsperiode: { fom, tom },
-      vedtaksbrevFritekst,
       erEessiReady,
     } = this.state;
 
@@ -172,7 +167,7 @@ export class VurderingEndrePeriode extends React.Component {
         type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         data: {
           mottaker: MKV.Koder.aktoersroller.BRUKER,
-          fritekst: vedtaksbrevFritekst,
+          fritekst: null,
           begrunnelseKode: endretPeriodeBegrunnelse,
         },
       },
@@ -238,7 +233,12 @@ export class VurderingEndrePeriode extends React.Component {
             />
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
+        {
+        /**
+         * Skjuler fritekstfelt inntil fritekst for endret periode støttes i brev.
+         * TODO: Vise når brev er klar.
+         */
+        /* <Nav.Row>
           <Nav.Column xs="6">
             <Nav.Textarea
               label="Fritekst til vedtaksbrev"
@@ -249,7 +249,7 @@ export class VurderingEndrePeriode extends React.Component {
               disabled={!redigerbart}
             />
           </Nav.Column>
-        </Nav.Row>
+        </Nav.Row> */}
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
         <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>

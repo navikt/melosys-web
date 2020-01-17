@@ -22,19 +22,24 @@ const VELG_ETT_LAND = { melding: 'Velg ett land.' };
 const VELG_EN_AVSENDER = { melding: 'Velg en avsender' };
 const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
 const DATO_MA_VAERE_ETTER_FOM = { melding: 'Dato må være lik eller senere enn fra.' };
+const VELG_REPRESENTERER = { melding: 'Velg hvem fullmektig representerer' };
 
-const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) =>
+const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) => (
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
     MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
     MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
-  ].includes(behandlingstype);
+  ].includes(behandlingstype)
+);
 
 const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
   kreverPeriodeOgLand(journalforingHensikt, behandlingstype) &&
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
   behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
-const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => MKV.Koder.avsendertyper.ORGANISASJON === avsenderType && !erAvsenderPreutfylt;
+const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
+  const organisasjonAliasTyper = ['FULLMEKTIG', 'ARBEIDSGIVER', 'ARBEIDSGIVER_FULLMEKTIG'];
+  return organisasjonAliasTyper.includes(avsenderType) && !erAvsenderPreutfylt;
+};
 
 const journalforing = object().shape({
   brukerID: string()
@@ -86,16 +91,16 @@ const journalforing = object().shape({
     .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
       is: kreverPeriodeOgLand,
       then: string()
-        .required(TAST_INN_DATO)
-        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO),
+        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+        .required(TAST_INN_DATO),
     }),
   journalforingPeriodeTilOgMed: string()
     .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
       is: kreverPeriodeOgLand,
       then: string()
-        .required(TAST_INN_DATO)
+        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
-        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO),
+        .required(TAST_INN_DATO),
     }),
   journalforingSoknadsland: array().of(string())
     .ensure()
@@ -124,6 +129,11 @@ const journalforing = object().shape({
       is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
       then: string().required(VELG_ETT_LAND),
     }),
+  representantRepresenterer: string()
+    .when('avsenderType', {
+      is: 'FULLMEKTIG',
+      then: string().required(VELG_REPRESENTERER),
+    }),
   avsenderType: string()
     .when('$erAvsenderPreutfylt', {
       is: false,
@@ -131,6 +141,9 @@ const journalforing = object().shape({
         .ensure()
         .required(VELG_EN_AVSENDER),
     }),
+  mottattDato: string()
+    .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+    .required(TAST_INN_DATO),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),

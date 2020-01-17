@@ -27,36 +27,41 @@ const toJson = async response => {
   }
 };
 
-export const sendResultatTilDispatch = (dispatch, action, validering) => (...data) => {
+export const sendResultatTilDispatch = (dispatch, action, callback) => (...data) => {
   const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-  if (validering && typeof validering === 'function') {
-    validering(dispatch, dataSomSkalDispatches);
+  if (callback && typeof callback === 'function') {
+    callback(dispatch, dataSomSkalDispatches);
   }
   return dispatch({ type: action, data: dataSomSkalDispatches });
 };
 
-export const handterFeil = (dispatch, action) => async error => {
-  if (error.response) {
-    const data = await error.response.text();
+export const handterFeil = (dispatch, action, callback) => async error => {
+  const data = error.response ? await error.response.json() : error.toString();
 
-    window.frontendlogger.error({
-      error,
-      stack: error.stack,
-      data,
-    });
-
-    dispatch({
-      type: action,
-      data: { response: error.response, data },
-    });
-  } else {
-    window.frontendlogger.error({
-      error,
-      stack: error.stack,
-      data: error.toString(),
-    });
-    dispatch({ type: action, data: error.toString() });
+  if (callback && typeof callback === 'function') {
+    callback(dispatch, data);
   }
+
+  window.frontendlogger.error({
+    error,
+    stack: error.stack,
+    data: error.response ? JSON.stringify(data) : data,
+  });
+
+  if (error.response) {
+    return dispatch({
+      type: action,
+      data: {
+        response: error.response,
+        data,
+      },
+    });
+  }
+
+  return dispatch({
+    type: action,
+    data,
+  });
 };
 
 export const getCookie = name => {
@@ -76,6 +81,7 @@ const setCachedItem = (cacheKey, content) => {
   localStorage.setItem(cacheKey, content);
   localStorage.setItem(getCacheTS(cacheKey), Date.now());
 };
+const OIDC_TEST_TOKEN = process.env.REACT_APP_OIDC_TEST_TOKEN;
 
 const cachedFetch = async (url, cacheDurationSec) => {
   // Use the URL as the cache key to sessionStorage
@@ -117,6 +123,9 @@ const cachedFetch = async (url, cacheDurationSec) => {
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
   };
+  if (OIDC_TEST_TOKEN) {
+    headers.Authorization = `Bearer ${OIDC_TEST_TOKEN}`;
+  }
 
   const fetchConfig = {
     // body: below, for POST, PUT
@@ -218,6 +227,9 @@ const methodToJson = (method, url, data, extendResponse = false, accept = 'appli
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
   };
+  if (OIDC_TEST_TOKEN) {
+    headers.Authorization = `Bearer ${OIDC_TEST_TOKEN}`;
+  }
 
   const fetchConfig = {
     // body: below, for POST, PUT
@@ -249,6 +261,9 @@ const methodToText = (method, url, data) => {
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
   };
+  if (OIDC_TEST_TOKEN) {
+    headers.Authorization = `Bearer ${OIDC_TEST_TOKEN}`;
+  }
 
   const fetchConfig = {
     // body: below, for POST, PUT
@@ -284,13 +299,13 @@ export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) =
 
 export const getAsPDF = (url, extendResponse = false) => methodToJson('GET', url, null, extendResponse, 'application/pdf');
 
-export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
+export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
   return async (dispatch, getState) => {
     if (PENDING) {
       await dispatch({ type: PENDING });
     }
     return api(dispatch, getState)
-      .then(sendResultatTilDispatch(dispatch, OK, validering))
-      .catch(handterFeil(dispatch, FEILET));
+      .then(sendResultatTilDispatch(dispatch, OK, callbacks.success))
+      .catch(handterFeil(dispatch, FEILET, callbacks.error));
   };
 }

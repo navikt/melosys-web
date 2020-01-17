@@ -49,14 +49,6 @@ class Journalforing extends Component {
     this.setState({ valgtDokumentID });
   };
 
-  /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
-   * funksjoner. Allikevel trenger vi en default handler som Redux Form hekter på gjennom <form onsubmit="" .../>
-   * @param event
-   */
-  overstyrSubmit = event => {
-    event.preventDefault();
-  };
-
   /** Selv om saksbehandler velger å avbryte journalføringsoppgaven vil den fortsatt ligge
    * i "Mine Oppgaver"-listen. Vi trenger derfor ikke å gi noen melding til backend om at
    * noe er avbrutt - kun redirecte til forsiden.
@@ -96,9 +88,10 @@ class Journalforing extends Component {
     const {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
-      representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
+      representantID, representantKontaktPerson, representantRepresenterer, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
       ikkeSendForvaltingsmelding,
+      mottattDato,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -115,6 +108,7 @@ class Journalforing extends Component {
       oppgaveID,
       vedlegg,
       skalTilordnes,
+      mottattDato: Utils.dato.formatterDatoTilISO(mottattDato),
     };
     if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
       journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
@@ -126,6 +120,7 @@ class Journalforing extends Component {
         behandlingstypeKode,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        representererKode: representantRepresenterer,
         ikkeSendForvaltingsmelding,
       });
     }
@@ -146,13 +141,13 @@ class Journalforing extends Component {
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
-
+    const organisasjonAliaser = ['FULLMEKTIG', 'ARBEIDSGIVER', 'ARBEIDSGIVER_FULLMEKTIG', MKV.Koder.avsendertyper.ORGANISASJON];
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
       saksnummer,
       behandlingstypeKode,
       ingenVurdering,
-      avsenderType,
+      avsenderType: organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
       ...vasketJournalforing,
     };
 
@@ -234,13 +229,25 @@ class Journalforing extends Component {
       ...vasketJournalforing,
       fagsak,
       anmodningOmUnntak,
-      avsenderType,
+      avsenderType: this.mapAvsenderType(avsenderType),
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
       tilForsiden();
     }
   };
+
+  mapAvsenderType = avsenderType => {
+    switch (avsenderType) {
+      case 'ARBEIDSGIVER':
+      case 'ARBEIDSGIVER_FULLMEKTIG':
+      case 'FULLMEKTIG':
+        return MKV.Koder.avsendertyper.ORGANISASJON;
+      default:
+        return avsenderType;
+    }
+  };
+
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
    * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
@@ -317,7 +324,6 @@ class Journalforing extends Component {
 
   resetSkjemaFelterForEksisterendeSaker = () => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold('saksnummer', '');
     settFeltInnhold('behandlingstype', '');
   };
 
@@ -361,13 +367,40 @@ class Journalforing extends Component {
     }
   };
 
-  behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
-    .filter(({ kode }) =>
-      kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED);
+  submitJournalforing = () => {
+    const {
+      journalforingSkjemaVerdier, journalforSEDSkjemaVerdier,
+    } = this.props;
+    if (journalforSEDSkjemaVerdier.brukerID) {
+      this.journalforSed();
+    } else {
+      const { saksnummer } = journalforingSkjemaVerdier;
+      if (saksnummer === '-1') {
+        this.opprettFagsak();
+      } else {
+        this.knyttTilEksisterendeSak();
+      }
+    }
+  };
+
+  kanSubmittes = () => {
+    const { journalforSEDSkjemaVerdier } = this.props;
+    if (journalforSEDSkjemaVerdier.brukerID) {
+      return true;
+    }
+    return !Utils._isEmpty(this.props.journalforingSkjemaVerdier.saksnummer);
+  };
+
+  behandlingstyper = [
+    ...MKV.KTObjects.behandlinger.behandlingstyper
+      .filter(({ kode }) =>
+        kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
+        kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED),
+  ];
 
   render() {
     const {
@@ -380,8 +413,9 @@ class Journalforing extends Component {
       },
       fagsakListe,
     } = this.props;
+
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant, journalforSed,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
@@ -398,7 +432,7 @@ class Journalforing extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="4">
-              <h1>Journalføring</h1>
+              <Nav.typo.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.typo.Sidetittel>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -413,6 +447,9 @@ class Journalforing extends Component {
                         avsenderNavn={avsenderNavn}
                         behandlingstype={behandlingstype}
                         sakstype={sakstype}
+                        submitJournalforing={this.submitJournalforing}
+                        avbrytJournalforing={this.avbrytJournalforing}
+                        kanSubmittes={this.kanSubmittes()}
                       />
                     }
                     {
@@ -428,20 +465,12 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
-                        overstyrSubmit={this.overstyrSubmit}
                         behandlingstyper={this.behandlingstyper}
+                        submitJournalforing={this.submitJournalforing}
+                        avbrytJournalforing={this.avbrytJournalforing}
+                        kanSubmittes={this.kanSubmittes()}
                       />
                     }
-                    <div className="journalforing__fotknapper">
-                      {
-                        /*
-                          TODO: Quick fix, viser denne knappen for Sed-journalføring.
-                          Denne knappen burde også brukes for det vanlige journalføringsbildet når vi skriver om journalføringen.
-                        */
-                        visSedJournalforing && <Nav.Hovedknapp onClick={journalforSed}>JOURNALFØR</Nav.Hovedknapp>
-                      }
-                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
-                    </div>
                   </div>
                 </Nav.Panel>
               </Sticky>

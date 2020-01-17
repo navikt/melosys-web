@@ -9,7 +9,16 @@ import EnkeltDato from './datoOmrade/enkeltDato';
 
 const Oppsummering = props => {
   const {
-    arbeidsland, lovvalgsland, fagsak, oppsummering, person, soknadsperiodeFom, soknadsperiodeTom, lovvalgsperiodeFom, lovvalgsperiodeTom,
+    arbeidsland,
+    oppholdsland,
+    lovvalgsland,
+    fagsak,
+    oppsummering,
+    person,
+    soknadsperiodeFom,
+    soknadsperiodeTom,
+    lovvalgsperiodeFom,
+    lovvalgsperiodeTom,
   } = props;
   if (!oppsummering) return <div />;
 
@@ -61,6 +70,12 @@ const Oppsummering = props => {
           <dd>{lovvalgslandTilSetning(lovvalgsland)}</dd>
         </Fragment>
       }
+      { oppholdsland.length > 0 &&
+        <Fragment>
+          <dt>Oppholdsland:</dt>
+          <dd>{arbeidslandTilSetning(oppholdsland)}</dd>
+        </Fragment>
+      }
       { (soknadsperiodeFom || soknadsperiodeTom) &&
         <Fragment>
           <dt>Søknadsperiode:</dt>
@@ -85,6 +100,7 @@ const Oppsummering = props => {
 
 Oppsummering.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
+  oppholdsland: PT.arrayOf(MPT.Kodeverk),
   lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -96,6 +112,7 @@ Oppsummering.propTypes = {
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],
+  oppholdsland: [],
   lovvalgsland: {},
   soknadsperiodeFom: undefined,
   soknadsperiodeTom: undefined,

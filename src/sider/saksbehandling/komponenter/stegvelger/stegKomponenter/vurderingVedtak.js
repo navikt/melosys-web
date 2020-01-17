@@ -10,12 +10,14 @@ import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as Validering from '../../../../../felleskomponenter/skjema/validering';
+import * as Utils from '../../../../../utils';
+
 import { soknadSelectors } from '../../../../../ducks/soknad';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
+import { vedtakSelectors } from '../../../../../ducks/vedtak';
 
-import { datoDiffMenneskelig } from '../../../../../utils/dato';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import VedtaktypeSkjema from '../../vedtaktypeskjema';
@@ -41,6 +43,7 @@ const VurderingVedtak = ({
   formIsValid,
   formValues,
   form,
+  vedtakLastes,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -52,9 +55,10 @@ const VurderingVedtak = ({
     fomDato, tomDato, lovvalgsbestemmelse,
   } = lovvalget;
 
-  const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
+  const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const fattVedtakDisabled = !redigerbart;
 
   const pdfDokumenter = [
     {
@@ -72,11 +76,21 @@ const VurderingVedtak = ({
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
   ];
 
-  if (lovvalgSomKodeTerm && visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode)) {
-    pdfDokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
+  if (lovvalgSomKodeTerm &&
+      visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
+      !erNyVurdering) {
+    pdfDokumenter.push({
+      navn: 'Orienteringsbrev til arbeidsgiver',
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+      },
+    });
   }
 
-  if (formValues.kreverMottakerinstitusjon) {
+  if (formValues.kreverMottakerinstitusjon &&
+    lovvalgSomKodeTerm &&
+    lovvalgSomKodeTerm.kode !== MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2) {
     pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
   }
 
@@ -88,7 +102,7 @@ const VurderingVedtak = ({
     return formIsValid;
   };
 
-  const fattVedtak = async () => {
+  const fattVedtak = () => {
     if (!validerForm()) return;
 
     lagreOgFatteVedtak({
@@ -112,7 +126,7 @@ const VurderingVedtak = ({
         <Nav.Row className="vedtak__oppsummering">
           <Nav.Column xs="6">
             <Nav.typo.Element type="element">Antall måneder i utlandet</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{antallManeder}</Nav.typo.Normaltekst>
+            <Nav.typo.Normaltekst>{antallManederMenneskelig}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         {
@@ -129,7 +143,7 @@ const VurderingVedtak = ({
           </Nav.Row>
         }
         <Nav.Row className="fritekst">
-          <Nav.Column xs="8">
+          <Nav.Column xs="12">
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekst til vedtaksbrev"
@@ -157,7 +171,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp disabled={!redigerbart} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
+            <Nav.Hovedknapp spinner={vedtakLastes} disabled={fattVedtakDisabled} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -177,6 +191,7 @@ VurderingVedtak.propTypes = {
   formValues: PT.object,
   touch: PT.func.isRequired,
   form: PT.string.isRequired,
+  vedtakLastes: PT.bool.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -190,6 +205,7 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
+  vedtakLastes: vedtakSelectors.ErPendingSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   initialValues: {

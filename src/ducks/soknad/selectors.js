@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 import { OrganisasjonSelectors } from '../organisasjoner';
 
 import { PersonSelectors } from '../personer';
+import MKV from '../../melosyskodeverk';
 
 /**
  * Selectors
@@ -87,6 +88,11 @@ export const OppholdUtlandSelector = createSelector(
 export const OppholdsLandSelector = createSelector(
   state => OppholdUtlandSelector(state),
   oppholdUtland => oppholdUtland.oppholdslandkoder || []
+);
+
+export const OppholdsLandKTSelector = createSelector(
+  state => OppholdsLandSelector(state),
+  oppholdsLand => MKV.KTObjects.landkoder.filter(landkodeObjekt => oppholdsLand.includes(landkodeObjekt.kode))
 );
 
 export const OppholdUtlandPeriodeSelector = createSelector(

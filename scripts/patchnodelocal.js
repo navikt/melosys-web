@@ -8,7 +8,6 @@ const pkg = readPkg.sync();
 const { proxy } = pkg;
 
 const patchPackageNodeLocal = () => {
-  delete pkg.homepage;
   delete pkg._id;
 
   if (proxy['/api'].target !== DEFAULT_NODE_MOCK_SERVER) {

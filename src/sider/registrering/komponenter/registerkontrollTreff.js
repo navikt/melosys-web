@@ -7,7 +7,7 @@ import * as Nav from '../../../utils/navFrontend';
 
 const UnntakPeriodeBegrunnelse = kode => {
   if (!kode) return '';
-  return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.unntak_periode_begrunnelser);
+  return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
 };
 
 const RegisterkontrollTreff = ({ begrunnelseKode }) => (

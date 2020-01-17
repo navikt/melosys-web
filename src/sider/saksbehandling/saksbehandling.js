@@ -27,7 +27,6 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { formSelectors } from '../../ducks/form';
-import { vedtakOperations } from '../../ducks/vedtak';
 import { datalastingOperations } from '../../ducks/datalasting';
 
 import './saksbehandling.css';
@@ -170,6 +169,8 @@ class Saksbehandling extends Component {
       soknadsperiodeFom,
       soknadsperiodeTom,
       visRevurderVedtakDialogHandle,
+      tilForsiden,
+      visValideringModalDialogHandle,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -190,6 +191,8 @@ class Saksbehandling extends Component {
                 lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
                 oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                 lagreAllData={this.props.lagreAllData}
+                tilForsiden={tilForsiden}
+                visValideringModalDialogHandle={visValideringModalDialogHandle}
               />
             </Nav.Column>
             <Nav.Column xs="5">
@@ -217,6 +220,7 @@ class Saksbehandling extends Component {
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
                   visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
+                  visRevurderVedtak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                 />}
                 renderBehandlingsstatus={() => <Behandlingsstatus
                   behandlingID={behandlingID}
@@ -280,7 +284,6 @@ Saksbehandling.propTypes = {
   oppdaterBehandlingerState: PT.func.isRequired,
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
-  fattVedtak: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
@@ -304,6 +307,8 @@ Saksbehandling.propTypes = {
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
   visRevurderVedtakDialogHandle: PT.func.isRequired,
+  tilForsiden: PT.func.isRequired,
+  visValideringModalDialogHandle: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -374,7 +379,6 @@ const mapDispatchToProps = dispatch => ({
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),

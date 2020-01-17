@@ -99,8 +99,7 @@ const Registrering = props => {
   };
 
   const apneTidligereBehandlinger = () => {
-    const URI_SOK = `/sok/${person.fnr}`;
-    window.open(URI_SOK);
+    Utils.url.nyFane(`sok/${person.fnr}`);
   };
 
   if (Utils._isNil(redigerbart)) return null;

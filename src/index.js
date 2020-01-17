@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router as ReduxRouter } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import './index.css';
@@ -11,7 +11,10 @@ import loadInitialData from './startupDataLoader';
 import createStore from './store';
 import routerHistory from './history';
 import Routing from './routing';
+import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 import { unregister } from './registerServiceWorker';
+
+const SideLoadingFailMessage = 'Beklager, kunne ikke laste inn siden.';
 
 const store = createStore(routerHistory);
 loadInitialData(store);
@@ -19,11 +22,13 @@ loadInitialData(store);
 
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <ReduxRouter history={routerHistory}>
+    <ConnectedRouter history={routerHistory}>
       <App>
-        <Routing />
+        <ErrorBoundary message={SideLoadingFailMessage}>
+          <Routing />
+        </ErrorBoundary>
       </App>
-    </ReduxRouter>
+    </ConnectedRouter>
   </ReduxProvider>,
   document.getElementById('root')
 );

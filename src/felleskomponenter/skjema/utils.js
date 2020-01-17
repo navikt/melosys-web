@@ -1,11 +1,23 @@
 import * as Utils from '../../utils';
 
-export const mapReduxFormFeilTilNavFeil = meta => {
+const skalReturnereFeilmelding = (meta, errorConfig) => {
+  if (!errorConfig) return true;
+
+  return (
+    (errorConfig.submitFailed === meta.submitFailed) &&
+    (errorConfig.active === meta.active) &&
+    (errorConfig.touched === meta.touched)
+  );
+};
+
+export const mapReduxFormFeilTilNavFeil = (meta, errorConfig) => {
   const { error } = meta;
 
   if (!error) return undefined;
 
-  /* Støtter objekter som feilmeldinger */
+  if (!skalReturnereFeilmelding(meta, errorConfig)) return undefined;
+
+  /* Støtter objekter med key "melding" som feilmeldinger */
   const feilmelding = Utils._isObject(error) ? error.melding : error;
 
   return { feilmelding };

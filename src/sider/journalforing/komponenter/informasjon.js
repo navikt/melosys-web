@@ -11,14 +11,13 @@ import * as Konstanter from '../../../constants';
 import * as Api from '../../../services/api';
 import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
+import * as Mui from '../../../felleskomponenter/ui';
 import AvsenderVelger from './avsendervelger';
 import LenkeListeVelger from './lenkelistevelger';
 
-import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
 import { formSelectors } from '../../../ducks/form';
-import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import './informasjon.css';
 
@@ -154,9 +153,9 @@ class Informasjon extends Component {
     const {
       journalpostID,
       dokumentID,
-      mottattDato,
       vedlegg,
       settFeltInnhold,
+      hentOgVisRepresentant,
       journalforingSkjemaVerdier,
     } = this.props;
     const { hoveddokumentTittel, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
@@ -168,27 +167,27 @@ class Informasjon extends Component {
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
-        <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
-          { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-        </Nav.Fieldset>
+        <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
+        <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+        <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
+        { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
 
-        <Nav.typo.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.typo.Element>
+        <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
         <AvsenderVelger
           className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
           tomAvsender={this.tomAvsender}
           settFeltInnhold={settFeltInnhold}
           visAvsenderSpinner={visAvsenderSpinner}
+          hentOgVisRepresentant={hentOgVisRepresentant}
         />
-        <Overskrift tekst="Dokumenter" ikon={Ikoner.IkonSak} className="undertittel oversteUndertittel" />
-        <Nav.Input
+        <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
+        <Skjema.Input
+          datoFelt
           label="Mottatt dato"
           type="dato"
           bredde="S"
-          disabled
-          value={Utils.dato.formatterDatoTilNorsk(mottattDato)}
+          feltNavn="mottattDato"
         />
 
         <Nav.Fieldset legend="Hoveddokument:">
@@ -233,9 +232,9 @@ Informasjon.propTypes = {
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
-  mottattDato: PT.string.isRequired,
   vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
 };
@@ -250,7 +249,6 @@ Informasjon.defaultProps = {
 const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
-  mottattDato: journalforingSelectors.MottattDatoSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 

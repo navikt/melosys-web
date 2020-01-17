@@ -43,3 +43,18 @@ foregår på én side. Følgende routes er satt opp i applikasjonen:
 | ---------------- | ---------------- | ---------------- |
 | /sok | Sok | Dette er grunnsiden som saksbehandleren benytter for å hente søke etter en sak eller hente tidligere behandlede saker. |
 | /saksbehandling | Saksbehandling | Dette er hovedsiden i applikasjonen hvor alle nødvendige felles-komponenter er bygget inn. |
+
+## Utvikling på laptop mot backend i dev-fss
+
+Installer [kubefwd](https://github.com/txn2/kubefwd) eller [Kube Forwarder](https://github.com/pixel-point/kube-forwarder). Start applikasjonen med forwarding mot
+ønsket miljø, f.eks. `kubefwd` mot `t8`:
+
+```shell script
+sudo -E kubefwd svc -n t8 -l app=melosys
+```
+
+Legg inn OIDC-token fra [IDA](https://ida.adeo.no) i `scripts/patchkubefwd.js`, og start frontend med forwarding mot backend i miljø:
+
+```shell script
+npm run start:kubefwd
+```
