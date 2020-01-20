@@ -58,7 +58,6 @@ class Arbeidsmonster extends Steg {
       const aktivitetINorgeNodvendig = landMedVesentligArbeid.length > 1 && erNorgeValgt;
 
       const harAvklaring = landMedVesentligArbeid.length > 0 &&
-        Yrkesaktivitet.erArbeidstaker(_propsLight.avklartefakta) &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
 
       return ({
