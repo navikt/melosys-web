@@ -30,17 +30,17 @@ const Forretningsstedet = props => {
 
   useEffect(() => {
     if (avklartForretningsland) {
-      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
+      oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
     }
     const cleanup = () => {
-      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId));
+      slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId));
     };
     return cleanup;
   }, []);
 
   const { navn, virksomhetId } = forretningsstedet;
   const landEndretHandler = landKode => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, virksomhetId, landKode));
+    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, virksomhetId, landKode));
   };
 
   const eksisterendeLand = hentFaktaVerdi(avklartForretningsland) || '';
@@ -124,15 +124,15 @@ const VurderingForretningssted = props => {
       label: '13.1 b i: en arbeidsgiver',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B2,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2,
       label: '13.1 b ii: to arbeidsgivere',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B3,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3,
       label: '13.1 b iii: Flere arbeidsgivere, med forretningssted i to land, hvorav et er Norge',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B4,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
       label: '13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge',
     },
     {
@@ -175,12 +175,12 @@ const VurderingForretningssted = props => {
 
   const avklartefaktaTyper = [
     { label: 'Norge', type: KV.Koder.BoolskAvklartfaktaType.SANN },
-    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN, disabled: true },
+    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN },
   ];
 
   return (
     <div>
-      <Nav.typo.Undertittel>Vurdering av artikkel 13.1b)</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>Vurdering av artikkel 13 nr. 1 bokstav b</Nav.typo.Undertittel>
       <Nav.Fieldset legend="Vurder hvor virksomhetene har forretningssted">
         <Forretningssteder {...tilstand}{...props} />
       </Nav.Fieldset>

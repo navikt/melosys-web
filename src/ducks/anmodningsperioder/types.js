@@ -1,4 +1,3 @@
-export const NULL = null;
 export const OK = 'anmodningsperioder/OK';
 export const FEILET = 'anmodningsperioder/FEILET';
 export const PENDING = 'anmodningsperioder/PENDING';
