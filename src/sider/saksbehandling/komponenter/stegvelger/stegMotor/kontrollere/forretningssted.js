@@ -10,7 +10,7 @@ import { hentLovvalgsbestemmelse } from '../../../../../../regler/lovvalgsbestem
 class Forretningssted extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const perioder = propsLight.omfattesIAnnetLand ? propsLight.utpekningsperioder : propsLight.lovvalgsperioder;
+    const perioder = propsLight.omfattesIAnnetLand ? propsLight.utpekingsperioder : propsLight.lovvalgsperioder;
     const harLovvalgsbestemmelse = this.harLovvalgsbestemmelse(perioder);
     const harAvklartForretningsland = this.harAvklartForretningsland(propsLight);
     const erOmfattetINorge = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) === KV.Koder.BoolskAvklartfaktaType.SANN;

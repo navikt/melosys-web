@@ -16,7 +16,7 @@ import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import Mottakerinstitusjonvelger from '../../../../../felleskomponenter/mottakerinstitusjonvelger';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
-import { utpekningsperioderSelectors } from '../../../../../ducks/utpekningsperioder';
+import { utpekingsperioderSelectors } from '../../../../../ducks/utpekingsperioder';
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 
 import './vurderingArtikkel13_1b_UtpekLand.css';
@@ -123,8 +123,8 @@ VurderingArtikkel13_1b_UtpekLand.defaultProps = {
 const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  lovvalgsland: utpekningsperioderSelectors.LovvalgslandSelector(state),
-  lovvalgsperiode: utpekningsperioderSelectors.UtpekningsperiodeSelector(state),
+  lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
+  lovvalgsperiode: utpekingsperioderSelectors.UtpekingsperiodeSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_13_1B_UTPEKLAND)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_13_1B_UTPEKLAND)(state),
   initialValues: {

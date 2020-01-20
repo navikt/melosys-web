@@ -1,6 +1,6 @@
 import PT from 'prop-types';
 
-const Utpekningsperiode = PT.shape({
+const Utpekingsperiode = PT.shape({
   fomDato: PT.string,
   tomDato: PT.string,
   lovvalgsbestemmelse: PT.string,
@@ -8,9 +8,9 @@ const Utpekningsperiode = PT.shape({
   lovvalgsland: PT.string,
 });
 
-const Utpekningsperioder = PT.arrayOf(Utpekningsperiode);
+const Utpekingsperioder = PT.arrayOf(Utpekingsperiode);
 
 export {
-  Utpekningsperiode,
-  Utpekningsperioder,
+  Utpekingsperiode,
+  Utpekingsperioder,
 };

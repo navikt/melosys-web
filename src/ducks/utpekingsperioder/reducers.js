@@ -16,15 +16,15 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         status: STATUS.OK,
-        data: action.data.utpekningsperioder,
+        data: action.data.utpekingsperioder,
       };
     case Types.RESET:
       return { ...initialState };
-    case Types.OPPDATER_UTPEKNINGSPERIODER: {
-      const { utpekningsperioder } = action;
+    case Types.OPPDATER_UTPEKINGSPERIODER: {
+      const { utpekingsperioder } = action;
       return {
         ...state,
-        data: utpekningsperioder,
+        data: utpekingsperioder,
         status: STATUS.OK,
       };
     }

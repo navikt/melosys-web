@@ -11,15 +11,15 @@ import { soknadSelectors } from '../soknad';
 import { behandlingerSelectors } from '../behandlinger';
 
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Utpekningsperioder.hent(behandlingID), {
+  return doThenDispatch(() => Api.Utpekingsperioder.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function send(behandlingID, utpekningsperioder) {
-  return doThenDispatch(() => Api.Utpekningsperioder.send(behandlingID, utpekningsperioder), {
+export function send(behandlingID, utpekingsperioder) {
+  return doThenDispatch(() => Api.Utpekingsperioder.send(behandlingID, utpekingsperioder), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -28,14 +28,14 @@ export function send(behandlingID, utpekningsperioder) {
 
 export function lagre() {
   return (dispatch, getState) => {
-    const utpekningsperioder = Selectors.UtpekningsperioderSelector(getState());
+    const utpekingsperioder = Selectors.UtpekingsperioderSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
 
-    return dispatch(send(bid, { utpekningsperioder }));
+    return dispatch(send(bid, { utpekingsperioder }));
   };
 }
 
-const byggUtpekningsperiode = (stegState, reduxState) => {
+const byggUtpekingsperiode = (stegState, reduxState) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
   const lovvalgsland = avklartefaktaSelectors.OmfattesILandSelector(reduxState);
 
@@ -48,7 +48,7 @@ const byggUtpekningsperiode = (stegState, reduxState) => {
   }];
 };
 
-const byggUtpekningsperioder = (stegState, reduxState) => {
+const byggUtpekingsperioder = (stegState, reduxState) => {
   const omfattesIAnnetLand = avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState);
   if (!omfattesIAnnetLand) return [];
 
@@ -58,24 +58,24 @@ const byggUtpekningsperioder = (stegState, reduxState) => {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11:
-      return byggUtpekningsperiode(stegState, reduxState);
+      return byggUtpekingsperiode(stegState, reduxState);
     default: {
       return [];
     }
   }
 };
 
-export function oppdaterUtpekningsperioderState(stegState) {
+export function oppdaterUtpekingsperioderState(stegState) {
   return (dispatch, getState) => {
     if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse) {
-      const utpekningsperioder = byggUtpekningsperioder(stegState, getState());
-      dispatch(Actions.oppdaterUtpekningsperioder(utpekningsperioder));
+      const utpekingsperioder = byggUtpekingsperioder(stegState, getState());
+      dispatch(Actions.oppdaterUtpekingsperioder(utpekingsperioder));
     } else {
-      dispatch(Actions.resetUtpekningsperioderState());
+      dispatch(Actions.resetUtpekingsperioderState());
     }
   };
 }
 
-export function resetUtpekningsperioderState() {
-  return dispatch => dispatch(Actions.resetUtpekningsperioderState());
+export function resetUtpekingsperioderState() {
+  return dispatch => dispatch(Actions.resetUtpekingsperioderState());
 }

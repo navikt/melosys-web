@@ -10,7 +10,7 @@ import MKV from '../../melosyskodeverk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('Utpekningsperioder operations', () => {
+describe('utpekingsperioder operations', () => {
   let initialState = null;
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('Utpekningsperioder operations', () => {
           },
         ],
       },
-      utpekningsperioder: {
+      utpekingsperioder: {
         data: [],
       },
     };
@@ -77,7 +77,7 @@ describe('Utpekningsperioder operations', () => {
   });
 
   describe('OppdaterUtpekingsperioderState', () => {
-    it('bygger utpekningsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge', () => {
+    it('bygger utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge', () => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
@@ -96,8 +96,8 @@ describe('Utpekningsperioder operations', () => {
 
       const expectedActions = [
         {
-          type: types.OPPDATER_UTPEKNINGSPERIODER,
-          utpekningsperioder: [
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [
             {
               fomDato: initialState.soknad.data.soeknadDokument.periode.fom,
               tomDato: initialState.soknad.data.soeknadDokument.periode.tom,
@@ -111,7 +111,7 @@ describe('Utpekningsperioder operations', () => {
 
       const store = mockStore(initialState);
 
-      store.dispatch(operations.oppdaterUtpekningsperioderState(stegState));
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -135,14 +135,14 @@ describe('Utpekningsperioder operations', () => {
 
       const expectedActions = [
         {
-          type: types.OPPDATER_UTPEKNINGSPERIODER,
-          utpekningsperioder: [],
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
         },
       ];
 
       const store = mockStore(initialState);
 
-      store.dispatch(operations.oppdaterUtpekningsperioderState(stegState));
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
       expect(store.getActions()).toEqual(expectedActions);
     });
