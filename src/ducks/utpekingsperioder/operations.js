@@ -43,7 +43,7 @@ const byggUtpekingsperiode = (stegState, reduxState) => {
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-    tilleggBestemmelse: stegState.tilleggbestemmelse,
+    tilleggsbestemmelse: stegState.tilleggbestemmelse,
     lovvalgsland,
   }];
 };

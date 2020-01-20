@@ -102,7 +102,7 @@ describe('utpekingsperioder operations', () => {
               fomDato: initialState.soknad.data.soeknadDokument.periode.fom,
               tomDato: initialState.soknad.data.soeknadDokument.periode.tom,
               lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-              tilleggBestemmelse: stegState.tilleggbestemmelse,
+              tilleggsbestemmelse: stegState.tilleggbestemmelse,
               lovvalgsland: avklartfakta.fakta[0],
             },
           ],

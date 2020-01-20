@@ -4,7 +4,7 @@ const Utpekingsperiode = PT.shape({
   fomDato: PT.string,
   tomDato: PT.string,
   lovvalgsbestemmelse: PT.string,
-  tilleggBestemmelse: PT.string,
+  tilleggsbestemmelse: PT.string,
   lovvalgsland: PT.string,
 });
 
