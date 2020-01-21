@@ -2,10 +2,13 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../../../utils';
 
-const { object, string, bool } = Utils.yup;
+const {
+  object, string, bool, array,
+} = Utils.yup;
 
 const VELG_EN_VEDTAKSTYPE = { melding: 'Velg en vedtakstype' };
 const OPPGI_BEGRUNNELSE = { melding: 'Oppgi begrunnelse' };
+const MOTTAKERINSTITUSJON_KREVES = { melding: 'Mottaker institusjon kreves' };
 
 const artikkel13_1_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
@@ -30,6 +33,13 @@ const artikkel13_1_vedtak = object().shape({
       then: string()
         .required(OPPGI_BEGRUNNELSE),
     }),
+  mottakerinstitusjoner: array().of(object().shape({
+    kreverMottakerinstitusjon: bool(),
+    id: string().when('kreverMottakerinstitusjon', {
+      is: true,
+      then: string().required(MOTTAKERINSTITUSJON_KREVES),
+    }),
+  })),
 });
 
 export { artikkel13_1_vedtak };

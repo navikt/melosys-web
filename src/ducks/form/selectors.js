@@ -18,6 +18,11 @@ export const FormSelector = createSelector(
   state => state.form
 );
 
+export const RegisteredFieldsSelector = formName => createSelector(
+  state => getFormState(state, formName, {}),
+  (formState = {}) => formState.registeredFields || []
+);
+
 export const SoknadenFormSelector = createSelector(
   state => getFormState(state, KV.Form.SOKNAD, {}),
   soknaden => soknaden
