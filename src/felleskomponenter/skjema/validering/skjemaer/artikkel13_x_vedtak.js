@@ -10,7 +10,7 @@ const VELG_EN_VEDTAKSTYPE = { melding: 'Velg en vedtakstype' };
 const OPPGI_BEGRUNNELSE = { melding: 'Oppgi begrunnelse' };
 const MOTTAKERINSTITUSJON_KREVES = { melding: 'Mottaker institusjon kreves' };
 
-const artikkel13_1_vedtak = object().shape({
+const artikkel13_x_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
   tomDato: string()
     .when('forkortLovvalgsperiode', {
@@ -42,4 +42,4 @@ const artikkel13_1_vedtak = object().shape({
   })),
 });
 
-export { artikkel13_1_vedtak };
+export { artikkel13_x_vedtak };

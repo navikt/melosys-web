@@ -168,7 +168,7 @@ class Stegvelger extends Component {
     const vedtakBody = {
       behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
       fritekst: data.fritekst || null,
-      mottakerinstitusjon: data.mottakerinstitusjon || null,
+      mottakerinstitusjoner: data.mottakerinstitusjoner || [],
       vedtakstype: data.vedtakstype,
       revurderBegrunnelse: data.revurderBegrunnelse || null,
     };

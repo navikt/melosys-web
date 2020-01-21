@@ -12,6 +12,7 @@ import * as Validering from '../../../../../felleskomponenter/skjema/validering'
 import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as KV from '../../../../../kodeverk';
 import * as MPT from '../../../../../proptypes';
+import * as Mui from '../../../../../felleskomponenter/ui';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import VedtaktypeSkjema from '../../vedtaktypeskjema';
@@ -26,9 +27,9 @@ import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { formOperations } from '../../../../../ducks/form';
 import { MottakerinstitusjonvelgerFlervalg } from '../../../../../felleskomponenter/mottakerinstitusjonvelger';
 
-import './vurderingArtikkel13_1_vedtak.css';
+import './vurderingArtikkel13_x_vedtak.css';
 
-export const VurderingArtikkel13_1_Vedtak = ({
+export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
   behandlingID,
   lovvalgsperiode,
@@ -53,9 +54,13 @@ export const VurderingArtikkel13_1_Vedtak = ({
 
   const forkortLovvalgsperiode = () => endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
 
-  const vedKlikkForhandsvis = () => {
+  const vedKlikkForhandsvis = async () => {
     if (!formIsValid) {
       touchAll();
+    }
+
+    if (formValues.forkortLovvalgsperiode) {
+      await forkortLovvalgsperiode();
     }
 
     lagreLovvalgsperioder();
@@ -174,12 +179,12 @@ export const VurderingArtikkel13_1_Vedtak = ({
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Hovedknapp disabled={!redigerbart} htmlType="submit">FATT VEDTAK</Nav.Hovedknapp>
+      <Mui.Knapp disabled={!redigerbart} htmlType="submit" type="hoved">FATT VEDTAK</Mui.Knapp>
     </form>
   );
 };
 
-VurderingArtikkel13_1_Vedtak.propTypes = {
+VurderingArtikkel13_x_vedtak.propTypes = {
   tilstand: PT.shape({
     overskrift: PT.string.isRequired,
   }).isRequired,
@@ -198,7 +203,7 @@ VurderingArtikkel13_1_Vedtak.propTypes = {
   handleSubmit: PT.func.isRequired,
 };
 
-VurderingArtikkel13_1_Vedtak.defaultProps = {
+VurderingArtikkel13_x_vedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
 };
@@ -208,8 +213,8 @@ const mapStateToProps = (state, ownProps) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_13_1_VEDTAK)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_13_1_VEDTAK)(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
   initialValues: {
     forkortLovvalgsperiode: Utils.dato.datoDiffPure(
       soknadSelectors.SoknadsperiodeSelector(state).tom,
@@ -227,10 +232,11 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
-  touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_1_VEDTAK)),
+  touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_X_VEDTAK)),
 });
 
 const fattVedtak = async (values, dispatch, props) => {
+  props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
   await props.lagreOgFatteVedtak({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
@@ -240,19 +246,19 @@ const fattVedtak = async (values, dispatch, props) => {
   });
 };
 
-const VurderingArtikkel13_1_vedtak_form = reduxForm({
+const VurderingArtikkel13_x_vedtak_form = reduxForm({
   onSubmit: fattVedtak,
-  form: KV.Form.ARTIKKEL_13_1_VEDTAK,
+  form: KV.Form.ARTIKKEL_13_X_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_vedtak, {
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_x_vedtak, {
     context: {
       lovvalgsperiode: props.lovvalgsperiode,
       behandlingstype: props.behandlingstype,
     },
   })(values),
-})(VurderingArtikkel13_1_Vedtak);
+})(VurderingArtikkel13_x_vedtak);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_1_vedtak_form);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_x_vedtak_form);

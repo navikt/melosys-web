@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingArtikkel13_1_vedtak from '../../stegKomponenter/vurderingArtikkel13_1_vedtak';
+import VurderingArtikkel13_x_vedtak from '../../stegKomponenter/vurderingArtikkel13_x_vedtak';
 
 class Artikkel13_1_a_vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -14,7 +14,7 @@ class Artikkel13_1_a_vedtak extends Steg {
     ];
     this.id = STEG.ARTIKKEL_13_1_A_VEDTAK;
     this.tittel = 'Vedtak';
-    this.komponent = VurderingArtikkel13_1_vedtak;
+    this.komponent = VurderingArtikkel13_x_vedtak;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
     });
