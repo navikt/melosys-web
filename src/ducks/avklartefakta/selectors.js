@@ -301,3 +301,27 @@ export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
     })
   )
 );
+
+export const OmfattesILandFaktaSelector = createSelector(
+  AvklartefaktaSelector,
+  avklarteFakta => (
+    avklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND)
+  )
+);
+
+export const OmfattesILandSelector = createSelector(
+  OmfattesILandFaktaSelector,
+  omfattesILandFakta => hentFaktaVerdi(omfattesILandFakta)
+);
+
+export const OmfattesINorgeSelector = createSelector(
+  OmfattesILandSelector,
+  OmfattesILandFaktaSelector,
+  (omfattesILand, omfattesILandFaktaEksisterer) => omfattesILandFaktaEksisterer && omfattesILand === MKV.Koder.landkoder.NO
+);
+
+export const OmfattesIAnnetLandSelector = createSelector(
+  OmfattesILandSelector,
+  OmfattesILandFaktaSelector,
+  (omfattesILand, omfattesILandFaktaEksisterer) => omfattesILandFaktaEksisterer && omfattesILand !== MKV.Koder.landkoder.NO
+);
