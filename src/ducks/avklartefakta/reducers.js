@@ -71,6 +71,7 @@ export default function reducer(state = initialState, action) {
           ARBEIDSGIVERS_FORRETNINGSSTED,
           OMFATTES_I_NORGE,
           OMFATTES_I_LAND,
+          INTERESSESENTER,
         },
         referanseKoder: {
           INSTALLASJON_ARBEIDSLAND,
@@ -95,6 +96,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND_TYPE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_SOKKEL_SKIP], ARBEID_SOKKEL_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AARSAK_ENDRING_PERIODE], AARSAK_ENDRING_PERIODE),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[INTERESSESENTER], null),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };

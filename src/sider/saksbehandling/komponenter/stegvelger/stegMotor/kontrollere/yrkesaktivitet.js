@@ -26,7 +26,7 @@ class Yrkesaktivitet extends Steg {
         exec: avklartefakta => {
           const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
           const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
-          const erSelvstendigNaeringsdrivende = Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE);
+          const erSelvstendigNaeringsdrivende = Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta);
           return (erKunEttLand || erSokkelEllerSkip) && erSelvstendigNaeringsdrivende;
         },
         nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
@@ -87,6 +87,10 @@ class Yrkesaktivitet extends Steg {
   static erArbeidstaker = avklartefakta => (
     Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) ||
     Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG)
+  )
+
+  static erSelvstendigNaeringsdrivende = avklartefakta => (
+    Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE)
   )
 }
 
