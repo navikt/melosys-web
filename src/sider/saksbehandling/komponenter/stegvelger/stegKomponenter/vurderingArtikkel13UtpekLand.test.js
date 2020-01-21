@@ -1,7 +1,7 @@
 import React from 'react';
 import * as MKV from 'melosys-kodeverk';
 
-import { VurderingArtikkel13_1b_UtpekLand } from './vurderingArtikkel13_1b_UtpekLand';
+import { VurderingArtikkel13UtpekLand } from './vurderingArtikkel13UtpekLand';
 
 /* eslint-disable react/jsx-pascal-case */
 describe('VurderingArtikkel13_1_Vedtak', () => {
@@ -21,6 +21,6 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       form: 'Form',
     };
 
-    shallow(<VurderingArtikkel13_1b_UtpekLand {...props} />);
+    shallow(<VurderingArtikkel13UtpekLand {...props} />);
   });
 });

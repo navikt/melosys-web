@@ -19,9 +19,9 @@ import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { utpekingsperioderSelectors } from '../../../../../ducks/utpekingsperioder';
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 
-import './vurderingArtikkel13_1b_UtpekLand.css';
+import './vurderingArtikkel13UtpekLand.css';
 
-export const VurderingArtikkel13_1b_UtpekLand = ({
+export const VurderingArtikkel13UtpekLand = ({
   redigerbart,
   behandlingID,
   lovvalgsland,
@@ -100,7 +100,7 @@ export const VurderingArtikkel13_1b_UtpekLand = ({
   );
 };
 
-VurderingArtikkel13_1b_UtpekLand.propTypes = {
+VurderingArtikkel13UtpekLand.propTypes = {
   tilstand: PT.shape({
     overskrift: PT.string.isRequired,
   }).isRequired,
@@ -115,7 +115,7 @@ VurderingArtikkel13_1b_UtpekLand.propTypes = {
   lagreOgUtpek: PT.func.isRequired,
 };
 
-VurderingArtikkel13_1b_UtpekLand.defaultProps = {
+VurderingArtikkel13UtpekLand.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
 };
@@ -125,21 +125,21 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
   lovvalgsperiode: utpekingsperioderSelectors.UtpekingsperiodeSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_13_1B_UTPEKLAND)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_13_1B_UTPEKLAND)(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   initialValues: {
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,
   },
 });
 
-const VurderingArtikkel13_1b_UtpekLand_form = reduxForm({
-  form: KV.Form.ARTIKKEL_13_1B_UTPEKLAND,
+const VurderingArtikkel13UtpekLand_form = reduxForm({
+  form: KV.Form.ARTIKKEL_13_UTPEKLAND,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_b_utpek),
-})(VurderingArtikkel13_1b_UtpekLand);
+  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_utpek),
+})(VurderingArtikkel13UtpekLand);
 
-export default connect(mapStateToProps)(VurderingArtikkel13_1b_UtpekLand_form);
+export default connect(mapStateToProps)(VurderingArtikkel13UtpekLand_form);

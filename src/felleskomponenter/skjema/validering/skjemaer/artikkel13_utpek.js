@@ -4,7 +4,7 @@ const { object, string, bool } = Utils.yup;
 
 const MOTTAKERINSTITUSJON_KREVES = { melding: 'Mottakerinstitusjon kreves' };
 
-const artikkel13_1_b_utpek = object().shape({
+const artikkel13_utpek = object().shape({
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when('kreverMottakerinstitusjon', {
     is: true,
@@ -12,4 +12,4 @@ const artikkel13_1_b_utpek = object().shape({
   }),
 });
 
-export { artikkel13_1_b_utpek };
+export { artikkel13_utpek };
