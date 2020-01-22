@@ -139,20 +139,29 @@ const VurderingArbeidsmonster = props => {
   const {
     marginaltArbeid, aktivitetINorge,
     aktivitetINorgeNodvendig, harAvklaring,
+    yrkesaktivitet,
   } = tilstand;
 
 
   const endreLovvalgsperiode = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
-    } else {
-      slettData(slettLovvalgsbestemmelse());
+    } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
+      if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B));
+      } else {
+        slettData(slettLovvalgsbestemmelse());
+      }
     }
   };
 
   const oppdaterLovvalgsperiodeVedMount = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+    } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
+      if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
+        oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B));
+      }
     }
   };
 
@@ -211,6 +220,7 @@ VurderingArbeidsmonster.propTypes = {
     aktivitetINorge: PT.object,
     aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
+    yrkesaktivitet: PT.string.isRequired,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
 };

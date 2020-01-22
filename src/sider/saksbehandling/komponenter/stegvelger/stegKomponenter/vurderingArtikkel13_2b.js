@@ -23,7 +23,7 @@ const radioValg = {
 const VurderingArtikkel13_2b = ({
   redigerbart,
   tilstand: {
-    interessesenterFakta,
+    omfattesILandFakta,
     harAvklaring,
   },
   slettData,
@@ -31,38 +31,38 @@ const VurderingArtikkel13_2b = ({
   bekreftOgFortsett,
 }) => {
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.INTERESSESENTER, interessesenterFakta));
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattesILandFakta));
 
     return () => {
       slettData();
     };
   }, []);
 
-  const harInteressesenterINorge = () => {
-    const interessesenter = hentFaktaVerdi(interessesenterFakta);
-    if (Utils._isNil(interessesenter)) {
+  const erOmfattetINorge = () => {
+    const omfattetILand = hentFaktaVerdi(omfattesILandFakta);
+    if (Utils._isNil(omfattetILand)) {
       return null;
     }
-    return interessesenter === MKV.Koder.landkoder.NO;
+    return omfattetILand === MKV.Koder.landkoder.NO;
   };
 
-  const [erNorgeValgt, setErNorgeValgt] = useState(harInteressesenterINorge());
+  const [erNorgeValgt, setErNorgeValgt] = useState(erOmfattetINorge());
 
   const radioEndringHandler = event => {
     if (event.target.value === radioValg.NORGE) {
       setErNorgeValgt(true);
-      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.INTERESSESENTER, null, MKV.Koder.landkoder.NO, null));
+      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO, null));
     } else {
       setErNorgeValgt(false);
-      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.INTERESSESENTER);
+      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND);
     }
   };
 
   const landEndretHandler = landKode => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.INTERESSESENTER, null, landKode));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, landKode));
   };
 
-  const valgtLand = hentFaktaVerdi(interessesenterFakta);
+  const valgtLand = hentFaktaVerdi(omfattesILandFakta);
 
   return (
     <div>
@@ -110,7 +110,7 @@ const VurderingArtikkel13_2b = ({
 VurderingArtikkel13_2b.propTypes = {
   redigerbart: PT.bool.isRequired,
   tilstand: PT.shape({
-    interessesenterFakta: MPT.Avklartefakta,
+    omfattesILandFakta: MPT.Avklartefakta,
     harAvklaring: PT.bool.isRequired,
   }).isRequired,
   oppdaterData: PT.func.isRequired,

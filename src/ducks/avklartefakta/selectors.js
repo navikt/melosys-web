@@ -11,6 +11,7 @@ import { createSelector } from 'reselect';
 import MKV from '../../melosyskodeverk';
 
 import * as KV from '../../kodeverk';
+import * as Utils from '../../utils';
 
 import { behandlingerSelectors } from '../behandlinger';
 import { soknadSelectors } from '../soknad';
@@ -317,11 +318,11 @@ export const OmfattesILandSelector = createSelector(
 export const OmfattesINorgeSelector = createSelector(
   OmfattesILandSelector,
   OmfattesILandFaktaSelector,
-  (omfattesILand, omfattesILandFaktaEksisterer) => omfattesILandFaktaEksisterer && omfattesILand === MKV.Koder.landkoder.NO
+  (omfattesILand, omfattesILandFakta) => Utils._isObject(omfattesILandFakta) && omfattesILand === MKV.Koder.landkoder.NO
 );
 
 export const OmfattesIAnnetLandSelector = createSelector(
   OmfattesILandSelector,
   OmfattesILandFaktaSelector,
-  (omfattesILand, omfattesILandFaktaEksisterer) => omfattesILandFaktaEksisterer && omfattesILand !== MKV.Koder.landkoder.NO
+  (omfattesILand, omfattesILandFakta) => Utils._isObject(omfattesILandFakta) && omfattesILand !== MKV.Koder.landkoder.NO
 );

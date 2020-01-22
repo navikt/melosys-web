@@ -1,7 +1,6 @@
 import React from 'react';
 
 import MKV from '../../../../../melosyskodeverk';
-import * as Nav from '../../../../../utils/navFrontend';
 
 import VurderingArtikkel13_2b from './vurderingArtikkel13_2b';
 import EnkeltLandPure from '../../../../../felleskomponenter/skjema/landvelger/enkeltLandPure';
@@ -13,7 +12,7 @@ describe('VurderingArtikkel13_2b', () => {
   beforeEach(() => {
     props = {
       tilstand: {
-        interessesenterFakta: {
+        omfattesILandFakta: {
           fakta: [MKV.Koder.landkoder.CY],
         },
         harAvklaring: true,
@@ -36,7 +35,7 @@ describe('VurderingArtikkel13_2b', () => {
   });
 
   it('viser ikke landvelger dersom Norge er valgt', () => {
-    props.tilstand.interessesenterFakta.fakta = [MKV.Koder.landkoder.NO];
+    props.tilstand.omfattesILandFakta.fakta = [MKV.Koder.landkoder.NO];
     const vurderingArtikkel13_2b = shallow(<VurderingArtikkel13_2b {...props} />);
 
     expect(vurderingArtikkel13_2b.find(EnkeltLandPure)).toHaveLength(0);

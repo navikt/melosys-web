@@ -64,6 +64,8 @@ class Arbeidsmonster extends Steg {
       const harAvklaring = landMedVesentligArbeid.length > 0 &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
 
+      const yrkesaktivitet = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta));
+
       return ({
         marginaltArbeid,
         aktivitetINorge,
@@ -71,6 +73,7 @@ class Arbeidsmonster extends Steg {
         erNorgeValgt,
         aktivitetINorgeNodvendig,
         harAvklaring,
+        yrkesaktivitet,
       });
     };
     this.handlers = {

@@ -50,6 +50,11 @@ export const VurderingArtikkel13UtpekLand = ({
     {
       navn: 'Forhåndsvis orienteringsbrev',
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
+      data: {
+        begrunnelseKode: null,
+        fritekst: null,
+        mottaker: MKV.Koder.aktoersroller.BRUKER,
+      },
     },
     {
       navn: 'Forhåndsvis SED A003',

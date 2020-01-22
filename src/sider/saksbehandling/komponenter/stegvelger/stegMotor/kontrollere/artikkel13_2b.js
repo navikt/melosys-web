@@ -1,6 +1,8 @@
 import * as KV from '../../../../../../kodeverk';
 import * as Utils from '../../../../../../utils';
 
+import MKV from '../../../../../../melosyskodeverk';
+
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel13_2b from '../../stegKomponenter/vurderingArtikkel13_2b';
@@ -9,7 +11,17 @@ import { hentFakta, hentFaktaVerdi } from '../../../../../../regler/avklartefakt
 class Artikkel13_2_b extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+    const harAvklaring = Artikkel13_2_b.harAvklaring(propsLight.avklartefakta);
+    const omfattetILandFakta = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
+    const omfattetILandFaktaVerdi = hentFaktaVerdi(omfattetILandFakta);
+    const erOmfattetILandIkkeNorge = omfattetILandFaktaVerdi && omfattetILandFaktaVerdi !== MKV.Koder.landkoder.NO;
+
     this.kriterier = [
+      {
+        beskrivelse: '',
+        exec: () => harAvklaring && erOmfattetILandIkkeNorge,
+        nesteSteg: STEG.ARTIKKEL_13_2_B_UTPEK_LAND,
+      },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
@@ -23,11 +35,11 @@ class Artikkel13_2_b extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const interessesenterFakta = Artikkel13_2_b.hentInteressesenterFakta(_propsLight.avklartefakta);
+      const omfattesILandFakta = Artikkel13_2_b.hentOmfattesILandFakta(_propsLight.avklartefakta);
 
       return {
         harAvklaring: Artikkel13_2_b.harAvklaring(_propsLight.avklartefakta),
-        interessesenterFakta,
+        omfattesILandFakta,
       };
     };
     this.handlers = {
@@ -38,15 +50,13 @@ class Artikkel13_2_b extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static hentInteressesenterFakta = avklarteFakta => {
-    return hentFakta(KV.Koder.avklartefaktaKoder.INTERESSESENTER, avklarteFakta);
-  };
+  static hentOmfattesILandFakta = avklarteFakta => hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, avklarteFakta);
 
   static harAvklaring = avklarteFakta => {
-    const interessesenterFakta = Artikkel13_2_b.hentInteressesenterFakta(avklarteFakta);
-    const interessesenter = hentFaktaVerdi(interessesenterFakta);
+    const omfattesILandFakta = Artikkel13_2_b.hentOmfattesILandFakta(avklarteFakta);
+    const omfattesILand = hentFaktaVerdi(omfattesILandFakta);
 
-    return !(Utils._isNil(interessesenter) || interessesenter === '');
+    return !(Utils._isNil(omfattesILand) || omfattesILand === '');
   };
 }
 
