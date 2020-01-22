@@ -236,8 +236,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const fattVedtak = async (values, dispatch, props) => {
-  props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
-  await props.lagreOgFatteVedtak({
+  if (values.forkortLovvalgsperiode) {
+    await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
+  }
+
+  props.lagreLovvalgsperioder();
+  props.lagreOgFatteVedtak({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
     mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),

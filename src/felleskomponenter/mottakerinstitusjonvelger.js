@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { change, Field, formValueSelector } from 'redux-form';
 import * as PT from 'prop-types';
 
-import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import * as Utils from '../utils';
 import MKV from '../melosyskodeverk';
@@ -100,7 +99,7 @@ const mapStateToPropsFlervalg = (state, ownProps) => ({
 });
 
 const mapDispatchToPropsFlervalg = dispatch => ({
-  oppdaterKreverMottakerinstitusjon: (form, feltnavn) => kreverMottakerinstitusjon => dispatch(change(form, feltnavn, kreverMottakerinstitusjon))
+  oppdaterKreverMottakerinstitusjon: (form, feltnavn) => kreverMottakerinstitusjon => dispatch(change(form, feltnavn, kreverMottakerinstitusjon)),
 });
 
 const MottakerinstitusjonvelgerFlervalgInner = ({
