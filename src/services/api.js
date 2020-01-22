@@ -15,7 +15,9 @@ import * as Saksbehandler from './modules/saksbehandler';
 import * as Saksflyt from './modules/saksflyt';
 import * as ServerInfo from './modules/serverinfo';
 import * as Soknader from './modules/soknader';
+import * as Utpekingsperioder from './modules/utpekingsperioder';
 import * as Vilkar from './modules/vilkar';
+
 
 export {
   Anmodningsperioder,
@@ -35,5 +37,6 @@ export {
   Saksflyt,
   ServerInfo,
   Soknader,
+  Utpekingsperioder,
   Vilkar,
 };

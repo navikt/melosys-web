@@ -12,16 +12,13 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       },
       redigerbart: true,
       behandlingID: 3,
-      lovvalgsland: { kode: 'NO', term: 'Norge' },
-      lovvalgsperiode: {},
-      endreLovvalgsPeriode: jest.fn(),
-      lagreOgFatteVedtak: jest.fn(),
+      lovvalgsland: 'NO',
+      lagreOgUtpek: jest.fn(),
       formIsValid: true,
       formValues: {},
       touch: jest.fn(),
-      byggLovvalgsperioder: jest.fn(),
-      lagreLovvalgsperioder: jest.fn(),
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      form: 'Form',
     };
 
     shallow(<VurderingArtikkel13_1b_UtpekLand {...props} />);

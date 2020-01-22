@@ -3,6 +3,8 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import { modalerOperations, modalerSelectors } from './ducks/modaler';
+import { vedtakSelectors } from './ducks/vedtak';
+import { utpekSelectors } from './ducks/utpek';
 
 import DialogboksOppfriskSak from './felleskomponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from './felleskomponenter/dialogboks/dialogboksVenter';
@@ -34,7 +36,7 @@ const Modals = ({
   venterPaRevurderVedtak,
   visValideringModal,
   skjulValideringModalDialogHandle,
-  vedtakfeilkoder,
+  valideringerFeilkoder,
 }) => (
   <Fragment>
     {
@@ -89,7 +91,7 @@ const Modals = ({
       visValideringModal &&
       <DialogboksValidering
         avbryt={skjulValideringModalDialogHandle}
-        valideringer={vedtakfeilkoder}
+        valideringer={valideringerFeilkoder}
       />
     }
   </Fragment>
@@ -117,11 +119,11 @@ Modals.propTypes = {
   venterPaRevurderVedtak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
-  vedtakfeilkoder: PT.arrayOf(PT.string),
+  valideringerFeilkoder: PT.arrayOf(PT.string),
 };
 
 Modals.defaultProps = {
-  vedtakfeilkoder: [],
+  valideringerFeilkoder: [],
 };
 
 const mapStateToProps = state => ({
@@ -132,6 +134,7 @@ const mapStateToProps = state => ({
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
   visRevurderVedtak: modalerSelectors.ErRevurderVedtakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
+  valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
 });
 
 const mapDispatchToProps = dispatch => ({

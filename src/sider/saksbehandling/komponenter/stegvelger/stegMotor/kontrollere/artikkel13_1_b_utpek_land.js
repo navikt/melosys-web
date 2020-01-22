@@ -23,9 +23,7 @@ class Artikkel13_1_b_utpek_land extends Steg {
       overskrift: 'Utpek land etter artikkel 13.1 bokstav b',
     });
     this.handlers = {
-      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
-      lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
-      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      lagreOgUtpek: this._propsLight.tilgjengeligeHandlers.lagreOgUtpek,
     };
     this._status = FANE_STATUS.OK;
   }
