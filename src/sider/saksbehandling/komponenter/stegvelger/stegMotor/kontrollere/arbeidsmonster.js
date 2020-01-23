@@ -42,6 +42,14 @@ class Arbeidsmonster extends Steg {
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
       {
+        beskrivelse: 'vedtak art 13.2 a',
+        exec: avklartefakta => (
+          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+          Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta)
+        ),
+        nesteSteg: STEG.ARTIKKEL_13_2_A_VEDTAK,
+      },
+      {
         beskrivelse: 'Stopp steg',
         exec: () => true,
         nesteSteg: null,

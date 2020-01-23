@@ -42,7 +42,7 @@ addMethod(string, 'periodeErGyldig', function (message) {
 
     if (!lovvalgsperiode) return false;
 
-    return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, value);
+    return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, Utils.dato.formatterDatoTilISO(value));
   });
 });
 
