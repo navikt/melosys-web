@@ -32,9 +32,19 @@ class Arbeidsmonster extends Steg {
           const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
 
           return hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
-          Yrkesaktivitet.erArbeidstaker(avklartefakta);
+            Yrkesaktivitet.erArbeidstaker(avklartefakta);
         },
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
+      },
+      {
+        beskrivelse: 'vedtak art 13.2 a',
+        exec: avklartefakta => {
+          const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
+
+          return hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+            Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta);
+        },
+        nesteSteg: STEG.ARTIKKEL_13_2_A_VEDTAK,
       },
       {
         beskrivelse: 'Stopp steg',
@@ -58,7 +68,7 @@ class Arbeidsmonster extends Steg {
       const aktivitetINorgeNodvendig = landMedVesentligArbeid.length > 1 && erNorgeValgt;
 
       const harAvklaring = landMedVesentligArbeid.length > 0 &&
-        Yrkesaktivitet.erArbeidstaker(_propsLight.avklartefakta) &&
+        (Yrkesaktivitet.erArbeidstaker(_propsLight.avklartefakta) || Yrkesaktivitet.erSelvstendigNaeringsdrivende(_propsLight.avklartefakta)) &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
 
       return ({

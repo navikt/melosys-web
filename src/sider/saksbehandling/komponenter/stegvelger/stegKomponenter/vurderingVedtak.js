@@ -108,7 +108,7 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
-      mottakerinstitusjon: formValues.mottakerinstitusjon,
+      mottakerinstitusjoner: [formValues.mottakerinstitusjon],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });

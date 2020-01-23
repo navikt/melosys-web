@@ -82,12 +82,15 @@ class Yrkesaktivitet extends Steg {
     const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESAKTIVITET);
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
-  }
+  };
 
   static erArbeidstaker = avklartefakta => (
     Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) ||
     Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG)
-  )
+  );
+
+  static erSelvstendigNaeringsdrivende = avklartefakte =>
+    Yrkesaktivitet.finnAvklaring(avklartefakte, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE);
 }
 
 export default Yrkesaktivitet;
