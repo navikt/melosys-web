@@ -57,6 +57,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   const vedKlikkForhandsvis = async () => {
     if (!formIsValid) {
       touchAll();
+      return false;
     }
 
     if (formValues.forkortLovvalgsperiode) {
@@ -240,7 +241,6 @@ const fattVedtak = async (values, dispatch, props) => {
     await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
   }
 
-  props.lagreLovvalgsperioder();
   props.lagreOgFatteVedtak({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
