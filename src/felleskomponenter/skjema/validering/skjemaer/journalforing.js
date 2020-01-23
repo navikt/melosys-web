@@ -1,6 +1,7 @@
 import MKV from '../../../../melosyskodeverk';
 import * as Utils from '../../../../utils';
 import * as Konstanter from '../../../../constants';
+import * as KV from '../../../../kodeverk';
 
 const {
   object, string, lazy, array,
@@ -37,7 +38,7 @@ const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
   behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
 const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
-  const organisasjonAliasTyper = ['FULLMEKTIG', 'ARBEIDSGIVER', 'ARBEIDSGIVER_FULLMEKTIG'];
+  const organisasjonAliasTyper = [KV.AvsenderTyper.FULLMEKTIG, KV.AvsenderTyper.ARBEIDSGIVER, KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG];
   return organisasjonAliasTyper.includes(avsenderType) && !erAvsenderPreutfylt;
 };
 
@@ -131,7 +132,7 @@ const journalforing = object().shape({
     }),
   representantRepresenterer: string()
     .when('avsenderType', {
-      is: 'FULLMEKTIG',
+      is: KV.AvsenderTyper.FULLMEKTIG,
       then: string().required(VELG_REPRESENTERER),
     }),
   avsenderType: string()

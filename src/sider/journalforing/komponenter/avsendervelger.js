@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -77,35 +77,43 @@ const AvsenderVelger = ({
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Fullmektig"
-          value="FULLMEKTIG"
+          value={KV.AvsenderTyper.FULLMEKTIG}
         />
         {
-          formValues.avsenderType === 'FULLMEKTIG' &&
-          <Fragment>
-            <AvsenderFullmektig avsenderID={formValues.avsenderID} settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
-          </Fragment>
+          formValues.avsenderType === KV.AvsenderTyper.FULLMEKTIG &&
+          <AvsenderFullmektig
+            avsenderID={formValues.avsenderID}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
         }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver"
-          value="ARBEIDSGIVER"
+          value={KV.AvsenderTyper.ARBEIDSGIVER}
         />
         {
-          formValues.avsenderType === 'ARBEIDSGIVER' &&
-          <Fragment>
-            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
-          </Fragment>
+          formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER &&
+          <AvsenderOrganisasjon
+            avsenderID={formValues.avsenderID}
+            avsenderType={formValues.avsenderType}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
         }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver som er fullmektig"
-          value="ARBEIDSGIVER_FULLMEKTIG"
+          value={KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG}
         />
         {
-          formValues.avsenderType === 'ARBEIDSGIVER_FULLMEKTIG' &&
-          <Fragment>
-            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
-          </Fragment>
+          formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG &&
+          <AvsenderOrganisasjon
+            avsenderID={formValues.avsenderID}
+            avsenderType={formValues.avsenderType}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
         }
         <Skjema.Radio
           feltNavn="avsenderType"
@@ -114,12 +122,10 @@ const AvsenderVelger = ({
         />
         {
           formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET &&
-          <Fragment>
-            <AvsenderUtenlanskTrygdemyndighet
-              utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
-              fullmektigLandEndret={fullmektigLandEndret}
-            />
-          </Fragment>
+          <AvsenderUtenlanskTrygdemyndighet
+            utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
+            fullmektigLandEndret={fullmektigLandEndret}
+          />
         }
         {/* TODO: Legges inn igjen i SPRINT-41 (etter endringer er avklart hos fag)
         <Skjema.Radio

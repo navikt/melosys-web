@@ -127,6 +127,13 @@ class Journalforing extends Component {
     return journalPostData;
   };
 
+  organisasjonAliaser = [
+    KV.AvsenderTyper.FULLMEKTIG,
+    KV.AvsenderTyper.ARBEIDSGIVER,
+    KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG,
+    MKV.Koder.avsendertyper.ORGANISASJON,
+  ];
+
   /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
    * relevante felter før saken tilordnes (sendes til API) og saksbehandler returneres til forsiden.
    * @returns {boolean}
@@ -141,13 +148,12 @@ class Journalforing extends Component {
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
-    const organisasjonAliaser = ['FULLMEKTIG', 'ARBEIDSGIVER', 'ARBEIDSGIVER_FULLMEKTIG', MKV.Koder.avsendertyper.ORGANISASJON];
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
       saksnummer,
       behandlingstypeKode,
       ingenVurdering,
-      avsenderType: organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
+      avsenderType: this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
       ...vasketJournalforing,
     };
 
@@ -229,22 +235,11 @@ class Journalforing extends Component {
       ...vasketJournalforing,
       fagsak,
       anmodningOmUnntak,
-      avsenderType: this.mapAvsenderType(avsenderType),
+      avsenderType: this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
       tilForsiden();
-    }
-  };
-
-  mapAvsenderType = avsenderType => {
-    switch (avsenderType) {
-      case 'ARBEIDSGIVER':
-      case 'ARBEIDSGIVER_FULLMEKTIG':
-      case 'FULLMEKTIG':
-        return MKV.Koder.avsendertyper.ORGANISASJON;
-      default:
-        return avsenderType;
     }
   };
 
