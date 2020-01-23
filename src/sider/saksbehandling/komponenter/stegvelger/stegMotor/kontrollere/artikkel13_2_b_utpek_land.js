@@ -20,7 +20,7 @@ class Artikkel13_2_b_utpek_land extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
-      overskrift: 'Utpek land etter artikkel 13.2 bokstav b',
+      overskrift: 'Utpek land etter artikkel 13 nr. 2 bokstav b',
     });
     this.handlers = {
       lagreOgUtpek: this._propsLight.tilgjengeligeHandlers.lagreOgUtpek,

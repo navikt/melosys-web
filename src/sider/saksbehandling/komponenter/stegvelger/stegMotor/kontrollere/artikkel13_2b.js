@@ -15,8 +15,14 @@ class Artikkel13_2_b extends Steg {
     const omfattetILandFakta = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
     const omfattetILandFaktaVerdi = hentFaktaVerdi(omfattetILandFakta);
     const erOmfattetILandIkkeNorge = omfattetILandFaktaVerdi && omfattetILandFaktaVerdi !== MKV.Koder.landkoder.NO;
+    const erOmfattetINorge = omfattetILandFaktaVerdi && omfattetILandFaktaVerdi === MKV.Koder.landkoder.NO;
 
     this.kriterier = [
+      {
+        beskrivelse: '',
+        exec: () => harAvklaring && erOmfattetINorge,
+        nesteSteg: STEG.ARTIKKEL_13_2_B_NORGE,
+      },
       {
         beskrivelse: '',
         exec: () => harAvklaring && erOmfattetILandIkkeNorge,
