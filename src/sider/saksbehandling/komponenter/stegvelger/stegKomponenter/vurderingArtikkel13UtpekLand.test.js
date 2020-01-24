@@ -19,6 +19,7 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       touch: jest.fn(),
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       form: 'Form',
+      touchAll: jest.fn(),
     };
 
     shallow(<VurderingArtikkel13UtpekLand {...props} />);
