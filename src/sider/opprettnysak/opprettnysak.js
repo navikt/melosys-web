@@ -32,9 +32,7 @@ const OpprettNySak = ({
   const { behandlingstype } = formValues;
   const soknadErValgt = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
 
-  const hentOppgaver = async event => {
-    const brukerID = event.target.value;
-
+  const hentOppgaver = async brukerID => {
     if (Validering.erGyldigFnr(brukerID) || Validering.erGyldigDnr(brukerID)) {
       try {
         const oppgaverResponse = await Api.Oppgaver.sok(brukerID);
@@ -46,6 +44,7 @@ const OpprettNySak = ({
       }
     } else {
       setOppgaver([]);
+      setOppgaverForsoktHentetFraEksisterendePerson(false);
     }
   };
 
@@ -91,7 +90,7 @@ const OpprettNySak = ({
                   <Brukernavnskjema
                     className="brukernavnskjema innrykk"
                     form={form}
-                    onChange={hentOppgaver}
+                    onHentBruker={hentOppgaver}
                   />
                   <Mui.Undertittel tekst="Informasjon om sak" ikon={Ikoner.Filenew} className="undertittel" />
                   <div className="innrykk">
@@ -142,7 +141,7 @@ const OpprettNySak = ({
                     }
                     {
                       !oppgaverFinnes && oppgaverForsoktHentetFraEksisterendePerson &&
-                      <Nav.AlertStripeAdvarsel>Det finnes ingen saker på denne personen.</Nav.AlertStripeAdvarsel>
+                      <Nav.AlertStripeAdvarsel>Det finnes ingen oppgaver på denne personen.</Nav.AlertStripeAdvarsel>
                     }
                     <Skjema.Checkbox
                       className="skalTilordnes"
@@ -154,6 +153,7 @@ const OpprettNySak = ({
                       avbryt={tilForsiden}
                       avbrytTekst="Avbryt"
                       redigerbart
+                      bekreftRedigerbart={oppgaverFinnes}
                     />
                   </div>
                 </Nav.Column>
