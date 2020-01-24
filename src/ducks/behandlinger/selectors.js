@@ -31,6 +31,10 @@ export const BehandlingstypeKodeSelector = createSelector(
   OppsummeringSelector,
   oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
 );
+export const BehandlingsstatusKodeSelector = createSelector(
+  OppsummeringSelector,
+  oppsummering => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : '')
+);
 
 export const ErArtikkel16AnmodningSendtSelector = createSelector(
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,

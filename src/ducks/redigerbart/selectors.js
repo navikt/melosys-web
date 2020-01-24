@@ -44,3 +44,8 @@ export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
     return !erIArtikkel13_1Flyt || enVirksomhetErAvklart || mottaker !== MKV.Koder.aktoersroller.ARBEIDSGIVER;
   }
 );
+export const BehandlingsmenyRedigerbartSelector = createSelector(
+  RedigerbartSelector,
+  behandlingerSelectors.BehandlingsstatusKodeSelector,
+  (redigerbart, behandlingsstatus) => (behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT ? true : redigerbart)
+);
