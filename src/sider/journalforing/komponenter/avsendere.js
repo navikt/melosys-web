@@ -9,10 +9,34 @@ import * as KV from '../../../kodeverk';
 
 import './avsendervelger.css';
 
-export const AvsenderOrganisasjon = props => {
+export const AvsenderOrganisasjon = ({
+  settFeltInnhold,
+  hentOgVisRepresentant,
+  avsenderID,
+  avsenderType,
+  children,
+}) => {
+  useEffect(() => {
+    if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG) {
+      settFeltInnhold('representantRepresenterer', MKV.Koder.representerer.BRUKER);
+    }
+    return () => {
+      settFeltInnhold('representantRepresenterer', '');
+    };
+  }, []);
+
+  useEffect(() => {
+    if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG || avsenderType === KV.AvsenderTyper.FULLMEKTIG) {
+      settFeltInnhold('representantID', avsenderID);
+    }
+    return () => {
+      settFeltInnhold('representantID', '');
+    };
+  }, [avsenderID]);
+
   const erGyldigOrgnummer = verdi => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
+
   const sjekkArbeidsgiver = async verdi => {
-    const { settFeltInnhold, hentOgVisRepresentant } = props;
     if (erGyldigOrgnummer(verdi)) {
       // TODO await this.spinner('representantNavn');
       await hentOgVisRepresentant(verdi);
@@ -20,16 +44,18 @@ export const AvsenderOrganisasjon = props => {
       await settFeltInnhold('representantNavn', '');
     }
   };
+
   const IDFeltTastOppHandler = async event => {
     const { id: opprinneligFeltID, value } = event.target;
     if (opprinneligFeltID === 'representantID') { await sjekkArbeidsgiver(value); }
   };
+
   return (
     <div className="avsender">
       <Skjema.Input feltNavn="avsenderID" label="Oppgi avsenders org.nr." onKeyUp={IDFeltTastOppHandler} />
       <Skjema.Input feltNavn="avsenderNavn" label="Organisasjonsnavn" disabled />
       {
-        props.children
+        children
       }
     </div>
   );
@@ -37,26 +63,17 @@ export const AvsenderOrganisasjon = props => {
 AvsenderOrganisasjon.propTypes = {
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
+  avsenderID: PT.string,
+  avsenderType: PT.string.isRequired,
   children: PT.node,
 };
 
 AvsenderOrganisasjon.defaultProps = {
+  avsenderID: '',
   children: null,
 };
 
 export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepresentant }) => {
-  useEffect(() =>
-    () => {
-      settFeltInnhold('representantRepresenterer', '');
-    }, []);
-
-  useEffect(() => {
-    settFeltInnhold('representantID', avsenderID);
-    return () => {
-      settFeltInnhold('representantID', '');
-    };
-  }, [avsenderID]);
-
   const representererMap = {
     [MKV.Koder.representerer.ARBEIDSGIVER]: 'Arbeidsgiver',
     [MKV.Koder.representerer.BRUKER]: 'Arbeidstaker',
@@ -64,7 +81,12 @@ export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepre
   };
 
   return (
-    <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant}>
+    <AvsenderOrganisasjon
+      avsenderID={avsenderID}
+      avsenderType={KV.AvsenderTyper.FULLMEKTIG}
+      settFeltInnhold={settFeltInnhold}
+      hentOgVisRepresentant={hentOgVisRepresentant}
+    >
       <Skjema.Select feltNavn="representantRepresenterer" label="Hvem er dette fullmektig for">
         {MKV.KTObjects.representerer.map(({ kode }) =>
           (<option key={kode} value={kode}>{representererMap[kode]}</option>))}
