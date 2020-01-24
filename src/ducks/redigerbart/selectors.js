@@ -47,5 +47,5 @@ export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
 export const BehandlingsmenyRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.BehandlingsstatusKodeSelector,
-  (redigerbart, behandlingsstatus) => (behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT ? true : redigerbart)
+  (redigerbart, behandlingsstatus) => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT || redigerbart
 );
