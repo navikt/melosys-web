@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { change, Field, formValueSelector } from 'redux-form';
+import { change, Field, formValueSelector, FieldArray } from 'redux-form';
 import * as PT from 'prop-types';
 
 import * as Api from '../services/api';
@@ -133,4 +133,19 @@ MottakerinstitusjonvelgerFlervalgInner.propTypes = {
   bucType: PT.string.isRequired,
 };
 
-export const MottakerinstitusjonvelgerFlervalg = connect(mapStateToPropsFlervalg, mapDispatchToPropsFlervalg)(MottakerinstitusjonvelgerFlervalgInner);
+const MottakerinstitusjonvelgerFlervalgWrapper = ({
+  feltnavn,
+  ...rest
+}) => (
+  <FieldArray
+    name={feltnavn}
+    component={MottakerinstitusjonvelgerFlervalgInner}
+    props={{ ...rest }}
+  />
+);
+
+MottakerinstitusjonvelgerFlervalgWrapper.propTypes = {
+  feltnavn: PT.string.isRequired,
+};
+
+export const MottakerinstitusjonvelgerFlervalg = connect(mapStateToPropsFlervalg, mapDispatchToPropsFlervalg)(MottakerinstitusjonvelgerFlervalgWrapper);

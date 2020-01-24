@@ -13,11 +13,13 @@ import * as KV from '../../../../../kodeverk';
 import * as Validering from '../../../../../felleskomponenter/skjema/validering';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import Mottakerinstitusjonvelger from '../../../../../felleskomponenter/mottakerinstitusjonvelger';
+import { MottakerinstitusjonvelgerFlervalg } from '../../../../../felleskomponenter/mottakerinstitusjonvelger';
 
+import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { utpekingsperioderSelectors } from '../../../../../ducks/utpekingsperioder';
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
+import { formOperations } from '../../../../../ducks/form';
 
 import './vurderingArtikkel13UtpekLand.css';
 
@@ -28,13 +30,13 @@ export const VurderingArtikkel13UtpekLand = ({
   lovvalgsperiode,
   tilstand: { overskrift },
   form,
-  touch,
   formIsValid,
   lagreOgUtpek,
   formValues,
+  touchAll,
 }) => {
   const validerForm = () => {
-    touch('mottakerinstitusjon');
+    touchAll();
     return formIsValid;
   };
 
@@ -42,7 +44,7 @@ export const VurderingArtikkel13UtpekLand = ({
     if (!validerForm()) return;
 
     lagreOgUtpek({
-      mottakerinstitusjoner: [formValues.mottakerinstitusjon],
+      mottakerinstitusjoner: formValues.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
     });
   };
 
@@ -87,10 +89,10 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.Row>
       <Nav.Row className="mottakerinstitusjoner">
         <Nav.Column xs="7">
-          <Mottakerinstitusjonvelger
+          <MottakerinstitusjonvelgerFlervalg
+            feltnavn="mottakerinstitusjoner"
             form={form}
             redigerbart={redigerbart}
-            landkode={lovvalgsland}
             bucType={EKV.Koder.buctyper.legislation.LA_BUC_02}
           />
         </Nav.Column>
@@ -116,8 +118,8 @@ VurderingArtikkel13UtpekLand.propTypes = {
   form: PT.string.isRequired,
   formValues: PT.object,
   formIsValid: PT.bool.isRequired,
-  touch: PT.func.isRequired,
   lagreOgUtpek: PT.func.isRequired,
+  touchAll: PT.func.isRequired,
 };
 
 VurderingArtikkel13UtpekLand.defaultProps = {
@@ -133,9 +135,13 @@ const mapStateToProps = state => ({
   formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   initialValues: {
-    mottakerinstitusjon: '',
+    mottakerinstitusjoner: avklartefaktaSelectors.ArbeidslandKTSelector(state) || [],
     kreverMottakerinstitusjon: false,
   },
+});
+
+const mapDispatchToProps = dispatch => ({
+  touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_UTPEKLAND)),
 });
 
 const VurderingArtikkel13UtpekLand_form = reduxForm({
@@ -147,4 +153,4 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
   validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_utpek),
 })(VurderingArtikkel13UtpekLand);
 
-export default connect(mapStateToProps)(VurderingArtikkel13UtpekLand_form);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13UtpekLand_form);
