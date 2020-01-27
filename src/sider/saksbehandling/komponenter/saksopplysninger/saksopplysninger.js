@@ -41,6 +41,7 @@ import { behandlingsresultatSelectors } from '../../../../ducks/behandlingsresul
 import { formSelectors } from '../../../../ducks/form';
 import { formatterDatoTilNorsk } from '../../../../utils/dato';
 
+import { stegMap } from '../../stegMap';
 
 const Saksopplysninger = props => {
   const overstyrSubmit = event => {
@@ -110,6 +111,7 @@ const Saksopplysninger = props => {
         landkoder={MKV.KTObjects.landkoder}
         tilForsiden={tilForsiden}
         visValideringModalDialogHandle={visValideringModalDialogHandle}
+        stegMap={stegMap}
       />
       }
       <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>

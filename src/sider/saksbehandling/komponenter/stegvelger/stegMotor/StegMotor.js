@@ -2,12 +2,11 @@ import MKV from '../../../../../melosyskodeverk';
 
 import { STEG } from './typer';
 
-import { stegKatalogMap } from './kontrollere';
-
 class StegMotor {
   _propsLight;
-  constructor(props) {
+  constructor(props, stegMap) {
     this._propsLight = props;
+    this._stegMap = stegMap;
   }
   get forsteStegID() { return this._forsteStegID; }
 
@@ -39,7 +38,7 @@ class StegMotor {
   };
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {
-    const StegKlasse = stegKatalogMap.get(stegID);
+    const StegKlasse = this._stegMap.get(stegID);
     if (!StegKlasse) { return false; }
     return new StegKlasse(this._propsLight, stegPosisjon);
   };
