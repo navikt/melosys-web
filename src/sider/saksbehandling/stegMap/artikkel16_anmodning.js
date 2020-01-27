@@ -2,9 +2,9 @@ import MKV from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingArtikkel16Anmodning from '../komponenter/stegvelger/stegKomponenter/vurderingArtikkel16Anmodning';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingArtikkel16Anmodning from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16Anmodning';
 import { hentVilkar, hentBegrunnelser } from '../../../regler/vilkar';
 
 class Artikkel16Anmodning extends Steg {

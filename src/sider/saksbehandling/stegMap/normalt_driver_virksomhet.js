@@ -1,7 +1,7 @@
 import MKV from '../../../melosyskodeverk';
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingNormaltDriverVirksomhet from '../komponenter/stegvelger/stegKomponenter/vurderingNormaltDriverVirksomhet';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingNormaltDriverVirksomhet from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingNormaltDriverVirksomhet';
 import { erVilkarOppfylt, hentVilkar } from '../../../regler/vilkar';
 
 class NormaltDriverVirksomhet extends Steg {

@@ -1,11 +1,11 @@
 import MKV from '../../../melosyskodeverk';
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
 
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../regler/avklartefakta';
-import VurderingArbeidsmonster from '../komponenter/stegvelger/stegKomponenter/vurderingArbeidsmonster';
+import VurderingArbeidsmonster from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArbeidsmonster';
 import { BoolskAvklartfaktaType } from '../../../kodeverk/koder';
 import Yrkesaktivitet from './yrkesaktivitet';
 

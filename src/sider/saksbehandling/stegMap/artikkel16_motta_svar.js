@@ -3,9 +3,9 @@ import MKV from '../../../melosyskodeverk';
 import * as Utils from '../../../utils';
 import * as Validering from '../../../felleskomponenter/skjema/validering';
 
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingArtikkel16MottaSvar from '../komponenter/stegvelger/stegKomponenter/vurderingArtikkel16MottaSvar';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingArtikkel16MottaSvar from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16MottaSvar';
 import { hentFakta } from '../../../regler/avklartefakta';
 
 

@@ -1,6 +1,6 @@
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingYrkesaktivitetAntallLand from '../komponenter/stegvelger/stegKomponenter/vurderingYrkesaktivitetAntallLand';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingYrkesaktivitetAntallLand from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import * as KV from '../../../kodeverk';
 import Yrkesgruppe from './yrkesgruppe';
 import { hentFakta } from '../../../regler/avklartefakta';

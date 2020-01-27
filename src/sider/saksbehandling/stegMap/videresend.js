@@ -1,6 +1,6 @@
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingVideresend from '../komponenter/stegvelger/stegKomponenter/vurderingVideresend';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingVideresend from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVideresend';
 
 class Videresend extends Steg {
   constructor(propsLight, stegPosisjon) {

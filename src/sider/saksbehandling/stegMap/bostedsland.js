@@ -1,8 +1,8 @@
 import MKV from '../../../melosyskodeverk';
 import * as KV from '../../../kodeverk';
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingBostedsland from '../komponenter/stegvelger/stegKomponenter/vurderingBostedsland';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingBostedsland from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingBostedsland';
 
 import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';

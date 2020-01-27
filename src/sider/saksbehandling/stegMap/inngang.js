@@ -1,6 +1,6 @@
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingInngang from '../komponenter/stegvelger/stegKomponenter/vurderingInngang';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingInngang from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingInngang';
 import * as KV from '../../../kodeverk';
 
 class Inngang extends Steg {

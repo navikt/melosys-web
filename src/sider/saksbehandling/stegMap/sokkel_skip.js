@@ -1,6 +1,6 @@
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingSokkelSkip from '../komponenter/stegvelger/stegKomponenter/vurderingSokkelSkip';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingSokkelSkip from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../kodeverk';
 import { hentFaktaListe, hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 

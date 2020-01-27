@@ -1,6 +1,6 @@
-import Steg from '../komponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../komponenter/stegvelger/stegMotor/typer';
-import VurderingArtikkel13_x_vedtak from '../komponenter/stegvelger/stegKomponenter/vurderingArtikkel13_x_vedtak';
+import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingArtikkel13_x_vedtak from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel13_x_vedtak';
 
 class Artikkel13_1_b_vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {

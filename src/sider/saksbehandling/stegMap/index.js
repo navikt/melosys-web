@@ -32,7 +32,7 @@ import Vedtak from './vedtak';
 import EndrePeriode from './endre_periode';
 import Videresend from './videresend';
 
-import { STEG } from '../komponenter/stegvelger/stegMotor/typer';
+import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 
 export const stegMap = new Map([
   [STEG.INNGANG, Inngang],

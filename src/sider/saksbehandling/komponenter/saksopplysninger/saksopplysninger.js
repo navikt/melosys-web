@@ -19,7 +19,7 @@ import Medlemskap from '../../../../felleskomponenter/medlemskap';
 import Soknadsperiode from '../soknadsperiode';
 import Personopplysninger from '../personopplysninger';
 import SelvstendigArbeid from '../selvstendigarbeid';
-import Stegvelger from '../stegvelger';
+import Stegvelger from '../../../../felleskomponenter/stegvelger';
 import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
 import VirksomhetNorge from '../virksomhetNorge';
 import FullmektigPanel from '../fullmektig';
