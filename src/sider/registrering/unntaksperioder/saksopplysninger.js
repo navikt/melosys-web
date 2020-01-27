@@ -11,7 +11,7 @@ import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as RegistreringContext from '../state/registreringContext';
 import * as Mui from '../../../felleskomponenter/ui';
-import Medlemskap from '../../../felleskomponenter/medlemskap';
+import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
 import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';

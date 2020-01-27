@@ -29,7 +29,7 @@ import { soknadOperations } from '../../ducks/soknad';
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 
-import { SoknadFeilmeldinger } from '../../sider/saksbehandling/komponenter/soknadFeilmeldinger';
+import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 import { StegStoreTyper } from '../../regler';
 

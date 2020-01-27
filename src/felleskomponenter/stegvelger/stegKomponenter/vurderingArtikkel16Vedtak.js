@@ -10,7 +10,7 @@ import * as KV from '../../../kodeverk';
 import * as Validering from '../../skjema/validering';
 import * as Skjema from '../../skjema';
 
-import Begrunnelser from '../../../sider/saksbehandling/komponenter/begrunnelser';
+import Begrunnelser from '../../begrunnelser';
 import PdfLenkeListe from '../../pdfLenkeListe';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
 import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';

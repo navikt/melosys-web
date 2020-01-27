@@ -14,7 +14,7 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
-import Begrunnelser from '../../../sider/saksbehandling/komponenter/begrunnelser';
+import Begrunnelser from '../../begrunnelser';
 import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
 import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 
