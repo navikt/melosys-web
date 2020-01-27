@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, isValid, getFormValues, FieldArray } from 'redux-form';
+import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
@@ -164,14 +164,11 @@ export const VurderingArtikkel13_x_vedtak = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="8">
-          <FieldArray
-            name="mottakerinstitusjoner"
-            component={MottakerinstitusjonvelgerFlervalg}
-            props={{
-              bucType: EKV.Koder.buctyper.legislation.LA_BUC_02,
-              redigerbart,
-              form,
-            }}
+          <MottakerinstitusjonvelgerFlervalg
+            feltnavn="mottakerinstitusjoner"
+            bucType={EKV.Koder.buctyper.legislation.LA_BUC_02}
+            redigerbart={redigerbart}
+            form={form}
           />
         </Nav.Column>
       </Nav.Row>

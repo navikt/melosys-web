@@ -179,6 +179,7 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => 
 const bestemLovvalgsland = lovvalgsbestemmelse => {
   switch (lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B:
       return MKV.Koder.landkoder.NO;
     default:
       return null;

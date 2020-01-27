@@ -15,14 +15,26 @@ class EnkeltLandPure extends Component {
   };
 
   componentDidMount = () => {
+    this.oppdaterInputVerdi();
+  };
+
+  componentDidUpdate = prevProps => {
+    if (prevProps.value !== this.props.value ||
+      prevProps.landkoder !== this.props.landkoder) {
+      this.oppdaterInputVerdi();
+    }
+  };
+
+  setInputVerdi = verdi => {
+    this.setState({ inputVerdi: verdi });
+  };
+
+  oppdaterInputVerdi = () => {
     const { value } = this.props;
     const { landkoder } = this.props;
     const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
     const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
     this.setInputVerdi(inputVerdi);
-  };
-  setInputVerdi = verdi => {
-    this.setState({ inputVerdi: verdi });
   };
 
   oppdaterLand = landkode => {

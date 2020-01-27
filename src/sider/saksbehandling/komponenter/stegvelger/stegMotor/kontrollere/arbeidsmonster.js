@@ -12,38 +12,41 @@ import Yrkesaktivitet from './yrkesaktivitet';
 class Arbeidsmonster extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+    const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, propsLight.avklartefakta);
+
     this.kriterier = [
       {
         beskrivelse: 'Ga videre til forretningssted hvis aktivitet i norge er avklart',
-        exec: avklartefakta => {
-          const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
-
-          return (
-            aktivitetINorge &&
-            hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
-            Yrkesaktivitet.erArbeidstaker(avklartefakta)
-          );
-        },
+        exec: avklartefakta => (
+          aktivitetINorge &&
+          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
+          Yrkesaktivitet.erArbeidstaker(avklartefakta)
+        ),
         nesteSteg: STEG.FORRETNINGSSTED,
       },
       {
+        beskrivelse: '',
+        exec: avklartefakta => (
+          aktivitetINorge &&
+          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
+          Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta)
+        ),
+        nesteSteg: STEG.ARTIKKEL_13_2_B,
+      },
+      {
         beskrivelse: 'vedtak art 13.1 a',
-        exec: avklartefakta => {
-          const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
-
-          return hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
-            Yrkesaktivitet.erArbeidstaker(avklartefakta);
-        },
+        exec: avklartefakta => (
+          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+          Yrkesaktivitet.erArbeidstaker(avklartefakta)
+        ),
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
       {
         beskrivelse: 'vedtak art 13.2 a',
-        exec: avklartefakta => {
-          const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
-
-          return hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
-            Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta);
-        },
+        exec: avklartefakta => (
+          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+          Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta)
+        ),
         nesteSteg: STEG.ARTIKKEL_13_2_A_VEDTAK,
       },
       {
@@ -61,15 +64,15 @@ class Arbeidsmonster extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, _propsLight.avklartefakta);
-      const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, _propsLight.avklartefakta);
 
       const landMedVesentligArbeid = this.hentLandMedVesentligArbeid(_propsLight.arbeidsland, marginaltArbeid);
       const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);
       const aktivitetINorgeNodvendig = landMedVesentligArbeid.length > 1 && erNorgeValgt;
 
       const harAvklaring = landMedVesentligArbeid.length > 0 &&
-        (Yrkesaktivitet.erArbeidstaker(_propsLight.avklartefakta) || Yrkesaktivitet.erSelvstendigNaeringsdrivende(_propsLight.avklartefakta)) &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
+
+      const yrkesaktivitet = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta));
 
       return ({
         marginaltArbeid,
@@ -78,6 +81,7 @@ class Arbeidsmonster extends Steg {
         erNorgeValgt,
         aktivitetINorgeNodvendig,
         harAvklaring,
+        yrkesaktivitet,
       });
     };
     this.handlers = {
