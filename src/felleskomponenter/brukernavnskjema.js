@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import PT from 'prop-types';
-import { getFormValues, change } from 'redux-form';
+import { getFormValues, change, clearFields } from 'redux-form';
 import { connect } from 'react-redux';
 
 import * as Skjema from './skjema';
@@ -15,6 +15,8 @@ export const Brukernavnskjema = ({
   settFormBruker,
   className,
   onChange,
+  onHentBruker,
+  resetFelter,
 }) => {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
   const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
@@ -32,6 +34,7 @@ export const Brukernavnskjema = ({
       }
     }
 
+    onHentBruker(fnrdnr);
     setBrukerSpinner(false);
   };
 
@@ -43,6 +46,8 @@ export const Brukernavnskjema = ({
     if (formValues.brukerID && !brukerHentetVedOppstart) {
       hentBrukerMedID();
       setBrukerHentetVedOppstart(true);
+    } else if (!formValues.brukerID) {
+      resetFelter(['bruker']);
     }
   }, [formValues.brukerID]);
 
@@ -78,12 +83,15 @@ Brukernavnskjema.propTypes = {
   settFormBruker: PT.func.isRequired,
   className: PT.string,
   onChange: PT.func,
+  resetFelter: PT.func.isRequired,
+  onHentBruker: PT.func,
 };
 
 Brukernavnskjema.defaultProps = {
   formValues: {},
   className: undefined,
   onChange: undefined,
+  onHentBruker: () => {},
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -92,6 +100,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   settFormBruker: brukerNavn => dispatch(change(ownProps.form, 'bruker', brukerNavn)),
+  resetFelter: felter => dispatch(clearFields(ownProps.form, true, true, felter)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Brukernavnskjema);
