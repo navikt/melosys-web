@@ -8,7 +8,6 @@ class StegMotor {
     this._propsLight = props;
     this._stegMap = stegMap;
   }
-  get forsteStegID() { return this._forsteStegID; }
 
   beregnAlleSteg = () => {
     let gjeldendeSteg = null;

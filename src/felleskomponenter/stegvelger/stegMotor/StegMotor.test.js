@@ -1,56 +1,84 @@
 import StegMotor from './StegMotor';
 
-describe('Tester stegVelger', () => {
-  test('stegvelger', () => {
-    const avklartefakta = {
-      behandlingID: 4,
-      avklaring: {
-        opphold: {
-          land: ['GB'],
-          periode: {
-            fom: '2018-01-01',
-            tom: '2019-01-01',
-          },
-        },
-        aktivitet: {
-          aktivitetLand: ['GB'],
-        },
-        yrkesgruppe: {
-          yrkesgruppeType: 'ARBEIDSTAKER',
-        },
-        utsending: {
-          ansattINorskSelskap: true,
-          erstatterTidligereUtsendt: true,
-          utsendingMindreEnn24Mnd: null,
-          foretakDriverINorge: true,
-          harForutgaendeMedlemskap: true,
-          arbeidKnyttetTilVirksomhetUtlandet: null,
-          sammeTypeVirksomhet: null,
-        },
-        bosted: {
-          vurdering: {},
-          land: [],
-        },
-        yrkesaktivitet: {
-          yrkesaktivitetType: 'INGEN_AV_DISSE',
-        },
-        tjenestemann: {
-          tjenestemann: 'ETT_LAND_YRKESAKTIVITET_ANDRE_LAND',
-        },
-        valgteArbeidsforhold: [],
-        yrkesaktivitetAntallLand: {
-          antallLand: 'ETT_LAND_IKKE_NORGE',
-        },
-        virksomhet: {
-          aktivitetINorge: 'OVER_25_PROSENT',
-          marginaltArbeid: 'MARGINALT_JA',
-          vekslingMellomLand: 'EN_ELLER_BEGGE',
-        },
-      },
-    };
+import MKV from '../../../melosyskodeverk';
+import { STEG } from './typer';
+import Steg from './steg';
 
-    const _stegvelger = new StegMotor(avklartefakta);
+describe('Stegmotor', () => {
+  describe('beregnAlleSteg', () => {
+    class Inngangssteg extends Steg {
+      constructor(propslight, posisjon) {
+        super(propslight, posisjon);
 
-    expect(typeof StegMotor).toBe('function');
+        this.id = STEG.INNGANG;
+        this._samleRelevanteData = jest.fn();
+        this._beregnRelevantUI = jest.fn();
+        this._kriterier = [{ exec: () => true, nesteSteg: STEG.YRKESAKTIVITET }];
+      }
+    }
+
+    class Endretperiodesteg extends Steg {
+      constructor(propslight, posisjon) {
+        super(propslight, posisjon);
+
+        this.id = STEG.ENDRET_PERIODE;
+        this._samleRelevanteData = jest.fn();
+        this._beregnRelevantUI = jest.fn();
+        this._kriterier = [{ exec: () => true, nesteSteg: null }];
+      }
+    }
+
+    class YrkesaktivitetSteg extends Steg {
+      constructor(propslight, posisjon) {
+        super(propslight, posisjon);
+
+        this.id = STEG.YRKESAKTIVITET;
+        this._samleRelevanteData = jest.fn();
+        this._beregnRelevantUI = jest.fn();
+        this._kriterier = [{ exec: () => true, nesteSteg: STEG.ENDRET_PERIODE }];
+      }
+    }
+
+    const stegMap = new Map([
+      [STEG.INNGANG, Inngangssteg],
+      [STEG.ENDRET_PERIODE, Endretperiodesteg],
+      [STEG.YRKESAKTIVITET, YrkesaktivitetSteg],
+    ]);
+
+    it('beregner alle steg i en flyt', () => {
+      const props = {};
+      const stegmotor = new StegMotor(props, stegMap);
+      const alleSteg = stegmotor.beregnAlleSteg();
+
+      expect(alleSteg[0].id).toBe(STEG.INNGANG);
+      expect(alleSteg[1].id).toBe(STEG.YRKESAKTIVITET);
+      expect(alleSteg[2].id).toBe(STEG.ENDRET_PERIODE);
+    });
+
+    it('Starter med inngangsteget dersom behandlingstype er SOEKNAD', () => {
+      const props = {
+        behandlingstype: {
+          kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+          term: MKV.Terms.behandlinger.behandlingstyper.SOEKNAD,
+        },
+      };
+      const stegmotor = new StegMotor(props, stegMap);
+      const alleSteg = stegmotor.beregnAlleSteg();
+
+      expect(alleSteg[0].id).toBe(STEG.INNGANG);
+    });
+
+    it('Starter med steget for endret periode dersom behandlingstype er ENDRET_PERIODE', () => {
+      const props = {
+        behandlingstype: {
+          kode: MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
+          term: MKV.Terms.behandlinger.behandlingstyper.ENDRET_PERIODE,
+        },
+      };
+      const stegmotor = new StegMotor(props, stegMap);
+      const alleSteg = stegmotor.beregnAlleSteg();
+
+      expect(alleSteg[0].id).toBe(STEG.ENDRET_PERIODE);
+    });
   });
 });
