@@ -49,3 +49,11 @@ export const BehandlingsmenyRedigerbartSelector = createSelector(
   behandlingerSelectors.BehandlingsstatusKodeSelector,
   (redigerbart, behandlingsstatus) => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT || redigerbart
 );
+export const ModalHenleggRedigerbartSelector = createSelector(
+  BehandlingsmenyRedigerbartSelector,
+  redigerbart => redigerbart
+);
+export const ModalAvsluttSomBortfaltRedigerbartSelector = createSelector(
+  BehandlingsmenyRedigerbartSelector,
+  redigerbart => redigerbart
+);
