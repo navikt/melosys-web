@@ -30,11 +30,6 @@ class Yrkesgruppe extends Steg {
         exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12),
         nesteSteg: STEG.VIRKSOMHETER,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.YRKESGRUPPE;
     this.tittel = 'Yrkes\u00ADsituasjon';

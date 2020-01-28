@@ -43,11 +43,6 @@ class Bostedsland extends Steg {
         },
         nesteSteg: STEG.VIDERESEND,
       },
-      {
-        beskrivelse: 'dead end',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
 
     this.id = STEG.BOSTEDSLAND;

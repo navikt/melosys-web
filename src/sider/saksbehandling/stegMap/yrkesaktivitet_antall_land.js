@@ -35,11 +35,6 @@ class YrkesaktivitetAntallLand extends Steg {
         ),
         nesteSteg: STEG.BOSTEDSLAND,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.YRKESAKTIVITET_ANTALL_LAND;
     this.tittel = 'Antall <br> land';

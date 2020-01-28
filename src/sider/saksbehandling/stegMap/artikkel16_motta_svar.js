@@ -18,11 +18,6 @@ class Artikkel16MottaSvar extends Steg {
         exec: () => Artikkel16MottaSvar.finnAvklaring(propsLight.anmodningsperiodesvarForm),
         nesteSteg: STEG.ARTIKKEL_16_VEDTAK,
       },
-      {
-        beskrivelse: 'alle valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.ARTIKKEL_16_MOTTA_SVAR;
     this.tittel = 'Artikkel 16.1 Svar';

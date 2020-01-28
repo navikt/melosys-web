@@ -29,11 +29,6 @@ class SokkelSkip extends Steg {
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND) && alleErAvklart,
         nesteSteg: STEG.VIRKSOMHETER,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.SOKKEL_SKIP;
     this.tittel = 'Sokkel / skip';

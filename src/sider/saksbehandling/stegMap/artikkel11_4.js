@@ -25,11 +25,6 @@ class Artikkel11_4 extends Steg {
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1, alleVilkar),
         nesteSteg: STEG.YRKESAKTIVITET,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.ARTIKKEL_11_4;
     this.tittel = 'Vurdering av 11.4';

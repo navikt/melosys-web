@@ -52,7 +52,7 @@ class Steg {
       return this.assertRegel(exec, avklartefakta, vilkar);
     });
 
-    return kriterieMatch.nesteSteg;
+    return kriterieMatch && kriterieMatch.nesteSteg;
   };
 
   hentStatus = () => {

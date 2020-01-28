@@ -28,11 +28,6 @@ class Artikkel12_2 extends Steg {
         ),
         nesteSteg: STEG.AVSLAG_12_X_OG_16,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.ARTIKKEL_12_2;
     this.tittel = 'Vurdering av 12.2';

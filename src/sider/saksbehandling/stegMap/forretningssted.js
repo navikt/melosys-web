@@ -31,11 +31,6 @@ class Forretningssted extends Steg {
         exec: () => harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetNorgeVurdert && erOmfattetILandIkkeNorge,
         nesteSteg: STEG.ARTIKKEL_13_1_B_UTPEK_LAND,
       },
-      {
-        beskrivelse: 'dead end',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.FORRETNINGSSTED;
     this.tittel = 'Forretnings\u00ADsted';

@@ -5,13 +5,7 @@ import VurderingArtikkel13UtpekLand from '../../../felleskomponenter/stegvelger/
 class Artikkel13_2_b_utpek_land extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this.kriterier = [
-      {
-        beskrivelse: 'dead end',
-        exec: () => true,
-        nesteSteg: null,
-      },
-    ];
+    this.kriterier = [];
 
     this.id = STEG.ARTIKKEL_13_2_B_UTPEK_LAND;
     this.tittel = 'Utpek\u00ADlandet';

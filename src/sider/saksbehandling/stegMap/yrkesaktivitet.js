@@ -45,11 +45,6 @@ class Yrkesaktivitet extends Steg {
         },
         nesteSteg: STEG.ARBEIDSMONSTER,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.YRKESAKTIVITET;
     this.tittel = 'Yrkes-aktivitet';

@@ -5,13 +5,7 @@ import VurderingArtikkel13_x_vedtak from '../../../felleskomponenter/stegvelger/
 class Artikkel13_1_b_vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this.kriterier = [
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
-    ];
+    this.kriterier = [];
     this.id = STEG.ARTIKKEL_13_1_B_VEDTAK;
     this.tittel = 'Vedtak';
     this.komponent = VurderingArtikkel13_x_vedtak;

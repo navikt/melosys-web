@@ -49,11 +49,6 @@ class Arbeidsmonster extends Steg {
         ),
         nesteSteg: STEG.ARTIKKEL_13_2_A_VEDTAK,
       },
-      {
-        beskrivelse: 'Stopp steg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.ARBEIDSMONSTER;
     this.tittel = 'Arbeids\u00ADmønster';

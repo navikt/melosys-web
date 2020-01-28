@@ -13,11 +13,6 @@ class Inngang extends Steg {
         exec: avklartefakta => (Inngang.harMinstEttGyldigSoknadsland(avklartefakta)),
         nesteSteg: STEG.YRKESGRUPPE,
       },
-      {
-        beskrivelse: 'Dead end - ingen land',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.INNGANG;
     this.tittel = 'Inngang';

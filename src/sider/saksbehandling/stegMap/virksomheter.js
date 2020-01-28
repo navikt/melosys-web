@@ -64,11 +64,6 @@ class Virksomheter extends Steg {
         },
         nesteSteg: STEG.YRKESAKTIVITET,
       },
-      {
-        beskrivelse: 'Stopp steg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.VIRKSOMHETER;
     this.tittel = 'Virksomhet';

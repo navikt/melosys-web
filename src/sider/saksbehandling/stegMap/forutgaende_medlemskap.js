@@ -13,11 +13,6 @@ class ForutgaendeMedlemskap extends Steg {
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, alleVilkar) !== undefined,
         nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.FORUTGAENDE_MEDLEMSKAP;
     this.tittel = 'Forutg. medl.';

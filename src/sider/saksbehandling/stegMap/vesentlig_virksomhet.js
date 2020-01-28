@@ -14,11 +14,6 @@ class VesentligVirksomhet extends Steg {
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar) !== undefined,
         nesteSteg: STEG.ARTIKKEL_12_1,
       },
-      {
-        beskrivelse: '',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
 
     this.id = STEG.VESENTLIG_VIRKSOMHET;

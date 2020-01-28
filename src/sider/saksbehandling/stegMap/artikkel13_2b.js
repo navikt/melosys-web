@@ -28,11 +28,6 @@ class Artikkel13_2_b extends Steg {
         exec: () => harAvklaring && erOmfattetILandIkkeNorge,
         nesteSteg: STEG.ARTIKKEL_13_2_B_UTPEK_LAND,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.ARTIKKEL_13_2_B;
     this.tittel = 'Vurdering av 13.2 b';

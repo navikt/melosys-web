@@ -5,13 +5,7 @@ import VurderingVideresend from '../../../felleskomponenter/stegvelger/stegKompo
 class Videresend extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this.kriterier = [
-      {
-        beskrivelse: '',
-        exec: () => true,
-        nesteSteg: null,
-      },
-    ];
+    this.kriterier = [];
 
     this.id = STEG.VIDERESEND;
     this.tittel = 'Videresending av søknad';

@@ -13,11 +13,6 @@ class NormaltDriverVirksomhet extends Steg {
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
         nesteSteg: STEG.ARTIKKEL_12_2,
       },
-      {
-        beskrivelse: '',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
 
     this.id = STEG.NORMALT_DRIVER_VIRKSOMHET;

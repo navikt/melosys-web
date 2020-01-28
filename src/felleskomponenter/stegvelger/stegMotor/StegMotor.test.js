@@ -24,7 +24,7 @@ describe('Stegmotor', () => {
         this.id = STEG.ENDRET_PERIODE;
         this._samleRelevanteData = jest.fn();
         this._beregnRelevantUI = jest.fn();
-        this._kriterier = [{ exec: () => true, nesteSteg: null }];
+        this._kriterier = [];
       }
     }
 

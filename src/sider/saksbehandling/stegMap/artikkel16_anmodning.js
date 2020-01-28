@@ -16,11 +16,6 @@ class Artikkel16Anmodning extends Steg {
         exec: () => Artikkel16Anmodning.skalArt16SvarstegVaereSynlig(propsLight),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
-      {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: null,
-      },
     ];
     this.id = STEG.ARTIKKEL_16_ANMODNING;
     this.tittel = 'Artikkel 16.1';
