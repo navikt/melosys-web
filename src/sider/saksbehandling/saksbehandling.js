@@ -220,7 +220,7 @@ class Saksbehandling extends Component {
                   visHenleggDialogHandle={visHenleggDialogHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                  visHenleggSak
+                  visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
                   visOppfriskSaksopplysninger

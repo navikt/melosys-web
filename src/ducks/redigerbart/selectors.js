@@ -8,8 +8,7 @@ import { formSelectors } from '../form';
 
 export const RedigerbartSelector = createSelector(
   state => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
-  behandlingerSelectors.BehandlingstypeKodeSelector,
-  (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
+  redigerbart => redigerbart
 );
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
   state => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
@@ -23,12 +22,20 @@ export const GeneriskStegRedigerbartSelector = createSelector(
 export const PanelerRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
+  behandlingerSelectors.BehandlingstypeKodeSelector,
+  (redigerbart, erArtikkel16AnmodningSendt, behandlingstypeKode) => {
+    if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE) return false;
+    return redigerbart && !erArtikkel16AnmodningSendt;
+  }
 );
 export const SidedialogRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
+  behandlingerSelectors.BehandlingstypeKodeSelector,
+  (redigerbart, erArtikkel16AnmodningSendt, behandlingstypeKode) => {
+    if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE) return false;
+    return redigerbart && !erArtikkel16AnmodningSendt;
+  }
 );
 export const BrevBestillingRedigerbartSelector = createSelector(
   SidedialogRedigerbartSelector,
@@ -47,7 +54,11 @@ export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
 export const BehandlingsmenyRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.BehandlingsstatusKodeSelector,
-  (redigerbart, behandlingsstatus) => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT || redigerbart
+  behandlingerSelectors.BehandlingstypeKodeSelector,
+  (redigerbart, behandlingsstatus, behandlingstype) => {
+    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE) return true;
+    return behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT || redigerbart;
+  }
 );
 export const ModalHenleggRedigerbartSelector = createSelector(
   BehandlingsmenyRedigerbartSelector,
