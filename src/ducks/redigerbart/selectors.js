@@ -30,9 +30,8 @@ export const PanelerRedigerbartSelector = createSelector(
 export const SidedialogRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
-  behandlingerSelectors.ErEndretPeriodeSelector,
-  (redigerbart, erArtikkel16AnmodningSendt, erEndretPeriode) => (
-    !erEndretPeriode && redigerbart && !erArtikkel16AnmodningSendt
+  (redigerbart, erArtikkel16AnmodningSendt) => (
+    redigerbart && !erArtikkel16AnmodningSendt
   )
 );
 export const BrevBestillingRedigerbartSelector = createSelector(
