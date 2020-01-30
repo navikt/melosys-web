@@ -316,3 +316,12 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   }
 );
 
+export const ErEndretPeriodeSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
+);
+
+export const ErStatusAnmodningUnntakSendtSelector = createSelector(
+  BehandlingsstatusKodeSelector,
+  behandlingsstatus => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT
+);
