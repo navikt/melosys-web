@@ -22,20 +22,18 @@ export const GeneriskStegRedigerbartSelector = createSelector(
 export const PanelerRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
-  behandlingerSelectors.BehandlingstypeKodeSelector,
-  (redigerbart, erArtikkel16AnmodningSendt, behandlingstypeKode) => {
-    if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE) return false;
-    return redigerbart && !erArtikkel16AnmodningSendt;
-  }
+  behandlingerSelectors.ErEndretPeriodeSelector,
+  (redigerbart, erArtikkel16AnmodningSendt, erEndretPeriode) => (
+    !erEndretPeriode && redigerbart && !erArtikkel16AnmodningSendt
+  )
 );
 export const SidedialogRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
-  behandlingerSelectors.BehandlingstypeKodeSelector,
-  (redigerbart, erArtikkel16AnmodningSendt, behandlingstypeKode) => {
-    if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE) return false;
-    return redigerbart && !erArtikkel16AnmodningSendt;
-  }
+  behandlingerSelectors.ErEndretPeriodeSelector,
+  (redigerbart, erArtikkel16AnmodningSendt, erEndretPeriode) => (
+    !erEndretPeriode && redigerbart && !erArtikkel16AnmodningSendt
+  )
 );
 export const BrevBestillingRedigerbartSelector = createSelector(
   SidedialogRedigerbartSelector,
@@ -53,12 +51,11 @@ export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
 );
 export const BehandlingsmenyRedigerbartSelector = createSelector(
   RedigerbartSelector,
-  behandlingerSelectors.BehandlingsstatusKodeSelector,
-  behandlingerSelectors.BehandlingstypeKodeSelector,
-  (redigerbart, behandlingsstatus, behandlingstype) => {
-    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE) return true;
-    return behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT || redigerbart;
-  }
+  behandlingerSelectors.ErStatusAnmodningUnntakSendtSelector,
+  behandlingerSelectors.ErEndretPeriodeSelector,
+  (redigerbart, erStatusAnmodningunntakSendt, erEndretPeriode) => (
+    erEndretPeriode || erStatusAnmodningunntakSendt || redigerbart
+  )
 );
 export const ModalHenleggRedigerbartSelector = createSelector(
   BehandlingsmenyRedigerbartSelector,
