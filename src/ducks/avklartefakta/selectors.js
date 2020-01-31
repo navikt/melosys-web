@@ -240,6 +240,37 @@ export const ArbeidslandKTSelector = createSelector(
   arbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))
 );
 
+const MarginaltArbeidFaktaerSelector = createSelector(
+  AvklartefaktaSelector,
+  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID)
+);
+
+const MarginaleArbeidslandFaktaerSelector = createSelector(
+  MarginaltArbeidFaktaerSelector,
+  marginaltArbeidFakta => marginaltArbeidFakta.filter(enkelt => enkelt.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN))
+);
+
+const MarginaleArbeidslandSelector = createSelector(
+  state => MarginaleArbeidslandFaktaerSelector(state) || [],
+  marginaleArbeidslandFaktaer => marginaleArbeidslandFaktaer.map(fakta => fakta.subjektID)
+);
+
+export const MarginaleArbeidslandKTSelector = createSelector(
+  state => MarginaleArbeidslandSelector(state) || [],
+  marginaleArbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => marginaleArbeidsland.includes(landkodeObjekt.kode))
+);
+
+const IkkeMarginaleArbeidslandSelector = createSelector(
+  state => ArbeidslandSelector(state) || [],
+  state => MarginaleArbeidslandSelector(state) || [],
+  (arbeidsland, marginaleArbeidsland) => arbeidsland.filter(land => !marginaleArbeidsland.includes(land))
+);
+
+export const IkkeMarginaleArbeidslandKTSelector = createSelector(
+  state => IkkeMarginaleArbeidslandSelector(state) || [],
+  ikkeMarginaleArbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => ikkeMarginaleArbeidsland.includes(landkodeObjekt.kode))
+);
+
 export const AvklartefaktaLovvalgKodeSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering || {},
   vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
