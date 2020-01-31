@@ -1,148 +1,104 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 
-import MKV from '../../../../melosyskodeverk';
-import * as Utils from '../../../../utils';
-import * as KV from '../../../../kodeverk';
-import * as Validering from '../../../../felleskomponenter/skjema/validering';
-import * as MPT from '../../../../proptypes';
+import * as MPT from '../proptypes';
+import * as KV from '../kodeverk';
+import * as Validering from '../felleskomponenter/skjema/validering';
 
-import Stegvelger from '../../../../felleskomponenter/stegvelger';
-import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
-import Soknadpaneler from '../../../../felleskomponenter/soknadpaneler';
+import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
+import ArbeidUtland from './paneler/arbeidutland';
+import ForetakUtland from './paneler/foretakutland';
+import Inntekt from './paneler/inntektUtland';
+import MaritimtArbeid from './paneler/maritimtArbeid';
+import Medlemskap from './paneler/medlemskap';
+import Soknadsperiode from './paneler/soknadsperiode';
+import Personopplysninger from './paneler/personopplysninger';
+import SelvstendigArbeid from './paneler/selvstendigarbeid';
+import VirksomhetNorge from './paneler/virksomhetNorge';
+import FullmektigPanel from './paneler/fullmektig';
+import Kontantytelser from './paneler/kontantytelser';
 
-import { fagsakSelectors } from '../../../../ducks/fagsaker';
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { behandlingsperioderSelectors } from '../../../../ducks/behandlingsperioder';
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
-import { saksopplysningerSelectors } from '../../../../ducks/saksopplysninger';
+import { fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingerSelectors } from '../ducks/behandlinger';
+import { behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
+import { saksopplysningerOperations } from '../ducks/saksopplysninger';
 import {
   soknadOperations,
   soknadSelectors,
-} from '../../../../ducks/soknad';
+} from '../ducks/soknad';
+import { avklartefaktaSelectors } from '../ducks/avklartefakta';
+import { vilkarSelectors } from '../ducks/vilkar';
+import { formSelectors } from '../ducks/form';
+import { formatterDatoTilNorsk } from '../utils/dato';
 
-import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
-import { vilkarSelectors } from '../../../../ducks/vilkar';
-import { behandlingsresultatSelectors } from '../../../../ducks/behandlingsresultat';
-import { formSelectors } from '../../../../ducks/form';
-import { formatterDatoTilNorsk } from '../../../../utils/dato';
-
-import { stegMap } from '../../stegMap';
-
-const Saksopplysninger = ({
-  redigerbart,
-  behandlingID,
-  soknadForm,
-  soknad,
-  behandlingsresultat,
-  fagsakStatusKode,
-  tilForsiden,
-  lagreVilkarHandler,
-  lagreAvklartefaktaHandler,
-  lagreLovvalgsperioderHandler,
-  lagreAnmodningsperioderHandler,
-  oppdaterOgLagreBehandlingerHandler,
-  lagreAllData,
-  oppdaterSoknad,
+const Soknadpaneler = ({
   blokkerInnholdMedOppfriskSpinner,
+  oppfriskSaksopplysninger,
+  sendSoknad,
+  fagsaker,
+  medlemskap,
+  soknadArbeidsinntekt,
+  soknadForm,
+  behandlingID,
+  soknad,
 }) => {
-  if (Utils._isNil(redigerbart)) return null;
-  if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
+  const overstyrSubmit = event => {
+    event.preventDefault();
+  };
 
-  if (!behandlingID) {
-    return null;
-  }
+  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
+    await sendSoknad(behandlingID, soknad);
+    await oppfriskSaksopplysninger(behandlingID);
+    blokkerInnholdMedOppfriskSpinner();
+  };
 
-  const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
-  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
+  const { values: soknadVerdier } = soknadForm;
 
   return (
-    <Fragment>
-      { erHenlagtSak &&
-      <HenlagtSak behandlingsresultat={behandlingsresultat} />
-      }
-      {
-        visAvslaattSoknad &&
-        <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
-      }
-      { visStegVelger &&
-      <Stegvelger
-        behandlingID={behandlingID}
-        lagreVilkarHandler={lagreVilkarHandler}
-        lagreAvklartefaktaHandler={lagreAvklartefaktaHandler}
-        lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
-        lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
-        oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
-        lagreAllData={lagreAllData}
-        oppdaterLokalSoknadHandler={oppdaterSoknad}
-        begrunnelser={MKV.KTObjects.begrunnelser}
-        landkoder={MKV.KTObjects.landkoder}
-        tilForsiden={tilForsiden}
-        stegMap={stegMap}
-      />
-      }
-      <Soknadpaneler
-        blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
-        behandlingID={behandlingID}
-      />
-    </Fragment>
+    <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
+      <Personopplysninger />
+      <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      <ArbeidsgivereNorge />
+      <ForetakUtland />
+      <SelvstendigArbeid soknadVerdier={soknadVerdier} />
+      {fagsaker && fagsaker.saksnummer && <FullmektigPanel />}
+      <ArbeidUtland />
+      <VirksomhetNorge />
+      <MaritimtArbeid />
+      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+      <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
+      <Kontantytelser />
+    </form>
   );
 };
 
-Saksopplysninger.propTypes = {
-  redigerbart: PT.bool,
-  behandlingID: PT.number.isRequired,
-  alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
-  avklartefakta: MPT.AvklartefaktaListe.isRequired,
-  behandlingsresultat: MPT.Behandlingsresultat.isRequired,
+Soknadpaneler.propTypes = {
+  soknadForm: PT.object,
+  fagsaker: MPT.Fagsak.isRequired,
+  sendSoknad: PT.func.isRequired,
+  oppfriskSaksopplysninger: PT.func.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
-  fagsakStatusKode: PT.string.isRequired,
-  handleSubmit: PT.func.isRequired,
-  match: PT.object.isRequired,
-  oppdaterSoknad: PT.func.isRequired,
-  person: MPT.Behandlinger.Saksopplysninger.Person,
+  medlemskap: MPT.Medlemskap,
+  soknadArbeidsinntekt: PT.object,
+  behandlingID: PT.number.isRequired,
   soknad: MPT.Soknad,
-  soknadForm: PT.object.isRequired,
-  inngangForm: PT.object,
-  valid: PT.bool.isRequired,
-  vurdering: PT.object,
-  syncErrors: PT.object,
-  lagreVilkarHandler: PT.func.isRequired,
-  lagreAvklartefaktaHandler: PT.func.isRequired,
-  lagreLovvalgsperioderHandler: PT.func.isRequired,
-  lagreAnmodningsperioderHandler: PT.func.isRequired,
-  oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
-  lagreAllData: PT.func.isRequired,
-  tilForsiden: PT.func.isRequired,
 };
 
-Saksopplysninger.defaultProps = {
-  redigerbart: null,
-  alleRelevantePersoner: [],
-  person: {},
+Soknadpaneler.defaultProps = {
+  soknadForm: {},
+  medlemskap: {},
+  soknadArbeidsinntekt: {},
   soknad: {},
-  vurdering: {},
-  syncErrors: {},
-  inngangForm: {},
 };
 
 const mapStateToProps = state => ({
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
-  fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  soknad: soknadSelectors.SoknadSelector(state),
-  forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  inngangForm: formSelectors.InngangFormSelector(state),
-  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
+  fagsaker: fagsakSelectors.FagsakSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
+  soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
+  soknad: soknadSelectors.SoknadSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
@@ -229,10 +185,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
+  sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
+  oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
 });
 
-const SaksopplysningerForm = reduxForm({
+const SoknadpanelerForm = reduxForm({
   form: KV.Form.SOKNAD,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -247,6 +204,6 @@ const SaksopplysningerForm = reduxForm({
 
     return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.saksopplysninger, settings)(values);
   },
-})(Saksopplysninger);
+})(Soknadpaneler);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));
+export default connect(mapStateToProps, mapDispatchToProps)(SoknadpanelerForm);
