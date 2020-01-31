@@ -68,8 +68,10 @@ const journalforing = object().shape({
     }),
   avsenderNavn: string()
     .required(SKRIV_INN_NAVN_PA_AVSENDER),
-  hoveddokumentTittel: string()
-    .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
+  hoveddokument: object().shape({
+    tittel: string()
+      .required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
+  }),
   representantID: lazy(value => (value === '' ?
     string()
     :

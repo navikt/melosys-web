@@ -105,10 +105,12 @@ const mapStateToProps = state => ({
     representantID: '',
     representantRepresenterer: '',
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
-    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
+    hoveddokument: {
+      tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
+      logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
+    },
     vedlegg: {
       pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-      logiskeTitler: [],
     },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettBehandling: BOOLSK.USANN,
