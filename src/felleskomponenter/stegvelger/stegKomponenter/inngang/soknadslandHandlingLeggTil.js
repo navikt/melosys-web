@@ -10,6 +10,8 @@ import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 
 import { landTekstFormat } from '../../../skjema/landvelger';
 
+import './soknadslandHandlingLeggTil.css';
+
 export function LeggTilWrapper(props) {
   const [landkode, setLandkode] = useState('');
   const [begrunnelseKode, setBegrunnelseKode] = useState('0');
@@ -49,7 +51,7 @@ export function LeggTilWrapper(props) {
       </div>
       <div className="linje__knapper">
         <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
-        <Nav.Knapp onClick={() => bekreft(landkode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)}>Legg til</Nav.Knapp>
+        <Nav.Knapp onClick={() => bekreft(landkode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)} className="leggtil_bekreft">Legg til</Nav.Knapp>
       </div>
     </div>
   );

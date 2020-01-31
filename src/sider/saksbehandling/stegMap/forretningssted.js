@@ -33,7 +33,7 @@ class Forretningssted extends Steg {
       },
     ];
     this.id = STEG.FORRETNINGSSTED;
-    this.tittel = 'Forretnings\u00ADsted';
+    this.tittel = 'Vurdering av 13.1.b';
     this.komponent = VurderingForretningssted;
     this.samleRelevanteData = _propsLight => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,

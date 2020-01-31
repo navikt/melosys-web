@@ -10,11 +10,11 @@ import './dialogboksValidering.css';
 const feilmeldingMap = {
   [MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER]: {
     tittel: 'Overlappende periode',
-    innhold: 'Du kan ikke fatte vedtak på grunn av overlappende periode i MEDL.\n Rediger gammel periode i Gosys og fatt vedtak etterpå.',
+    innhold: 'Du kan ikke fatte vedtak fordi det ligger en overlappende periode i MEDL. Du må endre søknadsperioden eller perioden som er registrert i MEDL, slik at de ikke overlapper.',
   },
   [MKV.Koder.begrunnelser.kontroll_begrunnelser.PERIODEN_OVER_24_MD]: {
     tittel: 'Periode over 24 måneder',
-    innhold: 'Du kan ikke fatte vedtak på grunn av at perioden er over 24 måneder.',
+    innhold: 'Du kan ikke fatte vedtak etter artikkel 12.',
   },
 };
 

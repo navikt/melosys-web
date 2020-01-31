@@ -4,6 +4,8 @@ import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
+import './soknadslandHandlingSlett.css';
+
 function SoknadslandHandlingSlett(props) {
   const [begrunnelse, setBegrunnelse] = useState('0');
 
