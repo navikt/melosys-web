@@ -135,7 +135,7 @@ const mapStateToProps = state => ({
   formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   initialValues: {
-    mottakerinstitusjoner: avklartefaktaSelectors.ArbeidslandKTSelector(state) || [],
+    mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
     kreverMottakerinstitusjon: false,
   },
 });

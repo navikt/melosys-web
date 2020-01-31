@@ -224,7 +224,7 @@ const mapStateToProps = (state, ownProps) => ({
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    mottakerinstitusjoner: avklartefaktaSelectors.ArbeidslandKTSelector(state) || [],
+    mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
   },
 });
 
