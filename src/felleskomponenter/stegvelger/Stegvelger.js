@@ -328,7 +328,6 @@ class Stegvelger extends Component {
       omfattesIAnnetLand: props.omfattesIAnnetLand,
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
       artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
-      soknad_skjema: props.soknad_skjema,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       arbeidsland: props.arbeidsland,
@@ -337,6 +336,7 @@ class Stegvelger extends Component {
       redigerbart: props.redigerbart,
       generiskStegRedigerbart: props.generiskStegRedigerbart,
       erIDirekteTilArtikkel16Flyt: props.erIDirekteTilArtikkel16Flyt,
+      soknadslandFaktaer: props.soknadslandFaktaer,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap);
@@ -446,7 +446,7 @@ Stegvelger.propTypes = {
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
-  soknad_skjema: PT.object.isRequired,
+  soknad_skjema: PT.object,
   artikkel16_anmodning_skjema: PT.object,
   artikkel16_motta_svar_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
@@ -469,7 +469,7 @@ Stegvelger.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterAnmodningsperiodesvar: PT.func.isRequired,
   generiskStegRedigerbart: PT.bool.isRequired,
-  saksnummer: PT.string.isRequired,
+  saksnummer: PT.string,
   erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
   tilForsiden: PT.func.isRequired,
   utpek: PT.func.isRequired,
@@ -481,6 +481,7 @@ Stegvelger.propTypes = {
     PT.string,
     PT.object,
   ]))).isRequired,
+  soknadslandFaktaer: PT.arrayOf(MPT.Avklartefakta).isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -491,6 +492,8 @@ Stegvelger.defaultProps = {
   valgteVirksomheter: [],
   artikkel16_anmodning_skjema: {},
   artikkel16_motta_svar_skjema: {},
+  soknad_skjema: {},
+  saksnummer: '',
 };
 
 const mapStateToProps = state => ({
@@ -516,6 +519,7 @@ const mapStateToProps = state => ({
   erIDirekteTilArtikkel16Flyt: avklartefaktaSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
   utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
   omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
+  soknadslandFaktaer: avklartefaktaSelectors.Soknadsland(state),
 });
 
 /* eslint no-alert:off */

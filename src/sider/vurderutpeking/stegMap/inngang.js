@@ -1,17 +1,17 @@
 import { Inngang } from '../../../felleskomponenter/stegvelger/stegMap';
 import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 
-class SaksbehandlingInngang extends Inngang {
+class VurderUtpekingInngang extends Inngang {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
     this.kriterier = [
       {
         exec: avklartefakta => (Inngang.harMinstEttGyldigSoknadsland(avklartefakta)),
-        nesteSteg: STEG.YRKESGRUPPE,
+        nesteSteg: STEG.VIRKSOMHETER,
       },
     ];
   }
 }
 
-export default SaksbehandlingInngang;
+export default VurderUtpekingInngang;

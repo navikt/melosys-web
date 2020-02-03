@@ -69,7 +69,7 @@ export const resetSaksopplysninger = () => (
     dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
     dispatch(vilkarOperations.resetVilkarState());
     dispatch(behandlingsperioderOperations.resetPerioderState());
-    dispatch(utpekingsperioderOperations.resetutpekingsperioderState());
+    dispatch(utpekingsperioderOperations.resetUtpekingsperioderState());
   }
 );
 
