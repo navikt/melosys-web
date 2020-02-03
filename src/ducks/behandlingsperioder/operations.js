@@ -13,6 +13,7 @@ import * as Types from './types';
 import * as Selectors from './selectors';
 
 import { behandlingerSelectors } from '../behandlinger';
+import { formSelectors } from '../form';
 
 export function hentMedlemsPerioder(behandlingID) {
   return doThenDispatch(() => Api.Behandlinger.perioder.hentMedlemsPerioder(behandlingID), {
@@ -39,6 +40,16 @@ export function lagre() {
 
 export function oppdaterPerioderState(state) {
   return dispatch => (dispatch(Actions.oppdaterPerioderState(state)));
+}
+
+export function oppdaterOgLagre() {
+  return (dispatch, getState) => {
+    const skjema = formSelectors.SoknadenFormSelector(getState()).values;
+    const artikkel16_skjema = formSelectors.Artikkel16AnmodningFormSelector(getState()).values;
+
+    dispatch(oppdaterPerioderState({ ...skjema, ...artikkel16_skjema }));
+    dispatch(lagre());
+  };
 }
 
 export function resetPerioderState() {

@@ -74,11 +74,11 @@ const Vurderutpeking = ({
   brevBestillingRedigerbartIArtikkel13,
   resetSaksopplysninger,
   oppdaterSoknad,
-  sendVilkar,
-  sendAvklartefakta,
-  sendLovvalgsperioder,
-  sendAnmodningsperioder,
-  oppdaterBehandlingsperioder,
+  lagreVilkar,
+  lagreAvklartefakta,
+  lagreLovvalgsperioder,
+  lagreAnmodningsperioder,
+  oppdaterOgLagreBehandlingsperioder,
   lagreAllData,
   tilForsiden,
   blokkerInnholdMedOppfriskSpinner,
@@ -105,11 +105,11 @@ const Vurderutpeking = ({
             <Stegvelger
               behandlingID={behandlingID}
               stegMap={stegMap}
-              lagreVilkarHandler={sendVilkar}
-              lagreAvklartefaktaHandler={sendAvklartefakta}
-              lagreLovvalgsperioderHandler={sendLovvalgsperioder}
-              lagreAnmodningsperioderHandler={sendAnmodningsperioder}
-              oppdaterOgLagreBehandlingerHandler={oppdaterBehandlingsperioder}
+              lagreVilkarHandler={lagreVilkar}
+              lagreAvklartefaktaHandler={lagreAvklartefakta}
+              lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
+              lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
+              oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
               lagreAllData={lagreAllData}
               oppdaterLokalSoknadHandler={oppdaterSoknad}
               begrunnelser={MKV.KTObjects.begrunnelser}
@@ -198,11 +198,11 @@ Vurderutpeking.propTypes = {
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppdaterSoknad: PT.func.isRequired,
-  sendVilkar: PT.func.isRequired,
-  sendAvklartefakta: PT.func.isRequired,
-  sendLovvalgsperioder: PT.func.isRequired,
-  sendAnmodningsperioder: PT.func.isRequired,
-  oppdaterBehandlingsperioder: PT.func.isRequired,
+  lagreVilkar: PT.func.isRequired,
+  lagreAvklartefakta: PT.func.isRequired,
+  lagreLovvalgsperioder: PT.func.isRequired,
+  lagreAnmodningsperioder: PT.func.isRequired,
+  oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
 };
@@ -231,11 +231,11 @@ const mapDispatchToProps = dispatch => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
-  sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
-  sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
-  oppdaterBehandlingsperioder: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
+  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
+  lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
+  lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
+  lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
+  oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
