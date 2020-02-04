@@ -13,7 +13,7 @@ import * as RegistreringContext from '../state/registreringContext';
 import * as Mui from '../../../felleskomponenter/ui';
 import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
 import EndrePeriode from './komponenter/endrePeriode';
-import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
+import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';
@@ -273,8 +273,7 @@ const Saksopplysninger = ({
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-                  {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                    <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
+                  <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">

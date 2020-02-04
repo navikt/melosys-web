@@ -12,7 +12,7 @@ import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as RegistreringContext from '../state/registreringContext';
 import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
-import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
+import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
@@ -264,8 +264,7 @@ const Saksopplysninger = ({
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-                  {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                    <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
+                  <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
