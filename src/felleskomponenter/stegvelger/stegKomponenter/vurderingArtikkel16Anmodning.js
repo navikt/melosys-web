@@ -35,12 +35,6 @@ import * as Validering from '../../skjema/validering';
 
 const uuid = require('uuid/v4');
 
-const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-];
-
 const TidligereMedlemPeriodeLinje = ({
   perm, onChange, checked, redigerbart, feil,
 }) => {
@@ -337,7 +331,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 label="Artikkelen det søkes unntak fra:"
               >
                 <option key={uuid()} value="" >Velg...</option>
-                { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+                { MKV.Kodekombinasjoner.alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
