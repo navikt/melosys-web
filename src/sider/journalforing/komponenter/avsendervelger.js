@@ -8,7 +8,6 @@ import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as KV from '../../../kodeverk';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
-import PreutfyltAvsender from './preutfyltAvsender';
 import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from './avsendere';
 import './avsendervelger.css';
 
@@ -19,13 +18,15 @@ const AvsenderVelger = ({
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-  journalforingAvsenderID,
-  journalforingAvsenderNavn,
   erAvsenderPreutfylt,
 }) => {
-  const avsenderTypeEndret = avsenderType => {
-    if (erAvsenderPreutfylt) return;
+  useEffect(() => {
+    if (erAvsenderPreutfylt) {
+      settFeltInnhold('avsenderType', MKV.Koder.avsendertyper.PERSON);
+    }
+  }, [erAvsenderPreutfylt]);
 
+  const avsenderTypeEndret = avsenderType => {
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
@@ -55,16 +56,6 @@ const AvsenderVelger = ({
     settFeltInnhold('avsenderID', landkode);
     settFeltInnhold('avsenderNavn', avsenderNavn);
   };
-
-  if (erAvsenderPreutfylt) {
-    return (
-      <PreutfyltAvsender
-        className={className}
-        avsenderID={journalforingAvsenderID}
-        avsenderNavn={journalforingAvsenderNavn}
-      />
-    );
-  }
 
   return (
     <div className={className}>
