@@ -362,7 +362,7 @@ Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
-  vurderingBegrunnelser: PT.object,
+  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
   history: PT.object.isRequired,
@@ -376,7 +376,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   medlemskap: {},
-  vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
   anmodningsperiodeID: undefined,

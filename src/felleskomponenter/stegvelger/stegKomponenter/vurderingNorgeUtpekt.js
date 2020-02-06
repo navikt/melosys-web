@@ -11,15 +11,16 @@ import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
-
+import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
-
+import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 
 import './vurderingNorgeUtpekt.css';
 
 const VurderingNorgeUtpekt = ({
+  vurderingBegrunnelser,
   slettData,
   oppdaterData,
   bekreftOgFortsett,
@@ -51,12 +52,17 @@ const VurderingNorgeUtpekt = ({
   return (
     <form onSubmit={handleSubmit}>
       <Nav.typo.Undertittel className="stegTittel">Vurder utpekingen</Nav.typo.Undertittel>
-      {/* <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-      <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} /> */}
-      <Nav.Row>
+      <Nav.Row className="rad">
         <Nav.Column xs="5">
+      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+      <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row className="rad">
+        <Nav.Column xs="5">
+          <Nav.typo.Element>Utenlandske myndigheter har utpekt Norge etter:</Nav.typo.Element>
           <Nav.Select
-            label="Utenlandske myndigheter har utpekt Norge etter:"
+            label=""
             onChange={vedArtikkelEndring}
             value={lovvalgsbestemmelse || ''}
           >
@@ -69,7 +75,7 @@ const VurderingNorgeUtpekt = ({
           </Nav.Select>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
+      <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.typo.Element>Lovvalgsperiode</Nav.typo.Element>
           <Nav.Row>
@@ -117,6 +123,7 @@ const VurderingNorgeUtpekt = ({
 };
 
 VurderingNorgeUtpekt.propTypes = {
+  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   slettData: PT.func.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -134,6 +141,7 @@ const mapStateToProps = state => ({
     fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
     tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
   },
+  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollBegrunnelseKoderSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({});

@@ -16,6 +16,7 @@ import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
+import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { RegistreringStateProviderWrapper } from './state/registreringStateProvider';
@@ -163,7 +164,7 @@ Registrering.propTypes = {
   tilbakeleggOppgave: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
-  vurderingBegrunnelser: PT.object,
+  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   fagsak: MPT.Fagsak,
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
   medlemskap: MPT.Medlemskap,
@@ -186,14 +187,13 @@ Registrering.defaultProps = {
   medlemskap: {},
   oppsummering: {},
   sed: {},
-  vurderingBegrunnelser: {},
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
 };
 const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  vurderingBegrunnelser: avklartefaktaSelectors.VurderingUnntakPeriode(state),
+  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollBegrunnelseKoderSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
