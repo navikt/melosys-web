@@ -30,7 +30,6 @@ sider. Komponenter kan også nøste hverandre.
 | Personopplysninger | Dette er panelet hvor personopplysninger som fødselsnummer, adresse, nasjonalitet og annen generell informasjon vises. |
 | Arbeidsforholdene | Her listes alle arbeidsforhold opp, dvs innenfor en gitt periode. |
 | OrganisasjonerNorge | Denne listen er utledet av aktuelle Arbeidsforholdene og viser en oppsummering av organisasjoner (arbeidsgiver) som er aktuelle for søknaden. |
-| SideKommentarer | Her kan saksbehandleren skrive et ett-felts-kommentar som gjelder for den aktuelle saken. |
 | SideOppsummering | Oppsummeringen er ment å gi saksbehandleren en rask forståelse av søknadens natur og status. |
 | SideDialog | Dette er en fane hvor dialog, historikk og samhandling med søker er synlig. |
 | Tilleggsopplysninger | Her har søkeren selv skrevet inn tilleggsopplysninger som er relevant for søknaden. |

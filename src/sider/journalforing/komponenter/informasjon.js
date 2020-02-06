@@ -45,7 +45,7 @@ class Informasjon extends Component {
 
   async componentDidMount() {
     const { vedlegg, journalforingSkjemaVerdier } = this.props;
-    await this.oppdaterState('hoveddokumentTittel', journalforingSkjemaVerdier.hoveddokumentTittel);
+    await this.oppdaterState('hoveddokument.tittel', journalforingSkjemaVerdier.hoveddokument.tittel);
     await this.oppdaterState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
     await this.oppdaterFelter(this.props, true);
   }
@@ -158,7 +158,7 @@ class Informasjon extends Component {
       hentOgVisRepresentant,
       journalforingSkjemaVerdier,
     } = this.props;
-    const { hoveddokumentTittel, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
+    const { hoveddokument: { tittel: hoveddokumentTittel }, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
       spinner: { avsenderNavn: visAvsenderSpinner },
@@ -192,13 +192,13 @@ class Informasjon extends Component {
 
         <Nav.Fieldset legend="Hoveddokument:">
           <LenkeListeVelger
-            feltNavn="hoveddokumentTittel"
+            feltNavn="hoveddokument.tittel"
             placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumenttitler}
             linkTo={dokumentURI(journalpostID, dokumentID)}
             dokumentTittel={hoveddokumentTittel}
             undoTittel={this.state.hoveddokumentTittel}
-            updateTittel={() => this.oppdaterState('hoveddokumentTittel', hoveddokumentTittel)}
+            updateTittel={() => this.oppdaterState('hoveddokument.tittel', hoveddokumentTittel)}
           />
         </Nav.Fieldset>
         <p>Vedlegg</p>
@@ -216,7 +216,7 @@ class Informasjon extends Component {
           </Fragment>)
         }
         <Skjema.ListeVelger
-          feltNavn="vedlegg.logiskeTitler"
+          feltNavn="hoveddokument.logiskeVedlegg"
           label="Velg ny tittel:"
           gruppe
           tillatFritekst

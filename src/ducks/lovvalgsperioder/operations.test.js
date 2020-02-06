@@ -18,6 +18,9 @@ describe('Lovvalgsperioder operations', () => {
     fetch.mockResponse(JSON.stringify({}));
 
     initialState = {
+      avklartefakta: {
+        data: [],
+      },
       behandlinger: {
         data: [
           {
@@ -203,6 +206,35 @@ describe('Lovvalgsperioder operations', () => {
       });
 
       const stegState = { unntakfrabestemmelse };
+
+      store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+      expect(store.getActions()).toMatchObject(expectedActions);
+    });
+
+    it('lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom avklartfakta OMFATTES_I_LAND er et annet land enn Norge', () => {
+      const expectedActions = [
+        { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
+      ];
+
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
+        fakta: ['CY'],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
+
+      const store = mockStore({
+        ...initialState,
+        avklartefakta: {
+          data: [avklartfakta],
+        },
+      });
+
+      const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;
+      const stegState = { lovvalgsbestemmelse };
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 

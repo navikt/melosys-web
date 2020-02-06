@@ -11,11 +11,10 @@ import { push } from 'connected-react-router';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as DucksUtils from '../utils';
 import MKV from '../../melosyskodeverk';
 
 import { modalerOperations } from '../modaler';
-
-const vedtakValideringFeilet = data => data.feilkoder && data.feilkoder.length > 0;
 
 /* eslint-disable import/prefer-default-export */
 export function fatt(behandlingID, body) {
@@ -32,7 +31,7 @@ export function fatt(behandlingID, body) {
         dispatch(push('/'));
       },
       error: (dispatch, data) => {
-        if (vedtakValideringFeilet(data)) {
+        if (DucksUtils.valideringFeilet(data)) {
           dispatch(modalerOperations.visValidering());
         }
       },
@@ -60,7 +59,7 @@ export function avslaSoknad(behandlingID) {
         dispatch(push('/'));
       },
       error: (dispatch, data) => {
-        if (vedtakValideringFeilet(data)) {
+        if (DucksUtils.valideringFeilet(data)) {
           dispatch(modalerOperations.visValidering());
         }
       },

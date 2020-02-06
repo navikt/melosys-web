@@ -80,7 +80,7 @@ const RenderOversiktRad = ({ oversikt }) => {
   const {
     mottaksretning, avsenderEllerMottaker, journalpostID, mottattDato, journalforingDato, hoveddokument, vedlegg,
   } = oversikt;
-  const { dokumentID, tittel } = hoveddokument;
+  const { dokumentID, tittel, logiskeVedlegg } = hoveddokument;
   if (!dokumentID) return null;
   return (
     <tr>
@@ -88,6 +88,7 @@ const RenderOversiktRad = ({ oversikt }) => {
       <td>
         <span>
           <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} />
+          { logiskeVedlegg.map(logiskVedlegg => <RenderVedleggLink key={uuid()} journalpostID={journalpostID} dokument={{ tittel: logiskVedlegg }} />) }
           { vedlegg.map(vedleggDokument => <RenderVedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />) }
         </span>
       </td>

@@ -7,3 +7,4 @@ export const henlegg = (snr, body) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${s
 export const bortfall = snr => putAsText(`${API_BASE_URL}${FAGSAKER}/${snr}/avsluttsaksombortfalt`);
 export const videresend = (snr, body) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${snr}/henlegg-videresend`, body);
 export const avslutt = snr => putAsText(`${API_BASE_URL}${FAGSAKER}/${snr}/avslutt`);
+export const utpek = (snr, body) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${snr}/utpek`, body);
