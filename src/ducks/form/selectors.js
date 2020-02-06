@@ -28,6 +28,26 @@ export const SoknadenFormSelector = createSelector(
   soknaden => soknaden
 );
 
+export const VurderUtpekingFormSelector = createSelector(
+  state => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
+  vurderUtpekingForm => vurderUtpekingForm
+);
+
+export const VurderUtpekingFomSelector = createSelector(
+  state => VurderUtpekingFormSelector(state).values || {},
+  values => values.fom
+);
+
+export const VurderUtpekingTomSelector = createSelector(
+  state => VurderUtpekingFormSelector(state).values || {},
+  values => values.tom
+);
+
+export const VurderUtpekingValid = createSelector(
+  state => VurderUtpekingFormSelector(state).syncErrors || {},
+  errors => Utils._isEmpty(errors)
+);
+
 export const Artikkel16AnmodningFormSelector = createSelector(
   state => getFormState(state, KV.Form.ARTIKKEL_16_ANMODNING, {}),
   artikkel16Anmodning => artikkel16Anmodning

@@ -11,3 +11,4 @@ export { journalforing } from './journalforing';
 export { journalforingSED } from './journalforingsed';
 export { opprettnysak } from './opprettnysak';
 export { vurdering_videresend } from './vurdering_videresend';
+export { vurder_utpeking } from './vurder_utpeking';

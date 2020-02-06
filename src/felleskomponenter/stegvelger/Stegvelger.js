@@ -25,7 +25,7 @@ import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { vedtakOperations } from '../../ducks/vedtak';
 import { formSelectors } from '../../ducks/form';
-import { soknadOperations } from '../../ducks/soknad';
+import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 
@@ -337,6 +337,9 @@ class Stegvelger extends Component {
       generiskStegRedigerbart: props.generiskStegRedigerbart,
       erIDirekteTilArtikkel16Flyt: props.erIDirekteTilArtikkel16Flyt,
       soknadslandFaktaer: props.soknadslandFaktaer,
+      vurderUtpekingFom: props.vurderUtpekingFom,
+      vurderUtpekingTom: props.vurderUtpekingTom,
+      vurderUtpekingValid: props.vurderUtpekingValid,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap);
@@ -482,6 +485,9 @@ Stegvelger.propTypes = {
     PT.object,
   ]))).isRequired,
   soknadslandFaktaer: PT.arrayOf(MPT.Avklartefakta).isRequired,
+  vurderUtpekingFom: PT.string,
+  vurderUtpekingTom: PT.string,
+  vurderUtpekingValid: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -494,6 +500,8 @@ Stegvelger.defaultProps = {
   artikkel16_motta_svar_skjema: {},
   soknad_skjema: {},
   saksnummer: '',
+  vurderUtpekingFom: '',
+  vurderUtpekingTom: '',
 };
 
 const mapStateToProps = state => ({
@@ -520,6 +528,9 @@ const mapStateToProps = state => ({
   utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
   omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
   soknadslandFaktaer: avklartefaktaSelectors.Soknadsland(state),
+  vurderUtpekingFom: formSelectors.VurderUtpekingFomSelector(state),
+  vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
+  vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
 });
 
 /* eslint no-alert:off */
