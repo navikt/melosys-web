@@ -198,10 +198,12 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
+  const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || soknadPeriode.fom;
+  const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || soknadPeriode.tom;
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato,
+    tomDato,
     lovvalgsbestemmelse: stegState.lovvalgsbestemmelse || null,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,

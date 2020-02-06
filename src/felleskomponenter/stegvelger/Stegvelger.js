@@ -25,7 +25,7 @@ import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { vedtakOperations } from '../../ducks/vedtak';
 import { formSelectors } from '../../ducks/form';
-import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
+import { soknadOperations } from '../../ducks/soknad';
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 
@@ -46,6 +46,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.Lovvalgsbestemmelser]: new EnkelDataStore(),
       [StegStoreTyper.Tilleggbestemmelser]: new EnkelDataStore(),
       [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
+      [StegStoreTyper.Lovvalgsperiode]: new EnkelDataStore(),
     },
     visSoknadFeilmeldinger: false,
   };
@@ -140,12 +141,14 @@ class Stegvelger extends Component {
       anmodningsperiodesvar,
       tilleggbestemmelse,
       unntakfrabestemmelse,
+      lovvalgsperiode,
     } = stegStores;
 
     const bestemmelser = {
       lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
       tilleggbestemmelse: tilleggbestemmelse.hent(),
       unntakfrabestemmelse: unntakfrabestemmelse.hent(),
+      lovvalgsperiode: lovvalgsperiode.hent(),
     };
 
     await Promise.all([

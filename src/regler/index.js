@@ -6,6 +6,7 @@ import { lovvalgsbestemmelseType } from './lovvalgsbestemmelser';
 import { tilleggBestemmelseType } from './tilleggbestemmelser';
 import { unntakfrabestemmelseType } from './unntakfrabestemmelse';
 import { vilkaarType } from './vilkar';
+import { lovvalgsperiodeType } from './lovvalgsperiode';
 
 const StegStoreTyper = {
   Anmodningsperiodersvar: anmodningsperiodesvartype,
@@ -14,6 +15,7 @@ const StegStoreTyper = {
   Tilleggbestemmelser: tilleggBestemmelseType,
   UnntakFraBestemmelse: unntakfrabestemmelseType,
   Vilkar: vilkaarType,
+  Lovvalgsperiode: lovvalgsperiodeType,
 };
 
 export default Regler;

@@ -136,6 +136,16 @@ export const SoknadsperiodeSelector = createSelector(
   soknadsperiode => soknadsperiode || {}
 );
 
+export const SoknadsperiodeFomSelector = createSelector(
+  SoknadsperiodeSelector,
+  soknadsperiode => soknadsperiode.fom
+);
+
+export const SoknadsperiodeTomSelector = createSelector(
+  SoknadsperiodeSelector,
+  soknadsperiode => soknadsperiode.tom
+);
+
 export const PersonOpplysningerSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.personOpplysninger : {}),
   person => person || {}

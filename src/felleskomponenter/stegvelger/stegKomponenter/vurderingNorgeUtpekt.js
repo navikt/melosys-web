@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, getFormValues } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
@@ -12,10 +12,11 @@ import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
+import { soknadSelectors } from '../../../ducks/soknad';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 
 import './vurderingNorgeUtpekt.css';
 
@@ -31,10 +32,13 @@ const VurderingNorgeUtpekt = ({
     lovvalgsbestemmelse,
   },
   handleSubmit,
+  formValues,
+  lovvalgsperiode,
 }) => {
   useEffect(() => {
     if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, utpekingGodkjentFakta));
+    oppdaterData(konverterLovvalgsperiodeTilStegData(lovvalgsperiode));
 
     return () => {
       slettData();
@@ -49,13 +53,29 @@ const VurderingNorgeUtpekt = ({
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, null, event.target.value));
   };
 
+  const formValid = () => {
+    const { fom, tom } = formValues;
+    return Boolean(Utils.dato.vaskInputDato(fom)) && Boolean(Utils.dato.vaskInputDato(tom));
+  };
+
+  useEffect(() => {
+    if (formValid()) {
+      oppdaterData(lagLovvalgsperiode({
+        fomDato: Utils.dato.formatterDatoTilISO(formValues.fom),
+        tomDato: Utils.dato.formatterDatoTilISO(formValues.tom),
+      }));
+    } else {
+      slettData(slettLovvalgsperiode());
+    }
+  }, [formValues]);
+
   return (
     <form onSubmit={handleSubmit}>
       <Nav.typo.Undertittel className="stegTittel">Vurder utpekingen</Nav.typo.Undertittel>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-      <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+          <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+          <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="rad">
@@ -134,17 +154,26 @@ VurderingNorgeUtpekt.propTypes = {
   }).isRequired,
   oppdaterData: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
+  formValues: PT.object,
+  lovvalgsperiode: MPT.Periode.isRequired,
+};
+
+VurderingNorgeUtpekt.defaultProps = {
+  formValues: {},
 };
 
 const mapStateToProps = state => ({
+  lovvalgsperiode: {
+    fomDato: soknadSelectors.SoknadsperiodeFomSelector(state),
+    tomDato: soknadSelectors.SoknadsperiodeTomSelector(state),
+  },
+  formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
   initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+    fom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeFomSelector(state)),
+    tom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeTomSelector(state)),
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollBegrunnelseKoderSelector(state),
 });
-
-const mapDispatchToProps = dispatch => ({});
 
 const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();
@@ -160,4 +189,4 @@ const VurderingNorgeUtpektForm = reduxForm({
   validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.vurder_utpeking),
 })(VurderingNorgeUtpekt);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingNorgeUtpektForm);
+export default connect(mapStateToProps)(VurderingNorgeUtpektForm);

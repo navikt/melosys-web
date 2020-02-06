@@ -12,9 +12,9 @@ class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(propsLight.lovvalgsperioder);
-    const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, propsLight.avklartefakta);
-    const { vurderUtpekingValid } = propsLight;
+    const { lovvalgsperioder, avklartefakta, vurderUtpekingValid } = propsLight;
+    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
+    const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
     const harAvklaring = this.harAvklaring(lovvalgsbestemmelse, utpekingGodkjentFakta, vurderUtpekingValid);
 
     this.kriterier = [
