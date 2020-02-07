@@ -30,6 +30,8 @@ const VurderingNorgeUtpekt = ({
     harAvklaring,
     utpekingGodkjentFakta,
     lovvalgsbestemmelse,
+    utpekingGodkjent,
+    utpekingIkkeGodkjent,
   },
   handleSubmit,
   formValues,
@@ -124,12 +126,14 @@ const VurderingNorgeUtpekt = ({
               label="Godkjenn lovvalg"
               value={KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN}
               name="godkjenn"
+              checked={utpekingGodkjent}
             />
             <Nav.Radio
               onChange={vedGodkjennEndring}
               label="Ikke godkjenn"
               value={KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN}
               name="godkjenn"
+              checked={utpekingIkkeGodkjent}
             />
           </Nav.Fieldset>
         </Nav.Column>
@@ -151,6 +155,8 @@ VurderingNorgeUtpekt.propTypes = {
     harAvklaring: PT.bool.isRequired,
     utpekingGodkjentFakta: MPT.Avklartefakta,
     lovvalgsbestemmelse: PT.string,
+    utpekingGodkjent: PT.bool.isRequired,
+    utpekingIkkeGodkjent: PT.bool.isRequired,
   }).isRequired,
   oppdaterData: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,

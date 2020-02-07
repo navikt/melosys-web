@@ -6,7 +6,7 @@ import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMot
 import VurderingNorgeUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingNorgeUtpekt';
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
-import { hentFakta } from '../../../regler/avklartefakta';
+import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -17,10 +17,17 @@ class VurderUtpeking extends Steg {
     const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
     const harAvklaring = this.harAvklaring(lovvalgsbestemmelse, utpekingGodkjentFakta, vurderUtpekingValid);
 
+    const utpekingGodkjent = hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN;
+    const utpekingIkkeGodkjent = hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN;
+
     this.kriterier = [
       {
-        exec: () => harAvklaring,
-        nesteSteg: '',
+        exec: () => harAvklaring && utpekingGodkjent,
+        nesteSteg: STEG.GODKJENN_UTPEKING,
+      },
+      {
+        exec: () => harAvklaring && utpekingIkkeGodkjent,
+        nesteSteg: STEG.AVSLAA_UTPEKING,
       },
     ];
     this.id = STEG.VURDER_UTPEKING;
@@ -33,6 +40,8 @@ class VurderUtpeking extends Steg {
       harAvklaring,
       lovvalgsbestemmelse,
       utpekingGodkjentFakta,
+      utpekingGodkjent,
+      utpekingIkkeGodkjent,
     });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
