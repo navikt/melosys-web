@@ -93,7 +93,7 @@ const Vurderutpeking = ({
     };
   }, []);
 
-  if (!behandlingID || !redigerbart) {
+  if (!behandlingID || Utils._isNil(redigerbart)) {
     return null;
   }
 
