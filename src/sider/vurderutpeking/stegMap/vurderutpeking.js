@@ -15,10 +15,11 @@ class VurderUtpeking extends Steg {
     const { lovvalgsperioder, avklartefakta, vurderUtpekingValid } = propsLight;
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
     const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
-    const harAvklaring = this.harAvklaring(lovvalgsbestemmelse, utpekingGodkjentFakta, vurderUtpekingValid);
 
-    const utpekingGodkjent = hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN;
-    const utpekingIkkeGodkjent = hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN;
+    const utpekingGodkjent = this.utpekingGodkjent(utpekingGodkjentFakta);
+    const utpekingIkkeGodkjent = this.utpekingIkkeGodkjent(utpekingGodkjentFakta);
+
+    const harAvklaring = this.harAvklaring(utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid);
 
     this.kriterier = [
       {
@@ -51,9 +52,22 @@ class VurderUtpeking extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  harAvklaring = (lovvalgsbestemmelse, utpekingGodkjentFakta, vurderUtpekingValid) => (
-    Boolean(lovvalgsbestemmelse && !Utils._isEmpty(utpekingGodkjentFakta) && vurderUtpekingValid)
+  utpekingGodkjent = utpekingGodkjentFakta => (
+    hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN
   );
+
+  utpekingIkkeGodkjent = utpekingGodkjentFakta => (
+    hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN
+  );
+
+  harAvklaring = (utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid) => {
+    if (this.utpekingGodkjent(utpekingGodkjentFakta)) {
+      return Boolean(lovvalgsbestemmelse && !Utils._isEmpty(utpekingGodkjentFakta) && vurderUtpekingValid);
+    } else if (this.utpekingIkkeGodkjent(utpekingGodkjentFakta)) {
+      return Boolean(!Utils._isEmpty(utpekingGodkjentFakta) && vurderUtpekingValid);
+    }
+    return false;
+  };
 }
 
 export default VurderUtpeking;

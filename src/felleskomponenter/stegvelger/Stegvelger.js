@@ -205,6 +205,19 @@ class Stegvelger extends Component {
     });
   };
 
+  avvisUtpekingHandler = data => {
+    const { avvisUtpeking } = this.props;
+
+    avvisUtpeking(data);
+  };
+
+  avvisUtpeking = data => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      await this.props.lagreAllData();
+      this.avvisUtpekingHandler(data);
+    });
+  };
+
   bestillAnmodningsperioder = async (mottakerinstitusjon = null) => {
     const { behandlingID, tilForsiden } = this.props;
     const bestillAnmodningsperioderBody = { mottakerinstitusjon };
@@ -310,6 +323,7 @@ class Stegvelger extends Component {
       videresendSoknad: this.videresendSoknad,
       byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
+      avvisUtpeking: this.avvisUtpeking,
     };
 
     const { props } = this;
@@ -479,6 +493,7 @@ Stegvelger.propTypes = {
   erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
   tilForsiden: PT.func.isRequired,
   utpek: PT.func.isRequired,
+  avvisUtpeking: PT.func.isRequired,
   hentUtpekingsperioder: PT.func.isRequired,
   oppdaterUtpekingsperioder: PT.func.isRequired,
   utpekingsperioder: MPT.Utpekingsperioder.isRequired,
@@ -554,6 +569,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
   lagreSoknadHandler: () => dispatch(soknadOperations.lagre()),
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
+  avvisUtpeking: body => dispatch(utpekOperations.avvis(body)),
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
 });
 

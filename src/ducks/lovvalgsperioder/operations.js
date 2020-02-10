@@ -188,7 +188,8 @@ const bestemLovvalgsland = lovvalgsbestemmelse => {
 
 const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
-  avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState)
+  avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
+  avklartefaktaSelectors.UtpekingAvvistSelector(reduxState)
 );
 
 const byggLovvalgsPerioder = (stegState, reduxState) => {
