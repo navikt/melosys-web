@@ -28,6 +28,16 @@ export const SoknadenFormSelector = createSelector(
   soknaden => soknaden
 );
 
+export const VedtakArtikkel12FormSelector = createSelector(
+  state => getFormState(state, KV.Form.ARTIKKEL_12_VEDTAK, {}),
+  vedtakForm => vedtakForm
+);
+
+export const VedtakArtikkel12FormValuesSelector = createSelector(
+  VedtakArtikkel12FormSelector,
+  vedtakArtikkel12Form => vedtakArtikkel12Form.values
+);
+
 export const VurderUtpekingFormSelector = createSelector(
   state => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   vurderUtpekingForm => vurderUtpekingForm

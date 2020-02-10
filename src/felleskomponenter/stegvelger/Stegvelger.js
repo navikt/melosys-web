@@ -72,7 +72,8 @@ class Stegvelger extends Component {
   componentDidUpdate(prevProps) {
     const { aktivtStegNummer } = this.state;
 
-    if (this.props.oppsummering.behandlingsstatus !== prevProps.oppsummering.behandlingsstatus) {
+    if (this.props.oppsummering.behandlingsstatus !== prevProps.oppsummering.behandlingsstatus ||
+      this.props.artikkel12_vedtak_skjema !== prevProps.artikkel12_vedtak_skjema) {
       this.oppdaterAktuelleSteg(aktivtStegNummer);
     }
   }
@@ -341,8 +342,10 @@ class Stegvelger extends Component {
       behandlingstype: props.oppsummering.behandlingstype,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
+      lovvalgsbestemmelse: props.lovvalgsbestemmelse,
       utpekingsperioder: props.utpekingsperioder,
       omfattesIAnnetLand: props.omfattesIAnnetLand,
+      artikkel12_vedtak_skjema: props.artikkel12_vedtak_skjema,
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
       artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
       tilgjengeligeHandlers,
@@ -467,6 +470,7 @@ Stegvelger.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   soknad_skjema: PT.object,
+  artikkel12_vedtak_skjema: PT.object,
   artikkel16_anmodning_skjema: PT.object,
   artikkel16_motta_svar_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
@@ -506,6 +510,7 @@ Stegvelger.propTypes = {
   vurderUtpekingFom: PT.string,
   vurderUtpekingTom: PT.string,
   vurderUtpekingValid: PT.bool.isRequired,
+  lovvalgsbestemmelse: PT.string,
 };
 
 Stegvelger.defaultProps = {
@@ -514,12 +519,14 @@ Stegvelger.defaultProps = {
   bostedsland: null,
   oppsummering: {},
   valgteVirksomheter: [],
+  artikkel12_vedtak_skjema: {},
   artikkel16_anmodning_skjema: {},
   artikkel16_motta_svar_skjema: {},
   soknad_skjema: {},
   saksnummer: '',
   vurderUtpekingFom: '',
   vurderUtpekingTom: '',
+  lovvalgsbestemmelse: '',
 };
 
 const mapStateToProps = state => ({
@@ -534,6 +541,7 @@ const mapStateToProps = state => ({
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   soknad_skjema: formSelectors.SoknadenFormSelector(state).values,
+  artikkel12_vedtak_skjema: formSelectors.VedtakArtikkel12FormValuesSelector(state),
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
@@ -549,6 +557,7 @@ const mapStateToProps = state => ({
   vurderUtpekingFom: formSelectors.VurderUtpekingFomSelector(state),
   vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
   vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
+  lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
 });
 
 /* eslint no-alert:off */
