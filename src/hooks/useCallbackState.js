@@ -23,14 +23,24 @@ export const useAsyncCallbackState = (asyncCallback, defaultState = null, errorH
   const [state, setState] = useState(defaultState);
 
   useEffect(() => {
+    let isMounted = true;
+
     // Kaller callback og oppdaterer state dersom alle dependencies finnes
     if (deps.every(dep => !Utils._isEmpty(dep))) {
       try {
-        (async () => setState(await asyncCallback()))();
+        asyncCallback().then(result => {
+          if (isMounted) {
+            setState(result);
+          }
+        });
       } catch (e) {
         errorHandler(e);
       }
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, deps);
 
   return [state, setState];
