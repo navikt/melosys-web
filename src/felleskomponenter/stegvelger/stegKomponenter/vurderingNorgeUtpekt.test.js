@@ -45,10 +45,9 @@ describe('VurderingNorgeUtpekt', () => {
 
   it('viser artikkelen Norge er utpekt etter', () => {
     const vurderingNorgeUtpekt = shallow(<VurderingNorgeUtpekt {...props} />);
-    const select = vurderingNorgeUtpekt.find(Nav.Select);
+    const select = vurderingNorgeUtpekt.find(Skjema.Select);
 
     expect(select).toHaveLength(1);
-    expect(select.props().value).toBe(props.tilstand.lovvalgsbestemmelse);
   });
 
   it('viser lovvalgsperioden Norge er utpekt for', () => {
