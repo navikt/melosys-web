@@ -13,7 +13,7 @@ import * as Mui from '../../../felleskomponenter/ui';
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 
-const VurderingAvslaaUtpeking = ({
+export const VurderingAvslaaUtpeking = ({
   redigerbart,
   behandlingID,
   handleSubmit,

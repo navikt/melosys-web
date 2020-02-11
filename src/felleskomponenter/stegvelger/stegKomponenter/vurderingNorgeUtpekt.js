@@ -20,7 +20,7 @@ import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsp
 
 import './vurderingNorgeUtpekt.css';
 
-const VurderingNorgeUtpekt = ({
+export const VurderingNorgeUtpekt = ({
   vurderingBegrunnelser,
   slettData,
   oppdaterData,
@@ -146,7 +146,7 @@ const VurderingNorgeUtpekt = ({
       </Nav.Row>
       <Nav.AlertStripe type="advarsel">Hvis det ikke er nok informasjon, må dette innhentes før lovvalget skal godkjennes eller ikke.</Nav.AlertStripe>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp">Bekreft og fortsett</Nav.Knapp>
       </div>
     </form>
   );
