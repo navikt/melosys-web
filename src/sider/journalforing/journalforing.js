@@ -409,6 +409,7 @@ class Journalforing extends Component {
         avsenderNavn = '',
       },
       fagsakListe,
+      settFeltInnhold,
     } = this.props;
 
     const {
@@ -466,6 +467,7 @@ class Journalforing extends Component {
                         submitJournalforing={this.submitJournalforing}
                         avbrytJournalforing={this.avbrytJournalforing}
                         kanSubmittes={this.kanSubmittes()}
+                        settFeltInnhold={settFeltInnhold}
                       />
                     }
                   </div>
