@@ -76,7 +76,10 @@ const VurderingNorgeUtpekt = ({
       <Nav.typo.Undertittel className="stegTittel">Vurder utpekingen</Nav.typo.Undertittel>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+          {
+            vurderingBegrunnelser.length > 0 &&
+            <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+          }
           <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
         </Nav.Column>
       </Nav.Row>
@@ -87,6 +90,7 @@ const VurderingNorgeUtpekt = ({
             label=""
             onChange={vedArtikkelEndring}
             value={lovvalgsbestemmelse || ''}
+            disabled={!redigerbart}
           >
             <option disabled key="VELG" value="">Velg</option>
             {
@@ -106,6 +110,7 @@ const VurderingNorgeUtpekt = ({
                 datoFelt
                 label="Fra og med"
                 feltNavn="fom"
+                disabled={!redigerbart}
               />
             </Nav.Column>
             <Nav.Column xs="6">
@@ -113,6 +118,7 @@ const VurderingNorgeUtpekt = ({
                 datoFelt
                 label="Til og med"
                 feltNavn="tom"
+                disabled={!redigerbart}
               />
             </Nav.Column>
           </Nav.Row>
@@ -120,7 +126,7 @@ const VurderingNorgeUtpekt = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="5">
-          <Nav.Fieldset legend="Skal lovvalget godkjennes?">
+          <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={!redigerbart}>
             <Nav.Radio
               onChange={vedGodkjennEndring}
               label="Godkjenn lovvalg"
@@ -147,7 +153,7 @@ const VurderingNorgeUtpekt = ({
 };
 
 VurderingNorgeUtpekt.propTypes = {
-  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
+  vurderingBegrunnelser: PT.arrayOf(PT.string),
   slettData: PT.func.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -166,6 +172,7 @@ VurderingNorgeUtpekt.propTypes = {
 
 VurderingNorgeUtpekt.defaultProps = {
   formValues: {},
+  vurderingBegrunnelser: [],
 };
 
 const mapStateToProps = state => ({

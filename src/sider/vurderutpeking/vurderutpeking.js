@@ -13,6 +13,7 @@ import Soknadpaneler from '../../felleskomponenter/soknadpaneler';
 import Stegvelger from '../../felleskomponenter/stegvelger';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
+import { formSelectors } from '../../ducks/form';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
@@ -82,6 +83,8 @@ const Vurderutpeking = ({
   lagreAllData,
   tilForsiden,
   blokkerInnholdMedOppfriskSpinner,
+  soknadForm,
+  soknad,
 }) => {
   const { params: { snr: saksnummer } } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -97,25 +100,30 @@ const Vurderutpeking = ({
     return null;
   }
 
+  const soknadErKlar = !(Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0);
+
   return (
     <div className="vurderutpeking">
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="7">
-            <Stegvelger
-              behandlingID={behandlingID}
-              stegMap={stegMap}
-              lagreVilkarHandler={lagreVilkar}
-              lagreAvklartefaktaHandler={lagreAvklartefakta}
-              lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
-              lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
-              oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
-              lagreAllData={lagreAllData}
-              oppdaterLokalSoknadHandler={oppdaterSoknad}
-              begrunnelser={MKV.KTObjects.begrunnelser}
-              landkoder={MKV.KTObjects.landkoder}
-              tilForsiden={tilForsiden}
-            />
+            {
+              soknadErKlar &&
+              <Stegvelger
+                behandlingID={behandlingID}
+                stegMap={stegMap}
+                lagreVilkarHandler={lagreVilkar}
+                lagreAvklartefaktaHandler={lagreAvklartefakta}
+                lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
+                lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
+                oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
+                lagreAllData={lagreAllData}
+                oppdaterLokalSoknadHandler={oppdaterSoknad}
+                begrunnelser={MKV.KTObjects.begrunnelser}
+                landkoder={MKV.KTObjects.landkoder}
+                tilForsiden={tilForsiden}
+              />
+            }
             <Soknadpaneler
               behandlingID={behandlingID}
               blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
@@ -205,10 +213,12 @@ Vurderutpeking.propTypes = {
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
+  soknad: MPT.Soknad,
+  soknadForm: PT.object.isRequired,
 };
 
 Vurderutpeking.defaultProps = {
-
+  soknad: {},
 };
 
 const mapStateToProps = state => ({
@@ -225,6 +235,8 @@ const mapStateToProps = state => ({
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
+  soknad: soknadSelectors.SoknadSelector(state),
+  soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
