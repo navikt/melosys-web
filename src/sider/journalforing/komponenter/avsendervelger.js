@@ -18,14 +18,7 @@ const AvsenderVelger = ({
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-  erAvsenderPreutfylt,
 }) => {
-  useEffect(() => {
-    if (erAvsenderPreutfylt) {
-      settFeltInnhold('avsenderType', MKV.Koder.avsendertyper.PERSON);
-    }
-  }, [erAvsenderPreutfylt]);
-
   const avsenderTypeEndret = avsenderType => {
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
@@ -146,7 +139,6 @@ AvsenderVelger.propTypes = {
   hentOgVisRepresentant: PT.func.isRequired,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
-  erAvsenderPreutfylt: PT.bool.isRequired,
 };
 
 AvsenderVelger.defaultProps = {
@@ -161,7 +153,6 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
 });
 
 export default connect(mapStateToProps)(AvsenderVelger);

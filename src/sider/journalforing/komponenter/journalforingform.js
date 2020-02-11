@@ -96,7 +96,7 @@ const mapStateToProps = state => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   initialValues: {
-    avsenderType: journalforingSelectors.AvsenderTypeSelector(state), // ["string", "null"]
+    avsenderType: journalforingSelectors.ErAvsenderPreutfyltSelector(state) ? MKV.Koder.avsendertyper.PERSON : journalforingSelectors.AvsenderTypeSelector(state),
     behandlingstype: null,
     saksnummer: '',
     brukerID: journalforingSelectors.BrukerIDSelector(state),
