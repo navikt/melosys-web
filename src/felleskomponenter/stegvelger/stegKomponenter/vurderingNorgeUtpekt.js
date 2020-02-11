@@ -24,7 +24,6 @@ export const VurderingNorgeUtpekt = ({
   vurderingBegrunnelser,
   slettData,
   oppdaterData,
-  bekreftOgFortsett,
   redigerbart,
   tilstand: {
     harAvklaring,
@@ -47,9 +46,9 @@ export const VurderingNorgeUtpekt = ({
     };
   }, []);
 
-  const vedArtikkelEndring = event => {
-    oppdaterData(lagLovvalgsbestemmelse(event.target.value));
-  };
+  useEffect(() => {
+    oppdaterData(lagLovvalgsbestemmelse(formValues.lovvalgsbestemmelse));
+  }, [formValues.lovvalgsbestemmelse]);
 
   const vedGodkjennEndring = event => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, null, event.target.value));
@@ -86,10 +85,9 @@ export const VurderingNorgeUtpekt = ({
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.typo.Element>Utenlandske myndigheter har utpekt Norge etter:</Nav.typo.Element>
-          <Nav.Select
+          <Skjema.Select
+            feltNavn="lovvalgsbestemmelse"
             label=""
-            onChange={vedArtikkelEndring}
-            value={lovvalgsbestemmelse || ''}
             disabled={!redigerbart}
           >
             <option disabled key="VELG" value="">Velg</option>
@@ -98,7 +96,7 @@ export const VurderingNorgeUtpekt = ({
                 <option key={Utils._uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>
               ))
             }
-          </Nav.Select>
+          </Skjema.Select>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="rad">
@@ -175,7 +173,7 @@ VurderingNorgeUtpekt.defaultProps = {
   vurderingBegrunnelser: [],
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   lovvalgsperiode: {
     fomDato: soknadSelectors.SoknadsperiodeFomSelector(state),
     tomDato: soknadSelectors.SoknadsperiodeTomSelector(state),
@@ -184,6 +182,7 @@ const mapStateToProps = state => ({
   initialValues: {
     fom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeFomSelector(state)),
     tom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeTomSelector(state)),
+    lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollBegrunnelseKoderSelector(state),
 });
@@ -195,7 +194,7 @@ const nesteSteg = (values, dispatch, props) => {
 const VurderingNorgeUtpektForm = reduxForm({
   onSubmit: nesteSteg,
   form: KV.Form.VURDER_UTPEKING,
-  enableReinitialize: true,
+  enableReinitialize: false,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
