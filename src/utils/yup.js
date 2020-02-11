@@ -41,8 +41,9 @@ addMethod(string, 'periodeErGyldig', function (message) {
     const { lovvalgsperiode } = this.options.context;
 
     if (!lovvalgsperiode) return false;
+    if (value === '') return false;
 
-    return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, value);
+    return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, Utils.dato.formatterDatoTilISO(value));
   });
 });
 

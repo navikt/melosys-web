@@ -59,9 +59,9 @@ jobs:
       - name: Push Docker image
         run: docker push ${IMAGE}
 
-  # Deploy til T8 ved push på SPRINT-branch
-  deploy_t8:
-    name: Deploy til T8
+  # Deploy til Q1 ved push på SPRINT-branch
+  deploy_q1:
+    name: Deploy til Q1
     needs: build
     if: contains(github.ref, 'SPRINT-')
     runs-on: ubuntu-latest
@@ -74,14 +74,14 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/redis.yaml
-          VAR: namespace=t8
+          VAR: namespace=default
       - name: Deploy melosys-web
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/nais.yaml
-          VAR: namespace=t8,ingress=https://melosys-t8.nais.preprod.local
+          VAR: namespace=default,ingress=https://melosys.nais.preprod.local
       - name: Slack Notification (deploy success)
         if: success()
         uses: rtCamp/action-slack-notify@v1.0.0
@@ -89,7 +89,7 @@ jobs:
           SLACK_COLOR: good
           SLACK_USERNAME: Github Actions
           SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: ':clap: melosys-web ble deployet til t8 :rocket:'
+          SLACK_TITLE: ':clap: melosys-web ble deployet til q1 :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ github.event.head_commit.message }}
 

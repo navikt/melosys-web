@@ -22,5 +22,6 @@ export const SERVERINFO = 'serverinfo';
 export const SOKNADER = 'soknader';
 export const SVAR = 'svar';
 export const UNNTAKSPERIODER = 'unntaksperioder';
+export const UTPEKINGSPERIODER = 'utpekingsperioder';
 export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';
