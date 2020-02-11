@@ -9,6 +9,14 @@ class Artikkel12_1 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
+    const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
+    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
+
+    const art12_eller_16_er_ikke_nil = !Utils._isNil(art12_1.oppfylt) || !Utils._isNil(art16_1.oppfylt);
+    const manglerBegrunnelse12 = art12_1.oppfylt === false && art12_1.begrunnelseKoder.length === 0;
+    const manglerBegrunnelse16 = art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst === null;
+    const harAvklaring = art12_eller_16_er_ikke_nil && !manglerBegrunnelse12 && !manglerBegrunnelse16;
+
     this.kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 12.1 er oppfylt',
@@ -17,7 +25,7 @@ class Artikkel12_1 extends Steg {
       },
       {
         beskrivelse: 'ønsker å vurdere 16.1',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) && harAvklaring,
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {
@@ -25,6 +33,7 @@ class Artikkel12_1 extends Steg {
         exec: (avklartefakta, alleVilkar) => (
           erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar) !== undefined
           && erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) !== undefined
+          && harAvklaring
         ),
         nesteSteg: STEG.AVSLAG_12_X_OG_16,
       },
@@ -37,22 +46,13 @@ class Artikkel12_1 extends Steg {
       begrunnelser: _propsLight.begrunnelser.art12_1_begrunnelser || [],
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => {
-      const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, _propsLight.vilkar);
-      const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar);
-
-      const harAvklaring = !Utils._isNil(art12_1.oppfylt) || !Utils._isNil(art16_1.oppfylt);
-      const manglerBegrunnelse12 = art12_1.oppfylt === false && art12_1.begrunnelseKoder.length === 0;
-      const manglerBegrunnelse16 = art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst === null;
-
-      return {
-        harAvklaring: harAvklaring && !manglerBegrunnelse12 && !manglerBegrunnelse16,
-        visBegrunnelser12: art12_1.oppfylt === false,
-        visBegrunnelser16: art16_1.oppfylt === false,
-        art12_1,
-        art16_1,
-      };
-    };
+    this.beregnRelevantUI = _propsLight => ({
+      harAvklaring,
+      visBegrunnelser12: art12_1.oppfylt === false,
+      visBegrunnelser16: art16_1.oppfylt === false,
+      art12_1,
+      art16_1,
+    });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),

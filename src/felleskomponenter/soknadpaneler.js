@@ -144,6 +144,7 @@ const mapStateToProps = state => ({
     maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
     soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
     soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+    soknadsland: soknadSelectors.SoknadslandSelector(state),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
@@ -180,6 +181,7 @@ const mapStateToProps = state => ({
       art16_1_begrunnelser: vilkarSelectors.art16_1(state).begrunnelseKoder,
     },
     vurderingLovvalg: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
+    vurderingBegrunnelser: avklartefaktaSelectors.AvklartefaktaVurderingSelector(state).begrunnelser,
   },
 });
 

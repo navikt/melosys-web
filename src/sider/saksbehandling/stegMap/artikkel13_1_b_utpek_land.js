@@ -8,7 +8,7 @@ class Artikkel13_1_b_utpek_land extends Steg {
     this.kriterier = [];
 
     this.id = STEG.ARTIKKEL_13_1_B_UTPEK_LAND;
-    this.tittel = 'Utpek\u00ADlandet';
+    this.tittel = 'Utpek land';
     this.komponent = VurderingArtikkel13UtpekLand;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,

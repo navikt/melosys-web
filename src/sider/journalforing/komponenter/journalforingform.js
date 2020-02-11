@@ -30,6 +30,7 @@ const JournalforingForm = props => {
     hentOgVisRepresentant,
     behandlingstyper,
     formValues,
+    settFeltInnhold,
     settJournalforingHensikt,
     avbrytJournalforing,
     kanSubmittes,
@@ -49,7 +50,7 @@ const JournalforingForm = props => {
       />
       <Mui.Undertittel tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
       <FagsakVelger
-        sakstyper={MKV.KTObjects.sakstyper}
+        sakstyper={MKV.KTObjects.sakstyper.filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)}
         behandlingstyper={behandlingstyper}
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
@@ -58,7 +59,7 @@ const JournalforingForm = props => {
         visForvaltningsMelding &&
         <Fragment>
           <Mui.Undertittel tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
-          <SendForvaltningsMelding />
+          <SendForvaltningsMelding avsenderType={formValues.avsenderType} settFeltInnhold={settFeltInnhold} />
         </Fragment>
       }
       <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
@@ -76,6 +77,7 @@ JournalforingForm.propTypes = {
   fagsakListe: PT.array.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
+  settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   submitJournalforing: PT.func.isRequired,
@@ -94,7 +96,7 @@ const mapStateToProps = state => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   initialValues: {
-    avsenderType: journalforingSelectors.AvsenderTypeSelector(state), // ["string", "null"]
+    avsenderType: journalforingSelectors.ErAvsenderPreutfyltSelector(state) ? MKV.Koder.avsendertyper.PERSON : journalforingSelectors.AvsenderTypeSelector(state),
     behandlingstype: null,
     saksnummer: '',
     brukerID: journalforingSelectors.BrukerIDSelector(state),
@@ -105,10 +107,12 @@ const mapStateToProps = state => ({
     representantID: '',
     representantRepresenterer: '',
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
-    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
+    hoveddokument: {
+      tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
+      logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
+    },
     vedlegg: {
       pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-      logiskeTitler: [],
     },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettBehandling: BOOLSK.USANN,

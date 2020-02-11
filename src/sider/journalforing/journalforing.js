@@ -56,18 +56,15 @@ class Journalforing extends Component {
   avbrytJournalforing = () => {
     this.props.tilForsiden();
   };
-  mapLogiskeVedleggsTitlerTilVedlegg = titler => {
-    const dokumentID = null;
-    return titler.map(tittel => ({ dokumentID, tittel }));
-  };
+
   mapFysiskeVedleggsTitlerTilVedlegg = pdf => {
     const { vedleggsdokumenter } = this.props;
     if (!vedleggsdokumenter || vedleggsdokumenter.length === 0) return [];
     const pdfTitler = Object.values(pdf);
     if (pdfTitler.length === 0) return [];
     return pdfTitler.map((tittel, index) => {
-      const { dokumentID } = vedleggsdokumenter[index];
-      return ({ dokumentID, tittel });
+      const { dokumentID, logiskeVedlegg } = vedleggsdokumenter[index];
+      return ({ dokumentID, tittel, logiskeVedlegg });
     });
   };
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
@@ -88,22 +85,27 @@ class Journalforing extends Component {
     const {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
-      representantID, representantKontaktPerson, representantRepresenterer, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
+      representantID, representantKontaktPerson, representantRepresenterer, avsenderNavn,
+      hoveddokument: { tittel, logiskeVedlegg },
+      vedlegg: vedleggSkjema,
       skalTilordnes,
       ikkeSendForvaltingsmelding,
       mottattDato,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
-    const vedlegg = [...this.mapFysiskeVedleggsTitlerTilVedlegg(vedleggSkjema.pdf), ...this.mapLogiskeVedleggsTitlerTilVedlegg(vedleggSkjema.logiskeTitler)];
+    const vedlegg = [...this.mapFysiskeVedleggsTitlerTilVedlegg(vedleggSkjema.pdf)];
 
     // Data for /tilordne i.e KNYTT
     let journalPostData = {
       avsenderID,
       avsenderNavn,
       brukerID,
-      dokumentID,
-      hoveddokumentTittel,
+      hoveddokument: {
+        dokumentID,
+        tittel,
+        logiskeVedlegg: logiskeVedlegg.filter(lv => lv), // fjern tomme titler
+      },
       journalpostID,
       oppgaveID,
       vedlegg,
@@ -407,6 +409,7 @@ class Journalforing extends Component {
         avsenderNavn = '',
       },
       fagsakListe,
+      settFeltInnhold,
     } = this.props;
 
     const {
@@ -464,6 +467,7 @@ class Journalforing extends Component {
                         submitJournalforing={this.submitJournalforing}
                         avbrytJournalforing={this.avbrytJournalforing}
                         kanSubmittes={this.kanSubmittes()}
+                        settFeltInnhold={settFeltInnhold}
                       />
                     }
                   </div>
@@ -510,7 +514,7 @@ Journalforing.propTypes = {
   sokOrgnr: PT.func.isRequired,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
-  vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
+  vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string, logiskeVedlegg: PT.arrayOf(PT.string) })).isRequired,
   tilForsiden: PT.func.isRequired,
   journalforSEDSkjemaIsValid: PT.bool.isRequired,
   journalforSEDSkjemaVerdier: PT.object,

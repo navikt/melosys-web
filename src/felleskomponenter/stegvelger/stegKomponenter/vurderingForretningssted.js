@@ -181,15 +181,15 @@ const VurderingForretningssted = props => {
   return (
     <div>
       <Nav.typo.Undertittel>Vurdering av artikkel 13 nr. 1 bokstav b</Nav.typo.Undertittel>
-      <Nav.Fieldset legend="Vurder hvor virksomhetene har forretningssted">
+      <Nav.Fieldset legend="Velg hvor virksomhetene har forretningssted" className="forretningssteder">
         <Forretningssteder {...tilstand}{...props} />
       </Nav.Fieldset>
 
-      <Nav.Fieldset legend="Vurder" className="vilkaar">
+      <Nav.Fieldset legend="Velg artikkel" className="vilkaar">
         <Nav.Select
           name="artikkel3_1_vurdering"
           id="vurdering13_1"
-          label="Velg Artikkel"
+          label=""
           onChange={lovvalgsbestemmelseEndret}
           disabled={!redigerbart}
           value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser)}

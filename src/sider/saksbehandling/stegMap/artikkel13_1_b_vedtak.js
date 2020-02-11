@@ -13,7 +13,7 @@ class Artikkel13_1_b_vedtak extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
-      overskrift: 'Omfattet av norsk lovgivning, etter artikkel 13, nr. 1, b',
+      overskrift: 'Omfattet av norsk lovgivning etter artikkel 13 nr. 1 bokstav b',
     });
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,

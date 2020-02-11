@@ -21,7 +21,12 @@ const KnyttTilSak = props => {
   if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
       <div className="panelramme">
-        <Mui.Elementskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.InformationCircle} className="elementTittel oversteUndertittel" style={clsElementskrift} />
+        <Mui.Elementskrift
+          tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
+          ikon={Ikoner.InformationCircle}
+          className="elementTittel oversteUndertittel"
+          style={clsElementskrift}
+        />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />

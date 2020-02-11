@@ -96,9 +96,11 @@ const OpprettNySak = ({
                   <div className="innrykk">
                     <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
                       {
-                        MKV.KTObjects.sakstyper.map(({ kode, term }) => (
-                          <option key={kode} value={kode}>{term}</option>
-                        ))
+                        MKV.KTObjects.sakstyper
+                          .filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)
+                          .map(({ kode, term }) => (
+                            <option key={kode} value={kode}>{term}</option>
+                          ))
                       }
                     </Skjema.Select>
                     <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">

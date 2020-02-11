@@ -8,7 +8,6 @@ import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as KV from '../../../kodeverk';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
-import PreutfyltAvsender from './preutfyltAvsender';
 import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from './avsendere';
 import './avsendervelger.css';
 
@@ -19,13 +18,8 @@ const AvsenderVelger = ({
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-  journalforingAvsenderID,
-  journalforingAvsenderNavn,
-  erAvsenderPreutfylt,
 }) => {
   const avsenderTypeEndret = avsenderType => {
-    if (erAvsenderPreutfylt) return;
-
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
@@ -55,16 +49,6 @@ const AvsenderVelger = ({
     settFeltInnhold('avsenderID', landkode);
     settFeltInnhold('avsenderNavn', avsenderNavn);
   };
-
-  if (erAvsenderPreutfylt) {
-    return (
-      <PreutfyltAvsender
-        className={className}
-        avsenderID={journalforingAvsenderID}
-        avsenderNavn={journalforingAvsenderNavn}
-      />
-    );
-  }
 
   return (
     <div className={className}>
@@ -155,7 +139,6 @@ AvsenderVelger.propTypes = {
   hentOgVisRepresentant: PT.func.isRequired,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
-  erAvsenderPreutfylt: PT.bool.isRequired,
 };
 
 AvsenderVelger.defaultProps = {
@@ -170,7 +153,6 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
 });
 
 export default connect(mapStateToProps)(AvsenderVelger);

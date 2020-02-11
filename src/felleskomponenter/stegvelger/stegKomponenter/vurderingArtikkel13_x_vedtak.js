@@ -109,8 +109,8 @@ export const VurderingArtikkel13_x_vedtak = ({
         </Fragment>
       }
       <Nav.Row className="forkortLovvalgsperiode">
-        <Nav.Column xs="6">
-          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} onClick={vedCheck} />
+        <Nav.Column xs="8">
+          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalget innvilges for en kortere periode" disabled={!redigerbart} onClick={vedCheck} />
         </Nav.Column>
       </Nav.Row>
       {
@@ -224,7 +224,7 @@ const mapStateToProps = (state, ownProps) => ({
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    mottakerinstitusjoner: avklartefaktaSelectors.ArbeidslandKTSelector(state) || [],
+    mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
   },
 });
 
