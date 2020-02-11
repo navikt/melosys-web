@@ -49,7 +49,7 @@ const JournalforingForm = props => {
       />
       <Mui.Undertittel tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
       <FagsakVelger
-        sakstyper={MKV.KTObjects.sakstyper}
+        sakstyper={MKV.KTObjects.sakstyper.filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)}
         behandlingstyper={behandlingstyper}
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
