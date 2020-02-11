@@ -7,6 +7,7 @@ import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as Utils from '../../../utils';
 import * as Ikoner from '../../../resources/images';
 import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../../felleskomponenter/ui';
 import { formSelectors } from '../../../ducks/form';
 
 function LenkeListeVelger(props) {
@@ -41,7 +42,7 @@ function LenkeListeVelger(props) {
         {visListevelger &&
           <Fragment>
             <Skjema.ListeVelger feltNavn={feltNavn} label="" placeholdere={placeholder} muligeValg={muligeValg} />
-            <Nav.Knapp disabled={erTomTittel()} onClick={lagre}>Lagre Tittel</Nav.Knapp>&nbsp;<Nav.Flatknapp onClick={avbryt}>Avbryt</Nav.Flatknapp>
+            <Mui.Knapp disabled={erTomTittel()} onClick={lagre}>Lagre Tittel</Mui.Knapp>&nbsp;<Mui.Knapp type="flat" onClick={avbryt}>Avbryt</Mui.Knapp>
           </Fragment>
         }
       </Nav.Column>

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PT from 'prop-types';
 import MKV from 'melosys-kodeverk';
 
@@ -9,18 +9,34 @@ import * as KV from '../../../kodeverk';
 
 import './avsendervelger.css';
 
-const clsBehandlingsPanel = {
-  background: 'lightgray',
-  border: '1px solid #b7b1a9',
-  borderRadius: '3px',
-  margin: '0.5em 0.5em 0.5em 1.5em',
-  padding: '0.25em 1.25em 0 1.25em',
-};
+export const AvsenderOrganisasjon = ({
+  settFeltInnhold,
+  hentOgVisRepresentant,
+  avsenderID,
+  avsenderType,
+  children,
+}) => {
+  useEffect(() => {
+    if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG) {
+      settFeltInnhold('representantRepresenterer', MKV.Koder.representerer.BRUKER);
+    }
+    return () => {
+      settFeltInnhold('representantRepresenterer', '');
+    };
+  }, []);
 
-export const AvsenderOrganisasjon = props => {
+  useEffect(() => {
+    if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG || avsenderType === KV.AvsenderTyper.FULLMEKTIG) {
+      settFeltInnhold('representantID', avsenderID);
+    }
+    return () => {
+      settFeltInnhold('representantID', '');
+    };
+  }, [avsenderID]);
+
   const erGyldigOrgnummer = verdi => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
+
   const sjekkArbeidsgiver = async verdi => {
-    const { settFeltInnhold, hentOgVisRepresentant } = props;
     if (erGyldigOrgnummer(verdi)) {
       // TODO await this.spinner('representantNavn');
       await hentOgVisRepresentant(verdi);
@@ -28,27 +44,71 @@ export const AvsenderOrganisasjon = props => {
       await settFeltInnhold('representantNavn', '');
     }
   };
+
   const IDFeltTastOppHandler = async event => {
     const { id: opprinneligFeltID, value } = event.target;
     if (opprinneligFeltID === 'representantID') { await sjekkArbeidsgiver(value); }
   };
+
   return (
-    <div style={clsBehandlingsPanel}>
-      <Nav.typo.Element>Avsender firmanavn</Nav.typo.Element>
-      <Skjema.Input feltNavn="avsenderID" label="Fullmektigens organisasjonsnummer" onKeyUp={IDFeltTastOppHandler} />
+    <div className="avsender">
+      <Skjema.Input feltNavn="avsenderID" label="Oppgi avsenders org.nr." onKeyUp={IDFeltTastOppHandler} />
       <Skjema.Input feltNavn="avsenderNavn" label="Organisasjonsnavn" disabled />
+      {
+        children
+      }
     </div>
   );
 };
 AvsenderOrganisasjon.propTypes = {
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
+  avsenderID: PT.string,
+  avsenderType: PT.string.isRequired,
+  children: PT.node,
+};
+
+AvsenderOrganisasjon.defaultProps = {
+  avsenderID: '',
+  children: null,
+};
+
+export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepresentant }) => {
+  const representererMap = {
+    [MKV.Koder.representerer.ARBEIDSGIVER]: 'Arbeidsgiver',
+    [MKV.Koder.representerer.BRUKER]: 'Arbeidstaker',
+    [MKV.Koder.representerer.BEGGE]: 'Både arbeidsgiver og arbeidstaker',
+  };
+
+  return (
+    <AvsenderOrganisasjon
+      avsenderID={avsenderID}
+      avsenderType={KV.AvsenderTyper.FULLMEKTIG}
+      settFeltInnhold={settFeltInnhold}
+      hentOgVisRepresentant={hentOgVisRepresentant}
+    >
+      <Skjema.Select feltNavn="representantRepresenterer" label="Hvem er dette fullmektig for">
+        {MKV.KTObjects.representerer.map(({ kode }) =>
+          (<option key={kode} value={kode}>{representererMap[kode]}</option>))}
+      </Skjema.Select>
+    </AvsenderOrganisasjon>
+  );
+};
+
+AvsenderFullmektig.propTypes = {
+  avsenderID: PT.string,
+  settFeltInnhold: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
+};
+
+AvsenderFullmektig.defaultProps = {
+  avsenderID: '',
 };
 
 export const AvsenderUtenlanskTrygdemyndighet = ({
   utenlandskTrygdemyndighetLandkode, fullmektigLandEndret,
 }) => (
-  <div style={clsBehandlingsPanel}>
+  <div className="avsender">
     <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
     {
       utenlandskTrygdemyndighetLandkode &&
@@ -69,7 +129,7 @@ AvsenderUtenlanskTrygdemyndighet.defaultProps = {
 };
 
 export const AvsenderAnnet = () => (
-  <div style={clsBehandlingsPanel}>
+  <div className="avsender">
     <Skjema.Input
       feltNavn="avsenderNavn"
       label="Oppgi avsenders navn"

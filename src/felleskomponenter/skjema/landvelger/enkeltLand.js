@@ -5,6 +5,7 @@ import { Field } from 'redux-form';
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
+import * as SkjemaUtils from '../utils';
 
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 
@@ -121,13 +122,12 @@ export class EnkeltLand extends Component {
 
     const { inputVerdi } = this.state;
 
-    const { error, touched, active } = meta;
+    const { touched, active } = meta;
 
-    let skjemaError = Utils._isObject(meta.error) ? error.melding : error;
-    if (!touched || active) skjemaError = undefined;
+    const skjemaError = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
     const { error: internError = '' } = this.state;
-    const feilObjekt = skjemaError || internError ? { feilmelding: `${skjemaError || ''} ${internError || ''}` } : null;
+    const feilObjekt = skjemaError || internError ? { feilmelding: `${(skjemaError && skjemaError.feilmelding) || ''} ${internError || ''}` } : null;
 
     return (
       <div>

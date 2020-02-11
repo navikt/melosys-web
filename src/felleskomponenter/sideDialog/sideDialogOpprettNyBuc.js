@@ -122,7 +122,14 @@ const SideDialogOpprettNyBuc = ({ behandlingID }) => {
     kodeTilObjekt(EKV.Koder.sektor.HZ, EKV.KTObjects.sektor),
   ];
 
-  const tilgjengeligeHBucer = [EKV.Koder.buctyper.horizontal.H_BUC_02a];
+  const tilgjengeligeHBucer = [
+    EKV.Koder.buctyper.horizontal.H_BUC_01,
+    EKV.Koder.buctyper.horizontal.H_BUC_02a,
+    EKV.Koder.buctyper.horizontal.H_BUC_02b,
+    EKV.Koder.buctyper.horizontal.H_BUC_02c,
+    EKV.Koder.buctyper.horizontal.H_BUC_03a,
+    EKV.Koder.buctyper.horizontal.H_BUC_03b,
+  ];
   const ignorerteHBucer = EKV.KTObjects.buctyper.horizontal.filter(({ kode }) => !tilgjengeligeHBucer.includes(kode));
 
   const tilgjengeligeBucer = fagomrade => EKV.Selectors.hentBucTyperForFagomrade(fagomrade).filter(buc => !ignorerteHBucer.includes(buc));

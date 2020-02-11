@@ -117,9 +117,13 @@ export const avklartefaktaKoder = {
   YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
   YRKESGRUPPE: 'YRKESGRUPPE',
-
 };
 export const referanseKoder = {
   INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
   INSTALLASJON_ARBEIDSLAND_TYPE: 'INSTALLASJON_ARBEIDSLAND_TYPE',
+};
+
+export const Tema = {
+  MED: 'Medlemskap',
+  UFM: 'Unntak fra medlemskap',
 };

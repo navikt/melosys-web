@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -8,8 +8,7 @@ import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as KV from '../../../kodeverk';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
-import PreutfyltAvsender from './preutfyltAvsender';
-import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderAnnet } from './avsendere';
+import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from './avsendere';
 import './avsendervelger.css';
 
 const AvsenderVelger = ({
@@ -19,13 +18,8 @@ const AvsenderVelger = ({
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-  journalforingAvsenderID,
-  journalforingAvsenderNavn,
-  erAvsenderPreutfylt,
 }) => {
   const avsenderTypeEndret = avsenderType => {
-    if (erAvsenderPreutfylt) return;
-
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
@@ -56,16 +50,6 @@ const AvsenderVelger = ({
     settFeltInnhold('avsenderNavn', avsenderNavn);
   };
 
-  if (erAvsenderPreutfylt) {
-    return (
-      <PreutfyltAvsender
-        className={className}
-        avsenderID={journalforingAvsenderID}
-        avsenderNavn={journalforingAvsenderNavn}
-      />
-    );
-  }
-
   return (
     <div className={className}>
       <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
@@ -77,35 +61,43 @@ const AvsenderVelger = ({
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Fullmektig"
-          value="FULLMEKTIG"
+          value={KV.AvsenderTyper.FULLMEKTIG}
         />
         {
-          formValues.avsenderType === 'FULLMEKTIG' &&
-          <Fragment>
-            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
-          </Fragment>
+          formValues.avsenderType === KV.AvsenderTyper.FULLMEKTIG &&
+          <AvsenderFullmektig
+            avsenderID={formValues.avsenderID}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
         }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver"
-          value="ARBEIDSGIVER"
+          value={KV.AvsenderTyper.ARBEIDSGIVER}
         />
         {
-          formValues.avsenderType === 'ARBEIDSGIVER' &&
-          <Fragment>
-            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
-          </Fragment>
+          formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER &&
+          <AvsenderOrganisasjon
+            avsenderID={formValues.avsenderID}
+            avsenderType={formValues.avsenderType}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
         }
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver som er fullmektig"
-          value="ARBEIDSGIVER_FULLMEKTIG"
+          value={KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG}
         />
         {
-          formValues.avsenderType === 'ARBEIDSGIVER_FULLMEKTIG' &&
-          <Fragment>
-            <AvsenderOrganisasjon settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
-          </Fragment>
+          formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG &&
+          <AvsenderOrganisasjon
+            avsenderID={formValues.avsenderID}
+            avsenderType={formValues.avsenderType}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
         }
         <Skjema.Radio
           feltNavn="avsenderType"
@@ -114,13 +106,12 @@ const AvsenderVelger = ({
         />
         {
           formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET &&
-          <Fragment>
-            <AvsenderUtenlanskTrygdemyndighet
-              utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
-              fullmektigLandEndret={fullmektigLandEndret}
-            />
-          </Fragment>
+          <AvsenderUtenlanskTrygdemyndighet
+            utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
+            fullmektigLandEndret={fullmektigLandEndret}
+          />
         }
+        {/* TODO: Legges inn igjen i SPRINT-41 (etter endringer er avklart hos fag)
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Annet"
@@ -132,6 +123,7 @@ const AvsenderVelger = ({
             <AvsenderAnnet />
           </Fragment>
         }
+        */}
       </Skjema.RadioGruppe>
     </div>
   );
@@ -147,7 +139,6 @@ AvsenderVelger.propTypes = {
   hentOgVisRepresentant: PT.func.isRequired,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
-  erAvsenderPreutfylt: PT.bool.isRequired,
 };
 
 AvsenderVelger.defaultProps = {
@@ -162,7 +153,6 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
 });
 
 export default connect(mapStateToProps)(AvsenderVelger);

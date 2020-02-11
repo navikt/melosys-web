@@ -30,7 +30,6 @@ sider. Komponenter kan også nøste hverandre.
 | Personopplysninger | Dette er panelet hvor personopplysninger som fødselsnummer, adresse, nasjonalitet og annen generell informasjon vises. |
 | Arbeidsforholdene | Her listes alle arbeidsforhold opp, dvs innenfor en gitt periode. |
 | OrganisasjonerNorge | Denne listen er utledet av aktuelle Arbeidsforholdene og viser en oppsummering av organisasjoner (arbeidsgiver) som er aktuelle for søknaden. |
-| SideKommentarer | Her kan saksbehandleren skrive et ett-felts-kommentar som gjelder for den aktuelle saken. |
 | SideOppsummering | Oppsummeringen er ment å gi saksbehandleren en rask forståelse av søknadens natur og status. |
 | SideDialog | Dette er en fane hvor dialog, historikk og samhandling med søker er synlig. |
 | Tilleggsopplysninger | Her har søkeren selv skrevet inn tilleggsopplysninger som er relevant for søknaden. |
@@ -43,3 +42,18 @@ foregår på én side. Følgende routes er satt opp i applikasjonen:
 | ---------------- | ---------------- | ---------------- |
 | /sok | Sok | Dette er grunnsiden som saksbehandleren benytter for å hente søke etter en sak eller hente tidligere behandlede saker. |
 | /saksbehandling | Saksbehandling | Dette er hovedsiden i applikasjonen hvor alle nødvendige felles-komponenter er bygget inn. |
+
+## Utvikling på laptop mot backend i dev-fss
+
+Installer [kubefwd](https://github.com/txn2/kubefwd) eller [Kube Forwarder](https://github.com/pixel-point/kube-forwarder). Start applikasjonen med forwarding mot
+ønsket miljø, f.eks. `kubefwd` mot `t8`:
+
+```shell script
+sudo -E kubefwd svc -n t8 -l app=melosys
+```
+
+Legg inn OIDC-token fra [IDA](https://ida.adeo.no) i `scripts/patchkubefwd.js`, og start frontend med forwarding mot backend i miljø:
+
+```shell script
+npm run start:kubefwd
+```

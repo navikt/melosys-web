@@ -5,6 +5,7 @@ import Ikon from 'melosys-ikoner-assets';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../ui';
 
 import './listevelger.css';
 
@@ -26,10 +27,10 @@ const ListevelgerValgtElement = ({
       <div className="listevelger__innhold">
         { element }
       </div>
-      <Nav.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
+      <Mui.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
         <div className="knapp__ikon"><Ikon kind="minus" size="24" /></div>
         <div className="knapp__tittel">Fjern</div>
-      </Nav.Knapp>
+      </Mui.Knapp>
     </div>
   );
 };

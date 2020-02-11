@@ -8,19 +8,25 @@ import { BOOLSK } from '../../../constants';
 import * as MPT from '../../../proptypes';
 import * as Ikoner from '../../../resources/images';
 import * as Skjema from '../../../felleskomponenter/skjema';
-import { Elementskrift } from './overskrift';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import './knyttTilSak.css';
 
 const KnyttTilSak = props => {
   const { sak, behandlingstyper, opprettBehandling } = props;
-  const { saksstatus } = sak;
+  const { behandlingOversikter } = sak;
+  const sisteBehandling = behandlingOversikter[0];
   const clsElementskrift = { 'border-bottom': 'none' };
 
-  if (saksstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
+  if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
       <div className="panelramme">
-        <Elementskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.InformationCircle} className="elementTittel oversteUndertittel" style={clsElementskrift} />
+        <Mui.Elementskrift
+          tekst="Tidligere behandling er avsluttet. Velg hva du vil gjøre med dokumentet"
+          ikon={Ikoner.InformationCircle}
+          className="elementTittel oversteUndertittel"
+          style={clsElementskrift}
+        />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />
@@ -32,6 +38,8 @@ const KnyttTilSak = props => {
               behandlingstyper &&
               behandlingstyper
                 .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV
+                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
                   && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED)
                 .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)

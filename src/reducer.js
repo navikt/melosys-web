@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import { connectRouter } from 'connected-react-router';
 
 import anmodningsperioderReducer from './ducks/anmodningsperioder/';
 import anmodningsperiodesvarReducer from './ducks/anmodningsperiodesvar';
@@ -11,6 +12,7 @@ import dokumenterReducer from './ducks/dokumenter/';
 import fagsakerReducer from './ducks/fagsaker/';
 import journalforingReducer from './ducks/journalforing';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
+import modalerReducer from './ducks/modaler';
 import oppgaverReducer from './ducks/oppgaver';
 import organisasjonerReducer from './ducks/organisasjoner';
 import personerReducer from './ducks/personer';
@@ -18,13 +20,16 @@ import saksbehandlerReducer from './ducks/saksbehandler/';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
 import soknadReducer from './ducks/soknad/';
+import utpekReducer from './ducks/utpek';
+import utpekingsperioderReducer from './ducks/utpekingsperioder';
 import vilkarReducer from './ducks/vilkar/';
 import vedtakReducer from './ducks/vedtak';
 
 import customFormReducer from './ducks/form';
 
-export default combineReducers({
+const createRootReducer = history => combineReducers({
   form: formReducer.plugin({ forretningsValidering: customFormReducer }),
+  router: connectRouter(history),
   anmodningsperioder: anmodningsperioderReducer,
   anmodningsperiodesvar: anmodningsperiodesvarReducer,
   avklartefakta: avklartefaktaReducer,
@@ -35,6 +40,7 @@ export default combineReducers({
   fagsaker: fagsakerReducer,
   journalforing: journalforingReducer,
   lovvalgsperioder: lovvalgsperioderReducer,
+  modaler: modalerReducer,
   oppgaver: oppgaverReducer,
   organisasjoner: organisasjonerReducer,
   personer: personerReducer,
@@ -42,6 +48,10 @@ export default combineReducers({
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
   soknad: soknadReducer,
+  utpek: utpekReducer,
+  utpekingsperioder: utpekingsperioderReducer,
   vedtak: vedtakReducer,
   vilkar: vilkarReducer,
 });
+
+export default createRootReducer;

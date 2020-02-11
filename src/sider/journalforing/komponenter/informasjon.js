@@ -11,14 +11,13 @@ import * as Konstanter from '../../../constants';
 import * as Api from '../../../services/api';
 import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
+import * as Mui from '../../../felleskomponenter/ui';
 import AvsenderVelger from './avsendervelger';
 import LenkeListeVelger from './lenkelistevelger';
 
-import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
 import { formSelectors } from '../../../ducks/form';
-import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import './informasjon.css';
 
@@ -45,9 +44,9 @@ class Informasjon extends Component {
   };
 
   async componentDidMount() {
-    const { hoveddokument, vedlegg } = this.props;
-    await this.oppdaterUndoState('hoveddokumentTittel', hoveddokument.tittel);
-    await this.oppdaterUndoState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
+    const { vedlegg, journalforingSkjemaVerdier } = this.props;
+    await this.oppdaterState('hoveddokument.tittel', journalforingSkjemaVerdier.hoveddokument.tittel);
+    await this.oppdaterState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
     await this.oppdaterFelter(this.props, true);
   }
 
@@ -55,7 +54,7 @@ class Informasjon extends Component {
     await this.oppdaterFelter(prevProps);
   }
 
-  oppdaterUndoState = async (stateNavn, verdi) => {
+  oppdaterState = async (stateNavn, verdi) => {
     await this.setState({ [stateNavn]: verdi });
   };
   oppdaterFelter = async (props, tvingOppdatering) => {
@@ -145,25 +144,21 @@ class Informasjon extends Component {
     await Utils.delay(ms);
     this.setState(this.toggleSpinn(navn, false));
   };
-  updateTittel = (feltnavn, verdi) => {
-    this.oppdaterUndoState(feltnavn, verdi);
-  };
   updateVedleggTittel = async (index, verdi) => {
     const tittler = [...this.state.vedleggPdfTittler];
     tittler[index] = verdi;
-    await this.oppdaterUndoState('vedleggPdfTittler', tittler);
+    await this.oppdaterState('vedleggPdfTittler', tittler);
   };
   render() {
     const {
       journalpostID,
       dokumentID,
-      mottattDato,
       vedlegg,
       settFeltInnhold,
       hentOgVisRepresentant,
       journalforingSkjemaVerdier,
     } = this.props;
-    const { hoveddokumentTittel, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
+    const { hoveddokument: { tittel: hoveddokumentTittel }, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
       spinner: { avsenderNavn: visAvsenderSpinner },
@@ -172,12 +167,12 @@ class Informasjon extends Component {
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
-        <Overskrift tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
+        <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
         <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
         <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
         { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
 
-        <Overskrift tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
+        <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
         <AvsenderVelger
           className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
@@ -186,24 +181,24 @@ class Informasjon extends Component {
           visAvsenderSpinner={visAvsenderSpinner}
           hentOgVisRepresentant={hentOgVisRepresentant}
         />
-        <Overskrift tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
-        <Nav.Input
+        <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
+        <Skjema.Input
+          datoFelt
           label="Mottatt dato"
           type="dato"
           bredde="S"
-          disabled
-          value={Utils.dato.formatterDatoTilNorsk(mottattDato)}
+          feltNavn="mottattDato"
         />
 
         <Nav.Fieldset legend="Hoveddokument:">
           <LenkeListeVelger
-            feltNavn="hoveddokumentTittel"
+            feltNavn="hoveddokument.tittel"
             placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumenttitler}
             linkTo={dokumentURI(journalpostID, dokumentID)}
             dokumentTittel={hoveddokumentTittel}
             undoTittel={this.state.hoveddokumentTittel}
-            updateTittel={() => this.updateTittel('hoveddokumentTittel', hoveddokumentTittel)}
+            updateTittel={() => this.oppdaterState('hoveddokument.tittel', hoveddokumentTittel)}
           />
         </Nav.Fieldset>
         <p>Vedlegg</p>
@@ -221,7 +216,7 @@ class Informasjon extends Component {
           </Fragment>)
         }
         <Skjema.ListeVelger
-          feltNavn="vedlegg.logiskeTitler"
+          feltNavn="hoveddokument.logiskeVedlegg"
           label="Velg ny tittel:"
           gruppe
           tillatFritekst
@@ -240,9 +235,6 @@ Informasjon.propTypes = {
   hentOgVisRepresentant: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
-  dokumentTittel: PT.string,
-  mottattDato: PT.string.isRequired,
-  hoveddokument: PT.shape({ dokumentID: PT.string, tittel: PT.string }).isRequired,
   vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
 };
@@ -251,15 +243,12 @@ Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
   journalpostID: '',
   dokumentID: '',
-  dokumentTittel: null,
   vedlegg: [],
 };
 
 const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
-  mottattDato: journalforingSelectors.MottattDatoSelector(state),
-  hoveddokument: journalforingSelectors.JournalforingHovedDokument(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 

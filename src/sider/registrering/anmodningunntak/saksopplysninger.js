@@ -11,7 +11,7 @@ import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as RegistreringContext from '../state/registreringContext';
-import Medlemskap from '../../../felleskomponenter/medlemskap';
+import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';

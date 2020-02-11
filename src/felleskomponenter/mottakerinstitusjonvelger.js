@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { change, Field } from 'redux-form';
+import { change, Field, formValueSelector, FieldArray } from 'redux-form';
 import * as PT from 'prop-types';
 
 import * as Api from '../services/api';
 import * as Utils from '../utils';
+import MKV from '../melosyskodeverk';
 
 import { useAsyncCallbackState } from '../hooks/useCallbackState';
 import { SelectWrappedComponent } from './skjema/input/select';
@@ -16,9 +17,14 @@ export const MottakerinstitusjonvelgerSchema = ({
   redigerbart,
   bucType,
   landkode,
+  label,
   oppdaterKreverMottakerinstitusjon,
   ...rest
 }) => {
+  if (landkode === MKV.Koder.landkoder.NO) {
+    return null;
+  }
+
   const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, landkode);
   const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [landkode, bucType]);
 
@@ -32,7 +38,7 @@ export const MottakerinstitusjonvelgerSchema = ({
 
   return (
     <SelectWrappedComponent
-      label="Velg utenlandsk institusjon som skal motta SED"
+      label={label}
       emptyFieldDisabled={false}
       emptyFieldText="Velg..."
       {...rest}
@@ -46,7 +52,12 @@ MottakerinstitusjonvelgerSchema.propTypes = {
   redigerbart: PT.bool.isRequired,
   bucType: PT.string.isRequired,
   landkode: PT.string.isRequired,
+  label: PT.string,
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
+};
+
+MottakerinstitusjonvelgerSchema.defaultProps = {
+  label: 'Velg utenlandsk institusjon som skal motta SED',
 };
 
 const Mottakerinstitusjonvelger = ({
@@ -82,3 +93,59 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mottakerinstitusjonvelger);
+
+const mapStateToPropsFlervalg = (state, ownProps) => ({
+  hentFelt: feltnavn => formValueSelector(ownProps.form)(state, feltnavn),
+});
+
+const mapDispatchToPropsFlervalg = dispatch => ({
+  oppdaterKreverMottakerinstitusjon: (form, feltnavn) => kreverMottakerinstitusjon => dispatch(change(form, feltnavn, kreverMottakerinstitusjon)),
+});
+
+const MottakerinstitusjonvelgerFlervalgInner = ({
+  oppdaterKreverMottakerinstitusjon,
+  redigerbart,
+  hentFelt,
+  form,
+  fields,
+  bucType,
+}) =>
+  fields.map(mottakerinstitusjon =>
+    <Field
+      key={`${mottakerinstitusjon}.id`}
+      name={`${mottakerinstitusjon}.id`}
+      component={MottakerinstitusjonvelgerSchema}
+      props={{
+        redigerbart,
+        bucType,
+        landkode: hentFelt(`${mottakerinstitusjon}.kode`),
+        label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
+        oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(form, `${mottakerinstitusjon}.kreverMottakerinstitusjon`),
+      }}
+    />);
+
+MottakerinstitusjonvelgerFlervalgInner.propTypes = {
+  oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
+  hentFelt: PT.func.isRequired,
+  form: PT.string.isRequired,
+  fields: PT.object.isRequired,
+  bucType: PT.string.isRequired,
+};
+
+const MottakerinstitusjonvelgerFlervalgWrapper = ({
+  feltnavn,
+  ...rest
+}) => (
+  <FieldArray
+    name={feltnavn}
+    component={MottakerinstitusjonvelgerFlervalgInner}
+    props={{ ...rest }}
+  />
+);
+
+MottakerinstitusjonvelgerFlervalgWrapper.propTypes = {
+  feltnavn: PT.string.isRequired,
+};
+
+export const MottakerinstitusjonvelgerFlervalg = connect(mapStateToPropsFlervalg, mapDispatchToPropsFlervalg)(MottakerinstitusjonvelgerFlervalgWrapper);

@@ -10,20 +10,20 @@ import * as KV from '../../../../kodeverk';
 import * as Validering from '../../../../felleskomponenter/skjema/validering';
 import * as MPT from '../../../../proptypes';
 
-import ArbeidsgivereNorge from '../arbeidsgivereNorge';
-import ArbeidUtland from '../arbeidutland';
-import ForetakUtland from '../foretakutland';
-import Inntekt from '../inntektUtland';
-import MaritimtArbeid from '../maritimtArbeid';
-import Medlemskap from '../../../../felleskomponenter/medlemskap';
-import Soknadsperiode from '../soknadsperiode';
-import Personopplysninger from '../personopplysninger';
-import SelvstendigArbeid from '../selvstendigarbeid';
-import Stegvelger from '../stegvelger';
+import ArbeidsgivereNorge from '../../../../felleskomponenter/paneler/arbeidsgivereNorge';
+import ArbeidUtland from '../../../../felleskomponenter/paneler/arbeidutland';
+import ForetakUtland from '../../../../felleskomponenter/paneler/foretakutland';
+import Inntekt from '../../../../felleskomponenter/paneler/inntektUtland';
+import MaritimtArbeid from '../../../../felleskomponenter/paneler/maritimtArbeid';
+import Medlemskap from '../../../../felleskomponenter/paneler/medlemskap';
+import Soknadsperiode from '../../../../felleskomponenter/paneler/soknadsperiode';
+import Personopplysninger from '../../../../felleskomponenter/paneler/personopplysninger';
+import SelvstendigArbeid from '../../../../felleskomponenter/paneler/selvstendigarbeid';
+import Stegvelger from '../../../../felleskomponenter/stegvelger';
 import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
-import VirksomhetNorge from '../virksomhetNorge';
-import FullmektigPanel from '../fullmektig';
-import Kontantytelser from '../kontantytelser';
+import VirksomhetNorge from '../../../../felleskomponenter/paneler/virksomhetNorge';
+import FullmektigPanel from '../../../../felleskomponenter/paneler/fullmektig';
+import Kontantytelser from '../../../../felleskomponenter/paneler/kontantytelser';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
@@ -41,17 +41,9 @@ import { behandlingsresultatSelectors } from '../../../../ducks/behandlingsresul
 import { formSelectors } from '../../../../ducks/form';
 import { formatterDatoTilNorsk } from '../../../../utils/dato';
 
+import { stegMap } from '../../stegMap';
 
 const Saksopplysninger = props => {
-  const lagreSoknadHandler = async () => {
-    const {
-      behandlingID, valid, sendSoknad, soknad,
-    } = props;
-    if (valid) {
-      await sendSoknad(behandlingID, soknad);
-    }
-  };
-
   const overstyrSubmit = event => {
     event.preventDefault();
   };
@@ -79,6 +71,8 @@ const Saksopplysninger = props => {
     behandlingsresultat,
     fagsakStatusKode,
     fagsaker,
+    tilForsiden,
+    visValideringModalDialogHandle,
   } = props;
 
 
@@ -112,10 +106,12 @@ const Saksopplysninger = props => {
         lagreAnmodningsperioderHandler={props.lagreAnmodningsperioderHandler}
         oppdaterOgLagreBehandlingerHandler={props.oppdaterOgLagreBehandlingerHandler}
         lagreAllData={props.lagreAllData}
-        lagreSoknadHandler={lagreSoknadHandler}
         oppdaterLokalSoknadHandler={oppdaterLokalSoknadHandler}
         begrunnelser={MKV.KTObjects.begrunnelser}
         landkoder={MKV.KTObjects.landkoder}
+        tilForsiden={tilForsiden}
+        visValideringModalDialogHandle={visValideringModalDialogHandle}
+        stegMap={stegMap}
       />
       }
       <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
@@ -166,6 +162,8 @@ Saksopplysninger.propTypes = {
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
+  tilForsiden: PT.func.isRequired,
+  visValideringModalDialogHandle: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -240,6 +238,7 @@ const mapStateToProps = state => ({
     maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
     soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
     soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+    soknadsland: soknadSelectors.SoknadslandSelector(state),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,

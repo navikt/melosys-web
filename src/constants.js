@@ -11,3 +11,5 @@ export const BOOLSK = {
   SANN: true,
   USANN: false,
 };
+
+export const URL_BASENAME = process.env.APP_PATH_PREFIX || '/melosys';

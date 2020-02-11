@@ -9,6 +9,7 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Utils from '../../utils';
 import * as Actions from './actions';
 import * as Selectors from './selectors';
 
@@ -30,8 +31,6 @@ export function resetBehandlingerState() {
 export function apneTidligereBehandlinger() {
   return (dispatch, getState) => {
     const person = Selectors.PersonSelector(getState());
-
-    const URI_SOK = `/sok/${person.fnr}`;
-    window.open(URI_SOK);
+    Utils.url.nyFane(`sok/${person.fnr}`);
   };
 }

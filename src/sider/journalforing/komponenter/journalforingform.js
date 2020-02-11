@@ -10,45 +10,47 @@ import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import { BOOLSK } from '../../../constants';
 import { journalforingSelectors } from '../../../ducks/journalforing';
-import { Overskrift } from './overskrift';
 import Informasjon from '../komponenter/informasjon';
 import FagsakVelger from './fagsakVelger';
 import SendForvaltningsMelding from './sendForvaltningsMelding';
+import Fotknapper from './fotknapper';
 
 const JournalforingForm = props => {
   const {
     journalpostID,
     hoveddokumentID,
-    hoveddokumentTittel,
     vedlegg,
     hentOgVisAvsender,
     hentOgVisBruker,
     fagsakListe,
     hentOgVisRepresentant,
-    overstyrSubmit,
     behandlingstyper,
     formValues,
+    settFeltInnhold,
     settJournalforingHensikt,
+    avbrytJournalforing,
+    kanSubmittes,
+    handleSubmit,
   } = props;
   const visForvaltningsMelding = formValues.saksnummer === '-1' && formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
 
   return (
-    <form onSubmit={overstyrSubmit}>
+    <form onSubmit={handleSubmit}>
       <Informasjon
         journalpostID={journalpostID}
         dokumentID={hoveddokumentID}
-        dokumentTittel={hoveddokumentTittel}
         vedlegg={vedlegg}
         hentOgVisAvsender={hentOgVisAvsender}
         hentOgVisBruker={hentOgVisBruker}
         hentOgVisRepresentant={hentOgVisRepresentant}
       />
-      <Overskrift tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
+      <Mui.Undertittel tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
       <FagsakVelger
-        sakstyper={MKV.KTObjects.sakstyper}
+        sakstyper={MKV.KTObjects.sakstyper.filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)}
         behandlingstyper={behandlingstyper}
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
@@ -56,11 +58,12 @@ const JournalforingForm = props => {
       {
         visForvaltningsMelding &&
         <Fragment>
-          <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
-          <SendForvaltningsMelding />
+          <Mui.Undertittel tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
+          <SendForvaltningsMelding avsenderType={formValues.avsenderType} settFeltInnhold={settFeltInnhold} />
         </Fragment>
       }
       <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
+      <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
     </form>
   );
 };
@@ -68,16 +71,19 @@ const JournalforingForm = props => {
 JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,
   hoveddokumentID: PT.string,
-  hoveddokumentTittel: PT.string.isRequired,
   vedlegg: PT.array.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
   hentOgVisBruker: PT.func.isRequired,
   fagsakListe: PT.array.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
-  overstyrSubmit: PT.func.isRequired,
+  settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  submitJournalforing: PT.func.isRequired,
+  avbrytJournalforing: PT.func.isRequired,
+  kanSubmittes: PT.bool.isRequired,
+  handleSubmit: PT.func.isRequired,
 };
 
 JournalforingForm.defaultProps = {
@@ -90,7 +96,7 @@ const mapStateToProps = state => ({
   erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   initialValues: {
-    avsenderType: journalforingSelectors.AvsenderTypeSelector(state), // ["string", "null"]
+    avsenderType: journalforingSelectors.ErAvsenderPreutfyltSelector(state) ? MKV.Koder.avsendertyper.PERSON : journalforingSelectors.AvsenderTypeSelector(state),
     behandlingstype: null,
     saksnummer: '',
     brukerID: journalforingSelectors.BrukerIDSelector(state),
@@ -99,11 +105,14 @@ const mapStateToProps = state => ({
     avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
     arbeidsgiverID: null,
     representantID: '',
+    representantRepresenterer: '',
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
-    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state),
+    hoveddokument: {
+      tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
+      logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
+    },
     vedlegg: {
       pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-      logiskeTitler: [],
     },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettBehandling: BOOLSK.USANN,
@@ -116,10 +125,13 @@ const mapStateToProps = state => ({
     submittable: false,
   },
 });
+
 const mapDispatchToProps = dispatch => ({
   settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
 });
+
 const form = {
+  onSubmit: (values, dispatch, props) => props.submitJournalforing(),
   form: KV.Form.JOURNALFORING,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -135,7 +147,6 @@ const form = {
 
     return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
   },
-  onSubmit: () => {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(JournalforingForm));

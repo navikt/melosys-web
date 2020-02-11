@@ -1,0 +1,36 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: melosys-web
+  namespace: {{namespace}}
+  labels:
+    team: teammelosys
+spec:
+  image: {{image}}
+  port: 3000
+  replicas:
+    min: 2
+    max: 2
+    cpuThresholdPercentage: 50
+  liveness:
+    path: melosys/health/is-alive
+    initialDelay: 30
+    timeout: 10
+  readiness:
+    path: melosys/health/is-ready
+    initialDelay: 30
+    timeout: 10
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  vault:
+    enabled: true
+  ingresses:
+    - {{ingress}}
+  env:
+    - name: REDIS_HOST
+      value: melosys-web-redis.{{namespace}}.svc.nais.local

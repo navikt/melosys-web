@@ -21,7 +21,7 @@ const Knapperad = ({
 );
 
 Knapperad.propTypes = {
-  bekreft: PT.func.isRequired,
+  bekreft: PT.func,
   bekreftTekst: PT.string.isRequired,
   avbryt: PT.func.isRequired,
   avbrytTekst: PT.string.isRequired,
@@ -31,6 +31,7 @@ Knapperad.propTypes = {
 };
 
 Knapperad.defaultProps = {
+  bekreft: undefined,
   bekreftRedigerbart: true,
   spinner: false,
 };

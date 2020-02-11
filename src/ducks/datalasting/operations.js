@@ -10,6 +10,7 @@ import { vilkarOperations } from '../vilkar';
 import { behandlingsperioderOperations } from '../behandlingsperioder';
 import { anmodningsperioderOperations } from '../anmodningsperioder';
 import { anmodningsperiodesvarOperations } from '../anmodningsperiodesvar';
+import { utpekingsperioderOperations } from '../utpekingsperioder';
 
 
 export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
@@ -22,6 +23,7 @@ export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
       dispatch(avklartefaktaOperations.hent(behandlingID));
       dispatch(vilkarOperations.hent(behandlingID));
       dispatch(lovvalgsperioderOperations.hent(behandlingID));
+      dispatch(utpekingsperioderOperations.hent(behandlingID));
       dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
     } catch (e) {
       Utils.logger.error(e);
@@ -67,6 +69,7 @@ export const resetSaksopplysninger = () => (
     dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
     dispatch(vilkarOperations.resetVilkarState());
     dispatch(behandlingsperioderOperations.resetPerioderState());
+    dispatch(utpekingsperioderOperations.resetUtpekingsperioderState());
   }
 );
 
@@ -82,6 +85,7 @@ export const lagreAllData = () => (
 
       dispatch(anmodningsperioderOperations.lagre());
       dispatch(lovvalgsperioderOperations.lagre());
+      dispatch(utpekingsperioderOperations.lagre());
     } catch (e) {
       Utils.logger.error(e);
     }
