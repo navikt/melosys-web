@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import { connect } from 'react-redux';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -9,9 +10,9 @@ import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
-import * as RegistreringContext from '../state/registreringContext';
 import * as Mui from '../../../felleskomponenter/ui';
-import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
+
+import Paneler from './paneler';
 import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
@@ -367,8 +368,7 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      {/* <Personopplysninger redigerbart /> TODO: Må hentes fra context (SPRINT-34) */}
-      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+      <Paneler medlemskap={medlemskap} />
     </div>
   );
 };
@@ -414,4 +414,4 @@ const mapDispatchToProps = dispatch => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) => datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
 });
 
-export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

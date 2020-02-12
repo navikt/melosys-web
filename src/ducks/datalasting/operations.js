@@ -36,6 +36,7 @@ export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) =
     try {
       dispatch(fagsakOperations.hent(saksnummer));
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
+      dispatch(soknadOperations.hent(behandlingID));
       dispatch(behandlingsresultatOperations.hent(behandlingID));
       dispatch(avklartefaktaOperations.hent(behandlingID));
       dispatch(vilkarOperations.hent(behandlingID));
