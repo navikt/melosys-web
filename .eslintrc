@@ -70,6 +70,8 @@
   "globals": {
     "shallow": true,
     "mount": true,
-    "each": true
+    "each": true,
+    "cy": true,
+    "Cypress": true
   }
 }

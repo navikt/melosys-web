@@ -172,6 +172,7 @@ class ListevelgerFlervalg extends Component {
       label,
       muligeValg,
       disabled,
+      data_cy,
     } = this.props;
 
     const { valgteElementer } = this.state;
@@ -183,7 +184,7 @@ class ListevelgerFlervalg extends Component {
     const datalistID = uuid();
 
     return (
-      <div className="listevelger">
+      <div className="listevelger" data-cy={data_cy}>
         {byggValgtListe(valgteElementer)}
         <div className="listevelger__linje">
           <Nav.Input
@@ -226,6 +227,7 @@ ListevelgerFlervalg.propTypes = {
   onChange: PT.func,
   placeholder: PT.string,
   tillatFritekst: PT.bool.isRequired,
+  data_cy: PT.string,
 };
 
 ListevelgerFlervalg.defaultProps = {
@@ -234,6 +236,7 @@ ListevelgerFlervalg.defaultProps = {
   feil: undefined,
   onChange: undefined,
   placeholder: '',
+  data_cy: undefined,
 };
 
 export default ListevelgerFlervalg;

@@ -1,0 +1,17 @@
+{
+  "behandlingID": "4",
+  "anmodningsperioder": [
+    {
+      "id": "ID",
+      "fomDato": "2019-01-01",
+      "tomDato": "2020-01-01",
+      "lovvalgBestemmelse": "ART12_1",
+      "medlemskapsperiodeID": "100111203",
+      "tilleggBestemmelse": "FO_883_2004_ART13_4",
+      "trygdeDekning": "FULL_DEKNING_EOSFO",
+      "unntakFraBestemmelse": null,
+      "lovvalgsland": "NO",
+      "unntakFraLovvalgsland": null
+    }
+  ]
+}
