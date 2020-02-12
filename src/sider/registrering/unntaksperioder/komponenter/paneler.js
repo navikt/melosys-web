@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import PT from 'prop-types';
 
-import * as MPT from '../../../proptypes';
-import * as KV from '../../../kodeverk';
+import * as MPT from '../../../../proptypes';
+import * as KV from '../../../../kodeverk';
 
-import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
-import Personopplysninger from '../../../felleskomponenter/paneler/personopplysninger';
-import Kontantytelser from '../../../felleskomponenter/paneler/kontantytelser';
+import Medlemskap from '../../../../felleskomponenter/paneler/medlemskap';
+import Personopplysninger from '../../../../felleskomponenter/paneler/personopplysninger';
+import Kontantytelser from '../../../../felleskomponenter/paneler/kontantytelser';
 
-import { soknadSelectors } from '../../../ducks/soknad';
-import { formSelectors } from '../../../ducks/form';
+import { soknadSelectors } from '../../../../ducks/soknad';
+import { formSelectors } from '../../../../ducks/form';
 
 const Paneler = ({
   medlemskap,

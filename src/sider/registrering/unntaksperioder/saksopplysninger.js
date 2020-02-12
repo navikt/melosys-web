@@ -12,7 +12,7 @@ import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as Mui from '../../../felleskomponenter/ui';
 
-import Paneler from './paneler';
+import Paneler from './komponenter/paneler';
 import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
