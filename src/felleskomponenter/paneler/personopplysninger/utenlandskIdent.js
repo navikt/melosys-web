@@ -4,13 +4,14 @@ import { FieldArray } from 'redux-form';
 
 import * as Skjema from '../../skjema';
 import Landvelger from '../../skjema/landvelger';
-import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../ui';
+
 
 const UtenlandskIdentLinje = ({ indeks, remove, disabled }) => (
   <div className="utenlandskIdent__linje">
     <Skjema.Input disabled={disabled} bredde="S" feltNavn={`utenlandskIdent[${indeks}].ident`} label="Utenlandsk ID" />
     <Landvelger disabled={disabled} feltNavn={`utenlandskIdent[${indeks}].landkode`} label="Land" />
-    <Nav.Knapp disabled={disabled} mini onClick={() => remove(indeks)}>Slett</Nav.Knapp>
+    <Mui.Knapp disabled={disabled} mini onClick={() => remove(indeks)}>Slett</Mui.Knapp>
   </div>
 );
 
@@ -31,7 +32,7 @@ const UtenlandskIdentWrapper = props => {
   return (
     <div className="utenlandskIdent__wrapper">
       { linjer.map((linje, indeks) => <UtenlandskIdentLinje key={indeks} indeks={indeks} remove={remove} disabled={disabled} />) }
-      <Nav.Knapp disabled={disabled} mini className="utenlandskIdent__leggtil" onClick={() => push({ ident: '', landkode: '' })}>{btnText}</Nav.Knapp>
+      <Mui.Knapp disabled={disabled} mini className="utenlandskIdent__leggtil" onClick={() => push({ ident: '', landkode: '' })}>{btnText}</Mui.Knapp>
     </div>
   );
 };

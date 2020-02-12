@@ -6,6 +6,7 @@ import Ikon from 'melosys-ikoner-assets';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../../felleskomponenter/ui';
 import * as MPT from '../../../proptypes';
 import * as Ikoner from '../../../resources/images';
 
@@ -123,7 +124,7 @@ export const ExpandableTable = props => {
       <div className="btnContainer">
         {
           expandable &&
-          <button onClick={toggleMaxElements}>
+          <button type="button" onClick={toggleMaxElements}>
             {btnText}
             { chevron && <Nav.Chevron type={chevronDirection} />}
           </button>
@@ -248,7 +249,7 @@ class Personopplysninger extends Component {
               </Nav.Column>
             </Nav.Row>
             {visAnnenAdresseFelter && <OppgittAdresseSoknad redigerbart={redigerbart} /> }
-            {!visAnnenAdresseFelter && <Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Nav.Knapp>}
+            {!visAnnenAdresseFelter && <Mui.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Mui.Knapp>}
             {/* SLUTT PERSONINFO */}
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
