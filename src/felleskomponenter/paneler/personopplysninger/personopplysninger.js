@@ -98,32 +98,34 @@ AdresseHeader.propTypes = {
 
 export const ExpandableTable = props => {
   const {
-    renderElement, elements, header, defaultMax, altMax, btnTextExpanded, btnTextCollapsed, chevron, expandable,
+    renderElement, elements, header, amountOfItemsCollapsed, btnTextExpanded, btnTextCollapsed, chevron, expandable,
   } = props;
 
-  const [maxElements, setMaxElements] = useState(defaultMax);
+  const [collapsed, setCollapsed] = useState(true);
 
-  const toggleMaxElements = () => {
-    if (maxElements === defaultMax) setMaxElements(altMax);
-    else if (maxElements === altMax) setMaxElements(defaultMax);
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
   };
 
-  const collapsed = maxElements === defaultMax;
   const chevronDirection = collapsed ? 'ned' : 'opp';
   const btnText = collapsed ? btnTextCollapsed : btnTextExpanded;
+
+  const renderableElements = collapsed ? elements.slice(0, amountOfItemsCollapsed) : elements;
 
   return (
     <div className="expandableList">
       <table>
         {header}
         <tbody>
-          {elements.map((element, index) => (index < maxElements ? renderElement(element) : null))}
+          {
+            renderableElements.map(renderElement)
+          }
         </tbody>
       </table>
       <div className="btnContainer">
         {
           expandable &&
-          <button type="button" onClick={toggleMaxElements}>
+          <button type="button" onClick={toggleCollapsed}>
             {btnText}
             { chevron && <Nav.Chevron type={chevronDirection} />}
           </button>
@@ -137,8 +139,7 @@ ExpandableTable.propTypes = {
   renderElement: PT.func.isRequired,
   header: PT.node.isRequired,
   elements: PT.array.isRequired,
-  defaultMax: PT.number.isRequired,
-  altMax: PT.number.isRequired,
+  amountOfItemsCollapsed: PT.number.isRequired,
   btnTextExpanded: PT.string.isRequired,
   btnTextCollapsed: PT.string.isRequired,
   chevron: PT.bool,
@@ -205,8 +206,7 @@ class Personopplysninger extends Component {
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
                 <ExpandableTable
-                  defaultMax={1}
-                  altMax={100}
+                  amountOfItemsCollapsed={1}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
                   expandable={bostedsadressePerioder.length > 1}
@@ -218,8 +218,7 @@ class Personopplysninger extends Component {
                   )}
                 />
                 <ExpandableTable
-                  defaultMax={1}
-                  altMax={100}
+                  amountOfItemsCollapsed={1}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
                   expandable={postadressePerioder.length > 1}
@@ -231,8 +230,7 @@ class Personopplysninger extends Component {
                   )}
                 />
                 <ExpandableTable
-                  defaultMax={1}
-                  altMax={100}
+                  amountOfItemsCollapsed={1}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
                   expandable={midlertidigAdressePerioder.length > 1}
