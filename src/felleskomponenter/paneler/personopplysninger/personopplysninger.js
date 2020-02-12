@@ -24,7 +24,6 @@ import UtenlandskIdent from './utenlandskIdent';
 import './personopplysninger.css';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { soknadSelectors } from '../../../ducks/soknad';
-import { formSelectors } from '../../../ducks/form';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 const ikonFraKjonn = kjoenn => {
@@ -153,17 +152,22 @@ ExpandableTable.defaultProps = {
 
 class Personopplysninger extends Component {
   state = {
-    visAnnenAdresseFelter: this.props.oppgittAdresseHarVerdier,
+    visAnnenAdresseFelterKnappKlikket: false,
   };
 
-  settVisAnnenAdresseFelterTrue = () => this.setState({ visAnnenAdresseFelter: true });
+  settVisAnnenAdresseFelterKnappKlikketTrue = () => this.setState({ visAnnenAdresseFelterKnappKlikket: true });
 
   render() {
-    const { redigerbart, person, personhistorikk } = this.props;
+    const {
+      redigerbart,
+      person,
+      personhistorikk,
+      oppgittAdresseHarVerdier,
+    } = this.props;
 
-    const { visAnnenAdresseFelter } = this.state;
+    const { visAnnenAdresseFelterKnappKlikket } = this.state;
 
-    const { settVisAnnenAdresseFelterTrue } = this;
+    const { settVisAnnenAdresseFelterKnappKlikketTrue } = this;
 
     const {
       fnr,
@@ -178,6 +182,8 @@ class Personopplysninger extends Component {
 
     if (Object.keys(person).length === 0) { return null; }
 
+    const visAnnenAdresseFelter = visAnnenAdresseFelterKnappKlikket || oppgittAdresseHarVerdier;
+
     return (
       <div className="personopplysninger panelSeksjon">
         <Nav.EkspanderbartpanelBase
@@ -188,7 +194,6 @@ class Personopplysninger extends Component {
             </div>}
           ariaTittel="Panel for personinformasjon">
           <Nav.Container fluid>
-            {/* START PERSONINFO */}
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="6">
                 <PersonInfo person={person} />
@@ -248,9 +253,14 @@ class Personopplysninger extends Component {
                 />
               </Nav.Column>
             </Nav.Row>
-            {visAnnenAdresseFelter && <OppgittAdresseSoknad redigerbart={redigerbart} /> }
-            {!visAnnenAdresseFelter && <Mui.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Mui.Knapp>}
-            {/* SLUTT PERSONINFO */}
+            {
+              visAnnenAdresseFelter &&
+              <OppgittAdresseSoknad redigerbart={redigerbart} />
+            }
+            {
+              !visAnnenAdresseFelter &&
+              <Mui.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterKnappKlikketTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Mui.Knapp>
+            }
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -279,7 +289,6 @@ const mapStateToProps = state => ({
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
-  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
 });
 
 export default connect(mapStateToProps)(Personopplysninger);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
@@ -10,12 +11,14 @@ import Personopplysninger from '../../../felleskomponenter/paneler/personopplysn
 import Kontantytelser from '../../../felleskomponenter/paneler/kontantytelser';
 
 import { soknadSelectors } from '../../../ducks/soknad';
+import { formSelectors } from '../../../ducks/form';
 
 const Paneler = ({
   medlemskap,
+  oppgittAdresseHarVerdier,
 }) => (
   <form name="paneler">
-    <Personopplysninger />
+    <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
     {medlemskap && <Medlemskap medlemskap={medlemskap} />}
     <Kontantytelser />
   </form>
@@ -23,6 +26,7 @@ const Paneler = ({
 
 Paneler.propTypes = {
   medlemskap: MPT.Medlemskap,
+  oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
 
 Paneler.defaultProps = {
@@ -30,6 +34,7 @@ Paneler.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  oppgittAdresseHarVerdier: formSelectors.RegistreringPanelerOppgittAdresseHarVerdierSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     oppgittAdresseGatenavn: soknadSelectors.BostedAdresseSelector(state).gatenavn,
