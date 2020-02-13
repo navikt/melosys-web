@@ -167,10 +167,7 @@ export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
 
 export const RegistreringPanelerOppgittAdresseHusnummerSelector = createSelector(
   state => RegistreringPanelerFormSelector(state).values || {},
-  soknad => {
-    console.log(soknad.oppgittAdresseHusnummer)
-    return soknad.oppgittAdresseHusnummer;
-  }
+  soknad => soknad.oppgittAdresseHusnummer
 );
 
 export const RegistreringPanelerOppgittAdresseGatenavnSelector = createSelector(

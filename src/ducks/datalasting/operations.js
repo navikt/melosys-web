@@ -52,6 +52,7 @@ export const lastInnSaksopplysningerBehandleMottattAOU = (behandlingID, anmodnin
   dispatch => {
     try {
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
+      dispatch(soknadOperations.hent(behandlingID));
       dispatch(anmodningsperioderOperations.hent(behandlingID));
       dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID));
     } catch (e) {
