@@ -20,6 +20,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { soknadOperations } from '../../../ducks/soknad';
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 
@@ -42,6 +43,7 @@ const Saksopplysninger = ({
   oppdaterAvklartefakta,
   oppdaterLovvalgsperioder,
   lastInnSaksopplysninger,
+  lagreSoknad,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
@@ -209,7 +211,7 @@ const Saksopplysninger = ({
     );
   };
 
-  const submitRegistrering = () => {
+  const submitRegistrering = async () => {
     if (!validerFelt()) {
       setPeriodeOver5aarVarslet(false);
       return false;
@@ -224,6 +226,9 @@ const Saksopplysninger = ({
       }
     }
     const tilForsiden = () => history.push('/');
+
+    await lagreSoknad();
+
     switch (unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
         godkjenn()
@@ -361,7 +366,7 @@ const Saksopplysninger = ({
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
+                  <Nav.Hovedknapp onClick={submitRegistrering} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
                 </Nav.Column>
               </Nav.Row>
             </div>
@@ -391,6 +396,7 @@ Saksopplysninger.propTypes = {
   oppdaterLovvalgsperioder: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   behandlingsresultat: PT.object,
+  lagreSoknad: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -412,6 +418,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
+  lagreSoknad: () => dispatch(soknadOperations.lagre()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
