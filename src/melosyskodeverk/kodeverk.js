@@ -1,6 +1,5 @@
 import { unset, get, set } from 'lodash';
 
-/* eslint-disable no-param-reassign */
 const fjernKode = (kodeverk, path, kode) => {
   set(kodeverk.KTObjects, path, get(kodeverk.KTObjects, path).filter(KTObject => KTObject.kode !== kode));
   const pathMedKode = `${path}.${kode}`;
