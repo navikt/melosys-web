@@ -7,9 +7,9 @@ const fjernKode = (kodeverk, path, kode) => {
   unset(kodeverk.Terms, pathMedKode);
 };
 
-const fjernFlereKoder = (kodeverk, paths) => {
+const fjernFlereKoder = (kodeverk, koder) => {
   const rensetKodeverk = { ...kodeverk };
-  paths.forEach(({ path, kode }) => fjernKode(rensetKodeverk, path, kode));
+  koder.forEach(({ path, kode }) => fjernKode(rensetKodeverk, path, kode));
 
   return rensetKodeverk;
 };

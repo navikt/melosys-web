@@ -1,6 +1,6 @@
 import * as MKV from 'melosys-kodeverk';
 
-import { fjernFlereKoder } from './kodeverk';
+import { fjernFlereKoder } from './fjernkoder';
 
 describe('fjernFlereKoder', () => {
   it('fjerner koder', () => {
