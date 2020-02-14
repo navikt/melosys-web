@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import { connect } from 'react-redux';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -9,9 +10,9 @@ import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
-import * as RegistreringContext from '../state/registreringContext';
 import * as Mui from '../../../felleskomponenter/ui';
-import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
+
+import Paneler from './komponenter/paneler';
 import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
@@ -19,6 +20,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { soknadOperations } from '../../../ducks/soknad';
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 
@@ -41,6 +43,7 @@ const Saksopplysninger = ({
   oppdaterAvklartefakta,
   oppdaterLovvalgsperioder,
   lastInnSaksopplysninger,
+  lagreSoknad,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
@@ -208,7 +211,7 @@ const Saksopplysninger = ({
     );
   };
 
-  const submitRegistrering = () => {
+  const submitRegistrering = async () => {
     if (!validerFelt()) {
       setPeriodeOver5aarVarslet(false);
       return false;
@@ -223,6 +226,9 @@ const Saksopplysninger = ({
       }
     }
     const tilForsiden = () => history.push('/');
+
+    await lagreSoknad();
+
     switch (unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
         godkjenn()
@@ -360,15 +366,14 @@ const Saksopplysninger = ({
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
+                  <Nav.Hovedknapp onClick={submitRegistrering} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
                 </Nav.Column>
               </Nav.Row>
             </div>
           </div>
         </div>
       </form>
-      {/* <Personopplysninger redigerbart /> TODO: Må hentes fra context (SPRINT-34) */}
-      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+      <Paneler medlemskap={medlemskap} />
     </div>
   );
 };
@@ -391,6 +396,7 @@ Saksopplysninger.propTypes = {
   oppdaterLovvalgsperioder: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   behandlingsresultat: PT.object,
+  lagreSoknad: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -412,6 +418,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
+  lagreSoknad: () => dispatch(soknadOperations.lagre()),
 });
 
-export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

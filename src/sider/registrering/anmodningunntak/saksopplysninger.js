@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import { connect } from 'react-redux';
 import * as EKV from 'eessi-kodeverk';
 
 import MKV from '../../../melosyskodeverk';
@@ -10,13 +11,14 @@ import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
-import * as RegistreringContext from '../state/registreringContext';
-import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
+
+import Paneler from './komponenter/paneler';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
+import { soknadOperations } from '../../../ducks/soknad';
 
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
@@ -57,6 +59,7 @@ const Saksopplysninger = ({
   sed,
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
+  lagreSoknad,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
@@ -197,6 +200,7 @@ const Saksopplysninger = ({
 
     const tilForsiden = () => history.push('/');
     try {
+      await lagreSoknad();
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
     } catch (e) {
@@ -353,7 +357,7 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+      <Paneler medlemskap={medlemskap} />
     </div>
   );
 };
@@ -373,6 +377,7 @@ Saksopplysninger.propTypes = {
   anmodningsperiodeID: PT.string,
   anmodningsperiodeSvar: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
+  lagreSoknad: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -392,6 +397,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) => datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
+  lagreSoknad: () => dispatch(soknadOperations.lagre()),
 });
 
-export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

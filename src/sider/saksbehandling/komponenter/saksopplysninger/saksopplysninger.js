@@ -73,6 +73,7 @@ const Saksopplysninger = props => {
     fagsaker,
     tilForsiden,
     visValideringModalDialogHandle,
+    oppgittAdresseHarVerdier,
   } = props;
 
 
@@ -115,7 +116,7 @@ const Saksopplysninger = props => {
       />
       }
       <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
-        <Personopplysninger />
+        <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
         <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
         <ArbeidsgivereNorge />
         <ForetakUtland />
@@ -164,6 +165,7 @@ Saksopplysninger.propTypes = {
   lagreAllData: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
+  oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -192,7 +194,7 @@ const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   inngangForm: formSelectors.InngangFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
-  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
+  oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
