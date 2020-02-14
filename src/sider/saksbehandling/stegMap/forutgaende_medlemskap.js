@@ -2,15 +2,19 @@ import MKV from '../../../melosyskodeverk';
 import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingForutgaendeMedlemskap from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingForutgaendeMedlemskap';
-import { erVilkarOppfylt, hentVilkar } from '../../../regler/vilkar';
+import { hentVilkar } from '../../../regler/vilkar';
 
 class ForutgaendeMedlemskap extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const forutgaendeMedlemskap = hentVilkar(MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, propsLight.vilkar);
+    const harAvklaring = forutgaendeMedlemskap.oppfylt === true || (forutgaendeMedlemskap.oppfylt === false && forutgaendeMedlemskap.begrunnelseKoder.length > 0);
+
     this.kriterier = [
       {
         beskrivelse: 'harForutgaendeMedlemskap ER LIK TRUE',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, alleVilkar) !== undefined,
+        exec: () => harAvklaring,
         nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
     ];
@@ -21,16 +25,11 @@ class ForutgaendeMedlemskap extends Steg {
       begrunnelser: _propsLight.begrunnelser.art12_1_forutgaaende_medl,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => {
-      const forutgaendeMedlemskap = hentVilkar(MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, _propsLight.vilkar);
-      const harAvklaring = forutgaendeMedlemskap.oppfylt === true || (forutgaendeMedlemskap.oppfylt === false && forutgaendeMedlemskap.begrunnelseKoder.length > 0);
-
-      return {
-        visBegrunnelser: !forutgaendeMedlemskap.oppfylt,
-        forutgaendeMedlemskap,
-        harAvklaring,
-      };
-    };
+    this.beregnRelevantUI = _propsLight => ({
+      visBegrunnelser: !forutgaendeMedlemskap.oppfylt,
+      forutgaendeMedlemskap,
+      harAvklaring,
+    });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, innhold) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, innhold),
