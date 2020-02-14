@@ -23,8 +23,20 @@ export const PanelerRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
   behandlingerSelectors.ErEndretPeriodeSelector,
-  (redigerbart, erArtikkel16AnmodningSendt, erEndretPeriode) => (
-    !erEndretPeriode && redigerbart && !erArtikkel16AnmodningSendt
+  behandlingerSelectors.ErAnmodningOmUnntakHovedRegelSelector,
+  behandlingerSelectors.ErRegistreringAvUnntaksperioderSelector,
+  (
+    redigerbart,
+    erArtikkel16AnmodningSendt,
+    erEndretPeriode,
+    erBehandleAnmodningOmUnntak,
+    erRegistreringAvUnntaksperioder
+  ) => (
+    !erEndretPeriode &&
+    !erBehandleAnmodningOmUnntak &&
+    !erRegistreringAvUnntaksperioder &&
+    redigerbart &&
+    !erArtikkel16AnmodningSendt
   )
 );
 export const SidedialogRedigerbartSelector = createSelector(
