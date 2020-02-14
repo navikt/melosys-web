@@ -18,7 +18,6 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
-import { soknadOperations } from '../../../ducks/soknad';
 
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
@@ -59,7 +58,6 @@ const Saksopplysninger = ({
   sed,
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
-  lagreSoknad,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
@@ -200,7 +198,6 @@ const Saksopplysninger = ({
 
     const tilForsiden = () => history.push('/');
     try {
-      await lagreSoknad();
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
     } catch (e) {
@@ -377,7 +374,6 @@ Saksopplysninger.propTypes = {
   anmodningsperiodeID: PT.string,
   anmodningsperiodeSvar: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
-  lagreSoknad: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -397,7 +393,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) => datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
-  lagreSoknad: () => dispatch(soknadOperations.lagre()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
