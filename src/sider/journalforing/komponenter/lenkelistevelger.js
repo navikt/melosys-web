@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change, formValueSelector } from 'redux-form';
 import PT from 'prop-types';
@@ -33,7 +32,7 @@ function LenkeListeVelger(props) {
   return (
     <Nav.Row>
       <Nav.Column xs="9">
-        {!visListevelger && <Link to={linkTo} target="_blank" className="informasjon__dokumentlenke">{dokumentTittel}</Link>}
+        {!visListevelger && <Nav.Lenker href={linkTo} target="_blank">{dokumentTittel}</Nav.Lenker>}
       </Nav.Column>
       <Nav.Column xs="3">
         {!visListevelger && <Nav.Lenker onClick={tittelEndres}><img src={Ikoner.Pencil} alt="Edit" /><span>&nbsp;Endre tittel</span></Nav.Lenker>}
