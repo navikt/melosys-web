@@ -321,6 +321,35 @@ export const ErEndretPeriodeSelector = createSelector(
   behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
 );
 
+export const ErAnmodningOmUnntakHovedRegelSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
+);
+
+export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+);
+
+export const ErRegistreringUnntakNorskTrygdOvrigeSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
+);
+
+export const ErUtlMyndUtpektSegSelvSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV
+);
+
+export const ErRegistreringAvUnntaksperioderSelector = createSelector(
+  ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
+  ErRegistreringUnntakNorskTrygdOvrigeSelector,
+  ErUtlMyndUtpektSegSelvSelector,
+  (ErRegistreringUnntakNorskTrygdUtstasjonering, ErRegistreringUnntakNorskTrygdOvrige, ErUtlMyndUtpektSegSelv) => (
+    ErRegistreringUnntakNorskTrygdUtstasjonering || ErRegistreringUnntakNorskTrygdOvrige || ErUtlMyndUtpektSegSelv
+  )
+);
+
 export const ErStatusAnmodningUnntakSendtSelector = createSelector(
   BehandlingsstatusKodeSelector,
   behandlingsstatus => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT

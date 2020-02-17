@@ -1,6 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React from 'react';
 import PT from 'prop-types';
+import { connect } from 'react-redux';
 
 import MKV from '../../melosyskodeverk';
 
@@ -19,7 +20,6 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
-import { RegistreringStateProviderWrapper } from './state/registreringStateProvider';
 
 import './registrering.css';
 
@@ -216,4 +216,4 @@ const mapDispatchToProps = dispatch => ({
   tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
 
-export default RegistreringStateProviderWrapper(mapStateToProps, mapDispatchToProps)(Registrering);
+export default connect(mapStateToProps, mapDispatchToProps)(Registrering);

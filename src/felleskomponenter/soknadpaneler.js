@@ -43,6 +43,7 @@ const Soknadpaneler = ({
   soknadForm,
   behandlingID,
   soknad,
+  oppgittAdresseHarVerdier,
 }) => {
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -58,7 +59,7 @@ const Soknadpaneler = ({
 
   return (
     <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
-      <Personopplysninger />
+      <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
       <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
       <ArbeidsgivereNorge />
       <ForetakUtland />
@@ -84,6 +85,7 @@ Soknadpaneler.propTypes = {
   soknadArbeidsinntekt: PT.object,
   behandlingID: PT.number.isRequired,
   soknad: MPT.Soknad,
+  oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
 
 Soknadpaneler.defaultProps = {
@@ -94,6 +96,7 @@ Soknadpaneler.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),

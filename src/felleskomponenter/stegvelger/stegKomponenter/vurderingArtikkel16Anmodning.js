@@ -329,6 +329,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 value={unntakFraBestemmelse || ''}
                 disabled={!redigerbart}
                 label="Artikkelen det søkes unntak fra:"
+                data-cy="unntakArtikkel"
               >
                 <option key={uuid()} value="" >Velg...</option>
                 { MKV.Kodekombinasjoner.alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
@@ -343,6 +344,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 value={begrunnelseKode}
                 disabled={!redigerbart}
                 label="Legg til begrunnelse:"
+                data-cy="begrunnelse"
               >
                 <option key={uuid()} value="">Velg...</option>
                 { muligeBegrunnelseValg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}

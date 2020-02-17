@@ -110,6 +110,7 @@ Saksopplysninger.propTypes = {
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
+  visValideringModalDialogHandle: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -131,7 +132,6 @@ const mapStateToProps = state => ({
   soknad: soknadSelectors.SoknadSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   inngangForm: formSelectors.InngangFormSelector(state),
-  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../../felleskomponenter/ui';
+
 import OrganisasjonsAdresse from '../../adresser/organisasjonsAdresse';
 
 import { erOrgnrGyldig } from '../../skjema/validering/generisk/organisasjon';
@@ -57,8 +59,8 @@ const SkjemaSokOgLeggTil = ({
           label="Søk etter orgnr:"
           feil={feilObjekt}
         />
-        <Nav.Hovedknapp onClick={forsokHentOrganisasjon}>Søk</Nav.Hovedknapp>
-        <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
+        <Mui.Knapp type="hoved" onClick={forsokHentOrganisasjon}>Søk</Mui.Knapp>
+        <Mui.Knapp onClick={avbryt}>Avbryt</Mui.Knapp>
       </div>
       <div className="leggTilArbeidsgiver">
         {Object.keys(organisasjon).length > 0 && <FunnetOrganisasjon organisasjon={organisasjon} leggTil={leggTil} />}
@@ -137,7 +139,7 @@ class EkstraArbeidsgivereLeggTil extends Component {
 
     return (
       <div>
-        {!erLeggTilSynlig && <Nav.Knapp disabled={!redigerbart} onClick={visLeggTil}>+ Legg til arbeidsgiver</Nav.Knapp> }
+        {!erLeggTilSynlig && <Mui.Knapp disabled={!redigerbart} onClick={visLeggTil}>+ Legg til arbeidsgiver</Mui.Knapp> }
         {erLeggTilSynlig && <SkjemaSokOgLeggTil
           avbryt={skjulLeggTil}
           feilmelding={feilmelding}
