@@ -193,7 +193,7 @@ Registrering.defaultProps = {
 const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollBegrunnelseKoderSelector(state),
+  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),

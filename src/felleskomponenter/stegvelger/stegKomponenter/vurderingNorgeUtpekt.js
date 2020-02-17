@@ -184,7 +184,7 @@ const mapStateToProps = (state, ownProps) => ({
     tom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
   },
-  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollBegrunnelseKoderSelector(state),
+  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
 });
 
 const nesteSteg = (values, dispatch, props) => {
