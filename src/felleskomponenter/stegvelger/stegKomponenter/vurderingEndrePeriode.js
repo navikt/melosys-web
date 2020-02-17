@@ -2,12 +2,14 @@ import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as EKV from 'eessi-kodeverk';
+import * as UfiltrertMKV from 'melosys-kodeverk';
 
 import MKV from '../../../melosyskodeverk';
 
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
+import * as KV from '../../../kodeverk';
 
 import { konverterTilStegData, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
@@ -26,7 +28,7 @@ export class VurderingEndrePeriode extends React.Component {
   state = {
     nyTomDato: '',
     nyTomDatoFeilmelding: undefined,
-    begrunnelse: hentFaktaVerdi(this.props.tilstand.aarsakEndringPeriodeAvklartfakta) || '',
+    begrunnelse: '',
     begrunnelseFeilmelding: undefined,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
     erEessiReady: false,
@@ -43,6 +45,8 @@ export class VurderingEndrePeriode extends React.Component {
 
     if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
     this.setErEessiReady(soknadsland[0]);
+
+    this.initialiserBegrunnelseState();
   }
 
   setErEessiReady = async landkode => this.setState({
@@ -50,6 +54,16 @@ export class VurderingEndrePeriode extends React.Component {
   });
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
+
+  initialiserBegrunnelseState = () => {
+    let begrunnelse = hentFaktaVerdi(this.props.tilstand.aarsakEndringPeriodeAvklartfakta) || '';
+
+    if (begrunnelse === UfiltrertMKV.Koder.begrunnelser.endretperiode.ENDRINGER_ARBEIDSSITUASJON) {
+      begrunnelse = KV.kodeTilTerm(begrunnelse, UfiltrertMKV.KTObjects.begrunnelser.endretperiode);
+    }
+
+    this.setState({ begrunnelse });
+  };
 
   hentOpprinneligPeriode = async behandlingID => {
     const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID).catch(Utils.logger.error);
