@@ -11,23 +11,33 @@ const kodeTermSelect = ({
   disableForsteValg,
   redigerbart,
   onBlur,
-}) => (
-  <Nav.Select
-    value={value}
-    onChange={onChange}
-    label={label}
-    feil={feil}
-    disabled={!redigerbart}
-    onBlur={onBlur}
-  >
-    <option key="VELG" value="" disabled={disableForsteValg}>Velg...</option>
-    {koder.map(k => (
-      <option key={k.kode} value={k.kode}>
-        {k.term}
-      </option>
-    ))}
-  </Nav.Select>
-);
+}) => {
+  const visValueIkkeOppgittIKoder = !redigerbart && !koder.includes(value);
+
+  return (
+    <Nav.Select
+      value={value}
+      onChange={onChange}
+      label={label}
+      feil={feil}
+      disabled={!redigerbart}
+      onBlur={onBlur}
+    >
+      <option key="VELG" value="" disabled={disableForsteValg}>Velg...</option>
+      {koder.map(k => (
+        <option key={k.kode} value={k.kode}>
+          {k.term}
+        </option>
+      ))}
+      {
+        visValueIkkeOppgittIKoder &&
+        <option>
+          {value}
+        </option>
+      }
+    </Nav.Select>
+  );
+};
 
 kodeTermSelect.propTypes = {
   koder: PT.array.isRequired,
