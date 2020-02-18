@@ -20,7 +20,7 @@ import { behandlingerSelectors } from '../behandlinger';
 
 // Action Creators
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Soknader.hent(behandlingID), {
+  return doThenDispatch(() => Api.Behandlingsgrunnlag.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -29,7 +29,7 @@ export function hent(behandlingID) {
 
 export function send(bid, soknad) {
   return doThenDispatch(
-    () => Api.Soknader.send(bid, soknad), {
+    () => Api.Behandlingsgrunnlag.send(bid, soknad), {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
