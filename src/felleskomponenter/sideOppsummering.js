@@ -23,8 +23,8 @@ const SideOppsummering = ({
   lovvalgsland,
   renderBehandlingsmeny,
   renderBehandlingsstatus,
-  soknadsperiodeFom,
-  soknadsperiodeTom,
+  behandlingsgrunnlagPeriodeFom,
+  behandlingsgrunnlagPeriodeTom,
 }) => {
   if (!oppsummering) return <div />;
 
@@ -58,8 +58,8 @@ const SideOppsummering = ({
               person={person}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
-              soknadsperiodeFom={soknadsperiodeFom}
-              soknadsperiodeTom={soknadsperiodeTom}
+              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
             />
             }
           </Nav.Column>
@@ -89,8 +89,8 @@ SideOppsummering.propTypes = {
   renderBehandlingsstatus: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
-  soknadsperiodeFom: PT.string,
-  soknadsperiodeTom: PT.string,
+  behandlingsgrunnlagPeriodeFom: PT.string,
+  behandlingsgrunnlagPeriodeTom: PT.string,
 };
 
 SideOppsummering.defaultProps = {
@@ -102,8 +102,8 @@ SideOppsummering.defaultProps = {
   oppsummering: undefined,
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
-  soknadsperiodeFom: undefined,
-  soknadsperiodeTom: undefined,
+  behandlingsgrunnlagPeriodeFom: undefined,
+  behandlingsgrunnlagPeriodeTom: undefined,
 };
 
 export default SideOppsummering;

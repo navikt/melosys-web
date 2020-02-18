@@ -25,7 +25,7 @@ import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { vedtakOperations } from '../../ducks/vedtak';
 import { formSelectors } from '../../ducks/form';
-import { soknadOperations } from '../../ducks/soknad';
+import { behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 
@@ -367,7 +367,7 @@ class Stegvelger extends Component {
       artikkel16_anmodning_skjema,
       soknad_skjema,
       oppdaterPerioderState,
-      lagreSoknadHandler,
+      lagreBehandlingsgrunnlagHandler,
       redigerbart,
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
@@ -387,7 +387,7 @@ class Stegvelger extends Component {
       await lagreUtpekingsperioderHandler();
 
       if (this.erSisteSteg(nyttStegNummer)) {
-        await lagreSoknadHandler();
+        await lagreBehandlingsgrunnlagHandler();
       }
     }
 
@@ -440,7 +440,7 @@ Stegvelger.propTypes = {
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
   fattVedtak: PT.func.isRequired,
-  lagreSoknadHandler: PT.func.isRequired,
+  lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
@@ -534,7 +534,7 @@ const mapDispatchToProps = dispatch => ({
   hentUtpekingsperioder: behandlingID => dispatch(utpekingsperioderOperations.hent(behandlingID)),
   oppdaterUtpekingsperioder: stegState => dispatch(utpekingsperioderOperations.oppdaterUtpekingsperioderState(stegState)),
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
-  lagreSoknadHandler: () => dispatch(soknadOperations.lagre()),
+  lagreBehandlingsgrunnlagHandler: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
 });

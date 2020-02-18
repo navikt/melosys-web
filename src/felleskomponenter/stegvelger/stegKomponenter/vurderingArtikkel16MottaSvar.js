@@ -15,7 +15,7 @@ import * as Validering from '../../skjema/validering';
 import { DatoOmradeMedVarighet } from '../../datoOmrade/datoOmrade';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { formSelectors } from '../../../ducks/form';
 import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
@@ -152,7 +152,7 @@ VurderingArtikkel16MottaSvar.defaultProps = {
 
 const mapStateToProps = state => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
+  soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   endretPeriode: artikkel16MottaSvarFormValueSelector(state, 'endretPeriode'),
   anmodningsperiodeSvarType: artikkel16MottaSvarFormValueSelector(state, 'anmodningsperiodeSvarType'),

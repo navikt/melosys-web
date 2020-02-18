@@ -5,7 +5,7 @@ import behandlingerReducer, { initialState as behandlingerInitialState } from '.
 import behandlingsresultatReducer, { initialState as behandlingsresultatInitialState } from '../../../ducks/behandlingsresultat';
 import fagsakerReducer, { initialState as fagsakerInitialState } from '../../../ducks/fagsaker';
 import lovvalgsperioderReducer, { initialState as lovvalgsperioderInitialState } from '../../../ducks/lovvalgsperioder';
-import soknadReducer, { initialState as soknadInitialState } from '../../../ducks/soknad';
+import soknadReducer, { initialState as soknadInitialState } from '../../../ducks/behandlingsgrunnlag';
 
 export const initialState = {
   avklartefakta: avklartefaktaInitialState,

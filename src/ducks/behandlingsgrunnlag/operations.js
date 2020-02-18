@@ -27,9 +27,9 @@ export function hent(behandlingID) {
   });
 }
 
-export function send(bid, soknad) {
+export function send(bid, behandlingsgrunnlag) {
   return doThenDispatch(
-    () => Api.Behandlingsgrunnlag.send(bid, soknad), {
+    () => Api.Behandlingsgrunnlag.send(bid, behandlingsgrunnlag), {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
@@ -40,26 +40,26 @@ export function send(bid, soknad) {
   );
 }
 
-export function oppdaterSoknadState() {
+export function oppdaterBehandlingsgrunnlagState() {
   return (dispatch, getState) => {
-    const soknadData = {
+    const behandlingsgrunnlagData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
       ...formSelectors.InngangFormSelector(getState()).values,
     };
 
-    if (Utils._isEmpty(soknadData)) return;
+    if (Utils._isEmpty(behandlingsgrunnlagData)) return;
 
-    dispatch(Actions.oppdaterSoknadState(soknadData));
+    dispatch(Actions.oppdaterBehandlingsgrunnlagState(behandlingsgrunnlagData));
   };
 }
 
 export function lagre() {
   return (dispatch, getState) => {
-    dispatch(oppdaterSoknadState());
+    dispatch(oppdaterBehandlingsgrunnlagState());
 
-    const soknad = Selectors.SoknadSelector(getState());
+    const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    dispatch(send(bid, soknad));
+    dispatch(send(bid, behandlingsgrunnlag));
   };
 }
 
@@ -67,6 +67,6 @@ export function oppdaterPeriode(periode) {
   return dispatch => dispatch(Actions.oppdaterPeriode(periode));
 }
 
-export function resetSoknadState() {
-  return Actions.resetSoknadState();
+export function resetBehandlingsgrunnlagState() {
+  return Actions.resetBehandlingsgrunnlagState();
 }

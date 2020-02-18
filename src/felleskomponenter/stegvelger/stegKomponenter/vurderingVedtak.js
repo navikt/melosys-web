@@ -12,7 +12,7 @@ import * as Skjema from '../../skjema';
 import * as Validering from '../../skjema/validering';
 import * as Utils from '../../../utils';
 
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -201,7 +201,7 @@ VurderingVedtak.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  soknadsland: soknadSelectors.SoknadslandSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),

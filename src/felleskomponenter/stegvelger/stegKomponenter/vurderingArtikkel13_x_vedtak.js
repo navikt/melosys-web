@@ -22,7 +22,7 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { formOperations } from '../../../ducks/form';
 import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
@@ -215,7 +215,7 @@ const mapStateToProps = (state, ownProps) => ({
   formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
   initialValues: {
     forkortLovvalgsperiode: Utils.dato.datoDiffPure(
-      soknadSelectors.SoknadsperiodeSelector(state).tom,
+      behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
       lovvalgsperioderSelectors.TomDatoSelector(state),
       'days'
     ) !== 0,

@@ -23,7 +23,7 @@ import UtenlandskIdent from './utenlandskIdent';
 
 import './personopplysninger.css';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 const ikonFraKjonn = kjoenn => {
@@ -282,11 +282,11 @@ Personopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
+  personOpplysninger: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
-  medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
+  medfolgendeAndre: behandlingsgrunnlagSelectors.MedfolgendeAndreSelector(state),
 });
 
 export default connect(mapStateToProps)(Personopplysninger);

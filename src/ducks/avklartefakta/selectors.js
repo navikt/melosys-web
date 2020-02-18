@@ -14,7 +14,7 @@ import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 
 import { behandlingerSelectors } from '../behandlinger';
-import { soknadSelectors } from '../soknad';
+import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
 import { OrganisasjonSelectors } from '../organisasjoner';
 import { hentFaktaVerdi } from '../../regler/avklartefakta';
 
@@ -53,7 +53,7 @@ export const VurderingUnntakPeriode = createSelector(
  */
 export const Soknadsland = createSelector(
   state => SoknadslandFaktaerSelector(state),
-  state => soknadSelectors.SoknadslandSelector(state),
+  state => behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   (soknadslandFaktaer, alleLandISoknaden) => (
     alleLandISoknaden.map(enkeltLand => (
       soknadslandFaktaer.find(avklaring => avklaring.subjektID === enkeltLand) ||
@@ -119,9 +119,9 @@ const konverterOrganisasjonTilVirksomhet = org => ({
 export const VirksomheterIPeriodenSelector = createSelector(
   state => behandlingerSelectors.ArbeidsforholdSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
-  state => soknadSelectors.EkstraArbeidsgivereSelector(state),
-  state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
-  state => soknadSelectors.ForetakUtlandSelector(state),
+  state => behandlingsgrunnlagSelectors.EkstraArbeidsgivereSelector(state),
+  state => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
+  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
   (
     arbeidsforholdene,
     organisasjoner,
@@ -179,7 +179,7 @@ export const ArbeidSokkelSkipSelector = createSelector(
  */
 export const SokkelEllerSkipSelector = createSelector(
   state => AvklartefaktaSelector(state),
-  state => soknadSelectors.MaritimtArbeidSelector(state),
+  state => behandlingsgrunnlagSelectors.MaritimtArbeidSelector(state),
   (alleAvklarteFakta, alleMaritimeArbeid) => {
     // Selectoren lager 2 lister - en for avklart fakta for arbeidsland for hvert sokkel / skip
     // og én for avklartfakta om installasjonen er sokkel eller skip.
@@ -280,7 +280,7 @@ export const AvklarteVirksomheterSelector = createSelector(
   state => VirksomhetFaktaerSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
-  state => soknadSelectors.ForetakUtlandSelector(state),
+  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
   (virksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
     const alleAvklarteVirksomheter = virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes('TRUE'));

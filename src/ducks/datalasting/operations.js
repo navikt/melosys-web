@@ -4,7 +4,7 @@ import { avklartefaktaOperations } from '../avklartefakta';
 import { fagsakOperations } from '../fagsaker';
 import { behandlingerOperations } from '../behandlinger';
 import { behandlingsresultatOperations } from '../behandlingsresultat';
-import { soknadOperations } from '../soknad';
+import { behandlingsgrunnlagOperations } from '../behandlingsgrunnlag';
 import { lovvalgsperioderOperations } from '../lovvalgsperioder';
 import { vilkarOperations } from '../vilkar';
 import { behandlingsperioderOperations } from '../behandlingsperioder';
@@ -18,7 +18,7 @@ export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
     try {
       dispatch(fagsakOperations.hent(saksnummer));
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
-      dispatch(soknadOperations.hent(behandlingID));
+      dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
       dispatch(behandlingsresultatOperations.hent(behandlingID));
       dispatch(avklartefaktaOperations.hent(behandlingID));
       dispatch(vilkarOperations.hent(behandlingID));
@@ -36,7 +36,7 @@ export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) =
     try {
       dispatch(fagsakOperations.hent(saksnummer));
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
-      dispatch(soknadOperations.hent(behandlingID));
+      dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
       dispatch(behandlingsresultatOperations.hent(behandlingID));
       dispatch(avklartefaktaOperations.hent(behandlingID));
       dispatch(vilkarOperations.hent(behandlingID));
@@ -52,7 +52,7 @@ export const lastInnSaksopplysningerBehandleMottattAOU = (behandlingID, anmodnin
   dispatch => {
     try {
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
-      dispatch(soknadOperations.hent(behandlingID));
+      dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
       dispatch(anmodningsperioderOperations.hent(behandlingID));
       dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID));
     } catch (e) {
@@ -65,7 +65,7 @@ export const resetSaksopplysninger = () => (
   dispatch => {
     dispatch(fagsakOperations.resetFagsakState());
     dispatch(behandlingerOperations.resetBehandlingerState());
-    dispatch(soknadOperations.resetSoknadState());
+    dispatch(behandlingsgrunnlagOperations.resetBehandlingsgrunnlagState());
     dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
     dispatch(avklartefaktaOperations.resetAvklartefaktaState());
     dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
@@ -79,7 +79,7 @@ export const lagreAllData = () => (
   async dispatch => {
     try {
       await Promise.all([
-        dispatch(soknadOperations.lagre()),
+        dispatch(behandlingsgrunnlagOperations.lagre()),
         dispatch(vilkarOperations.lagre()),
         dispatch(avklartefaktaOperations.lagre()),
         dispatch(behandlingsperioderOperations.lagre()),

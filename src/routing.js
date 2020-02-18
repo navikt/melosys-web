@@ -11,7 +11,7 @@ import * as Api from './services/api';
 import Modals from './modals';
 
 import { oppgaverOperations } from './ducks/oppgaver';
-import { soknadOperations } from './ducks/soknad';
+import { behandlingsgrunnlagOperations } from './ducks/behandlingsgrunnlag';
 import { datalastingOperations } from './ducks/datalasting';
 import { vedtakOperations } from './ducks/vedtak';
 import { saksopplysningerOperations } from './ducks/saksopplysninger';
@@ -40,7 +40,7 @@ const Routing = ({
   sjekkOppfriskningStatus,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
-  lagreSoknad,
+  lagreBehandlingsgrunnlag,
   saksnummer,
   apneTidligereBehandlinger,
   avslaSoknad,
@@ -81,8 +81,8 @@ const Routing = ({
     visOppfriskningBlokkererInnhold();
   };
 
-  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    await lagreSoknad();
+  const lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger = async () => {
+    await lagreBehandlingsgrunnlag();
     await oppfriskSaksopplysninger(behandlingID);
     blokkerInnholdMedOppfriskSpinner();
   };
@@ -197,7 +197,7 @@ const Routing = ({
       <Modals
         skjulOppfriskBekreftelseOgNavigerTilForside={skjulOppfriskBekreftelseOgNavigerTilForside}
         hentBehandlingStatus={hentBehandlingStatus}
-        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
         henleggHandle={henleggHandle}
         avslaaSoknadHandle={avslaaSoknadHandle}
         avsluttSakSomBortfalt={avsluttSakSomBortfalt}
@@ -218,7 +218,7 @@ Routing.propTypes = {
   sjekkOppfriskningStatus: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  lagreSoknad: PT.func.isRequired,
+  lagreBehandlingsgrunnlag: PT.func.isRequired,
   saksnummer: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
   avslaSoknad: PT.func.isRequired,
@@ -246,7 +246,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  lagreSoknad: () => dispatch(soknadOperations.lagre()),
+  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaSoknad: behandlingID => dispatch(vedtakOperations.avslaSoknad(behandlingID)),

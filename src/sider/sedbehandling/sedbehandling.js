@@ -17,7 +17,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { datalastingOperations } from '../../ducks/datalasting';
-import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 
 import './sedbehandling.css';
 
@@ -65,15 +65,15 @@ const SedBehandling = ({
   oppsummering,
   person,
   oppholdsland,
-  soknadsperiodeFom,
-  soknadsperiodeTom,
+  behandlingsgrunnlagPeriodeFom,
+  behandlingsgrunnlagPeriodeTom,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   oppdaterBehandlingsStatus,
   location,
   lastInnSaksopplysninger,
   resetSaksopplysninger,
-  hentSoknad,
+  hentBehandlingsgrunnlag,
   lagreOgLukk,
   tilbakeleggOppgave,
   visHenleggDialogHandle,
@@ -96,7 +96,7 @@ const SedBehandling = ({
   const soknadIkkeYrkesaktiv = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV;
   useEffect(() => {
     if (soknadIkkeYrkesaktiv) {
-      hentSoknad(behandlingID);
+      hentBehandlingsgrunnlag(behandlingID);
     }
   }, [behandlingstype]);
 
@@ -120,8 +120,8 @@ const SedBehandling = ({
               oppsummering={oppsummering}
               person={person}
               oppholdsland={soknadIkkeYrkesaktiv ? oppholdsland : []}
-              soknadsperiodeFom={soknadIkkeYrkesaktiv ? soknadsperiodeFom : undefined}
-              soknadsperiodeTom={soknadIkkeYrkesaktiv ? soknadsperiodeTom : undefined}
+              behandlingsgrunnlagPeriodeFom={soknadIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined}
+              behandlingsgrunnlagPeriodeTom={soknadIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               renderBehandlingsmeny={() => <Behandlingsmeny
@@ -168,15 +168,15 @@ SedBehandling.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
-  soknadsperiodeFom: PT.string,
-  soknadsperiodeTom: PT.string,
+  behandlingsgrunnlagPeriodeFom: PT.string,
+  behandlingsgrunnlagPeriodeTom: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   location: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
-  hentSoknad: PT.func.isRequired,
+  hentBehandlingsgrunnlag: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
@@ -190,8 +190,8 @@ SedBehandling.defaultProps = {
   fagsak: undefined,
   oppsummering: undefined,
   oppholdsland: [],
-  soknadsperiodeFom: undefined,
-  soknadsperiodeTom: undefined,
+  behandlingsgrunnlagPeriodeFom: undefined,
+  behandlingsgrunnlagPeriodeTom: undefined,
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
 };
@@ -202,9 +202,9 @@ const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  oppholdsland: soknadSelectors.OppholdsLandKTSelector(state),
-  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
-  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+  oppholdsland: behandlingsgrunnlagSelectors.OppholdsLandKTSelector(state),
+  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
+  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
@@ -215,7 +215,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
-  hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
+  hentBehandlingsgrunnlag: behandlingID => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SedBehandling);

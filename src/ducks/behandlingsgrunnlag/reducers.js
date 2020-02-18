@@ -6,13 +6,6 @@ import { strengTilInt } from '../../utils/streng';
 import { formatterDatoTilISO } from '../../utils/dato';
 import * as Utils from '../../utils';
 
-/**
- * Reducers
- * ----------------------------------------------------------------------------------
- * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
- * action types som sendes inn sammen med dataene.
- */
-
 const lagNullableAdresse = adresse => {
   if (Utils._isNil(adresse)) {
     return {
@@ -39,7 +32,6 @@ export const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-// Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case Types.PENDING:
@@ -47,38 +39,35 @@ export default function reducer(state = initialState, action) {
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
-      const soknadData = action.data;
-      const { behandlingID, soeknadDokument } = soknadData;
-
       return {
         ...state,
         status: STATUS.OK,
         data: {
-          behandlingID,
-          soeknadDokument,
+          ...action.data,
         },
       };
     }
     case Types.RESET:
       return { ...initialState };
     case Types.OPPDATER_PERIODE: {
-      const { soknadsperiode } = action.data;
+      const { periode } = action.data;
 
-      const soknad = {
-        ...state.data.soeknadDokument,
-        periode: {
-          fom: soknadsperiode.fom,
-          tom: soknadsperiode.tom,
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          periode: {
+            fom: periode.fom,
+            tom: periode.tom,
+          },
         },
       };
-
-      return { ...state, data: { ...state.data, soeknadDokument: soknad } };
     }
-    case Types.OPPDATER_SOKNAD: {
+    case Types.OPPDATER_BEHANDLINGSGRUNNLAG: {
       const { dokument } = action;
 
-      const soknad = {
-        ...state.data.soeknadDokument,
+      const data = {
+        ...state.data,
         arbeidsinntekt: {
           inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
           inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden ? strengTilInt(dokument.inntektUtenlandskIPerioden) : null,
@@ -92,7 +81,6 @@ export default function reducer(state = initialState, action) {
           inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
         },
         arbeidNorge: {
-          ...state.data.soeknadDokument.arbeidNorge,
           fullmektigFirma: dokument.fullmektigFirma,
           fullmektigGateadresse: dokument.fullmektigGateadresse,
           fullmektigPostnr: dokument.fullmektigPostnr,
@@ -125,7 +113,6 @@ export default function reducer(state = initialState, action) {
           ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
         },
         arbeidsgiversBekreftelse: {
-          ...state.data.soeknadDokument.arbeidsgiversBekreftelse,
           arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
           arbeidstakerAnsattUnderUtsendelsen: dokument.arbeidstakerAnsattUnderUtsendelsen,
           erstatterArbeidstakerenUtsendte: dokument.erstatterArbeidstakerenUtsendte,
@@ -135,7 +122,6 @@ export default function reducer(state = initialState, action) {
           trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato ? formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato) : null,
         },
         oppholdUtland: {
-          ...state.data.soeknadDokument.oppholdUtland,
           oppholdsPeriode: {
             fom: dokument.oppholdUtlandFom ? formatterDatoTilISO(dokument.oppholdUtlandFom) : null,
             tom: dokument.oppholdUtlandTom ? formatterDatoTilISO(dokument.oppholdUtlandTom) : null,
@@ -195,7 +181,7 @@ export default function reducer(state = initialState, action) {
         },
       };
 
-      return { ...state, data: { ...state.data, soeknadDokument: soknad } };
+      return { ...state, data: { ...data } };
     }
     default:
       return state;

@@ -7,7 +7,7 @@ import * as Actions from './actions';
 import * as Selectors from './selectors';
 
 import { avklartefaktaSelectors } from '../avklartefakta';
-import { soknadSelectors } from '../soknad';
+import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
 import { behandlingerSelectors } from '../behandlinger';
 
 export function hent(behandlingID) {
@@ -36,12 +36,12 @@ export function lagre() {
 }
 
 const byggUtpekingsperiode = (stegState, reduxState) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const lovvalgsland = avklartefaktaSelectors.OmfattesILandSelector(reduxState);
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato: periode.fom,
+    tomDato: periode.tom,
     lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
     tilleggsbestemmelse: stegState.tilleggbestemmelse,
     lovvalgsland,

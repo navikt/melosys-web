@@ -12,7 +12,6 @@ import { fagsakOperations } from '../../../ducks/fagsaker/';
 import { vilkarOperations } from '../../../ducks/vilkar/';
 import { avklartefaktaOperations } from '../../../ducks/avklartefakta/';
 import { lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder/';
-import { soknadOperations } from '../../../ducks/soknad/';
 import { oppgaverOperations } from '../../../ducks/oppgaver/';
 
 import './topplinje.css';
@@ -71,7 +70,6 @@ const mapDispatchToProps = dispatch => ({
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
-  resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });

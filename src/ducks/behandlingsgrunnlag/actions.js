@@ -8,9 +8,9 @@ import * as Types from './types';
  */
 
 /* eslint-disable import/prefer-default-export */
-export function oppdaterSoknadState(dokument) {
+export function oppdaterBehandlingsgrunnlagState(dokument) {
   return ({
-    type: Types.OPPDATER_SOKNAD,
+    type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
     dokument,
   });
 }
@@ -19,7 +19,7 @@ export function oppdaterPeriode(periode) {
   return ({
     type: Types.OPPDATER_PERIODE,
     data: {
-      soknadsperiode: periode,
+      periode,
     },
   });
 }
@@ -28,7 +28,7 @@ export function oppdaterPeriode(periode) {
  *
  * @returns {{type: *}}
  */
-export function resetSoknadState() {
+export function resetBehandlingsgrunnlagState() {
   return { type: Types.RESET };
 }
 

@@ -12,7 +12,7 @@ import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
 
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
@@ -448,7 +448,7 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsland: soknadSelectors.SoknadslandSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
