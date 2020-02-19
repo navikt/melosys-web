@@ -186,7 +186,7 @@ const mapStateToProps = state => ({
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagSelector(state),
+  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   inngangForm: formSelectors.InngangFormSelector(state),

@@ -17,18 +17,23 @@ export const BehandlingsgrunnlagSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag
 );
 
-export const ArbeidNorgeSelector = createSelector(
+export const BehandlingsgrunnlagDataSelector = createSelector(
   BehandlingsgrunnlagSelector,
+  behandlingsgrunnlagState => behandlingsgrunnlagState.data || {}
+);
+
+export const ArbeidNorgeSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidnorge || {}
 );
 
 export const ArbeidUtlandSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidUtland || []
 );
 
 export const ArbeidsinntektSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidsinntekt || {}
 );
 
@@ -38,12 +43,12 @@ export const ArbeidsinntektNaturalytelserSelector = createSelector(
 );
 
 export const ForetakUtlandSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.foretakUtland || []
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.juridiskArbeidsgiverNorge || {}
 );
 
@@ -59,7 +64,7 @@ export const EkstraArbeidsgivereSelector = createSelector(
 );
 
 export const SelvstendigArbeidSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.selvstendigArbeid || {}
 );
 
@@ -73,7 +78,7 @@ export const SelvstendigNaringsvirksomhetSelector = createSelector(
 );
 
 export const OppholdUtlandSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.oppholdUtland || {}
 );
 
@@ -96,7 +101,7 @@ export const OppholdUtlandPeriodeSelector = createSelector(
 );
 
 export const BostedSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.bosted || {}
 );
 
@@ -109,27 +114,27 @@ export const BostedAdresseSelector = createSelector(
 );
 
 export const ArbeidsgiversBekreftelseSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidsgiversBekreftelse || {}
 );
 
 export const MaritimtArbeidSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.maritimtArbeid || []
 );
 
 export const SoknadslandSelector = createSelector(
-  BehandlingsgrunnlagSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.soeknadsland.landkoder || []
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => (behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : [])
 );
 
 export const PeriodeSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.periode || {}
 );
 
 export const PersonOpplysningerSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.personOpplysninger || {}
 );
 
