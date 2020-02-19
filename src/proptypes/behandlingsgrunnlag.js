@@ -2,29 +2,8 @@
 import PT from 'prop-types';
 import { ArbeidNorge } from './arbeidNorge';
 import { ArbeidUtland } from './arbeidUtland';
-import { Kodeverk } from './kodeverk';
 import { Periode } from './periode';
 
-const ArbeidsgiversBekreftelse = PT.shape({
-  arbeidsgiverBekrefterUtsendelse: PT.bool,
-  arbeidsgiverBetalerArbeidsgiveravgift: PT.bool,
-  arbeidstakerAnsattUnderUtsendelsen: PT.bool,
-  arbeidstakerTidligereUtsendt24Mnd: PT.bool,
-  erstatterArbeidstakerenUtsendte: PT.bool,
-  trygdeavgiftTrukketGjennomSkatt: PT.bool,
-  trygdeavgiftTrukketGjennomSkattDato: PT.string,
-});
-const ArbeidsinntektPropType = PT.shape({
-  inntektErInnrapporteringspliktig: PT.bool,
-  inntektNaturalytelser: PT.shape({
-    friAnnet: PT.string,
-    friBil: PT.bool,
-    friBolig: PT.bool,
-  }),
-  inntektNorskIPerioden: PT.number,
-  inntektTrygdeavgiftBlirTrukket: PT.bool,
-  inntektUtenlandskIPerioden: PT.number,
-});
 const BostedPropType = PT.shape({
   antallMaanederINorge: PT.number,
   intensjonOmRetur: PT.bool,
@@ -40,16 +19,6 @@ const ForetakUtlandPropType = PT.arrayOf(PT.shape({
   navn: PT.string,
   orgnr: PT.string,
 }));
-const JuridiskArbeidsgiverNorgePropType = PT.shape({
-  andelKontrakterINorge: PT.number,
-  andelOmsetningINorge: PT.number,
-  andelOppdragINorge: PT.number,
-  antallAdmAnsatte: PT.number,
-  antallAnsatte: PT.number,
-  arbeidstakereRekruttertILand: PT.string,
-  ekstraArbeidsgivere: PT.arrayOf(PT.string),
-  utsendteNeste12Mnd: PT.number,
-});
 const MaritimtArbeidPropType = PT.arrayOf(PT.shape({
   fartsomradeKode: PT.string,
   flaggLandkode: PT.string,
@@ -83,14 +52,11 @@ const SoeknadslandPropType = PT.shape({
   landkoder: PT.arrayOf(PT.string),
 });
 
-const SoknadDokumentPropType = PT.shape({
+const BehandlingsgrunnnlagDataPropType = PT.shape({
   arbeidNorge: ArbeidNorge,
   arbeidUtland: ArbeidUtland,
-  arbeidsgiversBekreftelse: ArbeidsgiversBekreftelse,
-  arbeidsinntekt: ArbeidsinntektPropType,
   bosted: BostedPropType,
   foretakUtland: ForetakUtlandPropType,
-  juridiskArbeidsgiverNorge: JuridiskArbeidsgiverNorgePropType,
   maritimtArbeid: MaritimtArbeidPropType,
   oppholdUtland: OppholdUtlandPropType,
   periode: Periode,
@@ -123,30 +89,14 @@ const OrganisasjonerPropType = PT.arrayOf(PT.shape({
     poststed: PT.string,
   }),
 }));
-const PersonerPropType = PT.arrayOf(PT.shape({
-  bostedsadresse: PT.shape({
-    gateadresse: GateAdressePropType,
-    land: Kodeverk,
-    postnr: PT.string,
-    poststed: PT.string,
-  }),
-  fnr: PT.string,
-  foedselsdato: PT.string,
-  kjoenn: Kodeverk,
-  personStatus: Kodeverk,
-  sammensattNavn: PT.string,
-  sivilstand: Kodeverk,
-  statsborgerskap: Kodeverk,
-}));
 
 const TilleggsDataPropType = PT.shape({
   organisasjoner: OrganisasjonerPropType,
-  personer: PersonerPropType,
 });
-const SoknadPropType = PT.shape({
-  behandlingID: PT.number,
-  soeknadDokument: SoknadDokumentPropType,
+const BehandlingsgrunnlagPropType = PT.shape({
+  data: BehandlingsgrunnnlagDataPropType,
+  type: PT.string,
   tilleggsData: TilleggsDataPropType,
 });
 
-export { SoknadPropType as Soknad };
+export { BehandlingsgrunnlagPropType as Behandlingsgrunnlag };

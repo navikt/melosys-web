@@ -149,7 +149,7 @@ Saksopplysninger.propTypes = {
   sjekkOppfriskningStatus: PT.func.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person,
   sendBehandlingsgrunnlag: PT.func.isRequired,
-  behandlingsgrunnlag: MPT.Soknad,
+  behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
   inngangForm: PT.object,
   valid: PT.bool.isRequired,
