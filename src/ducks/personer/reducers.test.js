@@ -25,25 +25,6 @@ describe('personer reducer', () => {
     expect(reducedState).toEqual({ data: [{ fnr: 17117802280 }, { fnr: 19117220349 }], status: Utils.STATUS.OK });
   });
 
-  it('returnerer ny state ved soknad/ok action når initialState er satt til feilobjekt', () => {
-    initialState = {
-      data: {
-        error: 'Not found',
-        status: 404,
-      },
-    };
-    const data = {
-      tilleggsData: {
-        personer: [
-          { fnr: 19117220349 },
-        ],
-      },
-    };
-
-    const reducedState = reducer(initialState, SoknadActions.OK(data));
-    expect(reducedState).toEqual({ data: [{ fnr: 19117220349 }], status: Utils.STATUS.OK });
-  });
-
   it('returnerer ny state ved ok action når initialState er satt til feilobjekt', () => {
     initialState = {
       data: {
