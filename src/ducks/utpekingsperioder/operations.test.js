@@ -20,9 +20,11 @@ describe('utpekingsperioder operations', () => {
     initialState = {
       behandlingsgrunnlag: {
         data: {
-          periode: {
-            tom: '',
-            fom: '',
+          data: {
+            periode: {
+              tom: '',
+              fom: '',
+            },
           },
         },
       },
@@ -97,8 +99,8 @@ describe('utpekingsperioder operations', () => {
           type: types.OPPDATER_UTPEKINGSPERIODER,
           utpekingsperioder: [
             {
-              fomDato: initialState.behandlingsgrunnlag.data.periode.fom,
-              tomDato: initialState.behandlingsgrunnlag.data.periode.tom,
+              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
+              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
               lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
               tilleggsbestemmelse: stegState.tilleggbestemmelse,
               lovvalgsland: avklartfakta.fakta[0],

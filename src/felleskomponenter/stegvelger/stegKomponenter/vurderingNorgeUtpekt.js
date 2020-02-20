@@ -13,7 +13,7 @@ import * as Utils from '../../../utils';
 import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
@@ -177,13 +177,13 @@ VurderingNorgeUtpekt.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => ({
   lovvalgsperiode: {
-    fomDato: soknadSelectors.SoknadsperiodeFomSelector(state),
-    tomDato: soknadSelectors.SoknadsperiodeTomSelector(state),
+    fomDato: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
+    tomDato: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
   },
   formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
   initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeFomSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeTomSelector(state)),
+    fom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeFomSelector(state)),
+    tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),

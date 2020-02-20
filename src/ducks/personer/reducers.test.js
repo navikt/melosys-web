@@ -2,7 +2,6 @@ import reducer from './reducers';
 
 import * as actions from './actions';
 import * as Utils from '../../services/utils';
-import * as SoknadActions from '../behandlingsgrunnlag/actions';
 
 describe('personer reducer', () => {
   let initialState = null;

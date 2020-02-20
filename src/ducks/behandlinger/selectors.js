@@ -11,7 +11,7 @@ import moment from 'moment/moment';
 import MKV from '../../melosyskodeverk';
 import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
-import * as soknadSelectors from '../behandlingsgrunnlag/selectors';
+import * as behandlingsgrunnlagSelectors from '../behandlingsgrunnlag/selectors';
 import { anmodningsperioderSelectors } from '../anmodningsperioder';
 
 /* eslint import/prefer-default-export:"off" */
@@ -277,7 +277,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntekterPrAarMaanedSelector(state),
-  state => soknadSelectors.PeriodeSelector(state),
+  state => behandlingsgrunnlagSelectors.PeriodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.

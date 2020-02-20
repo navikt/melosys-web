@@ -133,13 +133,13 @@ export const PeriodeSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag.periode || {}
 );
 
-export const SoknadsperiodeFomSelector = createSelector(
-  SoknadsperiodeSelector,
+export const PeriodeFomSelector = createSelector(
+  PeriodeSelector,
   soknadsperiode => soknadsperiode.fom
 );
 
-export const SoknadsperiodeTomSelector = createSelector(
-  SoknadsperiodeSelector,
+export const PeriodeTomSelector = createSelector(
+  PeriodeSelector,
   soknadsperiode => soknadsperiode.tom
 );
 

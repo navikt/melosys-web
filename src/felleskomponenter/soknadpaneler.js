@@ -33,13 +33,12 @@ import { formatterDatoTilNorsk } from '../utils/dato';
 const Soknadpaneler = ({
   blokkerInnholdMedOppfriskSpinner,
   oppfriskSaksopplysninger,
-  sendSoknad,
+  lagreSoknad,
   fagsaker,
   medlemskap,
   soknadArbeidsinntekt,
   soknadForm,
   behandlingID,
-  soknad,
   oppgittAdresseHarVerdier,
 }) => {
   const overstyrSubmit = event => {
@@ -47,7 +46,7 @@ const Soknadpaneler = ({
   };
 
   const lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    await sendSoknad(behandlingID, soknad);
+    await lagreSoknad();
     await oppfriskSaksopplysninger(behandlingID);
     blokkerInnholdMedOppfriskSpinner();
   };
@@ -75,13 +74,12 @@ const Soknadpaneler = ({
 Soknadpaneler.propTypes = {
   soknadForm: PT.object,
   fagsaker: MPT.Fagsak.isRequired,
-  sendSoknad: PT.func.isRequired,
+  lagreSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   medlemskap: MPT.Medlemskap,
   soknadArbeidsinntekt: PT.object,
   behandlingID: PT.number.isRequired,
-  soknad: MPT.Soknad,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
 
@@ -89,7 +87,6 @@ Soknadpaneler.defaultProps = {
   soknadForm: {},
   medlemskap: {},
   soknadArbeidsinntekt: {},
-  soknad: {},
 };
 
 const mapStateToProps = state => ({
@@ -98,7 +95,6 @@ const mapStateToProps = state => ({
   fagsaker: fagsakSelectors.FagsakSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   soknadArbeidsinntekt: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state),
-  soknad: behandlingsgrunnlagSelectors.BehandlingsgrunnlagSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
@@ -142,8 +138,8 @@ const mapStateToProps = state => ({
     antallMaanederINorge: behandlingsgrunnlagSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: behandlingsgrunnlagSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     maritimtArbeid: behandlingsgrunnlagSelectors.MaritimtArbeidSelector(state),
-    soknadsperiodeFom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.SoknadsperiodeSelector(state).fom),
-    soknadsperiodeTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.SoknadsperiodeSelector(state).tom),
+    soknadsperiodeFom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
+    soknadsperiodeTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
     foretakUtland: behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
     kontaktNavn: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).kontaktNavn,
@@ -186,7 +182,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sendSoknad: (bid, dokument) => dispatch(behandlingsgrunnlagOperations.send(bid, dokument)),
+  lagreSoknad: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
 });
 

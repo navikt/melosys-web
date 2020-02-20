@@ -18,7 +18,7 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
 import { datalastingOperations } from '../../ducks/datalasting';
-import { soknadSelectors, soknadOperations } from '../../ducks/soknad';
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 import { vilkarOperations } from '../../ducks/vilkar';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta';
 import { anmodningsperioderOperations } from '../../ducks/anmodningsperioder';
@@ -84,7 +84,7 @@ const Vurderutpeking = ({
   tilForsiden,
   blokkerInnholdMedOppfriskSpinner,
   soknadForm,
-  soknad,
+  behandlingsgrunnlag,
 }) => {
   const { params: { snr: saksnummer } } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -100,7 +100,7 @@ const Vurderutpeking = ({
     return null;
   }
 
-  const soknadErKlar = !(Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0);
+  const soknadErKlar = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
   return (
     <div className="vurderutpeking">
@@ -214,12 +214,12 @@ Vurderutpeking.propTypes = {
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
-  soknad: MPT.Soknad,
+  behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
 };
 
 Vurderutpeking.defaultProps = {
-  soknad: {},
+  behandlingsgrunnlag: {},
 };
 
 const mapStateToProps = state => ({
@@ -231,19 +231,19 @@ const mapStateToProps = state => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
-  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
+  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
-  soknad: soknadSelectors.SoknadSelector(state),
+  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
-  oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
+  oppdaterSoknad: () => dispatch(behandlingsgrunnlagOperations.oppdaterSoknadState()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
