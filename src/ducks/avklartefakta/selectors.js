@@ -358,7 +358,7 @@ export const OmfattesIAnnetLandSelector = createSelector(
   (omfattesILand, omfattesILandFakta) => Utils._isObject(omfattesILandFakta) && omfattesILand !== MKV.Koder.landkoder.NO
 );
 
-export const UtpekingGodkjentFaktaSelector = createSelector(
+const UtpekingGodkjentFaktaSelector = createSelector(
   AvklartefaktaSelector,
   avklarteFakta => hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklarteFakta)
 );
