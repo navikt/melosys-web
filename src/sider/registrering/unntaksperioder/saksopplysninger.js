@@ -14,7 +14,7 @@ import * as Mui from '../../../felleskomponenter/ui';
 
 import Paneler from './komponenter/paneler';
 import EndrePeriode from './komponenter/endrePeriode';
-import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
+import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';
@@ -273,9 +273,13 @@ const Saksopplysninger = ({
             <div className="vurderingEndrePeriode">
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-                  {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                    <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
+                  {
+                    vurderingBegrunnelser.length > 0 &&
+                    <Fragment>
+                      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+                      <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+                    </Fragment>
+                  }
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
@@ -379,7 +383,7 @@ Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
-  vurderingBegrunnelser: PT.object,
+  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
   lovvalgsperiode: PT.object.isRequired,
@@ -395,7 +399,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   medlemskap: {},
-  vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
   sedLovvalgsperiode: {},

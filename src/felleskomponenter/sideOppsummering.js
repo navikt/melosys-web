@@ -25,6 +25,7 @@ const SideOppsummering = ({
   renderBehandlingsstatus,
   soknadsperiodeFom,
   soknadsperiodeTom,
+  periodeLabel,
 }) => {
   if (!oppsummering) return <div />;
 
@@ -60,6 +61,7 @@ const SideOppsummering = ({
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               soknadsperiodeFom={soknadsperiodeFom}
               soknadsperiodeTom={soknadsperiodeTom}
+              periodeLabel={periodeLabel}
             />
             }
           </Nav.Column>
@@ -91,6 +93,7 @@ SideOppsummering.propTypes = {
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
   soknadsperiodeFom: PT.string,
   soknadsperiodeTom: PT.string,
+  periodeLabel: PT.string,
 };
 
 SideOppsummering.defaultProps = {
@@ -104,6 +107,7 @@ SideOppsummering.defaultProps = {
   lovvalgsperiodeTom: undefined,
   soknadsperiodeFom: undefined,
   soknadsperiodeTom: undefined,
+  periodeLabel: 'Søknadsperiode',
 };
 
 export default SideOppsummering;

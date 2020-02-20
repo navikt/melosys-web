@@ -117,6 +117,7 @@ export const avklartefaktaKoder = {
   YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
   YRKESGRUPPE: 'YRKESGRUPPE',
+  UTPEKING_GODKJENT: 'UTPEKING_GODKJENT',
 };
 export const referanseKoder = {
   INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
@@ -126,4 +127,9 @@ export const referanseKoder = {
 export const Tema = {
   MED: 'Medlemskap',
   UFM: 'Unntak fra medlemskap',
+};
+
+export const UtpekingAvNorgeGodkjenning = {
+  GODKJENN: 'GODKJENN',
+  IKKE_GODKJENN: 'IKKE_GODKJENN',
 };
