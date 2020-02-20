@@ -36,6 +36,8 @@ export const VurderingAvslaaUtpeking = ({
             label="Begrunnelse til utenlandsk myndighet (engelsk)"
             feltNavn="begrunnelseUtenlandskMyndighet"
             disabled={!redigerbart}
+            visTellerFra={500}
+            maxLength={500}
           />
           <Skjema.RadioGruppe label="Anmodning om mer informasjon vil bli sendt" feltNavn="vilSendeAnmodningOmMerInformasjon">
             <Skjema.Radio disabled={!redigerbart} feltNavn="vilSendeAnmodningOmMerInformasjon" value label="Ja" />
@@ -50,6 +52,8 @@ export const VurderingAvslaaUtpeking = ({
             label="Ytterligere informasjon (valgfritt)"
             feltNavn="fritekst"
             disabled={!redigerbart}
+            visTellerFra={500}
+            maxLength={500}
           />
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
         </Fragment>
