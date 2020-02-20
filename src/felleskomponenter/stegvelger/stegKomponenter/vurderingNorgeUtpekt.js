@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, getFormValues } from 'redux-form';
@@ -77,9 +77,11 @@ export const VurderingNorgeUtpekt = ({
         <Nav.Column xs="5">
           {
             vurderingBegrunnelser.length > 0 &&
-            <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+            <Fragment>
+              <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+              <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+            </Fragment>
           }
-          <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="rad">

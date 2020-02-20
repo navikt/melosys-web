@@ -264,8 +264,13 @@ const Saksopplysninger = ({
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-                  <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+                  {
+                    vurderingBegrunnelser.length > 0 &&
+                    <Fragment>
+                      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+                      <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+                    </Fragment>
+                  }
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">

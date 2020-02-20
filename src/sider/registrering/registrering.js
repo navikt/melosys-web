@@ -164,7 +164,7 @@ Registrering.propTypes = {
   tilbakeleggOppgave: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
-  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
+  vurderingBegrunnelser: PT.arrayOf(PT.string),
   fagsak: MPT.Fagsak,
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
   medlemskap: MPT.Medlemskap,
@@ -189,6 +189,7 @@ Registrering.defaultProps = {
   sed: {},
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
+  vurderingBegrunnelser: [],
 };
 const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
