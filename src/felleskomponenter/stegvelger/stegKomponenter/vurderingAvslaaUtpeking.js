@@ -28,7 +28,7 @@ export const VurderingAvslaaUtpeking = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Nav.typo.Undertittel className="stegTittel">Avvis utpeking</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel className="stegTittel">Avvis utpeking — informasjon til SED</Nav.typo.Undertittel>
       {
         redigerbart &&
         <Fragment>
@@ -45,11 +45,11 @@ export const VurderingAvslaaUtpeking = ({
           </Skjema.RadioGruppe>
           <Skjema.LandVelger
             feltNavn="nyttLovvalgsland"
-            label="Foreslå nytt lovvalgsland (valgfritt)"
+            label="Foreslå nytt lovvalgsland (valgfri)"
             disabled={!redigerbart}
           />
           <Skjema.Textarea
-            label="Ytterligere informasjon (valgfritt)"
+            label="Ytterligere informasjon (valgfri)"
             feltNavn="fritekst"
             disabled={!redigerbart}
             visTellerFra={500}

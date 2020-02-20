@@ -141,7 +141,7 @@ const Vurderutpeking = ({
               arbeidsland={arbeidsland}
               soknadsperiodeFom={soknadsperiodeFom}
               soknadsperiodeTom={soknadsperiodeTom}
-              periodeLabel="Periode for SED"
+              periodeLabel="Periode fra SED"
               renderBehandlingsmeny={() => <Behandlingsmeny
                 redigerbart={behandlingsmenyRedigerbart}
                 lagreOgLukkHandle={lagreOgLukk}
