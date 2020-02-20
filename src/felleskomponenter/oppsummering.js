@@ -19,6 +19,7 @@ const Oppsummering = props => {
     behandlingsgrunnlagPeriodeTom,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
+    periodeLabel,
   } = props;
   if (!oppsummering) return <div />;
 
@@ -78,7 +79,7 @@ const Oppsummering = props => {
       }
       { (behandlingsgrunnlagPeriodeFom || behandlingsgrunnlagPeriodeTom) &&
         <Fragment>
-          <dt>Søknadsperiode:</dt>
+          <dt>{periodeLabel}</dt>
           <dd>{behandlingsgrunnlagPeriodeFom || 'ukjent'} - {behandlingsgrunnlagPeriodeTom || 'ukjent'}</dd>
         </Fragment>
       }
@@ -109,6 +110,7 @@ Oppsummering.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
+  periodeLabel: PT.string.isRequired,
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],

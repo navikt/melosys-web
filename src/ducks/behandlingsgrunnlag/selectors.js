@@ -133,6 +133,16 @@ export const PeriodeSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag.periode || {}
 );
 
+export const SoknadsperiodeFomSelector = createSelector(
+  SoknadsperiodeSelector,
+  soknadsperiode => soknadsperiode.fom
+);
+
+export const SoknadsperiodeTomSelector = createSelector(
+  SoknadsperiodeSelector,
+  soknadsperiode => soknadsperiode.tom
+);
+
 export const PersonOpplysningerSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.personOpplysninger || {}

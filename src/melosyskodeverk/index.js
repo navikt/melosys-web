@@ -1,3 +1,4 @@
 import filtrertMKV from './filtrertmelosyskodeverk';
+import * as Kodekombinasjoner from './kodekombinasjoner';
 
-export default filtrertMKV;
+export default { ...filtrertMKV, Kodekombinasjoner };

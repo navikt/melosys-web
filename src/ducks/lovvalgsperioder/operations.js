@@ -188,7 +188,8 @@ const bestemLovvalgsland = lovvalgsbestemmelse => {
 
 const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
-  avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState)
+  avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
+  avklartefaktaSelectors.UtpekingAvvistSelector(reduxState)
 );
 
 const byggLovvalgsPerioder = (stegState, reduxState) => {
@@ -198,10 +199,12 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
+  const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
+  const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
 
   return [{
-    fomDato: periode.fom,
-    tomDato: periode.tom,
+    fomDato,
+    tomDato,
     lovvalgsbestemmelse: stegState.lovvalgsbestemmelse || null,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,

@@ -2,6 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
+import * as SkjemaUtils from '../utils';
 
 /** Returnerer en tekst som gir brukeren en indikasjon på hvor mange tegn
  * hun har igjen eller hvor mange tegn hun har overskridet. visTellerFra gjør at denne teksten ikke vises
@@ -33,9 +34,12 @@ function InnerTextAreaComponent({
   maxLength,
   visTellerFra,
   input,
+  meta,
   ...rest
 }) {
-  const feil = (rest.meta.error && rest.meta.touched && !rest.meta.active) ? { feilmelding: rest.meta.error } : undefined;
+  const { touched, active } = meta;
+  const feil = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
+
   const inputProps = { ...input, ...rest, feil };
 
   return (

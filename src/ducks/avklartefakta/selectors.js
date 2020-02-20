@@ -16,7 +16,7 @@ import * as Utils from '../../utils';
 import { behandlingerSelectors } from '../behandlinger';
 import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
 import { OrganisasjonSelectors } from '../organisasjoner';
-import { hentFaktaVerdi } from '../../regler/avklartefakta';
+import { hentFakta, hentFaktaVerdi } from '../../regler/avklartefakta';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -356,4 +356,14 @@ export const OmfattesIAnnetLandSelector = createSelector(
   OmfattesILandSelector,
   OmfattesILandFaktaSelector,
   (omfattesILand, omfattesILandFakta) => Utils._isObject(omfattesILandFakta) && omfattesILand !== MKV.Koder.landkoder.NO
+);
+
+const UtpekingGodkjentFaktaSelector = createSelector(
+  AvklartefaktaSelector,
+  avklarteFakta => hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklarteFakta)
+);
+
+export const UtpekingAvvistSelector = createSelector(
+  UtpekingGodkjentFaktaSelector,
+  utpekingGodkjentFakta => hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN
 );

@@ -87,7 +87,7 @@ const OpprettFagsak = props => {
             </Nav.Fieldset>
           </Fragment>
           }
-          <Nav.Fieldset legend="Soknadperiode:" className="opprettnysak__soknadsperiode">
+          <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
               <Nav.Column xs="6">
                 <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />

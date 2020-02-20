@@ -30,6 +30,7 @@ const RegistreringUnntaksperioderLoadable = loadable(() => import('./sider/regis
 const RegistreringAnmodningunntakLoadable = loadable(() => import('./sider/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
 const SedBehandlingLoadable = loadable(() => import('./sider/sedbehandling'), { fallback: SideLoadingStatus });
 const OpprettNySakLoadable = loadable(() => import('./sider/opprettnysak'), { fallback: SideLoadingStatus });
+const VurderUtpekingLoadable = loadable(() => import('./sider/vurderutpeking'), { fallback: SideLoadingStatus });
 
 const Routing = ({
   location,
@@ -192,6 +193,7 @@ const Routing = ({
         <Route path="/saksbehandling/:snr" render={props => <SaksbehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" render={props => <JournalforingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/opprettnysak" render={props => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
+        <Route path="/vurderutpeking/:snr" render={props => <VurderUtpekingLoadable {...props} {...fellesHandlers} />} />
         <Route component={UkjentSideLoadable} />
       </Switch>
       <Modals
