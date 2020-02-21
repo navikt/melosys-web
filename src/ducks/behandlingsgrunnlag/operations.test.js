@@ -19,7 +19,10 @@ describe('Behandlingsgrunnlag operations', () => {
 
     initialState = {
       form: {
-        [KV.Form.Soknad]: {
+        [KV.Form.SOKNAD]: {
+          values: {},
+        },
+        [KV.Form.INNGANG]: {
           values: {},
         },
       },
@@ -185,6 +188,48 @@ describe('Behandlingsgrunnlag operations', () => {
       const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterPeriode({ tom: 'tom', fom: 'fom' }));
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe('resetState', () => {
+    it('lager RESET action', () => {
+      const expectedActions = [
+        {
+          type: types.RESET,
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.resetState());
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe('oppdaterState', () => {
+    it('lager OPPDATER_BEHANDLINGSGRUNNLAG action', () => {
+      initialState.form[KV.Form.SOKNAD].values = {
+        foretakUtland: {},
+      };
+      initialState.form[KV.Form.INNGANG].values = {
+        soknadsland: ['DK'],
+      };
+      const expectedActions = [
+        {
+          type: types.OPPDATER_BEHANDLINGSGRUNNLAG,
+          dokument: {
+            foretakUtland: {},
+            soknadsland: ['DK'],
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterState());
 
       expect(store.getActions()).toEqual(expectedActions);
     });
