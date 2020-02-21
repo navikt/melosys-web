@@ -129,7 +129,7 @@ export const VurderingNorgeUtpekt = ({
           <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={!redigerbart}>
             <Nav.Radio
               onChange={vedGodkjennEndring}
-              label="Godkjenn lovvalg"
+              label="Godkjenn"
               value={KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN}
               name="godkjenn"
               checked={utpekingGodkjent}
@@ -144,7 +144,14 @@ export const VurderingNorgeUtpekt = ({
           </Nav.Fieldset>
         </Nav.Column>
       </Nav.Row>
-      <Nav.AlertStripe type="advarsel">Hvis det ikke er nok informasjon, må dette innhentes før lovvalget skal godkjennes eller ikke.</Nav.AlertStripe>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.AlertStripe type="advarsel">
+            Hvis det ikke er nok informasjon, må dette innhentes før du velger «Godkjenn» eller «Ikke godkjenn».
+            Lovvalgsbestemmelsen og perioden kan kun redigeres etter avtale med utenlandsk trygdemyndighet.
+          </Nav.AlertStripe>
+        </Nav.Column>
+      </Nav.Row>
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp">Bekreft og fortsett</Nav.Knapp>
       </div>
