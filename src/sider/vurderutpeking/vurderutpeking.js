@@ -243,7 +243,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterBehandlingsgrunnlagState()),
+  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),

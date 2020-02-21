@@ -132,7 +132,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   sendBehandlingsgrunnlag: (bid, dokument) => dispatch(behandlingsgrunnlagOperations.send(bid, dokument)),
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterBehandlingsgrunnlagState()),
+  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

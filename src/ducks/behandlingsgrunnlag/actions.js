@@ -8,7 +8,7 @@ import * as Types from './types';
  */
 
 /* eslint-disable import/prefer-default-export */
-export function oppdaterBehandlingsgrunnlagState(dokument) {
+export function oppdaterState(dokument) {
   return ({
     type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
     dokument,
@@ -28,7 +28,7 @@ export function oppdaterPeriode(periode) {
  *
  * @returns {{type: *}}
  */
-export function resetBehandlingsgrunnlagState() {
+export function resetState() {
   return { type: Types.RESET };
 }
 

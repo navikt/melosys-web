@@ -65,7 +65,7 @@ export const resetSaksopplysninger = () => (
   dispatch => {
     dispatch(fagsakOperations.resetFagsakState());
     dispatch(behandlingerOperations.resetBehandlingerState());
-    dispatch(behandlingsgrunnlagOperations.resetBehandlingsgrunnlagState());
+    dispatch(behandlingsgrunnlagOperations.resetState());
     dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
     dispatch(avklartefaktaOperations.resetAvklartefaktaState());
     dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());

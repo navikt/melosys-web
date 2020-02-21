@@ -368,7 +368,7 @@ const mapDispatchToProps = dispatch => ({
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
-  resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetBehandlingsgrunnlagState()),
+  resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsPerioderState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),

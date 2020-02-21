@@ -42,7 +42,7 @@ export function send(bid, behandlingsgrunnlag) {
   );
 }
 
-export function oppdaterBehandlingsgrunnlagState() {
+export function oppdaterState() {
   return (dispatch, getState) => {
     const behandlingsgrunnlagData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
@@ -51,7 +51,7 @@ export function oppdaterBehandlingsgrunnlagState() {
 
     if (Utils._isEmpty(behandlingsgrunnlagData)) return;
 
-    dispatch(Actions.oppdaterBehandlingsgrunnlagState(behandlingsgrunnlagData));
+    dispatch(Actions.oppdaterState(behandlingsgrunnlagData));
   };
 }
 
@@ -89,7 +89,7 @@ const lagBehandlingsgrunnlagData = (behandlingstype, behandlingsgrunnlag) => {
 
 export function lagre() {
   return (dispatch, getState) => {
-    dispatch(oppdaterBehandlingsgrunnlagState());
+    dispatch(oppdaterState());
 
     const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagDataSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
@@ -105,6 +105,6 @@ export function oppdaterPeriode(periode) {
   return dispatch => dispatch(Actions.oppdaterPeriode(periode));
 }
 
-export function resetBehandlingsgrunnlagState() {
-  return Actions.resetBehandlingsgrunnlagState();
+export function resetState() {
+  return Actions.resetState();
 }
