@@ -5,6 +5,8 @@ import * as Actions from './actions';
 import * as Types from './types';
 import * as Selectors from './selectors';
 
+import MKV from '../../melosyskodeverk';
+
 import { doThenDispatch } from '../../services/utils';
 import { formSelectors } from '../form';
 import { behandlingerSelectors } from '../behandlinger';
@@ -53,13 +55,49 @@ export function oppdaterBehandlingsgrunnlagState() {
   };
 }
 
+const lagBehandlingsgrunnlagFelter = behandlingsgrunnlag => ({
+  juridiskArbeidsgiverNorge: behandlingsgrunnlag.juridiskArbeidsgiverNorge,
+  personOpplysninger: behandlingsgrunnlag.personOpplysninger,
+  arbeidUtland: behandlingsgrunnlag.arbeidUtland,
+  foretakUtland: behandlingsgrunnlag.foretakUtland,
+  oppholdUtland: behandlingsgrunnlag.oppholdUtland,
+  bosted: behandlingsgrunnlag.bosted,
+  arbeidNorge: behandlingsgrunnlag.arbeidNorge,
+  selvstendigArbeid: behandlingsgrunnlag.selvstendigArbeid,
+  maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
+  soeknadsland: behandlingsgrunnlag.soeknadsland,
+  periode: behandlingsgrunnlag.periode,
+});
+
+const lagSoeknadFelter = behandlingsgrunnlag => ({
+  ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  arbeidsinntekt: behandlingsgrunnlag.arbeidsinntekt,
+  arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
+});
+
+const lagBehandlingsgrunnlagData = (behandlingstype, behandlingsgrunnlag) => {
+  switch (behandlingstype) {
+    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD:
+    case MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING:
+      return lagSoeknadFelter(behandlingsgrunnlag);
+    case MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_NORGE:
+      return lagBehandlingsgrunnlagFelter(behandlingsgrunnlag);
+    default:
+      return {};
+  }
+};
+
 export function lagre() {
   return (dispatch, getState) => {
     dispatch(oppdaterBehandlingsgrunnlagState());
 
-    const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagSelector(getState());
+    const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagDataSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    dispatch(send(bid, behandlingsgrunnlag));
+    const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(getState());
+
+    const data = lagBehandlingsgrunnlagData(behandlingstype, behandlingsgrunnlag);
+
+    dispatch(send(bid, { data }));
   };
 }
 
