@@ -97,7 +97,7 @@ export function lagre() {
 
     const data = lagBehandlingsgrunnlagData(behandlingstype, behandlingsgrunnlag);
 
-    dispatch(send(bid, { data }));
+    return dispatch(send(bid, { data }));
   };
 }
 
