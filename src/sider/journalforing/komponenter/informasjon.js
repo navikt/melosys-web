@@ -45,7 +45,7 @@ class Informasjon extends Component {
 
   async componentDidMount() {
     const { vedlegg, journalforingSkjemaVerdier } = this.props;
-    await this.oppdaterState('hoveddokument.tittel', journalforingSkjemaVerdier.hoveddokument.tittel);
+    await this.oppdaterState('hoveddokumentTittel', journalforingSkjemaVerdier.hoveddokument.tittel);
     await this.oppdaterState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
     await this.oppdaterFelter(this.props, true);
   }
@@ -198,7 +198,7 @@ class Informasjon extends Component {
             linkTo={dokumentURI(journalpostID, dokumentID)}
             dokumentTittel={hoveddokumentTittel}
             undoTittel={this.state.hoveddokumentTittel}
-            updateTittel={() => this.oppdaterState('hoveddokument.tittel', hoveddokumentTittel)}
+            updateTittel={() => this.oppdaterState('hoveddokumentTittel', hoveddokumentTittel)}
           />
         </Nav.Fieldset>
         <p>Vedlegg</p>
