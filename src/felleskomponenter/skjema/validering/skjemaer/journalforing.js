@@ -101,8 +101,8 @@ const journalforing = object().shape({
     .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
       is: kreverPeriodeOgLand,
       then: string()
-        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
+        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .required(TAST_INN_DATO),
     }),
   journalforingSoknadsland: array().of(string())
