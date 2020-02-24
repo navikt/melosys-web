@@ -103,7 +103,7 @@ export default function reducer(state = initialState, action) {
             },
             foretakNavn: arbeidUtland.foretakNavn || null,
             foretakOrgnr: arbeidUtland.foretakOrgnr || null,
-            arbeidUtlandHjemmekontor: arbeidUtland.arbeidUtlandHjemmekontor || null,
+            arbeidUtlandHjemmekontor: Utils._isNil(arbeidUtland.arbeidUtlandHjemmekontor) ? null : arbeidUtland.arbeidUtlandHjemmekontor,
           })),
           juridiskArbeidsgiverNorge: {
             antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
@@ -172,10 +172,10 @@ export default function reducer(state = initialState, action) {
             tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
           },
           selvstendigArbeid: {
-            erSelvstendig: dokument.erSelvstendig || null,
+            erSelvstendig: Utils._isNil(dokument.erSelvstendig) ? null : dokument.erSelvstendig,
             selvstendigForetak: dokument.selvstendigForetak.map(foretak => ({
               orgnr: foretak.orgnr || null,
-              fortsetterEtterArbeidIUtlandet: foretak.fortsetterEtterArbeidIUtlandet || null,
+              fortsetterEtterArbeidIUtlandet: Utils._isNil(foretak.fortsetterEtterArbeidIUtlandet) ? null : foretak.fortsetterEtterArbeidIUtlandet,
             })),
           },
           personOpplysninger: {
