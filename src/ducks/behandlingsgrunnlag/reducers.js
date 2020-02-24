@@ -56,9 +56,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         data: {
           ...state.data,
-          periode: {
-            fom: periode.fom,
-            tom: periode.tom,
+          data: {
+            periode: {
+              fom: periode.fom,
+              tom: periode.tom,
+            },
           },
         },
       };
@@ -68,116 +70,119 @@ export default function reducer(state = initialState, action) {
 
       const data = {
         ...state.data,
-        arbeidsinntekt: {
-          inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
-          inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden ? strengTilInt(dokument.inntektUtenlandskIPerioden) : null,
-          inntektNaeringIPerioden: null,
-          inntektNaturalytelser: {
-            friBil: dokument.inntektNaturalFribil,
-            friBolig: dokument.inntektNaturalFribolig,
-            friAnnet: dokument.inntektNaturalIAnnet || null,
+        data: {
+          arbeidsinntekt: {
+            inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
+            inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden ? strengTilInt(dokument.inntektUtenlandskIPerioden) : null,
+            inntektNaeringIPerioden: null,
+            inntektNaturalytelser: {
+              friBil: dokument.inntektNaturalFribil,
+              friBolig: dokument.inntektNaturalFribolig,
+              friAnnet: dokument.inntektNaturalIAnnet || null,
+            },
+            inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
+            inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
           },
-          inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
-          inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
-        },
-        arbeidNorge: {
-          fullmektigFirma: dokument.fullmektigFirma,
-          fullmektigGateadresse: dokument.fullmektigGateadresse,
-          fullmektigPostnr: dokument.fullmektigPostnr,
-          fullmektigPoststed: dokument.fullmektigPoststed,
-          fullmektigRegion: dokument.fullmektigRegion,
-          fullmektigLandkode: dokument.fullmektigLand,
-        },
-        arbeidUtland: dokument.arbeidUtland.map(arbeidUtland => ({
-          adresse: {
-            gatenavn: arbeidUtland.adresse.gatenavn,
-            husnummer: arbeidUtland.adresse.husnummer || null,
-            landkode: arbeidUtland.adresse.landkode,
-            postnummer: arbeidUtland.adresse.postnummer,
-            poststed: arbeidUtland.adresse.poststed,
-            region: arbeidUtland.adresse.region || null,
+          arbeidNorge: {
+            ...state.data.data.arbeidNorge,
+            fullmektigFirma: dokument.fullmektigFirma,
+            fullmektigGateadresse: dokument.fullmektigGateadresse,
+            fullmektigPostnr: dokument.fullmektigPostnr,
+            fullmektigPoststed: dokument.fullmektigPoststed,
+            fullmektigRegion: dokument.fullmektigRegion,
+            fullmektigLandkode: dokument.fullmektigLand,
           },
-          foretakNavn: arbeidUtland.foretakNavn || null,
-          foretakOrgnr: arbeidUtland.foretakOrgnr || null,
-          arbeidUtlandHjemmekontor: arbeidUtland.arbeidUtlandHjemmekontor || null,
-        })),
-        juridiskArbeidsgiverNorge: {
-          antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
-          utsendteNeste12Mnd: dokument.utsendteNeste12Mnd ? strengTilInt(dokument.utsendteNeste12Mnd) : null,
-          antallAdmAnsatte: dokument.antallAdmAnsatte ? strengTilInt(dokument.antallAdmAnsatte) : null,
-          andelOmsetningINorge: dokument.andelOmsetningINorge ? strengTilInt(dokument.andelOmsetningINorge) : null,
-          andelOppdragINorge: dokument.andelOppdragINorge ? strengTilInt(dokument.andelOppdragINorge) : null,
-          andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
-          arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
-          oppdragsKontrakterIHovedsakInngaattILand: null,
-          ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
-        },
-        arbeidsgiversBekreftelse: {
-          arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
-          arbeidstakerAnsattUnderUtsendelsen: dokument.arbeidstakerAnsattUnderUtsendelsen,
-          erstatterArbeidstakerenUtsendte: dokument.erstatterArbeidstakerenUtsendte,
-          arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
-          arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
-          trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
-          trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato ? formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato) : null,
-        },
-        oppholdUtland: {
-          oppholdsPeriode: {
-            fom: dokument.oppholdUtlandFom ? formatterDatoTilISO(dokument.oppholdUtlandFom) : null,
-            tom: dokument.oppholdUtlandTom ? formatterDatoTilISO(dokument.oppholdUtlandTom) : null,
-          },
-          oppholdslandkoder: dokument.oppholdsland,
-          ektefelleEllerBarnINorge: null,
-          studentSemester: null,
-          studentFinansieringKode: null,
-        },
-        foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
-          uuid: foretakUtland.uuid,
-          navn: foretakUtland.navn || null,
-          orgnr: foretakUtland.orgnr || null,
-          selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet || false,
-          adresse: lagNullableAdresse(foretakUtland.adresse),
-        })),
-        bosted: {
-          intensjonOmRetur: null,
-          antallMaanederINorge: null,
-          EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
-          oppgittAdresse: {
-            gatenavn: dokument.oppgittAdresseGatenavn,
-            husnummer: dokument.oppgittAdresseHusnummer,
-            region: dokument.oppgittAdresseRegion,
-            postnummer: dokument.oppgittAdressePostnummer,
-            poststed: dokument.oppgittAdressePoststed,
-            landkode: dokument.oppgittAdresseLand,
-          },
-        },
-        maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
-          enhetNavn: maritimtArbeid.enhetNavn || null,
-          fartsomradeKode: maritimtArbeid.fartsomradeKode || null,
-          flaggLandkode: maritimtArbeid.flaggLandkode || null,
-          installasjonsLandkode: maritimtArbeid.installasjonsLandkode || null,
-          territorialfarvann: maritimtArbeid.territorialfarvann || null,
-          foretakNavn: maritimtArbeid.foretakNavn || null,
-          foretakOrgnr: maritimtArbeid.foretakOrgnr || null,
-        })),
-        soeknadsland: {
-          landkoder: dokument.soknadsland,
-        },
-        periode: {
-          fom: dokument.soknadsperiodeFom ? formatterDatoTilISO(dokument.soknadsperiodeFom) : null,
-          tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
-        },
-        selvstendigArbeid: {
-          erSelvstendig: dokument.erSelvstendig || null,
-          selvstendigForetak: dokument.selvstendigForetak.map(foretak => ({
-            orgnr: foretak.orgnr || null,
-            fortsetterEtterArbeidIUtlandet: foretak.fortsetterEtterArbeidIUtlandet || null,
+          arbeidUtland: dokument.arbeidUtland.map(arbeidUtland => ({
+            adresse: {
+              gatenavn: arbeidUtland.adresse.gatenavn,
+              husnummer: arbeidUtland.adresse.husnummer || null,
+              landkode: arbeidUtland.adresse.landkode,
+              postnummer: arbeidUtland.adresse.postnummer,
+              poststed: arbeidUtland.adresse.poststed,
+              region: arbeidUtland.adresse.region || null,
+            },
+            foretakNavn: arbeidUtland.foretakNavn || null,
+            foretakOrgnr: arbeidUtland.foretakOrgnr || null,
+            arbeidUtlandHjemmekontor: arbeidUtland.arbeidUtlandHjemmekontor || null,
           })),
-        },
-        personOpplysninger: {
-          utenlandskIdent: dokument.utenlandskIdent,
-          medfolgendeFamilie: [],
-          medfolgendeAndre: null,
+          juridiskArbeidsgiverNorge: {
+            antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
+            utsendteNeste12Mnd: dokument.utsendteNeste12Mnd ? strengTilInt(dokument.utsendteNeste12Mnd) : null,
+            antallAdmAnsatte: dokument.antallAdmAnsatte ? strengTilInt(dokument.antallAdmAnsatte) : null,
+            andelOmsetningINorge: dokument.andelOmsetningINorge ? strengTilInt(dokument.andelOmsetningINorge) : null,
+            andelOppdragINorge: dokument.andelOppdragINorge ? strengTilInt(dokument.andelOppdragINorge) : null,
+            andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
+            arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
+            oppdragsKontrakterIHovedsakInngaattILand: null,
+            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
+          },
+          arbeidsgiversBekreftelse: {
+            arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
+            arbeidstakerAnsattUnderUtsendelsen: dokument.arbeidstakerAnsattUnderUtsendelsen,
+            erstatterArbeidstakerenUtsendte: dokument.erstatterArbeidstakerenUtsendte,
+            arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
+            arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
+            trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
+            trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato ? formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato) : null,
+          },
+          oppholdUtland: {
+            oppholdsPeriode: {
+              fom: dokument.oppholdUtlandFom ? formatterDatoTilISO(dokument.oppholdUtlandFom) : null,
+              tom: dokument.oppholdUtlandTom ? formatterDatoTilISO(dokument.oppholdUtlandTom) : null,
+            },
+            oppholdslandkoder: dokument.oppholdsland,
+            ektefelleEllerBarnINorge: null,
+            studentSemester: null,
+            studentFinansieringKode: null,
+          },
+          foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
+            uuid: foretakUtland.uuid,
+            navn: foretakUtland.navn || null,
+            orgnr: foretakUtland.orgnr || null,
+            selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet || false,
+            adresse: lagNullableAdresse(foretakUtland.adresse),
+          })),
+          bosted: {
+            intensjonOmRetur: null,
+            antallMaanederINorge: null,
+            EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
+            oppgittAdresse: {
+              gatenavn: dokument.oppgittAdresseGatenavn,
+              husnummer: dokument.oppgittAdresseHusnummer,
+              region: dokument.oppgittAdresseRegion,
+              postnummer: dokument.oppgittAdressePostnummer,
+              poststed: dokument.oppgittAdressePoststed,
+              landkode: dokument.oppgittAdresseLand,
+            },
+          },
+          maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
+            enhetNavn: maritimtArbeid.enhetNavn || null,
+            fartsomradeKode: maritimtArbeid.fartsomradeKode || null,
+            flaggLandkode: maritimtArbeid.flaggLandkode || null,
+            installasjonsLandkode: maritimtArbeid.installasjonsLandkode || null,
+            territorialfarvann: maritimtArbeid.territorialfarvann || null,
+            foretakNavn: maritimtArbeid.foretakNavn || null,
+            foretakOrgnr: maritimtArbeid.foretakOrgnr || null,
+          })),
+          soeknadsland: {
+            landkoder: dokument.soknadsland,
+          },
+          periode: {
+            fom: dokument.soknadsperiodeFom ? formatterDatoTilISO(dokument.soknadsperiodeFom) : null,
+            tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
+          },
+          selvstendigArbeid: {
+            erSelvstendig: dokument.erSelvstendig || null,
+            selvstendigForetak: dokument.selvstendigForetak.map(foretak => ({
+              orgnr: foretak.orgnr || null,
+              fortsetterEtterArbeidIUtlandet: foretak.fortsetterEtterArbeidIUtlandet || null,
+            })),
+          },
+          personOpplysninger: {
+            utenlandskIdent: dokument.utenlandskIdent,
+            medfolgendeFamilie: [],
+            medfolgendeAndre: null,
+          },
         },
       };
 

@@ -37,13 +37,23 @@ describe('behandlingsgrunnlag reducer', () => {
     const action = {
       type: Types.OK,
       data: {
-        test: 'testdata',
+        data: {
+          test: 'testdata',
+        },
+        tilleggsData: {
+          testtest: 'testtest',
+        },
       },
     };
     const expectedState = {
       status: STATUS.OK,
       data: {
-        test: 'testdata',
+        data: {
+          test: 'testdata',
+        },
+        tilleggsData: {
+          testtest: 'testtest',
+        },
       },
     };
 
@@ -65,9 +75,11 @@ describe('behandlingsgrunnlag reducer', () => {
     const expectedState = {
       status: STATUS.NOT_STARTED,
       data: {
-        periode: {
-          fom: 'dato1',
-          tom: 'dato2',
+        data: {
+          periode: {
+            fom: 'dato1',
+            tom: 'dato2',
+          },
         },
       },
     };
@@ -78,6 +90,20 @@ describe('behandlingsgrunnlag reducer', () => {
   });
 
   it('Oppdaterer behandlingsgrunnlag ved action.type OPPDATER_BEHANDLINGSGRUNNLAG', () => {
+    initialState.data = {
+      ...initialState.data,
+      data: {
+        arbeidNorge: {
+          arbeidsforholdOpprettholdIHelePerioden: true,
+          arbeidsforholdVikarNavn: 'Vikarbyrået AS',
+          vikarOrgnr: '22334455',
+          flyendePersonellHjemmebase: 'Flybasen Int. Airport, ....',
+          kontaktNavn: 'Ola Nordmann',
+          kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
+        },
+      },
+    };
+
     const action = {
       type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
       dokument: {
@@ -187,131 +213,139 @@ describe('behandlingsgrunnlag reducer', () => {
     const expectedState = {
       status: STATUS.NOT_STARTED,
       data: {
-        arbeidsinntekt: {
-          inntektNorskIPerioden: 1,
-          inntektUtenlandskIPerioden: 2,
-          inntektNaeringIPerioden: null,
-          inntektNaturalytelser: {
-            friBil: '4',
-            friBolig: '5',
-            friAnnet: '6',
-          },
-          inntektErInnrapporteringspliktig: true,
-          inntektTrygdeavgiftBlirTrukket: true,
-        },
-        arbeidNorge: {
-          fullmektigFirma: 'test',
-          fullmektigGateadresse: 'test',
-          fullmektigPostnr: 'test',
-          fullmektigPoststed: 'test',
-          fullmektigRegion: 'test',
-          fullmektigLandkode: 'test',
-        },
-        arbeidUtland: [
-          {
-            adresse: {
-              gatenavn: 'test',
-              husnummer: 'test',
-              landkode: 'NO',
-              postnummer: 'test',
-              poststed: 'test',
-              region: 'test',
+        data: {
+          arbeidsinntekt: {
+            inntektNorskIPerioden: 1,
+            inntektUtenlandskIPerioden: 2,
+            inntektNaeringIPerioden: null,
+            inntektNaturalytelser: {
+              friBil: '4',
+              friBolig: '5',
+              friAnnet: '6',
             },
-            foretakNavn: 'test',
-            foretakOrgnr: '12345',
-            arbeidUtlandHjemmekontor: true,
+            inntektErInnrapporteringspliktig: true,
+            inntektTrygdeavgiftBlirTrukket: true,
           },
-        ],
-        juridiskArbeidsgiverNorge: {
-          antallAnsatte: 12345,
-          utsendteNeste12Mnd: 12345,
-          antallAdmAnsatte: 12345,
-          andelOmsetningINorge: 12345,
-          andelOppdragINorge: 12345,
-          andelKontrakterINorge: 12345,
-          arbeidstakereRekruttertILand: 'DE',
-          oppdragsKontrakterIHovedsakInngaattILand: null,
-          ekstraArbeidsgivere: [],
-        },
-        arbeidsgiversBekreftelse: {
-          arbeidsgiverBekrefterUtsendelse: true,
-          arbeidstakerAnsattUnderUtsendelsen: true,
-          erstatterArbeidstakerenUtsendte: true,
-          arbeidstakerTidligereUtsendt24Mnd: true,
-          arbeidsgiverBetalerArbeidsgiveravgift: true,
-          trygdeavgiftTrukketGjennomSkatt: true,
-          trygdeavgiftTrukketGjennomSkattDato: '2011-11-11',
-        },
-        oppholdUtland: {
-          oppholdsPeriode: {
+          arbeidNorge: {
+            arbeidsforholdOpprettholdIHelePerioden: true,
+            arbeidsforholdVikarNavn: 'Vikarbyrået AS',
+            vikarOrgnr: '22334455',
+            flyendePersonellHjemmebase: 'Flybasen Int. Airport, ....',
+            kontaktNavn: 'Ola Nordmann',
+            kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
+            fullmektigFirma: 'test',
+            fullmektigGateadresse: 'test',
+            fullmektigPostnr: 'test',
+            fullmektigPoststed: 'test',
+            fullmektigRegion: 'test',
+            fullmektigLandkode: 'test',
+          },
+          arbeidUtland: [
+            {
+              adresse: {
+                gatenavn: 'test',
+                husnummer: 'test',
+                landkode: 'NO',
+                postnummer: 'test',
+                poststed: 'test',
+                region: 'test',
+              },
+              foretakNavn: 'test',
+              foretakOrgnr: '12345',
+              arbeidUtlandHjemmekontor: true,
+            },
+          ],
+          juridiskArbeidsgiverNorge: {
+            antallAnsatte: 12345,
+            utsendteNeste12Mnd: 12345,
+            antallAdmAnsatte: 12345,
+            andelOmsetningINorge: 12345,
+            andelOppdragINorge: 12345,
+            andelKontrakterINorge: 12345,
+            arbeidstakereRekruttertILand: 'DE',
+            oppdragsKontrakterIHovedsakInngaattILand: null,
+            ekstraArbeidsgivere: [],
+          },
+          arbeidsgiversBekreftelse: {
+            arbeidsgiverBekrefterUtsendelse: true,
+            arbeidstakerAnsattUnderUtsendelsen: true,
+            erstatterArbeidstakerenUtsendte: true,
+            arbeidstakerTidligereUtsendt24Mnd: true,
+            arbeidsgiverBetalerArbeidsgiveravgift: true,
+            trygdeavgiftTrukketGjennomSkatt: true,
+            trygdeavgiftTrukketGjennomSkattDato: '2011-11-11',
+          },
+          oppholdUtland: {
+            oppholdsPeriode: {
+              fom: '2011-11-11',
+              tom: '2011-11-11',
+            },
+            oppholdslandkoder: [],
+            ektefelleEllerBarnINorge: null,
+            studentSemester: null,
+            studentFinansieringKode: null,
+          },
+          foretakUtland: [
+            {
+              uuid: '12ff23dc4',
+              navn: 'Abcdef',
+              orgnr: '123456789',
+              selvstendigNaeringsvirksomhet: true,
+              adresse: {
+                gatenavn: null,
+                husnummer: null,
+                region: null,
+                postnummer: null,
+                poststed: null,
+                landkode: null,
+              },
+            },
+          ],
+          bosted: {
+            intensjonOmRetur: null,
+            antallMaanederINorge: null,
+            EOSBarnetrygdFraNAV: true,
+            oppgittAdresse: {
+              gatenavn: '12345',
+              husnummer: '12345',
+              region: '12345',
+              postnummer: '12345',
+              poststed: '12345',
+              landkode: '12345',
+            },
+          },
+          maritimtArbeid: [
+            {
+              enhetNavn: '12345',
+              fartsomradeKode: '12345',
+              flaggLandkode: '12345',
+              installasjonsLandkode: '12345',
+              territorialfarvann: '12345',
+              foretakNavn: '12345',
+              foretakOrgnr: '12345',
+            },
+          ],
+          soeknadsland: {
+            landkoder: [],
+          },
+          periode: {
             fom: '2011-11-11',
             tom: '2011-11-11',
           },
-          oppholdslandkoder: [],
-          ektefelleEllerBarnINorge: null,
-          studentSemester: null,
-          studentFinansieringKode: null,
-        },
-        foretakUtland: [
-          {
-            uuid: '12ff23dc4',
-            navn: 'Abcdef',
-            orgnr: '123456789',
-            selvstendigNaeringsvirksomhet: true,
-            adresse: {
-              gatenavn: null,
-              husnummer: null,
-              region: null,
-              postnummer: null,
-              poststed: null,
-              landkode: null,
-            },
+          selvstendigArbeid: {
+            erSelvstendig: true,
+            selvstendigForetak: [
+              {
+                orgnr: '12345',
+                fortsetterEtterArbeidIUtlandet: true,
+              },
+            ],
           },
-        ],
-        bosted: {
-          intensjonOmRetur: null,
-          antallMaanederINorge: null,
-          EOSBarnetrygdFraNAV: true,
-          oppgittAdresse: {
-            gatenavn: '12345',
-            husnummer: '12345',
-            region: '12345',
-            postnummer: '12345',
-            poststed: '12345',
-            landkode: '12345',
+          personOpplysninger: {
+            utenlandskIdent: '12345',
+            medfolgendeFamilie: [],
+            medfolgendeAndre: null,
           },
-        },
-        maritimtArbeid: [
-          {
-            enhetNavn: '12345',
-            fartsomradeKode: '12345',
-            flaggLandkode: '12345',
-            installasjonsLandkode: '12345',
-            territorialfarvann: '12345',
-            foretakNavn: '12345',
-            foretakOrgnr: '12345',
-          },
-        ],
-        soeknadsland: {
-          landkoder: [],
-        },
-        periode: {
-          fom: '2011-11-11',
-          tom: '2011-11-11',
-        },
-        selvstendigArbeid: {
-          erSelvstendig: true,
-          selvstendigForetak: [
-            {
-              orgnr: '12345',
-              fortsetterEtterArbeidIUtlandet: true,
-            },
-          ],
-        },
-        personOpplysninger: {
-          utenlandskIdent: '12345',
-          medfolgendeFamilie: [],
-          medfolgendeAndre: null,
         },
       },
     };
