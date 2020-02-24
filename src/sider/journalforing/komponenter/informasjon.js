@@ -54,9 +54,10 @@ class Informasjon extends Component {
     await this.oppdaterFelter(prevProps);
   }
 
-  oppdaterState = async (stateNavn, verdi) => {
-    await this.setState({ [stateNavn]: verdi });
+  oppdaterState = (stateNavn, verdi) => {
+    this.setState({ [stateNavn]: verdi });
   };
+
   oppdaterFelter = async (props, tvingOppdatering) => {
     const {
       brukerID: gammelBrukerID,
