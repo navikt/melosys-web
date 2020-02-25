@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { reduxForm, getFormValues, FormSection } from 'redux-form';
+import { reduxForm, getFormValues, FormSection, SubmissionError } from 'redux-form';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../../felleskomponenter/skjema';
@@ -26,6 +26,7 @@ const OpprettNySak = ({
   tilForsiden,
   handleSubmit,
   change,
+  error,
 }) => {
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
@@ -154,6 +155,10 @@ const OpprettNySak = ({
                       feltNavn="skalTilordnes"
                       label="Legg behandlingen i mine oppgaver"
                     />
+                    {
+                      error &&
+                      <Nav.AlertStripeAdvarsel className="formError">{error}</Nav.AlertStripeAdvarsel>
+                    }
                     <Knapperad
                       bekreftTekst="Opprett sak"
                       avbryt={tilForsiden}
@@ -178,10 +183,12 @@ OpprettNySak.propTypes = {
   tilForsiden: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
   change: PT.func.isRequired,
+  error: PT.string,
 };
 
 OpprettNySak.defaultProps = {
   formValues: {},
+  error: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -215,6 +222,9 @@ const opprettNySak = async (values, dispatch, props) => {
     props.tilForsiden();
   } catch (e) {
     Utils.logger.error(e);
+    if (e.body.message) {
+      throw new SubmissionError({ _error: e.body.message });
+    }
   }
 };
 
