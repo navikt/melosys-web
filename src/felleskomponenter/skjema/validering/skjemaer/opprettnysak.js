@@ -1,6 +1,6 @@
 import * as Utils from '../../../../utils';
 
-import MKV from '../../../../melosyskodeverk';
+import { Utils as MKVUtils } from '../../../../melosyskodeverk';
 
 const {
   object, string, mixed, array,
@@ -47,7 +47,7 @@ const opprettnysak = object().shape({
     .required(VELG_BEHANDLINGSTYPE),
   soknadsinfo: object()
     .when('behandlingstype', {
-      is: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      is: MKVUtils.erSoknad,
       then: soknadsinfo,
     }),
   oppgaveID: string()

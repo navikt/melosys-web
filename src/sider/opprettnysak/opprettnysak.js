@@ -16,7 +16,7 @@ import Brukernavnskjema from '../../felleskomponenter/brukernavnskjema';
 import Knapperad from '../../felleskomponenter/knapperad';
 import EnkeltDato from '../../felleskomponenter/datoOmrade/enkeltDato';
 
-import MKV from '../../melosyskodeverk';
+import MKV, { Utils as MKVUtils } from '../../melosyskodeverk';
 
 import './opprettnysak.css';
 
@@ -30,7 +30,7 @@ const OpprettNySak = ({
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
   const { behandlingstype } = formValues;
-  const soknadErValgt = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
+  const soknadErValgt = MKVUtils.erSoknad(behandlingstype);
 
   const hentOppgaver = async brukerID => {
     if (Validering.erGyldigFnr(brukerID) || Validering.erGyldigDnr(brukerID)) {
@@ -68,10 +68,7 @@ const OpprettNySak = ({
 
   const oppgaverFinnes = radioValg.length > 0;
 
-  const filtrerteBehandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => ([
-    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV,
-  ].includes(kode)));
+  const filtrerteBehandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => MKVUtils.erSoknad(kode));
 
   return (
     <form className="opprettnysak" onSubmit={handleSubmit}>
@@ -187,12 +184,13 @@ const mapStateToProps = state => ({
 });
 
 const opprettNySak = async (values, dispatch, props) => {
+  const soknadErValgt = MKVUtils.erSoknad(values.behandlingstype);
   const soknadDto = {
     periode: {
-      fom: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null,
-      tom: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null,
+      fom: soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null,
+      tom: soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null,
     },
-    land: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? values.soknadsinfo.land : [],
+    land: soknadErValgt ? values.soknadsinfo.land : [],
   };
 
   const data = {
