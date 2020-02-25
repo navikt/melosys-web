@@ -132,6 +132,20 @@ addMethod(string, 'harIkkeFnrEllerDnrLengde', function(message) {
   });
 });
 
+addMethod(string, 'siblingIs', function(sibling, expectedValue, message) {
+  return this.test('siblingIs', message, function() {
+    const { options: { parent }, createError, path } = this;
+
+    if (parent[sibling] === expectedValue) {
+      throw createError({
+        path,
+        message,
+      });
+    }
+
+    return true;
+  });
+});
 
 export {
   mixed,

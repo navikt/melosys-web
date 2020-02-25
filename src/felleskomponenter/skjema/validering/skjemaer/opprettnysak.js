@@ -16,6 +16,7 @@ const VELG_SAKSTYPE = { melding: 'Velg sakstype' };
 const VELG_BEHANDLINGSTYPE = { melding: 'Velg behandlingstype' };
 const VELG_LAND = { melding: 'Velg land' };
 const VELG_EN_OPPGAVE = { melding: 'Velg en oppgave' };
+const MANGLER_JOURNALPOST = { melding: 'Den valgte oppgaven har ingen journalpost' };
 
 const soknadsinfo = object().shape({
   fom: string()
@@ -51,8 +52,10 @@ const opprettnysak = object().shape({
       then: soknadsinfo,
     }),
   oppgaveID: string()
+    .siblingIs('journalpostID', null, MANGLER_JOURNALPOST)
     .required(VELG_EN_OPPGAVE),
 
+  /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   bruker: mixed(),
 });
 

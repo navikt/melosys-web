@@ -25,6 +25,7 @@ const OpprettNySak = ({
   formValues,
   tilForsiden,
   handleSubmit,
+  change,
 }) => {
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
@@ -69,6 +70,11 @@ const OpprettNySak = ({
   const oppgaverFinnes = radioValg.length > 0;
 
   const filtrerteBehandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => MKVUtils.erSoknad(kode));
+
+  const settJournalpostID = oppgaveID => {
+    const { journalpostID } = oppgaver.find(oppgave => oppgave.oppgaveID === oppgaveID);
+    change('journalpostID', journalpostID);
+  };
 
   return (
     <form className="opprettnysak" onSubmit={handleSubmit}>
@@ -132,6 +138,7 @@ const OpprettNySak = ({
                       <Skjema.CustomRadioPanelGruppe
                         feltNavn="oppgaveID"
                         radios={radioValg}
+                        notify={settJournalpostID}
                       />
                     }
                     {
@@ -170,6 +177,7 @@ OpprettNySak.propTypes = {
   formValues: PT.object,
   tilForsiden: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
+  change: PT.func.isRequired,
 };
 
 OpprettNySak.defaultProps = {
