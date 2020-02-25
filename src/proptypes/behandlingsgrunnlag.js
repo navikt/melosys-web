@@ -4,6 +4,16 @@ import { ArbeidNorge } from './arbeidNorge';
 import { ArbeidUtland } from './arbeidUtland';
 import { Periode } from './periode';
 
+const JuridiskArbeidsgiverNorgePropType = PT.shape({
+  andelKontrakterINorge: PT.number,
+  andelOmsetningINorge: PT.number,
+  andelOppdragINorge: PT.number,
+  antallAdmAnsatte: PT.number,
+  antallAnsatte: PT.number,
+  arbeidstakereRekruttertILand: PT.string,
+  ekstraArbeidsgivere: PT.arrayOf(PT.string),
+  utsendteNeste12Mnd: PT.number,
+});
 const BostedPropType = PT.shape({
   antallMaanederINorge: PT.number,
   intensjonOmRetur: PT.bool,
@@ -53,6 +63,7 @@ const SoeknadslandPropType = PT.shape({
 });
 
 const BehandlingsgrunnnlagDataPropType = PT.shape({
+  juridiskArbeidsgiverNorge: JuridiskArbeidsgiverNorgePropType,
   arbeidNorge: ArbeidNorge,
   arbeidUtland: ArbeidUtland,
   bosted: BostedPropType,
