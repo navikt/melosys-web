@@ -10,7 +10,7 @@ import * as KV from '../../kodeverk';
 
 import * as Ikoner from '../../resources/images';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
-import { soknadSelectors, soknadOperations } from '../../ducks/soknad';
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 import PanelHeader from '../panelHeader/panelHeader';
 
 import './soknadsperiode.css';
@@ -224,13 +224,13 @@ Soknadsperiode.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
-  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
+  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
+  oppdaterPeriode: periode => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Soknadsperiode);

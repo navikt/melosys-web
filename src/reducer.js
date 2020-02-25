@@ -6,6 +6,7 @@ import anmodningsperioderReducer from './ducks/anmodningsperioder/';
 import anmodningsperiodesvarReducer from './ducks/anmodningsperiodesvar';
 import avklartefaktaReducer from './ducks/avklartefakta/';
 import behandlingerReducer from './ducks/behandlinger';
+import behandlingsgrunnlagReducer from './ducks/behandlingsgrunnlag/';
 import behandlingsperioderReducer from './ducks/behandlingsperioder';
 import behandlingsresultatReducer from './ducks/behandlingsresultat';
 import dokumenterReducer from './ducks/dokumenter/';
@@ -19,7 +20,6 @@ import personerReducer from './ducks/personer';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
-import soknadReducer from './ducks/soknad/';
 import utpekReducer from './ducks/utpek';
 import utpekingsperioderReducer from './ducks/utpekingsperioder';
 import vilkarReducer from './ducks/vilkar/';
@@ -34,6 +34,7 @@ const createRootReducer = history => combineReducers({
   anmodningsperiodesvar: anmodningsperiodesvarReducer,
   avklartefakta: avklartefaktaReducer,
   behandlinger: behandlingerReducer,
+  behandlingsgrunnlag: behandlingsgrunnlagReducer,
   behandlingsperioder: behandlingsperioderReducer,
   behandlingsresultat: behandlingsresultatReducer,
   dokumenter: dokumenterReducer,
@@ -47,7 +48,6 @@ const createRootReducer = history => combineReducers({
   saksbehandler: saksbehandlerReducer,
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
-  soknad: soknadReducer,
   utpek: utpekReducer,
   utpekingsperioder: utpekingsperioderReducer,
   vedtak: vedtakReducer,

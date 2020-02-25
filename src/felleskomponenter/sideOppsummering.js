@@ -23,8 +23,8 @@ const SideOppsummering = ({
   lovvalgsland,
   renderBehandlingsmeny,
   renderBehandlingsstatus,
-  soknadsperiodeFom,
-  soknadsperiodeTom,
+  behandlingsgrunnlagPeriodeFom,
+  behandlingsgrunnlagPeriodeTom,
   periodeLabel,
 }) => {
   if (!oppsummering) return <div />;
@@ -59,8 +59,8 @@ const SideOppsummering = ({
               person={person}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
-              soknadsperiodeFom={soknadsperiodeFom}
-              soknadsperiodeTom={soknadsperiodeTom}
+              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               periodeLabel={periodeLabel}
             />
             }
@@ -91,8 +91,8 @@ SideOppsummering.propTypes = {
   renderBehandlingsstatus: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
-  soknadsperiodeFom: PT.string,
-  soknadsperiodeTom: PT.string,
+  behandlingsgrunnlagPeriodeFom: PT.string,
+  behandlingsgrunnlagPeriodeTom: PT.string,
   periodeLabel: PT.string,
 };
 
@@ -105,8 +105,8 @@ SideOppsummering.defaultProps = {
   oppsummering: undefined,
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
-  soknadsperiodeFom: undefined,
-  soknadsperiodeTom: undefined,
+  behandlingsgrunnlagPeriodeFom: undefined,
+  behandlingsgrunnlagPeriodeTom: undefined,
   periodeLabel: 'Søknadsperiode',
 };
 

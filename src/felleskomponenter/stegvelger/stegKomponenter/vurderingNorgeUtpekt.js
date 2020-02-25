@@ -13,7 +13,7 @@ import * as Utils from '../../../utils';
 import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
@@ -129,7 +129,7 @@ export const VurderingNorgeUtpekt = ({
           <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={!redigerbart}>
             <Nav.Radio
               onChange={vedGodkjennEndring}
-              label="Godkjenn lovvalg"
+              label="Godkjenn"
               value={KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN}
               name="godkjenn"
               checked={utpekingGodkjent}
@@ -144,7 +144,14 @@ export const VurderingNorgeUtpekt = ({
           </Nav.Fieldset>
         </Nav.Column>
       </Nav.Row>
-      <Nav.AlertStripe type="advarsel">Hvis det ikke er nok informasjon, må dette innhentes før lovvalget skal godkjennes eller ikke.</Nav.AlertStripe>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.AlertStripe type="advarsel">
+            Hvis det ikke er nok informasjon, må dette innhentes før du velger «Godkjenn» eller «Ikke godkjenn».
+            Lovvalgsbestemmelsen og perioden kan kun redigeres etter avtale med utenlandsk trygdemyndighet.
+          </Nav.AlertStripe>
+        </Nav.Column>
+      </Nav.Row>
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp">Bekreft og fortsett</Nav.Knapp>
       </div>
@@ -177,13 +184,13 @@ VurderingNorgeUtpekt.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => ({
   lovvalgsperiode: {
-    fomDato: soknadSelectors.SoknadsperiodeFomSelector(state),
-    tomDato: soknadSelectors.SoknadsperiodeTomSelector(state),
+    fomDato: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
+    tomDato: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
   },
   formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
   initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeFomSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeTomSelector(state)),
+    fom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeFomSelector(state)),
+    tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),

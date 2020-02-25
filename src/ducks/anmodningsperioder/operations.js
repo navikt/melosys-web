@@ -14,7 +14,7 @@ import * as Types from './types';
 import * as Actions from './actions';
 import * as Selectors from './selectors';
 
-import { soknadSelectors } from '../soknad';
+import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
 import { lovvalgsperioderSelectors } from '../lovvalgsperioder';
 import { anmodningsperioderSelectors } from '../anmodningsperioder';
 import { behandlingerSelectors } from '../behandlinger';
@@ -49,8 +49,8 @@ export function lagre() {
 }
 
 const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
-  const soknadsland = soknadSelectors.SoknadslandSelector(reduxState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+  const soknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   const unntakFraLovvalgsland = soknadsland.join('');
@@ -58,8 +58,8 @@ const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
 
   return [{
     id: null,
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato: periode.fom,
+    tomDato: periode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
     tilleggBestemmelse: stegState.tilleggbestemmelse,
     lovvalgsland: MKV.Koder.landkoder.NO,

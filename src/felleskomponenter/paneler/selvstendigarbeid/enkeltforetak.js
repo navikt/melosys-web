@@ -30,7 +30,7 @@ class EnkeltForetak extends Component {
 
     if (erOrgnrGyldig(nyttOrgnr)) {
       await hentOrganisasjon(nyttOrgnr);
-      this.props.oppdaterSoknadState();
+      this.props.oppdaterBehandlingsgrunnlagState();
     }
   }
 
@@ -88,7 +88,7 @@ EnkeltForetak.propTypes = {
   hentOrganisasjon: PT.func.isRequired,
   organisasjon: PT.object,
   orgnr: PT.string,
-  oppdaterSoknadState: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlagState: PT.func.isRequired,
   posisjon: PT.number.isRequired,
   slettForetak: PT.func.isRequired,
 };

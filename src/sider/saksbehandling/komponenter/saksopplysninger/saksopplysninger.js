@@ -12,12 +12,11 @@ import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
 import Soknadpaneler from '../../../../felleskomponenter/soknadpaneler';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import {
-  soknadOperations,
-  soknadSelectors,
-} from '../../../../ducks/soknad';
+  behandlingsgrunnlagOperations,
+  behandlingsgrunnlagSelectors,
+} from '../../../../ducks/behandlingsgrunnlag';
 
 import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 import { behandlingsresultatSelectors } from '../../../../ducks/behandlingsresultat';
@@ -29,7 +28,7 @@ const Saksopplysninger = ({
   redigerbart,
   behandlingID,
   soknadForm,
-  soknad,
+  behandlingsgrunnlag,
   behandlingsresultat,
   fagsakStatusKode,
   tilForsiden,
@@ -39,7 +38,7 @@ const Saksopplysninger = ({
   lagreAnmodningsperioderHandler,
   oppdaterOgLagreBehandlingerHandler,
   lagreAllData,
-  oppdaterSoknad,
+  oppdaterBehandlingsgrunnlag,
   blokkerInnholdMedOppfriskSpinner,
 }) => {
   if (Utils._isNil(redigerbart)) return null;
@@ -51,8 +50,8 @@ const Saksopplysninger = ({
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-  const soknadErKlar = !(Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0);
-  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && soknadErKlar;
+  const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
 
   return (
     <Fragment>
@@ -72,7 +71,7 @@ const Saksopplysninger = ({
         lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
         oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
         lagreAllData={lagreAllData}
-        oppdaterLokalSoknadHandler={oppdaterSoknad}
+        oppdaterLokalSoknadHandler={oppdaterBehandlingsgrunnlag}
         begrunnelser={MKV.KTObjects.begrunnelser}
         landkoder={MKV.KTObjects.landkoder}
         tilForsiden={tilForsiden}
@@ -96,9 +95,9 @@ Saksopplysninger.propTypes = {
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   match: PT.object.isRequired,
-  oppdaterSoknad: PT.func.isRequired,
-  person: MPT.Behandlinger.Saksopplysninger.Person,
-  soknad: MPT.Soknad,
+  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
+  sendBehandlingsgrunnlag: PT.func.isRequired,
+  behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
   inngangForm: PT.object,
   vurdering: PT.object,
@@ -116,8 +115,7 @@ Saksopplysninger.propTypes = {
 Saksopplysninger.defaultProps = {
   redigerbart: null,
   alleRelevantePersoner: [],
-  person: {},
-  soknad: {},
+  behandlingsgrunnlag: {},
   vurdering: {},
   syncErrors: {},
   inngangForm: {},
@@ -127,15 +125,14 @@ const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  soknad: soknadSelectors.SoknadSelector(state),
+  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  inngangForm: formSelectors.InngangFormSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
+  sendBehandlingsgrunnlag: (bid, dokument) => dispatch(behandlingsgrunnlagOperations.send(bid, dokument)),
+  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

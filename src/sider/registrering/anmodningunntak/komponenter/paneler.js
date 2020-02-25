@@ -11,7 +11,7 @@ import Personopplysninger from '../../../../felleskomponenter/paneler/personoppl
 import Kontantytelser from '../../../../felleskomponenter/paneler/kontantytelser';
 import ArbeidsgivereNorge from '../../../../felleskomponenter/paneler/arbeidsgivereNorge';
 
-import { soknadSelectors } from '../../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { formSelectors } from '../../../../ducks/form';
 
 const Paneler = ({
@@ -38,13 +38,13 @@ Paneler.defaultProps = {
 const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.RegistreringPanelerOppgittAdresseHarVerdierSelector(state),
   initialValues: {
-    utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
-    oppgittAdresseGatenavn: soknadSelectors.BostedAdresseSelector(state).gatenavn,
-    oppgittAdresseHusnummer: soknadSelectors.BostedAdresseSelector(state).husnummer,
-    oppgittAdresseRegion: soknadSelectors.BostedAdresseSelector(state).region,
-    oppgittAdressePostnummer: soknadSelectors.BostedAdresseSelector(state).postnummer,
-    oppgittAdressePoststed: soknadSelectors.BostedAdresseSelector(state).poststed,
-    oppgittAdresseLand: soknadSelectors.BostedAdresseSelector(state).landkode,
+    utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
+    oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
+    oppgittAdresseHusnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummer,
+    oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
+    oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
+    oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
+    oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,
   },
 });
 

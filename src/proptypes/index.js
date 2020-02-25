@@ -7,6 +7,7 @@ import { Avklartefakta, AvklartefaktaListe } from './avklartefakta';
 import { BehandligOversikt, BehandligOversikter } from './behandlingOversikt';
 import { Bekreftelser } from './bekreftelser';
 import * as Behandlinger from './behandlinger';
+import { Behandlingsgrunnlag } from './behandlingsgrunnlag';
 import { Behandlingsresultat } from './behandlingsresultat';
 import { Dokument, DokumentNullable, Vedlegg } from './dokument';
 import { DokumentMetadataListe } from './dokumentMetadata';
@@ -25,7 +26,6 @@ import { Personhistorikk } from './personhistorikk';
 import { Periode } from './periode';
 import { Saksbehandler } from './saksbehandler';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
-import { Soknad } from './soknad';
 import { SoknadForm } from './soknadForm';
 import { Soknadsland } from './soknadsland';
 import { Soknadsperiode } from './soknadsperiode';
@@ -84,7 +84,7 @@ export {
   Personhistorikk,
   SaksbehandlingOppgave,
   Saksbehandler,
-  Soknad,
+  Behandlingsgrunnlag,
   SoknadForm,
   Soknadsland,
   Soknadsperiode,

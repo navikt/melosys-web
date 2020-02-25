@@ -18,7 +18,7 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
 import { datalastingOperations } from '../../ducks/datalasting';
-import { soknadSelectors, soknadOperations } from '../../ducks/soknad';
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 import { vilkarOperations } from '../../ducks/vilkar';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta';
 import { anmodningsperioderOperations } from '../../ducks/anmodningsperioder';
@@ -59,8 +59,8 @@ const Vurderutpeking = ({
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   arbeidsland,
-  soknadsperiodeFom,
-  soknadsperiodeTom,
+  behandlingsgrunnlagPeriodeFom,
+  behandlingsgrunnlagPeriodeTom,
   behandlingsmenyRedigerbart,
   lagreOgLukk,
   tilbakeleggOppgave,
@@ -74,7 +74,7 @@ const Vurderutpeking = ({
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
   resetSaksopplysninger,
-  oppdaterSoknad,
+  oppdaterBehandlingsgrunnlag,
   lagreVilkar,
   lagreAvklartefakta,
   lagreLovvalgsperioder,
@@ -84,7 +84,7 @@ const Vurderutpeking = ({
   tilForsiden,
   blokkerInnholdMedOppfriskSpinner,
   soknadForm,
-  soknad,
+  behandlingsgrunnlag,
 }) => {
   const { params: { snr: saksnummer } } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -100,7 +100,7 @@ const Vurderutpeking = ({
     return null;
   }
 
-  const soknadErKlar = !(Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0);
+  const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
   return (
     <div className="vurderutpeking">
@@ -108,7 +108,7 @@ const Vurderutpeking = ({
         <Nav.Row>
           <Nav.Column xs="7">
             {
-              soknadErKlar &&
+              behandlingsgrunnlagErKlart &&
               <Stegvelger
                 behandlingID={behandlingID}
                 stegMap={stegMap}
@@ -118,7 +118,7 @@ const Vurderutpeking = ({
                 lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
                 oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
                 lagreAllData={lagreAllData}
-                oppdaterLokalSoknadHandler={oppdaterSoknad}
+                oppdaterLokalSoknadHandler={oppdaterBehandlingsgrunnlag}
                 begrunnelser={MKV.KTObjects.begrunnelser}
                 landkoder={MKV.KTObjects.landkoder}
                 tilForsiden={tilForsiden}
@@ -139,8 +139,8 @@ const Vurderutpeking = ({
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               arbeidsland={arbeidsland}
-              soknadsperiodeFom={soknadsperiodeFom}
-              soknadsperiodeTom={soknadsperiodeTom}
+              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               periodeLabel="Periode fra SED"
               renderBehandlingsmeny={() => <Behandlingsmeny
                 redigerbart={behandlingsmenyRedigerbart}
@@ -190,8 +190,8 @@ Vurderutpeking.propTypes = {
   lovvalgsperiodeFom: PT.string.isRequired,
   lovvalgsperiodeTom: PT.string.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  soknadsperiodeFom: PT.string.isRequired,
-  soknadsperiodeTom: PT.string.isRequired,
+  behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
+  behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   behandlingsmenyRedigerbart: PT.bool.isRequired,
   lagreOgLukk: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
@@ -206,7 +206,7 @@ Vurderutpeking.propTypes = {
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
-  oppdaterSoknad: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
@@ -214,12 +214,12 @@ Vurderutpeking.propTypes = {
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
-  soknad: MPT.Soknad,
+  behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
 };
 
 Vurderutpeking.defaultProps = {
-  soknad: {},
+  behandlingsgrunnlag: {},
 };
 
 const mapStateToProps = state => ({
@@ -231,19 +231,19 @@ const mapStateToProps = state => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
-  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
+  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
-  soknad: soknadSelectors.SoknadSelector(state),
+  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
-  oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
+  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),

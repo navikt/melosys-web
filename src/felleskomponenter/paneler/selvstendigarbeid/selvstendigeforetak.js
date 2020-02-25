@@ -9,18 +9,18 @@ import './selvstendigArbeid.css';
 class SelvstendigeForetak extends Component {
   componentDidUpdate(prevProps) {
     const { fields: oldFields } = prevProps;
-    const { oppdaterSoknadState, fields } = this.props;
+    const { oppdaterBehandlingsgrunnlagState, fields } = this.props;
 
     // Sjekk om listen over selvstendig næringsdrivende
-    // har oppdatert seg siden sist. I såfall, oppdaterSoknadState.
+    // har oppdatert seg siden sist. I såfall, oppdaterBehandlingsgrunnlagState.
     if (fields.length !== oldFields.length) {
-      oppdaterSoknadState();
+      oppdaterBehandlingsgrunnlagState();
     }
   }
 
   render() {
     const {
-      redigerbart, fields, organisasjoner, hentOrganisasjon, oppdaterSoknadState, skjema,
+      redigerbart, fields, organisasjoner, hentOrganisasjon, oppdaterBehandlingsgrunnlagState, skjema,
     } = this.props;
 
     return (
@@ -34,7 +34,7 @@ class SelvstendigeForetak extends Component {
             posisjon={index + 1}
             hentOrganisasjon={hentOrganisasjon}
             slettForetak={() => fields.remove(index)}
-            oppdaterSoknadState={oppdaterSoknadState}
+            oppdaterBehandlingsgrunnlagState={oppdaterBehandlingsgrunnlagState}
             skjema={skjema}
             redigerbart={redigerbart}
           />))
@@ -56,7 +56,7 @@ SelvstendigeForetak.propTypes = {
   fields: PT.object.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   organisasjoner: PT.array.isRequired,
-  oppdaterSoknadState: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlagState: PT.func.isRequired,
   skjema: PT.object.isRequired,
 };
 

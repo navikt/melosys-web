@@ -7,7 +7,6 @@
 
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
-import * as SoknadTypes from '../soknad/types';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
@@ -22,17 +21,6 @@ const flettPersoner = (nyePersoner, eksisterendePersoner) => {
 
 export default function reducer(state = initalState, action) {
   switch (action.type) {
-    case SoknadTypes.OK: {
-      if (!action.data.tilleggsData) { return state; }
-      const { personer } = action.data.tilleggsData;
-      const eksisterendePersoner = Array.isArray(state.data) ? state.data : [];
-
-      return {
-        ...state,
-        status: STATUS.OK,
-        data: flettPersoner(personer, eksisterendePersoner),
-      };
-    }
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:

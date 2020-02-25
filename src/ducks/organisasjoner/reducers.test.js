@@ -2,7 +2,7 @@ import reducer from './reducers';
 
 import * as actions from './actions';
 import * as Utils from '../../services/utils';
-import * as SoknadActions from '../soknad/actions';
+import * as BehandlingsgrunnlagActions from '../behandlingsgrunnlag/actions';
 
 describe('organisasjoner reducer', () => {
   let initialState = null;
@@ -25,7 +25,7 @@ describe('organisasjoner reducer', () => {
     expect(reducedState).toEqual({ data: [{ orgnr: 810072512 }, { orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 
-  it('returnerer ny state ved soknad/ok action når initialState er satt til feilobjekt', () => {
+  it('returnerer ny state ved behandlingsgrunnlag/ok action når initialState er satt til feilobjekt', () => {
     initialState = {
       data: {
         error: 'Not found',
@@ -40,7 +40,7 @@ describe('organisasjoner reducer', () => {
       },
     };
 
-    const reducedState = reducer(initialState, SoknadActions.OK(data));
+    const reducedState = reducer(initialState, BehandlingsgrunnlagActions.OK(data));
     expect(reducedState).toEqual({ data: [{ orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 

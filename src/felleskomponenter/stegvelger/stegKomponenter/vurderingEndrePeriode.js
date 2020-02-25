@@ -18,7 +18,7 @@ import * as Mui from '../../ui';
 
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { soknadOperations, soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import * as Api from '../../../services/api';
 
@@ -294,11 +294,11 @@ VurderingEndrePeriode.defaultProps = {
 const mapStateToProps = state => ({
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   redigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
-  soknadsland: soknadSelectors.SoknadslandSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
+  oppdaterPeriode: periode => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingEndrePeriode);
