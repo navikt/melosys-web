@@ -209,7 +209,7 @@ class Informasjon extends Component {
               feltNavn={`vedlegg.pdf.tittel_${index}`}
               placeholder="(velg eller skriv inn egen tittel)"
               muligeValg={dokumenttitler}
-              linkTo={dokumentURI(journalpostID, dokumentID)}
+              linkTo={dokumentURI(journalpostID, elem.dokumentID)}
               dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
               undoTittel={this.state.vedleggPdfTittler[index]}
               updateTittel={() => this.updateVedleggTittel(index, skjemaVedlegg.pdf[`tittel_${index}`])}
