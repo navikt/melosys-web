@@ -274,16 +274,25 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
  *  - inntekt
  */
 export const ArbeidsgivereNorgeSelector = createSelector(
-  state => OrganisasjonerSelector(state),
-  state => ArbeidsforholdeneSelector(state),
-  state => InntekterPrAarMaanedSelector(state),
-  state => behandlingsgrunnlagSelectors.PeriodeSelector(state),
-  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode) => {
+  OrganisasjonerSelector,
+  ArbeidsforholdeneSelector,
+  InntekterPrAarMaanedSelector,
+  behandlingsgrunnlagSelectors.PeriodeSelector,
+  LovvalgsperiodeSelector,
+  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
+    let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
+    const { fom: sedLovvalgsperiodeFom, tom: sedLovvalgsperiodeTom } = sedLovvalgsperiode;
 
-    const { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
-    if (!soknadPeriodeStart && !soknadPeriodeSlutt) { return []; }
+    if (!soknadPeriodeStart && !soknadPeriodeSlutt) {
+      if (!sedLovvalgsperiodeFom && !sedLovvalgsperiodeTom) {
+        return [];
+      }
+
+      soknadPeriodeStart = sedLovvalgsperiodeFom;
+      soknadPeriodeSlutt = sedLovvalgsperiodeTom;
+    }
 
     const relevantPeriodeStart = moment(soknadPeriodeStart, 'YYYY-MM-DD')
       .subtract(6, 'months')
