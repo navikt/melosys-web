@@ -52,7 +52,7 @@ const opprettnysak = object().shape({
       then: soknadsinfo,
     }),
   oppgaveID: string()
-    .siblingIs('journalpostID', null, MANGLER_JOURNALPOST)
+    .siblingIs('journalpostID', journalpostID => journalpostID !== null, MANGLER_JOURNALPOST)
     .required(VELG_EN_OPPGAVE),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
