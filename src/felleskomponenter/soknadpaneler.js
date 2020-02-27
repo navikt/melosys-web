@@ -183,7 +183,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   lagreSoknad: () => dispatch(behandlingsgrunnlagOperations.lagre()),
-  oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
+  oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
 });
 
 const SoknadpanelerForm = reduxForm({
