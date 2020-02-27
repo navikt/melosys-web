@@ -23,7 +23,7 @@
     "lodash": "^4.17.15",
     "lodash.throttle": "^4.1.1",
     "melosys-ikoner-assets": "^1.0.1",
-    "melosys-kodeverk": "5.15.8",
+    "melosys-kodeverk": "5.15.10",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.27",
