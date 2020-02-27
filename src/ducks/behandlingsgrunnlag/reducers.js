@@ -57,6 +57,7 @@ export default function reducer(state = initialState, action) {
         data: {
           ...state.data,
           data: {
+            ...state.data.data,
             periode: {
               fom: periode.fom,
               tom: periode.tom,

@@ -63,6 +63,11 @@ describe('behandlingsgrunnlag reducer', () => {
   });
 
   it('Oppdaterer periode ved action.type OPPDATER_PERIODE', () => {
+    initialState.data.data = {
+      ...initialState.data.data,
+      bosted: {},
+    };
+
     const action = {
       type: Types.OPPDATER_PERIODE,
       data: {
@@ -80,6 +85,7 @@ describe('behandlingsgrunnlag reducer', () => {
             fom: 'dato1',
             tom: 'dato2',
           },
+          bosted: {},
         },
       },
     };
