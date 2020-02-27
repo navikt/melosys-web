@@ -6,4 +6,12 @@ const PeriodePropType = PT.shape({
   tom: PT.string,
 });
 
-export { PeriodePropType as Periode };
+const LovvalgsperiodePropType = PT.shape({
+  fomDato: PT.string,
+  tomDato: PT.string,
+});
+
+export {
+  PeriodePropType as Periode,
+  LovvalgsperiodePropType as Lovvalgsperiode,
+};

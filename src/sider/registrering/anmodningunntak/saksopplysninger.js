@@ -75,15 +75,15 @@ const Saksopplysninger = ({
 
   const setEndretPeriode = () => {
     if (sed.lovvalgsperiode) {
-      setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom)}`);
-      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom)}`);
+      setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom));
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom));
     }
     if (anmodningsperiodeSvar.endretPeriode) {
-      setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom)}`);
-      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom)}`);
+      setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom));
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom));
     }
     if (lovvalgsperiode.tomDato) {
-      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato)}`);
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato));
     }
   };
 
@@ -387,7 +387,7 @@ Saksopplysninger.propTypes = {
   anmodningsperiodeID: PT.string,
   anmodningsperiodeSvar: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
-  lovvalgsperiode: PT.object.isRequired,
+  lovvalgsperiode: MPT.Lovvalgsperiode.isRequired,
 };
 
 Saksopplysninger.defaultProps = {

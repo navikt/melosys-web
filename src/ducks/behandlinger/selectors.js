@@ -65,7 +65,7 @@ export const SEDSelector = createSelector(
 );
 
 export const LovvalgsperiodeSelector = createSelector(
-  state => lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  lovvalgsperioderSelectors.LovvalgsperiodeSelector,
   state => SEDSelector(state).lovvalgsperiode || {},
   (lovvalgsperiode, sedLovvalgsperiode) => {
     const { fomDato, tomDato } = lovvalgsperiode;
