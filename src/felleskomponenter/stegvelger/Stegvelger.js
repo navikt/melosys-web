@@ -361,6 +361,7 @@ class Stegvelger extends Component {
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
+      erSoknad: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap);
