@@ -48,16 +48,14 @@ describe('Lovvalgsperioder operations', () => {
       vilkar: {
         data: [],
       },
-      soknad: {
+      behandlingsgrunnlag: {
         data: {
-          soeknadDokument: {
-            periode: { fom: '1234', tom: '4321' },
-            soeknadsland: {
-              landkoder: [
-                'NO',
-                'DK',
-              ],
-            },
+          periode: { fom: '1234', tom: '4321' },
+          soeknadsland: {
+            landkoder: [
+              'NO',
+              'DK',
+            ],
           },
         },
       },

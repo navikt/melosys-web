@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import { connect } from 'react-redux';
 import * as EKV from 'eessi-kodeverk';
 
 import MKV from '../../../melosyskodeverk';
@@ -10,9 +11,9 @@ import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
-import * as RegistreringContext from '../state/registreringContext';
-import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
-import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
+
+import Paneler from './komponenter/paneler';
+import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
@@ -263,9 +264,13 @@ const Saksopplysninger = ({
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-                  {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                    <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
+                  {
+                    vurderingBegrunnelser.length > 0 &&
+                    <Fragment>
+                      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+                      <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+                    </Fragment>
+                  }
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
@@ -353,7 +358,7 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+      <Paneler medlemskap={medlemskap} />
     </div>
   );
 };
@@ -363,7 +368,7 @@ Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
-  vurderingBegrunnelser: PT.object,
+  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
   history: PT.object.isRequired,
@@ -377,7 +382,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   medlemskap: {},
-  vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
   anmodningsperiodeID: undefined,
@@ -394,4 +398,4 @@ const mapDispatchToProps = dispatch => ({
   lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) => datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
 });
 
-export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

@@ -16,14 +16,14 @@ import PanelHeader from '../../panelHeader/panelHeader';
 
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../ducks/organisasjoner';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { soknadOperations } from '../../../ducks/soknad';
+import { behandlingsgrunnlagOperations } from '../../../ducks/behandlingsgrunnlag';
 
 import './selvstendigArbeid.css';
 
 const SelvstendigArbeid = props => {
   const { values: soknadVerdier } = props.soknadForm;
   const {
-    redigerbart, organisasjoner, hentOrganisasjon, oppdaterSoknadState,
+    redigerbart, organisasjoner, hentOrganisasjon, oppdaterBehandlingsgrunnlagState,
   } = props;
   const { erSelvstendig } = soknadVerdier;
   const panelErRelevant = erSelvstendig === BOOLSK.SANN;
@@ -36,7 +36,7 @@ const SelvstendigArbeid = props => {
       component={SelvstendigeForetak}
       organisasjoner={organisasjoner}
       hentOrganisasjon={hentOrganisasjon}
-      oppdaterSoknadState={oppdaterSoknadState}
+      oppdaterBehandlingsgrunnlagState={oppdaterBehandlingsgrunnlagState}
       skjema={soknadVerdier}
       redigerbart={redigerbart}
     />
@@ -68,7 +68,7 @@ SelvstendigArbeid.propTypes = {
   soknadForm: PT.object,
   hentOrganisasjon: PT.func.isRequired,
   organisasjoner: PT.array.isRequired,
-  oppdaterSoknadState: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlagState: PT.func.isRequired,
 };
 
 SelvstendigArbeid.defaultProps = {
@@ -83,7 +83,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentOrganisasjon: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
-  oppdaterSoknadState: () => dispatch(soknadOperations.oppdaterSoknadState()),
+  oppdaterBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelvstendigArbeid);

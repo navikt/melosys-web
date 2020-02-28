@@ -19,7 +19,7 @@ const Modals = ({
   skjulOppfriskBekreftelseOgNavigerTilForside,
   hentBehandlingStatus,
   visOppfriskDialog,
-  lagreSoknadOgOppfriskSaksopplysninger,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   skjulOppfriskBekreftelse,
   visHenleggDialog,
   skjulHenleggDialogHandle,
@@ -52,7 +52,7 @@ const Modals = ({
     {
       visOppfriskDialog &&
       <DialogboksOppfriskSak
-        bekreft={lagreSoknadOgOppfriskSaksopplysninger}
+        bekreft={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
         avbryt={skjulOppfriskBekreftelse}
         tilForsiden={skjulOppfriskBekreftelseOgNavigerTilForside}
         oppdater={hentBehandlingStatus}
@@ -102,7 +102,7 @@ Modals.propTypes = {
   skjulOppfriskBekreftelseOgNavigerTilForside: PT.func.isRequired,
   hentBehandlingStatus: PT.func.isRequired,
   visOppfriskDialog: PT.bool.isRequired,
-  lagreSoknadOgOppfriskSaksopplysninger: PT.func.isRequired,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   skjulOppfriskBekreftelse: PT.func.isRequired,
   visHenleggDialog: PT.bool.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,

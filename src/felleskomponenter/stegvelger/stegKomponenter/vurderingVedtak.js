@@ -11,8 +11,9 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as Validering from '../../skjema/validering';
 import * as Utils from '../../../utils';
+import * as MPT from '../../../proptypes';
 
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -26,12 +27,6 @@ import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
 
 import './vurderingVedtak.css';
 
-const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-];
-
 const VurderingVedtak = ({
   lovvalgsperioder,
   soknadsland,
@@ -44,11 +39,9 @@ const VurderingVedtak = ({
   formValues,
   form,
   vedtakLastes,
+  visAntallManederUtland,
+  pdfDokumenter,
 }) => {
-  // 1. Motta vedtakskode (kodeverk og avklartefakta)
-  // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
-  // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og avklartefakta)
-
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
@@ -56,43 +49,9 @@ const VurderingVedtak = ({
   } = lovvalget;
 
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
-  const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
+  const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const fattVedtakDisabled = !redigerbart;
-
-  const pdfDokumenter = [
-    {
-      navn: 'Forhåndsvis vedtaksbrev og A1',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
-        fritekst: formValues.vedtaksbrevFritekst,
-      },
-    },
-  ];
-
-  const visSedLenkeForLovvalgsbestemmelser = [
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
-    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
-  ];
-
-  if (lovvalgSomKodeTerm &&
-      visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-      !erNyVurdering) {
-    pdfDokumenter.push({
-      navn: 'Orienteringsbrev til arbeidsgiver',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
-      },
-    });
-  }
-
-  if (formValues.kreverMottakerinstitusjon &&
-    lovvalgSomKodeTerm &&
-    lovvalgSomKodeTerm.kode !== MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2) {
-    pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
-  }
 
   const validerForm = () => {
     touch('tomDato');
@@ -123,12 +82,15 @@ const VurderingVedtak = ({
             <DatoOmrade periode={{ fom: lovvalget.fomDato, tom: lovvalget.tomDato }} label="Lovvalgsperiode" />
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row className="vedtak__oppsummering">
-          <Nav.Column xs="6">
-            <Nav.typo.Element type="element">Antall måneder i utlandet</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{antallManederMenneskelig}</Nav.typo.Normaltekst>
-          </Nav.Column>
-        </Nav.Row>
+        {
+          visAntallManederUtland &&
+          <Nav.Row className="vedtak__oppsummering">
+            <Nav.Column xs="6">
+              <Nav.typo.Element type="element">Antall måneder i utlandet</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{antallManederMenneskelig}</Nav.typo.Normaltekst>
+            </Nav.Column>
+          </Nav.Row>
+        }
         {
           erNyVurdering &&
           <Nav.Row>
@@ -192,16 +154,19 @@ VurderingVedtak.propTypes = {
   touch: PT.func.isRequired,
   form: PT.string.isRequired,
   vedtakLastes: PT.bool.isRequired,
+  visAntallManederUtland: PT.bool,
+  pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
   lovvalgsland: '',
   formValues: {},
+  visAntallManederUtland: true,
 };
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  soknadsland: soknadSelectors.SoknadslandSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),

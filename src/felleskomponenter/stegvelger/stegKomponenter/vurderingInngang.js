@@ -7,7 +7,7 @@ import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import SoknadslandListe from './inngang/soknadslandListe';
 
@@ -47,7 +47,7 @@ const VurderingInngang = props => {
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg0" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -66,7 +66,7 @@ VurderingInngang.propTypes = {
 
 const mapStateToProps = state => ({
   initialValues: {
-    soknadsland: soknadSelectors.SoknadslandSelector(state),
+    soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   },
 });
 

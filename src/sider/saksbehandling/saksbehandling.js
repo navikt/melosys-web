@@ -24,7 +24,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avk
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
-import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { formSelectors } from '../../ducks/form';
 import { datalastingOperations } from '../../ducks/datalasting';
@@ -67,7 +67,7 @@ class Saksbehandling extends Component {
     this.props.resetAvklartefaktaState();
     this.props.resetLovvalgsperiode();
     this.props.resetVilkarState();
-    this.props.resetSoknadState();
+    this.props.resetBehandlingsgrunnlagState();
     this.props.resetBehandlingsPerioderState();
   }
 
@@ -79,7 +79,7 @@ class Saksbehandling extends Component {
 
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
-      hentSoknad, sjekkOppfriskningStatus, blokkerInnholdMedOppfriskSpinner,
+      hentBehandlingsgrunnlag, sjekkOppfriskningStatus, blokkerInnholdMedOppfriskSpinner,
     } = this.props;
 
     try {
@@ -99,7 +99,7 @@ class Saksbehandling extends Component {
         return false;
       }
 
-      await hentSoknad(behandlingID);
+      await hentBehandlingsgrunnlag(behandlingID);
       return true;
     } catch (e) {
       Utils.logger.error(e);
@@ -172,8 +172,8 @@ class Saksbehandling extends Component {
       apneTidligereBehandlinger,
       blokkerInnholdMedOppfriskSpinner,
       arbeidsland,
-      soknadsperiodeFom,
-      soknadsperiodeTom,
+      behandlingsgrunnlagPeriodeFom,
+      behandlingsgrunnlagPeriodeTom,
       visRevurderVedtakDialogHandle,
       tilForsiden,
       visValideringModalDialogHandle,
@@ -211,8 +211,8 @@ class Saksbehandling extends Component {
                 lovvalgsperiodeFom={lovvalgsperiodeFom}
                 lovvalgsperiodeTom={lovvalgsperiodeTom}
                 arbeidsland={arbeidsland}
-                soknadsperiodeFom={soknadsperiodeFom}
-                soknadsperiodeTom={soknadsperiodeTom}
+                behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+                behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                 renderBehandlingsmeny={() => <Behandlingsmeny
                   redigerbart={behandlingsmenyRedigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
@@ -256,7 +256,6 @@ Saksbehandling.propTypes = {
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
-  soknad: MPT.Soknad,
   vilkar: PT.array, // TODO lag proptype
   behandlingsPeriode: PT.object.isRequired, // TODO lag proptype
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
@@ -269,19 +268,17 @@ Saksbehandling.propTypes = {
   hentFagsaker: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
-  hentSoknad: PT.func.isRequired,
+  hentBehandlingsgrunnlag: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   resetBehandlingsresultatState: PT.func.isRequired,
   resetVilkarState: PT.func.isRequired,
   resetAvklartefaktaState: PT.func.isRequired,
-  resetSoknadState: PT.func.isRequired,
+  resetBehandlingsgrunnlagState: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsPerioderState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
-  sendSoknad: PT.func.isRequired,
-  oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
@@ -311,8 +308,8 @@ Saksbehandling.propTypes = {
   lovvalgsperiodeTom: PT.string,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  soknadsperiodeFom: PT.string.isRequired,
-  soknadsperiodeTom: PT.string.isRequired,
+  behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
+  behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   visRevurderVedtakDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
@@ -322,7 +319,6 @@ Saksbehandling.defaultProps = {
   redigerbart: null,
   avklartefakta: [],
   fagsak: {},
-  soknad: {},
   vilkar: [],
   skjema: {},
   anmodningsperioder: [],
@@ -345,7 +341,6 @@ const mapStateToProps = state => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
-  soknad: soknadSelectors.SoknadSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   artikkel16_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
@@ -357,8 +352,8 @@ const mapStateToProps = state => ({
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
-  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
+  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
 });
 
@@ -367,20 +362,18 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),
-  hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
+  hentBehandlingsgrunnlag: bid => dispatch(behandlingsgrunnlagOperations.hent(bid)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
-  resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
+  resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsPerioderState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
-  sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  oppdaterSoknadState: () => dispatch(soknadOperations.oppdaterSoknadState()),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),

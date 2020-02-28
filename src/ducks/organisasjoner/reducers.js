@@ -7,7 +7,7 @@
 
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
-import * as SoknadTypes from '../soknad/types';
+import * as BehandlingsgrunnlagTypes from '../behandlingsgrunnlag/types';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
@@ -22,7 +22,7 @@ const flettOrganisasjoner = (nyeOrganisasjoner, eksisterendeOrganisasjoner) => {
 
 export default function reducer(state = initalState, action) {
   switch (action.type) {
-    case SoknadTypes.OK: {
+    case BehandlingsgrunnlagTypes.OK: {
       if (!action.data.tilleggsData) { return state; }
       const { organisasjoner } = action.data.tilleggsData;
       const eksisterendeOrganisasjoner = Array.isArray(state.data) ? state.data : [];

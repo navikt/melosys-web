@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as Nav from '../utils/navFrontend';
+import * as Mui from './ui';
 import * as Api from '../services/api';
 import * as Utils from '../utils';
 
@@ -141,7 +142,7 @@ export class KontaktOpplysninger extends Component {
       <Fragment>
         {
           skjulInput &&
-          <Nav.Knapp disabled={!redigerbart} mini onClick={toggleSkjulInput}>+ LEGG TIL KONTAKTOPPLYSNINGER</Nav.Knapp>
+          <Mui.Knapp disabled={!redigerbart} mini onClick={toggleSkjulInput}>+ LEGG TIL KONTAKTOPPLYSNINGER</Mui.Knapp>
         }
         {
           !skjulInput &&
@@ -173,7 +174,7 @@ export class KontaktOpplysninger extends Component {
                   />
                 </Nav.Column>
                 <Nav.Column xs="4">
-                  <Nav.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Nav.Knapp>
+                  <Mui.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Mui.Knapp>
                 </Nav.Column>
               </Nav.Row>
             }
@@ -184,7 +185,7 @@ export class KontaktOpplysninger extends Component {
         }
         {
           !skjulInput &&
-          <Nav.Knapp className="fjernOppforingKnapp" disabled={!redigerbart} mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Nav.Knapp>
+          <Mui.Knapp className="fjernOppforingKnapp" disabled={!redigerbart} mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Mui.Knapp>
         }
       </Fragment>
     );

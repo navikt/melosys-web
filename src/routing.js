@@ -11,7 +11,7 @@ import * as Api from './services/api';
 import Modals from './modals';
 
 import { oppgaverOperations } from './ducks/oppgaver';
-import { soknadOperations } from './ducks/soknad';
+import { behandlingsgrunnlagOperations } from './ducks/behandlingsgrunnlag';
 import { datalastingOperations } from './ducks/datalasting';
 import { vedtakOperations } from './ducks/vedtak';
 import { saksopplysningerOperations } from './ducks/saksopplysninger';
@@ -30,6 +30,7 @@ const RegistreringUnntaksperioderLoadable = loadable(() => import('./sider/regis
 const RegistreringAnmodningunntakLoadable = loadable(() => import('./sider/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
 const SedBehandlingLoadable = loadable(() => import('./sider/sedbehandling'), { fallback: SideLoadingStatus });
 const OpprettNySakLoadable = loadable(() => import('./sider/opprettnysak'), { fallback: SideLoadingStatus });
+const VurderUtpekingLoadable = loadable(() => import('./sider/vurderutpeking'), { fallback: SideLoadingStatus });
 
 const Routing = ({
   location,
@@ -40,7 +41,7 @@ const Routing = ({
   sjekkOppfriskningStatus,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
-  lagreSoknad,
+  lagreBehandlingsgrunnlag,
   saksnummer,
   apneTidligereBehandlinger,
   avslaSoknad,
@@ -81,8 +82,8 @@ const Routing = ({
     visOppfriskningBlokkererInnhold();
   };
 
-  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    await lagreSoknad();
+  const lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger = async () => {
+    await lagreBehandlingsgrunnlag();
     await oppfriskSaksopplysninger(behandlingID);
     blokkerInnholdMedOppfriskSpinner();
   };
@@ -192,12 +193,13 @@ const Routing = ({
         <Route path="/saksbehandling/:snr" render={props => <SaksbehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" render={props => <JournalforingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/opprettnysak" render={props => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
+        <Route path="/vurderutpeking/:snr" render={props => <VurderUtpekingLoadable {...props} {...fellesHandlers} />} />
         <Route component={UkjentSideLoadable} />
       </Switch>
       <Modals
         skjulOppfriskBekreftelseOgNavigerTilForside={skjulOppfriskBekreftelseOgNavigerTilForside}
         hentBehandlingStatus={hentBehandlingStatus}
-        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
         henleggHandle={henleggHandle}
         avslaaSoknadHandle={avslaaSoknadHandle}
         avsluttSakSomBortfalt={avsluttSakSomBortfalt}
@@ -218,7 +220,7 @@ Routing.propTypes = {
   sjekkOppfriskningStatus: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  lagreSoknad: PT.func.isRequired,
+  lagreBehandlingsgrunnlag: PT.func.isRequired,
   saksnummer: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
   avslaSoknad: PT.func.isRequired,
@@ -246,7 +248,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  lagreSoknad: () => dispatch(soknadOperations.lagre()),
+  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaSoknad: behandlingID => dispatch(vedtakOperations.avslaSoknad(behandlingID)),

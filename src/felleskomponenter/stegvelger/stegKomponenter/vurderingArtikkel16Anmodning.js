@@ -12,7 +12,7 @@ import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
 
-import { soknadSelectors } from '../../../ducks/soknad';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
@@ -34,12 +34,6 @@ import './vurderingArtikkel16Anmodning.css';
 import * as Validering from '../../skjema/validering';
 
 const uuid = require('uuid/v4');
-
-const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-];
 
 const TidligereMedlemPeriodeLinje = ({
   perm, onChange, checked, redigerbart, feil,
@@ -335,9 +329,10 @@ class VurderingArtikkel16Anmodning extends Component {
                 value={unntakFraBestemmelse || ''}
                 disabled={!redigerbart}
                 label="Artikkelen det søkes unntak fra:"
+                data-cy="unntakArtikkel"
               >
                 <option key={uuid()} value="" >Velg...</option>
-                { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+                { MKV.Kodekombinasjoner.alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
@@ -349,6 +344,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 value={begrunnelseKode}
                 disabled={!redigerbart}
                 label="Legg til begrunnelse:"
+                data-cy="begrunnelse"
               >
                 <option key={uuid()} value="">Velg...</option>
                 { muligeBegrunnelseValg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
@@ -446,7 +442,7 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsland: soknadSelectors.SoknadslandSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),

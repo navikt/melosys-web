@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { reduxForm, getFormValues, FormSection } from 'redux-form';
+import { reduxForm, getFormValues, FormSection, SubmissionError } from 'redux-form';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../../felleskomponenter/skjema';
@@ -16,7 +16,7 @@ import Brukernavnskjema from '../../felleskomponenter/brukernavnskjema';
 import Knapperad from '../../felleskomponenter/knapperad';
 import EnkeltDato from '../../felleskomponenter/datoOmrade/enkeltDato';
 
-import MKV from '../../melosyskodeverk';
+import MKV, { Utils as MKVUtils } from '../../melosyskodeverk';
 
 import './opprettnysak.css';
 
@@ -25,12 +25,14 @@ const OpprettNySak = ({
   formValues,
   tilForsiden,
   handleSubmit,
+  change,
+  error,
 }) => {
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
   const { behandlingstype } = formValues;
-  const soknadErValgt = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
+  const soknadErValgt = MKVUtils.erSoknad(behandlingstype);
 
   const hentOppgaver = async brukerID => {
     if (Validering.erGyldigFnr(brukerID) || Validering.erGyldigDnr(brukerID)) {
@@ -68,10 +70,12 @@ const OpprettNySak = ({
 
   const oppgaverFinnes = radioValg.length > 0;
 
-  const filtrerteBehandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => ([
-    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV,
-  ].includes(kode)));
+  const filtrerteBehandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => MKVUtils.erSoknad(kode));
+
+  const settJournalpostID = oppgaveID => {
+    const { journalpostID } = oppgaver.find(oppgave => oppgave.oppgaveID === oppgaveID);
+    change('journalpostID', journalpostID);
+  };
 
   return (
     <form className="opprettnysak" onSubmit={handleSubmit}>
@@ -135,6 +139,7 @@ const OpprettNySak = ({
                       <Skjema.CustomRadioPanelGruppe
                         feltNavn="oppgaveID"
                         radios={radioValg}
+                        notify={settJournalpostID}
                       />
                     }
                     {
@@ -150,6 +155,10 @@ const OpprettNySak = ({
                       feltNavn="skalTilordnes"
                       label="Legg behandlingen i mine oppgaver"
                     />
+                    {
+                      error &&
+                      <Nav.AlertStripeAdvarsel className="formError">{error}</Nav.AlertStripeAdvarsel>
+                    }
                     <Knapperad
                       bekreftTekst="Opprett sak"
                       avbryt={tilForsiden}
@@ -173,10 +182,13 @@ OpprettNySak.propTypes = {
   formValues: PT.object,
   tilForsiden: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
+  change: PT.func.isRequired,
+  error: PT.string,
 };
 
 OpprettNySak.defaultProps = {
   formValues: {},
+  error: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -187,12 +199,13 @@ const mapStateToProps = state => ({
 });
 
 const opprettNySak = async (values, dispatch, props) => {
+  const soknadErValgt = MKVUtils.erSoknad(values.behandlingstype);
   const soknadDto = {
     periode: {
-      fom: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null,
-      tom: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null,
+      fom: soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null,
+      tom: soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null,
     },
-    land: values.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ? values.soknadsinfo.land : [],
+    land: soknadErValgt ? values.soknadsinfo.land : [],
   };
 
   const data = {
@@ -209,6 +222,9 @@ const opprettNySak = async (values, dispatch, props) => {
     props.tilForsiden();
   } catch (e) {
     Utils.logger.error(e);
+    if (e.body.message) {
+      throw new SubmissionError({ _error: e.body.message });
+    }
   }
 };
 

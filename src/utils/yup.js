@@ -132,6 +132,28 @@ addMethod(string, 'harIkkeFnrEllerDnrLengde', function(message) {
   });
 });
 
+addMethod(string, 'siblingIs', function(sibling, predicate, message) {
+  return this.test('siblingIs', message, function() {
+    const { options: { parent }, createError, path } = this;
+    const siblingValue = parent[sibling];
+
+    if (Utils._isFunction(predicate)) {
+      if (!predicate(siblingValue)) {
+        throw createError({
+          path,
+          message,
+        });
+      }
+    } else if (siblingValue !== predicate) {
+      throw createError({
+        path,
+        message,
+      });
+    }
+
+    return true;
+  });
+});
 
 export {
   mixed,

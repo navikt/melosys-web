@@ -18,9 +18,9 @@ describe('utpekingsperioder operations', () => {
     fetch.mockResponse(JSON.stringify({}));
 
     initialState = {
-      soknad: {
+      behandlingsgrunnlag: {
         data: {
-          soeknadDokument: {
+          data: {
             periode: {
               tom: '',
               fom: '',
@@ -99,8 +99,8 @@ describe('utpekingsperioder operations', () => {
           type: types.OPPDATER_UTPEKINGSPERIODER,
           utpekingsperioder: [
             {
-              fomDato: initialState.soknad.data.soeknadDokument.periode.fom,
-              tomDato: initialState.soknad.data.soeknadDokument.periode.tom,
+              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
+              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
               lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
               tilleggsbestemmelse: stegState.tilleggbestemmelse,
               lovvalgsland: avklartfakta.fakta[0],

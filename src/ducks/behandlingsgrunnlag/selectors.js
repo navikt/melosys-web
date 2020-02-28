@@ -12,52 +12,49 @@ import MKV from '../../melosyskodeverk';
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-export const SoknadSelector = createSelector(
-  state => state.soknad.data.soeknadDokument && state.soknad.data,
-  soknad => soknad
+export const BehandlingsgrunnlagSelector = createSelector(
+  state => state.behandlingsgrunnlag.data,
+  behandlingsgrunnlag => behandlingsgrunnlag
+);
+
+export const BehandlingsgrunnlagDataSelector = createSelector(
+  BehandlingsgrunnlagSelector,
+  behandlingsgrunnlagState => behandlingsgrunnlagState.data || {}
 );
 
 export const ArbeidNorgeSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidNorge : {}),
-  arbeidNorge => arbeidNorge || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.arbeidNorge || {}
 );
 
 export const ArbeidUtlandSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidUtland : []),
-  arbeidUtland => arbeidUtland || []
-);
-
-export const ArbeidUtlandAdresseSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidUtland : {}),
-  arbeidUtland => {
-    const { adresse } = arbeidUtland;
-    return adresse || {};
-  }
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.arbeidUtland || []
 );
 
 export const ArbeidsinntektSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidsinntekt : {}),
-  soknad => soknad || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.arbeidsinntekt || {}
 );
 
 export const ArbeidsinntektNaturalytelserSelector = createSelector(
-  state => ArbeidsinntektSelector(state),
+  ArbeidsinntektSelector,
   arbeidsinntekt => arbeidsinntekt.inntektNaturalytelser || {}
 );
 
 export const ForetakUtlandSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.foretakUtland : []),
-  foretakUtland => foretakUtland || []
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.foretakUtland || []
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
-  state => state.soknad.data.soeknadDokument && state.soknad.data.soeknadDokument.juridiskArbeidsgiverNorge,
-  soknad => soknad || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.juridiskArbeidsgiverNorge || {}
 );
 
 export const EkstraArbeidsgivereSelector = createSelector(
-  state => JuridiskArbeidsgiverNorgeSelector(state),
-  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  JuridiskArbeidsgiverNorgeSelector,
+  OrganisasjonSelectors.organisasjonerSelector,
   (juridiskArbeidsgiver, organisasjoner) => {
     const { ekstraArbeidsgivere } = juridiskArbeidsgiver;
     if (!ekstraArbeidsgivere) { return []; }
@@ -67,13 +64,13 @@ export const EkstraArbeidsgivereSelector = createSelector(
 );
 
 export const SelvstendigArbeidSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.selvstendigArbeid : {}),
-  selvstendigArbeid => selvstendigArbeid || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.selvstendigArbeid || {}
 );
 
 export const SelvstendigNaringsvirksomhetSelector = createSelector(
-  state => SelvstendigArbeidSelector(state),
-  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  SelvstendigArbeidSelector,
+  OrganisasjonSelectors.organisasjonerSelector,
   (selvstendigArbeid, organisasjoner) => {
     const { selvstendigForetak = [] } = selvstendigArbeid;
     return organisasjoner.filter(organisasjon => selvstendigForetak.find(foretak => foretak.orgnr === organisasjon.orgnr));
@@ -81,22 +78,22 @@ export const SelvstendigNaringsvirksomhetSelector = createSelector(
 );
 
 export const OppholdUtlandSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.oppholdUtland : {}),
-  oppholdUtland => oppholdUtland || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.oppholdUtland || {}
 );
 
 export const OppholdsLandSelector = createSelector(
-  state => OppholdUtlandSelector(state),
+  OppholdUtlandSelector,
   oppholdUtland => oppholdUtland.oppholdslandkoder || []
 );
 
 export const OppholdsLandKTSelector = createSelector(
-  state => OppholdsLandSelector(state),
+  OppholdsLandSelector,
   oppholdsLand => MKV.KTObjects.landkoder.filter(landkodeObjekt => oppholdsLand.includes(landkodeObjekt.kode))
 );
 
 export const OppholdUtlandPeriodeSelector = createSelector(
-  state => OppholdUtlandSelector(state),
+  OppholdUtlandSelector,
   oppholdUtland => {
     const { oppholdsPeriode } = oppholdUtland;
     return oppholdsPeriode || {};
@@ -104,12 +101,12 @@ export const OppholdUtlandPeriodeSelector = createSelector(
 );
 
 export const BostedSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.bosted : {}),
-  bosted => bosted || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.bosted || {}
 );
 
 export const BostedAdresseSelector = createSelector(
-  state => BostedSelector(state),
+  BostedSelector,
   bosted => {
     const { oppgittAdresse } = bosted;
     return oppgittAdresse || {};
@@ -117,33 +114,43 @@ export const BostedAdresseSelector = createSelector(
 );
 
 export const ArbeidsgiversBekreftelseSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidsgiversBekreftelse : {}),
-  soknad => soknad || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.arbeidsgiversBekreftelse || {}
 );
 
 export const MaritimtArbeidSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.maritimtArbeid : []),
-  maritimtArbeid => maritimtArbeid || []
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.maritimtArbeid || []
 );
 
 export const SoknadslandSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.soeknadsland.landkoder : []),
-  soknadsland => soknadsland || []
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => (behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : [])
 );
 
-export const SoknadsperiodeSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.periode : {}),
-  soknadsperiode => soknadsperiode || {}
+export const PeriodeSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.periode || {}
+);
+
+export const PeriodeFomSelector = createSelector(
+  PeriodeSelector,
+  soknadsperiode => soknadsperiode.fom
+);
+
+export const PeriodeTomSelector = createSelector(
+  PeriodeSelector,
+  soknadsperiode => soknadsperiode.tom
 );
 
 export const PersonOpplysningerSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.personOpplysninger : {}),
-  person => person || {}
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.personOpplysninger || {}
 );
 
 export const MedfolgendeAndreSelector = createSelector(
-  state => PersonOpplysningerSelector(state),
-  state => PersonSelectors.personerSelector(state),
+  PersonOpplysningerSelector,
+  PersonSelectors.personerSelector,
   (personopplysninger, allePersoner) => {
     const { medfolgendeAndre } = personopplysninger;
     return allePersoner.find(person => person.fnr === medfolgendeAndre);

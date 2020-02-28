@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import { connect } from 'react-redux';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -9,11 +10,11 @@ import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
-import * as RegistreringContext from '../state/registreringContext';
 import * as Mui from '../../../felleskomponenter/ui';
-import Medlemskap from '../../../felleskomponenter/paneler/medlemskap';
+
+import Paneler from './komponenter/paneler';
 import EndrePeriode from './komponenter/endrePeriode';
-import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
+import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';
@@ -272,9 +273,13 @@ const Saksopplysninger = ({
             <div className="vurderingEndrePeriode">
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
-                  {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                    <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
+                  {
+                    vurderingBegrunnelser.length > 0 &&
+                    <Fragment>
+                      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+                      <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
+                    </Fragment>
+                  }
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
@@ -367,8 +372,7 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      {/* <Personopplysninger redigerbart /> TODO: Må hentes fra context (SPRINT-34) */}
-      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+      <Paneler medlemskap={medlemskap} />
     </div>
   );
 };
@@ -379,7 +383,7 @@ Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
-  vurderingBegrunnelser: PT.object,
+  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
   lovvalgsperiode: PT.object.isRequired,
@@ -395,7 +399,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   medlemskap: {},
-  vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
   sedLovvalgsperiode: {},
@@ -414,4 +417,4 @@ const mapDispatchToProps = dispatch => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) => datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
 });
 
-export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

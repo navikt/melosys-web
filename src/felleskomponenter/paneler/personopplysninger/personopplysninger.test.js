@@ -51,8 +51,7 @@ describe('ExpandableTable', () => {
       renderElement: jest.fn(() => <span />),
       elements: [],
       header: '',
-      defaultMax: 2,
-      altMax: 10,
+      amountOfItemsCollapsed: 1,
       btnTextExpanded: 'vis mindre',
       btnTextCollapsed: 'vis flere',
       chevron: true,
@@ -67,10 +66,10 @@ describe('ExpandableTable', () => {
   });
 
   it('viser en knapp med tekst og chevron', () => {
-    const expandableList = shallow(<ExpandableTable {...props} />);
+    const expandableTable = shallow(<ExpandableTable {...props} />);
 
-    expect(expandableList.exists('button')).toBe(true);
-    expect(expandableList.find('button').contains(props.btnTextCollapsed)).toBe(true);
-    expect(expandableList.find('NavFrontendChevron')).toHaveLength(1);
+    expect(expandableTable.exists('button')).toBe(true);
+    expect(expandableTable.find('button').contains(props.btnTextCollapsed)).toBe(true);
+    expect(expandableTable.find('NavFrontendChevron')).toHaveLength(1);
   });
 });

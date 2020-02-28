@@ -1,6 +1,6 @@
 import * as Utils from '../../../../utils';
 
-import MKV from '../../../../melosyskodeverk';
+import { Utils as MKVUtils } from '../../../../melosyskodeverk';
 
 const {
   object, string, mixed, array,
@@ -16,6 +16,7 @@ const VELG_SAKSTYPE = { melding: 'Velg sakstype' };
 const VELG_BEHANDLINGSTYPE = { melding: 'Velg behandlingstype' };
 const VELG_LAND = { melding: 'Velg land' };
 const VELG_EN_OPPGAVE = { melding: 'Velg en oppgave' };
+const MANGLER_JOURNALPOST = { melding: 'Den valgte oppgaven har ingen journalpost' };
 
 const soknadsinfo = object().shape({
   fom: string()
@@ -47,12 +48,14 @@ const opprettnysak = object().shape({
     .required(VELG_BEHANDLINGSTYPE),
   soknadsinfo: object()
     .when('behandlingstype', {
-      is: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      is: MKVUtils.erSoknad,
       then: soknadsinfo,
     }),
   oppgaveID: string()
+    .siblingIs('journalpostID', journalpostID => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
     .required(VELG_EN_OPPGAVE),
 
+  /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   bruker: mixed(),
 });
 

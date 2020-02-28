@@ -42,7 +42,7 @@ class EkstraArbeidsgivere extends Component {
 
     if (gammelListe.join('') === nyListe.join('')) { return; }
 
-    this.props.oppdaterSoknadState();
+    this.props.oppdaterBehandlingsgrunnlagState();
     this.sjekkAtArbeidsgivereEksistererLokalt();
   }
 
@@ -95,7 +95,7 @@ EkstraArbeidsgivere.propTypes = {
   fields: PT.object.isRequired,
   organisasjoner: MPT.Organisasjoner.isRequired,
   hentOrganisasjon: PT.func.isRequired,
-  oppdaterSoknadState: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlagState: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

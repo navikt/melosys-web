@@ -11,7 +11,7 @@ import moment from 'moment/moment';
 import MKV from '../../melosyskodeverk';
 import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
-import * as soknadSelectors from '../soknad/selectors';
+import * as behandlingsgrunnlagSelectors from '../behandlingsgrunnlag/selectors';
 import { anmodningsperioderSelectors } from '../anmodningsperioder';
 
 /* eslint import/prefer-default-export:"off" */
@@ -274,16 +274,25 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
  *  - inntekt
  */
 export const ArbeidsgivereNorgeSelector = createSelector(
-  state => OrganisasjonerSelector(state),
-  state => ArbeidsforholdeneSelector(state),
-  state => InntekterPrAarMaanedSelector(state),
-  state => soknadSelectors.SoknadsperiodeSelector(state),
-  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode) => {
+  OrganisasjonerSelector,
+  ArbeidsforholdeneSelector,
+  InntekterPrAarMaanedSelector,
+  behandlingsgrunnlagSelectors.PeriodeSelector,
+  LovvalgsperiodeSelector,
+  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
+    let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
+    const { fom: sedLovvalgsperiodeFom, tom: sedLovvalgsperiodeTom } = sedLovvalgsperiode;
 
-    const { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
-    if (!soknadPeriodeStart && !soknadPeriodeSlutt) { return []; }
+    if (!soknadPeriodeStart && !soknadPeriodeSlutt) {
+      if (!sedLovvalgsperiodeFom && !sedLovvalgsperiodeTom) {
+        return [];
+      }
+
+      soknadPeriodeStart = sedLovvalgsperiodeFom;
+      soknadPeriodeSlutt = sedLovvalgsperiodeTom;
+    }
 
     const relevantPeriodeStart = moment(soknadPeriodeStart, 'YYYY-MM-DD')
       .subtract(6, 'months')
@@ -319,6 +328,35 @@ export const ArbeidsgivereNorgeSelector = createSelector(
 export const ErEndretPeriodeSelector = createSelector(
   BehandlingstypeKodeSelector,
   behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
+);
+
+export const ErAnmodningOmUnntakHovedRegelSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
+);
+
+export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+);
+
+export const ErRegistreringUnntakNorskTrygdOvrigeSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
+);
+
+export const ErUtlMyndUtpektSegSelvSelector = createSelector(
+  BehandlingstypeKodeSelector,
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV
+);
+
+export const ErRegistreringAvUnntaksperioderSelector = createSelector(
+  ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
+  ErRegistreringUnntakNorskTrygdOvrigeSelector,
+  ErUtlMyndUtpektSegSelvSelector,
+  (ErRegistreringUnntakNorskTrygdUtstasjonering, ErRegistreringUnntakNorskTrygdOvrige, ErUtlMyndUtpektSegSelv) => (
+    ErRegistreringUnntakNorskTrygdUtstasjonering || ErRegistreringUnntakNorskTrygdOvrige || ErUtlMyndUtpektSegSelv
+  )
 );
 
 export const ErStatusAnmodningUnntakSendtSelector = createSelector(

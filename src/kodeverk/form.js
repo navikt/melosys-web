@@ -16,3 +16,6 @@ export const ARTIKKEL_13_UTPEKLAND = 'artikkel_13_utpekland';
 export const ARTIKKEL_13_X_VEDTAK = 'artikkel_13_x_vedtak';
 export const OPPRETT_NY_SAK = 'opprett_ny_sak';
 export const VURDERING_VIDERESEND = 'vurdering_videresend';
+export const VURDER_UTPEKING = 'vurder_utpeking';
+export const AVSLAA_UTPEKING = 'avslaa_utpeking';
+export const REGISTRERING_PANELER = 'registrering_paneler';

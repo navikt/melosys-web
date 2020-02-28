@@ -6,12 +6,13 @@ export const STATUS = {
   ERROR: 'ERROR',
 };
 
-export const sjekkStatuskode = response => {
+export const sjekkStatuskode = async response => {
   if (response.status >= 200 && response.status < 300 && response.ok && !response.redirected) {
     return response;
   }
   const error = new Error(response.statusText || response.type);
   error.response = response;
+  error.body = await response.clone().json();
   throw error;
 };
 
@@ -159,7 +160,7 @@ const cachedFetch = async (url, cacheDurationSec) => {
       setCachedItem(cacheKey, content);
     }
   }
-  const sjekketResponse = sjekkStatuskode(fetchResponse);
+  const sjekketResponse = await sjekkStatuskode(fetchResponse);
   return toJson(sjekketResponse);
 };
 
@@ -213,7 +214,7 @@ if (config.headers) {
     return toJsonExtended(fetchResponse);
   }
 
-  const sjekketResponse = sjekkStatuskode(fetchResponse);
+  const sjekketResponse = await sjekkStatuskode(fetchResponse);
   return toJson(sjekketResponse);
 };
 

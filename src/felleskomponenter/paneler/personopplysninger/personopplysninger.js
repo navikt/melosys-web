@@ -6,6 +6,7 @@ import Ikon from 'melosys-ikoner-assets';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../../felleskomponenter/ui';
 import * as MPT from '../../../proptypes';
 import * as Ikoner from '../../../resources/images';
 
@@ -22,8 +23,7 @@ import UtenlandskIdent from './utenlandskIdent';
 
 import './personopplysninger.css';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { soknadSelectors } from '../../../ducks/soknad';
-import { formSelectors } from '../../../ducks/form';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 const ikonFraKjonn = kjoenn => {
@@ -98,32 +98,34 @@ AdresseHeader.propTypes = {
 
 export const ExpandableTable = props => {
   const {
-    renderElement, elements, header, defaultMax, altMax, btnTextExpanded, btnTextCollapsed, chevron, expandable,
+    renderElement, elements, header, amountOfItemsCollapsed, btnTextExpanded, btnTextCollapsed, chevron, expandable,
   } = props;
 
-  const [maxElements, setMaxElements] = useState(defaultMax);
+  const [collapsed, setCollapsed] = useState(true);
 
-  const toggleMaxElements = () => {
-    if (maxElements === defaultMax) setMaxElements(altMax);
-    else if (maxElements === altMax) setMaxElements(defaultMax);
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
   };
 
-  const collapsed = maxElements === defaultMax;
   const chevronDirection = collapsed ? 'ned' : 'opp';
   const btnText = collapsed ? btnTextCollapsed : btnTextExpanded;
+
+  const renderableElements = collapsed ? elements.slice(0, amountOfItemsCollapsed) : elements;
 
   return (
     <div className="expandableList">
       <table>
         {header}
         <tbody>
-          {elements.map((element, index) => (index < maxElements ? renderElement(element) : null))}
+          {
+            renderableElements.map(renderElement)
+          }
         </tbody>
       </table>
       <div className="btnContainer">
         {
           expandable &&
-          <button onClick={toggleMaxElements}>
+          <button type="button" onClick={toggleCollapsed}>
             {btnText}
             { chevron && <Nav.Chevron type={chevronDirection} />}
           </button>
@@ -137,8 +139,7 @@ ExpandableTable.propTypes = {
   renderElement: PT.func.isRequired,
   header: PT.node.isRequired,
   elements: PT.array.isRequired,
-  defaultMax: PT.number.isRequired,
-  altMax: PT.number.isRequired,
+  amountOfItemsCollapsed: PT.number.isRequired,
   btnTextExpanded: PT.string.isRequired,
   btnTextCollapsed: PT.string.isRequired,
   chevron: PT.bool,
@@ -152,17 +153,22 @@ ExpandableTable.defaultProps = {
 
 class Personopplysninger extends Component {
   state = {
-    visAnnenAdresseFelter: this.props.oppgittAdresseHarVerdier,
+    visAnnenAdresseFelterKnappKlikket: false,
   };
 
-  settVisAnnenAdresseFelterTrue = () => this.setState({ visAnnenAdresseFelter: true });
+  settVisAnnenAdresseFelterKnappKlikketTrue = () => this.setState({ visAnnenAdresseFelterKnappKlikket: true });
 
   render() {
-    const { redigerbart, person, personhistorikk } = this.props;
+    const {
+      redigerbart,
+      person,
+      personhistorikk,
+      oppgittAdresseHarVerdier,
+    } = this.props;
 
-    const { visAnnenAdresseFelter } = this.state;
+    const { visAnnenAdresseFelterKnappKlikket } = this.state;
 
-    const { settVisAnnenAdresseFelterTrue } = this;
+    const { settVisAnnenAdresseFelterKnappKlikketTrue } = this;
 
     const {
       fnr,
@@ -177,6 +183,8 @@ class Personopplysninger extends Component {
 
     if (Object.keys(person).length === 0) { return null; }
 
+    const visAnnenAdresseFelter = visAnnenAdresseFelterKnappKlikket || oppgittAdresseHarVerdier;
+
     return (
       <div className="personopplysninger panelSeksjon">
         <Nav.EkspanderbartpanelBase
@@ -187,7 +195,6 @@ class Personopplysninger extends Component {
             </div>}
           ariaTittel="Panel for personinformasjon">
           <Nav.Container fluid>
-            {/* START PERSONINFO */}
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="6">
                 <PersonInfo person={person} />
@@ -199,8 +206,7 @@ class Personopplysninger extends Component {
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
                 <ExpandableTable
-                  defaultMax={1}
-                  altMax={100}
+                  amountOfItemsCollapsed={1}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
                   expandable={bostedsadressePerioder.length > 1}
@@ -212,8 +218,7 @@ class Personopplysninger extends Component {
                   )}
                 />
                 <ExpandableTable
-                  defaultMax={1}
-                  altMax={100}
+                  amountOfItemsCollapsed={1}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
                   expandable={postadressePerioder.length > 1}
@@ -225,8 +230,7 @@ class Personopplysninger extends Component {
                   )}
                 />
                 <ExpandableTable
-                  defaultMax={1}
-                  altMax={100}
+                  amountOfItemsCollapsed={1}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
                   expandable={midlertidigAdressePerioder.length > 1}
@@ -247,9 +251,14 @@ class Personopplysninger extends Component {
                 />
               </Nav.Column>
             </Nav.Row>
-            {visAnnenAdresseFelter && <OppgittAdresseSoknad redigerbart={redigerbart} /> }
-            {!visAnnenAdresseFelter && <Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Nav.Knapp>}
-            {/* SLUTT PERSONINFO */}
+            {
+              visAnnenAdresseFelter &&
+              <OppgittAdresseSoknad redigerbart={redigerbart} />
+            }
+            {
+              !visAnnenAdresseFelter &&
+              <Mui.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterKnappKlikketTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Mui.Knapp>
+            }
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -273,12 +282,11 @@ Personopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
+  personOpplysninger: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
-  medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
-  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
+  medfolgendeAndre: behandlingsgrunnlagSelectors.MedfolgendeAndreSelector(state),
 });
 
 export default connect(mapStateToProps)(Personopplysninger);

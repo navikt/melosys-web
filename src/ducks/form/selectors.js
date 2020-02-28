@@ -28,6 +28,36 @@ export const SoknadenFormSelector = createSelector(
   soknaden => soknaden
 );
 
+export const VedtakArtikkel12FormSelector = createSelector(
+  state => getFormState(state, KV.Form.ARTIKKEL_12_VEDTAK, {}),
+  vedtakForm => vedtakForm
+);
+
+export const VedtakArtikkel12FormValuesSelector = createSelector(
+  VedtakArtikkel12FormSelector,
+  vedtakArtikkel12Form => vedtakArtikkel12Form.values
+);
+
+export const VurderUtpekingFormSelector = createSelector(
+  state => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
+  vurderUtpekingForm => vurderUtpekingForm
+);
+
+export const VurderUtpekingFomSelector = createSelector(
+  state => VurderUtpekingFormSelector(state).values || {},
+  values => values.fom
+);
+
+export const VurderUtpekingTomSelector = createSelector(
+  state => VurderUtpekingFormSelector(state).values || {},
+  values => values.tom
+);
+
+export const VurderUtpekingValid = createSelector(
+  state => VurderUtpekingFormSelector(state).syncErrors || {},
+  errors => Utils._isEmpty(errors)
+);
+
 export const Artikkel16AnmodningFormSelector = createSelector(
   state => getFormState(state, KV.Form.ARTIKKEL_16_ANMODNING, {}),
   artikkel16Anmodning => artikkel16Anmodning
@@ -36,6 +66,11 @@ export const Artikkel16AnmodningFormSelector = createSelector(
 export const Artikkel16MottaSvarFormSelector = createSelector(
   state => getFormState(state, KV.Form.ARTIKKEL_16_MOTTA_SVAR, {}),
   artikkel16MottaSvar => artikkel16MottaSvar
+);
+
+export const RegistreringPanelerFormSelector = createSelector(
+  state => getFormState(state, KV.Form.REGISTRERING_PANELER, {}),
+  soknaden => soknaden
 );
 
 export const InngangFormSelector = createSelector(
@@ -120,42 +155,82 @@ export const ErAlleMaritimtArbeidNavnUnikeSelector = createSelector(
   maritimtarbeidListe => maritimtarbeidListe.length === [...new Set(maritimtarbeidListe.map(maritimtarbeid => maritimtarbeid.navn))].length
 );
 
-export const OppgittAdresseHusnummerSelector = createSelector(
+export const SoknadOppgittAdresseHusnummerSelector = createSelector(
   state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseHusnummer
 );
 
-export const OppgittAdresseGatenavnSelector = createSelector(
+export const SoknadOppgittAdresseGatenavnSelector = createSelector(
   state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseGatenavn
 );
 
-export const OppgittAdresseRegionSelector = createSelector(
+export const SoknadOppgittAdresseRegionSelector = createSelector(
   state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseRegion
 );
 
-export const OppgittAdressePostnummerSelector = createSelector(
+export const SoknadOppgittAdressePostnummerSelector = createSelector(
   state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdressePostnummer
 );
 
-export const OppgittAdressePoststedSelector = createSelector(
+export const SoknadOppgittAdressePoststedSelector = createSelector(
   state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdressePoststed
 );
 
-export const OppgittAdresseLandSelector = createSelector(
+export const SoknadOppgittAdresseLandSelector = createSelector(
   state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseLand
 );
 
-export const OppgittAdresseHarVerdierSelector = createSelector(
-  OppgittAdresseHusnummerSelector,
-  OppgittAdresseGatenavnSelector,
-  OppgittAdresseRegionSelector,
-  OppgittAdressePostnummerSelector,
-  OppgittAdressePoststedSelector,
-  OppgittAdresseLandSelector,
+export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
+  SoknadOppgittAdresseHusnummerSelector,
+  SoknadOppgittAdresseGatenavnSelector,
+  SoknadOppgittAdresseRegionSelector,
+  SoknadOppgittAdressePostnummerSelector,
+  SoknadOppgittAdressePoststedSelector,
+  SoknadOppgittAdresseLandSelector,
+  (...felter) => !felter.every(felt => Utils._isNil(felt) || felt === '')
+);
+
+export const RegistreringPanelerOppgittAdresseHusnummerSelector = createSelector(
+  state => RegistreringPanelerFormSelector(state).values || {},
+  soknad => soknad.oppgittAdresseHusnummer
+);
+
+export const RegistreringPanelerOppgittAdresseGatenavnSelector = createSelector(
+  state => RegistreringPanelerFormSelector(state).values || {},
+  soknad => soknad.oppgittAdresseGatenavn
+);
+
+export const RegistreringPanelerOppgittAdresseRegionSelector = createSelector(
+  state => RegistreringPanelerFormSelector(state).values || {},
+  soknad => soknad.oppgittAdresseRegion
+);
+
+export const RegistreringPanelerOppgittAdressePostnummerSelector = createSelector(
+  state => RegistreringPanelerFormSelector(state).values || {},
+  soknad => soknad.oppgittAdressePostnummer
+);
+
+export const RegistreringPanelerOppgittAdressePoststedSelector = createSelector(
+  state => RegistreringPanelerFormSelector(state).values || {},
+  soknad => soknad.oppgittAdressePoststed
+);
+
+export const RegistreringPanelerOppgittAdresseLandSelector = createSelector(
+  state => RegistreringPanelerFormSelector(state).values || {},
+  soknad => soknad.oppgittAdresseLand
+);
+
+export const RegistreringPanelerOppgittAdresseHarVerdierSelector = createSelector(
+  RegistreringPanelerOppgittAdresseHusnummerSelector,
+  RegistreringPanelerOppgittAdresseGatenavnSelector,
+  RegistreringPanelerOppgittAdresseRegionSelector,
+  RegistreringPanelerOppgittAdressePostnummerSelector,
+  RegistreringPanelerOppgittAdressePoststedSelector,
+  RegistreringPanelerOppgittAdresseLandSelector,
   (...felter) => !felter.every(felt => Utils._isNil(felt) || felt === '')
 );

@@ -124,7 +124,7 @@ const VurderingVirksomhet = props => {
 
   return (
     <div className="vurderingArbeidsgiver">
-      <Nav.typo.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>Velg arbeidsgiver eller selvstendig næringsvirksomhet:</Nav.typo.Undertittel>
       <div className="arbeidsgiver">
         <VirksomheterListe
           avklarteVirksomheter={virksomheter}
@@ -132,7 +132,7 @@ const VurderingVirksomhet = props => {
           {...props}
         />
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg3" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     </div>

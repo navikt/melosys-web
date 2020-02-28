@@ -15,10 +15,11 @@ const Oppsummering = props => {
     fagsak,
     oppsummering,
     person,
-    soknadsperiodeFom,
-    soknadsperiodeTom,
+    behandlingsgrunnlagPeriodeFom,
+    behandlingsgrunnlagPeriodeTom,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
+    periodeLabel,
   } = props;
   if (!oppsummering) return <div />;
 
@@ -76,10 +77,10 @@ const Oppsummering = props => {
           <dd>{arbeidslandTilSetning(oppholdsland)}</dd>
         </Fragment>
       }
-      { (soknadsperiodeFom || soknadsperiodeTom) &&
+      { (behandlingsgrunnlagPeriodeFom || behandlingsgrunnlagPeriodeTom) &&
         <Fragment>
-          <dt>Søknadsperiode:</dt>
-          <dd>{soknadsperiodeFom || 'ukjent'} - {soknadsperiodeTom || 'ukjent'}</dd>
+          <dt>{periodeLabel}</dt>
+          <dd>{behandlingsgrunnlagPeriodeFom || 'ukjent'} - {behandlingsgrunnlagPeriodeTom || 'ukjent'}</dd>
         </Fragment>
       }
       { (lovvalgsperiodeFom || lovvalgsperiodeTom) &&
@@ -105,17 +106,18 @@ Oppsummering.propTypes = {
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
-  soknadsperiodeFom: PT.string,
-  soknadsperiodeTom: PT.string,
+  behandlingsgrunnlagPeriodeFom: PT.string,
+  behandlingsgrunnlagPeriodeTom: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
+  periodeLabel: PT.string.isRequired,
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],
   oppholdsland: [],
   lovvalgsland: {},
-  soknadsperiodeFom: undefined,
-  soknadsperiodeTom: undefined,
+  behandlingsgrunnlagPeriodeFom: undefined,
+  behandlingsgrunnlagPeriodeTom: undefined,
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
 };

@@ -17,7 +17,7 @@ import * as Actions from './actions';
 import * as Selectors from './selectors';
 
 import { AnmodningsperioderErSendtUtlandetSelector } from '../anmodningsperioder/selectors';
-import { soknadSelectors } from '../soknad';
+import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
 import { vilkarSelectors } from '../vilkar';
 import { avklartefaktaSelectors } from '../avklartefakta';
 import { lovvalgsperioderSelectors } from './index';
@@ -54,13 +54,13 @@ const finnValgteVilkar = alleLovvalgsVilkar => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato: periode.fom,
+    tomDato: periode.tom,
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
@@ -74,13 +74,13 @@ const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato: periode.fom,
+    tomDato: periode.tom,
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
@@ -94,14 +94,14 @@ const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const tilleggsbestemmelseFraVilkar = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato: periode.fom,
+    tomDato: periode.tom,
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || tilleggsbestemmelseFraVilkar || null,
@@ -115,13 +115,13 @@ const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato: periode.fom,
+    tomDato: periode.tom,
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
@@ -135,12 +135,12 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
 };
 
 const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato: periode.fom,
+    tomDato: periode.tom,
     lovvalgsbestemmelse,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: null,
@@ -188,20 +188,23 @@ const bestemLovvalgsland = lovvalgsbestemmelse => {
 
 const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
-  avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState)
+  avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
+  avklartefaktaSelectors.UtpekingAvvistSelector(reduxState)
 );
 
 const byggLovvalgsPerioder = (stegState, reduxState) => {
   if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
+  const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
+  const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
 
   return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
+    fomDato,
+    tomDato,
     lovvalgsbestemmelse: stegState.lovvalgsbestemmelse || null,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
