@@ -77,16 +77,6 @@ export const Yrkesgruppe = createSelector(
   }
 );
 
-/* Avklart fakta om søkers yrkesaktivitet og antall land. */
-export const YrkesaktivitetAntallLand = createSelector(
-  state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND);
-    if (!avklartFakta) return null;
-    return avklartFakta.fakta[0];
-  }
-);
-
 /* Avklart fakta om søker er ordinær arbeidstaker, selvstendig næringsdrivende, begge deler eller tjenesteperson. */
 export const Yrkesaktivitet = createSelector(
   state => AvklartefaktaSelector(state),

@@ -63,7 +63,6 @@ export default function reducer(state = initialState, action) {
 
       const {
         SOKNADSLAND,
-        YRKESAKTIVITET_ANTALL_LAND,
         YRKESAKTIVITET,
         avklartefaktaKoder: {
           AKTIVITET_I_NORGE,
@@ -83,7 +82,6 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[SOKNADSLAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[VIRKSOMHET], VIRKSOMHET),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESGRUPPE], YRKESGRUPPE),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESAKTIVITET_ANTALL_LAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESAKTIVITET], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AKTIVITET_I_NORGE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[MARGINALT_ARBEID], null),

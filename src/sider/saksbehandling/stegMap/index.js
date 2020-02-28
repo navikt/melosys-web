@@ -25,7 +25,6 @@ import Artikkel16Vedtak from './artikkel16_vedtak';
 import VirksomhetType from './virksomhet_type';
 import VesentligVirksomhet from './vesentlig_virksomhet';
 import NormaltDriverVirksomhet from './normalt_driver_virksomhet';
-import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 import Arbeidsmonster from './arbeidsmonster';
 import SokkelSkip from './sokkel_skip';
 import Vedtak from './vedtak';
@@ -54,7 +53,6 @@ export const stegMap = new Map([
   [STEG.IKKE_YRKESAKTIV, IkkeYrkesaktiv],
   [STEG.FORUTGAENDE_MEDLEMSKAP, ForutgaendeMedlemskap],
   [STEG.YRKESAKTIVITET, Yrkesaktivitet],
-  [STEG.YRKESAKTIVITET_ANTALL_LAND, YrkesaktivitetAntallLand],
   [STEG.ARBEIDSMONSTER, Arbeidsmonster],
   [STEG.VIRKSOMHET_TYPE, VirksomhetType],
   [STEG.VESENTLIG_VIRKSOMHET, VesentligVirksomhet],
