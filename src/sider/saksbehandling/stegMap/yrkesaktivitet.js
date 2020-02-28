@@ -34,7 +34,7 @@ class Yrkesaktivitet extends Steg {
       {
         beskrivelse: 'yrkesaktivitetAntallLand ER LIK "TO_ELLER_FLERE_LAND"',
         exec: avklartefakta => {
-          const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
+          const erToEllerFlereLand = propsLight.erSoknadArbeidFlereLand;
           const erYrkesAktivitetValgt = (
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) ||
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) ||

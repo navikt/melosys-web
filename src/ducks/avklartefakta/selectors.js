@@ -318,10 +318,8 @@ export const BostedslandSelector = createSelector(
 );
 
 export const ErIArtikkel13_1FlytSelector = createSelector(
-  AvklartefaktaSelector,
-  avklarteFakta => (
-    avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND))
-  )
+  state => behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND
 );
 
 export const ErIDirekteTilArtikkel16FlytSelector = createSelector(

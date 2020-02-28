@@ -5,7 +5,6 @@ import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMot
 import VurderingBostedsland from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingBostedsland';
 
 import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
-import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 import SokkelSkip from './sokkel_skip';
 import * as Utils from '../../../utils';
 
@@ -13,33 +12,32 @@ import * as Utils from '../../../utils';
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const erSokkalSkipEttLand = SokkelSkip.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND);
+
     this.kriterier = [
       {
         beskrivelse: 'konklusjon for sokkel/skip-steget ER LIK "SKIP_ETT_LAND" og det er gjort en vurdering av bosted, enten utfallet er TRUE eller FALSE',
-        exec: avklartefakta => (
-          SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND)
-        ),
+        exec: () => erSokkalSkipEttLand,
         nesteSteg: STEG.ARTIKKEL_11_4,
       },
       {
         beskrivelse: 'to eller flere land',
         exec: avklartefakta => {
-          const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
           const harBostedslandNorge = Bostedsland.finnAvklaring(avklartefakta, MKV.Koder.landkoder.NO);
-          return erToEllerFlereLand && harBostedslandNorge;
+          return harBostedslandNorge;
         },
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {
         beskrivelse: 'to eller flere land',
         exec: avklartefakta => {
-          const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
           const bostedsfakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, avklartefakta);
           const bostedsland = hentFaktaVerdi(bostedsfakta);
           const { begrunnelseKoder = [] } = bostedsfakta;
           const begrunnelserErOppgitt = begrunnelseKoder.length > 0;
           const harAvklartBostedsland = !Utils._isNil(bostedsland);
-          return erToEllerFlereLand && harAvklartBostedsland && begrunnelserErOppgitt;
+          return harAvklartBostedsland && begrunnelserErOppgitt;
         },
         nesteSteg: STEG.VIDERESEND,
       },
@@ -59,7 +57,7 @@ class Bostedsland extends Steg {
 
       const bostedslandFakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, _propsLight.avklartefakta);
 
-      const erBegrunnelserPaakrevd = YrkesaktivitetAntallLand.finnAvklaring(_propsLight.avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
+      const erBegrunnelserPaakrevd = !Bostedsland.finnAvklaring(_propsLight.avklartefakta, MKV.Koder.landkoder.NO) && !erSokkalSkipEttLand;
 
       return {
         harAvklaring: Bostedsland.alleErAvklart(bostedslandFakta, erBegrunnelserPaakrevd),

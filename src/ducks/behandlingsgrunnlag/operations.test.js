@@ -62,6 +62,8 @@ describe('Behandlingsgrunnlag operations', () => {
     each([
       MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
+      MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND,
     ]).it('lagrer soeknadData ved behandlingstype %p', async behandlingstype => {
       initialState.behandlinger.data.oppsummering.behandlingstype.kode = behandlingstype;
 

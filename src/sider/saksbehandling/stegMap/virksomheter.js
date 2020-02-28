@@ -56,10 +56,8 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         beskrivelse: 'Valgt minst én arbeidsgiver og ordinaert arbeid og i flere land',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
-          const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
-          const erFlyendePersonell = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL);
-          const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
-          return harValgtArbeidsgiver && (erVanligYrkesaktiv || erFlyendePersonell) && erToEllerFlereLand;
+          const erToEllerFlereLand = propsLight.erSoknadArbeidFlereLand;
+          return harValgtArbeidsgiver && erToEllerFlereLand;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
       },
