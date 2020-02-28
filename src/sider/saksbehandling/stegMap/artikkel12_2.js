@@ -20,17 +20,14 @@ class Artikkel12_2 extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'vilkar for artikkel 12.2 er oppfylt',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
-        beskrivelse: 'ønsker å vurdere 16.1',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) && harAvklaring,
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {
-        beskrivelse: 'avslår søknad',
         exec: (avklartefakta, alleVilkar) => (
           erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar) !== undefined
           && erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) !== undefined

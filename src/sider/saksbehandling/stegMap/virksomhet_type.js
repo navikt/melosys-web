@@ -8,7 +8,6 @@ class VirksomhetType extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'yrkesgruppeType ER LIK "ARBEIDSTAKER" OG yrkesaktivitetType ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
         exec: ({
           yrkesgruppeType, ansattISektor, antallLand, aktivitetINorge,
         }) => (
@@ -20,7 +19,6 @@ class VirksomhetType extends Steg {
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        beskrivelse: 'yrkesgruppeType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND"',
         exec: ({ yrkesgruppeType, antallLand }) => (
           yrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.SELVSTENDIG &&
           antallLand === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND
@@ -28,7 +26,6 @@ class VirksomhetType extends Steg {
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: STEG.VEDTAK,
       },

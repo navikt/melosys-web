@@ -8,8 +8,6 @@ class Tjenestemann extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'vurderingTjenestemann ER LIK "ETT_LAND" eller vurderingTjenestemann ER LIK "ETT_LAND_YRKESAKTIVITET_ANDRE_LAND" ' +
-        'eller vurderingTjenestemann ER LIK "FLERE_LAND" eller vurderingTjenestemann ER LIK "FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND"',
         exec: ({ vurderingTjenestemann }) => (
           vurderingTjenestemann === KV.Koder.VurderingTjenestemannTyper.ETT_LAND ||
           vurderingTjenestemann === KV.Koder.VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND ||
@@ -19,7 +17,6 @@ class Tjenestemann extends Steg {
         nesteSteg: null,
       },
       {
-        beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: STEG.VEDTAK,
       },

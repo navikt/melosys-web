@@ -16,7 +16,6 @@ class Arbeidsmonster extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'Ga videre til forretningssted hvis aktivitet i norge er avklart',
         exec: avklartefakta => (
           aktivitetINorge &&
           hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
@@ -25,7 +24,6 @@ class Arbeidsmonster extends Steg {
         nesteSteg: STEG.FORRETNINGSSTED,
       },
       {
-        beskrivelse: '',
         exec: avklartefakta => (
           aktivitetINorge &&
           hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
@@ -34,7 +32,6 @@ class Arbeidsmonster extends Steg {
         nesteSteg: STEG.ARTIKKEL_13_2_B,
       },
       {
-        beskrivelse: 'vedtak art 13.1 a',
         exec: avklartefakta => (
           hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
           Yrkesaktivitet.erArbeidstaker(avklartefakta)
@@ -42,7 +39,6 @@ class Arbeidsmonster extends Steg {
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
       {
-        beskrivelse: 'vedtak art 13.2 a',
         exec: avklartefakta => (
           hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
           Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta)

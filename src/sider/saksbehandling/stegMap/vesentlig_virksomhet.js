@@ -14,7 +14,6 @@ class VesentligVirksomhet extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
         exec: () => harAvklaring,
         nesteSteg: STEG.ARTIKKEL_12_1,
       },

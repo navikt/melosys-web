@@ -17,12 +17,10 @@ class Bostedsland extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'konklusjon for sokkel/skip-steget ER LIK "SKIP_ETT_LAND" og det er gjort en vurdering av bosted, enten utfallet er TRUE eller FALSE',
         exec: () => erSokkalSkipEttLand,
         nesteSteg: STEG.ARTIKKEL_11_4,
       },
       {
-        beskrivelse: 'to eller flere land',
         exec: avklartefakta => {
           const harBostedslandNorge = Bostedsland.finnAvklaring(avklartefakta, MKV.Koder.landkoder.NO);
           return harBostedslandNorge;
@@ -30,7 +28,6 @@ class Bostedsland extends Steg {
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {
-        beskrivelse: 'to eller flere land',
         exec: avklartefakta => {
           const bostedsfakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, avklartefakta);
           const bostedsland = hentFaktaVerdi(bostedsfakta);

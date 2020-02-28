@@ -19,12 +19,10 @@ class Artikkel13_2_b extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: '',
         exec: () => harAvklaring && erOmfattetINorge,
         nesteSteg: STEG.ARTIKKEL_13_2_B_NORGE,
       },
       {
-        beskrivelse: '',
         exec: () => harAvklaring && erOmfattetILandIkkeNorge,
         nesteSteg: STEG.ARTIKKEL_13_2_B_UTPEK_LAND,
       },

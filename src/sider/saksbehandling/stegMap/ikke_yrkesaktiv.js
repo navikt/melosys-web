@@ -7,7 +7,6 @@ class IkkeYrkesaktiv extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: STEG.VEDTAK,
       },
