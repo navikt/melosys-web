@@ -31,7 +31,7 @@ class Behandling extends Component {
     MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
     MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
     MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-    MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV,
+    MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND,
     MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL,
     MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
     MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
