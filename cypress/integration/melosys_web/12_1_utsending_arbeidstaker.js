@@ -17,14 +17,6 @@ describe('12.1 utsending arbeidstaker', () => {
       .click();
 
     cy.get('.panel.stegFane.steg2.stegFane--aktiv')
-      .find('[name="yrkesaktivitetAntallLand"]')
-      .eq(1)
-      .check(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE, { force: true })
-      .should('be.checked');
-    cy.get('[data-cy-nesteknapp="knapp_steg2"]')
-      .click();
-
-    cy.get('.panel.stegFane.steg3.stegFane--aktiv')
       .find('[type="checkbox"]')
       .eq(0)
       .check({ force: true })
@@ -32,14 +24,14 @@ describe('12.1 utsending arbeidstaker', () => {
     cy.get('[data-cy-nesteknapp="knapp_steg3"]')
       .click();
 
-    cy.get('.panel.stegFane.steg4.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg3.stegFane--aktiv')
       .find('[name="yrkesaktivitet"]')
       .check(KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER, { force: true })
       .should('be.checked');
     cy.get('[data-cy-nesteknapp="knapp_steg4"]')
       .click();
 
-    cy.get('.panel.stegFane.steg5.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg4.stegFane--aktiv')
       .find('[name="forutgaendeMedlemskap"]')
       .eq(0)
       .check({ force: true })
@@ -47,7 +39,7 @@ describe('12.1 utsending arbeidstaker', () => {
     cy.get('[data-cy-nesteknapp="knapp_steg5"]')
       .click();
 
-    cy.get('.panel.stegFane.steg6.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg5.stegFane--aktiv')
       .find('[name="vesentligVirksomhet"]')
       .eq(0)
       .check({ force: true })
@@ -55,21 +47,28 @@ describe('12.1 utsending arbeidstaker', () => {
     cy.get('[data-cy-nesteknapp="knapp_steg6"]')
       .click({ force: true });
 
-    cy.get('.panel.stegFane.steg7.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg6.stegFane--aktiv')
       .find('[name="artikkel12"]')
       .eq(0)
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('.panel.stegFane.steg7.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg6.stegFane--aktiv')
       .find('button')
       .click();
 
-    cy.get('.panel.stegFane.steg8.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg7.stegFane--aktiv')
       .find('textarea')
       .type('fritekst til vedtaksbrev')
       .blur();
+    cy.get('.panel.stegFane.steg7.stegFane--aktiv')
+      .find('[data-cy="mottakerinstitusjoner"]')
+      .selectNth(1);
     cy.contains('Fatt vedtak')
       .click();
+
+    cy.location().should(loc => {
+      expect(loc.pathname).to.eq('/melosys/');
+    });
   });
 });
