@@ -347,7 +347,7 @@ export const ErRegistreringUnntakNorskTrygdOvrigeSelector = createSelector(
 
 export const ErUtlMyndUtpektSegSelvSelector = createSelector(
   BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND
 );
 
 export const ErRegistreringAvUnntaksperioderSelector = createSelector(

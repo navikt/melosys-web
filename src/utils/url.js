@@ -5,7 +5,7 @@ export const lagUrl = (saksnummer, behandlingID, behandlingstypeKode) => {
   switch (behandlingstypeKode) {
     case MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
-    case MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV:
+    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND:
       return `/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL:
       return `/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
@@ -19,7 +19,7 @@ export const lagUrl = (saksnummer, behandlingID, behandlingstypeKode) => {
     case MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID:
     case MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED:
       return `/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_NORGE:
+    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
       return `/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return null;
