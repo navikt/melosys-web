@@ -12,7 +12,7 @@ export const sjekkStatuskode = async response => {
   }
   const error = new Error(response.statusText || response.type);
   error.response = response;
-  error.body = await response.json();
+  error.body = await response.clone().json();
   throw error;
 };
 
