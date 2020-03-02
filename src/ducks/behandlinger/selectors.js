@@ -13,7 +13,7 @@ import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
 import * as behandlingsgrunnlagSelectors from '../behandlingsgrunnlag/selectors';
 import { anmodningsperioderSelectors } from '../anmodningsperioder';
-import { lovvalgsperioderSelectors } from '../lovvalgsperioder';
+import * as lovvalgsperioderSelectors from '../lovvalgsperioder/selectors';
 
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingerSelector = createSelector(
