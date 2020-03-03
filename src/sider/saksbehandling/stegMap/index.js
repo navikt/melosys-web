@@ -30,6 +30,7 @@ import SokkelSkip from './sokkel_skip';
 import Vedtak from './vedtak';
 import EndrePeriode from './endre_periode';
 import Videresend from './videresend';
+import VurderArbeidsland from './vurderarbeidsland';
 
 import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 
@@ -66,5 +67,6 @@ export const stegMap = new Map([
   [STEG.VEDTAK, Vedtak],
   [STEG.ENDRET_PERIODE, EndrePeriode],
   [STEG.VIDERESEND, Videresend],
+  [STEG.VURDER_ARBEIDSLAND, VurderArbeidsland],
 ]);
 

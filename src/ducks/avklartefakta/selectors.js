@@ -219,7 +219,13 @@ const MaritimeArbeidslandSelector = createSelector(
 const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
   state => MaritimeArbeidslandSelector(state),
-  (soknadsland, maritimeArbeidsland) => {
+  state => behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  (soknadsland, maritimeArbeidsland, behandlingstype) => {
+    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND) {
+      const soknadsMaritimeArbeidsland = [...soknadsland, ...maritimeArbeidsland];
+      return [...new Set(soknadsMaritimeArbeidsland)];
+    }
+
     if (maritimeArbeidsland.length > 0) return maritimeArbeidsland;
     return soknadsland;
   }

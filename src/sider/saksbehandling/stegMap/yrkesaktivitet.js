@@ -40,7 +40,7 @@ class Yrkesaktivitet extends Steg {
           );
           return erToEllerFlereLand && erYrkesAktivitetValgt;
         },
-        nesteSteg: STEG.ARBEIDSMONSTER,
+        nesteSteg: STEG.VURDER_ARBEIDSLAND,
       },
     ];
     this.id = STEG.YRKESAKTIVITET;
