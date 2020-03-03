@@ -4,7 +4,7 @@ import VurderingVurderarbeidsland from '../../../felleskomponenter/stegvelger/st
 import Yrkesgruppe from './yrkesgruppe';
 
 import * as KV from '../../../kodeverk';
-import { hentFakta, hentFaktaListe } from '../../../regler/avklartefakta';
+import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class Vurderarbeidsland extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -12,13 +12,14 @@ class Vurderarbeidsland extends Steg {
 
     const sokkelEllerSkipListe = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, propsLight.avklartefakta);
     const installasjonArbeidslandListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, propsLight.avklartefakta);
+    const arbeidUtforesIOppgittLandFakta = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, propsLight.avklartefakta);
+
+    const harAvklaring = this.harAvklaring(arbeidUtforesIOppgittLandFakta);
 
     this.kriterier = [
       {
-        exec: () => {
-          return false;
-        },
-        nesteSteg: STEG.VURDER_ARBEIDSLAND,
+        exec: () => harAvklaring,
+        nesteSteg: STEG.ARBEIDSMONSTER,
       },
     ];
     this.id = STEG.VURDER_ARBEIDSLAND;
@@ -32,10 +33,11 @@ class Vurderarbeidsland extends Steg {
       const installasjonArbeidslandTypeListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, _propsLight.avklartefakta);
 
       return ({
-        harAvklaring: false,
+        harAvklaring,
         sokkelEllerSkipListe,
         installasjonArbeidslandListe,
         installasjonArbeidslandTypeListe,
+        arbeidUtforesIOppgittLandFakta,
       });
     };
     this.handlers = {
@@ -45,6 +47,11 @@ class Vurderarbeidsland extends Steg {
     };
     this.status = FANE_STATUS.OK;
   }
+
+  harAvklaring = arbeidUtforesIOppgittLandFakta => {
+    const arbeidUtforesIOppgittLand = hentFaktaVerdi(arbeidUtforesIOppgittLandFakta);
+    return arbeidUtforesIOppgittLand;
+  };
 }
 
 export default Vurderarbeidsland;

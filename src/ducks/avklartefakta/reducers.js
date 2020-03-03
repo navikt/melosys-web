@@ -66,6 +66,7 @@ export default function reducer(state = initialState, action) {
         YRKESAKTIVITET,
         avklartefaktaKoder: {
           AKTIVITET_I_NORGE,
+          ARBEID_UTFORES_I_OPPGITT_LAND,
           MARGINALT_ARBEID,
           ARBEIDSGIVERS_FORRETNINGSSTED,
           OMFATTES_I_NORGE,
@@ -95,6 +96,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_SOKKEL_SKIP], ARBEID_SOKKEL_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AARSAK_ENDRING_PERIODE], AARSAK_ENDRING_PERIODE),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[UTPEKING_GODKJENT], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_UTFORES_I_OPPGITT_LAND], null),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };
