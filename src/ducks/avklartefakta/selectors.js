@@ -216,14 +216,30 @@ const MaritimeArbeidslandSelector = createSelector(
     .filter(arbeidsland => arbeidsland))
 );
 
-const ArbeidslandSelector = createSelector(
+export const FjernedeArbeidslandSelector = createSelector(
+  AvklartefaktaSelector,
+  avklarteFakta => avklarteFakta
+    .filter(avklartfakta => avklartfakta.referanse === KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND)
+    .map(avklartfakta => avklartfakta.subjektID)
+);
+
+export const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
   state => MaritimeArbeidslandSelector(state),
   state => behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  (soknadsland, maritimeArbeidsland, behandlingstype) => {
+  FjernedeArbeidslandSelector,
+  state => behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  (
+    soknadsland,
+    maritimeArbeidsland,
+    behandlingstype,
+    fjernedeArbeidsland,
+    hjemmebase
+  ) => {
     if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND) {
-      const soknadsMaritimeArbeidsland = [...soknadsland, ...maritimeArbeidsland];
-      return [...new Set(soknadsMaritimeArbeidsland)];
+      const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !fjernedeArbeidsland.includes(land));
+      const unikeSoknadsMaritimeArbeidsland = [...new Set(soknadsMaritimeArbeidsland)];
+      return unikeSoknadsMaritimeArbeidsland;
     }
 
     if (maritimeArbeidsland.length > 0) return maritimeArbeidsland;

@@ -1,17 +1,21 @@
 import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import { formValueSelector } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
+import * as Mui from '../../../felleskomponenter/ui';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta, lagAvklartefaktaBegrunnelse, slettAvklartfakta } from '../../../regler/avklartefakta';
 
 import SokkelSkipListe from '../../../felleskomponenter/sokkelskipliste';
 
 import { formSelectors } from '../../../ducks/form';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import MKV from '../../../melosyskodeverk';
 
 import './vurderingVurderarbeidsland.css';
 
@@ -67,7 +71,7 @@ IngenSokkelSkipEllerHjemmebase.defaultProps = {
   arbeidUtforesIOppgittLandFakta: {},
 };
 
-const VurderingVurderarbeidsland = ({
+export const VurderingVurderarbeidsland = ({
   bekreftOgFortsett,
   tilstand: {
     harAvklaring,
@@ -75,6 +79,8 @@ const VurderingVurderarbeidsland = ({
     installasjonArbeidslandListe,
     installasjonArbeidslandTypeListe,
     arbeidUtforesIOppgittLandFakta,
+    fjernetArbeidslandFakta,
+    harIngenSokkelSkipEllerHjemmebase,
   },
   redigerbart,
   oppdaterData,
@@ -82,12 +88,41 @@ const VurderingVurderarbeidsland = ({
   maritimtArbeid,
   begrunnelser,
   hjemmebase,
+  soknadsland,
+  arbeidsland,
+  fjernedeArbeidsland,
 }) => {
   useEffect(() => {
+    fjernetArbeidslandFakta.forEach(fakta => {
+      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, fakta));
+    });
+
     return () => {
       slettData();
     };
   }, []);
+
+  const genererArbeidslandFakta = () => {
+    slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
+
+    arbeidsland
+      .filter(land => land)
+      .forEach(land => {
+        oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, KV.Koder.BoolskAvklartfaktaType.SANN, null));
+      });
+  };
+
+  useEffect(() => {
+    genererArbeidslandFakta();
+  }, [arbeidsland.toString()]);
+
+  const fjernSoknadsland = land => {
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, land, KV.Koder.BoolskAvklartfaktaType.SANN, null));
+  };
+
+  const angreFjernSoknadsland = land => {
+    slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, land));
+  };
 
   const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(maritimtArbeid, enkeltMaritimtArbeid => enkeltMaritimtArbeid.enhetNavn);
 
@@ -99,9 +134,7 @@ const VurderingVurderarbeidsland = ({
     oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
   };
 
-  const ingenSokkelskipEllerHjemmebase = sokkelEllerSkipListe.length === 0 && Utils._isEmpty(hjemmebase);
-
-  const innhold = ingenSokkelskipEllerHjemmebase ?
+  const innhold = harIngenSokkelSkipEllerHjemmebase ?
     <IngenSokkelSkipEllerHjemmebase
       oppdaterData={oppdaterData}
       slettData={slettData}
@@ -110,19 +143,57 @@ const VurderingVurderarbeidsland = ({
     />
     :
     <Fragment>
-      <SokkelSkipListe
-        className="borderBottom"
-        sokkelEllerSkipListe={sokkelEllerSkipListe}
-        installasjonArbeidslandListe={installasjonArbeidslandListe}
-        installasjonArbeidslandTypeListe={installasjonArbeidslandTypeListe}
-        maritimtArbeid={maritimtArbeid}
-        begrunnelser={begrunnelser}
-        redigerbart={redigerbart && harMaritimeArbeidUnikeNavn}
-        avklartefaktaEndretHandler={avklartefaktaEndret}
-        avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelseEndret}
-        oppdaterData={oppdaterData}
-        slettData={slettData}
-      />
+      {
+        maritimtArbeid.length > 0 &&
+        <Fragment>
+          <Nav.typo.Element className="undertittel">Vurdering sokkel/skip</Nav.typo.Element>
+          <SokkelSkipListe
+            className="borderBottom"
+            sokkelEllerSkipListe={sokkelEllerSkipListe}
+            installasjonArbeidslandListe={installasjonArbeidslandListe}
+            installasjonArbeidslandTypeListe={installasjonArbeidslandTypeListe}
+            maritimtArbeid={maritimtArbeid}
+            begrunnelser={begrunnelser}
+            redigerbart={redigerbart && harMaritimeArbeidUnikeNavn}
+            avklartefaktaEndretHandler={avklartefaktaEndret}
+            avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelseEndret}
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+          />
+        </Fragment>
+      }
+      {
+        hjemmebase &&
+        <Nav.Row className="borderBottom">
+          <Nav.Column xs="6">
+            <Nav.typo.Element className="undertittel">Hjemmebase</Nav.typo.Element>
+            <Mui.RedigerbarListe
+              elementer={[
+                {
+                  kode: hjemmebase,
+                  term: `${KV.kodeTilTerm(hjemmebase, MKV.KTObjects.landkoder)} (${hjemmebase})`,
+                  fjernbar: false,
+                },
+              ]}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Nav.typo.Element className="undertittel">Land fra inngangsvilkår:</Nav.typo.Element>
+          <Mui.RedigerbarListe
+            elementer={soknadsland.map(kode => ({
+              kode,
+              term: `${KV.kodeTilTerm(kode, MKV.KTObjects.landkoder)} (${kode})`,
+              defaultFjernet: fjernedeArbeidsland.includes(kode),
+            }))}
+            onFjern={fjernSoknadsland}
+            onAngreFjern={angreFjernSoknadsland}
+            redigerbar={redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
     </Fragment>;
 
   return (
@@ -145,22 +216,33 @@ VurderingVurderarbeidsland.propTypes = {
     installasjonArbeidslandListe: PT.array.isRequired,
     installasjonArbeidslandTypeListe: PT.array.isRequired,
     arbeidUtforesIOppgittLandFakta: MPT.Avklartefakta,
+    fjernetArbeidslandFakta: PT.arrayOf(MPT.Avklartefakta),
+    harIngenSokkelSkipEllerHjemmebase: PT.bool.isRequired,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   maritimtArbeid: PT.array,
   hjemmebase: PT.string,
+  soknadsland: PT.arrayOf(PT.string).isRequired,
+  arbeidsland: PT.arrayOf(PT.string).isRequired,
+  fjernedeArbeidsland: PT.arrayOf(PT.string),
 };
 
 VurderingVurderarbeidsland.defaultProps = {
   maritimtArbeid: [],
   hjemmebase: '',
+  fjernedeArbeidsland: [],
 };
+
+const inngangFormValuesSelector = formValueSelector('inngang');
 
 const mapStateToProps = state => ({
   maritimtArbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  soknadsland: inngangFormValuesSelector(state, 'soknadsland'),
+  arbeidsland: avklartefaktaSelectors.ArbeidslandSelector(state),
+  fjernedeArbeidsland: avklartefaktaSelectors.FjernedeArbeidslandSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVurderarbeidsland);
