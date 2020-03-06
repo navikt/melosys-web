@@ -37,7 +37,7 @@ describe('Element', () => {
     expect(props.onFjern).toHaveBeenCalledTimes(1);
   });
 
-  it('gjemmer knapp for å fjerne element dersom fjernbar', () => {
+  it('gjemmer knapp for å fjerne element dersom ikke fjernbar', () => {
     props.fjernbar = false;
     const element = shallow(<Element {...props} />);
 
