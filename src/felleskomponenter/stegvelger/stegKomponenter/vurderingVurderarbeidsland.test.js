@@ -20,6 +20,7 @@ describe('VurderingVurderarbeidsland', () => {
         sokkelEllerSkipListe: [],
         installasjonArbeidslandListe: [],
         installasjonArbeidslandTypeListe: [],
+        arbeidslandListe: [],
         arbeidUtforesIOppgittLandFakta: undefined,
         fjernetArbeidslandFakta: [],
         harIngenSokkelSkipEllerHjemmebase: false,
