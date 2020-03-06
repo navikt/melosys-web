@@ -4,6 +4,7 @@ import VurderingVurderarbeidsland from '../../../felleskomponenter/stegvelger/st
 
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
+import MKV from '../../../melosyskodeverk';
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class Vurderarbeidsland extends Steg {
@@ -39,12 +40,14 @@ class Vurderarbeidsland extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const installasjonArbeidslandTypeListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, _propsLight.avklartefakta);
+      const arbeidslandListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, _propsLight.avklartefakta);
 
       return ({
         harAvklaring,
         sokkelEllerSkipListe,
         installasjonArbeidslandListe,
         installasjonArbeidslandTypeListe,
+        arbeidslandListe,
         arbeidUtforesIOppgittLandFakta,
         fjernetArbeidslandFakta,
         harIngenSokkelSkipEllerHjemmebase,
@@ -98,9 +101,9 @@ class Vurderarbeidsland extends Steg {
     Boolean(hentFaktaVerdi(arbeidUtforesIOppgittLandFakta))
   );
 
-  harIngenSokkelEllerHjemmebase = (sokkelEllerSkipListe, hjemmebase) => {
-    return sokkelEllerSkipListe.length === 0 && Utils._isEmpty(hjemmebase);
-  };
+  harIngenSokkelEllerHjemmebase = (sokkelEllerSkipListe, hjemmebase) => (
+    sokkelEllerSkipListe.length === 0 && Utils._isEmpty(hjemmebase)
+  )
 }
 
 export default Vurderarbeidsland;

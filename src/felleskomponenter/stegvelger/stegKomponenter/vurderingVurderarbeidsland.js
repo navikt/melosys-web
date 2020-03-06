@@ -78,6 +78,7 @@ export const VurderingVurderarbeidsland = ({
     sokkelEllerSkipListe,
     installasjonArbeidslandListe,
     installasjonArbeidslandTypeListe,
+    arbeidslandListe,
     arbeidUtforesIOppgittLandFakta,
     fjernetArbeidslandFakta,
     harIngenSokkelSkipEllerHjemmebase,
@@ -152,6 +153,7 @@ export const VurderingVurderarbeidsland = ({
             sokkelEllerSkipListe={sokkelEllerSkipListe}
             installasjonArbeidslandListe={installasjonArbeidslandListe}
             installasjonArbeidslandTypeListe={installasjonArbeidslandTypeListe}
+            arbeidslandListe={arbeidslandListe}
             maritimtArbeid={maritimtArbeid}
             begrunnelser={begrunnelser}
             redigerbart={redigerbart && harMaritimeArbeidUnikeNavn}
@@ -215,6 +217,7 @@ VurderingVurderarbeidsland.propTypes = {
     sokkelEllerSkipListe: PT.array.isRequired,
     installasjonArbeidslandListe: PT.array.isRequired,
     installasjonArbeidslandTypeListe: PT.array.isRequired,
+    arbeidslandListe: PT.array.isRequired,
     arbeidUtforesIOppgittLandFakta: MPT.Avklartefakta,
     fjernetArbeidslandFakta: PT.arrayOf(MPT.Avklartefakta),
     harIngenSokkelSkipEllerHjemmebase: PT.bool.isRequired,

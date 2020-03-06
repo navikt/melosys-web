@@ -2,6 +2,7 @@ import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingSokkelSkip from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../kodeverk';
+import MKV from '../../../melosyskodeverk';
 import { hentFaktaListe, hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class SokkelSkip extends Steg {
@@ -36,6 +37,7 @@ class SokkelSkip extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const installasjonArbeidslandTypeListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, _propsLight.avklartefakta);
+      const arbeidslandListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, _propsLight.avklartefakta);
 
       return ({
         harAvklaring: alleErAvklart,
@@ -43,6 +45,7 @@ class SokkelSkip extends Steg {
         sokkelSkipKonklusjon,
         installasjonArbeidslandListe,
         installasjonArbeidslandTypeListe,
+        arbeidslandListe,
       });
     };
     this.handlers = {

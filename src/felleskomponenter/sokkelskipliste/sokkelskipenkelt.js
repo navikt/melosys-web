@@ -56,6 +56,7 @@ const SokkelSkipEnkelt = props => {
     sokkelEllerSkip,
     arbeidslandAvklartfakta,
     arbeidslandTypeAvklartfakta,
+    arbeidslandFakta,
     begrunnelser,
     redigerbart,
     avklartefaktaEndretHandler,
@@ -71,6 +72,7 @@ const SokkelSkipEnkelt = props => {
   const { begrunnelseKoder } = sokkelEllerSkip;
   const installasjonsType = hentFaktaVerdi(sokkelEllerSkip);
   const arbeidslandType = hentFaktaVerdi(arbeidslandTypeAvklartfakta);
+  const arbeidsland = arbeidslandFakta.subjektID;
   const { SOKKEL, SKIP } = KV.Koder;
 
   const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${enhetNavn}`;
@@ -78,10 +80,12 @@ const SokkelSkipEnkelt = props => {
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sokkelEllerSkip));
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
+    oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND), arbeidslandFakta);
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta));
     const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn));
       slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn));
+      slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, arbeidsland));
       slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, enhetNavn));
     };
     return cleanup;
@@ -97,6 +101,7 @@ const SokkelSkipEnkelt = props => {
 
   const arbeidslandEndret = (land = {}) => {
     avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn, land.kode);
+    avklartefaktaEndretHandler(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land.kode, KV.Koder.BoolskAvklartfaktaType.SANN);
     avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, enhetNavn, land.term);
   };
 
@@ -159,6 +164,7 @@ SokkelSkipEnkelt.propTypes = {
   sokkelEllerSkip: PT.object,
   arbeidslandAvklartfakta: PT.object,
   arbeidslandTypeAvklartfakta: PT.object,
+  arbeidslandFakta: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
   avklartefaktaEndretHandler: PT.func.isRequired,
@@ -171,6 +177,7 @@ SokkelSkipEnkelt.defaultProps = {
   sokkelEllerSkip: {},
   arbeidslandAvklartfakta: {},
   arbeidslandTypeAvklartfakta: {},
+  arbeidslandFakta: {},
 };
 
 export default SokkelSkipEnkelt;

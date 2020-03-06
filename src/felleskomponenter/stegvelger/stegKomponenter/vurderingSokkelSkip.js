@@ -62,7 +62,7 @@ class VurderingSokkelSkip extends React.Component {
     } = this.props;
 
     const {
-      sokkelEllerSkipListe, sokkelSkipKonklusjon, installasjonArbeidslandListe, installasjonArbeidslandTypeListe,
+      sokkelEllerSkipListe, sokkelSkipKonklusjon, installasjonArbeidslandListe, installasjonArbeidslandTypeListe, arbeidslandListe,
     } = tilstand;
     const fakta = hentFaktaVerdi(sokkelSkipKonklusjon);
 
@@ -78,6 +78,7 @@ class VurderingSokkelSkip extends React.Component {
           sokkelEllerSkipListe={sokkelEllerSkipListe}
           installasjonArbeidslandListe={installasjonArbeidslandListe}
           installasjonArbeidslandTypeListe={installasjonArbeidslandTypeListe}
+          arbeidslandListe={arbeidslandListe}
           maritimtArbeid={maritimtArbeid}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart && harMaritimeArbeidUnikeNavn}

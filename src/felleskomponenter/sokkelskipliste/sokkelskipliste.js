@@ -15,6 +15,7 @@ const SokkelSkipListe = ({
   slettData,
   installasjonArbeidslandListe,
   installasjonArbeidslandTypeListe,
+  arbeidslandListe,
   className,
 }) => (
   <div className={className}>
@@ -25,6 +26,7 @@ const SokkelSkipListe = ({
         sokkelEllerSkip={sokkelEllerSkipListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}
         arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}
         arbeidslandTypeAvklartfakta={installasjonArbeidslandTypeListe.find(avklartfakta => avklartfakta.subjektID === enkelt.enhetNavn)}
+        arbeidslandFakta={arbeidslandListe.find(avklartfakta => avklartfakta.subjektID === enkelt.enhetNavn)}
         index={index}
         begrunnelser={begrunnelser}
         redigerbart={redigerbart}
@@ -40,6 +42,7 @@ SokkelSkipListe.propTypes = {
   sokkelEllerSkipListe: PT.array,
   installasjonArbeidslandListe: PT.array,
   installasjonArbeidslandTypeListe: PT.array,
+  arbeidslandListe: PT.array,
   maritimtArbeid: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
@@ -55,6 +58,7 @@ SokkelSkipListe.defaultProps = {
   maritimtArbeid: [],
   installasjonArbeidslandListe: [],
   installasjonArbeidslandTypeListe: [],
+  arbeidslandListe: [],
   className: undefined,
 };
 
