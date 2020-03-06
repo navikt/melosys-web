@@ -16,7 +16,7 @@ const ServerinfoSelector = createSelector(
 const ServerinfoDataSelector = createSelector(
   ServerinfoSelector,
   serverinfo => serverinfo.data
-)
+);
 
 const NamespaceSelector = createSelector(
   ServerinfoDataSelector,
