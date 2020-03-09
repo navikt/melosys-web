@@ -22,7 +22,7 @@ import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiode
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer';
-import { fritekstPakrevdSkjema, endrePeriodeSkjema } from './validering/anmodningunntakSkjema';
+import { delvisInnvilgelseSkjema, avslagSkjema } from './validering/anmodningunntakSkjema';
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 const uuid = require('uuid/v4');
@@ -103,10 +103,14 @@ const Saksopplysninger = ({
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
         return true;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
-        valideringsresultat = lagYupToReduxformErrorMapper(endrePeriodeSkjema)({ fom: endretPeriodeFom, tom: endretPeriodeTom });
+        valideringsresultat = lagYupToReduxformErrorMapper(delvisInnvilgelseSkjema)({
+          fom: endretPeriodeFom,
+          tom: endretPeriodeTom,
+          fritekst: begrunnelseFritekst,
+        });
         break;
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
-        valideringsresultat = lagYupToReduxformErrorMapper(fritekstPakrevdSkjema)({ fritekst: begrunnelseFritekst });
+        valideringsresultat = lagYupToReduxformErrorMapper(avslagSkjema)({ fritekst: begrunnelseFritekst });
         break;
       default:
         return false;
@@ -141,7 +145,7 @@ const Saksopplysninger = ({
         return makeResponse({
           fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
           tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
-        }, null);
+        }, begrunnelseFritekst);
       case AVSLAG:
         return makeResponse(tomPeriode, begrunnelseFritekst);
       default:
@@ -291,28 +295,42 @@ const Saksopplysninger = ({
                       label="Godkjenn, men endre periode"
                     />
                     {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
-                      <Nav.Row>
-                        <Nav.Column xs="3">
-                          <Nav.Input
-                            bredde="fullbredde"
-                            label="Startdato"
-                            value={endretPeriodeFom}
-                            onChange={e => oppdaterDato(e, setEndretPeriodeFom)}
-                            onBlur={e => formaterDato(e, setEndretPeriodeFom)}
-                            feil={feilmeldinger.fom}
-                            disabled={!redigerbart} />
-                        </Nav.Column>
-                        <Nav.Column xs="3">
-                          <Nav.Input
-                            bredde="fullbredde"
-                            label="Sluttdato"
-                            value={endretPeriodeTom}
-                            onChange={e => oppdaterDato(e, setEndretPeriodeTom)}
-                            onBlur={e => formaterDato(e, setEndretPeriodeTom)}
-                            feil={feilmeldinger.tom}
-                            disabled={!redigerbart} />
-                        </Nav.Column>
-                      </Nav.Row>
+                      <Fragment>
+                        <Nav.Row>
+                          <Nav.Column xs="3">
+                            <Nav.Input
+                              bredde="fullbredde"
+                              label="Startdato"
+                              value={endretPeriodeFom}
+                              onChange={e => oppdaterDato(e, setEndretPeriodeFom)}
+                              onBlur={e => formaterDato(e, setEndretPeriodeFom)}
+                              feil={feilmeldinger.fom}
+                              disabled={!redigerbart} />
+                          </Nav.Column>
+                          <Nav.Column xs="3">
+                            <Nav.Input
+                              bredde="fullbredde"
+                              label="Sluttdato"
+                              value={endretPeriodeTom}
+                              onChange={e => oppdaterDato(e, setEndretPeriodeTom)}
+                              onBlur={e => formaterDato(e, setEndretPeriodeTom)}
+                              feil={feilmeldinger.tom}
+                              disabled={!redigerbart} />
+                          </Nav.Column>
+                        </Nav.Row>
+                        <Nav.Row>
+                          <Nav.Column xs="6">
+                            <Nav.Textarea
+                              disabled={!redigerbart}
+                              label="Skriv inn begrunnelse for delvis innvilgelse..."
+                              onChange={textAreaOnChange}
+                              value={begrunnelseFritekst}
+                              maxLength={255}
+                              feil={feilmeldinger.fritekst}
+                              bredde="fullbredde" />
+                          </Nav.Column>
+                        </Nav.Row>
+                      </Fragment>
                     )}
                     <Nav.Radio
                       name={unikRadioButtonGruppeID}
@@ -325,20 +343,18 @@ const Saksopplysninger = ({
                 </Nav.Column>
               </Nav.Row>
               {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
-                <Fragment>
-                  <Nav.Row>
-                    <Nav.Column xs="6">
-                      <Nav.Textarea
-                        disabled={!redigerbart}
-                        label="Skriv inn begrunnelse for avslaget..."
-                        onChange={textAreaOnChange}
-                        value={begrunnelseFritekst}
-                        maxLength={255}
-                        feil={feilmeldinger.fritekst}
-                        bredde="fullbredde" />
-                    </Nav.Column>
-                  </Nav.Row>
-                </Fragment>
+                <Nav.Row>
+                  <Nav.Column xs="6">
+                    <Nav.Textarea
+                      disabled={!redigerbart}
+                      label="Skriv inn begrunnelse for avslaget..."
+                      onChange={textAreaOnChange}
+                      value={begrunnelseFritekst}
+                      maxLength={255}
+                      feil={feilmeldinger.fritekst}
+                      bredde="fullbredde" />
+                  </Nav.Column>
+                </Nav.Row>
               )}
               <Nav.Row>
                 <LinkForhandsvisningSed
