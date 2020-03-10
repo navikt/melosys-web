@@ -13,11 +13,11 @@ class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const erSokkalSkipEttLand = SokkelSkip.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND);
+    const erSokkelSkipEttLand = SokkelSkip.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND);
 
     this.kriterier = [
       {
-        exec: () => erSokkalSkipEttLand,
+        exec: () => erSokkelSkipEttLand,
         nesteSteg: STEG.ARTIKKEL_11_4,
       },
       {
@@ -54,7 +54,7 @@ class Bostedsland extends Steg {
 
       const bostedslandFakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, _propsLight.avklartefakta);
 
-      const erBegrunnelserPaakrevd = !Bostedsland.finnAvklaring(_propsLight.avklartefakta, MKV.Koder.landkoder.NO) && !erSokkalSkipEttLand;
+      const erBegrunnelserPaakrevd = !Bostedsland.finnAvklaring(_propsLight.avklartefakta, MKV.Koder.landkoder.NO) && !erSokkelSkipEttLand;
 
       return {
         harAvklaring: Bostedsland.alleErAvklart(bostedslandFakta, erBegrunnelserPaakrevd),
