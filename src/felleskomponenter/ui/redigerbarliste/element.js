@@ -36,7 +36,7 @@ const Element = ({
         <Nav.Column xs="6">
           {
             !fjernet &&
-            <Mui.Knapp disabled={!redigerbar} onClick={fjern}>&times; FJERN</Mui.Knapp>
+            <Mui.Knapp ikon={Ikoner.RemoveOne} disabled={!redigerbar} onClick={fjern}>FJERN</Mui.Knapp>
           }
           {
             fjernet &&
