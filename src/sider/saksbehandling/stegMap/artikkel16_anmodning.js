@@ -12,7 +12,6 @@ class Artikkel16Anmodning extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'mottatt svar',
         exec: () => Artikkel16Anmodning.skalArt16SvarstegVaereSynlig(propsLight),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },

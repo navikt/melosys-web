@@ -14,7 +14,6 @@ class Artikkel16MottaSvar extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'Artikkel 16 vedtak',
         exec: () => Artikkel16MottaSvar.finnAvklaring(propsLight.anmodningsperiodesvarForm),
         nesteSteg: STEG.ARTIKKEL_16_VEDTAK,
       },

@@ -123,6 +123,7 @@ const VurderingVedtak = ({
               redigerbart={redigerbart}
               landkode={soknadsland[0]}
               bucType={EKV.Koder.buctyper.legislation.LA_BUC_04}
+              data_cy="mottakerinstitusjoner"
             />
           </Nav.Column>
         </Nav.Row>

@@ -22,12 +22,10 @@ class Forretningssted extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'vedtaksteg',
         exec: () => harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetNorgeVurdert && erOmfattetINorge,
         nesteSteg: STEG.ARTIKKEL_13_1_B_VEDTAK,
       },
       {
-        beskrivelse: '',
         exec: () => harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetNorgeVurdert && erOmfattetILandIkkeNorge,
         nesteSteg: STEG.ARTIKKEL_13_1_B_UTPEK_LAND,
       },

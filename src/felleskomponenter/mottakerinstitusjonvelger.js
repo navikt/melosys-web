@@ -19,6 +19,7 @@ export const MottakerinstitusjonvelgerSchema = ({
   landkode,
   label,
   oppdaterKreverMottakerinstitusjon,
+  data_cy,
   ...rest
 }) => {
   if (landkode === MKV.Koder.landkoder.NO) {
@@ -41,6 +42,7 @@ export const MottakerinstitusjonvelgerSchema = ({
       label={label}
       emptyFieldDisabled={false}
       emptyFieldText="Velg..."
+      data-cy={data_cy}
       {...rest}
     >
       {mottakerinstitusjoner.map(institusjon => <option key={institusjon.id} value={institusjon.id}>{institusjon.navn}</option>)}
@@ -54,6 +56,7 @@ MottakerinstitusjonvelgerSchema.propTypes = {
   landkode: PT.string.isRequired,
   label: PT.string,
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
+  data_cy: PT.string.isRequired,
 };
 
 MottakerinstitusjonvelgerSchema.defaultProps = {
@@ -65,6 +68,7 @@ const Mottakerinstitusjonvelger = ({
   landkode,
   bucType,
   oppdaterKreverMottakerinstitusjon,
+  data_cy,
 }) => (
   <Field
     name={MOTTAKERINSTITUSJON}
@@ -74,6 +78,7 @@ const Mottakerinstitusjonvelger = ({
       landkode,
       bucType,
       oppdaterKreverMottakerinstitusjon,
+      data_cy,
     }}
   />
 );
@@ -84,6 +89,11 @@ Mottakerinstitusjonvelger.propTypes = {
   landkode: PT.string.isRequired,
   bucType: PT.string.isRequired,
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
+  data_cy: PT.string,
+};
+
+Mottakerinstitusjonvelger.defaultProps = {
+  data_cy: undefined,
 };
 
 const mapStateToProps = () => ({});

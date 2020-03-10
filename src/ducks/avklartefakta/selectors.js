@@ -77,16 +77,6 @@ export const Yrkesgruppe = createSelector(
   }
 );
 
-/* Avklart fakta om søkers yrkesaktivitet og antall land. */
-export const YrkesaktivitetAntallLand = createSelector(
-  state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND);
-    if (!avklartFakta) return null;
-    return avklartFakta.fakta[0];
-  }
-);
-
 /* Avklart fakta om søker er ordinær arbeidstaker, selvstendig næringsdrivende, begge deler eller tjenesteperson. */
 export const Yrkesaktivitet = createSelector(
   state => AvklartefaktaSelector(state),
@@ -226,10 +216,32 @@ const MaritimeArbeidslandSelector = createSelector(
     .filter(arbeidsland => arbeidsland))
 );
 
-const ArbeidslandSelector = createSelector(
+export const FjernedeArbeidslandSelector = createSelector(
+  AvklartefaktaSelector,
+  avklarteFakta => avklarteFakta
+    .filter(avklartfakta => avklartfakta.referanse === KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND)
+    .map(avklartfakta => avklartfakta.subjektID)
+);
+
+export const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
   state => MaritimeArbeidslandSelector(state),
-  (soknadsland, maritimeArbeidsland) => {
+  state => behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  FjernedeArbeidslandSelector,
+  state => behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  (
+    soknadsland,
+    maritimeArbeidsland,
+    behandlingstype,
+    fjernedeArbeidsland,
+    hjemmebase
+  ) => {
+    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND) {
+      const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !fjernedeArbeidsland.includes(land));
+      const unikeSoknadsMaritimeArbeidsland = [...new Set(soknadsMaritimeArbeidsland)];
+      return unikeSoknadsMaritimeArbeidsland;
+    }
+
     if (maritimeArbeidsland.length > 0) return maritimeArbeidsland;
     return soknadsland;
   }
@@ -318,10 +330,8 @@ export const BostedslandSelector = createSelector(
 );
 
 export const ErIArtikkel13_1FlytSelector = createSelector(
-  AvklartefaktaSelector,
-  avklarteFakta => (
-    avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND))
-  )
+  state => behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND
 );
 
 export const ErIDirekteTilArtikkel16FlytSelector = createSelector(

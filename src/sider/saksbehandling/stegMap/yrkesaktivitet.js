@@ -1,7 +1,6 @@
 import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingYrkesaktivitet from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingYrkesaktivitet';
-import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 import Yrkesgruppe from './yrkesgruppe';
 
 import * as KV from '../../../kodeverk';
@@ -10,31 +9,29 @@ import { hentFakta } from '../../../regler/avklartefakta';
 class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
+    const { erSoknad } = propsLight;
+    const erSoknadEllerSokkelSkip = erSoknad || erSokkelEllerSkip;
+
     this.kriterier = [
       {
-        beskrivelse: 'yrkesaktivitet ER LIK "ORDINAER_ARBEIDSTAKER" && VurderingYrkesaktivitetAntallLandTyper ER LIK "ETT_LAND_IKKE_NORGE"',
         exec: avklartefakta => {
-          const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
-          const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erOrdinaerArbeidstaker = Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER);
-          return (erKunEttLand || erSokkelEllerSkip) && erOrdinaerArbeidstaker;
+          return erSoknadEllerSokkelSkip && erOrdinaerArbeidstaker;
         },
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
       {
-        beskrivelse: 'yrkesaktivitet ER LIK "SELVSTENDIG_NAERINGSDRIVENDE" && VurderingYrkesaktivitetAntallLandTyper ER LIK "ETT_LAND_IKKE_NORGE"',
         exec: avklartefakta => {
-          const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
-          const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erSelvstendigNaeringsdrivende = Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta);
-          return (erKunEttLand || erSokkelEllerSkip) && erSelvstendigNaeringsdrivende;
+          return erSoknadEllerSokkelSkip && erSelvstendigNaeringsdrivende;
         },
         nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
       },
       {
-        beskrivelse: 'yrkesaktivitetAntallLand ER LIK "TO_ELLER_FLERE_LAND"',
         exec: avklartefakta => {
-          const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
+          const erToEllerFlereLand = propsLight.erSoknadArbeidFlereLand;
           const erYrkesAktivitetValgt = (
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) ||
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) ||
@@ -43,7 +40,7 @@ class Yrkesaktivitet extends Steg {
           );
           return erToEllerFlereLand && erYrkesAktivitetValgt;
         },
-        nesteSteg: STEG.ARBEIDSMONSTER,
+        nesteSteg: STEG.VURDER_ARBEIDSLAND,
       },
     ];
     this.id = STEG.YRKESAKTIVITET;
@@ -55,9 +52,7 @@ class Yrkesaktivitet extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const yrkesaktivitet = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta);
 
-      const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(_propsLight.avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
-      const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(_propsLight.avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
-      const skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende = erKunEttLand || erSokkelEllerSkip;
+      const skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende = erSoknadEllerSokkelSkip;
 
       return ({
         skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende,

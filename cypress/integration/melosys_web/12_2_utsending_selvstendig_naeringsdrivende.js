@@ -17,43 +17,41 @@ describe('12.2 utsending næringsdrivende', () => {
       .click();
 
     cy.get('.panel.stegFane.steg2.stegFane--aktiv')
-      .find('[name="yrkesaktivitetAntallLand"]')
-      .eq(1)
-      .check(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE, { force: true })
-      .should('be.checked');
-    cy.get('[data-cy-nesteknapp="knapp_steg2"]').click();
-
-    cy.get('.panel.stegFane.steg3.stegFane--aktiv')
       .find('[type="checkbox"]')
-      .eq(2) // MULTICONSULT
+      .eq(2)
       .check({ force: true })
       .should('be.checked');
     cy.get('[data-cy-nesteknapp="knapp_steg3"]').click();
 
-    cy.get('.panel.stegFane.steg4.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg3.stegFane--aktiv')
       .find('[name="yrkesaktivitet"]')
       .check(KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE, { force: true })
       .should('be.checked');
     cy.get('[data-cy-nesteknapp="knapp_steg4"]').click();
 
-    cy.get('.panel.stegFane.steg5.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg4.stegFane--aktiv')
       .find('[name="normaltDriverVirksomhet"]')
       .first()
       .check('true', { force: true })
       .should('be.checked');
     cy.get('[data-cy-nesteknapp="knapp_steg5"]').click();
 
-    cy.get('.panel.stegFane.steg6.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg5.stegFane--aktiv')
       .find('[name="artikkel12"]')
       .first()
       .check('art12_2', { force: true })
       .should('be.checked');
-    cy.get('.panel.stegFane.steg6.stegFane--aktiv')
+    cy.get('.panel.stegFane.steg5.stegFane--aktiv')
       .find('button')
       .click();
 
-    // steg7
+    cy.get('[data-cy="mottakerinstitusjoner"]')
+      .selectNth(1);
     cy.contains('Fatt vedtak')
       .click();
+
+    cy.location().should(loc => {
+      expect(loc.pathname).to.eq('/melosys/');
+    });
   });
 });

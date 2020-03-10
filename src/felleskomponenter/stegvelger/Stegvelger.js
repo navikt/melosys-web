@@ -25,7 +25,7 @@ import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { vedtakOperations } from '../../ducks/vedtak';
 import { formSelectors } from '../../ducks/form';
-import { behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 
@@ -360,6 +360,10 @@ class Stegvelger extends Component {
       vurderUtpekingFom: props.vurderUtpekingFom,
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
+      erSoknadArbeidFlereLand: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
+      erSoknad: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      maritimtarbeid: props.maritimtarbeid,
+      hjemmebase: props.hjemmebase,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap);
@@ -511,6 +515,8 @@ Stegvelger.propTypes = {
   vurderUtpekingTom: PT.string,
   vurderUtpekingValid: PT.bool.isRequired,
   lovvalgsbestemmelse: PT.string,
+  maritimtarbeid: PT.arrayOf(PT.object),
+  hjemmebase: PT.string,
 };
 
 Stegvelger.defaultProps = {
@@ -527,6 +533,8 @@ Stegvelger.defaultProps = {
   vurderUtpekingFom: '',
   vurderUtpekingTom: '',
   lovvalgsbestemmelse: '',
+  maritimtarbeid: [],
+  hjemmebase: null,
 };
 
 const mapStateToProps = state => ({
@@ -558,6 +566,8 @@ const mapStateToProps = state => ({
   vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
   vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
+  maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
+  hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
 });
 
 /* eslint no-alert:off */

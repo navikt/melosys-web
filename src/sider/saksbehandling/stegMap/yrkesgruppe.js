@@ -11,24 +11,15 @@ class Yrkesgruppe extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER"',
-        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER),
-        nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
+        exec: avklartefakta =>
+          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) ||
+          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL) ||
+          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12),
+        nesteSteg: STEG.VIRKSOMHETER,
       },
       {
-        beskrivelse: 'yrkesgruppeType ER LIK "SOKKEL_ELLER_SKIP"',
         exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP),
         nesteSteg: STEG.SOKKEL_SKIP,
-      },
-      {
-        beskrivelse: 'yrkesgruppeType ER LIK "FLYENDE_PERSONELL"',
-        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL),
-        nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
-      },
-      {
-        beskrivelse: '',
-        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12),
-        nesteSteg: STEG.VIRKSOMHETER,
       },
     ];
     this.id = STEG.YRKESGRUPPE;

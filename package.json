@@ -120,7 +120,8 @@
     "eject": "react-scripts eject",
     "eslint:src": "eslint src --ext .js",
     "eslint:scripts": "eslint scripts --ext .js",
-    "eslint": "npm-run-all -s eslint:*",
+    "eslint:cypress": "eslint cypress --ext .js",
+    "eslint": "npm-run-all -p eslint:*",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
     "mocha": "mocha"
   },

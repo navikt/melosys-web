@@ -63,15 +63,16 @@ export default function reducer(state = initialState, action) {
 
       const {
         SOKNADSLAND,
-        YRKESAKTIVITET_ANTALL_LAND,
         YRKESAKTIVITET,
         avklartefaktaKoder: {
           AKTIVITET_I_NORGE,
+          ARBEID_UTFORES_I_OPPGITT_LAND,
           MARGINALT_ARBEID,
           ARBEIDSGIVERS_FORRETNINGSSTED,
           OMFATTES_I_NORGE,
           OMFATTES_I_LAND,
           UTPEKING_GODKJENT,
+          FJERNET_ARBEIDSLAND,
         },
         referanseKoder: {
           INSTALLASJON_ARBEIDSLAND,
@@ -83,7 +84,6 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[SOKNADSLAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[VIRKSOMHET], VIRKSOMHET),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESGRUPPE], YRKESGRUPPE),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESAKTIVITET_ANTALL_LAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESAKTIVITET], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AKTIVITET_I_NORGE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[MARGINALT_ARBEID], null),
@@ -92,11 +92,14 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[OMFATTES_I_LAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[BOSTEDSLAND], BOSTEDSLAND),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[SOKKEL_ELLER_SKIP], SOKKEL_ELLER_SKIP),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND], ARBEIDSLAND),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEIDSLAND], ARBEIDSLAND),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND_TYPE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_SOKKEL_SKIP], ARBEID_SOKKEL_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AARSAK_ENDRING_PERIODE], AARSAK_ENDRING_PERIODE),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[UTPEKING_GODKJENT], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_UTFORES_I_OPPGITT_LAND], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[FJERNET_ARBEIDSLAND], null),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };

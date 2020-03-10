@@ -19,6 +19,7 @@ import Medlemskap from './ikon-medlemsskap.svg';
 import PaperPlane from './paperplane.svg';
 import Pencil from './pencil-2.svg';
 import ParagraphTwoColumns from './line-version-paragraph-two-columns.svg';
+import RemoveOne from './filled-version-remove-1.svg';
 import Svar from './reply.svg';
 import Ubehandlet from './ikon-steg-ubehandlet.svg';
 import VedtakAvslatt from './ikon-vedtak-avslatt.svg';
@@ -47,6 +48,7 @@ export {
   PaperPlane,
   Pencil,
   ParagraphTwoColumns,
+  RemoveOne,
   Svar,
   Varsel,
   Ubehandlet,

@@ -5,9 +5,17 @@ class SaksbehandlingInngang extends Inngang {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
+    const harMinstEttGyldigSoknadsland = Inngang.harMinstEttGyldigSoknadsland(propsLight.avklartefakta);
+
     this.kriterier = [
       {
-        exec: avklartefakta => (Inngang.harMinstEttGyldigSoknadsland(avklartefakta)),
+        exec: () =>
+          harMinstEttGyldigSoknadsland &&
+          propsLight.erSoknadArbeidFlereLand,
+        nesteSteg: STEG.BOSTEDSLAND,
+      },
+      {
+        exec: () => harMinstEttGyldigSoknadsland,
         nesteSteg: STEG.YRKESGRUPPE,
       },
     ];
