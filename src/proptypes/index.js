@@ -23,7 +23,7 @@ import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { OppholdLand, OppholdPeriode } from './opphold';
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Personhistorikk } from './personhistorikk';
-import { Periode } from './periode';
+import { Periode, Lovvalgsperiode } from './periode';
 import { Saksbehandler } from './saksbehandler';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { SoknadForm } from './soknadForm';
@@ -68,6 +68,7 @@ export {
   Kodeverk,
   Lovvalgsbestemmelse,
   Lovvalgsbestemmelser,
+  Lovvalgsperiode,
   Medlemskap,
   MedlemskapEnkeltPeriode,
   MedlemskapPerioder,

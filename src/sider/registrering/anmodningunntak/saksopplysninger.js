@@ -18,6 +18,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
+import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
@@ -58,6 +59,7 @@ const Saksopplysninger = ({
   sed,
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
+  lovvalgsperiode,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
@@ -71,12 +73,19 @@ const Saksopplysninger = ({
     lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
   }, [anmodningsperiodeID]);
 
-  useEffect(() => {
+  const setEndretPeriode = () => {
     if (sed.lovvalgsperiode) {
-      setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom)}`);
-      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom)}`);
+      setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom));
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom));
     }
-  }, [sed]);
+    if (anmodningsperiodeSvar.endretPeriode) {
+      setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom));
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom));
+    }
+    if (lovvalgsperiode.tomDato) {
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato));
+    }
+  };
 
   const initialiserSkjema = () => {
     if (anmodningsperiodeSvar) {
@@ -86,16 +95,16 @@ const Saksopplysninger = ({
       if (anmodningsperiodeSvar.begrunnelseFritekst) {
         setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
       }
-      if (anmodningsperiodeSvar.endretPeriode) {
-        setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom)}`);
-        setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom)}`);
-      }
     }
   };
 
   useEffect(() => {
     initialiserSkjema();
   }, [anmodningsperiodeSvar]);
+
+  useEffect(() => {
+    setEndretPeriode();
+  }, [sed.lovvalgsperiode, anmodningsperiodeSvar.endretPeriode, lovvalgsperiode.tomDato]);
 
   const validerFelt = () => {
     let valideringsresultat;
@@ -394,6 +403,7 @@ Saksopplysninger.propTypes = {
   anmodningsperiodeID: PT.string,
   anmodningsperiodeSvar: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
+  lovvalgsperiode: MPT.Lovvalgsperiode.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -407,6 +417,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodeSvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

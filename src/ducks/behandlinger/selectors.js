@@ -13,6 +13,7 @@ import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
 import * as behandlingsgrunnlagSelectors from '../behandlingsgrunnlag/selectors';
 import { anmodningsperioderSelectors } from '../anmodningsperioder';
+import * as lovvalgsperioderSelectors from '../lovvalgsperioder/selectors';
 
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingerSelector = createSelector(
@@ -62,7 +63,15 @@ export const SEDSelector = createSelector(
   state => SaksopplysningerSelector(state).sed || {},
   sed => sed
 );
-export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
+
+export const LovvalgsperiodeSelector = createSelector(
+  lovvalgsperioderSelectors.LovvalgsperiodeSelector,
+  state => SEDSelector(state).lovvalgsperiode || {},
+  (lovvalgsperiode, sedLovvalgsperiode) => {
+    const { fomDato, tomDato } = lovvalgsperiode;
+    return tomDato ? { fom: fomDato, tom: tomDato } : sedLovvalgsperiode;
+  }
+);
 
 const landkodeTilKodeverksobjekt = landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
 export const LovvalgslandSelector = createSelector(
