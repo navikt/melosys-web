@@ -12,7 +12,7 @@ const Knapp = ({
   type,
   ...rest
 }) => (
-  <Nav.Knapp htmlType={htmlType} type={type} {...rest} >
+  <Nav.Knapp htmlType={htmlType} type={type} {...rest} className="knapp">
     {
       ikon && <img src={ikon} height={20} alt={ikon} className="ikon" />
     }
