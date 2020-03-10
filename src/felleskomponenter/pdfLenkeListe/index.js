@@ -13,8 +13,13 @@ class PdfLenkeListe extends Component {
     feilmelding: false,
   };
 
+  setGeneriskFeil = erSed => {
+    this.setState({ feilmelding: `Det oppstod en feil da ${erSed ? 'SED' : 'brevet'} skulle forhåndsvises!` });
+  };
+
   klikk = async dokument => {
     const { behandlingID, vedKlikk } = this.props;
+    const { setGeneriskFeil } = this;
 
     // Avbryt forespørsel hvis validator er oppgitt og returnerer false
     if (vedKlikk) {
@@ -25,17 +30,24 @@ class PdfLenkeListe extends Component {
     }
 
     let fileURL;
-    if (dokument.erSed) {
-      fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type);
-    } else {
-      fileURL = await dokumenterOperations.forhandsvisBrev(behandlingID, dokument.type, dokument.data);
+
+    try {
+      if (dokument.erSed) {
+        fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type);
+      } else {
+        fileURL = await dokumenterOperations.forhandsvisBrev(behandlingID, dokument.type, dokument.data);
+      }
+    } catch (e) {
+      if (e.status >= 500) {
+        setGeneriskFeil(dokument.erSed);
+      } else if (e.status >= 400) {
+        this.setState({ feilmelding: e.body.message });
+      }
     }
 
     if (fileURL) {
       window.open(fileURL);
       this.setState({ feilmelding: false });
-    } else {
-      this.setState({ feilmelding: 'Det oppstod en feil da brevet skulle forhåndsvises!' });
     }
   };
 
