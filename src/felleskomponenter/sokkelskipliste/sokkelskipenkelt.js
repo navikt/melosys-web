@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PT from 'prop-types';
 import uuid from 'uuid';
 
@@ -128,20 +128,23 @@ const SokkelSkipEnkelt = props => {
       </Nav.Column>
       {
         installasjonsType === SOKKEL &&
-        <Nav.Column xs="2">
-          <Nav.Select
-            name={`${key}_begrunnelser`}
-            disabled={sokkelSkipDisabled}
-            id="installasjonsTypeBegrunnelser"
-            label="Begrunnelse hvis sokkel"
-            onChange={begrunnelserEndret}
-            value={begrunnelseKoder[0]} >
-            <option key={null} value={null} />
-            {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
-          </Nav.Select>
-        </Nav.Column>
+        <Fragment>
+          <Nav.Column xs="2">
+            <Nav.Select
+              name={`${key}_begrunnelser`}
+              disabled={sokkelSkipDisabled}
+              id="installasjonsTypeBegrunnelser"
+              label="Begrunnelse hvis sokkel"
+              onChange={begrunnelserEndret}
+              value={begrunnelseKoder[0]} >
+              <option key={null} value={null} />
+              {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
+            </Nav.Select>
+          </Nav.Column>
+          <Nav.Column xs="1"></Nav.Column>
+        </Fragment>
       }
-      <Nav.Column xs="5">
+      <Nav.Column xs="4">
         <Nav.Fieldset disabled={sokkelSkipDisabled} legend="Velg arbeidsland">
           <ArbeidslandRadioButtons
             landliste={[
