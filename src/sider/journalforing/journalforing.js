@@ -403,17 +403,20 @@ class Journalforing extends Component {
       erProd,
     } = this.props;
 
-    const behandlingstyper = [
+    let behandlingstyper = [
       ...MKV.KTObjects.behandlinger.behandlingstyper
         .filter(({ kode }) =>
           kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
           kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND ||
           kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
           kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
           kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
           kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED),
     ];
-    if (!erProd) behandlingstyper.splice(2, 0, MKV.KTObjects.behandlinger.behandlingstyper.find(({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND));
+    if (erProd) {
+      behandlingstyper = behandlingstyper.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND);
+    }
 
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
