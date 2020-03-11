@@ -137,13 +137,24 @@ const VurderingArbeidsmonster = props => {
     bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const {
-    marginaltArbeid, aktivitetINorge,
-    aktivitetINorgeNodvendig, harAvklaring,
+    marginaltArbeid,
+    aktivitetINorge,
+    aktivitetINorgeNodvendig,
+    harAvklaring,
     yrkesaktivitet,
+    erArbeidstakerOgSelvstendigNaeringsdrivende,
+    loennetArbeidAntallLandFakta,
   } = tilstand;
 
+  const loennetArbeidEndretHandler = avklartLoennetArbeid => {
+    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.ETT_LAND) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+    } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
+      slettData(slettLovvalgsbestemmelse());
+    }
+  };
 
-  const endreLovvalgsperiode = avklartAktivitetINorge => {
+  const aktivitetINorgeEndretHandler = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
@@ -179,6 +190,11 @@ const VurderingArbeidsmonster = props => {
     { label: 'Mindre enn 25%', type: VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT },
   ];
 
+  const loennetArbeidValg = [
+    { label: 'Lønnet arbeid i ett land (13.3)', type: KV.Koder.LoennetArbeidAntallLand.ETT_LAND },
+    { label: 'Lønnet arbeid i to eller flere land (13.1)', type: KV.Koder.LoennetArbeidAntallLand.FLERE_LAND },
+  ];
+
   return (
     <div className="vurderingArbeidsmonster">
       <Nav.typo.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.typo.Undertittel>
@@ -190,17 +206,32 @@ const VurderingArbeidsmonster = props => {
           oppdaterData={oppdaterData}
           {...tilstand}
         />
-        { aktivitetINorgeNodvendig &&
-        <EnkeltAvklartfakta
-          redigerbart={redigerbart}
-          avklartfakta={aktivitetINorge}
-          avklartfaktaKode={KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE}
-          avklartefaktaTyper={vesentligAktivitetINorgeValg}
-          tittel="Vurdering av vesentlig aktivitet i Norge"
-          oppdaterData={oppdaterData}
-          slettData={slettData}
-          onChange={endreLovvalgsperiode}
-        />
+        {
+          erArbeidstakerOgSelvstendigNaeringsdrivende &&
+          <EnkeltAvklartfakta
+            redigerbart={redigerbart}
+            avklartfakta={loennetArbeidAntallLandFakta}
+            avklartfaktaKode={KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND}
+            avklartefaktaTyper={loennetArbeidValg}
+            tittel="Vurder aktivitet"
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+            onChange={loennetArbeidEndretHandler}
+          />
+        }
+        {
+          aktivitetINorgeNodvendig &&
+          <EnkeltAvklartfakta
+            redigerbart={redigerbart}
+            avklartfakta={aktivitetINorge}
+            avklartfaktaKode={KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE}
+            avklartefaktaTyper={vesentligAktivitetINorgeValg}
+            tittel="Vurdering av vesentlig aktivitet i Norge"
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+            onChange={aktivitetINorgeEndretHandler}
+          />
+
         }
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -221,6 +252,8 @@ VurderingArbeidsmonster.propTypes = {
     aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
     yrkesaktivitet: PT.string.isRequired,
+    erArbeidstakerOgSelvstendigNaeringsdrivende: PT.bool.isRequired,
+    loennetArbeidAntallLandFakta: MPT.Avklartefakta,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
 };

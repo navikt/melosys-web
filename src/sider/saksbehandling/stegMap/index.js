@@ -19,6 +19,7 @@ import Artikkel13_2_B from './artikkel13_2b';
 import Artikkel13_2_B_UtpekLand from './artikkel13_2_b_utpek_land';
 import Artikkel13_2_A_Vedtak from './artikkel13_2_a_vedtak';
 import Artikkel13_2_B_Norge from './artikkel13_2_b_norge';
+import Artikkel13_3_Vedtak from './artikkel13_3_vedtak';
 import Artikkel16Anmodning from './artikkel16_anmodning';
 import Artikkel16MottaSvar from './artikkel16_motta_svar';
 import Artikkel16Vedtak from './artikkel16_vedtak';
@@ -50,6 +51,7 @@ export const stegMap = new Map([
   [STEG.ARTIKKEL_13_2_B_UTPEK_LAND, Artikkel13_2_B_UtpekLand],
   [STEG.ARTIKKEL_13_2_A_VEDTAK, Artikkel13_2_A_Vedtak],
   [STEG.ARTIKKEL_13_2_B_NORGE, Artikkel13_2_B_Norge],
+  [STEG.ARTIKKEL_13_3_VEDTAK, Artikkel13_3_Vedtak],
   [STEG.YRKESGRUPPE, Yrkesgruppe],
   [STEG.IKKE_YRKESAKTIV, IkkeYrkesaktiv],
   [STEG.FORUTGAENDE_MEDLEMSKAP, ForutgaendeMedlemskap],

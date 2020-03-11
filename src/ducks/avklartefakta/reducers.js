@@ -73,6 +73,7 @@ export default function reducer(state = initialState, action) {
           OMFATTES_I_LAND,
           UTPEKING_GODKJENT,
           FJERNET_ARBEIDSLAND,
+          LOENNET_ARBEID_ANTALL_LAND,
         },
         referanseKoder: {
           INSTALLASJON_ARBEIDSLAND,
@@ -100,6 +101,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[UTPEKING_GODKJENT], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_UTFORES_I_OPPGITT_LAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[FJERNET_ARBEIDSLAND], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[LOENNET_ARBEID_ANTALL_LAND], null),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };
