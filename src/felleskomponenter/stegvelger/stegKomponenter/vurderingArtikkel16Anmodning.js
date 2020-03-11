@@ -384,6 +384,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 redigerbart={redigerbart}
                 landkode={soknadsland[0]}
                 bucType={EKV.Koder.buctyper.legislation.LA_BUC_01}
+                data_cy="mottakerinstitusjoner"
               />
             </Nav.Column>
           </Nav.Row>

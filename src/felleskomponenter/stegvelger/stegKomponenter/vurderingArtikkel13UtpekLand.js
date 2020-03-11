@@ -94,6 +94,7 @@ export const VurderingArtikkel13UtpekLand = ({
             form={form}
             redigerbart={redigerbart}
             bucType={EKV.Koder.buctyper.legislation.LA_BUC_02}
+            data_cy="mottakerinstitusjoner"
           />
         </Nav.Column>
       </Nav.Row>

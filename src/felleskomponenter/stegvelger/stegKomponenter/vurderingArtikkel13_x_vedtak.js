@@ -169,6 +169,7 @@ export const VurderingArtikkel13_x_vedtak = ({
             bucType={EKV.Koder.buctyper.legislation.LA_BUC_02}
             redigerbart={redigerbart}
             form={form}
+            data_cy="mottakerinstitusjoner"
           />
         </Nav.Column>
       </Nav.Row>
