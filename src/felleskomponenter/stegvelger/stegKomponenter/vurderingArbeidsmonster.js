@@ -140,9 +140,9 @@ const VurderingArbeidsmonster = props => {
     marginaltArbeid,
     aktivitetINorge,
     aktivitetINorgeNodvendig,
+    erYrkesaktivitetAntallLandNodvendig,
     harAvklaring,
     yrkesaktivitet,
-    erArbeidstakerOgSelvstendigNaeringsdrivende,
     loennetArbeidAntallLandFakta,
   } = tilstand;
 
@@ -156,7 +156,11 @@ const VurderingArbeidsmonster = props => {
 
   const aktivitetINorgeEndretHandler = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
-      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG) {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+      } else {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      }
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
       if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
         oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B));
@@ -207,7 +211,7 @@ const VurderingArbeidsmonster = props => {
           {...tilstand}
         />
         {
-          erArbeidstakerOgSelvstendigNaeringsdrivende &&
+          erYrkesaktivitetAntallLandNodvendig &&
           <EnkeltAvklartfakta
             redigerbart={redigerbart}
             avklartfakta={loennetArbeidAntallLandFakta}
@@ -252,7 +256,7 @@ VurderingArbeidsmonster.propTypes = {
     aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
     yrkesaktivitet: PT.string.isRequired,
-    erArbeidstakerOgSelvstendigNaeringsdrivende: PT.bool.isRequired,
+    erYrkesaktivitetAntallLandNodvendig: PT.bool.isRequired,
     loennetArbeidAntallLandFakta: MPT.Avklartefakta,
   }).isRequired,
   redigerbart: PT.bool.isRequired,

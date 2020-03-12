@@ -19,42 +19,43 @@ class Arbeidsmonster extends Steg {
     const erArbeidstakerOgSelvstendigNaeringsdrivende = Yrkesaktivitet.erArbeidstakerOgSelvstendigNaeringsdrivende(propsLight.avklartefakta);
     const loennetArbeidIFlereLand = hentFaktaVerdi(loennetArbeidAntallLandFakta) === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND;
     const loennetArbeidIEttLand = hentFaktaVerdi(loennetArbeidAntallLandFakta) === KV.Koder.LoennetArbeidAntallLand.ETT_LAND;
+    const aktivitetNorgeOver25Prosent = hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT;
+    const aktivitetNorgeUnder25Prosent = hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT;
 
     this.kriterier = [
       {
         exec: () => (
-          aktivitetINorge &&
-          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
-          erArbeidstaker
+          (aktivitetINorge && aktivitetNorgeUnder25Prosent && erArbeidstaker) ||
+          (loennetArbeidIFlereLand && aktivitetNorgeUnder25Prosent)
         ),
         nesteSteg: STEG.FORRETNINGSSTED,
       },
       {
         exec: () => (
           aktivitetINorge &&
-          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
+          aktivitetNorgeUnder25Prosent &&
           erSelvstendigNaeringsdrivende
         ),
         nesteSteg: STEG.ARTIKKEL_13_2_B,
       },
       {
         exec: () => (
-          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+          aktivitetNorgeOver25Prosent &&
           erArbeidstaker
         ),
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
       {
         exec: () => (
-          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+          aktivitetNorgeOver25Prosent &&
           erSelvstendigNaeringsdrivende
         ),
         nesteSteg: STEG.ARTIKKEL_13_2_A_VEDTAK,
       },
       {
         exec: () => (
-          loennetArbeidIEttLand &&
-          erArbeidstakerOgSelvstendigNaeringsdrivende
+          (loennetArbeidIEttLand && erArbeidstakerOgSelvstendigNaeringsdrivende) ||
+          (loennetArbeidIFlereLand && aktivitetNorgeOver25Prosent)
         ),
         nesteSteg: STEG.ARTIKKEL_13_3_VEDTAK,
       },
@@ -71,10 +72,11 @@ class Arbeidsmonster extends Steg {
 
       const landMedVesentligArbeid = this.hentLandMedVesentligArbeid(_propsLight.arbeidsland, marginaltArbeid);
       const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);
-      const aktivitetINorgeNodvendig = landMedVesentligArbeid.length > 1 &&
-        erNorgeValgt &&
+      const finnesLandMedVesentligArbeidOgNorgeErValgt = landMedVesentligArbeid.length > 1 && erNorgeValgt;
+      const aktivitetINorgeNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
         (erArbeidstakerOgSelvstendigNaeringsdrivende ? loennetArbeidIFlereLand : true);
-
+      const erYrkesaktivitetAntallLandNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
+        erArbeidstakerOgSelvstendigNaeringsdrivende;
       const harAvklaring = landMedVesentligArbeid.length > 0 &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
         (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidIEttLand || loennetArbeidIFlereLand) : true);
@@ -89,7 +91,7 @@ class Arbeidsmonster extends Steg {
         aktivitetINorgeNodvendig,
         harAvklaring,
         yrkesaktivitet,
-        erArbeidstakerOgSelvstendigNaeringsdrivende,
+        erYrkesaktivitetAntallLandNodvendig,
         loennetArbeidAntallLandFakta,
       });
     };
