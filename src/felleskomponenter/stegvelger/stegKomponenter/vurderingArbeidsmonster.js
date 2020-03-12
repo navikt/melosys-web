@@ -132,7 +132,7 @@ MarginaltArbeid.defaultProps = {
  *
  * @param props
  */
-const VurderingArbeidsmonster = props => {
+export const VurderingArbeidsmonster = props => {
   const {
     bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
