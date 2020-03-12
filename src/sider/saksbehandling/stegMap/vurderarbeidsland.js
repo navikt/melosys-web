@@ -15,6 +15,7 @@ class Vurderarbeidsland extends Steg {
     const installasjonArbeidslandListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, propsLight.avklartefakta);
     const arbeidUtforesIOppgittLandFakta = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, propsLight.avklartefakta);
     const fjernetArbeidslandFakta = hentFaktaListe(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, propsLight.avklartefakta);
+    const arbeidslandFaktaListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, propsLight.avklartefakta);
     const harIngenSokkelSkipEllerHjemmebase = this.harIngenSokkelEllerHjemmebase(sokkelEllerSkipListe, propsLight.hjemmebase);
 
     const harAvklaring = this.harAvklaring({
@@ -51,6 +52,7 @@ class Vurderarbeidsland extends Steg {
         arbeidUtforesIOppgittLandFakta,
         fjernetArbeidslandFakta,
         harIngenSokkelSkipEllerHjemmebase,
+        arbeidslandFaktaListe,
       });
     };
     this.handlers = {
