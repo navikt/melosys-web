@@ -36,7 +36,7 @@ describe('Avklartefaktaselectors', () => {
   describe('ArbeidslandKTSelector', () => {
     each([
       [
-        [MKV.KTObjects.landkoder.find(({ kode }) => kode === MKV.Koder.landkoder.FR)],
+        [KV.kodeTilObjekt(MKV.Koder.landkoder.FR, MKV.KTObjects.landkoder)],
         [
           {
             referanse: KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND,
@@ -59,7 +59,7 @@ describe('Avklartefaktaselectors', () => {
         },
       ],
       [
-        [MKV.KTObjects.landkoder.find(({ kode }) => kode === MKV.Koder.landkoder.GB)],
+        [KV.kodeTilObjekt(MKV.Koder.landkoder.GB, MKV.KTObjects.landkoder)],
         [
           {
             referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
@@ -83,7 +83,7 @@ describe('Avklartefaktaselectors', () => {
         },
       ],
       [
-        [MKV.KTObjects.landkoder.find(({ kode }) => kode === MKV.Koder.landkoder.DE)],
+        [KV.kodeTilObjekt(MKV.Koder.landkoder.DE, MKV.KTObjects.landkoder)],
         [
           {
             referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
