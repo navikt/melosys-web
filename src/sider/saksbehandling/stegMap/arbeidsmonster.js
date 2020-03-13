@@ -64,7 +64,7 @@ class Arbeidsmonster extends Steg {
     this.tittel = 'Arbeids\u00ADmønster';
     this.komponent = VurderingArbeidsmonster;
     this.samleRelevanteData = _propsLight => ({
-      arbeidsland: _propsLight.arbeidsland,
+      arbeidsland: _propsLight.arbeidslandMedYrkesaktivitet,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {

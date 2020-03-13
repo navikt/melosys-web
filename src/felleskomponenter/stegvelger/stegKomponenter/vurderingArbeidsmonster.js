@@ -14,6 +14,13 @@ import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbest
 
 import './vurderingArbeidsmonster.css';
 
+const genererYrkesaktivitetTekst = (erLonnetArbeid, erSelvstendigNaeringsvirksomhet) => {
+  if (erLonnetArbeid && !erSelvstendigNaeringsvirksomhet) return 'Lønnet arbeid';
+  else if (!erLonnetArbeid && erSelvstendigNaeringsvirksomhet) return 'Selvstendig næringsvirksomhet';
+  else if (erLonnetArbeid && erSelvstendigNaeringsvirksomhet) return 'Lønnet arbeid og selvstendig næringsvirksomhet';
+  return 'Fant ingen yrkesaktivitet';
+};
+
 /**
  * Enkeltsjekkboks for marginalt arbeid i et land.
  *
@@ -21,7 +28,7 @@ import './vurderingArbeidsmonster.css';
  */
 const LandLinje = props => {
   const {
-    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart,
+    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart, erLonnetArbeid, erSelvstendigNaeringsvirksomhet,
   } = props;
 
   useEffect(() => {
@@ -37,6 +44,8 @@ const LandLinje = props => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, landKode.kode, verdi));
   };
 
+  const yrkesaktivitet = genererYrkesaktivitetTekst(erLonnetArbeid, erSelvstendigNaeringsvirksomhet);
+
   return (
     <div className="land__enkeltlinje">
       <span>{`${landKode.term} (${landKode.kode})`}</span>
@@ -46,7 +55,9 @@ const LandLinje = props => {
         value={BoolskAvklartfaktaType.SANN}
         onChange={klikkHandler}
         label="ja"
+        className="marginaltArbeidCheckbox"
       />
+      <span className="yrkesaktivitet">{yrkesaktivitet}</span>
     </div>
   );
 };
@@ -56,6 +67,8 @@ LandLinje.propTypes = {
   landKode: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
   redigerbart: PT.bool.isRequired,
+  erLonnetArbeid: PT.bool.isRequired,
+  erSelvstendigNaeringsvirksomhet: PT.bool.isRequired,
 };
 
 LandLinje.defaultProps = {
@@ -89,18 +102,21 @@ const MarginaltArbeid = props => {
         <div className="landliste_innhold">
           <div className="land__enkeltlinje">
             <Nav.typo.UndertekstBold>Land</Nav.typo.UndertekstBold>
-            <Nav.typo.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.typo.UndertekstBold>
+            <Nav.typo.UndertekstBold className="marginaltArbeidCheckbox">Marginalt arbeid? {'(<5%)'}</Nav.typo.UndertekstBold>
+            <Nav.typo.UndertekstBold className="yrkesaktivitet">Yrkesaktivitet</Nav.typo.UndertekstBold>
           </div>
-          {arbeidsland.map(arbeidslandet => {
-            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet.kode);
+          {arbeidsland.map(({ land, erLonnetArbeid, erSelvstendigNaeringsvirksomhet }) => {
+            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === land.kode);
 
-            const key = `marginaltArbeidslandListe${arbeidslandet.kode}`;
+            const key = `marginaltArbeidslandListe${land.kode}`;
             return <LandLinje
-              landKode={arbeidslandet}
+              landKode={land}
               avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
               key={key}
               oppdaterData={oppdaterData}
               redigerbart={redigerbart}
+              erLonnetArbeid={erLonnetArbeid}
+              erSelvstendigNaeringsvirksomhet={erSelvstendigNaeringsvirksomhet}
             />;
           })
           }
@@ -113,7 +129,7 @@ const MarginaltArbeid = props => {
 };
 
 MarginaltArbeid.propTypes = {
-  arbeidsland: PT.array,
+  arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet),
   marginaltArbeid: PT.array,
   landMedVesentligArbeid: PT.array.isRequired,
   erNorgeValgt: PT.bool.isRequired,
@@ -249,7 +265,7 @@ VurderingArbeidsmonster.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  arbeidsland: PT.array.isRequired,
+  arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
   tilstand: PT.shape({
     marginaltArbeid: PT.array,
     aktivitetINorge: PT.object,
