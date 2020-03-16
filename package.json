@@ -107,8 +107,9 @@
     "build:js": "react-scripts build",
     "start:css": "less-watch-compiler --config less.json",
     "build:css": "less-watch-compiler --run-once --config less.json",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
+    "cypress:install": "npm add -D cypress@4.1.0 cypress-file-upload",
+    "cypress:open": "CYPRESS_baseUrl=http://localhost:3000 cypress open --project $PWD/e2e",
+    "cypress:run": "CYPRESS_baseUrl=http://localhost:3000 cypress run --project $PWD/e2e",
     "start": "npm-run-all -s patch:init patch:env patch:nodelocal echo:env -p start:css start:js",
     "start:javalocal": "npm-run-all -s patch:init patch:env patch:javalocal echo:env -p start:css start:js",
     "start:kubefwd": "npm-run-all -s patch:init patch:env patch:kubefwd echo:env -p start:css start:js",
@@ -122,7 +123,9 @@
     "eslint:scripts": "eslint scripts --ext .js",
     "eslint": "npm-run-all -s eslint:*",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
-    "mocha": "mocha"
+    "mocha": "mocha",
+    "docker:pull": "docker pull docker.pkg.github.com/navikt/melosys-web/melosys-web:f211f34b0fbe47f4d986a4ae54a41fc2900ddc9b",
+    "e2e-docker-compose": "docker-compose -f ./e2e/docker-compose.yml up --build --exit-code-from e2e"
   },
   "jest-junit": {
     "suiteName": "jest tests",
@@ -144,7 +147,8 @@
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.19.0",
     "cross-env": "^5.2.1",
-    "cypress": "3.6.0",
+    "cypress": "^4.1.0",
+    "cypress-file-upload": "^3.5.3",
     "dotenv-save": "^1.2.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.5.0",

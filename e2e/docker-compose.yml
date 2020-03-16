@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  api-mock:
+    image: docker.pkg.github.com/navikt/melosys-web-mock/melosys-web-mock:2.0.0-af81c7b
+    ports:
+      - 3002:3002
+  web:
+    image: docker.pkg.github.com/navikt/melosys-web/melosys-web:f211f34b0fbe47f4d986a4ae54a41fc2900ddc9b
+    ports:
+      - 3000:3000
+    depends_on:
+      - api-mock
+    environment:
+      - APP_DIR=/app
+      - APP_CALLBACK_PATH=/openid_connect_login
+      - APP_PATH_PREFIX=/melosys
+      - APP_URL_MELOSYS=http://web
+      - APP_PORT=3000
+      - APP_NAME=melosys
+      # TODO make env config in web-mock to listen to API_URL as env.
+      - API_URL=http://api-mock:3002
+  e2e:
+    build: .
+    depends_on:
+      - web
+    environment:
+      - CYPRESS_video=false
+      - CYPRESS_baseUrl=http://web:8080
+# Dersom debugging er nødvendig
+#    working_dir: /e2e
+#    volumes:
+#      - ./:/e2e
+

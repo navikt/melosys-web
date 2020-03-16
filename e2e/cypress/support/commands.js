@@ -21,18 +21,11 @@
 // Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
 //
 //
-// -- This is will overwrite an existing command --
+// -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add(
-  'selectNth',
-  { prevSubject: 'element' },
-  (subject, pos) => {
-    cy.wrap(subject)
-      .children('option')
-      .eq(pos)
-      .then(e => {
-        cy.wrap(subject).select(e.val())
-      });
-  }
-);
+import 'cypress-file-upload';
+
+Cypress.Commands.add('dataCy', (value) => {
+    return cy.get(`[data-cy=${value}]`)
+});

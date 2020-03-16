@@ -16,8 +16,8 @@
 /test
 
 # cypress
-/cypress/screenshots
-/cypress/videos
+/e2e/cypress/screenshots
+/e2e/cypress/videos
 
 # misc
 .idea
