@@ -15,9 +15,9 @@ import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbest
 import './vurderingArbeidsmonster.css';
 
 const genererYrkesaktivitetTekst = (erLonnetArbeid, erSelvstendigNaeringsvirksomhet) => {
-  if (erLonnetArbeid && !erSelvstendigNaeringsvirksomhet) return 'Lønnet arbeid';
-  else if (!erLonnetArbeid && erSelvstendigNaeringsvirksomhet) return 'Selvstendig næringsvirksomhet';
-  else if (erLonnetArbeid && erSelvstendigNaeringsvirksomhet) return 'Lønnet arbeid og selvstendig næringsvirksomhet';
+  if (erLonnetArbeid && erSelvstendigNaeringsvirksomhet) return 'Lønnet arbeid og selvstendig næringsvirksomhet';
+  else if (erLonnetArbeid) return 'Lønnet arbeid';
+  else if (erSelvstendigNaeringsvirksomhet) return 'Selvstendig næringsvirksomhet';
   return 'Fant ingen yrkesaktivitet';
 };
 
