@@ -93,7 +93,7 @@ Mottakerinstitusjonvelger.propTypes = {
 };
 
 Mottakerinstitusjonvelger.defaultProps = {
-  data_cy: undefined,
+  data_cy: 'mottakerinstitusjoner',
 };
 
 const mapStateToProps = () => ({});
@@ -119,6 +119,7 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
   form,
   fields,
   bucType,
+  data_cy,
 }) =>
   fields.map(mottakerinstitusjon =>
     <Field
@@ -131,6 +132,7 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
         landkode: hentFelt(`${mottakerinstitusjon}.kode`),
         label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
         oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(form, `${mottakerinstitusjon}.kreverMottakerinstitusjon`),
+        data_cy,
       }}
     />);
 
@@ -141,6 +143,11 @@ MottakerinstitusjonvelgerFlervalgInner.propTypes = {
   form: PT.string.isRequired,
   fields: PT.object.isRequired,
   bucType: PT.string.isRequired,
+  data_cy: PT.string,
+};
+
+MottakerinstitusjonvelgerFlervalgInner.defaultProps = {
+  data_cy: 'mottakerinstitusjoner',
 };
 
 const MottakerinstitusjonvelgerFlervalgWrapper = ({

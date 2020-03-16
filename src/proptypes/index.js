@@ -3,6 +3,7 @@ import { ArbeidNorge } from './arbeidNorge';
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
+import { ArbeidslandMedYrkesaktivitet } from './arbeidslandMedYrkesaktivitet';
 import { Avklartefakta, AvklartefaktaListe } from './avklartefakta';
 import { BehandligOversikt, BehandligOversikter } from './behandlingOversikt';
 import { Bekreftelser } from './bekreftelser';
@@ -44,6 +45,7 @@ export {
   Arbeidsforholdene,
   Arbeidsforholdet,
   ArbeidsgivereNorge,
+  ArbeidslandMedYrkesaktivitet,
   Avklartefakta,
   AvklartefaktaListe,
   Behandlinger,

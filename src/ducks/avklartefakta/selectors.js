@@ -247,9 +247,80 @@ export const ArbeidslandSelector = createSelector(
   }
 );
 
+const erLonnetArbeidNorge = arbeidsgivereNorge => (
+  arbeidsgivereNorge.length > 0
+);
+
+const erLonnetArbeidUtland = (land, arbeidUtland, foretakUtland) => (
+  arbeidUtland.some(arbeid => (
+    arbeid.adresse.landkode === land
+  )) ||
+  foretakUtland
+    .filter(foretak => !foretak.selvstendigNaeringsvirksomhet)
+    .some(foretak => (
+      foretak.adresse.landkode === land
+    ))
+);
+
+const erSelvstendigNaeringsvirksomhetNorge = selvstendigArbeid => (
+  selvstendigArbeid.erSelvstendig &&
+  selvstendigArbeid.selvstendigForetak.length > 0
+);
+
+const erSelvstendigNaeringsvirksomhetUtland = (land, foretakUtland) => (
+  foretakUtland
+    .filter(foretak => foretak.selvstendigNaeringsvirksomhet)
+    .some(foretak => (
+      foretak.adresse.landkode === land
+    ))
+);
+
 export const ArbeidslandKTSelector = createSelector(
   state => ArbeidslandSelector(state),
   arbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))
+);
+
+const byggLandMedYrkesAktivitet = ({
+  land,
+  arbeidUtland,
+  foretakUtland,
+  selvstendigArbeid,
+  arbeidsgivereNorge,
+}) => {
+  const erNorge = land.kode === MKV.Koder.landkoder.NO;
+  const erLonnetArbeid = erNorge ? erLonnetArbeidNorge(arbeidsgivereNorge) : erLonnetArbeidUtland(land.kode, arbeidUtland, foretakUtland);
+  const erSelvstendigNaeringsvirksomhet = erNorge ? erSelvstendigNaeringsvirksomhetNorge(selvstendigArbeid) : erSelvstendigNaeringsvirksomhetUtland(land.kode, foretakUtland);
+
+  return {
+    land,
+    erLonnetArbeid,
+    erSelvstendigNaeringsvirksomhet,
+  };
+};
+
+export const ArbeidslandMedYrkesAktivitetSelector = createSelector(
+  ArbeidslandKTSelector,
+  state => behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
+  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  state => behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state),
+  state => behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
+  (
+    arbeidsland,
+    arbeidUtland,
+    foretakUtland,
+    selvstendigArbeid,
+    arbeidsgivereNorge
+  ) => (
+    arbeidsland.map(land => (
+      byggLandMedYrkesAktivitet({
+        land,
+        arbeidUtland,
+        foretakUtland,
+        selvstendigArbeid,
+        arbeidsgivereNorge,
+      })
+    ))
+  )
 );
 
 const MarginaltArbeidFaktaerSelector = createSelector(

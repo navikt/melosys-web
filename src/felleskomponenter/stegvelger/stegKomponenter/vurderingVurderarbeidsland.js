@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { formValueSelector } from 'redux-form';
@@ -82,6 +82,7 @@ export const VurderingVurderarbeidsland = ({
     arbeidUtforesIOppgittLandFakta,
     fjernetArbeidslandFakta,
     harIngenSokkelSkipEllerHjemmebase,
+    arbeidslandFaktaListe,
   },
   redigerbart,
   oppdaterData,
@@ -93,10 +94,17 @@ export const VurderingVurderarbeidsland = ({
   arbeidsland,
   fjernedeArbeidsland,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     fjernetArbeidslandFakta.forEach(fakta => {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, fakta));
     });
+    arbeidslandFaktaListe.forEach(fakta => {
+      oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, fakta));
+    });
+
+    setMounted(true);
 
     return () => {
       slettData();
@@ -114,8 +122,8 @@ export const VurderingVurderarbeidsland = ({
   };
 
   useEffect(() => {
-    genererArbeidslandFakta();
-  }, [arbeidsland.toString()]);
+    if (mounted) genererArbeidslandFakta();
+  }, [arbeidsland.toString(), mounted]);
 
   const fjernSoknadsland = land => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, land, KV.Koder.BoolskAvklartfaktaType.SANN, null));
@@ -221,6 +229,7 @@ VurderingVurderarbeidsland.propTypes = {
     arbeidUtforesIOppgittLandFakta: MPT.Avklartefakta,
     fjernetArbeidslandFakta: PT.arrayOf(MPT.Avklartefakta),
     harIngenSokkelSkipEllerHjemmebase: PT.bool.isRequired,
+    arbeidslandFaktaListe: PT.arrayOf(MPT.Avklartefakta),
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,

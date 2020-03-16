@@ -14,6 +14,13 @@ import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbest
 
 import './vurderingArbeidsmonster.css';
 
+const genererYrkesaktivitetTekst = (erLonnetArbeid, erSelvstendigNaeringsvirksomhet) => {
+  if (erLonnetArbeid && erSelvstendigNaeringsvirksomhet) return 'Lønnet arbeid og selvstendig næringsvirksomhet';
+  else if (erLonnetArbeid) return 'Lønnet arbeid';
+  else if (erSelvstendigNaeringsvirksomhet) return 'Selvstendig næringsvirksomhet';
+  return 'Fant ingen yrkesaktivitet';
+};
+
 /**
  * Enkeltsjekkboks for marginalt arbeid i et land.
  *
@@ -21,7 +28,7 @@ import './vurderingArbeidsmonster.css';
  */
 const LandLinje = props => {
   const {
-    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart,
+    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart, erLonnetArbeid, erSelvstendigNaeringsvirksomhet,
   } = props;
 
   useEffect(() => {
@@ -37,6 +44,8 @@ const LandLinje = props => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, landKode.kode, verdi));
   };
 
+  const yrkesaktivitet = genererYrkesaktivitetTekst(erLonnetArbeid, erSelvstendigNaeringsvirksomhet);
+
   return (
     <div className="land__enkeltlinje">
       <span>{`${landKode.term} (${landKode.kode})`}</span>
@@ -46,7 +55,9 @@ const LandLinje = props => {
         value={BoolskAvklartfaktaType.SANN}
         onChange={klikkHandler}
         label="ja"
+        className="marginaltArbeidCheckbox"
       />
+      <span className="yrkesaktivitet">{yrkesaktivitet}</span>
     </div>
   );
 };
@@ -56,6 +67,8 @@ LandLinje.propTypes = {
   landKode: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
   redigerbart: PT.bool.isRequired,
+  erLonnetArbeid: PT.bool.isRequired,
+  erSelvstendigNaeringsvirksomhet: PT.bool.isRequired,
 };
 
 LandLinje.defaultProps = {
@@ -89,18 +102,21 @@ const MarginaltArbeid = props => {
         <div className="landliste_innhold">
           <div className="land__enkeltlinje">
             <Nav.typo.UndertekstBold>Land</Nav.typo.UndertekstBold>
-            <Nav.typo.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.typo.UndertekstBold>
+            <Nav.typo.UndertekstBold className="marginaltArbeidCheckbox">Marginalt arbeid? {'(<5%)'}</Nav.typo.UndertekstBold>
+            <Nav.typo.UndertekstBold className="yrkesaktivitet">Yrkesaktivitet</Nav.typo.UndertekstBold>
           </div>
-          {arbeidsland.map(arbeidslandet => {
-            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet.kode);
+          {arbeidsland.map(({ land, erLonnetArbeid, erSelvstendigNaeringsvirksomhet }) => {
+            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === land.kode);
 
-            const key = `marginaltArbeidslandListe${arbeidslandet.kode}`;
+            const key = `marginaltArbeidslandListe${land.kode}`;
             return <LandLinje
-              landKode={arbeidslandet}
+              landKode={land}
               avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
               key={key}
               oppdaterData={oppdaterData}
               redigerbart={redigerbart}
+              erLonnetArbeid={erLonnetArbeid}
+              erSelvstendigNaeringsvirksomhet={erSelvstendigNaeringsvirksomhet}
             />;
           })
           }
@@ -113,7 +129,7 @@ const MarginaltArbeid = props => {
 };
 
 MarginaltArbeid.propTypes = {
-  arbeidsland: PT.array,
+  arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet),
   marginaltArbeid: PT.array,
   landMedVesentligArbeid: PT.array.isRequired,
   erNorgeValgt: PT.bool.isRequired,
@@ -132,20 +148,35 @@ MarginaltArbeid.defaultProps = {
  *
  * @param props
  */
-const VurderingArbeidsmonster = props => {
+export const VurderingArbeidsmonster = props => {
   const {
     bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const {
-    marginaltArbeid, aktivitetINorge,
-    aktivitetINorgeNodvendig, harAvklaring,
+    marginaltArbeid,
+    aktivitetINorge,
+    aktivitetINorgeNodvendig,
+    erYrkesaktivitetAntallLandNodvendig,
+    harAvklaring,
     yrkesaktivitet,
+    loennetArbeidAntallLandFakta,
   } = tilstand;
 
+  const loennetArbeidEndretHandler = avklartLoennetArbeid => {
+    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.ETT_LAND) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+    } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
+      slettData(slettLovvalgsbestemmelse());
+    }
+  };
 
-  const endreLovvalgsperiode = avklartAktivitetINorge => {
+  const aktivitetINorgeEndretHandler = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
-      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG) {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+      } else {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      }
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
       if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
         oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B));
@@ -179,6 +210,11 @@ const VurderingArbeidsmonster = props => {
     { label: 'Mindre enn 25%', type: VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT },
   ];
 
+  const loennetArbeidValg = [
+    { label: 'Lønnet arbeid i ett land (13.3)', type: KV.Koder.LoennetArbeidAntallLand.ETT_LAND },
+    { label: 'Lønnet arbeid i to eller flere land (13.1)', type: KV.Koder.LoennetArbeidAntallLand.FLERE_LAND },
+  ];
+
   return (
     <div className="vurderingArbeidsmonster">
       <Nav.typo.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.typo.Undertittel>
@@ -190,17 +226,32 @@ const VurderingArbeidsmonster = props => {
           oppdaterData={oppdaterData}
           {...tilstand}
         />
-        { aktivitetINorgeNodvendig &&
-        <EnkeltAvklartfakta
-          redigerbart={redigerbart}
-          avklartfakta={aktivitetINorge}
-          avklartfaktaKode={KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE}
-          avklartefaktaTyper={vesentligAktivitetINorgeValg}
-          tittel="Vurdering av vesentlig aktivitet i Norge"
-          oppdaterData={oppdaterData}
-          slettData={slettData}
-          onChange={endreLovvalgsperiode}
-        />
+        {
+          erYrkesaktivitetAntallLandNodvendig &&
+          <EnkeltAvklartfakta
+            redigerbart={redigerbart}
+            avklartfakta={loennetArbeidAntallLandFakta}
+            avklartfaktaKode={KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND}
+            avklartefaktaTyper={loennetArbeidValg}
+            tittel="Vurder aktivitet"
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+            onChange={loennetArbeidEndretHandler}
+          />
+        }
+        {
+          aktivitetINorgeNodvendig &&
+          <EnkeltAvklartfakta
+            redigerbart={redigerbart}
+            avklartfakta={aktivitetINorge}
+            avklartfaktaKode={KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE}
+            avklartefaktaTyper={vesentligAktivitetINorgeValg}
+            tittel="Vurdering av vesentlig aktivitet i Norge"
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+            onChange={aktivitetINorgeEndretHandler}
+          />
+
         }
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -214,13 +265,15 @@ VurderingArbeidsmonster.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  arbeidsland: PT.array.isRequired,
+  arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
   tilstand: PT.shape({
     marginaltArbeid: PT.array,
     aktivitetINorge: PT.object,
     aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
     yrkesaktivitet: PT.string.isRequired,
+    erYrkesaktivitetAntallLandNodvendig: PT.bool.isRequired,
+    loennetArbeidAntallLandFakta: MPT.Avklartefakta,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
 };

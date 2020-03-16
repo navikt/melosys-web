@@ -118,6 +118,7 @@ export const avklartefaktaKoder = {
   UTPEKING_GODKJENT: 'UTPEKING_GODKJENT',
   ARBEID_UTFORES_I_OPPGITT_LAND: 'ARBEID_UTFORES_I_OPPGITT_LAND',
   FJERNET_ARBEIDSLAND: 'FJERNET_ARBEIDSLAND',
+  LOENNET_ARBEID_ANTALL_LAND: 'LOENNET_ARBEID_ANTALL_LAND',
 };
 export const referanseKoder = {
   INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
@@ -132,4 +133,9 @@ export const Tema = {
 export const UtpekingAvNorgeGodkjenning = {
   GODKJENN: 'GODKJENN',
   IKKE_GODKJENN: 'IKKE_GODKJENN',
+};
+
+export const LoennetArbeidAntallLand = {
+  ETT_LAND: 'ETT_LAND',
+  FLERE_LAND: 'FLERE_LAND',
 };
