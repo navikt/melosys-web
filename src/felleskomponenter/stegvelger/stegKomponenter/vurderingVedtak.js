@@ -4,7 +4,7 @@ import { getFormValues, isValid, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
-import MKV from '../../../melosyskodeverk';
+import MKV, { Utils as MKVUtils } from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
@@ -51,6 +51,7 @@ const VurderingVedtak = ({
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const erSoknad = MKVUtils.erSoknad(behandlingstype);
   const fattVedtakDisabled = !redigerbart;
 
   const validerForm = () => {
@@ -67,7 +68,7 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
-      mottakerinstitusjoner: [formValues.mottakerinstitusjon],
+      mottakerinstitusjoner: erSoknad ? [formValues.mottakerinstitusjon] : [],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
@@ -116,16 +117,19 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row className="mottakerinstitusjoner">
-          <Nav.Column xs="7">
-            <Mottakerinstitusjonvelger
-              form={form}
-              redigerbart={redigerbart}
-              landkode={soknadsland[0]}
-              bucType={EKV.Koder.buctyper.legislation.LA_BUC_04}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        {
+          erSoknad &&
+          <Nav.Row className="mottakerinstitusjoner">
+            <Nav.Column xs="7">
+              <Mottakerinstitusjonvelger
+                form={form}
+                redigerbart={redigerbart}
+                landkode={soknadsland[0]}
+                bucType={EKV.Koder.buctyper.legislation.LA_BUC_04}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         <Nav.Row>
           <Nav.Column xs="6">
             {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
