@@ -52,7 +52,6 @@ export const VurderingVideresend = ({
               redigerbart={redigerbart}
               landkode={bostedsland.kode}
               bucType={EKV.Koder.buctyper.legislation.LA_BUC_03}
-              data_cy="mottakerinstitusjoner"
             />
           </Nav.Column>
         </Nav.Row>

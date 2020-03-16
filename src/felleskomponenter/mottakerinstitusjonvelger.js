@@ -93,7 +93,7 @@ Mottakerinstitusjonvelger.propTypes = {
 };
 
 Mottakerinstitusjonvelger.defaultProps = {
-  data_cy: undefined,
+  data_cy: 'mottakerinstitusjoner',
 };
 
 const mapStateToProps = () => ({});
@@ -143,7 +143,11 @@ MottakerinstitusjonvelgerFlervalgInner.propTypes = {
   form: PT.string.isRequired,
   fields: PT.object.isRequired,
   bucType: PT.string.isRequired,
-  data_cy: PT.string.isRequired,
+  data_cy: PT.string,
+};
+
+MottakerinstitusjonvelgerFlervalgInner.defaultProps = {
+  data_cy: 'mottakerinstitusjoner',
 };
 
 const MottakerinstitusjonvelgerFlervalgWrapper = ({
