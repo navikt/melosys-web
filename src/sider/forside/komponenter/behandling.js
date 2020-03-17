@@ -28,6 +28,7 @@ class Behandling extends Component {
 
   gyldigeBehandlingstyper = [
     MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
     MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
     MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
     MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
