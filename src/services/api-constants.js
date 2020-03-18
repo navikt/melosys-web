@@ -12,6 +12,7 @@ export const EESSI = 'eessi';
 export const FAGSAKER = 'fagsaker';
 export const JOURNALFORING = 'journalforing';
 export const LOVVALGSPERIODER = 'lovvalgsperioder';
+export const NOTATER = 'notater';
 export const OPPGAVER = 'oppgaver';
 export const ORGANISASJONER = 'organisasjoner';
 export const PERSONER = 'personer';

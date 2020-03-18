@@ -299,6 +299,7 @@ export const getAsJson = (url, extendResponse = false) => methodToJson('GET', ur
 export const postAsJson = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse);
 // putAsText, data can be empty string.
 export const putAsText = (url, data = '') => methodToText('PUT', url, data);
+export const putAsJson = (url, data, extendResponse = false) => methodToJson('PUT', url, data, extendResponse);
 
 export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse, 'application/pdf, application/json');
 

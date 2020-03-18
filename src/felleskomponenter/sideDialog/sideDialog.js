@@ -7,6 +7,7 @@ import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogOpprettNyBuc from './sideDialogOpprettNyBuc';
 import SideDialogBesvarSed from './sideDialogBesvarSed';
+import SideDialogNotater from './sideDialogNotater/sideDialogNotater';
 
 import './sideDialog.css';
 
@@ -32,6 +33,8 @@ export const FaneViser = ({
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} />;
     case 'besvarsed':
       return <SideDialogBesvarSed behandlingID={behandlingID} />;
+    case 'notat':
+      return <SideDialogNotater saksnummer={saksnummer} />;
     default:
       throw new Error('Navn er en påkrevd prop');
   }
@@ -61,6 +64,7 @@ class SideDialog extends Component {
   static defaultProps = {
     faner: [
       { navn: 'dokumenter', tittel: 'Dokumenter' },
+      { navn: 'notat', tittel: 'Notat' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
       { navn: 'sedbestilling', tittel: 'Opprett ny BUC' },
       { navn: 'besvarsed', tittel: 'SED-utveksling' },
