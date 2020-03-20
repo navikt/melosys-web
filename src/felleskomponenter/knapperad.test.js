@@ -1,7 +1,6 @@
 import React from 'react';
 
 import * as Mui from '../felleskomponenter/ui';
-import * as Nav from '../utils/navFrontend';
 
 import Knapperad from './knapperad';
 
