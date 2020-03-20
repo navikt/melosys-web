@@ -9,6 +9,7 @@ import * as KV from '../../../kodeverk';
 
 import MKV from '../../../melosyskodeverk';
 import Notat from './notat';
+import Knapperad from '../../../felleskomponenter/knapperad';
 
 import './sideDialogNotater.css';
 
@@ -126,8 +127,14 @@ const SideDialogNotater = ({
               onChange={endreNyttNotatTekst}
               maxLength={500}
             />
-            <Mui.Knapp disabled={disableLagreKnapp} type="hoved" onClick={opprettNotat}>LAGRE NOTAT</Mui.Knapp>
-            <Mui.Knapp onClick={avbrytLeggTilNotat}>AVBRYT</Mui.Knapp>
+            <Knapperad
+              avbryt={avbrytLeggTilNotat}
+              avbrytTekst="AVBRYT"
+              bekreft={opprettNotat}
+              bekreftTekst="LAGRE NOTAT"
+              bekreftRedigerbart={!disableLagreKnapp}
+              redigerbart
+            />
           </Fragment>
         }
         {
