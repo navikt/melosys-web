@@ -97,16 +97,24 @@ describe('Notat', () => {
     expect(overskrift).toHaveLength(1);
   });
 
-  it('viser endringsdato', () => {
+  it('viser endringsdato dersom opprettetDato og endretDato er forskjellige', () => {
     const notat = shallow(<Notat {...props} />);
-    const endringsdato = notat.findWhere(n => n.text().includes('24.04.2019'));
+    const endringsdato = notat.findWhere(n => n.text().includes('Endret:'));
 
     expect(endringsdato).toHaveLength(1);
   });
 
+  it('viser ikke endretDato dersom opprettelsesDato og endretDato er like', () => {
+    props.endretDato = '2019-04-23T10:02:52.031Z';
+    const notat = shallow(<Notat {...props} />);
+    const endringsdato = notat.findWhere(n => n.text().includes('Endret:'));
+
+    expect(endringsdato).toHaveLength(0);
+  });
+
   it('viser opprettelsesdato', () => {
     const notat = shallow(<Notat {...props} />);
-    const opprettelsesdato = notat.findWhere(n => n.text().includes('23.04.2019'));
+    const opprettelsesdato = notat.findWhere(n => n.text().includes('Opprettet:'));
 
     expect(opprettelsesdato).toHaveLength(1);
   });

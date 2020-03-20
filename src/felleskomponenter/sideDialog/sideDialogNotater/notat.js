@@ -40,17 +40,22 @@ const Notat = ({
     setEndretTekst(e.target.value);
   };
 
+  const notatErEndret = !Utils.dato.erLike(opprettetDato, endretDato);
+
   return (
     <Nav.Row className="notat">
       <Nav.Column xs="4">
-        <Nav.Row>
+        {
+          notatErEndret &&
+          <Nav.Row className="endretDato">
+            <Nav.Column xs="12">
+              <Nav.typo.Element>Endret: { Utils.dato.formatterDatoTilNorsk(endretDato) }</Nav.typo.Element>
+            </Nav.Column>
+          </Nav.Row>
+        }
+        <Nav.Row className="opprettetDato">
           <Nav.Column xs="12">
-            Endret: { Utils.dato.formatterDatoTilNorsk(endretDato) }
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            Opprettet: { Utils.dato.formatterDatoTilNorsk(opprettetDato) }
+            <Nav.typo.Element>Opprettet: { Utils.dato.formatterDatoTilNorsk(opprettetDato) }</Nav.typo.Element>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="forfatter">
