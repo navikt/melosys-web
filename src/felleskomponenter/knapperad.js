@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 
-import * as Nav from '../utils/navFrontend';
+import * as Mui from '../felleskomponenter/ui';
 
 import './knapperad.css';
 
@@ -13,10 +13,12 @@ const Knapperad = ({
   redigerbart,
   bekreftRedigerbart,
   spinner,
+  bekreftHtmlType,
+  avbrytHtmlType,
 }) => (
   <div className="container__knapperad">
-    <Nav.Hovedknapp onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart} spinner={spinner}>{ bekreftTekst }</Nav.Hovedknapp>
-    <Nav.Knapp onClick={avbryt} disabled={!redigerbart}>{avbrytTekst}</Nav.Knapp>
+    <Mui.Knapp htmlType={bekreftHtmlType} type="hoved" onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart} spinner={spinner}>{ bekreftTekst }</Mui.Knapp>
+    <Mui.Knapp htmlType={avbrytHtmlType} onClick={avbryt} disabled={!redigerbart}>{avbrytTekst}</Mui.Knapp>
   </div>
 );
 
@@ -28,12 +30,16 @@ Knapperad.propTypes = {
   redigerbart: PT.bool.isRequired,
   bekreftRedigerbart: PT.bool,
   spinner: PT.bool,
+  bekreftHtmlType: PT.string,
+  avbrytHtmlType: PT.string,
 };
 
 Knapperad.defaultProps = {
   bekreft: undefined,
   bekreftRedigerbart: true,
   spinner: false,
+  bekreftHtmlType: undefined,
+  avbrytHtmlType: undefined,
 };
 
 export default Knapperad;

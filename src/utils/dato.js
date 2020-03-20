@@ -140,6 +140,10 @@ function beregnAlder (foedselsdato) {
   return moment().diff(foedselsdato, 'years');
 }
 
+function erLike(datoEn, datoTo) {
+  return moment(datoEn).isSame(datoTo);
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -152,5 +156,6 @@ export {
   beregnAlder,
   erGyldigPeriode,
   erIPeriode,
+  erLike,
   MAX_AR_FREM_I_TID,
 };

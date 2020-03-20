@@ -10,6 +10,7 @@ import {
   datoDiffMenneskelig,
   beregnAlder,
   erGyldigPeriode,
+  erLike,
 } from './dato';
 
 import MockDate from 'mockdate';
@@ -285,6 +286,15 @@ describe('dato.js:', () => {
       it(`returnerer ${forventetResultat}`, () => {
         expect(erGyldigPeriode(fom, tom)).toBe(forventetResultat);
       })
+    });
+  });
+
+  describe('erLike', () => {
+    each([
+      [true, '2019-04-23T10:02:52.031Z', '2019-04-23T10:02:52.031Z'],
+      [false, '2019-04-23T10:02:52.031Z', '2019-04-23T10:02:59.031Z'],
+    ]).it('returnerer %p for %p og %p', (forventetResultat, datoEn, datoTo) => {
+      expect(erLike(datoEn, datoTo)).toBe(forventetResultat);
     });
   });
 });
