@@ -15,3 +15,13 @@ export const FagsakStatusSelector = createSelector(
   state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ''),
   fagsakStatus => fagsakStatus
 );
+
+export const SakstypeSelector = createSelector(
+  FagsakSelector,
+  fagsak => fagsak.sakstype
+);
+
+export const SakstypeKodeSelector = createSelector(
+  SakstypeSelector,
+  sakstype => sakstype.kode
+);
