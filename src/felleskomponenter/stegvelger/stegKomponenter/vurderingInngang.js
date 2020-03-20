@@ -10,7 +10,7 @@ import * as KV from '../../../kodeverk';
 
 import MKV from '../../../melosyskodeverk';
 
-import { fagsakSelectors } from '../../../ducks/fagsaker';
+import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import SoknadslandListe from './inngang/soknadslandListe';
