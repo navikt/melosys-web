@@ -97,14 +97,18 @@ const journalforing = object().shape({
         .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .required(TAST_INN_DATO),
     }),
-  journalforingPeriodeTilOgMed: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
-      is: kreverPeriodeOgLand,
-      then: string()
-        .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
-        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
-        .required(TAST_INN_DATO),
-    }),
+  journalforingPeriodeTilOgMed: lazy(value => (!value ?
+    string()
+      .ensure()
+    :
+    string()
+      .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+        is: kreverPeriodeOgLand,
+        then: string()
+          .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
+          .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+          .required(TAST_INN_DATO),
+      }))),
   journalforingSoknadsland: array().of(string())
     .ensure()
     .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
