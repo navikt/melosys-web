@@ -151,6 +151,7 @@ class Saksbehandling extends Component {
 
   render() {
     const {
+      anmodningsperioderErSendtUtlandet,
       redigerbart,
       brevBestillingRedigerbart,
       brevBestillingRedigerbartIArtikkel13,
@@ -182,6 +183,9 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
 
     if (Utils._isNil(redigerbart)) return null;
+
+    const visRevurderVedtak = anmodningsperioderErSendtUtlandet ||
+      (!redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
 
     return (
       <div className="saksbehandling">
@@ -226,7 +230,7 @@ class Saksbehandling extends Component {
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
                   visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
-                  visRevurderVedtak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
+                  visRevurderVedtak={visRevurderVedtak}
                   visAvsluttSakSomBortfalt={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                 />}
                 renderBehandlingsstatus={() => <Behandlingsstatus
