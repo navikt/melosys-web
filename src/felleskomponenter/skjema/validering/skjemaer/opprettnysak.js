@@ -3,7 +3,7 @@ import * as Utils from '../../../../utils';
 import { Utils as MKVUtils } from '../../../../melosyskodeverk';
 
 const {
-  object, string, mixed, array,
+  object, string, mixed, array, lazy,
 } = Utils.yup;
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: 'Skriv inn f.nr eller d.nr' };
@@ -22,9 +22,13 @@ const soknadsinfo = object().shape({
   fom: string()
     .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
     .required(TAST_INN_DATO),
-  tom: string()
-    .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
-    .required(TAST_INN_DATO),
+  tom: lazy(value => (!value ?
+    string()
+      .ensure()
+    :
+    string()
+      .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+      .required(TAST_INN_DATO))),
   land: array()
     .of(string())
     .required({ _error: VELG_LAND })

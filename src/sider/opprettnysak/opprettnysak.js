@@ -201,10 +201,14 @@ const mapStateToProps = state => ({
 
 const opprettNySak = async (values, dispatch, props) => {
   const soknadErValgt = MKVUtils.erSoknad(values.behandlingstype);
+  const fom = soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null;
+  const tomErUtfylt = values.soknadsinfo.tom;
+  const tom = tomErUtfylt && soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null;
+
   const soknadDto = {
     periode: {
-      fom: soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null,
-      tom: soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null,
+      fom,
+      tom,
     },
     land: soknadErValgt ? values.soknadsinfo.land : [],
   };
