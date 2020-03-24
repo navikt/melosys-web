@@ -37,7 +37,6 @@ class Vedtak extends Steg {
 
       const visSedLenkeForLovvalgsbestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
       ];
 
       if (lovvalgSomKodeTerm &&
