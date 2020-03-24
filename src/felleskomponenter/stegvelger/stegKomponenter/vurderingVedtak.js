@@ -51,7 +51,7 @@ const VurderingVedtak = ({
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erSoknad = MKVUtils.erSoknad(behandlingstype);
+  const erSoknad = MKVUtils.erSoknad(behandlingstype) || erNyVurdering;
   const fattVedtakDisabled = !redigerbart;
 
   const validerForm = () => {
@@ -179,7 +179,6 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,
