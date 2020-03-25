@@ -18,6 +18,7 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { vedtakSelectors } from '../../../ducks/vedtak';
+import { flytSelectors } from '../../../ducks/flyt';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
@@ -41,6 +42,7 @@ const VurderingVedtak = ({
   vedtakLastes,
   visAntallManederUtland,
   pdfDokumenter,
+  erArtikkel11_4,
 }) => {
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -52,6 +54,7 @@ const VurderingVedtak = ({
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const fattVedtakDisabled = !redigerbart;
+  const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
   const validerForm = () => {
     touch('tomDato');
@@ -122,7 +125,7 @@ const VurderingVedtak = ({
               form={form}
               redigerbart={redigerbart}
               landkode={soknadsland[0]}
-              bucType={EKV.Koder.buctyper.legislation.LA_BUC_04}
+              bucType={bucType}
             />
           </Nav.Column>
         </Nav.Row>
@@ -156,6 +159,7 @@ VurderingVedtak.propTypes = {
   vedtakLastes: PT.bool.isRequired,
   visAntallManederUtland: PT.bool,
   pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
+  erArtikkel11_4: PT.bool.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -173,6 +177,7 @@ const mapStateToProps = state => ({
   vedtakLastes: vedtakSelectors.ErPendingSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
+  erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
