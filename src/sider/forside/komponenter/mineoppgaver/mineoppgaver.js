@@ -2,26 +2,17 @@ import React, { useState, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
-import * as Oppgaver from '../../../ducks/oppgaver';
-import * as MPT from '../../../proptypes';
-import * as Utils from '../../../utils';
-import * as Nav from '../../../utils/navFrontend';
+import * as Oppgaver from '../../../../ducks/oppgaver';
+import * as MPT from '../../../../proptypes';
+import * as Utils from '../../../../utils';
+import * as Nav from '../../../../utils/navFrontend';
 
-import BehandlingOppgave from '../../../felleskomponenter/oppgaveliste/behandlingOppgave';
-import JournalforingOppgave from '../../../felleskomponenter/oppgaveliste/journalforingOppgave';
-import withErrorHandling from '../../../felleskomponenter/withErrorHandling';
+import BehandlingOppgave from '../../../../felleskomponenter/oppgaveliste/behandlingOppgave';
+import withErrorHandling from '../../../../felleskomponenter/withErrorHandling';
+import JournalforingOppgaver from './journalforingoppgaver';
+import sortOppgaverByDate from './sortoppgaverbydate';
 
 import './mineoppgaver.css';
-
-const uuid = require('uuid/v4');
-
-const sortBehandlinger = order => (forsteOppgave, andreOppgave) => {
-  const { behandling: { registrertDato: forsteRegistrertDato } } = forsteOppgave;
-  const { behandling: { registrertDato: andreRegistrertDato } } = andreOppgave;
-
-  const datoDiff = Utils.dato.datoDiffPure(forsteRegistrertDato, andreRegistrertDato, 'seconds');
-  return order === 'descending' ? -datoDiff : datoDiff;
-};
 
 const Saksbehandlinger = ({ saksbehandlinger }) => {
   const [sortOrder, setSortOrder] = useState('descending');
@@ -47,7 +38,7 @@ const Saksbehandlinger = ({ saksbehandlinger }) => {
           />
         </div>
       </Nav.Fieldset>
-      {saksbehandlinger && saksbehandlinger.slice().sort(sortBehandlinger(sortOrder)).map(oppgave => <BehandlingOppgave key={uuid()} sak={oppgave} />)}
+      {saksbehandlinger && saksbehandlinger.slice().sort(sortOppgaverByDate(sortOrder, 'behandling.registrertDato')).map(oppgave => <BehandlingOppgave key={Utils._uuid()} sak={oppgave} />)}
     </Fragment>
   );
 };
@@ -76,7 +67,7 @@ const MineOppgaver = props => {
   return (
     <div className="minesaker">
       <h1>Mine oppgaver ({antall()})</h1>
-      {journalforing && journalforing.map(oppgave => <JournalforingOppgave key={uuid()} sak={oppgave} />)}
+      <JournalforingOppgaver journalforinger={journalforing} defaultChecked="eldste" />
       <Saksbehandlinger saksbehandlinger={saksbehandling} />
       {antall() === 0 && ingenSakerMelding}
     </div>
@@ -103,5 +94,3 @@ const kontekster = [
   { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
 ];
 export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(MineOppgaver));
-
-export { sortBehandlinger };
