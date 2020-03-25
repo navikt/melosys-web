@@ -1,4 +1,4 @@
-import * as Utils from '../../../../utils';
+import * as Utils from '../../../../../utils';
 
 const sortOppgaverByDate = (order, dateFieldPath) => (forsteOppgave, andreOppgave) => {
   const forsteDato = Utils._get(forsteOppgave, dateFieldPath);

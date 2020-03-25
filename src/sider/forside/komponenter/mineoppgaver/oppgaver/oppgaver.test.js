@@ -2,16 +2,19 @@ import React from 'react';
 
 import * as Nav from '../../../../../utils/navFrontend';
 
-import JournalforingOppgaver from './index';
+import Oppgaver from './index';
 import JournalforingOppgave from '../../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
 
-describe('JournalforingOppgaver', () => {
+describe('Oppgaver', () => {
   let props = null;
 
   beforeEach(() => {
     props = {
+      component: JournalforingOppgave,
       defaultChecked: 'nyeste',
-      journalforinger: [
+      sortingLegend: 'Sorter journalføringsoppgaver etter frist:',
+      sortingPath: 'aktivTil',
+      oppgaver: [
         {
           aktivTil: '2016-02-21',
           ansvarligID: 'Z991111',
@@ -46,40 +49,40 @@ describe('JournalforingOppgaver', () => {
     };
   });
 
-  it('kan sortere slik at nyeste journalforingsoppgave kommer først', () => {
+  it('kan sortere slik at nyeste oppgave kommer først', () => {
     props.defaultChecked = 'eldste';
-    const journalforingOppgaver = shallow(<JournalforingOppgaver {...props} />);
+    const journalforingOppgaver = shallow(<Oppgaver {...props} />);
 
     const fieldset = journalforingOppgaver.find(Nav.Fieldset);
     const event = { target: { value: 'descending' } };
     fieldset.simulate('change', event);
 
-    const journalforingOppgaveListe = journalforingOppgaver.find(JournalforingOppgave);
-    const aktivTilDatoer = journalforingOppgaveListe.map(n => n.props().sak.aktivTil);
+    const oppgaveListe = journalforingOppgaver.find(JournalforingOppgave);
+    const aktivTilDatoer = oppgaveListe.map(n => n.props().sak.aktivTil);
 
     expect(aktivTilDatoer[0]).toBe('2016-02-22');
     expect(aktivTilDatoer[1]).toBe('2016-02-21');
     expect(aktivTilDatoer[2]).toBe('2016-02-20');
   });
 
-  it('kan sortere slik at eldste journalforingsoppgave kommer først', () => {
-    const journalforingOppgaver = shallow(<JournalforingOppgaver {...props} />);
+  it('kan sortere slik at eldste oppgave kommer først', () => {
+    const journalforingOppgaver = shallow(<Oppgaver {...props} />);
 
     const fieldset = journalforingOppgaver.find(Nav.Fieldset);
     const event = { target: { value: 'ascending' } };
     fieldset.simulate('change', event);
 
-    const journalforingOppgaveListe = journalforingOppgaver.find(JournalforingOppgave);
-    const aktivTilDatoer = journalforingOppgaveListe.map(n => n.props().sak.aktivTil);
+    const oppgaveListe = journalforingOppgaver.find(JournalforingOppgave);
+    const aktivTilDatoer = oppgaveListe.map(n => n.props().sak.aktivTil);
 
     expect(aktivTilDatoer[0]).toBe('2016-02-20');
     expect(aktivTilDatoer[1]).toBe('2016-02-21');
     expect(aktivTilDatoer[2]).toBe('2016-02-22');
   });
 
-  it('viser ingenting hvis journalforinger er falsy', () => {
-    props.journalforinger = null;
-    const journalforingOppgaver = shallow(<JournalforingOppgaver {...props} />);
+  it('viser ingenting hvis oppgaver er falsy', () => {
+    props.oppgaver = null;
+    const journalforingOppgaver = shallow(<Oppgaver {...props} />);
 
     expect(journalforingOppgaver.isEmptyRender()).toBe(true);
   });

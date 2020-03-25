@@ -1,55 +1,14 @@
-import React, { useState, Fragment } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as Oppgaver from '../../../../ducks/oppgaver';
 import * as MPT from '../../../../proptypes';
-import * as Utils from '../../../../utils';
-import * as Nav from '../../../../utils/navFrontend';
 
 import BehandlingOppgave from '../../../../felleskomponenter/oppgaveliste/behandlingOppgave';
 import withErrorHandling from '../../../../felleskomponenter/withErrorHandling';
-import JournalforingOppgaver from './journalforingoppgaver';
-import sortOppgaverByDate from './sortoppgaverbydate';
-
-import './mineoppgaver.css';
-
-const Saksbehandlinger = ({ saksbehandlinger }) => {
-  const [sortOrder, setSortOrder] = useState('descending');
-
-  const handleSortOrderChange = event => {
-    setSortOrder(event.target.value);
-  };
-
-  return (
-    <Fragment>
-      <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend="Sorter behandlinger etter opprettelsesdato:">
-        <div>
-          <Nav.Radio
-            name="behandlingsortering"
-            label="Nyeste først"
-            value="descending"
-            defaultChecked
-          />
-          <Nav.Radio
-            name="behandlingsortering"
-            label="Eldste først"
-            value="ascending"
-          />
-        </div>
-      </Nav.Fieldset>
-      {saksbehandlinger && saksbehandlinger.slice().sort(sortOppgaverByDate(sortOrder, 'behandling.registrertDato')).map(oppgave => <BehandlingOppgave key={Utils._uuid()} sak={oppgave} />)}
-    </Fragment>
-  );
-};
-
-Saksbehandlinger.propTypes = {
-  saksbehandlinger: PT.arrayOf(MPT.SaksbehandlingOppgave),
-};
-
-Saksbehandlinger.defaultProps = {
-  saksbehandlinger: [],
-};
+import JournalforingOppgave from '../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
+import OppgaverMedSortering from './oppgaver';
 
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
@@ -67,8 +26,20 @@ const MineOppgaver = props => {
   return (
     <div className="minesaker">
       <h1>Mine oppgaver ({antall()})</h1>
-      <JournalforingOppgaver journalforinger={journalforing} defaultChecked="eldste" />
-      <Saksbehandlinger saksbehandlinger={saksbehandling} />
+      <OppgaverMedSortering
+        oppgaver={journalforing}
+        component={JournalforingOppgave}
+        defaultChecked="eldste"
+        sortingLegend="Sorter journalføringsoppgaver etter frist:"
+        sortingPath="aktivTil"
+      />
+      <OppgaverMedSortering
+        oppgaver={saksbehandling}
+        component={BehandlingOppgave}
+        defaultChecked="nyeste"
+        sortingLegend="Sorter behandlinger etter opprettelsesdato:"
+        sortingPath="behandling.registrertDato"
+      />
       {antall() === 0 && ingenSakerMelding}
     </div>
   );
