@@ -1,5 +1,4 @@
 import React from 'react';
-import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as Oppgaver from '../../../../ducks/oppgaver';
@@ -13,7 +12,7 @@ import OppgaverMedSortering from './oppgaver';
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
-const MineOppgaver = props => {
+export const MineOppgaver = props => {
   const { minesaker } = props;
   const { journalforing, saksbehandling } = minesaker;
   const antall = () => {
@@ -46,7 +45,6 @@ const MineOppgaver = props => {
 };
 
 MineOppgaver.propTypes = {
-  hentOppgaveOversikt: PT.func.isRequired,
   minesaker: MPT.MineOppgaver,
 };
 
@@ -58,10 +56,8 @@ const mapStateToProps = state => ({
   minesaker: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  hentOppgaveOversikt: () => dispatch(Oppgaver.oppgaverOperations.oversikt()),
-});
 const kontekster = [
   { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
 ];
-export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(MineOppgaver));
+
+export default withErrorHandling(kontekster, connect(mapStateToProps)(MineOppgaver));
