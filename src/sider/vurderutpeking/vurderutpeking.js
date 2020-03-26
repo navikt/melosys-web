@@ -73,6 +73,7 @@ const Vurderutpeking = ({
   oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
+  sideDialogRedigerbart,
   resetSaksopplysninger,
   oppdaterBehandlingsgrunnlag,
   lagreVilkar,
@@ -170,6 +171,7 @@ const Vurderutpeking = ({
               saksnummer={saksnummer}
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+              redigerbart={sideDialogRedigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -204,6 +206,7 @@ Vurderutpeking.propTypes = {
   oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  sideDialogRedigerbart: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -235,6 +238,7 @@ const mapStateToProps = state => ({
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
+  sideDialogRedigerbart: redigerbartSelectors.SidedialogRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),

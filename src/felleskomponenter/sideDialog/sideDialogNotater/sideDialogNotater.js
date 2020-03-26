@@ -23,6 +23,7 @@ const sortNotaterByOpprettetDato = (forsteNotat, andreNotat) => {
 
 const SideDialogNotater = ({
   saksnummer,
+  redigerbart,
 }) => {
   const [notater, setNotater] = useState([]);
   const [leggTilNotatDialogSynlig, setLeggTilNotatDialogSynlig] = useState(false);
@@ -139,7 +140,7 @@ const SideDialogNotater = ({
         }
         {
           !leggTilNotatDialogSynlig &&
-          <Mui.Knapp type="hoved" onClick={visLeggTilNotatDialog}>LEGG TIL NYTT NOTAT</Mui.Knapp>
+          <Mui.Knapp disabled={!redigerbart} type="hoved" onClick={visLeggTilNotatDialog}>LEGG TIL NYTT NOTAT</Mui.Knapp>
         }
       </div>
     </Nav.Panel>
@@ -148,6 +149,7 @@ const SideDialogNotater = ({
 
 SideDialogNotater.propTypes = {
   saksnummer: PT.string.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default SideDialogNotater;
