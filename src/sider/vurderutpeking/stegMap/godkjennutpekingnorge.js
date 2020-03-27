@@ -5,12 +5,12 @@ import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { STEG, FANE_STATUS } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingVedtak from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVedtak';
 
-class GodkjennUtpeking extends Steg {
+class GodkjennUtpekingNorge extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
     this.kriterier = [];
-    this.id = STEG.GODKJENN_UTPEKING;
+    this.id = STEG.GODKJENN_UTPEKING_NORGE;
     this.tittel = 'Vedtak';
     this.komponent = VurderingVedtak;
     this.samleRelevanteData = _propsLight => {
@@ -52,4 +52,4 @@ class GodkjennUtpeking extends Steg {
   }
 }
 
-export default GodkjennUtpeking;
+export default GodkjennUtpekingNorge;

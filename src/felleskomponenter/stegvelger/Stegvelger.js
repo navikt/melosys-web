@@ -237,6 +237,23 @@ class Stegvelger extends Component {
     });
   };
 
+  godkjennUnntaksperioder = async () => {
+    const { behandlingID, tilForsiden } = this.props;
+    try {
+      await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
+      tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  lagreOgGodkjennUnntaksperioder = () => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      await this.props.lagreAllData();
+      this.godkjennUnntaksperioder();
+    });
+  };
+
   videresendSoknad = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       const { saksnummer, tilForsiden } = this.props;
@@ -325,6 +342,7 @@ class Stegvelger extends Component {
       byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       avvisUtpeking: this.avvisUtpeking,
+      lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
     };
 
     const { props } = this;
