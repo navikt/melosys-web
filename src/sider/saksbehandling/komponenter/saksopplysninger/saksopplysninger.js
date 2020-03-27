@@ -8,11 +8,13 @@ import * as Utils from '../../../../utils';
 import * as MPT from '../../../../proptypes';
 
 import Stegvelger from '../../../../felleskomponenter/stegvelger';
+import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
 import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
 import Soknadpaneler from '../../../../felleskomponenter/soknadpaneler';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
+import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import {
   behandlingsgrunnlagOperations,
   behandlingsgrunnlagSelectors,
@@ -24,7 +26,21 @@ import { formSelectors } from '../../../../ducks/form';
 
 import { stegMap } from '../../stegMap';
 
+const hentForsteSteg = behandlingstype => {
+  switch (behandlingstype) {
+    case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
+      return STEG.ENDRET_PERIODE;
+    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD:
+    case MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING:
+    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND:
+    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND:
+    default:
+      return STEG.INNGANG;
+  }
+};
+
 const Saksopplysninger = ({
+  behandlingstype,
   redigerbart,
   behandlingID,
   soknadForm,
@@ -52,6 +68,7 @@ const Saksopplysninger = ({
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
+  const forsteSteg = hentForsteSteg(behandlingstype);
 
   return (
     <Fragment>
@@ -76,6 +93,7 @@ const Saksopplysninger = ({
         landkoder={MKV.KTObjects.landkoder}
         tilForsiden={tilForsiden}
         stegMap={stegMap}
+        forsteSteg={forsteSteg}
       />
       }
       <Soknadpaneler
@@ -87,6 +105,7 @@ const Saksopplysninger = ({
 };
 
 Saksopplysninger.propTypes = {
+  behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
@@ -122,6 +141,7 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),

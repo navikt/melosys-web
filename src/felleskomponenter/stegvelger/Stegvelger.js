@@ -367,7 +367,7 @@ class Stegvelger extends Component {
       hjemmebase: props.hjemmebase,
     };
 
-    const stegMotor = new StegMotor(propsLight, props.stegMap);
+    const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
     // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
@@ -519,6 +519,7 @@ Stegvelger.propTypes = {
   lovvalgsbestemmelse: PT.string,
   maritimtarbeid: PT.arrayOf(PT.object),
   hjemmebase: PT.string,
+  forsteSteg: PT.string.isRequired,
 };
 
 Stegvelger.defaultProps = {
