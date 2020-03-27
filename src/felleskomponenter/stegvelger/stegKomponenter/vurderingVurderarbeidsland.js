@@ -117,7 +117,7 @@ export const VurderingVurderarbeidsland = ({
     arbeidsland
       .filter(land => land)
       .forEach(land => {
-        oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, KV.Koder.BoolskAvklartfaktaType.SANN, null));
+        oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, land, null));
       });
   };
 
@@ -126,7 +126,7 @@ export const VurderingVurderarbeidsland = ({
   }, [arbeidsland.toString(), mounted]);
 
   const fjernSoknadsland = land => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, land, KV.Koder.BoolskAvklartfaktaType.SANN, null));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND, land, land, null));
   };
 
   const angreFjernSoknadsland = land => {
