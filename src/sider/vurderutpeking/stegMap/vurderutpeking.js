@@ -29,8 +29,8 @@ class VurderUtpeking extends Steg {
 
     const harAvklaring = this.harAvklaring(utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid);
 
-    const lovvalgNorge = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE;
-    const lovvalgAnnetLand = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND;
+    const lovvalgNorge = behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE;
+    const lovvalgAnnetLand = behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND;
 
     this.kriterier = [
       {
