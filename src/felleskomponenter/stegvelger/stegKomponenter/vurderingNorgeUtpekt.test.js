@@ -3,7 +3,6 @@ import React from 'react';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../../felleskomponenter/skjema';
 
-import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { VurderingNorgeUtpekt } from './vurderingNorgeUtpekt';
 
@@ -33,7 +32,6 @@ describe('VurderingNorgeUtpekt', () => {
       handleSubmit: jest.fn(),
       formValues: {},
       lovvalgsperiode: { fom: '', tom: '' },
-      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE,
     };
   });
 
