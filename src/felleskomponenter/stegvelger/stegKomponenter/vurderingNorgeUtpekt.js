@@ -12,6 +12,7 @@ import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
@@ -19,6 +20,17 @@ import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartef
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 
 import './vurderingNorgeUtpekt.css';
+
+const hentUtpektArtikkelOverskrift = behandlingstype => {
+  switch (behandlingstype) {
+    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
+      return 'Utenlandske myndigheter har utpekt Norge etter:';
+    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND:
+      return 'Utenlandske myndigheter har utpekt utlandet etter:';
+    default:
+      return '';
+  }
+};
 
 export const VurderingNorgeUtpekt = ({
   vurderingBegrunnelser,
@@ -35,6 +47,7 @@ export const VurderingNorgeUtpekt = ({
   handleSubmit,
   formValues,
   lovvalgsperiode,
+  behandlingstype,
 }) => {
   useEffect(() => {
     if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
@@ -70,6 +83,8 @@ export const VurderingNorgeUtpekt = ({
     }
   }, [formValues]);
 
+  const utpektArtikkelOverskrift = hentUtpektArtikkelOverskrift(behandlingstype);
+
   return (
     <form onSubmit={handleSubmit}>
       <Nav.typo.Undertittel className="stegTittel">Vurder utpekingen</Nav.typo.Undertittel>
@@ -86,7 +101,7 @@ export const VurderingNorgeUtpekt = ({
       </Nav.Row>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          <Nav.typo.Element>Utenlandske myndigheter har utpekt Norge etter:</Nav.typo.Element>
+          <Nav.typo.Element>{utpektArtikkelOverskrift}</Nav.typo.Element>
           <Skjema.Select
             feltNavn="lovvalgsbestemmelse"
             label=""
@@ -175,6 +190,7 @@ VurderingNorgeUtpekt.propTypes = {
   handleSubmit: PT.func.isRequired,
   formValues: PT.object,
   lovvalgsperiode: MPT.Periode.isRequired,
+  behandlingstype: PT.string.isRequired,
 };
 
 VurderingNorgeUtpekt.defaultProps = {
@@ -194,6 +210,7 @@ const mapStateToProps = (state, ownProps) => ({
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
 });
 
 const nesteSteg = (values, dispatch, props) => {
