@@ -237,20 +237,24 @@ class Stegvelger extends Component {
     });
   };
 
-  godkjennUnntaksperioder = async () => {
+  godkjennUnntaksperioder = async data => {
     const { behandlingID, tilForsiden } = this.props;
+    const body = {
+      varsleUtland: data.varsleUtland || false,
+    };
+
     try {
-      await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
+      await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
       tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreOgGodkjennUnntaksperioder = () => {
+  lagreOgGodkjennUnntaksperioder = data => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.godkjennUnntaksperioder();
+      this.godkjennUnntaksperioder(data);
     });
   };
 
