@@ -4,6 +4,7 @@ import Checkboxgruppe from './checkboxgruppe';
 import ListevelgerFlervalg from './listevelgerFlervalg';
 import Undertittel from './undertittel';
 import Elementskrift from './elementskrift';
+import RedigerbarListe from './redigerbarliste';
 
 export {
   Knapp,
@@ -12,4 +13,5 @@ export {
   ListevelgerFlervalg,
   Undertittel,
   Elementskrift,
+  RedigerbarListe,
 };

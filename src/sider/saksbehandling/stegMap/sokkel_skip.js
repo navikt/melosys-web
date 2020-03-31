@@ -2,6 +2,7 @@ import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingSokkelSkip from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../kodeverk';
+import MKV from '../../../melosyskodeverk';
 import { hentFaktaListe, hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class SokkelSkip extends Steg {
@@ -15,17 +16,14 @@ class SokkelSkip extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_NORSK" (til vedtak)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) && alleErAvklart,
         nesteSteg: STEG.VEDTAK,
       },
       {
-        beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND) && alleErAvklart,
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {
-        beskrivelse: 'sokkelSkipKonklusjon ER LIK "SKIP_ETT_LAND" (videre til 12.1 eller 12.2)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND) && alleErAvklart,
         nesteSteg: STEG.VIRKSOMHETER,
       },
@@ -39,6 +37,7 @@ class SokkelSkip extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const installasjonArbeidslandTypeListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, _propsLight.avklartefakta);
+      const arbeidslandListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, _propsLight.avklartefakta);
 
       return ({
         harAvklaring: alleErAvklart,
@@ -46,6 +45,7 @@ class SokkelSkip extends Steg {
         sokkelSkipKonklusjon,
         installasjonArbeidslandListe,
         installasjonArbeidslandTypeListe,
+        arbeidslandListe,
       });
     };
     this.handlers = {

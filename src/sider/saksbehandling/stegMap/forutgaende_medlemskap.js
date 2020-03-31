@@ -13,7 +13,6 @@ class ForutgaendeMedlemskap extends Steg {
 
     this.kriterier = [
       {
-        beskrivelse: 'harForutgaendeMedlemskap ER LIK TRUE',
         exec: () => harAvklaring,
         nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },

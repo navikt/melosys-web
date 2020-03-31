@@ -59,11 +59,11 @@ jobs:
       - name: Push Docker image
         run: docker push ${IMAGE}
 
-  # Deploy til Q1 ved push på SPRINT-branch
+  # Deploy til Q1 ved pull-request mot master
   deploy_q1:
     name: Deploy til Q1
     needs: build
-    if: contains(github.ref, 'SPRINT-')
+    if: github.event_name == 'pull_request' && github.base_ref == 'master'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -93,11 +93,11 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ github.event.head_commit.message }}
 
-  # Deploy til Q2 ved pull-request mot master
+  # Deploy til Q2 ved push på SPRINT-branch
   deploy_q2:
     name: Deploy til Q2
     needs: build
-    if: github.event_name == 'pull_request'
+    if: contains(github.ref, 'SPRINT-')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

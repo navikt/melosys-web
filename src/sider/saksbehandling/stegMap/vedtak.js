@@ -11,7 +11,6 @@ class Vedtak extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'alle valg',
         exec: () => true,
         nesteSteg: false,
       },

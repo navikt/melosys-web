@@ -7,6 +7,7 @@ import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogOpprettNyBuc from './sideDialogOpprettNyBuc';
 import SideDialogBesvarSed from './sideDialogBesvarSed';
+import SideDialogNotater from './sideDialogNotater/sideDialogNotater';
 
 import './sideDialog.css';
 
@@ -18,6 +19,7 @@ export const FaneViser = ({
   saksnummer,
   brevBestillingRedigerbartIArtikkel13,
   brevBestillingRedigerbart,
+  redigerbart,
 }) => {
   switch (navn) {
     case 'dokumenter':
@@ -32,6 +34,11 @@ export const FaneViser = ({
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} />;
     case 'besvarsed':
       return <SideDialogBesvarSed behandlingID={behandlingID} />;
+    case 'notat':
+      return <SideDialogNotater
+        saksnummer={saksnummer}
+        redigerbart={redigerbart}
+      />;
     default:
       throw new Error('Navn er en påkrevd prop');
   }
@@ -43,6 +50,7 @@ FaneViser.propTypes = {
   saksnummer: PT.string.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 FaneViser.defaultProps = {
@@ -56,11 +64,13 @@ class SideDialog extends Component {
     behandlingID: PT.number.isRequired,
     brevBestillingRedigerbart: PT.bool.isRequired,
     brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+    redigerbart: PT.bool.isRequired,
   };
 
   static defaultProps = {
     faner: [
       { navn: 'dokumenter', tittel: 'Dokumenter' },
+      { navn: 'notat', tittel: 'Notat' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
       { navn: 'sedbestilling', tittel: 'Opprett ny BUC' },
       { navn: 'besvarsed', tittel: 'SED-utveksling' },
@@ -93,6 +103,7 @@ class SideDialog extends Component {
       saksnummer,
       brevBestillingRedigerbart,
       brevBestillingRedigerbartIArtikkel13,
+      redigerbart,
     } = this.props;
 
     const { navn } = this.state.faner.find(item => item.navn === this.state.aktivFane);
@@ -115,6 +126,7 @@ class SideDialog extends Component {
               saksnummer={saksnummer}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
               brevBestillingRedigerbart={brevBestillingRedigerbart}
+              redigerbart={redigerbart}
             />
           </div>
         </Panel>

@@ -31,6 +31,7 @@ import { OrganisasjonOperations } from '../../ducks/organisasjoner';
 import { PersonOperations } from '../../ducks/personer';
 import * as MPT from '../../proptypes';
 import { sokOperations, sokSelectors } from '../../ducks/sok';
+import { serverinfoSelectors } from '../../ducks/serverinfo';
 
 import './journalforing.css';
 
@@ -388,17 +389,6 @@ class Journalforing extends Component {
     return !Utils._isEmpty(this.props.journalforingSkjemaVerdier.saksnummer);
   };
 
-  behandlingstyper = [
-    ...MKV.KTObjects.behandlinger.behandlingstyper
-      .filter(({ kode }) =>
-        kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
-        kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
-        kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-        kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-        kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
-        kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED),
-  ];
-
   render() {
     const {
       journalforing: {
@@ -410,7 +400,23 @@ class Journalforing extends Component {
       },
       fagsakListe,
       settFeltInnhold,
+      erProd,
     } = this.props;
+
+    let behandlingstyper = [
+      ...MKV.KTObjects.behandlinger.behandlingstyper
+        .filter(({ kode }) =>
+          kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
+          kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED),
+    ];
+    if (erProd) {
+      behandlingstyper = behandlingstyper.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND);
+    }
 
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
@@ -463,7 +469,7 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
-                        behandlingstyper={this.behandlingstyper}
+                        behandlingstyper={behandlingstyper}
                         submitJournalforing={this.submitJournalforing}
                         avbrytJournalforing={this.avbrytJournalforing}
                         kanSubmittes={this.kanSubmittes()}
@@ -519,6 +525,7 @@ Journalforing.propTypes = {
   journalforSEDSkjemaIsValid: PT.bool.isRequired,
   journalforSEDSkjemaVerdier: PT.object,
   journalforSEDSkjemaErrors: PT.object.isRequired,
+  erProd: PT.bool.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -537,6 +544,7 @@ const mapStateToProps = state => ({
   journalforSEDSkjemaIsValid: isValid(KV.Form.JOURNALFORING_SED)(state),
   journalforSEDSkjemaVerdier: getFormValues(KV.Form.JOURNALFORING_SED)(state),
   journalforSEDSkjemaErrors: getFormSyncErrors(KV.Form.JOURNALFORING_SED)(state),
+  erProd: serverinfoSelectors.ErProdSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

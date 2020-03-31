@@ -23,7 +23,7 @@
     "lodash": "^4.17.15",
     "lodash.throttle": "^4.1.1",
     "melosys-ikoner-assets": "^1.0.1",
-    "melosys-kodeverk": "5.15.8",
+    "melosys-kodeverk": "5.15.14",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.27",
@@ -120,7 +120,8 @@
     "eject": "react-scripts eject",
     "eslint:src": "eslint src --ext .js",
     "eslint:scripts": "eslint scripts --ext .js",
-    "eslint": "npm-run-all -s eslint:*",
+    "eslint:cypress": "eslint cypress --ext .js",
+    "eslint": "npm-run-all -p eslint:*",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
     "mocha": "mocha"
   },

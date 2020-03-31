@@ -165,6 +165,7 @@ const OpprettNySak = ({
                       avbrytTekst="Avbryt"
                       redigerbart
                       bekreftRedigerbart={oppgaverFinnes}
+                      bekreftHtmlType="submit"
                     />
                   </div>
                 </Nav.Column>

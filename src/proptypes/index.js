@@ -3,6 +3,7 @@ import { ArbeidNorge } from './arbeidNorge';
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
+import { ArbeidslandMedYrkesaktivitet } from './arbeidslandMedYrkesaktivitet';
 import { Avklartefakta, AvklartefaktaListe } from './avklartefakta';
 import { BehandligOversikt, BehandligOversikter } from './behandlingOversikt';
 import { Bekreftelser } from './bekreftelser';
@@ -23,7 +24,7 @@ import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { OppholdLand, OppholdPeriode } from './opphold';
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Personhistorikk } from './personhistorikk';
-import { Periode } from './periode';
+import { Periode, Lovvalgsperiode } from './periode';
 import { Saksbehandler } from './saksbehandler';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { SoknadForm } from './soknadForm';
@@ -44,6 +45,7 @@ export {
   Arbeidsforholdene,
   Arbeidsforholdet,
   ArbeidsgivereNorge,
+  ArbeidslandMedYrkesaktivitet,
   Avklartefakta,
   AvklartefaktaListe,
   Behandlinger,
@@ -68,6 +70,7 @@ export {
   Kodeverk,
   Lovvalgsbestemmelse,
   Lovvalgsbestemmelser,
+  Lovvalgsperiode,
   Medlemskap,
   MedlemskapEnkeltPeriode,
   MedlemskapPerioder,

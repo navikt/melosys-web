@@ -13,6 +13,7 @@ export const sjekkStatuskode = async response => {
   const error = new Error(response.statusText || response.type);
   error.response = response;
   error.body = await response.clone().json();
+  error.status = response.status;
   throw error;
 };
 
@@ -196,6 +197,8 @@ const toJsonExtended = async fetchResponse => {
       response,
     };
   }
+
+
   return fetchResponse;
 };
 
@@ -210,11 +213,12 @@ if (config.headers) {
 
   const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
 
+  const sjekketResponse = await sjekkStatuskode(fetchResponse);
+
   if (extendResponse) {
-    return toJsonExtended(fetchResponse);
+    return toJsonExtended(sjekketResponse);
   }
 
-  const sjekketResponse = await sjekkStatuskode(fetchResponse);
   return toJson(sjekketResponse);
 };
 
@@ -295,10 +299,11 @@ export const getAsJson = (url, extendResponse = false) => methodToJson('GET', ur
 export const postAsJson = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse);
 // putAsText, data can be empty string.
 export const putAsText = (url, data = '') => methodToText('PUT', url, data);
+export const putAsJson = (url, data, extendResponse = false) => methodToJson('PUT', url, data, extendResponse);
 
-export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse, 'application/pdf');
+export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse, 'application/pdf, application/json');
 
-export const getAsPDF = (url, extendResponse = false) => methodToJson('GET', url, null, extendResponse, 'application/pdf');
+export const getAsPDF = (url, extendResponse = false) => methodToJson('GET', url, null, extendResponse, 'application/pdf, application/json');
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
   return async (dispatch, getState) => {

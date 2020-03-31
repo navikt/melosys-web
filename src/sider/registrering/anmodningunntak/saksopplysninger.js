@@ -18,11 +18,12 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
+import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer';
-import { fritekstPakrevdSkjema, endrePeriodeSkjema } from './validering/anmodningunntakSkjema';
+import { delvisInnvilgelseSkjema, avslagSkjema } from './validering/anmodningunntakSkjema';
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 const uuid = require('uuid/v4');
@@ -58,6 +59,7 @@ const Saksopplysninger = ({
   sed,
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
+  lovvalgsperiode,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
@@ -71,12 +73,19 @@ const Saksopplysninger = ({
     lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
   }, [anmodningsperiodeID]);
 
-  useEffect(() => {
+  const setEndretPeriode = () => {
     if (sed.lovvalgsperiode) {
-      setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom)}`);
-      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom)}`);
+      setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom));
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom));
     }
-  }, [sed]);
+    if (anmodningsperiodeSvar.endretPeriode) {
+      setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom));
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom));
+    }
+    if (lovvalgsperiode.tomDato) {
+      setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato));
+    }
+  };
 
   const initialiserSkjema = () => {
     if (anmodningsperiodeSvar) {
@@ -86,10 +95,6 @@ const Saksopplysninger = ({
       if (anmodningsperiodeSvar.begrunnelseFritekst) {
         setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
       }
-      if (anmodningsperiodeSvar.endretPeriode) {
-        setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom)}`);
-        setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom)}`);
-      }
     }
   };
 
@@ -97,16 +102,24 @@ const Saksopplysninger = ({
     initialiserSkjema();
   }, [anmodningsperiodeSvar]);
 
+  useEffect(() => {
+    setEndretPeriode();
+  }, [sed.lovvalgsperiode, anmodningsperiodeSvar.endretPeriode, lovvalgsperiode.tomDato]);
+
   const validerFelt = () => {
     let valideringsresultat;
     switch (anmodningsperiodeSvarType) {
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
         return true;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
-        valideringsresultat = lagYupToReduxformErrorMapper(endrePeriodeSkjema)({ fom: endretPeriodeFom, tom: endretPeriodeTom });
+        valideringsresultat = lagYupToReduxformErrorMapper(delvisInnvilgelseSkjema)({
+          fom: endretPeriodeFom,
+          tom: endretPeriodeTom,
+          fritekst: begrunnelseFritekst,
+        });
         break;
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
-        valideringsresultat = lagYupToReduxformErrorMapper(fritekstPakrevdSkjema)({ fritekst: begrunnelseFritekst });
+        valideringsresultat = lagYupToReduxformErrorMapper(avslagSkjema)({ fritekst: begrunnelseFritekst });
         break;
       default:
         return false;
@@ -141,7 +154,7 @@ const Saksopplysninger = ({
         return makeResponse({
           fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
           tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
-        }, null);
+        }, begrunnelseFritekst);
       case AVSLAG:
         return makeResponse(tomPeriode, begrunnelseFritekst);
       default:
@@ -291,28 +304,42 @@ const Saksopplysninger = ({
                       label="Godkjenn, men endre periode"
                     />
                     {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
-                      <Nav.Row>
-                        <Nav.Column xs="3">
-                          <Nav.Input
-                            bredde="fullbredde"
-                            label="Startdato"
-                            value={endretPeriodeFom}
-                            onChange={e => oppdaterDato(e, setEndretPeriodeFom)}
-                            onBlur={e => formaterDato(e, setEndretPeriodeFom)}
-                            feil={feilmeldinger.fom}
-                            disabled={!redigerbart} />
-                        </Nav.Column>
-                        <Nav.Column xs="3">
-                          <Nav.Input
-                            bredde="fullbredde"
-                            label="Sluttdato"
-                            value={endretPeriodeTom}
-                            onChange={e => oppdaterDato(e, setEndretPeriodeTom)}
-                            onBlur={e => formaterDato(e, setEndretPeriodeTom)}
-                            feil={feilmeldinger.tom}
-                            disabled={!redigerbart} />
-                        </Nav.Column>
-                      </Nav.Row>
+                      <Fragment>
+                        <Nav.Row>
+                          <Nav.Column xs="3">
+                            <Nav.Input
+                              bredde="fullbredde"
+                              label="Startdato"
+                              value={endretPeriodeFom}
+                              onChange={e => oppdaterDato(e, setEndretPeriodeFom)}
+                              onBlur={e => formaterDato(e, setEndretPeriodeFom)}
+                              feil={feilmeldinger.fom}
+                              disabled={!redigerbart} />
+                          </Nav.Column>
+                          <Nav.Column xs="3">
+                            <Nav.Input
+                              bredde="fullbredde"
+                              label="Sluttdato"
+                              value={endretPeriodeTom}
+                              onChange={e => oppdaterDato(e, setEndretPeriodeTom)}
+                              onBlur={e => formaterDato(e, setEndretPeriodeTom)}
+                              feil={feilmeldinger.tom}
+                              disabled={!redigerbart} />
+                          </Nav.Column>
+                        </Nav.Row>
+                        <Nav.Row>
+                          <Nav.Column xs="6">
+                            <Nav.Textarea
+                              disabled={!redigerbart}
+                              label="Skriv inn begrunnelse for delvis innvilgelse..."
+                              onChange={textAreaOnChange}
+                              value={begrunnelseFritekst}
+                              maxLength={255}
+                              feil={feilmeldinger.fritekst}
+                              bredde="fullbredde" />
+                          </Nav.Column>
+                        </Nav.Row>
+                      </Fragment>
                     )}
                     <Nav.Radio
                       name={unikRadioButtonGruppeID}
@@ -325,20 +352,18 @@ const Saksopplysninger = ({
                 </Nav.Column>
               </Nav.Row>
               {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
-                <Fragment>
-                  <Nav.Row>
-                    <Nav.Column xs="6">
-                      <Nav.Textarea
-                        disabled={!redigerbart}
-                        label="Skriv inn begrunnelse for avslaget..."
-                        onChange={textAreaOnChange}
-                        value={begrunnelseFritekst}
-                        maxLength={255}
-                        feil={feilmeldinger.fritekst}
-                        bredde="fullbredde" />
-                    </Nav.Column>
-                  </Nav.Row>
-                </Fragment>
+                <Nav.Row>
+                  <Nav.Column xs="6">
+                    <Nav.Textarea
+                      disabled={!redigerbart}
+                      label="Skriv inn begrunnelse for avslaget..."
+                      onChange={textAreaOnChange}
+                      value={begrunnelseFritekst}
+                      maxLength={255}
+                      feil={feilmeldinger.fritekst}
+                      bredde="fullbredde" />
+                  </Nav.Column>
+                </Nav.Row>
               )}
               <Nav.Row>
                 <LinkForhandsvisningSed
@@ -378,6 +403,7 @@ Saksopplysninger.propTypes = {
   anmodningsperiodeID: PT.string,
   anmodningsperiodeSvar: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
+  lovvalgsperiode: MPT.Lovvalgsperiode.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -391,6 +417,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodeSvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

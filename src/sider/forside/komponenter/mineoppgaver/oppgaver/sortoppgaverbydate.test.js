@@ -1,12 +1,12 @@
-import { sortBehandlinger } from './mineoppgaver';
+import sortOppgaverByDate from './sortoppgaverbydate';
 
-describe('Mineoppgaver', () => {
-  it('sortBehandlinger', () => {
+describe('sortOppgaverByDate', () => {
+  it('sorterer korrekt', () => {
     const forsteOppgave = { behandling: { registrertDato: '2019-12-11T16:30:00.622Z' } };
     const andreOppgave = { behandling: { registrertDato: '2019-12-11T16:30:01.622Z' } };
 
-    const sortBehandlingerDescending = sortBehandlinger('descending');
-    const sortBehandlingerAscending = sortBehandlinger('ascending');
+    const sortBehandlingerDescending = sortOppgaverByDate('descending', 'behandling.registrertDato');
+    const sortBehandlingerAscending = sortOppgaverByDate('ascending', 'behandling.registrertDato');
 
     expect(sortBehandlingerDescending(forsteOppgave, andreOppgave)).toBeGreaterThan(0);
     expect(sortBehandlingerDescending(andreOppgave, forsteOppgave)).toBeLessThan(0);

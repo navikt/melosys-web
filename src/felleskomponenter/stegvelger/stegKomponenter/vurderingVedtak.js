@@ -4,7 +4,7 @@ import { getFormValues, isValid, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
-import MKV from '../../../melosyskodeverk';
+import MKV, { Utils as MKVUtils } from '../../../melosyskodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
@@ -53,6 +53,7 @@ const VurderingVedtak = ({
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const erSoknad = MKVUtils.erSoknad(behandlingstype) || erNyVurdering;
   const fattVedtakDisabled = !redigerbart;
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
@@ -70,7 +71,7 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
-      mottakerinstitusjoner: [formValues.mottakerinstitusjon],
+      mottakerinstitusjoner: erSoknad ? [formValues.mottakerinstitusjon] : [],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
@@ -119,16 +120,19 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row className="mottakerinstitusjoner">
-          <Nav.Column xs="7">
-            <Mottakerinstitusjonvelger
-              form={form}
-              redigerbart={redigerbart}
-              landkode={soknadsland[0]}
-              bucType={bucType}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        {
+          erSoknad &&
+          <Nav.Row className="mottakerinstitusjoner">
+            <Nav.Column xs="7">
+              <Mottakerinstitusjonvelger
+                form={form}
+                redigerbart={redigerbart}
+                landkode={soknadsland[0]}
+                bucType={bucType}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         <Nav.Row>
           <Nav.Column xs="6">
             {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
@@ -180,7 +184,6 @@ const mapStateToProps = state => ({
   erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,

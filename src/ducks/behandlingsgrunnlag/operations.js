@@ -79,8 +79,10 @@ const lagBehandlingsgrunnlagData = (behandlingstype, behandlingsgrunnlag) => {
   switch (behandlingstype) {
     case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD:
     case MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING:
+    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND:
+    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND:
       return lagSoeknadFelter(behandlingsgrunnlag);
-    case MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_NORGE:
+    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
       return lagBehandlingsgrunnlagFelter(behandlingsgrunnlag);
     default:
       return {};

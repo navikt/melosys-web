@@ -156,3 +156,8 @@ export const MedfolgendeAndreSelector = createSelector(
     return allePersoner.find(person => person.fnr === medfolgendeAndre);
   }
 );
+
+export const HjemmebaseSelector = createSelector(
+  ArbeidNorgeSelector,
+  arbeidNorge => arbeidNorge.flyendePersonellHjemmebase
+);

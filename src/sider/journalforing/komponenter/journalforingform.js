@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, getFormValues, change } from 'redux-form';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Ikoner from '../../../resources/images';
 import * as KV from '../../../kodeverk';
@@ -12,6 +11,7 @@ import * as MPT from '../../../proptypes';
 import * as Skjema from '../../../felleskomponenter/skjema';
 import * as Mui from '../../../felleskomponenter/ui';
 
+import MKV, { Utils as MKVUtils } from '../../../melosyskodeverk';
 import { BOOLSK } from '../../../constants';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 import Informasjon from '../komponenter/informasjon';
@@ -36,7 +36,7 @@ const JournalforingForm = props => {
     kanSubmittes,
     handleSubmit,
   } = props;
-  const visForvaltningsMelding = formValues.saksnummer === '-1' && formValues.opprettnysak_behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
+  const visForvaltningsMelding = formValues.saksnummer === '-1' && MKVUtils.erSoknad(formValues.opprettnysak_behandlingstype);
 
   return (
     <form onSubmit={handleSubmit}>

@@ -54,6 +54,9 @@ describe('Behandlingerselectors', () => {
         },
       },
     },
+    lovvalgsperioder: {
+      data: [],
+    },
   });
   describe('ArbeidsgivereNorgeSelector', () => {
     it('returnerer tom liste dersom lovvalgsperiode og søknadsperiode ikke finnes', () => {

@@ -26,7 +26,7 @@ const Behandlingsmeny = ({
       { redigerbart && visHenleggSak && <Nav.Knapp mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvsluttSakSomBortfaltDialogHandle}>Avslutt sak som bortfalt</Nav.Knapp>}
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvslagSoknadDialogHandle}>Avslå søknad pga. manglende opplysninger</Nav.Knapp>}
-      { <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp> }
+      { <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>Vis alle behandlinger</Nav.Knapp> }
     </div>
   </Nav.EkspanderbartpanelBase>
 );

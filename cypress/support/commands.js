@@ -32,7 +32,7 @@ Cypress.Commands.add(
       .children('option')
       .eq(pos)
       .then(e => {
-        cy.wrap(subject).select(e.val())
+        cy.wrap(subject).select(e.val());
       });
   }
 );
