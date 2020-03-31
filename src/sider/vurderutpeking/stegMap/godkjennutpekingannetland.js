@@ -13,6 +13,7 @@ class GodkjennUtpekingAnnetLand extends Steg {
     this.samleRelevanteData = _propsLight => ({
       overskrift: 'Godkjenn utpeking',
       redigerbart: _propsLight.generiskStegRedigerbart,
+      behandlingID: _propsLight.behandlingID,
     });
     this.beregnRelevantUI = _propsLight => ({});
     this.handlers = {

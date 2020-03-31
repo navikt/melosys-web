@@ -4,6 +4,7 @@ import * as Mui from '../../ui';
 import * as Nav from '../../../utils/navFrontend';
 
 import VurderingGodkjennUtpekingAnnetLand from './vurderingGodkjennUtpekingAnnetLand';
+import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 describe('vurderingGodkjennUtpekingAnnetLand', () => {
   let props = null;
@@ -13,6 +14,7 @@ describe('vurderingGodkjennUtpekingAnnetLand', () => {
       lagreOgGodkjennUnntaksperioder: jest.fn(),
       redigerbart: true,
       overskrift: 'Godkjenn utpeking',
+      behandlingID: 4,
     };
   });
 
@@ -44,5 +46,13 @@ describe('vurderingGodkjennUtpekingAnnetLand', () => {
     const hovedknapp = komponent.find(Mui.Knapp);
 
     expect(hovedknapp.props().disabled).toBe(false);
+  });
+
+  it('viser en pdflenkeliste', () => {
+    const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
+
+    const pdflenkeliste = komponent.find(PdfLenkeListe);
+
+    expect(pdflenkeliste.props().behandlingID).toBe(props.behandlingID);
   });
 });

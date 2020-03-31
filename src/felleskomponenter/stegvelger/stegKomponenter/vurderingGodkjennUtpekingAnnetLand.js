@@ -1,8 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import PT from 'prop-types';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Mui from '../../ui';
+
+import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 import './vurderingGodkjennUtpekingAnnetLand.css';
 
@@ -10,6 +13,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,
   redigerbart,
   overskrift,
+  behandlingID,
 }) => {
   const [varsleUtland, setVarsleUtland] = useState(false);
 
@@ -22,6 +26,14 @@ const VurderingGodkjennUtpekingAnnetLand = ({
       varsleUtland,
     });
   };
+
+  const dokumenter = [
+    {
+      navn: 'Forhåndsvis SED A012',
+      type: EKV.Koder.sedtyper.A012,
+      erSed: true,
+    },
+  ];
 
   return (
     <Fragment>
@@ -37,6 +49,10 @@ const VurderingGodkjennUtpekingAnnetLand = ({
           </Nav.Column>
         </Nav.Row>
       }
+      <PdfLenkeListe
+        behandlingID={behandlingID}
+        dokumenter={dokumenter}
+      />
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
           <Mui.Knapp type="hoved" disabled={!redigerbart} onClick={hovedknappHandler}>Bekreft</Mui.Knapp>
@@ -50,6 +66,7 @@ VurderingGodkjennUtpekingAnnetLand.propTypes = {
   lagreOgGodkjennUnntaksperioder: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   overskrift: PT.string.isRequired,
+  behandlingID: PT.number.isRequired,
 };
 
 export default VurderingGodkjennUtpekingAnnetLand;
