@@ -5,7 +5,7 @@ import MKV from '../../../melosyskodeverk';
 
 import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingNorgeUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingNorgeUtpekt';
+import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
@@ -48,7 +48,7 @@ class VurderUtpeking extends Steg {
     ];
     this.id = STEG.VURDER_UTPEKING;
     this.tittel = 'Vurdering';
-    this.komponent = VurderingNorgeUtpekt;
+    this.komponent = VurderingUtpekt;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
     });

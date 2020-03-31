@@ -5,22 +5,22 @@ import { reduxForm, getFormValues } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
-import * as Skjema from '../../../felleskomponenter/skjema';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
+import * as Skjema from '../../skjema';
+import * as Validering from '../../skjema/validering';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
-import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
+import RegisterKontrollTreff from '../../registerkontrollTreff';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 
-import './vurderingNorgeUtpekt.css';
+import './vurderingUtpekt.css';
 
-export const VurderingNorgeUtpekt = ({
+export const VurderingUtpekt = ({
   vurderingBegrunnelser,
   slettData,
   oppdaterData,
@@ -159,7 +159,7 @@ export const VurderingNorgeUtpekt = ({
   );
 };
 
-VurderingNorgeUtpekt.propTypes = {
+VurderingUtpekt.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),
   slettData: PT.func.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
@@ -177,7 +177,7 @@ VurderingNorgeUtpekt.propTypes = {
   lovvalgsperiode: MPT.Periode.isRequired,
 };
 
-VurderingNorgeUtpekt.defaultProps = {
+VurderingUtpekt.defaultProps = {
   formValues: {},
   vurderingBegrunnelser: [],
 };
@@ -200,7 +200,7 @@ const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();
 };
 
-const VurderingNorgeUtpektForm = reduxForm({
+const VurderingUtpektForm = reduxForm({
   onSubmit: nesteSteg,
   form: KV.Form.VURDER_UTPEKING,
   enableReinitialize: false,
@@ -208,6 +208,6 @@ const VurderingNorgeUtpektForm = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.vurder_utpeking),
-})(VurderingNorgeUtpekt);
+})(VurderingUtpekt);
 
-export default connect(mapStateToProps)(VurderingNorgeUtpektForm);
+export default connect(mapStateToProps)(VurderingUtpektForm);
