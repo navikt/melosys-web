@@ -8,6 +8,7 @@ import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMot
 import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
+import { hentLovvalgsland } from '../../../regler/lovvalgsland';
 import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class VurderUtpeking extends Steg {
@@ -22,6 +23,8 @@ class VurderUtpeking extends Steg {
     } = propsLight;
 
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
+    const lovvalgsland = hentLovvalgsland(lovvalgsperioder);
+
     const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
 
     const utpekingGodkjent = this.utpekingGodkjent(utpekingGodkjentFakta);
@@ -55,6 +58,7 @@ class VurderUtpeking extends Steg {
     this.beregnRelevantUI = _propsLight => ({
       harAvklaring,
       lovvalgsbestemmelse,
+      lovvalgsland,
       utpekingGodkjentFakta,
       utpekingGodkjent,
       utpekingIkkeGodkjent,

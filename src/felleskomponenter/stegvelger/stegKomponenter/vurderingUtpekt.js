@@ -15,6 +15,7 @@ import RegisterKontrollTreff from '../../registerkontrollTreff';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 
@@ -29,6 +30,7 @@ export const VurderingUtpekt = ({
     harAvklaring,
     utpekingGodkjentFakta,
     lovvalgsbestemmelse,
+    lovvalgsland,
     utpekingGodkjent,
     utpekingIkkeGodkjent,
   },
@@ -37,6 +39,10 @@ export const VurderingUtpekt = ({
   lovvalgsperiode,
 }) => {
   useEffect(() => {
+    if (lovvalgsland) {
+      oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
+      oppdaterData(lagLovvalgsland(lovvalgsland));
+    }
     if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, utpekingGodkjentFakta));
     oppdaterData(konverterLovvalgsperiodeTilStegData(lovvalgsperiode));
@@ -70,6 +76,8 @@ export const VurderingUtpekt = ({
     }
   }, [formValues]);
 
+  const visLovvalgsland = lovvalgsland && lovvalgsland !== MKV.Koder.landkoder.NO;
+
   return (
     <form onSubmit={handleSubmit}>
       <Nav.typo.Undertittel className="stegTittel">Vurder lovvalgsbeslutningen (A003)</Nav.typo.Undertittel>
@@ -84,6 +92,15 @@ export const VurderingUtpekt = ({
           }
         </Nav.Column>
       </Nav.Row>
+      {
+        visLovvalgsland &&
+        <Nav.Row className="rad">
+          <Nav.Column xs="5">
+            <Nav.typo.Element>Lovvalgsland</Nav.typo.Element>
+            <Nav.typo.Normaltekst>{lovvalgsland}</Nav.typo.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.typo.Element>Grunnlag</Nav.typo.Element>
@@ -168,6 +185,7 @@ VurderingUtpekt.propTypes = {
     harAvklaring: PT.bool.isRequired,
     utpekingGodkjentFakta: MPT.Avklartefakta,
     lovvalgsbestemmelse: PT.string,
+    lovvalgsland: PT.string,
     utpekingGodkjent: PT.bool.isRequired,
     utpekingIkkeGodkjent: PT.bool.isRequired,
   }).isRequired,
