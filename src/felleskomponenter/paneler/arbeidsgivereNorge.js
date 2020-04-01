@@ -21,23 +21,28 @@ const uuid = require('uuid/v4');
 
 const ArbeidsgivereEnkeltNorge = props => {
   const {
-    organisasjon, arbeidsforholdene, inntektListe, redigerbart,
+    kilde, organisasjon, arbeidsforholdene, inntektListe, redigerbart,
   } = props;
 
   return (
     <div>
-      <Organisasjon organisasjon={organisasjon} redigerbart={redigerbart} />
-      <Inntekt inntektListe={inntektListe} />
+      <Organisasjon kilde={kilde} organisasjon={organisasjon} redigerbart={redigerbart} />
+      {kilde && <Inntekt inntektListe={inntektListe} />}
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
     </div>
   );
 };
 
 ArbeidsgivereEnkeltNorge.propTypes = {
+  kilde: PT.string,
   organisasjon: MPT.Organisasjon.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
   inntektListe: MPT.InntektListe.isRequired,
   redigerbart: PT.bool.isRequired,
+};
+
+ArbeidsgivereEnkeltNorge.defaultProps = {
+  kilde: undefined,
 };
 
 const ArbeidsgivereNorge = props => {

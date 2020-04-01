@@ -267,6 +267,7 @@ export const OrganisasjonSelector = createSelector(
  */
 const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => (
   {
+    kilde: KV.Koder.Opplysningskilder.AAREG_EREG,
     arbeidsforholdene: [arbeidsforholdet],
     organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID) || {},
     inntektListe: filtrerOgSpreInntekt(relevantPeriode, arbeidsforholdet.opplysningspliktigID, inntekter),
@@ -288,7 +289,8 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   InntekterPrAarMaanedSelector,
   behandlingsgrunnlagSelectors.PeriodeSelector,
   LovvalgsperiodeSelector,
-  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode) => {
+  behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector,
+  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode, norskeArbeidsgivere) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
     let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
@@ -315,22 +317,29 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       tom: relevantPeriodeSlutt,
     };
 
-    return arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
-      const tmpSamling = [...samling];
+    return [
+      ...arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
+        const tmpSamling = [...samling];
 
-      // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
-      const arbeidsforholdEksistererVedIndeks = samling
-        .findIndex(enkelt =>
-          enkelt.arbeidsforholdene.some(enkeltforhold =>
-            enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID));
+        // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
+        const arbeidsforholdEksistererVedIndeks = samling
+          .findIndex(enkelt =>
+            enkelt.arbeidsforholdene.some(enkeltforhold =>
+              enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID));
 
-      if (arbeidsforholdEksistererVedIndeks > -1) {
-        tmpSamling[arbeidsforholdEksistererVedIndeks].arbeidsforholdene.push(arbeidsforholdet);
-      } else {
-        tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, relevantPeriode));
-      }
-      return tmpSamling;
-    }, []);
+        if (arbeidsforholdEksistererVedIndeks > -1) {
+          tmpSamling[arbeidsforholdEksistererVedIndeks].arbeidsforholdene.push(arbeidsforholdet);
+        } else {
+          tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, relevantPeriode));
+        }
+        return tmpSamling;
+      }, []),
+      ...norskeArbeidsgivere.map(norskArbeidsgiver => ({
+        organisasjon: norskArbeidsgiver,
+        arbeidsforholdene: [],
+        inntektListe: [],
+      })),
+    ];
   }
 );
 
