@@ -184,6 +184,9 @@ export default function reducer(state = initialState, action) {
             medfolgendeFamilie: [],
             medfolgendeAndre: null,
           },
+          overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || [],
+          norskeArbeidsgivere: dokument.norskeArbeidsgivere || [],
+          ytterligereInformasjon: dokument.ytterligereInformasjon,
         },
       };
 
