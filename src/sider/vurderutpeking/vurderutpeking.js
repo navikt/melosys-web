@@ -51,7 +51,7 @@ const Vurderutpeking = ({
   lastInnSaksopplysninger,
   match,
   location,
-  behandlingstype,
+  behandlingstema,
   redigerbart,
   fagsak,
   oppsummering,
@@ -132,7 +132,7 @@ const Vurderutpeking = ({
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
-              behandlingstype={behandlingstype}
+              behandlingstema={behandlingstema}
               redigerbart={redigerbart}
               fagsak={fagsak}
               oppsummering={oppsummering}
@@ -184,7 +184,7 @@ Vurderutpeking.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -226,7 +226,7 @@ Vurderutpeking.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

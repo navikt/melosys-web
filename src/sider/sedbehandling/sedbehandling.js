@@ -61,6 +61,7 @@ const SedBehandling = ({
   sideDialogRedigerbart,
   match,
   behandlingstype,
+  behandlingstema,
   redigerbart,
   fagsak,
   oppsummering,
@@ -115,7 +116,7 @@ const SedBehandling = ({
           <Nav.Column xs="7" />
           <Nav.Column xs="5">
             <SideOppsummering
-              behandlingstype={behandlingstype}
+              behandlingstema={behandlingstema}
               redigerbart={redigerbart}
               fagsak={fagsak}
               oppsummering={oppsummering}
@@ -166,6 +167,7 @@ SedBehandling.propTypes = {
   sideDialogRedigerbart: PT.bool.isRequired,
   match: PT.object.isRequired,
   behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
@@ -205,6 +207,7 @@ const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   oppholdsland: behandlingsgrunnlagSelectors.OppholdsLandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
