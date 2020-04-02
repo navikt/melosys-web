@@ -49,10 +49,13 @@ const VurderingGodkjennUtpekingAnnetLand = ({
           </Nav.Column>
         </Nav.Row>
       }
-      <PdfLenkeListe
-        behandlingID={behandlingID}
-        dokumenter={dokumenter}
-      />
+      {
+        redigerbart &&
+        <PdfLenkeListe
+          behandlingID={behandlingID}
+          dokumenter={dokumenter}
+        />
+      }
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
           <Mui.Knapp type="hoved" disabled={!redigerbart} onClick={hovedknappHandler}>Bekreft</Mui.Knapp>
