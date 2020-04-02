@@ -13,7 +13,7 @@ import './fagsakVelger.css';
 
 const FagsakVelger = props => {
   const {
-    sakstyper, behandlingstyper, fagsakListe, settJournalforingHensikt,
+    sakstyper, behandlingstyper, behandlingstemaer, fagsakListe, settJournalforingHensikt,
   } = props;
   const notifier = async saksnummer => {
     const hensikt = (saksnummer === '-1') ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -28,7 +28,7 @@ const FagsakVelger = props => {
   radioValg.push({
     value: '-1',
     innhold: <OpprettSakTittel />,
-    footer: <OpprettSak sakstyper={sakstyper} behandlingstyper={behandlingstyper} />,
+    footer: <OpprettSak sakstyper={sakstyper} behandlingstemaer={behandlingstemaer} />,
   });
   return (
     <Fragment>
@@ -47,6 +47,7 @@ const FagsakVelger = props => {
 FagsakVelger.propTypes = {
   sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
 };

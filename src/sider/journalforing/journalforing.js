@@ -85,7 +85,7 @@ class Journalforing extends Component {
     } = this.props;
     const {
       brukerID, avsenderID, arbeidsgiverID,
-      opprettnysak_behandlingstype: behandlingstypeKode,
+      opprettnysak_behandlingstema: behandlingstemaKode,
       representantID, representantKontaktPerson, representantRepresenterer, avsenderNavn,
       hoveddokument: { tittel, logiskeVedlegg },
       vedlegg: vedleggSkjema,
@@ -120,7 +120,7 @@ class Journalforing extends Component {
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
         arbeidsgiverID,
-        behandlingstypeKode,
+        behandlingstemaKode,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
         representererKode: representantRepresenterer,
@@ -403,19 +403,22 @@ class Journalforing extends Component {
       erProd,
     } = this.props;
 
-    let behandlingstyper = [
-      ...MKV.KTObjects.behandlinger.behandlingstyper
-        .filter(({ kode }) =>
-          kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
-          kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV ||
-          kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND ||
-          kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
-          kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-          kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
-          kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED),
-    ];
+    const behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
+      .filter(({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
+
+    let behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
+      kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER ||
+      kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG ||
+      kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG ||
+      kode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV ||
+      kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
+      kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND ||
+      kode === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+      kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED ||
+      kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID);
+
     if (erProd) {
-      behandlingstyper = behandlingstyper.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND);
+      behandlingstemaer = behandlingstemaer.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstemaer.ARBEID_FLERE_LAND);
     }
 
     const {
@@ -470,6 +473,7 @@ class Journalforing extends Component {
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                         behandlingstyper={behandlingstyper}
+                        behandlingstemaer={behandlingstemaer}
                         submitJournalforing={this.submitJournalforing}
                         avbrytJournalforing={this.avbrytJournalforing}
                         kanSubmittes={this.kanSubmittes()}

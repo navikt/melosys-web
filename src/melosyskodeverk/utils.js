@@ -1,8 +1,10 @@
 import MKV from './filtrertmelosyskodeverk';
 
-export const erSoknad = behandlingstype => [
-  MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-  MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV,
-  MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
-  MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND,
-].includes(behandlingstype);
+export const erSoknad = behandlingstema => [
+  MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+  MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+  MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+  MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+].includes(behandlingstema);

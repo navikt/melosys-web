@@ -91,14 +91,14 @@ const journalforing = object().shape({
         .required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
     }),
   journalforingPeriodeFraOgMed: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: kreverPeriodeOgLand,
       then: string()
         .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .required(TAST_INN_DATO),
     }),
   journalforingPeriodeTilOgMed: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: kreverPeriodeOgLand,
       then: string()
         .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
@@ -107,23 +107,23 @@ const journalforing = object().shape({
     }),
   journalforingSoknadsland: array().of(string())
     .ensure()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: kreverPeriodeOgLand,
       then: array().of(string())
         .min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
   journalforingUnntakFraLovvalgsland: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: anmodningOmUnntak,
       then: string().required({ _error: VELG_ETT_LAND }),
     }),
   journalforingLovvalgsbestemmelse: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: anmodningOmUnntak,
       then: string().required(VELG_EN_BESTEMMELSE),
     }),
   journalforingUnntakFraLovvalgsbestemmelse: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: anmodningOmUnntak,
       then: string().required(VELG_EN_BESTEMMELSE),
     }),
@@ -151,7 +151,7 @@ const journalforing = object().shape({
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
   representantNavn: string(),
-  opprettnysak_behandlingstype: string(),
+  opprettnysak_behandlingstema: string(),
 });
 
 export { journalforing };
