@@ -30,7 +30,7 @@ describe('Behandlingsgrunnlag operations', () => {
         data: {
           behandlingID: 4,
           oppsummering: {
-            behandlingstype: {
+            behandlingstema: {
               kode: undefined,
             },
           },
@@ -60,12 +60,14 @@ describe('Behandlingsgrunnlag operations', () => {
 
   describe('lagre', () => {
     each([
-      MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-      MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
-      MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND,
-    ]).it('lagrer soeknadData ved behandlingstype %p', async behandlingstype => {
-      initialState.behandlinger.data.oppsummering.behandlingstype.kode = behandlingstype;
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+      MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+    ]).it('lagrer soeknadData ved behandlingstema %p', async behandlingstema => {
+      initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
 
       const expectedActions = [
         { type: types.PENDING },
@@ -102,9 +104,10 @@ describe('Behandlingsgrunnlag operations', () => {
     });
 
     each([
-      MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE,
-    ]).it('lagrer behandlingsgrunnlagData ved behandlingstype %p', async behandlingstype => {
-      initialState.behandlinger.data.oppsummering.behandlingstype.kode = behandlingstype;
+      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+    ]).it('lagrer behandlingsgrunnlagData ved behandlingstema %p', async behandlingstema => {
+      initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
 
       const expectedActions = [
         { type: types.PENDING },

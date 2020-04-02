@@ -25,17 +25,17 @@ const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
 const DATO_MA_VAERE_ETTER_FOM = { melding: 'Dato må være lik eller senere enn fra.' };
 const VELG_REPRESENTERER = { melding: 'Velg hvem fullmektig representerer' };
 
-const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) => (
+const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) => (
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
-    MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
-    MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
-  ].includes(behandlingstype)
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+  ].includes(behandlingstema)
 );
 
-const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
-  kreverPeriodeOgLand(journalforingHensikt, behandlingstype) &&
+const anmodningOmUnntak = (journalforingHensikt, behandlingstema) =>
+  kreverPeriodeOgLand(journalforingHensikt, behandlingstema) &&
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
+  behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
 const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   const organisasjonAliasTyper = [KV.AvsenderTyper.FULLMEKTIG, KV.AvsenderTyper.ARBEIDSGIVER, KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG];
