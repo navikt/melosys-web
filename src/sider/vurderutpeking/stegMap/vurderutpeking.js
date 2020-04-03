@@ -1,19 +1,30 @@
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
 
+import MKV from '../../../melosyskodeverk';
+
 import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingNorgeUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingNorgeUtpekt';
+import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
+import { hentLovvalgsland } from '../../../regler/lovvalgsland';
 import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const { lovvalgsperioder, avklartefakta, vurderUtpekingValid } = propsLight;
+    const {
+      lovvalgsperioder,
+      avklartefakta,
+      vurderUtpekingValid,
+      behandlingstype,
+    } = propsLight;
+
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
+    const lovvalgsland = hentLovvalgsland(lovvalgsperioder);
+
     const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
 
     const utpekingGodkjent = this.utpekingGodkjent(utpekingGodkjentFakta);
@@ -21,10 +32,17 @@ class VurderUtpeking extends Steg {
 
     const harAvklaring = this.harAvklaring(utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid);
 
+    const lovvalgNorge = behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE;
+    const lovvalgAnnetLand = behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND;
+
     this.kriterier = [
       {
-        exec: () => harAvklaring && utpekingGodkjent,
-        nesteSteg: STEG.GODKJENN_UTPEKING,
+        exec: () => harAvklaring && utpekingGodkjent && lovvalgNorge,
+        nesteSteg: STEG.GODKJENN_UTPEKING_NORGE,
+      },
+      {
+        exec: () => harAvklaring && utpekingGodkjent && lovvalgAnnetLand,
+        nesteSteg: STEG.GODKJENN_UTPEKING_ANNET_LAND,
       },
       {
         exec: () => harAvklaring && utpekingIkkeGodkjent,
@@ -33,13 +51,14 @@ class VurderUtpeking extends Steg {
     ];
     this.id = STEG.VURDER_UTPEKING;
     this.tittel = 'Vurdering';
-    this.komponent = VurderingNorgeUtpekt;
+    this.komponent = VurderingUtpekt;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
       harAvklaring,
       lovvalgsbestemmelse,
+      lovvalgsland,
       utpekingGodkjentFakta,
       utpekingGodkjent,
       utpekingIkkeGodkjent,

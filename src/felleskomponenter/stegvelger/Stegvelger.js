@@ -47,6 +47,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.Tilleggbestemmelser]: new EnkelDataStore(),
       [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
       [StegStoreTyper.Lovvalgsperiode]: new EnkelDataStore(),
+      [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
     },
     visSoknadFeilmeldinger: false,
   };
@@ -131,6 +132,24 @@ class Stegvelger extends Component {
     this.setState(stegStores);
   };
 
+  hentPerioderStegState = () => {
+    const {
+      lovvalgsbestemmelse,
+      tilleggbestemmelse,
+      unntakfrabestemmelse,
+      lovvalgsperiode,
+      lovvalgsland,
+    } = this.state.stegStores;
+
+    return {
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
+      lovvalgsperiode: lovvalgsperiode.hent(),
+      lovvalgsland: lovvalgsland.hent(),
+    };
+  };
+
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
 
@@ -138,26 +157,17 @@ class Stegvelger extends Component {
     const {
       vilkaar,
       avklartefakta,
-      lovvalgsbestemmelse,
       anmodningsperiodesvar,
-      tilleggbestemmelse,
-      unntakfrabestemmelse,
-      lovvalgsperiode,
     } = stegStores;
 
-    const bestemmelser = {
-      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-      tilleggbestemmelse: tilleggbestemmelse.hent(),
-      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-      lovvalgsperiode: lovvalgsperiode.hent(),
-    };
+    const perioderStegState = this.hentPerioderStegState();
 
     await Promise.all([
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder(bestemmelser),
-      this.props.oppdaterAnmodningsPerioder(bestemmelser),
-      this.props.oppdaterUtpekingsperioder(bestemmelser),
+      this.props.oppdaterLovvalgperioder(perioderStegState),
+      this.props.oppdaterAnmodningsPerioder(perioderStegState),
+      this.props.oppdaterUtpekingsperioder(perioderStegState),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -237,6 +247,27 @@ class Stegvelger extends Component {
     });
   };
 
+  godkjennUnntaksperioder = async data => {
+    const { behandlingID, tilForsiden } = this.props;
+    const body = {
+      varsleUtland: data.varsleUtland || false,
+    };
+
+    try {
+      await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
+      tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  lagreOgGodkjennUnntaksperioder = data => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      await this.props.lagreAllData();
+      this.godkjennUnntaksperioder(data);
+    });
+  };
+
   videresendSoknad = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       const { saksnummer, tilForsiden } = this.props;
@@ -262,23 +293,13 @@ class Stegvelger extends Component {
   };
 
   byggLovvalgsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
-
-    this.props.oppdaterLovvalgperioder({
-      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-      tilleggbestemmelse: tilleggbestemmelse.hent(),
-      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-    });
+    const perioderStegState = this.hentPerioderStegState();
+    this.props.oppdaterLovvalgperioder(perioderStegState);
   };
 
   byggAnmodningsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
-
-    this.props.oppdaterAnmodningsPerioder({
-      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-      tilleggbestemmelse: tilleggbestemmelse.hent(),
-      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-    });
+    const perioderStegState = this.hentPerioderStegState();
+    this.props.oppdaterAnmodningsPerioder(perioderStegState);
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
@@ -325,6 +346,7 @@ class Stegvelger extends Component {
       byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       avvisUtpeking: this.avvisUtpeking,
+      lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
     };
 
     const { props } = this;
@@ -367,7 +389,7 @@ class Stegvelger extends Component {
       hjemmebase: props.hjemmebase,
     };
 
-    const stegMotor = new StegMotor(propsLight, props.stegMap);
+    const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
     // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
@@ -519,6 +541,7 @@ Stegvelger.propTypes = {
   lovvalgsbestemmelse: PT.string,
   maritimtarbeid: PT.arrayOf(PT.object),
   hjemmebase: PT.string,
+  forsteSteg: PT.string.isRequired,
 };
 
 Stegvelger.defaultProps = {

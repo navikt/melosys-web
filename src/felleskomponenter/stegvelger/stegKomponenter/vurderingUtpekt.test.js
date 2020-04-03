@@ -1,12 +1,12 @@
 import React from 'react';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Skjema from '../../skjema';
 
-import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
-import { VurderingNorgeUtpekt } from './vurderingNorgeUtpekt';
+import RegisterKontrollTreff from '../../registerkontrollTreff';
+import { VurderingUtpekt } from './vurderingUtpekt';
 
-describe('VurderingNorgeUtpekt', () => {
+describe('VurderingUtpekt', () => {
   let props = null;
 
   beforeEach(() => {
@@ -36,38 +36,38 @@ describe('VurderingNorgeUtpekt', () => {
   });
 
   it('viser advarsler fra kontroller', () => {
-    const vurderingNorgeUtpekt = shallow(<VurderingNorgeUtpekt {...props} />);
-    const registerKontrollTreff = vurderingNorgeUtpekt.find(RegisterKontrollTreff);
+    const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
+    const registerKontrollTreff = vurderingUtpekt.find(RegisterKontrollTreff);
 
     expect(registerKontrollTreff).toHaveLength(1);
     expect(registerKontrollTreff.props().vurderingBegrunnelser).toEqual(props.vurderingBegrunnelser);
   });
 
   it('viser artikkelen Norge er utpekt etter', () => {
-    const vurderingNorgeUtpekt = shallow(<VurderingNorgeUtpekt {...props} />);
-    const select = vurderingNorgeUtpekt.find(Skjema.Select);
+    const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
+    const select = vurderingUtpekt.find(Skjema.Select);
 
     expect(select).toHaveLength(1);
   });
 
   it('viser lovvalgsperioden Norge er utpekt for', () => {
-    const vurderingNorgeUtpekt = shallow(<VurderingNorgeUtpekt {...props} />);
-    const inputs = vurderingNorgeUtpekt.find(Skjema.Input);
+    const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
+    const inputs = vurderingUtpekt.find(Skjema.Input);
 
     expect(inputs).toHaveLength(2);
   });
 
   it('viser radiobuttons for godkjenning og avslag', () => {
     props.tilstand.utpekingGodkjent = true;
-    const vurderingNorgeUtpekt = shallow(<VurderingNorgeUtpekt {...props} />);
-    const radios = vurderingNorgeUtpekt.find(Nav.Radio);
+    const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
+    const radios = vurderingUtpekt.find(Nav.Radio);
 
     expect(radios).toHaveLength(2);
     expect(radios.first().props().checked).toBe(true);
   });
 
   it('viser en form som tar handleSubmit som onSubmit-prop', () => {
-    const vurderingAvslaaUtpeking = shallow(<VurderingNorgeUtpekt {...props} />);
+    const vurderingAvslaaUtpeking = shallow(<VurderingUtpekt {...props} />);
     const form = vurderingAvslaaUtpeking.find('form');
 
     expect(form.props().onSubmit).toBe(props.handleSubmit);
