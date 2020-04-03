@@ -210,6 +210,24 @@ describe('Lovvalgsperioder operations', () => {
       expect(store.getActions()).toMatchObject(expectedActions);
     });
 
+    it('lager OPPDATER_LOVVALGSPERIODER dersom lovvalgsland er valgt', () => {
+      const lovvalgsland = MKV.Koder.landkoder.DE;
+
+      const expectedActions = [
+        { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ lovvalgsland }] },
+      ];
+
+      const store = mockStore({
+        ...initialState,
+      });
+
+      const stegState = { lovvalgsland };
+
+      store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+      expect(store.getActions()).toMatchObject(expectedActions);
+    });
+
     it('lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom avklartfakta OMFATTES_I_LAND er et annet land enn Norge', () => {
       const expectedActions = [
         { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },

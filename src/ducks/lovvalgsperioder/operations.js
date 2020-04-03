@@ -197,7 +197,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
 
   const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
-  const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
+  const lovvalgsland = stegState.lovvalgsland || bestemLovvalgsland(stegState.lovvalgsbestemmelse);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
   const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
   const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
@@ -254,7 +254,11 @@ export function oppdaterLovvalgsperioderState(stegState) {
       const valgtLovvalg = finnValgteVilkar(alleLovvalgsvilkar);
       const lovvalgsPerioder = byggLovvalgsPerioderFraVilkaar(valgtLovvalg, stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
-    } else if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.unntakfrabestemmelse) {
+    } else if (
+      stegState.lovvalgsbestemmelse ||
+      stegState.tilleggbestemmelse ||
+      stegState.unntakfrabestemmelse ||
+      stegState.lovvalgsland) {
       const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {
