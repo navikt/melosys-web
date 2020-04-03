@@ -361,8 +361,7 @@ class Stegvelger extends Component {
       vurderUtpekingFom: props.vurderUtpekingFom,
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
-      erSoknadArbeidFlereLand: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
-      erSoknad: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      erSoknadArbeidFlereLand: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebase: props.hjemmebase,
     };
