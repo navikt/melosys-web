@@ -139,3 +139,11 @@ export const LoennetArbeidAntallLand = {
   ETT_LAND: 'ETT_LAND',
   FLERE_LAND: 'FLERE_LAND',
 };
+
+export const Opplysningskilder = {
+  TPS: 'TPS',
+  MEDL: 'MEDL',
+  UTBETAL: 'Utbetalingstjenesten',
+  AAREG_EREG: 'Aa-registeret og Enhetsregisteret',
+  INNTEKT: 'Inntektskomponenten',
+};

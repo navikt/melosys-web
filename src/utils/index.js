@@ -1,4 +1,4 @@
-import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set, debounce, memoize, uniqBy } from 'lodash';
+import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set, get, debounce, memoize, uniqBy } from 'lodash';
 
 import throttle from 'lodash.throttle';
 
@@ -31,6 +31,7 @@ export {
   toInteger as _toInteger,
   round as _round,
   uuid as _uuid,
+  get as _get,
   set as _set,
   debounce as _debounce,
   memoize as _memoize,

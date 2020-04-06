@@ -30,7 +30,7 @@ describe('behandlingsmeny', () => {
   });
 
   it('kaller handlere ved klikk på knapper', () => {
-    let behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
+    const behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
 
     behandlingsmeny.find('Knapp').forEach(knapp => knapp.simulate('click'));
 
@@ -40,11 +40,6 @@ describe('behandlingsmeny', () => {
     expect(props.visHenleggDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.visAvsluttSakSomBortfaltDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.apneTidligereBehandlinger).toHaveBeenCalledTimes(1);
-
-    props.redigerbart = false;
-    behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
-    behandlingsmeny.find('Knapp').forEach(knapp => knapp.simulate('click'));
-
     expect(props.visRevurderVedtakDialogHandle).toHaveBeenCalledTimes(1);
   });
 });

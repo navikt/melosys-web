@@ -148,6 +148,7 @@ const Registrering = props => {
               behandlingID={behandlingID}
               brevBestillingRedigerbart={redigerbart}
               brevBestillingRedigerbartIArtikkel13={redigerbart}
+              redigerbart={redigerbart}
             />
           </Nav.Column>
         </Nav.Row>

@@ -11,6 +11,7 @@ import SideOppsummering from '../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
 import Soknadpaneler from '../../felleskomponenter/soknadpaneler';
 import Stegvelger from '../../felleskomponenter/stegvelger';
+import { STEG } from '../../felleskomponenter/stegvelger/stegMotor/typer';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
 import { formSelectors } from '../../ducks/form';
@@ -47,6 +48,16 @@ const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
 };
 
+const hentForsteSteg = behandlingstype => {
+  switch (behandlingstype) {
+    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND:
+      return STEG.VURDER_UTPEKING;
+    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
+    default:
+      return STEG.INNGANG;
+  }
+};
+
 const Vurderutpeking = ({
   lastInnSaksopplysninger,
   match,
@@ -73,6 +84,7 @@ const Vurderutpeking = ({
   oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
+  sideDialogRedigerbart,
   resetSaksopplysninger,
   oppdaterBehandlingsgrunnlag,
   lagreVilkar,
@@ -102,6 +114,8 @@ const Vurderutpeking = ({
 
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
+  const forsteSteg = hentForsteSteg(behandlingstype);
+
   return (
     <div className="vurderutpeking">
       <Nav.Container fluid>
@@ -122,6 +136,7 @@ const Vurderutpeking = ({
                 begrunnelser={MKV.KTObjects.begrunnelser}
                 landkoder={MKV.KTObjects.landkoder}
                 tilForsiden={tilForsiden}
+                forsteSteg={forsteSteg}
               />
             }
             <Soknadpaneler
@@ -170,6 +185,7 @@ const Vurderutpeking = ({
               saksnummer={saksnummer}
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+              redigerbart={sideDialogRedigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -204,6 +220,7 @@ Vurderutpeking.propTypes = {
   oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  sideDialogRedigerbart: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -235,6 +252,7 @@ const mapStateToProps = state => ({
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
+  sideDialogRedigerbart: redigerbartSelectors.SidedialogRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),

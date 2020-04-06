@@ -213,6 +213,14 @@ describe('behandlingsgrunnlag reducer', () => {
         utenlandskIdent: '12345',
         medfolgendeFamilie: null,
         medfolgendeAndre: true,
+        overgangsregelbestemmelser: [
+          {
+            kode: 'FO_1408_1971_ART14_2_A',
+            term: 'Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a',
+          },
+        ],
+        norskeArbeidsgivere: [],
+        ytterligereInformasjon: 'fritekst',
       },
     };
 
@@ -352,6 +360,14 @@ describe('behandlingsgrunnlag reducer', () => {
             medfolgendeFamilie: [],
             medfolgendeAndre: null,
           },
+          overgangsregelbestemmelser: [
+            {
+              kode: 'FO_1408_1971_ART14_2_A',
+              term: 'Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a',
+            },
+          ],
+          norskeArbeidsgivere: [],
+          ytterligereInformasjon: 'fritekst',
         },
       },
     };

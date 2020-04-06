@@ -8,6 +8,7 @@ describe('SideDialogNotater', () => {
   beforeEach(() => {
     props = {
       saksnummer: '1',
+      redigerbart: true,
     };
   });
 

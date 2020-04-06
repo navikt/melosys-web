@@ -5,22 +5,23 @@ import { reduxForm, getFormValues } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
-import * as Skjema from '../../../felleskomponenter/skjema';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
+import * as Skjema from '../../skjema';
+import * as Validering from '../../skjema/validering';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
-import RegisterKontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
+import RegisterKontrollTreff from '../../registerkontrollTreff';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 
-import './vurderingNorgeUtpekt.css';
+import './vurderingUtpekt.css';
 
-export const VurderingNorgeUtpekt = ({
+export const VurderingUtpekt = ({
   vurderingBegrunnelser,
   slettData,
   oppdaterData,
@@ -29,6 +30,7 @@ export const VurderingNorgeUtpekt = ({
     harAvklaring,
     utpekingGodkjentFakta,
     lovvalgsbestemmelse,
+    lovvalgsland,
     utpekingGodkjent,
     utpekingIkkeGodkjent,
   },
@@ -37,6 +39,10 @@ export const VurderingNorgeUtpekt = ({
   lovvalgsperiode,
 }) => {
   useEffect(() => {
+    if (lovvalgsland) {
+      oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
+      oppdaterData(lagLovvalgsland(lovvalgsland));
+    }
     if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, utpekingGodkjentFakta));
     oppdaterData(konverterLovvalgsperiodeTilStegData(lovvalgsperiode));
@@ -70,9 +76,11 @@ export const VurderingNorgeUtpekt = ({
     }
   }, [formValues]);
 
+  const visLovvalgsland = lovvalgsland && lovvalgsland !== MKV.Koder.landkoder.NO;
+
   return (
     <form onSubmit={handleSubmit}>
-      <Nav.typo.Undertittel className="stegTittel">Vurder utpekingen</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel className="stegTittel">Vurder lovvalgsbeslutningen (A003)</Nav.typo.Undertittel>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           {
@@ -84,9 +92,18 @@ export const VurderingNorgeUtpekt = ({
           }
         </Nav.Column>
       </Nav.Row>
+      {
+        visLovvalgsland &&
+        <Nav.Row className="rad">
+          <Nav.Column xs="5">
+            <Nav.typo.Element>Lovvalgsland</Nav.typo.Element>
+            <Nav.typo.Normaltekst>{lovvalgsland}</Nav.typo.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          <Nav.typo.Element>Utenlandske myndigheter har utpekt Norge etter:</Nav.typo.Element>
+          <Nav.typo.Element>Grunnlag</Nav.typo.Element>
           <Skjema.Select
             feltNavn="lovvalgsbestemmelse"
             label=""
@@ -159,7 +176,7 @@ export const VurderingNorgeUtpekt = ({
   );
 };
 
-VurderingNorgeUtpekt.propTypes = {
+VurderingUtpekt.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),
   slettData: PT.func.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
@@ -168,6 +185,7 @@ VurderingNorgeUtpekt.propTypes = {
     harAvklaring: PT.bool.isRequired,
     utpekingGodkjentFakta: MPT.Avklartefakta,
     lovvalgsbestemmelse: PT.string,
+    lovvalgsland: PT.string,
     utpekingGodkjent: PT.bool.isRequired,
     utpekingIkkeGodkjent: PT.bool.isRequired,
   }).isRequired,
@@ -177,7 +195,7 @@ VurderingNorgeUtpekt.propTypes = {
   lovvalgsperiode: MPT.Periode.isRequired,
 };
 
-VurderingNorgeUtpekt.defaultProps = {
+VurderingUtpekt.defaultProps = {
   formValues: {},
   vurderingBegrunnelser: [],
 };
@@ -200,7 +218,7 @@ const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();
 };
 
-const VurderingNorgeUtpektForm = reduxForm({
+const VurderingUtpektForm = reduxForm({
   onSubmit: nesteSteg,
   form: KV.Form.VURDER_UTPEKING,
   enableReinitialize: false,
@@ -208,6 +226,6 @@ const VurderingNorgeUtpektForm = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.vurder_utpeking),
-})(VurderingNorgeUtpekt);
+})(VurderingUtpekt);
 
-export default connect(mapStateToProps)(VurderingNorgeUtpektForm);
+export default connect(mapStateToProps)(VurderingUtpektForm);

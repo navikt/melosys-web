@@ -1,10 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-
-import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import Knapperad from '../knapperad';
 
@@ -15,7 +12,6 @@ export const DialogboksRevurderVedtak = ({
   avbryt,
   ariaHideApp,
   spinner,
-  redigerbart,
 }) => (
   <Nav.Modal
     className="dialogboksRevurderVedtak"
@@ -31,7 +27,7 @@ export const DialogboksRevurderVedtak = ({
       bekreftTekst="BEKREFT"
       avbryt={avbryt}
       avbrytTekst="AVBRYT"
-      redigerbart={!redigerbart}
+      redigerbart
       spinner={spinner}
     />
   </Nav.Modal>
@@ -50,8 +46,4 @@ DialogboksRevurderVedtak.defaultProps = {
   spinner: false,
 };
 
-const mapStateToProps = state => ({
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-});
-
-export default connect(mapStateToProps)(DialogboksRevurderVedtak);
+export default DialogboksRevurderVedtak;

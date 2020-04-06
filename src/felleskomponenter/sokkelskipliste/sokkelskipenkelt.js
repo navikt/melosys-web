@@ -101,7 +101,7 @@ const SokkelSkipEnkelt = props => {
 
   const arbeidslandEndret = (land = {}) => {
     avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn, land.kode);
-    avklartefaktaEndretHandler(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land.kode, KV.Koder.BoolskAvklartfaktaType.SANN);
+    avklartefaktaEndretHandler(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land.kode, land.kode);
     avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, enhetNavn, land.term);
   };
 
