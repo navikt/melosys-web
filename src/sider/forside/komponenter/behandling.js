@@ -26,24 +26,11 @@ class Behandling extends Component {
     return true;
   };
 
-  gyldigeBehandlingstyper = [
-    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
-    MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
-    MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-    MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-    MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND,
-    MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL,
-    MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
-    MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
-    MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-  ];
-
   render() {
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
         <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
-        <p>Velg sakstype og behandlingstype for å få tildelt en sak.</p>
+        <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
         <form className="behandling__skjema" onSubmit={this.submitOgVideresend}>
           <Nav.Row>
             <Nav.Column xs="4">
@@ -54,10 +41,11 @@ class Behandling extends Component {
               </Skjema.Select>
             </Nav.Column>
             <Nav.Column xs="8">
-              <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
-                {MKV.KTObjects.behandlinger.behandlingstyper
-                  .filter(({ kode }) => this.gyldigeBehandlingstyper.includes(kode))
-                  .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
+              <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
+                {
+                  MKV.KTObjects.behandlinger.behandlingstema
+                    .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))
+                }
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
@@ -81,9 +69,10 @@ Behandling.defaultProps = {
 const mapStateToProps = () => ({
   initialValues: {
     sakstype: MKV.Koder.sakstyper.EU_EOS,
-    behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+    behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
 });
+
 const BehandlngForm = reduxForm({
   form: KV.Form.BEHANDLINGS_FORM,
   destroyOnUnmount: false,

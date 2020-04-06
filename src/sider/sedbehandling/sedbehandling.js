@@ -60,7 +60,6 @@ const SedBehandling = ({
   brevBestillingRedigerbartIArtikkel13,
   sideDialogRedigerbart,
   match,
-  behandlingstype,
   behandlingstema,
   redigerbart,
   fagsak,
@@ -95,12 +94,12 @@ const SedBehandling = ({
     };
   }, []);
 
-  const soknadIkkeYrkesaktiv = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV;
+  const ikkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
   useEffect(() => {
-    if (soknadIkkeYrkesaktiv) {
+    if (ikkeYrkesaktiv) {
       hentBehandlingsgrunnlag(behandlingID);
     }
-  }, [behandlingstype]);
+  }, [behandlingstema]);
 
   const oppdaterStatus = (_, behandlingsstatus) => {
     if (behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
@@ -121,9 +120,9 @@ const SedBehandling = ({
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              oppholdsland={soknadIkkeYrkesaktiv ? oppholdsland : []}
-              behandlingsgrunnlagPeriodeFom={soknadIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined}
-              behandlingsgrunnlagPeriodeTom={soknadIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined}
+              oppholdsland={ikkeYrkesaktiv ? oppholdsland : []}
+              behandlingsgrunnlagPeriodeFom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined}
+              behandlingsgrunnlagPeriodeTom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               renderBehandlingsmeny={() => <Behandlingsmeny
@@ -166,7 +165,6 @@ SedBehandling.propTypes = {
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   sideDialogRedigerbart: PT.bool.isRequired,
   match: PT.object.isRequired,
-  behandlingstype: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
@@ -206,7 +204,6 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   oppholdsland: behandlingsgrunnlagSelectors.OppholdsLandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),

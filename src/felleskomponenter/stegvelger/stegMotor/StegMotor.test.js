@@ -61,12 +61,7 @@ describe('Stegmotor', () => {
       STEG.ENDRET_PERIODE,
       STEG.YRKESAKTIVITET,
     ]).it('Starter med det oppgitte første steget %p', forsteSteg => {
-      const props = {
-        behandlingstype: {
-          kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-          term: MKV.Terms.behandlinger.behandlingstyper.SOEKNAD,
-        },
-      };
+      const props = {};
       const stegmotor = new StegMotor(props, stegMap, forsteSteg);
       const alleSteg = stegmotor.beregnAlleSteg();
 

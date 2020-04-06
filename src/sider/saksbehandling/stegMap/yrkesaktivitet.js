@@ -3,7 +3,6 @@ import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMot
 import VurderingYrkesaktivitet from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingYrkesaktivitet';
 import Yrkesgruppe from './yrkesgruppe';
 
-import MKV from '../../../melosyskodeverk';
 import * as KV from '../../../kodeverk';
 import { hentFakta } from '../../../regler/avklartefakta';
 
@@ -12,9 +11,8 @@ class Yrkesaktivitet extends Steg {
     super(propsLight, stegPosisjon);
 
     const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
-    const { erSoknad, behandlingstype } = propsLight;
-    const erNyVurdering = KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-    const erSoknadEllerSokkelSkip = erSoknad || erSokkelEllerSkip || erNyVurdering;
+    const { erSoknad } = propsLight;
+    const erSoknadEllerSokkelSkip = erSoknad || erSokkelEllerSkip;
 
     this.kriterier = [
       {

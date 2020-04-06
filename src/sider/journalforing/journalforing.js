@@ -403,9 +403,6 @@ class Journalforing extends Component {
       erProd,
     } = this.props;
 
-    const behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
-      .filter(({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
-
     let behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
       kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER ||
       kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG ||
@@ -472,7 +469,6 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
-                        behandlingstyper={behandlingstyper}
                         behandlingstemaer={behandlingstemaer}
                         submitJournalforing={this.submitJournalforing}
                         avbrytJournalforing={this.avbrytJournalforing}

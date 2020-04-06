@@ -28,7 +28,6 @@ const JournalforingForm = props => {
     hentOgVisBruker,
     fagsakListe,
     hentOgVisRepresentant,
-    behandlingstyper,
     behandlingstemaer,
     formValues,
     settFeltInnhold,
@@ -52,7 +51,6 @@ const JournalforingForm = props => {
       <Mui.Undertittel tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
       <FagsakVelger
         sakstyper={MKV.KTObjects.sakstyper.filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)}
-        behandlingstyper={behandlingstyper}
         behandlingstemaer={behandlingstemaer}
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
@@ -81,7 +79,6 @@ JournalforingForm.propTypes = {
   formValues: PT.object,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
-  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,

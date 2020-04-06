@@ -48,11 +48,11 @@ const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
 };
 
-const hentForsteSteg = behandlingstype => {
-  switch (behandlingstype) {
-    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND:
+const hentForsteSteg = behandlingstema => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return STEG.VURDER_UTPEKING;
-    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     default:
       return STEG.INNGANG;
   }
@@ -114,7 +114,7 @@ const Vurderutpeking = ({
 
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
-  const forsteSteg = hentForsteSteg(behandlingstype);
+  const forsteSteg = hentForsteSteg(behandlingstema);
 
   return (
     <div className="vurderutpeking">

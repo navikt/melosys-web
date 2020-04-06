@@ -7,13 +7,17 @@ import * as MPT from '../../../proptypes/';
 import EnkeltSak from './enkeltSak';
 import KnyttTilSak from './knyttTilSak';
 import OpprettSak, { OpprettSakTittel } from './opprettSak';
-
+import MKV from '../../../melosyskodeverk';
 import { JOURNALFORING_HENSIKT } from '../../../constants';
+
 import './fagsakVelger.css';
+
+const behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
+  .filter(({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
 
 const FagsakVelger = props => {
   const {
-    sakstyper, behandlingstyper, behandlingstemaer, fagsakListe, settJournalforingHensikt,
+    sakstyper, behandlingstemaer, fagsakListe, settJournalforingHensikt,
   } = props;
   const notifier = async saksnummer => {
     const hensikt = (saksnummer === '-1') ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
@@ -46,7 +50,6 @@ const FagsakVelger = props => {
 
 FagsakVelger.propTypes = {
   sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
-  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
