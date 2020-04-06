@@ -332,7 +332,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 data-cy="unntakArtikkel"
               >
                 <option key={uuid()} value="" >Velg...</option>
-                { MKV.Kodekombinasjoner.alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+                { MKV.Kodekombinasjoner.unntaksbestemmelser.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>

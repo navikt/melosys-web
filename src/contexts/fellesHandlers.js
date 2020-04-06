@@ -1,39 +1,25 @@
-import React, { useState, Fragment } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { stringify } from 'qs';
-import loadable from '@loadable/component';
 import PT from 'prop-types';
 
-import * as Utils from './utils';
-import * as Api from './services/api';
+import * as Utils from '../utils';
+import * as Api from '../services/api';
 
-import Modals from './modals';
+import { fagsakSelectors } from '../ducks/fagsaker';
+import { datalastingOperations } from '../ducks/datalasting';
+import { behandlingsgrunnlagOperations } from '../ducks/behandlingsgrunnlag';
+import { oppgaverOperations } from '../ducks/oppgaver';
+import { vedtakOperations } from '../ducks/vedtak';
+import { saksopplysningerOperations } from '../ducks/saksopplysninger';
+import { behandlingerOperations } from '../ducks/behandlinger';
+import { modalerOperations } from '../ducks/modaler';
 
-import { oppgaverOperations } from './ducks/oppgaver';
-import { behandlingsgrunnlagOperations } from './ducks/behandlingsgrunnlag';
-import { datalastingOperations } from './ducks/datalasting';
-import { vedtakOperations } from './ducks/vedtak';
-import { saksopplysningerOperations } from './ducks/saksopplysninger';
-import { fagsakSelectors } from './ducks/fagsaker';
-import { behandlingerOperations } from './ducks/behandlinger';
-import { modalerOperations } from './ducks/modaler';
+const FellesHandlersContext = React.createContext({});
+export default FellesHandlersContext;
 
-const SideLoadingStatus = <div>Laster inn siden...</div>;
-
-const UkjentSideLoadable = loadable(() => import('./sider/ukjentSide'), { fallback: SideLoadingStatus });
-const ForsideLoadable = loadable(() => import('./sider/forside'), { fallback: SideLoadingStatus });
-const SokLoadable = loadable(() => import('./sider/sok'), { fallback: SideLoadingStatus });
-const SaksbehandlingLoadable = loadable(() => import('./sider/saksbehandling'), { fallback: SideLoadingStatus });
-const JournalforingLoadable = loadable(() => import('./sider/journalforing'), { fallback: SideLoadingStatus });
-const RegistreringUnntaksperioderLoadable = loadable(() => import('./sider/registrering/unntaksperioder'), { fallback: SideLoadingStatus });
-const RegistreringAnmodningunntakLoadable = loadable(() => import('./sider/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
-const SedBehandlingLoadable = loadable(() => import('./sider/sedbehandling'), { fallback: SideLoadingStatus });
-const OpprettNySakLoadable = loadable(() => import('./sider/opprettnysak'), { fallback: SideLoadingStatus });
-const VurderUtpekingLoadable = loadable(() => import('./sider/vurderutpeking'), { fallback: SideLoadingStatus });
-
-const Routing = ({
-  location,
+const FellesHandlersProviderUnconnected = ({
+  children,
   history,
   lagreAllData,
   hentOppgaveOversikt,
@@ -59,8 +45,7 @@ const Routing = ({
   visOppfriskningBlokkererInnhold,
 }) => {
   const [venterPaRevurderVedtak, setVenterPaRevurderVedtak] = useState(false);
-
-  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(window.location.href, 'behandlingID'));
 
   const skjulOppfriskBekreftelse = () => {
     skjulOppfriskDialogHandle();
@@ -116,7 +101,7 @@ const Routing = ({
       const res = await Api.Saksflyt.Vedtak.revurder(behandlingID);
       const { behandlingID: nyBehandlingID } = res;
 
-      history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
+      history.replace(`${window.location.href}?${stringify({ behandlingID: nyBehandlingID })}`);
       lastInnSaksopplysninger(saksnummer, nyBehandlingID);
     } catch (e) {
       Utils.logger.error(e);
@@ -180,39 +165,24 @@ const Routing = ({
     tilOpprettNySak,
     visRevurderVedtakDialogHandle,
     visValideringModalDialogHandle,
+    revurderVedtak,
+    henleggHandle,
+    avslaaSoknadHandle,
+    avsluttSakSomBortfalt,
+    hentBehandlingStatus,
+    lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+    venterPaRevurderVedtak,
   };
 
   return (
-    <Fragment>
-      <Switch location={location}>
-        <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
-        <Route exact path="/sok/:fnr" component={SokLoadable} />
-        <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
-        <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/sedbehandling/:snr" render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/saksbehandling/:snr" render={props => <SaksbehandlingLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/journalforing/:journalpostID/:oppgaveID" render={props => <JournalforingLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/opprettnysak" render={props => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
-        <Route path="/vurderutpeking/:snr" render={props => <VurderUtpekingLoadable {...props} {...fellesHandlers} />} />
-        <Route component={UkjentSideLoadable} />
-      </Switch>
-      <Modals
-        skjulOppfriskBekreftelseOgNavigerTilForside={skjulOppfriskBekreftelseOgNavigerTilForside}
-        hentBehandlingStatus={hentBehandlingStatus}
-        lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
-        henleggHandle={henleggHandle}
-        avslaaSoknadHandle={avslaaSoknadHandle}
-        avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-        revurderVedtak={revurderVedtak}
-        venterPaRevurderVedtak={venterPaRevurderVedtak}
-        skjulOppfriskBekreftelse={skjulOppfriskBekreftelse}
-      />
-    </Fragment>
+    <FellesHandlersContext.Provider value={fellesHandlers}>
+      {children}
+    </FellesHandlersContext.Provider>
   );
 };
 
-Routing.propTypes = {
-  location: PT.object.isRequired,
+FellesHandlersProviderUnconnected.propTypes = {
+  children: PT.node.isRequired,
   history: PT.object.isRequired,
   lagreAllData: PT.func.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
@@ -238,7 +208,7 @@ Routing.propTypes = {
   visOppfriskningBlokkererInnhold: PT.func.isRequired,
 };
 
-Routing.defaultProps = {
+FellesHandlersProviderUnconnected.defaultProps = {
   saksnummer: undefined,
 };
 
@@ -270,4 +240,4 @@ const mapDispatchToProps = dispatch => ({
   visOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.visOppfriskningBlokkererInnhold()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Routing));
+export const FellesHandlersProvider = connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected);

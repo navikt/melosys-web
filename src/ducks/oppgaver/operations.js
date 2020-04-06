@@ -12,7 +12,7 @@ import MKV from '../../melosyskodeverk';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
-import * as Utils from '../../utils';
+import * as Routing from '../../routing';
 
 /**
  * Hent Soknad
@@ -49,7 +49,7 @@ export const sendBehandlingsOppgave = async form => {
   const { saksnummer, behandlingID, behandlingstype } = response;
   if (!saksnummer) { return false; }
 
-  return Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype);
+  return Routing.lagUrl(saksnummer, behandlingID, behandlingstype);
 };
 
 export const sendJournalOppgave = async fagomrade => {
