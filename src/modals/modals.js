@@ -2,17 +2,18 @@ import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
-import { modalerOperations, modalerSelectors } from './ducks/modaler';
-import { vedtakSelectors } from './ducks/vedtak';
-import { utpekSelectors } from './ducks/utpek';
+import { FellesHandlersContext } from '../contexts';
+import { modalerOperations, modalerSelectors } from '../ducks/modaler';
+import { vedtakSelectors } from '../ducks/vedtak';
+import { utpekSelectors } from '../ducks/utpek';
 
-import DialogboksOppfriskSak from './felleskomponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from './felleskomponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from './felleskomponenter/dialogboks/dialogboksHenlegg';
-import DialogboksAvsluttSakSomBortfalt from './felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
-import DialogboksAvslagSoknad from './felleskomponenter/dialogboks/dialogboksAvslagSoknad';
-import DialogboksRevurderVedtak from './felleskomponenter/dialogboks/dialogboksRevurderVedtak';
-import DialogboksValidering from './felleskomponenter/dialogboks/dialogboksValidering';
+import DialogboksOppfriskSak from '../felleskomponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../felleskomponenter/dialogboks/dialogboksVenter';
+import DialogboksHenlegg from '../felleskomponenter/dialogboks/dialogboksHenlegg';
+import DialogboksAvsluttSakSomBortfalt from '../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
+import DialogboksAvslagSoknad from '../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
+import DialogboksRevurderVedtak from '../felleskomponenter/dialogboks/dialogboksRevurderVedtak';
+import DialogboksValidering from '../felleskomponenter/dialogboks/dialogboksValidering';
 
 const Modals = ({
   oppfriskningBlokkererInnhold,
@@ -146,4 +147,11 @@ const mapDispatchToProps = dispatch => ({
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Modals);
+const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
+
+export default () => (
+  <FellesHandlersContext.Consumer>
+    { fellesHandlers => <ConnectedModals {...fellesHandlers} />}
+  </FellesHandlersContext.Consumer>
+);
+

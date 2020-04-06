@@ -1,5 +1,5 @@
-import { uniqBy } from 'lodash';
 import MKV from './filtrertmelosyskodeverk';
+import * as Utils from '../utils/';
 
 export const alleLovvalg = [
   ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
@@ -24,7 +24,7 @@ const bestemmelserIkkeRelevanteForUnntak = [
 
 const kodeverkComparator = ({ kode: k1 }, { kode: k2 }) => k1.localeCompare(k2);
 
-export const unntaksbestemmelser = uniqBy(
+export const unntaksbestemmelser = Utils._uniqBy(
   [...alleLovvalg].filter(({ kode }) => !bestemmelserIkkeRelevanteForUnntak.includes(kode)),
   ({ kode }) => kode
 ).sort(kodeverkComparator);

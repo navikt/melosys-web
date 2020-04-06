@@ -13,6 +13,8 @@ import routerHistory from './history';
 import Routing from './routing';
 import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 import { unregister } from './registerServiceWorker';
+import { FellesHandlersProvider } from './contexts';
+import Modals from './modals';
 
 const SideLoadingFailMessage = 'Beklager, kunne ikke laste inn siden.';
 
@@ -25,7 +27,10 @@ ReactDOM.render(
     <ConnectedRouter history={routerHistory}>
       <App>
         <ErrorBoundary message={SideLoadingFailMessage}>
-          <Routing />
+          <FellesHandlersProvider history={routerHistory}>
+            <Routing />
+            <Modals />
+          </FellesHandlersProvider>
         </ErrorBoundary>
       </App>
     </ConnectedRouter>
