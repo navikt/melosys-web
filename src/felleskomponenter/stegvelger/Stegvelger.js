@@ -313,7 +313,6 @@ class Stegvelger extends Component {
     const { behandlingID } = this.props;
 
     const utfyltData = {
-      behandlingstype: data.behandlingstype || null,
       begrunnelseKode: data.begrunnelseKode || null,
       fritekst: data.fritekst || null,
     };
