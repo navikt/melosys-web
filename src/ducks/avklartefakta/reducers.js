@@ -94,7 +94,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[BOSTEDSLAND], BOSTEDSLAND),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[SOKKEL_ELLER_SKIP], SOKKEL_ELLER_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEIDSLAND], ARBEIDSLAND),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND], ARBEIDSLAND),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND_TYPE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_SOKKEL_SKIP], ARBEID_SOKKEL_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AARSAK_ENDRING_PERIODE], AARSAK_ENDRING_PERIODE),
