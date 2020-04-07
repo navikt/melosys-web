@@ -372,6 +372,16 @@ export const ErUtlMyndUtpektSegSelvSelector = createSelector(
   behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
 );
 
+export const ErArbeidEttLand = createSelector(
+  BehandlingstemaKodeSelector,
+  behandlingstema => [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+  ].includes(behandlingstema)
+);
+
 export const ErRegistreringAvUnntaksperioderSelector = createSelector(
   ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
   ErRegistreringUnntakNorskTrygdOvrigeSelector,

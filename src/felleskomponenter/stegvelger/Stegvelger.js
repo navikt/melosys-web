@@ -384,7 +384,7 @@ class Stegvelger extends Component {
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      erSoknad: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebase: props.hjemmebase,
     };
@@ -542,6 +542,7 @@ Stegvelger.propTypes = {
   maritimtarbeid: PT.arrayOf(PT.object),
   hjemmebase: PT.string,
   forsteSteg: PT.string.isRequired,
+  erArbeidEttLand: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -594,6 +595,7 @@ const mapStateToProps = state => ({
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
 });
 
 /* eslint no-alert:off */
