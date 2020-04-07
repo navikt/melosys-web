@@ -362,6 +362,7 @@ class Stegvelger extends Component {
       bostedsland: props.bostedsland,
       landkoder: MKV.KTObjects.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
+      behandlingstema: props.oppsummering.behandlingstema,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       lovvalgsbestemmelse: props.lovvalgsbestemmelse,
