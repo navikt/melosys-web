@@ -1,6 +1,5 @@
 import StegMotor from './StegMotor';
 
-import MKV from '../../../melosyskodeverk';
 import { STEG } from './typer';
 import Steg from './steg';
 
