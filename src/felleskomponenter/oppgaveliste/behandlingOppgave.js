@@ -54,6 +54,7 @@ const BehandlingOppgave = ({ sak }) => {
     erUnderOppdatering,
     behandlingsstatus,
     behandlingstema,
+    behandlingstype,
     registrertDato,
     endretDato,
     svarFrist,
@@ -118,10 +119,10 @@ const BehandlingOppgave = ({ sak }) => {
                 <Nav.Row>
                   <dl className="behandlingOppgave__meta">
                     <Nav.Column xs="12" md={kolonneBredder[0]}>
-                      <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
+                      <dt className="behandlingOppgave__meta__term">Behandlingstype:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[2]}>
                       <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
@@ -135,16 +136,27 @@ const BehandlingOppgave = ({ sak }) => {
                 <Nav.Row>
                   <dl className="behandlingOppgave__meta">
                     <Nav.Column xs="12" md={kolonneBredder[0]}>
-                      <dt className="behandlingOppgave__meta__term">Land:</dt>
+                      <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[2]}>
                       <dt className="behandlingOppgave__meta__term">Opprettelsesdato:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[3]}>
                       <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={registrertDato} /> || '(ukjent)'}</dd>
+                    </Nav.Column>
+                  </dl>
+                </Nav.Row>
+
+                <Nav.Row>
+                  <dl className="behandlingOppgave__meta">
+                    <Nav.Column xs="12" md={kolonneBredder[0]}>
+                      <dt className="behandlingOppgave__meta__term">Land:</dt>
+                    </Nav.Column>
+                    <Nav.Column xs="12" md={kolonneBredder[1]}>
+                      <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>
