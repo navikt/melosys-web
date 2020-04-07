@@ -4,7 +4,7 @@ import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
-import * as Utils from '../../utils';
+import * as Routing from '../../routing';
 
 import Behandling from './behandling';
 import PanelHeader from '../panelHeader/panelHeader';
@@ -69,7 +69,7 @@ const Fagsak = ({ sak }) => {
         <Nav.Row className="fagsak__behandlinger">
           {
             behandlingOversikter.map(behandling =>
-              <Behandling key={behandling.behandlingID} behandling={behandling} link={Utils.url.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)} />)
+              <Behandling key={behandling.behandlingID} behandling={behandling} link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)} />)
           }
         </Nav.Row>
       </Nav.Container>

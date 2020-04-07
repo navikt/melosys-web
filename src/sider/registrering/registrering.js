@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import MKV from '../../melosyskodeverk';
 
 import * as Utils from '../../utils/';
+import * as Routing from '../../routing/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 
@@ -100,7 +101,7 @@ const Registrering = props => {
   };
 
   const apneTidligereBehandlinger = () => {
-    Utils.url.nyFane(`sok/${person.fnr}`);
+    Routing.nyFane(`sok/${person.fnr}`);
   };
 
   if (Utils._isNil(redigerbart)) return null;

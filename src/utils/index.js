@@ -1,4 +1,4 @@
-import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set, get, debounce, memoize } from 'lodash';
+import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set, get, debounce, memoize, uniqBy } from 'lodash';
 
 import throttle from 'lodash.throttle';
 
@@ -8,7 +8,6 @@ import * as streng from './streng';
 import * as logger from './logger';
 import * as queryString from './queryString';
 import * as yup from './yup';
-import * as url from './url';
 
 import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
@@ -21,7 +20,6 @@ export {
   logger,
   queryString,
   yup,
-  url,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
   isNil as _isNil,
@@ -37,4 +35,5 @@ export {
   set as _set,
   debounce as _debounce,
   memoize as _memoize,
+  uniqBy as _uniqBy,
 };

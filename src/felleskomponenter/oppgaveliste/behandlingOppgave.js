@@ -7,7 +7,7 @@ import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
-import * as Utils from '../../utils';
+import * as Routing from '../../routing';
 
 import PanelHeader from '../panelHeader/panelHeader';
 import EnkeltDato from '../datoOmrade/enkeltDato';
@@ -61,7 +61,7 @@ const BehandlingOppgave = ({ sak }) => {
 
   const { fom, tom } = periode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
-  const link = Utils.url.lagUrl(saksnummer, behandlingID, behandlingstema.kode);
+  const link = Routing.lagUrl(saksnummer, behandlingID, behandlingstema.kode);
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 

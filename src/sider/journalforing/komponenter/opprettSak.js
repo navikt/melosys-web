@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as Nav from '../../../utils/navFrontend';
@@ -10,6 +9,7 @@ import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
 import { formSelectors } from '../../../ducks/form';
+import MKV from '../../../melosyskodeverk';
 
 import LandVelger from '../../../felleskomponenter/skjema/landvelger';
 import './opprettSak.css';
@@ -23,11 +23,7 @@ const OpprettFagsak = props => {
   const { sakstyper, behandlingstemaer } = props;
   const { journalforingSkjemaVerdier } = props;
   const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
-  const alleLovvalg = [
-    ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
-    ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
-    ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
-  ];
+
   const art16 = [
     KV.kodeTilObjekt(
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
@@ -38,6 +34,7 @@ const OpprettFagsak = props => {
       MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
     ),
   ];
+
   const skalViseSoknadsperiodeOgLand = behandlingstema => ![
     MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
@@ -78,7 +75,7 @@ const OpprettFagsak = props => {
               <Nav.Row className="">
                 <Nav.Column xs="12">
                   <Skjema.Select label="Artikkelen det søkes unntak fra:" feltNavn="journalforingUnntakFraLovvalgsbestemmelse">
-                    { alleLovvalg.map(kodeObjekt => <option key={Utils._uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+                    { MKV.Kodekombinasjoner.unntaksbestemmelser.map(kodeObjekt => <option key={Utils._uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
                   </Skjema.Select>
                 </Nav.Column>
               </Nav.Row>

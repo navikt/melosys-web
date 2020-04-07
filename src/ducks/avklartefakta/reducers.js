@@ -59,6 +59,7 @@ export default function reducer(state = initialState, action) {
         ARBEIDSLAND,
         ARBEID_SOKKEL_SKIP,
         AARSAK_ENDRING_PERIODE,
+        MARGINALT_ARBEID,
       } = MKV.Koder.avklartefaktatyper;
 
       const {
@@ -67,7 +68,6 @@ export default function reducer(state = initialState, action) {
         avklartefaktaKoder: {
           AKTIVITET_I_NORGE,
           ARBEID_UTFORES_I_OPPGITT_LAND,
-          MARGINALT_ARBEID,
           ARBEIDSGIVERS_FORRETNINGSSTED,
           OMFATTES_I_NORGE,
           OMFATTES_I_LAND,
@@ -87,7 +87,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESGRUPPE], YRKESGRUPPE),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESAKTIVITET], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AKTIVITET_I_NORGE], null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[MARGINALT_ARBEID], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[MARGINALT_ARBEID], MARGINALT_ARBEID),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEIDSGIVERS_FORRETNINGSSTED], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[OMFATTES_I_NORGE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[OMFATTES_I_LAND], null),
