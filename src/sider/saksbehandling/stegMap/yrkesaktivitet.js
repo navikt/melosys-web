@@ -50,6 +50,7 @@ class Yrkesaktivitet extends Steg {
     this.komponent = VurderingYrkesaktivitet;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
+      erSoknadArbeidFlereLand: _propsLight.erSoknadArbeidFlereLand,
     });
     this.beregnRelevantUI = _propsLight => {
       const yrkesaktivitet = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta);
