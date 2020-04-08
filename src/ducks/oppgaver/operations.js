@@ -37,11 +37,9 @@ export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
 };
 
 export const sendBehandlingsOppgave = async data => {
-  const { sakstype, behandlingstema: valgtBehandlingstema } = data;
-  if (!sakstype) { return false; }
+  const { behandlingstema: valgtBehandlingstema } = data;
 
   const oppgave = {
-    sakstype,
     behandlingstema: valgtBehandlingstema,
   };
 

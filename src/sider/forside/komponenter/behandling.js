@@ -30,16 +30,9 @@ class Behandling extends Component {
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
         <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
-        <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
+        <p>Velg behandlingstema for å få tildelt en sak.</p>
         <form className="behandling__skjema" onSubmit={this.submitOgVideresend}>
           <Nav.Row>
-            <Nav.Column xs="4">
-              <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
-                {MKV.KTObjects.sakstyper
-                  .filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)
-                  .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
-              </Skjema.Select>
-            </Nav.Column>
             <Nav.Column xs="8">
               <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
                 {
@@ -68,7 +61,6 @@ Behandling.defaultProps = {
 
 const mapStateToProps = () => ({
   initialValues: {
-    sakstype: MKV.Koder.sakstyper.EU_EOS,
     behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
 });
