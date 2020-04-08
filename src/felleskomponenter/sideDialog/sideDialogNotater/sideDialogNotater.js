@@ -105,31 +105,34 @@ const SideDialogNotater = ({
 
   return (
     <Nav.Panel>
-      <div className="notater">
-        {
-          notater
-            .sort(sortNotaterByOpprettetDato)
-            .map(notat => {
-              const overskrift = lagNotatOverskrift(notat.behandlingstypeKode, notat.behandlingstemaKode);
-              const onUpdate = tekst => oppdaterNotat(notat.notatId, tekst);
+      {
+        notater.length > 0 &&
+        <div className="notater">
+          {
+            notater
+              .sort(sortNotaterByOpprettetDato)
+              .map(notat => {
+                const overskrift = lagNotatOverskrift(notat.behandlingstypeKode, notat.behandlingstemaKode);
+                const onUpdate = tekst => oppdaterNotat(notat.notatId, tekst);
 
-              return (
-                <Notat
-                  key={Utils._uuid()}
-                  redigerbart={notat.redigerbar}
-                  tekst={notat.tekst}
-                  opprettetDato={notat.registrertDato}
-                  endretDato={notat.endretDato}
-                  forfatter={notat.registrertAvNavn}
-                  onUpdate={onUpdate}
-                  overskrift={overskrift}
-                  maksTekstLengde={maksTekstLengde}
-                />
-              );
-            })
-        }
-      </div>
-      <div className="leggTilNotat">
+                return (
+                  <Notat
+                    key={Utils._uuid()}
+                    redigerbart={notat.redigerbar}
+                    tekst={notat.tekst}
+                    opprettetDato={notat.registrertDato}
+                    endretDato={notat.endretDato}
+                    forfatter={notat.registrertAvNavn}
+                    onUpdate={onUpdate}
+                    overskrift={overskrift}
+                    maksTekstLengde={maksTekstLengde}
+                  />
+                );
+              })
+          }
+        </div>
+      }
+      <div>
         {
           leggTilNotatDialogSynlig &&
           <Fragment>
