@@ -88,6 +88,10 @@ class Yrkesaktivitet extends Steg {
   static erArbeidstakerOgSelvstendigNaeringsdrivende = avklartefakta => (
     Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG)
   )
+
+  static erOffentligTjenestemann = avklartefakta => (
+    Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING)
+  )
 }
 
 export default Yrkesaktivitet;

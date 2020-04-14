@@ -142,9 +142,11 @@ export const VurderingArbeidsmonster = props => {
     aktivitetINorge,
     aktivitetINorgeNodvendig,
     erYrkesaktivitetAntallLandNodvendig,
+    erYrkesAktivitetOffentligNodvendig,
     harAvklaring,
     yrkesaktivitet,
     loennetArbeidAntallLandFakta,
+    offentligArbeidAntallLandFakta,
   } = tilstand;
 
   const loennetArbeidEndretHandler = avklartLoennetArbeid => {
@@ -153,6 +155,10 @@ export const VurderingArbeidsmonster = props => {
     } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
       slettData(slettLovvalgsbestemmelse());
     }
+  };
+
+  const offentligArbeidEndretHandler = avklartOffentligArbeid => {
+    console.log(avklartOffentligArbeid)
   };
 
   const aktivitetINorgeEndretHandler = avklartAktivitetINorge => {
@@ -200,6 +206,21 @@ export const VurderingArbeidsmonster = props => {
     { label: 'Lønnet arbeid i to eller flere land (13.1)', type: KV.Koder.LoennetArbeidAntallLand.FLERE_LAND },
   ];
 
+  const offentligArbeidValg = [
+    {
+      label: 'Offentlig tjeneste i Norge og annen virksomhet (13.4)',
+      type: KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET,
+    },
+    {
+      label: 'Offentlig tjeneste i et annet land og annen virksomhet (13.4)',
+      type: KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET,
+    },
+    {
+      label: 'Offentlig tjeneste i to eller flere land og annen virksomhet (13.1)',
+      type: KV.Koder.OffentligArbeidAntallLand.FLERE_LAND_OG_ANNEN_VIRKSOMHET,
+    },
+  ];
+
   return (
     <div className="vurderingArbeidsmonster">
       <Nav.typo.Undertittel>Vurder aktiviteten i de ulike landene</Nav.typo.Undertittel>
@@ -222,6 +243,19 @@ export const VurderingArbeidsmonster = props => {
             oppdaterData={oppdaterData}
             slettData={slettData}
             onChange={loennetArbeidEndretHandler}
+          />
+        }
+        {
+          erYrkesAktivitetOffentligNodvendig &&
+          <EnkeltAvklartfakta
+            redigerbart={redigerbart}
+            avklartfakta={offentligArbeidAntallLandFakta}
+            avklartfaktaKode={KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND}
+            avklartefaktaTyper={offentligArbeidValg}
+            tittel="Vurder aktivitet"
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+            onChange={offentligArbeidEndretHandler}
           />
         }
         {
@@ -258,7 +292,9 @@ VurderingArbeidsmonster.propTypes = {
     harAvklaring: PT.bool,
     yrkesaktivitet: PT.string.isRequired,
     erYrkesaktivitetAntallLandNodvendig: PT.bool.isRequired,
+    erYrkesAktivitetOffentligNodvendig: PT.bool.isRequired,
     loennetArbeidAntallLandFakta: MPT.Avklartefakta,
+    offentligArbeidAntallLandFakta: MPT.Avklartefakta,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
 };

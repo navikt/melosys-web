@@ -14,9 +14,12 @@ class Arbeidsmonster extends Steg {
     super(propsLight, stegPosisjon);
     const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, propsLight.avklartefakta);
     const loennetArbeidAntallLandFakta = hentFakta(KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND, propsLight.avklartefakta);
+    const offentligArbeidAntallLandFakta = hentFakta(KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND, propsLight.avklartefakta);
     const erArbeidstaker = Yrkesaktivitet.erArbeidstaker(propsLight.avklartefakta);
     const erSelvstendigNaeringsdrivende = Yrkesaktivitet.erSelvstendigNaeringsdrivende(propsLight.avklartefakta);
     const erArbeidstakerOgSelvstendigNaeringsdrivende = Yrkesaktivitet.erArbeidstakerOgSelvstendigNaeringsdrivende(propsLight.avklartefakta);
+    const erOffentligTjenestemann = Yrkesaktivitet.erOffentligTjenestemann(propsLight.avklartefakta);
+    const offentligArbeidIFlereLand = hentFaktaVerdi(offentligArbeidAntallLandFakta) === KV.Koder.OffentligArbeidAntallLand.FLERE_LAND_OG_ANNEN_VIRKSOMHET;
     const loennetArbeidIFlereLand = hentFaktaVerdi(loennetArbeidAntallLandFakta) === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND;
     const loennetArbeidIEttLand = hentFaktaVerdi(loennetArbeidAntallLandFakta) === KV.Koder.LoennetArbeidAntallLand.ETT_LAND;
     const aktivitetNorgeOver25Prosent = hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT;
@@ -25,8 +28,11 @@ class Arbeidsmonster extends Steg {
     this.kriterier = [
       {
         exec: () => (
-          (aktivitetINorge && aktivitetNorgeUnder25Prosent && erArbeidstaker) ||
-          (loennetArbeidIFlereLand && aktivitetNorgeUnder25Prosent)
+          aktivitetNorgeUnder25Prosent && (
+            (aktivitetINorge && erArbeidstaker) ||
+            loennetArbeidIFlereLand ||
+            offentligArbeidIFlereLand
+          )
         ),
         nesteSteg: STEG.FORRETNINGSSTED,
       },
@@ -41,7 +47,7 @@ class Arbeidsmonster extends Steg {
       {
         exec: () => (
           aktivitetNorgeOver25Prosent &&
-          erArbeidstaker
+          (erArbeidstaker || offentligArbeidIFlereLand)
         ),
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
@@ -74,12 +80,16 @@ class Arbeidsmonster extends Steg {
       const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);
       const finnesLandMedVesentligArbeidOgNorgeErValgt = landMedVesentligArbeid.length > 1 && erNorgeValgt;
       const aktivitetINorgeNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
-        (erArbeidstakerOgSelvstendigNaeringsdrivende ? loennetArbeidIFlereLand : true);
+        (erArbeidstakerOgSelvstendigNaeringsdrivende ? loennetArbeidIFlereLand : true) &&
+        (erOffentligTjenestemann ? offentligArbeidIFlereLand : true);
       const erYrkesaktivitetAntallLandNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
         erArbeidstakerOgSelvstendigNaeringsdrivende;
+      const erYrkesAktivitetOffentligNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
+        erOffentligTjenestemann;
       const harAvklaring = landMedVesentligArbeid.length > 0 &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
-        (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidIEttLand || loennetArbeidIFlereLand) : true);
+        (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidIEttLand || loennetArbeidIFlereLand) : true) &&
+        (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
 
       const yrkesaktivitet = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta));
 
@@ -92,7 +102,9 @@ class Arbeidsmonster extends Steg {
         harAvklaring,
         yrkesaktivitet,
         erYrkesaktivitetAntallLandNodvendig,
+        erYrkesAktivitetOffentligNodvendig,
         loennetArbeidAntallLandFakta,
+        offentligArbeidAntallLandFakta,
       });
     };
     this.handlers = {
