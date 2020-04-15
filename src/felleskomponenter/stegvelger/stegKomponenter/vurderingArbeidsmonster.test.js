@@ -17,6 +17,7 @@ describe('VurderingVurderarbeidsland', () => {
         aktivitetINorgeNodvendig: true,
         yrkesaktivitet: '',
         erYrkesaktivitetAntallLandNodvendig: true,
+        erYrkesAktivitetOffentligNodvendig: true,
         loennetArbeidAntallLandFakta: {},
         landMedVesentligArbeid: [],
         erNorgeValgt: true,

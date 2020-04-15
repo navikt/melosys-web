@@ -448,3 +448,13 @@ export const UtpekingAvvistSelector = createSelector(
   UtpekingGodkjentFaktaSelector,
   utpekingGodkjentFakta => hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN
 );
+
+export const OffentligArbeidAntallLandFaktaSelector = createSelector(
+  AvklartefaktaSelector,
+  avklartefakta => avklartefakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND)
+);
+
+export const OffentligArbeidAntallLandFaktaVerdiSelector = createSelector(
+  OffentligArbeidAntallLandFaktaSelector,
+  offentligArbeidAntallLandFakta => hentFaktaVerdi(offentligArbeidAntallLandFakta)
+);

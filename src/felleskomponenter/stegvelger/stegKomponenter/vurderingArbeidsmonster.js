@@ -158,7 +158,10 @@ export const VurderingArbeidsmonster = props => {
   };
 
   const offentligArbeidEndretHandler = avklartOffentligArbeid => {
-    console.log(avklartOffentligArbeid)
+    if (avklartOffentligArbeid === KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET ||
+      avklartOffentligArbeid === KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4));
+    }
   };
 
   const aktivitetINorgeEndretHandler = avklartAktivitetINorge => {

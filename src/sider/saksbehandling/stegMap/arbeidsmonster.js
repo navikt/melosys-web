@@ -19,6 +19,8 @@ class Arbeidsmonster extends Steg {
     const erSelvstendigNaeringsdrivende = Yrkesaktivitet.erSelvstendigNaeringsdrivende(propsLight.avklartefakta);
     const erArbeidstakerOgSelvstendigNaeringsdrivende = Yrkesaktivitet.erArbeidstakerOgSelvstendigNaeringsdrivende(propsLight.avklartefakta);
     const erOffentligTjenestemann = Yrkesaktivitet.erOffentligTjenestemann(propsLight.avklartefakta);
+    const offentligArbeidNorge = hentFaktaVerdi(offentligArbeidAntallLandFakta) === KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET;
+    const offentligArbeidAnnetLand = hentFaktaVerdi(offentligArbeidAntallLandFakta) === KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET;
     const offentligArbeidIFlereLand = hentFaktaVerdi(offentligArbeidAntallLandFakta) === KV.Koder.OffentligArbeidAntallLand.FLERE_LAND_OG_ANNEN_VIRKSOMHET;
     const loennetArbeidIFlereLand = hentFaktaVerdi(loennetArbeidAntallLandFakta) === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND;
     const loennetArbeidIEttLand = hentFaktaVerdi(loennetArbeidAntallLandFakta) === KV.Koder.LoennetArbeidAntallLand.ETT_LAND;
@@ -64,6 +66,14 @@ class Arbeidsmonster extends Steg {
           (loennetArbeidIFlereLand && aktivitetNorgeOver25Prosent)
         ),
         nesteSteg: STEG.ARTIKKEL_13_3_VEDTAK,
+      },
+      {
+        exec: () => offentligArbeidNorge,
+        nesteSteg: STEG.ARTIKKEL_13_4_VEDTAK,
+      },
+      {
+        exec: () => offentligArbeidAnnetLand,
+        nesteSteg: STEG.ARTIKKEL_13_4_UTPEK_LAND,
       },
     ];
     this.id = STEG.ARBEIDSMONSTER;
