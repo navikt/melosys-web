@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
+import MKV from '../../../melosyskodeverk';
 import { BOOLSK } from '../../../constants';
 import * as MPT from '../../../proptypes';
 import * as Ikoner from '../../../resources/images';
@@ -37,11 +37,6 @@ const KnyttTilSak = props => {
             {
               behandlingstyper &&
               behandlingstyper
-                .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
-                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV
-                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID
-                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
-                  && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED)
                 .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
             }
           </Skjema.Select>

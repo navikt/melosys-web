@@ -14,7 +14,7 @@ import './sideOppsummering.css';
 const SideOppsummering = ({
   arbeidsland,
   oppholdsland,
-  behandlingstype,
+  behandlingstema,
   fagsak,
   oppsummering,
   person,
@@ -29,7 +29,7 @@ const SideOppsummering = ({
 }) => {
   if (!oppsummering) return <div />;
 
-  const tittel = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.behandlingstyper) || '';
+  const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || '';
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -79,7 +79,7 @@ const SideOppsummering = ({
 };
 
 SideOppsummering.propTypes = {
-  behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,

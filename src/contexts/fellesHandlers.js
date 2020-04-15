@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { stringify } from 'qs';
+import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
 import * as Utils from '../utils';
@@ -20,6 +21,7 @@ export default FellesHandlersContext;
 
 const FellesHandlersProviderUnconnected = ({
   children,
+  location,
   history,
   lagreAllData,
   hentOppgaveOversikt,
@@ -45,7 +47,7 @@ const FellesHandlersProviderUnconnected = ({
   visOppfriskningBlokkererInnhold,
 }) => {
   const [venterPaRevurderVedtak, setVenterPaRevurderVedtak] = useState(false);
-  const behandlingID = Utils._toInteger(Utils.queryString.getParam(window.location.href, 'behandlingID'));
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
   const skjulOppfriskBekreftelse = () => {
     skjulOppfriskDialogHandle();
@@ -101,7 +103,7 @@ const FellesHandlersProviderUnconnected = ({
       const res = await Api.Saksflyt.Vedtak.revurder(behandlingID);
       const { behandlingID: nyBehandlingID } = res;
 
-      history.replace(`${window.location.href}?${stringify({ behandlingID: nyBehandlingID })}`);
+      history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
       lastInnSaksopplysninger(saksnummer, nyBehandlingID);
     } catch (e) {
       Utils.logger.error(e);
@@ -184,6 +186,7 @@ const FellesHandlersProviderUnconnected = ({
 FellesHandlersProviderUnconnected.propTypes = {
   children: PT.node.isRequired,
   history: PT.object.isRequired,
+  location: PT.object.isRequired,
   lagreAllData: PT.func.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
   tilbakeleggeOppgave: PT.func.isRequired,
@@ -240,4 +243,4 @@ const mapDispatchToProps = dispatch => ({
   visOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.visOppfriskningBlokkererInnhold()),
 });
 
-export const FellesHandlersProvider = connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected);
+export const FellesHandlersProvider = withRouter(connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected));

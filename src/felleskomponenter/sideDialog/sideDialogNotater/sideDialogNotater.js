@@ -21,6 +21,13 @@ const sortNotaterByOpprettetDato = (forsteNotat, andreNotat) => {
   return -datoDiff;
 };
 
+const lagNotatOverskrift = (behandlingstype, behandlingstema) => {
+  const behandlingstypeString = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.behandlingstyper);
+  const behandlingstemaString = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema);
+
+  return `${behandlingstypeString} - ${behandlingstemaString}`;
+};
+
 const SideDialogNotater = ({
   saksnummer,
   redigerbart,
@@ -104,19 +111,24 @@ const SideDialogNotater = ({
           {
             notater
               .sort(sortNotaterByOpprettetDato)
-              .map(notat => (
-                <Notat
-                  key={Utils._uuid()}
-                  redigerbart={notat.redigerbar}
-                  tekst={notat.tekst}
-                  opprettetDato={notat.registrertDato}
-                  endretDato={notat.endretDato}
-                  forfatter={notat.registrertAvNavn}
-                  onUpdate={tekst => oppdaterNotat(notat.notatId, tekst)}
-                  overskrift={KV.kodeTilTerm(notat.behandlingstypeKode, MKV.KTObjects.behandlinger.behandlingstyper)}
-                  maksTekstLengde={maksTekstLengde}
-                />
-              ))
+              .map(notat => {
+                const overskrift = lagNotatOverskrift(notat.behandlingstypeKode, notat.behandlingstemaKode);
+                const onUpdate = tekst => oppdaterNotat(notat.notatId, tekst);
+
+                return (
+                  <Notat
+                    key={Utils._uuid()}
+                    redigerbart={notat.redigerbar}
+                    tekst={notat.tekst}
+                    opprettetDato={notat.registrertDato}
+                    endretDato={notat.endretDato}
+                    forfatter={notat.registrertAvNavn}
+                    onUpdate={onUpdate}
+                    overskrift={overskrift}
+                    maksTekstLengde={maksTekstLengde}
+                  />
+                );
+              })
           }
         </div>
       }

@@ -19,7 +19,7 @@ class VurderUtpeking extends Steg {
       lovvalgsperioder,
       avklartefakta,
       vurderUtpekingValid,
-      behandlingstype,
+      behandlingstema,
     } = propsLight;
 
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
@@ -32,8 +32,8 @@ class VurderUtpeking extends Steg {
 
     const harAvklaring = this.harAvklaring(utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid);
 
-    const lovvalgNorge = behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE;
-    const lovvalgAnnetLand = behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND;
+    const lovvalgNorge = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
+    const lovvalgAnnetLand = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
     this.kriterier = [
       {

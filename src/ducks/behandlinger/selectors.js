@@ -32,6 +32,10 @@ export const BehandlingstypeKodeSelector = createSelector(
   OppsummeringSelector,
   oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
 );
+export const BehandlingstemaKodeSelector = createSelector(
+  OppsummeringSelector,
+  oppsummering => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : '')
+);
 export const BehandlingsstatusKodeSelector = createSelector(
   OppsummeringSelector,
   oppsummering => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : '')
@@ -349,23 +353,33 @@ export const ErEndretPeriodeSelector = createSelector(
 );
 
 export const ErAnmodningOmUnntakHovedRegelSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
 );
 
 export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
 );
 
 export const ErRegistreringUnntakNorskTrygdOvrigeSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
 );
 
 export const ErUtlMyndUtpektSegSelvSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
+);
+
+export const ErArbeidEttLand = createSelector(
+  BehandlingstemaKodeSelector,
+  behandlingstema => [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+  ].includes(behandlingstema)
 );
 
 export const ErRegistreringAvUnntaksperioderSelector = createSelector(

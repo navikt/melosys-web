@@ -38,6 +38,7 @@ export const MineOppgaver = props => {
         defaultChecked="nyeste"
         sortingLegend="Sorter behandlinger etter opprettelsesdato:"
         sortingPath="behandling.registrertDato"
+        radioGroupName="behandlingsortering"
       />
       {antall() === 0 && ingenSakerMelding}
     </div>

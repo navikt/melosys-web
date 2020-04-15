@@ -35,6 +35,7 @@ const VurderingVedtak = ({
   behandlingID,
   lagreOgFatteVedtak,
   behandlingstype,
+  behandlingstema,
   touch,
   formIsValid,
   formValues,
@@ -53,7 +54,7 @@ const VurderingVedtak = ({
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erSoknad = MKVUtils.erSoknad(behandlingstype) || erNyVurdering;
+  const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering;
   const fattVedtakDisabled = !redigerbart;
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
@@ -71,7 +72,7 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
-      mottakerinstitusjoner: erSoknad ? [formValues.mottakerinstitusjon] : [],
+      mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
@@ -121,7 +122,7 @@ const VurderingVedtak = ({
           </Nav.Column>
         </Nav.Row>
         {
-          erSoknad &&
+          erSoknadEllerNyVurdering &&
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
               <Mottakerinstitusjonvelger
@@ -156,6 +157,7 @@ VurderingVedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
   behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
@@ -177,6 +179,7 @@ const mapStateToProps = state => ({
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   vedtakLastes: vedtakSelectors.ErPendingSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),

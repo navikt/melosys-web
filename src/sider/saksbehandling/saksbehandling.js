@@ -161,6 +161,7 @@ class Saksbehandling extends Component {
       lagreOgLukk,
       tilbakeleggOppgave,
       behandlingstype,
+      behandlingstema,
       fagsak,
       oppsummering,
       person,
@@ -208,7 +209,7 @@ class Saksbehandling extends Component {
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
-                behandlingstype={behandlingstype}
+                behandlingstema={behandlingstema}
                 redigerbart={redigerbart}
                 fagsak={fagsak}
                 oppsummering={oppsummering}
@@ -309,6 +310,7 @@ Saksbehandling.propTypes = {
   visOppfriskBekreftelse: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
@@ -345,6 +347,7 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),

@@ -20,9 +20,10 @@ export const OpprettSakTittel = () => (
   </div>
 );
 const OpprettFagsak = props => {
-  const { sakstyper, behandlingstyper } = props;
+  const { sakstyper, behandlingstemaer } = props;
   const { journalforingSkjemaVerdier } = props;
-  const { opprettnysak_behandlingstype: valgtBehandlingstype } = journalforingSkjemaVerdier;
+  const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
+
   const art16 = [
     KV.kodeTilObjekt(
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
@@ -33,27 +34,26 @@ const OpprettFagsak = props => {
       MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
     ),
   ];
-  const skalViseSoknadsperiodeOgLand = behandlingstype => ![
-    MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
-    MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
-  ].includes(behandlingstype);
+
+  const skalViseSoknadsperiodeOgLand = behandlingstema => ![
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+  ].includes(behandlingstema);
 
   return (
     <div className="panelramme">
       <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
         { sakstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
       </Skjema.Select>
-      <Skjema.Select feltNavn="opprettnysak_behandlingstype" bredde="fullbredde" label="Behandlingstype">
+      <Skjema.Select feltNavn="opprettnysak_behandlingstema" bredde="fullbredde" label="Behandlingstema">
         {
-          behandlingstyper &&
-          behandlingstyper
-            .filter(elem => (elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE))
-            .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
+          behandlingstemaer &&
+          behandlingstemaer.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
         }
       </Skjema.Select>
-      {skalViseSoknadsperiodeOgLand(valgtBehandlingstype) &&
+      {skalViseSoknadsperiodeOgLand(valgtBehandlingstema) &&
         <Fragment>
-          { valgtBehandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
+          { valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
           <Fragment>
             <Nav.Fieldset legend="Unntak fra lovvalgsland:">
               <Nav.Row className="">
@@ -105,7 +105,7 @@ const OpprettFagsak = props => {
   );
 };
 OpprettFagsak.propTypes = {
-  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   journalforingSkjemaVerdier: PT.object,
 };

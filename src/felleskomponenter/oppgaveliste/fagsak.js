@@ -69,7 +69,7 @@ const Fagsak = ({ sak }) => {
         <Nav.Row className="fagsak__behandlinger">
           {
             behandlingOversikter.map(behandling =>
-              <Behandling key={behandling.behandlingID} behandling={behandling} link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstype.kode)} />)
+              <Behandling key={behandling.behandlingID} behandling={behandling} link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)} />)
           }
         </Nav.Row>
       </Nav.Container>

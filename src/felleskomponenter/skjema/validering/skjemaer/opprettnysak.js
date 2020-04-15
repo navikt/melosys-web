@@ -13,7 +13,7 @@ const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: 'Fant ingen navn på dette f
 const TAST_INN_DATO = { melding: 'Tast inn dato' };
 const SKRIV_INN_EN_GYLDIG_DATO = { melding: 'Skriv inn en gyldig dato' };
 const VELG_SAKSTYPE = { melding: 'Velg sakstype' };
-const VELG_BEHANDLINGSTYPE = { melding: 'Velg behandlingstype' };
+const VELG_BEHANDLINGSTEMA = { melding: 'Velg behandlingstema' };
 const VELG_LAND = { melding: 'Velg land' };
 const VELG_EN_OPPGAVE = { melding: 'Velg en oppgave' };
 const MANGLER_JOURNALPOST = { melding: 'Den valgte oppgaven har ingen journalpost' };
@@ -44,10 +44,10 @@ const opprettnysak = object().shape({
     }),
   sakstype: string()
     .required(VELG_SAKSTYPE),
-  behandlingstype: string()
-    .required(VELG_BEHANDLINGSTYPE),
+  behandlingstema: string()
+    .required(VELG_BEHANDLINGSTEMA),
   soknadsinfo: object()
-    .when('behandlingstype', {
+    .when('behandlingstema', {
       is: MKVUtils.erSoknad,
       then: soknadsinfo,
     }),

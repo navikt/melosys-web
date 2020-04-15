@@ -48,11 +48,11 @@ const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
 };
 
-const hentForsteSteg = behandlingstype => {
-  switch (behandlingstype) {
-    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND:
+const hentForsteSteg = behandlingstema => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return STEG.VURDER_UTPEKING;
-    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     default:
       return STEG.INNGANG;
   }
@@ -62,7 +62,7 @@ const Vurderutpeking = ({
   lastInnSaksopplysninger,
   match,
   location,
-  behandlingstype,
+  behandlingstema,
   redigerbart,
   fagsak,
   oppsummering,
@@ -114,7 +114,7 @@ const Vurderutpeking = ({
 
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
-  const forsteSteg = hentForsteSteg(behandlingstype);
+  const forsteSteg = hentForsteSteg(behandlingstema);
 
   return (
     <div className="vurderutpeking">
@@ -146,7 +146,7 @@ const Vurderutpeking = ({
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
-              behandlingstype={behandlingstype}
+              behandlingstema={behandlingstema}
               redigerbart={redigerbart}
               fagsak={fagsak}
               oppsummering={oppsummering}
@@ -198,7 +198,7 @@ Vurderutpeking.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -240,7 +240,7 @@ Vurderutpeking.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
