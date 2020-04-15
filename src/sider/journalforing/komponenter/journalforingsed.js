@@ -21,7 +21,7 @@ const JournalforingSED = ({
   avsenderID,
   avsenderNavn,
   sakstype,
-  behandlingstype,
+  behandlingstema,
   form,
   kanSubmittes,
   avbrytJournalforing,
@@ -50,8 +50,8 @@ const JournalforingSED = ({
         <Nav.typo.Normaltekst>{sakstype.term}</Nav.typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="7">
-        <Nav.typo.Element>Behandlingstype</Nav.typo.Element>
-        <Nav.typo.Normaltekst>{behandlingstype.term}</Nav.typo.Normaltekst>
+        <Nav.typo.Element>Behandlingstema</Nav.typo.Element>
+        <Nav.typo.Normaltekst>{behandlingstema.term}</Nav.typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
     <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
@@ -62,7 +62,7 @@ JournalforingSED.propTypes = {
   avsenderNavn: PT.string.isRequired,
   avsenderID: PT.string.isRequired,
   sakstype: MPT.Kodeverk.isRequired,
-  behandlingstype: MPT.Kodeverk.isRequired,
+  behandlingstema: MPT.Kodeverk.isRequired,
   form: PT.string.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
