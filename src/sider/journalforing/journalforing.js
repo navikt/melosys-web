@@ -424,7 +424,7 @@ class Journalforing extends Component {
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
     const {
-      behandlingstype,
+      behandlingstema,
       sakstype,
     } = behandlingsInformasjon || {};
 
@@ -449,7 +449,7 @@ class Journalforing extends Component {
                       <JournalforingSED
                         avsenderID={avsenderID}
                         avsenderNavn={avsenderNavn}
-                        behandlingstype={behandlingstype}
+                        behandlingstema={behandlingstema}
                         sakstype={sakstype}
                         submitJournalforing={this.submitJournalforing}
                         avbrytJournalforing={this.avbrytJournalforing}
