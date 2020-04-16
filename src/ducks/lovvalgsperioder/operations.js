@@ -179,6 +179,7 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => 
 
 const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
   if (flytSelectors.HarOffentligTjenesteINorgeSelector(reduxState)) return MKV.Koder.landkoder.NO;
+  if (avklartefaktaSelectors.OmfattesINorgeSelector(reduxState)) return MKV.Koder.landkoder.NO;
 
   switch (lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
