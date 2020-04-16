@@ -287,35 +287,6 @@ describe('Lovvalgsperioder operations', () => {
     expect(store.getActions()).toMatchObject(expectedActions);
   });
 
-  it('lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom søker omfattes i annet land', () => {
-    const expectedActions = [
-      { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
-    ];
-
-    const avklartfakta = {
-      avklartefaktaKode: null,
-      referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
-      fakta: [MKV.Koder.landkoder.DE],
-      subjektID: null,
-      begrunnelseKoder: [],
-      begrunnelseFritekst: null,
-    };
-
-    const store = mockStore({
-      ...initialState,
-      avklartefakta: {
-        data: [avklartfakta],
-      },
-    });
-
-    const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;
-    const stegState = { lovvalgsbestemmelse };
-
-    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
-
-    expect(store.getActions()).toMatchObject(expectedActions);
-  });
-
   it('lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom utpeking er avvist', () => {
     const expectedActions = [
       { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
