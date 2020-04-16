@@ -27,7 +27,7 @@ ReactDOM.render(
     <ConnectedRouter history={routerHistory}>
       <App>
         <ErrorBoundary message={SideLoadingFailMessage}>
-          <FellesHandlersProvider history={routerHistory}>
+          <FellesHandlersProvider>
             <Routing />
             <Modals />
           </FellesHandlersProvider>

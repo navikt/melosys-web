@@ -36,20 +36,18 @@ export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
   return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch(error => error);
 };
 
-export const sendBehandlingsOppgave = async form => {
-  const { sakstype, behandlingstype: valgtBehandlingstype } = form;
-  if (!sakstype) { return false; }
+export const sendBehandlingsOppgave = async data => {
+  const { behandlingstema: valgtBehandlingstema } = data;
 
   const oppgave = {
-    sakstype,
-    behandlingstype: valgtBehandlingstype,
+    behandlingstema: valgtBehandlingstema,
   };
 
   const response = await Api.Oppgaver.sendPlukk(oppgave);
-  const { saksnummer, behandlingID, behandlingstype } = response;
+  const { saksnummer, behandlingID, behandlingstema } = response;
   if (!saksnummer) { return false; }
 
-  return Routing.lagUrl(saksnummer, behandlingID, behandlingstype);
+  return Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
 };
 
 export const sendJournalOppgave = async fagomrade => {

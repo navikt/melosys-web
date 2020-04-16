@@ -1,7 +1,6 @@
 import React from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import loadable from '@loadable/component';
-import PT from 'prop-types';
 
 import { FellesHandlersContext } from '../contexts';
 
@@ -18,10 +17,10 @@ const SedBehandlingLoadable = loadable(() => import('../sider/sedbehandling'), {
 const OpprettNySakLoadable = loadable(() => import('../sider/opprettnysak'), { fallback: SideLoadingStatus });
 const VurderUtpekingLoadable = loadable(() => import('../sider/vurderutpeking'), { fallback: SideLoadingStatus });
 
-const Routing = ({ location }) => (
+const Routing = () => (
   <FellesHandlersContext.Consumer>
     { fellesHandlers =>
-      <Switch location={location}>
+      <Switch>
         <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
@@ -37,8 +36,4 @@ const Routing = ({ location }) => (
   </FellesHandlersContext.Consumer>
 );
 
-Routing.propTypes = {
-  location: PT.object.isRequired,
-};
-
-export default withRouter(Routing);
+export default Routing;

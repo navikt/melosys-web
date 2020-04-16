@@ -128,7 +128,6 @@ export class VurderingEndrePeriode extends React.Component {
       const data = {
         begrunnelseKode: begrunnelse,
         fritekst: null,
-        behandlingstype: MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
       };
       await endreVedtak(data);
       tilForsiden();

@@ -30,10 +30,6 @@ const hentForsteSteg = behandlingstype => {
   switch (behandlingstype) {
     case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
       return STEG.ENDRET_PERIODE;
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD:
-    case MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING:
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND:
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND:
     default:
       return STEG.INNGANG;
   }

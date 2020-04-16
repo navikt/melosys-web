@@ -25,17 +25,17 @@ const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
 const DATO_MA_VAERE_ETTER_FOM = { melding: 'Dato må være lik eller senere enn fra.' };
 const VELG_REPRESENTERER = { melding: 'Velg hvem fullmektig representerer' };
 
-const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) => (
+const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) => (
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
-    MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
-    MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
-  ].includes(behandlingstype)
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+  ].includes(behandlingstema)
 );
 
-const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
-  kreverPeriodeOgLand(journalforingHensikt, behandlingstype) &&
+const anmodningOmUnntak = (journalforingHensikt, behandlingstema) =>
+  kreverPeriodeOgLand(journalforingHensikt, behandlingstema) &&
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
+  behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
 const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   const organisasjonAliasTyper = [KV.AvsenderTyper.FULLMEKTIG, KV.AvsenderTyper.ARBEIDSGIVER, KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG];
@@ -91,14 +91,14 @@ const journalforing = object().shape({
         .required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
     }),
   journalforingPeriodeFraOgMed: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: kreverPeriodeOgLand,
       then: string()
         .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .required(TAST_INN_DATO),
     }),
   journalforingPeriodeTilOgMed: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: kreverPeriodeOgLand,
       then: string()
         .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
@@ -107,23 +107,23 @@ const journalforing = object().shape({
     }),
   journalforingSoknadsland: array().of(string())
     .ensure()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: kreverPeriodeOgLand,
       then: array().of(string())
         .min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
   journalforingUnntakFraLovvalgsland: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: anmodningOmUnntak,
       then: string().required({ _error: VELG_ETT_LAND }),
     }),
   journalforingLovvalgsbestemmelse: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: anmodningOmUnntak,
       then: string().required(VELG_EN_BESTEMMELSE),
     }),
   journalforingUnntakFraLovvalgsbestemmelse: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
       is: anmodningOmUnntak,
       then: string().required(VELG_EN_BESTEMMELSE),
     }),
@@ -151,7 +151,7 @@ const journalforing = object().shape({
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
   representantNavn: string(),
-  opprettnysak_behandlingstype: string(),
+  opprettnysak_behandlingstema: string(),
 });
 
 export { journalforing };

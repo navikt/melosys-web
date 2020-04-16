@@ -7,6 +7,7 @@ describe('Avklartefaktaselectors', () => {
   const lagState = ({
     avklartefakta,
     behandlingstype,
+    behandlingstema,
     behandlingsgrunnlagData,
     behandlingerSaksopplysninger,
   }) => ({
@@ -18,6 +19,9 @@ describe('Avklartefaktaselectors', () => {
         oppsummering: {
           behandlingstype: {
             kode: behandlingstype,
+          },
+          behandlingstema: {
+            kode: behandlingstema,
           },
         },
         saksopplysninger: behandlingerSaksopplysninger,
@@ -51,7 +55,7 @@ describe('Avklartefaktaselectors', () => {
             fakta: [],
           },
         ],
-        MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
         {
           arbeidNorge: {
             flyendePersonellHjemmebase: MKV.Koder.landkoder.FR,
@@ -75,7 +79,7 @@ describe('Avklartefaktaselectors', () => {
             fakta: [],
           },
         ],
-        MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
         {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
@@ -91,17 +95,17 @@ describe('Avklartefaktaselectors', () => {
             fakta: ['TRUE'],
           },
         ],
-        MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
         {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
         },
       ],
-    ]).it('returnerer korrekt verdi', (forventetResultat, avklartefakta, behandlingstype, behandlingsgrunnlagData) => {
+    ]).it('returnerer korrekt verdi', (forventetResultat, avklartefakta, behandlingstema, behandlingsgrunnlagData) => {
       const state = lagState({
         avklartefakta,
-        behandlingstype,
+        behandlingstema,
         behandlingsgrunnlagData,
       });
       expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
@@ -351,6 +355,25 @@ describe('Avklartefaktaselectors', () => {
       });
 
       expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(forventetResultat);
+    });
+  });
+
+  describe('ErIArtikkel13_1FlytSelector', () => {
+    each([
+      [
+        true,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      ],
+      [
+        false,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+      ],
+    ]).it('returnerer korrekt verdi', (forventetResultat, behandlingstema) => {
+      const state = lagState({
+        behandlingstema,
+      });
+
+      expect(selectors.ErIArtikkel13_1FlytSelector(state)).toEqual(forventetResultat);
     });
   });
 });

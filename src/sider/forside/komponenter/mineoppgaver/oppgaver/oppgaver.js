@@ -14,6 +14,7 @@ const Oppgaver = ({
   component,
   sortingLegend,
   sortingPath,
+  radioGroupName,
 }) => {
   const defaultOrder = defaultChecked === 'nyeste' ? 'descending' : 'ascending';
   const [sortOrder, setSortOrder] = useState(defaultOrder);
@@ -26,7 +27,7 @@ const Oppgaver = ({
 
   const sorterteOppgaver = oppgaver.slice().sort(sortOppgaverByDate(sortOrder, sortingPath));
   const Component = component;
-  const uniqueName = Utils._uuid();
+  const uniqueName = radioGroupName || Utils._uuid();
 
   return (
     <Fragment>
@@ -59,11 +60,13 @@ Oppgaver.propTypes = {
   component: PT.elementType.isRequired,
   sortingLegend: PT.string.isRequired,
   sortingPath: PT.string.isRequired,
+  radioGroupName: PT.string,
 };
 
 Oppgaver.defaultProps = {
   oppgaver: [],
   defaultChecked: 'eldste',
+  radioGroupName: undefined,
 };
 
 export default Oppgaver;

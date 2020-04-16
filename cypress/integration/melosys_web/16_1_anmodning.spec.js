@@ -8,7 +8,7 @@ describe('16.1 anmodning om unntak flyt', () => {
   it('går gjennom uten krasj', () => {
     cy.visit('/');
 
-    cy.get(`[data-cy-behandlingstype="${MKV.Koder.behandlinger.behandlingstyper.SOEKNAD}"]`)
+    cy.get(`[data-cy-behandlingstema="${MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER}"]`)
       .first()
       .click();
 

@@ -313,7 +313,6 @@ class Stegvelger extends Component {
     const { behandlingID } = this.props;
 
     const utfyltData = {
-      behandlingstype: data.behandlingstype || null,
       begrunnelseKode: data.begrunnelseKode || null,
       fritekst: data.fritekst || null,
     };
@@ -362,6 +361,7 @@ class Stegvelger extends Component {
       bostedsland: props.bostedsland,
       landkoder: MKV.KTObjects.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
+      behandlingstema: props.oppsummering.behandlingstema,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       lovvalgsbestemmelse: props.lovvalgsbestemmelse,
@@ -383,8 +383,8 @@ class Stegvelger extends Component {
       vurderUtpekingFom: props.vurderUtpekingFom,
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
-      erSoknadArbeidFlereLand: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
-      erSoknad: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      erSoknadArbeidFlereLand: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebase: props.hjemmebase,
     };
@@ -542,6 +542,7 @@ Stegvelger.propTypes = {
   maritimtarbeid: PT.arrayOf(PT.object),
   hjemmebase: PT.string,
   forsteSteg: PT.string.isRequired,
+  erArbeidEttLand: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -594,6 +595,7 @@ const mapStateToProps = state => ({
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
 });
 
 /* eslint no-alert:off */
