@@ -24,17 +24,20 @@ export const PanelerRedigerbartSelector = createSelector(
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
   behandlingerSelectors.ErEndretPeriodeSelector,
   behandlingerSelectors.ErAnmodningOmUnntakHovedRegelSelector,
-  behandlingerSelectors.ErRegistreringAvUnntaksperioderSelector,
+  behandlingerSelectors.ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
+  behandlingerSelectors.ErRegistreringUnntakNorskTrygdOvrigeSelector,
   (
     redigerbart,
     erArtikkel16AnmodningSendt,
     erEndretPeriode,
     erBehandleAnmodningOmUnntak,
-    erRegistreringAvUnntaksperioder
+    erRegistreringUnntakNorskTrygdUtstasjonering,
+    erRegistreringUnntakNorskTrygdOvrige
   ) => (
     !erEndretPeriode &&
     !erBehandleAnmodningOmUnntak &&
-    !erRegistreringAvUnntaksperioder &&
+    !erRegistreringUnntakNorskTrygdUtstasjonering &&
+    !erRegistreringUnntakNorskTrygdOvrige &&
     redigerbart &&
     !erArtikkel16AnmodningSendt
   )
