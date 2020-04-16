@@ -12,11 +12,11 @@ export const ErIArtikkel11_4Selector = createSelector(
 );
 
 export const HarOffentligTjenesteINorgeSelector = createSelector(
-  avklartefaktaSelectors.OffentligArbeidAntallLandFaktaVerdiSelector,
+  state => avklartefaktaSelectors.OffentligArbeidAntallLandFaktaVerdiSelector(state),
   offentligArbeidAntallLand => offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET
 );
 
 export const HarOffentligTjenesteAnnetLandSelector = createSelector(
-  avklartefaktaSelectors.OffentligArbeidAntallLandFaktaVerdiSelector,
+  state => avklartefaktaSelectors.OffentligArbeidAntallLandFaktaVerdiSelector(state),
   offentligArbeidAntallLand => offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET
 );
