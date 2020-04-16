@@ -4,6 +4,8 @@ import * as Utils from './';
 import * as Person from '../felleskomponenter/skjema/validering/generisk/person';
 import * as Organisasjon from '../felleskomponenter/skjema/validering/generisk/organisasjon';
 
+import MKV from '../melosyskodeverk';
+
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
@@ -145,6 +147,21 @@ addMethod(string, 'siblingIs', function(sibling, predicate, message) {
         });
       }
     } else if (siblingValue !== predicate) {
+      throw createError({
+        path,
+        message,
+      });
+    }
+
+    return true;
+  });
+});
+
+addMethod(string, 'erLandKode', function(message) {
+  return this.test('erLandKode', message, function(value) {
+    const { createError, path } = this;
+
+    if (!Utils._has(MKV.Koder.landkoder, value)) {
       throw createError({
         path,
         message,

@@ -155,69 +155,73 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    // TODO: fjern kommentarer
-    // it.only('bygger utpekingsperiode dersom søker har offentlig tjeneste i annet land', () => {
-    //   const avklartfakta = {
-    //     avklartefaktaKode: null,
-    //     referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
-    //     fakta: [KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET],
-    //     subjektID: null,
-    //     begrunnelseKoder: [],
-    //     begrunnelseFritekst: null,
-    //   };
+    it('bygger utpekingsperiode dersom søker har offentlig tjeneste i annet land', () => {
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
+        fakta: [KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
 
-    //   initialState.avklartefakta.data = [avklartfakta];
+      initialState.avklartefakta.data = [avklartfakta];
 
-    //   const stegState = {
-    //     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
-    //   };
+      const stegState = {
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
+        lovvalgsland: MKV.Koder.landkoder.BE,
+      };
 
-    //   const expectedActions = [
-    //     {
-    //       type: types.OPPDATER_UTPEKINGSPERIODER,
-    //       utpekingsperioder: [
-    //         {
-    //           lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
-    //         },
-    //       ],
-    //     },
-    //   ];
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [
+            {
+              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
+              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
+              lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+              tilleggsbestemmelse: undefined,
+              lovvalgsland: stegState.lovvalgsland,
+            },
+          ],
+        },
+      ];
 
-    //   const store = mockStore(initialState);
+      const store = mockStore(initialState);
 
-    //   store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-    //   expect(store.getActions()).toEqual(expectedActions);
-    // });
+      expect(store.getActions()).toEqual(expectedActions);
+    });
 
-    // it('bygger tom utpekingsperiode dersom søker har offentlig tjeneste i Norge', () => {
-    //   const avklartfakta = {
-    //     avklartefaktaKode: null,
-    //     referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
-    //     fakta: [KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET],
-    //     subjektID: null,
-    //     begrunnelseKoder: [],
-    //     begrunnelseFritekst: null,
-    //   };
+    it('bygger tom utpekingsperiode dersom søker har offentlig tjeneste i Norge', () => {
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
+        fakta: [KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
 
-    //   initialState.avklartefakta.data = [avklartfakta];
+      initialState.avklartefakta.data = [avklartfakta];
 
-    //   const stegState = {
-    //     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
-    //   };
+      const stegState = {
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
+      };
 
-    //   const expectedActions = [
-    //     {
-    //       type: types.OPPDATER_UTPEKINGSPERIODER,
-    //       utpekingsperioder: [],
-    //     },
-    //   ];
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
 
-    //   const store = mockStore(initialState);
+      const store = mockStore(initialState);
 
-    //   store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-    //   expect(store.getActions()).toEqual(expectedActions);
-    // });
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 });
