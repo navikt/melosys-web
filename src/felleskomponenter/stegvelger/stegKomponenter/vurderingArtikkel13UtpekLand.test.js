@@ -18,6 +18,9 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       touch: jest.fn(),
       form: 'Form',
       touchAll: jest.fn(),
+      erOffentligArbeidUtland: true,
+      oppdaterData: jest.fn(),
+      slettData: jest.fn(),
     };
 
     shallow(<VurderingArtikkel13UtpekLand {...props} />);
