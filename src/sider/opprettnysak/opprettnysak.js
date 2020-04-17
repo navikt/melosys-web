@@ -17,6 +17,7 @@ import Knapperad from '../../felleskomponenter/knapperad';
 import EnkeltDato from '../../felleskomponenter/datoOmrade/enkeltDato';
 
 import MKV, { Utils as MKVUtils } from '../../melosyskodeverk';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
 
 import './opprettnysak.css';
 
@@ -235,7 +236,7 @@ const OpprettNySakForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.opprettnysak),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.opprettnysak),
 })(OpprettNySak);
 
 export default connect(mapStateToProps)(OpprettNySakForm);

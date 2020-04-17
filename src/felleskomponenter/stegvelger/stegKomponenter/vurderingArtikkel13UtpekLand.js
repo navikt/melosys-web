@@ -10,7 +10,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
-import * as Validering from '../../skjema/validering';
 import * as Skjema from '../../skjema';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
@@ -24,6 +23,7 @@ import { formOperations } from '../../../ducks/form';
 import { flytSelectors } from '../../../ducks/flyt';
 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingArtikkel13UtpekLand.css';
 
@@ -193,7 +193,7 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
       },
     };
 
-    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_utpek, settings)(values);
+    return lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_utpek, settings)(values);
   },
 })(VurderingArtikkel13UtpekLand);
 

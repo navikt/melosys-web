@@ -5,7 +5,6 @@ import { reduxForm, getFormValues, change } from 'redux-form';
 
 import * as Ikoner from '../../../resources/images';
 import * as KV from '../../../kodeverk';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../../felleskomponenter/skjema';
@@ -18,6 +17,7 @@ import Informasjon from '../komponenter/informasjon';
 import FagsakVelger from './fagsakVelger';
 import SendForvaltningsMelding from './sendForvaltningsMelding';
 import Fotknapper from './fotknapper';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 const JournalforingForm = props => {
   const {
@@ -145,7 +145,7 @@ const form = {
       },
     };
 
-    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
+    return lagYupToReduxformErrorMapper(YupSkjemaer.journalforing, options)(values);
   },
 };
 

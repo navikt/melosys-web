@@ -1,11 +1,9 @@
-import * as Utils from '../../../../utils';
-
-const {
+import {
   object,
   string,
   bool,
   array,
-} = Utils.yup;
+} from 'yup';
 
 const MOTTAKERINSTITUSJON_KREVES = { melding: 'Mottakerinstitusjon kreves' };
 const LOVVALGSLAND_KREVES = { melding: 'Lovvalgsland kreves' };

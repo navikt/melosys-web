@@ -1,10 +1,10 @@
-import { mixed, addMethod, object, array, string, date, bool, lazy, number } from 'yup';
+import { addMethod, object, string } from 'yup';
 
-import * as Utils from './';
-import * as Person from '../felleskomponenter/skjema/validering/generisk/person';
-import * as Organisasjon from '../felleskomponenter/skjema/validering/generisk/organisasjon';
+import * as Utils from './utils';
+import * as Person from './felleskomponenter/skjema/validering/generisk/person';
+import * as Organisasjon from './felleskomponenter/skjema/validering/generisk/organisasjon';
 
-import MKV from '../melosyskodeverk';
+import MKV from './melosyskodeverk';
 
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
@@ -171,14 +171,3 @@ addMethod(string, 'erLandKode', function(message) {
     return true;
   });
 });
-
-export {
-  mixed,
-  object,
-  array,
-  string,
-  date,
-  bool,
-  lazy,
-  number,
-};

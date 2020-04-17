@@ -1,10 +1,10 @@
+import {
+  object,
+  array,
+  number,
+} from 'yup';
+
 import { lagYupToReduxformErrorMapper } from './lagYupToReduxformErrorMapper';
-
-import * as Utils from '../../../../utils';
-
-const {
-  object, array, number,
-} = Utils.yup;
 
 describe('lagYupToReduxformErrorMapper', () => {
   it('throw Error hvis schema er falsy', () => {

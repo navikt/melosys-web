@@ -1,4 +1,4 @@
-import * as Utils from '../../../../utils';
+import * as Utils from '../utils';
 
 const lagYupToReduxformErrorMapper = (schema, settings) => {
   if (!schema) throw new Error('Schema kan ikke være falsy');

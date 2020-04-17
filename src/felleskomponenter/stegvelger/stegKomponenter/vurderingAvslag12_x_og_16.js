@@ -8,7 +8,6 @@ import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as VilkarSelectors from '../../../ducks/vilkar/selectors';
-import * as Validering from '../../skjema/validering';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -17,6 +16,8 @@ import PdfLenkeListe from '../../pdfLenkeListe';
 import Begrunnelser from '../../begrunnelser';
 import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
 import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
+
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
@@ -173,7 +174,7 @@ const VurderingAvslagArtikkel12Og16Form = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.avslag_artikkel_12_og_16, {
+  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.avslag_artikkel_12_og_16, {
     context: {
       behandlingstype: props.behandlingstype,
     },

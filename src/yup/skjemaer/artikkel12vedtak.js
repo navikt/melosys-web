@@ -1,8 +1,6 @@
+import { object, string, bool } from 'yup';
+
 import * as MKV from 'melosys-kodeverk';
-
-import * as Utils from '../../../../utils';
-
-const { object, string, bool } = Utils.yup;
 
 const VELG_EN_VEDTAKSTYPE = { melding: 'Velg en vedtakstype' };
 const OPPGI_BEGRUNNELSE = { melding: 'Oppgi begrunnelse' };

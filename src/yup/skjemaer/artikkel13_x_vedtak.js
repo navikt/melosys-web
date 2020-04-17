@@ -1,10 +1,11 @@
-import * as MKV from 'melosys-kodeverk';
+import {
+  object,
+  string,
+  bool,
+  array,
+} from 'yup';
 
-import * as Utils from '../../../../utils';
-
-const {
-  object, string, bool, array,
-} = Utils.yup;
+import MKV from '../../melosyskodeverk';
 
 const VELG_EN_VEDTAKSTYPE = { melding: 'Velg en vedtakstype' };
 const OPPGI_BEGRUNNELSE = { melding: 'Oppgi begrunnelse' };

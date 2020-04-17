@@ -4,7 +4,6 @@ import { reduxForm, getFormValues } from 'redux-form';
 import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Ikoner from '../../../resources/images';
@@ -14,6 +13,8 @@ import Brukernavnskjema from '../../../felleskomponenter/brukernavnskjema';
 import Fotknapper from './fotknapper';
 
 import { journalforingSelectors } from '../../../ducks/journalforing';
+
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './journalforingsed.css';
 
@@ -75,7 +76,7 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforingSED),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.journalforingSED),
 };
 
 const mapStateToProps = state => ({

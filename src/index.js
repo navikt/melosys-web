@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import './index.css';
+import './setupYup';
 import App from './App';
 import loadInitialData from './startupDataLoader';
 

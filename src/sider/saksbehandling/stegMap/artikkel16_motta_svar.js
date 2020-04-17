@@ -1,13 +1,12 @@
 import MKV from '../../../melosyskodeverk';
 
 import * as Utils from '../../../utils';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
 
 import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingArtikkel16MottaSvar from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16MottaSvar';
 import { hentFakta } from '../../../regler/avklartefakta';
-
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 class Artikkel16MottaSvar extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -41,7 +40,7 @@ class Artikkel16MottaSvar extends Steg {
 
     if (!anmodningsperiodeSvarType) return false;
 
-    const ugyldigeFelter = Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_motta_svar, {
+    const ugyldigeFelter = lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_motta_svar, {
       context: {
         anmodningsperiodeSvarType,
       },
