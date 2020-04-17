@@ -7,7 +7,7 @@ import each from 'jest-each';
 // Feiler tester som kaster en proptype-error
 import 'jest-prop-type-error';
 
-// Oppsettfilen for Yup kjøres ikke uten videre i testmiljø. Derfor er det nødvendig å importere den manuelt her.
+// Oppsettfilen for Yup kjøres ikke uten videre av jest. Derfor er det nødvendig å importere den manuelt her.
 import './setupYup';
 
 global.fetch = require('jest-fetch-mock');
