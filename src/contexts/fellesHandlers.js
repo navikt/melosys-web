@@ -36,17 +36,17 @@ const FellesHandlersProviderUnconnected = ({
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
   skjulAvsluttSakSomBortfaltDialogHandle,
-  skjulRevurderVedtakDialogHandle,
+  skjulRevurderFagsakDialogHandle,
   skjulOppfriskningBlokkererInnhold,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
-  visRevurderVedtakDialogHandle,
+  visRevurderFagsakDialogHandle,
   visValideringModalDialogHandle,
   visOppfriskningBlokkererInnhold,
 }) => {
-  const [venterPaRevurderVedtak, setVenterPaRevurderVedtak] = useState(false);
+  const [venterPaRevurderFagsak, setVenterPaRevurderFagsak] = useState(false);
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
   const skjulOppfriskBekreftelse = () => {
@@ -94,13 +94,13 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const debouncedSetVenterPaVurderVedtak = Utils._debounce(() => setVenterPaRevurderVedtak(true), 500);
+  const debouncedSetVenterPaVurderVedtak = Utils._debounce(() => setVenterPaRevurderFagsak(true), 500);
 
-  const revurderVedtak = async () => {
+  const revurderFagsak = async () => {
     debouncedSetVenterPaVurderVedtak();
 
     try {
-      const res = await Api.Saksflyt.Vedtak.revurder(behandlingID);
+      const res = await Api.Fagsaker.fagsak.revurder(saksnummer);
       const { behandlingID: nyBehandlingID } = res;
 
       history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
@@ -110,8 +110,8 @@ const FellesHandlersProviderUnconnected = ({
     }
 
     debouncedSetVenterPaVurderVedtak.cancel();
-    setVenterPaRevurderVedtak(false);
-    skjulRevurderVedtakDialogHandle();
+    setVenterPaRevurderFagsak(false);
+    skjulRevurderFagsakDialogHandle();
   };
 
   const tilbakeleggOppgave = async () => {
@@ -165,15 +165,15 @@ const FellesHandlersProviderUnconnected = ({
     blokkerInnholdMedOppfriskSpinner,
     tilForsiden,
     tilOpprettNySak,
-    visRevurderVedtakDialogHandle,
+    visRevurderFagsakDialogHandle,
     visValideringModalDialogHandle,
-    revurderVedtak,
+    revurderFagsak,
     henleggHandle,
     avslaaSoknadHandle,
     avsluttSakSomBortfalt,
     hentBehandlingStatus,
     lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
-    venterPaRevurderVedtak,
+    venterPaRevurderFagsak,
   };
 
   return (
@@ -200,13 +200,13 @@ FellesHandlersProviderUnconnected.propTypes = {
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  skjulRevurderVedtakDialogHandle: PT.func.isRequired,
+  skjulRevurderFagsakDialogHandle: PT.func.isRequired,
   skjulOppfriskningBlokkererInnhold: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
   visOppfriskningBlokkererInnhold: PT.func.isRequired,
 };
@@ -232,13 +232,13 @@ const mapDispatchToProps = dispatch => ({
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
-  skjulRevurderVedtakDialogHandle: () => dispatch(modalerOperations.skjulRevurderVedtak()),
+  skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   skjulOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.skjulOppfriskningBlokkererInnhold()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  visRevurderVedtakDialogHandle: () => dispatch(modalerOperations.visRevurderVedtak()),
+  visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
   visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
   visOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.visOppfriskningBlokkererInnhold()),
 });

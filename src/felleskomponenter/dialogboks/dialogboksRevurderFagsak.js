@@ -5,16 +5,16 @@ import * as Nav from '../../utils/navFrontend';
 
 import Knapperad from '../knapperad';
 
-import './dialogboksRevurderVedtak.css';
+import './dialogboksRevurderFagsak.css';
 
-export const DialogboksRevurderVedtak = ({
+export const DialogboksRevurderFagsak = ({
   bekreft,
   avbryt,
   ariaHideApp,
   spinner,
 }) => (
   <Nav.Modal
-    className="dialogboksRevurderVedtak"
+    className="dialogboksRevurderFagsak"
     isOpen
     contentLabel="Revurder vedtak"
     onRequestClose={avbryt}
@@ -33,17 +33,16 @@ export const DialogboksRevurderVedtak = ({
   </Nav.Modal>
 );
 
-DialogboksRevurderVedtak.propTypes = {
+DialogboksRevurderFagsak.propTypes = {
   bekreft: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
   spinner: PT.bool,
-  redigerbart: PT.bool.isRequired,
 };
 
-DialogboksRevurderVedtak.defaultProps = {
+DialogboksRevurderFagsak.defaultProps = {
   ariaHideApp: true,
   spinner: false,
 };
 
-export default DialogboksRevurderVedtak;
+export default DialogboksRevurderFagsak;

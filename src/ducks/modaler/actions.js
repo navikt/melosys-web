@@ -31,6 +31,6 @@ export const oppdaterOppfriskningBlokkererInnhold = data => ({
 });
 
 export const oppdaterRevurderFagsak = data => ({
-  type: Types.OPPDATER_REVURDER_VEDTAK,
+  type: Types.OPPDATER_REVURDER_FAGSAK,
   data,
 });
