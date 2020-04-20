@@ -30,7 +30,7 @@ export const oppdaterOppfriskningBlokkererInnhold = data => ({
   data,
 });
 
-export const oppdaterRevurderVedtak = data => ({
+export const oppdaterRevurderFagsak = data => ({
   type: Types.OPPDATER_REVURDER_VEDTAK,
   data,
 });
