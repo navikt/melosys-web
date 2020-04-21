@@ -100,7 +100,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       {
         redigerbart &&
         <Fragment>
-          <Nav.typo.Element className="undertittel">Lovvalgsperiode</Nav.typo.Element>
+          <Nav.typo.Element className="undertittel">Søknadsperiode</Nav.typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}
