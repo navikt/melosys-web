@@ -177,7 +177,7 @@ class Saksbehandling extends Component {
       arbeidsland,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
-      visRevurderVedtakDialogHandle,
+      visRevurderFagsakDialogHandle,
       tilForsiden,
       visValideringModalDialogHandle,
     } = this.props;
@@ -186,7 +186,7 @@ class Saksbehandling extends Component {
 
     if (Utils._isNil(redigerbart)) return null;
 
-    const visRevurderVedtak = anmodningsperioderErSendtUtlandet ||
+    const visRevurderFagsak = anmodningsperioderErSendtUtlandet ||
       (!redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
 
     return (
@@ -231,8 +231,8 @@ class Saksbehandling extends Component {
                   visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
-                  visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
-                  visRevurderVedtak={visRevurderVedtak}
+                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                  visRevurderFagsak={visRevurderFagsak}
                   visAvsluttSakSomBortfalt={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                 />}
                 renderBehandlingsstatus={() => <Behandlingsstatus
@@ -319,7 +319,7 @@ Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
-  visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
 };

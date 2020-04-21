@@ -2,10 +2,10 @@ import React from 'react';
 
 import * as Nav from '../../utils/navFrontend';
 
-import { DialogboksRevurderVedtak } from './dialogboksRevurderVedtak';
+import { DialogboksRevurderFagsak } from './dialogboksRevurderFagsak';
 import Knapperad from '../knapperad';
 
-describe('DialogboksRevurderVedtak', () => {
+describe('DialogboksRevurderFagsak', () => {
   let props = null;
 
   beforeEach(() => {
@@ -19,8 +19,8 @@ describe('DialogboksRevurderVedtak', () => {
   });
 
   it('viser en nav modal med korrekte props', () => {
-    const dialogboksRevurderVedtak = shallow(<DialogboksRevurderVedtak {...props} />);
-    const modal = dialogboksRevurderVedtak.find(Nav.Modal);
+    const dialogboksRevurderFagsak = shallow(<DialogboksRevurderFagsak {...props} />);
+    const modal = dialogboksRevurderFagsak.find(Nav.Modal);
     const modalProps = modal.props();
 
     expect(modal).toHaveLength(1);
@@ -30,8 +30,8 @@ describe('DialogboksRevurderVedtak', () => {
   });
 
   it('viser en knapperad med korrekte props', () => {
-    const dialogboksRevurderVedtak = shallow(<DialogboksRevurderVedtak {...props} />);
-    const knapperad = dialogboksRevurderVedtak.find(Knapperad);
+    const dialogboksRevurderFagsak = shallow(<DialogboksRevurderFagsak {...props} />);
+    const knapperad = dialogboksRevurderFagsak.find(Knapperad);
     const knapperadProps = knapperad.props();
 
     expect(knapperadProps.spinner).toBe(props.spinner);

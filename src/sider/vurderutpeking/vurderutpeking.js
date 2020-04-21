@@ -80,7 +80,7 @@ const Vurderutpeking = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
   visOppfriskBekreftelse,
-  visRevurderVedtakDialogHandle,
+  visRevurderFagsakDialogHandle,
   oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
@@ -169,8 +169,8 @@ const Vurderutpeking = ({
                 visAvslagManglendeOpplysninger
                 visOppfriskSaksopplysninger
                 oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
-                visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
-                visRevurderVedtak
+                visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                visRevurderFagsak
               />}
               renderBehandlingsstatus={() => <Behandlingsstatus
                 behandlingID={behandlingID}
@@ -216,7 +216,7 @@ Vurderutpeking.propTypes = {
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
   visOppfriskBekreftelse: PT.func.isRequired,
-  visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,

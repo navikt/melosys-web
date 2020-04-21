@@ -12,7 +12,7 @@ import DialogboksVenter from '../felleskomponenter/dialogboks/dialogboksVenter';
 import DialogboksHenlegg from '../felleskomponenter/dialogboks/dialogboksHenlegg';
 import DialogboksAvsluttSakSomBortfalt from '../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
 import DialogboksAvslagSoknad from '../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
-import DialogboksRevurderVedtak from '../felleskomponenter/dialogboks/dialogboksRevurderVedtak';
+import DialogboksRevurderFagsak from '../felleskomponenter/dialogboks/dialogboksRevurderFagsak';
 import DialogboksValidering from '../felleskomponenter/dialogboks/dialogboksValidering';
 
 const Modals = ({
@@ -31,10 +31,10 @@ const Modals = ({
   visAvsluttSakSomBortfaltDialog,
   skjulAvsluttSakSomBortfaltDialogHandle,
   avsluttSakSomBortfalt,
-  visRevurderVedtak,
-  skjulRevurderVedtakDialogHandle,
-  revurderVedtak,
-  venterPaRevurderVedtak,
+  visRevurderFagsak,
+  skjulRevurderFagsakDialogHandle,
+  revurderFagsak,
+  venterPaRevurderFagsak,
   visValideringModal,
   skjulValideringModalDialogHandle,
   valideringerFeilkoder,
@@ -81,11 +81,11 @@ const Modals = ({
       />
     }
     {
-      visRevurderVedtak &&
-      <DialogboksRevurderVedtak
-        avbryt={skjulRevurderVedtakDialogHandle}
-        bekreft={revurderVedtak}
-        spinner={venterPaRevurderVedtak}
+      visRevurderFagsak &&
+      <DialogboksRevurderFagsak
+        avbryt={skjulRevurderFagsakDialogHandle}
+        bekreft={revurderFagsak}
+        spinner={venterPaRevurderFagsak}
       />
     }
     {
@@ -114,10 +114,10 @@ Modals.propTypes = {
   visAvsluttSakSomBortfaltDialog: PT.bool.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   avsluttSakSomBortfalt: PT.func.isRequired,
-  visRevurderVedtak: PT.bool.isRequired,
-  skjulRevurderVedtakDialogHandle: PT.func.isRequired,
-  revurderVedtak: PT.func.isRequired,
-  venterPaRevurderVedtak: PT.bool.isRequired,
+  visRevurderFagsak: PT.bool.isRequired,
+  skjulRevurderFagsakDialogHandle: PT.func.isRequired,
+  revurderFagsak: PT.func.isRequired,
+  venterPaRevurderFagsak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
   valideringerFeilkoder: PT.arrayOf(PT.string),
@@ -133,7 +133,7 @@ const mapStateToProps = state => ({
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
-  visRevurderVedtak: modalerSelectors.ErRevurderVedtakSynligSelector(state),
+  visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
   valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
 });
@@ -143,7 +143,7 @@ const mapDispatchToProps = dispatch => ({
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
-  skjulRevurderVedtakDialogHandle: () => dispatch(modalerOperations.skjulRevurderVedtak()),
+  skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
 });
 

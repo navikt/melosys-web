@@ -17,8 +17,8 @@ const Behandlingsmeny = ({
   visAvslagSoknadDialogHandle,
   visAvslagManglendeOpplysninger,
   visOppfriskSaksopplysninger,
-  visRevurderVedtakDialogHandle,
-  visRevurderVedtak,
+  visRevurderFagsakDialogHandle,
+  visRevurderFagsak,
   visAvsluttSakSomBortfalt,
 }) => (
   <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
@@ -31,7 +31,7 @@ const Behandlingsmeny = ({
       { redigerbart && visAvsluttSakSomBortfalt && <Nav.Knapp mini className="innhold__element" onClick={visAvsluttSakSomBortfaltDialogHandle}>Avslutt sak som bortfalt</Nav.Knapp>}
       { redigerbart && visAvslagManglendeOpplysninger && <Nav.Knapp mini className="innhold__element" onClick={visAvslagSoknadDialogHandle}>Avslå søknad pga. manglende opplysninger</Nav.Knapp> }
       { <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>Vis alle behandlinger</Nav.Knapp> }
-      { visRevurderVedtak && <Nav.Knapp mini className="innhold__element" onClick={visRevurderVedtakDialogHandle}>Vurder vedtak på nytt</Nav.Knapp> }
+      { visRevurderFagsak && <Nav.Knapp mini className="innhold__element" onClick={visRevurderFagsakDialogHandle}>Vurder vedtak på nytt</Nav.Knapp> }
     </div>
   </Nav.EkspanderbartpanelBase>
 );
@@ -47,9 +47,9 @@ Behandlingsmeny.propTypes = {
   redigerbart: PT.bool.isRequired,
   visHenleggSak: PT.bool.isRequired,
   visOppfriskSaksopplysninger: PT.bool,
-  visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
   visAvslagManglendeOpplysninger: PT.bool.isRequired,
-  visRevurderVedtak: PT.bool.isRequired,
+  visRevurderFagsak: PT.bool.isRequired,
   visAvsluttSakSomBortfalt: PT.bool,
 };
 

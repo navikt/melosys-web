@@ -15,11 +15,11 @@ describe('behandlingsmeny', () => {
       visAvsluttSakSomBortfaltDialogHandle: jest.fn(),
       apneTidligereBehandlinger: jest.fn(),
       visAvslagSoknadDialogHandle: jest.fn(),
-      visRevurderVedtakDialogHandle: jest.fn(),
+      visRevurderFagsakDialogHandle: jest.fn(),
       redigerbart: true,
       visHenleggSak: true,
       visAvslagManglendeOpplysninger: true,
-      visRevurderVedtak: true,
+      visRevurderFagsak: true,
     };
   });
 
@@ -40,6 +40,6 @@ describe('behandlingsmeny', () => {
     expect(props.visHenleggDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.visAvsluttSakSomBortfaltDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.apneTidligereBehandlinger).toHaveBeenCalledTimes(1);
-    expect(props.visRevurderVedtakDialogHandle).toHaveBeenCalledTimes(1);
+    expect(props.visRevurderFagsakDialogHandle).toHaveBeenCalledTimes(1);
   });
 });
