@@ -1,8 +1,6 @@
-import MKV from '../../../../melosyskodeverk';
+import { object, string } from 'yup';
 
-import * as Utils from '../../../../utils';
-
-const { object, string } = Utils.yup;
+import MKV from '../../melosyskodeverk';
 
 const artikkel16_motta_svar = object().shape({
   endretPeriode: object()

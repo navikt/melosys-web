@@ -9,7 +9,6 @@ import MKV, { Utils as MKVUtils } from '../../../melosyskodeverk';
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import * as Validering from '../../skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 
@@ -25,6 +24,8 @@ import DatoOmrade from '../../datoOmrade/datoOmrade';
 import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
 import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
+
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingVedtak.css';
 
@@ -199,7 +200,7 @@ const VurderingVedtakForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel12_vedtak, {
+  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel12_vedtak, {
     context: {
       behandlingstype: props.behandlingstype,
     },

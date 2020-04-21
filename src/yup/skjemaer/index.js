@@ -1,4 +1,3 @@
-export { lagYupToReduxformErrorMapper } from './lagYupToReduxformErrorMapper';
 export { saksopplysninger } from './saksopplysninger';
 export { artikkel12_vedtak } from './artikkel12vedtak';
 export { avslag_artikkel_12_og_16 } from './avslagartikkel12og16';
@@ -13,3 +12,4 @@ export { opprettnysak } from './opprettnysak';
 export { vurdering_videresend } from './vurdering_videresend';
 export { vurder_utpeking } from './vurder_utpeking';
 export { avslaa_utpeking } from './avslaa_utpeking';
+export { sed } from './sed';

@@ -9,15 +9,16 @@ import MKV from '../../../melosyskodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
-import * as Validering from '../../skjema/validering';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
+import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+
 import './vurderingVideresend.css';
-import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
 
 export const VurderingVideresend = ({
   redigerbart,
@@ -95,7 +96,7 @@ const VurderingVideresendForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: values => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.vurdering_videresend)(values),
+  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_videresend)(values),
 })(VurderingVideresend);
 
 const mapStateToProps = state => ({

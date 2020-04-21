@@ -1,10 +1,13 @@
-import * as Utils from '../../../../utils';
+import {
+  object,
+  string,
+  mixed,
+  array,
+} from 'yup';
 
-import { Utils as MKVUtils } from '../../../../melosyskodeverk';
+import * as Utils from '../../utils';
 
-const {
-  object, string, mixed, array,
-} = Utils.yup;
+import { Utils as MKVUtils } from '../../melosyskodeverk';
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: 'Skriv inn f.nr eller d.nr' };
 const SKRIV_INN_KUN_NUMMER = { melding: 'Skriv inn kun nummer.' };

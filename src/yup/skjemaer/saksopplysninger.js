@@ -1,7 +1,6 @@
-import * as KV from '../../../../kodeverk';
-import * as Utils from '../../../../utils';
+import { object, array, string } from 'yup';
 
-const { object, array, string } = Utils.yup;
+import * as KV from '../../kodeverk';
 
 const saksopplysninger = object().shape({
   foretakUtland: array().of(object().shape({

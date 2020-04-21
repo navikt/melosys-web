@@ -19,6 +19,7 @@ import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { behandlingsperioderSelectors } from '../../../ducks/behandlingsperioder';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../pdfLenkeListe';
 import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
@@ -31,7 +32,6 @@ import {
 } from '../../../regler/unntakfrabestemmelse';
 
 import './vurderingArtikkel16Anmodning.css';
-import * as Validering from '../../skjema/validering';
 
 const uuid = require('uuid/v4');
 
@@ -461,7 +461,7 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: values => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_anmodning)(values),
+  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_anmodning)(values),
 })(VurderingArtikkel16Anmodning);
 
 export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);

@@ -6,7 +6,6 @@ import { reduxForm, getFormValues } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import * as Skjema from '../../skjema';
-import * as Validering from '../../skjema/validering';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 
@@ -18,6 +17,7 @@ import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingUtpekt.css';
 
@@ -225,7 +225,7 @@ const VurderingUtpektForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.vurder_utpeking),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurder_utpeking),
 })(VurderingUtpekt);
 
 export default connect(mapStateToProps)(VurderingUtpektForm);

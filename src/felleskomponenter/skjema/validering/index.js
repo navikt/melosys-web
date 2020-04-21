@@ -2,7 +2,6 @@ import { adresseKreves, norskPostNummer } from './generisk/adresse';
 import { minLengde, erPakrevet, kunTall, erDato, avhengerAvSann } from './generisk';
 import { fulltNavn, erGyldigDnr, erGyldigFnr } from './generisk/person';
 import Felles from './felles';
-import * as Skjemaer from './skjemaer';
 
 export {
   adresseKreves,
@@ -16,5 +15,4 @@ export {
   erDato,
   avhengerAvSann,
   Felles,
-  Skjemaer,
 };

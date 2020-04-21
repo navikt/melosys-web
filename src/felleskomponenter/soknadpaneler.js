@@ -5,7 +5,6 @@ import { reduxForm } from 'redux-form';
 
 import * as MPT from '../proptypes';
 import * as KV from '../kodeverk';
-import * as Validering from '../felleskomponenter/skjema/validering';
 
 import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
 import ArbeidUtland from './paneler/arbeidutland';
@@ -29,6 +28,7 @@ import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { vilkarSelectors } from '../ducks/vilkar';
 import { formSelectors } from '../ducks/form';
 import { formatterDatoTilNorsk } from '../utils/dato';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
 
 const Soknadpaneler = ({
   blokkerInnholdMedOppfriskSpinner,
@@ -198,7 +198,7 @@ const SoknadpanelerForm = reduxForm({
       },
     };
 
-    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.saksopplysninger, settings)(values);
+    return lagYupToReduxformErrorMapper(YupSkjemaer.saksopplysninger, settings)(values);
   },
 })(Soknadpaneler);
 

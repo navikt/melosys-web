@@ -1,13 +1,11 @@
-import * as MKV from 'melosys-kodeverk';
+import { object, string } from 'yup';
 
-import * as Utils from '../../../../utils';
-
-const { object, string } = Utils.yup;
+import MKV from '../../melosyskodeverk';
 
 const VELG_EN_VEDTAKSTYPE = { melding: 'Velg en vedtakstype' };
 const OPPGI_BEGRUNNELSE = { melding: 'Oppgi begrunnelse' };
 
-const avslag_artikkel_12_og_16 = object().shape({
+const artikkel16_vedtak = object().shape({
   vedtakstype: string()
     .when('$behandlingstype', {
       is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
@@ -23,4 +21,4 @@ const avslag_artikkel_12_og_16 = object().shape({
     }),
 });
 
-export { avslag_artikkel_12_og_16 };
+export { artikkel16_vedtak };

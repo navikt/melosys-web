@@ -1,6 +1,5 @@
-import * as Utils from '../../../../utils';
+import { object, string, bool } from 'yup';
 
-const { object, string, bool } = Utils.yup;
 const VELG_MOTTAKERINSTITUSJON = { melding: 'Velg mottakerinstitusjon' };
 
 export const artikkel16_anmodning = object().shape({

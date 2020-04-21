@@ -1,11 +1,13 @@
-import MKV from '../../../../melosyskodeverk';
-import * as Utils from '../../../../utils';
-import * as Konstanter from '../../../../constants';
-import * as KV from '../../../../kodeverk';
+import {
+  object,
+  string,
+  lazy,
+  array,
+} from 'yup';
 
-const {
-  object, string, lazy, array,
-} = Utils.yup;
+import MKV from '../../melosyskodeverk';
+import * as Konstanter from '../../constants';
+import * as KV from '../../kodeverk';
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: 'Skriv inn fnr eller dnr.' };
 const SKRIV_INN_KUN_NUMMER = { melding: 'Skriv inn kun nummer.' };

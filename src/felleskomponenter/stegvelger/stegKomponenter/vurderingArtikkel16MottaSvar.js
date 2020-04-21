@@ -10,7 +10,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
-import * as Validering from '../../skjema/validering';
 
 import { DatoOmradeMedVarighet } from '../../datoOmrade/datoOmrade';
 
@@ -21,6 +20,7 @@ import { formSelectors } from '../../../ducks/form';
 import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
 
 import { lagAnmodningsperiodesvar } from '../../../regler/anmodningsperiodesvar';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingArtikkel16MottaSvar.css';
 
@@ -179,7 +179,7 @@ const Artikkel16MottaSvarForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_motta_svar, {
+  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_motta_svar, {
     context: {
       anmodningsperiodeSvarType: props.anmodningsperiodeSvarType,
     },
