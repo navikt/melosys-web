@@ -284,7 +284,7 @@ const mapStateToProps = state => ({
   soknadsland: inngangFormValuesSelector(state, 'soknadsland'),
   fjernedeSoknadsland: inngangFormValuesSelector(state, 'fjernedeLand'),
   arbeidsland: avklartefaktaSelectors.ArbeidslandSelector(state),
-  fjernedeArbeidsland: avklartefaktaSelectors.FjernedeArbeidslandSelector(state),
+  fjernedeArbeidsland: avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVurderarbeidsland);
