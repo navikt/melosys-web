@@ -83,6 +83,11 @@ export const BoolskAvklartfaktaType = {
   USANN: 'FALSE',
 };
 
+export const SoknadslandFaktaTyper = {
+  ...BoolskAvklartfaktaType,
+  IKKE_ARBEIDSLAND: 'IKKE_ARBEIDSLAND',
+};
+
 export const AdresseType = {
   STRUKTURERT: 'STRUKTURERT',
   USTRUKTURERT: 'USTRUKTURERT',

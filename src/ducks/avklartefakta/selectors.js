@@ -41,6 +41,11 @@ export const SoknadslandFaktaerSelector = createSelector(
   avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
 );
 
+export const IkkeGyldigeSoknadslandFaktaerSelector = createSelector(
+  SoknadslandFaktaerSelector,
+  soknadslandFaktaer => soknadslandFaktaer.filter(fakta => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.USANN)
+);
+
 export const VurderingUnntakPeriode = createSelector(
   state => AvklartefaktaSelector(state) || [],
   alleAvklartefakta => (

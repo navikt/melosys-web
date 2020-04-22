@@ -10,6 +10,7 @@ import * as KV from '../../../kodeverk';
 
 import MKV from '../../../melosyskodeverk';
 
+import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
@@ -81,6 +82,7 @@ const mapStateToProps = state => ({
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   initialValues: {
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+    fjernedeLand: avklartefaktaSelectors.IkkeGyldigeSoknadslandFaktaerSelector(state),
   },
 });
 
