@@ -113,22 +113,27 @@ export const VurderingVurderarbeidsland = ({
   }, []);
 
   const genererSoknadslandFakta = () => {
-    soknadslandFaktaListe.forEach(fakta => {
-      /**
-       * Dette blir litt hacky. StegStore tillater bare overskriving av identisk faktatype fra annet steg,
-       * så SOKNADSLAND-fakta må i utgangspunktet bygges på nytt her.
-       */
-      if (soknadsland.includes(fakta.subjektID)) {
-        const faktaVerdi = hentFaktaVerdi(fakta);
-        if (faktaVerdi === KV.Koder.SoknadslandFaktaTyper.USANN) {
-          oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, fakta.subjektID, KV.Koder.SoknadslandFaktaTyper.SANN, []));
-        } else {
-          oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, fakta.subjektID, faktaVerdi, fakta.begrunnelseKoder));
-        }
-      } else if (fjernedeSoknadsland.map(l => l.land).includes(fakta.subjektID)) {
-        const { begrunnelse } = fjernedeSoknadsland.find(({ land }) => land === fakta.subjektID);
-        oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, fakta.subjektID, KV.Koder.SoknadslandFaktaTyper.USANN, [begrunnelse]));
+    /**
+     * Dette blir litt hacky. StegStore tillater bare overskriving av alle SOKNADSLAND-fakta fra inngangssteg,
+     * så SOKNADSLAND-fakta må i utgangspunktet bygges på nytt her.
+     */
+    soknadsland.forEach(land => {
+      const fakta = soknadslandFaktaListe.find(enkeltFakta => enkeltFakta.subjektID === land);
+      const faktaVerdi = hentFaktaVerdi(fakta);
+
+      if (!fakta) {
+        // Soknadsland er lagt til på normal måte
+        oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, []));
+      } else if (faktaVerdi === KV.Koder.SoknadslandFaktaTyper.USANN) {
+        // Soknadsland er lagt til ved angring av fjerning
+        oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, []));
+      } else {
+        // Soknadsland er ikke endret på
+        oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, faktaVerdi, fakta.begrunnelseKoder));
       }
+    });
+    fjernedeSoknadsland.forEach(({ land, begrunnelse }) => {
+      if (land) oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.USANN, [begrunnelse]));
     });
   };
 
