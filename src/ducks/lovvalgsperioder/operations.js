@@ -23,6 +23,7 @@ import { avklartefaktaSelectors } from '../avklartefakta';
 import { lovvalgsperioderSelectors } from './index';
 import { behandlingerSelectors } from '../behandlinger';
 import { flytSelectors } from '../flyt';
+import { formSelectors } from '../form';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -193,7 +194,7 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
 const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
-  avklartefaktaSelectors.UtpekingAvvistSelector(reduxState) ||
+  formSelectors.UtpekingAvvistSelector(reduxState) ||
   flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState)
 );
 

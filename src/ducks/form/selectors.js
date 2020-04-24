@@ -9,6 +9,8 @@ import { createSelector } from 'reselect';
 import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 
+import MKV from '../../melosyskodeverk';
+
 const getFormState = (state, formName, defaultValue = {}) => (
   state.form[formName] ? state.form[formName] : defaultValue
 );
@@ -43,14 +45,29 @@ export const VurderUtpekingFormSelector = createSelector(
   vurderUtpekingForm => vurderUtpekingForm
 );
 
+export const VurderUtpekingFormValuesSelector = createSelector(
+  VurderUtpekingFormSelector,
+  vurderUtpekingForm => vurderUtpekingForm.values || {}
+);
+
 export const VurderUtpekingFomSelector = createSelector(
-  state => VurderUtpekingFormSelector(state).values || {},
+  VurderUtpekingFormValuesSelector,
   values => values.fom
 );
 
 export const VurderUtpekingTomSelector = createSelector(
-  state => VurderUtpekingFormSelector(state).values || {},
+  VurderUtpekingFormValuesSelector,
   values => values.tom
+);
+
+export const VurderUtpekingVurderingSelector = createSelector(
+  VurderUtpekingFormValuesSelector,
+  values => values.utpekingVurdering
+);
+
+export const UtpekingAvvistSelector = createSelector(
+  VurderUtpekingVurderingSelector,
+  vurdering => vurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT
 );
 
 export const VurderUtpekingValid = createSelector(

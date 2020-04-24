@@ -1,6 +1,3 @@
-import * as KV from '../../../kodeverk';
-import * as Utils from '../../../utils';
-
 import MKV from '../../../melosyskodeverk';
 
 import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
@@ -9,7 +6,6 @@ import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponent
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { hentLovvalgsland } from '../../../regler/lovvalgsland';
-import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -17,35 +13,35 @@ class VurderUtpeking extends Steg {
 
     const {
       lovvalgsperioder,
-      avklartefakta,
       vurderUtpekingValid,
       behandlingstema,
+      vurder_utpeking_skjema,
     } = propsLight;
 
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
     const lovvalgsland = hentLovvalgsland(lovvalgsperioder);
 
-    const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
+    const { utpekingVurdering } = vurder_utpeking_skjema;
 
-    const utpekingGodkjent = this.utpekingGodkjent(utpekingGodkjentFakta);
-    const utpekingIkkeGodkjent = this.utpekingIkkeGodkjent(utpekingGodkjentFakta);
+    const utpekingErGodkjent = this.utpekingGodkjent(utpekingVurdering);
+    const utpekingErIkkeGodkjent = this.utpekingIkkeGodkjent(utpekingVurdering);
 
-    const harAvklaring = this.harAvklaring(utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid);
+    const harAvklaring = this.harAvklaring(utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid);
 
     const lovvalgNorge = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
     const lovvalgAnnetLand = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
     this.kriterier = [
       {
-        exec: () => harAvklaring && utpekingGodkjent && lovvalgNorge,
+        exec: () => harAvklaring && utpekingErGodkjent && lovvalgNorge,
         nesteSteg: STEG.GODKJENN_UTPEKING_NORGE,
       },
       {
-        exec: () => harAvklaring && utpekingGodkjent && lovvalgAnnetLand,
+        exec: () => harAvklaring && utpekingErGodkjent && lovvalgAnnetLand,
         nesteSteg: STEG.GODKJENN_UTPEKING_ANNET_LAND,
       },
       {
-        exec: () => harAvklaring && utpekingIkkeGodkjent,
+        exec: () => harAvklaring && utpekingErIkkeGodkjent,
         nesteSteg: STEG.AVSLAA_UTPEKING,
       },
     ];
@@ -59,9 +55,6 @@ class VurderUtpeking extends Steg {
       harAvklaring,
       lovvalgsbestemmelse,
       lovvalgsland,
-      utpekingGodkjentFakta,
-      utpekingGodkjent,
-      utpekingIkkeGodkjent,
     });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -71,19 +64,19 @@ class VurderUtpeking extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  utpekingGodkjent = utpekingGodkjentFakta => (
-    hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN
+  utpekingGodkjent = utpekingVurdering => (
+    utpekingVurdering === MKV.Koder.utfallregistreringunntak.GODKJENT
   );
 
-  utpekingIkkeGodkjent = utpekingGodkjentFakta => (
-    hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN
+  utpekingIkkeGodkjent = utpekingVurdering => (
+    utpekingVurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT
   );
 
-  harAvklaring = (utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid) => {
-    if (this.utpekingGodkjent(utpekingGodkjentFakta)) {
-      return Boolean(lovvalgsbestemmelse && !Utils._isEmpty(utpekingGodkjentFakta) && vurderUtpekingValid);
-    } else if (this.utpekingIkkeGodkjent(utpekingGodkjentFakta)) {
-      return Boolean(!Utils._isEmpty(utpekingGodkjentFakta) && vurderUtpekingValid);
+  harAvklaring = (utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid) => {
+    if (this.utpekingGodkjent(utpekingVurdering)) {
+      return Boolean(lovvalgsbestemmelse && vurderUtpekingValid);
+    } else if (this.utpekingIkkeGodkjent(utpekingVurdering)) {
+      return Boolean(vurderUtpekingValid);
     }
     return false;
   };

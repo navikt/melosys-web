@@ -15,7 +15,6 @@ import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
-import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
@@ -28,11 +27,8 @@ export const VurderingUtpekt = ({
   redigerbart,
   tilstand: {
     harAvklaring,
-    utpekingGodkjentFakta,
     lovvalgsbestemmelse,
     lovvalgsland,
-    utpekingGodkjent,
-    utpekingIkkeGodkjent,
   },
   handleSubmit,
   formValues,
@@ -44,7 +40,6 @@ export const VurderingUtpekt = ({
       oppdaterData(lagLovvalgsland(lovvalgsland));
     }
     if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, utpekingGodkjentFakta));
     oppdaterData(konverterLovvalgsperiodeTilStegData(lovvalgsperiode));
 
     return () => {
@@ -55,10 +50,6 @@ export const VurderingUtpekt = ({
   useEffect(() => {
     oppdaterData(lagLovvalgsbestemmelse(formValues.lovvalgsbestemmelse));
   }, [formValues.lovvalgsbestemmelse]);
-
-  const vedGodkjennEndring = event => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, null, event.target.value));
-  };
 
   const formValid = () => {
     const { fom, tom } = formValues;
@@ -144,19 +135,17 @@ export const VurderingUtpekt = ({
       <Nav.Row>
         <Nav.Column xs="5">
           <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={!redigerbart}>
-            <Nav.Radio
-              onChange={vedGodkjennEndring}
+            <Skjema.Radio
               label="Godkjenn"
-              value={KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN}
+              value={MKV.Koder.utfallregistreringunntak.GODKJENT}
               name="godkjenn"
-              checked={utpekingGodkjent}
+              feltNavn="utpekingVurdering"
             />
-            <Nav.Radio
-              onChange={vedGodkjennEndring}
+            <Skjema.Radio
               label="Ikke godkjenn"
-              value={KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN}
+              value={MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT}
               name="godkjenn"
-              checked={utpekingIkkeGodkjent}
+              feltNavn="utpekingVurdering"
             />
           </Nav.Fieldset>
         </Nav.Column>
@@ -183,11 +172,8 @@ VurderingUtpekt.propTypes = {
   redigerbart: PT.bool.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool.isRequired,
-    utpekingGodkjentFakta: MPT.Avklartefakta,
     lovvalgsbestemmelse: PT.string,
     lovvalgsland: PT.string,
-    utpekingGodkjent: PT.bool.isRequired,
-    utpekingIkkeGodkjent: PT.bool.isRequired,
   }).isRequired,
   oppdaterData: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
@@ -210,6 +196,7 @@ const mapStateToProps = (state, ownProps) => ({
     fom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeFomSelector(state)),
     tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
+    utpekingVurdering: behandlingsresultatSelectors.UtfallRegistreringUnntak(state),
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
 });
