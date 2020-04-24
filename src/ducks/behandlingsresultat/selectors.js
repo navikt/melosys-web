@@ -33,7 +33,7 @@ export const KontrollresultatBegrunnelseKoderSelector = createSelector(
   behandlingsresultat => behandlingsresultat.kontrollresultatBegrunnelseKoder
 );
 
-export const UtfallRegistreringUnntak = createSelector(
+export const UtfallRegistreringUnntakSelector = createSelector(
   BehandlingsresultatSelector,
   behandlingsresultat => behandlingsresultat.utfallRegistreringUnntak
 );
