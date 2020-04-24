@@ -76,7 +76,9 @@ export const VurderingUtpekt = ({
     }
   }, [formValues]);
 
-  const visLovvalgsland = lovvalgsland && lovvalgsland !== MKV.Koder.landkoder.NO;
+  const lovvalgslandFraForm = formValues.lovvalgsland;
+  const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
+  const lovvalgslandTerm = KV.kodeTilTerm(lovvalgslandFraForm, MKV.KTObjects.landkoder);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -97,7 +99,7 @@ export const VurderingUtpekt = ({
         <Nav.Row className="rad">
           <Nav.Column xs="5">
             <Nav.typo.Element>Lovvalgsland</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{lovvalgsland}</Nav.typo.Normaltekst>
+            <Nav.typo.Normaltekst>{lovvalgslandTerm}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       }
@@ -210,6 +212,7 @@ const mapStateToProps = (state, ownProps) => ({
     fom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeFomSelector(state)),
     tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
+    lovvalgsland: ownProps.tilstand.lovvalgsland,
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
 });
