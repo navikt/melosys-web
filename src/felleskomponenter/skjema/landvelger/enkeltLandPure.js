@@ -4,8 +4,9 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Utils from '../../../utils';
-import { kodeTilObjekt, landTekstFormat } from './LandVelger';
+import * as KV from '../../../kodeverk';
+
+import { landTekstFormat, lagDatalistID } from './utils';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -35,7 +36,7 @@ class EnkeltLandPure extends Component {
   oppdaterInputVerdi = () => {
     const { value } = this.props;
     const { landkoder } = this.props;
-    const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
+    const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
     const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
     this.setInputVerdi(inputVerdi);
   };
@@ -119,7 +120,7 @@ class EnkeltLandPure extends Component {
 
     const cl = classnames({ landliste__linje__input: true, [className]: true });
 
-    const dataListID = `datalist-${Utils._uuid()}`;
+    const dataListID = lagDatalistID();
 
     return (
       <div>

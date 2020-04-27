@@ -1,5 +1,5 @@
-import Landvelger, { landTekstFormat } from './LandVelger';
+import Landvelger from './LandVelger';
 import EnkeltLandPure from './enkeltLandPure';
 
-export { EnkeltLandPure, landTekstFormat };
+export { EnkeltLandPure };
 export default Landvelger;
