@@ -4,7 +4,10 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
+import * as Utils from '../../../utils';
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
+
+import MKV from '../../../melosyskodeverk';
 
 import './landvelger.css';
 
@@ -116,10 +119,12 @@ class EnkeltLandPure extends Component {
 
     const cl = classnames({ landliste__linje__input: true, [className]: true });
 
+    const dataListID = `datalist-${Utils._uuid()}`;
+
     return (
       <div>
         <Nav.Input
-          list="alleLand"
+          list={dataListID}
           label={label}
           bredde={bredde}
           feil={feilObjekt}
@@ -131,6 +136,13 @@ class EnkeltLandPure extends Component {
           onKeyDown={inputTastNedHandler}
           disabled={disabled}
         />
+        <div className="landliste__dataliste">
+          <datalist id={dataListID}>
+            {
+              MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))
+            }
+          </datalist>
+        </div>
       </div>
     );
   }
