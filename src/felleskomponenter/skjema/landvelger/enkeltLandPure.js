@@ -38,7 +38,6 @@ class EnkeltLandPure extends Component {
   };
 
   oppdaterLand = landkode => {
-    if (!landkode) throw new Error('landkode må inneholde verdi.');
     const { onChange } = this.props;
     onChange(landkode);
   };
@@ -75,10 +74,12 @@ class EnkeltLandPure extends Component {
   };
 
   fokusUtHandler = () => {
+    const { changeOnEmptyValue } = this.props;
     const { inputVerdi } = this.state;
 
     if (!inputVerdi) {
       this.tomFeilmelding();
+      if (changeOnEmptyValue) this.oppdaterLand(inputVerdi);
       return;
     }
 
@@ -145,6 +146,7 @@ EnkeltLandPure.propTypes = {
   label: PT.string,
   feil: PT.string,
   disabled: PT.bool,
+  changeOnEmptyValue: PT.bool,
 };
 
 EnkeltLandPure.defaultProps = {
@@ -153,6 +155,7 @@ EnkeltLandPure.defaultProps = {
   feil: '',
   bredde: 'fullbredde',
   disabled: false,
+  changeOnEmptyValue: false,
 };
 
 export default EnkeltLandPure;

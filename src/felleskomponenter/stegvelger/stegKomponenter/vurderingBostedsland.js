@@ -125,8 +125,8 @@ const VurderingBostedsland = props => {
                     label="Velg land:"
                     value={eksisterendeLand}
                     onChange={landEndretHandler}
+                    changeOnEmptyValue
                     landkoder={MKV.KTObjects.landkoder}
-                    multiland={false}
                     disabled={!redigerbart}
                   />
                 </Nav.Column>
