@@ -61,6 +61,11 @@ class Saksbehandling extends Component {
   componentDidMount() {
     this.lastInnSaksopplysninger();
   }
+
+  componentDidUpdate() {
+    this.oppdaterBehandlingIDState();
+  }
+
   componentWillUnmount() {
     this.props.resetFagsakState();
     this.props.resetBehandlingerState();
@@ -69,6 +74,15 @@ class Saksbehandling extends Component {
     this.props.resetVilkarState();
     this.props.resetBehandlingsgrunnlagState();
     this.props.resetBehandlingsPerioderState();
+  }
+
+  oppdaterBehandlingIDState = () => {
+    const { location } = this.props;
+    const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
+
+    if (Utils._toInteger(behandlingID) !== this.state.behandlingID) {
+      this.setState({ behandlingID: Utils._toInteger(behandlingID) });
+    }
   }
 
   lastInnSaksopplysninger = async () => {
