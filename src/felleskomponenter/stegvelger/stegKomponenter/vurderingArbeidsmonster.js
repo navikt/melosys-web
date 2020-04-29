@@ -150,8 +150,11 @@ export const VurderingArbeidsmonster = props => {
   } = tilstand;
 
   const loennetArbeidEndretHandler = avklartLoennetArbeid => {
-    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.ETT_LAND) {
+    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.NORGE) {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+    } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+      // TODO: lagre lovvalgsland ut i fra lønnet arbeid fra panelene
     } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
       slettData(slettLovvalgsbestemmelse());
     }
@@ -205,8 +208,18 @@ export const VurderingArbeidsmonster = props => {
   ];
 
   const loennetArbeidValg = [
-    { label: 'Lønnet arbeid i ett land (13.3)', type: KV.Koder.LoennetArbeidAntallLand.ETT_LAND },
-    { label: 'Lønnet arbeid i to eller flere land (13.1)', type: KV.Koder.LoennetArbeidAntallLand.FLERE_LAND },
+    {
+      label: 'Lønnet arbeid i Norge og selvstendig virksomhet (13.3)',
+      type: KV.Koder.LoennetArbeidAntallLand.NORGE,
+    },
+    {
+      label: 'Lønnet arbeid i et annet land og selvstendig virksomhet (13.3)',
+      type: KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND,
+    },
+    {
+      label: 'Lønnet arbeid i to eller flere land og selvstendig virksomhet (13.1)',
+      type: KV.Koder.LoennetArbeidAntallLand.FLERE_LAND,
+    },
   ];
 
   const offentligArbeidValg = [

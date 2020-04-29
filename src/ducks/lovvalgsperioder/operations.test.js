@@ -368,4 +368,67 @@ describe('Lovvalgsperioder operations', () => {
 
     expect(store.getActions()).toMatchObject(expectedActions);
   });
+
+  it('lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom avklartfakta OMFATTES_I_LAND er Norge', () => {
+    const expectedActions = [
+      {
+        type: types.OPPDATER_LOVVALGSPERIODER,
+        data: [
+          {
+            lovvalgsland: MKV.Koder.landkoder.NO,
+          },
+        ],
+      },
+    ];
+
+    const avklartfakta = {
+      avklartefaktaKode: null,
+      referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
+      fakta: [MKV.Koder.landkoder.NO],
+      subjektID: null,
+      begrunnelseKoder: [],
+      begrunnelseFritekst: null,
+    };
+
+    const store = mockStore({
+      ...initialState,
+      avklartefakta: {
+        data: [avklartfakta],
+      },
+    });
+
+    const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4;
+    const stegState = { lovvalgsbestemmelse };
+
+    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+    expect(store.getActions()).toMatchObject(expectedActions);
+  });
+
+  each([
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A,
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
+  ]).it('lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom lovvalgsbestemmelse er %p', lovvalgsbestemmelse => {
+    const expectedActions = [
+      {
+        type: types.OPPDATER_LOVVALGSPERIODER,
+        data: [
+          {
+            lovvalgsland: MKV.Koder.landkoder.NO,
+          },
+        ],
+      },
+    ];
+
+    const store = mockStore({
+      ...initialState,
+    });
+
+    const stegState = { lovvalgsbestemmelse };
+
+    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+    expect(store.getActions()).toMatchObject(expectedActions);
+  });
 });
