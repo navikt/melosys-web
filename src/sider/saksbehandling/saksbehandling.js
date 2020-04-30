@@ -243,7 +243,7 @@ class Saksbehandling extends Component {
                   visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
-                  visOppfriskSaksopplysninger
+                  visOppfriskSaksopplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                   visRevurderFagsak={visRevurderFagsak}
