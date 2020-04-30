@@ -366,6 +366,7 @@ describe('behandlingsgrunnlag reducer', () => {
             },
           ],
           norskeArbeidsgivere: [],
+          ytterligereInformasjon: null,
         },
       },
     };

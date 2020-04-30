@@ -186,7 +186,7 @@ export default function reducer(state = initialState, action) {
           },
           overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
           norskeArbeidsgivere: dokument.norskeArbeidsgivere || [],
-          ytterligereInformasjon: state.data.data.ytterligereInformasjon,
+          ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
         },
       };
 

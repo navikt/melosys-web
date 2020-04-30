@@ -110,7 +110,7 @@ describe('Behandlingsgrunnlag operations', () => {
     each([
       MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
       MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-    ]).it('lagrer behandlingsgrunnlagData ved behandlingstema %p', async behandlingstema => {
+    ]).it('lagrer SedGrunnlagData ved behandlingstema %p', async behandlingstema => {
       initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
 
       initialState.form[KV.Form.VURDER_UTPEKING].values = {

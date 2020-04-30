@@ -43,15 +43,9 @@ export function send(bid, behandlingsgrunnlag) {
   );
 }
 
-const konverterOvergangsregelbestemmelse = overgangsregelbestemmelse => {
-  if (overgangsregelbestemmelse && typeof overgangsregelbestemmelse !== 'object') {
-    return KV.kodeTilObjekt(overgangsregelbestemmelse, MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser);
-  }
-  return overgangsregelbestemmelse;
-};
-
 const hentOvergangsregelbestemmelser = values =>
-  values && values.overgangsregelbestemmelser.map(konverterOvergangsregelbestemmelse);
+  values && values.overgangsregelbestemmelser.map(overgangsregelbestemmelse =>
+    KV.kodeTilObjekt(overgangsregelbestemmelse, MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser));
 
 const temaForSedGrunnlag = behandlingstema => [
   MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
