@@ -458,3 +458,13 @@ export const OffentligArbeidAntallLandFaktaVerdiSelector = createSelector(
   OffentligArbeidAntallLandFaktaSelector,
   offentligArbeidAntallLandFakta => hentFaktaVerdi(offentligArbeidAntallLandFakta)
 );
+
+export const LoennetArbeidAntallLandFaktaSelector = createSelector(
+  AvklartefaktaSelector,
+  avklartefakta => avklartefakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND)
+);
+
+export const LoennetArbeidAntallLandFaktaVerdiSelector = createSelector(
+  LoennetArbeidAntallLandFaktaSelector,
+  loennetArbeidAntallLandFakta => hentFaktaVerdi(loennetArbeidAntallLandFakta)
+);
