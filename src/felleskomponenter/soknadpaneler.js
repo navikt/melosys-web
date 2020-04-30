@@ -31,15 +31,13 @@ import { formatterDatoTilNorsk } from '../utils/dato';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
 
 const Soknadpaneler = ({
-  blokkerInnholdMedOppfriskSpinner,
-  oppfriskSaksopplysninger,
   lagreSoknad,
   fagsaker,
   medlemskap,
   soknadArbeidsinntekt,
   soknadForm,
-  behandlingID,
   oppgittAdresseHarVerdier,
+  startOgVisOppfriskModal,
 }) => {
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -47,8 +45,7 @@ const Soknadpaneler = ({
 
   const lagreSoknadOgOppfriskSaksopplysninger = async () => {
     await lagreSoknad();
-    await oppfriskSaksopplysninger(behandlingID);
-    blokkerInnholdMedOppfriskSpinner();
+    startOgVisOppfriskModal();
   };
 
   const { values: soknadVerdier } = soknadForm;
@@ -76,11 +73,11 @@ Soknadpaneler.propTypes = {
   fagsaker: MPT.Fagsak.isRequired,
   lagreSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   medlemskap: MPT.Medlemskap,
   soknadArbeidsinntekt: PT.object,
   behandlingID: PT.number.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 
 Soknadpaneler.defaultProps = {

@@ -79,7 +79,6 @@ const Vurderutpeking = ({
   apneTidligereBehandlinger,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
-  visOppfriskBekreftelse,
   visRevurderFagsakDialogHandle,
   oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
@@ -94,7 +93,9 @@ const Vurderutpeking = ({
   oppdaterOgLagreBehandlingsperioder,
   lagreAllData,
   tilForsiden,
-  blokkerInnholdMedOppfriskSpinner,
+  visOppfriskModal,
+  startOgVisOppfriskModal,
+  behandlingOppfriskes,
   soknadForm,
   behandlingsgrunnlag,
 }) => {
@@ -103,6 +104,11 @@ const Vurderutpeking = ({
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
+
+    if (behandlingOppfriskes) {
+      visOppfriskModal();
+    }
+
     return () => {
       resetSaksopplysninger();
     };
@@ -141,7 +147,7 @@ const Vurderutpeking = ({
             }
             <Soknadpaneler
               behandlingID={behandlingID}
-              blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+              startOgVisOppfriskModal={startOgVisOppfriskModal}
             />
           </Nav.Column>
           <Nav.Column xs="5">
@@ -168,7 +174,7 @@ const Vurderutpeking = ({
                 visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                 visAvslagManglendeOpplysninger
                 visOppfriskSaksopplysninger
-                oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                oppfriskSaksopplysningerHandle={visOppfriskModal}
                 visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                 visRevurderFagsak
               />}
@@ -215,7 +221,8 @@ Vurderutpeking.propTypes = {
   apneTidligereBehandlinger: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskBekreftelse: PT.func.isRequired,
+  visOppfriskModal: PT.func.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
@@ -230,9 +237,9 @@ Vurderutpeking.propTypes = {
   lagreAnmodningsperioder: PT.func.isRequired,
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
-  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
+  behandlingOppfriskes: PT.bool.isRequired,
 };
 
 Vurderutpeking.defaultProps = {
