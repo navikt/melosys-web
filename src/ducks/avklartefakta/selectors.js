@@ -325,7 +325,7 @@ export const ArbeidslandMedYrkesAktivitetSelector = createSelector(
 
 const MarginaltArbeidFaktaerSelector = createSelector(
   AvklartefaktaSelector,
-  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID)
+  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID)
 );
 
 const MarginaleArbeidslandFaktaerSelector = createSelector(
