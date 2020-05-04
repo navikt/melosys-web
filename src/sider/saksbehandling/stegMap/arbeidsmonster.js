@@ -29,7 +29,7 @@ class Arbeidsmonster extends Steg {
     const aktivitetNorgeOver25Prosent = hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT;
     const aktivitetNorgeUnder25Prosent = hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT;
 
-    const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, propsLight.avklartefakta);
+    const marginaltArbeid = hentFaktaListe(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, propsLight.avklartefakta);
     const landMedVesentligArbeid = this.hentLandMedVesentligArbeid(propsLight.arbeidsland, marginaltArbeid);
     const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);
     const finnesLandMedVesentligArbeidOgNorgeErValgt = landMedVesentligArbeid.length > 1 && erNorgeValgt;
