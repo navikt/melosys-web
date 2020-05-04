@@ -39,30 +39,42 @@ describe('Avklartefaktaselectors', () => {
   });
 
   describe('ArbeidslandKTSelector', () => {
-    each([
-      [
-        [KV.kodeTilObjekt(MKV.Koder.landkoder.FR, MKV.KTObjects.landkoder)],
-        [
-          {
-            referanse: KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND,
-            subjektID: MKV.Koder.landkoder.DK,
-          },
-          {
-            referanse: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
-            fakta: [MKV.Koder.landkoder.DK],
-          },
-          {
-            referanse: KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
-            fakta: [],
-          },
-        ],
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+    it('returnerer ikke land som er SOKNADSLAND med fakta IKKE_ARBEIDSLAND', () => {
+      const avklartefakta = [
         {
-          arbeidNorge: {
-            flyendePersonellHjemmebase: MKV.Koder.landkoder.FR,
-          },
+          referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+          fakta: [KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND],
+          subjektID: MKV.Koder.landkoder.DK,
         },
-      ],
+        {
+          referanse: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
+          fakta: [MKV.Koder.landkoder.DK],
+        },
+        {
+          referanse: KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
+          fakta: [],
+        },
+      ];
+
+      const behandlingstema = MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+
+      const behandlingsgrunnlagData = {
+        arbeidNorge: {
+          flyendePersonellHjemmebase: MKV.Koder.landkoder.FR,
+        },
+      };
+
+      const forventetResultat = [KV.kodeTilObjekt(MKV.Koder.landkoder.FR, MKV.KTObjects.landkoder)];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingstema,
+        behandlingsgrunnlagData,
+      });
+      expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
+    });
+
+    each([
       [
         [KV.kodeTilObjekt(MKV.Koder.landkoder.GB, MKV.KTObjects.landkoder)],
         [

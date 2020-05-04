@@ -83,9 +83,16 @@ VurderingVideresend.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   videresendSoknad: PT.func.isRequired,
-  bostedsland: MPT.Kodeverk.isRequired,
+  bostedsland: MPT.Kodeverk,
   handleSubmit: PT.func.isRequired,
   form: PT.string.isRequired,
+};
+
+VurderingVideresend.defaultProps = {
+  bostedsland: {
+    kode: '',
+    term: '',
+  },
 };
 
 const videresendSoknad = (values, dispatch, props) => props.videresendSoknad(values.mottakerinstitusjon);
@@ -96,7 +103,7 @@ const VurderingVideresendForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_videresend)(values),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_videresend),
 })(VurderingVideresend);
 
 const mapStateToProps = state => ({
