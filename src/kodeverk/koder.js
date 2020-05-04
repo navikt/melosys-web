@@ -119,7 +119,6 @@ export const avklartefaktaKoder = {
   VURDERING_UNNTAK_PERIODE: 'VURDERING_UNNTAK_PERIODE',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
   YRKESGRUPPE: 'YRKESGRUPPE',
-  UTPEKING_GODKJENT: 'UTPEKING_GODKJENT',
   ARBEID_UTFORES_I_OPPGITT_LAND: 'ARBEID_UTFORES_I_OPPGITT_LAND',
   LOENNET_ARBEID_ANTALL_LAND: 'LOENNET_ARBEID_ANTALL_LAND',
   OFFENTLIG_ARBEID_ANTALL_LAND: 'OFFENTLIG_ARBEID_ANTALL_LAND',
@@ -132,11 +131,6 @@ export const referanseKoder = {
 export const Tema = {
   MED: 'Medlemskap',
   UFM: 'Unntak fra medlemskap',
-};
-
-export const UtpekingAvNorgeGodkjenning = {
-  GODKJENN: 'GODKJENN',
-  IKKE_GODKJENN: 'IKKE_GODKJENN',
 };
 
 export const LoennetArbeidAntallLand = {
