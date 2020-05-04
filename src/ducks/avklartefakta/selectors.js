@@ -470,10 +470,15 @@ export const LoennetArbeidAntallLandFaktaVerdiSelector = createSelector(
 export const LoennetArbeidUtlandSelector = createSelector(
   VirksomhetFaktaerSelector,
   state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (virksomhetFaktaer, foretakUtland) => virksomhetFaktaer
+  MarginaleArbeidslandSelector,
+  (virksomhetFaktaer, foretakUtland, marginaleArbeidsland) => virksomhetFaktaer
     .filter(virksomhetFakta => virksomhetFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN))
     .map(virksomhetFakta => {
-      const virksomhet = foretakUtland.find(foretak => foretak.uuid === virksomhetFakta.subjektID);
+      const virksomhet = foretakUtland.find(foretak =>
+        foretak.uuid === virksomhetFakta.subjektID &&
+        foretak.selvstendigNaeringsvirksomhet === false);
       return virksomhet ? virksomhet.adresse.landkode : null;
-    }).filter(land => land)
+    })
+    .filter(land => land)
+    .filter(land => !marginaleArbeidsland.includes(land))
 );

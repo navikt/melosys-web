@@ -392,6 +392,79 @@ describe('Avklartefaktaselectors', () => {
 
   describe('LoennetArbeidUtlandSelector', () => {
     it('returnerer land med utenlandsk lønnet arbeid', () => {
+      const id1 = '1';
+
+      const avklartefakta = [
+        {
+          referanse: MKV.Koder.avklartefaktatyper.VIRKSOMHET,
+          subjektID: id1,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+      ];
+
+      const behandlingsgrunnlagData = {
+        foretakUtland: [
+          {
+            uuid: id1,
+            navn: 'Bedrift i Tyskland',
+            adresse: {
+              landkode: MKV.Koder.landkoder.DE,
+            },
+            selvstendigNaeringsvirksomhet: false,
+          },
+        ],
+      };
+
+      const forventetResultat = [MKV.Koder.landkoder.DE];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingsgrunnlagData,
+      });
+
+      expect(selectors.LoennetArbeidUtlandSelector(state)).toEqual(forventetResultat);
+    });
+
+    it('ignorerer land hvor det er marginalt arbeid', () => {
+      const id = '2';
+
+      const avklartefakta = [
+        {
+          referanse: MKV.Koder.avklartefaktatyper.VIRKSOMHET,
+          subjektID: id,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+        {
+          referanse: MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID,
+          subjektID: MKV.Koder.landkoder.CZ,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+      ];
+
+      const behandlingsgrunnlagData = {
+        foretakUtland: [
+          {
+            uuid: id,
+            navn: 'Bedrift i Tsjekkia',
+            adresse: {
+              landkode: MKV.Koder.landkoder.CZ,
+            },
+            selvstendigNaeringsvirksomhet: false,
+          },
+        ],
+      };
+
+      const forventetResultat = [];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingsgrunnlagData,
+      });
+
+      expect(selectors.LoennetArbeidUtlandSelector(state)).toEqual(forventetResultat);
+    });
+
+    it('ignorerer land med foretak markert som selvstendig næringsvirksomhet', () => {
       const id = '1';
 
       const avklartefakta = [
@@ -406,15 +479,16 @@ describe('Avklartefaktaselectors', () => {
         foretakUtland: [
           {
             uuid: id,
-            navn: 'navn',
+            navn: 'Bedrift i Tyskland',
             adresse: {
               landkode: MKV.Koder.landkoder.DE,
             },
+            selvstendigNaeringsvirksomhet: true,
           },
         ],
       };
 
-      const forventetResultat = [MKV.Koder.landkoder.DE];
+      const forventetResultat = [];
 
       const state = lagState({
         avklartefakta,
