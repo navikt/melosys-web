@@ -35,6 +35,7 @@ describe('Avklartefaktaselectors', () => {
     lovvalgsperioder: {
       data: [],
     },
+    organisasjoner: [],
   });
 
   describe('ArbeidslandKTSelector', () => {
@@ -374,6 +375,41 @@ describe('Avklartefaktaselectors', () => {
       });
 
       expect(selectors.ErIArtikkel13_1FlytSelector(state)).toEqual(forventetResultat);
+    });
+  });
+
+  describe('LoennetArbeidUtlandSelector', () => {
+    it('returnerer land med utenlandsk lønnet arbeid', () => {
+      const id = '1';
+
+      const avklartefakta = [
+        {
+          referanse: MKV.Koder.avklartefaktatyper.VIRKSOMHET,
+          subjektID: id,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+      ];
+
+      const behandlingsgrunnlagData = {
+        foretakUtland: [
+          {
+            uuid: id,
+            navn: 'navn',
+            adresse: {
+              landkode: MKV.Koder.landkoder.DE,
+            },
+          },
+        ],
+      };
+
+      const forventetResultat = [MKV.Koder.landkoder.DE];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingsgrunnlagData,
+      });
+
+      expect(selectors.LoennetArbeidUtlandSelector(state)).toEqual(forventetResultat);
     });
   });
 });
