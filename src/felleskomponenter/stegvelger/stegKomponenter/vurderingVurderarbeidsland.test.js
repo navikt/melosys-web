@@ -41,6 +41,7 @@ describe('VurderingVurderarbeidsland', () => {
       soknadsland: [],
       arbeidsland: [],
       fjernedeArbeidsland: [],
+      fjernedeSoknadsland: [],
     };
   });
 

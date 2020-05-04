@@ -71,7 +71,6 @@ export default function reducer(state = initialState, action) {
           ARBEIDSGIVERS_FORRETNINGSSTED,
           OMFATTES_I_NORGE,
           OMFATTES_I_LAND,
-          FJERNET_ARBEIDSLAND,
           LOENNET_ARBEID_ANTALL_LAND,
           OFFENTLIG_ARBEID_ANTALL_LAND,
         },
@@ -99,7 +98,6 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_SOKKEL_SKIP], ARBEID_SOKKEL_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[AARSAK_ENDRING_PERIODE], AARSAK_ENDRING_PERIODE),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_UTFORES_I_OPPGITT_LAND], null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[FJERNET_ARBEIDSLAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[LOENNET_ARBEID_ANTALL_LAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[OFFENTLIG_ARBEID_ANTALL_LAND], null),
       ].filter(fakta => fakta !== Types.NULL);

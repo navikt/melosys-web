@@ -18,9 +18,8 @@ class Inngang extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { soknadslandFaktaer } = _propsLight;
+      const harAvklaring = this.harAvklaring(_propsLight.soknadslandFaktaer);
 
-      const harAvklaring = soknadslandFaktaer.some(land => land.fakta.includes('TRUE'));
       return ({
         harAvklaring,
       });
@@ -33,8 +32,17 @@ class Inngang extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  static harMinstEttGyldigSoknadsland = avklartefakta => avklartefakta
-    .some(enkeltFakta => ((enkeltFakta.referanse === KV.Koder.SOKNADSLAND) && enkeltFakta.fakta.includes('TRUE')));
+  harAvklaring = avklartefakta => (
+    avklartefakta.some(enkeltFakta => (
+      (enkeltFakta.referanse === KV.Koder.SOKNADSLAND) &&
+      this.faktaErSannEllerIkkeArbeidsland(enkeltFakta.fakta)
+    ))
+  )
+
+  faktaErSannEllerIkkeArbeidsland = fakta => (
+    fakta.includes(KV.Koder.SoknadslandFaktaTyper.SANN) ||
+    fakta.includes(KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND)
+  )
 }
 
 export default Inngang;

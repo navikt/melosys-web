@@ -84,7 +84,7 @@ class Arbeidsmonster extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, _propsLight.avklartefakta);
+      const marginaltArbeid = hentFaktaListe(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, _propsLight.avklartefakta);
 
       const landMedVesentligArbeid = this.hentLandMedVesentligArbeid(_propsLight.arbeidsland, marginaltArbeid);
       const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);

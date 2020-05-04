@@ -33,6 +33,7 @@ export const VurderingUtpekt = ({
   handleSubmit,
   formValues,
   lovvalgsperiode,
+  ytterligereInformasjon,
 }) => {
   useEffect(() => {
     if (lovvalgsland) {
@@ -109,6 +110,21 @@ export const VurderingUtpekt = ({
           </Skjema.Select>
         </Nav.Column>
       </Nav.Row>
+      {(redigerbart || formValues.overgangsregelbestemmelser) &&
+        <Nav.Row className="rad">
+          <Nav.Column xs="5">
+            <Nav.typo.Element>Overgangsregler gjelder:</Nav.typo.Element>
+            <Skjema.ListeVelger
+              feltNavn="overgangsregelbestemmelser"
+              label="Legg til ny overgangsregelbestemmelse:"
+              placeholder="(Velg bestemmelse)"
+              muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
+              disabled={!redigerbart}
+              gruppe
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.typo.Element>Lovvalgsperiode</Nav.typo.Element>
@@ -131,6 +147,14 @@ export const VurderingUtpekt = ({
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>
+      </Nav.Row>
+      <Nav.Row className="rad">
+        { ytterligereInformasjon &&
+          <Nav.Column xs="12">
+            <Nav.typo.Element>Ytterligere informasjon fra SED</Nav.typo.Element>
+            <Nav.typo.Normaltekst>{ytterligereInformasjon}</Nav.typo.Normaltekst>
+          </Nav.Column>
+        }
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="5">
@@ -179,11 +203,13 @@ VurderingUtpekt.propTypes = {
   handleSubmit: PT.func.isRequired,
   formValues: PT.object,
   lovvalgsperiode: MPT.Periode.isRequired,
+  ytterligereInformasjon: PT.string,
 };
 
 VurderingUtpekt.defaultProps = {
   formValues: {},
   vurderingBegrunnelser: [],
+  ytterligereInformasjon: null,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -197,8 +223,10 @@ const mapStateToProps = (state, ownProps) => ({
     tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
     utpekingVurdering: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
+    overgangsregelbestemmelser: behandlingsgrunnlagSelectors.OvergangsregelbestemmelserSelector(state).map(o => o.kode),
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
+  ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
 });
 
 const nesteSteg = (values, dispatch, props) => {

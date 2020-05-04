@@ -26,7 +26,7 @@ const LandLinje = props => {
 
   useEffect(() => {
     if (avklartMarginaltArbeidILand) {
-      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, avklartMarginaltArbeidILand));
+      oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand));
     }
   }, []);
 
@@ -34,7 +34,7 @@ const LandLinje = props => {
 
   const klikkHandler = () => {
     const verdi = erMarginaltArbeidIArbeidsland ? BoolskAvklartfaktaType.USANN : BoolskAvklartfaktaType.SANN;
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, landKode.kode, verdi));
+    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, landKode.kode, verdi));
   };
 
   return (
