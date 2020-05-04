@@ -41,6 +41,21 @@ export const SoknadslandFaktaerSelector = createSelector(
   avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
 );
 
+export const IkkeGyldigeSoknadslandFaktaerSelector = createSelector(
+  SoknadslandFaktaerSelector,
+  soknadslandFaktaer => soknadslandFaktaer.filter(fakta => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.USANN)
+);
+
+export const IkkeArbeidslandSoknadslandFaktaerSelector = createSelector(
+  SoknadslandFaktaerSelector,
+  soknadslandFaktaer => soknadslandFaktaer.filter(fakta => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND)
+);
+
+export const IkkeArbeidslandSoknadslandSelector = createSelector(
+  IkkeArbeidslandSoknadslandFaktaerSelector,
+  faktaer => faktaer.map(fakta => fakta.subjektID)
+);
+
 export const VurderingUnntakPeriode = createSelector(
   state => AvklartefaktaSelector(state) || [],
   alleAvklartefakta => (
@@ -216,28 +231,21 @@ const MaritimeArbeidslandSelector = createSelector(
     .filter(arbeidsland => arbeidsland))
 );
 
-export const FjernedeArbeidslandSelector = createSelector(
-  AvklartefaktaSelector,
-  avklarteFakta => avklarteFakta
-    .filter(avklartfakta => avklartfakta.referanse === KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND)
-    .map(avklartfakta => avklartfakta.subjektID)
-);
-
 export const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
   state => MaritimeArbeidslandSelector(state),
   state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  FjernedeArbeidslandSelector,
+  IkkeArbeidslandSoknadslandSelector,
   state => behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
   (
     soknadsland,
     maritimeArbeidsland,
     behandlingstema,
-    fjernedeArbeidsland,
+    IkkeArbeidslandSoknadland,
     hjemmebase
   ) => {
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
-      const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !fjernedeArbeidsland.includes(land));
+      const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !IkkeArbeidslandSoknadland.includes(land));
       const unikeSoknadsMaritimeArbeidsland = [...new Set(soknadsMaritimeArbeidsland)];
       return unikeSoknadsMaritimeArbeidsland;
     }
