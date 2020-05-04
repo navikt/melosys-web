@@ -154,7 +154,7 @@ export const VurderingArbeidsmonster = ({
     loennetArbeidAntallLandFakta,
     loennetArbeidIEttAnnetLand,
     offentligArbeidAntallLandFakta,
-    erEttUtlandMedLonnetArbeid,
+    finnesEttUtlandMedLonnetArbeid,
   } = tilstand;
 
   const oppdaterLovvalgsLandMedUtlandLonnetArbeid = () => {
@@ -168,12 +168,12 @@ export const VurderingArbeidsmonster = ({
    * onChange-handleren - for å kunne oppdatere lovvalgsland automatisk ved endring i avklarte virksomheter.
    */
   useEffect(() => {
-    if (erEttUtlandMedLonnetArbeid) {
+    if (finnesEttUtlandMedLonnetArbeid) {
       oppdaterLovvalgsLandMedUtlandLonnetArbeid();
     } else {
       slettData(slettLovvalgsland());
     }
-  }, [erEttUtlandMedLonnetArbeid]);
+  }, [finnesEttUtlandMedLonnetArbeid]);
 
   const loennetArbeidEndretHandler = avklartLoennetArbeid => {
     if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.NORGE) {
@@ -312,7 +312,7 @@ export const VurderingArbeidsmonster = ({
 
         }
         {
-          loennetArbeidIEttAnnetLand && !erEttUtlandMedLonnetArbeid &&
+          loennetArbeidIEttAnnetLand && !finnesEttUtlandMedLonnetArbeid &&
           <Nav.AlertStripe type="advarsel">
             Det finnes flere eller ingen lønnede arbeid i utlandet.
           </Nav.AlertStripe>
@@ -342,7 +342,7 @@ VurderingArbeidsmonster.propTypes = {
     loennetArbeidAntallLandFakta: MPT.Avklartefakta,
     loennetArbeidIEttAnnetLand: PT.bool.isRequired,
     offentligArbeidAntallLandFakta: MPT.Avklartefakta,
-    erEttUtlandMedLonnetArbeid: PT.bool.isRequired,
+    finnesEttUtlandMedLonnetArbeid: PT.bool.isRequired,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
 };

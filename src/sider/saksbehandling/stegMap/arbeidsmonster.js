@@ -40,11 +40,11 @@ class Arbeidsmonster extends Steg {
       erArbeidstakerOgSelvstendigNaeringsdrivende;
     const erYrkesAktivitetOffentligNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
       erOffentligTjenestemann;
-    const erEttUtlandMedLonnetArbeid = propsLight.utlandMedLonnetArbeid.length === 1;
+    const finnesEttUtlandMedLonnetArbeid = propsLight.utlandMedLonnetArbeid.length === 1;
 
     const harAvklaring = landMedVesentligArbeid.length > 0 &&
     (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
-    (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || (loennetArbeidIEttAnnetLand && erEttUtlandMedLonnetArbeid) || loennetArbeidIFlereLand) : true) &&
+    (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || (loennetArbeidIEttAnnetLand && finnesEttUtlandMedLonnetArbeid) || loennetArbeidIFlereLand) : true) &&
     (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
 
     this.kriterier = [
@@ -126,7 +126,7 @@ class Arbeidsmonster extends Steg {
         loennetArbeidAntallLandFakta,
         loennetArbeidIEttAnnetLand,
         offentligArbeidAntallLandFakta,
-        erEttUtlandMedLonnetArbeid,
+        finnesEttUtlandMedLonnetArbeid,
       });
     };
     this.handlers = {
