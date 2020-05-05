@@ -23,7 +23,7 @@ describe('VurderingVurderarbeidsland', () => {
         arbeidslandListe: [],
         arbeidUtforesIOppgittLandFakta: undefined,
         fjernetArbeidslandFakta: [],
-        harIngenSokkelSkipEllerHjemmebase: false,
+        harIngenMaritimeArbeidEllerHjemmebase: false,
       },
       redigerbart: true,
       oppdaterData: jest.fn(),

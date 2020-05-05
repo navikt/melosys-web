@@ -16,14 +16,14 @@ class Vurderarbeidsland extends Steg {
     const arbeidUtforesIOppgittLandFakta = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, propsLight.avklartefakta);
     const soknadslandFaktaListe = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSLAND, propsLight.avklartefakta);
     const arbeidslandFaktaListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, propsLight.avklartefakta);
-    const harIngenSokkelSkipEllerHjemmebase = this.harIngenSokkelEllerHjemmebase(sokkelEllerSkipListe, propsLight.hjemmebase);
+    const harIngenMaritimeArbeidEllerHjemmebase = this.harIngenSokkelEllerHjemmebase(propsLight.maritimtarbeid, propsLight.hjemmebase);
 
     const harAvklaring = this.harAvklaring({
       arbeidUtforesIOppgittLandFakta,
       sokkelEllerSkipListe,
       installasjonArbeidslandListe,
       maritimtarbeid: propsLight.maritimtarbeid,
-      harIngenSokkelSkipEllerHjemmebase,
+      harIngenMaritimeArbeidEllerHjemmebase,
     });
 
     this.kriterier = [
@@ -51,7 +51,7 @@ class Vurderarbeidsland extends Steg {
         arbeidslandListe,
         arbeidUtforesIOppgittLandFakta,
         soknadslandFaktaListe,
-        harIngenSokkelSkipEllerHjemmebase,
+        harIngenMaritimeArbeidEllerHjemmebase,
         arbeidslandFaktaListe,
       });
     };
@@ -68,12 +68,12 @@ class Vurderarbeidsland extends Steg {
     sokkelEllerSkipListe,
     installasjonArbeidslandListe,
     maritimtarbeid,
-    harIngenSokkelSkipEllerHjemmebase,
+    harIngenMaritimeArbeidEllerHjemmebase,
   }) => {
     const arbeidUtforesIOppgittLand = this.erArbeidUtforesIOppgittLandAvklart(arbeidUtforesIOppgittLandFakta);
     const erSokkelSkipAvklart = this.erSokkelSkipAvklart(sokkelEllerSkipListe, installasjonArbeidslandListe, maritimtarbeid);
 
-    return harIngenSokkelSkipEllerHjemmebase ? arbeidUtforesIOppgittLand : erSokkelSkipAvklart;
+    return harIngenMaritimeArbeidEllerHjemmebase ? arbeidUtforesIOppgittLand : erSokkelSkipAvklart;
   };
 
   erSokkelSkipAvklart = (sokkelEllerSkipListe, installasjonArbeidslandListe, maritimtarbeid) => {
@@ -103,8 +103,8 @@ class Vurderarbeidsland extends Steg {
     Boolean(hentFaktaVerdi(arbeidUtforesIOppgittLandFakta))
   );
 
-  harIngenSokkelEllerHjemmebase = (sokkelEllerSkipListe, hjemmebase) => (
-    sokkelEllerSkipListe.length === 0 && Utils._isEmpty(hjemmebase)
+  harIngenSokkelEllerHjemmebase = (maritimeArbeid, hjemmebase) => (
+    maritimeArbeid.length === 0 && Utils._isEmpty(hjemmebase)
   )
 }
 

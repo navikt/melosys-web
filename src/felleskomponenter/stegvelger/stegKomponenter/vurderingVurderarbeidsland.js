@@ -81,7 +81,7 @@ export const VurderingVurderarbeidsland = ({
     arbeidslandListe,
     arbeidUtforesIOppgittLandFakta,
     soknadslandFaktaListe,
-    harIngenSokkelSkipEllerHjemmebase,
+    harIngenMaritimeArbeidEllerHjemmebase,
     arbeidslandFaktaListe,
   },
   redigerbart,
@@ -173,7 +173,7 @@ export const VurderingVurderarbeidsland = ({
     oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
   };
 
-  const innhold = harIngenSokkelSkipEllerHjemmebase ?
+  const innhold = harIngenMaritimeArbeidEllerHjemmebase ?
     <IngenSokkelSkipEllerHjemmebase
       oppdaterData={oppdaterData}
       slettData={slettData}
@@ -258,7 +258,7 @@ VurderingVurderarbeidsland.propTypes = {
     arbeidslandListe: PT.array.isRequired,
     arbeidUtforesIOppgittLandFakta: MPT.Avklartefakta,
     soknadslandFaktaListe: PT.arrayOf(MPT.Avklartefakta),
-    harIngenSokkelSkipEllerHjemmebase: PT.bool.isRequired,
+    harIngenMaritimeArbeidEllerHjemmebase: PT.bool.isRequired,
     arbeidslandFaktaListe: PT.arrayOf(MPT.Avklartefakta),
   }).isRequired,
   redigerbart: PT.bool.isRequired,
