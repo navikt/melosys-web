@@ -4,7 +4,6 @@ import { reduxForm, getFormValues } from 'redux-form';
 import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Ikoner from '../../../resources/images';
@@ -15,13 +14,15 @@ import Fotknapper from './fotknapper';
 
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+
 import './journalforingsed.css';
 
 const JournalforingSED = ({
   avsenderID,
   avsenderNavn,
   sakstype,
-  behandlingstype,
+  behandlingstema,
   form,
   kanSubmittes,
   avbrytJournalforing,
@@ -50,8 +51,8 @@ const JournalforingSED = ({
         <Nav.typo.Normaltekst>{sakstype.term}</Nav.typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="7">
-        <Nav.typo.Element>Behandlingstype</Nav.typo.Element>
-        <Nav.typo.Normaltekst>{behandlingstype.term}</Nav.typo.Normaltekst>
+        <Nav.typo.Element>Behandlingstema</Nav.typo.Element>
+        <Nav.typo.Normaltekst>{behandlingstema.term}</Nav.typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
     <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
@@ -62,7 +63,7 @@ JournalforingSED.propTypes = {
   avsenderNavn: PT.string.isRequired,
   avsenderID: PT.string.isRequired,
   sakstype: MPT.Kodeverk.isRequired,
-  behandlingstype: MPT.Kodeverk.isRequired,
+  behandlingstema: MPT.Kodeverk.isRequired,
   form: PT.string.isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
@@ -75,7 +76,7 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforingSED),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.journalforingSED),
 };
 
 const mapStateToProps = state => ({

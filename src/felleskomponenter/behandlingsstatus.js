@@ -77,12 +77,7 @@ BehandlingsStatus.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   oppdaterStatus: PT.func,
-  behandlingsstatusMap: PT.shape({
-    [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: PT.arrayOf(MPT.Kodeverk).isRequired,
-    [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: PT.arrayOf(MPT.Kodeverk).isRequired,
-    [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: PT.arrayOf(MPT.Kodeverk).isRequired,
-    [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: PT.arrayOf(MPT.Kodeverk).isRequired,
-  }).isRequired,
+  behandlingsstatusMap: PT.objectOf(PT.arrayOf(MPT.Kodeverk)).isRequired,
 };
 
 BehandlingsStatus.defaultProps = {

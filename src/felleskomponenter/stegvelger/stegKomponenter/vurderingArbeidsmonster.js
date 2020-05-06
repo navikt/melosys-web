@@ -14,13 +14,6 @@ import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbest
 
 import './vurderingArbeidsmonster.css';
 
-const genererYrkesaktivitetTekst = (erLonnetArbeid, erSelvstendigNaeringsvirksomhet) => {
-  if (erLonnetArbeid && erSelvstendigNaeringsvirksomhet) return 'Lønnet arbeid og selvstendig næringsvirksomhet';
-  else if (erLonnetArbeid) return 'Lønnet arbeid';
-  else if (erSelvstendigNaeringsvirksomhet) return 'Selvstendig næringsvirksomhet';
-  return 'Fant ingen yrkesaktivitet';
-};
-
 /**
  * Enkeltsjekkboks for marginalt arbeid i et land.
  *
@@ -28,7 +21,7 @@ const genererYrkesaktivitetTekst = (erLonnetArbeid, erSelvstendigNaeringsvirksom
  */
 const LandLinje = props => {
   const {
-    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart, erLonnetArbeid, erSelvstendigNaeringsvirksomhet,
+    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart,
   } = props;
 
   useEffect(() => {
@@ -44,8 +37,6 @@ const LandLinje = props => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, landKode.kode, verdi));
   };
 
-  const yrkesaktivitet = genererYrkesaktivitetTekst(erLonnetArbeid, erSelvstendigNaeringsvirksomhet);
-
   return (
     <div className="land__enkeltlinje">
       <span>{`${landKode.term} (${landKode.kode})`}</span>
@@ -57,7 +48,6 @@ const LandLinje = props => {
         label="ja"
         className="marginaltArbeidCheckbox"
       />
-      <span className="yrkesaktivitet">{yrkesaktivitet}</span>
     </div>
   );
 };
@@ -67,8 +57,6 @@ LandLinje.propTypes = {
   landKode: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
   redigerbart: PT.bool.isRequired,
-  erLonnetArbeid: PT.bool.isRequired,
-  erSelvstendigNaeringsvirksomhet: PT.bool.isRequired,
 };
 
 LandLinje.defaultProps = {
@@ -103,9 +91,8 @@ const MarginaltArbeid = props => {
           <div className="land__enkeltlinje">
             <Nav.typo.UndertekstBold>Land</Nav.typo.UndertekstBold>
             <Nav.typo.UndertekstBold className="marginaltArbeidCheckbox">Marginalt arbeid? {'(<5%)'}</Nav.typo.UndertekstBold>
-            <Nav.typo.UndertekstBold className="yrkesaktivitet">Yrkesaktivitet</Nav.typo.UndertekstBold>
           </div>
-          {arbeidsland.map(({ land, erLonnetArbeid, erSelvstendigNaeringsvirksomhet }) => {
+          {arbeidsland.map(({ land }) => {
             const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === land.kode);
 
             const key = `marginaltArbeidslandListe${land.kode}`;
@@ -115,8 +102,6 @@ const MarginaltArbeid = props => {
               key={key}
               oppdaterData={oppdaterData}
               redigerbart={redigerbart}
-              erLonnetArbeid={erLonnetArbeid}
-              erSelvstendigNaeringsvirksomhet={erSelvstendigNaeringsvirksomhet}
             />;
           })
           }
@@ -157,9 +142,11 @@ export const VurderingArbeidsmonster = props => {
     aktivitetINorge,
     aktivitetINorgeNodvendig,
     erYrkesaktivitetAntallLandNodvendig,
+    erYrkesAktivitetOffentligNodvendig,
     harAvklaring,
     yrkesaktivitet,
     loennetArbeidAntallLandFakta,
+    offentligArbeidAntallLandFakta,
   } = tilstand;
 
   const loennetArbeidEndretHandler = avklartLoennetArbeid => {
@@ -167,6 +154,13 @@ export const VurderingArbeidsmonster = props => {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
     } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
       slettData(slettLovvalgsbestemmelse());
+    }
+  };
+
+  const offentligArbeidEndretHandler = avklartOffentligArbeid => {
+    if (avklartOffentligArbeid === KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET ||
+      avklartOffentligArbeid === KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4));
     }
   };
 
@@ -215,9 +209,24 @@ export const VurderingArbeidsmonster = props => {
     { label: 'Lønnet arbeid i to eller flere land (13.1)', type: KV.Koder.LoennetArbeidAntallLand.FLERE_LAND },
   ];
 
+  const offentligArbeidValg = [
+    {
+      label: 'Offentlig tjeneste i Norge og annen virksomhet (13.4)',
+      type: KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET,
+    },
+    {
+      label: 'Offentlig tjeneste i et annet land og annen virksomhet (13.4)',
+      type: KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET,
+    },
+    {
+      label: 'Offentlig tjeneste i to eller flere land og annen virksomhet (13.1)',
+      type: KV.Koder.OffentligArbeidAntallLand.FLERE_LAND_OG_ANNEN_VIRKSOMHET,
+    },
+  ];
+
   return (
     <div className="vurderingArbeidsmonster">
-      <Nav.typo.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>Vurder aktiviteten i de ulike landene</Nav.typo.Undertittel>
       <div className="arbeidsmonster">
         <MarginaltArbeid
           redigerbart={redigerbart}
@@ -237,6 +246,19 @@ export const VurderingArbeidsmonster = props => {
             oppdaterData={oppdaterData}
             slettData={slettData}
             onChange={loennetArbeidEndretHandler}
+          />
+        }
+        {
+          erYrkesAktivitetOffentligNodvendig &&
+          <EnkeltAvklartfakta
+            redigerbart={redigerbart}
+            avklartfakta={offentligArbeidAntallLandFakta}
+            avklartfaktaKode={KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND}
+            avklartefaktaTyper={offentligArbeidValg}
+            tittel="Vurder aktivitet"
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+            onChange={offentligArbeidEndretHandler}
           />
         }
         {
@@ -273,7 +295,9 @@ VurderingArbeidsmonster.propTypes = {
     harAvklaring: PT.bool,
     yrkesaktivitet: PT.string.isRequired,
     erYrkesaktivitetAntallLandNodvendig: PT.bool.isRequired,
+    erYrkesAktivitetOffentligNodvendig: PT.bool.isRequired,
     loennetArbeidAntallLandFakta: MPT.Avklartefakta,
+    offentligArbeidAntallLandFakta: MPT.Avklartefakta,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
 };

@@ -210,6 +210,24 @@ describe('Lovvalgsperioder operations', () => {
       expect(store.getActions()).toMatchObject(expectedActions);
     });
 
+    it('lager OPPDATER_LOVVALGSPERIODER dersom lovvalgsland er valgt', () => {
+      const lovvalgsland = MKV.Koder.landkoder.DE;
+
+      const expectedActions = [
+        { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ lovvalgsland }] },
+      ];
+
+      const store = mockStore({
+        ...initialState,
+      });
+
+      const stegState = { lovvalgsland };
+
+      store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+      expect(store.getActions()).toMatchObject(expectedActions);
+    });
+
     it('lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom avklartfakta OMFATTES_I_LAND er et annet land enn Norge', () => {
       const expectedActions = [
         { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
@@ -238,5 +256,116 @@ describe('Lovvalgsperioder operations', () => {
 
       expect(store.getActions()).toMatchObject(expectedActions);
     });
+  });
+
+  it('lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom søker har offentlig tjeneste i ett annet land', () => {
+    const expectedActions = [
+      { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
+    ];
+
+    const avklartfakta = {
+      avklartefaktaKode: null,
+      referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
+      fakta: [KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET],
+      subjektID: null,
+      begrunnelseKoder: [],
+      begrunnelseFritekst: null,
+    };
+
+    const store = mockStore({
+      ...initialState,
+      avklartefakta: {
+        data: [avklartfakta],
+      },
+    });
+
+    const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4;
+    const stegState = { lovvalgsbestemmelse };
+
+    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+    expect(store.getActions()).toMatchObject(expectedActions);
+  });
+
+  it('lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom utpeking er avvist', () => {
+    const expectedActions = [
+      { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
+    ];
+
+    const avklartfakta = {
+      avklartefaktaKode: null,
+      referanse: KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT,
+      fakta: [KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN],
+      subjektID: null,
+      begrunnelseKoder: [],
+      begrunnelseFritekst: null,
+    };
+
+    const store = mockStore({
+      ...initialState,
+      avklartefakta: {
+        data: [avklartfakta],
+      },
+    });
+
+    const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;
+    const stegState = { lovvalgsbestemmelse };
+
+    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+    expect(store.getActions()).toMatchObject(expectedActions);
+  });
+
+  it(`lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom lovvalgsbestemmelse er ${MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1}`, () => {
+    const expectedActions = [
+      { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
+    ];
+
+    const store = mockStore({
+      ...initialState,
+    });
+
+    const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1;
+    const stegState = { lovvalgsbestemmelse };
+
+    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+    expect(store.getActions()).toMatchObject(expectedActions);
+  });
+
+  it('lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom søker har offentlig tjeneste i Norge', () => {
+    const expectedActions = [
+      {
+        type: types.OPPDATER_LOVVALGSPERIODER,
+        data: [
+          {
+            lovvalgsland: MKV.Koder.landkoder.NO,
+          },
+        ],
+      },
+    ];
+
+    const avklartfakta = {
+      avklartefaktaKode: null,
+      referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
+      fakta: [KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET],
+      subjektID: null,
+      begrunnelseKoder: [],
+      begrunnelseFritekst: null,
+    };
+
+    const store = mockStore({
+      ...initialState,
+      avklartefakta: {
+        data: [avklartfakta],
+      },
+    });
+
+    const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4;
+    const stegState = { lovvalgsbestemmelse };
+
+    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+    expect(store.getActions()).toMatchObject(expectedActions);
   });
 });

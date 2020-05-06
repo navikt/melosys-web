@@ -12,7 +12,7 @@ import MKV from '../../melosyskodeverk';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
-import * as Utils from '../../utils';
+import * as Routing from '../../routing';
 
 /**
  * Hent Soknad
@@ -36,20 +36,18 @@ export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
   return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch(error => error);
 };
 
-export const sendBehandlingsOppgave = async form => {
-  const { sakstype, behandlingstype: valgtBehandlingstype } = form;
-  if (!sakstype) { return false; }
+export const sendBehandlingsOppgave = async data => {
+  const { behandlingstema: valgtBehandlingstema } = data;
 
   const oppgave = {
-    sakstype,
-    behandlingstype: valgtBehandlingstype,
+    behandlingstema: valgtBehandlingstema,
   };
 
   const response = await Api.Oppgaver.sendPlukk(oppgave);
-  const { saksnummer, behandlingID, behandlingstype } = response;
+  const { saksnummer, behandlingID, behandlingstema } = response;
   if (!saksnummer) { return false; }
 
-  return Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype);
+  return Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
 };
 
 export const sendJournalOppgave = async fagomrade => {

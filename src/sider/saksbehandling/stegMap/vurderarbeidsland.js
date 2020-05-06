@@ -29,7 +29,7 @@ class Vurderarbeidsland extends Steg {
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.ARBEIDSMONSTER,
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
     ];
     this.id = STEG.VURDER_ARBEIDSLAND;

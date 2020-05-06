@@ -226,17 +226,17 @@ export const FjernedeArbeidslandSelector = createSelector(
 export const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
   state => MaritimeArbeidslandSelector(state),
-  state => behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
   FjernedeArbeidslandSelector,
   state => behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
   (
     soknadsland,
     maritimeArbeidsland,
-    behandlingstype,
+    behandlingstema,
     fjernedeArbeidsland,
     hjemmebase
   ) => {
-    if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND) {
+    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
       const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !fjernedeArbeidsland.includes(land));
       const unikeSoknadsMaritimeArbeidsland = [...new Set(soknadsMaritimeArbeidsland)];
       return unikeSoknadsMaritimeArbeidsland;
@@ -401,8 +401,8 @@ export const BostedslandSelector = createSelector(
 );
 
 export const ErIArtikkel13_1FlytSelector = createSelector(
-  state => behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND
+  state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND
 );
 
 export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
@@ -447,4 +447,14 @@ const UtpekingGodkjentFaktaSelector = createSelector(
 export const UtpekingAvvistSelector = createSelector(
   UtpekingGodkjentFaktaSelector,
   utpekingGodkjentFakta => hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN
+);
+
+export const OffentligArbeidAntallLandFaktaSelector = createSelector(
+  AvklartefaktaSelector,
+  avklartefakta => avklartefakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND)
+);
+
+export const OffentligArbeidAntallLandFaktaVerdiSelector = createSelector(
+  OffentligArbeidAntallLandFaktaSelector,
+  offentligArbeidAntallLandFakta => hentFaktaVerdi(offentligArbeidAntallLandFakta)
 );

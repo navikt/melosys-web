@@ -7,11 +7,13 @@ import * as EKV from 'eessi-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../../felleskomponenter/skjema';
 import * as KV from '../../../kodeverk';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Mui from '../../../felleskomponenter/ui';
 
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
+
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
+
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 export const VurderingAvslaaUtpeking = ({
   redigerbart,
@@ -94,7 +96,7 @@ const VurderingAvslaaUtpekingForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.avslaa_utpeking),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.avslaa_utpeking),
 })(VurderingAvslaaUtpeking);
 
 export default connect(mapStateToProps)(VurderingAvslaaUtpekingForm);

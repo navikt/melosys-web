@@ -75,14 +75,17 @@ const lagSoeknadFelter = behandlingsgrunnlag => ({
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
 });
 
-const lagBehandlingsgrunnlagData = (behandlingstype, behandlingsgrunnlag) => {
-  switch (behandlingstype) {
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD:
-    case MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING:
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND:
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND:
+const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
+    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
+    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
       return lagSoeknadFelter(behandlingsgrunnlag);
-    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return lagBehandlingsgrunnlagFelter(behandlingsgrunnlag);
     default:
       return {};
@@ -95,9 +98,9 @@ export function lagre() {
 
     const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagDataSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(getState());
+    const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
 
-    const data = lagBehandlingsgrunnlagData(behandlingstype, behandlingsgrunnlag);
+    const data = lagBehandlingsgrunnlagData(behandlingstema, behandlingsgrunnlag);
 
     return dispatch(send(bid, { data }));
   };

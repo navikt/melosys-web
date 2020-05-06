@@ -48,10 +48,10 @@ export const skjulOppfriskningBlokkererInnhold = () => async dispatch => (
   dispatch(Actions.oppdaterOppfriskningBlokkererInnhold({ synlig: false }))
 );
 
-export const visRevurderVedtak = () => async dispatch => (
-  dispatch(Actions.oppdaterRevurderVedtak({ synlig: true }))
+export const visRevurderFagsak = () => async dispatch => (
+  dispatch(Actions.oppdaterRevurderFagsak({ synlig: true }))
 );
 
-export const skjulRevurderVedtak = () => async dispatch => (
-  dispatch(Actions.oppdaterRevurderVedtak({ synlig: false }))
+export const skjulRevurderFagsak = () => async dispatch => (
+  dispatch(Actions.oppdaterRevurderFagsak({ synlig: false }))
 );

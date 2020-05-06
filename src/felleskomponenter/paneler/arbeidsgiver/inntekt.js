@@ -5,6 +5,7 @@ import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
 import * as Ikoner from '../../../resources/images';
+import * as KV from '../../../kodeverk';
 
 import PanelHeader from '../../panelHeader/panelHeader';
 import Tabell from '../../tabell/tabell';
@@ -115,7 +116,12 @@ class Inntekt extends Component {
     return (
       <div className="inntekt panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader tittel="Inntekt" undertittel={manglerInntektTekst} ikon={Ikoner.Inntekt} />}
+          heading={<PanelHeader
+            tittel="Inntekt"
+            tittelTilleggsinfo={KV.Paneltitler.fraKilde(KV.Koder.Opplysningskilder.INNTEKT)}
+            undertittel={manglerInntektTekst}
+            ikon={Ikoner.Inntekt}
+          />}
           ariaTittel="Panel for inntekt">
           { inntektInnhold }
         </Nav.EkspanderbartpanelBase>

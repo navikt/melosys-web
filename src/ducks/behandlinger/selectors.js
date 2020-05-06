@@ -32,6 +32,10 @@ export const BehandlingstypeKodeSelector = createSelector(
   OppsummeringSelector,
   oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
 );
+export const BehandlingstemaKodeSelector = createSelector(
+  OppsummeringSelector,
+  oppsummering => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : '')
+);
 export const BehandlingsstatusKodeSelector = createSelector(
   OppsummeringSelector,
   oppsummering => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : '')
@@ -267,6 +271,7 @@ export const OrganisasjonSelector = createSelector(
  */
 const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => (
   {
+    kilde: KV.Koder.Opplysningskilder.AAREG_EREG,
     arbeidsforholdene: [arbeidsforholdet],
     organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID) || {},
     inntektListe: filtrerOgSpreInntekt(relevantPeriode, arbeidsforholdet.opplysningspliktigID, inntekter),
@@ -288,7 +293,8 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   InntekterPrAarMaanedSelector,
   behandlingsgrunnlagSelectors.PeriodeSelector,
   LovvalgsperiodeSelector,
-  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode) => {
+  behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector,
+  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode, norskeArbeidsgivere) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
     let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
@@ -315,22 +321,29 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       tom: relevantPeriodeSlutt,
     };
 
-    return arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
-      const tmpSamling = [...samling];
+    return [
+      ...arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
+        const tmpSamling = [...samling];
 
-      // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
-      const arbeidsforholdEksistererVedIndeks = samling
-        .findIndex(enkelt =>
-          enkelt.arbeidsforholdene.some(enkeltforhold =>
-            enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID));
+        // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
+        const arbeidsforholdEksistererVedIndeks = samling
+          .findIndex(enkelt =>
+            enkelt.arbeidsforholdene.some(enkeltforhold =>
+              enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID));
 
-      if (arbeidsforholdEksistererVedIndeks > -1) {
-        tmpSamling[arbeidsforholdEksistererVedIndeks].arbeidsforholdene.push(arbeidsforholdet);
-      } else {
-        tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, relevantPeriode));
-      }
-      return tmpSamling;
-    }, []);
+        if (arbeidsforholdEksistererVedIndeks > -1) {
+          tmpSamling[arbeidsforholdEksistererVedIndeks].arbeidsforholdene.push(arbeidsforholdet);
+        } else {
+          tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, relevantPeriode));
+        }
+        return tmpSamling;
+      }, []),
+      ...norskeArbeidsgivere.map(norskArbeidsgiver => ({
+        organisasjon: norskArbeidsgiver,
+        arbeidsforholdene: [],
+        inntektListe: [],
+      })),
+    ];
   }
 );
 
@@ -340,23 +353,33 @@ export const ErEndretPeriodeSelector = createSelector(
 );
 
 export const ErAnmodningOmUnntakHovedRegelSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
 );
 
 export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
 );
 
 export const ErRegistreringUnntakNorskTrygdOvrigeSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
 );
 
 export const ErUtlMyndUtpektSegSelvSelector = createSelector(
-  BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_ANNET_LAND
+  BehandlingstemaKodeSelector,
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
+);
+
+export const ErArbeidEttLand = createSelector(
+  BehandlingstemaKodeSelector,
+  behandlingstema => [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+  ].includes(behandlingstema)
 );
 
 export const ErRegistreringAvUnntaksperioderSelector = createSelector(

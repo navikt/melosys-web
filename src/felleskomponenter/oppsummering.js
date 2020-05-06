@@ -31,6 +31,7 @@ const Oppsummering = props => {
   } = fagsak;
 
   const {
+    behandlingstype,
     behandlingsstatus,
     endretDato,
     sisteOpplysningerHentetDato,
@@ -57,6 +58,8 @@ const Oppsummering = props => {
       <dd>{saksnummer || '-'}</dd>
       <dt>Saksstatus:</dt>
       <dd>{KV.objektTilTerm(saksstatus)}</dd>
+      <dt>Behandlingstype</dt>
+      <dd>{KV.objektTilTerm(behandlingstype)}</dd>
       <dt>Behandlingsstatus:</dt>
       <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
       { arbeidsland.length > 0 &&

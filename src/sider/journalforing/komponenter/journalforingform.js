@@ -5,7 +5,6 @@ import { reduxForm, getFormValues, change } from 'redux-form';
 
 import * as Ikoner from '../../../resources/images';
 import * as KV from '../../../kodeverk';
-import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../../felleskomponenter/skjema';
@@ -18,6 +17,7 @@ import Informasjon from '../komponenter/informasjon';
 import FagsakVelger from './fagsakVelger';
 import SendForvaltningsMelding from './sendForvaltningsMelding';
 import Fotknapper from './fotknapper';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 const JournalforingForm = props => {
   const {
@@ -28,7 +28,7 @@ const JournalforingForm = props => {
     hentOgVisBruker,
     fagsakListe,
     hentOgVisRepresentant,
-    behandlingstyper,
+    behandlingstemaer,
     formValues,
     settFeltInnhold,
     settJournalforingHensikt,
@@ -36,7 +36,7 @@ const JournalforingForm = props => {
     kanSubmittes,
     handleSubmit,
   } = props;
-  const visForvaltningsMelding = formValues.saksnummer === '-1' && MKVUtils.erSoknad(formValues.opprettnysak_behandlingstype);
+  const visForvaltningsMelding = formValues.saksnummer === '-1' && MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -51,7 +51,7 @@ const JournalforingForm = props => {
       <Mui.Undertittel tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
       <FagsakVelger
         sakstyper={MKV.KTObjects.sakstyper.filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)}
-        behandlingstyper={behandlingstyper}
+        behandlingstemaer={behandlingstemaer}
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
       />
@@ -79,7 +79,7 @@ JournalforingForm.propTypes = {
   formValues: PT.object,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
-  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
   kanSubmittes: PT.bool.isRequired,
@@ -116,7 +116,7 @@ const mapStateToProps = state => ({
     },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettBehandling: BOOLSK.USANN,
-    opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+    opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     ingenVurdering: false,
     ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
@@ -145,7 +145,7 @@ const form = {
       },
     };
 
-    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
+    return lagYupToReduxformErrorMapper(YupSkjemaer.journalforing, options)(values);
   },
 };
 

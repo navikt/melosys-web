@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import MKV from '../../melosyskodeverk';
 
 import * as Utils from '../../utils/';
+import * as Routing from '../../routing/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 
@@ -58,7 +59,7 @@ const Registrering = props => {
     sed,
     redigerbart,
     Saksopplysninger,
-    behandlingstype,
+    behandlingstema,
     fagsak,
     oppsummering,
     person,
@@ -100,7 +101,7 @@ const Registrering = props => {
   };
 
   const apneTidligereBehandlinger = () => {
-    Utils.url.nyFane(`sok/${person.fnr}`);
+    Routing.nyFane(`sok/${person.fnr}`);
   };
 
   if (Utils._isNil(redigerbart)) return null;
@@ -120,7 +121,7 @@ const Registrering = props => {
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
-              behandlingstype={behandlingstype}
+              behandlingstema={behandlingstema}
               redigerbart={redigerbart}
               fagsak={fagsak}
               oppsummering={oppsummering}
@@ -174,7 +175,7 @@ Registrering.propTypes = {
   sed: MPT.Behandlinger.Saksopplysninger.SED,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   oppdaterBehandlingsStatus: PT.func.isRequired,
@@ -202,7 +203,7 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),

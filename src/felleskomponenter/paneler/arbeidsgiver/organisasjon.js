@@ -17,9 +17,12 @@ import './organisasjon.css';
  *
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
-const Organisasjon = props => {
-  const { organisasjon, slettHandle, redigerbart } = props;
-
+const Organisasjon = ({
+  organisasjon,
+  kilde,
+  slettHandle,
+  redigerbart,
+}) => {
   if (!organisasjon) { return null; }
   const {
     orgnr,
@@ -32,6 +35,7 @@ const Organisasjon = props => {
         heading={<PanelHeader
           ikon={Ikoner.Arbeidsgiver}
           tittel={KV.Paneltitler.arbeidsgiverINorge(navn)}
+          tittelTilleggsinfo={KV.Paneltitler.fraKilde(kilde)}
           undertittel={<div>{`Org.nr: ${orgnr}`} </div>}
         />}
         ariaTittel={`Panel for arbeidsgiveren ${navn}`} >
@@ -57,11 +61,13 @@ const Organisasjon = props => {
 
 Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
+  kilde: PT.string,
   slettHandle: PT.func,
   redigerbart: PT.bool.isRequired,
 };
 
 Organisasjon.defaultProps = {
+  kilde: undefined,
   slettHandle: undefined,
 };
 

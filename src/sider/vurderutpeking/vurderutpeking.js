@@ -11,6 +11,7 @@ import SideOppsummering from '../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
 import Soknadpaneler from '../../felleskomponenter/soknadpaneler';
 import Stegvelger from '../../felleskomponenter/stegvelger';
+import { STEG } from '../../felleskomponenter/stegvelger/stegMotor/typer';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
 import { formSelectors } from '../../ducks/form';
@@ -47,11 +48,21 @@ const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
 };
 
+const hentForsteSteg = behandlingstema => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
+      return STEG.VURDER_UTPEKING;
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
+    default:
+      return STEG.INNGANG;
+  }
+};
+
 const Vurderutpeking = ({
   lastInnSaksopplysninger,
   match,
   location,
-  behandlingstype,
+  behandlingstema,
   redigerbart,
   fagsak,
   oppsummering,
@@ -69,7 +80,7 @@ const Vurderutpeking = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
   visOppfriskBekreftelse,
-  visRevurderVedtakDialogHandle,
+  visRevurderFagsakDialogHandle,
   oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
@@ -103,6 +114,8 @@ const Vurderutpeking = ({
 
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
+  const forsteSteg = hentForsteSteg(behandlingstema);
+
   return (
     <div className="vurderutpeking">
       <Nav.Container fluid>
@@ -123,6 +136,7 @@ const Vurderutpeking = ({
                 begrunnelser={MKV.KTObjects.begrunnelser}
                 landkoder={MKV.KTObjects.landkoder}
                 tilForsiden={tilForsiden}
+                forsteSteg={forsteSteg}
               />
             }
             <Soknadpaneler
@@ -132,7 +146,7 @@ const Vurderutpeking = ({
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
-              behandlingstype={behandlingstype}
+              behandlingstema={behandlingstema}
               redigerbart={redigerbart}
               fagsak={fagsak}
               oppsummering={oppsummering}
@@ -155,8 +169,8 @@ const Vurderutpeking = ({
                 visAvslagManglendeOpplysninger
                 visOppfriskSaksopplysninger
                 oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
-                visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
-                visRevurderVedtak
+                visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                visRevurderFagsak
               />}
               renderBehandlingsstatus={() => <Behandlingsstatus
                 behandlingID={behandlingID}
@@ -184,7 +198,7 @@ Vurderutpeking.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -202,7 +216,7 @@ Vurderutpeking.propTypes = {
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
   visOppfriskBekreftelse: PT.func.isRequired,
-  visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
@@ -226,7 +240,7 @@ Vurderutpeking.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

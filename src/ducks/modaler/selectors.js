@@ -65,12 +65,12 @@ export const ErValideringSynligSelector = createSelector(
   validering => validering.synlig
 );
 
-export const RevurderVedtakSelector = createSelector(
+export const RevurderFagsakSelector = createSelector(
   ModalerSelector,
-  modaler => modaler.revurderVedtak
+  modaler => modaler.revurderFagsak
 );
 
-export const ErRevurderVedtakSynligSelector = createSelector(
-  RevurderVedtakSelector,
-  revurderVedtak => revurderVedtak.synlig
+export const ErRevurderFagsakSynligSelector = createSelector(
+  RevurderFagsakSelector,
+  revurderFagsak => revurderFagsak.synlig
 );

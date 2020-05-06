@@ -21,7 +21,7 @@ import { datalastingOperations } from '../../../ducks/datalasting';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
-import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
+import { lagYupToReduxformErrorMapper } from '../../../yup';
 
 import '../saksopplysninger.css';
 
