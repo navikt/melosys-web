@@ -15,6 +15,12 @@ describe('VurderingAvslaaUtpeking', () => {
       behandlingID: 4,
       handleSubmit: jest.fn(),
       avvisUtpeking: jest.fn(),
+      fritekst: '',
+      nyttLovvalgsland: 'CZ',
+      begrunnelseUtenlandskMyndighet: 'Begrunnelse',
+      vilSendeAnmodningOmMerInformasjon: true,
+      touchAll: jest.fn(),
+      formIsValid: true,
     };
   });
 
