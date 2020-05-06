@@ -5,7 +5,6 @@ import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMot
 import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
-import { hentLovvalgsland } from '../../../regler/lovvalgsland';
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -23,7 +22,7 @@ class VurderUtpeking extends Steg {
 
     const { sed = {} } = saksopplysninger;
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder) || sed.lovvalgsbestemmelse;
-    const lovvalgsland = hentLovvalgsland(lovvalgsperioder);
+    const lovvalgsland = sed.lovvalgslandKode;
 
     const { utpekingVurdering } = vurder_utpeking_skjema;
 
