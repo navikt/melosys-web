@@ -292,20 +292,17 @@ describe('Lovvalgsperioder operations', () => {
       { type: types.OPPDATER_LOVVALGSPERIODER, data: [] },
     ];
 
-    const avklartfakta = {
-      avklartefaktaKode: null,
-      referanse: KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT,
-      fakta: [KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN],
-      subjektID: null,
-      begrunnelseKoder: [],
-      begrunnelseFritekst: null,
+    const form = {
+      [KV.Form.VURDER_UTPEKING]: {
+        values: {
+          utpekingVurdering: MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
+        },
+      },
     };
 
     const store = mockStore({
       ...initialState,
-      avklartefakta: {
-        data: [avklartfakta],
-      },
+      form,
     });
 
     const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;

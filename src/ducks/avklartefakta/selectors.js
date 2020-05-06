@@ -16,7 +16,7 @@ import * as Utils from '../../utils';
 import { behandlingerSelectors } from '../behandlinger';
 import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
 import { OrganisasjonSelectors } from '../organisasjoner';
-import { hentFakta, hentFaktaVerdi } from '../../regler/avklartefakta';
+import { hentFaktaVerdi } from '../../regler/avklartefakta';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -39,6 +39,21 @@ export const AvklartefaktaSelector = createSelector(
 export const SoknadslandFaktaerSelector = createSelector(
   AvklartefaktaSelector,
   avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
+);
+
+export const IkkeGyldigeSoknadslandFaktaerSelector = createSelector(
+  SoknadslandFaktaerSelector,
+  soknadslandFaktaer => soknadslandFaktaer.filter(fakta => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.USANN)
+);
+
+export const IkkeArbeidslandSoknadslandFaktaerSelector = createSelector(
+  SoknadslandFaktaerSelector,
+  soknadslandFaktaer => soknadslandFaktaer.filter(fakta => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND)
+);
+
+export const IkkeArbeidslandSoknadslandSelector = createSelector(
+  IkkeArbeidslandSoknadslandFaktaerSelector,
+  faktaer => faktaer.map(fakta => fakta.subjektID)
 );
 
 export const VurderingUnntakPeriode = createSelector(
@@ -216,28 +231,21 @@ const MaritimeArbeidslandSelector = createSelector(
     .filter(arbeidsland => arbeidsland))
 );
 
-export const FjernedeArbeidslandSelector = createSelector(
-  AvklartefaktaSelector,
-  avklarteFakta => avklarteFakta
-    .filter(avklartfakta => avklartfakta.referanse === KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND)
-    .map(avklartfakta => avklartfakta.subjektID)
-);
-
 export const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
   state => MaritimeArbeidslandSelector(state),
   state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  FjernedeArbeidslandSelector,
+  IkkeArbeidslandSoknadslandSelector,
   state => behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
   (
     soknadsland,
     maritimeArbeidsland,
     behandlingstema,
-    fjernedeArbeidsland,
+    IkkeArbeidslandSoknadland,
     hjemmebase
   ) => {
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
-      const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !fjernedeArbeidsland.includes(land));
+      const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !IkkeArbeidslandSoknadland.includes(land));
       const unikeSoknadsMaritimeArbeidsland = [...new Set(soknadsMaritimeArbeidsland)];
       return unikeSoknadsMaritimeArbeidsland;
     }
@@ -325,7 +333,7 @@ export const ArbeidslandMedYrkesAktivitetSelector = createSelector(
 
 const MarginaltArbeidFaktaerSelector = createSelector(
   AvklartefaktaSelector,
-  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID)
+  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID)
 );
 
 const MarginaleArbeidslandFaktaerSelector = createSelector(
@@ -437,16 +445,6 @@ export const OmfattesIAnnetLandSelector = createSelector(
   OmfattesILandSelector,
   OmfattesILandFaktaSelector,
   (omfattesILand, omfattesILandFakta) => Utils._isObject(omfattesILandFakta) && omfattesILand !== MKV.Koder.landkoder.NO
-);
-
-const UtpekingGodkjentFaktaSelector = createSelector(
-  AvklartefaktaSelector,
-  avklarteFakta => hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklarteFakta)
-);
-
-export const UtpekingAvvistSelector = createSelector(
-  UtpekingGodkjentFaktaSelector,
-  utpekingGodkjentFakta => hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN
 );
 
 export const OffentligArbeidAntallLandFaktaSelector = createSelector(
