@@ -11,8 +11,11 @@ import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../registerkontrollTreff';
+
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
@@ -209,8 +212,8 @@ const mapStateToProps = (state, ownProps) => ({
   },
   formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
   initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeFomSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
+    fom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+    tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
     lovvalgsland: ownProps.tilstand.lovvalgsland,
   },

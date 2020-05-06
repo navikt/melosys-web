@@ -20,9 +20,13 @@ class VurderUtpeking extends Steg {
       avklartefakta,
       vurderUtpekingValid,
       behandlingstema,
+      saksopplysninger,
     } = propsLight;
 
-    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
+    const redigerbart = propsLight.generiskStegRedigerbart;
+
+    const { sed = {} } = saksopplysninger;
+    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder) || sed.lovvalgsbestemmelse;
     const lovvalgsland = hentLovvalgsland(lovvalgsperioder);
 
     const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
@@ -53,7 +57,7 @@ class VurderUtpeking extends Steg {
     this.tittel = 'Vurdering';
     this.komponent = VurderingUtpekt;
     this.samleRelevanteData = _propsLight => ({
-      redigerbart: _propsLight.generiskStegRedigerbart,
+      redigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
       harAvklaring,
