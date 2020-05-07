@@ -204,8 +204,8 @@ const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
 });
 

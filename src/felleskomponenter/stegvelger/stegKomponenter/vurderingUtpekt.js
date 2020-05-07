@@ -11,8 +11,11 @@ import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../registerkontrollTreff';
+
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
@@ -68,7 +71,9 @@ export const VurderingUtpekt = ({
     }
   }, [formValues]);
 
-  const visLovvalgsland = lovvalgsland && lovvalgsland !== MKV.Koder.landkoder.NO;
+  const lovvalgslandFraForm = formValues.lovvalgsland;
+  const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
+  const lovvalgslandTerm = KV.kodeTilTerm(lovvalgslandFraForm, MKV.KTObjects.landkoder);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -89,7 +94,7 @@ export const VurderingUtpekt = ({
         <Nav.Row className="rad">
           <Nav.Column xs="5">
             <Nav.typo.Element>Lovvalgsland</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{lovvalgsland}</Nav.typo.Normaltekst>
+            <Nav.typo.Normaltekst>{lovvalgslandTerm}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       }
@@ -219,9 +224,10 @@ const mapStateToProps = (state, ownProps) => ({
   },
   formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
   initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeFomSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
+    fom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+    tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
+    lovvalgsland: ownProps.tilstand.lovvalgsland,
     utpekingVurdering: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
     overgangsregelbestemmelser: behandlingsgrunnlagSelectors.OvergangsregelbestemmelserSelector(state).map(o => o.kode),
   },

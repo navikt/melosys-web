@@ -5,7 +5,6 @@ import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMot
 import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
-import { hentLovvalgsland } from '../../../regler/lovvalgsland';
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -15,11 +14,15 @@ class VurderUtpeking extends Steg {
       lovvalgsperioder,
       vurderUtpekingValid,
       behandlingstema,
+      saksopplysninger,
       vurder_utpeking_skjema,
     } = propsLight;
 
-    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
-    const lovvalgsland = hentLovvalgsland(lovvalgsperioder);
+    const redigerbart = propsLight.generiskStegRedigerbart;
+
+    const { sed = {} } = saksopplysninger;
+    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder) || sed.lovvalgsbestemmelse;
+    const lovvalgsland = sed.lovvalgslandKode;
 
     const { utpekingVurdering } = vurder_utpeking_skjema;
 
@@ -49,7 +52,7 @@ class VurderUtpeking extends Steg {
     this.tittel = 'Vurdering';
     this.komponent = VurderingUtpekt;
     this.samleRelevanteData = _propsLight => ({
-      redigerbart: _propsLight.generiskStegRedigerbart,
+      redigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
       harAvklaring,
