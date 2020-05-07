@@ -55,7 +55,7 @@ const Oppfrisk = ({ oppfrisk, lukk }) => {
   return (
     <div>
       <Nav.typo.Systemtittel>Registeropplysninger har blitt oppdatert</Nav.typo.Systemtittel>
-      <Nav.AlertStripe type="suksess">Registeropplysninger i denne behandlingen har blitt oppdatert. Du kan nå fortsette å behandle denne saken.</Nav.AlertStripe>
+      <Nav.AlertStripe type="suksess">Registeropplysninger i denne behandlingen har blitt oppdatert. Lukk dette vinduet for å fortsette behandlingen.</Nav.AlertStripe>
       <div className="knapperadcontainer">
         <Nav.Knapp onClick={lukk}>Lukk</Nav.Knapp>
       </div>
@@ -68,23 +68,36 @@ Oppfrisk.propTypes = {
   oppfrisk: PT.func.isRequired,
 };
 
-const OppfriskFeilmelding = ({ tilForsiden }) => (
+const OppfriskFeilmelding = ({ feilmelding, lukk, resetErrorBoundary }) => (
   <div>
-    <Nav.typo.Systemtittel>Noe gikk galt</Nav.typo.Systemtittel>
-    <Nav.AlertStripe type="feil">Noe gikk galt ved oppdatering av registeropplysninger</Nav.AlertStripe>
+    <Nav.typo.Systemtittel>Feil ved oppdatering av registeropplysninger</Nav.typo.Systemtittel>
+    <Nav.AlertStripe type="feil">
+      Kunne ikke oppdatere opplysninger. Feilmelding: {feilmelding}<br />
+      Prøv igjen, eller meld sak i porten.
+    </Nav.AlertStripe>
     <div className="knapperadcontainer">
-      <Nav.Knapp onClick={tilForsiden}>Lukk</Nav.Knapp>
+      <Nav.Knapp onClick={resetErrorBoundary}>Prøv igjen</Nav.Knapp>
+      <Nav.Knapp onClick={() => lukk() && resetErrorBoundary()}>Lukk</Nav.Knapp>
     </div>
   </div>
 );
 
 OppfriskFeilmelding.propTypes = {
-  tilForsiden: PT.func.isRequired,
+  feilmelding: PT.string.isRequired,
+  resetErrorBoundary: PT.func.isRequired,
+  lukk: PT.func.isRequired,
 };
 
 // Returnerer OppfriskVenter mens behandlingen oppfriskes og OppfriskFeilmelding dersom oppfrisk() returnerer != 2xx
 const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => (
-  <ErrorBoundary errorComponent={<OppfriskFeilmelding tilForsiden={tilForsiden} />}>
+  <ErrorBoundary fallbackRender={({ error, resetErrorBoundary }) =>
+    <OppfriskFeilmelding
+      feilmelding={error ? error.message : 'Ukjent feil'}
+      resetErrorBoundary={resetErrorBoundary}
+      tilForsiden={tilForsiden}
+      lukk={lukk}
+    />
+  }>
     <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
       <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
     </Suspense>
@@ -98,10 +111,10 @@ OppfriskBehandling.propTypes = {
 };
 
 const BekreftEllerOppfrisk = ({
-  bekreftet, settBekreftet, oppfrisk, avbryt, tilForsiden,
+  bekreftet, settBekreftet, oppfrisk, avbryt, lukk, tilForsiden,
 }) => (
   bekreftet
-    ? <OppfriskBehandling oppfrisk={oppfrisk} lukk={avbryt} tilForsiden={tilForsiden} />
+    ? <OppfriskBehandling oppfrisk={oppfrisk} lukk={lukk} tilForsiden={tilForsiden} />
     : <OppfriskBekreft bekreft={settBekreftet} avbryt={avbryt} />
 );
 
@@ -110,27 +123,28 @@ BekreftEllerOppfrisk.propTypes = {
   settBekreftet: PT.func.isRequired,
   oppfrisk: PT.func.isRequired,
   avbryt: PT.func.isRequired,
+  lukk: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
 };
 
-const AnnenBehandlingOppfriskes = ({ lukk }) => (
+const AnnenBehandlingOppfriskes = ({ avbryt }) => (
   <div>
     <Nav.typo.Systemtittel>Kan ikke oppdatere registeropplysninger</Nav.typo.Systemtittel>
     <Nav.AlertStripe type="advarsel">
-      Registeropplysningene i en annen behandling er i ferd med å bli oppdatert. Registeropplysningene i denne behandlingen kan ikke bli oppdatert enda.
+      Registeropplysningene i en annen behandling er i ferd med å bli oppdatert. Vent til den behandlingen er oppdatert før du starter å oppdatere denne.
     </Nav.AlertStripe>
     <div className="knapperadcontainer">
-      <Nav.Knapp onClick={lukk}>Lukk</Nav.Knapp>
+      <Nav.Knapp onClick={avbryt}>Lukk</Nav.Knapp>
     </div>
   </div>
 );
 
 AnnenBehandlingOppfriskes.propTypes = {
-  lukk: PT.func.isRequired,
+  avbryt: PT.func.isRequired,
 };
 
 const DialogboksOppfriskBehandling = ({
-  avbryt, tilForsiden, oppfrisk, behandlingOppfriskes, annenBehandlingOppfriskes,
+  avbryt, lukk, tilForsiden, oppfrisk, behandlingOppfriskes, annenBehandlingOppfriskes,
 }) => {
   const [bekreftet, setBekreftet] = useState(behandlingOppfriskes);
 
@@ -145,12 +159,13 @@ const DialogboksOppfriskBehandling = ({
     >
       {
         annenBehandlingOppfriskes ?
-          <AnnenBehandlingOppfriskes lukk={avbryt} /> :
+          <AnnenBehandlingOppfriskes avbryt={avbryt} /> :
           <BekreftEllerOppfrisk
             tilForsiden={tilForsiden}
             settBekreftet={() => setBekreftet(true)}
             oppfrisk={oppfrisk}
             avbryt={avbryt}
+            lukk={lukk}
             bekreftet={bekreftet} />
       }
     </Nav.Modal>
@@ -160,6 +175,7 @@ const DialogboksOppfriskBehandling = ({
 DialogboksOppfriskBehandling.propTypes = {
   oppfrisk: PT.func.isRequired,
   avbryt: PT.func.isRequired,
+  lukk: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,

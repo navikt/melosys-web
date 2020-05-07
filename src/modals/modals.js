@@ -19,6 +19,7 @@ const Modals = ({
   visOppfriskDialog,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   skjulOppfriskModal,
+  lukkOppfriskModal,
   visHenleggDialog,
   skjulHenleggDialogHandle,
   henleggHandle,
@@ -44,6 +45,7 @@ const Modals = ({
       <DialogboksOppfriskSak
         oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
         avbryt={skjulOppfriskModal}
+        lukk={lukkOppfriskModal}
         tilForsiden={skjulOppfriskModalOgNavigerTilForside}
         behandlingOppfriskes={behandlingOppfriskes}
         annenBehandlingOppfriskes={annenBehandlingOppfriskes}
@@ -93,6 +95,7 @@ Modals.propTypes = {
   visOppfriskDialog: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   skjulOppfriskModal: PT.func.isRequired,
+  lukkOppfriskModal: PT.func.isRequired,
   visHenleggDialog: PT.bool.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   henleggHandle: PT.func.isRequired,
@@ -129,6 +132,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   skjulOppfriskModal: () => dispatch(modalerOperations.skjulOppfrisk()),
+  lukkOppfriskModal: () => dispatch(modalerOperations.skjulOppfrisk()) && dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
