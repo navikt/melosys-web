@@ -415,7 +415,7 @@ class Journalforing extends Component {
       kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID);
 
     if (erProdish) {
-      behandlingstemaer = behandlingstemaer.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstemaer.ARBEID_FLERE_LAND);
+      behandlingstemaer = behandlingstemaer.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND);
     }
 
     const {
