@@ -61,6 +61,11 @@ class Saksbehandling extends Component {
   componentDidMount() {
     this.lastInnSaksopplysninger();
   }
+
+  componentDidUpdate() {
+    this.oppdaterBehandlingIDState();
+  }
+
   componentWillUnmount() {
     this.props.resetFagsakState();
     this.props.resetBehandlingerState();
@@ -69,6 +74,15 @@ class Saksbehandling extends Component {
     this.props.resetVilkarState();
     this.props.resetBehandlingsgrunnlagState();
     this.props.resetBehandlingsPerioderState();
+  }
+
+  oppdaterBehandlingIDState = () => {
+    const { location } = this.props;
+    const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
+
+    if (Utils._toInteger(behandlingID) !== this.state.behandlingID) {
+      this.setState({ behandlingID: Utils._toInteger(behandlingID) });
+    }
   }
 
   lastInnSaksopplysninger = async () => {
@@ -189,6 +203,9 @@ class Saksbehandling extends Component {
     const visRevurderFagsak = anmodningsperioderErSendtUtlandet ||
       (!redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
 
+    const visOppfriskSaksopplysninger = behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE &&
+      !anmodningsperioderErSendtUtlandet;
+
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
@@ -229,7 +246,7 @@ class Saksbehandling extends Component {
                   visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
-                  visOppfriskSaksopplysninger
+                  visOppfriskSaksopplysninger={visOppfriskSaksopplysninger}
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                   visRevurderFagsak={visRevurderFagsak}
