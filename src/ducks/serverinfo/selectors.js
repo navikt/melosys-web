@@ -6,6 +6,7 @@ const namespaces = {
 
 const clusters = {
   PROD_FSS: 'PROD-FSS',
+  DEV_FSS: 'DEV-FSS',
 };
 
 const ServerinfoSelector = createSelector(
@@ -28,8 +29,11 @@ const ClusterSelector = createSelector(
   serverinfo => serverinfo.cluster
 );
 
-export const ErProdSelector = createSelector(
+export const ErProdishSelector = createSelector(
   NamespaceSelector,
   ClusterSelector,
-  (namespace = '', cluster = '') => namespace.toUpperCase() === namespaces.DEFAULT && cluster.toUpperCase() === clusters.PROD_FSS
+  (currentNamespace = '', currentCluster = '') => (
+    (currentNamespace.toUpperCase() === namespaces.DEFAULT && currentCluster.toUpperCase() === clusters.PROD_FSS) ||
+    (currentNamespace.toUpperCase() === namespaces.DEFAULT && currentCluster.toUpperCase() === clusters.DEV_FSS)
+  )
 );

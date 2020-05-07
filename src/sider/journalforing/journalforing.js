@@ -400,7 +400,7 @@ class Journalforing extends Component {
       },
       fagsakListe,
       settFeltInnhold,
-      erProd,
+      erProdish,
     } = this.props;
 
     let behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
@@ -414,7 +414,7 @@ class Journalforing extends Component {
       kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED ||
       kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID);
 
-    if (erProd) {
+    if (erProdish) {
       behandlingstemaer = behandlingstemaer.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstemaer.ARBEID_FLERE_LAND);
     }
 
@@ -525,7 +525,7 @@ Journalforing.propTypes = {
   journalforSEDSkjemaIsValid: PT.bool.isRequired,
   journalforSEDSkjemaVerdier: PT.object,
   journalforSEDSkjemaErrors: PT.object.isRequired,
-  erProd: PT.bool.isRequired,
+  erProdish: PT.bool.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -544,7 +544,7 @@ const mapStateToProps = state => ({
   journalforSEDSkjemaIsValid: isValid(KV.Form.JOURNALFORING_SED)(state),
   journalforSEDSkjemaVerdier: getFormValues(KV.Form.JOURNALFORING_SED)(state),
   journalforSEDSkjemaErrors: getFormSyncErrors(KV.Form.JOURNALFORING_SED)(state),
-  erProd: serverinfoSelectors.ErProdSelector(state),
+  erProdish: serverinfoSelectors.ErProdishSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -13,7 +13,7 @@ describe('serverinfoSelectors', () => {
     },
   });
 
-  describe('ErProdSelector', () => {
+  describe('ErProdishSelector', () => {
     each([
       [
         true,
@@ -21,8 +21,13 @@ describe('serverinfoSelectors', () => {
         'prod-fss',
       ],
       [
-        false,
+        true,
         'default',
+        'dev-fss',
+      ],
+      [
+        false,
+        'q2',
         'dev-fss',
       ],
       [
@@ -33,7 +38,7 @@ describe('serverinfoSelectors', () => {
     ]).it('returnerer %p for namespace=%p og cluster=%p', (forventetResultat, namespace, cluster) => {
       const state = lagState({ namespace, cluster });
 
-      expect(selectors.ErProdSelector(state)).toBe(forventetResultat);
+      expect(selectors.ErProdishSelector(state)).toBe(forventetResultat);
     });
   });
 });
