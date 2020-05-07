@@ -33,7 +33,7 @@ export const ErProdishSelector = createSelector(
   NamespaceSelector,
   ClusterSelector,
   (currentNamespace = '', currentCluster = '') => (
-    (currentNamespace.toUpperCase() === namespaces.DEFAULT && currentCluster.toUpperCase() === clusters.PROD_FSS) ||
-    (currentNamespace.toUpperCase() === namespaces.DEFAULT && currentCluster.toUpperCase() === clusters.DEV_FSS)
+    currentNamespace.toUpperCase() === namespaces.DEFAULT &&
+    (currentCluster.toUpperCase() === clusters.PROD_FSS || currentCluster.toUpperCase() === clusters.DEV_FSS)
   )
 );
