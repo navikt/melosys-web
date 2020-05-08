@@ -144,7 +144,7 @@ AnnenBehandlingOppfriskes.propTypes = {
 };
 
 const DialogboksOppfriskBehandling = ({
-  avbryt, lukk, tilForsiden, oppfrisk, behandlingOppfriskes, annenBehandlingOppfriskes,
+  avbryt, lukk, tilForsiden, oppfrisk, behandlingOppfriskes, annenBehandlingOppfriskes, ariaHideApp,
 }) => {
   const [bekreftet, setBekreftet] = useState(behandlingOppfriskes);
 
@@ -156,6 +156,7 @@ const DialogboksOppfriskBehandling = ({
       onRequestClose={tilForsiden}
       closeButton={false}
       shouldCloseOnOverlayClick={false}
+      ariaHideApp={ariaHideApp}
     >
       {
         annenBehandlingOppfriskes ?
@@ -179,8 +180,11 @@ DialogboksOppfriskBehandling.propTypes = {
   tilForsiden: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
+  ariaHideApp: PT.bool,
 };
 
-Nav.Modal.setAppElement('#root');
+DialogboksOppfriskBehandling.defaultProps = {
+  ariaHideApp: true,
+};
 
 export default DialogboksOppfriskBehandling;
