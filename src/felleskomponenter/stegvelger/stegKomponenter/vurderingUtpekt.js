@@ -11,11 +11,13 @@ import * as Utils from '../../../utils';
 
 import MKV from '../../../melosyskodeverk';
 import RegisterKontrollTreff from '../../registerkontrollTreff';
+
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
-import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
@@ -28,15 +30,13 @@ export const VurderingUtpekt = ({
   redigerbart,
   tilstand: {
     harAvklaring,
-    utpekingGodkjentFakta,
     lovvalgsbestemmelse,
     lovvalgsland,
-    utpekingGodkjent,
-    utpekingIkkeGodkjent,
   },
   handleSubmit,
   formValues,
   lovvalgsperiode,
+  ytterligereInformasjon,
 }) => {
   useEffect(() => {
     if (lovvalgsland) {
@@ -44,7 +44,6 @@ export const VurderingUtpekt = ({
       oppdaterData(lagLovvalgsland(lovvalgsland));
     }
     if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, utpekingGodkjentFakta));
     oppdaterData(konverterLovvalgsperiodeTilStegData(lovvalgsperiode));
 
     return () => {
@@ -55,10 +54,6 @@ export const VurderingUtpekt = ({
   useEffect(() => {
     oppdaterData(lagLovvalgsbestemmelse(formValues.lovvalgsbestemmelse));
   }, [formValues.lovvalgsbestemmelse]);
-
-  const vedGodkjennEndring = event => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, null, event.target.value));
-  };
 
   const formValid = () => {
     const { fom, tom } = formValues;
@@ -76,7 +71,9 @@ export const VurderingUtpekt = ({
     }
   }, [formValues]);
 
-  const visLovvalgsland = lovvalgsland && lovvalgsland !== MKV.Koder.landkoder.NO;
+  const lovvalgslandFraForm = formValues.lovvalgsland;
+  const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
+  const lovvalgslandTerm = KV.kodeTilTerm(lovvalgslandFraForm, MKV.KTObjects.landkoder);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -97,7 +94,7 @@ export const VurderingUtpekt = ({
         <Nav.Row className="rad">
           <Nav.Column xs="5">
             <Nav.typo.Element>Lovvalgsland</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{lovvalgsland}</Nav.typo.Normaltekst>
+            <Nav.typo.Normaltekst>{lovvalgslandTerm}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       }
@@ -118,6 +115,21 @@ export const VurderingUtpekt = ({
           </Skjema.Select>
         </Nav.Column>
       </Nav.Row>
+      {(redigerbart || formValues.overgangsregelbestemmelser) &&
+        <Nav.Row className="rad">
+          <Nav.Column xs="5">
+            <Nav.typo.Element>Overgangsregler gjelder:</Nav.typo.Element>
+            <Skjema.ListeVelger
+              feltNavn="overgangsregelbestemmelser"
+              label="Legg til ny overgangsregelbestemmelse:"
+              placeholder="(Velg bestemmelse)"
+              muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
+              disabled={!redigerbart}
+              gruppe
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.typo.Element>Lovvalgsperiode</Nav.typo.Element>
@@ -141,22 +153,28 @@ export const VurderingUtpekt = ({
           </Nav.Row>
         </Nav.Column>
       </Nav.Row>
+      <Nav.Row className="rad">
+        { ytterligereInformasjon &&
+          <Nav.Column xs="12">
+            <Nav.typo.Element>Ytterligere informasjon fra SED</Nav.typo.Element>
+            <Nav.typo.Normaltekst>{ytterligereInformasjon}</Nav.typo.Normaltekst>
+          </Nav.Column>
+        }
+      </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="5">
           <Nav.Fieldset legend="Skal lovvalget godkjennes?" disabled={!redigerbart}>
-            <Nav.Radio
-              onChange={vedGodkjennEndring}
+            <Skjema.Radio
               label="Godkjenn"
-              value={KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN}
+              value={MKV.Koder.utfallregistreringunntak.GODKJENT}
               name="godkjenn"
-              checked={utpekingGodkjent}
+              feltNavn="utpekingVurdering"
             />
-            <Nav.Radio
-              onChange={vedGodkjennEndring}
+            <Skjema.Radio
               label="Ikke godkjenn"
-              value={KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN}
+              value={MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT}
               name="godkjenn"
-              checked={utpekingIkkeGodkjent}
+              feltNavn="utpekingVurdering"
             />
           </Nav.Fieldset>
         </Nav.Column>
@@ -183,21 +201,20 @@ VurderingUtpekt.propTypes = {
   redigerbart: PT.bool.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool.isRequired,
-    utpekingGodkjentFakta: MPT.Avklartefakta,
     lovvalgsbestemmelse: PT.string,
     lovvalgsland: PT.string,
-    utpekingGodkjent: PT.bool.isRequired,
-    utpekingIkkeGodkjent: PT.bool.isRequired,
   }).isRequired,
   oppdaterData: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
   formValues: PT.object,
   lovvalgsperiode: MPT.Periode.isRequired,
+  ytterligereInformasjon: PT.string,
 };
 
 VurderingUtpekt.defaultProps = {
   formValues: {},
   vurderingBegrunnelser: [],
+  ytterligereInformasjon: null,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -207,11 +224,15 @@ const mapStateToProps = (state, ownProps) => ({
   },
   formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
   initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeFomSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeTomSelector(state)),
+    fom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+    tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
+    lovvalgsland: ownProps.tilstand.lovvalgsland,
+    utpekingVurdering: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
+    overgangsregelbestemmelser: behandlingsgrunnlagSelectors.OvergangsregelbestemmelserSelector(state).map(o => o.kode),
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
+  ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
 });
 
 const nesteSteg = (values, dispatch, props) => {

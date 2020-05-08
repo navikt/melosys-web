@@ -118,15 +118,15 @@ const VurderingBostedsland = props => {
                 checked={erNorgeValgt === BOOLSK.USANN}
                 disabled={!redigerbart}
               />
-              {eksisterendeLand !== MKV.Koder.landkoder.NO &&
+              {erNorgeValgt === false &&
               <Nav.Row>
                 <Nav.Column xs="8" md="6" lg="4">
                   <EnkeltLandPure
                     label="Velg land:"
                     value={eksisterendeLand}
                     onChange={landEndretHandler}
+                    changeOnEmptyValue
                     landkoder={MKV.KTObjects.landkoder}
-                    multiland={false}
                     disabled={!redigerbart}
                   />
                 </Nav.Column>

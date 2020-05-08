@@ -2,13 +2,10 @@
 import React, { useState } from 'react';
 import PT from 'prop-types';
 import Ikon from 'melosys-ikoner-assets';
-import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
 import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
-
-import { landTekstFormat } from '../../../skjema/landvelger';
 
 import './soknadslandHandlingLeggTil.css';
 
@@ -102,11 +99,6 @@ function SoknadslandHandlingLeggTil(props) {
             redigerbart={redigerbart}
           />
         )}
-      </div>
-      <div className="soknadsland__dataliste">
-        <datalist id="alleLand">
-          {alleLandkoder.map(item => (<option key={KV.objektTilKode(item)} value={landTekstFormat(item)} />))}
-        </datalist>
       </div>
     </div>
   );

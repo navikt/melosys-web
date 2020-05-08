@@ -38,6 +38,8 @@ jobs:
         with:
           node-version: '12.3.1'
       - name: npm install
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: npm i
       - name: build css
         run: npm run build:css

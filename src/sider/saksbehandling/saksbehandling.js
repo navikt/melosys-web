@@ -61,6 +61,11 @@ class Saksbehandling extends Component {
   componentDidMount() {
     this.lastInnSaksopplysninger();
   }
+
+  componentDidUpdate() {
+    this.oppdaterBehandlingIDState();
+  }
+
   componentWillUnmount() {
     this.props.resetFagsakState();
     this.props.resetBehandlingerState();
@@ -69,6 +74,15 @@ class Saksbehandling extends Component {
     this.props.resetVilkarState();
     this.props.resetBehandlingsgrunnlagState();
     this.props.resetBehandlingsPerioderState();
+  }
+
+  oppdaterBehandlingIDState = () => {
+    const { location } = this.props;
+    const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
+
+    if (Utils._toInteger(behandlingID) !== this.state.behandlingID) {
+      this.setState({ behandlingID: Utils._toInteger(behandlingID) });
+    }
   }
 
   lastInnSaksopplysninger = async () => {
@@ -186,6 +200,9 @@ class Saksbehandling extends Component {
     const visRevurderFagsak = anmodningsperioderErSendtUtlandet ||
       (!redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
 
+    const visOppfriskSaksopplysninger = behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE &&
+      !anmodningsperioderErSendtUtlandet;
+
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
@@ -227,7 +244,7 @@ class Saksbehandling extends Component {
                   visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
-                  visOppfriskSaksopplysninger
+                  visOppfriskSaksopplysninger={visOppfriskSaksopplysninger}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                   visRevurderFagsak={visRevurderFagsak}
@@ -346,8 +363,8 @@ const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,

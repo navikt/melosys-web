@@ -56,7 +56,7 @@ const SkjemaSokOgLeggTil = ({
         <Nav.Input
           value={orgnrVerdi}
           onChange={oppdaterOrgnrVerdi}
-          label="Søk etter orgnr:"
+          label="Søk etter organisasjonsnummer (må ha adresse i Norge):"
           feil={feilObjekt}
         />
         <Mui.Knapp type="hoved" onClick={forsokHentOrganisasjon}>Søk</Mui.Knapp>

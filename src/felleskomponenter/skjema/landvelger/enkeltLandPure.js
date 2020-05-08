@@ -4,7 +4,11 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import { kodeTilObjekt, landTekstFormat } from './LandVelger';
+import * as KV from '../../../kodeverk';
+
+import { landTekstFormat, lagDatalistID } from './utils';
+
+import MKV from '../../../melosyskodeverk';
 
 import './landvelger.css';
 
@@ -32,13 +36,12 @@ class EnkeltLandPure extends Component {
   oppdaterInputVerdi = () => {
     const { value } = this.props;
     const { landkoder } = this.props;
-    const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
+    const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
     const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
     this.setInputVerdi(inputVerdi);
   };
 
   oppdaterLand = landkode => {
-    if (!landkode) throw new Error('landkode må inneholde verdi.');
     const { onChange } = this.props;
     onChange(landkode);
   };
@@ -75,10 +78,12 @@ class EnkeltLandPure extends Component {
   };
 
   fokusUtHandler = () => {
+    const { changeOnEmptyValue } = this.props;
     const { inputVerdi } = this.state;
 
     if (!inputVerdi) {
       this.tomFeilmelding();
+      if (changeOnEmptyValue) this.oppdaterLand(inputVerdi);
       return;
     }
 
@@ -116,10 +121,12 @@ class EnkeltLandPure extends Component {
 
     const cl = classnames({ landliste__linje__input: true, [className]: true });
 
+    const dataListID = lagDatalistID();
+
     return (
       <div>
         <Nav.Input
-          list="alleLand"
+          list={dataListID}
           label={label}
           bredde={bredde}
           feil={feilObjekt}
@@ -131,6 +138,13 @@ class EnkeltLandPure extends Component {
           onKeyDown={inputTastNedHandler}
           disabled={disabled}
         />
+        <div className="landliste__dataliste">
+          <datalist id={dataListID}>
+            {
+              MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))
+            }
+          </datalist>
+        </div>
       </div>
     );
   }
@@ -145,6 +159,7 @@ EnkeltLandPure.propTypes = {
   label: PT.string,
   feil: PT.string,
   disabled: PT.bool,
+  changeOnEmptyValue: PT.bool,
 };
 
 EnkeltLandPure.defaultProps = {
@@ -153,6 +168,7 @@ EnkeltLandPure.defaultProps = {
   feil: '',
   bredde: 'fullbredde',
   disabled: false,
+  changeOnEmptyValue: false,
 };
 
 export default EnkeltLandPure;
