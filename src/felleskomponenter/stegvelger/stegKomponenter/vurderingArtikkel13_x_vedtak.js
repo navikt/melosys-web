@@ -46,12 +46,6 @@ export const VurderingArtikkel13_x_vedtak = ({
 }) => {
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  const vedCheck = e => {
-    if (!e.target.checked) {
-      gjenopprettOpprinneligLovvalgsperiode();
-    }
-  };
-
   const forkortLovvalgsperiode = () => endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
 
   const vedKlikkForhandsvis = async () => {
@@ -108,35 +102,18 @@ export const VurderingArtikkel13_x_vedtak = ({
           </Nav.Row>
         </Fragment>
       }
-      <Nav.Row className="forkortLovvalgsperiode">
-        <Nav.Column xs="8">
-          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalget innvilges for en kortere periode" disabled={!redigerbart} onClick={vedCheck} />
-        </Nav.Column>
-      </Nav.Row>
-      {
-        formValues.forkortLovvalgsperiode &&
-        <Fragment>
-          <Nav.Row>
-            <Nav.Column xs="3">
-              <Skjema.Input
-                bredde="fullbredde"
-                label="Startdato"
-                disabled
-                feltNavn="fomDato"
-              />
-            </Nav.Column>
-            <Nav.Column xs="3">
-              <Skjema.Input
-                bredde="fullbredde"
-                label="Sluttdato"
-                disabled={!redigerbart}
-                feltNavn="tomDato"
-                datoFelt
-              />
-            </Nav.Column>
-          </Nav.Row>
-        </Fragment>
-      }
+      <Skjema.PeriodeForkorter
+        redigerbart={redigerbart}
+        checkboxClassName="forkortLovvalgsperiode"
+        checkboxLabel="Lovvalget innvilges for en kortere periode"
+        checkboxFeltnavn="forkortLovvalgsperiode"
+        onUncheck={gjenopprettOpprinneligLovvalgsperiode}
+        forkortPeriode={formValues.forkortLovvalgsperiode}
+        fomLabel="Startdato"
+        fomFeltNavn="fomDato"
+        tomLabel="Sluttdato"
+        tomFeltNavn="tomDato"
+      />
       {
         erNyVurdering &&
         <Nav.Row>

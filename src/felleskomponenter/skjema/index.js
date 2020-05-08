@@ -9,6 +9,7 @@ import * as Validering from './validering';
 import CustomRadioPanelGruppe, { CustomRadioPanelElement } from './customRadioPanelGruppe';
 import ListeVelger from './listevelger';
 import LandVelger from './landvelger';
+import PeriodeForkorter from './periodeForkorter';
 
 export {
   Checkbox,
@@ -23,4 +24,5 @@ export {
   CustomRadioPanelElement,
   ListeVelger,
   LandVelger,
+  PeriodeForkorter,
 };
