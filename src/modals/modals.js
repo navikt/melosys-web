@@ -8,7 +8,6 @@ import { vedtakSelectors } from '../ducks/vedtak';
 import { utpekSelectors } from '../ducks/utpek';
 
 import DialogboksOppfriskSak from '../felleskomponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../felleskomponenter/dialogboks/dialogboksVenter';
 import DialogboksHenlegg from '../felleskomponenter/dialogboks/dialogboksHenlegg';
 import DialogboksAvsluttSakSomBortfalt from '../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
 import DialogboksAvslagSoknad from '../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
@@ -16,12 +15,11 @@ import DialogboksRevurderFagsak from '../felleskomponenter/dialogboks/dialogboks
 import DialogboksValidering from '../felleskomponenter/dialogboks/dialogboksValidering';
 
 const Modals = ({
-  oppfriskningBlokkererInnhold,
-  skjulOppfriskBekreftelseOgNavigerTilForside,
-  hentBehandlingStatus,
+  skjulOppfriskModalOgNavigerTilForside,
   visOppfriskDialog,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
-  skjulOppfriskBekreftelse,
+  skjulOppfriskModal,
+  lukkOppfriskModal,
   visHenleggDialog,
   skjulHenleggDialogHandle,
   henleggHandle,
@@ -38,25 +36,19 @@ const Modals = ({
   visValideringModal,
   skjulValideringModalDialogHandle,
   valideringerFeilkoder,
+  behandlingOppfriskes,
+  annenBehandlingOppfriskes,
 }) => (
   <Fragment>
     {
-      oppfriskningBlokkererInnhold &&
-      <DialogboksVenter
-        tittel="Oppdaterer registeropplysninger"
-        tekst="Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc."
-        synlig
-        tilForsiden={skjulOppfriskBekreftelseOgNavigerTilForside}
-        oppdater={hentBehandlingStatus}
-      />
-    }
-    {
       visOppfriskDialog &&
       <DialogboksOppfriskSak
-        bekreft={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
-        avbryt={skjulOppfriskBekreftelse}
-        tilForsiden={skjulOppfriskBekreftelseOgNavigerTilForside}
-        oppdater={hentBehandlingStatus}
+        oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+        avbryt={skjulOppfriskModal}
+        lukk={lukkOppfriskModal}
+        tilForsiden={skjulOppfriskModalOgNavigerTilForside}
+        behandlingOppfriskes={behandlingOppfriskes}
+        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
       />
     }
     {
@@ -99,12 +91,11 @@ const Modals = ({
 );
 
 Modals.propTypes = {
-  oppfriskningBlokkererInnhold: PT.bool.isRequired,
-  skjulOppfriskBekreftelseOgNavigerTilForside: PT.func.isRequired,
-  hentBehandlingStatus: PT.func.isRequired,
+  skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
   visOppfriskDialog: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
-  skjulOppfriskBekreftelse: PT.func.isRequired,
+  skjulOppfriskModal: PT.func.isRequired,
+  lukkOppfriskModal: PT.func.isRequired,
   visHenleggDialog: PT.bool.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   henleggHandle: PT.func.isRequired,
@@ -121,6 +112,8 @@ Modals.propTypes = {
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
   valideringerFeilkoder: PT.arrayOf(PT.string),
+  behandlingOppfriskes: PT.bool.isRequired,
+  annenBehandlingOppfriskes: PT.bool.isRequired,
 };
 
 Modals.defaultProps = {
@@ -128,7 +121,6 @@ Modals.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  oppfriskningBlokkererInnhold: modalerSelectors.ErOppfriskningBlokkererInnholdSynligSelector(state),
   visOppfriskDialog: modalerSelectors.ErOppfriskSynligSelector(state),
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
@@ -139,7 +131,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  skjulOppfriskBekreftelse: () => dispatch(modalerOperations.skjulOppfrisk()),
+  skjulOppfriskModal: () => dispatch(modalerOperations.skjulOppfrisk()),
+  lukkOppfriskModal: () => dispatch(modalerOperations.skjulOppfrisk()) && dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),

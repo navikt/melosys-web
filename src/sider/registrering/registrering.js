@@ -67,6 +67,8 @@ const Registrering = props => {
     lovvalgsperiodeTom,
     oppdaterBehandlingsStatus,
     lovvalgsland,
+    visOppfriskModal,
+    behandlingOppfriskes,
   } = props;
 
   const saksnummer = snr;
@@ -87,6 +89,11 @@ const Registrering = props => {
 
   React.useEffect(() => {
     lastInnSaksopplysninger();
+
+    if (behandlingOppfriskes) {
+      visOppfriskModal();
+    }
+
     return () => props.resetFagsakState();
   }, []);
 
@@ -134,6 +141,7 @@ const Registrering = props => {
                 lagreOgLukkHandle={lagreOgLukk}
                 tilbakeleggeHandle={tilbakeleggHandle}
                 apneTidligereBehandlinger={apneTidligereBehandlinger}
+                oppfriskSaksopplysningerHandle={visOppfriskModal}
               />}
               renderBehandlingsstatus={() => <Behandlingsstatus
                 behandlingID={behandlingID}
@@ -181,6 +189,8 @@ Registrering.propTypes = {
   oppdaterBehandlingsStatus: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   lovvalgsland: MPT.Kodeverk.isRequired,
+  visOppfriskModal: PT.func.isRequired,
+  behandlingOppfriskes: PT.bool.isRequired,
 };
 Registrering.defaultProps = {
   redigerbart: null,
