@@ -21,8 +21,6 @@ import { flytSelectors } from '../../../ducks/flyt';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
-import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
-import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
 
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
@@ -99,16 +97,7 @@ const VurderingVedtak = ({
         }
         {
           erNyVurdering &&
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <VedtaktypeSkjema
-                redigerbart={redigerbart}
-              />
-              <VedtaketypeBegrunnelseSkjema
-                redigerbart={redigerbart}
-              />
-            </Nav.Column>
-          </Nav.Row>
+          <Skjema.Vedtakstype redigerbart={redigerbart} />
         }
         <Nav.Row className="fritekst">
           <Nav.Column xs="12">

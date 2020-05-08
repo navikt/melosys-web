@@ -14,8 +14,6 @@ import * as MPT from '../../../proptypes';
 import * as Mui from '../../ui';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
-import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
-import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -116,16 +114,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       />
       {
         erNyVurdering &&
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <VedtaktypeSkjema
-              redigerbart={redigerbart}
-            />
-            <VedtaketypeBegrunnelseSkjema
-              redigerbart={redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        <Skjema.Vedtakstype redigerbart={redigerbart} />
       }
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">

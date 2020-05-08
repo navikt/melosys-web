@@ -10,6 +10,7 @@ import CustomRadioPanelGruppe, { CustomRadioPanelElement } from './customRadioPa
 import ListeVelger from './listevelger';
 import LandVelger from './landvelger';
 import PeriodeForkorter from './periodeForkorter';
+import Vedtakstype from './vedtakstype';
 
 export {
   Checkbox,
@@ -25,4 +26,5 @@ export {
   ListeVelger,
   LandVelger,
   PeriodeForkorter,
+  Vedtakstype,
 };
