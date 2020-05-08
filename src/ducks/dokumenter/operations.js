@@ -50,7 +50,7 @@ export async function forhandsvisBrev(behandlingID, dokumenttypeKode, data) {
 }
 
 export async function forhandsvisSed(behandlingID, sedType, data) {
-  const vilSendeAnmodningOmMerInformasjon = data.vilSendeAnmodningOmMerInformasjon || data.vilSendeAnmodningOmMerInformasjon === false ? false : null;
+  const vilSendeAnmodningOmMerInformasjon = data.vilSendeAnmodningOmMerInformasjon || (data.vilSendeAnmodningOmMerInformasjon === false ? false : null);
 
   const utfyltdata = {
     fritekst: data.fritekst || null,
