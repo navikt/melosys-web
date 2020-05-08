@@ -388,6 +388,7 @@ class Stegvelger extends Component {
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebase: props.hjemmebase,
+      utlandMedLonnetArbeid: props.utlandMedLonnetArbeid,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -545,6 +546,7 @@ Stegvelger.propTypes = {
   hjemmebase: PT.string,
   forsteSteg: PT.string.isRequired,
   erArbeidEttLand: PT.bool.isRequired,
+  utlandMedLonnetArbeid: PT.arrayOf(PT.string).isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -600,6 +602,7 @@ const mapStateToProps = state => ({
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
+  utlandMedLonnetArbeid: avklartefaktaSelectors.LoennetArbeidUtlandSelector(state),
 });
 
 /* eslint no-alert:off */

@@ -20,3 +20,8 @@ export const HarOffentligTjenesteAnnetLandSelector = createSelector(
   state => avklartefaktaSelectors.OffentligArbeidAntallLandFaktaVerdiSelector(state),
   offentligArbeidAntallLand => offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET
 );
+
+export const HarLonnetArbeidAnnetLand = createSelector(
+  state => avklartefaktaSelectors.LoennetArbeidAntallLandFaktaVerdiSelector(state),
+  loennetArbeidAntallLand => loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND
+);

@@ -52,7 +52,8 @@ const byggUtpekingsperiode = (stegState, reduxState) => {
 const byggUtpekingsperioder = (stegState, reduxState) => {
   const omfattesIAnnetLand = avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState);
   const offentligTjenesteUtland = flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState);
-  if (!omfattesIAnnetLand && !offentligTjenesteUtland) return [];
+  const lonnetArbeidAnnetLand = flytSelectors.HarLonnetArbeidAnnetLand(reduxState);
+  if (!omfattesIAnnetLand && !offentligTjenesteUtland && !lonnetArbeidAnnetLand) return [];
 
   switch (stegState.lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1:
@@ -61,6 +62,7 @@ const byggUtpekingsperioder = (stegState, reduxState) => {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4:
       return byggUtpekingsperiode(stegState, reduxState);
     default: {

@@ -185,6 +185,7 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
   switch (lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3:
       return MKV.Koder.landkoder.NO;
     default:
       return null;
@@ -194,8 +195,9 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
 const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
-  formSelectors.UtpekingAvvistSelector(reduxState) ||
-  flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState)
+  flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState) ||
+  flytSelectors.HarLonnetArbeidAnnetLand(reduxState) ||
+  formSelectors.UtpekingAvvistSelector(reduxState)
 );
 
 const byggLovvalgsPerioder = (stegState, reduxState) => {
