@@ -53,7 +53,14 @@ class Vedtak extends Steg {
       if (formValues.kreverMottakerinstitusjon &&
         lovvalgSomKodeTerm &&
         lovvalgSomKodeTerm.kode !== MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2) {
-        pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
+        pdfDokumenter.push({
+          navn: 'Forhåndsvis SED A009',
+          type: EKV.Koder.sedtyper.A009,
+          erSed: true,
+          data: {
+            fritekst: formValues.fritekstSed,
+          },
+        });
       }
 
       return {

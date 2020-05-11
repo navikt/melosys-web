@@ -60,6 +60,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
     lagreOgUtpek({
       mottakerinstitusjoner: formValues.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
+      fritekstSed: formValues.fritekstSed,
     });
   };
 
@@ -81,6 +82,9 @@ export const VurderingArtikkel13UtpekLand = ({
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
+      data: {
+        fritekst: formValues.fritekstSed,
+      },
     },
   ];
 
@@ -118,6 +122,20 @@ export const VurderingArtikkel13UtpekLand = ({
           {fom} - {tom}
         </Nav.Column>
       </Nav.Row>
+      {
+        redigerbart &&
+        <Nav.Row className="fritekstSed">
+          <Nav.Column xs="7">
+            <Skjema.Textarea
+              label="Ytterligere informasjon til SED (valgfri)"
+              feltNavn="fritekstSed"
+              disabled={!redigerbart}
+              visTellerFra={500}
+              maxLength={500}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="mottakerinstitusjoner">
         <Nav.Column xs="7">
           <MottakerinstitusjonvelgerFlervalg
@@ -173,6 +191,7 @@ const mapStateToProps = state => ({
   initialValues: {
     mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
     kreverMottakerinstitusjon: false,
+    fritekstSed: null,
   },
 });
 
