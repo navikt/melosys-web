@@ -316,6 +316,7 @@ class Stegvelger extends Component {
     const utfyltData = {
       begrunnelseKode: data.begrunnelseKode || null,
       fritekst: data.fritekst || null,
+      fritekstSed: data.fritekstSed || null,
     };
 
     return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);
