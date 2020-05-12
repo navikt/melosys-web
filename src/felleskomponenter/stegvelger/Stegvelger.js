@@ -597,7 +597,7 @@ const mapStateToProps = state => ({
   vurderUtpekingFom: formSelectors.VurderUtpekingFomSelector(state),
   vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
   vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
-  lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
+  lovvalgsbestemmelse: lovvalgsperioderSelectors.ValgteLovvalgsVilkarBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),

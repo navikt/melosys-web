@@ -9,10 +9,16 @@ class ArbeidEttLandOvrigVedtak extends Steg {
     this.id = STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK;
     this.tittel = 'Vedtak';
     this.komponent = VurderingArbeidEttLandOvrigVedtak;
-    this.samleRelevanteData = () => ({});
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.generiskStegRedigerbart,
+    });
     this.beregnRelevantUI = () => ({});
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
+      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }

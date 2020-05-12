@@ -264,7 +264,8 @@ export function oppdaterLovvalgsperioderState(stegState) {
       stegState.lovvalgsbestemmelse ||
       stegState.tilleggbestemmelse ||
       stegState.unntakfrabestemmelse ||
-      stegState.lovvalgsland) {
+      stegState.lovvalgsland ||
+      stegState.lovvalgsperiode) {
       const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {

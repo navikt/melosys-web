@@ -21,9 +21,14 @@ export const LovvalgsperiodeSelector = createSelector(
   lovvalgsPerioder => (lovvalgsPerioder[0] ? lovvalgsPerioder[0] : {})
 );
 
-export const LovvalgBestemmelseSelector = createSelector(
+export const ValgteLovvalgsVilkarBestemmelseSelector = createSelector(
   state => valgteLovvalgsVilkar(state),
   lovvalgsvilkar => (lovvalgsvilkar.length > 0 ? lovvalgsvilkar[0].vilkaar : undefined)
+);
+
+export const LovvalgBestemmelseSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.lovvalgsbestemmelse
 );
 
 export const LovvalgslandSelector = createSelector(
