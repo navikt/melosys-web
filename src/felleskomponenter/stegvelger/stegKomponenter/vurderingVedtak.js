@@ -73,6 +73,7 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
+      fritekstSed: formValues.fritekstSed,
       mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
@@ -111,7 +112,7 @@ const VurderingVedtak = ({
           </Nav.Row>
         }
         <Nav.Row className="fritekst">
-          <Nav.Column xs="12">
+          <Nav.Column xs="7">
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekst til vedtaksbrev"
@@ -122,6 +123,20 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
+        {
+          redigerbart &&
+          <Nav.Row className="fritekstSed">
+            <Nav.Column xs="7">
+              <Skjema.Textarea
+                label="Ytterligere informasjon til SED (valgfri)"
+                feltNavn="fritekstSed"
+                disabled={!redigerbart}
+                visTellerFra={500}
+                maxLength={500}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         {
           erSoknadEllerNyVurdering &&
           <Nav.Row className="mottakerinstitusjoner">
@@ -191,6 +206,7 @@ const mapStateToProps = state => ({
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,
+    fritekstSed: null,
   },
 });
 

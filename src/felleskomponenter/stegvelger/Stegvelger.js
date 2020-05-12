@@ -184,6 +184,7 @@ class Stegvelger extends Component {
     const vedtakBody = {
       behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
       fritekst: data.fritekst || null,
+      fritekstSed: data.fritekstSed || null,
       mottakerinstitusjoner: data.mottakerinstitusjoner || [],
       vedtakstype: data.vedtakstype,
       revurderBegrunnelse: data.revurderBegrunnelse || null,
@@ -204,6 +205,7 @@ class Stegvelger extends Component {
 
     const utpekBody = {
       mottakerinstitusjoner: data.mottakerinstitusjoner,
+      fritekstSed: data.fritekstSed || null,
     };
 
     utpek(saksnummer, utpekBody);
@@ -229,21 +231,20 @@ class Stegvelger extends Component {
     });
   };
 
-  bestillAnmodningsperioder = async (mottakerinstitusjon = null) => {
+  bestillAnmodningsperioder = async body => {
     const { behandlingID, tilForsiden } = this.props;
-    const bestillAnmodningsperioderBody = { mottakerinstitusjon };
     try {
-      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestillAnmodningsperioderBody);
+      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, body);
       tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreOgBestillAnmodningsperioder = mottakerinstitusjon => {
+  lagreOgBestillAnmodningsperioder = body => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.bestillAnmodningsperioder(mottakerinstitusjon);
+      this.bestillAnmodningsperioder(body);
     });
   };
 
@@ -315,6 +316,7 @@ class Stegvelger extends Component {
     const utfyltData = {
       begrunnelseKode: data.begrunnelseKode || null,
       fritekst: data.fritekst || null,
+      fritekstSed: data.fritekstSed || null,
     };
 
     return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);

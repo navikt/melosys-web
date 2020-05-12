@@ -32,6 +32,7 @@ export class VurderingEndrePeriode extends React.Component {
     begrunnelseFeilmelding: undefined,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
     erEessiReady: false,
+    fritekstSed: '',
   };
 
   componentDidMount() {
@@ -120,7 +121,7 @@ export class VurderingEndrePeriode extends React.Component {
   vedKlikkEndrePeriode = async () => {
     const { endreVedtak, tilForsiden } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
-    const { begrunnelse } = this.state;
+    const { begrunnelse, fritekstSed } = this.state;
 
     if (validerAlt()) {
       await sendEndretLovvalgsPeriode();
@@ -128,6 +129,7 @@ export class VurderingEndrePeriode extends React.Component {
       const data = {
         begrunnelseKode: begrunnelse,
         fritekst: null,
+        fritekstSed,
       };
       await endreVedtak(data);
       tilForsiden();
@@ -170,6 +172,7 @@ export class VurderingEndrePeriode extends React.Component {
       begrunnelseFeilmelding,
       opprinneligLovvalgsperiode: { fom, tom },
       erEessiReady,
+      fritekstSed,
     } = this.state;
 
     const endretPeriodeBegrunnelse = begrunnelse;
@@ -263,6 +266,20 @@ export class VurderingEndrePeriode extends React.Component {
             />
           </Nav.Column>
         </Nav.Row> */}
+        {
+          redigerbart &&
+          <Nav.Row className="fritekstSed">
+            <Nav.Column xs="6">
+              <Nav.Textarea
+                label="Ytterligere informasjon til SED (valgfri)"
+                value={fritekstSed}
+                onChange={e => this.setState({ fritekstSed: e.target.value })}
+                disabled={!redigerbart}
+                maxLength={500}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
         <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>

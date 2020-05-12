@@ -88,6 +88,9 @@ export const VurderingArtikkel13_x_vedtak = ({
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
+      data: {
+        fritekst: formValues.fritekstSed,
+      },
     },
   ];
 
@@ -162,6 +165,20 @@ export const VurderingArtikkel13_x_vedtak = ({
           />
         </Nav.Column>
       </Nav.Row>
+      {
+        redigerbart &&
+        <Nav.Row className="fritekstSed">
+          <Nav.Column xs="8">
+            <Skjema.Textarea
+              label="Ytterligere informasjon til SED (valgfri)"
+              feltNavn="fritekstSed"
+              disabled={!redigerbart}
+              visTellerFra={500}
+              maxLength={500}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row>
         <Nav.Column xs="8">
           <MottakerinstitusjonvelgerFlervalg
@@ -225,6 +242,7 @@ const mapStateToProps = (state, ownProps) => ({
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+    fritekstSed: null,
   },
 });
 
@@ -241,6 +259,7 @@ const fattVedtak = async (values, dispatch, props) => {
   props.lagreOgFatteVedtak({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
+    fritekstSed: values.fritekstSed,
     mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
     vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     revurderBegrunnelse: values.vedtakstypebegrunnelse,
