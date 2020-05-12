@@ -93,7 +93,7 @@ class Saksbehandling extends Component {
 
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
-      hentBehandlingsgrunnlag, sjekkOppfriskningStatus, blokkerInnholdMedOppfriskSpinner,
+      hentBehandlingsgrunnlag, visOppfriskModal, behandlingOppfriskes,
     } = this.props;
 
     try {
@@ -105,11 +105,8 @@ class Saksbehandling extends Component {
       await hentBehandlingsresultat(behandlingID);
 
       // Sjekk om saken er iferd under oppdatering
-      const oppfriskningStatus = await sjekkOppfriskningStatus(behandlingID);
-      const { data: status } = oppfriskningStatus;
-
-      if (status === 'PROGRESS') {
-        blokkerInnholdMedOppfriskSpinner();
+      if (behandlingOppfriskes) {
+        visOppfriskModal();
         return false;
       }
 
@@ -185,15 +182,15 @@ class Saksbehandling extends Component {
       visHenleggDialogHandle,
       visAvsluttSakSomBortfaltDialogHandle,
       visAvslagSoknadDialogHandle,
-      visOppfriskBekreftelse,
+      visOppfriskModal,
       apneTidligereBehandlinger,
-      blokkerInnholdMedOppfriskSpinner,
       arbeidsland,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
       visRevurderFagsakDialogHandle,
       tilForsiden,
       visValideringModalDialogHandle,
+      startOgVisOppfriskModal,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -213,7 +210,7 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <Saksopplysninger
                 behandlingID={behandlingID}
-                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+                visOppfriskModal={visOppfriskModal}
                 lagreVilkarHandler={this.lagreVilkarHandler}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
@@ -222,6 +219,7 @@ class Saksbehandling extends Component {
                 lagreAllData={this.props.lagreAllData}
                 tilForsiden={tilForsiden}
                 visValideringModalDialogHandle={visValideringModalDialogHandle}
+                startOgVisOppfriskModal={startOgVisOppfriskModal}
               />
             </Nav.Column>
             <Nav.Column xs="5">
@@ -247,7 +245,7 @@ class Saksbehandling extends Component {
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
                   visOppfriskSaksopplysninger={visOppfriskSaksopplysninger}
-                  oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                  oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                   visRevurderFagsak={visRevurderFagsak}
                   visAvsluttSakSomBortfalt={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
@@ -302,7 +300,6 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsPerioderState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
-  sjekkOppfriskningStatus: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
@@ -324,7 +321,6 @@ Saksbehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskBekreftelse: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
@@ -332,13 +328,15 @@ Saksbehandling.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
+  visOppfriskModal: PT.func.isRequired,
+  behandlingOppfriskes: PT.bool.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -365,8 +363,8 @@ const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
@@ -386,7 +384,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),

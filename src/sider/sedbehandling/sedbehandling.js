@@ -80,7 +80,8 @@ const SedBehandling = ({
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
-  visOppfriskBekreftelse,
+  visOppfriskModal,
+  behandlingOppfriskes,
   apneTidligereBehandlinger,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -88,6 +89,10 @@ const SedBehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
+
+    if (behandlingOppfriskes) {
+      visOppfriskModal();
+    }
 
     return () => {
       resetSaksopplysninger();
@@ -135,7 +140,7 @@ const SedBehandling = ({
                 visHenleggSak
                 visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                 visOppfriskSaksopplysninger
-                oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                oppfriskSaksopplysningerHandle={visOppfriskModal}
               />}
               renderBehandlingsstatus={() => <Behandlingsstatus
                 behandlingID={behandlingID}
@@ -185,7 +190,8 @@ SedBehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskBekreftelse: PT.func.isRequired,
+  visOppfriskModal: PT.func.isRequired,
+  behandlingOppfriskes: PT.bool.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
 };
 
@@ -208,8 +214,8 @@ const mapStateToProps = state => ({
   oppholdsland: behandlingsgrunnlagSelectors.OppholdsLandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   sideDialogRedigerbart: redigerbartSelectors.SidedialogRedigerbartSelector(state),

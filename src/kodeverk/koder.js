@@ -134,7 +134,8 @@ export const Tema = {
 };
 
 export const LoennetArbeidAntallLand = {
-  ETT_LAND: 'ETT_LAND',
+  NORGE: 'NORGE',
+  ETT_ANNET_LAND: 'ETT_ANNET_LAND',
   FLERE_LAND: 'FLERE_LAND',
 };
 
