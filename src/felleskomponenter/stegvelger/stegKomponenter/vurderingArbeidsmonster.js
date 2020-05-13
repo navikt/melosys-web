@@ -154,7 +154,8 @@ export const VurderingArbeidsmonster = ({
   } = tilstand;
 
   const loennetArbeidEndretHandler = avklartLoennetArbeid => {
-    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.NORGE) {
+    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.NORGE ||
+        avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND) {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
     } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
       slettData(slettLovvalgsbestemmelse());
@@ -184,7 +185,17 @@ export const VurderingArbeidsmonster = ({
     }
   };
 
-  const oppdaterLovvalgsperiodeVedMount = avklartAktivitetINorge => {
+  const initialiserStegDataForSteg = (avklartAktivitetINorge, loennetArbeidAntallLand, offentligArbeidAntallLand) => {
+    if (loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.NORGE ||
+      loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+    }
+
+    if (offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET ||
+      offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4));
+    }
+
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
@@ -196,7 +207,9 @@ export const VurderingArbeidsmonster = ({
 
   useEffect(() => {
     const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
-    oppdaterLovvalgsperiodeVedMount(avklartAktivitetINorge);
+    const loennetArbeidAntallLand = hentFaktaVerdi(loennetArbeidAntallLandFakta);
+    const offentligArbeidAntallLand = hentFaktaVerdi(offentligArbeidAntallLandFakta);
+    initialiserStegDataForSteg(avklartAktivitetINorge, loennetArbeidAntallLand, offentligArbeidAntallLand);
 
     return () => {
       slettData();
