@@ -200,6 +200,8 @@ const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   formSelectors.UtpekingAvvistSelector(reduxState)
 );
 
+const norgeErLovvalgsland = lovvalgsland => lovvalgsland === MKV.Koder.landkoder.NO;
+
 const byggLovvalgsPerioder = (stegState, reduxState) => {
   if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
@@ -220,7 +222,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland,
-    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    trygdeDekning: norgeErLovvalgsland(lovvalgsland) ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO : MKV.Koder.trygdedekninger.UTEN_DEKNING,
     medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];
 };
