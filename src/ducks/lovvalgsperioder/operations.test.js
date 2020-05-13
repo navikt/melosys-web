@@ -406,6 +406,8 @@ describe('Lovvalgsperioder operations', () => {
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A,
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B,
   ]).it('lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom lovvalgsbestemmelse er %p', lovvalgsbestemmelse => {
     const expectedActions = [
       {
