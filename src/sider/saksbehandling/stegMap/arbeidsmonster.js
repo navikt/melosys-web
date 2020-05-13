@@ -40,11 +40,10 @@ class Arbeidsmonster extends Steg {
       erArbeidstakerOgSelvstendigNaeringsdrivende;
     const erYrkesAktivitetOffentligNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
       erOffentligTjenestemann;
-    const finnesEttUtlandMedLonnetArbeid = propsLight.utlandMedLonnetArbeid.length === 1;
 
     const harAvklaring = landMedVesentligArbeid.length > 0 &&
     (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
-    (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || (loennetArbeidIEttAnnetLand && finnesEttUtlandMedLonnetArbeid) || loennetArbeidIFlereLand) : true) &&
+    (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || loennetArbeidIEttAnnetLand || loennetArbeidIFlereLand) : true) &&
     (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
 
     this.kriterier = [
@@ -108,7 +107,6 @@ class Arbeidsmonster extends Steg {
     this.samleRelevanteData = _propsLight => ({
       arbeidsland: _propsLight.arbeidslandMedYrkesaktivitet,
       redigerbart: _propsLight.generiskStegRedigerbart,
-      utlandMedLonnetArbeid: _propsLight.utlandMedLonnetArbeid,
     });
     this.beregnRelevantUI = _propsLight => {
       const yrkesaktivitet = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta));
@@ -124,9 +122,7 @@ class Arbeidsmonster extends Steg {
         erYrkesaktivitetAntallLandNodvendig,
         erYrkesAktivitetOffentligNodvendig,
         loennetArbeidAntallLandFakta,
-        loennetArbeidIEttAnnetLand,
         offentligArbeidAntallLandFakta,
-        finnesEttUtlandMedLonnetArbeid,
       });
     };
     this.handlers = {
