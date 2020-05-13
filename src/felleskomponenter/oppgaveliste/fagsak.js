@@ -10,6 +10,7 @@ import Behandling from './behandling';
 import PanelHeader from '../panelHeader/panelHeader';
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import { DatoOmradeDescription } from '../datoOmrade/datoOmrade';
+import sortOppgaverByDate from '../../sider/forside/komponenter/mineoppgaver/oppgaver/sortoppgaverbydate';
 
 import './fagsak.css';
 
@@ -34,6 +35,9 @@ const Fagsak = ({ sak }) => {
   const tittel = `${KV.objektTilTerm(sakstype)}`;
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const customMargin = { marginLeft: '1em' };
+
+  const sorterteBehandlinger = behandlingOversikter.slice().sort(sortOppgaverByDate('descending', 'opprettetDato'));
+
   return (
     <Nav.Panel className="fagsak">
       <PanelHeader
@@ -68,7 +72,7 @@ const Fagsak = ({ sak }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {
-            behandlingOversikter.map(behandling =>
+            sorterteBehandlinger.map(behandling =>
               <Behandling key={behandling.behandlingID} behandling={behandling} link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)} />)
           }
         </Nav.Row>
