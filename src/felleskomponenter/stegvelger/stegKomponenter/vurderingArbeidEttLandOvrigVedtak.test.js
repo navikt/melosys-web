@@ -28,7 +28,6 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       form: KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK,
       handleSubmit: jest.fn(),
-      lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3,
       behandlingsgrunnlagFom: '',
       behandlingsgrunnlagTom: '',
     };
