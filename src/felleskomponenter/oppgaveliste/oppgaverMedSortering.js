@@ -1,14 +1,14 @@
 import React, { Fragment, useState } from 'react';
 import PT from 'prop-types';
 
-import * as Utils from '../../../../../utils';
-import * as Nav from '../../../../../utils/navFrontend';
+import * as Utils from '../../utils';
+import * as Nav from '../../utils/navFrontend';
 
 import sortOppgaverByDate from './sortoppgaverbydate';
 
-import './oppgaver.css';
+import './oppgaverMedSortering.css';
 
-const Oppgaver = ({
+const OppgaverMedSortering = ({
   oppgaver,
   defaultChecked,
   component,
@@ -54,7 +54,7 @@ const Oppgaver = ({
   );
 };
 
-Oppgaver.propTypes = {
+OppgaverMedSortering.propTypes = {
   oppgaver: PT.arrayOf(PT.object),
   defaultChecked: PT.string,
   component: PT.elementType.isRequired,
@@ -63,10 +63,10 @@ Oppgaver.propTypes = {
   radioGroupName: PT.string,
 };
 
-Oppgaver.defaultProps = {
+OppgaverMedSortering.defaultProps = {
   oppgaver: [],
   defaultChecked: 'eldste',
   radioGroupName: undefined,
 };
 
-export default Oppgaver;
+export default OppgaverMedSortering;

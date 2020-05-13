@@ -10,7 +10,7 @@ import Behandling from './behandling';
 import PanelHeader from '../panelHeader/panelHeader';
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import { DatoOmradeDescription } from '../datoOmrade/datoOmrade';
-import sortOppgaverByDate from '../../sider/forside/komponenter/mineoppgaver/oppgaver/sortoppgaverbydate';
+import sortOppgaverByDate from './sortoppgaverbydate';
 
 import './fagsak.css';
 

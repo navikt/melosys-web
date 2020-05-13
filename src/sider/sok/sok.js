@@ -6,7 +6,7 @@ import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 import Fagsak from '../../felleskomponenter/oppgaveliste/fagsak';
-import OppgaverMedSortering from '../forside/komponenter/mineoppgaver/oppgaver';
+import OppgaverMedSortering from '../../felleskomponenter/oppgaveliste/oppgaverMedSortering';
 
 import { sokSelectors, sokOperations } from '../../ducks/sok';
 

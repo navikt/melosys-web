@@ -7,7 +7,7 @@ import * as MPT from '../../../../proptypes';
 import BehandlingOppgave from '../../../../felleskomponenter/oppgaveliste/behandlingOppgave';
 import withErrorHandling from '../../../../felleskomponenter/withErrorHandling';
 import JournalforingOppgave from '../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
-import OppgaverMedSortering from './oppgaver';
+import OppgaverMedSortering from '../../../../felleskomponenter/oppgaveliste/oppgaverMedSortering';
 
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.

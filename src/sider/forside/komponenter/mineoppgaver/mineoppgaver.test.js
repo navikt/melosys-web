@@ -2,7 +2,7 @@ import React from 'react';
 
 import BehandlingOppgave from '../../../../felleskomponenter/oppgaveliste/behandlingOppgave';
 import JournalforingOppgave from '../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
-import OppgaverMedSortering from './oppgaver';
+import OppgaverMedSortering from '../../../../felleskomponenter/oppgaveliste/oppgaverMedSortering';
 import { MineOppgaver } from './mineoppgaver';
 
 describe('MineOppgaver', () => {
