@@ -13,8 +13,6 @@ import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 import * as Mui from '../../ui';
 
-import PdfLenkeListe from '../../pdfLenkeListe';
-
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder';
@@ -22,10 +20,12 @@ import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { formOperations } from '../../../ducks/form';
 
+import PdfLenkeListe from '../../pdfLenkeListe';
 import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 import { lagLovvalgsbestemmelse, konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
 import { lagLovvalgsperiode } from '../../../regler/lovvalgsperiode';
+import { lagTilleggBestemmelse, slettTilleggBestemmelse } from '../../../regler/tilleggbestemmelser';
 
 import './vurderingArbeidEttLandOvrigVedtak.css';
 
@@ -42,15 +42,16 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   lagreLovvalgsperioder,
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
-  lovvalgsbestemmelse,
+  lovvalgsbestemmelseSomSkalVises,
+  lovvalgsbestemmelseSomSkalLagres,
   oppdaterData,
   slettData,
   behandlingsgrunnlagFom,
   behandlingsgrunnlagTom,
 }) => {
   useEffect(() => {
-    if (lovvalgsbestemmelse) {
-      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+    if (lovvalgsbestemmelseSomSkalLagres) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelseSomSkalLagres));
     }
 
     if (redigerbart) {
@@ -112,7 +113,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
 
-  const lovvalgsbestemmelseTerm = KV.kodeTilTerm(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+  const lovvalgsbestemmelseTerm = KV.kodeTilTerm(lovvalgsbestemmelseSomSkalVises, MKV.Kodekombinasjoner.alleLovvalg);
   const overskrift = `Omfattet av norsk lovgivning etter ${lovvalgsbestemmelseTerm || '...'}`;
 
   const valgbareLovvalgsbestemmelser = [
@@ -125,8 +126,12 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   ];
 
   useEffect(() => {
-    if (formValues.lovvalgsbestemmelse) {
+    if (formValues.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A));
+      oppdaterData(lagTilleggBestemmelse(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5));
+    } else if (formValues.lovvalgsbestemmelse) {
       oppdaterData(lagLovvalgsbestemmelse(formValues.lovvalgsbestemmelse));
+      slettData(slettTilleggBestemmelse());
     }
   }, [formValues.lovvalgsbestemmelse]);
 
@@ -233,7 +238,8 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   behandlingstype: PT.string.isRequired,
   form: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
-  lovvalgsbestemmelse: PT.string,
+  lovvalgsbestemmelseSomSkalVises: PT.string,
+  lovvalgsbestemmelseSomSkalLagres: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   behandlingsgrunnlagFom: PT.string.isRequired,
@@ -243,7 +249,8 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
 VurderingArbeidEttLandOvrigVedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
-  lovvalgsbestemmelse: undefined,
+  lovvalgsbestemmelseSomSkalVises: '',
+  lovvalgsbestemmelseSomSkalLagres: '',
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -259,7 +266,6 @@ const mapStateToProps = (state, ownProps) => {
   return ({
     behandlingsgrunnlagFom: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
     behandlingsgrunnlagTom: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
-    lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
@@ -273,7 +279,7 @@ const mapStateToProps = (state, ownProps) => {
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
       vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
       mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
-      lovvalgsbestemmelse: ownProps.redigerbart ? '' : lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
+      lovvalgsbestemmelse: ownProps.lovvalgsbestemmelseSomSkalVises,
       fritekstSed: '',
     },
   });
