@@ -202,13 +202,20 @@ const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   formSelectors.UtpekingAvvistSelector(reduxState)
 );
 
+const bestemPeriode = reduxState => {
+  const periode = Selectors.PeriodeSelector(reduxState);
+  if (periode.tom || periode.fom) return periode;
+
+  return behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+};
+
 const byggLovvalgsPerioder = (stegState, reduxState) => {
   if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = stegState.lovvalgsland || bestemLovvalgsland(stegState.lovvalgsbestemmelse, reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
+  const periode = bestemPeriode(reduxState);
   const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
   const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
 
