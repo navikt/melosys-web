@@ -186,6 +186,8 @@ const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B:
       return MKV.Koder.landkoder.NO;
     default:
       return null;
@@ -200,15 +202,22 @@ const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   formSelectors.UtpekingAvvistSelector(reduxState)
 );
 
+const bestemPeriode = reduxState => {
+  const periode = Selectors.PeriodeSelector(reduxState);
+  if (periode.tom || periode.fom) return periode;
+
+  return behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
+};
+
 const norgeErLovvalgsland = lovvalgsland => lovvalgsland === MKV.Koder.landkoder.NO;
 
 const byggLovvalgsPerioder = (stegState, reduxState) => {
   if (lovvalgsperiodeSkalVaereTom(stegState.lovvalgsbestemmelse, reduxState)) return [];
 
-  const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = stegState.lovvalgsland || bestemLovvalgsland(stegState.lovvalgsbestemmelse, reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
+  const periode = bestemPeriode(reduxState);
   const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
   const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
 
@@ -268,7 +277,8 @@ export function oppdaterLovvalgsperioderState(stegState) {
       stegState.lovvalgsbestemmelse ||
       stegState.tilleggbestemmelse ||
       stegState.unntakfrabestemmelse ||
-      stegState.lovvalgsland) {
+      stegState.lovvalgsland ||
+      stegState.lovvalgsperiode) {
       const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {
