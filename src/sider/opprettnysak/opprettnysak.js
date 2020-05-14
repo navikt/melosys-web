@@ -17,6 +17,7 @@ import Knapperad from '../../felleskomponenter/knapperad';
 import EnkeltDato from '../../felleskomponenter/datoOmrade/enkeltDato';
 
 import MKV, { Utils as MKVUtils } from '../../melosyskodeverk';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
 
 import './opprettnysak.css';
 
@@ -31,8 +32,8 @@ const OpprettNySak = ({
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
-  const { behandlingstype } = formValues;
-  const soknadErValgt = MKVUtils.erSoknad(behandlingstype);
+  const { behandlingstema } = formValues;
+  const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const hentOppgaver = async brukerID => {
     if (Validering.erGyldigFnr(brukerID) || Validering.erGyldigDnr(brukerID)) {
@@ -70,7 +71,7 @@ const OpprettNySak = ({
 
   const oppgaverFinnes = radioValg.length > 0;
 
-  const filtrerteBehandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(({ kode }) => MKVUtils.erSoknad(kode));
+  const filtrerteBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) => MKVUtils.erSoknad(kode));
 
   const settJournalpostID = oppgaveID => {
     const { journalpostID } = oppgaver.find(oppgave => oppgave.oppgaveID === oppgaveID);
@@ -107,9 +108,9 @@ const OpprettNySak = ({
                           ))
                       }
                     </Skjema.Select>
-                    <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
+                    <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
                       {
-                        filtrerteBehandlingstyper.map(({ kode, term }) => (
+                        filtrerteBehandlingstemaer.map(({ kode, term }) => (
                           <option key={kode} value={kode}>{term}</option>
                         ))
                       }
@@ -200,7 +201,7 @@ const mapStateToProps = state => ({
 });
 
 const opprettNySak = async (values, dispatch, props) => {
-  const soknadErValgt = MKVUtils.erSoknad(values.behandlingstype);
+  const soknadErValgt = MKVUtils.erSoknad(values.behandlingstema);
   const fom = soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null;
   const tomErUtfylt = values.soknadsinfo.tom;
   const tom = tomErUtfylt && soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null;
@@ -216,7 +217,7 @@ const opprettNySak = async (values, dispatch, props) => {
   const data = {
     brukerID: values.brukerID,
     sakstype: values.sakstype,
-    behandlingstype: values.behandlingstype,
+    behandlingstema: values.behandlingstema,
     soknadDto,
     skalTilordnes: values.skalTilordnes,
     oppgaveID: values.oppgaveID,
@@ -239,7 +240,7 @@ const OpprettNySakForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.opprettnysak),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.opprettnysak),
 })(OpprettNySak);
 
 export default connect(mapStateToProps)(OpprettNySakForm);

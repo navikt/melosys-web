@@ -8,7 +8,6 @@ import MKV from '../../../melosyskodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
-import * as Validering from '../../skjema/validering';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
@@ -26,6 +25,7 @@ import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { formOperations } from '../../../ducks/form';
 import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingArtikkel13_x_vedtak.css';
 
@@ -88,6 +88,9 @@ export const VurderingArtikkel13_x_vedtak = ({
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
+      data: {
+        fritekst: formValues.fritekstSed,
+      },
     },
   ];
 
@@ -100,7 +103,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       {
         redigerbart &&
         <Fragment>
-          <Nav.typo.Element className="undertittel">Lovvalgsperiode</Nav.typo.Element>
+          <Nav.typo.Element className="undertittel">Søknadsperiode</Nav.typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}
@@ -162,6 +165,20 @@ export const VurderingArtikkel13_x_vedtak = ({
           />
         </Nav.Column>
       </Nav.Row>
+      {
+        redigerbart &&
+        <Nav.Row className="fritekstSed">
+          <Nav.Column xs="8">
+            <Skjema.Textarea
+              label="Ytterligere informasjon til SED (valgfri)"
+              feltNavn="fritekstSed"
+              disabled={!redigerbart}
+              visTellerFra={500}
+              maxLength={500}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row>
         <Nav.Column xs="8">
           <MottakerinstitusjonvelgerFlervalg
@@ -225,6 +242,7 @@ const mapStateToProps = (state, ownProps) => ({
     vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+    fritekstSed: null,
   },
 });
 
@@ -241,6 +259,7 @@ const fattVedtak = async (values, dispatch, props) => {
   props.lagreOgFatteVedtak({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
+    fritekstSed: values.fritekstSed,
     mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
     vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     revurderBegrunnelse: values.vedtakstypebegrunnelse,
@@ -252,9 +271,9 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   form: KV.Form.ARTIKKEL_13_X_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
+  keepDirtyOnReinitialize: false,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_x_vedtak, {
+  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
     context: {
       lovvalgsperiode: props.lovvalgsperiode,
       behandlingstype: props.behandlingstype,

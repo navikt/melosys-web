@@ -47,6 +47,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.Tilleggbestemmelser]: new EnkelDataStore(),
       [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
       [StegStoreTyper.Lovvalgsperiode]: new EnkelDataStore(),
+      [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
     },
     visSoknadFeilmeldinger: false,
   };
@@ -131,6 +132,24 @@ class Stegvelger extends Component {
     this.setState(stegStores);
   };
 
+  hentPerioderStegState = () => {
+    const {
+      lovvalgsbestemmelse,
+      tilleggbestemmelse,
+      unntakfrabestemmelse,
+      lovvalgsperiode,
+      lovvalgsland,
+    } = this.state.stegStores;
+
+    return {
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
+      lovvalgsperiode: lovvalgsperiode.hent(),
+      lovvalgsland: lovvalgsland.hent(),
+    };
+  };
+
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
 
@@ -138,26 +157,17 @@ class Stegvelger extends Component {
     const {
       vilkaar,
       avklartefakta,
-      lovvalgsbestemmelse,
       anmodningsperiodesvar,
-      tilleggbestemmelse,
-      unntakfrabestemmelse,
-      lovvalgsperiode,
     } = stegStores;
 
-    const bestemmelser = {
-      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-      tilleggbestemmelse: tilleggbestemmelse.hent(),
-      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-      lovvalgsperiode: lovvalgsperiode.hent(),
-    };
+    const perioderStegState = this.hentPerioderStegState();
 
     await Promise.all([
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder(bestemmelser),
-      this.props.oppdaterAnmodningsPerioder(bestemmelser),
-      this.props.oppdaterUtpekingsperioder(bestemmelser),
+      this.props.oppdaterLovvalgperioder(perioderStegState),
+      this.props.oppdaterAnmodningsPerioder(perioderStegState),
+      this.props.oppdaterUtpekingsperioder(perioderStegState),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -174,6 +184,7 @@ class Stegvelger extends Component {
     const vedtakBody = {
       behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
       fritekst: data.fritekst || null,
+      fritekstSed: data.fritekstSed || null,
       mottakerinstitusjoner: data.mottakerinstitusjoner || [],
       vedtakstype: data.vedtakstype,
       revurderBegrunnelse: data.revurderBegrunnelse || null,
@@ -194,6 +205,7 @@ class Stegvelger extends Component {
 
     const utpekBody = {
       mottakerinstitusjoner: data.mottakerinstitusjoner,
+      fritekstSed: data.fritekstSed || null,
     };
 
     utpek(saksnummer, utpekBody);
@@ -219,21 +231,41 @@ class Stegvelger extends Component {
     });
   };
 
-  bestillAnmodningsperioder = async (mottakerinstitusjon = null) => {
+  bestillAnmodningsperioder = async body => {
     const { behandlingID, tilForsiden } = this.props;
-    const bestillAnmodningsperioderBody = { mottakerinstitusjon };
     try {
-      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestillAnmodningsperioderBody);
+      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, body);
       tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreOgBestillAnmodningsperioder = mottakerinstitusjon => {
+  lagreOgBestillAnmodningsperioder = body => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.bestillAnmodningsperioder(mottakerinstitusjon);
+      this.bestillAnmodningsperioder(body);
+    });
+  };
+
+  godkjennUnntaksperioder = async data => {
+    const { behandlingID, tilForsiden } = this.props;
+    const body = {
+      varsleUtland: data.varsleUtland || false,
+    };
+
+    try {
+      await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
+      tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  lagreOgGodkjennUnntaksperioder = data => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      await this.props.lagreAllData();
+      this.godkjennUnntaksperioder(data);
     });
   };
 
@@ -262,23 +294,13 @@ class Stegvelger extends Component {
   };
 
   byggLovvalgsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
-
-    this.props.oppdaterLovvalgperioder({
-      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-      tilleggbestemmelse: tilleggbestemmelse.hent(),
-      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-    });
+    const perioderStegState = this.hentPerioderStegState();
+    this.props.oppdaterLovvalgperioder(perioderStegState);
   };
 
   byggAnmodningsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
-
-    this.props.oppdaterAnmodningsPerioder({
-      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
-      tilleggbestemmelse: tilleggbestemmelse.hent(),
-      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
-    });
+    const perioderStegState = this.hentPerioderStegState();
+    this.props.oppdaterAnmodningsPerioder(perioderStegState);
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
@@ -292,9 +314,9 @@ class Stegvelger extends Component {
     const { behandlingID } = this.props;
 
     const utfyltData = {
-      behandlingstype: data.behandlingstype || null,
       begrunnelseKode: data.begrunnelseKode || null,
       fritekst: data.fritekst || null,
+      fritekstSed: data.fritekstSed || null,
     };
 
     return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);
@@ -325,6 +347,7 @@ class Stegvelger extends Component {
       byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       avvisUtpeking: this.avvisUtpeking,
+      lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
     };
 
     const { props } = this;
@@ -340,6 +363,7 @@ class Stegvelger extends Component {
       bostedsland: props.bostedsland,
       landkoder: MKV.KTObjects.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
+      behandlingstema: props.oppsummering.behandlingstema,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       lovvalgsbestemmelse: props.lovvalgsbestemmelse,
@@ -348,6 +372,7 @@ class Stegvelger extends Component {
       artikkel12_vedtak_skjema: props.artikkel12_vedtak_skjema,
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
       artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
+      vurder_utpeking_skjema: props.vurder_utpeking_skjema,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       arbeidsland: props.arbeidsland,
@@ -361,13 +386,14 @@ class Stegvelger extends Component {
       vurderUtpekingFom: props.vurderUtpekingFom,
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
-      erSoknadArbeidFlereLand: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
-      erSoknad: props.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+      erSoknadArbeidFlereLand: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebase: props.hjemmebase,
+      utlandMedLonnetArbeid: props.utlandMedLonnetArbeid,
     };
 
-    const stegMotor = new StegMotor(propsLight, props.stegMap);
+    const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
     // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
@@ -479,6 +505,7 @@ Stegvelger.propTypes = {
   artikkel12_vedtak_skjema: PT.object,
   artikkel16_anmodning_skjema: PT.object,
   artikkel16_motta_svar_skjema: PT.object,
+  vurder_utpeking_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgperioder: PT.func.isRequired,
@@ -519,6 +546,9 @@ Stegvelger.propTypes = {
   lovvalgsbestemmelse: PT.string,
   maritimtarbeid: PT.arrayOf(PT.object),
   hjemmebase: PT.string,
+  forsteSteg: PT.string.isRequired,
+  erArbeidEttLand: PT.bool.isRequired,
+  utlandMedLonnetArbeid: PT.arrayOf(PT.string).isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -530,6 +560,7 @@ Stegvelger.defaultProps = {
   artikkel12_vedtak_skjema: {},
   artikkel16_anmodning_skjema: {},
   artikkel16_motta_svar_skjema: {},
+  vurder_utpeking_skjema: {},
   soknad_skjema: {},
   saksnummer: '',
   vurderUtpekingFom: '',
@@ -555,6 +586,7 @@ const mapStateToProps = state => ({
   artikkel12_vedtak_skjema: formSelectors.VedtakArtikkel12FormValuesSelector(state),
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
+  vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -571,6 +603,8 @@ const mapStateToProps = state => ({
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
+  utlandMedLonnetArbeid: avklartefaktaSelectors.LoennetArbeidUtlandSelector(state),
 });
 
 /* eslint no-alert:off */

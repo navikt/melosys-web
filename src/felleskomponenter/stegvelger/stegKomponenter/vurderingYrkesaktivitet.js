@@ -4,11 +4,10 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
-import { BOOLSK } from '../../../constants';
 
 const VurderingYrkesaktivitet = props => {
   const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, erSoknadArbeidFlereLand,
   } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
 
@@ -24,6 +23,18 @@ const VurderingYrkesaktivitet = props => {
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET, null, event.target.value));
   };
 
+  const labels = erSoknadArbeidFlereLand ? [
+    'Lønnet arbeid i to eller flere land',
+    'Selvstendig næringsvirksomhet i to eller flere land',
+    'Lønnet arbeid og selvstendig næringsvirksomhet i to eller flere land',
+    'Offentlig tjeneste og annen yrkesaktivitet i to eller flere land',
+  ] : [
+    'Lønnet arbeid',
+    'Selvstendig næringsvirksomhet',
+    'Arbeidstaker eller frilanser og selvstendig næringsdrivende',
+    'Tjeneste i norsk statsforvaltning',
+  ];
+
   const fakta = hentFaktaVerdi(yrkesaktivitet);
   return (
     <div>
@@ -35,7 +46,7 @@ const VurderingYrkesaktivitet = props => {
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
           onChange={radioEndret}
-          label="Lønnet arbeid"
+          label={labels[0]}
         />
         <Nav.Radio
           name="yrkesaktivitet"
@@ -43,7 +54,7 @@ const VurderingYrkesaktivitet = props => {
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
           value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
           onChange={radioEndret}
-          label="Selvstendig næringsvirksomhet"
+          label={labels[1]}
         />
         {
           !skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende &&
@@ -53,16 +64,16 @@ const VurderingYrkesaktivitet = props => {
             checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
             value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
             onChange={radioEndret}
-            label="Arbeidstaker eller frilanser og selvstendig næringsdrivende"
+            label={labels[2]}
           />
         }
         <Nav.Radio
           name="yrkesaktivitet"
-          disabled={BOOLSK.SANN}
+          disabled={!redigerbart || !erSoknadArbeidFlereLand}
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           onChange={radioEndret}
-          label="Tjeneste i norsk statsforvaltning"
+          label={labels[3]}
         />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
@@ -78,6 +89,7 @@ VurderingYrkesaktivitet.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  erSoknadArbeidFlereLand: PT.bool.isRequired,
 };
 
 VurderingYrkesaktivitet.defaultProps = {

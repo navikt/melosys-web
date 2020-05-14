@@ -6,9 +6,8 @@ const modaler = {
   avsluttSakSomBortfalt: 'avsluttSakSomBortfalt',
   henlegg: 'henlegg',
   oppfrisk: 'oppfrisk',
-  oppfriskningBlokkererInnhold: 'oppfriskningBlokkererInnhold',
   validering: 'validering',
-  revurderVedtak: 'revurderVedtak',
+  revurderFagsak: 'revurderFagsak',
 };
 
 const initialState = {
@@ -24,14 +23,12 @@ const initialState = {
     },
     [modaler.oppfrisk]: {
       synlig: false,
-    },
-    [modaler.oppfriskningBlokkererInnhold]: {
-      synlig: false,
+      behandlingUnderOppfriskning: null,
     },
     [modaler.validering]: {
       synlig: false,
     },
-    [modaler.revurderVedtak]: {
+    [modaler.revurderFagsak]: {
       synlig: false,
     },
   },
@@ -64,14 +61,11 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_OPPFRISK: {
       return lagNyState(state, action, modaler.oppfrisk);
     }
-    case Types.OPPDATER_OPPFRISKNING_BLOKKERER_INNHOLD: {
-      return lagNyState(state, action, modaler.oppfriskningBlokkererInnhold);
-    }
     case Types.OPPDATER_VALIDERING: {
       return lagNyState(state, action, modaler.validering);
     }
-    case Types.OPPDATER_REVURDER_VEDTAK: {
-      return lagNyState(state, action, modaler.revurderVedtak);
+    case Types.OPPDATER_REVURDER_FAGSAK: {
+      return lagNyState(state, action, modaler.revurderFagsak);
     }
     default:
       return state;

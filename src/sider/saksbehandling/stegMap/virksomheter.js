@@ -23,16 +23,22 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {
+        exec: () => {
+          const erToEllerFlereLand = propsLight.erSoknadArbeidFlereLand;
+
+          return harValgtArbeidsgiver && erToEllerFlereLand;
+        },
+        nesteSteg: STEG.VURDER_ARBEIDSLAND,
+      },
+      {
         exec: avklartefakta => {
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
           const erFlyendePersonell = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL);
           const erSokkelUtland = SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND);
-          const erToEllerFlereLand = propsLight.erSoknadArbeidFlereLand;
 
           return harValgtArbeidsgiver && (
             ((erVanligYrkesaktiv || erFlyendePersonell)) ||
-            (arbeiderPaSokkelEllerSkip && erSokkelUtland) ||
-            erToEllerFlereLand
+            (arbeiderPaSokkelEllerSkip && erSokkelUtland)
           );
         },
         nesteSteg: STEG.YRKESAKTIVITET,

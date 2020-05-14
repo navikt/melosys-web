@@ -17,14 +17,19 @@ describe('VurderingVurderarbeidsland', () => {
         aktivitetINorgeNodvendig: true,
         yrkesaktivitet: '',
         erYrkesaktivitetAntallLandNodvendig: true,
+        erYrkesAktivitetOffentligNodvendig: true,
         loennetArbeidAntallLandFakta: {},
+        offentligArbeidAntallLandFakta: {},
         landMedVesentligArbeid: [],
         erNorgeValgt: true,
+        loennetArbeidIEttAnnetLand: false,
+        finnesEttUtlandMedLonnetArbeid: false,
       },
       redigerbart: true,
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
       arbeidsland: [],
+      utlandMedLonnetArbeid: [],
     };
   });
 

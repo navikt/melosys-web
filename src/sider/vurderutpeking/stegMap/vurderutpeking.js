@@ -1,48 +1,63 @@
-import * as KV from '../../../kodeverk';
-import * as Utils from '../../../utils';
+import MKV from '../../../melosyskodeverk';
 
 import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingNorgeUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingNorgeUtpekt';
+import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
 
 import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
-import { hentFakta, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const { lovvalgsperioder, avklartefakta, vurderUtpekingValid } = propsLight;
-    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder);
-    const utpekingGodkjentFakta = hentFakta(KV.Koder.avklartefaktaKoder.UTPEKING_GODKJENT, avklartefakta);
+    const {
+      lovvalgsperioder,
+      vurderUtpekingValid,
+      behandlingstema,
+      saksopplysninger,
+      vurder_utpeking_skjema,
+    } = propsLight;
 
-    const utpekingGodkjent = this.utpekingGodkjent(utpekingGodkjentFakta);
-    const utpekingIkkeGodkjent = this.utpekingIkkeGodkjent(utpekingGodkjentFakta);
+    const redigerbart = propsLight.generiskStegRedigerbart;
 
-    const harAvklaring = this.harAvklaring(utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid);
+    const { sed = {} } = saksopplysninger;
+    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(lovvalgsperioder) || sed.lovvalgsbestemmelse;
+    const lovvalgsland = sed.lovvalgslandKode;
+
+    const { utpekingVurdering } = vurder_utpeking_skjema;
+
+    const utpekingErGodkjent = this.utpekingGodkjent(utpekingVurdering);
+    const utpekingErIkkeGodkjent = this.utpekingIkkeGodkjent(utpekingVurdering);
+
+    const harAvklaring = this.harAvklaring(utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid);
+
+    const lovvalgNorge = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
+    const lovvalgAnnetLand = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
     this.kriterier = [
       {
-        exec: () => harAvklaring && utpekingGodkjent,
-        nesteSteg: STEG.GODKJENN_UTPEKING,
+        exec: () => harAvklaring && utpekingErGodkjent && lovvalgNorge,
+        nesteSteg: STEG.GODKJENN_UTPEKING_NORGE,
       },
       {
-        exec: () => harAvklaring && utpekingIkkeGodkjent,
+        exec: () => harAvklaring && utpekingErGodkjent && lovvalgAnnetLand,
+        nesteSteg: STEG.GODKJENN_UTPEKING_ANNET_LAND,
+      },
+      {
+        exec: () => harAvklaring && utpekingErIkkeGodkjent,
         nesteSteg: STEG.AVSLAA_UTPEKING,
       },
     ];
     this.id = STEG.VURDER_UTPEKING;
     this.tittel = 'Vurdering';
-    this.komponent = VurderingNorgeUtpekt;
+    this.komponent = VurderingUtpekt;
     this.samleRelevanteData = _propsLight => ({
-      redigerbart: _propsLight.generiskStegRedigerbart,
+      redigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
       harAvklaring,
       lovvalgsbestemmelse,
-      utpekingGodkjentFakta,
-      utpekingGodkjent,
-      utpekingIkkeGodkjent,
+      lovvalgsland,
     });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -52,19 +67,19 @@ class VurderUtpeking extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  utpekingGodkjent = utpekingGodkjentFakta => (
-    hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.GODKJENN
+  utpekingGodkjent = utpekingVurdering => (
+    utpekingVurdering === MKV.Koder.utfallregistreringunntak.GODKJENT
   );
 
-  utpekingIkkeGodkjent = utpekingGodkjentFakta => (
-    hentFaktaVerdi(utpekingGodkjentFakta) === KV.Koder.UtpekingAvNorgeGodkjenning.IKKE_GODKJENN
+  utpekingIkkeGodkjent = utpekingVurdering => (
+    utpekingVurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT
   );
 
-  harAvklaring = (utpekingGodkjentFakta, lovvalgsbestemmelse, vurderUtpekingValid) => {
-    if (this.utpekingGodkjent(utpekingGodkjentFakta)) {
-      return Boolean(lovvalgsbestemmelse && !Utils._isEmpty(utpekingGodkjentFakta) && vurderUtpekingValid);
-    } else if (this.utpekingIkkeGodkjent(utpekingGodkjentFakta)) {
-      return Boolean(!Utils._isEmpty(utpekingGodkjentFakta) && vurderUtpekingValid);
+  harAvklaring = (utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid) => {
+    if (this.utpekingGodkjent(utpekingVurdering)) {
+      return Boolean(lovvalgsbestemmelse && vurderUtpekingValid);
+    } else if (this.utpekingIkkeGodkjent(utpekingVurdering)) {
+      return Boolean(vurderUtpekingValid);
     }
     return false;
   };

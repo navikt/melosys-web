@@ -3,17 +3,12 @@ import PT from 'prop-types';
 
 import MKV from '../../../melosyskodeverk';
 
-import * as KV from '../../../kodeverk';
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
 
+import { lagDatalistID, landTekstFormat } from './utils';
+
 import './landvelger.css';
-
-/** Hjelpere som deles av hovedkomponent og subkomponentene EnkeltLand og MultiLand */
-const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
-const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => KV.objektTilKode(enkeltKode) === kode);
-
-const uuid = require('uuid/v4');
 
 /** Dette er inngangskomponent for MultiLand eller EnkeltLand. Disse avgjøres via
  * prop-type multiLand som er subkomponenter i landvelgeren.
@@ -21,7 +16,7 @@ const uuid = require('uuid/v4');
  */
 const LandVelger = props => {
   const { multiLand } = props;
-  const dataListID = `datalist-${uuid()}`;
+  const dataListID = lagDatalistID();
 
   return (
     <div>
@@ -51,7 +46,5 @@ LandVelger.defaultProps = {
   label: undefined,
   bredde: 'XL',
 };
-
-export { kodeTilObjekt, landTekstFormat };
 
 export default LandVelger;

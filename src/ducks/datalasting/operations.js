@@ -22,6 +22,7 @@ export const lastAppdata = () => (
 export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
   dispatch => {
     try {
+      dispatch(anmodningsperioderOperations.hent(behandlingID));
       dispatch(fagsakOperations.hent(saksnummer));
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
       dispatch(behandlingsgrunnlagOperations.hent(behandlingID));

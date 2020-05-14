@@ -25,12 +25,7 @@ export const oppdaterValidering = data => ({
   data,
 });
 
-export const oppdaterOppfriskningBlokkererInnhold = data => ({
-  type: Types.OPPDATER_OPPFRISKNING_BLOKKERER_INNHOLD,
-  data,
-});
-
-export const oppdaterRevurderVedtak = data => ({
-  type: Types.OPPDATER_REVURDER_VEDTAK,
+export const oppdaterRevurderFagsak = data => ({
+  type: Types.OPPDATER_REVURDER_FAGSAK,
   data,
 });

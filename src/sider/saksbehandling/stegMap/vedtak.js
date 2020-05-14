@@ -20,7 +20,7 @@ class Vedtak extends Steg {
     this.komponent = VurderingVedtak;
     this.samleRelevanteData = _propsLight => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
-      const erNyVurdering = _propsLight.behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+      const erNyVurdering = _propsLight.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
       const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(_propsLight.lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
 
       const pdfDokumenter = [
@@ -36,7 +36,6 @@ class Vedtak extends Steg {
 
       const visSedLenkeForLovvalgsbestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
       ];
 
       if (lovvalgSomKodeTerm &&
@@ -54,7 +53,14 @@ class Vedtak extends Steg {
       if (formValues.kreverMottakerinstitusjon &&
         lovvalgSomKodeTerm &&
         lovvalgSomKodeTerm.kode !== MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2) {
-        pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
+        pdfDokumenter.push({
+          navn: 'Forhåndsvis SED A009',
+          type: EKV.Koder.sedtyper.A009,
+          erSed: true,
+          data: {
+            fritekst: formValues.fritekstSed,
+          },
+        });
       }
 
       return {

@@ -77,7 +77,16 @@ describe('utpekingsperioder operations', () => {
   });
 
   describe('OppdaterUtpekingsperioderState', () => {
-    it('bygger utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge', () => {
+    each([
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
+    ]).it('bygger utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge og lovvalgsbestemmelse er %p', lovvalgsbestemmelse => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
@@ -90,7 +99,7 @@ describe('utpekingsperioder operations', () => {
       initialState.avklartefakta.data = [avklartfakta];
 
       const stegState = {
-        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
+        lovvalgsbestemmelse,
         tilleggbestemmelse: MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
       };
 
@@ -131,6 +140,144 @@ describe('utpekingsperioder operations', () => {
       const stegState = {
         lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
         tilleggbestemmelse: MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
+      };
+
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('bygger utpekingsperiode dersom søker har offentlig tjeneste i annet land', () => {
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
+        fakta: [KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
+
+      initialState.avklartefakta.data = [avklartfakta];
+
+      const stegState = {
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
+        lovvalgsland: MKV.Koder.landkoder.BE,
+      };
+
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [
+            {
+              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
+              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
+              lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+              tilleggsbestemmelse: undefined,
+              lovvalgsland: stegState.lovvalgsland,
+            },
+          ],
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('bygger tom utpekingsperiode dersom søker har offentlig tjeneste i Norge', () => {
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
+        fakta: [KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
+
+      initialState.avklartefakta.data = [avklartfakta];
+
+      const stegState = {
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
+      };
+
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('bygger utpekingsperiode dersom søker har lønnet arbeid i annet land', () => {
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
+        fakta: [KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
+
+      initialState.avklartefakta.data = [avklartfakta];
+
+      const stegState = {
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
+        lovvalgsland: MKV.Koder.landkoder.BE,
+      };
+
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [
+            {
+              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
+              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
+              lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+              tilleggsbestemmelse: undefined,
+              lovvalgsland: stegState.lovvalgsland,
+            },
+          ],
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('bygger tom utpekingsperiode dersom søker har lønnet arbeid i Norge', () => {
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
+        fakta: [KV.Koder.LoennetArbeidAntallLand.NORGE],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
+
+      initialState.avklartefakta.data = [avklartfakta];
+
+      const stegState = {
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
       };
 
       const expectedActions = [

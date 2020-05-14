@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -10,7 +10,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
-import * as Validering from '../../skjema/validering';
+import * as Skjema from '../../skjema';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
@@ -20,6 +20,10 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { utpekingsperioderSelectors } from '../../../ducks/utpekingsperioder';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { formOperations } from '../../../ducks/form';
+import { flytSelectors } from '../../../ducks/flyt';
+
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingArtikkel13UtpekLand.css';
 
@@ -34,7 +38,18 @@ export const VurderingArtikkel13UtpekLand = ({
   lagreOgUtpek,
   formValues,
   touchAll,
+  erOffentligArbeidUtland,
+  oppdaterData,
+  slettData,
 }) => {
+  useEffect(() => {
+    konverterLovvalgslandTilStegData(lovvalgsland);
+
+    return () => {
+      slettData();
+    };
+  }, []);
+
   const validerForm = () => {
     touchAll();
     return formIsValid;
@@ -45,7 +60,12 @@ export const VurderingArtikkel13UtpekLand = ({
 
     lagreOgUtpek({
       mottakerinstitusjoner: formValues.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
+      fritekstSed: formValues.fritekstSed,
     });
+  };
+
+  const endreLovvalgsland = land => {
+    oppdaterData(lagLovvalgsland(land));
   };
 
   const pdfDokumenter = [
@@ -62,6 +82,9 @@ export const VurderingArtikkel13UtpekLand = ({
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
+      data: {
+        fritekst: formValues.fritekstSed,
+      },
     },
   ];
 
@@ -76,7 +99,19 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
-          <div>{lovvalgsland && KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder)}</div>
+          {
+            erOffentligArbeidUtland &&
+            <Skjema.LandVelger
+              feltNavn="lovvalgsland"
+              label=""
+              disabled={!redigerbart}
+              onChange={endreLovvalgsland}
+            />
+          }
+          {
+            !erOffentligArbeidUtland &&
+            <div>{lovvalgsland && KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder)}</div>
+          }
         </Nav.Column>
       </Nav.Row>
       <Nav.typo.Undertittel>
@@ -87,6 +122,20 @@ export const VurderingArtikkel13UtpekLand = ({
           {fom} - {tom}
         </Nav.Column>
       </Nav.Row>
+      {
+        redigerbart &&
+        <Nav.Row className="fritekstSed">
+          <Nav.Column xs="7">
+            <Skjema.Textarea
+              label="Ytterligere informasjon til SED (valgfri)"
+              feltNavn="fritekstSed"
+              disabled={!redigerbart}
+              visTellerFra={500}
+              maxLength={500}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="mottakerinstitusjoner">
         <Nav.Column xs="7">
           <MottakerinstitusjonvelgerFlervalg
@@ -113,21 +162,26 @@ VurderingArtikkel13UtpekLand.propTypes = {
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  lovvalgsland: PT.string.isRequired,
+  lovvalgsland: PT.string,
   lovvalgsperiode: MPT.Periode,
   form: PT.string.isRequired,
   formValues: PT.object,
   formIsValid: PT.bool.isRequired,
   lagreOgUtpek: PT.func.isRequired,
   touchAll: PT.func.isRequired,
+  erOffentligArbeidUtland: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 VurderingArtikkel13UtpekLand.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
+  lovvalgsland: '',
 };
 
 const mapStateToProps = state => ({
+  erOffentligArbeidUtland: flytSelectors.HarOffentligTjenesteAnnetLandSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
@@ -137,6 +191,7 @@ const mapStateToProps = state => ({
   initialValues: {
     mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
     kreverMottakerinstitusjon: false,
+    fritekstSed: null,
   },
 });
 
@@ -150,7 +205,15 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_utpek),
+  validate: (values, props) => {
+    const settings = {
+      context: {
+        erOffentligArbeidUtland: props.erOffentligArbeidUtland,
+      },
+    };
+
+    return lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_utpek, settings)(values);
+  },
 })(VurderingArtikkel13UtpekLand);
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13UtpekLand_form);

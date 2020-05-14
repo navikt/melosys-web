@@ -18,6 +18,7 @@ describe('SideDialog', () => {
         saksnummer: '4',
         brevBestillingRedigerbartIArtikkel13: false,
         brevBestillingRedigerbart: false,
+        redigerbart: true,
       };
     });
 

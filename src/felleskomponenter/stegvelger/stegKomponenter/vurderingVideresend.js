@@ -9,15 +9,16 @@ import MKV from '../../../melosyskodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
-import * as Validering from '../../skjema/validering';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
+import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+
 import './vurderingVideresend.css';
-import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
 
 export const VurderingVideresend = ({
   redigerbart,
@@ -82,9 +83,16 @@ VurderingVideresend.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   videresendSoknad: PT.func.isRequired,
-  bostedsland: MPT.Kodeverk.isRequired,
+  bostedsland: MPT.Kodeverk,
   handleSubmit: PT.func.isRequired,
   form: PT.string.isRequired,
+};
+
+VurderingVideresend.defaultProps = {
+  bostedsland: {
+    kode: '',
+    term: '',
+  },
 };
 
 const videresendSoknad = (values, dispatch, props) => props.videresendSoknad(values.mottakerinstitusjon);
@@ -95,7 +103,7 @@ const VurderingVideresendForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: values => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.vurdering_videresend)(values),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_videresend),
 })(VurderingVideresend);
 
 const mapStateToProps = state => ({

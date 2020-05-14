@@ -8,6 +8,8 @@ const JournalforingOppgavePropType = PT.shape({
   prioritet: PT.string,
   versjon: PT.number,
   ansvarligID: PT.string,
+  fnr: PT.string,
+  sammensattNavn: PT.string,
 });
 const SaksbehandlingOppgavePropType = PT.shape({
   oppgaveID: PT.string,
@@ -17,7 +19,8 @@ const SaksbehandlingOppgavePropType = PT.shape({
   sakstype: MPT.Kodeverk,
   behandling: PT.shape({
     behandlingID: PT.number,
-    behandlingType: MPT.Kodeverk,
+    behandlingstype: MPT.Kodeverk,
+    behandlingstema: MPT.Kodeverk,
     behandlingsstatus: MPT.Kodeverk,
     endretDato: PT.string,
     erUnderOppdatering: PT.bool,

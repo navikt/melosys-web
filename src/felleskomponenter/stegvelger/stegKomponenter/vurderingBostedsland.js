@@ -97,7 +97,7 @@ const VurderingBostedsland = props => {
 
   return (
     <div className="vurderingBostedsland">
-      <Nav.typo.Undertittel>Vurdering av bosted</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>Vurder bosted (&#171;sentrum for livsinteresser&#187;)</Nav.typo.Undertittel>
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">
@@ -118,15 +118,15 @@ const VurderingBostedsland = props => {
                 checked={erNorgeValgt === BOOLSK.USANN}
                 disabled={!redigerbart}
               />
-              {eksisterendeLand !== MKV.Koder.landkoder.NO &&
+              {erNorgeValgt === false &&
               <Nav.Row>
                 <Nav.Column xs="8" md="6" lg="4">
                   <EnkeltLandPure
                     label="Velg land:"
                     value={eksisterendeLand}
                     onChange={landEndretHandler}
+                    changeOnEmptyValue
                     landkoder={MKV.KTObjects.landkoder}
-                    multiland={false}
                     disabled={!redigerbart}
                   />
                 </Nav.Column>

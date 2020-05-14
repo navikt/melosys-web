@@ -7,7 +7,7 @@ class VurderUtpekingInngang extends Inngang {
 
     this.kriterier = [
       {
-        exec: avklartefakta => (Inngang.harMinstEttGyldigSoknadsland(avklartefakta)),
+        exec: () => this.harAvklaring(propsLight.avklartefakta),
         nesteSteg: STEG.VIRKSOMHETER,
       },
     ];

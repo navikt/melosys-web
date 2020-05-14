@@ -11,6 +11,7 @@ import SideOppsummering from '../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
 import Soknadpaneler from '../../felleskomponenter/soknadpaneler';
 import Stegvelger from '../../felleskomponenter/stegvelger';
+import { STEG } from '../../felleskomponenter/stegvelger/stegMotor/typer';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
 import { formSelectors } from '../../ducks/form';
@@ -47,11 +48,21 @@ const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
 };
 
+const hentForsteSteg = behandlingstema => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
+      return STEG.VURDER_UTPEKING;
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
+    default:
+      return STEG.INNGANG;
+  }
+};
+
 const Vurderutpeking = ({
   lastInnSaksopplysninger,
   match,
   location,
-  behandlingstype,
+  behandlingstema,
   redigerbart,
   fagsak,
   oppsummering,
@@ -68,11 +79,11 @@ const Vurderutpeking = ({
   apneTidligereBehandlinger,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
-  visOppfriskBekreftelse,
-  visRevurderVedtakDialogHandle,
+  visRevurderFagsakDialogHandle,
   oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
+  sideDialogRedigerbart,
   resetSaksopplysninger,
   oppdaterBehandlingsgrunnlag,
   lagreVilkar,
@@ -82,7 +93,9 @@ const Vurderutpeking = ({
   oppdaterOgLagreBehandlingsperioder,
   lagreAllData,
   tilForsiden,
-  blokkerInnholdMedOppfriskSpinner,
+  visOppfriskModal,
+  startOgVisOppfriskModal,
+  behandlingOppfriskes,
   soknadForm,
   behandlingsgrunnlag,
 }) => {
@@ -91,6 +104,11 @@ const Vurderutpeking = ({
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
+
+    if (behandlingOppfriskes) {
+      visOppfriskModal();
+    }
+
     return () => {
       resetSaksopplysninger();
     };
@@ -101,6 +119,8 @@ const Vurderutpeking = ({
   }
 
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
+
+  const forsteSteg = hentForsteSteg(behandlingstema);
 
   return (
     <div className="vurderutpeking">
@@ -122,16 +142,17 @@ const Vurderutpeking = ({
                 begrunnelser={MKV.KTObjects.begrunnelser}
                 landkoder={MKV.KTObjects.landkoder}
                 tilForsiden={tilForsiden}
+                forsteSteg={forsteSteg}
               />
             }
             <Soknadpaneler
               behandlingID={behandlingID}
-              blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+              startOgVisOppfriskModal={startOgVisOppfriskModal}
             />
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
-              behandlingstype={behandlingstype}
+              behandlingstema={behandlingstema}
               redigerbart={redigerbart}
               fagsak={fagsak}
               oppsummering={oppsummering}
@@ -153,9 +174,9 @@ const Vurderutpeking = ({
                 visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                 visAvslagManglendeOpplysninger
                 visOppfriskSaksopplysninger
-                oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
-                visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
-                visRevurderVedtak
+                oppfriskSaksopplysningerHandle={visOppfriskModal}
+                visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                visRevurderFagsak
               />}
               renderBehandlingsstatus={() => <Behandlingsstatus
                 behandlingID={behandlingID}
@@ -170,6 +191,7 @@ const Vurderutpeking = ({
               saksnummer={saksnummer}
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+              redigerbart={sideDialogRedigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -182,7 +204,7 @@ Vurderutpeking.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -199,11 +221,13 @@ Vurderutpeking.propTypes = {
   apneTidligereBehandlinger: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskBekreftelse: PT.func.isRequired,
-  visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visOppfriskModal: PT.func.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  sideDialogRedigerbart: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -213,9 +237,9 @@ Vurderutpeking.propTypes = {
   lagreAnmodningsperioder: PT.func.isRequired,
   oppdaterOgLagreBehandlingsperioder: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
-  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
+  behandlingOppfriskes: PT.bool.isRequired,
 };
 
 Vurderutpeking.defaultProps = {
@@ -223,18 +247,19 @@ Vurderutpeking.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
+  sideDialogRedigerbart: redigerbartSelectors.SidedialogRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),

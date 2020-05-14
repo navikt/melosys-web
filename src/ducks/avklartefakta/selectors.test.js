@@ -7,6 +7,7 @@ describe('Avklartefaktaselectors', () => {
   const lagState = ({
     avklartefakta,
     behandlingstype,
+    behandlingstema,
     behandlingsgrunnlagData,
     behandlingerSaksopplysninger,
   }) => ({
@@ -18,6 +19,9 @@ describe('Avklartefaktaselectors', () => {
         oppsummering: {
           behandlingstype: {
             kode: behandlingstype,
+          },
+          behandlingstema: {
+            kode: behandlingstema,
           },
         },
         saksopplysninger: behandlingerSaksopplysninger,
@@ -31,33 +35,46 @@ describe('Avklartefaktaselectors', () => {
     lovvalgsperioder: {
       data: [],
     },
+    organisasjoner: [],
   });
 
   describe('ArbeidslandKTSelector', () => {
-    each([
-      [
-        [KV.kodeTilObjekt(MKV.Koder.landkoder.FR, MKV.KTObjects.landkoder)],
-        [
-          {
-            referanse: KV.Koder.avklartefaktaKoder.FJERNET_ARBEIDSLAND,
-            subjektID: MKV.Koder.landkoder.DK,
-          },
-          {
-            referanse: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
-            fakta: [MKV.Koder.landkoder.DK],
-          },
-          {
-            referanse: KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
-            fakta: [],
-          },
-        ],
-        MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND,
+    it('returnerer ikke land som er SOKNADSLAND med fakta IKKE_ARBEIDSLAND', () => {
+      const avklartefakta = [
         {
-          arbeidNorge: {
-            flyendePersonellHjemmebase: MKV.Koder.landkoder.FR,
-          },
+          referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+          fakta: [KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND],
+          subjektID: MKV.Koder.landkoder.DK,
         },
-      ],
+        {
+          referanse: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
+          fakta: [MKV.Koder.landkoder.DK],
+        },
+        {
+          referanse: KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
+          fakta: [],
+        },
+      ];
+
+      const behandlingstema = MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+
+      const behandlingsgrunnlagData = {
+        arbeidNorge: {
+          flyendePersonellHjemmebase: MKV.Koder.landkoder.FR,
+        },
+      };
+
+      const forventetResultat = [KV.kodeTilObjekt(MKV.Koder.landkoder.FR, MKV.KTObjects.landkoder)];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingstema,
+        behandlingsgrunnlagData,
+      });
+      expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
+    });
+
+    each([
       [
         [KV.kodeTilObjekt(MKV.Koder.landkoder.GB, MKV.KTObjects.landkoder)],
         [
@@ -75,7 +92,7 @@ describe('Avklartefaktaselectors', () => {
             fakta: [],
           },
         ],
-        MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
         {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
@@ -91,17 +108,17 @@ describe('Avklartefaktaselectors', () => {
             fakta: ['TRUE'],
           },
         ],
-        MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
         {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
         },
       ],
-    ]).it('returnerer korrekt verdi', (forventetResultat, avklartefakta, behandlingstype, behandlingsgrunnlagData) => {
+    ]).it('returnerer korrekt verdi', (forventetResultat, avklartefakta, behandlingstema, behandlingsgrunnlagData) => {
       const state = lagState({
         avklartefakta,
-        behandlingstype,
+        behandlingstema,
         behandlingsgrunnlagData,
       });
       expect(selectors.ArbeidslandKTSelector(state)).toEqual(forventetResultat);
@@ -351,6 +368,134 @@ describe('Avklartefaktaselectors', () => {
       });
 
       expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(forventetResultat);
+    });
+  });
+
+  describe('ErIArtikkel13_1FlytSelector', () => {
+    each([
+      [
+        true,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      ],
+      [
+        false,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+      ],
+    ]).it('returnerer korrekt verdi', (forventetResultat, behandlingstema) => {
+      const state = lagState({
+        behandlingstema,
+      });
+
+      expect(selectors.ErIArtikkel13_1FlytSelector(state)).toEqual(forventetResultat);
+    });
+  });
+
+  describe('LoennetArbeidUtlandSelector', () => {
+    it('returnerer land med utenlandsk lønnet arbeid', () => {
+      const id1 = '1';
+
+      const avklartefakta = [
+        {
+          referanse: MKV.Koder.avklartefaktatyper.VIRKSOMHET,
+          subjektID: id1,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+      ];
+
+      const behandlingsgrunnlagData = {
+        foretakUtland: [
+          {
+            uuid: id1,
+            navn: 'Bedrift i Tyskland',
+            adresse: {
+              landkode: MKV.Koder.landkoder.DE,
+            },
+            selvstendigNaeringsvirksomhet: false,
+          },
+        ],
+      };
+
+      const forventetResultat = [MKV.Koder.landkoder.DE];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingsgrunnlagData,
+      });
+
+      expect(selectors.LoennetArbeidUtlandSelector(state)).toEqual(forventetResultat);
+    });
+
+    it('ignorerer land hvor det er marginalt arbeid', () => {
+      const id = '2';
+
+      const avklartefakta = [
+        {
+          referanse: MKV.Koder.avklartefaktatyper.VIRKSOMHET,
+          subjektID: id,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+        {
+          referanse: MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID,
+          subjektID: MKV.Koder.landkoder.CZ,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+      ];
+
+      const behandlingsgrunnlagData = {
+        foretakUtland: [
+          {
+            uuid: id,
+            navn: 'Bedrift i Tsjekkia',
+            adresse: {
+              landkode: MKV.Koder.landkoder.CZ,
+            },
+            selvstendigNaeringsvirksomhet: false,
+          },
+        ],
+      };
+
+      const forventetResultat = [];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingsgrunnlagData,
+      });
+
+      expect(selectors.LoennetArbeidUtlandSelector(state)).toEqual(forventetResultat);
+    });
+
+    it('ignorerer land med foretak markert som selvstendig næringsvirksomhet', () => {
+      const id = '1';
+
+      const avklartefakta = [
+        {
+          referanse: MKV.Koder.avklartefaktatyper.VIRKSOMHET,
+          subjektID: id,
+          fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+        },
+      ];
+
+      const behandlingsgrunnlagData = {
+        foretakUtland: [
+          {
+            uuid: id,
+            navn: 'Bedrift i Tyskland',
+            adresse: {
+              landkode: MKV.Koder.landkoder.DE,
+            },
+            selvstendigNaeringsvirksomhet: true,
+          },
+        ],
+      };
+
+      const forventetResultat = [];
+
+      const state = lagState({
+        avklartefakta,
+        behandlingsgrunnlagData,
+      });
+
+      expect(selectors.LoennetArbeidUtlandSelector(state)).toEqual(forventetResultat);
     });
   });
 });

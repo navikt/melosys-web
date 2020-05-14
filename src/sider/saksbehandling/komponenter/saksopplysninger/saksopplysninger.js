@@ -8,11 +8,13 @@ import * as Utils from '../../../../utils';
 import * as MPT from '../../../../proptypes';
 
 import Stegvelger from '../../../../felleskomponenter/stegvelger';
+import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
 import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
 import Soknadpaneler from '../../../../felleskomponenter/soknadpaneler';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
+import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import {
   behandlingsgrunnlagOperations,
   behandlingsgrunnlagSelectors,
@@ -24,7 +26,17 @@ import { formSelectors } from '../../../../ducks/form';
 
 import { stegMap } from '../../stegMap';
 
+const hentForsteSteg = behandlingstype => {
+  switch (behandlingstype) {
+    case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
+      return STEG.ENDRET_PERIODE;
+    default:
+      return STEG.INNGANG;
+  }
+};
+
 const Saksopplysninger = ({
+  behandlingstype,
   redigerbart,
   behandlingID,
   soknadForm,
@@ -39,7 +51,7 @@ const Saksopplysninger = ({
   oppdaterOgLagreBehandlingerHandler,
   lagreAllData,
   oppdaterBehandlingsgrunnlag,
-  blokkerInnholdMedOppfriskSpinner,
+  startOgVisOppfriskModal,
 }) => {
   if (Utils._isNil(redigerbart)) return null;
 
@@ -52,6 +64,7 @@ const Saksopplysninger = ({
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
+  const forsteSteg = hentForsteSteg(behandlingstype);
 
   return (
     <Fragment>
@@ -76,10 +89,11 @@ const Saksopplysninger = ({
         landkoder={MKV.KTObjects.landkoder}
         tilForsiden={tilForsiden}
         stegMap={stegMap}
+        forsteSteg={forsteSteg}
       />
       }
       <Soknadpaneler
-        blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+        startOgVisOppfriskModal={startOgVisOppfriskModal}
         behandlingID={behandlingID}
       />
     </Fragment>
@@ -87,12 +101,12 @@ const Saksopplysninger = ({
 };
 
 Saksopplysninger.propTypes = {
+  behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
-  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   match: PT.object.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -110,6 +124,7 @@ Saksopplysninger.propTypes = {
   lagreAllData: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -122,6 +137,7 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),

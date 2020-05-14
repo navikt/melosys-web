@@ -22,6 +22,8 @@ import { vilkarSelectors } from '../vilkar';
 import { avklartefaktaSelectors } from '../avklartefakta';
 import { lovvalgsperioderSelectors } from './index';
 import { behandlingerSelectors } from '../behandlinger';
+import { flytSelectors } from '../flyt';
+import { formSelectors } from '../form';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -176,10 +178,14 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => 
   }
 };
 
-const bestemLovvalgsland = lovvalgsbestemmelse => {
+const bestemLovvalgsland = (lovvalgsbestemmelse, reduxState) => {
+  if (flytSelectors.HarOffentligTjenesteINorgeSelector(reduxState)) return MKV.Koder.landkoder.NO;
+  if (avklartefaktaSelectors.OmfattesINorgeSelector(reduxState)) return MKV.Koder.landkoder.NO;
+
   switch (lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3:
       return MKV.Koder.landkoder.NO;
     default:
       return null;
@@ -189,7 +195,9 @@ const bestemLovvalgsland = lovvalgsbestemmelse => {
 const lovvalgsperiodeSkalVaereTom = (lovvalgsbestemmelse, reduxState) => (
   lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1 ||
   avklartefaktaSelectors.OmfattesIAnnetLandSelector(reduxState) ||
-  avklartefaktaSelectors.UtpekingAvvistSelector(reduxState)
+  flytSelectors.HarOffentligTjenesteAnnetLandSelector(reduxState) ||
+  flytSelectors.HarLonnetArbeidAnnetLand(reduxState) ||
+  formSelectors.UtpekingAvvistSelector(reduxState)
 );
 
 const byggLovvalgsPerioder = (stegState, reduxState) => {
@@ -197,7 +205,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
 
   const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
-  const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
+  const lovvalgsland = stegState.lovvalgsland || bestemLovvalgsland(stegState.lovvalgsbestemmelse, reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
   const fomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.fomDato : null) || periode.fom;
   const tomDato = (stegState.lovvalgsperiode ? stegState.lovvalgsperiode.tomDato : null) || periode.tom;
@@ -254,7 +262,11 @@ export function oppdaterLovvalgsperioderState(stegState) {
       const valgtLovvalg = finnValgteVilkar(alleLovvalgsvilkar);
       const lovvalgsPerioder = byggLovvalgsPerioderFraVilkaar(valgtLovvalg, stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
-    } else if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.unntakfrabestemmelse) {
+    } else if (
+      stegState.lovvalgsbestemmelse ||
+      stegState.tilleggbestemmelse ||
+      stegState.unntakfrabestemmelse ||
+      stegState.lovvalgsland) {
       const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {

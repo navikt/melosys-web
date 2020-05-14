@@ -58,8 +58,9 @@ const behandlingsstatusMap = {
 const SedBehandling = ({
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
+  sideDialogRedigerbart,
   match,
-  behandlingstype,
+  behandlingstema,
   redigerbart,
   fagsak,
   oppsummering,
@@ -79,7 +80,8 @@ const SedBehandling = ({
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
-  visOppfriskBekreftelse,
+  visOppfriskModal,
+  behandlingOppfriskes,
   apneTidligereBehandlinger,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -88,17 +90,21 @@ const SedBehandling = ({
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
 
+    if (behandlingOppfriskes) {
+      visOppfriskModal();
+    }
+
     return () => {
       resetSaksopplysninger();
     };
   }, []);
 
-  const soknadIkkeYrkesaktiv = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_IKKE_YRKESAKTIV;
+  const ikkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
   useEffect(() => {
-    if (soknadIkkeYrkesaktiv) {
+    if (ikkeYrkesaktiv) {
       hentBehandlingsgrunnlag(behandlingID);
     }
-  }, [behandlingstype]);
+  }, [behandlingstema]);
 
   const oppdaterStatus = (_, behandlingsstatus) => {
     if (behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
@@ -114,14 +120,14 @@ const SedBehandling = ({
           <Nav.Column xs="7" />
           <Nav.Column xs="5">
             <SideOppsummering
-              behandlingstype={behandlingstype}
+              behandlingstema={behandlingstema}
               redigerbart={redigerbart}
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              oppholdsland={soknadIkkeYrkesaktiv ? oppholdsland : []}
-              behandlingsgrunnlagPeriodeFom={soknadIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined}
-              behandlingsgrunnlagPeriodeTom={soknadIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined}
+              oppholdsland={ikkeYrkesaktiv ? oppholdsland : []}
+              behandlingsgrunnlagPeriodeFom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined}
+              behandlingsgrunnlagPeriodeTom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               renderBehandlingsmeny={() => <Behandlingsmeny
@@ -134,7 +140,7 @@ const SedBehandling = ({
                 visHenleggSak
                 visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                 visOppfriskSaksopplysninger
-                oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                oppfriskSaksopplysningerHandle={visOppfriskModal}
               />}
               renderBehandlingsstatus={() => <Behandlingsstatus
                 behandlingID={behandlingID}
@@ -150,6 +156,7 @@ const SedBehandling = ({
               saksnummer={saksnummer}
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+              redigerbart={sideDialogRedigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -161,8 +168,9 @@ const SedBehandling = ({
 SedBehandling.propTypes = {
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  sideDialogRedigerbart: PT.bool.isRequired,
   match: PT.object.isRequired,
-  behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
@@ -182,7 +190,8 @@ SedBehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskBekreftelse: PT.func.isRequired,
+  visOppfriskModal: PT.func.isRequired,
+  behandlingOppfriskes: PT.bool.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
 };
 
@@ -201,14 +210,15 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   oppholdsland: behandlingsgrunnlagSelectors.OppholdsLandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
+  sideDialogRedigerbart: redigerbartSelectors.SidedialogRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

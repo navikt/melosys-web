@@ -1,5 +1,4 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
 
 import { VurderingArtikkel13UtpekLand } from './vurderingArtikkel13UtpekLand';
 
@@ -17,9 +16,11 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       formIsValid: true,
       formValues: {},
       touch: jest.fn(),
-      behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       form: 'Form',
       touchAll: jest.fn(),
+      erOffentligArbeidUtland: true,
+      oppdaterData: jest.fn(),
+      slettData: jest.fn(),
     };
 
     shallow(<VurderingArtikkel13UtpekLand {...props} />);

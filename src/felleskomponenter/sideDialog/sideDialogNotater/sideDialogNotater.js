@@ -21,8 +21,16 @@ const sortNotaterByOpprettetDato = (forsteNotat, andreNotat) => {
   return -datoDiff;
 };
 
+const lagNotatOverskrift = (behandlingstype, behandlingstema) => {
+  const behandlingstypeString = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.behandlingstyper);
+  const behandlingstemaString = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema);
+
+  return `${behandlingstypeString} - ${behandlingstemaString}`;
+};
+
 const SideDialogNotater = ({
   saksnummer,
+  redigerbart,
 }) => {
   const [notater, setNotater] = useState([]);
   const [leggTilNotatDialogSynlig, setLeggTilNotatDialogSynlig] = useState(false);
@@ -97,26 +105,34 @@ const SideDialogNotater = ({
 
   return (
     <Nav.Panel>
-      <div className="notater">
-        {
-          notater
-            .sort(sortNotaterByOpprettetDato)
-            .map(notat => (
-              <Notat
-                key={Utils._uuid()}
-                redigerbart={notat.redigerbar}
-                tekst={notat.tekst}
-                opprettetDato={notat.registrertDato}
-                endretDato={notat.endretDato}
-                forfatter={notat.registrertAvNavn}
-                onUpdate={tekst => oppdaterNotat(notat.notatId, tekst)}
-                overskrift={KV.kodeTilTerm(notat.behandlingstypeKode, MKV.KTObjects.behandlinger.behandlingstyper)}
-                maksTekstLengde={maksTekstLengde}
-              />
-            ))
-        }
-      </div>
-      <div className="leggTilNotat">
+      {
+        notater.length > 0 &&
+        <div className="notater">
+          {
+            notater
+              .sort(sortNotaterByOpprettetDato)
+              .map(notat => {
+                const overskrift = lagNotatOverskrift(notat.behandlingstypeKode, notat.behandlingstemaKode);
+                const onUpdate = tekst => oppdaterNotat(notat.notatId, tekst);
+
+                return (
+                  <Notat
+                    key={Utils._uuid()}
+                    redigerbart={notat.redigerbar}
+                    tekst={notat.tekst}
+                    opprettetDato={notat.registrertDato}
+                    endretDato={notat.endretDato}
+                    forfatter={notat.registrertAvNavn}
+                    onUpdate={onUpdate}
+                    overskrift={overskrift}
+                    maksTekstLengde={maksTekstLengde}
+                  />
+                );
+              })
+          }
+        </div>
+      }
+      <div>
         {
           leggTilNotatDialogSynlig &&
           <Fragment>
@@ -139,7 +155,7 @@ const SideDialogNotater = ({
         }
         {
           !leggTilNotatDialogSynlig &&
-          <Mui.Knapp type="hoved" onClick={visLeggTilNotatDialog}>LEGG TIL NYTT NOTAT</Mui.Knapp>
+          <Mui.Knapp disabled={!redigerbart} type="hoved" onClick={visLeggTilNotatDialog}>LEGG TIL NYTT NOTAT</Mui.Knapp>
         }
       </div>
     </Nav.Panel>
@@ -148,6 +164,7 @@ const SideDialogNotater = ({
 
 SideDialogNotater.propTypes = {
   saksnummer: PT.string.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default SideDialogNotater;

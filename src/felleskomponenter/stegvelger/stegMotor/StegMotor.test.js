@@ -1,6 +1,5 @@
 import StegMotor from './StegMotor';
 
-import MKV from '../../../melosyskodeverk';
 import { STEG } from './typer';
 import Steg from './steg';
 
@@ -47,7 +46,8 @@ describe('Stegmotor', () => {
 
     it('beregner alle steg i en flyt', () => {
       const props = {};
-      const stegmotor = new StegMotor(props, stegMap);
+      const forsteSteg = STEG.INNGANG;
+      const stegmotor = new StegMotor(props, stegMap, forsteSteg);
       const alleSteg = stegmotor.beregnAlleSteg();
 
       expect(alleSteg[0].id).toBe(STEG.INNGANG);
@@ -55,30 +55,16 @@ describe('Stegmotor', () => {
       expect(alleSteg[2].id).toBe(STEG.ENDRET_PERIODE);
     });
 
-    it('Starter med inngangsteget dersom behandlingstype er SOEKNAD', () => {
-      const props = {
-        behandlingstype: {
-          kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-          term: MKV.Terms.behandlinger.behandlingstyper.SOEKNAD,
-        },
-      };
-      const stegmotor = new StegMotor(props, stegMap);
+    each([
+      STEG.INNGANG,
+      STEG.ENDRET_PERIODE,
+      STEG.YRKESAKTIVITET,
+    ]).it('Starter med det oppgitte første steget %p', forsteSteg => {
+      const props = {};
+      const stegmotor = new StegMotor(props, stegMap, forsteSteg);
       const alleSteg = stegmotor.beregnAlleSteg();
 
-      expect(alleSteg[0].id).toBe(STEG.INNGANG);
-    });
-
-    it('Starter med steget for endret periode dersom behandlingstype er ENDRET_PERIODE', () => {
-      const props = {
-        behandlingstype: {
-          kode: MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
-          term: MKV.Terms.behandlinger.behandlingstyper.ENDRET_PERIODE,
-        },
-      };
-      const stegmotor = new StegMotor(props, stegMap);
-      const alleSteg = stegmotor.beregnAlleSteg();
-
-      expect(alleSteg[0].id).toBe(STEG.ENDRET_PERIODE);
+      expect(alleSteg[0].id).toBe(forsteSteg);
     });
   });
 });

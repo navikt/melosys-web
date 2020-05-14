@@ -6,6 +6,7 @@ import * as Types from './types';
 import * as Selectors from './selectors';
 
 import MKV from '../../melosyskodeverk';
+import * as KV from '../../kodeverk';
 
 import { doThenDispatch } from '../../services/utils';
 import { formSelectors } from '../form';
@@ -42,12 +43,27 @@ export function send(bid, behandlingsgrunnlag) {
   );
 }
 
+const hentOvergangsregelbestemmelser = values =>
+  values && values.overgangsregelbestemmelser.map(overgangsregelbestemmelse =>
+    KV.kodeTilObjekt(overgangsregelbestemmelse, MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser));
+
+const temaForSedGrunnlag = behandlingstema => [
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+].includes(behandlingstema);
+
 export function oppdaterState() {
   return (dispatch, getState) => {
     const behandlingsgrunnlagData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
       ...formSelectors.InngangFormSelector(getState()).values,
     };
+
+    const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
+    if (temaForSedGrunnlag(behandlingstema)) {
+      behandlingsgrunnlagData.overgangsregelbestemmelser =
+        hentOvergangsregelbestemmelser(formSelectors.VurderUtpekingFormSelector(getState()).values);
+    }
 
     if (Utils._isEmpty(behandlingsgrunnlagData)) return;
 
@@ -75,15 +91,25 @@ const lagSoeknadFelter = behandlingsgrunnlag => ({
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
 });
 
-const lagBehandlingsgrunnlagData = (behandlingstype, behandlingsgrunnlag) => {
-  switch (behandlingstype) {
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD:
-    case MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING:
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_FLERE_LAND:
-    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD_ARBEID_NORGE_BOSATT_ANNET_LAND:
+const lagSedGrunnlagFelter = behandlingsgrunnlag => ({
+  ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
+  norskeArbeidsgivere: behandlingsgrunnlag.norskeArbeidsgivere,
+  ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon,
+});
+
+const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
+  switch (behandlingstema) {
+    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
+    case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
+    case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
       return lagSoeknadFelter(behandlingsgrunnlag);
-    case MKV.Koder.behandlinger.behandlingstyper.BESLUTNING_LOVVALG_NORGE:
-      return lagBehandlingsgrunnlagFelter(behandlingsgrunnlag);
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
+    case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
+      return lagSedGrunnlagFelter(behandlingsgrunnlag);
     default:
       return {};
   }
@@ -95,9 +121,9 @@ export function lagre() {
 
     const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagDataSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(getState());
+    const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
 
-    const data = lagBehandlingsgrunnlagData(behandlingstype, behandlingsgrunnlag);
+    const data = lagBehandlingsgrunnlagData(behandlingstema, behandlingsgrunnlag);
 
     return dispatch(send(bid, { data }));
   };

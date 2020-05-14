@@ -8,3 +8,4 @@ export const bortfall = snr => putAsText(`${API_BASE_URL}${FAGSAKER}/${snr}/avsl
 export const videresend = (snr, body) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${snr}/henlegg-videresend`, body);
 export const avslutt = snr => putAsText(`${API_BASE_URL}${FAGSAKER}/${snr}/avslutt`);
 export const utpek = (snr, body) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${snr}/utpek`, body);
+export const revurder = snr => postAsJson(`${API_BASE_URL}${FAGSAKER}/${snr}/revurder`, {});

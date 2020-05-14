@@ -9,7 +9,6 @@ import MKV, { Utils as MKVUtils } from '../../../melosyskodeverk';
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import * as Validering from '../../skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 
@@ -18,12 +17,15 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { vedtakSelectors } from '../../../ducks/vedtak';
+import { flytSelectors } from '../../../ducks/flyt';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
 import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
 import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
+
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingVedtak.css';
 
@@ -34,6 +36,7 @@ const VurderingVedtak = ({
   behandlingID,
   lagreOgFatteVedtak,
   behandlingstype,
+  behandlingstema,
   touch,
   formIsValid,
   formValues,
@@ -41,6 +44,7 @@ const VurderingVedtak = ({
   vedtakLastes,
   visAntallManederUtland,
   pdfDokumenter,
+  erArtikkel11_4,
 }) => {
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -51,8 +55,9 @@ const VurderingVedtak = ({
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-  const erSoknad = MKVUtils.erSoknad(behandlingstype);
+  const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering;
   const fattVedtakDisabled = !redigerbart;
+  const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
   const validerForm = () => {
     touch('tomDato');
@@ -68,7 +73,8 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
-      mottakerinstitusjoner: erSoknad ? [formValues.mottakerinstitusjon] : [],
+      fritekstSed: formValues.fritekstSed,
+      mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
@@ -106,7 +112,7 @@ const VurderingVedtak = ({
           </Nav.Row>
         }
         <Nav.Row className="fritekst">
-          <Nav.Column xs="12">
+          <Nav.Column xs="7">
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekst til vedtaksbrev"
@@ -118,14 +124,28 @@ const VurderingVedtak = ({
           </Nav.Column>
         </Nav.Row>
         {
-          erSoknad &&
+          redigerbart &&
+          <Nav.Row className="fritekstSed">
+            <Nav.Column xs="7">
+              <Skjema.Textarea
+                label="Ytterligere informasjon til SED (valgfri)"
+                feltNavn="fritekstSed"
+                disabled={!redigerbart}
+                visTellerFra={500}
+                maxLength={500}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
+        {
+          erSoknadEllerNyVurdering &&
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
               <Mottakerinstitusjonvelger
                 form={form}
                 redigerbart={redigerbart}
                 landkode={soknadsland[0]}
-                bucType={EKV.Koder.buctyper.legislation.LA_BUC_04}
+                bucType={bucType}
               />
             </Nav.Column>
           </Nav.Row>
@@ -153,6 +173,7 @@ VurderingVedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
   behandlingstype: PT.string.isRequired,
+  behandlingstema: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
@@ -160,6 +181,7 @@ VurderingVedtak.propTypes = {
   vedtakLastes: PT.bool.isRequired,
   visAntallManederUtland: PT.bool,
   pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
+  erArtikkel11_4: PT.bool.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -173,16 +195,18 @@ const mapStateToProps = state => ({
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   vedtakLastes: vedtakSelectors.ErPendingSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
+  erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,
+    fritekstSed: null,
   },
 });
 
@@ -192,7 +216,7 @@ const VurderingVedtakForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel12_vedtak, {
+  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel12_vedtak, {
     context: {
       behandlingstype: props.behandlingstype,
     },

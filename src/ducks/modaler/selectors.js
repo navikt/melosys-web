@@ -45,14 +45,9 @@ export const ErOppfriskSynligSelector = createSelector(
   oppfrisk => oppfrisk.synlig
 );
 
-export const OppfriskningBlokkererInnholdSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.oppfriskningBlokkererInnhold
-);
-
-export const ErOppfriskningBlokkererInnholdSynligSelector = createSelector(
-  OppfriskningBlokkererInnholdSelector,
-  oppfriskningBlokkererInnhold => oppfriskningBlokkererInnhold.synlig
+export const BehandlingUnderOppfriskningSelector = createSelector(
+  OppfriskSelector,
+  oppfrisk => oppfrisk.behandlingUnderOppfriskning
 );
 
 export const ValideringSelector = createSelector(
@@ -65,12 +60,12 @@ export const ErValideringSynligSelector = createSelector(
   validering => validering.synlig
 );
 
-export const RevurderVedtakSelector = createSelector(
+export const RevurderFagsakSelector = createSelector(
   ModalerSelector,
-  modaler => modaler.revurderVedtak
+  modaler => modaler.revurderFagsak
 );
 
-export const ErRevurderVedtakSynligSelector = createSelector(
-  RevurderVedtakSelector,
-  revurderVedtak => revurderVedtak.synlig
+export const ErRevurderFagsakSynligSelector = createSelector(
+  RevurderFagsakSelector,
+  revurderFagsak => revurderFagsak.synlig
 );

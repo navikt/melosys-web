@@ -8,7 +8,7 @@ describe('16.1 anmodning om unntak flyt', () => {
   it('går gjennom uten krasj', () => {
     cy.visit('/');
 
-    cy.get(`[data-cy-behandlingstype="${MKV.Koder.behandlinger.behandlingstyper.SOEKNAD}"]`)
+    cy.get(`[data-cy-behandlingstema="${MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER}"]`)
       .first()
       .click();
 
@@ -77,7 +77,7 @@ describe('16.1 anmodning om unntak flyt', () => {
 
     cy.get(aktivtStegSelector(7))
       .find('[data-cy="unntakArtikkel"]')
-      .select(MKV.Terms.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1);
+      .select(MKV.Terms.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A);
     cy.get(aktivtStegSelector(7))
       .find('[data-cy="begrunnelse"]')
       .select(MKV.Terms.begrunnelser.art16_1_anmodning.KORT_OPPDRAG_RETUR_NORSK_AG);

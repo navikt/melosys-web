@@ -11,36 +11,35 @@ class Yrkesaktivitet extends Steg {
     super(propsLight, stegPosisjon);
 
     const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
-    const { erSoknad } = propsLight;
-    const erSoknadEllerSokkelSkip = erSoknad || erSokkelEllerSkip;
+    const { erArbeidEttLand, erSoknadArbeidFlereLand } = propsLight;
+    const erEttLandEllerSokkelSkip = erSokkelEllerSkip || erArbeidEttLand;
 
     this.kriterier = [
       {
         exec: avklartefakta => {
           const erOrdinaerArbeidstaker = Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER);
-          return erSoknadEllerSokkelSkip && erOrdinaerArbeidstaker;
+          return erEttLandEllerSokkelSkip && erOrdinaerArbeidstaker;
         },
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
       {
         exec: avklartefakta => {
           const erSelvstendigNaeringsdrivende = Yrkesaktivitet.erSelvstendigNaeringsdrivende(avklartefakta);
-          return erSoknadEllerSokkelSkip && erSelvstendigNaeringsdrivende;
+          return erEttLandEllerSokkelSkip && erSelvstendigNaeringsdrivende;
         },
         nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
       },
       {
         exec: avklartefakta => {
-          const erToEllerFlereLand = propsLight.erSoknadArbeidFlereLand;
           const erYrkesAktivitetValgt = (
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) ||
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) ||
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG) ||
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING)
           );
-          return erToEllerFlereLand && erYrkesAktivitetValgt;
+          return erSoknadArbeidFlereLand && erYrkesAktivitetValgt;
         },
-        nesteSteg: STEG.VURDER_ARBEIDSLAND,
+        nesteSteg: STEG.ARBEIDSMONSTER,
       },
     ];
     this.id = STEG.YRKESAKTIVITET;
@@ -48,11 +47,12 @@ class Yrkesaktivitet extends Steg {
     this.komponent = VurderingYrkesaktivitet;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
+      erSoknadArbeidFlereLand: _propsLight.erSoknadArbeidFlereLand,
     });
     this.beregnRelevantUI = _propsLight => {
       const yrkesaktivitet = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta);
 
-      const skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende = erSoknadEllerSokkelSkip;
+      const skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende = erEttLandEllerSokkelSkip;
 
       return ({
         skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende,
@@ -84,6 +84,10 @@ class Yrkesaktivitet extends Steg {
 
   static erArbeidstakerOgSelvstendigNaeringsdrivende = avklartefakta => (
     Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG)
+  )
+
+  static erOffentligTjenestemann = avklartefakta => (
+    Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING)
   )
 }
 
