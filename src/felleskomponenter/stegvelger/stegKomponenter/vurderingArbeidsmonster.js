@@ -11,7 +11,6 @@ import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
-import { lagLovvalgsland, slettLovvalgsland } from '../../../regler/lovvalgsland';
 
 import './vurderingArbeidsmonster.css';
 
@@ -141,7 +140,6 @@ export const VurderingArbeidsmonster = ({
   redigerbart,
   oppdaterData,
   slettData,
-  utlandMedLonnetArbeid,
 }) => {
   const {
     marginaltArbeid,
@@ -152,31 +150,12 @@ export const VurderingArbeidsmonster = ({
     harAvklaring,
     yrkesaktivitet,
     loennetArbeidAntallLandFakta,
-    loennetArbeidIEttAnnetLand,
     offentligArbeidAntallLandFakta,
-    finnesEttUtlandMedLonnetArbeid,
   } = tilstand;
 
-  const oppdaterLovvalgsLandMedUtlandLonnetArbeid = () => {
-    const lovvalgsland = utlandMedLonnetArbeid[0];
-    oppdaterData(lagLovvalgsland(lovvalgsland));
-    oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
-  };
-
-  /**
-   * Håndterer valget av "Lønnet arbeid i et annet land og selvstendig virksomhet" i en useEffect - ikke i
-   * onChange-handleren - for å kunne oppdatere lovvalgsland automatisk ved endring i avklarte virksomheter.
-   */
-  useEffect(() => {
-    if (finnesEttUtlandMedLonnetArbeid) {
-      oppdaterLovvalgsLandMedUtlandLonnetArbeid();
-    } else {
-      slettData(slettLovvalgsland());
-    }
-  }, [finnesEttUtlandMedLonnetArbeid]);
-
   const loennetArbeidEndretHandler = avklartLoennetArbeid => {
-    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.NORGE) {
+    if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.NORGE ||
+        avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND) {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
     } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
       slettData(slettLovvalgsbestemmelse());
@@ -206,7 +185,17 @@ export const VurderingArbeidsmonster = ({
     }
   };
 
-  const oppdaterLovvalgsperiodeVedMount = avklartAktivitetINorge => {
+  const initialiserStegDataForSteg = (avklartAktivitetINorge, loennetArbeidAntallLand, offentligArbeidAntallLand) => {
+    if (loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.NORGE ||
+      loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+    }
+
+    if (offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET ||
+      offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.ANNET_LAND_OG_ANNEN_VIRKSOMHET) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4));
+    }
+
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
@@ -218,7 +207,9 @@ export const VurderingArbeidsmonster = ({
 
   useEffect(() => {
     const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
-    oppdaterLovvalgsperiodeVedMount(avklartAktivitetINorge);
+    const loennetArbeidAntallLand = hentFaktaVerdi(loennetArbeidAntallLandFakta);
+    const offentligArbeidAntallLand = hentFaktaVerdi(offentligArbeidAntallLandFakta);
+    initialiserStegDataForSteg(avklartAktivitetINorge, loennetArbeidAntallLand, offentligArbeidAntallLand);
 
     return () => {
       slettData();
@@ -309,13 +300,6 @@ export const VurderingArbeidsmonster = ({
             slettData={slettData}
             onChange={aktivitetINorgeEndretHandler}
           />
-
-        }
-        {
-          loennetArbeidIEttAnnetLand && !finnesEttUtlandMedLonnetArbeid &&
-          <Nav.AlertStripe type="advarsel">
-            Det finnes flere eller ingen lønnede arbeid i utlandet.
-          </Nav.AlertStripe>
         }
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -330,7 +314,6 @@ VurderingArbeidsmonster.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
-  utlandMedLonnetArbeid: PT.arrayOf(PT.string).isRequired,
   tilstand: PT.shape({
     marginaltArbeid: PT.array,
     aktivitetINorge: PT.object,
@@ -340,9 +323,7 @@ VurderingArbeidsmonster.propTypes = {
     erYrkesaktivitetAntallLandNodvendig: PT.bool.isRequired,
     erYrkesAktivitetOffentligNodvendig: PT.bool.isRequired,
     loennetArbeidAntallLandFakta: MPT.Avklartefakta,
-    loennetArbeidIEttAnnetLand: PT.bool.isRequired,
     offentligArbeidAntallLandFakta: MPT.Avklartefakta,
-    finnesEttUtlandMedLonnetArbeid: PT.bool.isRequired,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
 };

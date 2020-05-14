@@ -466,19 +466,3 @@ export const LoennetArbeidAntallLandFaktaVerdiSelector = createSelector(
   LoennetArbeidAntallLandFaktaSelector,
   loennetArbeidAntallLandFakta => hentFaktaVerdi(loennetArbeidAntallLandFakta)
 );
-
-export const LoennetArbeidUtlandSelector = createSelector(
-  VirksomhetFaktaerSelector,
-  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  MarginaleArbeidslandSelector,
-  (virksomhetFaktaer, foretakUtland, marginaleArbeidsland) => virksomhetFaktaer
-    .filter(virksomhetFakta => virksomhetFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN))
-    .map(virksomhetFakta => {
-      const virksomhet = foretakUtland.find(foretak =>
-        foretak.uuid === virksomhetFakta.subjektID &&
-        foretak.selvstendigNaeringsvirksomhet === false);
-      return virksomhet ? virksomhet.adresse.landkode : null;
-    })
-    .filter(land => land)
-    .filter(land => !marginaleArbeidsland.includes(land))
-);

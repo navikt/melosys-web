@@ -73,7 +73,9 @@ const byggUtpekingsperioder = (stegState, reduxState) => {
 
 export function oppdaterUtpekingsperioderState(stegState) {
   return (dispatch, getState) => {
-    if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse) {
+    if (stegState.lovvalgsbestemmelse ||
+      stegState.tilleggbestemmelse ||
+      stegState.lovvalgsland) {
       const utpekingsperioder = byggUtpekingsperioder(stegState, getState());
       dispatch(Actions.oppdaterUtpekingsperioder(utpekingsperioder));
     } else {
