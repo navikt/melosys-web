@@ -39,11 +39,12 @@ export const VurderingArtikkel13UtpekLand = ({
   formValues,
   touchAll,
   erOffentligArbeidUtland,
+  harLonnetArbeidAnnetLand,
   oppdaterData,
   slettData,
 }) => {
   useEffect(() => {
-    konverterLovvalgslandTilStegData(lovvalgsland);
+    oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
 
     return () => {
       slettData();
@@ -91,16 +92,19 @@ export const VurderingArtikkel13UtpekLand = ({
   const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
 
+  const visLandvelger = erOffentligArbeidUtland || harLonnetArbeidAnnetLand;
+  const lovvalgslandTittel = visLandvelger ? 'Velg lovvalgsland' : 'Lovvalgsland';
+
   return (
     <Fragment>
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       <Nav.typo.Undertittel>
-        <Nav.typo.Element className="undertittel">Lovvalgsland:</Nav.typo.Element>
+        <Nav.typo.Element className="undertittel">{lovvalgslandTittel}</Nav.typo.Element>
       </Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
           {
-            erOffentligArbeidUtland &&
+            visLandvelger &&
             <Skjema.LandVelger
               feltNavn="lovvalgsland"
               label=""
@@ -109,7 +113,7 @@ export const VurderingArtikkel13UtpekLand = ({
             />
           }
           {
-            !erOffentligArbeidUtland &&
+            !visLandvelger &&
             <div>{lovvalgsland && KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder)}</div>
           }
         </Nav.Column>
@@ -170,6 +174,7 @@ VurderingArtikkel13UtpekLand.propTypes = {
   lagreOgUtpek: PT.func.isRequired,
   touchAll: PT.func.isRequired,
   erOffentligArbeidUtland: PT.bool.isRequired,
+  harLonnetArbeidAnnetLand: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
 };
@@ -182,6 +187,7 @@ VurderingArtikkel13UtpekLand.defaultProps = {
 
 const mapStateToProps = state => ({
   erOffentligArbeidUtland: flytSelectors.HarOffentligTjenesteAnnetLandSelector(state),
+  harLonnetArbeidAnnetLand: flytSelectors.HarLonnetArbeidAnnetLand(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
@@ -192,6 +198,7 @@ const mapStateToProps = state => ({
     mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
+    lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
   },
 });
 
@@ -208,7 +215,7 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
   validate: (values, props) => {
     const settings = {
       context: {
-        erOffentligArbeidUtland: props.erOffentligArbeidUtland,
+        validerLovvalgsland: props.erOffentligArbeidUtland || props.harLonnetArbeidAnnetLand,
       },
     };
 

@@ -19,6 +19,7 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       form: 'Form',
       touchAll: jest.fn(),
       erOffentligArbeidUtland: true,
+      harLonnetArbeidAnnetLand: true,
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
     };

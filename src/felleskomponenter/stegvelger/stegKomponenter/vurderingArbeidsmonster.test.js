@@ -22,14 +22,11 @@ describe('VurderingVurderarbeidsland', () => {
         offentligArbeidAntallLandFakta: {},
         landMedVesentligArbeid: [],
         erNorgeValgt: true,
-        loennetArbeidIEttAnnetLand: false,
-        finnesEttUtlandMedLonnetArbeid: false,
       },
       redigerbart: true,
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
       arbeidsland: [],
-      utlandMedLonnetArbeid: [],
     };
   });
 
