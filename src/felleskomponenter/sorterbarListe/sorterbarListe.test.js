@@ -1,11 +1,11 @@
 import React from 'react';
 
-import * as Nav from '../../../../../utils/navFrontend';
+import * as Nav from '../../utils/navFrontend';
 
-import Oppgaver from './index';
-import JournalforingOppgave from '../../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
+import SorterbarListe from './sorterbarListe';
+import JournalforingOppgave from '../oppgaveliste/journalforingOppgave';
 
-describe('Oppgaver', () => {
+describe('SorterbarListe', () => {
   let props = null;
 
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('Oppgaver', () => {
       defaultChecked: 'nyeste',
       sortingLegend: 'Sorter journalføringsoppgaver etter frist:',
       sortingPath: 'aktivTil',
-      oppgaver: [
+      elementer: [
         {
           aktivTil: '2016-02-21',
           ansvarligID: 'Z991111',
@@ -49,9 +49,9 @@ describe('Oppgaver', () => {
     };
   });
 
-  it('kan sortere slik at nyeste oppgave kommer først', () => {
+  it('kan sortere slik at nyeste element kommer først', () => {
     props.defaultChecked = 'eldste';
-    const journalforingOppgaver = shallow(<Oppgaver {...props} />);
+    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
     const fieldset = journalforingOppgaver.find(Nav.Fieldset);
     const event = { target: { value: 'descending' } };
@@ -65,8 +65,8 @@ describe('Oppgaver', () => {
     expect(aktivTilDatoer[2]).toBe('2016-02-20');
   });
 
-  it('kan sortere slik at eldste oppgave kommer først', () => {
-    const journalforingOppgaver = shallow(<Oppgaver {...props} />);
+  it('kan sortere slik at eldste element kommer først', () => {
+    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
     const fieldset = journalforingOppgaver.find(Nav.Fieldset);
     const event = { target: { value: 'ascending' } };
@@ -80,9 +80,9 @@ describe('Oppgaver', () => {
     expect(aktivTilDatoer[2]).toBe('2016-02-22');
   });
 
-  it('viser ingenting hvis oppgaver er falsy', () => {
-    props.oppgaver = null;
-    const journalforingOppgaver = shallow(<Oppgaver {...props} />);
+  it('viser ingenting hvis elementer er falsy', () => {
+    props.elementer = null;
+    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
     expect(journalforingOppgaver.isEmptyRender()).toBe(true);
   });
