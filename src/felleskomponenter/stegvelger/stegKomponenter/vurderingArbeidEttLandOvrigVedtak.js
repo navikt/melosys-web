@@ -243,7 +243,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   behandlingsgrunnlagFom: PT.string.isRequired,
-  behandlingsgrunnlagTom: PT.string.isRequired,
+  behandlingsgrunnlagTom: PT.string,
 };
 
 VurderingArbeidEttLandOvrigVedtak.defaultProps = {
@@ -251,6 +251,7 @@ VurderingArbeidEttLandOvrigVedtak.defaultProps = {
   formValues: {},
   lovvalgsbestemmelseSomSkalVises: '',
   lovvalgsbestemmelseSomSkalLagres: '',
+  behandlingsgrunnlagTom: null,
 };
 
 const mapStateToProps = (state, ownProps) => {
