@@ -189,28 +189,35 @@ VurderingArtikkel13_x_vedtak.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
-  initialValues: {
-    forkortLovvalgsperiode: Utils.dato.datoDiffPure(
-      behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
-      lovvalgsperioderSelectors.TomDatoSelector(state),
-      'days'
-    ) !== 0,
-    tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
-    fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
-    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
-    fritekstSed: null,
-  },
-});
+const mapStateToProps = (state, ownProps) => {
+  const erLovvalgsperiodeForkortet = () => Utils.dato.datoDiffPure(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
+    lovvalgsperioderSelectors.TomDatoSelector(state),
+    'days'
+  ) !== 0;
+
+  const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
+  const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
+
+  return ({
+    behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+    formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
+    formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
+    initialValues: {
+      forkortLovvalgsperiode,
+      tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
+      vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+      vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+      vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+      mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+      fritekstSed: null,
+    },
+  });
+};
 
 const mapDispatchToProps = dispatch => ({
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
