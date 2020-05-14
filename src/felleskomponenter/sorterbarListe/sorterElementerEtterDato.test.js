@@ -1,6 +1,6 @@
 import sorterElementerEtterDato from './sorterElementerEtterDato';
 
-describe('sortOppgaverByDate', () => {
+describe('sortElementerEtterDato', () => {
   it('sorterer korrekt', () => {
     const forsteOppgave = { behandling: { registrertDato: '2019-12-11T16:30:00.622Z' } };
     const andreOppgave = { behandling: { registrertDato: '2019-12-11T16:30:01.622Z' } };

@@ -5,7 +5,7 @@ import * as Nav from '../../utils/navFrontend';
 import SorterbarListe from './sorterbarListe';
 import JournalforingOppgave from '../oppgaveliste/journalforingOppgave';
 
-describe('Oppgaver', () => {
+describe('SorterbarListe', () => {
   let props = null;
 
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe('Oppgaver', () => {
     };
   });
 
-  it('kan sortere slik at nyeste oppgave kommer først', () => {
+  it('kan sortere slik at nyeste element kommer først', () => {
     props.defaultChecked = 'eldste';
     const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
@@ -65,7 +65,7 @@ describe('Oppgaver', () => {
     expect(aktivTilDatoer[2]).toBe('2016-02-20');
   });
 
-  it('kan sortere slik at eldste oppgave kommer først', () => {
+  it('kan sortere slik at eldste element kommer først', () => {
     const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
     const fieldset = journalforingOppgaver.find(Nav.Fieldset);
@@ -80,7 +80,7 @@ describe('Oppgaver', () => {
     expect(aktivTilDatoer[2]).toBe('2016-02-22');
   });
 
-  it('viser ingenting hvis oppgaver er falsy', () => {
+  it('viser ingenting hvis elementer er falsy', () => {
     props.elementer = null;
     const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
