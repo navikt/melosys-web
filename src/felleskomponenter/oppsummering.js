@@ -83,13 +83,13 @@ const Oppsummering = props => {
       { (behandlingsgrunnlagPeriodeFom || behandlingsgrunnlagPeriodeTom) &&
         <Fragment>
           <dt>{periodeLabel}</dt>
-          <dd>{behandlingsgrunnlagPeriodeFom || 'ukjent'} - {behandlingsgrunnlagPeriodeTom || 'ukjent'}</dd>
+          <dd>{behandlingsgrunnlagPeriodeFom || 'ukjent'} - {behandlingsgrunnlagPeriodeTom}</dd>
         </Fragment>
       }
       { (lovvalgsperiodeFom || lovvalgsperiodeTom) &&
         <Fragment>
           <dt>Lovvalgsperiode:</dt>
-          <dd>{lovvalgsperiodeFom || 'ukjent'} - {lovvalgsperiodeTom || 'ukjent'}</dd>
+          <dd>{lovvalgsperiodeFom || 'ukjent'} - {lovvalgsperiodeTom}</dd>
         </Fragment>
       }
       <dt>Behandling sist oppdatert:</dt>
