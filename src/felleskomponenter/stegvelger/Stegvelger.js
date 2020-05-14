@@ -367,6 +367,7 @@ class Stegvelger extends Component {
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       lovvalgsbestemmelse: props.lovvalgsbestemmelse,
+      valgteLovvalgsVilkarBestemmelse: props.valgteLovvalgsVilkarBestemmelse,
       utpekingsperioder: props.utpekingsperioder,
       omfattesIAnnetLand: props.omfattesIAnnetLand,
       artikkel12_vedtak_skjema: props.artikkel12_vedtak_skjema,
@@ -387,10 +388,10 @@ class Stegvelger extends Component {
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      erArbeidEttLandOvrig: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebase: props.hjemmebase,
-      utlandMedLonnetArbeid: props.utlandMedLonnetArbeid,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -544,11 +545,11 @@ Stegvelger.propTypes = {
   vurderUtpekingTom: PT.string,
   vurderUtpekingValid: PT.bool.isRequired,
   lovvalgsbestemmelse: PT.string,
+  valgteLovvalgsVilkarBestemmelse: PT.string,
   maritimtarbeid: PT.arrayOf(PT.object),
   hjemmebase: PT.string,
   forsteSteg: PT.string.isRequired,
   erArbeidEttLand: PT.bool.isRequired,
-  utlandMedLonnetArbeid: PT.arrayOf(PT.string).isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -566,6 +567,7 @@ Stegvelger.defaultProps = {
   vurderUtpekingFom: '',
   vurderUtpekingTom: '',
   lovvalgsbestemmelse: '',
+  valgteLovvalgsVilkarBestemmelse: '',
   maritimtarbeid: [],
   hjemmebase: null,
 };
@@ -601,10 +603,10 @@ const mapStateToProps = state => ({
   vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
   vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
+  valgteLovvalgsVilkarBestemmelse: lovvalgsperioderSelectors.ValgteLovvalgsVilkarBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
-  utlandMedLonnetArbeid: avklartefaktaSelectors.LoennetArbeidUtlandSelector(state),
 });
 
 /* eslint no-alert:off */

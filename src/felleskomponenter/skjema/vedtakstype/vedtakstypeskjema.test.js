@@ -3,17 +3,19 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
-import VedtaktypeSkjema from './vedtaktypeskjema';
+import VedtakstypeSkjema from './vedtakstypeskjema';
 
 describe('Vedtaketypeskjema', () => {
   describe('radiogruppe', () => {
     const props = {
       className: 'artikkel',
       redigerbart: true,
+      feltNavn: 'feltNavn',
+      label: 'label',
     };
 
-    const vedtaktypeSkjema = shallow(<VedtaktypeSkjema {...props} />);
-    const radiogruppe = vedtaktypeSkjema.find(Skjema.RadioGruppe);
+    const vedtakstypeSkjema = shallow(<VedtakstypeSkjema {...props} />);
+    const radiogruppe = vedtakstypeSkjema.find(Skjema.RadioGruppe);
 
     it('vises', () => {
       expect(radiogruppe).toHaveLength(1);
@@ -22,32 +24,48 @@ describe('Vedtaketypeskjema', () => {
     it('setter className', () => {
       expect(radiogruppe.props().className).toBe(props.className);
     });
+
+    it('setter label', () => {
+      expect(radiogruppe.props().label).toBe(props.label);
+    });
+
+    it('setter feltNavn', () => {
+      expect(radiogruppe.props().feltNavn).toBe(props.feltNavn);
+    });
   });
 
   describe('radioknapper', () => {
     let props = null;
-    let vedtaktypeSkjema = null;
+    let vedtakstypeSkjema = null;
     let radioknapper = null;
 
     beforeEach(() => {
       props = {
         className: 'artikkel',
         redigerbart: true,
+        feltNavn: 'feltNavn',
+        label: 'label',
       };
-      vedtaktypeSkjema = shallow(<VedtaktypeSkjema {...props} />);
-      radioknapper = vedtaktypeSkjema.find(Skjema.Radio);
+      vedtakstypeSkjema = shallow(<VedtakstypeSkjema {...props} />);
+      radioknapper = vedtakstypeSkjema.find(Skjema.Radio);
     });
 
     it('viser 2', () => {
       expect(radioknapper).toHaveLength(2);
     });
 
+    it('sin feltNavn settes', () => {
+      radioknapper.forEach(radioKnapp => {
+        expect(radioKnapp.props().feltNavn).toBe(props.feltNavn);
+      });
+    });
+
     describe('sin disabled', () => {
       it('settes av redigerbart for korrigeringsvedtak', () => {
         expect(radioknapper.find({ value: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK }).props().disabled).toBe(false);
 
-        vedtaktypeSkjema = shallow(<VedtaktypeSkjema {...props} redigerbart={false} />);
-        radioknapper = vedtaktypeSkjema.find(Skjema.Radio);
+        vedtakstypeSkjema = shallow(<VedtakstypeSkjema {...props} redigerbart={false} />);
+        radioknapper = vedtakstypeSkjema.find(Skjema.Radio);
         expect(radioknapper.find({ value: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK }).props().disabled).toBe(true);
       });
 

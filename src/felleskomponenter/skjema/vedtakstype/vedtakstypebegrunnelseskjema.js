@@ -4,13 +4,15 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
-const VedtaktypebegrunnelseSkjema = ({
+const VedtakstypebegrunnelseSkjema = ({
   className,
   redigerbart,
+  feltNavn,
+  label,
 }) => (
   <Skjema.Select
-    feltNavn="vedtakstypebegrunnelse"
-    label="Bakgrunn for nytt vedtak"
+    feltNavn={feltNavn}
+    label={label}
     className={className}
     disabled={!redigerbart}
   >
@@ -20,13 +22,15 @@ const VedtaktypebegrunnelseSkjema = ({
   </Skjema.Select>
 );
 
-VedtaktypebegrunnelseSkjema.propTypes = {
+VedtakstypebegrunnelseSkjema.propTypes = {
   className: PT.string,
   redigerbart: PT.bool.isRequired,
+  feltNavn: PT.string.isRequired,
+  label: PT.string.isRequired,
 };
 
-VedtaktypebegrunnelseSkjema.defaultProps = {
+VedtakstypebegrunnelseSkjema.defaultProps = {
   className: undefined,
 };
 
-export default VedtaktypebegrunnelseSkjema;
+export default VedtakstypebegrunnelseSkjema;
