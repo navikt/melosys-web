@@ -223,7 +223,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland,
     trygdeDekning: norgeErLovvalgsland(lovvalgsland) ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO : MKV.Koder.trygdedekninger.UTEN_DEKNING,
-    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
+    medlemskapstype: norgeErLovvalgsland(lovvalgsland) ? MKV.Koder.medlemskapstyper.PLIKTIG : MKV.Koder.medlemskapstyper.UNNTATT,
   }];
 };
 
