@@ -2,8 +2,8 @@ import React from 'react';
 
 import * as Nav from '../../utils/navFrontend';
 
-import OppgaverMedSortering from './oppgaverMedSortering';
-import JournalforingOppgave from './journalforingOppgave';
+import SorterbarListe from './sorterbarListe';
+import JournalforingOppgave from '../oppgaveliste/journalforingOppgave';
 
 describe('Oppgaver', () => {
   let props = null;
@@ -14,7 +14,7 @@ describe('Oppgaver', () => {
       defaultChecked: 'nyeste',
       sortingLegend: 'Sorter journalføringsoppgaver etter frist:',
       sortingPath: 'aktivTil',
-      oppgaver: [
+      elementer: [
         {
           aktivTil: '2016-02-21',
           ansvarligID: 'Z991111',
@@ -51,7 +51,7 @@ describe('Oppgaver', () => {
 
   it('kan sortere slik at nyeste oppgave kommer først', () => {
     props.defaultChecked = 'eldste';
-    const journalforingOppgaver = shallow(<OppgaverMedSortering {...props} />);
+    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
     const fieldset = journalforingOppgaver.find(Nav.Fieldset);
     const event = { target: { value: 'descending' } };
@@ -66,7 +66,7 @@ describe('Oppgaver', () => {
   });
 
   it('kan sortere slik at eldste oppgave kommer først', () => {
-    const journalforingOppgaver = shallow(<OppgaverMedSortering {...props} />);
+    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
     const fieldset = journalforingOppgaver.find(Nav.Fieldset);
     const event = { target: { value: 'ascending' } };
@@ -81,8 +81,8 @@ describe('Oppgaver', () => {
   });
 
   it('viser ingenting hvis oppgaver er falsy', () => {
-    props.oppgaver = null;
-    const journalforingOppgaver = shallow(<OppgaverMedSortering {...props} />);
+    props.elementer = null;
+    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
 
     expect(journalforingOppgaver.isEmptyRender()).toBe(true);
   });

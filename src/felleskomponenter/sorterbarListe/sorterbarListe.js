@@ -4,12 +4,12 @@ import PT from 'prop-types';
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
 
-import sortOppgaverByDate from './sortoppgaverbydate';
+import sorterElementerEtterDato from './sorterElementerEtterDato';
 
-import './oppgaverMedSortering.css';
+import './sorterbarListe.css';
 
-const OppgaverMedSortering = ({
-  oppgaver,
+const SorterbarListe = ({
+  elementer,
   defaultChecked,
   component,
   sortingLegend,
@@ -19,13 +19,13 @@ const OppgaverMedSortering = ({
   const defaultOrder = defaultChecked === 'nyeste' ? 'descending' : 'ascending';
   const [sortOrder, setSortOrder] = useState(defaultOrder);
 
-  if (!oppgaver) return null;
+  if (!elementer) return null;
 
   const handleSortOrderChange = event => {
     setSortOrder(event.target.value);
   };
 
-  const sorterteOppgaver = oppgaver.slice().sort(sortOppgaverByDate(sortOrder, sortingPath));
+  const sorterteElementer = elementer.slice().sort(sorterElementerEtterDato(sortOrder, sortingPath));
   const Component = component;
   const uniqueName = radioGroupName || Utils._uuid();
 
@@ -48,14 +48,14 @@ const OppgaverMedSortering = ({
         </div>
       </Nav.Fieldset>
       {
-        sorterteOppgaver.map(oppgave => <Component key={Utils._uuid()} sak={oppgave} />)
+        sorterteElementer.map(oppgave => <Component key={Utils._uuid()} sak={oppgave} />)
       }
     </Fragment>
   );
 };
 
-OppgaverMedSortering.propTypes = {
-  oppgaver: PT.arrayOf(PT.object),
+SorterbarListe.propTypes = {
+  elementer: PT.arrayOf(PT.object),
   defaultChecked: PT.string,
   component: PT.elementType.isRequired,
   sortingLegend: PT.string.isRequired,
@@ -63,10 +63,10 @@ OppgaverMedSortering.propTypes = {
   radioGroupName: PT.string,
 };
 
-OppgaverMedSortering.defaultProps = {
-  oppgaver: [],
+SorterbarListe.defaultProps = {
+  elementer: [],
   defaultChecked: 'eldste',
   radioGroupName: undefined,
 };
 
-export default OppgaverMedSortering;
+export default SorterbarListe;

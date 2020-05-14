@@ -6,7 +6,7 @@ import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 import Fagsak from '../../felleskomponenter/oppgaveliste/fagsak';
-import OppgaverMedSortering from '../../felleskomponenter/oppgaveliste/oppgaverMedSortering';
+import SorterbarListe from '../../felleskomponenter/sorterbarListe/sorterbarListe';
 
 import { sokSelectors, sokOperations } from '../../ducks/sok';
 
@@ -41,8 +41,8 @@ class Sok extends Component {
                 Resultater for fnr {fnr}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
               </h2>
               { sokResultat.length > 0 &&
-                <OppgaverMedSortering
-                  oppgaver={sokResultat}
+                <SorterbarListe
+                  elementer={sokResultat}
                   component={Fagsak}
                   defaultChecked="nyeste"
                   sortingLegend="Sorter fagsaker etter opprettelsesdato:"

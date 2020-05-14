@@ -1,6 +1,6 @@
 import * as Utils from '../../utils';
 
-const sortOppgaverByDate = (order, dateFieldPath) => (forsteOppgave, andreOppgave) => {
+const sorterElementerEtterDato = (order, dateFieldPath) => (forsteOppgave, andreOppgave) => {
   const forsteDato = Utils._get(forsteOppgave, dateFieldPath);
   const andreDato = Utils._get(andreOppgave, dateFieldPath);
 
@@ -8,4 +8,4 @@ const sortOppgaverByDate = (order, dateFieldPath) => (forsteOppgave, andreOppgav
   return order === 'descending' ? -datoDiff : datoDiff;
 };
 
-export default sortOppgaverByDate;
+export default sorterElementerEtterDato;

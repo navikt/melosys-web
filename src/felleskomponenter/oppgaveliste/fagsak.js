@@ -10,7 +10,7 @@ import Behandling from './behandling';
 import PanelHeader from '../panelHeader/panelHeader';
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import { DatoOmradeDescription } from '../datoOmrade/datoOmrade';
-import sortOppgaverByDate from './sortoppgaverbydate';
+import sorterElementerEtterDato from '../sorterbarListe/sorterElementerEtterDato';
 
 import './fagsak.css';
 
@@ -36,7 +36,7 @@ const Fagsak = ({ sak }) => {
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const customMargin = { marginLeft: '1em' };
 
-  const sorterteBehandlinger = behandlingOversikter.slice().sort(sortOppgaverByDate('descending', 'opprettetDato'));
+  const sorterteBehandlinger = behandlingOversikter.slice().sort(sorterElementerEtterDato('descending', 'opprettetDato'));
 
   return (
     <Nav.Panel className="fagsak">

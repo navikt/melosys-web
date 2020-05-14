@@ -7,7 +7,7 @@ import * as MPT from '../../../../proptypes';
 import BehandlingOppgave from '../../../../felleskomponenter/oppgaveliste/behandlingOppgave';
 import withErrorHandling from '../../../../felleskomponenter/withErrorHandling';
 import JournalforingOppgave from '../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
-import OppgaverMedSortering from '../../../../felleskomponenter/oppgaveliste/oppgaverMedSortering';
+import SorterbarListe from '../../../../felleskomponenter/sorterbarListe/sorterbarListe';
 
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
@@ -25,15 +25,15 @@ export const MineOppgaver = props => {
   return (
     <div className="minesaker">
       <h1>Mine oppgaver ({antall()})</h1>
-      <OppgaverMedSortering
-        oppgaver={journalforing}
+      <SorterbarListe
+        elementer={journalforing}
         component={JournalforingOppgave}
         defaultChecked="eldste"
         sortingLegend="Sorter journalføringsoppgaver etter frist:"
         sortingPath="aktivTil"
       />
-      <OppgaverMedSortering
-        oppgaver={saksbehandling}
+      <SorterbarListe
+        elementer={saksbehandling}
         component={BehandlingOppgave}
         defaultChecked="nyeste"
         sortingLegend="Sorter behandlinger etter opprettelsesdato:"
