@@ -38,5 +38,5 @@ describe('SoknadFeilmeldinger', () => {
     const soknadFeilmeldinger = shallow(<SoknadFeilmeldinger {...props} />);
 
     expect(soknadFeilmeldinger.isEmptyRender()).toBe(true);
-  })
+  });
 });
