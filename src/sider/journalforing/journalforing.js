@@ -411,7 +411,6 @@ class Journalforing extends Component {
       kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
       kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND ||
       kode === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-      kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED ||
       kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID);
 
     if (erProdish) {
