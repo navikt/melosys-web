@@ -8,10 +8,6 @@ import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils/utils';
 
 import { saksbehandlerSelectors } from '../../../ducks/saksbehandler/';
-import { fagsakOperations } from '../../../ducks/fagsaker/';
-import { vilkarOperations } from '../../../ducks/vilkar/';
-import { avklartefaktaOperations } from '../../../ducks/avklartefakta/';
-import { lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder/';
 import { oppgaverOperations } from '../../../ducks/oppgaver/';
 
 import './topplinje.css';
@@ -67,10 +63,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
-  resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
-  resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
-  resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 

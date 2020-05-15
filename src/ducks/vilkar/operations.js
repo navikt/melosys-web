@@ -16,6 +16,8 @@ import * as Selectors from './selectors';
 
 import { behandlingerSelectors } from '../behandlinger';
 
+import MKV from '../../melosyskodeverk';
+
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Vilkar.hent(behandlingID), {
     OK: Types.OK,
@@ -24,7 +26,7 @@ export function hent(behandlingID) {
   });
 }
 
-export function send(behandlingID, body) {
+function send(behandlingID, body) {
   return doThenDispatch(() => Api.Vilkar.send(behandlingID, body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -32,19 +34,27 @@ export function send(behandlingID, body) {
   });
 }
 
+const VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL = [
+  MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
+];
+
+const filtrerVilkar = vilkar => vilkar.filter(enkeltVilkar => !VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.includes(enkeltVilkar.vilkaar));
+
 export function lagre() {
   return (dispatch, getState) => {
     const vilkar = Selectors.VilkarSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    dispatch(send(bid, vilkar));
+
+    const filtrerteVilkar = filtrerVilkar(vilkar);
+
+    return dispatch(send(bid, filtrerteVilkar));
   };
 }
 
-export function oppdaterVilkarState(skjema) {
-  return dispatch => (dispatch(Actions.oppdaterVilkarState(skjema)));
+export function oppdaterState(skjema) {
+  return dispatch => (dispatch(Actions.oppdaterState(skjema)));
 }
 
-export function resetVilkarState() {
-  return Actions.resetVilkarState();
+export function resetState() {
+  return Actions.resetState();
 }
-

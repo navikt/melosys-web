@@ -8,7 +8,7 @@ import * as Types from './types';
  */
 
 /* eslint-disable import/prefer-default-export */
-export function oppdaterVilkarState(alleVilkaar) {
+export function oppdaterState(alleVilkaar) {
   return ({
     type: Types.OPPDATER_VILKAR,
     data: { vilkar: alleVilkaar },
@@ -19,6 +19,6 @@ export function oppdaterVilkarState(alleVilkaar) {
  *
  * @returns {{type: *}}
  */
-export function resetVilkarState() {
+export function resetState() {
   return { type: Types.RESET };
 }
