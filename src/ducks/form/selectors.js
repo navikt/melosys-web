@@ -155,16 +155,23 @@ export const SoknadErrorsSelector = createSelector(
   errors => errors
 );
 
-const finnPanelerMedFeil = errors => {
-  const panelerMedFeil = Utils.finnVerdierMedKey(errors, 'panel');
-  const unikePaneler = [...new Set(panelerMedFeil)];
+const finnPanelFeil = errors => {
+  const panelerOgFeil = Utils.finnVerdierMedKey(errors, 'panel', true);
+  const unikePanelerMedFeilNavn = Utils._uniqBy(panelerOgFeil, 'panel').map(({ panel }) => panel);
 
-  return unikePaneler;
+  const panelFeil = unikePanelerMedFeilNavn.map(panelNavn => ({
+    panel: panelNavn,
+    feil: panelerOgFeil
+      .map(({ panel, melding }) => (panelNavn === panel ? melding : null))
+      .filter(v => v !== null),
+  }));
+
+  return panelFeil;
 };
 
-export const PanelerMedFeilSelector = createSelector(
+export const PanelFeilSelector = createSelector(
   SoknadErrorsSelector,
-  soknadErrors => finnPanelerMedFeil(soknadErrors)
+  soknadErrors => finnPanelFeil(soknadErrors)
 );
 
 export const ErAlleMaritimtArbeidNavnUnikeSelector = createSelector(

@@ -92,6 +92,7 @@ const mapStateToProps = state => ({
   fagsaker: fagsakSelectors.FagsakSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   soknadArbeidsinntekt: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
@@ -192,6 +193,7 @@ const SoknadpanelerForm = reduxForm({
     const settings = {
       context: {
         skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
+        behandlingstema: props.behandlingstema,
       },
     };
 
