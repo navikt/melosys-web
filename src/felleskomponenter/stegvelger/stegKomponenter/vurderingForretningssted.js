@@ -125,11 +125,11 @@ const VurderingForretningssted = props => {
     },
     {
       kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2,
-      label: '13.1 b ii: to arbeidsgivere',
+      label: '13.1 b ii: Ansatt av to eller flere arbeidsgivere med forretningssted i samme land',
     },
     {
       kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3,
-      label: '13.1 b iii: Flere arbeidsgivere, med forretningssted i to land, hvorav et er Norge',
+      label: '13.1 b iii: To eller flere arbeidsgivere, med forretningssted i to land, hvorav ett er Norge',
     },
     {
       kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
