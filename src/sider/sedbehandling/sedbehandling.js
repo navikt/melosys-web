@@ -58,7 +58,6 @@ const behandlingsstatusMap = {
 const SedBehandling = ({
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
-  sideDialogRedigerbart,
   match,
   behandlingstema,
   redigerbart,
@@ -156,7 +155,7 @@ const SedBehandling = ({
               saksnummer={saksnummer}
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-              redigerbart={sideDialogRedigerbart}
+              redigerbart={redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -168,7 +167,6 @@ const SedBehandling = ({
 SedBehandling.propTypes = {
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
-  sideDialogRedigerbart: PT.bool.isRequired,
   match: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -218,7 +216,6 @@ const mapStateToProps = state => ({
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
-  sideDialogRedigerbart: redigerbartSelectors.SidedialogRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
