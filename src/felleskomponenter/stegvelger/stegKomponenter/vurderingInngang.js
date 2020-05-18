@@ -8,48 +8,82 @@ import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import MKV from '../../../melosyskodeverk';
-
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+
+import MKV from '../../../melosyskodeverk';
 
 import SoknadslandListe from './inngang/soknadslandListe';
 
-const VurderingInngang = props => {
-  const {
-    bekreftOgFortsett, alleLandkoder, begrunnelser, avklartefakta,
-    tilstand, redigerbart, oppdaterData, slettData, sakstype,
-  } = props;
-
-  useEffect(() => (
-    function cleanup() {
-      slettData();
-    }
-  ), []);
-
-  const soknadslandBegrunnelser = begrunnelser.opphold;
-  const { harAvklaring } = tilstand;
-
-  const oppfyllerInngangsvilkar = sakstype === MKV.Koder.sakstyper.EU_EOS;
-
+export const Varsler = ({
+  oppfyllerInngangsvilkar,
+  inngangsvilkaarBegrunnelser,
+}) => {
   const oppfyllerInngangsvilkarCl = classNames({
     liste__element: true,
     'liste__element--oppfylt': oppfyllerInngangsvilkar,
     'liste__element--ikkeoppfylt': !oppfyllerInngangsvilkar,
   });
 
+  const varselCl = classNames({
+    liste__element: true,
+    'liste__element--varsel': true,
+  });
+
+  const oppfyltTekst = `Søknaden oppfyller${oppfyllerInngangsvilkar ? ' ' : ' ikke '}inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
+
+  return (
+    <ul className="betingelser__liste">
+      <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
+      {
+        !oppfyllerInngangsvilkar &&
+        inngangsvilkaarBegrunnelser.map(begrunnelseKode => (
+          <li key={begrunnelseKode} className={oppfyllerInngangsvilkarCl}>
+            {KV.kodeTilTerm(begrunnelseKode, MKV.KTObjects.begrunnelser.inngangsvilkaar)}
+          </li>
+        ))
+      }
+      {
+        oppfyllerInngangsvilkar &&
+        <li className={varselCl}>Sjekk eventuelt at området dekkes av forordningen.</li>
+      }
+    </ul>
+  );
+};
+
+Varsler.propTypes = {
+  oppfyllerInngangsvilkar: PT.bool.isRequired,
+  inngangsvilkaarBegrunnelser: PT.arrayOf(PT.string).isRequired,
+};
+
+export const VurderingInngang = ({
+  bekreftOgFortsett,
+  alleLandkoder,
+  avklartefakta,
+  redigerbart,
+  oppdaterData,
+  oppfyllerInngangsvilkar,
+  slettData,
+  inngangsvilkaar: {
+    begrunnelseKoder: inngangsvilkaarBegrunnelser,
+  },
+  tilstand: {
+    harAvklaring,
+  },
+  begrunnelser: {
+    opphold: soknadslandBegrunnelser,
+  },
+}) => {
+  useEffect(() => (
+    function cleanup() {
+      slettData();
+    }
+  ), []);
+
   return (
     <div className="vurderingInngang">
       <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
-      <ul className="betingelser__liste">
-        <li className={oppfyllerInngangsvilkarCl}>
-          Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.
-        </li>
-        <li className="liste__element liste__element--varsel">
-          Sjekk eventuelt at området dekkes av forordningen.
-        </li>
-      </ul>
+      <Varsler oppfyllerInngangsvilkar={oppfyllerInngangsvilkar} inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser} />
       <FieldArray
         name="avklartefakta.soknadsland"
         component={SoknadslandListe}
@@ -71,15 +105,17 @@ VurderingInngang.propTypes = {
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
-  tilstand: PT.object.isRequired,
+  tilstand: PT.shape({
+    harAvklaring: PT.bool.isRequired,
+  }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  sakstype: PT.string.isRequired,
+  inngangsvilkaar: MPT.Vilkaar.isRequired,
+  oppfyllerInngangsvilkar: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   initialValues: {
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
     fjernedeLand: avklartefaktaSelectors.IkkeGyldigeSoknadslandFaktaerSelector(state),

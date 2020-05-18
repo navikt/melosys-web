@@ -380,6 +380,7 @@ class Stegvelger extends Component {
       arbeidslandMedYrkesaktivitet: props.arbeidslandMedYrkesaktivitet,
       valgteVirksomheter: props.valgteVirksomheter,
       vilkar: props.vilkar,
+      inngangsvilkaar: props.inngangsvilkaar,
       redigerbart: props.redigerbart,
       generiskStegRedigerbart: props.generiskStegRedigerbart,
       erIDirekteTilArtikkel16Flyt: props.erIDirekteTilArtikkel16Flyt,
@@ -512,6 +513,7 @@ Stegvelger.propTypes = {
   oppdaterLovvalgperioder: PT.func.isRequired,
   valgteVirksomheter: PT.array,
   vilkar: PT.array.isRequired,
+  inngangsvilkaar: MPT.Vilkaar,
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
@@ -570,6 +572,7 @@ Stegvelger.defaultProps = {
   valgteLovvalgsVilkarBestemmelse: '',
   maritimtarbeid: [],
   hjemmebase: null,
+  inngangsvilkaar: {},
 };
 
 const mapStateToProps = state => ({
@@ -578,6 +581,7 @@ const mapStateToProps = state => ({
   arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
+  inngangsvilkaar: vilkarSelectors.inngangsvilkaarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
