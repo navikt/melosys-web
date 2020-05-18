@@ -2,6 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
+import * as KV from '../../kodeverk';
 
 import MKV from '../../melosyskodeverk';
 
@@ -19,7 +20,17 @@ const feilmeldingMap = {
 };
 
 const hentFeilmelding = valideringKode => {
-  const feilmelding = feilmeldingMap[valideringKode];
+  let feilmelding = feilmeldingMap[valideringKode];
+
+  if (!feilmelding) {
+    const valideringKodeObjekt = KV.kodeTilObjekt(valideringKode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    if (valideringKodeObjekt) {
+      feilmelding = {
+        tittel: 'Feil ved kontroll',
+        innhold: valideringKodeObjekt.term,
+      };
+    }
+  }
 
   if (!feilmelding) {
     return {
