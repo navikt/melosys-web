@@ -7,6 +7,9 @@
 
 import { createSelector } from 'reselect';
 
+import MKV from '../../melosyskodeverk';
+import { BehandlingstemaKodeSelector } from '../behandlinger/selectors';
+
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingsresultatSelector = createSelector(
   state => (state.behandlingsresultat ? state.behandlingsresultat.data : []),
@@ -33,12 +36,23 @@ export const KontrollresultatBegrunnelseKoderSelector = createSelector(
   behandlingsresultat => behandlingsresultat.kontrollresultatBegrunnelseKoder
 );
 
-export const UtfallRegistreringUnntakSelector = createSelector(
+const UtfallRegistreringUnntakSelector = createSelector(
   BehandlingsresultatSelector,
   behandlingsresultat => behandlingsresultat.utfallRegistreringUnntak
 );
 
-export const UtfallUtpekingSelector = createSelector(
+const UtfallUtpekingSelector = createSelector(
   BehandlingsresultatSelector,
   behandlingsresultat => behandlingsresultat.utfallUtpeking
+);
+
+export const UtpekingVurderingSelector = createSelector(
+  state => BehandlingstemaKodeSelector(state),
+  UtfallRegistreringUnntakSelector,
+  UtfallUtpekingSelector,
+  (behandlingstema, utfallRegistreringUnntak, utfallUtpeking) => (
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
+      ? utfallRegistreringUnntak
+      : utfallUtpeking
+  )
 );
