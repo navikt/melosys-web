@@ -1,7 +1,7 @@
 import * as selectors from './selectors';
 import MKV from '../../melosyskodeverk';
 
-describe('BehandlingsresultatSelectors', () => {
+describe('FlytSelectors', () => {
   describe('UtpekingVurderingSelector', () => {
     const lagState = behandlingstema => ({
       behandlinger: {
@@ -30,7 +30,7 @@ describe('BehandlingsresultatSelectors', () => {
         MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
         MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
       ],
-    ]).describe('UtpekginVurderingSelector med behandlingstema %p', (behandlingstema, forventet) => {
+    ]).describe('UtpekingVurderingSelector med behandlingstema %p', (behandlingstema, forventet) => {
       it(`returnerer ${forventet}`, () => {
         const state = lagState(behandlingstema);
         expect(selectors.UtpekingVurderingSelector(state)).toBe(forventet);

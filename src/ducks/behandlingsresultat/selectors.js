@@ -36,23 +36,13 @@ export const KontrollresultatBegrunnelseKoderSelector = createSelector(
   behandlingsresultat => behandlingsresultat.kontrollresultatBegrunnelseKoder
 );
 
-const UtfallRegistreringUnntakSelector = createSelector(
+export const UtfallRegistreringUnntakSelector = createSelector(
   BehandlingsresultatSelector,
   behandlingsresultat => behandlingsresultat.utfallRegistreringUnntak
 );
 
-const UtfallUtpekingSelector = createSelector(
+export const UtfallUtpekingSelector = createSelector(
   BehandlingsresultatSelector,
   behandlingsresultat => behandlingsresultat.utfallUtpeking
 );
 
-export const UtpekingVurderingSelector = createSelector(
-  state => BehandlingstemaKodeSelector(state),
-  UtfallRegistreringUnntakSelector,
-  UtfallUtpekingSelector,
-  (behandlingstema, utfallRegistreringUnntak, utfallUtpeking) => (
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
-      ? utfallRegistreringUnntak
-      : utfallUtpeking
-  )
-);
