@@ -31,8 +31,8 @@ export const HarLonnetArbeidAnnetLand = createSelector(
 
 export const UtpekingVurderingSelector = createSelector(
   state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  state => behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
-  state => behandlingsresultatSelectors.UtfallUtpekingSelector(state),
+  behandlingsresultatSelectors.UtfallRegistreringUnntakSelector,
+  behandlingsresultatSelectors.UtfallUtpekingSelector,
   (behandlingstema, utfallRegistreringUnntak, utfallUtpeking) => (
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
       ? utfallRegistreringUnntak

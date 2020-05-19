@@ -7,9 +7,6 @@
 
 import { createSelector } from 'reselect';
 
-import MKV from '../../melosyskodeverk';
-import { BehandlingstemaKodeSelector } from '../behandlinger/selectors';
-
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingsresultatSelector = createSelector(
   state => (state.behandlingsresultat ? state.behandlingsresultat.data : []),
