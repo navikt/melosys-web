@@ -228,7 +228,7 @@ const mapStateToProps = (state, ownProps) => ({
     tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
     lovvalgsland: ownProps.tilstand.lovvalgsland,
-    utpekingVurdering: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
+    utpekingVurdering: behandlingsresultatSelectors.UtfallUtpekingSelector(state),
     overgangsregelbestemmelser: behandlingsgrunnlagSelectors.OvergangsregelbestemmelserSelector(state).map(o => o.kode),
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
