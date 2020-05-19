@@ -12,6 +12,7 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import MKV from '../../../melosyskodeverk';
+import { konverterTilStegData as konverterVilkarTilStegData } from '../../../regler/vilkar';
 
 import SoknadslandListe from './inngang/soknadslandListe';
 
@@ -64,6 +65,7 @@ export const VurderingInngang = ({
   oppdaterData,
   oppfyllerInngangsvilkar,
   slettData,
+  inngangsvilkaar,
   inngangsvilkaar: {
     begrunnelseKoder: inngangsvilkaarBegrunnelser,
   },
@@ -74,11 +76,13 @@ export const VurderingInngang = ({
     opphold: soknadslandBegrunnelser,
   },
 }) => {
-  useEffect(() => (
-    function cleanup() {
+  useEffect(() => {
+    oppdaterData(konverterVilkarTilStegData(MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR, inngangsvilkaar));
+
+    return function cleanup() {
       slettData();
-    }
-  ), []);
+    };
+  }, []);
 
   return (
     <div className="vurderingInngang">
