@@ -34,6 +34,7 @@ import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
 import { Utenlandsopphold } from './utenlandsopphold';
 import { Utpekingsperiode, Utpekingsperioder } from './utpekingsperioder';
 import { Vedtakstype } from './vedtakstype';
+import { Vilkaar } from './vilkaar';
 import { Virksomhet } from './virksomhet';
 import { Yrkesgruppe } from './yrkesgruppe';
 
@@ -99,6 +100,7 @@ export {
   Utpekingsperioder,
   Vedlegg,
   Vedtakstype,
+  Vilkaar,
   Virksomhet,
   Vurdering,
 };

@@ -7,6 +7,8 @@ class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
+    const { inngangsvilkaar } = propsLight;
+
     this.kriterier = [];
     this.id = STEG.INNGANG;
     this.tittel = 'Inngang';
@@ -16,9 +18,11 @@ class Inngang extends Steg {
       alleLandkoder: _propsLight.landkoder,
       avklartefakta: _propsLight.avklartefakta,
       redigerbart: _propsLight.generiskStegRedigerbart,
+      oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(propsLight.inngangsvilkaar),
+      inngangsvilkaar,
     });
     this.beregnRelevantUI = _propsLight => {
-      const harAvklaring = this.harAvklaring(_propsLight.soknadslandFaktaer);
+      const harAvklaring = this.harAvklaring(propsLight.soknadslandFaktaer, inngangsvilkaar);
 
       return ({
         harAvklaring,
@@ -32,11 +36,19 @@ class Inngang extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  harAvklaring = avklartefakta => (
-    avklartefakta.some(enkeltFakta => (
+  harAvklaring = (avklartefakta, inngangsvilkaar) => {
+    const faktaAvklart = avklartefakta.some(enkeltFakta => (
       (enkeltFakta.referanse === KV.Koder.SOKNADSLAND) &&
       this.faktaErSannEllerIkkeArbeidsland(enkeltFakta.fakta)
-    ))
+    ));
+
+    const oppfyllerInngangsvilkaar = this.oppfyllerInngangsvilkaar(inngangsvilkaar);
+
+    return faktaAvklart && oppfyllerInngangsvilkaar;
+  }
+
+  oppfyllerInngangsvilkaar = inngangsvilkaar => (
+    inngangsvilkaar.oppfylt
   )
 
   faktaErSannEllerIkkeArbeidsland = fakta => (

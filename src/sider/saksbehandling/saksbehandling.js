@@ -118,13 +118,6 @@ class Saksbehandling extends Component {
     return false;
   };
 
-  lagreVilkarHandler = async () => {
-    const { behandlingID } = this.state;
-
-    const { sendVilkar, vilkar } = this.props;
-    sendVilkar(behandlingID, vilkar);
-  };
-
   lagreAvklartefaktaHandler = async () => {
     const { behandlingID } = this.state;
     const { sendAvklartefakta, avklartefakta } = this.props;
@@ -210,7 +203,7 @@ class Saksbehandling extends Component {
               <Saksopplysninger
                 behandlingID={behandlingID}
                 visOppfriskModal={visOppfriskModal}
-                lagreVilkarHandler={this.lagreVilkarHandler}
+                lagreVilkarHandler={this.props.lagreVilkar}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
                 lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
@@ -299,7 +292,7 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsPerioderState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
-  sendVilkar: PT.func.isRequired,
+  lagreVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   lagrePerioder: PT.func.isRequired,
@@ -388,15 +381,15 @@ const mapDispatchToProps = dispatch => ({
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
-  resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
+  resetVilkarState: () => dispatch(vilkarOperations.resetState()),
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsPerioderState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
-  sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
+  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
+  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
