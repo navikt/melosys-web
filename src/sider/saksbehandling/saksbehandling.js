@@ -118,13 +118,6 @@ class Saksbehandling extends Component {
     return false;
   };
 
-  lagreVilkarHandler = async () => {
-    const { behandlingID } = this.state;
-
-    const { lagreVilkar, vilkar } = this.props;
-    lagreVilkar(behandlingID, vilkar);
-  };
-
   lagreAvklartefaktaHandler = async () => {
     const { behandlingID } = this.state;
     const { sendAvklartefakta, avklartefakta } = this.props;
@@ -211,7 +204,7 @@ class Saksbehandling extends Component {
               <Saksopplysninger
                 behandlingID={behandlingID}
                 visOppfriskModal={visOppfriskModal}
-                lagreVilkarHandler={this.lagreVilkarHandler}
+                lagreVilkarHandler={this.props.lagreVilkar}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
                 lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
