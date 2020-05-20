@@ -22,9 +22,8 @@ describe('Varsler', () => {
     const varsler = shallow(<Varsler {...props} />);
     const lis = varsler.find('li');
 
-    expect(lis).toHaveLength(2);
+    expect(lis).toHaveLength(1);
     expect(lis.first().text()).toBe('Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.');
-    expect(lis.last().text()).toBe('Sjekk eventuelt at området dekkes av forordningen.');
   });
 
   it('Viser feilmelding ved ikke oppfylte inngangsvilkår', () => {
