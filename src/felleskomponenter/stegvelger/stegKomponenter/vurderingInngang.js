@@ -54,9 +54,14 @@ export const Varsler = ({
 };
 
 Varsler.propTypes = {
-  oppfyllerInngangsvilkar: PT.bool.isRequired,
-  inngangsvilkaarBegrunnelser: PT.arrayOf(PT.string).isRequired,
+  oppfyllerInngangsvilkar: PT.bool,
+  inngangsvilkaarBegrunnelser: PT.arrayOf(PT.string),
   inngangsvilkaar: MPT.Vilkaar.isRequired,
+};
+
+Varsler.defaultProps = {
+  oppfyllerInngangsvilkar: undefined,
+  inngangsvilkaarBegrunnelser: [],
 };
 
 export const VurderingInngang = ({

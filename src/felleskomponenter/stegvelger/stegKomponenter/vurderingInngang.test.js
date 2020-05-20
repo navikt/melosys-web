@@ -15,6 +15,9 @@ describe('Varsler', () => {
     props = {
       oppfyllerInngangsvilkar: true,
       inngangsvilkaarBegrunnelser: [],
+      inngangsvilkaar: {
+        oppfylt: true,
+      },
     };
   });
 
@@ -39,6 +42,18 @@ describe('Varsler', () => {
     expect(lis.first().text()).toBe('Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.');
     expect(lis.at(1).text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.MANGLER_STATSBORGERSKAP);
     expect(lis.last().text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL);
+  });
+
+  it('Viser feilmelding manglende inngangsvilkår', () => {
+    props.oppfyllerInngangsvilkar = undefined;
+    props.inngangsvilkaarBegrunnelser = undefined;
+    props.inngangsvilkaar = {};
+
+    const varsler = shallow(<Varsler {...props} />);
+    const lis = varsler.find('li');
+
+    expect(lis).toHaveLength(1);
+    expect(lis.first().text()).toBe('Teknisk feil, finner ingen inngangsvilkår.');
   });
 });
 
@@ -79,6 +94,7 @@ describe('VurderingInngang', () => {
     expect(varsler).toHaveLength(1);
     expect(varslerProps.oppfyllerInngangsvilkar).toBe(props.oppfyllerInngangsvilkar);
     expect(varslerProps.inngangsvilkaarBegrunnelser).toBe(props.inngangsvilkaar.begrunnelseKoder);
+    expect(varslerProps.inngangsvilkaar).toBe(props.inngangsvilkaar);
   });
 
   it('viser en fieldarray for søknadsland', () => {
