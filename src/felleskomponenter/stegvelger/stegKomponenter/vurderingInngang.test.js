@@ -1,7 +1,6 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import * as Mui from '../../ui';
 import * as Nav from '../../../utils/navFrontend';
 
 import MKV from '../../../melosyskodeverk';

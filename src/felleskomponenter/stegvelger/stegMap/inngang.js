@@ -47,9 +47,9 @@ class Inngang extends Steg {
     return faktaAvklart && oppfyllerInngangsvilkaar;
   }
 
-  oppfyllerInngangsvilkaar = inngangsvilkaar => {
-    return inngangsvilkaar.oppfylt;
-  }
+  oppfyllerInngangsvilkaar = inngangsvilkaar => (
+    inngangsvilkaar.oppfylt
+  )
 
   faktaErSannEllerIkkeArbeidsland = fakta => (
     fakta.includes(KV.Koder.SoknadslandFaktaTyper.SANN) ||
