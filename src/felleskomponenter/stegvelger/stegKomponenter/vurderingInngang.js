@@ -26,11 +26,6 @@ export const Varsler = ({
     'liste__element--ikkeoppfylt': !oppfyllerInngangsvilkar,
   });
 
-  const varselCl = classNames({
-    liste__element: true,
-    'liste__element--varsel': true,
-  });
-
   const oppfyltTekst = `Søknaden oppfyller${oppfyllerInngangsvilkar ? ' ' : ' ikke '}inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   return (
@@ -43,10 +38,6 @@ export const Varsler = ({
             {KV.kodeTilTerm(begrunnelseKode, MKV.KTObjects.begrunnelser.inngangsvilkaar)}
           </li>
         ))
-      }
-      {
-        oppfyllerInngangsvilkar &&
-        <li className={varselCl}>Sjekk eventuelt at området dekkes av forordningen.</li>
       }
     </ul>
   );
