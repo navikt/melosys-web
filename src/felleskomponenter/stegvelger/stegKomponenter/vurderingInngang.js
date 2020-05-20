@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
+import * as Utils from '../../../utils';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
@@ -19,6 +20,7 @@ import SoknadslandListe from './inngang/soknadslandListe';
 export const Varsler = ({
   oppfyllerInngangsvilkar,
   inngangsvilkaarBegrunnelser,
+  inngangsvilkaar,
 }) => {
   const oppfyllerInngangsvilkarCl = classNames({
     liste__element: true,
@@ -27,6 +29,14 @@ export const Varsler = ({
   });
 
   const oppfyltTekst = `Søknaden oppfyller${oppfyllerInngangsvilkar ? ' ' : ' ikke '}inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
+
+  if (Utils._isEmpty(inngangsvilkaar)) {
+    return (
+      <ul className="betingelser__liste">
+        <li className={oppfyllerInngangsvilkarCl}>Teknisk feil, finner ingen inngangsvilkår.</li>
+      </ul>
+    );
+  }
 
   return (
     <ul className="betingelser__liste">
@@ -46,6 +56,7 @@ export const Varsler = ({
 Varsler.propTypes = {
   oppfyllerInngangsvilkar: PT.bool.isRequired,
   inngangsvilkaarBegrunnelser: PT.arrayOf(PT.string).isRequired,
+  inngangsvilkaar: MPT.Vilkaar.isRequired,
 };
 
 export const VurderingInngang = ({
@@ -78,7 +89,11 @@ export const VurderingInngang = ({
   return (
     <div className="vurderingInngang">
       <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
-      <Varsler oppfyllerInngangsvilkar={oppfyllerInngangsvilkar} inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser} />
+      <Varsler
+        oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
+        inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser}
+        inngangsvilkaar={inngangsvilkaar}
+      />
       <FieldArray
         name="avklartefakta.soknadsland"
         component={SoknadslandListe}
