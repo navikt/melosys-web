@@ -85,7 +85,7 @@ export const VurderingInngang = ({
         avklartefakta={avklartefakta}
         soknadslandBegrunnelser={soknadslandBegrunnelser}
         alleLandkoder={alleLandkoder}
-        redigerbart={redigerbart}
+        redigerbart={redigerbart && oppfyllerInngangsvilkar}
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
