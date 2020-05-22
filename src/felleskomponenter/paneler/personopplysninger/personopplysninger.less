@@ -63,50 +63,6 @@
   }
 }
 
-.expandableList {
-  margin-bottom: 1em;
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 0.5em;
-
-    thead {
-      border-bottom: 1px solid @gray;
-    }
-
-    th {
-      text-align: left;
-    }
-
-    td {
-      padding: .3em .2em;
-      vertical-align: top;
-      border-bottom: 1px solid @gray;
-    }
-
-    .adresseTittel {
-      width: 50%;
-    }
-  }
-
-  .btnContainer {
-    display: flex;
-    justify-content: flex-end;
-
-    button {
-      text-decoration: underline;
-      display: block;
-      border:0;
-      padding:0;
-      outline: 0;
-      background: transparent;
-      color: @blue-nav;
-      cursor: pointer;
-    }
-  }
-}
-
 .knappMedIkon {
   display: flex;
   flex-direction: row;
@@ -123,5 +79,27 @@
     path {
       stroke: white;
     }
+  }
+}
+
+.adresseHeader {
+  thead {
+    border-bottom: 1px solid @gray;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  .adresseTittel {
+    width: 50%;
+  }
+}
+
+.adresseRad {
+  td {
+    padding: .3em .2em;
+    vertical-align: top;
+    border-bottom: 1px solid @gray;
   }
 }

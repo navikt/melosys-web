@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import uuid from 'uuid';
@@ -20,11 +20,12 @@ import StrukturertAdresse from '../../adresser/strukturertAdresse';
 import UstrukturertAdresse from '../../adresser/ustrukturertAdresse';
 import OppgittAdresseSoknad from './oppgittAdresseSoknad';
 import UtenlandskIdent from './utenlandskIdent';
+import ExpandableTable from './expandableTable';
+
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 import './personopplysninger.css';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
-import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
   const personStatusKode = KV.objektTilKode(personStatus);
@@ -49,7 +50,7 @@ PersonMerkelapper.defaultProps = {
 };
 
 export const AdresseRad = ({ periode: { fom, tom }, adresseKomponent }) => (
-  <tr>
+  <tr className="adresseRad">
     <td>
       { adresseKomponent }
     </td>
@@ -75,7 +76,7 @@ AdresseRad.defaultProps = {
 };
 
 export const AdresseHeader = ({ adresseTittel }) => (
-  <thead>
+  <thead className="adresseHeader">
     <tr>
       <th className="adresseTittel">{adresseTittel}</th>
       <th>Fra og med</th>
@@ -88,62 +89,7 @@ AdresseHeader.propTypes = {
   adresseTittel: PT.string.isRequired,
 };
 
-export const ExpandableTable = props => {
-  const {
-    renderElement, elements, header, amountOfItemsCollapsed, btnTextExpanded, btnTextCollapsed, chevron, expandable,
-  } = props;
-
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
-
-  const chevronDirection = collapsed ? 'ned' : 'opp';
-  const btnText = collapsed ? btnTextCollapsed : btnTextExpanded;
-
-  const renderableElements = collapsed ? elements.slice(0, amountOfItemsCollapsed) : elements;
-
-  return (
-    <div className="expandableList">
-      <table>
-        {header}
-        <tbody>
-          {
-            renderableElements.map(renderElement)
-          }
-        </tbody>
-      </table>
-      <div className="btnContainer">
-        {
-          expandable &&
-          <button type="button" onClick={toggleCollapsed}>
-            {btnText}
-            { chevron && <Nav.Chevron type={chevronDirection} />}
-          </button>
-        }
-      </div>
-    </div>
-  );
-};
-
-ExpandableTable.propTypes = {
-  renderElement: PT.func.isRequired,
-  header: PT.node.isRequired,
-  elements: PT.array.isRequired,
-  amountOfItemsCollapsed: PT.number.isRequired,
-  btnTextExpanded: PT.string.isRequired,
-  btnTextCollapsed: PT.string.isRequired,
-  chevron: PT.bool,
-  expandable: PT.bool,
-};
-
-ExpandableTable.defaultProps = {
-  chevron: false,
-  expandable: true,
-};
-
-class Personopplysninger extends Component {
+export class Personopplysninger extends Component {
   state = {
     visAnnenAdresseFelterKnappKlikket: false,
   };
@@ -261,26 +207,16 @@ class Personopplysninger extends Component {
 }
 
 Personopplysninger.propTypes = {
-  registrering: PT.bool,
   redigerbart: PT.bool.isRequired,
-  medfolgendeAndre: MPT.Behandlinger.Saksopplysninger.Person,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   personhistorikk: MPT.Personhistorikk.isRequired,
-  personOpplysninger: PT.object.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
 
-Personopplysninger.defaultProps = {
-  registrering: undefined,
-  medfolgendeAndre: {},
-};
-
 const mapStateToProps = state => ({
-  personOpplysninger: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
-  medfolgendeAndre: behandlingsgrunnlagSelectors.MedfolgendeAndreSelector(state),
 });
 
 export default connect(mapStateToProps)(Personopplysninger);
