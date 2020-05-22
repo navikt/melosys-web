@@ -1,9 +1,15 @@
+@import '../../../constants';
 @import '../../../utils/mixins';
 
 .personopplysninger {
 
   .person__seksjon {
     .seksjonmixin();
+
+    .navn {
+      padding-bottom: 5px;
+      border-bottom: 1px solid @gray;
+    }
   }
 
   .personopplysninger__panelheader {

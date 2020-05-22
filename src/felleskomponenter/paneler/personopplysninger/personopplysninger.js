@@ -10,7 +10,7 @@ import * as Mui from '../../../felleskomponenter/ui';
 import * as MPT from '../../../proptypes';
 import * as Ikoner from '../../../resources/images';
 
-import { beregnAlder, formatterDatoTilNorsk } from '../../../utils/dato';
+import { formatterDatoTilNorsk } from '../../../utils/dato';
 
 import PersonInfo from '../../personInfo';
 import PanelHeader from '../../panelHeader/panelHeader';
@@ -25,14 +25,6 @@ import './personopplysninger.css';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-
-const ikonFraKjonn = kjoenn => {
-  switch (kjoenn) {
-    case 'K': { return Ikoner.Kvinne; }
-    case 'M': { return Ikoner.Mann; }
-    default: { return Ikoner.Ukjentkjoenn; }
-  }
-};
 
 const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
   const personStatusKode = KV.objektTilKode(personStatus);
@@ -171,10 +163,7 @@ class Personopplysninger extends Component {
     const { settVisAnnenAdresseFelterKnappKlikketTrue } = this;
 
     const {
-      fnr,
-      kjoenn,
       sammensattNavn,
-      foedselsdato,
       personStatus,
       erEgenAnsatt,
     } = person;
@@ -190,11 +179,16 @@ class Personopplysninger extends Component {
         <Nav.EkspanderbartpanelBase
           heading={
             <div className="personopplysninger__panelheader">
-              <PanelHeader ikon={ikonFraKjonn(KV.objektTilKode(kjoenn))} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
+              <PanelHeader tittel="Informasjon om bruker" />
               <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
             </div>}
           ariaTittel="Panel for personinformasjon">
           <Nav.Container fluid>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="12">
+                <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={sammensattNavn} className="navn" />
+              </Nav.Column>
+            </Nav.Row>
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="6">
                 <PersonInfo person={person} />
