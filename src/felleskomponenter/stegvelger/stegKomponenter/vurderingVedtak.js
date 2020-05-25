@@ -27,6 +27,15 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../
 
 import './vurderingVedtak.css';
 
+const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
+  if (lovvalgsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A &&
+    tilleggsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1) {
+    return `${KV.objektTilTerm(tilleggsbestemmelse)} og ${KV.objektTilTerm(lovvalgsbestemmelse)}`;
+  }
+
+  return KV.objektTilTerm(lovvalgsbestemmelse);
+};
+
 const VurderingVedtak = ({
   lovvalgsperioder,
   soknadsland,
@@ -47,11 +56,13 @@ const VurderingVedtak = ({
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
-    fomDato, tomDato, lovvalgsbestemmelse,
+    fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse,
   } = lovvalget;
 
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+  const tilleggBestemmelseSomKodeTerm = KV.finnEnkeltKodeFraListe(tilleggBestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+  const lovvalgSomTerm = finnLovvalgSomTerm(lovvalgSomKodeTerm, tilleggBestemmelseSomKodeTerm);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering;
   const fattVedtakDisabled = !redigerbart;
@@ -80,7 +91,7 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
-      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter { KV.objektTilTerm(lovvalgSomKodeTerm) }</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}</Nav.typo.Undertittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
           <Nav.Column xs="6">
