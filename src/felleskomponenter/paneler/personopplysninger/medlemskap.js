@@ -1,13 +1,11 @@
 import React from 'react';
 import PT from 'prop-types';
 
-import * as KV from '../../kodeverk';
-import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes';
-import * as Ikoner from '../../resources/images';
+import * as KV from '../../../kodeverk';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
 
-import PanelHeader from '../panelHeader/panelHeader';
-import DatoOmrade from '../datoOmrade/datoOmrade';
+import DatoOmrade from '../../datoOmrade/datoOmrade';
 
 import './medlemskap.css';
 
@@ -18,7 +16,7 @@ const uuid = require('uuid/v4');
  *
  * @constructor
  */
-function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
+export function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
   const {
     periode,
     periodetype,
@@ -76,7 +74,7 @@ MedlemskapEnkeltPeriode.propTypes = {
  * hvor søkeren har eller ikke har medlemskap. Dette kan være avgjørende for vurdering av søknaden.
  *
  */
-function MedlemskapGruppe(props) {
+export function MedlemskapGruppe(props) {
   const { perioder, overskrift } = props;
 
   return (
@@ -84,7 +82,7 @@ function MedlemskapGruppe(props) {
       <Nav.typo.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
       <section aria-label="Panel for medlemskap">
         { perioder.map(enkeltPeriode => <MedlemskapEnkeltPeriode key={uuid()} enkeltPeriode={enkeltPeriode} />) }
-        { perioder.length === 0 && '(ingen funnet)'}
+        { perioder.length === 0 && '(ingen data funnet)'}
       </section>
     </div>
   );
@@ -108,17 +106,9 @@ const Medlemskap = props => {
 
   return (
     <div className="medlemskap panelSeksjon">
-      <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Medlemskap} tittel={KV.Paneltitler.medlemskap} undertittel="" />}
-        ariaTittel="Panel for medlemskap">
-        <section aria-label="Panel for medlemskap">
-          <Nav.Container fluid>
-            <MedlemskapGruppe perioder={medlemskap.perioderMed} overskrift="Perioder med medlemskap" />
-            <MedlemskapGruppe perioder={medlemskap.perioderUten} overskrift="Perioder uten medlemskap" />
-            <MedlemskapGruppe perioder={medlemskap.perioderUavklart} overskrift="Perioder med uavklart medlemskap" />
-          </Nav.Container>
-        </section>
-      </Nav.EkspanderbartpanelBase>
+      <MedlemskapGruppe perioder={medlemskap.perioderMed} overskrift="Perioder med medlemskap" />
+      <MedlemskapGruppe perioder={medlemskap.perioderUten} overskrift="Perioder uten medlemskap" />
+      <MedlemskapGruppe perioder={medlemskap.perioderUavklart} overskrift="Perioder med uavklart medlemskap" />
     </div>
   );
 };

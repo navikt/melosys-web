@@ -11,16 +11,13 @@ import ArbeidUtland from './paneler/arbeidutland';
 import ForetakUtland from './paneler/foretakutland';
 import Inntekt from './paneler/inntektUtland';
 import MaritimtArbeid from './paneler/maritimtArbeid';
-import Medlemskap from './paneler/medlemskap';
 import Soknadsperiode from './paneler/soknadsperiode';
 import Personopplysninger from './paneler/personopplysninger';
 import SelvstendigArbeid from './paneler/selvstendigarbeid';
 import VirksomhetNorge from './paneler/virksomhetNorge';
 import FullmektigPanel from './paneler/fullmektig';
-import Kontantytelser from './paneler/kontantytelser';
 
 import { fagsakSelectors } from '../ducks/fagsaker';
-import { behandlingerSelectors } from '../ducks/behandlinger';
 import { behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
 import { saksopplysningerOperations } from '../ducks/saksopplysninger';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../ducks/behandlingsgrunnlag';
@@ -33,7 +30,6 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
 const Soknadpaneler = ({
   lagreSoknad,
   fagsaker,
-  medlemskap,
   soknadArbeidsinntekt,
   soknadForm,
   oppgittAdresseHarVerdier,
@@ -61,9 +57,7 @@ const Soknadpaneler = ({
       <ArbeidUtland />
       <VirksomhetNorge />
       <MaritimtArbeid />
-      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
       <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
-      <Kontantytelser />
     </form>
   );
 };
@@ -73,7 +67,6 @@ Soknadpaneler.propTypes = {
   fagsaker: MPT.Fagsak.isRequired,
   lagreSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  medlemskap: MPT.Medlemskap,
   soknadArbeidsinntekt: PT.object,
   behandlingID: PT.number.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
@@ -82,7 +75,6 @@ Soknadpaneler.propTypes = {
 
 Soknadpaneler.defaultProps = {
   soknadForm: {},
-  medlemskap: {},
   soknadArbeidsinntekt: {},
 };
 
@@ -90,7 +82,6 @@ const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
-  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   soknadArbeidsinntekt: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,

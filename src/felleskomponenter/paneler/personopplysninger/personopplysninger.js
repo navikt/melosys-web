@@ -21,6 +21,8 @@ import UstrukturertAdresse from '../../adresser/ustrukturertAdresse';
 import OppgittAdresseSoknad from './oppgittAdresseSoknad';
 import UtenlandskIdent from './utenlandskIdent';
 import ExpandableTable from './expandableTable';
+import Medlemskap from './medlemskap';
+import Kontantytelser from './kontantytelser';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
@@ -102,6 +104,7 @@ export class Personopplysninger extends Component {
       person,
       personhistorikk,
       oppgittAdresseHarVerdier,
+      medlemskap,
     } = this.props;
 
     const { visAnnenAdresseFelterKnappKlikket } = this.state;
@@ -125,14 +128,14 @@ export class Personopplysninger extends Component {
         <Nav.EkspanderbartpanelBase
           heading={
             <div className="personopplysninger__panelheader">
-              <PanelHeader tittel="Informasjon om bruker" />
+              <PanelHeader tittel={KV.Paneltitler.informasjonOmBruker} />
               <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
             </div>}
           ariaTittel="Panel for personinformasjon">
           <Nav.Container fluid>
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
-                <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={sammensattNavn} className="navn" />
+                <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={sammensattNavn} className="undertittel" />
               </Nav.Column>
             </Nav.Row>
             <Nav.Row className="person__seksjon">
@@ -199,6 +202,26 @@ export class Personopplysninger extends Component {
               !visAnnenAdresseFelter &&
               <Mui.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterKnappKlikketTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Mui.Knapp>
             }
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="12">
+                <Mui.Undertittel ikon={Ikoner.Medlemskap} tekst="Medlemskap" className="undertittel" />
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="12">
+                <Medlemskap medlemskap={medlemskap} />
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="12">
+                <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Paneltitler.kontantytelser} className="undertittel" />
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="12">
+                <Kontantytelser />
+              </Nav.Column>
+            </Nav.Row>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -211,12 +234,18 @@ Personopplysninger.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   personhistorikk: MPT.Personhistorikk.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
+  medlemskap: MPT.Medlemskap,
+};
+
+Personopplysninger.defaultProps = {
+  medlemskap: {},
 };
 
 const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
 });
 
 export default connect(mapStateToProps)(Personopplysninger);

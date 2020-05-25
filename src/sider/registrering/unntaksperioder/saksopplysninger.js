@@ -32,7 +32,6 @@ const Saksopplysninger = ({
   behandlingID,
   redigerbart,
   history,
-  medlemskap,
   sed,
   sedLovvalgsperiode,
   vurderingBegrunnelser,
@@ -372,7 +371,7 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      <Paneler medlemskap={medlemskap} />
+      <Paneler />
     </div>
   );
 };
@@ -381,7 +380,6 @@ const Saksopplysninger = ({
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  medlemskap: MPT.Medlemskap,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
   vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   skjema: PT.any,
@@ -398,7 +396,6 @@ Saksopplysninger.propTypes = {
 };
 
 Saksopplysninger.defaultProps = {
-  medlemskap: {},
   sed: {},
   skjema: {},
   sedLovvalgsperiode: {},

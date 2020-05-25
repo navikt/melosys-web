@@ -11,3 +11,5 @@ export const arbeidsgiverINorge = navn => `Arbeidsgiver i Norge: ${navn}`;
 export const fraKilde = kilde => kilde && `(fra ${kilde})`;
 export const kontantytelser = 'Kontantytelser fra NAV';
 export const personopplysningspanel = 'Personopplysningspanel';
+
+export const informasjonOmBruker = 'Informasjon om bruker';

@@ -7,6 +7,7 @@ import ExpandableTable from './expandableTable';
 import PersonInfo from '../../personInfo';
 import UtenlandskIdent from './utenlandskIdent';
 import OppgittAdresseSoknad from './oppgittAdresseSoknad';
+import Medlemskap from './medlemskap';
 
 describe('Personopplysninger', () => {
   let props = null;
@@ -72,15 +73,16 @@ describe('Personopplysninger', () => {
           },
         ],
       },
+      medlemskap: {},
     };
   });
 
   it('viser undertittel med søkers navn', () => {
     const personopplysninger = shallow(<Personopplysninger {...props} />);
-    const undertittel = personopplysninger.find(Mui.Undertittel);
+    const undertittel = personopplysninger
+      .findWhere(n => n.type() === Mui.Undertittel && n.props().tekst === props.person.sammensattNavn);
 
     expect(undertittel).toHaveLength(1);
-    expect(undertittel.props().tekst).toBe(props.person.sammensattNavn);
   });
 
   it('viser PersonInfo', () => {
@@ -137,6 +139,14 @@ describe('Personopplysninger', () => {
 
     const oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
     expect(oppgittAdresseSoknad).toHaveLength(1);
+  });
+
+  it('viser medlemskap', () => {
+    const personopplysninger = shallow(<Personopplysninger {...props} />);
+    const medlemskap = personopplysninger.find(Medlemskap);
+
+    expect(medlemskap).toHaveLength(1);
+    expect(medlemskap.props().medlemskap).toBe(props.medlemskap);
   });
 });
 
