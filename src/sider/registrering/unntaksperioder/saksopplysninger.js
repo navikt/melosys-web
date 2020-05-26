@@ -271,17 +271,16 @@ const Saksopplysninger = ({
             <Nav.typo.Systemtittel>Registrering av unntaksperioder</Nav.typo.Systemtittel>
             <br />
             <div className="vurderingEndrePeriode">
-              <Nav.Row className="seksjon">
-                <Nav.Column xs="12">
-                  {
-                    vurderingBegrunnelser.length > 0 &&
+              { vurderingBegrunnelser.length > 0 &&
+                <Nav.Row className="seksjon">
+                  <Nav.Column xs="12">
                     <Fragment>
                       <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                     </Fragment>
-                  }
-                </Nav.Column>
-              </Nav.Row>
+                  </Nav.Column>
+                </Nav.Row>
+              }
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>

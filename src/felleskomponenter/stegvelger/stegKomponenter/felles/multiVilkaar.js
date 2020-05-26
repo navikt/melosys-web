@@ -53,6 +53,10 @@ class MultiVilkaar extends Component {
     oppdaterData(lagBegrunnelse(id, null, value));
   };
 
+  hentAvslagBegrunnelser = () => (
+    this.props.vilkaar16 ? (this.props.vilkaar16.begrunnelseKoder || []) : []
+  );
+
   render () {
     const {
       redigerbart, vilkaar12, vilkaarKode12, vilkaarNavn12, begrunnelser12, vilkaar16,
@@ -61,6 +65,7 @@ class MultiVilkaar extends Component {
     const innvilgelse = vilkaar12.oppfylt;
     const anmodningOmUnntak = vilkaar12.oppfylt === false && vilkaar16.oppfylt === true;
     const avslag = vilkaar12.oppfylt === false && vilkaar16.oppfylt === false;
+    const visFritekstfelt = this.hentAvslagBegrunnelser().includes(MKV.Koder.begrunnelser.art16_1_avslag.SAERLIG_AVSLAGSGRUNN);
 
     return (
       <div>
@@ -120,15 +125,17 @@ class MultiVilkaar extends Component {
                     defaultElementer={vilkaar16.begrunnelseKoder}
                     disabled={!redigerbart}
                   />
-                  <Nav.Textarea
-                    id="art16_1_avslag"
-                    label="Begrunnelse for avslag (fritekst):"
-                    maxLength={255}
-                    bredde="fullbredde"
-                    value={vilkaar16.begrunnelseFritekst || ''}
-                    onChange={this.fritekstEndret}
-                    disabled={!redigerbart}
-                  />
+                  { visFritekstfelt &&
+                    <Nav.Textarea
+                      id="art16_1_avslag"
+                      label="Begrunnelse for avslag (fritekst):"
+                      maxLength={255}
+                      bredde="fullbredde"
+                      value={vilkaar16.begrunnelseFritekst || ''}
+                      onChange={this.fritekstEndret}
+                      disabled={!redigerbart}
+                    />
+                  }
                 </Nav.Fieldset>
               )}
             </Nav.Column>

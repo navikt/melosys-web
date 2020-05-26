@@ -261,7 +261,7 @@ const Saksopplysninger = ({
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.typo.Systemtittel>Behandle anmodning om unntak</Nav.typo.Systemtittel>
+            <Nav.typo.Systemtittel>Vurder anmodning om unntak</Nav.typo.Systemtittel>
             <br />
             <div className="vurderUnntaksperiode">
               <Nav.Row className="seksjon">
@@ -275,17 +275,17 @@ const Saksopplysninger = ({
                   <DatoOmradeMedVarighet periode={sed.lovvalgsperiode} label="Søknadsperiode" />
                 </Nav.Column>
               </Nav.Row>
-              <Nav.Row className="seksjon">
-                <Nav.Column xs="12">
-                  {
-                    vurderingBegrunnelser.length > 0 &&
+              {
+                vurderingBegrunnelser.length > 0 &&
+                <Nav.Row className="seksjon">
+                  <Nav.Column xs="12">
                     <Fragment>
                       <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                     </Fragment>
-                  }
-                </Nav.Column>
-              </Nav.Row>
+                  </Nav.Column>
+                </Nav.Row>
+              }
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
@@ -331,7 +331,7 @@ const Saksopplysninger = ({
                           <Nav.Column xs="6">
                             <Nav.Textarea
                               disabled={!redigerbart}
-                              label="Skriv inn begrunnelse for delvis innvilgelse..."
+                              label="Skriv begrunnelse til SED"
                               onChange={textAreaOnChange}
                               value={begrunnelseFritekst}
                               maxLength={255}
@@ -356,7 +356,7 @@ const Saksopplysninger = ({
                   <Nav.Column xs="6">
                     <Nav.Textarea
                       disabled={!redigerbart}
-                      label="Skriv inn begrunnelse for avslaget..."
+                      label="Skriv begrunnelse til SED"
                       onChange={textAreaOnChange}
                       value={begrunnelseFritekst}
                       maxLength={255}
