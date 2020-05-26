@@ -72,7 +72,7 @@ Forretningsstedet.defaultProps = {
 };
 
 
-const Forretningssteder = props => {
+export const Forretningssteder = props => {
   const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
   const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
@@ -109,13 +109,20 @@ Forretningssteder.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-const VurderingForretningssted = props => {
+export const VurderingForretningssted = props => {
   const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
+    bekreftOgFortsett,
+    tilstand,
+    redigerbart,
+    oppdaterData,
+    slettData,
   } = props;
 
   const {
-    omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring,
+    omfattetINorge,
+    omfattetILand,
+    lovvalgsbestemmelse,
+    harAvklaring,
   } = tilstand;
 
   const stegetsLovvalgsbestemmelser = [
@@ -232,24 +239,22 @@ const VurderingForretningssted = props => {
 
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  tilstand: PT.object,
+  tilstand: PT.shape({
+    omfattetINorge: PT.object,
+    omfattetILand: PT.object,
+    lovvalgsbestemmelse: PT.string,
+    harAvklaring: PT.bool.isRequired,
+  }).isRequired,
   valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
-  avklartForretningsland: PT.array,
-  omfattetINorge: PT.object,
-  omfattetILand: PT.object,
-  lovvalgsbestemmelse: PT.string,
+  avklarteForretningsland: PT.array,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
 };
 
 VurderingForretningssted.defaultProps = {
-  tilstand: {},
   valgteVirksomheter: [],
-  avklartForretningsland: [],
-  omfattetINorge: {},
-  omfattetILand: {},
-  lovvalgsbestemmelse: null,
+  avklarteForretningsland: [],
 };
 
 export default VurderingForretningssted;

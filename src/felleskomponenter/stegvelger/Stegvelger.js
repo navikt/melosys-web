@@ -594,7 +594,7 @@ const mapStateToProps = state => ({
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
-  valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
+  valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),

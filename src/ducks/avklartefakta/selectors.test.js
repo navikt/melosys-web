@@ -389,4 +389,127 @@ describe('Avklartefaktaselectors', () => {
       expect(selectors.ErIArtikkel13_1FlytSelector(state)).toEqual(forventetResultat);
     });
   });
+
+  describe('AvklarteVirksomheterIkkeNaeringsdrivendeSelector', () => {
+    const { resultFunc } = selectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector;
+
+    it('throw error hvis avklart virksomhet ikke tilhører foretak eller organisasjon', () => {
+      const alleAvklarteVirksomhetFaktaer = [
+        {
+          subjektID: '1',
+        },
+      ];
+      const fagsakOrganisasjoner = [];
+      const soknadOrganisasjoner = [];
+      const foretakUtland = [];
+      const selvstendigArbeidForetak = [];
+
+      expect(() => {
+        resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak);
+      }).toThrow();
+    });
+
+    it('selvstendige foretakUtland returneres ikke', () => {
+      const alleAvklarteVirksomhetFaktaer = [
+        {
+          subjektID: '1',
+        },
+      ];
+      const fagsakOrganisasjoner = [];
+      const soknadOrganisasjoner = [];
+      const foretakUtland = [
+        {
+          uuid: '1',
+          selvstendigNaeringsvirksomhet: true,
+        },
+      ];
+      const selvstendigArbeidForetak = [];
+
+      const forventetResultat = [];
+
+      expect(resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
+    });
+
+    it('ikke-selvstendige foretakUtland returneres', () => {
+      const alleAvklarteVirksomhetFaktaer = [
+        {
+          subjektID: '1',
+        },
+      ];
+      const fagsakOrganisasjoner = [];
+      const soknadOrganisasjoner = [];
+      const foretakUtland = [
+        {
+          uuid: '1',
+          selvstendigNaeringsvirksomhet: false,
+          adresse: {},
+        },
+      ];
+      const selvstendigArbeidForetak = [];
+
+      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak);
+
+      expect(resultat[0].virksomhetId).toBe('1');
+    });
+
+    it('selvstendige arbeid foretak returneres ikke', () => {
+      const alleAvklarteVirksomhetFaktaer = [
+        {
+          subjektID: '1',
+        },
+      ];
+      const fagsakOrganisasjoner = [];
+      const soknadOrganisasjoner = [
+        {
+          orgnr: '1',
+        },
+      ];
+      const foretakUtland = [];
+      const selvstendigArbeidForetak = [
+        {
+          orgnr: '1',
+        },
+      ];
+
+      const forventetResultat = [];
+
+      expect(resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
+    });
+
+    it('virksomheter som finnes blant organisasjoner returneres', () => {
+      const alleAvklarteVirksomhetFaktaer = [
+        {
+          subjektID: '1',
+        },
+        {
+          subjektID: '2',
+        },
+      ];
+      const fagsakOrganisasjoner = [
+        {
+          orgnr: '2',
+          forretningsadresse: {},
+        },
+      ];
+      const soknadOrganisasjoner = [
+        {
+          orgnr: '1',
+          forretningsadresse: {},
+        },
+      ];
+      const foretakUtland = [];
+      const selvstendigArbeidForetak = [];
+
+      const forventetResultat = [
+        {
+          virksomhetId: '1',
+        },
+        {
+          virksomhetId: '2',
+        },
+      ];
+
+      expect(resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toMatchObject(forventetResultat);
+    });
+  });
 });
