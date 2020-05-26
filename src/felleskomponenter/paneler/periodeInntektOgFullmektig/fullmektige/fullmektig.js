@@ -1,13 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import PT from 'prop-types';
 
-import MKV from '../../../melosyskodeverk';
+import MKV from '../../../../melosyskodeverk';
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Utils from '../../../utils';
+import * as Nav from '../../../../utils/navFrontend';
+import * as Utils from '../../../../utils';
 
-import Kontaktopplysninger from '../../kontaktopplysninger';
-import OrganisasjonsAdresse from '../../adresser/organisasjonsAdresse';
+import Kontaktopplysninger from '../../../kontaktopplysninger';
+import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
 import SokFullmektigOrg from './sokFullmektigOrg';
 
 import './fullmektig.css';

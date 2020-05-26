@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import PT from 'prop-types';
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from '../../../../utils/navFrontend';
 
-import { erOrgnrGyldig } from '../../skjema/validering/generisk/organisasjon';
+import { erOrgnrGyldig } from '../../../skjema/validering/generisk/organisasjon';
 
-
-import './fullmektig.css';
+import './sokFullmektigOrg.css';
 
 function SokFullmektigOrg(props) {
   const { lagreNyFullmektigOgOppdaterLokalt } = props;
@@ -27,10 +26,10 @@ function SokFullmektigOrg(props) {
   };
 
   return (
-    <Nav.Row>
+    <Nav.Row className="sokFullmektigOrg">
       <Nav.Column xs="9">
         <Nav.Input
-          label="Organisasjonsnummer"
+          label="Skriv inn organisasjonsnummer"
           placeholder="Skriv inn..."
           onChange={vedEndretInput}
           value={orgnr}

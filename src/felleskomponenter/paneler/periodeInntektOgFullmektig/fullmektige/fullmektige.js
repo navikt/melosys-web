@@ -2,23 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import MKV from '../../../melosyskodeverk';
+import MKV from '../../../../melosyskodeverk';
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Ikoner from '../../../resources/images';
-import * as Api from '../../../services/api';
-import * as Utils from '../../../utils';
-import * as KV from '../../../kodeverk';
-import * as MPT from '../../../proptypes';
+import * as Nav from '../../../../utils/navFrontend';
+import * as Api from '../../../../services/api';
+import * as Utils from '../../../../utils';
+import * as MPT from '../../../../proptypes';
 
-import PanelHeader from '../../panelHeader/panelHeader';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { fagsakSelectors } from '../../../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 
-import { redigerbartSelectors } from '../../../ducks/redigerbart';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import Fullmektig from './fullmektig';
-import './fullmektig.css';
 
 const aktoerTemplate = {
   aktoerID: undefined,
@@ -30,7 +26,7 @@ const aktoerTemplate = {
   utenlandskPersonID: undefined,
 };
 
-class FullmektigPanel extends Component {
+export class Fullmektige extends Component {
   state = {
     fullmektige: [],
     disableLeggTilFullmektig: false,
@@ -86,7 +82,7 @@ class FullmektigPanel extends Component {
     const { saksnummer } = fagsak;
     try {
       if (!saksnummer) {
-        throw new Error('fagsak.saksnummer er undefined', 'fullmektigPanel', '89');
+        throw new Error('fagsak.saksnummer er undefined', 'fullmektige', '89');
       }
       const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
       this.setState({ fullmektige });
@@ -116,38 +112,30 @@ class FullmektigPanel extends Component {
 
     const { disableLeggTilFullmektig, fullmektige } = this.state;
 
-    const panelIkon = fullmektige.some(fullmektig => fullmektig.orgnr) ? Ikoner.Ferdig : Ikoner.Ubehandlet;
-
     return (
-      <div>
-        <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.fullmektig} />}
-          ariaTittel="Opplysninger om fullmektig">
-          <Nav.Container fluid>
-            {fullmektige.map((fullmektig, index) => (
-              <Fullmektig
-                key={fullmektig.databaseID}
-                index={index}
-                databaseID={fullmektig.databaseID}
-                redigerbart={redigerbart}
-                fullmektig={fullmektig}
-                lagreFullmektig={lagreFullmektig}
-                slettAktoer={slettAktoer}
-                slettFullmektigLokalt={slettFullmektigLokalt}
-                lagreNyFullmektigOgOppdaterLokalt={lagreNyFullmektigOgOppdaterLokalt}
-                hentOrg={hentOrg}
-                settRepresentant={settRepresentant}
-              />
-            ))}
-            <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="standard">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
-          </Nav.Container>
-        </Nav.EkspanderbartpanelBase>
-      </div>
+      <Nav.Container fluid>
+        {fullmektige.map((fullmektig, index) => (
+          <Fullmektig
+            key={fullmektig.databaseID}
+            index={index}
+            databaseID={fullmektig.databaseID}
+            redigerbart={redigerbart}
+            fullmektig={fullmektig}
+            lagreFullmektig={lagreFullmektig}
+            slettAktoer={slettAktoer}
+            slettFullmektigLokalt={slettFullmektigLokalt}
+            lagreNyFullmektigOgOppdaterLokalt={lagreNyFullmektigOgOppdaterLokalt}
+            hentOrg={hentOrg}
+            settRepresentant={settRepresentant}
+          />
+        ))}
+        <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="standard">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
+      </Nav.Container>
     );
   }
 }
 
-FullmektigPanel.propTypes = {
+Fullmektige.propTypes = {
   fagsak: MPT.Fagsak.isRequired,
   hentOrg: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
@@ -167,8 +155,8 @@ const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer
 const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
 const slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
 
-const SokersFullmektigWrapper = props => (
-  <FullmektigPanel
+const FullmektigeWrapper = props => (
+  <Fullmektige
     {...props}
     lagreAktoer={lagreAktoer}
     hentAktoer={hentAktoer}
@@ -176,5 +164,5 @@ const SokersFullmektigWrapper = props => (
     slettAktoer={slettAktoer}
   />
 );
-export { FullmektigPanel };
-export default connect(mapStateToProps)(SokersFullmektigWrapper);
+
+export default connect(mapStateToProps)(FullmektigeWrapper);

@@ -13,3 +13,4 @@ export const kontantytelser = 'Kontantytelser fra NAV';
 export const personopplysningspanel = 'Personopplysningspanel';
 
 export const informasjonOmBruker = 'Informasjon om bruker';
+export const periodeInntektOgFullmektig = 'Opplysninger om periode, inntekt og fullmektig';

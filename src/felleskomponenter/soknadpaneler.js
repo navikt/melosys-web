@@ -9,13 +9,11 @@ import * as KV from '../kodeverk';
 import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
 import ArbeidUtland from './paneler/arbeidutland';
 import ForetakUtland from './paneler/foretakutland';
-import Inntekt from './paneler/inntektUtland';
 import MaritimtArbeid from './paneler/maritimtArbeid';
-import Soknadsperiode from './paneler/soknadsperiode';
 import Personopplysninger from './paneler/personopplysninger';
+import PeriodeInntektOgFullmektig from './paneler/periodeInntektOgFullmektig';
 import SelvstendigArbeid from './paneler/selvstendigarbeid';
 import VirksomhetNorge from './paneler/virksomhetNorge';
-import FullmektigPanel from './paneler/fullmektig';
 
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
@@ -30,7 +28,6 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
 const Soknadpaneler = ({
   lagreSoknad,
   fagsaker,
-  soknadArbeidsinntekt,
   soknadForm,
   oppgittAdresseHarVerdier,
   startOgVisOppfriskModal,
@@ -49,15 +46,15 @@ const Soknadpaneler = ({
   return (
     <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
       <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
-      <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      {fagsaker && fagsaker.saksnummer &&
+        <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      }
       <ArbeidsgivereNorge />
       <ForetakUtland />
       <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-      {fagsaker && fagsaker.saksnummer && <FullmektigPanel />}
       <ArbeidUtland />
       <VirksomhetNorge />
       <MaritimtArbeid />
-      <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
     </form>
   );
 };
@@ -67,7 +64,6 @@ Soknadpaneler.propTypes = {
   fagsaker: MPT.Fagsak.isRequired,
   lagreSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  soknadArbeidsinntekt: PT.object,
   behandlingID: PT.number.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
@@ -75,14 +71,12 @@ Soknadpaneler.propTypes = {
 
 Soknadpaneler.defaultProps = {
   soknadForm: {},
-  soknadArbeidsinntekt: {},
 };
 
 const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
-  soknadArbeidsinntekt: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,

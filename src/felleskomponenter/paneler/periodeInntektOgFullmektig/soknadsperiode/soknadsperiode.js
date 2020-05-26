@@ -3,74 +3,17 @@ import { connect } from 'react-redux';
 
 import PT from 'prop-types';
 
-import * as Utils from '../../utils';
-import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes';
-import * as KV from '../../kodeverk';
+import * as Utils from '../../../../utils';
+import * as Nav from '../../../../utils/navFrontend';
 
-import * as Ikoner from '../../resources/images';
-import { redigerbartSelectors } from '../../ducks/redigerbart';
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
-import PanelHeader from '../panelHeader/panelHeader';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../../../ducks/behandlingsgrunnlag';
+
+import SoknadsperiodeEndring from './soknadsperiodeEndring';
 
 import './soknadsperiode.css';
 
-export const SoknadsperiodeEndring = props => {
-  const {
-    soknadsperiodeNyFom,
-    soknadsperiodeNyTom,
-    vedFeltEndring,
-    avbryt,
-    oppdaterPeriode,
-    vedFeltFokusUt,
-    erDatoerGyldig,
-  } = props;
-
-  return (
-    <Nav.Row>
-      <Nav.Column xs="12">
-        <Nav.Fieldset legend="Skriv inn korrigert søknadsperiode:">
-          <Nav.Row>
-            <Nav.Column xs="3">
-              <Nav.Input
-                bredde="S"
-                label="Fra og med:"
-                value={soknadsperiodeNyFom}
-                onChange={event => vedFeltEndring('soknadsperiodeNyFom', event.target.value)}
-                onBlur={() => vedFeltFokusUt('soknadsperiodeNyFom')}
-              />
-            </Nav.Column>
-            <Nav.Column xs="3">
-              <Nav.Input
-                bredde="S"
-                label="Til og med:"
-                value={soknadsperiodeNyTom}
-                onChange={event => vedFeltEndring('soknadsperiodeNyTom', event.target.value)}
-                onBlur={() => vedFeltFokusUt('soknadsperiodeNyTom')}
-              />
-            </Nav.Column>
-            <Nav.Column xs="12">
-              <Nav.Hovedknapp disabled={!erDatoerGyldig} onClick={oppdaterPeriode}>Oppdater registeropplysningene</Nav.Hovedknapp>
-              <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
-      </Nav.Column>
-    </Nav.Row>
-  );
-};
-
-SoknadsperiodeEndring.propTypes = {
-  avbryt: PT.func.isRequired,
-  oppdaterPeriode: PT.func.isRequired,
-  soknadsperiodeNyFom: PT.string.isRequired,
-  soknadsperiodeNyTom: PT.string.isRequired,
-  vedFeltEndring: PT.func.isRequired,
-  vedFeltFokusUt: PT.func.isRequired,
-  erDatoerGyldig: PT.bool.isRequired,
-};
-
-class Soknadsperiode extends Component {
+export class Soknadsperiode extends Component {
   state = {
     erEndrePeriodeSynlig: false,
     erPeriodeOppdatertOgGyldig: false,
@@ -159,7 +102,6 @@ class Soknadsperiode extends Component {
   };
 
   render () {
-    const panelIkon = Ikoner.Ferdig;
     const { redigerbart, soknadsperiodeFom, soknadsperiodeTom } = this.props;
     const {
       visEndrePeriode, skjulEndrePeriode, validerFelter, oppdaterPeriode, oppdaterFelt, avbryt,
@@ -170,38 +112,33 @@ class Soknadsperiode extends Component {
     } = this.state;
 
     return (
-      <div className="soknadsperiode panelSeksjon">
-        <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.soknadsPeriode} undertittel={`${soknadsperiodeFom} - ${soknadsperiodeTom}`} />}
-          ariaTittel="Panel for søknadsperiode">
-          <Nav.Container fluid>
-            {
-              !erEndrePeriodeSynlig && (
-                <Nav.Row>
-                  <Nav.Column xs="12">
-                    <p>Dersom søkeren har opplyst at søknadsperioden er endret, legger du inn den korrigerte perioden her og oppdaterer saksopplysningene.</p>
-                    <div className="knapper">
-                      <Nav.Hovedknapp disabled={!redigerbart} onClick={visEndrePeriode}>Endre søknadsperioden</Nav.Hovedknapp>
-                    </div>
-                  </Nav.Column>
-                </Nav.Row>
-              )
-            }
-            {
-              erEndrePeriodeSynlig &&
-              <SoknadsperiodeEndring
-                soknadsperiodeNyFom={soknadsperiodeNyFom}
-                soknadsperiodeNyTom={soknadsperiodeNyTom}
-                skjulEndrePeriode={skjulEndrePeriode}
-                oppdaterPeriode={oppdaterPeriode}
-                vedFeltEndring={oppdaterFelt}
-                vedFeltFokusUt={validerFelter}
-                erDatoerGyldig={this.state.erPeriodeOppdatertOgGyldig}
-                avbryt={avbryt}
-              />
-            }
-          </Nav.Container>
-        </Nav.EkspanderbartpanelBase>
+      <div className="soknadsperiode">
+        {
+          !erEndrePeriodeSynlig && (
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <Nav.typo.Element>{soknadsperiodeFom} - {soknadsperiodeTom}</Nav.typo.Element>
+                <p>Dersom søkeren har meldt inn en endring i søknadsperioden, kan du endre og oppdatere saksopplysningene her:</p>
+                <div className="knapper">
+                  <Nav.Hovedknapp disabled={!redigerbart} onClick={visEndrePeriode}>Endre søknadsperioden</Nav.Hovedknapp>
+                </div>
+              </Nav.Column>
+            </Nav.Row>
+          )
+        }
+        {
+          erEndrePeriodeSynlig &&
+          <SoknadsperiodeEndring
+            soknadsperiodeNyFom={soknadsperiodeNyFom}
+            soknadsperiodeNyTom={soknadsperiodeNyTom}
+            skjulEndrePeriode={skjulEndrePeriode}
+            oppdaterPeriode={oppdaterPeriode}
+            vedFeltEndring={oppdaterFelt}
+            vedFeltFokusUt={validerFelter}
+            erDatoerGyldig={this.state.erPeriodeOppdatertOgGyldig}
+            avbryt={avbryt}
+          />
+        }
       </div>
     );
   }
@@ -213,14 +150,6 @@ Soknadsperiode.propTypes = {
   lagreSoknadOgOppfriskSaksopplysninger: PT.func.isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
-};
-
-Soknadsperiode.propTypes = {
-  soknadVerdier: MPT.SoknadForm,
-};
-
-Soknadsperiode.defaultProps = {
-  soknadVerdier: {},
 };
 
 const mapStateToProps = state => ({

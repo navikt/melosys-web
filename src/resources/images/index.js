@@ -4,6 +4,7 @@ import Arbeidsgiver from './ikon-arbeidsgiver.svg';
 import Arbeidsforhold from './ikon-arbeidsforhold.svg';
 import Binders from './paperclip.svg';
 import BrevSendt from './emailsend.svg';
+import Calendar from './calendar.svg';
 import CheckList from './check-list.svg';
 import Ferdig from './ikon-steg-ferdig.svg';
 import Feil from './ikon-steg-feil.svg';
@@ -34,6 +35,7 @@ export {
   Arbeidsforhold,
   Binders,
   BrevSendt as InnBrev,
+  Calendar,
   CheckList,
   Feil,
   Ferdig,
