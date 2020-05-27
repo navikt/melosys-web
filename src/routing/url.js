@@ -16,7 +16,8 @@ export const lagUrl = (saksnummer, behandlingID, behandlingstemaKode) => {
       return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
     case MKV.Koder.behandlinger.behandlingstema.TRYGDETID:
-    case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED:
+    case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED:
+    case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM:
       return `/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
