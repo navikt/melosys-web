@@ -34,7 +34,7 @@ class Forretningssted extends Steg {
     this.tittel = 'Vurdering av 13.1.b';
     this.komponent = VurderingForretningssted;
     this.samleRelevanteData = _propsLight => ({
-      valgteVirksomheter: _propsLight.valgteVirksomheter,
+      valgteVirksomheter: _propsLight.valgteVirksomheterIkkeNaeringsDrivende,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
@@ -90,7 +90,7 @@ class Forretningssted extends Steg {
   harAvklartForretningsland = propsLight => {
     const avklarteForretningsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, propsLight.avklartefakta);
 
-    return propsLight.valgteVirksomheter.every(vv => (
+    return propsLight.valgteVirksomheterIkkeNaeringsDrivende.every(vv => (
       avklarteForretningsland.some(afl => (
         afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl))
       ))
