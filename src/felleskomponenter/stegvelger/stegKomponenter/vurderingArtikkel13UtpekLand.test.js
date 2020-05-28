@@ -29,10 +29,6 @@ describe('VurderingArtikkel13_1_UtpekLand', () => {
     };
   });
 
-  it('vises uten å krasje', () => {
-    shallow(<VurderingArtikkel13UtpekLand {...props} />);
-  });
-
   it('viser fritekst for orienteringsbrev', () => {
     const vurderingArt13UtpekLand = shallow(<VurderingArtikkel13UtpekLand {...props} />);
 
