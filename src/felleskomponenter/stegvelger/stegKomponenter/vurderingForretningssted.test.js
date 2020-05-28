@@ -1,5 +1,11 @@
 import React from 'react';
 
+import * as Nav from '../../../utils/navFrontend';
+
+import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
+
+import MKV from '../../../melosyskodeverk';
+
 import { VurderingForretningssted, Forretningssteder } from './vurderingForretningssted';
 
 describe('VurderingForretningssted', () => {
@@ -8,7 +14,7 @@ describe('VurderingForretningssted', () => {
     tilstand: {
       omfattetINorge: {},
       omfattetILand: {},
-      lovvalgsbestemmelse: 'lovvalgsbestemmelse',
+      lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B,
       avklarteForretningsland: [],
       harAvklaring: false,
     },
@@ -18,9 +24,6 @@ describe('VurderingForretningssted', () => {
         navn: 'NAV',
       },
     ],
-    avklartForretningsland: [],
-    omfattetILand: {},
-    lovvalgsbestemmelse: 'lovvalgsbestemmelse',
     redigerbart: true,
     oppdaterData: jest.fn(),
     slettData: jest.fn(),
@@ -31,28 +34,51 @@ describe('VurderingForretningssted', () => {
     const forretningssteder = vurderingForretningssted.find(Forretningssteder);
     const forretningsstederProps = forretningssteder.props();
 
-    it('vises', () => {
+    it('vises med korrekte props', () => {
       expect(forretningssteder).toHaveLength(1);
-    });
-
-    it('får virksomheter', () => {
       expect(forretningsstederProps.valgteVirksomheter).toBe(props.valgteVirksomheter);
-    });
-
-    it('får avklarteForretningsland', () => {
       expect(forretningsstederProps.avklarteForretningsland).toEqual(props.tilstand.avklarteForretningsland);
-    });
-
-    it('får oppdaterData', () => {
       expect(forretningsstederProps.oppdaterData).toEqual(props.oppdaterData);
-    });
-
-    it('får slettData', () => {
       expect(forretningsstederProps.slettData).toEqual(props.slettData);
+      expect(forretningsstederProps.redigerbart).toEqual(props.redigerbart);
+    });
+  });
+
+  describe('dropdown for lovvalgsbestemmelse', () => {
+    const vurderingForretningssted = shallow(<VurderingForretningssted {...props} />);
+    const lovvalgsbestemmelseDropdown = vurderingForretningssted.findWhere(n =>
+      n.type() === Nav.Select &&
+      n.props().id === 'vurdering13_1');
+    const lovvalgsbestemmelseProps = lovvalgsbestemmelseDropdown.props();
+
+    it('vises med korrekte props', () => {
+      expect(lovvalgsbestemmelseDropdown).toHaveLength(1);
+      expect(lovvalgsbestemmelseProps.value).toBe(props.tilstand.lovvalgsbestemmelse);
+      expect(lovvalgsbestemmelseProps.disabled).toBe(!props.redigerbart);
     });
 
-    it('får redigerbart', () => {
-      expect(forretningsstederProps.redigerbart).toEqual(props.redigerbart);
+    it('håndterer change', () => {
+      const event = { target: { value: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4 } };
+      lovvalgsbestemmelseDropdown.simulate('change', event);
+
+      expect(props.oppdaterData).toHaveBeenCalledTimes(1);
+      expect(props.oppdaterData).toHaveBeenLastCalledWith(expect.objectContaining({
+        innhold: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
+      }));
+    });
+  });
+
+  describe('EnkeltAvklartfakta', () => {
+    const vurderingForretningssted = shallow(<VurderingForretningssted {...props} />);
+    const enkeltAvklartfakta = vurderingForretningssted.find(EnkeltAvklartfakta);
+    const enkeltAvklartfaktaProps = enkeltAvklartfakta.props();
+
+    it('vises med korrekte props', () => {
+      expect(enkeltAvklartfakta).toHaveLength(1);
+      expect(enkeltAvklartfaktaProps.redigerbart).toBe(props.redigerbart);
+      expect(enkeltAvklartfaktaProps.avklartfakta).toBe(props.tilstand.omfattetINorge);
+      expect(enkeltAvklartfaktaProps.oppdaterData).toBe(props.oppdaterData);
+      expect(enkeltAvklartfaktaProps.slettData).toBe(props.slettData);
     });
   });
 });
