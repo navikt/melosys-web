@@ -9,6 +9,7 @@ describe('VurderingForretningssted', () => {
       omfattetINorge: {},
       omfattetILand: {},
       lovvalgsbestemmelse: 'lovvalgsbestemmelse',
+      avklarteForretningsland: [],
       harAvklaring: false,
     },
     valgteVirksomheter: [
@@ -35,7 +36,23 @@ describe('VurderingForretningssted', () => {
     });
 
     it('får virksomheter', () => {
-      expect(forretningsstederProps.valgteVirksomheter).toEqual(props.valgteVirksomheter);
+      expect(forretningsstederProps.valgteVirksomheter).toBe(props.valgteVirksomheter);
+    });
+
+    it('får avklarteForretningsland', () => {
+      expect(forretningsstederProps.avklarteForretningsland).toEqual(props.tilstand.avklarteForretningsland);
+    });
+
+    it('får oppdaterData', () => {
+      expect(forretningsstederProps.oppdaterData).toEqual(props.oppdaterData);
+    });
+
+    it('får slettData', () => {
+      expect(forretningsstederProps.slettData).toEqual(props.slettData);
+    });
+
+    it('får redigerbart', () => {
+      expect(forretningsstederProps.redigerbart).toEqual(props.redigerbart);
     });
   });
 });
