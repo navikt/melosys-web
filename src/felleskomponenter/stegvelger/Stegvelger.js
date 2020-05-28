@@ -206,6 +206,7 @@ class Stegvelger extends Component {
     const utpekBody = {
       mottakerinstitusjoner: data.mottakerinstitusjoner,
       fritekstSed: data.fritekstSed || null,
+      fritekstBrev: data.fritekstBrev || null,
     };
 
     utpek(saksnummer, utpekBody);
