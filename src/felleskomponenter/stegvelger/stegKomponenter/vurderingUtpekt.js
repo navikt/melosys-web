@@ -15,6 +15,7 @@ import RegisterKontrollTreff from '../../registerkontrollTreff';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+import { flytSelectors } from '../../../ducks/flyt';
 
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
@@ -228,7 +229,7 @@ const mapStateToProps = (state, ownProps) => ({
     tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
     lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
     lovvalgsland: ownProps.tilstand.lovvalgsland,
-    utpekingVurdering: behandlingsresultatSelectors.UtfallRegistreringUnntakSelector(state),
+    utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
     overgangsregelbestemmelser: behandlingsgrunnlagSelectors.OvergangsregelbestemmelserSelector(state).map(o => o.kode),
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),

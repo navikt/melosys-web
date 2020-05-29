@@ -37,3 +37,9 @@ export const UtfallRegistreringUnntakSelector = createSelector(
   BehandlingsresultatSelector,
   behandlingsresultat => behandlingsresultat.utfallRegistreringUnntak
 );
+
+export const UtfallUtpekingSelector = createSelector(
+  BehandlingsresultatSelector,
+  behandlingsresultat => behandlingsresultat.utfallUtpeking
+);
+

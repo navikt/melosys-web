@@ -14,6 +14,8 @@ import { oppgaverOperations } from '../../../ducks/oppgaver';
 
 import './behandling.css';
 
+const compareTerm = (a, b) => a.term.localeCompare(b.term);
+
 class Behandling extends Component {
   submitOgVideresend = async form => {
     const { handleSubmit, history } = this.props;
@@ -37,6 +39,7 @@ class Behandling extends Component {
               <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
                 {
                   MKV.KTObjects.behandlinger.behandlingstema
+                    .sort(compareTerm)
                     .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))
                 }
               </Skjema.Select>

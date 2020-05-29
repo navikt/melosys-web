@@ -169,6 +169,11 @@ export const VirksomhetFaktaerSelector = createSelector(
   }
 );
 
+const AvklarteVirksomhetFaktaerSelector = createSelector(
+  VirksomhetFaktaerSelector,
+  virksomhetFaktaer => virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN))
+);
+
 export const ArbeidSokkelSkipSelector = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
@@ -368,15 +373,14 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
 );
 
 export const AvklarteVirksomheterSelector = createSelector(
-  state => VirksomhetFaktaerSelector(state),
+  AvklarteVirksomhetFaktaerSelector,
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
   state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (virksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
+  (alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
-    const alleAvklarteVirksomheter = virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes('TRUE'));
 
-    return alleAvklarteVirksomheter.map(virksomhet => {
+    return alleAvklarteVirksomhetFaktaer.map(virksomhet => {
       const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
       if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
 
@@ -385,6 +389,38 @@ export const AvklarteVirksomheterSelector = createSelector(
 
       throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
     });
+  }
+);
+
+export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(
+  AvklarteVirksomhetFaktaerSelector,
+  state => behandlingerSelectors.OrganisasjonerSelector(state),
+  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  state => behandlingsgrunnlagSelectors.SelvstendigArbeidForetakSelector(state),
+  (
+    alleAvklarteVirksomhetFaktaer,
+    fagsakOrganisasjoner,
+    soknadOrganisasjoner,
+    foretakUtland,
+    selvstendigArbeidForetak
+  ) => {
+    const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
+
+    return alleAvklarteVirksomhetFaktaer.map(virksomhet => {
+      const avklartForetakUtland = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
+      if (avklartForetakUtland) {
+        return avklartForetakUtland.selvstendigNaeringsvirksomhet ? null : konverterForetakUtlandTilVirksomhet(avklartForetakUtland);
+      }
+
+      const avklartSelvstendigArbeid = selvstendigArbeidForetak.find(foretak => foretak.orgnr === virksomhet.subjektID);
+      if (avklartSelvstendigArbeid) return null;
+
+      const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.subjektID);
+      if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
+
+      throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
+    }).filter(virksomhet => virksomhet);
   }
 );
 

@@ -15,6 +15,11 @@ export const VilkarSelector = createSelector(
   vurdering => vurdering
 );
 
+export const inngangsvilkaarSelector = createSelector(
+  VilkarSelector,
+  alleVilkar => alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR)
+);
+
 export const vesentligVirksomhetSelector = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET) || {})

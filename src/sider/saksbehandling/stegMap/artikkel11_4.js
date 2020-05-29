@@ -7,19 +7,31 @@ import { erVilkarOppfylt, hentVilkar } from '../../../regler/vilkar';
 class Artikkel11_4 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const art11_3A = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, propsLight.vilkar);
+    const art11_4_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, propsLight.vilkar);
+    const art11_4_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, propsLight.vilkar);
+    const nis = hentVilkar(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, propsLight.vilkar);
+    const harAvklaring = (art11_4_1.oppfylt && art11_3A.oppfylt && (nis.oppfylt || nis.oppfylt === false)) || art11_4_2.oppfylt || (art11_4_1.oppfylt && !art11_3A.oppfylt);
+
     this.kriterier = [
       {
         exec: (avklartefakta, alleVilkar) =>
+          harAvklaring &&
           erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1, alleVilkar) &&
           erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2, alleVilkar),
+        exec: (avklartefakta, alleVilkar) =>
+          harAvklaring &&
+          erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1, alleVilkar),
+        exec: (avklartefakta, alleVilkar) =>
+          harAvklaring &&
+          erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1, alleVilkar),
         nesteSteg: STEG.YRKESAKTIVITET,
       },
     ];
@@ -36,14 +48,7 @@ class Artikkel11_4 extends Steg {
     });
 
     this.beregnRelevantUI = _propsLight => {
-      const art11_3A = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, _propsLight.vilkar);
-      const art11_4_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, _propsLight.vilkar);
-      const art11_4_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, _propsLight.vilkar);
-      const nis = hentVilkar(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, _propsLight.vilkar);
-
       const visNISAvsnitt = art11_4_1.oppfylt && art11_3A.oppfylt;
-
-      const harAvklaring = (art11_4_1.oppfylt && art11_3A.oppfylt && (nis.oppfylt || nis.oppfylt === false)) || art11_4_2.oppfylt || (art11_4_1.oppfylt && !art11_3A.oppfylt);
 
       return {
         harAvklaring,

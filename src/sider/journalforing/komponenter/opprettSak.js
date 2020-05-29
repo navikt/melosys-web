@@ -35,7 +35,8 @@ const OpprettFagsak = props => {
   ];
 
   const skalViseSoknadsperiodeOgLand = behandlingstema => ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
   ].includes(behandlingstema);
 
