@@ -86,18 +86,11 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
 
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev',
+      navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
-      },
-    },
-    {
-      navn: 'Forhåndsvis A1',
-      type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
     },
     {
