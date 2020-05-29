@@ -133,12 +133,12 @@ export class Personopplysninger extends Component {
             </div>}
           ariaTittel="Panel for personinformasjon">
           <Nav.Container fluid>
-            <Nav.Row className="person__seksjon">
+            <Nav.Row>
               <Nav.Column xs="12">
                 <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={sammensattNavn} className="undertittel" />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row className="person__seksjon">
+            <Nav.Row>
               <Nav.Column xs="6">
                 <PersonInfo person={person} />
               </Nav.Column>
@@ -146,7 +146,7 @@ export class Personopplysninger extends Component {
                 <UtenlandskIdent disabled={!redigerbart} />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row className="person__seksjon">
+            <Nav.Row className="registrerteAdresser">
               <Nav.Column xs="12">
                 <ExpandableTable
                   amountOfItemsCollapsed={1}
@@ -202,22 +202,22 @@ export class Personopplysninger extends Component {
               !visAnnenAdresseFelter &&
               <Mui.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterKnappKlikketTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Mui.Knapp>
             }
-            <Nav.Row className="person__seksjon">
+            <Nav.Row>
               <Nav.Column xs="12">
                 <Mui.Undertittel ikon={Ikoner.Medlemskap} tekst="Medlemskap" className="undertittel" />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row className="person__seksjon">
+            <Nav.Row>
               <Nav.Column xs="12">
                 <Medlemskap medlemskap={medlemskap} />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row className="person__seksjon">
+            <Nav.Row>
               <Nav.Column xs="12">
                 <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Paneltitler.kontantytelser} className="undertittel" />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row className="person__seksjon">
+            <Nav.Row>
               <Nav.Column xs="12">
                 <Kontantytelser />
               </Nav.Column>

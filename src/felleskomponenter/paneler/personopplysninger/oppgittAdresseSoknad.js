@@ -6,7 +6,7 @@ import * as Skjema from '../../skjema';
 import LandVelger from '../../skjema/landvelger';
 
 const OppgittAdresseSoknad = ({ redigerbart }) => (
-  <Nav.Row className="person__seksjon">
+  <Nav.Row>
     <Nav.Column xs="6">
       <Nav.Fieldset legend="Annen adresse oppgitt i søknaden som ikke er registrert i TPS:">
         <dl className="person__detaljer">

@@ -5,8 +5,6 @@ import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import DatoOmrade from '../../datoOmrade/datoOmrade';
-
 import './medlemskap.css';
 
 const uuid = require('uuid/v4');
@@ -23,37 +21,34 @@ export function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
     status,
     grunnlagstype,
     land,
-    lovvalg,
-    trygdedekning,
-    kildedokumenttype,
-    kilde,
   } = enkeltPeriode;
 
   return (
     <div className="medlemskap__enkelt" aria-label="Enkelt medlemskap">
       <Nav.Row>
         {/* START DETALJER */}
-        <Nav.Column xs="4">
-          <DatoOmrade periode={periode} />
+        <Nav.Column xs="6">
+          <Nav.typo.Element>Fra - til:</Nav.typo.Element>
+          <Nav.typo.Normaltekst>{periode.fom} - {periode.tom}</Nav.typo.Normaltekst>
         </Nav.Column>
-        <Nav.Column xs="8">
-          <dl className="medlemskap__detaljer">
-            <dt>Periodetype:</dt>
-            <dd>{KV.objektTilTerm(periodetype)}</dd>
-            <dt>Status:</dt>
-            <dd>{KV.objektTilTerm(status)}</dd>
-            <dt>Grunnlagstype:</dt>
-            <dd>{KV.objektTilTerm(grunnlagstype)}</dd>
-            <dt>Land:</dt>
-            <dd>{KV.objektTilTerm(land)}</dd>
-            <dt>Lovvalg:</dt>
-            <dd>{KV.objektTilTerm(lovvalg)}</dd>
-            <dt>Trygdedekning:</dt>
-            <dd>{KV.objektTilTerm(trygdedekning)}</dd>
-            <dt>Kildedokumenttype:</dt>
-            <dd>{KV.objektTilTerm(kildedokumenttype)}</dd>
-            <dt>Kilde:</dt>
-            <dd>{KV.objektTilTerm(kilde)}</dd>
+        <Nav.Column xs="6">
+          <dl>
+            <div>
+              <dt>Lovvalgsland:</dt>
+              <dd>{KV.objektTilTerm(land)}</dd>
+            </div>
+            <div>
+              <dt>Periodetype:</dt>
+              <dd>{KV.objektTilTerm(periodetype)}</dd>
+            </div>
+            <div>
+              <dt>Status:</dt>
+              <dd>{KV.objektTilTerm(status)}</dd>
+            </div>
+            <div>
+              <dt>Grunnlagshjemmel:</dt>
+              <dd>{KV.objektTilTerm(grunnlagstype)}</dd>
+            </div>
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
