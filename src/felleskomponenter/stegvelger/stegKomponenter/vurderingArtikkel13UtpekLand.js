@@ -21,6 +21,7 @@ import { utpekingsperioderSelectors } from '../../../ducks/utpekingsperioder';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { formOperations } from '../../../ducks/form';
 import { flytSelectors } from '../../../ducks/flyt';
+import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
@@ -62,6 +63,7 @@ export const VurderingArtikkel13UtpekLand = ({
     lagreOgUtpek({
       mottakerinstitusjoner: formValues.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
       fritekstSed: formValues.fritekstSed,
+      fritekstBrev: formValues.fritekstOrienteringsbrev,
     });
   };
 
@@ -75,7 +77,7 @@ export const VurderingArtikkel13UtpekLand = ({
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
       data: {
         begrunnelseKode: null,
-        fritekst: null,
+        fritekst: formValues.fritekstOrienteringsbrev,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -126,9 +128,21 @@ export const VurderingArtikkel13UtpekLand = ({
           {fom} - {tom}
         </Nav.Column>
       </Nav.Row>
+      <Nav.Row className="fritekst">
+        <Nav.Column xs="7">
+          <Skjema.Textarea
+            feltNavn="fritekstOrienteringsbrev"
+            label="Fritekst til orienteringsbrev"
+            placeholder="Skriv inn tekst til orienteringsbrevet..."
+            maxLength={500}
+            visTellerFra={500}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
       {
         redigerbart &&
-        <Nav.Row className="fritekstSed">
+        <Nav.Row className="fritekst">
           <Nav.Column xs="7">
             <Skjema.Textarea
               label="Ytterligere informasjon til SED (valgfri)"
@@ -196,6 +210,7 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   initialValues: {
     mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+    fritekstOrienteringsbrev: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
     lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
