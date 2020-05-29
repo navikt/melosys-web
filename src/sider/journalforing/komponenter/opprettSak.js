@@ -11,7 +11,6 @@ import * as KV from '../../../kodeverk';
 import { formSelectors } from '../../../ducks/form';
 import MKV from '../../../melosyskodeverk';
 
-import LandVelger from '../../../felleskomponenter/skjema/landvelger';
 import './opprettSak.css';
 
 export const OpprettSakTittel = () => (
@@ -59,7 +58,7 @@ const OpprettFagsak = props => {
             <Nav.Fieldset legend="Unntak fra lovvalgsland:">
               <Nav.Row className="">
                 <Nav.Column xs="12">
-                  <LandVelger label="Velg ett land:" feltNavn="journalforingUnntakFraLovvalgsland" multiLand={false} />
+                  <Skjema.LandVelger label="Velg ett land:" feltNavn="journalforingUnntakFraLovvalgsland" multiLand={false} />
                 </Nav.Column>
               </Nav.Row>
             </Nav.Fieldset>
@@ -96,7 +95,7 @@ const OpprettFagsak = props => {
           <Nav.Fieldset legend="Land:">
             <Nav.Row className="">
               <Nav.Column xs="12">
-                <LandVelger feltNavn="journalforingSoknadsland" multiLand />
+                <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>

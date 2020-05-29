@@ -73,7 +73,7 @@ export const LovvalgsperiodeSelector = createSelector(
   state => SEDSelector(state).lovvalgsperiode || {},
   (lovvalgsperiode, sedLovvalgsperiode) => {
     const { fomDato, tomDato } = lovvalgsperiode;
-    return tomDato ? { fom: fomDato, tom: tomDato } : sedLovvalgsperiode;
+    return fomDato ? { fom: fomDato, tom: tomDato } : sedLovvalgsperiode;
   }
 );
 

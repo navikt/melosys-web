@@ -3,6 +3,7 @@ import {
   string,
   mixed,
   array,
+  lazy,
 } from 'yup';
 
 import * as Utils from '../../utils';
@@ -25,9 +26,13 @@ const soknadsinfo = object().shape({
   fom: string()
     .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
     .required(TAST_INN_DATO),
-  tom: string()
-    .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
-    .required(TAST_INN_DATO),
+  tom: lazy(value => (!value ?
+    string()
+      .ensure()
+    :
+    string()
+      .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+      .required(TAST_INN_DATO))),
   land: array()
     .of(string())
     .required({ _error: VELG_LAND })
