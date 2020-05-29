@@ -243,10 +243,10 @@ VurderingForretningssted.propTypes = {
     omfattetINorge: PT.object,
     omfattetILand: PT.object,
     lovvalgsbestemmelse: PT.string,
+    avklarteForretningsland: PT.arrayOf(MPT.Avklartefakta),
     harAvklaring: PT.bool.isRequired,
   }).isRequired,
   valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
-  avklarteForretningsland: PT.array,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
@@ -254,7 +254,6 @@ VurderingForretningssted.propTypes = {
 
 VurderingForretningssted.defaultProps = {
   valgteVirksomheter: [],
-  avklarteForretningsland: [],
 };
 
 export default VurderingForretningssted;
