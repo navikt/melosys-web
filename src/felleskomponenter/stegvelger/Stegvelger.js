@@ -206,6 +206,7 @@ class Stegvelger extends Component {
     const utpekBody = {
       mottakerinstitusjoner: data.mottakerinstitusjoner,
       fritekstSed: data.fritekstSed || null,
+      fritekstBrev: data.fritekstBrev || null,
     };
 
     utpek(saksnummer, utpekBody);
@@ -379,6 +380,7 @@ class Stegvelger extends Component {
       arbeidsland: props.arbeidsland,
       arbeidslandMedYrkesaktivitet: props.arbeidslandMedYrkesaktivitet,
       valgteVirksomheter: props.valgteVirksomheter,
+      valgteVirksomheterIkkeNaeringsDrivende: props.valgteVirksomheterIkkeNaeringsDrivende,
       vilkar: props.vilkar,
       inngangsvilkaar: props.inngangsvilkaar,
       redigerbart: props.redigerbart,
@@ -512,6 +514,7 @@ Stegvelger.propTypes = {
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgperioder: PT.func.isRequired,
   valgteVirksomheter: PT.array,
+  valgteVirksomheterIkkeNaeringsDrivende: PT.array,
   vilkar: PT.array.isRequired,
   inngangsvilkaar: MPT.Vilkaar,
   lagreVilkarHandler: PT.func.isRequired,
@@ -560,6 +563,7 @@ Stegvelger.defaultProps = {
   bostedsland: null,
   oppsummering: {},
   valgteVirksomheter: [],
+  valgteVirksomheterIkkeNaeringsDrivende: [],
   artikkel12_vedtak_skjema: {},
   artikkel16_anmodning_skjema: {},
   artikkel16_motta_svar_skjema: {},
@@ -595,6 +599,7 @@ const mapStateToProps = state => ({
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
+  valgteVirksomheterIkkeNaeringsDrivende: avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),

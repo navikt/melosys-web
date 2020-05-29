@@ -86,18 +86,11 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
 
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev',
+      navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
         fritekst: formValues.vedtaksbrevFritekst,
-      },
-    },
-    {
-      navn: 'Forhåndsvis A1',
-      type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
     },
     {
@@ -243,7 +236,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   behandlingsgrunnlagFom: PT.string.isRequired,
-  behandlingsgrunnlagTom: PT.string.isRequired,
+  behandlingsgrunnlagTom: PT.string,
 };
 
 VurderingArbeidEttLandOvrigVedtak.defaultProps = {
@@ -251,6 +244,7 @@ VurderingArbeidEttLandOvrigVedtak.defaultProps = {
   formValues: {},
   lovvalgsbestemmelseSomSkalVises: '',
   lovvalgsbestemmelseSomSkalLagres: '',
+  behandlingsgrunnlagTom: null,
 };
 
 const mapStateToProps = (state, ownProps) => {

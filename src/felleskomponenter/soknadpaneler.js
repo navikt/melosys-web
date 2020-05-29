@@ -20,6 +20,7 @@ import { behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
 import { saksopplysningerOperations } from '../ducks/saksopplysninger';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../ducks/behandlingsgrunnlag';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 import { vilkarSelectors } from '../ducks/vilkar';
 import { formSelectors } from '../ducks/form';
 import { formatterDatoTilNorsk } from '../utils/dato';
@@ -77,6 +78,7 @@ const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
@@ -177,6 +179,7 @@ const SoknadpanelerForm = reduxForm({
     const settings = {
       context: {
         skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
+        behandlingstema: props.behandlingstema,
       },
     };
 

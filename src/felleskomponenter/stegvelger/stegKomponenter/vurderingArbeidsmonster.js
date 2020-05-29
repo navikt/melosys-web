@@ -11,6 +11,7 @@ import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
+import { lagTilleggBestemmelse, slettTilleggBestemmelse, konverterTilleggBestemmelseTilStegData } from '../../../regler/tilleggbestemmelser';
 
 import './vurderingArbeidsmonster.css';
 
@@ -157,8 +158,10 @@ export const VurderingArbeidsmonster = ({
     if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.NORGE ||
         avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND) {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+      slettData(slettTilleggBestemmelse());
     } else if (avklartLoennetArbeid === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
       slettData(slettLovvalgsbestemmelse());
+      oppdaterData(lagTilleggBestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
     }
   };
 
@@ -171,11 +174,7 @@ export const VurderingArbeidsmonster = ({
 
   const aktivitetINorgeEndretHandler = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
-      if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG) {
-        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
-      } else {
-        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
-      }
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
       if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
         oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B));
@@ -189,6 +188,8 @@ export const VurderingArbeidsmonster = ({
     if (loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.NORGE ||
       loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
+    } else if (loennetArbeidAntallLand === KV.Koder.LoennetArbeidAntallLand.FLERE_LAND) {
+      oppdaterData(konverterTilleggBestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3));
     }
 
     if (offentligArbeidAntallLand === KV.Koder.OffentligArbeidAntallLand.NORGE_OG_ANNEN_VIRKSOMHET ||

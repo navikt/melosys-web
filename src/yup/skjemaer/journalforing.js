@@ -29,7 +29,8 @@ const VELG_REPRESENTERER = { melding: 'Velg hvem fullmektig representerer' };
 
 const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) => (
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
   ].includes(behandlingstema)
 );
@@ -99,14 +100,18 @@ const journalforing = object().shape({
         .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
         .required(TAST_INN_DATO),
     }),
-  journalforingPeriodeTilOgMed: string()
-    .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
-      is: kreverPeriodeOgLand,
-      then: string()
-        .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
-        .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
-        .required(TAST_INN_DATO),
-    }),
+  journalforingPeriodeTilOgMed: lazy(value => (!value ?
+    string()
+      .ensure()
+    :
+    string()
+      .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
+        is: kreverPeriodeOgLand,
+        then: string()
+          .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
+          .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
+          .required(TAST_INN_DATO),
+      }))),
   journalforingSoknadsland: array().of(string())
     .ensure()
     .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {

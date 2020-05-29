@@ -68,7 +68,7 @@ class Arbeidsmonster extends Steg {
       {
         exec: () => (
           aktivitetNorgeOver25Prosent &&
-          (erArbeidstaker || offentligArbeidIFlereLand)
+          (erArbeidstaker || offentligArbeidIFlereLand || loennetArbeidIFlereLand)
         ),
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
@@ -81,8 +81,8 @@ class Arbeidsmonster extends Steg {
       },
       {
         exec: () => (
-          (loennetArbeidINorge && erArbeidstakerOgSelvstendigNaeringsdrivende) ||
-          (loennetArbeidIFlereLand && aktivitetNorgeOver25Prosent)
+          loennetArbeidINorge &&
+          erArbeidstakerOgSelvstendigNaeringsdrivende
         ),
         nesteSteg: STEG.ARTIKKEL_13_3_VEDTAK,
       },

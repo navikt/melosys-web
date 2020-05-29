@@ -78,5 +78,19 @@ describe('utils.js:', () => {
         },
       }, 'panel')).toEqual(['personinfoPanel']);
     });
+
+    it('kan returnere parent-objekt til key', () => {
+      expect(finnVerdierMedKey({
+        oppgittAdresse: {
+          gatenavn: {
+            panel: 'personinfoPanel',
+            melding: 'melding',
+          },
+        },
+      }, 'panel', true)).toEqual([{
+        panel: 'personinfoPanel',
+        melding: 'melding',
+      }]);
+    })
   });
 });
