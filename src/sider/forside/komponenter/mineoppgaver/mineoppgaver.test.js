@@ -2,7 +2,7 @@ import React from 'react';
 
 import BehandlingOppgave from '../../../../felleskomponenter/oppgaveliste/behandlingOppgave';
 import JournalforingOppgave from '../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
-import OppgaverMedSortering from './oppgaver';
+import SorterbarListe from '../../../../felleskomponenter/sorterbarListe/sorterbarListe';
 import { MineOppgaver } from './mineoppgaver';
 
 describe('MineOppgaver', () => {
@@ -81,24 +81,24 @@ describe('MineOppgaver', () => {
     const mineOppgaver = shallow(<MineOppgaver {...props} />);
 
     const journalforingOppgaver = mineOppgaver
-      .find(OppgaverMedSortering)
+      .find(SorterbarListe)
       .first();
 
     const journalforingOppgaverProps = journalforingOppgaver.props();
     expect(journalforingOppgaverProps.component).toBe(JournalforingOppgave);
-    expect(journalforingOppgaverProps.oppgaver).toBe(props.minesaker.journalforing);
+    expect(journalforingOppgaverProps.elementer).toBe(props.minesaker.journalforing);
   });
 
   it('viser en OppgaverMedSortering for behandlinger', () => {
     const mineOppgaver = shallow(<MineOppgaver {...props} />);
 
     const journalforingOppgaver = mineOppgaver
-      .find(OppgaverMedSortering)
+      .find(SorterbarListe)
       .last();
 
     const journalforingOppgaverProps = journalforingOppgaver.props();
     expect(journalforingOppgaverProps.component).toBe(BehandlingOppgave);
-    expect(journalforingOppgaverProps.oppgaver).toBe(props.minesaker.saksbehandling);
+    expect(journalforingOppgaverProps.elementer).toBe(props.minesaker.saksbehandling);
   });
 
   it('viser en melding dersom det ikke er noen journalføringsoppgaver eller behandlinger', () => {

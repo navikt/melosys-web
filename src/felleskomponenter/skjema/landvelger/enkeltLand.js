@@ -5,9 +5,10 @@ import { Field } from 'redux-form';
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
+import * as KV from '../../../kodeverk';
 import * as SkjemaUtils from '../utils';
 
-import { kodeTilObjekt, landTekstFormat } from './LandVelger';
+import { landTekstFormat } from './utils';
 
 import './landvelger.css';
 
@@ -20,7 +21,7 @@ export class EnkeltLand extends Component {
   componentDidMount = () => {
     const { value } = this.props.input;
     const { landkoder } = this.props;
-    const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
+    const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
     const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
     this.setInputVerdi(inputVerdi);
   };

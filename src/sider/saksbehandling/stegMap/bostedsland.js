@@ -33,8 +33,7 @@ class Bostedsland extends Steg {
           const bostedsland = hentFaktaVerdi(bostedsfakta);
           const { begrunnelseKoder = [] } = bostedsfakta;
           const begrunnelserErOppgitt = begrunnelseKoder.length > 0;
-          const harAvklartBostedsland = !Utils._isNil(bostedsland);
-          return harAvklartBostedsland && begrunnelserErOppgitt;
+          return bostedsland && begrunnelserErOppgitt;
         },
         nesteSteg: STEG.VIDERESEND,
       },

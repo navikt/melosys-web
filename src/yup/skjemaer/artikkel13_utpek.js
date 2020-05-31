@@ -19,7 +19,7 @@ const artikkel13_utpek = object().shape({
     }),
   })),
   lovvalgsland: string()
-    .when('$erOffentligArbeidUtland', {
+    .when('$validerLovvalgsland', {
       is: true,
       then: string()
         .erLandKode(OPPGI_ET_LAND)

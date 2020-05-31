@@ -72,7 +72,7 @@ Forretningsstedet.defaultProps = {
 };
 
 
-const Forretningssteder = props => {
+export const Forretningssteder = props => {
   const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
   const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
@@ -109,13 +109,20 @@ Forretningssteder.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-const VurderingForretningssted = props => {
+export const VurderingForretningssted = props => {
   const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
+    bekreftOgFortsett,
+    tilstand,
+    redigerbart,
+    oppdaterData,
+    slettData,
   } = props;
 
   const {
-    omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring,
+    omfattetINorge,
+    omfattetILand,
+    lovvalgsbestemmelse,
+    harAvklaring,
   } = tilstand;
 
   const stegetsLovvalgsbestemmelser = [
@@ -125,11 +132,11 @@ const VurderingForretningssted = props => {
     },
     {
       kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2,
-      label: '13.1 b ii: to arbeidsgivere',
+      label: '13.1 b ii: Ansatt av to eller flere arbeidsgivere med forretningssted i samme land',
     },
     {
       kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3,
-      label: '13.1 b iii: Flere arbeidsgivere, med forretningssted i to land, hvorav et er Norge',
+      label: '13.1 b iii: To eller flere arbeidsgivere, med forretningssted i to land, hvorav ett er Norge',
     },
     {
       kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
@@ -232,24 +239,21 @@ const VurderingForretningssted = props => {
 
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  tilstand: PT.object,
+  tilstand: PT.shape({
+    omfattetINorge: PT.object,
+    omfattetILand: PT.object,
+    lovvalgsbestemmelse: PT.string,
+    avklarteForretningsland: PT.arrayOf(MPT.Avklartefakta),
+    harAvklaring: PT.bool.isRequired,
+  }).isRequired,
   valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
-  avklartForretningsland: PT.array,
-  omfattetINorge: PT.object,
-  omfattetILand: PT.object,
-  lovvalgsbestemmelse: PT.string,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
 };
 
 VurderingForretningssted.defaultProps = {
-  tilstand: {},
   valgteVirksomheter: [],
-  avklartForretningsland: [],
-  omfattetINorge: {},
-  omfattetILand: {},
-  lovvalgsbestemmelse: null,
 };
 
 export default VurderingForretningssted;

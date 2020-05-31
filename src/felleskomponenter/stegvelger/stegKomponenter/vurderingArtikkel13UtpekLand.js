@@ -21,6 +21,7 @@ import { utpekingsperioderSelectors } from '../../../ducks/utpekingsperioder';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { formOperations } from '../../../ducks/form';
 import { flytSelectors } from '../../../ducks/flyt';
+import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
@@ -39,11 +40,12 @@ export const VurderingArtikkel13UtpekLand = ({
   formValues,
   touchAll,
   erOffentligArbeidUtland,
+  harLonnetArbeidAnnetLand,
   oppdaterData,
   slettData,
 }) => {
   useEffect(() => {
-    konverterLovvalgslandTilStegData(lovvalgsland);
+    oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
 
     return () => {
       slettData();
@@ -60,6 +62,8 @@ export const VurderingArtikkel13UtpekLand = ({
 
     lagreOgUtpek({
       mottakerinstitusjoner: formValues.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
+      fritekstSed: formValues.fritekstSed,
+      fritekstBrev: formValues.fritekstOrienteringsbrev,
     });
   };
 
@@ -73,7 +77,7 @@ export const VurderingArtikkel13UtpekLand = ({
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
       data: {
         begrunnelseKode: null,
-        fritekst: null,
+        fritekst: formValues.fritekstOrienteringsbrev,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -81,22 +85,28 @@ export const VurderingArtikkel13UtpekLand = ({
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
+      data: {
+        fritekst: formValues.fritekstSed,
+      },
     },
   ];
 
   const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
 
+  const visLandvelger = erOffentligArbeidUtland || harLonnetArbeidAnnetLand;
+  const lovvalgslandTittel = visLandvelger ? 'Velg lovvalgsland' : 'Lovvalgsland';
+
   return (
     <Fragment>
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       <Nav.typo.Undertittel>
-        <Nav.typo.Element className="undertittel">Lovvalgsland:</Nav.typo.Element>
+        <Nav.typo.Element className="undertittel">{lovvalgslandTittel}</Nav.typo.Element>
       </Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
           {
-            erOffentligArbeidUtland &&
+            visLandvelger &&
             <Skjema.LandVelger
               feltNavn="lovvalgsland"
               label=""
@@ -105,7 +115,7 @@ export const VurderingArtikkel13UtpekLand = ({
             />
           }
           {
-            !erOffentligArbeidUtland &&
+            !visLandvelger &&
             <div>{lovvalgsland && KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder)}</div>
           }
         </Nav.Column>
@@ -118,6 +128,32 @@ export const VurderingArtikkel13UtpekLand = ({
           {fom} - {tom}
         </Nav.Column>
       </Nav.Row>
+      <Nav.Row className="fritekst">
+        <Nav.Column xs="7">
+          <Skjema.Textarea
+            feltNavn="fritekstOrienteringsbrev"
+            label="Fritekst til orienteringsbrev"
+            placeholder="Skriv inn tekst til orienteringsbrevet..."
+            maxLength={500}
+            visTellerFra={500}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      {
+        redigerbart &&
+        <Nav.Row className="fritekst">
+          <Nav.Column xs="7">
+            <Skjema.Textarea
+              label="Ytterligere informasjon til SED (valgfri)"
+              feltNavn="fritekstSed"
+              disabled={!redigerbart}
+              visTellerFra={500}
+              maxLength={500}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="mottakerinstitusjoner">
         <Nav.Column xs="7">
           <MottakerinstitusjonvelgerFlervalg
@@ -152,6 +188,7 @@ VurderingArtikkel13UtpekLand.propTypes = {
   lagreOgUtpek: PT.func.isRequired,
   touchAll: PT.func.isRequired,
   erOffentligArbeidUtland: PT.bool.isRequired,
+  harLonnetArbeidAnnetLand: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
 };
@@ -164,6 +201,7 @@ VurderingArtikkel13UtpekLand.defaultProps = {
 
 const mapStateToProps = state => ({
   erOffentligArbeidUtland: flytSelectors.HarOffentligTjenesteAnnetLandSelector(state),
+  harLonnetArbeidAnnetLand: flytSelectors.HarLonnetArbeidAnnetLand(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
@@ -172,7 +210,10 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   initialValues: {
     mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+    fritekstOrienteringsbrev: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     kreverMottakerinstitusjon: false,
+    fritekstSed: null,
+    lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
   },
 });
 
@@ -189,7 +230,7 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
   validate: (values, props) => {
     const settings = {
       context: {
-        erOffentligArbeidUtland: props.erOffentligArbeidUtland,
+        validerLovvalgsland: props.erOffentligArbeidUtland || props.harLonnetArbeidAnnetLand,
       },
     };
 

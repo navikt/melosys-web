@@ -31,6 +31,10 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         nesteSteg: STEG.VURDER_ARBEIDSLAND,
       },
       {
+        exec: () => harValgtArbeidsgiver && propsLight.erArbeidEttLandOvrig,
+        nesteSteg: STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK,
+      },
+      {
         exec: avklartefakta => {
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
           const erFlyendePersonell = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL);

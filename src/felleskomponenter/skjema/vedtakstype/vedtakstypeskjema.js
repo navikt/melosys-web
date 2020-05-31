@@ -4,19 +4,21 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
-const VedtaktypeSkjema = ({
+const VedtakstypeSkjema = ({
   className,
   redigerbart,
+  feltNavn,
+  label,
 }) => (
-  <Skjema.RadioGruppe className={className} feltNavn="vedtakstype" label="Hvilken type vedtak skal fattes?">
+  <Skjema.RadioGruppe className={className} feltNavn={feltNavn} label={label}>
     <Skjema.Radio
-      feltNavn="vedtakstype"
+      feltNavn={feltNavn}
       label="Korrigert vedtak"
       value={MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK}
       disabled={!redigerbart}
     />
     <Skjema.Radio
-      feltNavn="vedtakstype"
+      feltNavn={feltNavn}
       label="Omgjøringsvedtak"
       value={MKV.Koder.vedtakstyper.OMGJØRINGSVEDTAK}
       disabled
@@ -24,13 +26,15 @@ const VedtaktypeSkjema = ({
   </Skjema.RadioGruppe>
 );
 
-VedtaktypeSkjema.propTypes = {
+VedtakstypeSkjema.propTypes = {
   className: PT.string,
   redigerbart: PT.bool.isRequired,
+  feltNavn: PT.string.isRequired,
+  label: PT.string.isRequired,
 };
 
-VedtaktypeSkjema.defaultProps = {
+VedtakstypeSkjema.defaultProps = {
   className: undefined,
 };
 
-export default VedtaktypeSkjema;
+export default VedtakstypeSkjema;

@@ -184,6 +184,7 @@ class Stegvelger extends Component {
     const vedtakBody = {
       behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
       fritekst: data.fritekst || null,
+      fritekstSed: data.fritekstSed || null,
       mottakerinstitusjoner: data.mottakerinstitusjoner || [],
       vedtakstype: data.vedtakstype,
       revurderBegrunnelse: data.revurderBegrunnelse || null,
@@ -204,6 +205,8 @@ class Stegvelger extends Component {
 
     const utpekBody = {
       mottakerinstitusjoner: data.mottakerinstitusjoner,
+      fritekstSed: data.fritekstSed || null,
+      fritekstBrev: data.fritekstBrev || null,
     };
 
     utpek(saksnummer, utpekBody);
@@ -229,21 +232,20 @@ class Stegvelger extends Component {
     });
   };
 
-  bestillAnmodningsperioder = async (mottakerinstitusjon = null) => {
+  bestillAnmodningsperioder = async body => {
     const { behandlingID, tilForsiden } = this.props;
-    const bestillAnmodningsperioderBody = { mottakerinstitusjon };
     try {
-      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestillAnmodningsperioderBody);
+      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, body);
       tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreOgBestillAnmodningsperioder = mottakerinstitusjon => {
+  lagreOgBestillAnmodningsperioder = body => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.bestillAnmodningsperioder(mottakerinstitusjon);
+      this.bestillAnmodningsperioder(body);
     });
   };
 
@@ -315,6 +317,7 @@ class Stegvelger extends Component {
     const utfyltData = {
       begrunnelseKode: data.begrunnelseKode || null,
       fritekst: data.fritekst || null,
+      fritekstSed: data.fritekstSed || null,
     };
 
     return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);
@@ -365,17 +368,21 @@ class Stegvelger extends Component {
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       lovvalgsbestemmelse: props.lovvalgsbestemmelse,
+      valgteLovvalgsVilkarBestemmelse: props.valgteLovvalgsVilkarBestemmelse,
       utpekingsperioder: props.utpekingsperioder,
       omfattesIAnnetLand: props.omfattesIAnnetLand,
       artikkel12_vedtak_skjema: props.artikkel12_vedtak_skjema,
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
       artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
+      vurder_utpeking_skjema: props.vurder_utpeking_skjema,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       arbeidsland: props.arbeidsland,
       arbeidslandMedYrkesaktivitet: props.arbeidslandMedYrkesaktivitet,
       valgteVirksomheter: props.valgteVirksomheter,
+      valgteVirksomheterIkkeNaeringsDrivende: props.valgteVirksomheterIkkeNaeringsDrivende,
       vilkar: props.vilkar,
+      inngangsvilkaar: props.inngangsvilkaar,
       redigerbart: props.redigerbart,
       generiskStegRedigerbart: props.generiskStegRedigerbart,
       erIDirekteTilArtikkel16Flyt: props.erIDirekteTilArtikkel16Flyt,
@@ -384,6 +391,7 @@ class Stegvelger extends Component {
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      erArbeidEttLandOvrig: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebase: props.hjemmebase,
@@ -501,11 +509,14 @@ Stegvelger.propTypes = {
   artikkel12_vedtak_skjema: PT.object,
   artikkel16_anmodning_skjema: PT.object,
   artikkel16_motta_svar_skjema: PT.object,
+  vurder_utpeking_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgperioder: PT.func.isRequired,
   valgteVirksomheter: PT.array,
+  valgteVirksomheterIkkeNaeringsDrivende: PT.array,
   vilkar: PT.array.isRequired,
+  inngangsvilkaar: MPT.Vilkaar,
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
@@ -539,6 +550,7 @@ Stegvelger.propTypes = {
   vurderUtpekingTom: PT.string,
   vurderUtpekingValid: PT.bool.isRequired,
   lovvalgsbestemmelse: PT.string,
+  valgteLovvalgsVilkarBestemmelse: PT.string,
   maritimtarbeid: PT.arrayOf(PT.object),
   hjemmebase: PT.string,
   forsteSteg: PT.string.isRequired,
@@ -551,16 +563,20 @@ Stegvelger.defaultProps = {
   bostedsland: null,
   oppsummering: {},
   valgteVirksomheter: [],
+  valgteVirksomheterIkkeNaeringsDrivende: [],
   artikkel12_vedtak_skjema: {},
   artikkel16_anmodning_skjema: {},
   artikkel16_motta_svar_skjema: {},
+  vurder_utpeking_skjema: {},
   soknad_skjema: {},
   saksnummer: '',
   vurderUtpekingFom: '',
   vurderUtpekingTom: '',
   lovvalgsbestemmelse: '',
+  valgteLovvalgsVilkarBestemmelse: '',
   maritimtarbeid: [],
   hjemmebase: null,
+  inngangsvilkaar: {},
 };
 
 const mapStateToProps = state => ({
@@ -569,6 +585,7 @@ const mapStateToProps = state => ({
   arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
+  inngangsvilkaar: vilkarSelectors.inngangsvilkaarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
@@ -579,8 +596,10 @@ const mapStateToProps = state => ({
   artikkel12_vedtak_skjema: formSelectors.VedtakArtikkel12FormValuesSelector(state),
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
+  vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
+  valgteVirksomheterIkkeNaeringsDrivende: avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
@@ -593,6 +612,7 @@ const mapStateToProps = state => ({
   vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
   vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
+  valgteLovvalgsVilkarBestemmelse: lovvalgsperioderSelectors.ValgteLovvalgsVilkarBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
@@ -605,7 +625,7 @@ const mapDispatchToProps = dispatch => ({
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
-  oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
+  oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
   oppdaterLovvalgperioder: stegState => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(stegState)),
   hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),

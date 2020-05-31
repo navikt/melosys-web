@@ -1,7 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import * as EKV from 'eessi-kodeverk';
 import * as UfiltrertMKV from 'melosys-kodeverk';
 
 import MKV from '../../../melosyskodeverk';
@@ -18,7 +17,7 @@ import * as Mui from '../../ui';
 
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+import { behandlingsgrunnlagOperations } from '../../../ducks/behandlingsgrunnlag';
 
 import * as Api from '../../../services/api';
 
@@ -31,12 +30,12 @@ export class VurderingEndrePeriode extends React.Component {
     begrunnelse: '',
     begrunnelseFeilmelding: undefined,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
-    erEessiReady: false,
+    fritekstSed: '',
   };
 
   componentDidMount() {
     const {
-      behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta }, soknadsland,
+      behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta },
     } = this.props;
 
     oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
@@ -44,14 +43,9 @@ export class VurderingEndrePeriode extends React.Component {
     this.hentOpprinneligPeriode(behandlingID);
 
     if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
-    this.setErEessiReady(soknadsland[0]);
 
     this.initialiserBegrunnelseState();
   }
-
-  setErEessiReady = async landkode => this.setState({
-    erEessiReady: (await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_04, landkode)).length > 0,
-  });
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
 
@@ -120,7 +114,7 @@ export class VurderingEndrePeriode extends React.Component {
   vedKlikkEndrePeriode = async () => {
     const { endreVedtak, tilForsiden } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
-    const { begrunnelse } = this.state;
+    const { begrunnelse, fritekstSed } = this.state;
 
     if (validerAlt()) {
       await sendEndretLovvalgsPeriode();
@@ -128,6 +122,7 @@ export class VurderingEndrePeriode extends React.Component {
       const data = {
         begrunnelseKode: begrunnelse,
         fritekst: null,
+        fritekstSed,
       };
       await endreVedtak(data);
       tilForsiden();
@@ -169,14 +164,14 @@ export class VurderingEndrePeriode extends React.Component {
       begrunnelse,
       begrunnelseFeilmelding,
       opprinneligLovvalgsperiode: { fom, tom },
-      erEessiReady,
+      fritekstSed,
     } = this.state;
 
     const endretPeriodeBegrunnelse = begrunnelse;
 
     const pdfDokumenter = [
       {
-        navn: 'Forhåndsvis vedtaksbrev',
+        navn: 'Forhåndsvis vedtaksbrev og A1',
         type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         data: {
           mottaker: MKV.Koder.aktoersroller.BRUKER,
@@ -185,17 +180,6 @@ export class VurderingEndrePeriode extends React.Component {
         },
       },
     ];
-
-    if (!erEessiReady) {
-      pdfDokumenter.push({
-        navn: 'Forhåndsvis A1',
-        type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
-        data: {
-          mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-          begrunnelseKode: endretPeriodeBegrunnelse,
-        },
-      });
-    }
 
     const formattertOpprinneligFom = Utils.dato.formatterDatoTilNorsk(fom);
     const formattertOpprinneligTom = Utils.dato.formatterDatoTilNorsk(tom);
@@ -263,6 +247,20 @@ export class VurderingEndrePeriode extends React.Component {
             />
           </Nav.Column>
         </Nav.Row> */}
+        {
+          redigerbart &&
+          <Nav.Row className="fritekstSed">
+            <Nav.Column xs="6">
+              <Nav.Textarea
+                label="Ytterligere informasjon til SED (valgfri)"
+                value={fritekstSed}
+                onChange={e => this.setState({ fritekstSed: e.target.value })}
+                disabled={!redigerbart}
+                maxLength={500}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
         <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
@@ -283,7 +281,6 @@ VurderingEndrePeriode.propTypes = {
   tilstand: PT.shape({
     aarsakEndringPeriodeAvklartfakta: MPT.Avklartefakta.isRequired,
   }).isRequired,
-  soknadsland: PT.arrayOf(PT.string).isRequired,
 };
 
 VurderingEndrePeriode.defaultProps = {
@@ -293,7 +290,6 @@ VurderingEndrePeriode.defaultProps = {
 const mapStateToProps = state => ({
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   redigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
-  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

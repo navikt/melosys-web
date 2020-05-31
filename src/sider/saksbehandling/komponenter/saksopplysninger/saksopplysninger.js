@@ -51,7 +51,7 @@ const Saksopplysninger = ({
   oppdaterOgLagreBehandlingerHandler,
   lagreAllData,
   oppdaterBehandlingsgrunnlag,
-  blokkerInnholdMedOppfriskSpinner,
+  startOgVisOppfriskModal,
 }) => {
   if (Utils._isNil(redigerbart)) return null;
 
@@ -93,7 +93,7 @@ const Saksopplysninger = ({
       />
       }
       <Soknadpaneler
-        blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+        startOgVisOppfriskModal={startOgVisOppfriskModal}
         behandlingID={behandlingID}
       />
     </Fragment>
@@ -107,7 +107,6 @@ Saksopplysninger.propTypes = {
   alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
-  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   match: PT.object.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -125,6 +124,7 @@ Saksopplysninger.propTypes = {
   lagreAllData: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {

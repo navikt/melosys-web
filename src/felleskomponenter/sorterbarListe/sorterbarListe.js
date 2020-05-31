@@ -1,15 +1,15 @@
 import React, { Fragment, useState } from 'react';
 import PT from 'prop-types';
 
-import * as Utils from '../../../../../utils';
-import * as Nav from '../../../../../utils/navFrontend';
+import * as Utils from '../../utils';
+import * as Nav from '../../utils/navFrontend';
 
-import sortOppgaverByDate from './sortoppgaverbydate';
+import sorterElementerEtterDato from './sorterElementerEtterDato';
 
-import './oppgaver.css';
+import './sorterbarListe.css';
 
-const Oppgaver = ({
-  oppgaver,
+const SorterbarListe = ({
+  elementer,
   defaultChecked,
   component,
   sortingLegend,
@@ -19,13 +19,13 @@ const Oppgaver = ({
   const defaultOrder = defaultChecked === 'nyeste' ? 'descending' : 'ascending';
   const [sortOrder, setSortOrder] = useState(defaultOrder);
 
-  if (!oppgaver) return null;
+  if (!elementer) return null;
 
   const handleSortOrderChange = event => {
     setSortOrder(event.target.value);
   };
 
-  const sorterteOppgaver = oppgaver.slice().sort(sortOppgaverByDate(sortOrder, sortingPath));
+  const sorterteElementer = elementer.slice().sort(sorterElementerEtterDato(sortOrder, sortingPath));
   const Component = component;
   const uniqueName = radioGroupName || Utils._uuid();
 
@@ -48,14 +48,14 @@ const Oppgaver = ({
         </div>
       </Nav.Fieldset>
       {
-        sorterteOppgaver.map(oppgave => <Component key={Utils._uuid()} sak={oppgave} />)
+        sorterteElementer.map(oppgave => <Component key={Utils._uuid()} sak={oppgave} />)
       }
     </Fragment>
   );
 };
 
-Oppgaver.propTypes = {
-  oppgaver: PT.arrayOf(PT.object),
+SorterbarListe.propTypes = {
+  elementer: PT.arrayOf(PT.object),
   defaultChecked: PT.string,
   component: PT.elementType.isRequired,
   sortingLegend: PT.string.isRequired,
@@ -63,10 +63,10 @@ Oppgaver.propTypes = {
   radioGroupName: PT.string,
 };
 
-Oppgaver.defaultProps = {
-  oppgaver: [],
+SorterbarListe.defaultProps = {
+  elementer: [],
   defaultChecked: 'eldste',
   radioGroupName: undefined,
 };
 
-export default Oppgaver;
+export default SorterbarListe;

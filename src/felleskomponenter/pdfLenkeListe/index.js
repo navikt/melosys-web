@@ -32,10 +32,12 @@ class PdfLenkeListe extends Component {
     let fileURL;
 
     try {
+      const data = dokument.data || {};
+
       if (dokument.erSed) {
-        fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type);
+        fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type, data);
       } else {
-        fileURL = await dokumenterOperations.forhandsvisBrev(behandlingID, dokument.type, dokument.data);
+        fileURL = await dokumenterOperations.forhandsvisBrev(behandlingID, dokument.type, data);
       }
     } catch (e) {
       if (e.status >= 500) {

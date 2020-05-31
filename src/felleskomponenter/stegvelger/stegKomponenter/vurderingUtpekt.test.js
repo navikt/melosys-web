@@ -1,6 +1,5 @@
 import React from 'react';
 
-import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 import RegisterKontrollTreff from '../../registerkontrollTreff';
@@ -17,16 +16,7 @@ describe('VurderingUtpekt', () => {
       redigerbart: true,
       tilstand: {
         harAvklaring: true,
-        utpekingGodkjentFakta: {
-          referanse: 'referanse',
-          subjektID: 'referanse',
-          fakta: ['fakta'],
-          begrunnelseKoder: ['kode'],
-          begrunnelseFritekst: 'fritekst',
-        },
         lovvalgsbestemmelse: 'Lovvalgsbestemmelse',
-        utpekingGodkjent: false,
-        utpekingIkkeGodkjent: false,
       },
       oppdaterData: jest.fn(),
       handleSubmit: jest.fn(),
@@ -60,10 +50,9 @@ describe('VurderingUtpekt', () => {
   it('viser radiobuttons for godkjenning og avslag', () => {
     props.tilstand.utpekingGodkjent = true;
     const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
-    const radios = vurderingUtpekt.find(Nav.Radio);
+    const radios = vurderingUtpekt.find(Skjema.Radio);
 
     expect(radios).toHaveLength(2);
-    expect(radios.first().props().checked).toBe(true);
   });
 
   it('viser en form som tar handleSubmit som onSubmit-prop', () => {

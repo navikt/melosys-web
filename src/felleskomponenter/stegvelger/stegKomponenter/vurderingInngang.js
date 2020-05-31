@@ -7,55 +7,105 @@ import classNames from 'classnames';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
+import * as Utils from '../../../utils';
+
+import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import MKV from '../../../melosyskodeverk';
-
-import { fagsakSelectors } from '../../../ducks/fagsaker';
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+import { konverterTilStegData as konverterVilkarTilStegData } from '../../../regler/vilkar';
 
 import SoknadslandListe from './inngang/soknadslandListe';
 
-const VurderingInngang = props => {
-  const {
-    bekreftOgFortsett, alleLandkoder, begrunnelser, avklartefakta,
-    tilstand, redigerbart, oppdaterData, slettData, sakstype,
-  } = props;
-
-  useEffect(() => (
-    function cleanup() {
-      slettData();
-    }
-  ), []);
-
-  const soknadslandBegrunnelser = begrunnelser.opphold;
-  const { harAvklaring } = tilstand;
-
-  const oppfyllerInngangsvilkar = sakstype === MKV.Koder.sakstyper.EU_EOS;
-
+export const Varsler = ({
+  oppfyllerInngangsvilkar,
+  inngangsvilkaarBegrunnelser,
+  inngangsvilkaar,
+}) => {
   const oppfyllerInngangsvilkarCl = classNames({
     liste__element: true,
     'liste__element--oppfylt': oppfyllerInngangsvilkar,
     'liste__element--ikkeoppfylt': !oppfyllerInngangsvilkar,
   });
 
+  const oppfyltTekst = `Søknaden oppfyller${oppfyllerInngangsvilkar ? ' ' : ' ikke '}inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
+
+  if (Utils._isEmpty(inngangsvilkaar)) {
+    return (
+      <ul className="betingelser__liste">
+        <li className={oppfyllerInngangsvilkarCl}>Teknisk feil, finner ingen inngangsvilkår.</li>
+      </ul>
+    );
+  }
+
+  return (
+    <ul className="betingelser__liste">
+      <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
+      {
+        !oppfyllerInngangsvilkar &&
+        inngangsvilkaarBegrunnelser.map(begrunnelseKode => (
+          <li key={begrunnelseKode} className={oppfyllerInngangsvilkarCl}>
+            {KV.kodeTilTerm(begrunnelseKode, MKV.KTObjects.begrunnelser.inngangsvilkaar)}
+          </li>
+        ))
+      }
+    </ul>
+  );
+};
+
+Varsler.propTypes = {
+  oppfyllerInngangsvilkar: PT.bool,
+  inngangsvilkaarBegrunnelser: PT.arrayOf(PT.string),
+  inngangsvilkaar: MPT.Vilkaar.isRequired,
+};
+
+Varsler.defaultProps = {
+  oppfyllerInngangsvilkar: undefined,
+  inngangsvilkaarBegrunnelser: [],
+};
+
+export const VurderingInngang = ({
+  bekreftOgFortsett,
+  alleLandkoder,
+  avklartefakta,
+  redigerbart,
+  oppdaterData,
+  oppfyllerInngangsvilkar,
+  slettData,
+  inngangsvilkaar,
+  inngangsvilkaar: {
+    begrunnelseKoder: inngangsvilkaarBegrunnelser,
+  },
+  tilstand: {
+    harAvklaring,
+  },
+  begrunnelser: {
+    opphold: soknadslandBegrunnelser,
+  },
+}) => {
+  useEffect(() => {
+    oppdaterData(konverterVilkarTilStegData(MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR, inngangsvilkaar));
+
+    return function cleanup() {
+      slettData();
+    };
+  }, []);
+
   return (
     <div className="vurderingInngang">
       <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
-      <ul className="betingelser__liste">
-        <li className={oppfyllerInngangsvilkarCl}>
-          Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.
-        </li>
-        <li className="liste__element liste__element--varsel">
-          Sjekk eventuelt at området dekkes av forordningen.
-        </li>
-      </ul>
+      <Varsler
+        oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
+        inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser}
+        inngangsvilkaar={inngangsvilkaar}
+      />
       <FieldArray
         name="avklartefakta.soknadsland"
         component={SoknadslandListe}
         avklartefakta={avklartefakta}
         soknadslandBegrunnelser={soknadslandBegrunnelser}
         alleLandkoder={alleLandkoder}
-        redigerbart={redigerbart}
+        redigerbart={redigerbart && oppfyllerInngangsvilkar}
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
@@ -70,17 +120,20 @@ VurderingInngang.propTypes = {
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
-  tilstand: PT.object.isRequired,
+  tilstand: PT.shape({
+    harAvklaring: PT.bool.isRequired,
+  }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  sakstype: PT.string.isRequired,
+  inngangsvilkaar: MPT.Vilkaar.isRequired,
+  oppfyllerInngangsvilkar: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   initialValues: {
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+    fjernedeLand: avklartefaktaSelectors.IkkeGyldigeSoknadslandFaktaerSelector(state),
   },
 });
 

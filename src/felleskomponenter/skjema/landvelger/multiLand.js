@@ -7,7 +7,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import * as SkjemaUtils from '../utils';
 
-import { kodeTilObjekt, landTekstFormat } from './LandVelger';
+import { landTekstFormat } from './utils';
 
 import * as MPT from '../../../proptypes';
 import './landvelger.css';
@@ -124,7 +124,7 @@ function MultiLand(props) {
   return (
     <div className="landliste">
       {
-        props.landkoder.length > 0 && valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, props.landkoder)} />)
+        props.landkoder.length > 0 && valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={KV.kodeTilObjekt(land, props.landkoder)} />)
       }
       <div className="landliste__leggtil">
         <Nav.Input

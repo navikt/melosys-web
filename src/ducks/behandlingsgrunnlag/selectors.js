@@ -68,13 +68,15 @@ export const SelvstendigArbeidSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag.selvstendigArbeid || {}
 );
 
-export const SelvstendigNaringsvirksomhetSelector = createSelector(
+export const SelvstendigArbeidForetakSelector = createSelector(
   SelvstendigArbeidSelector,
+  selvstendigArbeid => selvstendigArbeid.selvstendigForetak
+);
+
+export const SelvstendigNaringsvirksomhetSelector = createSelector(
+  SelvstendigArbeidForetakSelector,
   OrganisasjonSelectors.organisasjonerSelector,
-  (selvstendigArbeid, organisasjoner) => {
-    const { selvstendigForetak = [] } = selvstendigArbeid;
-    return organisasjoner.filter(organisasjon => selvstendigForetak.find(foretak => foretak.orgnr === organisasjon.orgnr));
-  }
+  (selvstendigForetak = [], organisasjoner) => organisasjoner.filter(organisasjon => selvstendigForetak.find(foretak => foretak.orgnr === organisasjon.orgnr))
 );
 
 export const OppholdUtlandSelector = createSelector(
@@ -165,4 +167,14 @@ export const HjemmebaseSelector = createSelector(
 export const NorskeArbeidsgivereSedSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlagData => behandlingsgrunnlagData.norskeArbeidsgivere || []
+);
+
+export const OvergangsregelbestemmelserSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlagData => behandlingsgrunnlagData.overgangsregelbestemmelser
+);
+
+export const YtterligereInformasjonSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlagData => behandlingsgrunnlagData.ytterligereInformasjon
 );

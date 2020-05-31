@@ -23,6 +23,7 @@
 .idea
 !.idea/runConfigurations/
 .vscode
+.jsbeautifyrc
 .DS_Store
 .env
 .env.local

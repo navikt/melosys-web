@@ -2,6 +2,10 @@ import { object, array, string } from 'yup';
 
 import * as KV from '../../kodeverk';
 
+import { Utils as MKVUtils } from '../../melosyskodeverk';
+
+const SLUTTDATO_ER_APEN = { melding: 'Sluttdato er åpen', panel: KV.Paneltitler.soknadsPeriode };
+
 const saksopplysninger = object().shape({
   foretakUtland: array().of(object().shape({
     navn: string().nullable().required({ melding: 'Foretaksnavn kreves', panel: KV.Paneltitler.foretakUtland }),
@@ -11,7 +15,7 @@ const saksopplysninger = object().shape({
       postnummer: string().nullable().required({ melding: 'Postnummer kreves', panel: KV.Paneltitler.arbeidUtland }),
       landkode: string().nullable().required({ melding: 'Land kreves', panel: KV.Paneltitler.arbeidUtland }),
       poststed: string().nullable().required({ melding: 'Poststed kreves', panel: KV.Paneltitler.arbeidUtland }),
-      gatenavn: string().nullable().required({ melding: 'Gatenavn kreves' }),
+      gatenavn: string().nullable().required({ melding: 'Gatenavn kreves', panel: KV.Paneltitler.arbeidUtland }),
     }),
   })),
   maritimtArbeid: array().of(object().shape({
@@ -32,6 +36,10 @@ const saksopplysninger = object().shape({
   oppgittAdresseLand: string().nullable().when('$skalOppgittAdresseValideres', {
     is: true,
     then: string().nullable().required({ melding: 'Land kreves', panel: KV.Paneltitler.personopplysningspanel }),
+  }),
+  soknadsperiodeTom: string().when('$behandlingstema', {
+    is: MKVUtils.erUtsendt,
+    then: string().required(SLUTTDATO_ER_APEN),
   }),
 });
 

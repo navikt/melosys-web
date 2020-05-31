@@ -69,7 +69,7 @@ const VurderingYrkesaktivitet = props => {
         }
         <Nav.Radio
           name="yrkesaktivitet"
-          disabled={!erSoknadArbeidFlereLand}
+          disabled={!redigerbart || !erSoknadArbeidFlereLand}
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           onChange={radioEndret}

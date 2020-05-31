@@ -1,11 +1,15 @@
 import React from 'react';
 
+import * as Skjema from '../../skjema';
+
 import { VurderingArtikkel13UtpekLand } from './vurderingArtikkel13UtpekLand';
 
 /* eslint-disable react/jsx-pascal-case */
-describe('VurderingArtikkel13_1_Vedtak', () => {
-  it('vises uten å krasje', () => {
-    const props = {
+describe('VurderingArtikkel13_1_UtpekLand', () => {
+  let props = null;
+
+  beforeEach(() => {
+    props = {
       tilstand: {
         overskrift: 'Omfattet av norsk lovgivning, etter artikkel 13, nr 1, b',
       },
@@ -19,10 +23,20 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       form: 'Form',
       touchAll: jest.fn(),
       erOffentligArbeidUtland: true,
+      harLonnetArbeidAnnetLand: true,
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
     };
+  });
 
-    shallow(<VurderingArtikkel13UtpekLand {...props} />);
+  it('viser fritekst for orienteringsbrev', () => {
+    const vurderingArt13UtpekLand = shallow(<VurderingArtikkel13UtpekLand {...props} />);
+
+    const fritekstOrienteringsbrevTextarea = vurderingArt13UtpekLand.findWhere(n =>
+      n.type() === Skjema.Textarea &&
+      n.props().label === 'Fritekst til orienteringsbrev');
+
+    expect(fritekstOrienteringsbrevTextarea).toHaveLength(1);
+    expect(fritekstOrienteringsbrevTextarea.props().disabled).toBe(false);
   });
 });

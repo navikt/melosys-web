@@ -12,8 +12,6 @@ import * as Skjema from '../../skjema';
 import Begrunnelser from '../../begrunnelser';
 import PdfLenkeListe from '../../pdfLenkeListe';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
-import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
-import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -367,16 +365,10 @@ export const VurderingArtikkel16Vedtak = ({
         <Nav.Column xs="7" className="fane__fot">
           {
             erNyVurdering &&
-            <Nav.Row className="vedtakstype">
-              <Nav.Column xs="6">
-                <VedtaktypeSkjema
-                  redigerbart={redigerbart}
-                />
-                <VedtaketypeBegrunnelseSkjema
-                  redigerbart={redigerbart}
-                />
-              </Nav.Column>
-            </Nav.Row>
+            <Skjema.Vedtakstype
+              redigerbart={redigerbart}
+              className="vedtakstype"
+            />
           }
           <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
         </Nav.Column>

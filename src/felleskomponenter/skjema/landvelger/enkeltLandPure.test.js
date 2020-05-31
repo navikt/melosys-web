@@ -25,6 +25,14 @@ describe('EnkeltLandPure', () => {
     expect(input.props().bredde).toBe(props.bredde);
   });
 
+  it('viser en datalist som er koblet til inputfelt', () => {
+    const enkeltLandPure = shallow(<EnkeltLandPure {...props} />);
+    const input = enkeltLandPure.find('Input');
+    const datalist = enkeltLandPure.find('datalist');
+
+    expect(input.props().list).toBe(datalist.props().id);
+  });
+
   describe('ved endring av tekst', () => {
     it('sendes tekst som value prop til nav input-komponent', () => {
       const enkeltLandPure = shallow(<EnkeltLandPure {...props} />);

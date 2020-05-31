@@ -14,8 +14,6 @@ import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import Begrunnelser from '../../begrunnelser';
-import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
-import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
@@ -128,16 +126,7 @@ const VurderingAvslag12_x_og_16 = ({
       </Nav.Row>
       {
         erNyVurdering &&
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <VedtaktypeSkjema
-              redigerbart={redigerbart}
-            />
-            <VedtaketypeBegrunnelseSkjema
-              redigerbart={redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        <Skjema.Vedtakstype redigerbart={redigerbart} />
       }
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
       <Nav.Hovedknapp disabled={!redigerbart} onClick={avslaa}>

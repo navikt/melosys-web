@@ -49,8 +49,17 @@ export async function forhandsvisBrev(behandlingID, dokumenttypeKode, data) {
   return false;
 }
 
-export async function forhandsvisSed(behandlingID, sedType) {
-  const response = await Api.Dokumenter.pdf.forhandsvisSed(behandlingID, sedType);
+export async function forhandsvisSed(behandlingID, sedType, data) {
+  const vilSendeAnmodningOmMerInformasjon = data.vilSendeAnmodningOmMerInformasjon || (data.vilSendeAnmodningOmMerInformasjon === false ? false : null);
+
+  const utfyltdata = {
+    fritekst: data.fritekst || null,
+    nyttLovvalgsland: data.nyttLovvalgsland || null,
+    begrunnelseUtenlandskMyndighet: data.begrunnelseUtenlandskMyndighet || null,
+    vilSendeAnmodningOmMerInformasjon,
+  };
+
+  const response = await Api.Dokumenter.pdf.forhandsvisSed(behandlingID, sedType, utfyltdata);
 
   if (response.ok) {
     return getObjectURL(response);

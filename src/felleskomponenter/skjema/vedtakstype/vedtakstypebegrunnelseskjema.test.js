@@ -2,9 +2,9 @@ import React from 'react';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
-import VedtaktypebegrunnelseSkjema from './vedtaktypebegrunnelseskjema';
+import VedtakstypebegrunnelseSkjema from './vedtakstypebegrunnelseskjema';
 
-describe('VedtaketypebegrunnelseSkjema', () => {
+describe('VedtakstypebegrunnelseSkjema', () => {
   describe('select', () => {
     let props = null;
     let select = null;
@@ -13,9 +13,11 @@ describe('VedtaketypebegrunnelseSkjema', () => {
       props = {
         className: 'artikkel',
         redigerbart: true,
+        feltNavn: 'feltNavn',
+        label: 'label',
       };
-      const vedtaktypebegrunnelseSkjema = shallow(<VedtaktypebegrunnelseSkjema {...props} />);
-      select = vedtaktypebegrunnelseSkjema.find(Skjema.Select);
+      const vedtakstypebegrunnelseSkjema = shallow(<VedtakstypebegrunnelseSkjema {...props} />);
+      select = vedtakstypebegrunnelseSkjema.find(Skjema.Select);
     });
 
     it('vises', () => {
@@ -30,9 +32,17 @@ describe('VedtaketypebegrunnelseSkjema', () => {
       expect(select.props().disabled).toBe(false);
 
       props.redigerbart = false;
-      select = shallow(<VedtaktypebegrunnelseSkjema {...props} />).find(Skjema.Select);
+      select = shallow(<VedtakstypebegrunnelseSkjema {...props} />).find(Skjema.Select);
 
       expect(select.props().disabled).toBe(true);
+    });
+
+    it('setter feltNavn', () => {
+      expect(select.props().feltNavn).toBe(props.feltNavn);
+    });
+
+    it('setter label', () => {
+      expect(select.props().label).toBe(props.label);
     });
   });
 });

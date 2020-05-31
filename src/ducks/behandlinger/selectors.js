@@ -73,8 +73,18 @@ export const LovvalgsperiodeSelector = createSelector(
   state => SEDSelector(state).lovvalgsperiode || {},
   (lovvalgsperiode, sedLovvalgsperiode) => {
     const { fomDato, tomDato } = lovvalgsperiode;
-    return tomDato ? { fom: fomDato, tom: tomDato } : sedLovvalgsperiode;
+    return fomDato ? { fom: fomDato, tom: tomDato } : sedLovvalgsperiode;
   }
+);
+
+export const LovvalgsperiodeFomSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.fom
+);
+
+export const LovvalgsperiodeTomSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.tom
 );
 
 const landkodeTilKodeverksobjekt = landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);

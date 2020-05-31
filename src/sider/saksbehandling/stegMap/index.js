@@ -9,6 +9,7 @@ import Inngang from './inngang';
 import Yrkesaktivitet from './yrkesaktivitet';
 import Yrkesgruppe from './yrkesgruppe';
 import Tjenestemann from './tjenestemann';
+import ArbeidEttLandOvrigVedtak from './arbeid_ett_land_ovrig_vedtak';
 import Artikkel12_1 from './artikkel12_1';
 import Artikkel12_2 from './artikkel12_2';
 import Artikkel11_4 from './artikkel11_4';
@@ -20,6 +21,7 @@ import Artikkel13_2_B_UtpekLand from './artikkel13_2_b_utpek_land';
 import Artikkel13_2_A_Vedtak from './artikkel13_2_a_vedtak';
 import Artikkel13_2_B_Norge from './artikkel13_2_b_norge';
 import Artikkel13_3_Vedtak from './artikkel13_3_vedtak';
+import Artikkel13_3_Utpekland from './artikkel13_3_utpek_land';
 import Artikkel13_4_Vedtak from './artikkel13_4_vedtak';
 import Artikkel13_4_UtpekLand from './artikkel13_4_utpekland';
 import Artikkel16Anmodning from './artikkel16_anmodning';
@@ -54,6 +56,7 @@ export const stegMap = new Map([
   [STEG.ARTIKKEL_13_2_A_VEDTAK, Artikkel13_2_A_Vedtak],
   [STEG.ARTIKKEL_13_2_B_NORGE, Artikkel13_2_B_Norge],
   [STEG.ARTIKKEL_13_3_VEDTAK, Artikkel13_3_Vedtak],
+  [STEG.ARTIKKEL_13_3_UTPEK_LAND, Artikkel13_3_Utpekland],
   [STEG.ARTIKKEL_13_4_VEDTAK, Artikkel13_4_Vedtak],
   [STEG.ARTIKKEL_13_4_UTPEK_LAND, Artikkel13_4_UtpekLand],
   [STEG.YRKESGRUPPE, Yrkesgruppe],
@@ -74,5 +77,6 @@ export const stegMap = new Map([
   [STEG.ENDRET_PERIODE, EndrePeriode],
   [STEG.VIDERESEND, Videresend],
   [STEG.VURDER_ARBEIDSLAND, VurderArbeidsland],
+  [STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK, ArbeidEttLandOvrigVedtak],
 ]);
 

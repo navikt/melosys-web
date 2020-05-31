@@ -32,20 +32,20 @@ export const skjulOppfrisk = () => async dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: false }))
 );
 
+export const leggTilBehandlingOppfriskes = behandlingID => async dispatch => (
+  dispatch(Actions.oppdaterOppfrisk({ behandlingUnderOppfriskning: behandlingID }))
+);
+
+export const fjernBehandlingOppfriskes = () => async dispatch => (
+  dispatch(Actions.oppdaterOppfrisk({ behandlingUnderOppfriskning: null }))
+);
+
 export const visValidering = () => async dispatch => (
   dispatch(Actions.oppdaterValidering({ synlig: true }))
 );
 
 export const skjulValidering = () => async dispatch => (
   dispatch(Actions.oppdaterValidering({ synlig: false }))
-);
-
-export const visOppfriskningBlokkererInnhold = () => async dispatch => (
-  dispatch(Actions.oppdaterOppfriskningBlokkererInnhold({ synlig: true }))
-);
-
-export const skjulOppfriskningBlokkererInnhold = () => async dispatch => (
-  dispatch(Actions.oppdaterOppfriskningBlokkererInnhold({ synlig: false }))
 );
 
 export const visRevurderFagsak = () => async dispatch => (

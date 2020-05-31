@@ -45,14 +45,9 @@ export const ErOppfriskSynligSelector = createSelector(
   oppfrisk => oppfrisk.synlig
 );
 
-export const OppfriskningBlokkererInnholdSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.oppfriskningBlokkererInnhold
-);
-
-export const ErOppfriskningBlokkererInnholdSynligSelector = createSelector(
-  OppfriskningBlokkererInnholdSelector,
-  oppfriskningBlokkererInnhold => oppfriskningBlokkererInnhold.synlig
+export const BehandlingUnderOppfriskningSelector = createSelector(
+  OppfriskSelector,
+  oppfrisk => oppfrisk.behandlingUnderOppfriskning
 );
 
 export const ValideringSelector = createSelector(

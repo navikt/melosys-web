@@ -23,8 +23,10 @@ const erVedtakSteg = id => (
   id === STEG.AVSLAA_UTPEKING ||
   id === STEG.ARTIKKEL_13_2_B_UTPEK_LAND ||
   id === STEG.ARTIKKEL_13_3_VEDTAK ||
+  id === STEG.ARTIKKEL_13_3_UTPEK_LAND ||
   id === STEG.ARTIKKEL_13_4_VEDTAK ||
-  id === STEG.ARTIKKEL_13_4_UTPEK_LAND
+  id === STEG.ARTIKKEL_13_4_UTPEK_LAND ||
+  id === STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK
 );
 
 const ikonVelger = (id, status) => {

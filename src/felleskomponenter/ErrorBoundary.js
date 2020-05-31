@@ -10,36 +10,50 @@ import * as Utils from '../utils';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      hasError: false,
-    };
+    this.state = { error: null };
   }
 
   static getDerivedStateFromError(error) {
     Utils.logger.error(error);
-    return { hasError: true };
+    return { error };
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({
-      hasError: true,
-    });
+    this.setState({ error });
     window.frontendlogger.error({ error, stack: errorInfo.componentStack });
   }
 
+  resetErrorBoundary = () => {
+    this.setState({ error: null });
+  }
+
   render() {
-    if (this.state.hasError) {
+    const { error } = this.state;
+    const { fallbackRender, message, children } = this.props;
+
+    if (error !== null) {
+      if (fallbackRender !== null) {
+        return fallbackRender({ error: error.body, resetErrorBoundary: this.resetErrorBoundary });
+      }
+
       return (
         <div>
-          <h3>{this.props.message}</h3>
+          <h3>{message}</h3>
         </div>
       );
     }
-    return this.props.children;
+    return children;
   }
 }
 ErrorBoundary.propTypes = {
-  message: PT.string.isRequired,
+  message: PT.string,
   children: PT.node.isRequired,
+  fallbackRender: PT.func,
 };
+
+ErrorBoundary.defaultProps = {
+  fallbackRender: null,
+  message: null,
+};
+
 export default ErrorBoundary;

@@ -14,8 +14,6 @@ import * as MPT from '../../../proptypes';
 import * as Mui from '../../ui';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
-import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
-import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -46,12 +44,6 @@ export const VurderingArtikkel13_x_vedtak = ({
 }) => {
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  const vedCheck = e => {
-    if (!e.target.checked) {
-      gjenopprettOpprinneligLovvalgsperiode();
-    }
-  };
-
   const forkortLovvalgsperiode = () => endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
 
   const vedKlikkForhandsvis = async () => {
@@ -70,7 +62,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev',
+      navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
@@ -78,16 +70,12 @@ export const VurderingArtikkel13_x_vedtak = ({
       },
     },
     {
-      navn: 'Forhåndsvis A1',
-      type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-      },
-    },
-    {
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
+      data: {
+        fritekst: formValues.fritekstSed,
+      },
     },
   ];
 
@@ -108,47 +96,21 @@ export const VurderingArtikkel13_x_vedtak = ({
           </Nav.Row>
         </Fragment>
       }
-      <Nav.Row className="forkortLovvalgsperiode">
-        <Nav.Column xs="8">
-          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalget innvilges for en kortere periode" disabled={!redigerbart} onClick={vedCheck} />
-        </Nav.Column>
-      </Nav.Row>
-      {
-        formValues.forkortLovvalgsperiode &&
-        <Fragment>
-          <Nav.Row>
-            <Nav.Column xs="3">
-              <Skjema.Input
-                bredde="fullbredde"
-                label="Startdato"
-                disabled
-                feltNavn="fomDato"
-              />
-            </Nav.Column>
-            <Nav.Column xs="3">
-              <Skjema.Input
-                bredde="fullbredde"
-                label="Sluttdato"
-                disabled={!redigerbart}
-                feltNavn="tomDato"
-                datoFelt
-              />
-            </Nav.Column>
-          </Nav.Row>
-        </Fragment>
-      }
+      <Skjema.PeriodeForkorter
+        redigerbart={redigerbart}
+        checkboxClassName="forkortLovvalgsperiode"
+        checkboxLabel="Lovvalget innvilges for en kortere periode"
+        checkboxFeltnavn="forkortLovvalgsperiode"
+        onUncheck={gjenopprettOpprinneligLovvalgsperiode}
+        forkortPeriode={formValues.forkortLovvalgsperiode}
+        fomLabel="Startdato"
+        fomFeltNavn="fomDato"
+        tomLabel="Sluttdato"
+        tomFeltNavn="tomDato"
+      />
       {
         erNyVurdering &&
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <VedtaktypeSkjema
-              redigerbart={redigerbart}
-            />
-            <VedtaketypeBegrunnelseSkjema
-              redigerbart={redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        <Skjema.Vedtakstype redigerbart={redigerbart} />
       }
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
@@ -162,6 +124,20 @@ export const VurderingArtikkel13_x_vedtak = ({
           />
         </Nav.Column>
       </Nav.Row>
+      {
+        redigerbart &&
+        <Nav.Row className="fritekstSed">
+          <Nav.Column xs="8">
+            <Skjema.Textarea
+              label="Ytterligere informasjon til SED (valgfri)"
+              feltNavn="fritekstSed"
+              disabled={!redigerbart}
+              visTellerFra={500}
+              maxLength={500}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row>
         <Nav.Column xs="8">
           <MottakerinstitusjonvelgerFlervalg
@@ -206,27 +182,35 @@ VurderingArtikkel13_x_vedtak.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
-  initialValues: {
-    forkortLovvalgsperiode: Utils.dato.datoDiffPure(
-      behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
-      lovvalgsperioderSelectors.TomDatoSelector(state),
-      'days'
-    ) !== 0,
-    tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
-    fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
-    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
-  },
-});
+const mapStateToProps = (state, ownProps) => {
+  const erLovvalgsperiodeForkortet = () => Utils.dato.datoDiffPure(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
+    lovvalgsperioderSelectors.TomDatoSelector(state),
+    'days'
+  ) !== 0;
+
+  const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
+  const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
+
+  return ({
+    behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+    formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
+    formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
+    initialValues: {
+      forkortLovvalgsperiode,
+      tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
+      vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+      vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+      vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+      mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+      fritekstSed: null,
+    },
+  });
+};
 
 const mapDispatchToProps = dispatch => ({
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
@@ -241,6 +225,7 @@ const fattVedtak = async (values, dispatch, props) => {
   props.lagreOgFatteVedtak({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
+    fritekstSed: values.fritekstSed,
     mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
     vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     revurderBegrunnelse: values.vedtakstypebegrunnelse,
@@ -252,7 +237,7 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   form: KV.Form.ARTIKKEL_13_X_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
+  keepDirtyOnReinitialize: false,
   updateUnregisteredFields: true,
   validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
     context: {

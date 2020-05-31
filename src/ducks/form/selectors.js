@@ -9,6 +9,8 @@ import { createSelector } from 'reselect';
 import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 
+import MKV from '../../melosyskodeverk';
+
 const getFormState = (state, formName, defaultValue = {}) => (
   state.form[formName] ? state.form[formName] : defaultValue
 );
@@ -43,14 +45,29 @@ export const VurderUtpekingFormSelector = createSelector(
   vurderUtpekingForm => vurderUtpekingForm
 );
 
+export const VurderUtpekingFormValuesSelector = createSelector(
+  VurderUtpekingFormSelector,
+  vurderUtpekingForm => vurderUtpekingForm.values || {}
+);
+
 export const VurderUtpekingFomSelector = createSelector(
-  state => VurderUtpekingFormSelector(state).values || {},
+  VurderUtpekingFormValuesSelector,
   values => values.fom
 );
 
 export const VurderUtpekingTomSelector = createSelector(
-  state => VurderUtpekingFormSelector(state).values || {},
+  VurderUtpekingFormValuesSelector,
   values => values.tom
+);
+
+export const VurderUtpekingVurderingSelector = createSelector(
+  VurderUtpekingFormValuesSelector,
+  values => values.utpekingVurdering
+);
+
+export const UtpekingAvvistSelector = createSelector(
+  VurderUtpekingVurderingSelector,
+  vurdering => vurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT
 );
 
 export const VurderUtpekingValid = createSelector(
@@ -138,16 +155,23 @@ export const SoknadErrorsSelector = createSelector(
   errors => errors
 );
 
-const finnPanelerMedFeil = errors => {
-  const panelerMedFeil = Utils.finnVerdierMedKey(errors, 'panel');
-  const unikePaneler = [...new Set(panelerMedFeil)];
+const finnPanelFeil = errors => {
+  const panelerOgFeil = Utils.finnVerdierMedKey(errors, 'panel', true);
+  const unikePanelerMedFeilNavn = Utils._uniqBy(panelerOgFeil, 'panel').map(({ panel }) => panel);
 
-  return unikePaneler;
+  const panelFeil = unikePanelerMedFeilNavn.map(panelNavn => ({
+    panel: panelNavn,
+    feil: panelerOgFeil
+      .map(({ panel, melding }) => (panelNavn === panel ? melding : null))
+      .filter(v => v !== null),
+  }));
+
+  return panelFeil;
 };
 
-export const PanelerMedFeilSelector = createSelector(
+export const PanelFeilSelector = createSelector(
   SoknadErrorsSelector,
-  soknadErrors => finnPanelerMedFeil(soknadErrors)
+  soknadErrors => finnPanelFeil(soknadErrors)
 );
 
 export const ErAlleMaritimtArbeidNavnUnikeSelector = createSelector(

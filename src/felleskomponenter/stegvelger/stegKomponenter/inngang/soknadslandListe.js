@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { formValueSelector, change } from 'redux-form';
+import { formValueSelector, change, arrayPush, arrayRemove } from 'redux-form';
 import PT from 'prop-types';
 
 import MKV from '../../../../melosyskodeverk';
@@ -31,12 +31,13 @@ class SoknadslandListe extends Component {
      || begrunnelseKode === MKV.Koder.begrunnelser.opphold.NYE_OPPLYSNINGER_LAND) {
       this.fjernLandFraSoknad(landkode);
     }
-    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'FALSE', [begrunnelseKode]));
+    this.props.pushFjernetLand({ land: landkode, begrunnelse: begrunnelseKode });
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, KV.Koder.SoknadslandFaktaTyper.USANN, [begrunnelseKode]));
   };
 
   bekreftLeggTil = (landkode, begrunnelseKode) => {
     this.leggLandTilSoknad(landkode);
-    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'TRUE', [begrunnelseKode]));
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, KV.Koder.SoknadslandFaktaTyper.SANN, [begrunnelseKode]));
   };
 
   fjernLandFraSoknad = valgtLand => {
@@ -52,12 +53,15 @@ class SoknadslandListe extends Component {
   angreFjern = landkode => {
     const enkeltFakta = this.props.soknadslandFaktaer.find(enkelt => enkelt.subjektID === landkode);
 
-    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'TRUE', []));
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, KV.Koder.SoknadslandFaktaTyper.SANN, []));
 
     if (enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING)
         || enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.NYE_OPPLYSNINGER_LAND)) {
       this.leggLandTilSoknad(landkode);
     }
+
+    const fjernetLandIndeks = this.props.fjernedeLand.map(({ land }) => land).indexOf(landkode);
+    this.props.removeFjernetLand(fjernetLandIndeks);
   };
 
   finnLandVedKode = kode => (this.props.alleLandkoder.find(land => land.kode === kode));
@@ -70,7 +74,12 @@ class SoknadslandListe extends Component {
 
   render () {
     const {
-      soknadslandBegrunnelser, alleLandkoder, soknadslandFraSoknad, redigerbart, avklarteSoknadsland, soknadslandFaktaer,
+      soknadslandBegrunnelser,
+      alleLandkoder,
+      soknadslandFraSoknad,
+      redigerbart,
+      avklarteSoknadsland,
+      alleIkkeGyldigeSoknadsland,
     } = this.props;
 
     const {
@@ -78,7 +87,6 @@ class SoknadslandListe extends Component {
     } = this;
 
     const alleGyldigeSoknadsland = avklarteSoknadsland;
-    const alleIkkeGyldigeSoknadsland = soknadslandFaktaer.filter(avklartFakta => avklartFakta.fakta.includes('FALSE'));
 
     const alleUbrukteLandkoder = alleLandkoder.filter(landkode => !soknadslandFraSoknad.includes(landkode.kode));
 
@@ -134,10 +142,17 @@ const formValues = formValueSelector('inngang');
 
 SoknadslandListe.propTypes = {
   soknadslandFaktaer: PT.arrayOf(MPT.Avklartefakta).isRequired,
+  alleIkkeGyldigeSoknadsland: PT.arrayOf(MPT.Avklartefakta).isRequired,
   fields: PT.object.isRequired,
   soknadslandBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   soknadslandFraSoknad: PT.arrayOf(PT.string).isRequired,
+  fjernedeLand: PT.arrayOf(PT.shape({
+    land: PT.string,
+    begrunnelse: PT.string,
+  })).isRequired,
   erstattSoknadsland: PT.func.isRequired,
+  removeFjernetLand: PT.func.isRequired,
+  pushFjernetLand: PT.func.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -147,12 +162,16 @@ SoknadslandListe.propTypes = {
 
 const mapStateToProps = state => ({
   soknadslandFraSoknad: formValues(state, 'soknadsland'),
+  fjernedeLand: formValues(state, 'fjernedeLand'),
   avklarteSoknadsland: avklartefaktaSelectors.Soknadsland(state),
   soknadslandFaktaer: avklartefaktaSelectors.SoknadslandFaktaerSelector(state),
+  alleIkkeGyldigeSoknadsland: avklartefaktaSelectors.IkkeGyldigeSoknadslandFaktaerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  erstattSoknadsland: nyttSoknadsland => dispatch(change('inngang', 'soknadsland', nyttSoknadsland)),
+  erstattSoknadsland: nyttSoknadsland => dispatch(change(KV.Form.INNGANG, 'soknadsland', nyttSoknadsland)),
+  pushFjernetLand: land => dispatch(arrayPush(KV.Form.INNGANG, 'fjernedeLand', land)),
+  removeFjernetLand: index => dispatch(arrayRemove(KV.Form.INNGANG, 'fjernedeLand', index)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SoknadslandListe);

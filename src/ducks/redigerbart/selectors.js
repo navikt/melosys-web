@@ -42,16 +42,12 @@ export const PanelerRedigerbartSelector = createSelector(
     !erArtikkel16AnmodningSendt
   )
 );
-export const SidedialogRedigerbartSelector = createSelector(
+export const BrevBestillingRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => (
     redigerbart && !erArtikkel16AnmodningSendt
   )
-);
-export const BrevBestillingRedigerbartSelector = createSelector(
-  SidedialogRedigerbartSelector,
-  sideDialogRedigerbart => sideDialogRedigerbart
 );
 export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
   avklartefaktaSelectors.ErIArtikkel13_1FlytSelector,

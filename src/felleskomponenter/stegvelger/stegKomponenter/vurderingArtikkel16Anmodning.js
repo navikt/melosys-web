@@ -32,6 +32,7 @@ import {
 } from '../../../regler/unntakfrabestemmelse';
 
 import './vurderingArtikkel16Anmodning.css';
+import * as Skjema from '../../skjema';
 
 const uuid = require('uuid/v4');
 
@@ -141,11 +142,16 @@ class VurderingArtikkel16Anmodning extends Component {
     this.props.slettData();
   }
 
+  lagBestillAnmodningsperioderBody = () => ({
+    mottakerinstitusjon: this.props.formValues.mottakerinstitusjon || null,
+    fritekstSed: this.props.formValues.fritekstSed,
+  });
+
   lagreBehandlingerOgBestillAnmodningsperioder = async () => {
-    const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder, formValues } = this.props;
+    const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgBestillAnmodningsperioder(formValues.mottakerinstitusjon);
+      lagreOgBestillAnmodningsperioder(this.lagBestillAnmodningsperioderBody());
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -272,11 +278,19 @@ class VurderingArtikkel16Anmodning extends Component {
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const pdfDokumenter = formValues.kreverMottakerinstitusjon ? [
-      { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
-      { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
+      {
+        navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER },
+      },
+      {
+        navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true, data: { fritekst: this.props.formValues.fritekstSed },
+      },
     ] : [
-      { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
-      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
+      {
+        navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER },
+      },
+      {
+        navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET },
+      },
     ];
 
     const { art16_1: { begrunnelseFritekst, begrunnelseKoder }, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt } = tilstand;
@@ -352,7 +366,7 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Column xs="12">
+            <Nav.Column xs="7">
               {
                 visFritekstfelt &&
                 <Nav.Textarea
@@ -377,6 +391,20 @@ class VurderingArtikkel16Anmodning extends Component {
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
+          {
+            redigerbart &&
+            <Nav.Row className="fritekstSed">
+              <Nav.Column xs="7">
+                <Skjema.Textarea
+                  label="Ytterligere informasjon til SED (valgfri)"
+                  feltNavn="fritekstSed"
+                  disabled={!redigerbart}
+                  visTellerFra={500}
+                  maxLength={500}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          }
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
               <Mottakerinstitusjonvelger
@@ -452,6 +480,7 @@ const mapStateToProps = state => ({
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,
+    fritekstSed: null,
   },
 });
 

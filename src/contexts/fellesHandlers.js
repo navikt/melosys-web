@@ -14,7 +14,7 @@ import { oppgaverOperations } from '../ducks/oppgaver';
 import { vedtakOperations } from '../ducks/vedtak';
 import { saksopplysningerOperations } from '../ducks/saksopplysninger';
 import { behandlingerOperations } from '../ducks/behandlinger';
-import { modalerOperations } from '../ducks/modaler';
+import { modalerOperations, modalerSelectors } from '../ducks/modaler';
 
 const FellesHandlersContext = React.createContext({});
 export default FellesHandlersContext;
@@ -26,7 +26,6 @@ const FellesHandlersProviderUnconnected = ({
   lagreAllData,
   hentOppgaveOversikt,
   tilbakeleggeOppgave,
-  sjekkOppfriskningStatus,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
   lagreBehandlingsgrunnlag,
@@ -37,43 +36,38 @@ const FellesHandlersProviderUnconnected = ({
   skjulHenleggDialogHandle,
   skjulAvsluttSakSomBortfaltDialogHandle,
   skjulRevurderFagsakDialogHandle,
-  skjulOppfriskningBlokkererInnhold,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visRevurderFagsakDialogHandle,
   visValideringModalDialogHandle,
-  visOppfriskningBlokkererInnhold,
+  leggTilBehandlingOppfriskes,
+  fjernBehandlingOppfriskes,
+  behandlingUnderOppfriskning,
 }) => {
   const [venterPaRevurderFagsak, setVenterPaRevurderFagsak] = useState(false);
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
-  const skjulOppfriskBekreftelse = () => {
-    skjulOppfriskDialogHandle();
-    skjulOppfriskningBlokkererInnhold();
-  };
-
-  const hentBehandlingStatus = async () => {
-    const oppfriskning = await sjekkOppfriskningStatus(behandlingID);
-
-    if (oppfriskning && oppfriskning.response) {
-      skjulOppfriskBekreftelse();
-    } else if (oppfriskning.data === 'DONE') {
-      skjulOppfriskBekreftelse();
-      lastInnSaksopplysninger(saksnummer, behandlingID);
-    }
-  };
-
-  const blokkerInnholdMedOppfriskSpinner = () => {
-    visOppfriskningBlokkererInnhold();
-  };
-
   const lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger = async () => {
+    await leggTilBehandlingOppfriskes(behandlingID);
     await lagreBehandlingsgrunnlag();
     await oppfriskSaksopplysninger(behandlingID);
-    blokkerInnholdMedOppfriskSpinner();
+    await fjernBehandlingOppfriskes();
+    await lastInnSaksopplysninger(saksnummer, behandlingID);
   };
+
+  const startOgVisOppfriskModal = async () => {
+    await leggTilBehandlingOppfriskes(behandlingID);
+    visOppfriskDialogHandle();
+    await oppfriskSaksopplysninger(behandlingID);
+    await fjernBehandlingOppfriskes();
+    await lastInnSaksopplysninger(saksnummer, behandlingID);
+  };
+
+  const behandlingOppfriskes = behandlingUnderOppfriskning === behandlingID;
+
+  const annenBehandlingOppfriskes = behandlingUnderOppfriskning !== null && !behandlingOppfriskes;
 
   const tilForsiden = () => {
     hentOppgaveOversikt();
@@ -84,8 +78,8 @@ const FellesHandlersProviderUnconnected = ({
     history.push('/opprettnysak');
   };
 
-  const skjulOppfriskBekreftelseOgNavigerTilForside = () => {
-    skjulOppfriskBekreftelse();
+  const skjulOppfriskModalOgNavigerTilForside = () => {
+    skjulOppfriskDialogHandle();
     tilForsiden();
   };
 
@@ -159,10 +153,9 @@ const FellesHandlersProviderUnconnected = ({
     visHenleggDialogHandle,
     visAvsluttSakSomBortfaltDialogHandle,
     visAvslagSoknadDialogHandle,
-    visOppfriskBekreftelse: visOppfriskDialogHandle,
-    skjulOppfriskBekreftelseOgNavigerTilForside,
+    visOppfriskModal: visOppfriskDialogHandle,
+    skjulOppfriskModalOgNavigerTilForside,
     apneTidligereBehandlinger,
-    blokkerInnholdMedOppfriskSpinner,
     tilForsiden,
     tilOpprettNySak,
     visRevurderFagsakDialogHandle,
@@ -171,9 +164,11 @@ const FellesHandlersProviderUnconnected = ({
     henleggHandle,
     avslaaSoknadHandle,
     avsluttSakSomBortfalt,
-    hentBehandlingStatus,
     lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     venterPaRevurderFagsak,
+    behandlingOppfriskes,
+    annenBehandlingOppfriskes,
+    startOgVisOppfriskModal,
   };
 
   return (
@@ -190,7 +185,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   lagreAllData: PT.func.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
   tilbakeleggeOppgave: PT.func.isRequired,
-  sjekkOppfriskningStatus: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   lagreBehandlingsgrunnlag: PT.func.isRequired,
@@ -201,14 +195,19 @@ FellesHandlersProviderUnconnected.propTypes = {
   skjulHenleggDialogHandle: PT.func.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   skjulRevurderFagsakDialogHandle: PT.func.isRequired,
-  skjulOppfriskningBlokkererInnhold: PT.func.isRequired,
   visOppfriskDialogHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
-  visOppfriskningBlokkererInnhold: PT.func.isRequired,
+  leggTilBehandlingOppfriskes: PT.func.isRequired,
+  fjernBehandlingOppfriskes: PT.func.isRequired,
+  behandlingUnderOppfriskning: PT.number,
+};
+
+FellesHandlersProviderUnconnected.defaultProps = {
+  behandlingUnderOppfriskning: null,
 };
 
 FellesHandlersProviderUnconnected.defaultProps = {
@@ -217,6 +216,7 @@ FellesHandlersProviderUnconnected.defaultProps = {
 
 const mapStateToProps = state => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -225,22 +225,21 @@ const mapDispatchToProps = dispatch => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaSoknad: behandlingID => dispatch(vedtakOperations.avslaSoknad(behandlingID)),
-  sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
+  leggTilBehandlingOppfriskes: behandlingID => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
+  fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
-  skjulOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.skjulOppfriskningBlokkererInnhold()),
   visOppfriskDialogHandle: () => dispatch(modalerOperations.visOppfrisk()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
   visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
-  visOppfriskningBlokkererInnhold: () => dispatch(modalerOperations.visOppfriskningBlokkererInnhold()),
 });
 
 export const FellesHandlersProvider = withRouter(connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected));

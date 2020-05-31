@@ -21,13 +21,20 @@ import { flytSelectors } from '../../../ducks/flyt';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
-import VedtaktypeSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypeskjema';
-import VedtaketypeBegrunnelseSkjema from '../../../sider/saksbehandling/komponenter/vedtaktypebegrunnelseskjema';
 import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
 
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingVedtak.css';
+
+const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
+  if (lovvalgsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A &&
+    tilleggsbestemmelse.kode === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1) {
+    return `${KV.objektTilTerm(tilleggsbestemmelse)} og ${KV.objektTilTerm(lovvalgsbestemmelse)}`;
+  }
+
+  return KV.objektTilTerm(lovvalgsbestemmelse);
+};
 
 const VurderingVedtak = ({
   lovvalgsperioder,
@@ -49,11 +56,13 @@ const VurderingVedtak = ({
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
-    fomDato, tomDato, lovvalgsbestemmelse,
+    fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse,
   } = lovvalget;
 
   const antallManederMenneskelig = Utils.dato.datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+  const tilleggBestemmelseSomKodeTerm = KV.finnEnkeltKodeFraListe(tilleggBestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+  const lovvalgSomTerm = finnLovvalgSomTerm(lovvalgSomKodeTerm, tilleggBestemmelseSomKodeTerm);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering;
   const fattVedtakDisabled = !redigerbart;
@@ -73,6 +82,7 @@ const VurderingVedtak = ({
     lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
+      fritekstSed: formValues.fritekstSed,
       mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
@@ -81,7 +91,7 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
-      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter { KV.objektTilTerm(lovvalgSomKodeTerm) }</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}</Nav.typo.Undertittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
           <Nav.Column xs="6">
@@ -99,19 +109,10 @@ const VurderingVedtak = ({
         }
         {
           erNyVurdering &&
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <VedtaktypeSkjema
-                redigerbart={redigerbart}
-              />
-              <VedtaketypeBegrunnelseSkjema
-                redigerbart={redigerbart}
-              />
-            </Nav.Column>
-          </Nav.Row>
+          <Skjema.Vedtakstype redigerbart={redigerbart} />
         }
         <Nav.Row className="fritekst">
-          <Nav.Column xs="12">
+          <Nav.Column xs="7">
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekst til vedtaksbrev"
@@ -122,6 +123,20 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
+        {
+          redigerbart &&
+          <Nav.Row className="fritekstSed">
+            <Nav.Column xs="7">
+              <Skjema.Textarea
+                label="Ytterligere informasjon til SED (valgfri)"
+                feltNavn="fritekstSed"
+                disabled={!redigerbart}
+                visTellerFra={500}
+                maxLength={500}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         {
           erSoknadEllerNyVurdering &&
           <Nav.Row className="mottakerinstitusjoner">
@@ -191,6 +206,7 @@ const mapStateToProps = state => ({
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,
+    fritekstSed: null,
   },
 });
 

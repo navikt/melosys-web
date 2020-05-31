@@ -93,7 +93,7 @@ class Saksbehandling extends Component {
 
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
-      hentBehandlingsgrunnlag, sjekkOppfriskningStatus, blokkerInnholdMedOppfriskSpinner,
+      hentBehandlingsgrunnlag, visOppfriskModal, behandlingOppfriskes,
     } = this.props;
 
     try {
@@ -105,11 +105,8 @@ class Saksbehandling extends Component {
       await hentBehandlingsresultat(behandlingID);
 
       // Sjekk om saken er iferd under oppdatering
-      const oppfriskningStatus = await sjekkOppfriskningStatus(behandlingID);
-      const { data: status } = oppfriskningStatus;
-
-      if (status === 'PROGRESS') {
-        blokkerInnholdMedOppfriskSpinner();
+      if (behandlingOppfriskes) {
+        visOppfriskModal();
         return false;
       }
 
@@ -119,13 +116,6 @@ class Saksbehandling extends Component {
       Utils.logger.error(e);
     }
     return false;
-  };
-
-  lagreVilkarHandler = async () => {
-    const { behandlingID } = this.state;
-
-    const { sendVilkar, vilkar } = this.props;
-    sendVilkar(behandlingID, vilkar);
   };
 
   lagreAvklartefaktaHandler = async () => {
@@ -169,7 +159,6 @@ class Saksbehandling extends Component {
       redigerbart,
       brevBestillingRedigerbart,
       brevBestillingRedigerbartIArtikkel13,
-      sideDialogRedigerbart,
       behandlingsmenyRedigerbart,
       match,
       lagreOgLukk,
@@ -185,15 +174,15 @@ class Saksbehandling extends Component {
       visHenleggDialogHandle,
       visAvsluttSakSomBortfaltDialogHandle,
       visAvslagSoknadDialogHandle,
-      visOppfriskBekreftelse,
+      visOppfriskModal,
       apneTidligereBehandlinger,
-      blokkerInnholdMedOppfriskSpinner,
       arbeidsland,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
       visRevurderFagsakDialogHandle,
       tilForsiden,
       visValideringModalDialogHandle,
+      startOgVisOppfriskModal,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -213,8 +202,8 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <Saksopplysninger
                 behandlingID={behandlingID}
-                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
-                lagreVilkarHandler={this.lagreVilkarHandler}
+                visOppfriskModal={visOppfriskModal}
+                lagreVilkarHandler={this.props.lagreVilkar}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
                 lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
@@ -222,6 +211,7 @@ class Saksbehandling extends Component {
                 lagreAllData={this.props.lagreAllData}
                 tilForsiden={tilForsiden}
                 visValideringModalDialogHandle={visValideringModalDialogHandle}
+                startOgVisOppfriskModal={startOgVisOppfriskModal}
               />
             </Nav.Column>
             <Nav.Column xs="5">
@@ -247,7 +237,7 @@ class Saksbehandling extends Component {
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
                   visOppfriskSaksopplysninger={visOppfriskSaksopplysninger}
-                  oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                  oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                   visRevurderFagsak={visRevurderFagsak}
                   visAvsluttSakSomBortfalt={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
@@ -265,7 +255,7 @@ class Saksbehandling extends Component {
                 saksnummer={saksnummer}
                 brevBestillingRedigerbart={brevBestillingRedigerbart}
                 brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-                redigerbart={sideDialogRedigerbart}
+                redigerbart={redigerbart}
               />
             </Nav.Column>
           </Nav.Row>
@@ -302,8 +292,7 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsPerioderState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
-  sjekkOppfriskningStatus: PT.func.isRequired,
-  sendVilkar: PT.func.isRequired,
+  lagreVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   lagrePerioder: PT.func.isRequired,
@@ -313,7 +302,6 @@ Saksbehandling.propTypes = {
   sendAnmodningsperioder: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
-  sideDialogRedigerbart: PT.bool.isRequired,
   behandlingsmenyRedigerbart: PT.bool.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   lagreAllData: PT.func.isRequired,
@@ -324,7 +312,6 @@ Saksbehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskBekreftelse: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
@@ -332,13 +319,15 @@ Saksbehandling.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
+  visOppfriskModal: PT.func.isRequired,
+  behandlingOppfriskes: PT.bool.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -365,8 +354,8 @@ const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
@@ -377,7 +366,6 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
-  sideDialogRedigerbart: redigerbartSelectors.SidedialogRedigerbartSelector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
@@ -386,7 +374,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),
@@ -394,15 +381,15 @@ const mapDispatchToProps = dispatch => ({
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
-  resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
+  resetVilkarState: () => dispatch(vilkarOperations.resetState()),
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsPerioderState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
-  sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
+  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
+  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
