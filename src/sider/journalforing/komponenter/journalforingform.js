@@ -92,39 +92,43 @@ JournalforingForm.defaultProps = {
 };
 
 const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
-const mapStateToProps = state => ({
-  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
-  formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-  initialValues: {
-    avsenderType: journalforingSelectors.ErAvsenderPreutfyltSelector(state) ? MKV.Koder.avsendertyper.PERSON : journalforingSelectors.AvsenderTypeSelector(state),
-    behandlingstype: null,
-    saksnummer: '',
-    brukerID: journalforingSelectors.BrukerIDSelector(state),
-    erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
-    avsenderID: journalforingSelectors.AvsenderIDSelector(state),
-    avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-    arbeidsgiverID: null,
-    representantID: '',
-    representantRepresenterer: '',
-    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
-    hoveddokument: {
-      tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
-      logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
+const mapStateToProps = state => {
+  const avsenderType = journalforingSelectors.AvsenderTypeSelector(state);
+
+  return {
+    erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
+    formValues: getFormValues(KV.Form.JOURNALFORING)(state),
+    initialValues: {
+      avsenderType: (journalforingSelectors.ErAvsenderPreutfyltSelector(state) && avsenderType === MKV.Koder.avsendertyper.PERSON) ? MKV.Koder.avsendertyper.PERSON : avsenderType,
+      behandlingstype: null,
+      saksnummer: '',
+      brukerID: journalforingSelectors.BrukerIDSelector(state),
+      erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
+      avsenderID: journalforingSelectors.AvsenderIDSelector(state),
+      avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
+      arbeidsgiverID: null,
+      representantID: '',
+      representantRepresenterer: '',
+      mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
+      hoveddokument: {
+        tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
+        logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
+      },
+      vedlegg: {
+        pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
+      },
+      sakstype: MKV.Koder.sakstyper.EU_EOS,
+      opprettBehandling: BOOLSK.USANN,
+      opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+      ingenVurdering: false,
+      ikkeSendForvaltingsmelding: false,
+      skalTilordnes: false,
+      journalforingUnntakFraLovvalgsland: MKV.Koder.landkoder.NO,
+      journalforingLovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
+      submittable: false,
     },
-    vedlegg: {
-      pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-    },
-    sakstype: MKV.Koder.sakstyper.EU_EOS,
-    opprettBehandling: BOOLSK.USANN,
-    opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-    ingenVurdering: false,
-    ikkeSendForvaltingsmelding: false,
-    skalTilordnes: false,
-    journalforingUnntakFraLovvalgsland: MKV.Koder.landkoder.NO,
-    journalforingLovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
-    submittable: false,
-  },
-});
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
