@@ -198,11 +198,13 @@ class VurderingArtikkel16Anmodning extends Component {
     this.lagreVilkar();
   };
 
-  begrunnelserEndringHandler = async event => {
+  begrunnelserEndringHandler = async ({ target }) => {
     this.setState({ begrunnelserFeilmelding: undefined });
 
+    const { value } = target;
+    const begrunnelse = value ? [value] : [];
     const { oppdaterData } = this.props;
-    await oppdaterData(lagBegrunnelse('art16_1_anmodning', [event.target.value]));
+    await oppdaterData(lagBegrunnelse('art16_1_anmodning', begrunnelse));
     this.lagreVilkar();
   };
 
