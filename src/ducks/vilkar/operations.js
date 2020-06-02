@@ -13,10 +13,9 @@ import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
 import * as Actions from '../vilkar/actions';
 import * as Selectors from './selectors';
+import * as Constants from './constants';
 
 import { behandlingerSelectors } from '../behandlinger';
-
-import MKV from '../../melosyskodeverk';
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Vilkar.hent(behandlingID), {
@@ -34,11 +33,7 @@ function send(behandlingID, body) {
   });
 }
 
-const VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL = [
-  MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
-];
-
-const filtrerVilkar = vilkar => vilkar.filter(enkeltVilkar => !VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.includes(enkeltVilkar.vilkaar));
+const filtrerVilkar = vilkar => vilkar.filter(enkeltVilkar => !Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.includes(enkeltVilkar.vilkaar));
 
 export function lagre() {
   return (dispatch, getState) => {

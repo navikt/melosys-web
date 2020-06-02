@@ -9,6 +9,7 @@ import MKV from '../../melosyskodeverk';
 import { STATUS } from '../../services/utils';
 
 import * as Types from './types';
+import * as Constants from './constants';
 
 const initialState = {
   data: [],
@@ -41,8 +42,17 @@ export default function reducer(state = initialState, action) {
         status: STATUS.OK,
         data: action.data,
       };
-    case Types.RESET:
-      return { ...initialState };
+    case Types.RESET: {
+      const IKKE_SKRIVBARE_VILKAAR_DATA = Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.map(v => (
+        state.data.find(enkeltVilkaar => enkeltVilkaar.vilkaar === v)
+      )).filter(v => v != null);
+      const data = [...initialState.data, ...IKKE_SKRIVBARE_VILKAAR_DATA];
+
+      return {
+        ...initialState,
+        data,
+      };
+    }
     case Types.OPPDATER_VILKAR: {
       // Gjennomgå alle vilkår som kan være satt. Dersom de er 'undefined', vil det si at
       // saksbehandler ikke har vært innom denne vurderingen og kanskje aldri kommer tid. Siden
