@@ -71,7 +71,9 @@ const OpprettNySak = ({
 
   const oppgaverFinnes = radioValg.length > 0;
 
-  const filtrerteBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) => MKVUtils.erSoknad(kode));
+  const filtrerteBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
+    .filter(({ kode }) => MKVUtils.erSoknad(kode))
+    .filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND);
 
   const settJournalpostID = oppgaveID => {
     const { journalpostID } = oppgaver.find(oppgave => oppgave.oppgaveID === oppgaveID);
