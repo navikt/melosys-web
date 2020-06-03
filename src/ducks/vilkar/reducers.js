@@ -29,6 +29,10 @@ const velgArt16Objekt = (art16avslag, art16anmodning) => (
   art16avslag || art16anmodning
 );
 
+const hentIkkeSkrivbareVilkaarData = state => Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.map(v => (
+  state.data.find(enkeltVilkaar => enkeltVilkaar.vilkaar === v)
+)).filter(v => v != null);
+
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -43,9 +47,7 @@ export default function reducer(state = initialState, action) {
         data: action.data,
       };
     case Types.RESET: {
-      const IKKE_SKRIVBARE_VILKAAR_DATA = Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.map(v => (
-        state.data.find(enkeltVilkaar => enkeltVilkaar.vilkaar === v)
-      )).filter(v => v != null);
+      const IKKE_SKRIVBARE_VILKAAR_DATA = hentIkkeSkrivbareVilkaarData(state);
       const data = [...initialState.data, ...IKKE_SKRIVBARE_VILKAAR_DATA];
 
       return {
@@ -72,11 +74,14 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
-        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR, action.data.vilkar[MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR]),
       ].filter(vilkar => vilkar !== null);
-      /* eslint-enable max-len */
+
+      const IKKE_SKRIVBARE_VILKAAR_DATA = hentIkkeSkrivbareVilkaarData(state);
+      const data = [...vilkarArray, ...IKKE_SKRIVBARE_VILKAAR_DATA];
+
       return {
-        data: vilkarArray,
+        ...state,
+        data,
       };
     }
     default:

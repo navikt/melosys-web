@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FieldArray, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
@@ -13,7 +13,6 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import MKV from '../../../melosyskodeverk';
-import { konverterTilStegData as konverterVilkarTilStegData } from '../../../regler/vilkar';
 
 import SoknadslandListe from './inngang/soknadslandListe';
 
@@ -71,7 +70,6 @@ export const VurderingInngang = ({
   redigerbart,
   oppdaterData,
   oppfyllerInngangsvilkar,
-  slettData,
   inngangsvilkaar,
   inngangsvilkaar: {
     begrunnelseKoder: inngangsvilkaarBegrunnelser,
@@ -82,38 +80,28 @@ export const VurderingInngang = ({
   begrunnelser: {
     opphold: soknadslandBegrunnelser,
   },
-}) => {
-  useEffect(() => {
-    oppdaterData(konverterVilkarTilStegData(MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR, inngangsvilkaar));
-
-    return function cleanup() {
-      slettData();
-    };
-  }, []);
-
-  return (
-    <div className="vurderingInngang">
-      <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
-      <Varsler
-        oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
-        inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser}
-        inngangsvilkaar={inngangsvilkaar}
-      />
-      <FieldArray
-        name="avklartefakta.soknadsland"
-        component={SoknadslandListe}
-        avklartefakta={avklartefakta}
-        soknadslandBegrunnelser={soknadslandBegrunnelser}
-        alleLandkoder={alleLandkoder}
-        redigerbart={redigerbart && oppfyllerInngangsvilkar}
-        oppdaterData={oppdaterData}
-      />
-      <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg0" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-      </div>
+}) => (
+  <div className="vurderingInngang">
+    <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
+    <Varsler
+      oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
+      inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser}
+      inngangsvilkaar={inngangsvilkaar}
+    />
+    <FieldArray
+      name="avklartefakta.soknadsland"
+      component={SoknadslandListe}
+      avklartefakta={avklartefakta}
+      soknadslandBegrunnelser={soknadslandBegrunnelser}
+      alleLandkoder={alleLandkoder}
+      redigerbart={redigerbart && oppfyllerInngangsvilkar}
+      oppdaterData={oppdaterData}
+    />
+    <div className="fane__knapplinje">
+      <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg0" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
     </div>
-  );
-};
+  </div>
+);
 
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
@@ -125,7 +113,6 @@ VurderingInngang.propTypes = {
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettData: PT.func.isRequired,
   inngangsvilkaar: MPT.Vilkaar.isRequired,
   oppfyllerInngangsvilkar: PT.bool.isRequired,
 };
