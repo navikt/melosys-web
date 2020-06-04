@@ -31,7 +31,6 @@ import { OrganisasjonOperations } from '../../ducks/organisasjoner';
 import { PersonOperations } from '../../ducks/personer';
 import * as MPT from '../../proptypes';
 import { sokOperations, sokSelectors } from '../../ducks/sok';
-import { serverinfoSelectors } from '../../ducks/serverinfo';
 
 import './journalforing.css';
 
@@ -400,24 +399,18 @@ class Journalforing extends Component {
       },
       fagsakListe,
       settFeltInnhold,
-      erProdish,
     } = this.props;
 
-    let behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
+    const behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
       kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER ||
       kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG ||
       kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG ||
       kode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV ||
       kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
-      kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND ||
       kode === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
       kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED ||
       kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM ||
       kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID);
-
-    if (erProdish) {
-      behandlingstemaer = behandlingstemaer.filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND);
-    }
 
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
@@ -526,7 +519,6 @@ Journalforing.propTypes = {
   journalforSEDSkjemaIsValid: PT.bool.isRequired,
   journalforSEDSkjemaVerdier: PT.object,
   journalforSEDSkjemaErrors: PT.object.isRequired,
-  erProdish: PT.bool.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -545,7 +537,6 @@ const mapStateToProps = state => ({
   journalforSEDSkjemaIsValid: isValid(KV.Form.JOURNALFORING_SED)(state),
   journalforSEDSkjemaVerdier: getFormValues(KV.Form.JOURNALFORING_SED)(state),
   journalforSEDSkjemaErrors: getFormSyncErrors(KV.Form.JOURNALFORING_SED)(state),
-  erProdish: serverinfoSelectors.ErProdishSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

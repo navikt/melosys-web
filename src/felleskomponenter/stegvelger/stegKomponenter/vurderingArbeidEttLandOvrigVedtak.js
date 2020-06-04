@@ -201,7 +201,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
         <Nav.Column xs="8">
           <MottakerinstitusjonvelgerFlervalg
             feltnavn="mottakerinstitusjoner"
-            bucType={EKV.Koder.buctyper.legislation.LA_BUC_02}
+            bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
             redigerbart={redigerbart}
             form={form}
           />
