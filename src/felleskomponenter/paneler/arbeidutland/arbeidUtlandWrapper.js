@@ -26,7 +26,7 @@ class ArbeidUtlandWrapper extends Component {
       },
       foretakNavn: '',
       foretakOrgnr: '',
-      arbeidUtlandHjemmekontor: '',
+      arbeidUtlandHjemmekontor: null,
     });
   };
 
