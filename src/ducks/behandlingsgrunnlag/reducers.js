@@ -95,11 +95,11 @@ export default function reducer(state = initialState, action) {
           },
           arbeidUtland: dokument.arbeidUtland.map(arbeidUtland => ({
             adresse: {
-              gatenavn: arbeidUtland.adresse.gatenavn,
+              gatenavn: arbeidUtland.adresse.gatenavn || null,
               husnummer: arbeidUtland.adresse.husnummer || null,
-              landkode: arbeidUtland.adresse.landkode,
-              postnummer: arbeidUtland.adresse.postnummer,
-              poststed: arbeidUtland.adresse.poststed,
+              landkode: arbeidUtland.adresse.landkode || null,
+              postnummer: arbeidUtland.adresse.postnummer || null,
+              poststed: arbeidUtland.adresse.poststed || null,
               region: arbeidUtland.adresse.region || null,
             },
             foretakNavn: arbeidUtland.foretakNavn || null,
