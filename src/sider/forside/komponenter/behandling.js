@@ -11,6 +11,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../../felleskomponenter/skjema';
 
 import { oppgaverOperations } from '../../../ducks/oppgaver';
+import { serverinfoSelectors } from '../../../ducks/serverinfo';
 
 import './behandling.css';
 
@@ -29,6 +30,12 @@ class Behandling extends Component {
   };
 
   render() {
+    const { erProdish } = this.props;
+
+    const ikkePlukkbareBehandlingstemaer = erProdish ? [
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+    ] : [];
+
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
         <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
@@ -39,6 +46,7 @@ class Behandling extends Component {
               <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
                 {
                   MKV.KTObjects.behandlinger.behandlingstema
+                    .filter(({ kode }) => !ikkePlukkbareBehandlingstemaer.includes(kode))
                     .sort(compareTerm)
                     .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))
                 }
@@ -53,6 +61,7 @@ class Behandling extends Component {
 }
 
 Behandling.propTypes = {
+  erProdish: PT.bool.isRequired,
   handleSubmit: PT.func.isRequired,
   history: PT.object.isRequired,
   formValues: PT.object,
@@ -62,7 +71,8 @@ Behandling.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  erProdish: serverinfoSelectors.ErProdishSelector(state),
   initialValues: {
     behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
