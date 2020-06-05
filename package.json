@@ -178,6 +178,11 @@
     "webpack": "^3.12.0",
     "write-pkg": "^4.0.0"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/{!(index.js),}.js"
+    ]
+  },
   "proxy": {
     "/api": {
       "target": "http://localhost:3002",
