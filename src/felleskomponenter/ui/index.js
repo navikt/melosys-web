@@ -5,6 +5,7 @@ import ListevelgerFlervalg from './listevelgerFlervalg';
 import Undertittel from './undertittel';
 import Elementskrift from './elementskrift';
 import RedigerbarListe from './redigerbarliste';
+import LesMerPanel from './lesmerpanel';
 
 export {
   Knapp,
@@ -14,4 +15,5 @@ export {
   Undertittel,
   Elementskrift,
   RedigerbarListe,
+  LesMerPanel,
 };

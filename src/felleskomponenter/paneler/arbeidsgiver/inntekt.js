@@ -4,10 +4,6 @@ import ReactHighcharts from 'react-highcharts';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
-import * as Ikoner from '../../../resources/images';
-import * as KV from '../../../kodeverk';
-
-import PanelHeader from '../../panelHeader/panelHeader';
 import Tabell from '../../tabell/tabell';
 
 import './inntekt.css';
@@ -111,21 +107,7 @@ class Inntekt extends Component {
       </div>
     );
 
-    const manglerInntektTekst = !harMinstEnInntekt && 'Ingen inntekt i arbeidsforholdet 6 måneder forut for søknadsperioden.';
-
-    return (
-      <div className="inntekt panelSeksjon">
-        <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader
-            tittel="Inntekt"
-            tittelTilleggsinfo={KV.Paneltitler.fraKilde(KV.Koder.Opplysningskilder.INNTEKT)}
-            undertittel={manglerInntektTekst}
-            ikon={Ikoner.Inntekt}
-          />}
-          ariaTittel="Panel for inntekt">
-          { inntektInnhold }
-        </Nav.EkspanderbartpanelBase>
-      </div>);
+    return inntektInnhold;
   }
 }
 

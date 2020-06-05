@@ -15,48 +15,46 @@ import './periodeInntektOgFullmektig.css';
 
 const PeriodeInntektOgFullmektig = ({
   lagreSoknadOgOppfriskSaksopplysninger,
-}) => {
-  return (
-    <div className="periodeInntektOgFullmektig panelSeksjon">
-      <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader tittel={KV.Paneltitler.periodeInntektOgFullmektig} />}
-        ariaTittel="Panel for periode, inntekt og fullmektig">
-        <Nav.Container fluid>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Mui.Undertittel ikon={Ikoner.Calendar} tekst={KV.Paneltitler.soknadsPeriode} className="undertittel" />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Paneltitler.inntektUnderOpphold} className="undertittel inntektTittel" />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Inntektutland />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={KV.Paneltitler.fullmektig} className="undertittel fullmektigTittel" />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Fullmektige />
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Container>
-      </Nav.EkspanderbartpanelBase>
-    </div>
-  );
-};
+}) => (
+  <div className="periodeInntektOgFullmektig panelSeksjon">
+    <Nav.EkspanderbartpanelBase
+      heading={<PanelHeader tittel={KV.Paneltitler.periodeInntektOgFullmektig} />}
+      ariaTittel="Panel for periode, inntekt og fullmektig">
+      <Nav.Container fluid>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Mui.Undertittel ikon={Ikoner.Calendar} tekst={KV.Paneltitler.soknadsPeriode} className="undertittel" />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Paneltitler.inntektUnderOpphold} className="undertittel inntektTittel" />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Inntektutland />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={KV.Paneltitler.fullmektig} className="undertittel fullmektigTittel" />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Fullmektige />
+          </Nav.Column>
+        </Nav.Row>
+      </Nav.Container>
+    </Nav.EkspanderbartpanelBase>
+  </div>
+);
 
 PeriodeInntektOgFullmektig.propTypes = {
   lagreSoknadOgOppfriskSaksopplysninger: PT.func.isRequired,
