@@ -1,5 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
+import classNames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
@@ -18,14 +19,17 @@ const Organisasjon = ({
   organisasjon,
   slettHandle,
   redigerbart,
+  className,
 }) => {
   if (!organisasjon) { return null; }
   const {
     orgnr,
   } = organisasjon;
 
+  const organisasjonCls = classNames('panelSeksjon', 'organisasjon', className);
+
   return (
-    <div className="panelSeksjon organisasjon">
+    <div className={organisasjonCls}>
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="6">
@@ -55,10 +59,12 @@ Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   slettHandle: PT.func,
   redigerbart: PT.bool.isRequired,
+  className: PT.string,
 };
 
 Organisasjon.defaultProps = {
   slettHandle: undefined,
+  className: undefined,
 };
 
 export default Organisasjon;

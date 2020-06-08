@@ -28,10 +28,10 @@ export const ArbeidsgivereEnkeltNorge = props => {
 
   const seksjoner = (
     <Fragment>
-      <Organisasjon organisasjon={organisasjon} redigerbart={redigerbart} />
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} />
+      <Organisasjon organisasjon={organisasjon} redigerbart={redigerbart} className="organisasjonSeksjon" />
+      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} className="undertittel" />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
-      <Mui.Undertittel ikon={Ikoner.Inntekt} tekst="Inntekt (fra inntektskomponenten)" />
+      <Mui.Undertittel ikon={Ikoner.Inntekt} tekst="Inntekt (fra inntektskomponenten)" className="undertittel" />
       {kilde && <Inntekt inntektListe={inntektListe} />}
     </Fragment>
   );
