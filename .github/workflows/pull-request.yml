@@ -3,7 +3,7 @@ name: Push
 on:
   pull_request:
     branches:
-      - 'SPRINT-*'
+      - 'develop'
 jobs:
   build:
     runs-on: ubuntu-latest
