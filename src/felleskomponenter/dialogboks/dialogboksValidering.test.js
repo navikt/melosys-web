@@ -44,7 +44,9 @@ describe('DialogboksValidering', () => {
 
     expect(feilmeldinger).toHaveLength(2);
   });
+});
 
+describe('Validering', () => {
   it('Viser feilmelding "Ukjent feil" dersom det ikke finnes en mapping for feilkode', () => {
     const validering = shallow(<Validering valideringKode="tilfeldingString" />);
     const modalBody = validering.find(ModalBody);
