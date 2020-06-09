@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
+import * as Ikoner from '../../../resources/images';
 
 import OrganisasjonsAdresse from '../../adresser/organisasjonsAdresse';
 import KontaktOpplysninger from '../../kontaktopplysninger';
@@ -20,6 +21,7 @@ const Organisasjon = ({
   slettHandle,
   redigerbart,
   className,
+  slettTekst,
 }) => {
   if (!organisasjon) { return null; }
   const {
@@ -42,12 +44,15 @@ const Organisasjon = ({
             <dl className="organisasjon__detaljer">
               <OrganisasjonsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
             </dl>
-          </Nav.Column>
-          <Nav.Column xs="6" className="organisasjon__slettwrapper">
-            <KontaktOpplysninger juridiskOrg={organisasjon} redigerbart={redigerbart} />
             <div className="organisasjon__slettknapp">
-              { slettHandle && <Nav.Knapp disabled={!redigerbart} onClick={slettHandle}>Slett</Nav.Knapp> }
+              {
+                slettHandle && redigerbart &&
+                <Nav.Lenker onClick={slettHandle}><img src={Ikoner.Bin} alt="Slett" /><span>{slettTekst}</span></Nav.Lenker>
+              }
             </div>
+          </Nav.Column>
+          <Nav.Column xs="6" className="organisasjon__kontaktopplysninger">
+            <KontaktOpplysninger juridiskOrg={organisasjon} redigerbart={redigerbart} />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>
@@ -60,11 +65,13 @@ Organisasjon.propTypes = {
   slettHandle: PT.func,
   redigerbart: PT.bool.isRequired,
   className: PT.string,
+  slettTekst: PT.string,
 };
 
 Organisasjon.defaultProps = {
   slettHandle: undefined,
   className: undefined,
+  slettTekst: 'Slett',
 };
 
 export default Organisasjon;

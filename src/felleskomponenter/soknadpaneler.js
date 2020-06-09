@@ -7,6 +7,7 @@ import * as MPT from '../proptypes';
 import * as KV from '../kodeverk';
 
 import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
+import AndreArbeidsforholdNorge from './paneler/andreArbeidsforholdNorge';
 import ArbeidUtland from './paneler/arbeidutland';
 import ForetakUtland from './paneler/foretakutland';
 import MaritimtArbeid from './paneler/maritimtArbeid';
@@ -51,6 +52,7 @@ const Soknadpaneler = ({
         <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
       }
       <ArbeidsgivereNorge />
+      <AndreArbeidsforholdNorge />
       <ForetakUtland />
       <SelvstendigArbeid soknadVerdier={soknadVerdier} />
       <ArbeidUtland />

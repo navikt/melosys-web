@@ -2,6 +2,7 @@ import AccountCircle from './line-version-account-circle.svg';
 import AddOne from './line-version-add-1.svg';
 import Arbeidsgiver from './ikon-arbeidsgiver.svg';
 import Arbeidsforhold from './ikon-arbeidsforhold.svg';
+import Bin from './bin-1.svg';
 import Binders from './paperclip.svg';
 import BrevSendt from './emailsend.svg';
 import Calendar from './calendar.svg';
@@ -33,6 +34,7 @@ export {
   AddOne,
   Arbeidsgiver,
   Arbeidsforhold,
+  Bin,
   Binders,
   BrevSendt as InnBrev,
   Calendar,

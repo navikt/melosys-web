@@ -8,6 +8,7 @@ export const maritimtArbeid = 'Maritimt arbeid';
 export const medlemskap = 'Medlemskap';
 export const inntektUnderOpphold = 'Inntekt i søknadsperioden';
 export const arbeidsforholdRegistrertINorge = 'Arbeidsforhold registrert i Norge (Opplysninger fra A-ordningen)';
+export const andreArbeidsforholdNorge = 'Andre arbeidsforhold i Norge';
 export const fraKilde = kilde => kilde && `(fra ${kilde})`;
 export const kontantytelser = 'Kontantytelser fra NAV';
 export const personopplysningspanel = 'Personopplysningspanel';

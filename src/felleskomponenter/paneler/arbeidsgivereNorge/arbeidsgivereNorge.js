@@ -85,7 +85,7 @@ export const ArbeidsgivereNorge = props => {
   const wrapIPanel = arbeidsgivereNorge.length > 1;
 
   return (
-    <div className="arbeidsgivereNorge">
+    <div className="arbeidsgivereNorge panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader tittel={KV.Paneltitler.arbeidsforholdRegistrertINorge} />}
         ariaTittel="Panel for arbeidsforhold registrert i Norge"
