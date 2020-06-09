@@ -164,10 +164,26 @@ describe('behandlingsgrunnlag reducer', () => {
         ektefelleEllerBarnINorge: 'test',
         studentSemester: 'test',
         studentFinansieringKode: 'test',
-        foretakUtland: [
+        arbeidsforholdUtland: [
           {
             uuid: '12ff23dc4',
             navn: 'Abcdef',
+            orgnr: '123456789',
+            selvstendigNaeringsvirksomhet: false,
+            adresse: {
+              gatenavn: null,
+              husnummer: null,
+              region: null,
+              postnummer: null,
+              poststed: null,
+              landkode: null,
+            },
+          },
+        ],
+        selvstendigNaeringsvirksomhetUtland: [
+          {
+            uuid: '12ff23dc4',
+            navn: 'fedcba',
             orgnr: '123456789',
             selvstendigNaeringsvirksomhet: true,
             adresse: {
@@ -302,6 +318,20 @@ describe('behandlingsgrunnlag reducer', () => {
             {
               uuid: '12ff23dc4',
               navn: 'Abcdef',
+              orgnr: '123456789',
+              selvstendigNaeringsvirksomhet: false,
+              adresse: {
+                gatenavn: null,
+                husnummer: null,
+                region: null,
+                postnummer: null,
+                poststed: null,
+                landkode: null,
+              },
+            },
+            {
+              uuid: '12ff23dc4',
+              navn: 'fedcba',
               orgnr: '123456789',
               selvstendigNaeringsvirksomhet: true,
               adresse: {

@@ -28,7 +28,7 @@ export const AndreArbeidsforholdNorge = ({
     >
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidsforhold i Norge" className="undertittel" />
       <EkstraArbeidsforholdNorge
-        leggTilTekst="LEGG TIL NYTT ARBEIDSFORHOLD"
+        leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
         slettTekst="Slett arbeidsforhold"
         feltNavn="ekstraArbeidsgivere"
         redigerbart={redigerbart}
@@ -38,7 +38,7 @@ export const AndreArbeidsforholdNorge = ({
       />
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Selvstendig næringsvirksomhet i Norge" className="undertittel selvstendigNaeringsvirksomhetUndertittel" />
       <EkstraArbeidsforholdNorge
-        leggTilTekst="LEGG TIL NY SELVSTENDIG VIRKSOMHET"
+        leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET"
         slettTekst="Slett virksomhet"
         feltNavn="selvstendigForetak"
         redigerbart={redigerbart}

@@ -8,6 +8,7 @@ import * as KV from '../kodeverk';
 
 import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
 import AndreArbeidsforholdNorge from './paneler/andreArbeidsforholdNorge';
+import AndreArbeidsforholdUtland from './paneler/andreArbeidsforholdUtland';
 import ArbeidUtland from './paneler/arbeidutland';
 import ForetakUtland from './paneler/foretakutland';
 import MaritimtArbeid from './paneler/maritimtArbeid';
@@ -53,6 +54,7 @@ const Soknadpaneler = ({
       }
       <ArbeidsgivereNorge />
       <AndreArbeidsforholdNorge />
+      <AndreArbeidsforholdUtland />
       <ForetakUtland />
       <SelvstendigArbeid soknadVerdier={soknadVerdier} />
       <ArbeidUtland />
@@ -127,7 +129,8 @@ const mapStateToProps = state => ({
     soknadsperiodeFom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
     soknadsperiodeTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
-    foretakUtland: behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+    arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
+    selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
     kontaktNavn: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigFirma,

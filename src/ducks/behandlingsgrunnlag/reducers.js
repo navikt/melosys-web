@@ -69,6 +69,23 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_BEHANDLINGSGRUNNLAG: {
       const { dokument } = action;
 
+      const foretakUtland = [
+        ...dokument.arbeidsforholdUtland.map(forhold => ({
+          uuid: forhold.uuid,
+          navn: forhold.navn || null,
+          orgnr: forhold.orgnr || null,
+          selvstendigNaeringsvirksomhet: false,
+          adresse: lagNullableAdresse(forhold.adresse),
+        })),
+        ...dokument.selvstendigNaeringsvirksomhetUtland.map(virksomhet => ({
+          uuid: virksomhet.uuid,
+          navn: virksomhet.navn || null,
+          orgnr: virksomhet.orgnr || null,
+          selvstendigNaeringsvirksomhet: true,
+          adresse: lagNullableAdresse(virksomhet.adresse),
+        })),
+      ];
+
       const data = {
         ...state.data,
         data: {
@@ -136,13 +153,7 @@ export default function reducer(state = initialState, action) {
             studentSemester: null,
             studentFinansieringKode: null,
           },
-          foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
-            uuid: foretakUtland.uuid,
-            navn: foretakUtland.navn || null,
-            orgnr: foretakUtland.orgnr || null,
-            selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet || false,
-            adresse: lagNullableAdresse(foretakUtland.adresse),
-          })),
+          foretakUtland,
           bosted: {
             intensjonOmRetur: null,
             antallMaanederINorge: null,
