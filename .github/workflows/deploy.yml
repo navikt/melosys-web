@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'master'
-      - 'SPRINT-*'
+      - 'develop'
   pull_request:
     branches:
       - 'master'
@@ -84,6 +84,9 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: nais/nais.yaml
           VAR: namespace=default,ingress=https://melosys.nais.preprod.local
+      - name: get commit message
+        run: | # Må hentes med et script fordi pull_request ikke har github.event.head_commit
+          echo ::set-env name=COMMIT_MSG::$(git log --format=%B -n 1 ${{ github.event.after }})
       - name: Slack Notification (deploy success)
         if: success()
         uses: rtCamp/action-slack-notify@v1.0.0
@@ -93,13 +96,13 @@ jobs:
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ':clap: melosys-web ble deployet til q1 :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+          SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
 
-  # Deploy til Q2 ved push på SPRINT-branch
+  # Deploy til Q2 ved push på develop-branch
   deploy_q2:
     name: Deploy til Q2
     needs: build
-    if: contains(github.ref, 'SPRINT-')
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -3,7 +3,7 @@ import React from 'react';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 
-import DialogboksValidering from './dialogboksValidering';
+import DialogboksValidering, { Validering, Feilmelding, ModalBody } from './dialogboksValidering';
 import MKV from '../../melosyskodeverk';
 
 describe('DialogboksValidering', () => {
@@ -28,34 +28,41 @@ describe('DialogboksValidering', () => {
 
   it('Viser en liste over valideringer', () => {
     const dialogboksValidering = shallow(<DialogboksValidering {...props} />);
-    const valideringer = dialogboksValidering.find('div');
+    const valideringer = dialogboksValidering.find(Validering);
 
     expect(valideringer).toHaveLength(2);
   });
 
-  it('Viser feilmelding "Ukjent feil" dersom det ikke finnes en mapping for feilkode', () => {
-    props.valideringer = ['tilfeldigString'];
-    const dialogboksValidering = shallow(<DialogboksValidering {...props} />);
-    const valideringer = dialogboksValidering.find('div');
+  it('Viser en liste over feilmeldinger', () => {
+    props.feilmeldinger = [
+      { tittel: 'tittel1', innhold: 'innhold1' },
+      { tittel: 'tittel2', innhold: 'innhold2' },
+    ];
 
-    expect(valideringer).toHaveLength(1);
-    expect(valideringer.find(Nav.typo.Element).first().children().text()).toBe('Ukjent feil');
+    const dialogboksValidering = shallow(<DialogboksValidering {...props} />);
+    const feilmeldinger = dialogboksValidering.find(Feilmelding);
+
+    expect(feilmeldinger).toHaveLength(2);
+  });
+});
+
+describe('Validering', () => {
+  it('Viser feilmelding "Ukjent feil" dersom det ikke finnes en mapping for feilkode', () => {
+    const validering = shallow(<Validering valideringKode="tilfeldingString" />);
+    const modalBody = validering.find(ModalBody);
+
+    expect(modalBody).toHaveLength(1);
+    expect(modalBody.props().tittel).toBe('Ukjent feil');
   });
 
   it('viser feilmelding fra kodeverk dersom ingen mapping for feilmelding finnes', () => {
-    props.valideringer = [
-      MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
-    ];
-    const dialogboksValidering = shallow(<DialogboksValidering {...props} />);
+    const validering = shallow(<Validering valideringKode={MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE} />);
 
-    const valideringer = dialogboksValidering.find('div');
-    expect(valideringer).toHaveLength(1);
+    const modalBody = validering.find(ModalBody);
+    expect(modalBody).toHaveLength(1);
 
-    const elementer = valideringer.find(Nav.typo.Element);
-    const tekstomrader = valideringer.find(Nav.Tekstomrade);
-
-    expect(elementer.first().children().text()).toBe('Feil ved kontroll');
-    expect(tekstomrader.first().children().text()).toBe(KV.kodeTilTerm(
+    expect(modalBody.props().tittel).toBe('Feil ved kontroll');
+    expect(modalBody.props().innhold).toBe(KV.kodeTilTerm(
       MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
       MKV.KTObjects.begrunnelser.kontroll_begrunnelser
     ));
