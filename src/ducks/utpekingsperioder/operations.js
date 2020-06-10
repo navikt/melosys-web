@@ -39,6 +39,7 @@ export function lagre() {
 const byggUtpekingsperiode = (stegState, reduxState) => {
   const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const lovvalgsland = stegState.lovvalgsland || avklartefaktaSelectors.OmfattesILandSelector(reduxState);
+  if (!lovvalgsland) return [];
 
   return [{
     fomDato: periode.fom,
