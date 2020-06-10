@@ -26,6 +26,7 @@ describe('VurderingArtikkel13_1_UtpekLand', () => {
       harLonnetArbeidAnnetLand: true,
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
+      lagreUtpekingsperioder: jest.fn(),
     };
   });
 

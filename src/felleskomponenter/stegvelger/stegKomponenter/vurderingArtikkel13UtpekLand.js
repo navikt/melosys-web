@@ -17,7 +17,7 @@ import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelg
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { utpekingsperioderSelectors } from '../../../ducks/utpekingsperioder';
+import { utpekingsperioderSelectors, utpekingsperioderOperations } from '../../../ducks/utpekingsperioder';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { formOperations } from '../../../ducks/form';
 import { flytSelectors } from '../../../ducks/flyt';
@@ -43,6 +43,7 @@ export const VurderingArtikkel13UtpekLand = ({
   harLonnetArbeidAnnetLand,
   oppdaterData,
   slettData,
+  lagreUtpekingsperioder,
 }) => {
   useEffect(() => {
     oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
@@ -96,6 +97,14 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const visLandvelger = erOffentligArbeidUtland || harLonnetArbeidAnnetLand;
   const lovvalgslandTittel = visLandvelger ? 'Velg lovvalgsland' : 'Lovvalgsland';
+
+  const vedKlikkForhandsvis = () => {
+    const formValid = validerForm();
+    if (!formValid) return false;
+
+    lagreUtpekingsperioder();
+    return true;
+  };
 
   return (
     <Fragment>
@@ -166,7 +175,7 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
       <Nav.Hovedknapp onClick={vedKlikkUtpek} disabled={!redigerbart} type="hoved">SEND PÅSTAND</Nav.Hovedknapp>
@@ -191,6 +200,7 @@ VurderingArtikkel13UtpekLand.propTypes = {
   harLonnetArbeidAnnetLand: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  lagreUtpekingsperioder: PT.func.isRequired,
 };
 
 VurderingArtikkel13UtpekLand.defaultProps = {
@@ -219,6 +229,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_UTPEKLAND)),
+  lagreUtpekingsperioder: () => dispatch(utpekingsperioderOperations.lagre()),
 });
 
 const VurderingArtikkel13UtpekLand_form = reduxForm({
