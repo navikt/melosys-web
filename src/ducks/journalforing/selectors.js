@@ -6,14 +6,20 @@
  */
 
 import { createSelector } from 'reselect';
+import { STATUS } from '../../services/utils';
+
+const JournalforingSelector = createSelector(
+  state => state.journalforing || {},
+  journalforing => journalforing
+);
 
 export const JournalforingAlle = createSelector(
-  state => state.journalforing.data || {},
-  journalforing => journalforing || {}
+  JournalforingSelector,
+  journalforing => journalforing.data || {}
 );
 
 export const JournalforingHovedDokument = createSelector(
-  state => state.journalforing.data || {},
+  JournalforingAlle,
   journalforing => journalforing.hoveddokument || { tittel: '', dokumentID: null, logiskeVedlegg: [] }
 );
 
@@ -28,7 +34,7 @@ export const JournalforingLogiskeVedleggSelector = createSelector(
 );
 
 export const JournalforingVedleggsDokumenter = createSelector(
-  state => state.journalforing.data || {},
+  JournalforingAlle,
   journalforing => journalforing.vedlegg || []
 );
 
@@ -69,4 +75,38 @@ export const ErAvsenderPreutfyltSelector = createSelector(
   (avsenderID, avsenderNavn, avsenderType) => (
     Boolean(avsenderID) && Boolean(avsenderNavn) && Boolean(avsenderType)
   )
+);
+
+const ReduxStatusSelector = createSelector(
+  JournalforingSelector,
+  journalforing => journalforing.status
+);
+
+const JournalforingDataSelector = createSelector(
+  JournalforingAlle,
+  journalforing => journalforing.data || {}
+);
+
+const HttpStatusSelector = createSelector(
+  JournalforingDataSelector,
+  journalforingData => journalforingData.status
+);
+
+const HttpMessageSelector = createSelector(
+  JournalforingDataSelector,
+  journalforingData => journalforingData.message
+);
+
+export const FeilmeldingSelector = createSelector(
+  ReduxStatusSelector,
+  HttpStatusSelector,
+  HttpMessageSelector,
+  (reduxStatus, httpStatus, httpMessage) => {
+    if (reduxStatus === STATUS.ERROR) {
+      return httpStatus < 500
+        ? [{ tittel: 'Feil ved journalføring', innhold: httpMessage }]
+        : [{ tittel: 'Teknisk feil', innhold: 'Det oppsto en teknisk feil ved journalføring. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.' }];
+    }
+    return [];
+  }
 );

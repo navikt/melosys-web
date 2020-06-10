@@ -1,5 +1,5 @@
 /* eslint no-alert:off, consistent-return:off */
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { autofill, setSubmitFailed, change, getFormSyncErrors, touch, isValid, getFormValues } from 'redux-form';
@@ -16,7 +16,6 @@ import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
 import * as Person from '../../felleskomponenter/skjema/validering/generisk/person';
 
 import Sticky from '../../felleskomponenter/sticky';
-import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import PDFDokument from './komponenter/pdfdokument';
 import JournalforingSED from './komponenter/journalforingsed';
 import JournalforingForm from './komponenter/journalforingform';
@@ -42,6 +41,10 @@ class Journalforing extends Component {
     const { journalpostID } = this.props.match.params;
     queryParamLogger(this.props.location, 'kilde', 'GOSYS');
     await this.props.hentJournalOppgave(journalpostID);
+  }
+
+  componentWillUnmount() {
+    this.props.resetJournalforingState();
   }
 
   onChangeVedlegg = e => {
@@ -146,7 +149,7 @@ class Journalforing extends Component {
       journalforingSkjemaVerdier: {
         saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, avsenderType,
       },
-      tilordneSak, settJournalforingHensikt, settFeilFelt, tilForsiden,
+      tilordneSak, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
@@ -170,10 +173,8 @@ class Journalforing extends Component {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
       return false;
     }
-    const response = await tilordneSak(journalforingData);
-    if (response.ok) {
-      tilForsiden();
-    }
+
+    tilordneSak(journalforingData);
   };
 
   /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
@@ -182,7 +183,7 @@ class Journalforing extends Component {
    */
   opprettFagsak = async () => {
     const {
-      journalforingSkjemaVerdier, opprettNySak, settJournalforingHensikt, settFeilFelt, tilForsiden,
+      journalforingSkjemaVerdier, opprettNySak, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
@@ -239,10 +240,8 @@ class Journalforing extends Component {
       anmodningOmUnntak,
       avsenderType: this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
     };
-    const response = await opprettNySak(journalforingData);
-    if (response.ok) {
-      tilForsiden();
-    }
+
+    opprettNySak(journalforingData);
   };
 
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
@@ -519,6 +518,7 @@ Journalforing.propTypes = {
   journalforSEDSkjemaIsValid: PT.bool.isRequired,
   journalforSEDSkjemaVerdier: PT.object,
   journalforSEDSkjemaErrors: PT.object.isRequired,
+  resetJournalforingState: PT.func.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -545,35 +545,12 @@ const mapDispatchToProps = dispatch => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.JOURNALFORING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
-  opprettNySak: data => Api.Journalforing.opprett(data),
-  tilordneSak: data => Api.Journalforing.tilordne(data),
+  opprettNySak: data => dispatch(journalforingOperations.opprett(data)),
+  tilordneSak: data => dispatch(journalforingOperations.tilordne(data)),
   sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
   sokOrgnr: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
-});
-
-const kontekster = [
-  { navn: 'journalforing', melding: 'Det har oppstått en feil: Kunne ikke hente journalforing.' },
-];
-
-const JournalforingWrapper = externalProps => {
-  useEffect(() => (
-    function cleanup() {
-      externalProps.resetJournalforingState();
-    }
-  ), []);
-  const MergeProps = hocProps => <Journalforing {...hocProps} {...externalProps} />;
-  const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(MergeProps)));
-
-  return <JournalforingMedErrorHandling />;
-};
-
-JournalforingWrapper.propTypes = {
-  resetJournalforingState: PT.func.isRequired,
-};
-
-const journalforingWrapperMapDispatchToProps = dispatch => ({
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
 });
 
-export default connect(null, journalforingWrapperMapDispatchToProps)(JournalforingWrapper);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));

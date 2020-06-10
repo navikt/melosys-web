@@ -6,6 +6,7 @@ import { FellesHandlersContext } from '../contexts';
 import { modalerOperations, modalerSelectors } from '../ducks/modaler';
 import { vedtakSelectors } from '../ducks/vedtak';
 import { utpekSelectors } from '../ducks/utpek';
+import { journalforingSelectors } from '../ducks/journalforing';
 
 import DialogboksOppfriskSak from '../felleskomponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksHenlegg from '../felleskomponenter/dialogboks/dialogboksHenlegg';
@@ -36,6 +37,7 @@ const Modals = ({
   visValideringModal,
   skjulValideringModalDialogHandle,
   valideringerFeilkoder,
+  valideringerFeilmeldinger,
   behandlingOppfriskes,
   annenBehandlingOppfriskes,
 }) => (
@@ -85,6 +87,7 @@ const Modals = ({
       <DialogboksValidering
         avbryt={skjulValideringModalDialogHandle}
         valideringer={valideringerFeilkoder}
+        feilmeldinger={valideringerFeilmeldinger}
       />
     }
   </Fragment>
@@ -112,12 +115,17 @@ Modals.propTypes = {
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
   valideringerFeilkoder: PT.arrayOf(PT.string),
+  valideringerFeilmeldinger: PT.arrayOf(PT.shape({
+    tittel: PT.string.isRequired,
+    innhold: PT.string.isRequired,
+  })),
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
 };
 
 Modals.defaultProps = {
   valideringerFeilkoder: [],
+  valideringerFeilmeldinger: [],
 };
 
 const mapStateToProps = state => ({
@@ -128,6 +136,7 @@ const mapStateToProps = state => ({
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
   valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
+  valideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state)],
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -3,6 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
+import * as Utils from '../../utils';
 
 import MKV from '../../melosyskodeverk';
 
@@ -42,10 +43,46 @@ const hentFeilmelding = valideringKode => {
   return feilmelding;
 };
 
+export const ModalBody = ({ tittel, innhold }) => (
+  <div className="validering">
+    <Nav.typo.Element className="valideringKode">{tittel}</Nav.typo.Element>
+    <Nav.Tekstomrade>{innhold}</Nav.Tekstomrade>
+  </div>
+);
+
+ModalBody.propTypes = {
+  tittel: PT.string.isRequired,
+  innhold: PT.string.isRequired,
+};
+
+export const Validering = ({ valideringKode }) => {
+  const { tittel, innhold } = hentFeilmelding(valideringKode);
+
+  return (
+    <ModalBody tittel={tittel} innhold={innhold} />
+  );
+};
+
+Validering.propTypes = {
+  valideringKode: PT.string.isRequired,
+};
+
+export const Feilmelding = ({ feilmelding: { tittel, innhold } }) => (
+  <ModalBody tittel={tittel} innhold={innhold} />
+);
+
+Feilmelding.propTypes = {
+  feilmelding: PT.shape({
+    tittel: PT.string,
+    innhold: PT.string,
+  }).isRequired,
+};
+
 export const DialogboksValidering = ({
   avbryt,
   ariaHideApp,
   valideringer,
+  feilmeldinger,
 }) => {
   const handleKeyPress = e => {
     if (e.key === 'Enter') {
@@ -74,16 +111,9 @@ export const DialogboksValidering = ({
         &times;
       </span>
       {
-        valideringer.map(valideringKode => {
-          const { tittel, innhold } = hentFeilmelding(valideringKode);
-
-          return (
-            <div key={valideringKode} className="validering">
-              <Nav.typo.Element className="valideringKode">{tittel}</Nav.typo.Element>
-              <Nav.Tekstomrade>{innhold}</Nav.Tekstomrade>
-            </div>
-          );
-        })
+        Utils._isEmpty(feilmeldinger)
+          ? valideringer.map(valideringKode => <Validering valideringKode={valideringKode} key={valideringKode} />)
+          : feilmeldinger.map(feilmelding => <Feilmelding feilmelding={feilmelding} key={Utils._uuid()} />)
       }
     </Nav.Modal>
   );
@@ -92,11 +122,17 @@ export const DialogboksValidering = ({
 DialogboksValidering.propTypes = {
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
-  valideringer: PT.arrayOf(PT.string).isRequired,
+  valideringer: PT.arrayOf(PT.string),
+  feilmeldinger: PT.arrayOf(PT.shape({
+    tittel: PT.string,
+    innhold: PT.string,
+  })),
 };
 
 DialogboksValidering.defaultProps = {
   ariaHideApp: true,
+  valideringer: [],
+  feilmeldinger: [],
 };
 
 export default DialogboksValidering;
