@@ -10,7 +10,6 @@ import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
 import AndreArbeidsforholdNorge from './paneler/andreArbeidsforholdNorge';
 import AndreArbeidsforholdUtland from './paneler/andreArbeidsforholdUtland';
 import ArbeidUtland from './paneler/arbeidutland';
-import ForetakUtland from './paneler/foretakutland';
 import MaritimtArbeid from './paneler/maritimtArbeid';
 import Personopplysninger from './paneler/personopplysninger';
 import PeriodeInntektOgFullmektig from './paneler/periodeInntektOgFullmektig';
@@ -55,7 +54,6 @@ const Soknadpaneler = ({
       <ArbeidsgivereNorge />
       <AndreArbeidsforholdNorge />
       <AndreArbeidsforholdUtland />
-      <ForetakUtland />
       <SelvstendigArbeid soknadVerdier={soknadVerdier} />
       <ArbeidUtland />
       <VirksomhetNorge />
