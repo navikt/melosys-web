@@ -13,7 +13,6 @@ import ArbeidUtland from './paneler/arbeidutland';
 import MaritimtArbeid from './paneler/maritimtArbeid';
 import Personopplysninger from './paneler/personopplysninger';
 import PeriodeInntektOgFullmektig from './paneler/periodeInntektOgFullmektig';
-import SelvstendigArbeid from './paneler/selvstendigarbeid';
 import VirksomhetNorge from './paneler/virksomhetNorge';
 
 import { fagsakSelectors } from '../ducks/fagsaker';
@@ -30,7 +29,6 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
 const Soknadpaneler = ({
   lagreSoknad,
   fagsaker,
-  soknadForm,
   oppgittAdresseHarVerdier,
   startOgVisOppfriskModal,
 }) => {
@@ -43,8 +41,6 @@ const Soknadpaneler = ({
     startOgVisOppfriskModal();
   };
 
-  const { values: soknadVerdier } = soknadForm;
-
   return (
     <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
       <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
@@ -54,7 +50,6 @@ const Soknadpaneler = ({
       <ArbeidsgivereNorge />
       <AndreArbeidsforholdNorge />
       <AndreArbeidsforholdUtland />
-      <SelvstendigArbeid soknadVerdier={soknadVerdier} />
       <ArbeidUtland />
       <VirksomhetNorge />
       <MaritimtArbeid />
@@ -63,7 +58,6 @@ const Soknadpaneler = ({
 };
 
 Soknadpaneler.propTypes = {
-  soknadForm: PT.object,
   fagsaker: MPT.Fagsak.isRequired,
   lagreSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
@@ -72,13 +66,8 @@ Soknadpaneler.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
 };
 
-Soknadpaneler.defaultProps = {
-  soknadForm: {},
-};
-
 const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
-  soknadForm: formSelectors.SoknadenFormSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   initialValues: {
