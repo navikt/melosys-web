@@ -293,5 +293,36 @@ describe('utpekingsperioder operations', () => {
 
       expect(store.getActions()).toEqual(expectedActions);
     });
+
+    it('bygger tom utpekingsperiode dersom stegstate.lovvalgsland ikke er satt', () => {
+      const avklartfakta = {
+        avklartefaktaKode: null,
+        referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
+        fakta: [KV.Koder.LoennetArbeidAntallLand.ETT_ANNET_LAND],
+        subjektID: null,
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      };
+
+      initialState.avklartefakta.data = [avklartfakta];
+
+      const stegState = {
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
+        lovvalgsland: undefined,
+      };
+
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 });
