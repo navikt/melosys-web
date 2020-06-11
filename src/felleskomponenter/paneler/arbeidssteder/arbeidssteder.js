@@ -19,6 +19,20 @@ import PanelListe from '../panelListe';
 
 import './arbeidssteder.css';
 
+const arbeidUtlandDefaultElement = {
+  adresse: {
+    gatenavn: '',
+    husnummer: '',
+    landkode: '',
+    postnummer: '',
+    poststed: '',
+    region: '',
+  },
+  foretakNavn: '',
+  foretakOrgnr: '',
+  arbeidUtlandHjemmekontor: null,
+};
+
 export const Arbeidssteder = ({
   redigerbart,
 }) => (
@@ -35,6 +49,7 @@ export const Arbeidssteder = ({
         slettTekst="Slett arbeidssted"
         redigerbart={redigerbart}
         className="arbeidUtland"
+        defaultElement={arbeidUtlandDefaultElement}
       />
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidssted offshore" className="undertittel" />
       <PanelListe

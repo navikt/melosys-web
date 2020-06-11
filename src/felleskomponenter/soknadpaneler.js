@@ -10,11 +10,8 @@ import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
 import AndreArbeidsforholdNorge from './paneler/andreArbeidsforholdNorge';
 import AndreArbeidsforholdUtland from './paneler/andreArbeidsforholdUtland';
 import Arbeidssteder from './paneler/arbeidssteder';
-import ArbeidUtland from './paneler/arbeidutland';
-import MaritimtArbeid from './paneler/maritimtArbeid';
 import Personopplysninger from './paneler/personopplysninger';
 import PeriodeInntektOgFullmektig from './paneler/periodeInntektOgFullmektig';
-import VirksomhetNorge from './paneler/virksomhetNorge';
 
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
@@ -52,9 +49,6 @@ const Soknadpaneler = ({
       <AndreArbeidsforholdNorge />
       <AndreArbeidsforholdUtland />
       <Arbeidssteder />
-      <ArbeidUtland />
-      <VirksomhetNorge />
-      <MaritimtArbeid />
     </form>
   );
 };
