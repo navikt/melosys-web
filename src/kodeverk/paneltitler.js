@@ -10,6 +10,7 @@ export const inntektUnderOpphold = 'Inntekt i søknadsperioden';
 export const arbeidsforholdRegistrertINorge = 'Arbeidsforhold registrert i Norge (Opplysninger fra A-ordningen)';
 export const andreArbeidsforholdNorge = 'Andre arbeidsforhold i Norge';
 export const andreArbeidsforholdUtland = 'Andre arbeidsforhold i utlandet';
+export const arbeidssteder = 'Arbeidssted(er)';
 export const fraKilde = kilde => kilde && `(fra ${kilde})`;
 export const kontantytelser = 'Kontantytelser fra NAV';
 export const personopplysningspanel = 'Personopplysningspanel';

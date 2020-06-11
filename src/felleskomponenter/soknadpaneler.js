@@ -9,6 +9,7 @@ import * as KV from '../kodeverk';
 import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
 import AndreArbeidsforholdNorge from './paneler/andreArbeidsforholdNorge';
 import AndreArbeidsforholdUtland from './paneler/andreArbeidsforholdUtland';
+import Arbeidssteder from './paneler/arbeidssteder';
 import ArbeidUtland from './paneler/arbeidutland';
 import MaritimtArbeid from './paneler/maritimtArbeid';
 import Personopplysninger from './paneler/personopplysninger';
@@ -50,6 +51,7 @@ const Soknadpaneler = ({
       <ArbeidsgivereNorge />
       <AndreArbeidsforholdNorge />
       <AndreArbeidsforholdUtland />
+      <Arbeidssteder />
       <ArbeidUtland />
       <VirksomhetNorge />
       <MaritimtArbeid />
@@ -106,6 +108,9 @@ const mapStateToProps = state => ({
     oppholdUtlandTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).oppholdslandkoder,
     arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
+    arbeidsstedOffshore: [], // TODO: venter på avklaring for å håndtere arbeidssted offshore og skip
+    arbeidsstedSkip: [],
+    arbeidsstedFly: [], // TODO: venter på at felt skal implementeres i behandlingsgrunnlag (MELOSYS-3784)
     ektefelleEllerBarnINorge: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).studentSemester,
     erSelvstendig: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).erSelvstendig,

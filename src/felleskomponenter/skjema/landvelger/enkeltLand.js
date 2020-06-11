@@ -118,7 +118,7 @@ export class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta, dataListID, disabled, bredde,
+      label, meta, dataListID, disabled, bredde, placeholder,
     } = this.props;
 
     const { inputVerdi } = this.state;
@@ -144,6 +144,7 @@ export class EnkeltLand extends Component {
           onFocus={fokusInnHandler}
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
+          placeholder={placeholder}
         />
       </div>
     );
@@ -160,6 +161,7 @@ EnkeltLand.propTypes = {
   disabled: PT.bool,
   bredde: PT.string,
   onChange: PT.func,
+  placeholder: PT.string,
 };
 
 EnkeltLand.defaultProps = {
@@ -168,6 +170,7 @@ EnkeltLand.defaultProps = {
   disabled: false,
   bredde: 'XL',
   onChange: null,
+  placeholder: undefined,
 };
 
 const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={EnkeltLand} props={props} />);
