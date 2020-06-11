@@ -3,30 +3,25 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Skjema from '../../../skjema';
-import * as Ikoner from '../../../../resources/images';
 
-
-const EnkeltArbeidsforhold = ({
+const EnkeltArbeidsforholdUtland = ({
   redigerbart,
-  index,
-  slett,
-  overordnetFeltnavn,
+  overordnetFeltNavn,
   className,
-  slettTekst,
 }) => (
   <div className={className}>
     <Nav.Row>
       <Nav.Column xs="8">
         <Skjema.Input
           label="Navn på virksomheten"
-          feltNavn={`${overordnetFeltnavn}[${index}].navn`}
+          feltNavn={`${overordnetFeltNavn}.navn`}
           disabled={!redigerbart}
         />
       </Nav.Column>
       <Nav.Column xs="4">
         <Skjema.Input
           label="Org. nr"
-          feltNavn={`${overordnetFeltnavn}[${index}].orgnr`}
+          feltNavn={`${overordnetFeltNavn}.orgnr`}
           disabled={!redigerbart}
         />
       </Nav.Column>
@@ -35,21 +30,21 @@ const EnkeltArbeidsforhold = ({
       <Nav.Column xs="8">
         <Skjema.Input
           label="Adresse til arbeidsgiver"
-          feltNavn={`${overordnetFeltnavn}[${index}].adresse.gatenavn`}
+          feltNavn={`${overordnetFeltNavn}.adresse.gatenavn`}
           disabled={!redigerbart}
         />
       </Nav.Column>
       <Nav.Column xs="2">
         <Skjema.Input
           label="Poststed"
-          feltNavn={`${overordnetFeltnavn}[${index}].adresse.poststed`}
+          feltNavn={`${overordnetFeltNavn}.adresse.poststed`}
           disabled={!redigerbart}
         />
       </Nav.Column>
       <Nav.Column xs="2">
         <Skjema.Input
           label="Postnummer"
-          feltNavn={`${overordnetFeltnavn}[${index}].adresse.postnummer`}
+          feltNavn={`${overordnetFeltNavn}.adresse.postnummer`}
           disabled={!redigerbart}
         />
       </Nav.Column>
@@ -58,32 +53,22 @@ const EnkeltArbeidsforhold = ({
       <Nav.Column xs="8">
         <Skjema.LandVelger
           label="Land"
-          feltNavn={`${overordnetFeltnavn}[${index}].adresse.landkode`}
+          feltNavn={`${overordnetFeltNavn}.adresse.landkode`}
           disabled={!redigerbart}
         />
       </Nav.Column>
     </Nav.Row>
-    {
-      redigerbart &&
-      <Nav.Lenker onClick={() => slett(index)}>
-        <img src={Ikoner.Bin} alt="Slett" />
-        <span>{slettTekst}</span>
-      </Nav.Lenker>
-    }
   </div>
 );
 
-EnkeltArbeidsforhold.propTypes = {
+EnkeltArbeidsforholdUtland.propTypes = {
   redigerbart: PT.bool.isRequired,
-  index: PT.number.isRequired,
-  slett: PT.func.isRequired,
-  overordnetFeltnavn: PT.string.isRequired,
+  overordnetFeltNavn: PT.string.isRequired,
   className: PT.string,
-  slettTekst: PT.string.isRequired,
 };
 
-EnkeltArbeidsforhold.defaultProps = {
+EnkeltArbeidsforholdUtland.defaultProps = {
   className: undefined,
 };
 
-export default EnkeltArbeidsforhold;
+export default EnkeltArbeidsforholdUtland;

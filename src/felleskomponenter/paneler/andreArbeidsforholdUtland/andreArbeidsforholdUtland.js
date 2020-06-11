@@ -6,11 +6,13 @@ import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import * as Mui from '../../../felleskomponenter/ui';
 import * as Ikoner from '../../../resources/images';
+import * as Utils from '../../../utils';
 
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 import PanelHeader from '../../panelHeader/panelHeader';
-import ArbeidsforholdUtland from './arbeidsforholdUtland';
+import EnkeltArbeidsforholdUtland from './enkeltArbeidsforholdUtland';
+import PanelListe from '../panelListe';
 
 import './andreArbeidsforholdUtland.css';
 
@@ -23,18 +25,22 @@ export const AndreArbeidsforholdUtland = ({
       ariaTittel="Panel for andre arbeidsforhold i utlandet"
     >
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidsforhold i utlandet" className="undertittel" />
-      <ArbeidsforholdUtland
+      <PanelListe
         redigerbart={redigerbart}
+        feltNavn="arbeidsforholdUtland"
         leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD I UTLANDET"
         slettTekst="Slett arbeidsforhold"
-        feltNavn="arbeidsforholdUtland"
+        elementKomponent={EnkeltArbeidsforholdUtland}
+        defaultElement={{ uuid: Utils._uuid() }}
       />
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Selvstendig næringsvirksomhet i utlandet" className="undertittel selvstendigNaeringsvirksomhetUndertittel" />
-      <ArbeidsforholdUtland
+      <PanelListe
         redigerbart={redigerbart}
         leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET I UTLANDET"
         slettTekst="Slett næringsvirksomhet"
         feltNavn="selvstendigNaeringsvirksomhetUtland"
+        elementKomponent={EnkeltArbeidsforholdUtland}
+        defaultElement={{ uuid: Utils._uuid() }}
       />
     </Nav.EkspanderbartpanelBase>
   </div>
