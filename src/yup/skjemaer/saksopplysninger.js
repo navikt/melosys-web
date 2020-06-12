@@ -18,11 +18,10 @@ const saksopplysninger = object().shape({
   arbeidUtland: array().of(object().when('$behandlingstema', {
     is: erIkkeBeslutningLovvalgAnnetLand,
     then: object().shape({
+      foretakNavn: string().nullable().required({ melding: 'Navn på foretak kreves', panel: KV.Paneltitler.arbeidUtland }),
       adresse: object().shape({
-        postnummer: string().nullable().required({ melding: 'Postnummer kreves', panel: KV.Paneltitler.arbeidUtland }),
         landkode: string().nullable().required({ melding: 'Land kreves', panel: KV.Paneltitler.arbeidUtland }),
         poststed: string().nullable().required({ melding: 'Poststed kreves', panel: KV.Paneltitler.arbeidUtland }),
-        gatenavn: string().nullable().required({ melding: 'Gatenavn kreves', panel: KV.Paneltitler.arbeidUtland }),
       }),
     }),
   })),
