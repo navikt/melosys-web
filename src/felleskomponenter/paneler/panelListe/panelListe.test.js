@@ -20,7 +20,6 @@ describe('PanelListe', () => {
     const fieldArrayProps = fieldArray.props();
 
     expect(fieldArray).toHaveLength(1);
-    expect(fieldArrayProps.component).toBe(InnerPanelListe);
     expect(fieldArrayProps.name).toBe(props.feltNavn);
   });
 });
@@ -45,6 +44,7 @@ describe('InnerPanelListe', () => {
       elementClassName: 'elementClassName',
       defaultElement: {},
       className: 'className',
+      settFeltVerdi: jest.fn(),
     };
   });
 
@@ -56,9 +56,11 @@ describe('InnerPanelListe', () => {
     expect(elementer.first().props().overordnetFeltNavn).toBe('liste[0]');
     expect(elementer.first().props().redigerbart).toBe(props.redigerbart);
     expect(elementer.first().props().className).toBe(props.elementClassName);
+    expect(elementer.first().props().verdier).toEqual({});
     expect(elementer.last().props().overordnetFeltNavn).toBe('liste[1]');
     expect(elementer.last().props().redigerbart).toBe(props.redigerbart);
     expect(elementer.last().props().className).toBe(props.elementClassName);
+    expect(elementer.first().props().verdier).toEqual({});
   });
 
   it('viser lenker for å slette elementer', () => {

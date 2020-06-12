@@ -102,8 +102,8 @@ const mapStateToProps = state => ({
     oppholdUtlandTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).oppholdslandkoder,
     arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
-    arbeidsstedOffshore: [], // TODO: venter på avklaring for å håndtere arbeidssted offshore og skip
-    arbeidsstedSkip: [],
+    arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
+    arbeidsstedSkip: behandlingsgrunnlagSelectors.SkipArbeidSelector(state),
     arbeidsstedFly: [], // TODO: venter på at felt skal implementeres i behandlingsgrunnlag (MELOSYS-3784)
     ektefelleEllerBarnINorge: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).studentSemester,
@@ -111,7 +111,6 @@ const mapStateToProps = state => ({
     selvstendigForetak: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
     antallMaanederINorge: behandlingsgrunnlagSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: behandlingsgrunnlagSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
-    maritimtArbeid: behandlingsgrunnlagSelectors.MaritimtArbeidSelector(state),
     soknadsperiodeFom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
     soknadsperiodeTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),

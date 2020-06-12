@@ -2,9 +2,9 @@ import React from 'react';
 
 import * as Skjema from '../../../skjema';
 
-import EnkeltArbeidsstedLand from './enkeltArbeidsstedLand';
+import EnkeltArbeidsstedOffshore from './enkeltArbeidsstedOffshore';
 
-describe('EnkeltArbeidsstedLand', () => {
+describe('EnkeltArbeidsstedOffshore', () => {
   let props = null;
 
   beforeEach(() => {
@@ -16,10 +16,10 @@ describe('EnkeltArbeidsstedLand', () => {
 
   describe('alle inputs som vises', () => {
     it('har disabled satt basert på redigerbart', () => {
-      const enkeltArbeidsstedLand = shallow(<EnkeltArbeidsstedLand {...props} />);
+      const enkeltArbeidsstedOffshore = shallow(<EnkeltArbeidsstedOffshore {...props} />);
 
-      const inputs = enkeltArbeidsstedLand.find(Skjema.Input);
-      const landvelger = enkeltArbeidsstedLand.find(Skjema.LandVelger);
+      const inputs = enkeltArbeidsstedOffshore.find(Skjema.Input);
+      const landvelger = enkeltArbeidsstedOffshore.find(Skjema.LandVelger);
 
       inputs.forEach(n => {
         expect(n.props().disabled).toBe(!props.redigerbart);

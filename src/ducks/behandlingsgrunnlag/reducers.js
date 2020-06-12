@@ -86,6 +86,21 @@ export default function reducer(state = initialState, action) {
         })),
       ];
 
+      const lagMaritimtArbeid = arbeidssted => ({
+        enhetNavn: arbeidssted.enhetNavn || null,
+        fartsomradeKode: arbeidssted.fartsomradeKode || null,
+        flaggLandkode: arbeidssted.flaggLandkode || null,
+        installasjonsLandkode: arbeidssted.installasjonsLandkode || null,
+        territorialfarvann: arbeidssted.territorialfarvann || null,
+        foretakNavn: arbeidssted.foretakNavn || null,
+        foretakOrgnr: arbeidssted.foretakOrgnr || null,
+      });
+
+      const maritimtArbeid = [
+        ...dokument.arbeidsstedOffshore.map(lagMaritimtArbeid),
+        ...dokument.arbeidsstedSkip.map(lagMaritimtArbeid),
+      ];
+
       const data = {
         ...state.data,
         data: {
@@ -167,15 +182,7 @@ export default function reducer(state = initialState, action) {
               landkode: dokument.oppgittAdresseLand,
             },
           },
-          maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
-            enhetNavn: maritimtArbeid.enhetNavn || null,
-            fartsomradeKode: maritimtArbeid.fartsomradeKode || null,
-            flaggLandkode: maritimtArbeid.flaggLandkode || null,
-            installasjonsLandkode: maritimtArbeid.installasjonsLandkode || null,
-            territorialfarvann: maritimtArbeid.territorialfarvann || null,
-            foretakNavn: maritimtArbeid.foretakNavn || null,
-            foretakOrgnr: maritimtArbeid.foretakOrgnr || null,
-          })),
+          maritimtArbeid,
           soeknadsland: {
             landkoder: dokument.soknadsland,
           },

@@ -13,14 +13,21 @@ function SelectWrappedComponent({
   meta,
   emptyFieldDisabled,
   emptyFieldText,
+  onChange,
   ...rest
 }) {
   const { touched, active } = meta;
   const feil = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
+  const innerChange = e => {
+    if (onChange) onChange(e);
+    input.onChange(e);
+  };
+
   const inputProps = {
     ...input,
     ...rest,
+    onChange: innerChange,
   };
   return (
     <Nav.Select label={label} feil={feil} {...inputProps}>
@@ -36,6 +43,7 @@ SelectWrappedComponent.defaultProps = {
   meta: undefined,
   emptyFieldDisabled: true,
   emptyFieldText: '',
+  onChange: PT.func,
 };
 
 SelectWrappedComponent.propTypes = {
@@ -45,6 +53,7 @@ SelectWrappedComponent.propTypes = {
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   emptyFieldDisabled: PT.bool,
   emptyFieldText: PT.string,
+  onChange: () => {},
 };
 
 function Select({

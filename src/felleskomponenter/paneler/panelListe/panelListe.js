@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
-import { FieldArray } from 'redux-form';
+import { connect } from 'react-redux';
+import { FieldArray, change } from 'redux-form';
 import classNames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
@@ -17,6 +18,7 @@ export const InnerPanelListe = ({
   elementClassName,
   defaultElement,
   className,
+  settFeltVerdi,
 }) => {
   const panelListeCl = classNames('panelListe', className);
 
@@ -27,9 +29,10 @@ export const InnerPanelListe = ({
   return (
     <div className={panelListeCl}>
       {
-        elementer.map((enkeltElement, index) => {
+        elementer.map((element, index) => {
           const slett = () => fields.remove(index);
           const overordnetFeltNavn = `${fields.name}[${index}]`;
+          const settVerdi = (feltNavn, verdi) => settFeltVerdi(`${overordnetFeltNavn}.${feltNavn}`, verdi);
 
           return (
             /* eslint-disable-next-line react/no-array-index-key */
@@ -37,7 +40,9 @@ export const InnerPanelListe = ({
               <ElementKomponent
                 redigerbart={redigerbart}
                 overordnetFeltNavn={overordnetFeltNavn}
+                verdier={element}
                 className={elementClassName}
+                settVerdi={settVerdi}
               />
               {
                 redigerbart &&
@@ -70,6 +75,7 @@ InnerPanelListe.propTypes = {
   elementClassName: PT.string,
   defaultElement: PT.any,
   className: PT.string,
+  settFeltVerdi: PT.func.isRequired,
 };
 
 InnerPanelListe.defaultProps = {
@@ -78,12 +84,18 @@ InnerPanelListe.defaultProps = {
   className: undefined,
 };
 
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  settFeltVerdi: (field, value) => dispatch(change(ownProps.meta.form, field, value)),
+});
+
+const ConnectedInnerPanelListe = connect(null, mapDispatchToProps)(InnerPanelListe);
+
 const PanelListe = ({
   feltNavn,
   ...rest
 }) => (
   <FieldArray
-    component={InnerPanelListe}
+    component={ConnectedInnerPanelListe}
     name={feltNavn}
     props={rest}
   />
