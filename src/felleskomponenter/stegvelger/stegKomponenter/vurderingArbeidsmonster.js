@@ -64,55 +64,33 @@ LandLinje.defaultProps = {
   avklartMarginaltArbeidILand: undefined,
 };
 
-/**
- * @param props Objekt Diverse props Se prop types
- */
-const MarginaltArbeid = props => {
-  const {
-    arbeidsland, redigerbart, marginaltArbeid, landMedVesentligArbeid, erNorgeValgt, oppdaterData,
-  } = props;
-
-
-  const kombinasjonsbeskrivelse = erNorgeValgt ? 'kun Norge' : 'ett land, ikke Norge (Fortsetter med Art.12)';
-  const valgtKombinasjonInformasjon = landMedVesentligArbeid.length === 1 &&
-    (
-      <Nav.AlertStripeInfo>
-        Valgt kombinasjon er { kombinasjonsbeskrivelse }
-      </Nav.AlertStripeInfo>
-    );
-
-  const ingenArbeidslandVarsel = landMedVesentligArbeid.length === 0 && (
-    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsland, eller ingen land med vesentlig virksomhet.</Nav.AlertStripe>
-  );
-
-  return (
-    <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
-      <div className="marginaltArbeid">
-        <div className="landliste_innhold">
-          <div className="land__enkeltlinje">
-            <Nav.typo.UndertekstBold>Land</Nav.typo.UndertekstBold>
-            <Nav.typo.UndertekstBold className="marginaltArbeidCheckbox">Marginalt arbeid? {'(<5%)'}</Nav.typo.UndertekstBold>
-          </div>
-          {arbeidsland.map(({ land }) => {
-            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === land.kode);
-
-            const key = `marginaltArbeidslandListe${land.kode}`;
-            return <LandLinje
-              landKode={land}
-              avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
-              key={key}
-              oppdaterData={oppdaterData}
-              redigerbart={redigerbart}
-            />;
-          })
-          }
+const MarginaltArbeid = ({
+  arbeidsland, redigerbart, marginaltArbeid, oppdaterData,
+}) => (
+  <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
+    <div className="marginaltArbeid">
+      <div className="landliste_innhold">
+        <div className="land__enkeltlinje">
+          <Nav.typo.UndertekstBold>Land</Nav.typo.UndertekstBold>
+          <Nav.typo.UndertekstBold className="marginaltArbeidCheckbox">Marginalt arbeid? {'(<5%)'}</Nav.typo.UndertekstBold>
         </div>
-        {ingenArbeidslandVarsel}
-        {valgtKombinasjonInformasjon}
+        {arbeidsland.map(({ land }) => {
+          const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === land.kode);
+
+          const key = `marginaltArbeidslandListe${land.kode}`;
+          return <LandLinje
+            landKode={land}
+            avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
+            key={key}
+            oppdaterData={oppdaterData}
+            redigerbart={redigerbart}
+          />;
+        })
+        }
       </div>
-    </Nav.Fieldset>
-  );
-};
+    </div>
+  </Nav.Fieldset>
+);
 
 MarginaltArbeid.propTypes = {
   arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet),
@@ -146,8 +124,8 @@ export const VurderingArbeidsmonster = ({
     marginaltArbeid,
     aktivitetINorge,
     aktivitetINorgeNodvendig,
-    erYrkesaktivitetAntallLandNodvendig,
-    erYrkesAktivitetOffentligNodvendig,
+    erArbeidstakerOgSelvstendigNaeringsdrivende,
+    erOffentligTjenestemann,
     harAvklaring,
     yrkesaktivitet,
     loennetArbeidAntallLandFakta,
@@ -264,7 +242,7 @@ export const VurderingArbeidsmonster = ({
           {...tilstand}
         />
         {
-          erYrkesaktivitetAntallLandNodvendig &&
+          erArbeidstakerOgSelvstendigNaeringsdrivende &&
           <EnkeltAvklartfakta
             redigerbart={redigerbart}
             avklartfakta={loennetArbeidAntallLandFakta}
@@ -277,7 +255,7 @@ export const VurderingArbeidsmonster = ({
           />
         }
         {
-          erYrkesAktivitetOffentligNodvendig &&
+          erOffentligTjenestemann &&
           <EnkeltAvklartfakta
             redigerbart={redigerbart}
             avklartfakta={offentligArbeidAntallLandFakta}
@@ -321,8 +299,8 @@ VurderingArbeidsmonster.propTypes = {
     aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
     yrkesaktivitet: PT.string.isRequired,
-    erYrkesaktivitetAntallLandNodvendig: PT.bool.isRequired,
-    erYrkesAktivitetOffentligNodvendig: PT.bool.isRequired,
+    erArbeidstakerOgSelvstendigNaeringsdrivende: PT.bool.isRequired,
+    erOffentligTjenestemann: PT.bool.isRequired,
     loennetArbeidAntallLandFakta: MPT.Avklartefakta,
     offentligArbeidAntallLandFakta: MPT.Avklartefakta,
   }).isRequired,

@@ -27,6 +27,8 @@ describe('VurderingArtikkel13_1_UtpekLand', () => {
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
       lagreUtpekingsperioder: jest.fn(),
+      ikkeMarginaleArbeidsland: [],
+      oppdaterMottakerinstitusjoner: jest.fn(),
     };
   });
 

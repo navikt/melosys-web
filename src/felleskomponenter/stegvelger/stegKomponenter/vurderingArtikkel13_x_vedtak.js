@@ -31,6 +31,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
   behandlingID,
   lovvalgsperiode,
+  harIkkeMarginaleArbeidsland,
   formIsValid,
   formValues,
   form,
@@ -60,6 +61,8 @@ export const VurderingArtikkel13_x_vedtak = ({
     return formIsValid;
   };
 
+  const skalViseSedAlternativer = redigerbart && harIkkeMarginaleArbeidsland;
+
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
@@ -69,15 +72,18 @@ export const VurderingArtikkel13_x_vedtak = ({
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },
-    {
+  ];
+
+  if (skalViseSedAlternativer) {
+    pdfDokumenter.push({
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
       data: {
         fritekst: formValues.fritekstSed,
       },
-    },
-  ];
+    });
+  }
 
   const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
@@ -125,7 +131,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         </Nav.Column>
       </Nav.Row>
       {
-        redigerbart &&
+        skalViseSedAlternativer &&
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -165,6 +171,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: MPT.Periode,
+  harIkkeMarginaleArbeidsland: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
@@ -197,6 +204,7 @@ const mapStateToProps = (state, ownProps) => {
     redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+    harIkkeMarginaleArbeidsland: avklartefaktaSelectors.IkkeMarginaleArbeidslandAntallSelector(state) > 0,
     formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     initialValues: {
