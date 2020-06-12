@@ -71,7 +71,7 @@ class SokkelSkip extends Steg {
         }
         const installasjonsType = hentFaktaVerdi(enkelt);
         if (installasjonsType === KV.Koder.SOKKEL) {
-          return enkelt.begrunnelseKoder.length > 0;
+          return enkelt.begrunnelseKoder.some(kode => kode);
         }
         return true;
       }).every(enkelt => enkelt === true);
