@@ -21,7 +21,7 @@ const EnkeltArbeidsstedLand = ({
       </Nav.Column>
       <Nav.Column xs="6">
         <Skjema.Input
-          label="Gateadresse (valgfri)"
+          label="Gateadresse"
           feltNavn={`${overordnetFeltNavn}.adresse.gatenavn`}
           disabled={!redigerbart}
           placeholder="Skriv inn"
@@ -31,7 +31,7 @@ const EnkeltArbeidsstedLand = ({
     <Nav.Row>
       <Nav.Column xs="3">
         <Skjema.Input
-          label="Postnummer (valgfri)"
+          label="Postnummer"
           feltNavn={`${overordnetFeltNavn}.adresse.postnummer`}
           disabled={!redigerbart}
           placeholder="Skriv inn"
@@ -58,7 +58,7 @@ const EnkeltArbeidsstedLand = ({
       </Nav.Column>
       <Nav.Column xs="5">
         <Skjema.Input
-          label="Region (valgfri)"
+          label="Region"
           feltNavn={`${overordnetFeltNavn}.adresse.region`}
           disabled={!redigerbart}
           placeholder="Skriv inn"
