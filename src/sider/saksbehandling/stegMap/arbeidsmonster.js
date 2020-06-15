@@ -35,9 +35,9 @@ class Arbeidsmonster extends Steg {
     const aktivitetINorgeNodvendig = (erArbeidstakerOgSelvstendigNaeringsdrivende ? loennetArbeidIFlereLand : true) && (erOffentligTjenestemann ? offentligArbeidIFlereLand : true);
 
     const harAvklaring =
-    (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
-    (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || loennetArbeidIEttAnnetLand || loennetArbeidIFlereLand) : true) &&
-    (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
+      (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
+      (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || loennetArbeidIEttAnnetLand || loennetArbeidIFlereLand) : true) &&
+      (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
 
     this.kriterier = [
       {

@@ -78,7 +78,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
     // Skal ikke legge til ekstra mottakerinstitusjon dersom den allerede finnes
     const valgtLovvalgsland = ikkeMarginaleArbeidsland.includes(land)
-      ? [] : MKV.KTObjects.landkoder.filter(landkodeObjekt => land === landkodeObjekt.kode);
+      ? [] : KV.kodeTilObjekt(land, MKV.KTObjects.landkoder);
 
     oppdaterMottakerinstitusjoner([
       ...eksisterendeIkkeMarginaleArbeidsland,

@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import MKV from '../../melosyskodeverk';
+import * as KV from '../../kodeverk';
 
 export const UtpekingsperioderSelector = createSelector(
   state => (state.utpekingsperioder.data ? state.utpekingsperioder.data : []),
@@ -18,5 +19,5 @@ export const LovvalgslandSelector = createSelector(
 
 export const LovvalgslandKTSelector = createSelector(
   LovvalgslandSelector,
-  lovvalgsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => lovvalgsland === landkodeObjekt.kode)
+  lovvalgsland => KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder)
 );
