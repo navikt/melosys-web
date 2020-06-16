@@ -215,7 +215,7 @@ export class Personopplysninger extends Component {
                 <Medlemskap medlemskap={medlemskap} />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row>
+            <Nav.Row className="kontantytelserUndertittel">
               <Nav.Column xs="12">
                 <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.informasjonOmBruker.undertitler.kontantytelser} className="undertittel" />
               </Nav.Column>
