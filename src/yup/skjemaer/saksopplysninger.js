@@ -47,11 +47,6 @@ const saksopplysninger = object().when('$behandlingstema', {
           KV.Panel.arbeidssteder.undertitler.arbeidsstedLand,
           'Land kreves'
         )),
-        poststed: string().nullable().required(lagMelding(
-          KV.Panel.arbeidssteder.tittel,
-          KV.Panel.arbeidssteder.undertitler.arbeidsstedLand,
-          'Poststed kreves'
-        )),
       }),
     })),
     arbeidsstedOffshore: array().of(object().shape({
