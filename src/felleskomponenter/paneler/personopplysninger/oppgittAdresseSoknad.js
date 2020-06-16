@@ -5,10 +5,10 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import LandVelger from '../../skjema/landvelger';
 
-const OppgittAdresseSoknad = ({ redigerbart }) => (
+const OppgittAdresseSoknad = ({ redigerbart, tittel }) => (
   <Nav.Row>
     <Nav.Column xs="6">
-      <Nav.Fieldset legend="Annen adresse oppgitt i søknaden som ikke er registrert i TPS:">
+      <Nav.Fieldset legend={tittel}>
         <dl className="person__detaljer">
           <Nav.Row>
             <Nav.Column xs="8">
@@ -43,6 +43,7 @@ const OppgittAdresseSoknad = ({ redigerbart }) => (
 );
 OppgittAdresseSoknad.propTypes = {
   redigerbart: PT.bool.isRequired,
+  tittel: PT.string.isRequired,
 };
 
 export default OppgittAdresseSoknad;

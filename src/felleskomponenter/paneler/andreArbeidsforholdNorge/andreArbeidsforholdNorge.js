@@ -23,10 +23,14 @@ export const AndreArbeidsforholdNorge = ({
 }) => (
   <div className="andreArbeidsforholdNorge panelSeksjon">
     <Nav.EkspanderbartpanelBase
-      heading={<PanelHeader tittel={KV.Paneltitler.andreArbeidsforholdNorge} />}
+      heading={<PanelHeader tittel={KV.Panel.andreArbeidsforholdNorge.tittel} />}
       ariaTittel="Panel for andre arbeidsforhold i Norge"
     >
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidsforhold i Norge" className="undertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.arbeidsforholdINorge}
+        className="undertittel"
+      />
       <EkstraArbeidsforholdNorge
         leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
         slettTekst="Slett arbeidsforhold"
@@ -36,7 +40,11 @@ export const AndreArbeidsforholdNorge = ({
         leggTil={(fields, org) => fields.push(org.orgnr)}
         findOrganisasjon={orgnr => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === orgnr)}
       />
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Selvstendig næringsvirksomhet i Norge" className="undertittel selvstendigNaeringsvirksomhetUndertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.selvstendigNaeringsdrivendeINorge}
+        className="undertittel selvstendigNaeringsvirksomhetUndertittel"
+      />
       <EkstraArbeidsforholdNorge
         leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET"
         slettTekst="Slett virksomhet"

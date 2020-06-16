@@ -21,10 +21,14 @@ export const AndreArbeidsforholdUtland = ({
 }) => (
   <div className="andreArbeidsforholdUtland panelSeksjon">
     <Nav.EkspanderbartpanelBase
-      heading={<PanelHeader tittel={KV.Paneltitler.andreArbeidsforholdUtland} />}
+      heading={<PanelHeader tittel={KV.Panel.andreArbeidsforholdUtland.tittel} />}
       ariaTittel="Panel for andre arbeidsforhold i utlandet"
     >
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidsforhold i utlandet" className="undertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.andreArbeidsforholdUtland.undertitler.arbeidsforholdIUtlandet}
+        className="undertittel"
+      />
       <PanelListe
         redigerbart={redigerbart}
         feltNavn="arbeidsforholdUtland"
@@ -33,7 +37,11 @@ export const AndreArbeidsforholdUtland = ({
         elementKomponent={EnkeltArbeidsforholdUtland}
         defaultElement={{ uuid: Utils._uuid() }}
       />
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Selvstendig næringsvirksomhet i utlandet" className="undertittel selvstendigNaeringsvirksomhetUndertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.andreArbeidsforholdUtland.undertitler.selvstendigNaeringsdrivendeIUtlandet}
+        className="undertittel selvstendigNaeringsvirksomhetUndertittel"
+      />
       <PanelListe
         redigerbart={redigerbart}
         leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET I UTLANDET"

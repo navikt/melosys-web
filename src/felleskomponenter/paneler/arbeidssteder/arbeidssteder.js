@@ -38,10 +38,14 @@ export const Arbeidssteder = ({
 }) => (
   <div className="arbeidssteder panelSeksjon">
     <Nav.EkspanderbartpanelBase
-      heading={<PanelHeader tittel={KV.Paneltitler.arbeidssteder} />}
+      heading={<PanelHeader tittel={KV.Panel.arbeidssteder.tittel} />}
       ariaTittel="Panel for arbeidssteder"
     >
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidssted på land" className="undertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
+        className="undertittel"
+      />
       <PanelListe
         feltNavn="arbeidUtland"
         elementKomponent={EnkeltArbeidsstedLand}
@@ -51,7 +55,11 @@ export const Arbeidssteder = ({
         className="arbeidUtland"
         defaultElement={arbeidUtlandDefaultElement}
       />
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidssted offshore" className="undertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
+        className="undertittel"
+      />
       <PanelListe
         feltNavn="arbeidsstedOffshore"
         elementKomponent={EnkeltArbeidsstedOffshore}
@@ -60,7 +68,11 @@ export const Arbeidssteder = ({
         redigerbart={redigerbart}
         className="arbeidsstedOffshore"
       />
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidssted på skip" className="undertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
+        className="undertittel"
+      />
       <PanelListe
         feltNavn="arbeidsstedSkip"
         elementKomponent={EnkeltArbeidsstedSkip}
@@ -69,7 +81,11 @@ export const Arbeidssteder = ({
         redigerbart={redigerbart}
         className="arbeidsstedSkip"
       />
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst="Arbeidssted ombord på fly" className="undertittel" />
+      <Mui.Undertittel
+        ikon={Ikoner.Arbeidsgiver}
+        tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
+        className="undertittel"
+      />
       <PanelListe
         feltNavn="arbeidsstedFly"
         elementKomponent={EnkeltArbeidsstedFly}

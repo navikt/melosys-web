@@ -128,7 +128,7 @@ export class Personopplysninger extends Component {
         <Nav.EkspanderbartpanelBase
           heading={
             <div className="personopplysninger__panelheader">
-              <PanelHeader tittel={KV.Paneltitler.informasjonOmBruker} />
+              <PanelHeader tittel={KV.Panel.informasjonOmBruker.tittel} />
               <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
             </div>}
           ariaTittel="Panel for personinformasjon">
@@ -196,7 +196,10 @@ export class Personopplysninger extends Component {
             </Nav.Row>
             {
               visAnnenAdresseFelter &&
-              <OppgittAdresseSoknad redigerbart={redigerbart} />
+              <OppgittAdresseSoknad
+                redigerbart={redigerbart}
+                tittel={KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse}
+              />
             }
             {
               !visAnnenAdresseFelter &&
@@ -204,7 +207,7 @@ export class Personopplysninger extends Component {
             }
             <Nav.Row>
               <Nav.Column xs="12">
-                <Mui.Undertittel ikon={Ikoner.Medlemskap} tekst="Medlemskap" className="undertittel" />
+                <Mui.Undertittel ikon={Ikoner.Medlemskap} tekst={KV.Panel.informasjonOmBruker.undertitler.medlemskap} className="undertittel" />
               </Nav.Column>
             </Nav.Row>
             <Nav.Row>
@@ -214,7 +217,7 @@ export class Personopplysninger extends Component {
             </Nav.Row>
             <Nav.Row>
               <Nav.Column xs="12">
-                <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Paneltitler.kontantytelser} className="undertittel" />
+                <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.informasjonOmBruker.undertitler.kontantytelser} className="undertittel" />
               </Nav.Column>
             </Nav.Row>
             <Nav.Row>

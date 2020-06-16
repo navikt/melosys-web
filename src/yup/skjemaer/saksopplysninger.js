@@ -4,52 +4,114 @@ import * as KV from '../../kodeverk';
 
 import MKV, { Utils as MKVUtils } from '../../melosyskodeverk';
 
-const SLUTTDATO_ER_APEN = { melding: 'Sluttdato er åpen', panel: KV.Paneltitler.soknadsPeriode };
+const lagMelding = (panel, undertittel, felt) => ({
+  panel,
+  undertittel,
+  melding: felt,
+});
+
+const SLUTTDATO_ER_APEN = lagMelding(
+  KV.Panel.periodeInntektOgFullmektig.tittel,
+  KV.Panel.periodeInntektOgFullmektig.undertitler.soknadsPeriode,
+  'Sluttdato er åpen'
+);
 
 const erIkkeBeslutningLovvalgAnnetLand = behandlingstema => behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
-const saksopplysninger = object().shape({
-  foretakUtland: array().of(object().when('$behandlingstema', {
-    is: erIkkeBeslutningLovvalgAnnetLand,
-    then: object().shape({
-      navn: string().nullable().required({ melding: 'Foretaksnavn kreves', panel: KV.Paneltitler.foretakUtland }),
-    }),
-  })),
-  arbeidUtland: array().of(object().when('$behandlingstema', {
-    is: erIkkeBeslutningLovvalgAnnetLand,
-    then: object().shape({
-      foretakNavn: string().nullable().required({ melding: 'Navn på foretak kreves', panel: KV.Paneltitler.arbeidUtland }),
+const saksopplysninger = object().when('$behandlingstema', {
+  is: erIkkeBeslutningLovvalgAnnetLand,
+  then: object().shape({
+    arbeidsforholdUtland: array().of(object().shape({
+      navn: string().nullable().required(lagMelding(
+        KV.Panel.andreArbeidsforholdUtland.tittel,
+        KV.Panel.andreArbeidsforholdUtland.undertitler.arbeidsforholdIUtlandet,
+        'Navn kreves'
+      )),
+    })),
+    selvstendigNaeringsvirksomhetUtland: array().of(object().shape({
+      navn: string().nullable().required(lagMelding(
+        KV.Panel.andreArbeidsforholdUtland.tittel,
+        KV.Panel.andreArbeidsforholdUtland.undertitler.selvstendigNaeringsdrivendeIUtlandet,
+        'Navn kreves'
+      )),
+    })),
+    arbeidUtland: array().of(object().shape({
+      foretakNavn: string().nullable().required(lagMelding(
+        KV.Panel.arbeidssteder.tittel,
+        KV.Panel.arbeidssteder.undertitler.arbeidsstedLand,
+        'Navn på foretak kreves'
+      )),
       adresse: object().shape({
-        landkode: string().nullable().required({ melding: 'Land kreves', panel: KV.Paneltitler.arbeidUtland }),
-        poststed: string().nullable().required({ melding: 'Poststed kreves', panel: KV.Paneltitler.arbeidUtland }),
+        landkode: string().nullable().required(lagMelding(
+          KV.Panel.arbeidssteder.tittel,
+          KV.Panel.arbeidssteder.undertitler.arbeidsstedLand,
+          'Land kreves'
+        )),
+        poststed: string().nullable().required(lagMelding(
+          KV.Panel.arbeidssteder.tittel,
+          KV.Panel.arbeidssteder.undertitler.arbeidsstedLand,
+          'Poststed kreves'
+        )),
       }),
+    })),
+    arbeidsstedOffshore: array().of(object().shape({
+      enhetNavn: string().nullable().required(lagMelding(
+        KV.Panel.arbeidssteder.tittel,
+        KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore,
+        'Navn kreves'
+      )),
+    }).uniqueProperty('enhetNavn', lagMelding(
+      KV.Panel.arbeidssteder.tittel,
+      KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore,
+      'Navn på enhet må være unikt'
+    ))),
+    arbeidsstedSkip: array().of(object().shape({
+      enhetNavn: string().nullable().required(lagMelding(
+        KV.Panel.arbeidssteder.tittel,
+        KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip,
+        'Navn kreves'
+      )),
+    }).uniqueProperty('enhetNavn', lagMelding(
+      KV.Panel.arbeidssteder.tittel,
+      KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip,
+      'Navn på enhet må være unikt'
+    ))),
+    oppgittAdresseGatenavn: string().nullable().when('$skalOppgittAdresseValideres', {
+      is: true,
+      then: string().nullable().required(lagMelding(
+        KV.Panel.informasjonOmBruker.tittel,
+        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        'Gatenavn kreves'
+      )),
     }),
-  })),
-  maritimtArbeid: array().of(object().when('$behandlingstema', {
-    is: erIkkeBeslutningLovvalgAnnetLand,
-    then: object().shape({
-      enhetNavn: string().nullable().required({ melding: 'Navn kreves', panel: KV.Paneltitler.maritimtArbeid }),
-    }).uniqueProperty('enhetNavn', { melding: 'Navn på enhet må være unikt', panel: KV.Paneltitler.maritimtArbeid }),
-  })),
-  oppgittAdresseGatenavn: string().nullable().when(['$skalOppgittAdresseValideres', '$behandlingstema'], {
-    is: (oppgittAdresseSkalValideres, behandlingstema) => oppgittAdresseSkalValideres && erIkkeBeslutningLovvalgAnnetLand(behandlingstema),
-    then: string().nullable().required({ melding: 'Gatenavn kreves', panel: KV.Paneltitler.personopplysningspanel }),
-  }),
-  oppgittAdressePostnummer: string().nullable().when(['$skalOppgittAdresseValideres', '$behandlingstema'], {
-    is: (oppgittAdresseSkalValideres, behandlingstema) => oppgittAdresseSkalValideres && erIkkeBeslutningLovvalgAnnetLand(behandlingstema),
-    then: string().nullable().required({ melding: 'Postnummer kreves', panel: KV.Paneltitler.personopplysningspanel }),
-  }),
-  oppgittAdressePoststed: string().nullable().when(['$skalOppgittAdresseValideres', '$behandlingstema'], {
-    is: (oppgittAdresseSkalValideres, behandlingstema) => oppgittAdresseSkalValideres && erIkkeBeslutningLovvalgAnnetLand(behandlingstema),
-    then: string().nullable().required({ melding: 'Poststed kreves', panel: KV.Paneltitler.personopplysningspanel }),
-  }),
-  oppgittAdresseLand: string().nullable().when(['$skalOppgittAdresseValideres', '$behandlingstema'], {
-    is: (oppgittAdresseSkalValideres, behandlingstema) => oppgittAdresseSkalValideres && erIkkeBeslutningLovvalgAnnetLand(behandlingstema),
-    then: string().nullable().required({ melding: 'Land kreves', panel: KV.Paneltitler.personopplysningspanel }),
-  }),
-  soknadsperiodeTom: string().when('$behandlingstema', {
-    is: MKVUtils.erUtsendt,
-    then: string().required(SLUTTDATO_ER_APEN),
+    oppgittAdressePostnummer: string().nullable().when('$skalOppgittAdresseValideres', {
+      is: true,
+      then: string().nullable().required(lagMelding(
+        KV.Panel.informasjonOmBruker.tittel,
+        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        'Postnummer kreves'
+      )),
+    }),
+    oppgittAdressePoststed: string().nullable().when('$skalOppgittAdresseValideres', {
+      is: true,
+      then: string().nullable().required(lagMelding(
+        KV.Panel.informasjonOmBruker.tittel,
+        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        'Poststed kreves'
+      )),
+    }),
+    oppgittAdresseLand: string().nullable().when('$skalOppgittAdresseValideres', {
+      is: true,
+      then: string().nullable().required(lagMelding(
+        KV.Panel.informasjonOmBruker.tittel,
+        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        'Land kreves'
+      )),
+    }),
+    soknadsperiodeTom: string().when('$behandlingstema', {
+      is: MKVUtils.erUtsendt,
+      then: string().required(SLUTTDATO_ER_APEN),
+    }),
   }),
 });
 

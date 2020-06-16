@@ -31,7 +31,7 @@ export const ArbeidsgivereEnkeltNorge = props => {
       <Organisasjon organisasjon={organisasjon} redigerbart={redigerbart} className="organisasjonSeksjon" />
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} className="undertittel" />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
-      <Mui.Undertittel ikon={Ikoner.Inntekt} tekst="Inntekt (fra inntektskomponenten)" className="undertittel" />
+      <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.arbeidsforholdRegistrertINorge.undertitler.inntekt} className="undertittel" />
       {kilde && <Inntekt inntektListe={inntektListe} />}
     </Fragment>
   );
@@ -87,7 +87,7 @@ export const ArbeidsgivereNorge = props => {
   return (
     <div className="arbeidsgivereNorge panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader tittel={KV.Paneltitler.arbeidsforholdRegistrertINorge} />}
+        heading={<PanelHeader tittel={KV.Panel.arbeidsforholdRegistrertINorge.tittel} />}
         ariaTittel="Panel for arbeidsforhold registrert i Norge"
       >
         {

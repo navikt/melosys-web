@@ -1,7 +1,7 @@
 import * as AvsenderTyper from './avsendertyper';
 import * as Koder from './koder';
 import * as Form from './form';
-import * as Paneltitler from './paneltitler';
+import * as Panel from './panel';
 
 const objektTilTermUtenFeilmelding = KTObjekt => {
   if (!KTObjekt || !KTObjekt.term) return null;
@@ -42,5 +42,5 @@ export {
   kodeTilTerm,
   kodeTilObjekt,
   termTilKode,
-  Paneltitler,
+  Panel,
 };

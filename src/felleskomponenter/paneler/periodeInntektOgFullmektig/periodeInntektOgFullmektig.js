@@ -18,12 +18,12 @@ const PeriodeInntektOgFullmektig = ({
 }) => (
   <div className="periodeInntektOgFullmektig panelSeksjon">
     <Nav.EkspanderbartpanelBase
-      heading={<PanelHeader tittel={KV.Paneltitler.periodeInntektOgFullmektig} />}
+      heading={<PanelHeader tittel={KV.Panel.periodeInntektOgFullmektig.tittel} />}
       ariaTittel="Panel for periode, inntekt og fullmektig">
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Mui.Undertittel ikon={Ikoner.Calendar} tekst={KV.Paneltitler.soknadsPeriode} className="undertittel" />
+            <Mui.Undertittel ikon={Ikoner.Calendar} tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.soknadsPeriode} className="undertittel" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -33,7 +33,7 @@ const PeriodeInntektOgFullmektig = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Paneltitler.inntektUnderOpphold} className="undertittel inntektTittel" />
+            <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.inntektUnderOpphold} className="undertittel inntektTittel" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -43,7 +43,7 @@ const PeriodeInntektOgFullmektig = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={KV.Paneltitler.fullmektig} className="undertittel fullmektigTittel" />
+            <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.fullmektig} className="undertittel fullmektigTittel" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
