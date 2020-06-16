@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -107,7 +107,7 @@ export const VurderingArtikkel13UtpekLand = ({
   };
 
   return (
-    <Fragment>
+    <div className="vurderingArtikkel13UtpekLand">
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       <Nav.typo.Undertittel>
         <Nav.typo.Element className="undertittel">{lovvalgslandTittel}</Nav.typo.Element>
@@ -179,7 +179,7 @@ export const VurderingArtikkel13UtpekLand = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Hovedknapp onClick={vedKlikkUtpek} disabled={!redigerbart} type="hoved">SEND PÅSTAND</Nav.Hovedknapp>
-    </Fragment>
+    </div>
   );
 };
 
