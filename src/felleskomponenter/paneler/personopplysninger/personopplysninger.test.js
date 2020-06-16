@@ -110,35 +110,20 @@ describe('Personopplysninger', () => {
     expect(expandableTables.last().props().elements).toBe(props.personhistorikk.midlertidigAdressePerioder);
   });
 
-  it('viser oppgittadressesoknad dersom oppgitt adresse har verdier', () => {
+  it('viser oppgittadressesoknad', () => {
     props.oppgittAdresseHarVerdier = true;
-    const personopplysninger = shallow(<Personopplysninger {...props} />);
-    const oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
+    let personopplysninger = shallow(<Personopplysninger {...props} />);
+    let oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
 
     expect(oppgittAdresseSoknad).toHaveLength(1);
     expect(oppgittAdresseSoknad.props().redigerbart).toBe(props.redigerbart);
-  });
+    expect(oppgittAdresseSoknad.props().oppgittAdresseHarVerdier).toBe(true);
 
-  it('viser ikke oppgittadressesoknad dersom oppgitt adresse ikke har verdier', () => {
     props.oppgittAdresseHarVerdier = false;
-    const personopplysninger = shallow(<Personopplysninger {...props} />);
-    const oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
+    personopplysninger = shallow(<Personopplysninger {...props} />);
+    oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
 
-    expect(oppgittAdresseSoknad).toHaveLength(0);
-  });
-
-  it('viser oppgittadressesoknad ved klikk på knapp for å legge til oppgitt adressse', () => {
-    props.oppgittAdresseHarVerdier = false;
-    const personopplysninger = shallow(<Personopplysninger {...props} />);
-
-    const knapp = personopplysninger
-      .findWhere(n => n.type() === Mui.Knapp && n.containsMatchingElement('LEGG TIL ADRESSE'));
-    expect(knapp).toHaveLength(1);
-    expect(knapp.props().disabled).toBe(!props.redigerbart);
-    knapp.simulate('click');
-
-    const oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
-    expect(oppgittAdresseSoknad).toHaveLength(1);
+    expect(oppgittAdresseSoknad.props().oppgittAdresseHarVerdier).toBe(false);
   });
 
   it('viser medlemskap', () => {

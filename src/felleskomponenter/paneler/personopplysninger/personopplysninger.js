@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import uuid from 'uuid';
-import Ikon from 'melosys-ikoner-assets';
 
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
@@ -91,146 +90,124 @@ AdresseHeader.propTypes = {
   adresseTittel: PT.string.isRequired,
 };
 
-export class Personopplysninger extends Component {
-  state = {
-    visAnnenAdresseFelterKnappKlikket: false,
-  };
+export const Personopplysninger = ({
+  redigerbart,
+  person,
+  personhistorikk,
+  oppgittAdresseHarVerdier,
+  medlemskap,
+  person: {
+    sammensattNavn,
+    personStatus,
+    erEgenAnsatt,
+  },
+}) => {
+  const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } = personhistorikk;
 
-  settVisAnnenAdresseFelterKnappKlikketTrue = () => this.setState({ visAnnenAdresseFelterKnappKlikket: true });
+  if (Object.keys(person).length === 0) { return null; }
 
-  render() {
-    const {
-      redigerbart,
-      person,
-      personhistorikk,
-      oppgittAdresseHarVerdier,
-      medlemskap,
-    } = this.props;
-
-    const { visAnnenAdresseFelterKnappKlikket } = this.state;
-
-    const { settVisAnnenAdresseFelterKnappKlikketTrue } = this;
-
-    const {
-      sammensattNavn,
-      personStatus,
-      erEgenAnsatt,
-    } = person;
-
-    const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } = personhistorikk;
-
-    if (Object.keys(person).length === 0) { return null; }
-
-    const visAnnenAdresseFelter = visAnnenAdresseFelterKnappKlikket || oppgittAdresseHarVerdier;
-
-    return (
-      <div className="personopplysninger panelSeksjon">
-        <Nav.EkspanderbartpanelBase
-          heading={
-            <div className="personopplysninger__panelheader">
-              <PanelHeader tittel={KV.Panel.informasjonOmBruker.tittel} />
-              <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
-            </div>}
-          ariaTittel="Panel for personinformasjon">
-          <Nav.Container fluid>
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={sammensattNavn} className="undertittel" />
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row>
-              <Nav.Column xs="6">
-                <PersonInfo person={person} />
-              </Nav.Column>
-              <Nav.Column xs="6">
-                <UtenlandskIdent disabled={!redigerbart} />
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row className="registrerteAdresser">
-              <Nav.Column xs="12">
-                <ExpandableTable
-                  amountOfItemsCollapsed={1}
-                  btnTextExpanded="Vis mindre"
-                  btnTextCollapsed="Vis flere"
-                  expandable={bostedsadressePerioder.length > 1}
-                  chevron
-                  header={<AdresseHeader adresseTittel="Bostedsadresse (TPS)" />}
-                  elements={bostedsadressePerioder}
-                  renderElement={element => (
-                    <AdresseRad key={uuid()} adresseKomponent={<GeneriskAdresse adresse={element.bostedsadresse} />} periode={element.periode} />
-                  )}
-                />
-                <ExpandableTable
-                  amountOfItemsCollapsed={1}
-                  btnTextExpanded="Vis mindre"
-                  btnTextCollapsed="Vis flere"
-                  expandable={postadressePerioder.length > 1}
-                  chevron
-                  header={<AdresseHeader adresseTittel="Postadresse (TPS)" />}
-                  elements={postadressePerioder}
-                  renderElement={element => (
-                    <AdresseRad key={uuid()} adresseKomponent={<UstrukturertAdresse adresse={element.postadresse} />} periode={element.periode} />
-                  )}
-                />
-                <ExpandableTable
-                  amountOfItemsCollapsed={1}
-                  btnTextExpanded="Vis mindre"
-                  btnTextCollapsed="Vis flere"
-                  expandable={midlertidigAdressePerioder.length > 1}
-                  chevron
-                  header={<AdresseHeader adresseTittel="Midlertidig postadresse" />}
-                  elements={midlertidigAdressePerioder}
-                  renderElement={element => {
-                    const {
-                      midlertidigAdresse: { adressetype, strukturertAdresse, ustrukturertAdresse }, periode,
-                    } = element;
-                    let adresseKomponent = null;
-
-                    if (adressetype === KV.Koder.AdresseType.STRUKTURERT) adresseKomponent = <StrukturertAdresse adresse={strukturertAdresse} />;
-                    else if (adressetype === KV.Koder.AdresseType.USTRUKTURERT) adresseKomponent = <UstrukturertAdresse adresse={ustrukturertAdresse} />;
-
-                    return <AdresseRad key={uuid()} adresseKomponent={adresseKomponent} periode={periode} />;
-                  }}
-                />
-              </Nav.Column>
-            </Nav.Row>
-            {
-              visAnnenAdresseFelter &&
-              <OppgittAdresseSoknad
-                redigerbart={redigerbart}
-                tittel={KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse}
+  return (
+    <div className="personopplysninger panelSeksjon">
+      <Nav.EkspanderbartpanelBase
+        heading={
+          <div className="personopplysninger__panelheader">
+            <PanelHeader tittel={KV.Panel.informasjonOmBruker.tittel} />
+            <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
+          </div>}
+        ariaTittel="Panel for personinformasjon">
+        <Nav.Container fluid>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={sammensattNavn} className="undertittel" />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <PersonInfo person={person} />
+            </Nav.Column>
+            <Nav.Column xs="6">
+              <UtenlandskIdent disabled={!redigerbart} />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="registrerteAdresser">
+            <Nav.Column xs="12">
+              <ExpandableTable
+                amountOfItemsCollapsed={1}
+                btnTextExpanded="Vis mindre"
+                btnTextCollapsed="Vis flere"
+                expandable={bostedsadressePerioder.length > 1}
+                chevron
+                header={<AdresseHeader adresseTittel="Bostedsadresse (TPS)" />}
+                elements={bostedsadressePerioder}
+                renderElement={element => (
+                  <AdresseRad key={uuid()} adresseKomponent={<GeneriskAdresse adresse={element.bostedsadresse} />} periode={element.periode} />
+                )}
               />
-            }
-            {
-              !visAnnenAdresseFelter &&
-              <Mui.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settVisAnnenAdresseFelterKnappKlikketTrue}><Ikon kind="tilsette" />LEGG TIL ADRESSE</Mui.Knapp>
-            }
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <Mui.Undertittel ikon={Ikoner.Medlemskap} tekst={KV.Panel.informasjonOmBruker.undertitler.medlemskap} className="undertittel" />
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <Medlemskap medlemskap={medlemskap} />
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row className="kontantytelserUndertittel">
-              <Nav.Column xs="12">
-                <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.informasjonOmBruker.undertitler.kontantytelser} className="undertittel" />
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <Kontantytelser />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Container>
-        </Nav.EkspanderbartpanelBase>
-      </div>
-    );
-  }
-}
+              <ExpandableTable
+                amountOfItemsCollapsed={1}
+                btnTextExpanded="Vis mindre"
+                btnTextCollapsed="Vis flere"
+                expandable={postadressePerioder.length > 1}
+                chevron
+                header={<AdresseHeader adresseTittel="Postadresse (TPS)" />}
+                elements={postadressePerioder}
+                renderElement={element => (
+                  <AdresseRad key={uuid()} adresseKomponent={<UstrukturertAdresse adresse={element.postadresse} />} periode={element.periode} />
+                )}
+              />
+              <ExpandableTable
+                amountOfItemsCollapsed={1}
+                btnTextExpanded="Vis mindre"
+                btnTextCollapsed="Vis flere"
+                expandable={midlertidigAdressePerioder.length > 1}
+                chevron
+                header={<AdresseHeader adresseTittel="Midlertidig postadresse" />}
+                elements={midlertidigAdressePerioder}
+                renderElement={element => {
+                  const {
+                    midlertidigAdresse: { adressetype, strukturertAdresse, ustrukturertAdresse }, periode,
+                  } = element;
+                  let adresseKomponent = null;
+
+                  if (adressetype === KV.Koder.AdresseType.STRUKTURERT) adresseKomponent = <StrukturertAdresse adresse={strukturertAdresse} />;
+                  else if (adressetype === KV.Koder.AdresseType.USTRUKTURERT) adresseKomponent = <UstrukturertAdresse adresse={ustrukturertAdresse} />;
+
+                  return <AdresseRad key={uuid()} adresseKomponent={adresseKomponent} periode={periode} />;
+                }}
+              />
+            </Nav.Column>
+          </Nav.Row>
+          <OppgittAdresseSoknad
+            redigerbart={redigerbart}
+            tittel={KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse}
+            className="oppgittAdresse"
+            oppgittAdresseHarVerdier={oppgittAdresseHarVerdier}
+          />
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Mui.Undertittel ikon={Ikoner.Medlemskap} tekst={KV.Panel.informasjonOmBruker.undertitler.medlemskap} className="undertittel" />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Medlemskap medlemskap={medlemskap} />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="kontantytelserUndertittel">
+            <Nav.Column xs="12">
+              <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.informasjonOmBruker.undertitler.kontantytelser} className="undertittel" />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Kontantytelser />
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
+      </Nav.EkspanderbartpanelBase>
+    </div>
+  );
+};
 
 Personopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,
