@@ -183,6 +183,11 @@ export default function reducer(state = initialState, action) {
             },
           },
           maritimtArbeid,
+          luftfartBase: dokument.arbeidsstedFly.map(arbeidssted => ({
+            hjemmebaseNavn: arbeidssted.hjemmebaseNavn || null,
+            hjemmebaseLand: arbeidssted.hjemmebaseLand || null,
+            typeFlyvninger: arbeidssted.typeFlyvninger || null,
+          })),
           soeknadsland: {
             landkoder: dokument.soknadsland,
           },

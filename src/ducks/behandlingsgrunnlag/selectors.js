@@ -145,6 +145,11 @@ export const OffshoreArbeidSelector = createSelector(
   maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => enkeltArbeid.installasjonsLandkode)
 );
 
+export const LuftfartBaseSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.luftfartBase
+);
+
 export const SoknadslandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => (behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : [])

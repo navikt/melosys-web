@@ -91,7 +91,7 @@ export const Arbeidssteder = ({
         elementKomponent={EnkeltArbeidsstedFly}
         leggTilTekst="+ LEGG TIL NYTT ARBEIDSSTED PÅ FLY"
         slettTekst="Slett arbeidssted"
-        redigerbart={false} // TODO: låse opp når behandlingsgrunnlag har felt for arbeidssted for fly (MELOSYS-3784)
+        redigerbart={redigerbart}
         className="arbeidsstedFly"
       />
     </Nav.EkspanderbartpanelBase>

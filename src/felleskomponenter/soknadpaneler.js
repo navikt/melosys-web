@@ -104,7 +104,7 @@ const mapStateToProps = state => ({
     arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
     arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
     arbeidsstedSkip: behandlingsgrunnlagSelectors.SkipArbeidSelector(state),
-    arbeidsstedFly: [], // TODO: venter på at felt skal implementeres i behandlingsgrunnlag (MELOSYS-3784)
+    arbeidsstedFly: behandlingsgrunnlagSelectors.LuftfartBaseSelector(state),
     ektefelleEllerBarnINorge: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).studentSemester,
     erSelvstendig: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).erSelvstendig,

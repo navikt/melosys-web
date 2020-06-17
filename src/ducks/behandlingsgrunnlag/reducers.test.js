@@ -227,6 +227,13 @@ describe('behandlingsgrunnlag reducer', () => {
             foretakOrgnr: '12345',
           },
         ],
+        arbeidsstedFly: [
+          {
+            hjemmebaseNavn: 'Gardermoen',
+            hjemmebaseLand: 'NO',
+            typeFlyvninger: 'NASJONAL',
+          },
+        ],
         soknadsland: [],
         soknadsperiodeFom: '11.11.11',
         soknadsperiodeTom: '11.11.11',
@@ -386,6 +393,13 @@ describe('behandlingsgrunnlag reducer', () => {
               territorialfarvann: '12345',
               foretakNavn: '12345',
               foretakOrgnr: '12345',
+            },
+          ],
+          luftfartBase: [
+            {
+              hjemmebaseNavn: 'Gardermoen',
+              hjemmebaseLand: 'NO',
+              typeFlyvninger: 'NASJONAL',
             },
           ],
           soeknadsland: {
