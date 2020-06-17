@@ -3,7 +3,7 @@ Frontend deployes i en nginx-container som tar seg av oidc-oppsett. I `proxy.ngi
 defineres proxy til melosys backend.
 
 ## Automtatisk deploy
-Melosys-web deployer automatisk til t8 ved push på `develop`-branch
+Melosys-web deployer automatisk til q2 ved push på `develop`-branch
 (TODO: utfyll etter flere miljøer legges til)
 
 ## Manuell deploy
