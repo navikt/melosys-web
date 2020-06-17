@@ -43,7 +43,7 @@ SelectWrappedComponent.defaultProps = {
   meta: undefined,
   emptyFieldDisabled: true,
   emptyFieldText: '',
-  onChange: PT.func,
+  onChange: () => {},
 };
 
 SelectWrappedComponent.propTypes = {
@@ -53,7 +53,7 @@ SelectWrappedComponent.propTypes = {
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   emptyFieldDisabled: PT.bool,
   emptyFieldText: PT.string,
-  onChange: () => {},
+  onChange: PT.func,
 };
 
 function Select({
