@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import * as navLogo from '../../../resources/images/nav.svg';
+import { ReactComponent as NavLogo } from '../../../resources/images/nav.svg';
 import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils/utils';
 
@@ -36,9 +36,8 @@ const Topplinje = props => {
     <header className="topplinje">
       <div className="topplinje__brand">
         <button onClick={tilForsidenHandler} className="topplinje__brandKnapp">
-          <img
+          <NavLogo
             className="brand__logo"
-            src={navLogo}
             alt="To personer på NAV kontor"
           />
         </button>
