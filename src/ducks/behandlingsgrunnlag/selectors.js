@@ -152,7 +152,7 @@ export const LuftfartBaserSelector = createSelector(
 
 export const HjemmebaserSelector = createSelector(
   LuftfartBaserSelector,
-  luftfartBaser => luftfartBaser.map(base => base.hjemmebaseNavn)
+  luftfartBaser => luftfartBaser.map(base => base.hjemmebaseLand)
 );
 
 export const SoknadslandSelector = createSelector(
