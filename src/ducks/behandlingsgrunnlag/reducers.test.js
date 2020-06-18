@@ -393,7 +393,7 @@ describe('behandlingsgrunnlag reducer', () => {
               foretakOrgnr: '12345',
             },
           ],
-          luftfartBase: [
+          luftfartBaser: [
             {
               hjemmebaseNavn: 'Gardermoen',
               hjemmebaseLand: 'NO',

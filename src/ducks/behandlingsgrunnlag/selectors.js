@@ -145,13 +145,13 @@ export const OffshoreArbeidSelector = createSelector(
   maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => enkeltArbeid.installasjonsLandkode)
 );
 
-export const LuftfartBaseSelector = createSelector(
+export const LuftfartBaserSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.luftfartBase
+  behandlingsgrunnlag => behandlingsgrunnlag.luftfartBaser || []
 );
 
 export const HjemmebaserSelector = createSelector(
-  LuftfartBaseSelector,
+  LuftfartBaserSelector,
   luftfartBaser => luftfartBaser.map(base => base.hjemmebaseNavn)
 );
 

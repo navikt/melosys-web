@@ -83,6 +83,7 @@ const lagBehandlingsgrunnlagFelter = behandlingsgrunnlag => ({
   maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
   soeknadsland: behandlingsgrunnlag.soeknadsland,
   periode: behandlingsgrunnlag.periode,
+  luftfartBaser: behandlingsgrunnlag.luftfartBaser,
 });
 
 const lagSoeknadFelter = behandlingsgrunnlag => ({
