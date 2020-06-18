@@ -74,7 +74,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis orienteringsbrev',
+      navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_UTPEKING_UTLAND,
       data: {
         begrunnelseKode: null,
@@ -178,7 +178,7 @@ export const VurderingArtikkel13UtpekLand = ({
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Hovedknapp onClick={vedKlikkUtpek} disabled={!redigerbart} type="hoved">SEND PÅSTAND</Nav.Hovedknapp>
+      <Nav.Hovedknapp onClick={vedKlikkUtpek} disabled={!redigerbart} type="hoved">FATT VEDTAK</Nav.Hovedknapp>
     </Fragment>
   );
 };
