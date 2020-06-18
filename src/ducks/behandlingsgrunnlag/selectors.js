@@ -150,6 +150,11 @@ export const LuftfartBaseSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag.luftfartBase
 );
 
+export const HjemmebaserSelector = createSelector(
+  LuftfartBaseSelector,
+  luftfartBaser => luftfartBaser.map(base => base.hjemmebaseNavn)
+);
+
 export const SoknadslandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => (behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : [])
@@ -182,11 +187,6 @@ export const MedfolgendeAndreSelector = createSelector(
     const { medfolgendeAndre } = personopplysninger;
     return allePersoner.find(person => person.fnr === medfolgendeAndre);
   }
-);
-
-export const HjemmebaseSelector = createSelector(
-  ArbeidNorgeSelector,
-  arbeidNorge => arbeidNorge.flyendePersonellHjemmebase
 );
 
 export const NorskeArbeidsgivereSedSelector = createSelector(

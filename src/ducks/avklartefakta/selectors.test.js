@@ -59,12 +59,10 @@ describe('Avklartefaktaselectors', () => {
       const behandlingstema = MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
       const behandlingsgrunnlagData = {
-        arbeidNorge: {
-          flyendePersonellHjemmebase: MKV.Koder.landkoder.FR,
-        },
+        luftfartBase: [],
       };
 
-      const forventetResultat = [KV.kodeTilObjekt(MKV.Koder.landkoder.FR, MKV.KTObjects.landkoder)];
+      const forventetResultat = [];
 
       const state = lagState({
         avklartefakta,
@@ -97,6 +95,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
+          luftfartBase: [],
         },
       ],
       [
@@ -113,6 +112,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
+          luftfartBase: [],
         },
       ],
     ]).it('returnerer korrekt verdi', (forventetResultat, avklartefakta, behandlingstema, behandlingsgrunnlagData) => {
@@ -154,6 +154,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
+          luftfartBase: [],
           arbeidUtland: [
             {
               adresse: {
@@ -183,6 +184,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
+          luftfartBase: [],
           arbeidUtland: [],
         },
       ],
@@ -199,6 +201,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
+          luftfartBase: [],
           arbeidUtland: [],
         },
       ],
@@ -222,6 +225,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.DE],
           },
+          luftfartBase: [],
           arbeidUtland: [],
         },
       ],
@@ -253,6 +257,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.NO],
           },
+          luftfartBase: [],
         },
       ],
       [
@@ -273,6 +278,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.NO],
           },
+          luftfartBase: [],
         },
       ],
       [
@@ -290,6 +296,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.NO],
           },
+          luftfartBase: [],
           periode: { fom: '2020-02-02', tom: '2020-06-02' },
         },
       ],
@@ -311,6 +318,7 @@ describe('Avklartefaktaselectors', () => {
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.NO],
           },
+          luftfartBase: [],
           periode: { fom: '2020-02-02', tom: '2020-06-02' },
         },
       ],

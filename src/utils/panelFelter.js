@@ -24,7 +24,6 @@ export const feltGrupper = {
     selvstendigFortsetterEtterArbeidIUtlandet: [],
     arbeidsforholdVikarNavn: [],
     vikarOrgnr: [],
-    flyendePersonellHjemmebase: [],
     kontaktNavn: [],
     kontaktEpost: [],
     fullmektigFirma: [],

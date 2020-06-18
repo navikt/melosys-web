@@ -8,7 +8,6 @@ const ArbeidNorgePropType = PT.shape({
   selvstendigFortsetterEtterArbeidIUtlandet: PT.bool,
   arbeidsforholdVikarNavn: PT.string,
   vikarOrgnr: PT.string,
-  flyendePersonellHjemmebase: PT.string,
   ansattPaSokkelEllerSkip: PT.string,
   navnSkipEllerSokkel: PT.string,
   sokkelLand: PT.string,

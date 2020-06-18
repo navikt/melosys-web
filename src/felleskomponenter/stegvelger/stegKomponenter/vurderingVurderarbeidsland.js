@@ -19,7 +19,7 @@ import MKV from '../../../melosyskodeverk';
 
 import './vurderingVurderarbeidsland.css';
 
-const IngenSokkelSkipEllerHjemmebase = ({
+const IngenSokkelSkipEllerHjemmebaser = ({
   oppdaterData,
   slettData,
   redigerbart,
@@ -46,7 +46,7 @@ const IngenSokkelSkipEllerHjemmebase = ({
   return (
     <Fragment>
       <Nav.AlertStripe type="info">
-        Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebase. Fyll ut feltene hvis det er relevant for å vurdere arbeidsland.
+        Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebaser. Fyll ut feltene hvis det er relevant for å vurdere arbeidsland.
       </Nav.AlertStripe>
       <Nav.Fieldset legend="">
         <Nav.Checkbox
@@ -60,14 +60,14 @@ const IngenSokkelSkipEllerHjemmebase = ({
   );
 };
 
-IngenSokkelSkipEllerHjemmebase.propTypes = {
+IngenSokkelSkipEllerHjemmebaser.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   arbeidUtforesIOppgittLandFakta: MPT.Avklartefakta,
 };
 
-IngenSokkelSkipEllerHjemmebase.defaultProps = {
+IngenSokkelSkipEllerHjemmebaser.defaultProps = {
   arbeidUtforesIOppgittLandFakta: {},
 };
 
@@ -81,7 +81,7 @@ export const VurderingVurderarbeidsland = ({
     arbeidslandListe,
     arbeidUtforesIOppgittLandFakta,
     soknadslandFaktaListe,
-    harIngenMaritimeArbeidEllerHjemmebase,
+    harIngenMaritimeArbeidEllerHjemmebaser,
     arbeidslandFaktaListe,
   },
   redigerbart,
@@ -89,7 +89,7 @@ export const VurderingVurderarbeidsland = ({
   slettData,
   maritimtArbeid,
   begrunnelser,
-  hjemmebase,
+  hjemmebaser,
   soknadsland,
   fjernedeSoknadsland,
   arbeidsland,
@@ -173,8 +173,8 @@ export const VurderingVurderarbeidsland = ({
     oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
   };
 
-  const innhold = harIngenMaritimeArbeidEllerHjemmebase ?
-    <IngenSokkelSkipEllerHjemmebase
+  const innhold = harIngenMaritimeArbeidEllerHjemmebaser ?
+    <IngenSokkelSkipEllerHjemmebaser
       oppdaterData={oppdaterData}
       slettData={slettData}
       redigerbart={redigerbart}
@@ -203,18 +203,16 @@ export const VurderingVurderarbeidsland = ({
         </Fragment>
       }
       {
-        hjemmebase &&
+        hjemmebaser.length > 0 &&
         <Nav.Row className="borderBottom">
           <Nav.Column xs="6">
-            <Nav.typo.Element className="undertittel">Hjemmebase</Nav.typo.Element>
+            <Nav.typo.Element className="undertittel">Hjemmebaser</Nav.typo.Element>
             <Mui.RedigerbarListe
-              elementer={[
-                {
-                  kode: hjemmebase,
-                  term: `${KV.kodeTilTerm(hjemmebase, MKV.KTObjects.landkoder)} (${hjemmebase})`,
-                  fjernbar: false,
-                },
-              ]}
+              elementer={hjemmebaser.map(base => ({
+                kode: base,
+                term: `${KV.kodeTilTerm(base, MKV.KTObjects.landkoder)} (${base})`,
+                fjernbar: false,
+              }))}
             />
           </Nav.Column>
         </Nav.Row>
@@ -258,14 +256,14 @@ VurderingVurderarbeidsland.propTypes = {
     arbeidslandListe: PT.array.isRequired,
     arbeidUtforesIOppgittLandFakta: MPT.Avklartefakta,
     soknadslandFaktaListe: PT.arrayOf(MPT.Avklartefakta),
-    harIngenMaritimeArbeidEllerHjemmebase: PT.bool.isRequired,
+    harIngenMaritimeArbeidEllerHjemmebaser: PT.bool.isRequired,
     arbeidslandFaktaListe: PT.arrayOf(MPT.Avklartefakta),
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   maritimtArbeid: PT.array,
-  hjemmebase: PT.string,
+  hjemmebaser: PT.arrayOf(PT.string),
   soknadsland: PT.arrayOf(PT.string).isRequired,
   fjernedeSoknadsland: PT.arrayOf(PT.shape({
     land: PT.string,
@@ -277,7 +275,7 @@ VurderingVurderarbeidsland.propTypes = {
 
 VurderingVurderarbeidsland.defaultProps = {
   maritimtArbeid: [],
-  hjemmebase: '',
+  hjemmebaser: [],
   fjernedeArbeidsland: [],
 };
 
@@ -285,7 +283,7 @@ const inngangFormValuesSelector = formValueSelector(KV.Form.INNGANG);
 
 const mapStateToProps = state => ({
   maritimtArbeid: formSelectors.MaritimtArbeidSelector(state),
-  hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
   soknadsland: inngangFormValuesSelector(state, 'soknadsland'),
   fjernedeSoknadsland: inngangFormValuesSelector(state, 'fjernedeLand'),
   arbeidsland: avklartefaktaSelectors.ArbeidslandSelector(state),

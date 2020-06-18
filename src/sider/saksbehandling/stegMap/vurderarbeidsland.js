@@ -2,7 +2,6 @@ import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingVurderarbeidsland from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVurderarbeidsland';
 
-import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
 import MKV from '../../../melosyskodeverk';
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../regler/avklartefakta';
@@ -16,14 +15,14 @@ class Vurderarbeidsland extends Steg {
     const arbeidUtforesIOppgittLandFakta = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, propsLight.avklartefakta);
     const soknadslandFaktaListe = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSLAND, propsLight.avklartefakta);
     const arbeidslandFaktaListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, propsLight.avklartefakta);
-    const harIngenMaritimeArbeidEllerHjemmebase = this.harIngenSokkelEllerHjemmebase(propsLight.maritimtarbeid, propsLight.hjemmebase);
+    const harIngenMaritimeArbeidEllerHjemmebaser = this.harIngenSokkelEllerHjemmebaser(propsLight.maritimtarbeid, propsLight.hjemmebaser);
 
     const harAvklaring = this.harAvklaring({
       arbeidUtforesIOppgittLandFakta,
       sokkelEllerSkipListe,
       installasjonArbeidslandListe,
       maritimtarbeid: propsLight.maritimtarbeid,
-      harIngenMaritimeArbeidEllerHjemmebase,
+      harIngenMaritimeArbeidEllerHjemmebaser,
     });
 
     this.kriterier = [
@@ -51,7 +50,7 @@ class Vurderarbeidsland extends Steg {
         arbeidslandListe,
         arbeidUtforesIOppgittLandFakta,
         soknadslandFaktaListe,
-        harIngenMaritimeArbeidEllerHjemmebase,
+        harIngenMaritimeArbeidEllerHjemmebaser,
         arbeidslandFaktaListe,
       });
     };
@@ -68,12 +67,12 @@ class Vurderarbeidsland extends Steg {
     sokkelEllerSkipListe,
     installasjonArbeidslandListe,
     maritimtarbeid,
-    harIngenMaritimeArbeidEllerHjemmebase,
+    harIngenMaritimeArbeidEllerHjemmebaser,
   }) => {
     const arbeidUtforesIOppgittLand = this.erArbeidUtforesIOppgittLandAvklart(arbeidUtforesIOppgittLandFakta);
     const erSokkelSkipAvklart = this.erSokkelSkipAvklart(sokkelEllerSkipListe, installasjonArbeidslandListe, maritimtarbeid);
 
-    return harIngenMaritimeArbeidEllerHjemmebase ? arbeidUtforesIOppgittLand : erSokkelSkipAvklart;
+    return harIngenMaritimeArbeidEllerHjemmebaser ? arbeidUtforesIOppgittLand : erSokkelSkipAvklart;
   };
 
   erSokkelSkipAvklart = (sokkelEllerSkipListe, installasjonArbeidslandListe, maritimtarbeid) => {
@@ -103,8 +102,8 @@ class Vurderarbeidsland extends Steg {
     Boolean(hentFaktaVerdi(arbeidUtforesIOppgittLandFakta))
   );
 
-  harIngenSokkelEllerHjemmebase = (maritimeArbeid, hjemmebase) => (
-    maritimeArbeid.length === 0 && Utils._isEmpty(hjemmebase)
+  harIngenSokkelEllerHjemmebaser = (maritimeArbeid, hjemmebaser) => (
+    maritimeArbeid.length === 0 && hjemmebaser.length === 0
   )
 }
 
