@@ -1,12 +1,11 @@
 import React from 'react';
 import PT from 'prop-types';
+import classNames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Ikoner from '../../../resources/images';
-import * as KV from '../../../kodeverk';
 
-import PanelHeader from '../../panelHeader/panelHeader';
 import OrganisasjonsAdresse from '../../adresser/organisasjonsAdresse';
 import KontaktOpplysninger from '../../kontaktopplysninger';
 
@@ -19,56 +18,60 @@ import './organisasjon.css';
  */
 const Organisasjon = ({
   organisasjon,
-  kilde,
   slettHandle,
   redigerbart,
+  className,
+  slettTekst,
 }) => {
   if (!organisasjon) { return null; }
   const {
     orgnr,
-    navn,
   } = organisasjon;
 
+  const organisasjonCls = classNames('panelSeksjon', 'organisasjon', className);
+
   return (
-    <div className="panelSeksjon organisasjon">
-      <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader
-          ikon={Ikoner.Arbeidsgiver}
-          tittel={KV.Paneltitler.arbeidsgiverINorge(navn)}
-          tittelTilleggsinfo={KV.Paneltitler.fraKilde(kilde)}
-          undertittel={<div>{`Org.nr: ${orgnr}`} </div>}
-        />}
-        ariaTittel={`Panel for arbeidsgiveren ${navn}`} >
-        <Nav.Container fluid>
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <dl className="organisasjon__detaljer">
-                <OrganisasjonsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
-              </dl>
-            </Nav.Column>
-            <Nav.Column xs="6" className="organisasjon__slettwrapper">
-              <KontaktOpplysninger juridiskOrg={organisasjon} redigerbart={redigerbart} />
-              <div className="organisasjon__slettknapp">
-                { slettHandle && <Nav.Knapp disabled={!redigerbart} onClick={slettHandle}>Slett</Nav.Knapp> }
-              </div>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Container>
-      </Nav.EkspanderbartpanelBase>
+    <div className={organisasjonCls}>
+      <Nav.Container fluid>
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Nav.typo.Element className="orgnr">Org. nr: </Nav.typo.Element>
+            <Nav.typo.Normaltekst className="orgnr">{orgnr}</Nav.typo.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <dl className="organisasjon__detaljer">
+              <OrganisasjonsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
+            </dl>
+            <div className="organisasjon__slettknapp">
+              {
+                slettHandle && redigerbart &&
+                <Nav.Lenker onClick={slettHandle}><img src={Ikoner.Bin} alt="Slett" /><span>{slettTekst}</span></Nav.Lenker>
+              }
+            </div>
+          </Nav.Column>
+          <Nav.Column xs="6" className="organisasjon__kontaktopplysninger">
+            <KontaktOpplysninger juridiskOrg={organisasjon} redigerbart={redigerbart} />
+          </Nav.Column>
+        </Nav.Row>
+      </Nav.Container>
     </div>
   );
 };
 
 Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
-  kilde: PT.string,
   slettHandle: PT.func,
   redigerbart: PT.bool.isRequired,
+  className: PT.string,
+  slettTekst: PT.string,
 };
 
 Organisasjon.defaultProps = {
-  kilde: undefined,
   slettHandle: undefined,
+  className: undefined,
+  slettTekst: 'Slett',
 };
 
 export default Organisasjon;

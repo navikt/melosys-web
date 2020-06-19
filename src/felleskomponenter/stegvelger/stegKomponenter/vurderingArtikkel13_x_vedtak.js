@@ -83,7 +83,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="vurderingArtikkel13_x_vedtak">
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       {
         redigerbart &&

@@ -55,7 +55,6 @@ const Registrering = props => {
     hentFagsaker,
     hentLovvalgsperioder,
     vurderingBegrunnelser,
-    medlemskap,
     sed,
     redigerbart,
     Saksopplysninger,
@@ -121,7 +120,6 @@ const Registrering = props => {
             <Saksopplysninger
               redigerbart={redigerbart}
               behandlingID={behandlingID}
-              medlemskap={medlemskap}
               sed={sed}
               vurderingBegrunnelser={vurderingBegrunnelser}
             />
@@ -177,7 +175,6 @@ Registrering.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),
   fagsak: MPT.Fagsak,
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
-  medlemskap: MPT.Medlemskap,
   oppsummering: MPT.Behandlinger.Oppsummering,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
@@ -196,7 +193,6 @@ Registrering.defaultProps = {
   redigerbart: null,
   avklartefakta: [],
   fagsak: {},
-  medlemskap: {},
   oppsummering: {},
   sed: {},
   lovvalgsperiodeFom: undefined,
@@ -209,7 +205,6 @@ const mapStateToProps = state => ({
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),

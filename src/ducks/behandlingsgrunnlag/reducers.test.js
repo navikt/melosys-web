@@ -164,10 +164,26 @@ describe('behandlingsgrunnlag reducer', () => {
         ektefelleEllerBarnINorge: 'test',
         studentSemester: 'test',
         studentFinansieringKode: 'test',
-        foretakUtland: [
+        arbeidsforholdUtland: [
           {
             uuid: '12ff23dc4',
             navn: 'Abcdef',
+            orgnr: '123456789',
+            selvstendigNaeringsvirksomhet: false,
+            adresse: {
+              gatenavn: null,
+              husnummer: null,
+              region: null,
+              postnummer: null,
+              poststed: null,
+              landkode: null,
+            },
+          },
+        ],
+        selvstendigNaeringsvirksomhetUtland: [
+          {
+            uuid: '12ff23dc4',
+            navn: 'fedcba',
             orgnr: '123456789',
             selvstendigNaeringsvirksomhet: true,
             adresse: {
@@ -189,12 +205,23 @@ describe('behandlingsgrunnlag reducer', () => {
         oppgittAdressePostnummer: '12345',
         oppgittAdressePoststed: '12345',
         oppgittAdresseLand: '12345',
-        maritimtArbeid: [
+        arbeidsstedOffshore: [
+          {
+            enhetNavn: '12345',
+            fartsomradeKode: null,
+            flaggLandkode: null,
+            installasjonsLandkode: '12345',
+            territorialfarvann: null,
+            foretakNavn: '12345',
+            foretakOrgnr: '12345',
+          },
+        ],
+        arbeidsstedSkip: [
           {
             enhetNavn: '12345',
             fartsomradeKode: '12345',
             flaggLandkode: '12345',
-            installasjonsLandkode: '12345',
+            installasjonsLandkode: null,
             territorialfarvann: '12345',
             foretakNavn: '12345',
             foretakOrgnr: '12345',
@@ -303,6 +330,20 @@ describe('behandlingsgrunnlag reducer', () => {
               uuid: '12ff23dc4',
               navn: 'Abcdef',
               orgnr: '123456789',
+              selvstendigNaeringsvirksomhet: false,
+              adresse: {
+                gatenavn: null,
+                husnummer: null,
+                region: null,
+                postnummer: null,
+                poststed: null,
+                landkode: null,
+              },
+            },
+            {
+              uuid: '12ff23dc4',
+              navn: 'fedcba',
+              orgnr: '123456789',
               selvstendigNaeringsvirksomhet: true,
               adresse: {
                 gatenavn: null,
@@ -330,9 +371,18 @@ describe('behandlingsgrunnlag reducer', () => {
           maritimtArbeid: [
             {
               enhetNavn: '12345',
+              fartsomradeKode: null,
+              flaggLandkode: null,
+              installasjonsLandkode: '12345',
+              territorialfarvann: null,
+              foretakNavn: '12345',
+              foretakOrgnr: '12345',
+            },
+            {
+              enhetNavn: '12345',
               fartsomradeKode: '12345',
               flaggLandkode: '12345',
-              installasjonsLandkode: '12345',
+              installasjonsLandkode: null,
               territorialfarvann: '12345',
               foretakNavn: '12345',
               foretakOrgnr: '12345',

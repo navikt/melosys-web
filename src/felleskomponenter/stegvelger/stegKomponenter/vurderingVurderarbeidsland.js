@@ -237,7 +237,7 @@ export const VurderingVurderarbeidsland = ({
     </Fragment>;
 
   return (
-    <div>
+    <div className="vurderingVurderArbeidsland">
       <Nav.typo.Undertittel className="overskrift">Vurder arbeidsland</Nav.typo.Undertittel>
       { innhold }
       <div className="fane__knapplinje">
