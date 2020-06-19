@@ -118,7 +118,12 @@ export const Personopplysninger = ({
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={sammensattNavn} className="undertittel" />
+              <Mui.Undertittel
+                ikon={Ikoner.AccountCircle}
+                tekst={sammensattNavn}
+                className="undertittel"
+                understrek
+              />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -185,7 +190,12 @@ export const Personopplysninger = ({
           />
           <Nav.Row>
             <Nav.Column xs="12">
-              <Mui.Undertittel ikon={Ikoner.Medlemskap} tekst={KV.Panel.informasjonOmBruker.undertitler.medlemskap} className="undertittel" />
+              <Mui.Undertittel
+                ikon={Ikoner.Medlemskap}
+                tekst={KV.Panel.informasjonOmBruker.undertitler.medlemskap}
+                className="undertittel"
+                understrek
+              />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -195,7 +205,12 @@ export const Personopplysninger = ({
           </Nav.Row>
           <Nav.Row className="kontantytelserUndertittel">
             <Nav.Column xs="12">
-              <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.informasjonOmBruker.undertitler.kontantytelser} className="undertittel" />
+              <Mui.Undertittel
+                ikon={Ikoner.Inntekt}
+                tekst={KV.Panel.informasjonOmBruker.undertitler.kontantytelser}
+                className="undertittel"
+                understrek
+              />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>

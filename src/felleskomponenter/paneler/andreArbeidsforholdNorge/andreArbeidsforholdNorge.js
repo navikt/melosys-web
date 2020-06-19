@@ -30,6 +30,7 @@ export const AndreArbeidsforholdNorge = ({
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.arbeidsforholdINorge}
         className="undertittel"
+        understrek
       />
       <EkstraArbeidsforholdNorge
         leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
@@ -44,6 +45,7 @@ export const AndreArbeidsforholdNorge = ({
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.selvstendigNaeringsdrivendeINorge}
         className="undertittel selvstendigNaeringsvirksomhetUndertittel"
+        understrek
       />
       <EkstraArbeidsforholdNorge
         leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET"

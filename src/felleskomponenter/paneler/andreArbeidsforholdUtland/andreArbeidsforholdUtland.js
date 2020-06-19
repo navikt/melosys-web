@@ -28,6 +28,7 @@ export const AndreArbeidsforholdUtland = ({
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.andreArbeidsforholdUtland.undertitler.arbeidsforholdIUtlandet}
         className="undertittel"
+        understrek
       />
       <PanelListe
         redigerbart={redigerbart}
@@ -41,6 +42,7 @@ export const AndreArbeidsforholdUtland = ({
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.andreArbeidsforholdUtland.undertitler.selvstendigNaeringsdrivendeIUtlandet}
         className="undertittel selvstendigNaeringsvirksomhetUndertittel"
+        understrek
       />
       <PanelListe
         redigerbart={redigerbart}

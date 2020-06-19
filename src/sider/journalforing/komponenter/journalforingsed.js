@@ -28,14 +28,24 @@ const JournalforingSED = ({
   avbrytJournalforing,
   handleSubmit,
 }) => (
-  <form onSubmit={handleSubmit}>
-    <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
+  <form onSubmit={handleSubmit} className="journalforingSed">
+    <Mui.Undertittel
+      tekst="Informasjon om bruker"
+      ikon={Ikoner.AccountCircle}
+      className="undertittel oversteUndertittel"
+      understrek
+    />
     <Nav.Row>
       <Nav.Column xs="6">
         <Brukernavnskjema form={form} />
       </Nav.Column>
     </Nav.Row>
-    <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
+    <Mui.Undertittel
+      tekst="Informasjon om avsender"
+      ikon={Ikoner.Globe}
+      className="undertittel"
+      understrek
+    />
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.typo.Element>Avsender ID</Nav.typo.Element>
@@ -44,7 +54,12 @@ const JournalforingSED = ({
         <Nav.typo.Normaltekst>{avsenderNavn}</Nav.typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
-    <Mui.Undertittel tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" />
+    <Mui.Undertittel
+      tekst="Saksinformasjon"
+      ikon={Ikoner.ParagraphTwoColumns}
+      className="undertittel"
+      understrek
+    />
     <Nav.Row>
       <Nav.Column xs="5">
         <Nav.typo.Element>Sakstype</Nav.typo.Element>

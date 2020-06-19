@@ -23,7 +23,12 @@ const PeriodeInntektOgFullmektig = ({
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Mui.Undertittel ikon={Ikoner.Calendar} tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.soknadsPeriode} className="undertittel" />
+            <Mui.Undertittel
+              ikon={Ikoner.Calendar}
+              tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.soknadsPeriode}
+              className="undertittel"
+              understrek
+            />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -33,7 +38,12 @@ const PeriodeInntektOgFullmektig = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.inntektUnderOpphold} className="undertittel inntektTittel" />
+            <Mui.Undertittel
+              ikon={Ikoner.Inntekt}
+              tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.inntektUnderOpphold}
+              className="undertittel inntektTittel"
+              understrek
+            />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -43,7 +53,12 @@ const PeriodeInntektOgFullmektig = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Mui.Undertittel ikon={Ikoner.AccountCircle} tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.fullmektig} className="undertittel fullmektigTittel" />
+            <Mui.Undertittel
+              ikon={Ikoner.AccountCircle}
+              tekst={KV.Panel.periodeInntektOgFullmektig.undertitler.fullmektig}
+              className="undertittel fullmektigTittel"
+              understrek
+            />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>

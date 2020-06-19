@@ -93,13 +93,23 @@ const OpprettNySak = ({
             <Nav.Panel>
               <Nav.Row>
                 <Nav.Column xs="8">
-                  <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
+                  <Mui.Undertittel
+                    tekst="Informasjon om bruker"
+                    ikon={Ikoner.AccountCircle}
+                    className="undertittel"
+                    understrek
+                  />
                   <Brukernavnskjema
                     className="brukernavnskjema innrykk"
                     form={form}
                     onHentBruker={hentOppgaver}
                   />
-                  <Mui.Undertittel tekst="Informasjon om sak" ikon={Ikoner.Filenew} className="undertittel" />
+                  <Mui.Undertittel
+                    tekst="Informasjon om sak"
+                    ikon={Ikoner.Filenew}
+                    className="undertittel"
+                    understrek
+                  />
                   <div className="innrykk">
                     <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
                       {
@@ -135,7 +145,12 @@ const OpprettNySak = ({
                       </Fragment>
                     }
                   </div>
-                  <Mui.Undertittel tekst="Knytt oppgave fra Gosys til saken" ikon={Ikoner.CheckList} className="undertittel" />
+                  <Mui.Undertittel
+                    tekst="Knytt oppgave fra Gosys til saken"
+                    ikon={Ikoner.CheckList}
+                    className="undertittel"
+                    understrek
+                  />
                   <div className="innrykk">
                     {
                       oppgaverFinnes &&
