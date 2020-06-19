@@ -44,7 +44,7 @@ export const Arbeidssteder = ({
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
-        className="undertittel"
+        understrek
       />
       <PanelListe
         feltNavn="arbeidUtland"
@@ -58,7 +58,7 @@ export const Arbeidssteder = ({
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
-        className="undertittel"
+        understrek
       />
       <PanelListe
         feltNavn="arbeidsstedOffshore"
@@ -71,7 +71,7 @@ export const Arbeidssteder = ({
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
-        className="undertittel"
+        understrek
       />
       <PanelListe
         feltNavn="arbeidsstedSkip"
@@ -84,7 +84,7 @@ export const Arbeidssteder = ({
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
         tekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
-        className="undertittel"
+        understrek
       />
       <PanelListe
         feltNavn="arbeidsstedFly"

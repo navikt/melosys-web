@@ -29,9 +29,9 @@ export const ArbeidsgivereEnkeltNorge = props => {
   const seksjoner = (
     <Fragment>
       <Organisasjon organisasjon={organisasjon} redigerbart={redigerbart} className="organisasjonSeksjon" />
-      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} className="undertittel" />
+      <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} understrek />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
-      <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.arbeidsforholdRegistrertINorge.undertitler.inntekt} className="undertittel" />
+      <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.arbeidsforholdRegistrertINorge.undertitler.inntekt} understrek />
       {kilde && <Inntekt inntektListe={inntektListe} />}
     </Fragment>
   );
