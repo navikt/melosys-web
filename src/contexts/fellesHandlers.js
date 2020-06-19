@@ -128,10 +128,10 @@ const FellesHandlersProviderUnconnected = ({
     }
   };
 
-  const avslaaSoknadHandle = async () => {
+  const avslaaSoknadHandle = async data => {
     try {
       await lagreAllData();
-      avslaSoknad(behandlingID);
+      avslaSoknad(behandlingID, data);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -224,7 +224,7 @@ const mapDispatchToProps = dispatch => ({
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
-  avslaSoknad: behandlingID => dispatch(vedtakOperations.avslaSoknad(behandlingID)),
+  avslaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaSoknad(behandlingID, data)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
   leggTilBehandlingOppfriskes: behandlingID => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),

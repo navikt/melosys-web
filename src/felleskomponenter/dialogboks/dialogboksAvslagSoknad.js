@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import MKV from '../../melosyskodeverk';
+import useEventTargetValueState from '../../hooks/useEventTargetValueState';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Ikon from '../../resources/images';
@@ -16,12 +17,14 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import './dialogboksAvslagSoknad.css';
 
 export const DialogboksAvslagSoknad = props => {
+  const [fritekstBrev, setFritekstBrev] = useEventTargetValueState('');
+
   const {
     ariaHideApp,
     avbryt,
     behandlingID,
     redigerbart,
-    avslaaSoknad,
+    avslaaSoknadHandle,
   } = props;
 
   const pdfDokumenter = [{
@@ -33,6 +36,16 @@ export const DialogboksAvslagSoknad = props => {
       mottaker: MKV.Koder.aktoersroller.BRUKER,
     },
   }];
+
+  const avslaaSoknad = () => {
+    const data = {
+      fritekst: fritekstBrev,
+    };
+    avslaaSoknadHandle(data);
+  };
+
+  const fritekstBrevMaxLength = 500;
+  const bekreftRedigerbart = fritekstBrev.length <= fritekstBrevMaxLength;
 
   return (
     <Nav.Modal
@@ -50,6 +63,12 @@ export const DialogboksAvslagSoknad = props => {
         />
         <div>
           <Nav.typo.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.typo.Systemtittel>
+          <Nav.Textarea
+            value={fritekstBrev}
+            onChange={setFritekstBrev}
+            label="Fritekst"
+            maxLength={fritekstBrevMaxLength}
+          />
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
           }
@@ -60,6 +79,7 @@ export const DialogboksAvslagSoknad = props => {
               bekreft={avslaaSoknad}
               bekreftTekst="AVSLÅ SØKNAD"
               redigerbart={redigerbart}
+              bekreftRedigerbart={bekreftRedigerbart}
             />
           </div>
         </div>
@@ -69,7 +89,7 @@ export const DialogboksAvslagSoknad = props => {
 };
 
 DialogboksAvslagSoknad.propTypes = {
-  avslaaSoknad: PT.func.isRequired,
+  avslaaSoknadHandle: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
   behandlingID: PT.number.isRequired,

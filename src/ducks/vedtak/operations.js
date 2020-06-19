@@ -39,15 +39,18 @@ export function fatt(behandlingID, body) {
   );
 }
 
-export function avslaSoknad(behandlingID) {
+export function avslaSoknad(behandlingID, data) {
+  const body = {
+    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
+    fritekst: data.fritekst || null,
+    fritekstSed: null,
+    mottakerinstitusjoner: [],
+    vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    revurderBegrunnelse: null,
+  };
+
   return doThenDispatch(
-    () => Api.Saksflyt.Vedtak.fatt(behandlingID, {
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
-      fritekst: null,
-      mottakerinstitusjon: null,
-      vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      revurderBegrunnelse: null,
-    }),
+    () => Api.Saksflyt.Vedtak.fatt(behandlingID, body),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,
@@ -58,8 +61,8 @@ export function avslaSoknad(behandlingID) {
         dispatch(modalerOperations.skjulAvslagSoknad());
         dispatch(push('/'));
       },
-      error: (dispatch, data) => {
-        if (DucksUtils.valideringFeilet(data)) {
+      error: (dispatch, errorData) => {
+        if (DucksUtils.valideringFeilet(errorData)) {
           dispatch(modalerOperations.visValidering());
         }
       },
