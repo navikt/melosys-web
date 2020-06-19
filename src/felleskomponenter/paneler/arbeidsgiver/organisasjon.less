@@ -1,20 +1,22 @@
 @import '../../../utils/mixins';
 
 .organisasjon {
-  margin-top: 3em;
+  margin-top: 1em;
+  margin-bottom: 4em;
 
   .organisasjon__detaljer {
     .beskrivliste-mixin('col');
   }
 
   .organisasjon__slettknapp {
+    margin-top: 40px;
     display: flex;
     flex: 1;
     align-content: flex-end;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
-  .organisasjon__slettwrapper {
+  .organisasjon__kontaktopplysninger {
     margin-top: 0.8em;
   }
 
@@ -24,5 +26,9 @@
 
   .organisasjon__adresse_tittel {
     font-weight: 600;
+  }
+
+  .orgnr {
+    display: inline;
   }
 }

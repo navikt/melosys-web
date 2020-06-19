@@ -7,24 +7,18 @@ import * as MPT from '../proptypes';
 import * as KV from '../kodeverk';
 
 import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
-import ArbeidUtland from './paneler/arbeidutland';
-import ForetakUtland from './paneler/foretakutland';
-import Inntekt from './paneler/inntektUtland';
-import MaritimtArbeid from './paneler/maritimtArbeid';
-import Medlemskap from './paneler/medlemskap';
-import Soknadsperiode from './paneler/soknadsperiode';
+import AndreArbeidsforholdNorge from './paneler/andreArbeidsforholdNorge';
+import AndreArbeidsforholdUtland from './paneler/andreArbeidsforholdUtland';
+import Arbeidssteder from './paneler/arbeidssteder';
 import Personopplysninger from './paneler/personopplysninger';
-import SelvstendigArbeid from './paneler/selvstendigarbeid';
-import VirksomhetNorge from './paneler/virksomhetNorge';
-import FullmektigPanel from './paneler/fullmektig';
-import Kontantytelser from './paneler/kontantytelser';
+import PeriodeInntektOgFullmektig from './paneler/periodeInntektOgFullmektig';
 
 import { fagsakSelectors } from '../ducks/fagsaker';
-import { behandlingerSelectors } from '../ducks/behandlinger';
 import { behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
 import { saksopplysningerOperations } from '../ducks/saksopplysninger';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../ducks/behandlingsgrunnlag';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 import { vilkarSelectors } from '../ducks/vilkar';
 import { formSelectors } from '../ducks/form';
 import { formatterDatoTilNorsk } from '../utils/dato';
@@ -33,9 +27,6 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
 const Soknadpaneler = ({
   lagreSoknad,
   fagsaker,
-  medlemskap,
-  soknadArbeidsinntekt,
-  soknadForm,
   oppgittAdresseHarVerdier,
   startOgVisOppfriskModal,
 }) => {
@@ -48,50 +39,32 @@ const Soknadpaneler = ({
     startOgVisOppfriskModal();
   };
 
-  const { values: soknadVerdier } = soknadForm;
-
   return (
     <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
       <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
-      <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      {fagsaker && fagsaker.saksnummer &&
+        <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      }
       <ArbeidsgivereNorge />
-      <ForetakUtland />
-      <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-      {fagsaker && fagsaker.saksnummer && <FullmektigPanel />}
-      <ArbeidUtland />
-      <VirksomhetNorge />
-      <MaritimtArbeid />
-      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-      <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
-      <Kontantytelser />
+      <AndreArbeidsforholdNorge />
+      <AndreArbeidsforholdUtland />
+      <Arbeidssteder />
     </form>
   );
 };
 
 Soknadpaneler.propTypes = {
-  soknadForm: PT.object,
   fagsaker: MPT.Fagsak.isRequired,
   lagreSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  medlemskap: MPT.Medlemskap,
-  soknadArbeidsinntekt: PT.object,
   behandlingID: PT.number.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
 };
 
-Soknadpaneler.defaultProps = {
-  soknadForm: {},
-  medlemskap: {},
-  soknadArbeidsinntekt: {},
-};
-
 const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
-  soknadForm: formSelectors.SoknadenFormSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
-  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
-  soknadArbeidsinntekt: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
@@ -129,17 +102,20 @@ const mapStateToProps = state => ({
     oppholdUtlandTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).oppholdslandkoder,
     arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
+    arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
+    arbeidsstedSkip: behandlingsgrunnlagSelectors.SkipArbeidSelector(state),
+    arbeidsstedFly: [], // TODO: venter på at felt skal implementeres i behandlingsgrunnlag (MELOSYS-3784)
     ektefelleEllerBarnINorge: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).studentSemester,
     erSelvstendig: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
     selvstendigForetak: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
     antallMaanederINorge: behandlingsgrunnlagSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: behandlingsgrunnlagSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
-    maritimtArbeid: behandlingsgrunnlagSelectors.MaritimtArbeidSelector(state),
     soknadsperiodeFom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
     soknadsperiodeTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
-    foretakUtland: behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+    arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
+    selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
     kontaktNavn: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigFirma,

@@ -227,7 +227,7 @@ describe('Behandlingsgrunnlag operations', () => {
   describe('oppdaterState', () => {
     it('lager OPPDATER_BEHANDLINGSGRUNNLAG action', () => {
       initialState.form[KV.Form.SOKNAD].values = {
-        foretakUtland: {},
+        arbeidsforholdUtland: {},
       };
       initialState.form[KV.Form.INNGANG].values = {
         soknadsland: ['DK'],
@@ -236,7 +236,7 @@ describe('Behandlingsgrunnlag operations', () => {
         {
           type: types.OPPDATER_BEHANDLINGSGRUNNLAG,
           dokument: {
-            foretakUtland: {},
+            arbeidsforholdUtland: {},
             soknadsland: ['DK'],
           },
         },
