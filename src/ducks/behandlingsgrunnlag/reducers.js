@@ -116,15 +116,6 @@ export default function reducer(state = initialState, action) {
             inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
             inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
           },
-          arbeidNorge: {
-            ...state.data.data.arbeidNorge,
-            fullmektigFirma: dokument.fullmektigFirma,
-            fullmektigGateadresse: dokument.fullmektigGateadresse,
-            fullmektigPostnr: dokument.fullmektigPostnr,
-            fullmektigPoststed: dokument.fullmektigPoststed,
-            fullmektigRegion: dokument.fullmektigRegion,
-            fullmektigLandkode: dokument.fullmektigLand,
-          },
           arbeidUtland: dokument.arbeidUtland.map(arbeidUtland => ({
             adresse: {
               gatenavn: arbeidUtland.adresse.gatenavn || null,

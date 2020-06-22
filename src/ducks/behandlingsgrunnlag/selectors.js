@@ -22,11 +22,6 @@ export const BehandlingsgrunnlagDataSelector = createSelector(
   behandlingsgrunnlagState => behandlingsgrunnlagState.data || {}
 );
 
-export const ArbeidNorgeSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.arbeidNorge || {}
-);
-
 export const ArbeidUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidUtland || []

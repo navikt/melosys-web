@@ -1,6 +1,5 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
-import { ArbeidNorge } from './arbeidNorge';
 import { ArbeidUtland } from './arbeidUtland';
 import { Periode } from './periode';
 
@@ -64,7 +63,6 @@ const SoeknadslandPropType = PT.shape({
 
 const BehandlingsgrunnnlagDataPropType = PT.shape({
   juridiskArbeidsgiverNorge: JuridiskArbeidsgiverNorgePropType,
-  arbeidNorge: ArbeidNorge,
   arbeidUtland: ArbeidUtland,
   bosted: BostedPropType,
   foretakUtland: ForetakUtlandPropType,

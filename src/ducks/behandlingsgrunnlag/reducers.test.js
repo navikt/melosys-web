@@ -96,19 +96,6 @@ describe('behandlingsgrunnlag reducer', () => {
   });
 
   it('Oppdaterer behandlingsgrunnlag ved action.type OPPDATER_BEHANDLINGSGRUNNLAG', () => {
-    initialState.data = {
-      ...initialState.data,
-      data: {
-        arbeidNorge: {
-          arbeidsforholdOpprettholdIHelePerioden: true,
-          arbeidsforholdVikarNavn: 'Vikarbyrået AS',
-          vikarOrgnr: '22334455',
-          kontaktNavn: 'Ola Nordmann',
-          kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
-        },
-      },
-    };
-
     const action = {
       type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
       dokument: {
@@ -120,12 +107,6 @@ describe('behandlingsgrunnlag reducer', () => {
         inntektNaturalIAnnet: '6',
         inntektErInnrapporteringspliktig: true,
         inntektTrygdeavgiftBlirTrukket: true,
-        fullmektigFirma: 'test',
-        fullmektigGateadresse: 'test',
-        fullmektigPostnr: 'test',
-        fullmektigPoststed: 'test',
-        fullmektigRegion: 'test',
-        fullmektigLand: 'test',
         arbeidUtland: [
           {
             adresse: {
@@ -271,19 +252,6 @@ describe('behandlingsgrunnlag reducer', () => {
             },
             inntektErInnrapporteringspliktig: true,
             inntektTrygdeavgiftBlirTrukket: true,
-          },
-          arbeidNorge: {
-            arbeidsforholdOpprettholdIHelePerioden: true,
-            arbeidsforholdVikarNavn: 'Vikarbyrået AS',
-            vikarOrgnr: '22334455',
-            kontaktNavn: 'Ola Nordmann',
-            kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
-            fullmektigFirma: 'test',
-            fullmektigGateadresse: 'test',
-            fullmektigPostnr: 'test',
-            fullmektigPoststed: 'test',
-            fullmektigRegion: 'test',
-            fullmektigLandkode: 'test',
           },
           arbeidUtland: [
             {

@@ -78,7 +78,6 @@ const lagBehandlingsgrunnlagFelter = behandlingsgrunnlag => ({
   foretakUtland: behandlingsgrunnlag.foretakUtland,
   oppholdUtland: behandlingsgrunnlag.oppholdUtland,
   bosted: behandlingsgrunnlag.bosted,
-  arbeidNorge: behandlingsgrunnlag.arbeidNorge,
   selvstendigArbeid: behandlingsgrunnlag.selvstendigArbeid,
   maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
   soeknadsland: behandlingsgrunnlag.soeknadsland,
