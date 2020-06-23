@@ -41,6 +41,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   lagreLovvalgsperioder,
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
+  soknadsperiode,
 }) => {
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
@@ -79,8 +80,8 @@ export const VurderingArtikkel13_x_vedtak = ({
     },
   ];
 
-  const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
-  const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
+  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
+  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -175,6 +176,10 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   behandlingstype: PT.string.isRequired,
   form: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
+  soknadsperiode: PT.shape({
+    fom: PT.string.isRequired,
+    tom: PT.string.isRequired,
+  }).isRequired,
 };
 
 VurderingArtikkel13_x_vedtak.defaultProps = {
@@ -182,7 +187,7 @@ VurderingArtikkel13_x_vedtak.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   const erLovvalgsperiodeForkortet = () => Utils.dato.datoDiffPure(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
     lovvalgsperioderSelectors.TomDatoSelector(state),
@@ -197,11 +202,12 @@ const mapStateToProps = (state, ownProps) => {
     redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     initialValues: {
       forkortLovvalgsperiode,
-      tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+      tomDato: forkortLovvalgsperiode ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)) : '',
       fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
@@ -241,7 +247,7 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   updateUnregisteredFields: true,
   validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
     context: {
-      lovvalgsperiode: props.lovvalgsperiode,
+      soknadsperiode: props.soknadsperiode,
       behandlingstype: props.behandlingstype,
     },
   })(values),

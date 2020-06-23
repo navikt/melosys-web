@@ -48,6 +48,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   slettData,
   behandlingsgrunnlagFom,
   behandlingsgrunnlagTom,
+  soknadsperiode,
 }) => {
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -103,8 +104,8 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     },
   ];
 
-  const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
-  const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
+  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
+  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
   const lovvalgsbestemmelseTerm = KV.kodeTilTerm(lovvalgsbestemmelseSomSkalVises, MKV.Kodekombinasjoner.alleLovvalg);
   const overskrift = `Omfattet av norsk lovgivning etter ${lovvalgsbestemmelseTerm || '...'}`;
@@ -237,6 +238,10 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   slettData: PT.func.isRequired,
   behandlingsgrunnlagFom: PT.string.isRequired,
   behandlingsgrunnlagTom: PT.string,
+  soknadsperiode: PT.shape({
+    fom: PT.string.isRequired,
+    tom: PT.string.isRequired,
+  }).isRequired,
 };
 
 VurderingArbeidEttLandOvrigVedtak.defaultProps = {
@@ -263,11 +268,12 @@ const mapStateToProps = (state, ownProps) => {
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)(state),
     initialValues: {
       forkortLovvalgsperiode,
-      tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+      tomDato: forkortLovvalgsperiode ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)) : '',
       fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
@@ -307,7 +313,7 @@ const VurderingArbeidEttLandOvrigVedtakForm = reduxForm({
   updateUnregisteredFields: true,
   validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.arbeid_ett_land_ovrig_vedtak, {
     context: {
-      lovvalgsperiode: props.lovvalgsperiode,
+      soknadsperiode: props.soknadsperiode,
       behandlingstype: props.behandlingstype,
     },
   })(values),
