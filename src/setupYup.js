@@ -40,14 +40,14 @@ addMethod(string, 'erGyldigDato', function(message) {
 
 addMethod(string, 'endretPeriodeErGyldig', function (message) {
   return this.test('periode er gyldig', message, function(value) {
-    const { lovvalgsperiode } = this.options.context;
+    const { soknadsperiode } = this.options.context;
 
     /** Hvis åpen periode, ikke valider perioden */
-    if (!lovvalgsperiode.tomDato) return true;
+    if (!soknadsperiode.tom) return true;
 
     if (value === '') return false;
 
-    return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, Utils.dato.formatterDatoTilISO(value));
+    return Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, Utils.dato.formatterDatoTilISO(value));
   });
 });
 
