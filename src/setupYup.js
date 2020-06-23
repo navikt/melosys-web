@@ -38,11 +38,13 @@ addMethod(string, 'erGyldigDato', function(message) {
   });
 });
 
-addMethod(string, 'periodeErGyldig', function (message) {
+addMethod(string, 'endretPeriodeErGyldig', function (message) {
   return this.test('periode er gyldig', message, function(value) {
     const { lovvalgsperiode } = this.options.context;
 
-    if (!lovvalgsperiode) return false;
+    /** Hvis åpen periode, ikke valider perioden */
+    if (!lovvalgsperiode.tomDato) return true;
+
     if (value === '') return false;
 
     return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, Utils.dato.formatterDatoTilISO(value));
