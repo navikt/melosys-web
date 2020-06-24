@@ -20,7 +20,7 @@ const LeggTilEkstraArbeidsforholdNorge = ({
     setOrgnr(e.target.value);
   };
 
-  const onBlur = async () => {
+  const leggTilOrg = async () => {
     if (!Organisasjon.erOrgnrGyldig(orgnr)) {
       setFeil('Ugyldig org. nr');
       return;
@@ -54,7 +54,7 @@ const LeggTilEkstraArbeidsforholdNorge = ({
   const feilmelding = feil ? { feilmelding: feil } : undefined;
 
   return (
-    <Fragment>
+    <div className="leggTilEkstraArbeidsforholdNorge">
       {
         !visInput &&
         <Nav.Knapp
@@ -66,18 +66,32 @@ const LeggTilEkstraArbeidsforholdNorge = ({
       }
       {
         visInput &&
-        <Nav.Input
-          label="Org. nr"
-          onChange={onChange}
-          value={orgnr}
-          onBlur={onBlur}
-          disabled={!redigerbart}
-          bredde="M"
-          placeholder="Skriv inn..."
-          feil={feilmelding}
-        />
+        <Fragment>
+          <Nav.Row>
+            <Nav.Column xs="3">
+              <Nav.Input
+                label="Org. nr"
+                onChange={onChange}
+                value={orgnr}
+                disabled={!redigerbart}
+                bredde="M"
+                placeholder="Skriv inn..."
+                feil={feilmelding}
+              />
+            </Nav.Column>
+            <Nav.Column xs="3">
+              <Nav.Knapp
+                disabled={!redigerbart}
+                onClick={leggTilOrg}
+                className="sokKnapp"
+              >
+                SØK
+              </Nav.Knapp>
+            </Nav.Column>
+          </Nav.Row>
+        </Fragment>
       }
-    </Fragment>
+    </div>
   );
 };
 

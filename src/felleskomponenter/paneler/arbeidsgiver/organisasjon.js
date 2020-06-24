@@ -35,7 +35,7 @@ const Organisasjon = ({
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Nav.typo.Element className="orgnr">Org. nr: </Nav.typo.Element>
+            <Nav.typo.Element className="orgnr">Org.nr. juridisk enhet: </Nav.typo.Element>
             <Nav.typo.Normaltekst className="orgnr">{orgnr}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>

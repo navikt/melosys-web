@@ -18,7 +18,7 @@ import Fullmektig from './fullmektig';
 
 const aktoerTemplate = {
   aktoerID: undefined,
-  databaseID: 0,
+  databaseID: -1,
   institusjonsID: undefined,
   orgnr: undefined,
   representererKode: undefined,
@@ -56,7 +56,7 @@ export class Fullmektige extends Component {
   };
 
   byttUtTemplateMedLagretFullmektig = (fullmektige, lagretFullmektig) => fullmektige.map(fullmektig => {
-    if (fullmektig.databaseID === 0) return { ...lagretFullmektig };
+    if (fullmektig.databaseID === aktoerTemplate.databaseID) return { ...lagretFullmektig };
     return { ...fullmektig };
   });
 
@@ -114,21 +114,35 @@ export class Fullmektige extends Component {
 
     return (
       <Nav.Container fluid>
-        {fullmektige.map((fullmektig, index) => (
-          <Fullmektig
-            key={fullmektig.databaseID}
-            index={index}
-            databaseID={fullmektig.databaseID}
-            redigerbart={redigerbart}
-            fullmektig={fullmektig}
-            lagreFullmektig={lagreFullmektig}
-            slettAktoer={slettAktoer}
-            slettFullmektigLokalt={slettFullmektigLokalt}
-            lagreNyFullmektigOgOppdaterLokalt={lagreNyFullmektigOgOppdaterLokalt}
-            hentOrg={hentOrg}
-            settRepresentant={settRepresentant}
-          />
-        ))}
+        {
+          fullmektige.map((fullmektig, index) => {
+            const slettFullmektig = async () => {
+              try {
+                if (fullmektig.databaseID !== aktoerTemplate.databaseID) {
+                  await slettAktoer(fullmektig.databaseID);
+                }
+                slettFullmektigLokalt(fullmektig.databaseID);
+              } catch (e) {
+                Utils.logger.error(e);
+              }
+            };
+
+            return (
+              <Fullmektig
+                key={fullmektig.databaseID}
+                index={index}
+                databaseID={fullmektig.databaseID}
+                redigerbart={redigerbart}
+                fullmektig={fullmektig}
+                lagreFullmektig={lagreFullmektig}
+                slettFullmektig={slettFullmektig}
+                lagreNyFullmektigOgOppdaterLokalt={lagreNyFullmektigOgOppdaterLokalt}
+                hentOrg={hentOrg}
+                settRepresentant={settRepresentant}
+              />
+            );
+          })
+        }
         <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="standard">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
       </Nav.Container>
     );

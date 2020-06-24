@@ -18,8 +18,7 @@ function Fullmektig(props) {
     lagreFullmektig,
     redigerbart,
     databaseID,
-    slettAktoer,
-    slettFullmektigLokalt,
+    slettFullmektig,
     lagreNyFullmektigOgOppdaterLokalt,
     hentOrg,
     index,
@@ -47,15 +46,6 @@ function Fullmektig(props) {
     if (fullmektig.representererKode) settRepresentant(index, fullmektig.representererKode);
     hentOrgFraApi();
   }, [fullmektig.representererKode, fullmektig.orgnr]);
-
-  const slettFullmektig = async () => {
-    try {
-      await slettAktoer(databaseID);
-      slettFullmektigLokalt(databaseID);
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-  };
 
   const databaseIDString = databaseID.toString();
 
@@ -115,8 +105,7 @@ Fullmektig.propTypes = {
   redigerbart: PT.bool.isRequired,
   databaseID: PT.number,
   index: PT.number.isRequired,
-  slettAktoer: PT.func.isRequired,
-  slettFullmektigLokalt: PT.func.isRequired,
+  slettFullmektig: PT.func.isRequired,
   lagreNyFullmektigOgOppdaterLokalt: PT.func.isRequired,
   hentOrg: PT.func.isRequired,
   settRepresentant: PT.func.isRequired,
@@ -124,7 +113,7 @@ Fullmektig.propTypes = {
 
 Fullmektig.defaultProps = {
   fullmektig: {},
-  databaseID: 0,
+  databaseID: -1,
 };
 
 export default Fullmektig;
