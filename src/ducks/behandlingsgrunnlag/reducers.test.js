@@ -3,6 +3,8 @@ import * as Types from './types';
 import { STATUS } from '../../services/utils';
 import reducer, { initialState } from './reducers';
 
+import MKV from '../../melosyskodeverk';
+
 describe('behandlingsgrunnlag reducer', () => {
   it('setter status pending ved action.type PENDING', () => {
     const action = {
@@ -210,8 +212,8 @@ describe('behandlingsgrunnlag reducer', () => {
         arbeidsstedFly: [
           {
             hjemmebaseNavn: 'Gardermoen',
-            hjemmebaseLand: 'NO',
-            typeFlyvninger: 'NASJONAL',
+            hjemmebaseLand: MKV.Koder.landkoder.NO,
+            typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
           },
         ],
         soknadsland: [],
@@ -364,8 +366,8 @@ describe('behandlingsgrunnlag reducer', () => {
           luftfartBaser: [
             {
               hjemmebaseNavn: 'Gardermoen',
-              hjemmebaseLand: 'NO',
-              typeFlyvninger: 'NASJONAL',
+              hjemmebaseLand: MKV.Koder.landkoder.NO,
+              typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
             },
           ],
           soeknadsland: {
