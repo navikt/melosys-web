@@ -22,10 +22,12 @@ const Organisasjon = ({
   redigerbart,
   className,
   slettTekst,
+  visNavn,
 }) => {
   if (!organisasjon) { return null; }
   const {
     orgnr,
+    navn,
   } = organisasjon;
 
   const organisasjonCls = classNames('panelSeksjon', 'organisasjon', className);
@@ -35,10 +37,19 @@ const Organisasjon = ({
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Nav.typo.Element className="orgnr">Org.nr. juridisk enhet: </Nav.typo.Element>
-            <Nav.typo.Normaltekst className="orgnr">{orgnr}</Nav.typo.Normaltekst>
+            <Nav.typo.Element className="inline">Org.nr. juridisk enhet: </Nav.typo.Element>
+            <Nav.typo.Normaltekst className="inline">{orgnr}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
+        {
+          visNavn &&
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Nav.typo.Element className="inline">Navn: </Nav.typo.Element>
+              <Nav.typo.Normaltekst className="inline">{navn}</Nav.typo.Normaltekst>
+            </Nav.Column>
+          </Nav.Row>
+        }
         <Nav.Row>
           <Nav.Column xs="6">
             <dl className="organisasjon__detaljer">
@@ -66,12 +77,14 @@ Organisasjon.propTypes = {
   redigerbart: PT.bool.isRequired,
   className: PT.string,
   slettTekst: PT.string,
+  visNavn: PT.bool,
 };
 
 Organisasjon.defaultProps = {
   slettHandle: undefined,
   className: undefined,
   slettTekst: 'Slett',
+  visNavn: false,
 };
 
 export default Organisasjon;

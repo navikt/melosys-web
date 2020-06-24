@@ -35,6 +35,7 @@ export const InnerEkstraArbeidsforholdNorge = ({
               organisasjon={organisasjon}
               redigerbart={redigerbart}
               slettTekst={slettTekst}
+              visNavn
             />
           );
         })
