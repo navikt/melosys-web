@@ -3,7 +3,7 @@ import React from 'react';
 import * as Nav from '../../../utils/navFrontend';
 
 import { AndreArbeidsforholdNorge } from './andreArbeidsforholdNorge';
-import EkstraArbeidsforholdNorge from './ekstraArbeidsforholdNorge';
+import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
 
 describe('AndreArbeidsforholdNorge', () => {
   let props = null;
@@ -22,12 +22,12 @@ describe('AndreArbeidsforholdNorge', () => {
     expect(andreArbeidsforholdNorge.find(Nav.EkspanderbartpanelBase)).toHaveLength(1);
   });
 
-  it('viser to EkstraArbeidsforholdNorge', () => {
+  it('viser to ArbeidsforholdNorgeListe', () => {
     const andreArbeidsforholdNorge = shallow(<AndreArbeidsforholdNorge {...props} />);
-    const ekstraArbeidsforholdNorge = andreArbeidsforholdNorge.find(EkstraArbeidsforholdNorge);
+    const arbeidsforholdNorgeListe = andreArbeidsforholdNorge.find(ArbeidsforholdNorgeListe);
 
-    expect(ekstraArbeidsforholdNorge).toHaveLength(2);
-    ekstraArbeidsforholdNorge.forEach(n => {
+    expect(arbeidsforholdNorgeListe).toHaveLength(2);
+    arbeidsforholdNorgeListe.forEach(n => {
       const nProps = n.props();
       expect(nProps.redigerbart).toBe(props.redigerbart);
       expect(nProps.hentOrganisasjon).toBe(props.hentOrganisasjon);

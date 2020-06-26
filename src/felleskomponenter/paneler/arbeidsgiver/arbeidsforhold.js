@@ -3,6 +3,8 @@ import React from 'react';
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
+import * as Mui from '../../../felleskomponenter/ui';
+import * as Ikoner from '../../../resources/images';
 
 import EnkeltDato from '../../datoOmrade/enkeltDato';
 import Permisjoner from './permisjoner';
@@ -39,6 +41,7 @@ export const Arbeidsforholdet = props => {
   return (
     <div className="panelSeksjon arbeidsforholdet">
       <Nav.Container fluid>
+        <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={arbeidsgiver.navn} understrek />
         <Nav.Row className="arbeidsforholdet__enkelt">
           <div className="arbeidsforholdene panelSeksjon">
             <Nav.Row className="arbeidsforhold__enkelt">

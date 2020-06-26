@@ -98,6 +98,7 @@ const PanelListe = ({
     component={ConnectedInnerPanelListe}
     name={feltNavn}
     props={rest}
+    rerenderOnEveryChange
   />
 );
 
