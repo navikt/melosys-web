@@ -28,7 +28,12 @@ export const ArbeidsgivereEnkeltNorge = props => {
 
   const seksjoner = (
     <Fragment>
-      <Organisasjon organisasjon={organisasjon} redigerbart={redigerbart} className="organisasjonSeksjon" />
+      <Organisasjon
+        organisasjon={organisasjon}
+        redigerbart={redigerbart}
+        className="organisasjonSeksjon"
+        visOrgnr
+      />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
       <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Panel.arbeidsforholdRegistrertINorge.undertitler.inntekt} understrek />
       {kilde && <Inntekt inntektListe={inntektListe} />}

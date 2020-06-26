@@ -4,7 +4,6 @@ import classNames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Ikoner from '../../../resources/images';
 
 import OrganisasjonsAdresse from '../../adresser/organisasjonsAdresse';
 import KontaktOpplysninger from '../../kontaktopplysninger';
@@ -18,16 +17,16 @@ import './organisasjon.css';
  */
 const Organisasjon = ({
   organisasjon,
-  slettHandle,
   redigerbart,
   className,
-  slettTekst,
   visNavn,
+  visOrgnr,
+  visAdresseTittel,
+  boldAdresseNavn,
 }) => {
   if (!organisasjon) { return null; }
   const {
     orgnr,
-    navn,
   } = organisasjon;
 
   const organisasjonCls = classNames('panelSeksjon', 'organisasjon', className);
@@ -35,32 +34,26 @@ const Organisasjon = ({
   return (
     <div className={organisasjonCls}>
       <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <Nav.typo.Element className="inline">Org.nr. juridisk enhet: </Nav.typo.Element>
-            <Nav.typo.Normaltekst className="inline">{orgnr}</Nav.typo.Normaltekst>
-          </Nav.Column>
-        </Nav.Row>
         {
-          visNavn &&
+          visOrgnr &&
           <Nav.Row>
             <Nav.Column xs="6">
-              <Nav.typo.Element className="inline">Navn: </Nav.typo.Element>
-              <Nav.typo.Normaltekst className="inline">{navn}</Nav.typo.Normaltekst>
+              <Nav.typo.Element className="inline">Org.nr. juridisk enhet: </Nav.typo.Element>
+              <Nav.typo.Normaltekst className="inline">{orgnr}</Nav.typo.Normaltekst>
             </Nav.Column>
           </Nav.Row>
         }
         <Nav.Row>
           <Nav.Column xs="6">
             <dl className="organisasjon__detaljer">
-              <OrganisasjonsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
+              <OrganisasjonsAdresse
+                visNavn={visNavn}
+                visTittel={visAdresseTittel}
+                className="organisasjon__adresse"
+                organisasjon={organisasjon}
+                boldNavn={boldAdresseNavn}
+              />
             </dl>
-            <div className="organisasjon__slettknapp">
-              {
-                slettHandle && redigerbart &&
-                <Nav.Lenker onClick={slettHandle}><img src={Ikoner.Bin} alt="Slett" /><span>{slettTekst}</span></Nav.Lenker>
-              }
-            </div>
           </Nav.Column>
           <Nav.Column xs="6" className="organisasjon__kontaktopplysninger">
             <KontaktOpplysninger juridiskOrg={organisasjon} redigerbart={redigerbart} />
@@ -73,18 +66,20 @@ const Organisasjon = ({
 
 Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
-  slettHandle: PT.func,
   redigerbart: PT.bool.isRequired,
   className: PT.string,
-  slettTekst: PT.string,
   visNavn: PT.bool,
+  visOrgnr: PT.bool,
+  visAdresseTittel: PT.bool,
+  boldAdresseNavn: PT.bool,
 };
 
 Organisasjon.defaultProps = {
-  slettHandle: undefined,
   className: undefined,
-  slettTekst: 'Slett',
   visNavn: false,
+  visOrgnr: false,
+  visAdresseTittel: true,
+  boldAdresseNavn: false,
 };
 
 export default Organisasjon;

@@ -1,16 +1,17 @@
 import React from 'react';
 
-import LeggTilEkstraArbeidsforholdNorge from './leggTilEkstraArbeidsforholdNorge';
+import LeggTilEkstraArbeidsforholdNorge from './orgnrinput';
 
 describe('LeggTilEkstraArbeidsforholdNorge', () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      leggTil: jest.fn(),
-      leggTilTekst: 'Legg til',
       redigerbart: true,
       hentOrganisasjon: jest.fn(),
+      erstatt: jest.fn(),
+      defaultOrgnr: null,
+      preErstattValideringer: [],
     };
   });
 

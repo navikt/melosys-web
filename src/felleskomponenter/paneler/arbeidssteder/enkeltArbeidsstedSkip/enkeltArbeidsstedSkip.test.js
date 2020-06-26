@@ -37,7 +37,7 @@ describe('EnkeltArbeidsstedSkip', () => {
     const landvelger = enkeltArbeidsstedSkip.find(Skjema.LandVelger);
 
     expect(landvelger).toHaveLength(1);
-    expect(landvelger.props().label).toBe('Territorialfarvannsland');
+    expect(landvelger.props().label).toBe('I hvilket land?');
   });
 
   it('viser Landvelger for flaggland hvis fartsområde er utenriks', () => {

@@ -38,8 +38,10 @@ export const AndreArbeidsforholdNorge = ({
         feltNavn="ekstraArbeidsgivere"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
-        leggTil={(fields, org) => fields.push(org.orgnr)}
+        transformerOrgTilElement={org => org.orgnr}
         findOrganisasjon={orgnr => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === orgnr)}
+        defaultElement={null}
+        elementerInneholderOrg={(orgListe, orgnr) => orgListe.includes(orgnr)}
       />
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
@@ -53,8 +55,10 @@ export const AndreArbeidsforholdNorge = ({
         feltNavn="selvstendigForetak"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
-        leggTil={(fields, org) => fields.push({ orgnr: org.orgnr })}
+        transformerOrgTilElement={org => ({ orgnr: org.orgnr })}
         findOrganisasjon={org => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === org.orgnr)}
+        defaultElement={{}}
+        elementerInneholderOrg={(orgListe, orgnr) => orgListe.find(org => org.orgnr === orgnr)}
       />
     </Nav.EkspanderbartpanelBase>
   </div>
