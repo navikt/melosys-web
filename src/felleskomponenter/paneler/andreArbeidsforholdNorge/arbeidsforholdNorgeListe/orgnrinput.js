@@ -57,7 +57,7 @@ const Orgnrinput = ({
         <Nav.Row>
           <Nav.Column xs="3">
             <Nav.Input
-              label="Org. nr"
+              label="Org. nr."
               onChange={onChange}
               value={orgnr}
               disabled={!redigerbart}
