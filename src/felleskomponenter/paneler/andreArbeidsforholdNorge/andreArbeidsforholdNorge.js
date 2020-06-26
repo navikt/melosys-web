@@ -12,7 +12,7 @@ import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../ducks/organisasjoner';
 
 import PanelHeader from '../../panelHeader/panelHeader';
-import EkstraArbeidsforholdNorge from './ekstraArbeidsforholdNorge';
+import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
 
 import './andreArbeidsforholdNorge.css';
 
@@ -32,7 +32,7 @@ export const AndreArbeidsforholdNorge = ({
         className="undertittel"
         understrek
       />
-      <EkstraArbeidsforholdNorge
+      <ArbeidsforholdNorgeListe
         leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
         slettTekst="Slett arbeidsforhold"
         feltNavn="ekstraArbeidsgivere"
@@ -49,7 +49,7 @@ export const AndreArbeidsforholdNorge = ({
         className="undertittel selvstendigNaeringsvirksomhetUndertittel"
         understrek
       />
-      <EkstraArbeidsforholdNorge
+      <ArbeidsforholdNorgeListe
         leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET"
         slettTekst="Slett virksomhet"
         feltNavn="selvstendigForetak"

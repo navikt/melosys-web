@@ -10,9 +10,9 @@ import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
 import * as OrganisasjonValidering from '../../../skjema/validering/generisk/organisasjon';
 
-import './ekstraArbeidsforholdNorge.css';
+import './arbeidsforholdNorgeListe.css';
 
-export const InnerEkstraArbeidsforholdNorge = ({
+export const InnerArbeidsforholdNorgeListe = ({
   leggTilTekst,
   slettTekst,
   fields,
@@ -30,7 +30,7 @@ export const InnerEkstraArbeidsforholdNorge = ({
   };
 
   return (
-    <div className="innerEkstraArbeidsforholdNorge">
+    <div className="innerArbeidsforholdNorgeListe">
       {
         elementer.map((element, indeks) => {
           const organisasjon = findOrganisasjon(element) || {};
@@ -49,7 +49,7 @@ export const InnerEkstraArbeidsforholdNorge = ({
           ];
 
           return (
-            <div key={key} className="enkeltEkstraArbeidsforholdNorge">
+            <div key={key} className="enkeltArbeidsforholdNorge">
               <Orgnrinput
                 erstatt={erstatt}
                 preErstattValideringer={preErstattValideringer}
@@ -80,7 +80,7 @@ export const InnerEkstraArbeidsforholdNorge = ({
   );
 };
 
-InnerEkstraArbeidsforholdNorge.propTypes = {
+InnerArbeidsforholdNorgeListe.propTypes = {
   leggTilTekst: PT.string.isRequired,
   slettTekst: PT.string.isRequired,
   fields: PT.object.isRequired,
@@ -92,25 +92,25 @@ InnerEkstraArbeidsforholdNorge.propTypes = {
   elementerInneholderOrg: PT.func.isRequired,
 };
 
-InnerEkstraArbeidsforholdNorge.defaultProps = {
+InnerArbeidsforholdNorgeListe.defaultProps = {
   transformerOrgTilElement: verdi => verdi,
   defaultElement: undefined,
 };
 
-const EkstraArbeidsforholdNorge = ({
+const ArbeidsforholdNorgeListe = ({
   feltNavn,
   ...rest
 }) => (
   <FieldArray
     rerenderOnEveryChange
     name={feltNavn}
-    component={InnerEkstraArbeidsforholdNorge}
+    component={InnerArbeidsforholdNorgeListe}
     props={{ ...rest }}
   />
 );
 
-EkstraArbeidsforholdNorge.propTypes = {
+ArbeidsforholdNorgeListe.propTypes = {
   feltNavn: PT.string.isRequired,
 };
 
-export default EkstraArbeidsforholdNorge;
+export default ArbeidsforholdNorgeListe;

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import LeggTilEkstraArbeidsforholdNorge from './orgnrinput';
+import Orgnrinput from './orgnrinput';
 
-describe('LeggTilEkstraArbeidsforholdNorge', () => {
+describe('Orgnrinput', () => {
   let props = null;
 
   beforeEach(() => {
@@ -16,6 +16,6 @@ describe('LeggTilEkstraArbeidsforholdNorge', () => {
   });
 
   it('vises uten å krasje', () => {
-    shallow(<LeggTilEkstraArbeidsforholdNorge {...props} />);
+    shallow(<Orgnrinput {...props} />);
   });
 });

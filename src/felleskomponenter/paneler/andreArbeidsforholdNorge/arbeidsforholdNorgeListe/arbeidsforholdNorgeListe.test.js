@@ -1,11 +1,11 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import EkstraArbeidsforholdNorge, { InnerEkstraArbeidsforholdNorge } from './ekstraArbeidsforholdNorge';
+import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe } from './arbeidsforholdNorgeListe';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
 
-describe('EkstraArbeidsforholdNorge', () => {
+describe('ArbeidsforholdNorgeListe', () => {
   let props = null;
 
   beforeEach(() => {
@@ -20,17 +20,17 @@ describe('EkstraArbeidsforholdNorge', () => {
     };
   });
 
-  it('Viser en FieldArray med InnerEkstraArbeidsforholdNorge', () => {
-    const ekstraArbeidsforholdNorge = shallow(<EkstraArbeidsforholdNorge {...props} />);
-    const fieldArray = ekstraArbeidsforholdNorge.find(FieldArray);
+  it('Viser en FieldArray med InnerArbeidsforholdNorgeListe', () => {
+    const arbeidsforholdNorgeListe = shallow(<ArbeidsforholdNorgeListe {...props} />);
+    const fieldArray = arbeidsforholdNorgeListe.find(FieldArray);
     const fieldArrayProps = fieldArray.props();
 
     expect(fieldArray).toHaveLength(1);
-    expect(fieldArrayProps.component).toBe(InnerEkstraArbeidsforholdNorge);
+    expect(fieldArrayProps.component).toBe(InnerArbeidsforholdNorgeListe);
   });
 });
 
-describe('InnerEkstraArbeidsforholdNorge', () => {
+describe('InnerArbeidsforholdNorgeListe', () => {
   let props = null;
 
   beforeEach(() => {
@@ -53,8 +53,8 @@ describe('InnerEkstraArbeidsforholdNorge', () => {
   });
 
   it('viser en Organisasjon', () => {
-    const innerEkstraArbeidsforholdNorge = shallow(<InnerEkstraArbeidsforholdNorge {...props} />);
-    const organisasjon = innerEkstraArbeidsforholdNorge.find(Organisasjon);
+    const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
+    const organisasjon = innerArbeidsforholdNorgeListe.find(Organisasjon);
     const organisasjonProps = organisasjon.props();
 
     expect(organisasjon).toHaveLength(1);
@@ -63,8 +63,8 @@ describe('InnerEkstraArbeidsforholdNorge', () => {
   });
 
   it('viser en orgnrinput', () => {
-    const innerEkstraArbeidsforholdNorge = shallow(<InnerEkstraArbeidsforholdNorge {...props} />);
-    const orgnrinput = innerEkstraArbeidsforholdNorge.find(Orgnrinput);
+    const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
+    const orgnrinput = innerArbeidsforholdNorgeListe.find(Orgnrinput);
 
     expect(orgnrinput).toHaveLength(1);
   });
