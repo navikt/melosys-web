@@ -9,9 +9,9 @@ describe('Orgnrinput', () => {
     props = {
       redigerbart: true,
       hentOrganisasjon: jest.fn(),
-      erstatt: jest.fn(),
+      onOrgnrFunnet: jest.fn(),
       defaultOrgnr: null,
-      preErstattValideringer: [],
+      valideringer: [],
     };
   });
 
