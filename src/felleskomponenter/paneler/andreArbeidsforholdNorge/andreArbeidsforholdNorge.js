@@ -12,7 +12,7 @@ import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../ducks/organisasjoner';
 
 import PanelHeader from '../../panelHeader/panelHeader';
-import EkstraArbeidsforholdNorge from './ekstraArbeidsforholdNorge';
+import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
 
 import './andreArbeidsforholdNorge.css';
 
@@ -32,14 +32,16 @@ export const AndreArbeidsforholdNorge = ({
         className="undertittel"
         understrek
       />
-      <EkstraArbeidsforholdNorge
+      <ArbeidsforholdNorgeListe
         leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
         slettTekst="Slett arbeidsforhold"
         feltNavn="ekstraArbeidsgivere"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
-        leggTil={(fields, org) => fields.push(org.orgnr)}
+        transformerOrgTilElement={org => org.orgnr}
         findOrganisasjon={orgnr => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === orgnr)}
+        defaultElement={null}
+        elementerInneholderOrg={(orgListe, orgnr) => orgListe.includes(orgnr)}
       />
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
@@ -47,14 +49,16 @@ export const AndreArbeidsforholdNorge = ({
         className="undertittel selvstendigNaeringsvirksomhetUndertittel"
         understrek
       />
-      <EkstraArbeidsforholdNorge
+      <ArbeidsforholdNorgeListe
         leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET"
         slettTekst="Slett virksomhet"
         feltNavn="selvstendigForetak"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
-        leggTil={(fields, org) => fields.push({ orgnr: org.orgnr })}
+        transformerOrgTilElement={org => ({ orgnr: org.orgnr })}
         findOrganisasjon={org => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === org.orgnr)}
+        defaultElement={{}}
+        elementerInneholderOrg={(orgListe, orgnr) => orgListe.find(org => org.orgnr === orgnr)}
       />
     </Nav.EkspanderbartpanelBase>
   </div>
