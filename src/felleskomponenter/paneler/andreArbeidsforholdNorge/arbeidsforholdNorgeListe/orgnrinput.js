@@ -5,17 +5,18 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
 
 const Orgnrinput = ({
-  erstatt,
+  onOrgnrFunnet,
   redigerbart,
   hentOrganisasjon,
   defaultOrgnr,
-  preErstattValideringer,
+  valideringer,
 }) => {
   const [orgnr, setOrgnr] = useState(defaultOrgnr);
   const [feil, setFeil] = useState(undefined);
+  const [hasFocus, setHasFocus] = useState(false);
 
   const leggTilOrg = async tillagtOrgnr => {
-    const utlostValidering = preErstattValideringer.find(({ validering }) => validering(tillagtOrgnr));
+    const utlostValidering = valideringer.find(({ validering }) => validering(tillagtOrgnr));
     if (utlostValidering) {
       setFeil(utlostValidering.feilmelding);
       return;
@@ -30,7 +31,7 @@ const Orgnrinput = ({
       const orgFunnet = !Utils._isEmpty(organisasjon);
 
       if (orgFunnet) {
-        erstatt(organisasjon);
+        onOrgnrFunnet(organisasjon);
       } else {
         setFeil('Kunne ikke finne organisasjon');
       }
@@ -49,7 +50,7 @@ const Orgnrinput = ({
     leggTilOrg(e.target.value);
   };
 
-  const feilmelding = feil ? { feilmelding: feil } : undefined;
+  const feilmelding = !hasFocus && feil ? { feilmelding: feil } : undefined;
 
   return (
     <div className="orgnrinput">
@@ -64,6 +65,8 @@ const Orgnrinput = ({
               bredde="M"
               placeholder="Skriv inn..."
               feil={feilmelding}
+              onFocus={() => setHasFocus(true)}
+              onBlur={() => setHasFocus(false)}
             />
           </Nav.Column>
         </Nav.Row>
@@ -73,11 +76,11 @@ const Orgnrinput = ({
 };
 
 Orgnrinput.propTypes = {
-  erstatt: PT.func.isRequired,
+  onOrgnrFunnet: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   defaultOrgnr: PT.string,
-  preErstattValideringer: PT.arrayOf(PT.shape({
+  valideringer: PT.arrayOf(PT.shape({
     validering: PT.func.isRequired,
     feilmelding: PT.string.isRequired,
   })).isRequired,

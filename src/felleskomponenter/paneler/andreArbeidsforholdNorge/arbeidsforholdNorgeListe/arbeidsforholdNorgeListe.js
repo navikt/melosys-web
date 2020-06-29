@@ -37,7 +37,7 @@ export const InnerArbeidsforholdNorgeListe = ({
           const slett = () => fields.remove(indeks);
           const erstatt = verdi => fields.splice(indeks, 1, transformerOrgTilElement(verdi));
           const key = !Utils._isEmpty(organisasjon) ? organisasjon.orgnr : Utils._uuid();
-          const preErstattValideringer = [
+          const valideringer = [
             {
               validering: orgnr => !OrganisasjonValidering.erOrgnrGyldig(orgnr),
               feilmelding: 'Ugyldig org. nr',
@@ -51,8 +51,8 @@ export const InnerArbeidsforholdNorgeListe = ({
           return (
             <div key={key} className="enkeltArbeidsforholdNorge">
               <Orgnrinput
-                erstatt={erstatt}
-                preErstattValideringer={preErstattValideringer}
+                onOrgnrFunnet={erstatt}
+                valideringer={valideringer}
                 redigerbart={redigerbart}
                 hentOrganisasjon={hentOrganisasjon}
                 defaultOrgnr={organisasjon.orgnr}
