@@ -147,7 +147,7 @@ export default function reducer(state = initialState, action) {
             andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
             arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
             oppdragsKontrakterIHovedsakInngaattILand: null,
-            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.map(arbeidsgiver => arbeidsgiver) || [],
+            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.filter(arbeidsgiver => arbeidsgiver) || [],
           },
           arbeidsgiversBekreftelse: {
             arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
@@ -193,7 +193,6 @@ export default function reducer(state = initialState, action) {
           selvstendigArbeid: {
             erSelvstendig: Utils._isNil(dokument.erSelvstendig) ? null : dokument.erSelvstendig,
             selvstendigForetak: dokument.selvstendigForetak
-              .filter(foretak => foretak.orgnr)
               .map(foretak => ({
                 orgnr: foretak.orgnr || null,
                 fortsetterEtterArbeidIUtlandet: Utils._isNil(foretak.fortsetterEtterArbeidIUtlandet) ? null : foretak.fortsetterEtterArbeidIUtlandet,
