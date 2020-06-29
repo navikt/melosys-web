@@ -22,11 +22,6 @@ export const BehandlingsgrunnlagDataSelector = createSelector(
   behandlingsgrunnlagState => behandlingsgrunnlagState.data || {}
 );
 
-export const ArbeidNorgeSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.arbeidNorge || {}
-);
-
 export const ArbeidUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidUtland || []
@@ -145,6 +140,18 @@ export const OffshoreArbeidSelector = createSelector(
   maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => enkeltArbeid.installasjonsLandkode)
 );
 
+export const LuftfartBaserSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.luftfartBaser || []
+);
+
+export const HjemmebaserSelector = createSelector(
+  LuftfartBaserSelector,
+  luftfartBaser => luftfartBaser
+    .map(base => base.hjemmebaseLand)
+    .filter(base => base)
+);
+
 export const SoknadslandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => (behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : [])
@@ -177,11 +184,6 @@ export const MedfolgendeAndreSelector = createSelector(
     const { medfolgendeAndre } = personopplysninger;
     return allePersoner.find(person => person.fnr === medfolgendeAndre);
   }
-);
-
-export const HjemmebaseSelector = createSelector(
-  ArbeidNorgeSelector,
-  arbeidNorge => arbeidNorge.flyendePersonellHjemmebase
 );
 
 export const NorskeArbeidsgivereSedSelector = createSelector(

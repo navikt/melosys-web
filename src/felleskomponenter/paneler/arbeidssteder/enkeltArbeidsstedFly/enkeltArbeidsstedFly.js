@@ -4,21 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Skjema from '../../../skjema';
 
-/* TODO: hente fra kodeverk (MELOSYS-3784) */
-const typeFlyvninger = [
-  {
-    kode: 'NASJONAL',
-    term: 'NASJONAL',
-  },
-  {
-    kode: 'INTERNASJONAL',
-    term: 'INTERNASJONAL',
-  },
-  {
-    kode: 'BEGGE',
-    term: 'BEGGE',
-  },
-];
+import MKV from '../../../../melosyskodeverk';
 
 const EnkeltArbeidsstedFly = ({
   redigerbart,
@@ -52,7 +38,7 @@ const EnkeltArbeidsstedFly = ({
           placeholder="Skriv inn"
         >
           {
-            typeFlyvninger.map(type => <option key={type.kode} value={type.kode}>{type.term}</option>)
+            MKV.KTObjects.flyvningstyper.map(type => <option key={type.kode} value={type.kode}>{type.term}</option>)
           }
         </Skjema.Select>
       </Nav.Column>
