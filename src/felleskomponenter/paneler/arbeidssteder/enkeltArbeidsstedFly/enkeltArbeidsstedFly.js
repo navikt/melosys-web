@@ -13,7 +13,7 @@ const EnkeltArbeidsstedFly = ({
 }) => (
   <div className={className}>
     <Nav.Row>
-      <Nav.Column xs="4">
+      <Nav.Column xs="6">
         <Skjema.Input
           label="Navn på hjemmebase"
           feltNavn={`${overordnetFeltNavn}.hjemmebaseNavn`}
@@ -21,7 +21,9 @@ const EnkeltArbeidsstedFly = ({
           placeholder="Skriv inn"
         />
       </Nav.Column>
-      <Nav.Column xs="4">
+    </Nav.Row>
+    <Nav.Row>
+      <Nav.Column xs="6">
         <Skjema.LandVelger
           label="Hjemmebasens land"
           feltNavn={`${overordnetFeltNavn}.hjemmebaseLand`}
@@ -30,7 +32,7 @@ const EnkeltArbeidsstedFly = ({
           bredde="fullbredde"
         />
       </Nav.Column>
-      <Nav.Column xs="4">
+      <Nav.Column xs="5">
         <Skjema.Select
           label="Type flyvninger"
           feltNavn={`${overordnetFeltNavn}.typeFlyvninger`}

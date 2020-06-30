@@ -28,7 +28,7 @@ const EnkeltArbeidsstedSkip = ({
   return (
     <div className={className}>
       <Nav.Row>
-        <Nav.Column xs="4">
+        <Nav.Column xs="6">
           <Skjema.Input
             label="Navn på skip"
             feltNavn={`${overordnetFeltNavn}.enhetNavn`}
@@ -36,7 +36,9 @@ const EnkeltArbeidsstedSkip = ({
             placeholder="Skriv inn"
           />
         </Nav.Column>
-        <Nav.Column xs="4">
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="6">
           <Skjema.Select
             feltNavn={`${overordnetFeltNavn}.fartsomradeKode`}
             label="Fartsområde"
@@ -49,7 +51,7 @@ const EnkeltArbeidsstedSkip = ({
             }
           </Skjema.Select>
         </Nav.Column>
-        <Nav.Column xs="4">
+        <Nav.Column xs="5">
           {
             verdier.fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
             <Skjema.LandVelger
@@ -57,6 +59,7 @@ const EnkeltArbeidsstedSkip = ({
               label="I hvilket land?"
               disabled={!redigerbart}
               placeholder="Skriv inn"
+              bredde="fullbredde"
             />
           }
           {
@@ -66,6 +69,7 @@ const EnkeltArbeidsstedSkip = ({
               label="Flaggland"
               disabled={!redigerbart}
               placeholder="Skriv inn"
+              bredde="fullbredde"
             />
           }
         </Nav.Column>
