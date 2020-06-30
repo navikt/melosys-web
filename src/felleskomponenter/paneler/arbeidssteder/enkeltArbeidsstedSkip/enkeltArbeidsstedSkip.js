@@ -54,7 +54,7 @@ const EnkeltArbeidsstedSkip = ({
             verdier.fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
             <Skjema.LandVelger
               feltNavn={`${overordnetFeltNavn}.territorialfarvann`}
-              label="Territorialfarvannsland"
+              label="I hvilket land?"
               disabled={!redigerbart}
               placeholder="Skriv inn"
             />

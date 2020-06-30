@@ -27,7 +27,7 @@ export const andreArbeidsforholdNorge = {
   tittel: 'Andre arbeidsforhold i Norge',
   undertitler: {
     arbeidsforholdINorge: 'Arbeidsforhold i Norge',
-    selvstendigNaeringsdrivendeINorge: 'Selvstendig næringsdrivende i Norge',
+    selvstendigNaeringsdrivendeINorge: 'Selvstendig virksomhet i Norge',
   },
 };
 
@@ -35,7 +35,7 @@ export const andreArbeidsforholdUtland = {
   tittel: 'Andre arbeidsforhold i utlandet',
   undertitler: {
     arbeidsforholdIUtlandet: 'Arbeidsforhold i utlandet',
-    selvstendigNaeringsdrivendeIUtlandet: 'Selvstendig næringsdrivende i utlandet',
+    selvstendigNaeringsdrivendeIUtlandet: 'Selvstendig virksomhet i utlandet',
   },
 };
 

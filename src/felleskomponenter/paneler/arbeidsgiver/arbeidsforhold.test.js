@@ -31,7 +31,9 @@ describe('arbeidsforholdet', () => {
     props = {
       arbeidsforholdet: {
         ansettelsesPeriode: {},
-        arbeidsgiver: {},
+        arbeidsgiver: {
+          navn: 'NAV',
+        },
       },
     };
   });

@@ -30,6 +30,7 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
       handleSubmit: jest.fn(),
       behandlingsgrunnlagFom: '',
       behandlingsgrunnlagTom: '',
+      soknadsperiode: { tom: '', fom: '' },
     };
   });
 

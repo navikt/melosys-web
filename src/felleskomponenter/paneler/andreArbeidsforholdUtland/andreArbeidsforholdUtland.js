@@ -47,7 +47,7 @@ export const AndreArbeidsforholdUtland = ({
       <PanelListe
         redigerbart={redigerbart}
         leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET I UTLANDET"
-        slettTekst="Slett næringsvirksomhet"
+        slettTekst="Slett virksomhet"
         feltNavn="selvstendigNaeringsvirksomhetUtland"
         elementKomponent={EnkeltArbeidsforholdUtland}
         defaultElement={{ uuid: Utils._uuid() }}

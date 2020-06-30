@@ -116,15 +116,6 @@ export default function reducer(state = initialState, action) {
             inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
             inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
           },
-          arbeidNorge: {
-            ...state.data.data.arbeidNorge,
-            fullmektigFirma: dokument.fullmektigFirma,
-            fullmektigGateadresse: dokument.fullmektigGateadresse,
-            fullmektigPostnr: dokument.fullmektigPostnr,
-            fullmektigPoststed: dokument.fullmektigPoststed,
-            fullmektigRegion: dokument.fullmektigRegion,
-            fullmektigLandkode: dokument.fullmektigLand,
-          },
           arbeidUtland: dokument.arbeidUtland.map(arbeidUtland => ({
             adresse: {
               gatenavn: arbeidUtland.adresse.gatenavn || null,
@@ -147,7 +138,7 @@ export default function reducer(state = initialState, action) {
             andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
             arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
             oppdragsKontrakterIHovedsakInngaattILand: null,
-            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
+            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.filter(arbeidsgiver => arbeidsgiver) || [],
           },
           arbeidsgiversBekreftelse: {
             arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
@@ -183,6 +174,11 @@ export default function reducer(state = initialState, action) {
             },
           },
           maritimtArbeid,
+          luftfartBaser: dokument.arbeidsstedFly.map(arbeidssted => ({
+            hjemmebaseNavn: arbeidssted.hjemmebaseNavn || null,
+            hjemmebaseLand: arbeidssted.hjemmebaseLand || null,
+            typeFlyvninger: arbeidssted.typeFlyvninger || null,
+          })),
           soeknadsland: {
             landkoder: dokument.soknadsland,
           },
@@ -192,10 +188,11 @@ export default function reducer(state = initialState, action) {
           },
           selvstendigArbeid: {
             erSelvstendig: Utils._isNil(dokument.erSelvstendig) ? null : dokument.erSelvstendig,
-            selvstendigForetak: dokument.selvstendigForetak.map(foretak => ({
-              orgnr: foretak.orgnr || null,
-              fortsetterEtterArbeidIUtlandet: Utils._isNil(foretak.fortsetterEtterArbeidIUtlandet) ? null : foretak.fortsetterEtterArbeidIUtlandet,
-            })),
+            selvstendigForetak: dokument.selvstendigForetak
+              .map(foretak => ({
+                orgnr: foretak.orgnr || null,
+                fortsetterEtterArbeidIUtlandet: Utils._isNil(foretak.fortsetterEtterArbeidIUtlandet) ? null : foretak.fortsetterEtterArbeidIUtlandet,
+              })),
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,

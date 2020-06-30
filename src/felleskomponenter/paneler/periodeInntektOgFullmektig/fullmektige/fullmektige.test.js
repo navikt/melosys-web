@@ -45,7 +45,6 @@ describe('Fullmektige', () => {
 
       const fullmektig = komponent.find('Fullmektig');
       expect(fullmektig.props().hentOrg).toBe(props.hentOrg);
-      expect(fullmektig.props().slettAktoer).toBe(props.slettAktoer);
       expect(fullmektig.props().redigerbart).toBe(props.redigerbart);
     });
   });

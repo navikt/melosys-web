@@ -394,7 +394,7 @@ class Stegvelger extends Component {
       erArbeidEttLandOvrig: props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
-      hjemmebase: props.hjemmebase,
+      hjemmebaser: props.hjemmebaser,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -552,7 +552,7 @@ Stegvelger.propTypes = {
   lovvalgsbestemmelse: PT.string,
   valgteLovvalgsVilkarBestemmelse: PT.string,
   maritimtarbeid: PT.arrayOf(PT.object),
-  hjemmebase: PT.string,
+  hjemmebaser: PT.arrayOf(PT.string),
   forsteSteg: PT.string.isRequired,
   erArbeidEttLand: PT.bool.isRequired,
 };
@@ -575,7 +575,7 @@ Stegvelger.defaultProps = {
   lovvalgsbestemmelse: '',
   valgteLovvalgsVilkarBestemmelse: '',
   maritimtarbeid: [],
-  hjemmebase: null,
+  hjemmebaser: [],
   inngangsvilkaar: {},
 };
 
@@ -614,7 +614,7 @@ const mapStateToProps = state => ({
   lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
   valgteLovvalgsVilkarBestemmelse: lovvalgsperioderSelectors.ValgteLovvalgsVilkarBestemmelseSelector(state),
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
-  hjemmebase: behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
 });
 

@@ -3,6 +3,8 @@ import * as Types from './types';
 import { STATUS } from '../../services/utils';
 import reducer, { initialState } from './reducers';
 
+import MKV from '../../melosyskodeverk';
+
 describe('behandlingsgrunnlag reducer', () => {
   it('setter status pending ved action.type PENDING', () => {
     const action = {
@@ -96,20 +98,6 @@ describe('behandlingsgrunnlag reducer', () => {
   });
 
   it('Oppdaterer behandlingsgrunnlag ved action.type OPPDATER_BEHANDLINGSGRUNNLAG', () => {
-    initialState.data = {
-      ...initialState.data,
-      data: {
-        arbeidNorge: {
-          arbeidsforholdOpprettholdIHelePerioden: true,
-          arbeidsforholdVikarNavn: 'Vikarbyrået AS',
-          vikarOrgnr: '22334455',
-          flyendePersonellHjemmebase: 'Flybasen Int. Airport, ....',
-          kontaktNavn: 'Ola Nordmann',
-          kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
-        },
-      },
-    };
-
     const action = {
       type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
       dokument: {
@@ -121,12 +109,6 @@ describe('behandlingsgrunnlag reducer', () => {
         inntektNaturalIAnnet: '6',
         inntektErInnrapporteringspliktig: true,
         inntektTrygdeavgiftBlirTrukket: true,
-        fullmektigFirma: 'test',
-        fullmektigGateadresse: 'test',
-        fullmektigPostnr: 'test',
-        fullmektigPoststed: 'test',
-        fullmektigRegion: 'test',
-        fullmektigLand: 'test',
         arbeidUtland: [
           {
             adresse: {
@@ -227,6 +209,13 @@ describe('behandlingsgrunnlag reducer', () => {
             foretakOrgnr: '12345',
           },
         ],
+        arbeidsstedFly: [
+          {
+            hjemmebaseNavn: 'Gardermoen',
+            hjemmebaseLand: MKV.Koder.landkoder.NO,
+            typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
+          },
+        ],
         soknadsland: [],
         soknadsperiodeFom: '11.11.11',
         soknadsperiodeTom: '11.11.11',
@@ -265,20 +254,6 @@ describe('behandlingsgrunnlag reducer', () => {
             },
             inntektErInnrapporteringspliktig: true,
             inntektTrygdeavgiftBlirTrukket: true,
-          },
-          arbeidNorge: {
-            arbeidsforholdOpprettholdIHelePerioden: true,
-            arbeidsforholdVikarNavn: 'Vikarbyrået AS',
-            vikarOrgnr: '22334455',
-            flyendePersonellHjemmebase: 'Flybasen Int. Airport, ....',
-            kontaktNavn: 'Ola Nordmann',
-            kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
-            fullmektigFirma: 'test',
-            fullmektigGateadresse: 'test',
-            fullmektigPostnr: 'test',
-            fullmektigPoststed: 'test',
-            fullmektigRegion: 'test',
-            fullmektigLandkode: 'test',
           },
           arbeidUtland: [
             {
@@ -386,6 +361,13 @@ describe('behandlingsgrunnlag reducer', () => {
               territorialfarvann: '12345',
               foretakNavn: '12345',
               foretakOrgnr: '12345',
+            },
+          ],
+          luftfartBaser: [
+            {
+              hjemmebaseNavn: 'Gardermoen',
+              hjemmebaseLand: MKV.Koder.landkoder.NO,
+              typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
             },
           ],
           soeknadsland: {

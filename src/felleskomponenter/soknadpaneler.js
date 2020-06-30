@@ -104,7 +104,7 @@ const mapStateToProps = state => ({
     arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
     arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
     arbeidsstedSkip: behandlingsgrunnlagSelectors.SkipArbeidSelector(state),
-    arbeidsstedFly: [], // TODO: venter på at felt skal implementeres i behandlingsgrunnlag (MELOSYS-3784)
+    arbeidsstedFly: behandlingsgrunnlagSelectors.LuftfartBaserSelector(state),
     ektefelleEllerBarnINorge: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).studentSemester,
     erSelvstendig: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
@@ -116,14 +116,6 @@ const mapStateToProps = state => ({
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
     arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
     selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
-    kontaktNavn: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).kontaktNavn,
-    kontaktEpost: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).kontaktEpost,
-    fullmektigFirma: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
-    fullmektigGateadresse: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigGateadresse,
-    fullmektigPostnr: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigPostnr,
-    fullmektigPoststed: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
-    fullmektigRegion: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
-    fullmektigLand: behandlingsgrunnlagSelectors.ArbeidNorgeSelector(state).fullmektigLandkode,
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       soknadsland: avklartefaktaSelectors.Soknadsland(state),
