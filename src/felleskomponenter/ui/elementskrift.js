@@ -1,22 +1,27 @@
 import React from 'react';
 import PT from 'prop-types';
+import classNames from 'classnames';
 
 import * as Nav from '../../utils/navFrontend';
 
 import './elementskrift.css';
 
 const Elementskrift = ({
-  ikon,
+  ikon: Ikon,
   tekst,
   className,
-}) => (
-  <Nav.typo.Element className={className}>
-    <img src={ikon} height={20} alt={tekst} />{tekst}
-  </Nav.typo.Element>
-);
+}) => {
+  const cl = classNames('elementskrift', className);
+
+  return (
+    <Nav.typo.Element className={cl}>
+      <Ikon className="ikon" />{tekst}
+    </Nav.typo.Element>
+  );
+};
 
 Elementskrift.propTypes = {
-  ikon: PT.any.isRequired,
+  ikon: PT.elementType.isRequired,
   tekst: PT.string.isRequired,
   className: PT.string,
 };

@@ -44,9 +44,8 @@ export const DialogboksAvslagSoknad = props => {
       shouldCloseOnOverlayClick
       ariaHideApp={ariaHideApp}>
       <div className="avslagsoknadcontainer">
-        <div
+        <Ikon.VedtakGodkjent
           className="vedtakIkon"
-          style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
         />
         <div>
           <Nav.typo.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.typo.Systemtittel>
