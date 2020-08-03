@@ -17,7 +17,7 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import './dialogboksAvslagSoknad.css';
 
 export const DialogboksAvslagSoknad = props => {
-  const [fritekstBrev, setFritekstBrev] = useEventTargetValueState('');
+  const [brevFritekst, setBrevFritekst] = useEventTargetValueState('');
 
   const {
     ariaHideApp,
@@ -32,20 +32,20 @@ export const DialogboksAvslagSoknad = props => {
     type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
     data: {
       begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-      fritekst: fritekstBrev,
+      fritekst: brevFritekst,
       mottaker: MKV.Koder.aktoersroller.BRUKER,
     },
   }];
 
   const avslaaSoknad = () => {
     const data = {
-      fritekst: fritekstBrev,
+      fritekst: brevFritekst,
     };
     avslaaSoknadHandle(data);
   };
 
-  const fritekstBrevMaxLength = 500;
-  const bekreftRedigerbart = fritekstBrev.length <= fritekstBrevMaxLength;
+  const brevFritekstMaxLength = 500;
+  const bekreftRedigerbart = brevFritekst.length <= brevFritekstMaxLength;
 
   return (
     <Nav.Modal
@@ -64,10 +64,10 @@ export const DialogboksAvslagSoknad = props => {
         <div>
           <Nav.typo.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.typo.Systemtittel>
           <Nav.Textarea
-            value={fritekstBrev}
-            onChange={setFritekstBrev}
+            value={brevFritekst}
+            onChange={setBrevFritekst}
             label="Fritekst"
-            maxLength={fritekstBrevMaxLength}
+            maxLength={brevFritekstMaxLength}
           />
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
