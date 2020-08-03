@@ -1,4 +1,4 @@
-import Generator from './generators';
+import Generator from './generator';
 
 /**
  * BAKGRUNN:

@@ -6,21 +6,28 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
+import FnrValidator from '@navikt/fnrvalidator';
 
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
 /**
- * Soknads sok
+ * Søk etter fagsaker
  * @param fnr
  * @returns {*}
  */
-export function sok(fnr) {
-  return doThenDispatch(() => Api.Fagsaker.sok.sokFagsak(fnr), {
+export function sok(sokefrase) {
+  const sokefraseErIdnr = FnrValidator.idnr(sokefrase).status === 'valid';
+
+  const body = {
+    ident: sokefraseErIdnr ? sokefrase : null,
+    saksnummer: sokefraseErIdnr ? null : sokefrase,
+  };
+
+  return doThenDispatch(() => Api.Fagsaker.sok.send(body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
-

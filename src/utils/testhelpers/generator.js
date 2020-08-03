@@ -1,3 +1,5 @@
+import FnrValidator from '@navikt/fnrvalidator';
+
 class Generator {
   static MALE = 1;
   static FEMALE = 0;
@@ -99,7 +101,12 @@ class Generator {
       return this.generateBirthNumber();
     }
 
-    return `${partialBirthNumber}${k1}${k2}`;
+    const birthNumber = `${partialBirthNumber}${k1}${k2}`;
+    if (!FnrValidator.idnr(birthNumber)) {
+      return this.generateBirthNumber();
+    }
+
+    return birthNumber;
   };
 
   generateDNumber = () => {
@@ -112,7 +119,12 @@ class Generator {
       return this.generateDNumber();
     }
 
-    return `${partialDNumber}${k1}${k2}`;
+    const dNumber = `${partialDNumber}${k1}${k2}`;
+    if (!FnrValidator.idnr(dNumber)) {
+      return this.generateDNumber();
+    }
+
+    return dNumber;
   }
 }
 

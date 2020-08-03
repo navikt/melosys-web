@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -10,67 +10,65 @@ import SorterbarListe from '../../felleskomponenter/sorterbarListe/sorterbarList
 
 import { sokSelectors, sokOperations } from '../../ducks/sok';
 
-import { queryParamLogger } from '../../utils/queryParamLogger';
 import './sok.css';
 
-class Sok extends Component {
-  UNSAFE_componentWillMount() {
-    const { match, location, sokFagsaker } = this.props;
-    const { fnr } = match.params;
-    if (fnr) {
-      queryParamLogger(location, 'kilde', 'GOSYS');
-      sokFagsaker(fnr);
+export const Sok = ({
+  sokResultat,
+  children,
+  sok,
+}) => {
+  const sokefrase = sessionStorage.getItem('sokefrase');
+
+  useEffect(() => {
+    if (sokefrase) {
+      sok(sokefrase);
     }
-  }
 
-  render() {
-    const { sokResultat, children } = this.props;
-    const { fnr } = this.props.match.params;
-    if (!sokResultat) return null;
+    return () => {
+      sessionStorage.removeItem('sokefrase');
+    };
+  }, []);
 
-    const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til fnr eller dnr {fnr}.</Nav.Panel>;
+  if (!sokResultat) return null;
 
-    return (
-      <div className="sok">
-        { children }
-        <Nav.Container>
-          <Nav.Row className="">
-            <section className="sokresultat">
-              <h1>Innsyn i sak</h1>
-              <h2>
-                Resultater for fnr {fnr}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
-              </h2>
-              { sokResultat.length > 0 &&
-                <SorterbarListe
-                  elementer={sokResultat}
-                  component={Fagsak}
-                  defaultChecked="nyeste"
-                  sortingLegend="Sorter fagsaker etter opprettelsesdato:"
-                  sortingPath="opprettetDato"
-                  radioGroupName="fagsaksortering"
-                />
-              }
-              { sokResultat.length === 0 && ingenTreff }
-            </section>
-          </Nav.Row>
-        </Nav.Container>
-      </div>
-    );
-  }
-}
+  const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til fnr, dnr eller saksnummer {sokefrase}.</Nav.Panel>;
+
+  return (
+    <div className="sok">
+      { children }
+      <Nav.Container>
+        <Nav.Row className="">
+          <section className="sokresultat">
+            <h1>Innsyn i sak</h1>
+            <h2>
+              Resultater for fnr/dnr/saksnummer {sokefrase}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+            </h2>
+            { sokResultat.length > 0 &&
+              <SorterbarListe
+                elementer={sokResultat}
+                component={Fagsak}
+                defaultChecked="nyeste"
+                sortingLegend="Sorter fagsaker etter opprettelsesdato:"
+                sortingPath="opprettetDato"
+                radioGroupName="fagsaksortering"
+              />
+            }
+            { sokResultat.length === 0 && ingenTreff }
+          </section>
+        </Nav.Row>
+      </Nav.Container>
+    </div>
+  );
+};
 
 Sok.propTypes = {
-  location: PT.object.isRequired,
   sokResultat: MPT.FagsakSokListe.isRequired,
-  sokFagsaker: PT.func.isRequired,
-  sokStreng: PT.string,
   children: PT.node,
-  match: PT.object.isRequired,
+  sok: PT.func.isRequired,
 };
 
 Sok.defaultProps = {
   children: null,
-  sokStreng: '',
 };
 
 const mapStateToProps = state => ({
@@ -78,7 +76,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sokFagsaker: fnr => dispatch(sokOperations.sok(fnr)),
+  sok: sokefrase => dispatch(sokOperations.sok(sokefrase)),
 });
 
 const kontekster = [
@@ -86,4 +84,5 @@ const kontekster = [
   { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
   { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
 ];
+
 export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(Sok));
