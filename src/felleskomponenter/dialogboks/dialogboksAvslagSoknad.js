@@ -32,7 +32,7 @@ export const DialogboksAvslagSoknad = props => {
     type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
     data: {
       begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-      fritekst: null,
+      fritekst: fritekstBrev,
       mottaker: MKV.Koder.aktoersroller.BRUKER,
     },
   }];
