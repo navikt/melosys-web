@@ -12,11 +12,6 @@ import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-/**
- * Søk etter fagsaker
- * @param fnr
- * @returns {*}
- */
 export function sok(sokefrase) {
   const sokefraseErIdnr = FnrValidator.idnr(sokefrase).status === 'valid';
 
