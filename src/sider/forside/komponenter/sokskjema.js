@@ -51,7 +51,7 @@ class SokSkjema extends Component {
             bredde="XL"
             onChange={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
-            placeholder="F.nr./d.nr./saksnummer"
+            placeholder="F.nr./d-nr./saksnummer"
           />
           <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
         </form>
