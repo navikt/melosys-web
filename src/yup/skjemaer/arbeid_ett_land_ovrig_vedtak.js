@@ -15,9 +15,9 @@ const arbeid_ett_land_ovrig_vedtak = object().shape({
     .when('forkortLovvalgsperiode', {
       is: true,
       then: string()
-        .required({ melding: 'Dato kreves' })
-        .erGyldigDato({ melding: 'Dato kreves' })
-        .periodeErGyldig({ melding: 'Ugyldig periode' }),
+        .endretPeriodeErGyldig({ melding: 'Ugyldig periode' })
+        .erGyldigDato({ melding: 'Gyldig dato kreves' })
+        .required({ melding: 'Dato kreves' }),
     }),
   vedtakstype: string()
     .when('$behandlingstype', {

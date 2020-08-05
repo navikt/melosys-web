@@ -3,6 +3,8 @@ import * as Types from './types';
 import { STATUS } from '../../services/utils';
 import reducer, { initialState } from './reducers';
 
+import MKV from '../../melosyskodeverk';
+
 describe('behandlingsgrunnlag reducer', () => {
   it('setter status pending ved action.type PENDING', () => {
     const action = {
@@ -96,20 +98,6 @@ describe('behandlingsgrunnlag reducer', () => {
   });
 
   it('Oppdaterer behandlingsgrunnlag ved action.type OPPDATER_BEHANDLINGSGRUNNLAG', () => {
-    initialState.data = {
-      ...initialState.data,
-      data: {
-        arbeidNorge: {
-          arbeidsforholdOpprettholdIHelePerioden: true,
-          arbeidsforholdVikarNavn: 'Vikarbyrået AS',
-          vikarOrgnr: '22334455',
-          flyendePersonellHjemmebase: 'Flybasen Int. Airport, ....',
-          kontaktNavn: 'Ola Nordmann',
-          kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
-        },
-      },
-    };
-
     const action = {
       type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
       dokument: {
@@ -121,12 +109,6 @@ describe('behandlingsgrunnlag reducer', () => {
         inntektNaturalIAnnet: '6',
         inntektErInnrapporteringspliktig: true,
         inntektTrygdeavgiftBlirTrukket: true,
-        fullmektigFirma: 'test',
-        fullmektigGateadresse: 'test',
-        fullmektigPostnr: 'test',
-        fullmektigPoststed: 'test',
-        fullmektigRegion: 'test',
-        fullmektigLand: 'test',
         arbeidUtland: [
           {
             adresse: {
@@ -164,10 +146,26 @@ describe('behandlingsgrunnlag reducer', () => {
         ektefelleEllerBarnINorge: 'test',
         studentSemester: 'test',
         studentFinansieringKode: 'test',
-        foretakUtland: [
+        arbeidsforholdUtland: [
           {
             uuid: '12ff23dc4',
             navn: 'Abcdef',
+            orgnr: '123456789',
+            selvstendigNaeringsvirksomhet: false,
+            adresse: {
+              gatenavn: null,
+              husnummer: null,
+              region: null,
+              postnummer: null,
+              poststed: null,
+              landkode: null,
+            },
+          },
+        ],
+        selvstendigNaeringsvirksomhetUtland: [
+          {
+            uuid: '12ff23dc4',
+            navn: 'fedcba',
             orgnr: '123456789',
             selvstendigNaeringsvirksomhet: true,
             adresse: {
@@ -189,15 +187,33 @@ describe('behandlingsgrunnlag reducer', () => {
         oppgittAdressePostnummer: '12345',
         oppgittAdressePoststed: '12345',
         oppgittAdresseLand: '12345',
-        maritimtArbeid: [
+        arbeidsstedOffshore: [
+          {
+            enhetNavn: '12345',
+            fartsomradeKode: null,
+            flaggLandkode: null,
+            installasjonsLandkode: '12345',
+            territorialfarvann: null,
+            foretakNavn: '12345',
+            foretakOrgnr: '12345',
+          },
+        ],
+        arbeidsstedSkip: [
           {
             enhetNavn: '12345',
             fartsomradeKode: '12345',
             flaggLandkode: '12345',
-            installasjonsLandkode: '12345',
+            installasjonsLandkode: null,
             territorialfarvann: '12345',
             foretakNavn: '12345',
             foretakOrgnr: '12345',
+          },
+        ],
+        arbeidsstedFly: [
+          {
+            hjemmebaseNavn: 'Gardermoen',
+            hjemmebaseLand: MKV.Koder.landkoder.NO,
+            typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
           },
         ],
         soknadsland: [],
@@ -238,20 +254,6 @@ describe('behandlingsgrunnlag reducer', () => {
             },
             inntektErInnrapporteringspliktig: true,
             inntektTrygdeavgiftBlirTrukket: true,
-          },
-          arbeidNorge: {
-            arbeidsforholdOpprettholdIHelePerioden: true,
-            arbeidsforholdVikarNavn: 'Vikarbyrået AS',
-            vikarOrgnr: '22334455',
-            flyendePersonellHjemmebase: 'Flybasen Int. Airport, ....',
-            kontaktNavn: 'Ola Nordmann',
-            kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
-            fullmektigFirma: 'test',
-            fullmektigGateadresse: 'test',
-            fullmektigPostnr: 'test',
-            fullmektigPoststed: 'test',
-            fullmektigRegion: 'test',
-            fullmektigLandkode: 'test',
           },
           arbeidUtland: [
             {
@@ -303,6 +305,20 @@ describe('behandlingsgrunnlag reducer', () => {
               uuid: '12ff23dc4',
               navn: 'Abcdef',
               orgnr: '123456789',
+              selvstendigNaeringsvirksomhet: false,
+              adresse: {
+                gatenavn: null,
+                husnummer: null,
+                region: null,
+                postnummer: null,
+                poststed: null,
+                landkode: null,
+              },
+            },
+            {
+              uuid: '12ff23dc4',
+              navn: 'fedcba',
+              orgnr: '123456789',
               selvstendigNaeringsvirksomhet: true,
               adresse: {
                 gatenavn: null,
@@ -330,12 +346,28 @@ describe('behandlingsgrunnlag reducer', () => {
           maritimtArbeid: [
             {
               enhetNavn: '12345',
+              fartsomradeKode: null,
+              flaggLandkode: null,
+              installasjonsLandkode: '12345',
+              territorialfarvann: null,
+              foretakNavn: '12345',
+              foretakOrgnr: '12345',
+            },
+            {
+              enhetNavn: '12345',
               fartsomradeKode: '12345',
               flaggLandkode: '12345',
-              installasjonsLandkode: '12345',
+              installasjonsLandkode: null,
               territorialfarvann: '12345',
               foretakNavn: '12345',
               foretakOrgnr: '12345',
+            },
+          ],
+          luftfartBaser: [
+            {
+              hjemmebaseNavn: 'Gardermoen',
+              hjemmebaseLand: MKV.Koder.landkoder.NO,
+              typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
             },
           ],
           soeknadsland: {

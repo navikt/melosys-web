@@ -1,6 +1,139 @@
 import React from 'react';
 
-import { AdresseHeader, AdresseRad, ExpandableTable } from './personopplysninger';
+import * as Mui from '../../../felleskomponenter/ui';
+
+import { Personopplysninger, AdresseHeader, AdresseRad } from './personopplysninger';
+import ExpandableTable from './expandableTable';
+import PersonInfo from '../../personInfo';
+import UtenlandskIdent from './utenlandskIdent';
+import OppgittAdresseSoknad from './oppgittAdresseSoknad';
+import Medlemskap from './medlemskap';
+
+describe('Personopplysninger', () => {
+  let props = null;
+
+  beforeEach(() => {
+    props = {
+      oppgittAdresseHarVerdier: true,
+      redigerbart: true,
+      person: {
+        sammensattNavn: 'HATT',
+        personStatus: {
+          kode: 'I_LIVE',
+          term: 'Lever',
+        },
+        erEgenAnsatt: true,
+      },
+      personhistorikk: {
+        bostedsadressePerioder: [
+          {
+            bostedsadresse: {
+              gateadresse: {
+                gatenavn: 'Tysklandsgate',
+                gatenummer: 14,
+                husnummer: 20,
+                husbokstav: 'A',
+              },
+              postnr: '1111',
+              poststed: 'Berlin',
+              land: 'DE',
+            },
+            periode: {
+              fom: '12.12.2012',
+              tom: '13.12.2013',
+            },
+          },
+        ],
+        postadressePerioder: [
+          {
+            postadresse: {
+              landkode: 'PL',
+              adresselinjer: ['Polandgata 1111'],
+            },
+            periode: {
+              fom: '12.12.2012',
+              tom: '13.12.2013',
+            },
+          },
+        ],
+        midlertidigAdressePerioder: [
+          {
+            midlertidigAdresse: {
+              adressetype: 'ustrukturert',
+              strukturertAdresse: null,
+              UstrukturertAdresse: {
+                landkode: 'PL',
+                adresselinjer: ['Polandgata 1111'],
+              },
+            },
+            periode: {
+              fom: '12.12.2012',
+              tom: '13.12.2013',
+            },
+          },
+        ],
+      },
+      medlemskap: {},
+    };
+  });
+
+  it('viser undertittel med søkers navn', () => {
+    const personopplysninger = shallow(<Personopplysninger {...props} />);
+    const undertittel = personopplysninger
+      .findWhere(n => n.type() === Mui.Undertittel && n.props().tekst === props.person.sammensattNavn);
+
+    expect(undertittel).toHaveLength(1);
+  });
+
+  it('viser PersonInfo', () => {
+    const personopplysninger = shallow(<Personopplysninger {...props} />);
+    const personInfo = personopplysninger.find(PersonInfo);
+
+    expect(personInfo).toHaveLength(1);
+    expect(personInfo.props().person).toBe(props.person);
+  });
+
+  it('viser utenlandsk ident', () => {
+    const personopplysninger = shallow(<Personopplysninger {...props} />);
+    const utenlandskIdent = personopplysninger.find(UtenlandskIdent);
+
+    expect(utenlandskIdent).toHaveLength(1);
+    expect(utenlandskIdent.props().disabled).toBe(!props.redigerbart);
+  });
+
+  it('viser expandableTable for bostedsadresse-, postadresse- og midlertidig adresse perioder', () => {
+    const personopplysninger = shallow(<Personopplysninger {...props} />);
+    const expandableTables = personopplysninger.find(ExpandableTable);
+
+    expect(expandableTables.first().props().elements).toBe(props.personhistorikk.bostedsadressePerioder);
+    expect(expandableTables.at(1).props().elements).toBe(props.personhistorikk.postadressePerioder);
+    expect(expandableTables.last().props().elements).toBe(props.personhistorikk.midlertidigAdressePerioder);
+  });
+
+  it('viser oppgittadressesoknad', () => {
+    props.oppgittAdresseHarVerdier = true;
+    let personopplysninger = shallow(<Personopplysninger {...props} />);
+    let oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
+
+    expect(oppgittAdresseSoknad).toHaveLength(1);
+    expect(oppgittAdresseSoknad.props().redigerbart).toBe(props.redigerbart);
+    expect(oppgittAdresseSoknad.props().oppgittAdresseHarVerdier).toBe(true);
+
+    props.oppgittAdresseHarVerdier = false;
+    personopplysninger = shallow(<Personopplysninger {...props} />);
+    oppgittAdresseSoknad = personopplysninger.find(OppgittAdresseSoknad);
+
+    expect(oppgittAdresseSoknad.props().oppgittAdresseHarVerdier).toBe(false);
+  });
+
+  it('viser medlemskap', () => {
+    const personopplysninger = shallow(<Personopplysninger {...props} />);
+    const medlemskap = personopplysninger.find(Medlemskap);
+
+    expect(medlemskap).toHaveLength(1);
+    expect(medlemskap.props().medlemskap).toBe(props.medlemskap);
+  });
+});
 
 describe('AdresseRad', () => {
   const props = {
@@ -40,36 +173,5 @@ describe('AdresseHeader', () => {
     const adresseHeader = shallow(<AdresseHeader {...props} />);
 
     expect(adresseHeader.find('th').contains(props.adresseTittel)).toBe(true);
-  });
-});
-
-describe('ExpandableTable', () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      renderElement: jest.fn(() => <span />),
-      elements: [],
-      header: '',
-      amountOfItemsCollapsed: 1,
-      btnTextExpanded: 'vis mindre',
-      btnTextCollapsed: 'vis flere',
-      chevron: true,
-      expandable: true,
-    };
-  });
-
-  it('viser elementer', () => {
-    shallow(<ExpandableTable {...props} />);
-
-    expect(props.renderElement).toHaveBeenCalledTimes(props.elements.length);
-  });
-
-  it('viser en knapp med tekst og chevron', () => {
-    const expandableTable = shallow(<ExpandableTable {...props} />);
-
-    expect(expandableTable.exists('button')).toBe(true);
-    expect(expandableTable.find('button').contains(props.btnTextCollapsed)).toBe(true);
-    expect(expandableTable.find('NavFrontendChevron')).toHaveLength(1);
   });
 });

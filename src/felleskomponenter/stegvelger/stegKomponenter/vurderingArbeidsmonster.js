@@ -152,7 +152,11 @@ export const VurderingArbeidsmonster = ({
 
   const aktivitetINorgeEndretHandler = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
-      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2A));
+      } else {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      }
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
       if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
         oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B));
@@ -176,7 +180,11 @@ export const VurderingArbeidsmonster = ({
     }
 
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
-      oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2A));
+      } else {
+        oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+      }
     } else if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT) {
       if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
         oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B));
@@ -184,16 +192,21 @@ export const VurderingArbeidsmonster = ({
     }
   };
 
+  const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
+  const loennetArbeidAntallLand = hentFaktaVerdi(loennetArbeidAntallLandFakta);
+  const offentligArbeidAntallLand = hentFaktaVerdi(offentligArbeidAntallLandFakta);
+
   useEffect(() => {
-    const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
-    const loennetArbeidAntallLand = hentFaktaVerdi(loennetArbeidAntallLandFakta);
-    const offentligArbeidAntallLand = hentFaktaVerdi(offentligArbeidAntallLandFakta);
     initialiserStegDataForSteg(avklartAktivitetINorge, loennetArbeidAntallLand, offentligArbeidAntallLand);
 
     return () => {
       slettData();
     };
   }, []);
+
+  useEffect(() => {
+    initialiserStegDataForSteg(avklartAktivitetINorge, loennetArbeidAntallLand, offentligArbeidAntallLand);
+  }, [avklartAktivitetINorge, loennetArbeidAntallLand, offentligArbeidAntallLand, yrkesaktivitet]);
 
   const vesentligAktivitetINorgeValg = [
     { label: '25% eller mer', type: VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT },

@@ -128,7 +128,8 @@ class VurderingArtikkel16Anmodning extends Component {
   state = {
     lovvalgFeilmelding: undefined,
     begrunnelserFeilmelding: undefined,
-    fritekstFeilmelding: undefined,
+    begrunnelseFritekstBrevFeilmelding: undefined,
+    begrunnelseFritekstSedFeilmelding: undefined,
   };
 
   componentDidMount() {
@@ -185,8 +186,8 @@ class VurderingArtikkel16Anmodning extends Component {
     this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
-  fritekstEndretHandler = event => {
-    this.setState({ fritekstFeilmelding: undefined });
+  begrunnelseFritekstBrevEndretHandler = event => {
+    this.setState({ begrunnelseFritekstBrevFeilmelding: undefined });
 
     const { oppdaterData } = this.props;
     const { id, value } = event.target;
@@ -194,7 +195,16 @@ class VurderingArtikkel16Anmodning extends Component {
     oppdaterData(lagBegrunnelse(id, null, value));
   };
 
-  fritekstFokusFlyttetHandler = () => {
+  begrunnelseFritekstSedEndretHandler = event => {
+    this.setState({ begrunnelseFritekstSedFeilmelding: undefined });
+
+    const { oppdaterData } = this.props;
+    const { id, value } = event.target;
+
+    oppdaterData(lagBegrunnelse(id, null, null, value));
+  };
+
+  begrunnelseFritekstFokusFlyttetHandler = () => {
     this.lagreVilkar();
   };
 
@@ -222,9 +232,13 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   validerFritekst = () => {
-    const valid = this.props.tilstand.art16_1.begrunnelseFritekst;
-    if (!valid) this.setState({ fritekstFeilmelding: { feilmelding: 'Fyll inn fritekst' } });
-    return valid;
+    const begrunnelseFritekstBrevValid = this.props.tilstand.art16_1.begrunnelseFritekst;
+    if (!begrunnelseFritekstBrevValid) this.setState({ begrunnelseFritekstBrevFeilmelding: { feilmelding: 'Fyll inn fritekst' } });
+
+    const begrunnelseFritekstEngelskValid = this.props.tilstand.art16_1.begrunnelseFritekstEngelsk;
+    if (!begrunnelseFritekstEngelskValid) this.setState({ begrunnelseFritekstSedFeilmelding: { feilmelding: 'Fyll inn fritekst' } });
+
+    return begrunnelseFritekstBrevValid && begrunnelseFritekstEngelskValid;
   };
 
   validerAlt = () => {
@@ -264,14 +278,16 @@ class VurderingArtikkel16Anmodning extends Component {
       begrunnelserEndringHandler,
       validerAlt,
       validerOgLagreBehandling,
-      fritekstFokusFlyttetHandler,
-      fritekstEndretHandler,
+      begrunnelseFritekstFokusFlyttetHandler,
+      begrunnelseFritekstBrevEndretHandler,
+      begrunnelseFritekstSedEndretHandler,
       vedUnntakFraBestemmelseEndring,
     } = this;
 
     const {
       begrunnelserFeilmelding,
-      fritekstFeilmelding,
+      begrunnelseFritekstBrevFeilmelding,
+      begrunnelseFritekstSedFeilmelding,
       lovvalgFeilmelding,
     } = this.state;
 
@@ -295,13 +311,31 @@ class VurderingArtikkel16Anmodning extends Component {
       },
     ];
 
-    const { art16_1: { begrunnelseFritekst, begrunnelseKoder }, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt } = tilstand;
+    const {
+      art16_1: {
+        begrunnelseFritekst,
+        begrunnelseFritekstEngelsk,
+        begrunnelseKoder,
+      },
+      muligeBegrunnelseValg,
+      erIDirekteTilArtikkel16Flyt,
+    } = tilstand;
 
     const begrunnelseKode = begrunnelseKoder ? begrunnelseKoder[0] : '';
 
-    const visFritekstfelt = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
+    const visBegrunnelseFritekstFelter = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
-    const art16fritekst = begrunnelseFritekst || '';
+    const begrunnelseFritekstBrev = begrunnelseFritekst || '';
+    const begrunnelseFritekstSed = begrunnelseFritekstEngelsk || '';
+
+    const begrunnelseFritekstBrevLabel = (
+      <Fragment>
+        <Nav.typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.typo.Element>
+        <Nav.typo.Normaltekst>
+          Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land] om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
+        </Nav.typo.Normaltekst>
+      </Fragment>
+    );
 
     /* eslint-disable max-len */
     return (
@@ -344,7 +378,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 onChange={vedUnntakFraBestemmelseEndring}
                 value={unntakFraBestemmelse || ''}
                 disabled={!redigerbart}
-                label="Artikkelen det søkes unntak fra:"
+                label={<Nav.typo.Element>Artikkelen det søkes unntak fra:</Nav.typo.Element>}
                 data-cy="unntakArtikkel"
               >
                 <option key={uuid()} value="" >Velg...</option>
@@ -359,7 +393,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 onChange={begrunnelserEndringHandler}
                 value={begrunnelseKode}
                 disabled={!redigerbart}
-                label="Legg til begrunnelse:"
+                label={<Nav.typo.Element>Legg til begrunnelse:</Nav.typo.Element>}
                 data-cy="begrunnelse"
               >
                 <option key={uuid()} value="">Velg...</option>
@@ -370,19 +404,35 @@ class VurderingArtikkel16Anmodning extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               {
-                visFritekstfelt &&
-                <Nav.Textarea
-                  id="art16_1_anmodning"
-                  label="Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land] om en avtale for deg, fordi», og slutter med teksten du har tilføyd."
-                  placeholder="Skriv begrunnelsen her. Teksten vil også vises i SED A001, og du bør derfor unngå å bruke direkte tiltale med du/deg/din."
-                  disabled={!redigerbart}
-                  onBlur={fritekstFokusFlyttetHandler}
-                  onChange={fritekstEndretHandler}
-                  value={art16fritekst}
-                  feil={fritekstFeilmelding}
-                  maxLength={255}
-                  bredde="fullbredde"
-                />
+                visBegrunnelseFritekstFelter &&
+                <Fragment>
+                  <Nav.Textarea
+                    id="art16_1_anmodning"
+                    label={begrunnelseFritekstBrevLabel}
+                    placeholder="Skriv begrunnelsen her."
+                    disabled={!redigerbart}
+                    onBlur={begrunnelseFritekstFokusFlyttetHandler}
+                    onChange={begrunnelseFritekstBrevEndretHandler}
+                    value={begrunnelseFritekstBrev}
+                    feil={begrunnelseFritekstBrevFeilmelding}
+                    maxLength={255}
+                    bredde="fullbredde"
+                  />
+                  {
+                    redigerbart &&
+                    <Nav.Textarea
+                      id="art16_1_anmodning"
+                      label={<Nav.typo.Element>Begrunnelse til SED A001</Nav.typo.Element>}
+                      placeholder="Skriv begrunnelsen her."
+                      onBlur={begrunnelseFritekstFokusFlyttetHandler}
+                      onChange={begrunnelseFritekstSedEndretHandler}
+                      value={begrunnelseFritekstSed}
+                      feil={begrunnelseFritekstSedFeilmelding}
+                      maxLength={255}
+                      bredde="fullbredde"
+                    />
+                  }
+                </Fragment>
               }
             </Nav.Column>
           </Nav.Row>
@@ -398,7 +448,7 @@ class VurderingArtikkel16Anmodning extends Component {
             <Nav.Row className="fritekstSed">
               <Nav.Column xs="7">
                 <Skjema.Textarea
-                  label="Ytterligere informasjon til SED (valgfri)"
+                  label={<Nav.typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.typo.Element>}
                   feltNavn="fritekstSed"
                   disabled={!redigerbart}
                   visTellerFra={500}

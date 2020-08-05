@@ -30,6 +30,7 @@ describe('VurderingArtikkel13_x_Vedtak', () => {
       lagreLovvalgsperioder: jest.fn(),
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       harIkkeMarginaleArbeidsland: true,
+      soknadsperiode: { tom: '', fom: '' },
     };
 
     const store = createStore(combineReducers({ form: formReducer }));

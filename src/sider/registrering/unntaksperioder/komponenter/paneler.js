@@ -3,34 +3,23 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import PT from 'prop-types';
 
-import * as MPT from '../../../../proptypes';
 import * as KV from '../../../../kodeverk';
 
-import Medlemskap from '../../../../felleskomponenter/paneler/medlemskap';
 import Personopplysninger from '../../../../felleskomponenter/paneler/personopplysninger';
-import Kontantytelser from '../../../../felleskomponenter/paneler/kontantytelser';
 
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { formSelectors } from '../../../../ducks/form';
 
 const Paneler = ({
-  medlemskap,
   oppgittAdresseHarVerdier,
 }) => (
   <form name="paneler">
     <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
-    {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-    <Kontantytelser />
   </form>
 );
 
 Paneler.propTypes = {
-  medlemskap: MPT.Medlemskap,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
-};
-
-Paneler.defaultProps = {
-  medlemskap: {},
 };
 
 const mapStateToProps = state => ({

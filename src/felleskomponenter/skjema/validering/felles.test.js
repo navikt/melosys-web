@@ -119,7 +119,6 @@ describe('Tester felles.js:', () => {
       };
 
       const forventetData = {
-        arbeidNorge: true,
         bosted: false,
         inntekt: true,
         oppholdUtland: true,
