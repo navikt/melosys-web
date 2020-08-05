@@ -110,9 +110,14 @@ export const BrevBestillingFormSelector = createSelector(
   brevbestilling => brevbestilling
 );
 
-export const FartsomradeKodeSelector = createSelector(
+export const MaritimtArbeidSelector = createSelector(
   state => SoknadenFormSelector(state).values,
-  skjemaverdier => skjemaverdier.maritimtArbeid.map(maritimtArbeid => maritimtArbeid.fartsomradeKode) || undefined
+  skjemaverdier => [...skjemaverdier.arbeidsstedOffshore, ...skjemaverdier.arbeidsstedSkip]
+);
+
+export const FartsomradeKodeSelector = createSelector(
+  MaritimtArbeidSelector,
+  maritimeArbeid => maritimeArbeid.map(maritimtArbeid => maritimtArbeid.fartsomradeKode) || undefined
 );
 
 export const Art16BegrunnelserSelector = createSelector(
@@ -133,11 +138,6 @@ export const UnntakFraBestemmelseSelector = createSelector(
 export const Art16BegrunnelseFritekstSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.vilkar.art16_1_begrunnelser_fritekst
-);
-
-export const MaritimtArbeidSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
-  skjemaverdier => skjemaverdier.maritimtArbeid
 );
 
 export const SokkelEllerSkipSelector = createSelector(
@@ -162,7 +162,7 @@ const finnPanelFeil = errors => {
   const panelFeil = unikePanelerMedFeilNavn.map(panelNavn => ({
     panel: panelNavn,
     feil: panelerOgFeil
-      .map(({ panel, melding }) => (panelNavn === panel ? melding : null))
+      .map(({ panel, undertittel, melding }) => (panelNavn === panel ? `${undertittel} - ${melding}` : null))
       .filter(v => v !== null),
   }));
 
@@ -172,11 +172,6 @@ const finnPanelFeil = errors => {
 export const PanelFeilSelector = createSelector(
   SoknadErrorsSelector,
   soknadErrors => finnPanelFeil(soknadErrors)
-);
-
-export const ErAlleMaritimtArbeidNavnUnikeSelector = createSelector(
-  MaritimtArbeidSelector,
-  maritimtarbeidListe => maritimtarbeidListe.length === [...new Set(maritimtarbeidListe.map(maritimtarbeid => maritimtarbeid.navn))].length
 );
 
 export const SoknadOppgittAdresseHusnummerSelector = createSelector(

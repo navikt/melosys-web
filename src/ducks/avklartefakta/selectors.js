@@ -241,18 +241,18 @@ export const ArbeidslandSelector = createSelector(
   state => MaritimeArbeidslandSelector(state),
   state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
   IkkeArbeidslandSoknadslandSelector,
-  state => behandlingsgrunnlagSelectors.HjemmebaseSelector(state),
+  state => behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
   (
     soknadsland,
     maritimeArbeidsland,
     behandlingstema,
     IkkeArbeidslandSoknadland,
-    hjemmebase
+    hjemmebaser
   ) => {
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
-      const soknadsMaritimeArbeidsland = [hjemmebase, ...soknadsland, ...maritimeArbeidsland].filter(land => !IkkeArbeidslandSoknadland.includes(land));
-      const unikeSoknadsMaritimeArbeidsland = [...new Set(soknadsMaritimeArbeidsland)];
-      return unikeSoknadsMaritimeArbeidsland;
+      const vurderteArbeidsland = [...hjemmebaser, ...soknadsland, ...maritimeArbeidsland].filter(land => !IkkeArbeidslandSoknadland.includes(land));
+      const unikeVurderteArbeidsland = [...new Set(vurderteArbeidsland)];
+      return unikeVurderteArbeidsland;
     }
 
     if (maritimeArbeidsland.length > 0) return maritimeArbeidsland;

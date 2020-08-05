@@ -16,12 +16,13 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst) => (
+const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst, begrunnelseFritekstEngelsk) => (
   (oppfylt === undefined || oppfylt === null) ? null : {
     vilkaar,
     oppfylt: oppfylt === 'true' || oppfylt,
     begrunnelseKoder: begrunnelseKoder || [],
     begrunnelseFritekst: begrunnelseFritekst || null,
+    begrunnelseFritekstEngelsk: begrunnelseFritekstEngelsk || null,
   }
 );
 
@@ -68,8 +69,19 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
         velgArt16Objekt(
-          vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, action.data.vilkar.art16_1_avslag, action.data.vilkar.art16_1_avslag_begrunnelser, action.data.vilkar.art16_1_avslag_begrunnelser_fritekst),
-          vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, action.data.vilkar.art16_1_anmodning, action.data.vilkar.art16_1_anmodning_begrunnelser, action.data.vilkar.art16_1_anmodning_begrunnelser_fritekst)
+          vilkarTilObjekt(
+            MKV.Koder.vilkaar.FO_883_2004_ART16_1,
+            action.data.vilkar.art16_1_avslag,
+            action.data.vilkar.art16_1_avslag_begrunnelser,
+            action.data.vilkar.art16_1_avslag_begrunnelser_fritekst
+          ),
+          vilkarTilObjekt(
+            MKV.Koder.vilkaar.FO_883_2004_ART16_1,
+            action.data.vilkar.art16_1_anmodning,
+            action.data.vilkar.art16_1_anmodning_begrunnelser,
+            action.data.vilkar.art16_1_anmodning_begrunnelser_fritekst,
+            action.data.vilkar.art16_1_anmodning_begrunnelser_fritekst_engelsk
+          )
         ),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),

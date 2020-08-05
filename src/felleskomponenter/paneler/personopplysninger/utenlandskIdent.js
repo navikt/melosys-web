@@ -6,6 +6,7 @@ import * as Skjema from '../../skjema';
 import Landvelger from '../../skjema/landvelger';
 import * as Mui from '../../ui';
 
+import './utenlandskIdent.css';
 
 const UtenlandskIdentLinje = ({ indeks, remove, disabled }) => (
   <div className="utenlandskIdent__linje">
@@ -32,7 +33,7 @@ const UtenlandskIdentWrapper = props => {
   return (
     <div className="utenlandskIdent__wrapper">
       { linjer.map((linje, indeks) => <UtenlandskIdentLinje key={indeks} indeks={indeks} remove={remove} disabled={disabled} />) }
-      <Mui.Knapp disabled={disabled} mini className="utenlandskIdent__leggtil" onClick={() => push({ ident: '', landkode: '' })}>{btnText}</Mui.Knapp>
+      <Mui.Knapp disabled={disabled} mini onClick={() => push({ ident: '', landkode: '' })}>{btnText}</Mui.Knapp>
     </div>
   );
 };
