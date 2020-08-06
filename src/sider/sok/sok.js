@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import FnrValidator from '@navikt/fnrvalidator';
 
 import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
@@ -31,7 +32,8 @@ export const Sok = ({
 
   if (!sokResultat) return null;
 
-  const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til fnr, dnr eller saksnummer {sokefrase}.</Nav.Panel>;
+  const sokeFraseErFnrDnr = FnrValidator.idnr(sokefrase).status === 'valid';
+  const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til {sokeFraseErFnrDnr ? 'f.nr./d-nr.' : 'saksnummer' } {sokefrase}.</Nav.Panel>;
 
   return (
     <div className="sok">
@@ -41,7 +43,7 @@ export const Sok = ({
           <section className="sokresultat">
             <h1>Innsyn i sak</h1>
             <h2>
-              Resultater for fnr/dnr/saksnummer {sokefrase}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+              Resultater for {sokeFraseErFnrDnr ? 'f.nr./d-nr.' : 'saksnummer' } {sokefrase}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
             </h2>
             { sokResultat.length > 0 &&
               <SorterbarListe
