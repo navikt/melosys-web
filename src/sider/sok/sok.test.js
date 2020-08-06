@@ -11,6 +11,12 @@ describe('Sok', () => {
       sokResultat: [{}],
       sok: jest.fn(),
     };
+
+    sessionStorage.getItem = jest.fn(() => 'MEL-999999999999999999999');
+  });
+
+  afterAll(() => {
+    sessionStorage.getItem = jest.fn();
   });
 
   it('viser en sorterbarliste ved treff på søk', () => {
