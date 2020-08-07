@@ -31,7 +31,6 @@ const Saksopplysninger = ({
   match,
   behandlingID,
   redigerbart,
-  history,
   sed,
   sedLovvalgsperiode,
   vurderingBegrunnelser,
@@ -41,6 +40,7 @@ const Saksopplysninger = ({
   oppdaterAvklartefakta,
   oppdaterLovvalgsperioder,
   lastInnSaksopplysninger,
+  tilForsiden,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
@@ -222,7 +222,7 @@ const Saksopplysninger = ({
         return false;
       }
     }
-    const tilForsiden = () => history.push('/');
+
     switch (unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
         godkjenn()
@@ -385,13 +385,13 @@ Saksopplysninger.propTypes = {
   avklartefakta: PT.array.isRequired,
   lovvalgsperiode: PT.object.isRequired,
   sedLovvalgsperiode: MPT.Periode,
-  history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgsperioder: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   behandlingsresultat: PT.object,
+  tilForsiden: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
