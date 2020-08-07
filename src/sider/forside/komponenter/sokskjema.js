@@ -41,8 +41,7 @@ class SokSkjema extends Component {
   render () {
     return (
       <Nav.Panel>
-        <Nav.typo.Systemtittel>Søke etter saker</Nav.typo.Systemtittel>
-        <p>Oversikt over alle saker og behandlinger på en person eller for et saksnummer</p>
+        <Nav.typo.Systemtittel>Søk etter sak</Nav.typo.Systemtittel>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
           <Nav.Input
             id="id-sokeskjema"
@@ -51,7 +50,7 @@ class SokSkjema extends Component {
             bredde="XL"
             onChange={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
-            placeholder="F.nr./d-nr./saksnummer"
+            placeholder="F.nr./d-nr./saksnr."
           />
           <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
         </form>

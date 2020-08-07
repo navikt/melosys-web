@@ -41,7 +41,7 @@ export const Sok = ({
       <Nav.Container>
         <Nav.Row className="">
           <section className="sokresultat">
-            <h1>Innsyn i sak</h1>
+            <h1>Saksoversikt</h1>
             <h2>
               Resultater for {sokeFraseErFnrDnr ? 'f.nr./d-nr.' : 'saksnummer' } {sokefrase}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
             </h2>
