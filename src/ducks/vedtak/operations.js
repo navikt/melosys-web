@@ -6,7 +6,6 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-import { push } from 'connected-react-router';
 
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
@@ -15,6 +14,7 @@ import * as DucksUtils from '../utils';
 import MKV from '../../melosyskodeverk';
 
 import { modalerOperations } from '../modaler';
+import { navigeringOperations } from '../navigering';
 
 /* eslint-disable import/prefer-default-export */
 export function fatt(behandlingID, body) {
@@ -28,7 +28,7 @@ export function fatt(behandlingID, body) {
     {
       success: dispatch => {
         dispatch(modalerOperations.skjulValidering());
-        dispatch(push('/'));
+        dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, data) => {
         if (DucksUtils.valideringFeilet(data)) {
@@ -59,7 +59,7 @@ export function avslaSoknad(behandlingID, data) {
     {
       success: dispatch => {
         dispatch(modalerOperations.skjulAvslagSoknad());
-        dispatch(push('/'));
+        dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, errorData) => {
         if (DucksUtils.valideringFeilet(errorData)) {

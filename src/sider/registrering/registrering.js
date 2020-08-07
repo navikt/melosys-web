@@ -122,6 +122,7 @@ const Registrering = props => {
               behandlingID={behandlingID}
               sed={sed}
               vurderingBegrunnelser={vurderingBegrunnelser}
+              tilForsiden={tilForsiden}
             />
           </Nav.Column>
           <Nav.Column xs="5">
