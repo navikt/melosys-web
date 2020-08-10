@@ -31,3 +31,10 @@ global.localStorage = {
   setItem: jest.fn(),
   getItem: jest.fn(),
 };
+
+// Mocker sessionStorage
+global.sessionStorage = {
+  removeItem: jest.fn(),
+  setItem: jest.fn(),
+  getItem: jest.fn(),
+};
