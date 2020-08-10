@@ -16,6 +16,8 @@ import * as Utils from '../../utils';
 import { behandlingerSelectors } from '../behandlinger';
 import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
 import { OrganisasjonSelectors } from '../organisasjoner';
+import { utpekingsperioderSelectors } from '../utpekingsperioder';
+
 import { hentFaktaVerdi } from '../../regler/avklartefakta';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
@@ -365,6 +367,37 @@ export const IkkeMarginaleArbeidslandSelector = createSelector(
 export const IkkeMarginaleArbeidslandKTSelector = createSelector(
   state => IkkeMarginaleArbeidslandSelector(state) || [],
   ikkeMarginaleArbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => ikkeMarginaleArbeidsland.includes(landkodeObjekt.kode))
+);
+
+const overlappende = (liste1, liste2) => liste1.filter(element => liste2.includes(element));
+
+const LandSomKreverSEDSelector = createSelector(
+  state => IkkeMarginaleArbeidslandSelector(state) || [],
+  state => ArbeidslandSelector(state) || [],
+  state => behandlingsgrunnlagSelectors.ForetakUtlandLandkodeSelector(state) || [],
+  state => behandlingsgrunnlagSelectors.ArbeidUtlandLandkodeSelector(state) || [],
+  state => utpekingsperioderSelectors.LovvalgslandSelector(state) || [],
+  (
+    ikkeMarginaleArbeidsland,
+    arbeidsland,
+    foretakUtland,
+    arbeidUtland,
+    lovvalgsland
+  ) => (
+    [
+      ...new Set([
+        ...ikkeMarginaleArbeidsland,
+        ...overlappende(arbeidsland, foretakUtland),
+        ...overlappende(arbeidsland, arbeidUtland),
+        lovvalgsland,
+      ]),
+    ]
+  )
+);
+
+export const LandSomKreverSEDKTSelector = createSelector(
+  state => LandSomKreverSEDSelector(state),
+  arbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))
 );
 
 export const IkkeMarginaleArbeidslandAntallSelector = createSelector(

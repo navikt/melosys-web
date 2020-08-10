@@ -10,6 +10,7 @@ describe('Avklartefaktaselectors', () => {
     behandlingstema,
     behandlingsgrunnlagData,
     behandlingerSaksopplysninger,
+    utpekingsperioder,
   }) => ({
     avklartefakta: {
       data: avklartefakta,
@@ -36,6 +37,9 @@ describe('Avklartefaktaselectors', () => {
       data: [],
     },
     organisasjoner: [],
+    utpekingsperioder: {
+      data: utpekingsperioder,
+    },
   });
 
   describe('ArbeidslandKTSelector', () => {
@@ -518,6 +522,205 @@ describe('Avklartefaktaselectors', () => {
       ];
 
       expect(resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toMatchObject(forventetResultat);
+    });
+  });
+
+  describe('LandSomKreverSEDKTSelector', () => {
+    const avklartefakteArbeidslandMedMarginaltArbeid = [
+      {
+        avklartefaktaKode: 'MARGINALT_ARBEID',
+        referanse: 'MARGINALT_ARBEID',
+        fakta: [
+          'TRUE',
+        ],
+        subjektID: 'DK',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+      {
+        avklartefaktaKode: 'MARGINALT_ARBEID',
+        referanse: 'MARGINALT_ARBEID',
+        fakta: [
+          'TRUE',
+        ],
+        subjektID: 'NO',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+      {
+        avklartefaktaKode: 'ARBEIDSLAND',
+        referanse: 'ARBEIDSLAND',
+        fakta: [
+          'DK',
+        ],
+        subjektID: 'DK',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+      {
+        avklartefaktaKode: 'ARBEIDSLAND',
+        referanse: 'ARBEIDSLAND',
+        fakta: [
+          'NO',
+        ],
+        subjektID: 'NO',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+    ];
+
+    const avklartefakteArbeidslandUtenMarginaltArbeid = [
+      {
+        avklartefaktaKode: null,
+        referanse: 'SOKNADSLAND',
+        fakta: [
+          'TRUE',
+        ],
+        subjektID: 'DK',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+      {
+        avklartefaktaKode: null,
+        referanse: 'SOKNADSLAND',
+        fakta: [
+          'TRUE',
+        ],
+        subjektID: 'NO',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+      {
+        avklartefaktaKode: 'ARBEIDSLAND',
+        referanse: 'ARBEIDSLAND',
+        fakta: [
+          'DK',
+        ],
+        subjektID: 'DK',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+      {
+        avklartefaktaKode: 'ARBEIDSLAND',
+        referanse: 'ARBEIDSLAND',
+        fakta: [
+          'NO',
+        ],
+        subjektID: 'NO',
+        begrunnelseKoder: [],
+        begrunnelseFritekst: null,
+      },
+    ];
+
+    const soeknadsland = {
+      landkoder: [
+        'DK',
+        'NO',
+      ],
+    };
+
+    const foretakUtland = [
+      {
+        adresse: {
+          landkode: 'DK',
+        },
+      },
+    ];
+
+    const lagStateDefaults = ({
+      avklartefakta,
+      behandlingsgrunnlagData,
+      utpekingsperioder,
+    }) => lagState({
+      avklartefakta: avklartefakta || [],
+      behandlingsgrunnlagData: behandlingsgrunnlagData || [],
+      behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+      utpekingsperioder: utpekingsperioder || [],
+    });
+
+    it('skal returnere tom liste når ingen land er oppgitt', () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({}));
+      expect(resultat.length).toBe(0);
+    });
+
+    it('skal returnere tom liste når alle arbeidsland har marginalt arbeid', () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
+        avklartefakta: avklartefakteArbeidslandMedMarginaltArbeid,
+        behandlingsgrunnlagData: {
+          soeknadsland,
+        },
+      }));
+      expect(resultat.length).toBe(0);
+    });
+
+    it('skal returnere arbeidsland uten marginalt arbeid', () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
+        avklartefakta: avklartefakteArbeidslandUtenMarginaltArbeid,
+        behandlingsgrunnlagData: {
+          soeknadsland,
+        },
+      }));
+      expect(resultat.length).toBe(2);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(['DK', 'NO']));
+    });
+
+    it('skal returnere arbeidsland med marginalt arbeid som er oppgitt i foretakUtland', () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
+        avklartefakta: avklartefakteArbeidslandMedMarginaltArbeid,
+        behandlingsgrunnlagData: {
+          soeknadsland,
+          foretakUtland,
+        },
+      }));
+      expect(resultat.length).toBe(1);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(['DK']));
+    });
+
+    it('skal returnere arbeidsland med marginalt arbeid som er oppgitt i arbeidUtland', () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
+        avklartefakta: avklartefakteArbeidslandMedMarginaltArbeid,
+        behandlingsgrunnlagData: {
+          soeknadsland,
+          arbeidUtland: foretakUtland,
+        },
+      }));
+      expect(resultat.length).toBe(1);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(['DK']));
+    });
+
+    it('skal returnere lovvalgsland oppgitt i utpekingsperiode', () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
+        utpekingsperioder: [
+          {
+            lovvalgsland: 'DE',
+          },
+        ],
+      }));
+      expect(resultat.length).toBe(1);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(['DE']));
+    });
+
+    it('skal ikke returnere flere av samme land', () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
+        avklartefakta: avklartefakteArbeidslandUtenMarginaltArbeid,
+        behandlingsgrunnlagData: {
+          soeknadsland,
+          foretakUtland,
+          arbeidUtland: foretakUtland,
+        },
+      }));
+      expect(resultat.length).toBe(2);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(['DK', 'NO']));
     });
   });
 });

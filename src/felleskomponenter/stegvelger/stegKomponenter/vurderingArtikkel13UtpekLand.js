@@ -236,10 +236,7 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
   ikkeMarginaleArbeidsland: avklartefaktaSelectors.IkkeMarginaleArbeidslandSelector(state) || [],
   initialValues: {
-    mottakerinstitusjoner: [
-      ...(avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || []),
-      ...(utpekingsperioderSelectors.LovvalgslandKTSelector(state) || []),
-    ],
+    mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state),
     fritekstOrienteringsbrev: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     kreverMottakerinstitusjon: false,
     fritekstSed: null,

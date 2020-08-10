@@ -27,6 +27,16 @@ export const ArbeidUtlandSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidUtland || []
 );
 
+const ArbeidUtlandAdresseSelector = createSelector(
+  ArbeidUtlandSelector,
+  arbeidUtland => arbeidUtland.map(arbeid => arbeid.adresse) || []
+);
+
+export const ArbeidUtlandLandkodeSelector = createSelector(
+  ArbeidUtlandAdresseSelector,
+  arbeidUtlandAdresse => arbeidUtlandAdresse.map(adresse => adresse.landkode) || []
+);
+
 export const ArbeidsinntektSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.arbeidsinntekt || {}
@@ -40,6 +50,16 @@ export const ArbeidsinntektNaturalytelserSelector = createSelector(
 export const ForetakUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.foretakUtland || []
+);
+
+const ForetakUtlandAdresseSelector = createSelector(
+  ForetakUtlandSelector,
+  foretakUtland => foretakUtland.map(foretak => foretak.adresse) || []
+);
+
+export const ForetakUtlandLandkodeSelector = createSelector(
+  ForetakUtlandAdresseSelector,
+  foretakUtlandAdresse => foretakUtlandAdresse.map(adresse => adresse.landkode) || []
 );
 
 export const ArbeidsforholdUtlandSelector = createSelector(
