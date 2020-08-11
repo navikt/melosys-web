@@ -526,7 +526,7 @@ describe('Avklartefaktaselectors', () => {
   });
 
   describe('LandSomKreverSEDKTSelector', () => {
-    const avklartefakteArbeidslandMedMarginaltArbeid = [
+    const avklartefaktaArbeidslandMedMarginaltArbeid = [
       {
         avklartefaktaKode: 'MARGINALT_ARBEID',
         referanse: 'MARGINALT_ARBEID',
@@ -569,7 +569,7 @@ describe('Avklartefaktaselectors', () => {
       },
     ];
 
-    const avklartefakteArbeidslandUtenMarginaltArbeid = [
+    const avklartefaktaArbeidslandUtenMarginaltArbeid = [
       {
         avklartefaktaKode: null,
         referanse: 'SOKNADSLAND',
@@ -645,7 +645,7 @@ describe('Avklartefaktaselectors', () => {
 
     it('skal returnere tom liste når alle arbeidsland har marginalt arbeid', () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefakteArbeidslandMedMarginaltArbeid,
+        avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
         behandlingsgrunnlagData: {
           soeknadsland,
         },
@@ -655,7 +655,7 @@ describe('Avklartefaktaselectors', () => {
 
     it('skal returnere arbeidsland uten marginalt arbeid', () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefakteArbeidslandUtenMarginaltArbeid,
+        avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
         behandlingsgrunnlagData: {
           soeknadsland,
         },
@@ -668,7 +668,7 @@ describe('Avklartefaktaselectors', () => {
 
     it('skal returnere arbeidsland med marginalt arbeid som er oppgitt i foretakUtland', () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefakteArbeidslandMedMarginaltArbeid,
+        avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
         behandlingsgrunnlagData: {
           soeknadsland,
           foretakUtland,
@@ -682,7 +682,7 @@ describe('Avklartefaktaselectors', () => {
 
     it('skal returnere arbeidsland med marginalt arbeid som er oppgitt i arbeidUtland', () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefakteArbeidslandMedMarginaltArbeid,
+        avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
         behandlingsgrunnlagData: {
           soeknadsland,
           arbeidUtland: foretakUtland,
@@ -710,7 +710,7 @@ describe('Avklartefaktaselectors', () => {
 
     it('skal ikke returnere flere av samme land', () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefakteArbeidslandUtenMarginaltArbeid,
+        avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
         behandlingsgrunnlagData: {
           soeknadsland,
           foretakUtland,
