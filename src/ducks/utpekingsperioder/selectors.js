@@ -14,3 +14,13 @@ export const LovvalgslandSelector = createSelector(
   UtpekingsperiodeSelector,
   utpekingsperiode => utpekingsperiode.lovvalgsland
 );
+
+export const FomDatoSelector = createSelector(
+  UtpekingsperiodeSelector,
+  utpekingsperiode => utpekingsperiode.fomDato
+);
+
+export const TomDatoSelector = createSelector(
+  UtpekingsperiodeSelector,
+  utpekingsperiode => utpekingsperiode.tomDato
+);

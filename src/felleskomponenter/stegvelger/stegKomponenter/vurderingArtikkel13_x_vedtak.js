@@ -188,13 +188,13 @@ VurderingArtikkel13_x_vedtak.defaultProps = {
 };
 
 const mapStateToProps = state => {
+  const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
   const erLovvalgsperiodeForkortet = () => Utils.dato.datoDiffPure(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
-    lovvalgsperioderSelectors.TomDatoSelector(state),
+    lovvalgsperiodeTom,
     'days'
   ) !== 0;
 
-  const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
   const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
 
   return ({
