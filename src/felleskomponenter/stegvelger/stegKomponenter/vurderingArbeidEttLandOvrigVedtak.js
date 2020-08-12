@@ -380,6 +380,9 @@ const mapStateToProps = (state, ownProps) => {
       'days'
     ) !== 0;
 
+  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta);
+  const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
+
   return ({
     behandlingsgrunnlagFom: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
     behandlingsgrunnlagTom: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
@@ -399,7 +402,8 @@ const mapStateToProps = (state, ownProps) => {
       mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
       lovvalgsbestemmelse: ownProps.lovvalgsbestemmelseSomSkalVises,
       fritekstSed: '',
-      informerUtenlandskTrygdemyndighet: null,
+      informerUtenlandskTrygdemyndighet,
+      mottakerLand,
     },
   });
 };
