@@ -15,6 +15,7 @@ import { vedtakOperations } from '../ducks/vedtak';
 import { saksopplysningerOperations } from '../ducks/saksopplysninger';
 import { behandlingerOperations } from '../ducks/behandlinger';
 import { modalerOperations, modalerSelectors } from '../ducks/modaler';
+import { navigeringOperations } from '../ducks/navigering';
 
 const FellesHandlersContext = React.createContext({});
 export default FellesHandlersContext;
@@ -24,7 +25,6 @@ const FellesHandlersProviderUnconnected = ({
   location,
   history,
   lagreAllData,
-  hentOppgaveOversikt,
   tilbakeleggeOppgave,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
@@ -45,6 +45,7 @@ const FellesHandlersProviderUnconnected = ({
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
+  tilForsiden,
 }) => {
   const [venterPaRevurderFagsak, setVenterPaRevurderFagsak] = useState(false);
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -68,11 +69,6 @@ const FellesHandlersProviderUnconnected = ({
   const behandlingOppfriskes = behandlingUnderOppfriskning === behandlingID;
 
   const annenBehandlingOppfriskes = behandlingUnderOppfriskning !== null && !behandlingOppfriskes;
-
-  const tilForsiden = () => {
-    hentOppgaveOversikt();
-    history.push('/');
-  };
 
   const tilOpprettNySak = () => {
     history.push('/opprettnysak');
@@ -128,10 +124,10 @@ const FellesHandlersProviderUnconnected = ({
     }
   };
 
-  const avslaaSoknadHandle = async () => {
+  const avslaaSoknadHandle = async data => {
     try {
       await lagreAllData();
-      avslaSoknad(behandlingID);
+      avslaSoknad(behandlingID, data);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -183,7 +179,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   history: PT.object.isRequired,
   location: PT.object.isRequired,
   lagreAllData: PT.func.isRequired,
-  hentOppgaveOversikt: PT.func.isRequired,
   tilbakeleggeOppgave: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
@@ -204,6 +199,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   leggTilBehandlingOppfriskes: PT.func.isRequired,
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
+  tilForsiden: PT.func.isRequired,
 };
 
 FellesHandlersProviderUnconnected.defaultProps = {
@@ -222,9 +218,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
-  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
-  avslaSoknad: behandlingID => dispatch(vedtakOperations.avslaSoknad(behandlingID)),
+  avslaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaSoknad(behandlingID, data)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
   leggTilBehandlingOppfriskes: behandlingID => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
@@ -240,6 +235,7 @@ const mapDispatchToProps = dispatch => ({
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
   visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
+  tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
 });
 
 export const FellesHandlersProvider = withRouter(connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected));

@@ -10,6 +10,15 @@ const LOVVALGSLAND_KREVES = { melding: 'Lovvalgsland kreves' };
 const OPPGI_ET_LAND = { melding: 'Oppgi et land.' };
 
 const artikkel13_utpek = object().shape({
+  forkortUtpekingsperiode: bool().required(),
+  tomDato: string()
+    .when('forkortUtpekingsperiode', {
+      is: true,
+      then: string()
+        .endretPeriodeErGyldig({ melding: 'Ugyldig periode' })
+        .erGyldigDato({ melding: 'Gyldig dato kreves' })
+        .required({ melding: 'Dato kreves' }),
+    }),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjoner: array().of(object().shape({
     kreverMottakerinstitusjon: bool(),

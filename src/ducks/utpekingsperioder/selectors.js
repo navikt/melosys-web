@@ -21,3 +21,13 @@ export const LovvalgslandKTSelector = createSelector(
   LovvalgslandSelector,
   lovvalgsland => KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder)
 );
+
+export const FomDatoSelector = createSelector(
+  UtpekingsperiodeSelector,
+  utpekingsperiode => utpekingsperiode.fomDato
+);
+
+export const TomDatoSelector = createSelector(
+  UtpekingsperiodeSelector,
+  utpekingsperiode => utpekingsperiode.tomDato
+);

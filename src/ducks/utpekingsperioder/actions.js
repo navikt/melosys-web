@@ -10,3 +10,13 @@ export function oppdaterUtpekingsperioder(utpekingsperioder) {
 export function resetUtpekingsperioderState() {
   return { type: Types.RESET };
 }
+
+export function endrePeriode(fomdato, tomdato) {
+  return ({
+    type: Types.ENDRE_PERIODE,
+    data: {
+      fomdato,
+      tomdato,
+    },
+  });
+}

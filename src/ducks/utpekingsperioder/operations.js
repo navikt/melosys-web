@@ -88,3 +88,7 @@ export function oppdaterUtpekingsperioderState(stegState) {
 export function resetUtpekingsperioderState() {
   return dispatch => dispatch(Actions.resetUtpekingsperioderState());
 }
+
+export function endrePeriode(fomDato, tomDato) {
+  return dispatch => dispatch(Actions.endrePeriode(fomDato, tomDato));
+}

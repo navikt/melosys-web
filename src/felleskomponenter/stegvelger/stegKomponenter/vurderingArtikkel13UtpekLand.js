@@ -22,6 +22,7 @@ import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { formOperations } from '../../../ducks/form';
 import { flytSelectors } from '../../../ducks/flyt';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
@@ -32,7 +33,8 @@ export const VurderingArtikkel13UtpekLand = ({
   redigerbart,
   behandlingID,
   lovvalgsland,
-  lovvalgsperiode,
+  soknadsperiode,
+  utpekingsperiode,
   tilstand: { overskrift },
   form,
   formIsValid,
@@ -46,6 +48,8 @@ export const VurderingArtikkel13UtpekLand = ({
   lagreUtpekingsperioder,
   ikkeMarginaleArbeidsland,
   oppdaterMottakerinstitusjoner,
+  byggUtpekingsperioder: gjenopprettOpprinneligUtpekingsperiode,
+  endreUtpekingsperiode,
 }) => {
   useEffect(() => {
     oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
@@ -55,6 +59,8 @@ export const VurderingArtikkel13UtpekLand = ({
     };
   }, []);
 
+  const forkortUtpekingsperiode = () => endreUtpekingsperiode(utpekingsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+
   const validerForm = () => {
     touchAll();
     return formIsValid;
@@ -62,6 +68,10 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const vedKlikkUtpek = async () => {
     if (!validerForm()) return;
+
+    if (formValues.forkortUtpekingsperiode) {
+      await endreUtpekingsperiode(utpekingsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+    }
 
     lagreOgUtpek({
       mottakerinstitusjoner: formValues.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
@@ -106,15 +116,19 @@ export const VurderingArtikkel13UtpekLand = ({
     },
   ];
 
-  const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
-  const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
+  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
+  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
   const visLandvelger = erOffentligArbeidUtland || harLonnetArbeidAnnetLand;
   const lovvalgslandTittel = visLandvelger ? 'Velg lovvalgsland' : 'Lovvalgsland';
 
-  const vedKlikkForhandsvis = () => {
+  const vedKlikkForhandsvis = async () => {
     const formValid = validerForm();
     if (!formValid) return false;
+
+    if (formValues.forkortUtpekingsperiode) {
+      await forkortUtpekingsperiode();
+    }
 
     lagreUtpekingsperioder();
     return true;
@@ -151,6 +165,18 @@ export const VurderingArtikkel13UtpekLand = ({
           {fom} - {tom}
         </Nav.Column>
       </Nav.Row>
+      <Skjema.PeriodeForkorter
+        redigerbart={redigerbart}
+        checkboxClassName="forkortUtpekingsperiode"
+        checkboxLabel="Utpekingen gjelder for en kortere periode"
+        checkboxFeltnavn="forkortUtpekingsperiode"
+        onUncheck={gjenopprettOpprinneligUtpekingsperiode}
+        forkortPeriode={formValues.forkortUtpekingsperiode}
+        fomLabel="Startdato"
+        fomFeltNavn="fomDato"
+        tomLabel="Sluttdato"
+        tomFeltNavn="tomDato"
+      />
       <Nav.Row className="fritekst">
         <Nav.Column xs="7">
           <Skjema.Textarea
@@ -204,7 +230,7 @@ VurderingArtikkel13UtpekLand.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsland: PT.string,
-  lovvalgsperiode: MPT.Periode,
+  utpekingsperiode: MPT.Periode,
   form: PT.string.isRequired,
   formValues: PT.object,
   formIsValid: PT.bool.isRequired,
@@ -215,38 +241,57 @@ VurderingArtikkel13UtpekLand.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   lagreUtpekingsperioder: PT.func.isRequired,
+  endreUtpekingsperiode: PT.func.isRequired,
+  byggUtpekingsperioder: PT.func.isRequired,
+  soknadsperiode: MPT.Periode.isRequired,
   ikkeMarginaleArbeidsland: PT.array.isRequired,
   oppdaterMottakerinstitusjoner: PT.func.isRequired,
 };
 
 VurderingArtikkel13UtpekLand.defaultProps = {
-  lovvalgsperiode: {},
+  utpekingsperiode: {},
   formValues: {},
   lovvalgsland: '',
 };
 
-const mapStateToProps = state => ({
-  erOffentligArbeidUtland: flytSelectors.HarOffentligTjenesteAnnetLandSelector(state),
-  harLonnetArbeidAnnetLand: flytSelectors.HarLonnetArbeidAnnetLand(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
-  lovvalgsperiode: utpekingsperioderSelectors.UtpekingsperiodeSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
-  ikkeMarginaleArbeidsland: avklartefaktaSelectors.IkkeMarginaleArbeidslandSelector(state) || [],
-  initialValues: {
-    mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state),
-    fritekstOrienteringsbrev: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    kreverMottakerinstitusjon: false,
-    fritekstSed: null,
+const mapStateToProps = state => {
+  const utpekingsperiodeTom = utpekingsperioderSelectors.TomDatoSelector(state);
+  const erUtpekingsperiodeForkortet = () => Utils.dato.datoDiffPure(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
+    utpekingsperiodeTom,
+    'days'
+  ) !== 0;
+
+  const forkortUtpekingsperiode = utpekingsperiodeTom === null ? false : erUtpekingsperiodeForkortet();
+
+  return {
+    erOffentligArbeidUtland: flytSelectors.HarOffentligTjenesteAnnetLandSelector(state),
+    harLonnetArbeidAnnetLand: flytSelectors.HarLonnetArbeidAnnetLand(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
-  },
-});
+    utpekingsperiode: utpekingsperioderSelectors.UtpekingsperiodeSelector(state),
+    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+    formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
+    formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
+    ikkeMarginaleArbeidsland: avklartefaktaSelectors.IkkeMarginaleArbeidslandSelector(state) || [],
+    initialValues: {
+      forkortUtpekingsperiode,
+      tomDato: forkortUtpekingsperiode ? Utils.dato.formatterDatoTilNorsk(utpekingsperioderSelectors.TomDatoSelector(state)) : '',
+      fomDato: Utils.dato.formatterDatoTilNorsk(utpekingsperioderSelectors.FomDatoSelector(state)),
+      mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state),
+      fritekstOrienteringsbrev: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+      kreverMottakerinstitusjon: false,
+      fritekstSed: null,
+      lovvalgsland: utpekingsperioderSelectors.LovvalgslandSelector(state),
+    },
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_UTPEKLAND)),
   lagreUtpekingsperioder: () => dispatch(utpekingsperioderOperations.lagre()),
+  endreUtpekingsperiode: (fomdato, tomdato) => dispatch(utpekingsperioderOperations.endrePeriode(fomdato, tomdato)),
   oppdaterMottakerinstitusjoner: mottakerinstitusjoner => dispatch(change(KV.Form.ARTIKKEL_13_UTPEKLAND, 'mottakerinstitusjoner', mottakerinstitusjoner)),
 });
 
@@ -259,6 +304,7 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
   validate: (values, props) => {
     const settings = {
       context: {
+        soknadsperiode: props.soknadsperiode,
         validerLovvalgsland: props.erOffentligArbeidUtland || props.harLonnetArbeidAnnetLand,
       },
     };

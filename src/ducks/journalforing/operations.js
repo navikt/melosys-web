@@ -6,13 +6,13 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-import { push } from 'connected-react-router';
 
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 import * as Actions from '../journalforing/actions';
 import { modalerOperations } from '../modaler';
+import { navigeringOperations } from '../navigering';
 import * as DucksUtils from '../utils';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -39,7 +39,7 @@ export function opprett(body) {
     {
       success: dispatch => {
         dispatch(modalerOperations.skjulValidering());
-        dispatch(push('/'));
+        dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, data) => {
         if (DucksUtils.harFeilmelding(data)) {
@@ -61,7 +61,7 @@ export function tilordne(body) {
     {
       success: dispatch => {
         dispatch(modalerOperations.skjulValidering());
-        dispatch(push('/'));
+        dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, data) => {
         if (DucksUtils.harFeilmelding(data)) {

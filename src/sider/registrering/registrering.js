@@ -107,7 +107,8 @@ const Registrering = props => {
   };
 
   const apneTidligereBehandlinger = () => {
-    Routing.nyFane(`sok/${person.fnr}`);
+    sessionStorage.setItem('sokefrase', person.fnr);
+    Routing.nyFane('sok');
   };
 
   if (Utils._isNil(redigerbart)) return null;
@@ -122,6 +123,7 @@ const Registrering = props => {
               behandlingID={behandlingID}
               sed={sed}
               vurderingBegrunnelser={vurderingBegrunnelser}
+              tilForsiden={tilForsiden}
             />
           </Nav.Column>
           <Nav.Column xs="5">
