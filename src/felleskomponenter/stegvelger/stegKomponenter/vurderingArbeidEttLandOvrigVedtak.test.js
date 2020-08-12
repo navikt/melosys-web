@@ -44,7 +44,7 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
     });
 
     describe('viser nødvendige felter dersom', () => {
-      it('man velger å informere utenlandsk trygdemyndighet', () => {
+      test('man velger å informere utenlandsk trygdemyndighet', () => {
         props.formValues.informerUtenlandskTrygdemyndighet = true;
         props.formValues.kreverMottakerinstitusjon = true;
         props.formValues.mottakerLand = MKV.Koder.landkoder.DE;
@@ -68,7 +68,7 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
     });
 
     describe('gjemmer unødvendige felter dersom', () => {
-      it('man velger å informere utenlandsk trygdemyndighet, men ingen mottakerinstitusjoner finnes for valgt land', () => {
+      test('man velger å informere utenlandsk trygdemyndighet, men ingen mottakerinstitusjoner finnes for valgt land', () => {
         props.formValues.informerUtenlandskTrygdemyndighet = true;
         props.formValues.kreverMottakerinstitusjon = false;
         const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
@@ -88,7 +88,7 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
         ]));
       });
 
-      it('man velger å ikke informere utenlandsk trygdemyndighet', () => {
+      test('man velger å ikke informere utenlandsk trygdemyndighet', () => {
         props.formValues.informerUtenlandskTrygdemyndighet = false;
         const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
 
@@ -106,6 +106,35 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
           }),
         ]));
       });
+    });
+  });
+
+  describe('ved 11_3B', () => {
+    let vurderingArbeidEttLandOvrigVedtak = null;
+
+    beforeEach(() => {
+      props.formValues.lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
+      vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+    });
+
+    it('viser periodeforkorter', () => {
+      expect(vurderingArbeidEttLandOvrigVedtak.find(Skjema.PeriodeForkorter)).toHaveLength(1);
+    });
+
+    it('viser fritekst til vedtaksbrev', () => {
+      expect(vurderingArbeidEttLandOvrigVedtak.findWhere(n =>
+        n.type() === Skjema.Textarea &&
+        n.props().label === 'Fritekst til vedtaksbrev')).toHaveLength(1);
+    });
+
+    it('viser mottakerinstitusjonsvelgerFlervalg', () => {
+      expect(vurderingArbeidEttLandOvrigVedtak.find(MottakerinstitusjonvelgerFlervalg)).toHaveLength(1);
+    });
+
+    it('viser ytterligere informasjon til SED', () => {
+      expect(vurderingArbeidEttLandOvrigVedtak.findWhere(n =>
+        n.type() === Skjema.Textarea &&
+        n.props().label === 'Ytterligere informasjon til SED (valgfri)')).toHaveLength(1);
     });
   });
 });
