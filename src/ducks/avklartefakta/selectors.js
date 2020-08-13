@@ -371,25 +371,35 @@ export const IkkeMarginaleArbeidslandKTSelector = createSelector(
 
 const overlappende = (liste1, liste2) => liste1.filter(element => liste2.includes(element));
 
-const LandSomKreverSEDSelector = createSelector(
+export const LandMedVesentligEllerRegistrertArbeidSelector = createSelector(
   state => IkkeMarginaleArbeidslandSelector(state) || [],
   state => ArbeidslandSelector(state) || [],
   state => behandlingsgrunnlagSelectors.ForetakUtlandLandkodeSelector(state) || [],
   state => behandlingsgrunnlagSelectors.ArbeidUtlandLandkodeSelector(state) || [],
-  state => utpekingsperioderSelectors.LovvalgslandSelector(state) || [],
   (
     ikkeMarginaleArbeidsland,
     arbeidsland,
     foretakUtland,
-    arbeidUtland,
-    lovvalgsland
+    arbeidUtland
   ) => (
     [
       ...new Set([
         ...ikkeMarginaleArbeidsland,
         ...overlappende(arbeidsland, foretakUtland),
         ...overlappende(arbeidsland, arbeidUtland),
-        lovvalgsland,
+      ]),
+    ]
+  )
+);
+
+export const LandSomKreverSEDSelector = createSelector(
+  state => LandMedVesentligEllerRegistrertArbeidSelector(state) || [],
+  state => utpekingsperioderSelectors.LovvalgslandSelector(state),
+  (landSomKreverSED, utpektLovvalgsland) => (
+    [
+      ...new Set([
+        ...landSomKreverSED,
+        ...(utpektLovvalgsland ? [utpektLovvalgsland] : []),
       ]),
     ]
   )

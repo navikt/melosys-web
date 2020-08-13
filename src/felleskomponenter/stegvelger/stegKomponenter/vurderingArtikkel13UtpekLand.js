@@ -46,7 +46,7 @@ export const VurderingArtikkel13UtpekLand = ({
   oppdaterData,
   slettData,
   lagreUtpekingsperioder,
-  ikkeMarginaleArbeidsland,
+  landMedVesentligEllerRegistrertArbeid,
   oppdaterMottakerinstitusjoner,
   byggUtpekingsperioder: gjenopprettOpprinneligUtpekingsperiode,
   endreUtpekingsperiode,
@@ -83,17 +83,9 @@ export const VurderingArtikkel13UtpekLand = ({
   const endreLovvalgsland = land => {
     oppdaterData(lagLovvalgsland(land));
 
-    // Henter eksisterende mottakerinstitusjoner som også er ikke marginale arbeidsland (samme som i initialValues)
-    const eksisterendeIkkeMarginaleArbeidsland = formValues.mottakerinstitusjoner.filter(({ kode }) => ikkeMarginaleArbeidsland.includes(kode));
-
-    // Skal ikke legge til ekstra mottakerinstitusjon dersom den allerede finnes
-    const valgtLovvalgsland = ikkeMarginaleArbeidsland.includes(land)
-      ? [] : KV.kodeTilObjekt(land, MKV.KTObjects.landkoder);
-
     oppdaterMottakerinstitusjoner([
-      ...eksisterendeIkkeMarginaleArbeidsland,
-      ...valgtLovvalgsland,
-    ]);
+      ...new Set([...landMedVesentligEllerRegistrertArbeid, land]),
+    ].map(landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)));
   };
 
   const pdfDokumenter = [
@@ -244,7 +236,7 @@ VurderingArtikkel13UtpekLand.propTypes = {
   endreUtpekingsperiode: PT.func.isRequired,
   byggUtpekingsperioder: PT.func.isRequired,
   soknadsperiode: MPT.Periode.isRequired,
-  ikkeMarginaleArbeidsland: PT.array.isRequired,
+  landMedVesentligEllerRegistrertArbeid: PT.array.isRequired,
   oppdaterMottakerinstitusjoner: PT.func.isRequired,
 };
 
@@ -274,12 +266,12 @@ const mapStateToProps = state => {
     soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
-    ikkeMarginaleArbeidsland: avklartefaktaSelectors.IkkeMarginaleArbeidslandSelector(state) || [],
+    landMedVesentligEllerRegistrertArbeid: avklartefaktaSelectors.LandMedVesentligEllerRegistrertArbeidSelector(state) || [],
     initialValues: {
       forkortUtpekingsperiode,
       tomDato: forkortUtpekingsperiode ? Utils.dato.formatterDatoTilNorsk(utpekingsperioderSelectors.TomDatoSelector(state)) : '',
       fomDato: Utils.dato.formatterDatoTilNorsk(utpekingsperioderSelectors.FomDatoSelector(state)),
-      mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state),
+      mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state) || [],
       fritekstOrienteringsbrev: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
       kreverMottakerinstitusjon: false,
       fritekstSed: null,
