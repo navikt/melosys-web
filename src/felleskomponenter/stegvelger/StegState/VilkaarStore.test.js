@@ -7,6 +7,7 @@ const eksisterendeVilkar = {
   oppfylt: false,
   begrunnelseKoder: ['Annet'],
   begrunnelseFritekst: 'Suspekt bruk av gjemmekontor',
+  begrunnelseFritekstEngelsk: 'Suspicious use of home office',
 };
 
 describe('VilkaarStore oppdatering av eksisterende data', () => {
@@ -23,6 +24,7 @@ describe('VilkaarStore oppdatering av eksisterende data', () => {
     expect(vilkaar.art11_3A).toBeFalsy();
     expect(vilkaar.art11_3A_begrunnelser).toEqual(eksisterendeVilkar.begrunnelseKoder);
     expect(vilkaar.art11_3A_begrunnelser_fritekst).toEqual(eksisterendeVilkar.begrunnelseFritekst);
+    expect(vilkaar.art11_3A_begrunnelser_fritekst_engelsk).toEqual(eksisterendeVilkar.begrunnelseFritekstEngelsk);
   });
 
   it('Oppdater eksisterende vilkaar', () => {
@@ -34,13 +36,14 @@ describe('VilkaarStore oppdatering av eksisterende data', () => {
   });
 
   it('Oppdater vilkaarbegrunnelse', () => {
-    const vilkaarCmd = lagBegrunnelse('art11_3A', ['Mer enn 5 år'], 'Fritekst');
+    const vilkaarCmd = lagBegrunnelse('art11_3A', ['Mer enn 5 år'], 'Fritekst', 'Free text');
     store.oppdaterStegData('TESTSTEG-1', vilkaarCmd);
 
     const vilkaar = store.hent();
     expect(vilkaar.art11_3A).toBeFalsy();
     expect(vilkaar.art11_3A_begrunnelser).toEqual(['Mer enn 5 år']);
     expect(vilkaar.art11_3A_begrunnelser_fritekst).toEqual('Fritekst');
+    expect(vilkaar.art11_3A_begrunnelser_fritekst_engelsk).toEqual('Free text');
   });
 
   it('Legg til vilkaar', () => {

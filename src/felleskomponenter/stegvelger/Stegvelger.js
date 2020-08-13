@@ -299,6 +299,11 @@ class Stegvelger extends Component {
     this.props.oppdaterLovvalgperioder(perioderStegState);
   };
 
+  byggUtpekingsperioderHandler = () => {
+    const perioderStegState = this.hentPerioderStegState();
+    this.props.oppdaterUtpekingsperioder(perioderStegState);
+  };
+
   byggAnmodningsperioderHandler = () => {
     const perioderStegState = this.hentPerioderStegState();
     this.props.oppdaterAnmodningsPerioder(perioderStegState);
@@ -349,6 +354,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       avvisUtpeking: this.avvisUtpeking,
       lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
+      byggUtpekingsperioder: this.byggUtpekingsperioderHandler,
     };
 
     const { props } = this;

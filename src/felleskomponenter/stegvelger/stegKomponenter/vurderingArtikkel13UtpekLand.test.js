@@ -18,7 +18,6 @@ describe('VurderingArtikkel13_1_UtpekLand', () => {
       lovvalgsland: 'NO',
       lagreOgUtpek: jest.fn(),
       formIsValid: true,
-      formValues: {},
       touch: jest.fn(),
       form: 'Form',
       touchAll: jest.fn(),
@@ -27,6 +26,16 @@ describe('VurderingArtikkel13_1_UtpekLand', () => {
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
       lagreUtpekingsperioder: jest.fn(),
+      formValues: {
+        forkortUtpekingsperiode: true,
+      },
+      utpekingsperiode: {},
+      byggUtpekingsperioder: jest.fn(),
+      endreUtpekingsperiode: jest.fn(),
+      soknadsperiode: {},
+      ikkeMarginaleArbeidsland: [],
+      oppdaterMottakerinstitusjoner: jest.fn(),
+      landMedVesentligEllerRegistrertArbeid: [],
     };
   });
 
@@ -39,5 +48,17 @@ describe('VurderingArtikkel13_1_UtpekLand', () => {
 
     expect(fritekstOrienteringsbrevTextarea).toHaveLength(1);
     expect(fritekstOrienteringsbrevTextarea.props().disabled).toBe(false);
+  });
+
+  it('viser periodeforkorter', () => {
+    const vurderingArt13UtpekLand = shallow(<VurderingArtikkel13UtpekLand {...props} />);
+
+    const periodeforkorter = vurderingArt13UtpekLand.find(Skjema.PeriodeForkorter);
+    const periodeforkorterProps = periodeforkorter.props();
+
+    expect(periodeforkorter).toHaveLength(1);
+    expect(periodeforkorterProps.redigerbart).toBe(props.redigerbart);
+    expect(periodeforkorterProps.onUncheck).toBe(props.byggUtpekingsperioder);
+    expect(periodeforkorterProps.forkortPeriode).toBe(props.formValues.forkortUtpekingsperiode);
   });
 });

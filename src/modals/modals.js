@@ -68,7 +68,7 @@ const Modals = ({
       visAvslagSoknadDialog &&
       <DialogboksAvslagSoknad
         avbryt={skjulAvslagSoknadDialogHandle}
-        avslaaSoknad={avslaaSoknadHandle}
+        avslaaSoknadHandle={avslaaSoknadHandle}
       />
     }
     {

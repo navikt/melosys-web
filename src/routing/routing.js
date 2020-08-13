@@ -22,7 +22,7 @@ const Routing = () => (
     { fellesHandlers =>
       <Switch>
         <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
-        <Route exact path="/sok/:fnr" component={SokLoadable} />
+        <Route exact path="/sok" component={SokLoadable} />
         <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />
         <Route path="/sedbehandling/:snr" render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />

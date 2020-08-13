@@ -325,4 +325,40 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
+  describe('resetUtpekingsperioderState', () => {
+    it('lager RESET', () => {
+      const expectedActions = [
+        {
+          type: types.RESET,
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.resetUtpekingsperioderState());
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe('endrePeriode', () => {
+    it('lager ENDRE_PERIODE', () => {
+      const expectedActions = [
+        {
+          type: types.ENDRE_PERIODE,
+          data: {
+            fomdato: '12.12.2000',
+            tomdato: '12.12.2001',
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.endrePeriode('12.12.2000', '12.12.2001'));
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
 });
