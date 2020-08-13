@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, isValid, getFormValues } from 'redux-form';
+import { reduxForm, isValid, getFormValues, change } from 'redux-form';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
@@ -46,6 +46,8 @@ export const VurderingArtikkel13UtpekLand = ({
   oppdaterData,
   slettData,
   lagreUtpekingsperioder,
+  landMedVesentligEllerRegistrertArbeid,
+  oppdaterMottakerinstitusjoner,
   byggUtpekingsperioder: gjenopprettOpprinneligUtpekingsperiode,
   endreUtpekingsperiode,
 }) => {
@@ -80,6 +82,10 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const endreLovvalgsland = land => {
     oppdaterData(lagLovvalgsland(land));
+
+    oppdaterMottakerinstitusjoner([
+      ...new Set([...landMedVesentligEllerRegistrertArbeid, land]),
+    ].map(landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)));
   };
 
   const pdfDokumenter = [
@@ -230,6 +236,8 @@ VurderingArtikkel13UtpekLand.propTypes = {
   endreUtpekingsperiode: PT.func.isRequired,
   byggUtpekingsperioder: PT.func.isRequired,
   soknadsperiode: MPT.Periode.isRequired,
+  landMedVesentligEllerRegistrertArbeid: PT.array.isRequired,
+  oppdaterMottakerinstitusjoner: PT.func.isRequired,
 };
 
 VurderingArtikkel13UtpekLand.defaultProps = {
@@ -258,11 +266,12 @@ const mapStateToProps = state => {
     soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_UTPEKLAND)(state),
+    landMedVesentligEllerRegistrertArbeid: avklartefaktaSelectors.LandMedVesentligEllerRegistrertArbeidSelector(state) || [],
     initialValues: {
       forkortUtpekingsperiode,
       tomDato: forkortUtpekingsperiode ? Utils.dato.formatterDatoTilNorsk(utpekingsperioderSelectors.TomDatoSelector(state)) : '',
       fomDato: Utils.dato.formatterDatoTilNorsk(utpekingsperioderSelectors.FomDatoSelector(state)),
-      mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+      mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state) || [],
       fritekstOrienteringsbrev: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
       kreverMottakerinstitusjon: false,
       fritekstSed: null,
@@ -275,6 +284,7 @@ const mapDispatchToProps = dispatch => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_UTPEKLAND)),
   lagreUtpekingsperioder: () => dispatch(utpekingsperioderOperations.lagre()),
   endreUtpekingsperiode: (fomdato, tomdato) => dispatch(utpekingsperioderOperations.endrePeriode(fomdato, tomdato)),
+  oppdaterMottakerinstitusjoner: mottakerinstitusjoner => dispatch(change(KV.Form.ARTIKKEL_13_UTPEKLAND, 'mottakerinstitusjoner', mottakerinstitusjoner)),
 });
 
 const VurderingArtikkel13UtpekLand_form = reduxForm({

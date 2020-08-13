@@ -32,19 +32,12 @@ class Arbeidsmonster extends Steg {
     const marginaltArbeid = hentFaktaListe(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, propsLight.avklartefakta);
     const landMedVesentligArbeid = this.hentLandMedVesentligArbeid(propsLight.arbeidsland, marginaltArbeid);
     const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);
-    const finnesLandMedVesentligArbeidOgNorgeErValgt = landMedVesentligArbeid.length > 1 && erNorgeValgt;
-    const aktivitetINorgeNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
-      (erArbeidstakerOgSelvstendigNaeringsdrivende ? loennetArbeidIFlereLand : true) &&
-      (erOffentligTjenestemann ? offentligArbeidIFlereLand : true);
-    const erYrkesaktivitetAntallLandNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
-      erArbeidstakerOgSelvstendigNaeringsdrivende;
-    const erYrkesAktivitetOffentligNodvendig = finnesLandMedVesentligArbeidOgNorgeErValgt &&
-      erOffentligTjenestemann;
+    const aktivitetINorgeNodvendig = (erArbeidstakerOgSelvstendigNaeringsdrivende ? loennetArbeidIFlereLand : true) && (erOffentligTjenestemann ? offentligArbeidIFlereLand : true);
 
-    const harAvklaring = landMedVesentligArbeid.length > 0 &&
-    (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
-    (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || loennetArbeidIEttAnnetLand || loennetArbeidIFlereLand) : true) &&
-    (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
+    const harAvklaring =
+      (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
+      (erArbeidstakerOgSelvstendigNaeringsdrivende ? (loennetArbeidINorge || loennetArbeidIEttAnnetLand || loennetArbeidIFlereLand) : true) &&
+      (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
 
     this.kriterier = [
       {
@@ -119,8 +112,8 @@ class Arbeidsmonster extends Steg {
         aktivitetINorgeNodvendig,
         harAvklaring,
         yrkesaktivitet,
-        erYrkesaktivitetAntallLandNodvendig,
-        erYrkesAktivitetOffentligNodvendig,
+        erArbeidstakerOgSelvstendigNaeringsdrivende,
+        erOffentligTjenestemann,
         loennetArbeidAntallLandFakta,
         offentligArbeidAntallLandFakta,
       });

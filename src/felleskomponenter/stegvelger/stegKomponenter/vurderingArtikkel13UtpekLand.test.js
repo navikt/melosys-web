@@ -33,6 +33,9 @@ describe('VurderingArtikkel13_1_UtpekLand', () => {
       byggUtpekingsperioder: jest.fn(),
       endreUtpekingsperiode: jest.fn(),
       soknadsperiode: {},
+      ikkeMarginaleArbeidsland: [],
+      oppdaterMottakerinstitusjoner: jest.fn(),
+      landMedVesentligEllerRegistrertArbeid: [],
     };
   });
 
