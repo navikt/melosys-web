@@ -35,20 +35,6 @@ const saksopplysninger = object().when('$behandlingstema', {
         'Navn kreves'
       )),
     })),
-    arbeidUtland: array().of(object().shape({
-      foretakNavn: string().nullable().required(lagMelding(
-        KV.Panel.arbeidssteder.tittel,
-        KV.Panel.arbeidssteder.undertitler.arbeidsstedLand,
-        'Navn på foretak kreves'
-      )),
-      adresse: object().shape({
-        landkode: string().nullable().required(lagMelding(
-          KV.Panel.arbeidssteder.tittel,
-          KV.Panel.arbeidssteder.undertitler.arbeidsstedLand,
-          'Land kreves'
-        )),
-      }),
-    })),
     arbeidsstedOffshore: array().of(object().shape({
       enhetNavn: string().nullable().required(lagMelding(
         KV.Panel.arbeidssteder.tittel,
