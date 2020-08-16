@@ -2,6 +2,8 @@ import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingArbeidEttLandOvrigVedtak from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArbeidEttLandOvrigVedtak';
 
+import { hentFakta } from '../../../regler/avklartefakta';
+
 import MKV from '../../../melosyskodeverk';
 
 class ArbeidEttLandOvrigVedtak extends Steg {
@@ -15,6 +17,8 @@ class ArbeidEttLandOvrigVedtak extends Steg {
 
     const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
 
+    const informertMyndighetFakta = hentFakta(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, propsLight.avklartefakta);
+
     this.kriterier = [];
     this.id = STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK;
     this.tittel = 'Vedtak';
@@ -23,6 +27,7 @@ class ArbeidEttLandOvrigVedtak extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
+      informertMyndighetFakta,
     });
     this.beregnRelevantUI = () => ({});
     this.handlers = {

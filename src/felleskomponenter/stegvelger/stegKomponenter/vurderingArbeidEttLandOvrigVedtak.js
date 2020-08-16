@@ -21,13 +21,69 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { formOperations } from '../../../ducks/form';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
-import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
+import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { lagAvklartfakta, slettAvklartfakta, konverterTilStegData as konverterAvklartfaktaTilStegData } from '../../../regler/avklartefakta';
 import { lagLovvalgsbestemmelse, konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
 import { lagLovvalgsperiode } from '../../../regler/lovvalgsperiode';
 import { lagTilleggBestemmelse, slettTilleggBestemmelse } from '../../../regler/tilleggbestemmelser';
 
 import './vurderingArbeidEttLandOvrigVedtak.css';
+
+const InformertMyndighetVelger = ({
+  redigerbart,
+  oppdaterData,
+  slettData,
+  informertMyndighetFakta,
+}) => {
+  useEffect(() => {
+    oppdaterData(konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, informertMyndighetFakta));
+
+    return () => {
+      slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET));
+    };
+  }, []);
+
+  const oppdaterInformertMyndighetFakta = land => {
+    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, land, KV.Koder.SoknadslandFaktaTyper.SANN));
+  };
+
+  return (
+    <Skjema.LandVelger
+      label="Hvilket land skal informeres?"
+      feltNavn="mottakerLand"
+      disabled={!redigerbart}
+      onChange={oppdaterInformertMyndighetFakta}
+    />
+  );
+};
+
+InformertMyndighetVelger.propTypes = {
+  redigerbart: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  informertMyndighetFakta: MPT.Avklartefakta.isRequired,
+};
+
+const art11_5_ErValgt = formValues => (
+  formValues.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
+);
+
+const art11_3B_ErValgt = formValues => (
+  formValues.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B
+);
+
+const sjekkSkalSendeSed = formValues => {
+  const { kreverMottakerinstitusjon } = formValues;
+
+  if (art11_5_ErValgt(formValues)) {
+    return kreverMottakerinstitusjon;
+  } else if (art11_3B_ErValgt(formValues)) {
+    return true;
+  }
+
+  return false;
+};
 
 export const VurderingArbeidEttLandOvrigVedtak = ({
   redigerbart,
@@ -49,6 +105,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   behandlingsgrunnlagFom,
   behandlingsgrunnlagTom,
   soknadsperiode,
+  informertMyndighetFakta,
 }) => {
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -85,7 +142,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     return formIsValid;
   };
 
-  const pdfDokumenter = [
+  let pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -94,15 +151,21 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },
-    {
-      navn: 'Forhåndsvis SED A010',
-      type: EKV.Koder.sedtyper.A010,
-      erSed: true,
-      data: {
-        fritekst: formValues.fritekstSed,
-      },
-    },
   ];
+
+  if (sjekkSkalSendeSed(formValues)) {
+    pdfDokumenter = [
+      ...pdfDokumenter,
+      {
+        navn: 'Forhåndsvis SED A010',
+        type: EKV.Koder.sedtyper.A010,
+        erSed: true,
+        data: {
+          fritekst: formValues.fritekstSed,
+        },
+      },
+    ];
+  }
 
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
   const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
@@ -129,8 +192,13 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     }
   }, [formValues.lovvalgsbestemmelse]);
 
+  const visSendSEDValg = art11_5_ErValgt(formValues);
+  const visMottakerinstitusjonvelgerFlervalg = art11_3B_ErValgt(formValues);
+
+  const skalSendeSed = sjekkSkalSendeSed(formValues);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="vurderingArbeidEttLandOvrigVedtak">
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
@@ -157,6 +225,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
         </Fragment>
       }
       <Skjema.PeriodeForkorter
+        className="periodeForkorter"
         redigerbart={redigerbart}
         checkboxClassName="forkortLovvalgsperiode"
         checkboxLabel="Lovvalget innvilges for en kortere periode"
@@ -185,7 +254,64 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
         </Nav.Column>
       </Nav.Row>
       {
+        visSendSEDValg &&
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Skjema.RadioGruppe feltNavn="informerUtenlandskTrygdemyndighet" label="Skal utenlandsk trygdemyndighet informeres?">
+              <Skjema.Radio
+                feltNavn="informerUtenlandskTrygdemyndighet"
+                label="Ja"
+                value
+                disabled={!redigerbart}
+              />
+              <Skjema.Radio
+                feltNavn="informerUtenlandskTrygdemyndighet"
+                label="Nei"
+                value={false}
+                disabled={!redigerbart}
+              />
+            </Skjema.RadioGruppe>
+          </Nav.Column>
+        </Nav.Row>
+      }
+      {
+        visSendSEDValg && formValues.informerUtenlandskTrygdemyndighet &&
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <InformertMyndighetVelger
+              redigerbart={redigerbart}
+              oppdaterData={oppdaterData}
+              slettData={slettData}
+              informertMyndighetFakta={informertMyndighetFakta}
+            />
+            {
+              formValues.mottakerLand &&
+              <Mottakerinstitusjonvelger
+                form={form}
+                redigerbart={redigerbart}
+                landkode={formValues.mottakerLand}
+                bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
+              />
+            }
+          </Nav.Column>
+        </Nav.Row>
+      }
+      {
+        visMottakerinstitusjonvelgerFlervalg &&
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <MottakerinstitusjonvelgerFlervalg
+              feltnavn="mottakerinstitusjoner"
+              bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
+              redigerbart={redigerbart}
+              form={form}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
+      {
         redigerbart &&
+        skalSendeSed &&
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -198,16 +324,6 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
           </Nav.Column>
         </Nav.Row>
       }
-      <Nav.Row>
-        <Nav.Column xs="8">
-          <MottakerinstitusjonvelgerFlervalg
-            feltnavn="mottakerinstitusjoner"
-            bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
-            redigerbart={redigerbart}
-            form={form}
-          />
-        </Nav.Column>
-      </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
@@ -242,6 +358,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
     fom: PT.string.isRequired,
     tom: PT.string.isRequired,
   }).isRequired,
+  informertMyndighetFakta: MPT.Avklartefakta,
 };
 
 VurderingArbeidEttLandOvrigVedtak.defaultProps = {
@@ -250,6 +367,7 @@ VurderingArbeidEttLandOvrigVedtak.defaultProps = {
   lovvalgsbestemmelseSomSkalVises: '',
   lovvalgsbestemmelseSomSkalLagres: '',
   behandlingsgrunnlagTom: null,
+  informertMyndighetFakta: {},
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -261,6 +379,9 @@ const mapStateToProps = (state, ownProps) => {
       lovvalgsperioderSelectors.TomDatoSelector(state),
       'days'
     ) !== 0;
+
+  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta);
+  const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
 
   return ({
     behandlingsgrunnlagFom: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
@@ -281,6 +402,8 @@ const mapStateToProps = (state, ownProps) => {
       mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
       lovvalgsbestemmelse: ownProps.lovvalgsbestemmelseSomSkalVises,
       fritekstSed: '',
+      informerUtenlandskTrygdemyndighet,
+      mottakerLand,
     },
   });
 };
@@ -295,10 +418,17 @@ const fattVedtak = async (values, dispatch, props) => {
     await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
   }
 
+  let mottakerinstitusjoner = null;
+  if (art11_5_ErValgt(values)) {
+    mottakerinstitusjoner = values.mottakerLand ? [values.mottakerinstitusjon] : [];
+  } else if (art11_3B_ErValgt(values)) {
+    mottakerinstitusjoner = values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id);
+  }
+
   props.lagreOgFatteVedtak({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
-    mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
+    mottakerinstitusjoner,
     vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     revurderBegrunnelse: values.vedtakstypebegrunnelse,
   });
