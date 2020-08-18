@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
@@ -78,17 +78,54 @@ Feilmelding.propTypes = {
   }).isRequired,
 };
 
+export const VedtakValideringsfeil = ({
+  feil,
+}) => (
+  <Fragment>
+    <Validering valideringKode={feil.kode} />
+    {
+      feil.felter.length > 0 && 'Sjekk følgende felt(er):'
+    }
+    <ul>
+      {
+        feil.felter.map(felt => {
+          const feltMelding = felt; //må mappes til navn på felt i gui
+
+          return (
+            <li key={feltMelding}>{feltMelding}</li>
+          );
+        })
+      }
+    </ul>
+  </Fragment>
+);
+
+VedtakValideringsfeil.propTypes = {
+  feil: PT.shape({
+    kode: PT.string.isRequired,
+    felter: PT.arrayOf(PT.string).isRequired,
+  }).isRequired,
+};
+
 export const DialogboksValidering = ({
   avbryt,
   ariaHideApp,
-  valideringer,
-  feilmeldinger,
+  vedtakValideringsfeil,
+  journalforingValideringerFeilmeldinger,
 }) => {
   const handleKeyPress = e => {
     if (e.key === 'Enter') {
       avbryt();
     }
   };
+
+  const journalforingValideringInnhold = journalforingValideringerFeilmeldinger.map(feilmelding => <Feilmelding feilmelding={feilmelding} key={Utils._uuid()} />);
+
+  const vedtakValideringInnhold = vedtakValideringsfeil.map(feil => <VedtakValideringsfeil feil={feil} key={feil.kode} />);
+
+  const innhold = Utils._isEmpty(journalforingValideringerFeilmeldinger)
+    ? vedtakValideringInnhold
+    : journalforingValideringInnhold;
 
   return (
     <Nav.Modal
@@ -110,11 +147,7 @@ export const DialogboksValidering = ({
       >
         &times;
       </span>
-      {
-        Utils._isEmpty(feilmeldinger)
-          ? valideringer.map(valideringKode => <Validering valideringKode={valideringKode} key={valideringKode} />)
-          : feilmeldinger.map(feilmelding => <Feilmelding feilmelding={feilmelding} key={Utils._uuid()} />)
-      }
+      { innhold }
     </Nav.Modal>
   );
 };
@@ -122,17 +155,20 @@ export const DialogboksValidering = ({
 DialogboksValidering.propTypes = {
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
-  valideringer: PT.arrayOf(PT.string),
-  feilmeldinger: PT.arrayOf(PT.shape({
-    tittel: PT.string,
-    innhold: PT.string,
+  vedtakValideringsfeil: PT.arrayOf(PT.shape({
+    kode: PT.string.isRequired,
+    felter: PT.arrayOf(PT.string).isRequired,
+  })),
+  journalforingValideringerFeilmeldinger: PT.arrayOf(PT.shape({
+    tittel: PT.string.isRequired,
+    innhold: PT.string.isRequired,
   })),
 };
 
 DialogboksValidering.defaultProps = {
   ariaHideApp: true,
-  valideringer: [],
-  feilmeldinger: [],
+  vedtakValideringsfeil: [],
+  journalforingValideringerFeilmeldinger: [],
 };
 
 export default DialogboksValidering;

@@ -2,14 +2,19 @@ import { createSelector } from 'reselect';
 
 import { STATUS } from '../../services/utils';
 
-export const VedtakSelector = createSelector(
-  state => state.vedtak.data,
+const VedtakSelector = createSelector(
+  state => state.vedtak,
   vedtak => vedtak
 );
 
-export const StatusSelector = createSelector(
-  state => state.vedtak.status,
-  status => status
+const DataSelector = createSelector(
+  VedtakSelector,
+  vedtak => vedtak.data
+);
+
+const StatusSelector = createSelector(
+  VedtakSelector,
+  status => status.status
 );
 
 export const ErPendingSelector = createSelector(
@@ -17,12 +22,17 @@ export const ErPendingSelector = createSelector(
   status => status === STATUS.PENDING
 );
 
+const ResponsDataSelector = createSelector(
+  DataSelector,
+  data => data.data
+);
+
 export const FeilkoderSelector = createSelector(
-  VedtakSelector,
+  ResponsDataSelector,
   StatusSelector,
-  (vedtak, status) => {
+  (responsData, status) => {
     if (status === STATUS.ERROR) {
-      return vedtak.data.feilkoder;
+      return responsData.feilkoder;
     }
     return [];
   }

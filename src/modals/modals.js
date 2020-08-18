@@ -36,8 +36,8 @@ const Modals = ({
   venterPaRevurderFagsak,
   visValideringModal,
   skjulValideringModalDialogHandle,
-  valideringerFeilkoder,
-  valideringerFeilmeldinger,
+  vedtakValideringsfeil,
+  journalforingValideringerFeilmeldinger,
   behandlingOppfriskes,
   annenBehandlingOppfriskes,
 }) => (
@@ -86,8 +86,8 @@ const Modals = ({
       visValideringModal &&
       <DialogboksValidering
         avbryt={skjulValideringModalDialogHandle}
-        valideringer={valideringerFeilkoder}
-        feilmeldinger={valideringerFeilmeldinger}
+        vedtakValideringsfeil={vedtakValideringsfeil}
+        journalforingValideringerFeilmeldinger={journalforingValideringerFeilmeldinger}
       />
     }
   </Fragment>
@@ -114,18 +114,21 @@ Modals.propTypes = {
   venterPaRevurderFagsak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
-  valideringerFeilkoder: PT.arrayOf(PT.string),
-  valideringerFeilmeldinger: PT.arrayOf(PT.shape({
+  behandlingOppfriskes: PT.bool.isRequired,
+  annenBehandlingOppfriskes: PT.bool.isRequired,
+  vedtakValideringsfeil: PT.arrayOf(PT.shape({
+    felt: PT.string.isRequired,
+    melding: PT.string.isRequired,
+  })),
+  journalforingValideringerFeilmeldinger: PT.arrayOf(PT.shape({
     tittel: PT.string.isRequired,
     innhold: PT.string.isRequired,
   })),
-  behandlingOppfriskes: PT.bool.isRequired,
-  annenBehandlingOppfriskes: PT.bool.isRequired,
 };
 
 Modals.defaultProps = {
-  valideringerFeilkoder: [],
-  valideringerFeilmeldinger: [],
+  vedtakValideringsfeil: [],
+  journalforingValideringerFeilmeldinger: [],
 };
 
 const mapStateToProps = state => ({
@@ -135,8 +138,8 @@ const mapStateToProps = state => ({
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
-  valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
-  valideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state)],
+  vedtakValideringsfeil: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
+  journalforingValideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state)],
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -3,7 +3,7 @@ import React from 'react';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 
-import DialogboksValidering, { Validering, Feilmelding, ModalBody } from './dialogboksValidering';
+import DialogboksValidering, { Validering, Feilmelding, ModalBody, VedtakValideringsfeil } from './dialogboksValidering';
 import MKV from '../../melosyskodeverk';
 
 describe('DialogboksValidering', () => {
@@ -13,9 +13,15 @@ describe('DialogboksValidering', () => {
     props = {
       avbryt: jest.fn(),
       ariaHideApp: false,
-      valideringer: [
-        MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
-        MKV.Koder.begrunnelser.kontroll_begrunnelser.TREDJELANDSBORGER_IKKE_AVTALELAND,
+      vedtakValideringsfeil: [
+        {
+          kode: 'abc',
+          felter: [],
+        },
+        {
+          kode: 'def',
+          felter: [],
+        },
       ],
     };
   });
@@ -26,15 +32,18 @@ describe('DialogboksValidering', () => {
     expect(dialogboksValidering.find(Nav.Modal)).toHaveLength(1);
   });
 
-  it('Viser en liste over valideringer', () => {
+  it('Viser en liste over vedtakValideringsfeil', () => {
     const dialogboksValidering = shallow(<DialogboksValidering {...props} />);
-    const valideringer = dialogboksValidering.find(Validering);
+    const vedtakValideringsfeil = dialogboksValidering.find(VedtakValideringsfeil);
 
-    expect(valideringer).toHaveLength(2);
+    expect(vedtakValideringsfeil).toHaveLength(2);
+    expect(vedtakValideringsfeil.first().props().feil).toBe(props.vedtakValideringsfeil[0]);
+    expect(vedtakValideringsfeil.last().props().feil).toBe(props.vedtakValideringsfeil[1]);
   });
 
-  it('Viser en liste over feilmeldinger', () => {
-    props.feilmeldinger = [
+  it('Viser en liste over feilmeldinger for journalforingValideringerFeilmeldinger', () => {
+    props.vedtakValideringsfeil = [];
+    props.journalforingValideringerFeilmeldinger = [
       { tittel: 'tittel1', innhold: 'innhold1' },
       { tittel: 'tittel2', innhold: 'innhold2' },
     ];
@@ -66,5 +75,37 @@ describe('Validering', () => {
       MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
       MKV.KTObjects.begrunnelser.kontroll_begrunnelser
     ));
+  });
+});
+
+describe('VedtakValideringsfeil', () => {
+  let props = null;
+
+  beforeEach(() => {
+    props = {
+      feil: {
+        kode: 'abc',
+        felter: ['1234', '5678'],
+      },
+    };
+  });
+
+  it('viser Validering', () => {
+    const vedtakValideringsfeil = shallow(<VedtakValideringsfeil {...props} />);
+    const validering = vedtakValideringsfeil.find(Validering);
+
+    expect(validering).toHaveLength(1);
+    expect(validering.props().valideringKode).toBe(props.feil.kode);
+  });
+
+  it('viser en liste over felter', () => {
+    const vedtakValideringsfeil = shallow(<VedtakValideringsfeil {...props} />);
+    const ul = vedtakValideringsfeil.find('ul');
+    const li = vedtakValideringsfeil.find('li');
+
+    expect(ul).toHaveLength(1);
+    expect(li).toHaveLength(2);
+    expect(li.first().text()).toBe(props.feil.felter[0]);
+    expect(li.last().text()).toBe(props.feil.felter[1]);
   });
 });
