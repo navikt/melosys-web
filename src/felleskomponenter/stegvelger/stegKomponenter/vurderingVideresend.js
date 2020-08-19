@@ -1,5 +1,5 @@
 import React from 'react';
-import { reduxForm } from 'redux-form';
+import { getFormValues, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
@@ -19,6 +19,7 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
 
 import './vurderingVideresend.css';
+import * as Skjema from '../../skjema';
 
 export const VurderingVideresend = ({
   redigerbart,
@@ -26,6 +27,7 @@ export const VurderingVideresend = ({
   bostedsland,
   handleSubmit,
   form,
+  formValues,
 }) => {
   const pdfDokumenter = [
     {
@@ -33,6 +35,7 @@ export const VurderingVideresend = ({
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
+        fritekst: formValues.orienteringsbrevFritekst,
       },
     },
     {
@@ -43,11 +46,23 @@ export const VurderingVideresend = ({
   ];
 
   return (
-    <div>
+    <div className="videresendSoknad">
       <form onSubmit={handleSubmit}>
         <Nav.typo.Undertittel>Videresending av søknad</Nav.typo.Undertittel>
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <Skjema.Textarea
+              feltNavn="orienteringsbrevFritekst"
+              label="Fritekst til orienteringsbrev"
+              placeholder="Skriv inn tekst til orienteringsbrevet..."
+              maxLength={500}
+              visTellerFra={500}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row className="mottakerinstitusjoner">
-          <Nav.Column xs="7">
+          <Nav.Column xs="8">
             <Mottakerinstitusjonvelger
               form={form}
               redigerbart={redigerbart}
@@ -86,6 +101,7 @@ VurderingVideresend.propTypes = {
   bostedsland: MPT.Kodeverk,
   handleSubmit: PT.func.isRequired,
   form: PT.string.isRequired,
+  formValues: PT.object,
 };
 
 VurderingVideresend.defaultProps = {
@@ -93,9 +109,10 @@ VurderingVideresend.defaultProps = {
     kode: '',
     term: '',
   },
+  formValues: {},
 };
 
-const videresendSoknad = (values, dispatch, props) => props.videresendSoknad(values.mottakerinstitusjon);
+const videresendSoknad = (values, dispatch, props) => props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst);
 
 const VurderingVideresendForm = reduxForm({
   onSubmit: videresendSoknad,
@@ -109,9 +126,11 @@ const VurderingVideresendForm = reduxForm({
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
+  formValues: getFormValues(KV.Form.VURDERING_VIDERESEND)(state),
   initialValues: {
     mottakerinstitusjon: '',
     kreverMottakerinstitusjon: false,
+    orienteringsbrevFritekst: '',
   },
 });
 
