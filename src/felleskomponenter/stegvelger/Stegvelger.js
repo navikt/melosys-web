@@ -270,12 +270,12 @@ class Stegvelger extends Component {
     });
   };
 
-  videresendSoknad = mottakerinstitusjon => {
+  videresendSoknad = (mottakerinstitusjon, fritekst) => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       const { saksnummer, tilForsiden } = this.props;
 
       try {
-        const body = { mottakerinstitusjon };
+        const body = { mottakerinstitusjon, fritekst };
         await Api.Fagsaker.fagsak.videresend(saksnummer, body);
       } catch (e) {
         Utils.logger.error(e);
