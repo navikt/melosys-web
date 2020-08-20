@@ -1,16 +1,6 @@
 import { mapBehandlingsgrunnlagpathTilGUI } from './mapping';
 
 describe('mapping', () => {
-  // describe('mapBehandlingsgrunnlagpathToPanelfelt', () => {
-  //   each([
-  //     ['behandlingsgrunnlag.arbeidUtland[0].foretakNavn', 'Arbeidssted på land(1) - navn'],
-  //     ['behandlingsgrunnlag.arbeidsUtland[0].adresse.gatenavn', 'Arbeidssted på land(1) - adresse - gatenavn'],
-  //     ['behandlingsgrunnlag.personOpplysninger.utenlandskIdent[0].ident', 'Informasjon om bruker - utenlandsk ident(1) - ident'],
-  //   ]).it('returnerer string "%p" for path %p', (path, panelfeltString) => {
-  //     expect(mapBehandlingsgrunnlagpathToPanelfelt(path)).toBe(panelfeltString);
-  //   });
-  // });
-
   describe('mapBehandlingsgrunnlagpathTilGUI', () => {
     each([
       ['behandlingsgrunnlag.arbeidUtland[0].foretakNavn', { panel: 'Arbeidssted på land', panelEntryNr: 1, felt: 'Navn' }],
