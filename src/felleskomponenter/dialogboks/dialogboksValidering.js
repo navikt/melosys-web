@@ -89,10 +89,14 @@ export const VedtakValideringsfeil = ({
     <ul>
       {
         feil.felter.map(felt => {
-          const feltMelding = felt; //må mappes til navn på felt i gui
+          const { panel, panelEntryNr, felt: feltNavn } = Utils.mapping.mapBehandlingsgrunnlagpathTilGUI(felt);
+          const key = `${panel}${panelEntryNr}${feltNavn}`;
+          const tekst = panel || feltNavn ? `${panel} - ${feltNavn}` : null;
+
+          if (!tekst) return null;
 
           return (
-            <li key={feltMelding}>{feltMelding}</li>
+            <li key={key}>{tekst}</li>
           );
         })
       }

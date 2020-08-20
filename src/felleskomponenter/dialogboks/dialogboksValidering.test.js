@@ -85,7 +85,10 @@ describe('VedtakValideringsfeil', () => {
     props = {
       feil: {
         kode: 'abc',
-        felter: ['1234', '5678'],
+        felter: [
+          'behandlingsgrunnlag.foretakUtland[1].navn',
+          'behandlingsgrunnlag.arbeidUtland[0].foretakNavn',
+        ],
       },
     };
   });
@@ -105,7 +108,5 @@ describe('VedtakValideringsfeil', () => {
 
     expect(ul).toHaveLength(1);
     expect(li).toHaveLength(2);
-    expect(li.first().text()).toBe(props.feil.felter[0]);
-    expect(li.last().text()).toBe(props.feil.felter[1]);
   });
 });
