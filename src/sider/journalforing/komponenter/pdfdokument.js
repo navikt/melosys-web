@@ -1,11 +1,13 @@
 /* eslint react/no-multi-comp:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Document, Page } from 'react-pdf/dist/entry.webpack';
+import { Document, Page, pdfjs } from 'react-pdf';
 import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 
 import './pdfdokument.css';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const uuid = require('uuid/v4');
 

@@ -6,17 +6,18 @@ import SorterbarListe from '../../felleskomponenter/sorterbarListe/sorterbarList
 describe('Sok', () => {
   let props = null;
 
+  const getItemPrototype = Storage.prototype.getItem;
+  Storage.prototype.getItem = jest.fn(() => 'MEL-999999999999999999999');
+
   beforeEach(() => {
     props = {
       sokResultat: [{}],
       sok: jest.fn(),
     };
-
-    sessionStorage.getItem = jest.fn(() => 'MEL-999999999999999999999');
   });
 
   afterAll(() => {
-    sessionStorage.getItem = jest.fn();
+    Storage.prototype.getItem = getItemPrototype;
   });
 
   it('viser en sorterbarliste ved treff på søk', () => {

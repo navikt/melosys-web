@@ -6,7 +6,7 @@ import * as Nav from '../../utils/navFrontend';
 import './knapp.css';
 
 const Knapp = ({
-  ikon,
+  ikon: Ikon,
   children,
   htmlType,
   type,
@@ -24,7 +24,7 @@ const Knapp = ({
       {...rest}
     >
       {
-        ikon && <img src={ikon} height={20} alt={ikon} className="ikon" />
+        Ikon && <Ikon className="ikon" />
       }
       {children}
     </Nav.Knapp>
@@ -32,7 +32,7 @@ const Knapp = ({
 };
 
 Knapp.propTypes = {
-  ikon: PT.string,
+  ikon: PT.elementType,
   children: PT.node,
   htmlType: PT.oneOf(['submit', 'button', 'reset']),
   type: PT.oneOf(['standard', 'hoved', 'fare', 'flat']),
