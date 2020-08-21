@@ -6,6 +6,7 @@ import * as Nav from '../../../utils/navFrontend';
 
 import { VurderingVideresend } from './vurderingVideresend';
 import PdfLenkeListe from '../../pdfLenkeListe';
+import * as Skjema from '../../skjema';
 
 describe('Vurderingvideresend', () => {
   let props = null;
@@ -19,6 +20,14 @@ describe('Vurderingvideresend', () => {
       handleSubmit: jest.fn(),
       form: 'form',
     };
+  });
+
+  it('viser fritekst til orienteringsbrev', () => {
+    const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
+
+    expect(vurderingVideresend.findWhere(n =>
+      n.type() === Skjema.Textarea &&
+      n.props().label === 'Fritekst til orienteringsbrev')).toHaveLength(1);
   });
 
   it('viser en PdfLenkeListe med korrekte props', () => {

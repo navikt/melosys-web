@@ -60,6 +60,7 @@ export default function reducer(state = initialState, action) {
         ARBEID_SOKKEL_SKIP,
         AARSAK_ENDRING_PERIODE,
         MARGINALT_ARBEID,
+        INFORMERT_MYNDIGHET,
       } = MKV.Koder.avklartefaktatyper;
 
       const {
@@ -100,6 +101,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_UTFORES_I_OPPGITT_LAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[LOENNET_ARBEID_ANTALL_LAND], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[OFFENTLIG_ARBEID_ANTALL_LAND], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[INFORMERT_MYNDIGHET], INFORMERT_MYNDIGHET),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };

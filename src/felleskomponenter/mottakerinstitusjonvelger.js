@@ -31,6 +31,10 @@ export const MottakerinstitusjonvelgerSchema = ({
 
   useEffect(() => {
     oppdaterKreverMottakerinstitusjon(!Utils._isEmpty(mottakerinstitusjoner));
+
+    return () => {
+      oppdaterKreverMottakerinstitusjon(undefined);
+    };
   }, [mottakerinstitusjoner]);
 
   if (Utils._isEmpty(mottakerinstitusjoner) || !redigerbart) {
