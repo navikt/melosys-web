@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 import { FANE_STATUS, STEG } from '../stegMotor/typer';
 
-import * as Ikon from '../../../resources/images';
+import * as Ikoner from '../../../resources/images';
 
 import './stegIkon.css';
 
@@ -32,16 +32,16 @@ const erVedtakSteg = id => (
 const ikonVelger = (id, status) => {
   const IKONER = {
     STEG: {
-      UBEHANDLET: Ikon.Ubehandlet,
-      OK: Ikon.Ferdig,
-      ADVARSEL: Ikon.Varsel,
-      FEIL: Ikon.Feil,
+      UBEHANDLET: Ikoner.Ubehandlet,
+      OK: Ikoner.Ferdig,
+      ADVARSEL: Ikoner.Varsel,
+      FEIL: Ikoner.Feil,
     },
     VEDTAK: {
-      UBEHANDLET: Ikon.VedakUbehandlet,
-      OK: Ikon.VedtakGodkjent,
-      ADVARSEL: Ikon.VedtakAvslatt,
-      FEIL: Ikon.VedtakAvslatt,
+      UBEHANDLET: Ikoner.VedakUbehandlet,
+      OK: Ikoner.VedtakGodkjent,
+      ADVARSEL: Ikoner.VedtakAvslatt,
+      FEIL: Ikoner.VedtakAvslatt,
     },
   };
 
@@ -58,7 +58,7 @@ const StegIkon = props => {
   } = props;
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
-  const ikon = ikonVelger(id, status);
+  const Ikon = ikonVelger(id, status);
 
   const cl = classnames(
     'stegIkon',
@@ -76,9 +76,8 @@ const StegIkon = props => {
   return (
     <li className={cl}>
       <button onClick={onClick} className="stegIkon__knapp">
-        <div
+        <Ikon
           className={knappKlasser}
-          style={{ backgroundImage: `url(${ikon})` }}
           aria-disabled={!tilgjengelig}
         />
         <div className="stegIkon__tittel" dangerouslySetInnerHTML={{ __html: tittel }} />

@@ -69,7 +69,10 @@ export const InnerArbeidsforholdNorgeListe = ({
               }
               {
                 redigerbart &&
-                <Nav.Lenker onClick={slett}><img src={Ikoner.Bin} alt="Slett" /><span>{slettTekst}</span></Nav.Lenker>
+                <Nav.Lenker onClick={slett}>
+                  <Ikoner.Bin />
+                  <span>{slettTekst}</span>
+                </Nav.Lenker>
               }
             </div>
           );

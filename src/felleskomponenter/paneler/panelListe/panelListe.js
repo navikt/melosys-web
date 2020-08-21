@@ -47,7 +47,7 @@ export const InnerPanelListe = ({
               {
                 redigerbart &&
                 <Nav.Lenker onClick={slett}>
-                  <img src={Ikoner.Bin} alt="Slett" />
+                  <Ikoner.Bin />
                   <span>{slettTekst}</span>
                 </Nav.Lenker>
               }

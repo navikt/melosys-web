@@ -25,17 +25,8 @@ describe('undertittel', () => {
 
   it('viser et ikon', () => {
     const undertittel = shallow(<Undertittel {...props} />);
-    const ikon = undertittel.find('img');
+    const ikon = undertittel.find(props.ikon);
 
     expect(ikon).toHaveLength(1);
-  });
-
-  describe('ikon', () => {
-    it('har korrekt src', () => {
-      const undertittel = shallow(<Undertittel {...props} />);
-      const ikon = undertittel.find('img');
-
-      expect(ikon.props().src).toBe(props.ikon);
-    });
   });
 });

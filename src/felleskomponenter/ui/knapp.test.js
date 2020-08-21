@@ -9,7 +9,7 @@ describe('knapp', () => {
 
   beforeEach(() => {
     props = {
-      ikon: 'ikonpath',
+      ikon: 'Pencil',
       children: 'child',
     };
   });
@@ -23,12 +23,12 @@ describe('knapp', () => {
   it('viser et ikon tilsvarende ikon-prop', () => {
     const knapp = shallow(<Knapp {...props} />);
 
-    expect(knapp.find('img').props().src).toBe(props.ikon);
+    expect(knapp.find(props.ikon)).toHaveLength(1);
   });
 
   it('viser children-prop', () => {
     const knapp = shallow(<Knapp {...props} />);
-    const passedChildren = knapp.find(Nav.Knapp).children().not('img');
+    const passedChildren = knapp.find(Nav.Knapp).children().not(props.ikon);
 
     expect(passedChildren.text()).toBe(props.children);
   });
