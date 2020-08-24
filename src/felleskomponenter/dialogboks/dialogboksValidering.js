@@ -91,7 +91,7 @@ export const VedtakValideringsfeil = ({
         feil.felter.map(felt => {
           const { panel, panelEntryNr, felt: feltNavn } = Utils.mapping.mapBehandlingsgrunnlagpathTilGUI(felt);
           const key = `${panel}${panelEntryNr}${feltNavn}`;
-          const tekst = panel || feltNavn ? `${panel} - ${feltNavn}` : null;
+          const tekst = panel && feltNavn ? `${panel} - ${feltNavn}` : null;
 
           if (!tekst) return null;
 
