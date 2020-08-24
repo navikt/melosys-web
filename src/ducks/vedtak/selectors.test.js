@@ -1,5 +1,7 @@
 import * as selectors from './selectors';
 
+import MKV from '../../melosyskodeverk';
+
 import { STATUS } from '../../services/utils';
 
 describe('vedtak selectors', () => {
@@ -30,7 +32,16 @@ describe('vedtak selectors', () => {
       const state = lagState({
         data: {
           data: {
-            feilkoder: [],
+            feilkoder: [
+              {
+                kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
+                felter: [],
+              },
+              {
+                kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
+                felter: [],
+              },
+            ],
           },
         },
         status: STATUS.OK,

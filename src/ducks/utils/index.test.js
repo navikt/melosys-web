@@ -35,7 +35,7 @@ describe('Utils', () => {
       expect(Utils.harFeilmelding(data)).toBe(data.message);
     });
 
-    it('returnerer undefiend hvis det ikke finnes message', () => {
+    it('returnerer undefined hvis det ikke finnes message', () => {
       const data = {};
 
       expect(Utils.harFeilmelding(data)).toBe(undefined);
