@@ -8,23 +8,14 @@ import { sokOperations as operations, sokTypes as types } from './index';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('vilkar operations', () => {
+describe('sok operations', () => {
   let initialState = null;
 
   beforeEach(() => {
     fetch.resetMocks();
     fetch.mockResponse(JSON.stringify([]));
 
-    initialState = {
-      vilkar: {
-        data: [],
-      },
-      behandlinger: {
-        data: {
-          behandlingID: 4,
-        },
-      },
-    };
+    initialState = {};
   });
 
   describe('sok', () => {

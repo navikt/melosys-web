@@ -102,7 +102,7 @@ class Generator {
     }
 
     const birthNumber = `${partialBirthNumber}${k1}${k2}`;
-    if (!FnrValidator.idnr(birthNumber)) {
+    if (FnrValidator.idnr(birthNumber).status !== 'valid') {
       return this.generateBirthNumber();
     }
 
@@ -120,7 +120,7 @@ class Generator {
     }
 
     const dNumber = `${partialDNumber}${k1}${k2}`;
-    if (!FnrValidator.idnr(dNumber)) {
+    if (FnrValidator.idnr(dNumber).status !== 'valid') {
       return this.generateDNumber();
     }
 

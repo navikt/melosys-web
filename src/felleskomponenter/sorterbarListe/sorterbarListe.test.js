@@ -51,13 +51,13 @@ describe('SorterbarListe', () => {
 
   it('kan sortere slik at nyeste element kommer først', () => {
     props.defaultChecked = 'eldste';
-    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
+    const sorterbarListe = shallow(<SorterbarListe {...props} />);
 
-    const fieldset = journalforingOppgaver.find(Nav.Fieldset);
+    const fieldset = sorterbarListe.find(Nav.Fieldset);
     const event = { target: { value: 'descending' } };
     fieldset.simulate('change', event);
 
-    const oppgaveListe = journalforingOppgaver.find(JournalforingOppgave);
+    const oppgaveListe = sorterbarListe.find(JournalforingOppgave);
     const aktivTilDatoer = oppgaveListe.map(n => n.props().sak.aktivTil);
 
     expect(aktivTilDatoer[0]).toBe('2016-02-22');
@@ -66,13 +66,13 @@ describe('SorterbarListe', () => {
   });
 
   it('kan sortere slik at eldste element kommer først', () => {
-    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
+    const sorterbarListe = shallow(<SorterbarListe {...props} />);
 
-    const fieldset = journalforingOppgaver.find(Nav.Fieldset);
+    const fieldset = sorterbarListe.find(Nav.Fieldset);
     const event = { target: { value: 'ascending' } };
     fieldset.simulate('change', event);
 
-    const oppgaveListe = journalforingOppgaver.find(JournalforingOppgave);
+    const oppgaveListe = sorterbarListe.find(JournalforingOppgave);
     const aktivTilDatoer = oppgaveListe.map(n => n.props().sak.aktivTil);
 
     expect(aktivTilDatoer[0]).toBe('2016-02-20');
@@ -82,8 +82,15 @@ describe('SorterbarListe', () => {
 
   it('viser ingenting hvis elementer er falsy', () => {
     props.elementer = null;
-    const journalforingOppgaver = shallow(<SorterbarListe {...props} />);
+    const sorterbarListe = shallow(<SorterbarListe {...props} />);
 
-    expect(journalforingOppgaver.isEmptyRender()).toBe(true);
+    expect(sorterbarListe.isEmptyRender()).toBe(true);
+  });
+
+  it('viser ikke sortering hvis bare ett element', () => {
+    props.elementer = [{}];
+    const sorterbarListe = shallow(<SorterbarListe {...props} />);
+
+    expect(sorterbarListe.find(Nav.Fieldset)).toHaveLength(0);
   });
 });
