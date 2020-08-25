@@ -251,7 +251,7 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   form: KV.Form.ARTIKKEL_13_X_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
-  keepDirtyOnReinitialize: false,
+  keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
     context: {
