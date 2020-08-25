@@ -1,5 +1,7 @@
 import React from 'react';
 
+import * as Utils from '../../utils';
+
 import { Sok } from './sok';
 import SorterbarListe from '../../felleskomponenter/sorterbarListe/sorterbarListe';
 
@@ -7,11 +9,10 @@ describe('Sok', () => {
   let props = null;
 
   const getItemPrototype = Storage.prototype.getItem;
-  Storage.prototype.getItem = jest.fn(() => 'MEL-999999999999999999999');
 
   beforeEach(() => {
     props = {
-      sokResultat: [{}],
+      sokResultat: [],
       sok: jest.fn(),
     };
   });
@@ -20,7 +21,10 @@ describe('Sok', () => {
     Storage.prototype.getItem = getItemPrototype;
   });
 
-  it('viser en sorterbarliste ved treff på søk', () => {
+  it('viser en sorterbarliste ved søk på fnr med ett resultat', () => {
+    const generator = new Utils.testhelpers.Generator();
+    Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
+    props.sokResultat = [{}];
     const sok = shallow(<Sok {...props} />);
 
     const sorterbarListe = sok.find(SorterbarListe);
@@ -28,5 +32,15 @@ describe('Sok', () => {
 
     expect(sorterbarListe).toHaveLength(1);
     expect(sorterbarListeProps.elementer).toBe(props.sokResultat);
+  });
+
+  it('viser ikke sorterbarliste ved søk på fnr uten resultat', () => {
+    const generator = new Utils.testhelpers.Generator();
+    Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
+    const sok = shallow(<Sok {...props} />);
+
+    const sorterbarListe = sok.find(SorterbarListe);
+
+    expect(sorterbarListe).toHaveLength(0);
   });
 });

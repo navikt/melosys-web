@@ -9,6 +9,8 @@ import withErrorHandling from '../../../../felleskomponenter/withErrorHandling';
 import JournalforingOppgave from '../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
 import SorterbarListe from '../../../../felleskomponenter/sorterbarListe/sorterbarListe';
 
+import './mineoppgaver.css';
+
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
@@ -23,7 +25,7 @@ export const MineOppgaver = props => {
   const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.';
 
   return (
-    <div className="minesaker">
+    <div className="mineOppgaver">
       <h1>Mine oppgaver ({antall()})</h1>
       <SorterbarListe
         elementer={journalforing}
@@ -33,6 +35,7 @@ export const MineOppgaver = props => {
         sortingPath="aktivTil"
       />
       <SorterbarListe
+        className="behandlingsoppgaver"
         elementer={saksbehandling}
         component={BehandlingOppgave}
         defaultChecked="nyeste"

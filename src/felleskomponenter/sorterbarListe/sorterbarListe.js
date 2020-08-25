@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
 
 import * as Utils from '../../utils';
@@ -15,6 +15,7 @@ const SorterbarListe = ({
   sortingLegend,
   sortingPath,
   radioGroupName,
+  className,
 }) => {
   const defaultOrder = defaultChecked === 'nyeste' ? 'descending' : 'ascending';
   const [sortOrder, setSortOrder] = useState(defaultOrder);
@@ -30,27 +31,30 @@ const SorterbarListe = ({
   const uniqueName = radioGroupName || Utils._uuid();
 
   return (
-    <Fragment>
-      <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend={sortingLegend}>
-        <div>
-          <Nav.Radio
-            name={uniqueName}
-            label="Nyeste først"
-            value="descending"
-            defaultChecked={defaultChecked === 'nyeste'}
-          />
-          <Nav.Radio
-            name={uniqueName}
-            label="Eldste først"
-            value="ascending"
-            defaultChecked={defaultChecked === 'eldste'}
-          />
-        </div>
-      </Nav.Fieldset>
+    <div className={className}>
+      {
+        elementer.length > 1 &&
+        <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend={sortingLegend}>
+          <div>
+            <Nav.Radio
+              name={uniqueName}
+              label="Nyeste først"
+              value="descending"
+              defaultChecked={defaultChecked === 'nyeste'}
+            />
+            <Nav.Radio
+              name={uniqueName}
+              label="Eldste først"
+              value="ascending"
+              defaultChecked={defaultChecked === 'eldste'}
+            />
+          </div>
+        </Nav.Fieldset>
+      }
       {
         sorterteElementer.map(oppgave => <Component key={Utils._uuid()} sak={oppgave} />)
       }
-    </Fragment>
+    </div>
   );
 };
 
@@ -61,12 +65,14 @@ SorterbarListe.propTypes = {
   sortingLegend: PT.string.isRequired,
   sortingPath: PT.string.isRequired,
   radioGroupName: PT.string,
+  className: PT.string,
 };
 
 SorterbarListe.defaultProps = {
   elementer: [],
   defaultChecked: 'eldste',
   radioGroupName: undefined,
+  className: undefined,
 };
 
 export default SorterbarListe;
