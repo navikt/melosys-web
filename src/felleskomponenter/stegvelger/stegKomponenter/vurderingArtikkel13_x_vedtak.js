@@ -31,7 +31,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
   behandlingID,
   lovvalgsperiode,
-  harIkkeMarginaleArbeidsland,
+  harLandSomKreverSED,
   formIsValid,
   formValues,
   form,
@@ -62,7 +62,7 @@ export const VurderingArtikkel13_x_vedtak = ({
     return formIsValid;
   };
 
-  const skalViseSedAlternativer = redigerbart && harIkkeMarginaleArbeidsland;
+  const skalViseSedAlternativer = redigerbart && harLandSomKreverSED;
 
   const pdfDokumenter = [
     {
@@ -172,7 +172,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: MPT.Periode,
-  harIkkeMarginaleArbeidsland: PT.bool.isRequired,
+  harLandSomKreverSED: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
@@ -209,7 +209,7 @@ const mapStateToProps = state => {
     redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-    harIkkeMarginaleArbeidsland: avklartefaktaSelectors.IkkeMarginaleArbeidslandAntallSelector(state) > 0,
+    harLandSomKreverSED: avklartefaktaSelectors.LandSomKreverSEDSelector(state).length > 0,
     soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
@@ -220,7 +220,8 @@ const mapStateToProps = state => {
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
       vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-      mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+      mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state) || [],
+      kreverMottakerinstitusjon: false,
       fritekstSed: null,
     },
   });
