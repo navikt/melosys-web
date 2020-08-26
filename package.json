@@ -142,7 +142,11 @@
     "@babel/preset-react": "7.8.3",
     "@babel/preset-stage-3": "7.8.3",
     "@testing-library/react-hooks": "^3.2.1",
-    "@types/jest": "^24.0.6",
+    "@types/enzyme": "^3.10.5",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^14.6.0",
+    "@types/react": "^16.9.46",
+    "@types/react-dom": "^16.9.8",
     "body-parser": "^1.19.0",
     "cross-env": "^5.2.1",
     "cypress": "3.6.0",
@@ -172,6 +176,7 @@
     "semver": "^6.3.0",
     "shelljs": "^0.8.3",
     "source-map-explorer": "^2.1.1",
+    "typescript": "^4.0.2",
     "write-pkg": "^4.0.0"
   },
   "browserslist": [

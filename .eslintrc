@@ -25,6 +25,18 @@
     "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
     "react/jsx-filename-extension": [0],
     "arrow-parens": ["error", "as-needed"],
+
+    // Tillat import av ts-filer uten å spesifisere extension(.ts, .tsx)
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+   ],
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
@@ -73,5 +85,12 @@
     "each": true,
     "cy": true,
     "Cypress": true
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }
