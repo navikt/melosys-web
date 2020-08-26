@@ -1,7 +1,7 @@
 import MKV from '../melosyskodeverk';
 import * as Constants from '../constants';
 
-export const lagUrl = (saksnummer, behandlingID, behandlingstemaKode) => {
+export const lagUrl = (saksnummer: number, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
@@ -27,6 +27,6 @@ export const lagUrl = (saksnummer, behandlingID, behandlingstemaKode) => {
   }
 };
 
-export const nyFane = url => {
+export const nyFane = (url: string) => {
   window.open(`${Constants.URL_BASENAME}/${url}`);
 };
