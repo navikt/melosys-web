@@ -164,19 +164,21 @@ const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
-const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
-const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
-const slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
+const FullmektigeWrapper = props => {
+  const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
+  const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
+  const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
+  const slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
 
-const FullmektigeWrapper = props => (
-  <Fullmektige
-    {...props}
-    lagreAktoer={lagreAktoer}
-    hentAktoer={hentAktoer}
-    hentOrg={hentOrg}
-    slettAktoer={slettAktoer}
-  />
-);
+  return (
+    <Fullmektige
+      {...props}
+      lagreAktoer={lagreAktoer}
+      hentAktoer={hentAktoer}
+      hentOrg={hentOrg}
+      slettAktoer={slettAktoer}
+    />
+  );
+};
 
 export default connect(mapStateToProps)(FullmektigeWrapper);

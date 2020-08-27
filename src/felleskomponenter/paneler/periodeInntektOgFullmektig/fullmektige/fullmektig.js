@@ -39,7 +39,14 @@ function Fullmektig(props) {
   };
 
   const hentOrgFraApi = async () => {
-    if (fullmektig.orgnr) settOrg(await hentOrg(fullmektig.orgnr));
+    if (fullmektig.orgnr) {
+      try {
+        const hentetOrg = await hentOrg(fullmektig.orgnr);
+        settOrg(hentetOrg);
+      } catch (e) {
+        Utils.logger.error(e);
+      }
+    }
   };
 
   useEffect(() => {
@@ -60,7 +67,10 @@ function Fullmektig(props) {
           </Fragment>
         }
         {
-          !org && <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(fullmektig.representererKode, orgnr)} />
+          !org && <SokFullmektigOrg
+            hentOrg={hentOrg}
+            lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(fullmektig.representererKode, orgnr)}
+          />
         }
         {
           org &&
