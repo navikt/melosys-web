@@ -277,10 +277,9 @@ class Stegvelger extends Component {
       try {
         const body = { mottakerinstitusjon, fritekst };
         await Api.Fagsaker.fagsak.videresend(saksnummer, body);
+        tilForsiden();
       } catch (e) {
         Utils.logger.error(e);
-      } finally {
-        tilForsiden();
       }
     });
   };
