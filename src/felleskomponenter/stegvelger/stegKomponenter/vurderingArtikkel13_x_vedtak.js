@@ -31,6 +31,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
   behandlingID,
   lovvalgsperiode,
+  harLandSomKreverSED,
   formIsValid,
   formValues,
   form,
@@ -61,6 +62,8 @@ export const VurderingArtikkel13_x_vedtak = ({
     return formIsValid;
   };
 
+  const skalViseSedAlternativer = redigerbart && harLandSomKreverSED;
+
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
@@ -70,15 +73,18 @@ export const VurderingArtikkel13_x_vedtak = ({
         fritekst: formValues.vedtaksbrevFritekst,
       },
     },
-    {
+  ];
+
+  if (skalViseSedAlternativer) {
+    pdfDokumenter.push({
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
       data: {
         fritekst: formValues.fritekstSed,
       },
-    },
-  ];
+    });
+  }
 
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
   const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
@@ -126,7 +132,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         </Nav.Column>
       </Nav.Row>
       {
-        redigerbart &&
+        skalViseSedAlternativer &&
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -166,6 +172,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: MPT.Periode,
+  harLandSomKreverSED: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
@@ -188,13 +195,13 @@ VurderingArtikkel13_x_vedtak.defaultProps = {
 };
 
 const mapStateToProps = state => {
+  const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
   const erLovvalgsperiodeForkortet = () => Utils.dato.datoDiffPure(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
-    lovvalgsperioderSelectors.TomDatoSelector(state),
+    lovvalgsperiodeTom,
     'days'
   ) !== 0;
 
-  const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
   const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
 
   return ({
@@ -202,6 +209,7 @@ const mapStateToProps = state => {
     redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+    harLandSomKreverSED: avklartefaktaSelectors.LandSomKreverSEDSelector(state).length > 0,
     soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
@@ -212,7 +220,8 @@ const mapStateToProps = state => {
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
       vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-      mottakerinstitusjoner: avklartefaktaSelectors.IkkeMarginaleArbeidslandKTSelector(state) || [],
+      mottakerinstitusjoner: avklartefaktaSelectors.LandSomKreverSEDKTSelector(state) || [],
+      kreverMottakerinstitusjon: false,
       fritekstSed: null,
     },
   });
@@ -243,7 +252,7 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   form: KV.Form.ARTIKKEL_13_X_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
-  keepDirtyOnReinitialize: false,
+  keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
     context: {

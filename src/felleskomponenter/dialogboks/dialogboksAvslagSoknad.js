@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import MKV from '../../melosyskodeverk';
+import useEventTargetValueState from '../../hooks/useEventTargetValueState';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Ikon from '../../resources/images';
@@ -16,12 +17,14 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import './dialogboksAvslagSoknad.css';
 
 export const DialogboksAvslagSoknad = props => {
+  const [brevFritekst, setBrevFritekst] = useEventTargetValueState('');
+
   const {
     ariaHideApp,
     avbryt,
     behandlingID,
     redigerbart,
-    avslaaSoknad,
+    avslaaSoknadHandle,
   } = props;
 
   const pdfDokumenter = [{
@@ -29,10 +32,20 @@ export const DialogboksAvslagSoknad = props => {
     type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
     data: {
       begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-      fritekst: null,
+      fritekst: brevFritekst,
       mottaker: MKV.Koder.aktoersroller.BRUKER,
     },
   }];
+
+  const avslaaSoknad = () => {
+    const data = {
+      fritekst: brevFritekst,
+    };
+    avslaaSoknadHandle(data);
+  };
+
+  const brevFritekstMaxLength = 500;
+  const bekreftRedigerbart = brevFritekst.length <= brevFritekstMaxLength;
 
   return (
     <Nav.Modal
@@ -44,12 +57,17 @@ export const DialogboksAvslagSoknad = props => {
       shouldCloseOnOverlayClick
       ariaHideApp={ariaHideApp}>
       <div className="avslagsoknadcontainer">
-        <div
+        <Ikon.VedtakGodkjent
           className="vedtakIkon"
-          style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
         />
         <div>
           <Nav.typo.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.typo.Systemtittel>
+          <Nav.Textarea
+            value={brevFritekst}
+            onChange={setBrevFritekst}
+            label="Fritekst til vedtaksbrev"
+            maxLength={brevFritekstMaxLength}
+          />
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
           }
@@ -60,6 +78,7 @@ export const DialogboksAvslagSoknad = props => {
               bekreft={avslaaSoknad}
               bekreftTekst="AVSLÅ SØKNAD"
               redigerbart={redigerbart}
+              bekreftRedigerbart={bekreftRedigerbart}
             />
           </div>
         </div>
@@ -69,7 +88,7 @@ export const DialogboksAvslagSoknad = props => {
 };
 
 DialogboksAvslagSoknad.propTypes = {
-  avslaaSoknad: PT.func.isRequired,
+  avslaaSoknadHandle: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
   behandlingID: PT.number.isRequired,

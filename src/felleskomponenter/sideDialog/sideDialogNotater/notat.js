@@ -111,7 +111,7 @@ const Notat = ({
                 <Fragment>
                   <Nav.Column xs="9" />
                   <Nav.Column xs="3">
-                    <Nav.Lenker onClick={apneEndring}><img src={Ikoner.Pencil} alt="Edit" /><span>&nbsp;Endre</span></Nav.Lenker>
+                    <Nav.Lenker onClick={apneEndring}><Ikoner.Pencil /><span>&nbsp;Endre</span></Nav.Lenker>
                   </Nav.Column>
                 </Fragment>
               }

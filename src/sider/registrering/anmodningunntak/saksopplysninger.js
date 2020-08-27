@@ -50,7 +50,6 @@ LinkForhandsvisningSed.propTypes = {
 };
 
 const Saksopplysninger = ({
-  history,
   redigerbart,
   behandlingID,
   anmodningsperiodeID,
@@ -59,6 +58,7 @@ const Saksopplysninger = ({
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
   lovvalgsperiode,
+  tilForsiden,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
@@ -208,7 +208,6 @@ const Saksopplysninger = ({
       }
     }
 
-    const tilForsiden = () => history.push('/');
     try {
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
@@ -394,7 +393,6 @@ Saksopplysninger.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
-  history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
@@ -402,6 +400,7 @@ Saksopplysninger.propTypes = {
   anmodningsperiodeSvar: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   lovvalgsperiode: MPT.Lovvalgsperiode.isRequired,
+  tilForsiden: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {

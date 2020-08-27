@@ -1,5 +1,3 @@
-import { push } from 'connected-react-router';
-
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
@@ -8,6 +6,7 @@ import * as Utils from '../../utils';
 
 import { modalerOperations } from '../modaler';
 import { behandlingerSelectors } from '../behandlinger';
+import { navigeringOperations } from '../navigering';
 
 export function utpek(saksnummer, body) {
   return doThenDispatch(
@@ -20,7 +19,7 @@ export function utpek(saksnummer, body) {
     {
       success: dispatch => {
         dispatch(modalerOperations.skjulValidering());
-        dispatch(push('/'));
+        dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, data) => {
         if (DucksUtils.valideringFeilet(data)) {
@@ -37,7 +36,7 @@ export function avvis(body) {
 
     try {
       await Api.Saksflyt.Utpeking.avvis(behandlingID, body);
-      dispatch(push('/'));
+      dispatch(navigeringOperations.tilForsiden());
     } catch (e) {
       Utils.logger.error(e);
     }

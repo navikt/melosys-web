@@ -1,10 +1,10 @@
 import PT from 'prop-types';
-import * as MPT from './index';
+import { Periode } from './periode';
 
 const AnmodningsperioderSvarProptype = PT.shape({
   begrunnelseFritekst: PT.string,
   anmodningsperiodeSvarType: PT.string,
-  endretPeriode: MPT.Periode,
+  endretPeriode: Periode,
 });
 
 export { AnmodningsperioderSvarProptype as AnmodningsperioderSvar };

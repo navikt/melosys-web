@@ -7,6 +7,7 @@ import * as dato from './dato';
 import * as streng from './streng';
 import * as logger from './logger';
 import * as queryString from './queryString';
+import * as testhelpers from './testhelpers';
 
 import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
@@ -18,6 +19,7 @@ export {
   dato, streng,
   logger,
   queryString,
+  testhelpers,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
   isNil as _isNil,

@@ -16,12 +16,18 @@ class SokSkjema extends Component {
   }
 
   vedSokSubmit = form => {
-    const { lagreSokString, handleSubmit, history } = this.props;
+    const {
+      lagreSokString,
+      handleSubmit,
+      history,
+    } = this.props;
     const { sokStreng } = this.state;
 
     lagreSokString(sokStreng);
     handleSubmit(form);
-    history.push(`/sok/${sokStreng}`);
+
+    sessionStorage.setItem('sokefrase', sokStreng);
+    history.push('/sok');
   };
 
   vedEndretSokFelt = event => {
@@ -35,8 +41,7 @@ class SokSkjema extends Component {
   render () {
     return (
       <Nav.Panel>
-        <Nav.typo.Systemtittel>Søke etter person</Nav.typo.Systemtittel>
-        <p>Oversikt over alle saker og behandlinger på en person</p>
+        <Nav.typo.Systemtittel>Søk etter sak</Nav.typo.Systemtittel>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
           <Nav.Input
             id="id-sokeskjema"
@@ -45,7 +50,7 @@ class SokSkjema extends Component {
             bredde="XL"
             onChange={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
-            placeholder="F.nr./d-nr."
+            placeholder="F.nr./d-nr./saksnr."
           />
           <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
         </form>
@@ -57,16 +62,18 @@ class SokSkjema extends Component {
 SokSkjema.propTypes = {
   handleSubmit: PT.func.isRequired,
   lagreSokString: PT.func.isRequired,
-  history: PT.object.isRequired,
   match: PT.object.isRequired,
+  history: PT.object.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
   lagreSokString: verdi => dispatch(change(KV.Form.SOK_ETTER_SAK, 'sokStreng', verdi)),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(reduxForm({
+const sokSkjemaForm = reduxForm({
   form: KV.Form.SOK_ETTER_SAK,
   initialValues: { sokFelt: '' },
   onSubmit: () => {},
-})(SokSkjema)));
+})(SokSkjema);
+
+export default withRouter(connect(null, mapDispatchToProps)(sokSkjemaForm));

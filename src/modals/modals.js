@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
+import * as Nav from '../utils/navFrontend';
+
 import { FellesHandlersContext } from '../contexts';
 import { modalerOperations, modalerSelectors } from '../ducks/modaler';
 import { vedtakSelectors } from '../ducks/vedtak';
@@ -14,6 +16,8 @@ import DialogboksAvsluttSakSomBortfalt from '../felleskomponenter/dialogboks/dia
 import DialogboksAvslagSoknad from '../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
 import DialogboksRevurderFagsak from '../felleskomponenter/dialogboks/dialogboksRevurderFagsak';
 import DialogboksValidering from '../felleskomponenter/dialogboks/dialogboksValidering';
+
+Nav.Modal.setAppElement(document.getElementById('root'));
 
 const Modals = ({
   skjulOppfriskModalOgNavigerTilForside,
@@ -64,7 +68,7 @@ const Modals = ({
       visAvslagSoknadDialog &&
       <DialogboksAvslagSoknad
         avbryt={skjulAvslagSoknadDialogHandle}
-        avslaaSoknad={avslaaSoknadHandle}
+        avslaaSoknadHandle={avslaaSoknadHandle}
       />
     }
     {

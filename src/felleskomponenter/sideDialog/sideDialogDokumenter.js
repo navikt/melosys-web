@@ -24,22 +24,16 @@ PdfLink.propTypes = {
 };
 
 const RenderInnUtImage = ({ mottaksretning }) => {
-  const { kode, term } = mottaksretning;
-  let icon;
+  const { kode } = mottaksretning;
+
   switch (kode) {
     case MKV.Koder.mottaksretning.INN:
-      icon = Ikoner.InnBrev;
-      break;
+      return <Ikoner.InnBrev />;
     case MKV.Koder.mottaksretning.UT:
-      icon = Ikoner.Svar;
-      break;
+      return <Ikoner.Svar />;
     default:
-      icon = Ikoner.Svar;
-      break;
+      return <Ikoner.Svar />;
   }
-  return (
-    <img src={icon} alt={term} />
-  );
 };
 RenderInnUtImage.propTypes = {
   mottaksretning: MPT.Kodeverk.isRequired,
@@ -48,7 +42,7 @@ const RenderVedleggLink = ({ journalpostID, dokument }) => {
   const { tittel, dokumentID } = dokument;
   return (
     <div>
-      <img src={Ikoner.Binders} alt="Vedlegg" />&nbsp;
+      <Ikoner.Binders />&nbsp;
       { dokumentID && <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} /> }
       { !dokumentID && <span>{tittel}</span> }
     </div>

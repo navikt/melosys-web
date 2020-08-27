@@ -5,13 +5,18 @@ import './panelHeader.css';
 
 
 const PanelHeader = ({
-  ikon,
+  ikon: Ikon,
   tittel,
   tittelTilleggsinfo,
   undertittel,
 }) => (
   <div className="panelheader">
-    { ikon && <div className="panelheader__ikon" style={{ backgroundImage: `url('${ikon}')` }} /> }
+    {
+      Ikon &&
+      <Ikon
+        className="panelheader__ikon"
+      />
+    }
     <div className="panelheader__tittel">
       <div className="panelheader__tittel__hoved">
         <Nav.typo.Undertittel>{tittel}</Nav.typo.Undertittel>&emsp;
@@ -23,9 +28,9 @@ const PanelHeader = ({
 );
 
 PanelHeader.propTypes = {
-  tittel: PT.string.isRequired,
+  tittel: PT.elementType.isRequired,
   tittelTilleggsinfo: PT.string,
-  ikon: PT.string,
+  ikon: PT.elementType,
   undertittel: PT.oneOfType([PT.string, PT.node]),
 };
 

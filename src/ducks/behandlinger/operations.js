@@ -31,6 +31,7 @@ export function resetBehandlingerState() {
 export function apneTidligereBehandlinger() {
   return (dispatch, getState) => {
     const person = Selectors.PersonSelector(getState());
-    Routing.nyFane(`sok/${person.fnr}`);
+    sessionStorage.setItem('sokefrase', person.fnr);
+    Routing.nyFane('sok');
   };
 }

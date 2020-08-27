@@ -5,3 +5,5 @@ export const PENDING = 'utpekingsperioder/PENDING';
 export const OPPDATER_UTPEKINGSPERIODER = 'utpekingsperioder/OPPDATER_UTPEKINGSPERIODER';
 
 export const RESET = 'utpekingsperioder/RESET';
+
+export const ENDRE_PERIODE = 'utpekingsperioder/ENDRE_PERIODE';

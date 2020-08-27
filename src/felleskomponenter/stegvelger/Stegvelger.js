@@ -270,12 +270,12 @@ class Stegvelger extends Component {
     });
   };
 
-  videresendSoknad = mottakerinstitusjon => {
+  videresendSoknad = (mottakerinstitusjon, fritekst) => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       const { saksnummer, tilForsiden } = this.props;
 
       try {
-        const body = { mottakerinstitusjon };
+        const body = { mottakerinstitusjon, fritekst };
         await Api.Fagsaker.fagsak.videresend(saksnummer, body);
       } catch (e) {
         Utils.logger.error(e);
@@ -297,6 +297,11 @@ class Stegvelger extends Component {
   byggLovvalgsperioderHandler = () => {
     const perioderStegState = this.hentPerioderStegState();
     this.props.oppdaterLovvalgperioder(perioderStegState);
+  };
+
+  byggUtpekingsperioderHandler = () => {
+    const perioderStegState = this.hentPerioderStegState();
+    this.props.oppdaterUtpekingsperioder(perioderStegState);
   };
 
   byggAnmodningsperioderHandler = () => {
@@ -349,6 +354,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       avvisUtpeking: this.avvisUtpeking,
       lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
+      byggUtpekingsperioder: this.byggUtpekingsperioderHandler,
     };
 
     const { props } = this;

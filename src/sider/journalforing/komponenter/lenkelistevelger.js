@@ -35,7 +35,7 @@ function LenkeListeVelger(props) {
         {!visListevelger && <Nav.Lenker href={linkTo} target="_blank">{dokumentTittel}</Nav.Lenker>}
       </Nav.Column>
       <Nav.Column xs="3">
-        {!visListevelger && <Nav.Lenker onClick={tittelEndres}><img src={Ikoner.Pencil} alt="Edit" /><span>&nbsp;Endre tittel</span></Nav.Lenker>}
+        {!visListevelger && <Nav.Lenker onClick={tittelEndres}><Ikoner.Pencil /><span>&nbsp;Endre tittel</span></Nav.Lenker>}
       </Nav.Column>
       <Nav.Column xs="12" style={style}>
         {visListevelger &&
