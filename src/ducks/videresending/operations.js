@@ -1,17 +1,14 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
-import * as DucksUtils from '../utils';
-import * as Utils from '../../utils';
-
+import * as Actions from './actions';
 import { modalerOperations } from '../modaler';
-import { behandlingerSelectors } from '../behandlinger';
 import { navigeringOperations } from '../navigering';
+import * as DucksUtils from '../utils';
 
-export function utpek(saksnummer, body) {
+export function send(snr, body) {
   return doThenDispatch(
-    () => Api.Fagsaker.fagsak.utpek(saksnummer, body),
-    {
+    () => Api.Fagsaker.fagsak.videresend(snr, body), {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
@@ -22,7 +19,7 @@ export function utpek(saksnummer, body) {
         dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, data) => {
-        if (DucksUtils.harFeilkode(data)) {
+        if (DucksUtils.harFeilmelding(data)) {
           dispatch(modalerOperations.visValidering());
         }
       },
@@ -30,15 +27,6 @@ export function utpek(saksnummer, body) {
   );
 }
 
-export function avvis(body) {
-  return async (dispatch, getState) => {
-    const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
-
-    try {
-      await Api.Saksflyt.Utpeking.avvis(behandlingID, body);
-      dispatch(navigeringOperations.tilForsiden());
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-  };
+export function reset() {
+  return dispatch => (dispatch(Actions.reset()));
 }

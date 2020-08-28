@@ -28,6 +28,7 @@ import { formSelectors } from '../../ducks/form';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
+import { videresendingOperations } from '../../ducks/videresending';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
@@ -272,15 +273,16 @@ class Stegvelger extends Component {
 
   videresendSoknad = (mottakerinstitusjon, fritekst) => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
-      const { saksnummer, tilForsiden } = this.props;
+      const {
+        saksnummer,
+        videresend,
+        lagreAllData,
+      } = this.props;
 
-      try {
-        const body = { mottakerinstitusjon, fritekst };
-        await Api.Fagsaker.fagsak.videresend(saksnummer, body);
-        tilForsiden();
-      } catch (e) {
-        Utils.logger.error(e);
-      }
+      const body = { mottakerinstitusjon, fritekst };
+
+      await lagreAllData();
+      videresend(saksnummer, body);
     });
   };
 
@@ -560,6 +562,7 @@ Stegvelger.propTypes = {
   hjemmebaser: PT.arrayOf(PT.string),
   forsteSteg: PT.string.isRequired,
   erArbeidEttLand: PT.bool.isRequired,
+  videresend: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -627,6 +630,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
+  videresend: (saksnummer, body) => dispatch(videresendingOperations.send(saksnummer, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
