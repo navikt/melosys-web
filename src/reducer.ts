@@ -1,35 +1,36 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { connectRouter } from 'connected-react-router';
+import { History } from 'history';
 
-import anmodningsperioderReducer from './ducks/anmodningsperioder/';
+import anmodningsperioderReducer from './ducks/anmodningsperioder';
 import anmodningsperiodesvarReducer from './ducks/anmodningsperiodesvar';
-import avklartefaktaReducer from './ducks/avklartefakta/';
+import avklartefaktaReducer from './ducks/avklartefakta';
 import behandlingerReducer from './ducks/behandlinger';
-import behandlingsgrunnlagReducer from './ducks/behandlingsgrunnlag/';
+import behandlingsgrunnlagReducer from './ducks/behandlingsgrunnlag';
 import behandlingsperioderReducer from './ducks/behandlingsperioder';
 import behandlingsresultatReducer from './ducks/behandlingsresultat';
-import dokumenterReducer from './ducks/dokumenter/';
-import fagsakerReducer from './ducks/fagsaker/';
+import dokumenterReducer from './ducks/dokumenter';
+import fagsakerReducer from './ducks/fagsaker';
 import journalforingReducer from './ducks/journalforing';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import modalerReducer from './ducks/modaler';
 import oppgaverReducer from './ducks/oppgaver';
 import organisasjonerReducer from './ducks/organisasjoner';
 import personerReducer from './ducks/personer';
-import saksbehandlerReducer from './ducks/saksbehandler/';
+import saksbehandlerReducer from './ducks/saksbehandler';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
 import serverinfoReducer from './ducks/serverinfo';
 import utpekReducer from './ducks/utpek';
 import utpekingsperioderReducer from './ducks/utpekingsperioder';
-import videreSendReducer from './ducks/videresending';
-import vilkarReducer from './ducks/vilkar/';
+import videreSendReducer from './ducks/videresending/reducers';
+import vilkarReducer from './ducks/vilkar';
 import vedtakReducer from './ducks/vedtak';
 
 import customFormReducer from './ducks/form';
 
-const createRootReducer = history => combineReducers({
+const createRootReducer = (history: History) => combineReducers({
   form: formReducer.plugin({ forretningsValidering: customFormReducer }),
   router: connectRouter(history),
   anmodningsperioder: anmodningsperioderReducer,
