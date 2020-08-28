@@ -7,7 +7,9 @@ import * as Api from '../../../services/api';
 
 import './pdfdokument.css';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+const pdfjsWorker = import('pdfjs-dist/build/pdf.worker.entry');
+
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const uuid = require('uuid/v4');
 
