@@ -25,16 +25,16 @@ export default function reducer(state = initalState, action) {
     case BehandlingsgrunnlagTypes.OK: {
       if (!action.data.tilleggsData) { return state; }
       const { organisasjoner } = action.data.tilleggsData;
-      const eksisterendeOrganisasjoner = Array.isArray(state.data) ? state.data : [];
+      const eksisterendeOrganisasjoner = state.data;
 
       return { ...state, status: STATUS.OK, data: flettOrganisasjoner(organisasjoner, eksisterendeOrganisasjoner) };
     }
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
-      return { ...state, status: STATUS.ERROR, data: action.data };
+      return { ...state, status: STATUS.ERROR, resError: action.data };
     case Types.OK: {
-      const eksisterendeOrganisasjoner = Array.isArray(state.data) ? state.data : [];
+      const eksisterendeOrganisasjoner = state.data;
 
       return { ...state, status: STATUS.OK, data: flettOrganisasjoner(action.data, eksisterendeOrganisasjoner) };
     }

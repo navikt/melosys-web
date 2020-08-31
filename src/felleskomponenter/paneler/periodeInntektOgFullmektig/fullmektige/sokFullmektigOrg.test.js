@@ -8,6 +8,7 @@ describe('SokFullmektigOrg', () => {
   beforeEach(() => {
     props = {
       lagreNyFullmektigOgOppdaterLokalt: jest.fn(),
+      hentOrg: jest.fn(),
     };
   });
 

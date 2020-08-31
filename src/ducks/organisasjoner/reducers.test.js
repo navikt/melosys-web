@@ -25,13 +25,7 @@ describe('organisasjoner reducer', () => {
     expect(reducedState).toEqual({ data: [{ orgnr: 810072512 }, { orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 
-  it('returnerer ny state ved behandlingsgrunnlag/ok action når initialState er satt til feilobjekt', () => {
-    initialState = {
-      data: {
-        error: 'Not found',
-        status: 404,
-      },
-    };
+  it('returnerer ny state ved behandlingsgrunnlag/ok action', () => {
     const data = {
       tilleggsData: {
         organisasjoner: [
@@ -44,13 +38,7 @@ describe('organisasjoner reducer', () => {
     expect(reducedState).toEqual({ data: [{ orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 
-  it('returnerer ny state ved ok action når initialState er satt til feilobjekt', () => {
-    initialState = {
-      data: {
-        error: 'Not found',
-        status: 404,
-      },
-    };
+  it('returnerer ny state ved ok action', () => {
     const data = { orgnr: 873152362 };
 
     const reducedState = reducer(initialState, actions.OK(data));
@@ -62,13 +50,18 @@ describe('organisasjoner reducer', () => {
     expect(reducedState).toEqual({ data: [], status: Utils.STATUS.PENDING });
   });
 
-  it('returnerer ny state med status ERROR ved feilet action', () => {
+  it('returnerer ny state med status ERROR ved feilet action, overskriver ikke eksisterende organisasjoner', () => {
     const data = {
       error: 'Not found',
       status: 404,
     };
 
     const reducedState = reducer(initialState, actions.FEILET(data));
-    expect(reducedState).toEqual({ data, status: Utils.STATUS.ERROR });
+
+    expect(reducedState).toEqual({
+      data: initialState.data,
+      status: Utils.STATUS.ERROR,
+      resError: data,
+    });
   });
 });
