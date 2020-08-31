@@ -72,7 +72,7 @@ const OpprettNySak = ({
   const oppgaverFinnes = radioValg.length > 0;
 
   const filtrerteBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
-    .filter(({ kode }) => MKVUtils.erSoknad(kode))
+    .filter(({ kode }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
     .filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND);
 
   const settJournalpostID = oppgaveID => {
@@ -220,7 +220,7 @@ const mapStateToProps = state => ({
 const opprettNySak = async (values, dispatch, props) => {
   const soknadErValgt = MKVUtils.erSoknad(values.behandlingstema);
   const fom = soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.fom) : null;
-  const tomErUtfylt = values.soknadsinfo.tom;
+  const tomErUtfylt = values.soknadsinfo && values.soknadsinfo.tom;
   const tom = tomErUtfylt && soknadErValgt ? Utils.dato.formatterDatoTilISO(values.soknadsinfo.tom) : null;
 
   const soknadDto = {
