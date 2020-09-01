@@ -1,3 +1,6 @@
+import { AppThunk, RootState } from 'AppTypes';
+import { ThunkDispatch } from 'redux-thunk';
+
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
@@ -6,7 +9,7 @@ import { modalerOperations } from '../modaler';
 import { navigeringOperations } from '../navigering';
 import * as DucksUtils from '../utils';
 
-export function send(snr, body) {
+export function send(snr: number, body: Api.Fagsaker.fagsak.VideresendDto): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
     () => Api.Fagsaker.fagsak.videresend(snr, body), {
       OK: Types.OK,
@@ -14,11 +17,11 @@ export function send(snr, body) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {
+      success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
         dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
       },
-      error: (dispatch, data) => {
+      error: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>, data: any) => {
         if (DucksUtils.harFeilmelding(data)) {
           dispatch(modalerOperations.visValidering());
         }
@@ -27,6 +30,6 @@ export function send(snr, body) {
   );
 }
 
-export function reset() {
-  return dispatch => (dispatch(Actions.reset()));
+export function reset(): AppThunk<Types.Action, Types.Action> {
+  return dispatch => dispatch(Actions.reset());
 }
