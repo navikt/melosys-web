@@ -41,8 +41,8 @@ Vedtakstype.propTypes = {
 
 Vedtakstype.defaultProps = {
   className: undefined,
-  vedtakstypeFeltNavn: 'vedtakstypebegrunnelse',
-  vedtakstypebegrunnelseFeltNavn: 'vedtakstype',
+  vedtakstypeFeltNavn: 'vedtakstype',
+  vedtakstypebegrunnelseFeltNavn: 'vedtakstypebegrunnelse',
   vedtakstypeLabel: 'Hvilken type vedtak skal fattes?',
   vedtakstypebegrunnelseLabel: 'Bakgrunn for nytt vedtak',
 };

@@ -238,7 +238,7 @@ const fattVedtak = async (values, dispatch, props) => {
   }
 
   props.lagreOgFatteVedtak({
-    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
     fritekst: values.vedtaksbrevFritekst,
     fritekstSed: values.fritekstSed,
     mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),

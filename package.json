@@ -67,6 +67,7 @@
     "nav-frontend-tekstomrade": "^2.0.37",
     "nav-frontend-typografi": "^2.0.16",
     "nav-frontend-typografi-style": "^1.0.17",
+    "pdfjs-dist": "^2.4.456",
     "prop-types": "^15.7.2",
     "qs": "^6.9.1",
     "react": "^16.12.0",
