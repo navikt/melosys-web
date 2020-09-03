@@ -115,7 +115,7 @@ export class KontaktOpplysninger extends Component {
 
     try {
       const org = await this.props.hentOrg(kontaktorgnr);
-      return org === null || Utils._isEmpty(org) ? null : org;
+      return org;
     } catch (e) {
       Utils.logger.error(e);
       return null;

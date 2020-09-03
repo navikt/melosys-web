@@ -8,15 +8,21 @@ import { erOrgnrGyldig } from '../../../skjema/validering/generisk/organisasjon'
 import './sokFullmektigOrg.css';
 
 function SokFullmektigOrg(props) {
-  const { lagreNyFullmektigOgOppdaterLokalt } = props;
+  const { lagreNyFullmektigOgOppdaterLokalt, hentOrg } = props;
   const [orgnr, settOrgnr] = useState('');
   const [feilmelding, settFeilmelding] = useState(undefined);
 
-  const sok = () => {
+  const sok = async () => {
     if (erOrgnrGyldig(orgnr)) {
-      lagreNyFullmektigOgOppdaterLokalt(orgnr);
+      try {
+        await hentOrg(orgnr);
+        lagreNyFullmektigOgOppdaterLokalt(orgnr);
+      } catch (e) {
+        if (e.response.status === 404) settFeilmelding({ feilmelding: 'Kunne ikke finne organisasjon' });
+        else settFeilmelding({ feilmelding: 'Ukjent feil ved søk på org.nr.' });
+      }
     } else {
-      settFeilmelding({ feilmelding: 'Ugyldig orgnr' });
+      settFeilmelding({ feilmelding: 'Ugyldig org.nr.' });
     }
   };
 
@@ -45,6 +51,7 @@ function SokFullmektigOrg(props) {
 
 SokFullmektigOrg.propTypes = {
   lagreNyFullmektigOgOppdaterLokalt: PT.func.isRequired,
+  hentOrg: PT.func.isRequired,
 };
 
 export default SokFullmektigOrg;
