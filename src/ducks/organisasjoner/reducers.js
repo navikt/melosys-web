@@ -11,7 +11,10 @@ import * as BehandlingsgrunnlagTypes from '../behandlingsgrunnlag/types';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: [],
+  // Med data: [] får data type never[] når fila konsumeres i ts. Dette gjør den vanskelig å jobbe med.
+  // TODO: Fjern denne disable-linjen når dette skrives om til .ts, og sørg for at data har en type.
+  /* eslint-disable no-array-constructor */
+  data: Array(),
 };
 
 const flettOrganisasjoner = (nyeOrganisasjoner, eksisterendeOrganisasjoner) => {

@@ -1,20 +1,12 @@
 import * as selectors from './selectors';
+import * as DucksUtils from '../utils';
 
-describe('Journalforingselectors', () => {
-  const lagState = ({
-    status, data,
-  }) => ({
-    journalforing: {
-      status,
-      data,
-    },
-  });
-
+describe('Videresendingselectors', () => {
   describe('FeilmeldingSelector', () => {
     it('feilmelding fra response ved 400-feil', () => {
-      const state = lagState({
-        status: 'ERROR',
-        data: {
+      const state = DucksUtils.lagState({
+        videresending: {
+          status: 'ERROR',
           data: {
             status: 400,
             message: 'Funksjonell feil',
@@ -27,9 +19,9 @@ describe('Journalforingselectors', () => {
     });
 
     it('generisk feilmelding ved 500-feil', () => {
-      const state = lagState({
-        status: 'ERROR',
-        data: {
+      const state = DucksUtils.lagState({
+        videresending: {
+          status: 'ERROR',
           data: {
             status: 500,
             message: 'Melding som ikke blir brukt',
@@ -42,11 +34,11 @@ describe('Journalforingselectors', () => {
     });
 
     it('tom liste ved ingen feil', () => {
-      const state = lagState({
-        status: 'OK',
-        data: {
+      const state = DucksUtils.lagState({
+        videresending: {
+          status: 'OK',
           data: {},
-        },
+        }
       });
 
       const feilmelding = selectors.FeilmeldingSelector(state);

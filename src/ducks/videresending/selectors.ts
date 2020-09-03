@@ -1,10 +1,10 @@
 import { createSelector, Selector } from 'reselect';
-import { RootState } from 'AppTypes';
+import { RootState, StateSection } from 'AppTypes';
 
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
-const VideresendingSelector: Selector<RootState, Types.State> = createSelector(
+const VideresendingSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   state => state.videresending,
   Videresending => Videresending
 );

@@ -1,12 +1,14 @@
+import { StateSection } from 'AppTypes';
+
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
-const initalState: Types.State = {
+const initalState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,
   data: {},
 };
 
-export default function reducer(state = initalState, action: Types.Action): Types.State {
+export default function reducer(state = initalState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };

@@ -3,12 +3,9 @@ export const FEILET = 'videresending/FEILET';
 export const PENDING = 'videresending/PENDING';
 export const RESET = 'videresending/RESET';
 
-export interface State {
-  status: string,
-  data: {
-    status?: number,
-    message?: string,
-  },
+export interface Data {
+  status?: number,
+  message?: string,
 }
 
 interface ResetAction {
