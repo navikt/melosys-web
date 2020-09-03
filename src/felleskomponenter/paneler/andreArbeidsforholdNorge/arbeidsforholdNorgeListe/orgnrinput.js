@@ -2,7 +2,6 @@ import React, { useState, Fragment } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
-import * as Utils from '../../../../utils';
 
 const Orgnrinput = ({
   onOrgnrFunnet,
@@ -22,25 +21,18 @@ const Orgnrinput = ({
       return;
     }
 
-    /**
-     * TODO: Backend svarer foreløpig med 200 selv om org ikke finnes. Må derfor sjekke responsen for å se om org faktisk eksisterer.
-     */
-    try {
-      const action = await hentOrganisasjon(tillagtOrgnr);
-      const { data: organisasjon } = action;
-      const orgFunnet = !Utils._isEmpty(organisasjon);
+    const action = await hentOrganisasjon(tillagtOrgnr);
+    const { data } = action;
+    const organisasjon = data;
+    const orgFunnet = organisasjon.orgnr;
+    const httpStatus = !orgFunnet && data.response.status;
 
-      if (orgFunnet) {
-        onOrgnrFunnet(organisasjon);
-      } else {
-        setFeil('Kunne ikke finne organisasjon');
-      }
-    } catch (e) {
-      if (e.body.status === 404) setFeil('Kunne ikke finne organisasjon');
-      else {
-        Utils.logger.error(e);
-        setFeil('Feil ved henting av organisasjon');
-      }
+    if (orgFunnet) {
+      onOrgnrFunnet(organisasjon);
+    } else if (httpStatus === 404) {
+      setFeil('Kunne ikke finne organisasjon');
+    } else {
+      setFeil('Feil ved henting av organisasjon');
     }
   };
 
