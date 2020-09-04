@@ -43,7 +43,7 @@ export function lagre() {
 
     if (anmodningsperioderErSendtUtlandet) return null;
 
-    /* eslint-disable-next-line no-unused-vars */
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     return dispatch(send(bid, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) }));
   };
 }
