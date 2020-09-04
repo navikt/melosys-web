@@ -38,7 +38,7 @@ describe('Videresendingselectors', () => {
         videresending: {
           status: 'OK',
           data: {},
-        }
+        },
       });
 
       const feilmelding = selectors.FeilmeldingSelector(state);
