@@ -36,10 +36,11 @@
         "ts": "never",
         "tsx": "never"
       }
-   ],
+    ],
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
+    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene"] }],
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
     "jsx-a11y/aria-role": 2,
@@ -68,7 +69,9 @@
       "specialLink": [ "to" ]
     }],
     "linebreak-style": "off",
-    "no-bitwise": [ "error", {"allow" : ["^"]} ]
+    "no-bitwise": [ "error", {"allow" : ["^"]} ],
+    // Støtt typescript reference, hvor det trengs tre slash(///)
+    "spaced-comment": ["error", "always", { "markers": ["/"] }]
   },
   "extends": ["react-app","airbnb"],
   "plugins": [
