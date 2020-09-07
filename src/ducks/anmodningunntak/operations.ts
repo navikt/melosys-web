@@ -1,5 +1,5 @@
 import { AppThunk, RootState } from 'AppTypes';
-import { AnmodningOmUnntak } from 'Domene';
+import { AnmodningOmUnntakBestilling } from 'Domene';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { doThenDispatch } from '../../services/utils';
@@ -10,9 +10,9 @@ import { modalerOperations } from '../modaler';
 import { navigeringOperations } from '../navigering';
 import * as DucksUtils from '../utils';
 
-export function send(behandlingID: number, body: AnmodningOmUnntak): AppThunk<Promise<Types.Action>, Types.Action> {
+export function bestill(behandlingID: number, bestilling: AnmodningOmUnntakBestilling): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
-    () => Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, body), {
+    () => Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestilling), {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,

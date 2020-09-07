@@ -641,7 +641,7 @@ const mapDispatchToProps = dispatch => ({
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
   avvisUtpeking: body => dispatch(utpekOperations.avvis(body)),
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
-  bestillAnmodningsperioder: (behandlingID, bestilling) => dispatch(anmodningunntakOperations.send(behandlingID, bestilling)),
+  bestillAnmodningsperioder: (behandlingID, bestilling) => dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
