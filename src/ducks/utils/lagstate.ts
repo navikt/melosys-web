@@ -20,6 +20,7 @@ function lagState({
     },
     action: 'PUSH',
   },
+  anmodningomunntak = { status: STATUS.OK, data: {} },
   anmodningsperioder = { status: STATUS.OK, data: [] },
   anmodningsperiodesvar = { status: STATUS.OK, data: {} },
   avklartefakta = { status: STATUS.OK, data: [] },
@@ -48,6 +49,7 @@ function lagState({
   return ({
     form,
     router,
+    anmodningomunntak,
     anmodningsperioder,
     anmodningsperiodesvar,
     avklartefakta,
