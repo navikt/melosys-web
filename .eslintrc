@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "space-before-function-paren": "off",
@@ -22,10 +22,10 @@
     "max-len": ["error", 200, 4],
     "no-return-assign": ["error", "except-parens"],
     "wrap-iife": "off",
-    "no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
     "react/jsx-filename-extension": [0],
     "arrow-parens": ["error", "as-needed"],
-
     // Tillat import av ts-filer uten å spesifisere extension(.ts, .tsx)
     "import/extensions": [
       "error",
@@ -36,10 +36,11 @@
         "ts": "never",
         "tsx": "never"
       }
-   ],
+    ],
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
+    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene"] }],
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
     "jsx-a11y/aria-role": 2,
@@ -68,12 +69,15 @@
       "specialLink": [ "to" ]
     }],
     "linebreak-style": "off",
-    "no-bitwise": [ "error", {"allow" : ["^"]} ]
+    "no-bitwise": [ "error", {"allow" : ["^"]} ],
+    // Støtt typescript reference, hvor det trengs tre slash(///)
+    "spaced-comment": ["error", "always", { "markers": ["/"] }]
   },
   "extends": ["react-app","airbnb"],
   "plugins": [
     "jsx-a11y",
-    "jest"
+    "jest",
+    "@typescript-eslint"
   ],
   "env": {
     "browser": true,

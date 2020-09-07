@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
+import { shallow } from 'enzyme';
+
 import EnkeltDato from './enkeltDato';
-import { shallow } from 'enzyme';
 
 describe('EnkeltDato', () => {
-  const props = {
+  const props: ComponentProps<typeof EnkeltDato> = {
     dato: '2016-12-31',
     visTidspunkt: true,
   };
@@ -26,7 +27,7 @@ describe('EnkeltDato', () => {
   });
 
   it('viser bindestrek dersom dato ikke er oppgitt', () => {
-    props.dato = null;
+    props.dato = undefined;
     const enkeltDato = shallow(<EnkeltDato {...props} />);
 
     expect(enkeltDato.children().text()).toBe('-');
