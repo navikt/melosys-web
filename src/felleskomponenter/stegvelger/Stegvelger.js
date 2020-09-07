@@ -14,6 +14,7 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
+import { anmodningunntakOperations } from '../../ducks/anmodningunntak';
 import { anmodningsperioderSelectors, anmodningsperioderOperations } from '../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors, anmodningsperiodesvarOperations } from '../../ducks/anmodningsperiodesvar';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
@@ -233,20 +234,12 @@ class Stegvelger extends Component {
     });
   };
 
-  bestillAnmodningsperioder = async body => {
-    const { behandlingID, tilForsiden } = this.props;
-    try {
-      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, body);
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-  };
+  lagreOgBestillAnmodningsperioder = bestilling => {
+    const { behandlingID, lagreAllData, bestillAnmodningsperioder } = this.props;
 
-  lagreOgBestillAnmodningsperioder = body => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
-      await this.props.lagreAllData();
-      this.bestillAnmodningsperioder(body);
+      await lagreAllData();
+      bestillAnmodningsperioder(behandlingID, bestilling);
     });
   };
 
@@ -563,6 +556,7 @@ Stegvelger.propTypes = {
   forsteSteg: PT.string.isRequired,
   erArbeidEttLand: PT.bool.isRequired,
   videresend: PT.func.isRequired,
+  bestillAnmodningsperioder: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -647,6 +641,7 @@ const mapDispatchToProps = dispatch => ({
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
   avvisUtpeking: body => dispatch(utpekOperations.avvis(body)),
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
+  bestillAnmodningsperioder: (behandlingID, bestilling) => dispatch(anmodningunntakOperations.send(behandlingID, bestilling)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as Nav from '../utils/navFrontend';
 
 import { FellesHandlersContext } from '../contexts';
+import { anmodningunntakSelectors } from '../ducks/anmodningunntak';
 import { modalerOperations, modalerSelectors } from '../ducks/modaler';
 import { vedtakSelectors } from '../ducks/vedtak';
 import { utpekSelectors } from '../ducks/utpek';
@@ -141,7 +142,7 @@ const mapStateToProps = state => ({
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
   valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
-  valideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state), ...videresendingSelectors.FeilmeldingSelector(state)],
+  valideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state), ...videresendingSelectors.FeilmeldingSelector(state), ...anmodningunntakSelectors.FeilmeldingSelector(state)],
 });
 
 const mapDispatchToProps = dispatch => ({
