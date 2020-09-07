@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
+import { shallow } from 'enzyme';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 
-import DialogboksValidering, { Validering, Feilmelding, ModalBody } from './dialogboksValidering';
+import DialogboksValidering, { Validering, ModalBody } from './dialogboksValidering';
 import MKV from '../../melosyskodeverk';
 
 describe('DialogboksValidering', () => {
-  let props = null;
+  let props: ComponentProps<typeof DialogboksValidering> = {
+    avbryt: jest.fn(),
+    valideringer: [],
+    feilmeldinger: [],
+  };
 
   beforeEach(() => {
     props = {
       avbryt: jest.fn(),
-      ariaHideApp: false,
       valideringer: [
         MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
         MKV.Koder.begrunnelser.kontroll_begrunnelser.TREDJELANDSBORGER_IKKE_AVTALELAND,
       ],
+      feilmeldinger: [],
     };
   });
 
@@ -40,7 +45,7 @@ describe('DialogboksValidering', () => {
     ];
 
     const dialogboksValidering = shallow(<DialogboksValidering {...props} />);
-    const feilmeldinger = dialogboksValidering.find(Feilmelding);
+    const feilmeldinger = dialogboksValidering.find(ModalBody);
 
     expect(feilmeldinger).toHaveLength(2);
   });

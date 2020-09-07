@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
@@ -9,19 +9,30 @@ import MKV from '../../melosyskodeverk';
 
 import './dialogboksValidering.css';
 
-const feilmeldingMap = {
-  [MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER]: {
-    tittel: 'Overlappende periode',
-    innhold: 'Du kan ikke fatte vedtak fordi det ligger en overlappende periode i MEDL. Du må endre søknadsperioden eller perioden som er registrert i MEDL, slik at de ikke overlapper.',
-  },
-  [MKV.Koder.begrunnelser.kontroll_begrunnelser.PERIODEN_OVER_24_MD]: {
-    tittel: 'Periode over 24 måneder',
-    innhold: 'Du kan ikke fatte vedtak etter artikkel 12.',
-  },
-};
+interface Feilmelding {
+  tittel: string,
+  innhold: string,
+}
 
-const hentFeilmelding = valideringKode => {
-  let feilmelding = feilmeldingMap[valideringKode];
+const feilmeldingMap = new Map<string, Feilmelding>([
+  [
+    MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
+    {
+      tittel: 'Overlappende periode',
+      innhold: 'Du kan ikke fatte vedtak fordi det ligger en overlappende periode i MEDL. Du må endre søknadsperioden eller perioden som er registrert i MEDL, slik at de ikke overlapper.',
+    },
+  ],
+  [
+    MKV.Koder.begrunnelser.kontroll_begrunnelser.PERIODEN_OVER_24_MD,
+    {
+      tittel: 'Periode over 24 måneder',
+      innhold: 'Du kan ikke fatte vedtak etter artikkel 12.',
+    },
+  ],
+]);
+
+const hentFeilmelding = (valideringKode: string) => {
+  let feilmelding = feilmeldingMap.get(valideringKode);
 
   if (!feilmelding) {
     const valideringKodeObjekt = KV.kodeTilObjekt(valideringKode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
@@ -43,7 +54,7 @@ const hentFeilmelding = valideringKode => {
   return feilmelding;
 };
 
-export const ModalBody = ({ tittel, innhold }) => (
+export const ModalBody = ({ tittel, innhold }: Feilmelding) => (
   <div className="validering">
     <Nav.typo.Element className="valideringKode">{tittel}</Nav.typo.Element>
     <Nav.Tekstomrade>{innhold}</Nav.Tekstomrade>
@@ -55,7 +66,11 @@ ModalBody.propTypes = {
   innhold: PT.string.isRequired,
 };
 
-export const Validering = ({ valideringKode }) => {
+interface ValideringProps {
+  valideringKode: string,
+}
+
+export const Validering = ({ valideringKode }: ValideringProps) => {
   const { tittel, innhold } = hentFeilmelding(valideringKode);
 
   return (
@@ -67,24 +82,18 @@ Validering.propTypes = {
   valideringKode: PT.string.isRequired,
 };
 
-export const Feilmelding = ({ feilmelding: { tittel, innhold } }) => (
-  <ModalBody tittel={tittel} innhold={innhold} />
-);
-
-Feilmelding.propTypes = {
-  feilmelding: PT.shape({
-    tittel: PT.string,
-    innhold: PT.string,
-  }).isRequired,
-};
+interface DialogboksValideringProps {
+  avbryt: () => void,
+  valideringer: string[],
+  feilmeldinger: Feilmelding[],
+}
 
 export const DialogboksValidering = ({
   avbryt,
-  ariaHideApp,
   valideringer,
   feilmeldinger,
-}) => {
-  const handleKeyPress = e => {
+}: DialogboksValideringProps) => {
+  const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       avbryt();
     }
@@ -98,7 +107,6 @@ export const DialogboksValidering = ({
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
-      ariaHideApp={ariaHideApp}
     >
       <span
         id="closeButton"
@@ -113,7 +121,7 @@ export const DialogboksValidering = ({
       {
         Utils._isEmpty(feilmeldinger)
           ? valideringer.map(valideringKode => <Validering valideringKode={valideringKode} key={valideringKode} />)
-          : feilmeldinger.map(feilmelding => <Feilmelding feilmelding={feilmelding} key={Utils._uuid()} />)
+          : feilmeldinger.map(feilmelding => <ModalBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} key={Utils._uuid()} />)
       }
     </Nav.Modal>
   );
@@ -121,7 +129,6 @@ export const DialogboksValidering = ({
 
 DialogboksValidering.propTypes = {
   avbryt: PT.func.isRequired,
-  ariaHideApp: PT.bool,
   valideringer: PT.arrayOf(PT.string),
   feilmeldinger: PT.arrayOf(PT.shape({
     tittel: PT.string,
@@ -130,7 +137,6 @@ DialogboksValidering.propTypes = {
 };
 
 DialogboksValidering.defaultProps = {
-  ariaHideApp: true,
   valideringer: [],
   feilmeldinger: [],
 };
