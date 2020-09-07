@@ -1,5 +1,5 @@
 import { AppThunk, RootState } from 'AppTypes';
-import { ThunkDispatch } from 'redux-thunk';
+import { ThunkDispatch } from 'redux-thunk';
 
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';

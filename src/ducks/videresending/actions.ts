@@ -4,4 +4,4 @@ export function reset(): Types.Action {
   return {
     type: Types.RESET,
   };
-};
+}

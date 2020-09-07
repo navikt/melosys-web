@@ -9,7 +9,7 @@ function lagState({
   form = {
     testForm: {
       registeredFields: [],
-    }
+    },
   },
   router = {
     location: {
@@ -20,31 +20,31 @@ function lagState({
     },
     action: 'PUSH',
   },
-  anmodningsperioder = { status: STATUS.OK, data: []},
-  anmodningsperiodesvar = { status: STATUS.OK, data: {}},
-  avklartefakta = { status: STATUS.OK, data: []},
-  behandlinger = { status: STATUS.OK, data: {}},
-  behandlingsgrunnlag = { status: STATUS.OK, data: {}},
-  behandlingsperioder = { status: STATUS.OK, data: {}},
-  behandlingsresultat = { status: STATUS.OK, data: {}},
-  dokumenter = { status: STATUS.OK, data: {}},
-  fagsaker = { status: STATUS.OK, data: {}},
-  journalforing = { status: STATUS.OK, data: {}},
-  lovvalgsperioder = { status: STATUS.OK, data: []},
-  modaler = { status: STATUS.OK, data: {}},
-  oppgaver = { status: STATUS.OK, data: {}},
-  organisasjoner = { status: STATUS.OK, data: []},
-  personer = { status: STATUS.OK, data: []},
-  saksbehandler = { status: STATUS.OK, data: {}},
-  saksopplysninger = { status: STATUS.OK, data: {}},
-  sok = { status: STATUS.OK, data: []},
-  serverinfo = { status: STATUS.OK, data: {}},
-  utpek = { status: STATUS.OK, data: {}},
-  utpekingsperioder = { status: STATUS.OK, data: []},
-  vedtak = { status: STATUS.OK, data: {}},
-  videresending = { status: STATUS.OK, data: {}},
-  vilkar = { status: STATUS.OK, data: []},
-}: Partial<RootState>): RootState{
+  anmodningsperioder = { status: STATUS.OK, data: [] },
+  anmodningsperiodesvar = { status: STATUS.OK, data: {} },
+  avklartefakta = { status: STATUS.OK, data: [] },
+  behandlinger = { status: STATUS.OK, data: {} },
+  behandlingsgrunnlag = { status: STATUS.OK, data: {} },
+  behandlingsperioder = { status: STATUS.OK, data: {} },
+  behandlingsresultat = { status: STATUS.OK, data: {} },
+  dokumenter = { status: STATUS.OK, data: {} },
+  fagsaker = { status: STATUS.OK, data: {} },
+  journalforing = { status: STATUS.OK, data: {} },
+  lovvalgsperioder = { status: STATUS.OK, data: [] },
+  modaler = { status: STATUS.OK, data: {} },
+  oppgaver = { status: STATUS.OK, data: {} },
+  organisasjoner = { status: STATUS.OK, data: [] },
+  personer = { status: STATUS.OK, data: [] },
+  saksbehandler = { status: STATUS.OK, data: {} },
+  saksopplysninger = { status: STATUS.OK, data: {} },
+  sok = { status: STATUS.OK, data: [] },
+  serverinfo = { status: STATUS.OK, data: {} },
+  utpek = { status: STATUS.OK, data: {} },
+  utpekingsperioder = { status: STATUS.OK, data: [] },
+  vedtak = { status: STATUS.OK, data: {} },
+  videresending = { status: STATUS.OK, data: {} },
+  vilkar = { status: STATUS.OK, data: [] },
+}: Partial<RootState>): RootState {
   return ({
     form,
     router,
@@ -72,7 +72,7 @@ function lagState({
     vedtak,
     videresending,
     vilkar,
-  })
-};
+  });
+}
 
 export default lagState;

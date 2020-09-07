@@ -1,5 +1,5 @@
 import { createSelector, Selector } from 'reselect';
-import { RootState, StateSection } from 'AppTypes';
+import { RootState, StateSection } from 'AppTypes';
 
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
@@ -40,12 +40,11 @@ export const FeilmeldingSelector = createSelector(
           tittel: 'Feil ved videresending',
           innhold: httpMessage,
         }];
-      } else {
-        return [{
-          tittel: 'Teknisk feil',
-          innhold: 'Det oppsto en teknisk feil ved videresending. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.',
-        }];
       }
+      return [{
+        tittel: 'Teknisk feil',
+        innhold: 'Det oppsto en teknisk feil ved videresending. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.',
+      }];
     }
     return [];
   }

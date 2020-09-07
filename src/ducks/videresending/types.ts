@@ -26,4 +26,4 @@ interface OkAction {
   data: any,
 }
 
-export type Action = ResetAction | FeiletAction | PendingAction | OkAction;
+export type Action = ResetAction | FeiletAction | PendingAction | OkAction;
