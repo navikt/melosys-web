@@ -8,8 +8,10 @@ describe('Videresendingselectors', () => {
         videresending: {
           status: 'ERROR',
           data: {
-            status: 400,
-            message: 'Funksjonell feil',
+            data: {
+              status: 400,
+              message: 'Funksjonell feil',
+            },
           },
         },
       });
@@ -23,8 +25,10 @@ describe('Videresendingselectors', () => {
         videresending: {
           status: 'ERROR',
           data: {
-            status: 500,
-            message: 'Melding som ikke blir brukt',
+            data: {
+              status: 500,
+              message: 'Melding som ikke blir brukt',
+            },
           },
         },
       });

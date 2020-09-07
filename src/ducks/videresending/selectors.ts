@@ -19,14 +19,19 @@ const VideresendingDataSelector = createSelector(
   Videresending => Videresending.data
 );
 
-const HttpStatusSelector = createSelector(
+const HttpResponsDataSelector = createSelector(
   VideresendingDataSelector,
-  VideresendingData => VideresendingData.status
+  videresendingData => videresendingData.data
+);
+
+const HttpStatusSelector = createSelector(
+  HttpResponsDataSelector,
+  VideresendingData => VideresendingData && VideresendingData.status
 );
 
 const HttpMessageSelector = createSelector(
-  VideresendingDataSelector,
-  VideresendingData => VideresendingData.message
+  HttpResponsDataSelector,
+  VideresendingData => VideresendingData && VideresendingData.message
 );
 
 export const FeilmeldingSelector = createSelector(
