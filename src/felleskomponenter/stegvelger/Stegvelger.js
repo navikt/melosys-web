@@ -624,7 +624,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
-  videresend: (saksnummer, body) => dispatch(videresendingOperations.send(saksnummer, body)),
+  videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
