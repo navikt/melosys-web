@@ -11,8 +11,7 @@ declare module 'AppTypes' {
 }
 
 declare module 'Domene' {
-  // TODO: Fjern dette eksempelet når vi begynner å legge inn domenetyper
-  // export type Saksbehandler = import('./@types').Saksbehandler;
+  export type Videresending = import('./@types').Videresending;
 }
 
 declare module 'melosys-kodeverk' {

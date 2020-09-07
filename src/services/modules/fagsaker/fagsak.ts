@@ -10,7 +10,7 @@ interface SoknadDto {
   },
   land: string[],
 }
-export interface OpprettDto {
+interface OpprettDto {
   brukerID: string,
   sakstype: string,
   behandlingstema: string,
@@ -20,7 +20,7 @@ export interface OpprettDto {
 }
 export const opprett = (body: OpprettDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/opprett`, body);
 
-export interface HenleggDto {
+interface HenleggDto {
   begrunnelseKode: string,
   fritekst: string | null,
 }
@@ -28,7 +28,7 @@ export const henlegg = (snr: number, body: HenleggDto) => postAsJson(`${API_BASE
 
 export const bortfall = (snr: number) => putAsText(`${API_BASE_URL}${FAGSAKER}/${snr}/avsluttsaksombortfalt`);
 
-export interface VideresendDto {
+interface VideresendDto {
   mottakerinstitusjon: string | null,
   fritekst: string | null,
 }
@@ -36,7 +36,7 @@ export const videresend = (snr: number, body: VideresendDto) => postAsJson(`${AP
 
 export const avslutt = (snr: number) => putAsText(`${API_BASE_URL}${FAGSAKER}/${snr}/avslutt`);
 
-export interface UtpekDto {
+interface UtpekDto {
   mottakerinstitusjoner: string[],
   fritekstSed: string | null,
   fritekstBrev: string | null,
