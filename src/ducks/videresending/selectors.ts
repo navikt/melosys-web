@@ -6,17 +6,17 @@ import * as Types from './types';
 
 const VideresendingSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   state => state.videresending,
-  Videresending => Videresending
+  videresending => videresending
 );
 
 const ReduxStatusSelector = createSelector(
   VideresendingSelector,
-  Videresending => Videresending.status
+  videresending => videresending.status
 );
 
 const VideresendingDataSelector = createSelector(
   VideresendingSelector,
-  Videresending => Videresending.data
+  videresending => videresending.data
 );
 
 const HttpResponsDataSelector = createSelector(
@@ -26,12 +26,12 @@ const HttpResponsDataSelector = createSelector(
 
 const HttpStatusSelector = createSelector(
   HttpResponsDataSelector,
-  VideresendingData => VideresendingData && VideresendingData.status
+  httpResponsData => httpResponsData && httpResponsData.status
 );
 
 const HttpMessageSelector = createSelector(
   HttpResponsDataSelector,
-  VideresendingData => VideresendingData && VideresendingData.message
+  httpResponsData => httpResponsData && httpResponsData.message
 );
 
 export const FeilmeldingSelector = createSelector(
