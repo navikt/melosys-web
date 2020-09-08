@@ -25,7 +25,7 @@ import sokReducer from './ducks/sok';
 import serverinfoReducer from './ducks/serverinfo';
 import utpekReducer from './ducks/utpek';
 import utpekingsperioderReducer from './ducks/utpekingsperioder';
-import videreSendReducer from './ducks/videresending/reducers';
+import videresendingReducer from './ducks/videresending';
 import vilkarReducer from './ducks/vilkar';
 import vedtakReducer from './ducks/vedtak';
 
@@ -57,7 +57,7 @@ const createRootReducer = (history: History) => combineReducers({
   utpek: utpekReducer,
   utpekingsperioder: utpekingsperioderReducer,
   vedtak: vedtakReducer,
-  videresending: videreSendReducer,
+  videresending: videresendingReducer,
   vilkar: vilkarReducer,
 });
 
