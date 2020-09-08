@@ -10,9 +10,9 @@ import { modalerOperations } from '../modaler';
 import { navigeringOperations } from '../navigering';
 import * as DucksUtils from '../utils';
 
-export function send(snr: number, videresending: Videresending): AppThunk<Promise<Types.Action>, Types.Action> {
+export function send(saksnummer: string, videresending: Videresending): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
-    () => Api.Fagsaker.fagsak.videresend(snr, videresending), {
+    () => Api.Fagsaker.fagsak.videresend(saksnummer, videresending), {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
