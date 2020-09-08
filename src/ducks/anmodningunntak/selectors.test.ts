@@ -1,10 +1,10 @@
 import * as selectors from './selectors';
-import * as DucksUtils from '../utils';
+import * as DucksTestUtils from '../test-utils';
 
 describe('AnmodningOmUnntakselectors', () => {
   describe('FeilmeldingSelector', () => {
     it('feilmelding fra response ved 400-feil', () => {
-      const state = DucksUtils.lagState({
+      const state = DucksTestUtils.lagState({
         anmodningomunntak: {
           status: 'ERROR',
           data: {
@@ -21,7 +21,7 @@ describe('AnmodningOmUnntakselectors', () => {
     });
 
     it('generisk feilmelding ved 500-feil', () => {
-      const state = DucksUtils.lagState({
+      const state = DucksTestUtils.lagState({
         anmodningomunntak: {
           status: 'ERROR',
           data: {
@@ -38,7 +38,7 @@ describe('AnmodningOmUnntakselectors', () => {
     });
 
     it('tom liste ved ingen feil', () => {
-      const state = DucksUtils.lagState({
+      const state = DucksTestUtils.lagState({
         anmodningomunntak: {
           status: 'OK',
           data: {},
