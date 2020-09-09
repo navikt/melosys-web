@@ -1,0 +1,48 @@
+
+.vedleggvelger {
+  margin: 0;
+
+  .vedleggvelger-tabell {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      border-bottom: 1px solid black;
+    }
+
+    th {
+      text-align: start;
+    }
+
+    td, th {
+      min-width: 50px;
+      padding: .3em 1em;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+
+    tr {
+      .skjemaelement {
+        display: table-cell;
+      }
+
+      .knapp {
+        width: 2.5rem;
+        padding: 0;
+        margin-top: 0;
+
+        .ikon {
+          height: 24px;
+          width: 24px;
+          margin-right: 0;
+
+          :hover {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

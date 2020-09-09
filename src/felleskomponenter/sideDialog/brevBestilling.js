@@ -81,7 +81,6 @@ class BrevBestilling extends Component {
       this.setState({ erBrevSendt: true });
       this.props.resetBrevBestillingForm();
       await Utils.delay(6000);
-      this.props.resetDokument();
       this.setState({ erBrevSendt: false });
     }
 
@@ -102,8 +101,7 @@ class BrevBestilling extends Component {
   };
 
   forkastBrev = async () => {
-    const { resetBrevBestillingForm, resetDokument } = this.props;
-    resetDokument();
+    const { resetBrevBestillingForm } = this.props;
     resetBrevBestillingForm();
     // Quirk: Reset av form oppdaterer tilbake til initValues i form state, men
     // av en eller annen grunn så rendres ikke select til DOM.
@@ -183,7 +181,6 @@ BrevBestilling.propTypes = {
   resetBrevBestillingForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
   settFeilFelt: PT.func.isRequired,
-  resetDokument: PT.func.isRequired,
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
   redigerbart: PT.bool.isRequired,
@@ -217,8 +214,7 @@ const mapDispatchToProps = dispatch => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.BREV_BESTILLING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.BREV_BESTILLING, ...feltNavn)),
   resetBrevBestillingForm: () => dispatch(reset(KV.Form.BREV_BESTILLING)),
-  resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
-  opprettDokument: (behandlingID, dokumenttypeKode, data) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, data)),
+  opprettDokument: (behandlingID, dokumenttypeKode, data) => dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, data),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(BrevBestilling));
