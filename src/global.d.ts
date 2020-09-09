@@ -13,6 +13,10 @@ declare module 'AppTypes' {
 declare module 'Domene' {
   export type AnmodningOmUnntakBestilling = import('./@types').AnmodningOmUnntakBestilling;
   export type Videresending = import('./@types').Videresending;
+  export type DokumentOversikt = import('./@types').DokumentOversikt;
+  export type Dokument = import('./@types').Dokument;
+  export type FysiskDokument = import('./@types').FysiskDokument;
+  export type Mottaksretning = import('./@types').Mottaksretning;
 }
 
 declare module 'melosys-kodeverk' {
