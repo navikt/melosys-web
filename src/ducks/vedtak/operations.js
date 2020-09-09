@@ -31,7 +31,7 @@ export function fatt(behandlingID, body) {
         dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, data) => {
-        if (DucksUtils.valideringFeilet(data)) {
+        if (DucksUtils.harFeilkode(data)) {
           dispatch(modalerOperations.visValidering());
         }
       },
@@ -62,7 +62,7 @@ export function avslaSoknad(behandlingID, data) {
         dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, errorData) => {
-        if (DucksUtils.valideringFeilet(errorData)) {
+        if (DucksUtils.harFeilkode(errorData)) {
           dispatch(modalerOperations.visValidering());
         }
       },
