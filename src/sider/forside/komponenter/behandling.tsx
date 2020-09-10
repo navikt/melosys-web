@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { withRouter } from 'react-router-dom';
-import PT from 'prop-types';
+import { connect, ConnectedProps } from 'react-redux';
+import { reduxForm, InjectedFormProps } from 'redux-form';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { KTObject } from 'melosys-kodeverk';
+import { RootState } from 'AppTypes';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -15,10 +16,30 @@ import { serverinfoSelectors } from '../../../ducks/serverinfo';
 
 import './behandling.css';
 
-const compareTerm = (a, b) => a.term.localeCompare(b.term);
+const compareTerm = (a: KTObject, b: KTObject) => {
+  if (!a.term) return 1;
+  if (!b.term) return -1;
 
-class Behandling extends Component {
-  submitOgVideresend = async form => {
+  return a.term.localeCompare(b.term);
+};
+
+const mapStateToProps = (state: RootState) => ({
+  erProdish: serverinfoSelectors.ErProdishSelector(state),
+  initialValues: {
+    behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+  },
+});
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type BehandlingProps = PropsFromRedux & RouteComponentProps;
+
+interface FormData {
+  behandlingstema: string,
+}
+
+class Behandling extends Component<InjectedFormProps<FormData, BehandlingProps> & BehandlingProps> {
+  submitOgVideresend = async (form: any) => {
     const { handleSubmit, history } = this.props;
     const redirectURL = await handleSubmit(form);
 
@@ -35,6 +56,7 @@ class Behandling extends Component {
     const ikkePlukkbareBehandlingstemaer = erProdish ? [
       MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
     ] : [];
+    const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
 
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
@@ -46,9 +68,15 @@ class Behandling extends Component {
               <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
                 {
                   MKV.KTObjects.behandlinger.behandlingstema
-                    .filter(({ kode }) => !ikkePlukkbareBehandlingstemaer.includes(kode))
+                    .filter(behandlingstemaErPlukkbart)
                     .sort(compareTerm)
-                    .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))
+                    .map(({ kode, term }: KTObject) => {
+                      const tekst = term;
+
+                      return (
+                        <option key={kode} value={kode}>{tekst}</option>
+                      );
+                    })
                 }
               </Skjema.Select>
             </Nav.Column>
@@ -60,28 +88,10 @@ class Behandling extends Component {
   }
 }
 
-Behandling.propTypes = {
-  erProdish: PT.bool.isRequired,
-  handleSubmit: PT.func.isRequired,
-  history: PT.object.isRequired,
-  formValues: PT.object,
-};
-
-Behandling.defaultProps = {
-  formValues: {},
-};
-
-const mapStateToProps = state => ({
-  erProdish: serverinfoSelectors.ErProdishSelector(state),
-  initialValues: {
-    behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-  },
-});
-
-const BehandlngForm = reduxForm({
+const BehandlngForm = reduxForm<FormData, BehandlingProps>({
   form: KV.Form.BEHANDLINGS_FORM,
   destroyOnUnmount: false,
   onSubmit: form => oppgaverOperations.sendBehandlingsOppgave(form),
 })(Behandling);
 
-export default withRouter(connect(mapStateToProps, null)(BehandlngForm));
+export default withRouter(connector(BehandlngForm));

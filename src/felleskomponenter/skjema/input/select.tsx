@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import PT from 'prop-types';
-import { Field } from 'redux-form';
+import { Field, WrappedFieldProps } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
 import * as SkjemaUtils from '../utils';
 
 import '../skjema.css';
+
+interface SelectWrappedComponentBaseProps extends Nav.SelectProps {
+  emptyFieldDisabled?: boolean,
+  emptyFieldText?: string,
+  onChange?: (event: ChangeEvent) => void,
+}
+
+type SelectWrappedComponentProps = SelectWrappedComponentBaseProps & WrappedFieldProps;
 
 function SelectWrappedComponent({
   input,
@@ -15,11 +23,11 @@ function SelectWrappedComponent({
   emptyFieldText,
   onChange,
   ...rest
-}) {
+}: SelectWrappedComponentProps) {
   const { touched, active } = meta;
   const feil = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
-  const innerChange = e => {
+  const innerChange = (e: ChangeEvent) => {
     if (onChange) onChange(e);
     input.onChange(e);
   };
@@ -56,9 +64,15 @@ SelectWrappedComponent.propTypes = {
   onChange: PT.func,
 };
 
+interface SelectProps extends SelectWrappedComponentBaseProps {
+  id?: string,
+  className?: string,
+  feltNavn: string,
+}
+
 function Select({
   id, feltNavn, className, ...rest
-}) {
+}: SelectProps) {
   return (
     <Field
       name={feltNavn}
