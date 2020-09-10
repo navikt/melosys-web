@@ -1,4 +1,7 @@
 export const BEHANDLINGS_FORM = 'behandlingsform';
+export interface BehandlingsFormData {
+  behandlingstema: string,
+}
 export const BREV_BESTILLING = 'brevbestilling';
 export const FORSIDE_JOURNALFORINGS_FORM = 'journalforingsform';
 export const JOURNALFORING = 'journalforing';

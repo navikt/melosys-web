@@ -34,11 +34,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type BehandlingProps = PropsFromRedux & RouteComponentProps;
 
-interface FormData {
-  behandlingstema: string,
-}
-
-class Behandling extends Component<InjectedFormProps<FormData, BehandlingProps> & BehandlingProps> {
+class Behandling extends Component<InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps> {
   submitOgVideresend = async (form: any) => {
     const { handleSubmit, history } = this.props;
     const redirectURL = await handleSubmit(form);
@@ -88,7 +84,7 @@ class Behandling extends Component<InjectedFormProps<FormData, BehandlingProps> 
   }
 }
 
-const BehandlngForm = reduxForm<FormData, BehandlingProps>({
+const BehandlngForm = reduxForm<KV.Form.BehandlingsFormData, BehandlingProps>({
   form: KV.Form.BEHANDLINGS_FORM,
   destroyOnUnmount: false,
   onSubmit: form => oppgaverOperations.sendBehandlingsOppgave(form),
