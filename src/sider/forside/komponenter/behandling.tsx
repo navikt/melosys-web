@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -34,9 +34,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type BehandlingProps = PropsFromRedux & RouteComponentProps;
 
-class Behandling extends Component<InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps> {
-  submitOgVideresend = async (form: any) => {
-    const { handleSubmit, history } = this.props;
+
+const Behandling = ({
+  handleSubmit,
+  history,
+  erProdish,
+}: InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps) => {
+  const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
 
     /* eslint-disable no-alert */
@@ -46,43 +50,39 @@ class Behandling extends Component<InjectedFormProps<KV.Form.BehandlingsFormData
     return true;
   };
 
-  render() {
-    const { erProdish } = this.props;
+  const ikkePlukkbareBehandlingstemaer = erProdish ? [
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+  ] : [];
+  const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
 
-    const ikkePlukkbareBehandlingstemaer = erProdish ? [
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
-    ] : [];
-    const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
+  return (
+    <Nav.Panel className="forside__sidepanel sidepanel__behandling">
+      <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
+      <p>Velg behandlingstema for å få tildelt en sak.</p>
+      <form className="behandling__skjema" onSubmit={submitOgVideresend}>
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
+              {
+                MKV.KTObjects.behandlinger.behandlingstema
+                  .filter(behandlingstemaErPlukkbart)
+                  .sort(compareTerm)
+                  .map(({ kode, term }: KTObject) => {
+                    const tekst = term;
 
-    return (
-      <Nav.Panel className="forside__sidepanel sidepanel__behandling">
-        <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
-        <p>Velg behandlingstema for å få tildelt en sak.</p>
-        <form className="behandling__skjema" onSubmit={this.submitOgVideresend}>
-          <Nav.Row>
-            <Nav.Column xs="8">
-              <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
-                {
-                  MKV.KTObjects.behandlinger.behandlingstema
-                    .filter(behandlingstemaErPlukkbart)
-                    .sort(compareTerm)
-                    .map(({ kode, term }: KTObject) => {
-                      const tekst = term;
-
-                      return (
-                        <option key={kode} value={kode}>{tekst}</option>
-                      );
-                    })
-                }
-              </Skjema.Select>
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Knapp className="behandling__knapp">Behandle sak</Nav.Knapp>
-        </form>
-      </Nav.Panel>
-    );
-  }
-}
+                    return (
+                      <option key={kode} value={kode}>{tekst}</option>
+                    );
+                  })
+              }
+            </Skjema.Select>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Knapp className="behandling__knapp">Behandle sak</Nav.Knapp>
+      </form>
+    </Nav.Panel>
+  );
+};
 
 const BehandlngForm = reduxForm<KV.Form.BehandlingsFormData, BehandlingProps>({
   form: KV.Form.BEHANDLINGS_FORM,
