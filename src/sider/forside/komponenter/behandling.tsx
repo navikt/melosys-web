@@ -66,7 +66,7 @@ const Behandling = ({
       <p>Velg behandlingstema for å få tildelt en sak.</p>
       <form className="behandling__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>
-          <Nav.Column xs="8">
+          <Nav.Column xs="12" >
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
               {
                 MKV.KTObjects.behandlinger.behandlingstema
