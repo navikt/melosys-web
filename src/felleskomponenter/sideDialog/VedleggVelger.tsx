@@ -61,9 +61,8 @@ const EnkeltVedlegg = ({
         <Mui.Knapp ikon={Ikoner.Eye} onClick={apnePdf} />
       </td>
       <td>
-        { redigerer
-          ? null
-          : <Mui.Knapp type="flat" ikon={Ikoner.Bin} onClick={slettVedlegg} />
+        { !redigerer &&
+          <Mui.Knapp type="flat" ikon={Ikoner.Bin} onClick={slettVedlegg} />
         }
       </td>
     </tr>
