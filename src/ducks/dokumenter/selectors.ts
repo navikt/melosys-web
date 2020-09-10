@@ -29,7 +29,7 @@ export const DokumentOversiktSelector: Selector<RootState, DokumentOversikt[]> =
 
 const lagID = (journalpostID: string, dokumentID: string) => `${journalpostID}-${dokumentID}`;
 
-export const hentDato = (mottaksretning: Mottaksretning, mottattDato: string, journalforingDato: string) => {
+export const hentDato = (mottaksretning: Mottaksretning, mottattDato: string | null, journalforingDato: string | null) => {
   if (mottaksretning.kode === MKV.Koder.mottaksretning.INN && mottattDato) {
     return mottattDato;
   }

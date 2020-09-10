@@ -11,7 +11,7 @@ export interface Dokument {
 export interface FysiskDokument extends Dokument {
   id: string,
   journalpostID: string,
-  dato: string,
+  dato: string | null,
   avsenderEllerMottaker: string,
 }
 
