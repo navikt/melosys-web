@@ -70,10 +70,12 @@
     }],
     "linebreak-style": "off",
     "no-bitwise": [ "error", {"allow" : ["^"]} ],
+    "no-extra-semi": "off",
+    "@typescript-eslint/no-extra-semi": ["error"],
     // Støtt typescript reference, hvor det trengs tre slash(///)
     "spaced-comment": ["error", "always", { "markers": ["/"] }]
   },
-  "extends": ["react-app","airbnb"],
+  "extends": ["react-app","airbnb", "plugin:@typescript-eslint/eslint-recommended"],
   "plugins": [
     "jsx-a11y",
     "jest",
