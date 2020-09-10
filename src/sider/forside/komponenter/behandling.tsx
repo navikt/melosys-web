@@ -10,9 +10,12 @@ import MKV from '../../../melosyskodeverk';
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Api from '../../../services/api';
 
 import { oppgaverOperations } from '../../../ducks/oppgaver';
 import { serverinfoSelectors } from '../../../ducks/serverinfo';
+
+import { useAsyncCallbackState } from '../../../hooks';
 
 import './behandling.css';
 
@@ -40,6 +43,8 @@ const Behandling = ({
   history,
   erProdish,
 }: InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps) => {
+  const [statistikk] = useAsyncCallbackState(Api.Statistikk.hent, { aapneBehandlinger: {} });
+
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
 
@@ -68,10 +73,10 @@ const Behandling = ({
                   .filter(behandlingstemaErPlukkbart)
                   .sort(compareTerm)
                   .map(({ kode, term }: KTObject) => {
-                    const tekst = term;
+                    const antallAapneBehandlinger = statistikk.aapneBehandlinger[kode] || 0;
 
                     return (
-                      <option key={kode} value={kode}>{tekst}</option>
+                      <option key={kode} value={kode}>{term}&nbsp;&nbsp;({antallAapneBehandlinger})</option>
                     );
                   })
               }
