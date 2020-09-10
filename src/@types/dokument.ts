@@ -10,20 +10,30 @@ export interface Dokument {
 
 export interface FysiskDokument extends Dokument {
   id: string,
-  dokumentID: string,
   journalpostID: string,
-  logiskeVedlegg: string[],
-  tittel: string,
   dato: string,
   avsenderEllerMottaker: string,
 }
 
 export interface DokumentOversikt {
-  journalforingDato: string,
+  journalforingDato: string | null,
   avsenderEllerMottaker: string,
   journalpostID: string,
   mottaksretning: Mottaksretning,
-  mottattDato: string,
+  mottattDato: string | null,
   hoveddokument: Dokument,
   vedlegg: Dokument[],
+}
+
+export interface BrevPdfData {
+  mottaker: string | null,
+  fritekst: string | null,
+  begrunnelseKode: string | null,
+}
+
+export interface SedPdfData {
+  begrunnelseUtenlandskMyndighet: string | null,
+  vilSendeAnmodningOmMerInformasjon: boolean | null,
+  nyttLovvalgsland: string | null,
+  fritekst: string | null,
 }

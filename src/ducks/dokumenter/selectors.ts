@@ -5,19 +5,26 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
+import { createSelector, Selector } from 'reselect';
+import { RootState, StateSection } from 'AppTypes';
 import { DokumentOversikt, FysiskDokument, Mottaksretning } from 'Domene';
 
 import MKV from '../../melosyskodeverk';
+import * as Types from './types';
 
-export const dokumenterSelector = createSelector(
-  (state: { dokumenter: { data: { dokumentOversikt: DokumentOversikt[] } } }) => state.dokumenter.data,
+export const DokumenterSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
+  state => state.dokumenter,
   dokumenter => dokumenter
 );
 
-export const DokumentOversiktSelector = createSelector(
-  dokumenterSelector,
-  (dokumenter: { dokumentOversikt: DokumentOversikt[] }) => dokumenter.dokumentOversikt || []
+const DokumenterDataSelector: Selector<RootState, Types.Data> = createSelector(
+  DokumenterSelector,
+  dokumenter => dokumenter.data
+);
+
+export const DokumentOversiktSelector: Selector<RootState, DokumentOversikt[]> = createSelector(
+  DokumenterDataSelector,
+  dokumenter => dokumenter.dokumentOversikt || []
 );
 
 const lagID = (journalpostID: string, dokumentID: string) => `${journalpostID}-${dokumentID}`;
@@ -51,7 +58,7 @@ const lagHoveddokument = ({
   dato: hentDato(mottaksretning, mottattDato, journalforingDato),
 });
 
-const HoveddokumentSelector = createSelector(
+export const HoveddokumentSelector = createSelector(
   DokumentOversiktSelector,
   (dokumentOversikt: DokumentOversikt[]) => dokumentOversikt.map(lagHoveddokument) || []
 );
@@ -75,7 +82,7 @@ const lagVedlegg = ({
   })),
 ];
 
-const VedleggSelector = createSelector(
+export const VedleggSelector = createSelector(
   DokumentOversiktSelector,
   (dokumentOversikt: DokumentOversikt[]) => ([] as FysiskDokument[]).concat(...dokumentOversikt.map(lagVedlegg)) || []
 );

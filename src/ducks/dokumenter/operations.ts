@@ -7,26 +7,21 @@
  *
  */
 
-import { ThunkDispatch } from 'redux-thunk';
-import { AppThunk, RootState } from 'AppTypes';
+import { AppThunk } from 'AppTypes';
+import { BrevPdfData, SedPdfData } from 'Domene';
 
 import { doThenDispatch } from '../../services/utils';
-import { BrevbestillingDto } from '../../services/modules/dokumenter/dokument';
 import * as Api from '../../services/api';
 import * as Types from './types';
 import * as Actions from './actions';
 
-export async function opprettDokument(behandlingID: number, dokumenttypeKode: string, dokument: BrevbestillingDto): Promise<void> {
-  return Api.Dokumenter.dokument.opprett(behandlingID, dokumenttypeKode, dokument);
-}
-
-async function getObjectURL(response: any): Promise<string> {
+async function getObjectURL(response: Response): Promise<string> {
   const arrayBuffer = await response.arrayBuffer();
   const file = new Blob([arrayBuffer], { type: 'application/pdf' });
   return URL.createObjectURL(file);
 }
 
-export async function forhandsvisBrev(behandlingID: number, dokumenttypeKode: any, data: {} | any) {
+export async function forhandsvisBrev(behandlingID: number, dokumenttypeKode: string, data: BrevPdfData) {
   const utfyltdata = {
     mottaker: data.mottaker ? data.mottaker : null,
     fritekst: data.fritekst ? data.fritekst : null,
@@ -41,7 +36,7 @@ export async function forhandsvisBrev(behandlingID: number, dokumenttypeKode: an
   return false;
 }
 
-export async function forhandsvisSed(behandlingID: number, sedType: string, data: any) {
+export async function forhandsvisSed(behandlingID: number, sedType: string, data: SedPdfData) {
   const vilSendeAnmodningOmMerInformasjon = data.vilSendeAnmodningOmMerInformasjon || (data.vilSendeAnmodningOmMerInformasjon === false ? false : null);
 
   const utfyltdata = {
@@ -59,8 +54,8 @@ export async function forhandsvisSed(behandlingID: number, sedType: string, data
   return false;
 }
 
-export function resetDokument(): (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => Types.Action {
-  return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => (dispatch(Actions.reset()));
+export function resetDokument(): AppThunk<Types.Action, Types.Action> {
+  return dispatch => (dispatch(Actions.reset()));
 }
 
 export function hentDokumentOversikt(saksnummer: string): AppThunk<Promise<Types.Action>, Types.Action> {

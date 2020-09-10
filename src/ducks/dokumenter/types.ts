@@ -6,9 +6,7 @@ export const PENDING = 'dokumenter/PENDING';
 export const RESET = 'dokumenter/RESET';
 
 export interface Data {
-  data?: {
-    dokumentOversikt?: DokumentOversikt[]
-  },
+  dokumentOversikt?: DokumentOversikt[]
 }
 
 interface ResetAction {

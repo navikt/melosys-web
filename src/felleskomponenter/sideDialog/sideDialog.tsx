@@ -14,7 +14,9 @@ import SideDialogNotater from './sideDialogNotater/sideDialogNotater';
 
 import './sideDialog.css';
 
-interface FaneViserProps {
+type FaneNavn = 'sedbestilling' | 'dokumenter' | 'notat' | 'brevbestilling' | 'besvarsed';
+
+export interface FaneViserProps {
   navn: FaneNavn,
   saksnummer: string,
   behandlingID: number,
@@ -57,8 +59,6 @@ export const FaneViser = ({
       throw new Error('Navn er en påkrevd prop');
   }
 };
-
-type FaneNavn = 'sedbestilling' | 'dokumenter' | 'notat' | 'brevbestilling' | 'besvarsed';
 
 type Fane = { navn: FaneNavn, tittel: string };
 

@@ -4,9 +4,9 @@ import { FysiskDokument } from 'Domene';
 import * as Nav from '../../utils/navFrontend';
 import * as Mui from '../ui';
 import * as Ikoner from '../../resources/images';
+import * as Utils from '../../utils';
 
 import PdfLink, { lagPdfUrl } from './pdfLink';
-import { formatterDatoTilNorsk } from '../../utils/dato';
 
 import './VedleggVelger.css';
 
@@ -55,14 +55,14 @@ const EnkeltVedlegg = ({
         <span>{vedlegg.avsenderEllerMottaker}</span>
       </td>
       <td>
-        <span>{formatterDatoTilNorsk(vedlegg.dato)}</span>
+        <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
       </td>
       <td>
         <Mui.Knapp ikon={Ikoner.Eye} onClick={apnePdf} />
       </td>
       <td>
         { redigerer
-          ? <span />
+          ? null
           : <Mui.Knapp type="flat" ikon={Ikoner.Bin} onClick={slettVedlegg} />
         }
       </td>
@@ -74,16 +74,18 @@ interface VedleggListeProps {
   valgteVedlegg: FysiskDokument[],
   alleVedlegg: FysiskDokument[],
   redigerer: boolean,
-  toggleRedigerer: () => void,
-  setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void,
+  onAvbryt: () => void,
+  onLeggTil: (markerteVedlegg: string[]) => void,
+  onSlettVedlegg: (vedleggID: string) => void,
 }
 
 const VedleggListe = ({
   valgteVedlegg,
   alleVedlegg,
   redigerer,
-  toggleRedigerer,
-  setValgteVedlegg,
+  onAvbryt,
+  onLeggTil,
+  onSlettVedlegg,
 }: VedleggListeProps) => {
   const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>([]);
 
@@ -93,17 +95,16 @@ const VedleggListe = ({
 
   const slettVedlegg = (vedleggID: string) => {
     fjernVedlegg(vedleggID);
-    setValgteVedlegg(valgteVedlegg.filter(({ id }) => id !== vedleggID));
+    onSlettVedlegg(vedleggID);
   };
 
   const leggTilMarkerteVedleggHandler = () => {
-    setValgteVedlegg(alleVedlegg.filter(v => markerteVedlegg.includes(v.id)));
-    toggleRedigerer();
+    onLeggTil(markerteVedlegg);
   };
 
   const avbrytHandler = () => {
     setMarkerteVedlegg(valgteVedlegg.map(({ id }) => id));
-    toggleRedigerer();
+    onAvbryt();
   };
 
   const alleVedleggErMarkert = alleVedlegg.every(({ id }) => markerteVedlegg.includes(id));
@@ -142,7 +143,7 @@ const VedleggListe = ({
             <tr>
               <td colSpan={6}>
                 <Nav.Checkbox
-                  onChange={e => markerAlleVedlegg(e)}
+                  onChange={markerAlleVedlegg}
                   label="Velg alle vedlegg"
                   checked={alleVedleggErMarkert}
                 />
@@ -191,16 +192,30 @@ export const VedleggVelger = ({
   const harValgteVedlegg = (valgteVedlegg && valgteVedlegg.length > 0);
   const skalViseVedleggListe = harValgteVedlegg || redigerer;
 
+  const onAvbrytHandler = () => {
+    toggleRedigerer();
+  };
+
+  const onLeggTilHandler = (markerteVedlegg: string[]) => {
+    toggleRedigerer();
+    setValgteVedlegg(dokumenter.filter(v => markerteVedlegg.includes(v.id)));
+  };
+
+  const onSlettVedleggHandler = (vedleggID: string) => {
+    setValgteVedlegg(valgteVedlegg.filter(({ id }) => id !== vedleggID));
+  };
+
   return (
     <Nav.Row className="vedleggvelger">
       <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
       { skalViseVedleggListe &&
         <VedleggListe
           redigerer={redigerer}
-          toggleRedigerer={toggleRedigerer}
+          onAvbryt={onAvbrytHandler}
+          onLeggTil={onLeggTilHandler}
+          onSlettVedlegg={onSlettVedleggHandler}
           valgteVedlegg={valgteVedlegg}
           alleVedlegg={dokumenter}
-          setValgteVedlegg={setValgteVedlegg}
         />
       }
       { !redigerer &&
