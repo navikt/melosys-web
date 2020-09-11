@@ -38,7 +38,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type BehandlingProps = PropsFromRedux & RouteComponentProps;
 
 
-const Behandling = ({
+export const Behandling = ({
   handleSubmit,
   history,
   erProdish,
