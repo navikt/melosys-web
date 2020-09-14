@@ -42,6 +42,7 @@ export const FaneViser = ({
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case 'brevbestilling':
       return <SideDialogBrevBestilling
+        // @ts-ignore TODO skriv om SideDialogBrevBestilling til TS.
         behandlingID={behandlingID}
         redigerbart={brevBestillingRedigerbart}
         brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
