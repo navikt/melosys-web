@@ -29,10 +29,13 @@ const toJson = async response => {
   }
 };
 
-export const sendResultatTilDispatch = (dispatch, action, callback) => (...data) => {
+export const sendResultatTilDispatch = (dispatch, action, { onDispatch, mapDispatchData }) => (...data) => {
   const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-  if (callback && typeof callback === 'function') {
-    callback(dispatch, dataSomSkalDispatches);
+  if (onDispatch && typeof onDispatch === 'function') {
+    onDispatch(dispatch, dataSomSkalDispatches);
+  }
+  if (mapDispatchData && typeof mapDispatchData === 'function') {
+    return dispatch({ type: action, data: mapDispatchData(dataSomSkalDispatches) });
   }
   return dispatch({ type: action, data: dataSomSkalDispatches });
 };
@@ -311,7 +314,10 @@ export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
       await dispatch({ type: PENDING });
     }
     return api(dispatch, getState)
-      .then(sendResultatTilDispatch(dispatch, OK, callbacks.success))
+      .then(sendResultatTilDispatch(dispatch, OK, {
+        onDispatch: callbacks.success,
+        mapDispatchData: callbacks.mapDispatchData,
+      }))
       .catch(handterFeil(dispatch, FEILET, callbacks.error));
   };
 }

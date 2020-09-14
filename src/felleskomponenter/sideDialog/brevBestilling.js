@@ -11,11 +11,11 @@ import * as Skjema from '../skjema';
 import { formSelectors } from '../../ducks/form';
 
 import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
-import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
 import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
 import * as Utils from '../../utils';
+import * as Api from '../../services/api';
 
 const InfoPanel = () => (
   <Nav.Lesmerpanel
@@ -58,7 +58,6 @@ class BrevBestilling extends Component {
     const {
       behandlingID,
       brevbestillingSkjemaVerdier,
-      opprettDokument,
     } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokumentFritekst = this.erMeldingOmForventetSaksbehandlingstid() || (fritekst === '') ? null : fritekst;
@@ -75,13 +74,12 @@ class BrevBestilling extends Component {
       return false;
     }
 
-    const dokumentResponse = await opprettDokument(behandlingID, dokumenttypeKode, dokument);
+    const dokumentResponse = await Api.Dokumenter.dokument.opprett(behandlingID, dokumenttypeKode, dokument);
 
     if (dokumentResponse) {
       this.setState({ erBrevSendt: true });
       this.props.resetBrevBestillingForm();
       await Utils.delay(6000);
-      this.props.resetDokument();
       this.setState({ erBrevSendt: false });
     }
 
@@ -102,8 +100,7 @@ class BrevBestilling extends Component {
   };
 
   forkastBrev = async () => {
-    const { resetBrevBestillingForm, resetDokument } = this.props;
-    resetDokument();
+    const { resetBrevBestillingForm } = this.props;
     resetBrevBestillingForm();
     // Quirk: Reset av form oppdaterer tilbake til initValues i form state, men
     // av en eller annen grunn så rendres ikke select til DOM.
@@ -181,18 +178,14 @@ class BrevBestilling extends Component {
 BrevBestilling.propTypes = {
   behandlingID: PT.number.isRequired,
   resetBrevBestillingForm: PT.func.isRequired,
-  opprettDokument: PT.func.isRequired,
   settFeilFelt: PT.func.isRequired,
-  resetDokument: PT.func.isRequired,
   brevbestillingSkjemaVerdier: PT.object,
-  dokumenter: PT.object,
   redigerbart: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
 };
 BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},
-  dokumenter: {},
 };
 
 const form = {
@@ -205,7 +198,6 @@ const form = {
 
 const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
-  dokumenter: dokumenterSelectors.dokumenterSelector(state),
   initialValues: {
     dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
     mottaker: MKV.Koder.representerer.BRUKER,
@@ -217,8 +209,6 @@ const mapDispatchToProps = dispatch => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.BREV_BESTILLING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.BREV_BESTILLING, ...feltNavn)),
   resetBrevBestillingForm: () => dispatch(reset(KV.Form.BREV_BESTILLING)),
-  resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
-  opprettDokument: (behandlingID, dokumenttypeKode, data) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(BrevBestilling));

@@ -4,16 +4,16 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-
+import { StateSection } from 'AppTypes';
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
-const initalState = {
+const initalState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,
   data: {},
 };
 
-export default function reducer(state = initalState, action) {
+export default function reducer(state = initalState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
