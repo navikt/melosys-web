@@ -21,6 +21,7 @@ export const SAKSBEHANDLER = 'saksbehandler';
 export const SAKSFLYT = 'saksflyt';
 export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const SERVERINFO = 'serverinfo';
+export const STATISTIKK = 'statistikk';
 export const SVAR = 'svar';
 export const UNNTAKSPERIODER = 'unntaksperioder';
 export const UTPEKING = 'utpeking';

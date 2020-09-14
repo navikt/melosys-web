@@ -4,15 +4,17 @@ import { useAsyncCallbackState, useCallbackState } from './useCallbackState';
 
 describe('useCallbackState', () => {
   it('tar imot et callback og lagrer resultatet til state', async () => {
-    const sum = (a, b) => a + b;
+    const sum = (a: number, b: number) => a + b;
     const { result } = renderHook(() => useCallbackState(() => sum(1, 2), 0));
 
     const [state] = result.current;
     expect(state).toBe(3);
   });
+});
 
+describe('useAsyncCallbackState', () => {
   it('tar imot et async callback og lagrer resultatet til state', async () => {
-    const asyncSum = async (a, b) => a + b;
+    const asyncSum = async (a: number, b: number) => a + b;
 
     const rh = renderHook(() => useAsyncCallbackState(() => asyncSum(1, 2), 0));
 

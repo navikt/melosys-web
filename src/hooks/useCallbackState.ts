@@ -2,8 +2,13 @@ import { useEffect, useState } from 'react';
 
 import * as Utils from '../utils';
 
-export const useCallbackState = (callback, defaultState = null, errorHandler = Utils.logger.error, deps = []) => {
-  const [state, setState] = useState(defaultState);
+export const useCallbackState = <StateType>(
+  callback: () => StateType,
+  defaultState: StateType,
+  errorHandler: (e: Error) => void = Utils.logger.error,
+  deps: any[] = []
+): [StateType, (state: StateType) => void] => {
+  const [state, setState] = useState<StateType>(defaultState);
 
   useEffect(() => {
     // Kaller callback og oppdaterer state dersom alle dependencies finnes
@@ -19,7 +24,12 @@ export const useCallbackState = (callback, defaultState = null, errorHandler = U
   return [state, setState];
 };
 
-export const useAsyncCallbackState = (asyncCallback, defaultState = null, errorHandler = Utils.logger.error, deps = []) => {
+export const useAsyncCallbackState = <StateType>(
+  asyncCallback: () => Promise<StateType>,
+  defaultState: StateType,
+  errorHandler: (e: Error) => void = Utils.logger.error,
+  deps: any[] = []
+): [StateType, (state: StateType) => void] => {
   const [state, setState] = useState(defaultState);
 
   useEffect(() => {
