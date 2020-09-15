@@ -86,29 +86,34 @@ export const VedtakValideringsfeil = ({
   validering,
 }: {
   validering: Validering
-}) => (
-  <Fragment>
-    <Validering valideringKode={validering.kode} />
-    {
-      validering.felter.length > 0 && 'Sjekk følgende felt(er):'
-    }
-    <ul>
+}) => {
+  const felter = validering.felter.map(felt => {
+    const { panel, panelEntryNr, felt: feltNavn } = Utils.mapping.mapBehandlingsgrunnlagpathTilGUI(felt);
+    const key = `${panel}${panelEntryNr}${feltNavn}`;
+    const tekst = panel && feltNavn ? `${panel} - ${feltNavn}` : null;
+
+    if (!tekst) return null;
+
+    return (
+      <li key={key}>{tekst}</li>
+    );
+  }).filter(felt => felt);
+
+  return (
+    <Fragment>
+      <Validering valideringKode={validering.kode} />
       {
-        validering.felter.map(felt => {
-          const { panel, panelEntryNr, felt: feltNavn } = Utils.mapping.mapBehandlingsgrunnlagpathTilGUI(felt);
-          const key = `${panel}${panelEntryNr}${feltNavn}`;
-          const tekst = panel && feltNavn ? `${panel} - ${feltNavn}` : null;
-
-          if (!tekst) return null;
-
-          return (
-            <li key={key}>{tekst}</li>
-          );
-        })
+        felter.length > 0 &&
+        <Fragment>
+          Sjekk følgende felt(er):
+          <ul>
+            { felter }
+          </ul>
+        </Fragment>
       }
-    </ul>
-  </Fragment>
-);
+    </Fragment>
+  );
+};
 
 VedtakValideringsfeil.propTypes = {
   validering: PT.shape({
