@@ -120,13 +120,16 @@ Modals.propTypes = {
   venterPaRevurderFagsak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
-  valideringerFeilkoder: PT.arrayOf(PT.string),
+  behandlingOppfriskes: PT.bool.isRequired,
+  annenBehandlingOppfriskes: PT.bool.isRequired,
+  valideringerFeilkoder: PT.arrayOf(PT.shape({
+    kode: PT.string.isRequired,
+    felter: PT.arrayOf(PT.string).isRequired,
+  })),
   valideringerFeilmeldinger: PT.arrayOf(PT.shape({
     tittel: PT.string.isRequired,
     innhold: PT.string.isRequired,
   })),
-  behandlingOppfriskes: PT.bool.isRequired,
-  annenBehandlingOppfriskes: PT.bool.isRequired,
 };
 
 Modals.defaultProps = {

@@ -2,12 +2,12 @@ import { createSelector } from 'reselect';
 
 import { STATUS } from '../../services/utils';
 
-export const UtpekSelector = createSelector(
+const UtpekSelector = createSelector(
   state => state.utpek.data,
   utpek => utpek
 );
 
-export const StatusSelector = createSelector(
+const StatusSelector = createSelector(
   state => state.utpek.status,
   status => status
 );
