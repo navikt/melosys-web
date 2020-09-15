@@ -14,6 +14,7 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
+import { anmodningunntakOperations } from '../../ducks/anmodningunntak';
 import { anmodningsperioderSelectors, anmodningsperioderOperations } from '../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors, anmodningsperiodesvarOperations } from '../../ducks/anmodningsperiodesvar';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
@@ -28,6 +29,7 @@ import { formSelectors } from '../../ducks/form';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
+import { videresendingOperations } from '../../ducks/videresending';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
@@ -232,20 +234,12 @@ class Stegvelger extends Component {
     });
   };
 
-  bestillAnmodningsperioder = async body => {
-    const { behandlingID, tilForsiden } = this.props;
-    try {
-      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, body);
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-  };
+  lagreOgBestillAnmodningsperioder = bestilling => {
+    const { behandlingID, lagreAllData, bestillAnmodningsperioder } = this.props;
 
-  lagreOgBestillAnmodningsperioder = body => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
-      await this.props.lagreAllData();
-      this.bestillAnmodningsperioder(body);
+      await lagreAllData();
+      bestillAnmodningsperioder(behandlingID, bestilling);
     });
   };
 
@@ -272,16 +266,16 @@ class Stegvelger extends Component {
 
   videresendSoknad = (mottakerinstitusjon, fritekst) => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
-      const { saksnummer, tilForsiden } = this.props;
+      const {
+        saksnummer,
+        videresend,
+        lagreAllData,
+      } = this.props;
 
-      try {
-        const body = { mottakerinstitusjon, fritekst };
-        await Api.Fagsaker.fagsak.videresend(saksnummer, body);
-      } catch (e) {
-        Utils.logger.error(e);
-      } finally {
-        tilForsiden();
-      }
+      const body = { mottakerinstitusjon, fritekst };
+
+      await lagreAllData();
+      videresend(saksnummer, body);
     });
   };
 
@@ -561,6 +555,8 @@ Stegvelger.propTypes = {
   hjemmebaser: PT.arrayOf(PT.string),
   forsteSteg: PT.string.isRequired,
   erArbeidEttLand: PT.bool.isRequired,
+  videresend: PT.func.isRequired,
+  bestillAnmodningsperioder: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -628,6 +624,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
+  videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
@@ -644,6 +641,7 @@ const mapDispatchToProps = dispatch => ({
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
   avvisUtpeking: body => dispatch(utpekOperations.avvis(body)),
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
+  bestillAnmodningsperioder: (behandlingID, bestilling) => dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

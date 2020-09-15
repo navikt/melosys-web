@@ -22,7 +22,7 @@ export function utpek(saksnummer, body) {
         dispatch(navigeringOperations.tilForsiden());
       },
       error: (dispatch, data) => {
-        if (DucksUtils.valideringFeilet(data)) {
+        if (DucksUtils.harFeilkode(data)) {
           dispatch(modalerOperations.visValidering());
         }
       },

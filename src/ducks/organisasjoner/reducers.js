@@ -11,7 +11,10 @@ import * as BehandlingsgrunnlagTypes from '../behandlingsgrunnlag/types';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: [],
+  // Med data: [] får data type never[] når fila konsumeres i ts. Dette gjør den vanskelig å jobbe med.
+  // TODO: Fjern denne disable-linjen når dette skrives om til .ts, og sørg for at data har en type.
+  /* eslint-disable no-array-constructor */
+  data: Array(),
 };
 
 const flettOrganisasjoner = (nyeOrganisasjoner, eksisterendeOrganisasjoner) => {
@@ -25,16 +28,16 @@ export default function reducer(state = initalState, action) {
     case BehandlingsgrunnlagTypes.OK: {
       if (!action.data.tilleggsData) { return state; }
       const { organisasjoner } = action.data.tilleggsData;
-      const eksisterendeOrganisasjoner = Array.isArray(state.data) ? state.data : [];
+      const eksisterendeOrganisasjoner = state.data;
 
       return { ...state, status: STATUS.OK, data: flettOrganisasjoner(organisasjoner, eksisterendeOrganisasjoner) };
     }
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
-      return { ...state, status: STATUS.ERROR, data: action.data };
+      return { ...state, status: STATUS.ERROR, resError: action.data };
     case Types.OK: {
-      const eksisterendeOrganisasjoner = Array.isArray(state.data) ? state.data : [];
+      const eksisterendeOrganisasjoner = state.data;
 
       return { ...state, status: STATUS.OK, data: flettOrganisasjoner(action.data, eksisterendeOrganisasjoner) };
     }

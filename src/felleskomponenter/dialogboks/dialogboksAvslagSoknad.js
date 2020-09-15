@@ -65,7 +65,7 @@ export const DialogboksAvslagSoknad = props => {
           <Nav.Textarea
             value={brevFritekst}
             onChange={setBrevFritekst}
-            label="Fritekst"
+            label="Fritekst til vedtaksbrev"
             maxLength={brevFritekstMaxLength}
           />
           {

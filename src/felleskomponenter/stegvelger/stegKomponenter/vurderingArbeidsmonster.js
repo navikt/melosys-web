@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { reset } from 'redux-form';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import MKV from '../../../melosyskodeverk';
@@ -20,9 +22,9 @@ import './vurderingArbeidsmonster.css';
  *
  * @param props Objekt Diverse props (se propTypes)
  */
-const LandLinje = props => {
+export const LandLinje = props => {
   const {
-    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart,
+    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart, resetForm,
   } = props;
 
   useEffect(() => {
@@ -36,6 +38,12 @@ const LandLinje = props => {
   const klikkHandler = () => {
     const verdi = erMarginaltArbeidIArbeidsland ? BoolskAvklartfaktaType.USANN : BoolskAvklartfaktaType.SANN;
     oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, landKode.kode, verdi));
+
+    /* Ved valg av marginale land(skal ikke ha SED), reinitialize former med mottakerinstitusjoner,
+    slik at mottakerinstitusjoner i vedtakssteget/utpekingssteg oppdateres.
+    Unngår at bruker må endre på radioknapp "Vurdering av vesentlig aktivitet i Norge" for å oppdatere de nevnte stegene. */
+    resetForm(KV.Form.ARTIKKEL_13_X_VEDTAK);
+    resetForm(KV.Form.ARTIKKEL_13_UTPEKLAND);
   };
 
   return (
@@ -58,11 +66,18 @@ LandLinje.propTypes = {
   landKode: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
   redigerbart: PT.bool.isRequired,
+  resetForm: PT.func.isRequired,
 };
 
 LandLinje.defaultProps = {
   avklartMarginaltArbeidILand: undefined,
 };
+
+const landLinjeMapDispatchToProps = dispatch => ({
+  resetForm: form => dispatch(reset(form)),
+});
+
+const ConnectedLandLinje = connect(null, landLinjeMapDispatchToProps)(LandLinje);
 
 const MarginaltArbeid = ({
   arbeidsland, redigerbart, marginaltArbeid, oppdaterData,
@@ -78,7 +93,7 @@ const MarginaltArbeid = ({
           const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === land.kode);
 
           const key = `marginaltArbeidslandListe${land.kode}`;
-          return <LandLinje
+          return <ConnectedLandLinje
             landKode={land}
             avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
             key={key}

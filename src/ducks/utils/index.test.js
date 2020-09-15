@@ -3,7 +3,7 @@ import * as Utils from './index';
 import MKV from '../../melosyskodeverk';
 
 describe('Utils', () => {
-  describe('valideringFeilet', () => {
+  describe('harFeilkode', () => {
     it('returnerer true hvis det finnes minst en feilkode', () => {
       const data = {
         feilkoder: [
@@ -14,7 +14,7 @@ describe('Utils', () => {
         ],
       };
 
-      expect(Utils.valideringFeilet(data)).toBe(true);
+      expect(Utils.harFeilkode(data)).toBe(true);
     });
 
     it('returnerer false hvis det ikke finnes feilkoder', () => {
@@ -22,7 +22,7 @@ describe('Utils', () => {
         feilkoder: [],
       };
 
-      expect(Utils.valideringFeilet(data)).toBe(false);
+      expect(Utils.harFeilkode(data)).toBe(false);
     });
   });
 

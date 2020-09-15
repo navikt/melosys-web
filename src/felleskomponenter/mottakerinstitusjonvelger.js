@@ -7,7 +7,7 @@ import * as Api from '../services/api';
 import * as Utils from '../utils';
 import MKV from '../melosyskodeverk';
 
-import { useAsyncCallbackState } from '../hooks/useCallbackState';
+import { useAsyncCallbackState } from '../hooks';
 import { SelectWrappedComponent } from './skjema/input/select';
 
 const MOTTAKERINSTITUSJON = 'mottakerinstitusjon';

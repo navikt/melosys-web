@@ -30,6 +30,7 @@ import { formSelectors } from '../../ducks/form';
 import { datalastingOperations } from '../../ducks/datalasting';
 
 import './saksbehandling.css';
+import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -94,6 +95,7 @@ class Saksbehandling extends Component {
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
       hentBehandlingsgrunnlag, visOppfriskModal, behandlingOppfriskes,
+      hentDokumentOversikt,
     } = this.props;
 
     try {
@@ -111,6 +113,7 @@ class Saksbehandling extends Component {
       }
 
       await hentBehandlingsgrunnlag(behandlingID);
+      await hentDokumentOversikt(snr);
       return true;
     } catch (e) {
       Utils.logger.error(e);
@@ -140,7 +143,7 @@ class Saksbehandling extends Component {
 
     if (anmodningsperioderErSendtUtlandet) return;
 
-    /* eslint-disable-next-line no-unused-vars */
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     sendAnmodningsperioder(behandlingID, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) });
   };
 
@@ -183,6 +186,8 @@ class Saksbehandling extends Component {
       tilForsiden,
       visValideringModalDialogHandle,
       startOgVisOppfriskModal,
+      dokumentOversikt,
+      dokumenter,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -256,6 +261,8 @@ class Saksbehandling extends Component {
                 brevBestillingRedigerbart={brevBestillingRedigerbart}
                 brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
                 redigerbart={redigerbart}
+                dokumentOversikt={dokumentOversikt}
+                dokumenter={dokumenter}
               />
             </Nav.Column>
           </Nav.Row>
@@ -328,6 +335,9 @@ Saksbehandling.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  hentDokumentOversikt: PT.func.isRequired,
+  dokumentOversikt: PT.array.isRequired,
+  dokumenter: PT.array.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -371,6 +381,8 @@ const mapStateToProps = state => ({
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -378,6 +390,7 @@ const mapDispatchToProps = dispatch => ({
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),
   hentBehandlingsgrunnlag: bid => dispatch(behandlingsgrunnlagOperations.hent(bid)),
+  hentDokumentOversikt: saksnummer => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
