@@ -144,8 +144,8 @@ const mapStateToProps = state => ({
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
-  valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
-  valideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state), ...videresendingSelectors.FeilmeldingSelector(state), ...anmodningunntakSelectors.FeilmeldingSelector(state)],
+  valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state), ...anmodningunntakSelectors.FeilkoderSelector(state)],
+  valideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state), ...videresendingSelectors.FeilmeldingSelector(state)],
 });
 
 const mapDispatchToProps = dispatch => ({

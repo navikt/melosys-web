@@ -54,3 +54,14 @@ export const FeilmeldingSelector = createSelector(
     return [];
   }
 );
+
+export const FeilkoderSelector = createSelector(
+  HttpResponsDataSelector,
+  ReduxStatusSelector,
+  (httpResponsData, reduxStatus) => {
+    if (httpResponsData && httpResponsData.feilkoder && reduxStatus === STATUS.ERROR) {
+      return httpResponsData.feilkoder;
+    }
+    return [];
+  }
+);
