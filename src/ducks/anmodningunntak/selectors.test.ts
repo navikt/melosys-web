@@ -8,56 +8,6 @@ import MKV from '../../melosyskodeverk';
 import { STATUS } from '../../services/utils';
 
 describe('AnmodningOmUnntakselectors', () => {
-  describe('FeilmeldingSelector', () => {
-    it('feilmelding fra response ved 400-feil', () => {
-      const mockedState = mock<RootState>();
-      const state = instance(mockedState);
-      state.anmodningomunntak = {
-        status: 'ERROR',
-        data: {
-          data: {
-            status: 400,
-            message: 'Funksjonell feil',
-            error: 'Valideringsfeil',
-          },
-        },
-      };
-
-      const [feilmelding] = selectors.FeilmeldingSelector(state);
-      expect(feilmelding.innhold).toEqual('Funksjonell feil');
-    });
-
-    it('generisk feilmelding ved 500-feil', () => {
-      const mockedState = mock<RootState>();
-      const state = instance(mockedState);
-      state.anmodningomunntak = {
-        status: 'ERROR',
-        data: {
-          data: {
-            status: 500,
-            message: 'Melding som ikke blir brukt',
-            error: 'Valideringsfeil',
-          },
-        },
-      };
-
-      const [feilmelding] = selectors.FeilmeldingSelector(state);
-      expect(feilmelding.tittel).toEqual('Teknisk feil');
-    });
-
-    it('tom liste ved ingen feil', () => {
-      const mockedState = mock<RootState>();
-      const state = instance(mockedState);
-      state.anmodningomunntak = {
-        status: 'OK',
-        data: {},
-      };
-
-      const feilmelding = selectors.FeilmeldingSelector(state);
-      expect(feilmelding).toHaveLength(0);
-    });
-  });
-
   describe('FeilkoderSelector', () => {
     it('returnerer feilkoder ved status ERROR', () => {
       const mockedState = mock<RootState>();
