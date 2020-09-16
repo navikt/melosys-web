@@ -12,7 +12,6 @@ import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
 
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
@@ -264,12 +263,11 @@ class VurderingArtikkel16Anmodning extends Component {
     const {
       anmodningsperiode,
       behandlingID,
-      gyldigeSoknadsland,
       medlemskap,
       redigerbart,
       tilstand,
       unntakFraBestemmelse,
-      soknadsland,
+      arbeidsland,
       formValues,
       form,
     } = this.props;
@@ -293,7 +291,7 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
 
-    const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
+    const landSomTekstListe = arbeidsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const pdfDokumenter = formValues.kreverMottakerinstitusjon ? [
       {
@@ -462,7 +460,7 @@ class VurderingArtikkel16Anmodning extends Component {
               <Mottakerinstitusjonvelger
                 form={form}
                 redigerbart={redigerbart}
-                landkode={soknadsland[0]}
+                landkode={arbeidsland[0].kode}
                 bucType={EKV.Koder.buctyper.legislation.LA_BUC_01}
               />
             </Nav.Column>
@@ -489,8 +487,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
-  gyldigeSoknadsland: MPT.Soknadsland.isRequired,
-  soknadsland: PT.arrayOf(PT.string).isRequired,
+  arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -521,8 +518,7 @@ VurderingArtikkel16Anmodning.defaultProps = {
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
-  gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
