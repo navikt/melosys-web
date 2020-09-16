@@ -18,6 +18,7 @@ import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behan
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { datalastingOperations } from '../../ducks/datalasting';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
+import { dokumenterSelectors } from '../../ducks/dokumenter';
 
 import './sedbehandling.css';
 
@@ -82,6 +83,8 @@ const SedBehandling = ({
   visOppfriskModal,
   behandlingOppfriskes,
   apneTidligereBehandlinger,
+  dokumentOversikt,
+  dokumenter,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
   const { params: { snr: saksnummer } } = match;
@@ -156,6 +159,8 @@ const SedBehandling = ({
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
               redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
             />
           </Nav.Column>
         </Nav.Row>
@@ -191,6 +196,8 @@ SedBehandling.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
+  dokumentOversikt: PT.array.isRequired,
+  dokumenter: PT.array.isRequired,
 };
 
 SedBehandling.defaultProps = {
@@ -216,6 +223,8 @@ const mapStateToProps = state => ({
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -28,6 +28,7 @@ import { behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
 
 import stegMap from './stegMap';
 import MKV from '../../melosyskodeverk';
+import { dokumenterSelectors } from '../../ducks/dokumenter';
 
 import './vurderutpeking.css';
 
@@ -97,6 +98,8 @@ const Vurderutpeking = ({
   behandlingOppfriskes,
   soknadForm,
   behandlingsgrunnlag,
+  dokumentOversikt,
+  dokumenter,
 }) => {
   const { params: { snr: saksnummer } } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -191,6 +194,8 @@ const Vurderutpeking = ({
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
               redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
             />
           </Nav.Column>
         </Nav.Row>
@@ -238,6 +243,8 @@ Vurderutpeking.propTypes = {
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
+  dokumentOversikt: PT.array.isRequired,
+  dokumenter: PT.array.isRequired,
 };
 
 Vurderutpeking.defaultProps = {
@@ -260,6 +267,8 @@ const mapStateToProps = state => ({
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

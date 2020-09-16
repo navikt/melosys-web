@@ -21,6 +21,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
+import { dokumenterSelectors } from '../../ducks/dokumenter';
 
 import './registrering.css';
 
@@ -68,6 +69,8 @@ const Registrering = props => {
     lovvalgsland,
     visOppfriskModal,
     behandlingOppfriskes,
+    dokumentOversikt,
+    dokumenter,
   } = props;
 
   const saksnummer = snr;
@@ -157,6 +160,8 @@ const Registrering = props => {
               brevBestillingRedigerbart={redigerbart}
               brevBestillingRedigerbartIArtikkel13={redigerbart}
               redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
             />
           </Nav.Column>
         </Nav.Row>
@@ -190,6 +195,8 @@ Registrering.propTypes = {
   lovvalgsland: MPT.Kodeverk.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
+  dokumentOversikt: PT.array.isRequired,
+  dokumenter: PT.array.isRequired,
 };
 Registrering.defaultProps = {
   redigerbart: null,
@@ -214,6 +221,8 @@ const mapStateToProps = state => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
