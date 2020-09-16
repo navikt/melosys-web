@@ -5,12 +5,26 @@
   height: 20px;
 }
 
+.knapp {
+  .ikon {
+    .ikonMixin();
+  }
+}
+
 .knapp:hover {
   .ikon {
     filter: @navBlaaTilHvittFilter;
     .ikonMixin();
   }
 }
+
+.knapp--flat:hover {
+  .ikon {
+    filter: revert;
+    .ikonMixin();
+  }
+}
+
 
 .disabledKnapp {
   .ikon {

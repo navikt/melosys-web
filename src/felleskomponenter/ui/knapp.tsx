@@ -1,9 +1,12 @@
 import React from 'react';
 import PT from 'prop-types';
+import { KnappBaseProps } from 'nav-frontend-knapper';
 
 import * as Nav from '../../utils/navFrontend';
 
 import './knapp.css';
+
+type KnappProps = KnappBaseProps & { ikon?: React.ElementType };
 
 const Knapp = ({
   ikon: Ikon,
@@ -12,7 +15,7 @@ const Knapp = ({
   type,
   disabled,
   ...rest
-}) => {
+}: KnappProps) => {
   const knappClassname = disabled ? 'disabledKnapp' : 'knapp';
 
   return (

@@ -12,6 +12,7 @@ import { anmodningsperioderOperations } from '../anmodningsperioder';
 import { anmodningsperiodesvarOperations } from '../anmodningsperiodesvar';
 import { utpekingsperioderOperations } from '../utpekingsperioder';
 import { serverinfoOperations } from '../serverinfo';
+import { dokumenterOperations } from '../dokumenter';
 
 export const lastAppdata = () => (
   dispatch => {
@@ -32,6 +33,7 @@ export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
       dispatch(lovvalgsperioderOperations.hent(behandlingID));
       dispatch(utpekingsperioderOperations.hent(behandlingID));
       dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
+      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -48,6 +50,7 @@ export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) =
       dispatch(vilkarOperations.hent(behandlingID));
       dispatch(lovvalgsperioderOperations.hent(behandlingID));
       dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
+      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -78,6 +81,7 @@ export const resetSaksopplysninger = () => (
     dispatch(vilkarOperations.resetState());
     dispatch(behandlingsperioderOperations.resetPerioderState());
     dispatch(utpekingsperioderOperations.resetUtpekingsperioderState());
+    dispatch(dokumenterOperations.resetDokument());
   }
 );
 

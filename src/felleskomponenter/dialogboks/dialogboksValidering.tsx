@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from 'react';
+import React, { KeyboardEvent, Fragment } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
@@ -82,9 +82,49 @@ Validering.propTypes = {
   valideringKode: PT.string.isRequired,
 };
 
+export const VedtakValideringsfeil = ({
+  validering,
+}: {
+  validering: Validering
+}) => (
+  <Fragment>
+    <Validering valideringKode={validering.kode} />
+    {
+      validering.felter.length > 0 && 'Sjekk følgende felt(er):'
+    }
+    <ul>
+      {
+        validering.felter.map(felt => {
+          const { panel, panelEntryNr, felt: feltNavn } = Utils.mapping.mapBehandlingsgrunnlagpathTilGUI(felt);
+          const key = `${panel}${panelEntryNr}${feltNavn}`;
+          const tekst = panel && feltNavn ? `${panel} - ${feltNavn}` : null;
+
+          if (!tekst) return null;
+
+          return (
+            <li key={key}>{tekst}</li>
+          );
+        })
+      }
+    </ul>
+  </Fragment>
+);
+
+VedtakValideringsfeil.propTypes = {
+  validering: PT.shape({
+    kode: PT.string.isRequired,
+    felter: PT.arrayOf(PT.string).isRequired,
+  }).isRequired,
+};
+
+interface Validering {
+  kode: string,
+  felter: string[],
+}
+
 interface DialogboksValideringProps {
   avbryt: () => void,
-  valideringer: string[],
+  valideringer: Validering[],
   feilmeldinger: Feilmelding[],
 }
 
@@ -98,6 +138,14 @@ export const DialogboksValidering = ({
       avbryt();
     }
   };
+
+  const journalforingValideringInnhold = feilmeldinger.map(feilmelding => <ModalBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} key={Utils._uuid()} />);
+
+  const vedtakValideringInnhold = valideringer.map(validering => <VedtakValideringsfeil validering={validering} key={validering.kode} />);
+
+  const innhold = Utils._isEmpty(feilmeldinger)
+    ? vedtakValideringInnhold
+    : journalforingValideringInnhold;
 
   return (
     <Nav.Modal
@@ -118,18 +166,17 @@ export const DialogboksValidering = ({
       >
         &times;
       </span>
-      {
-        Utils._isEmpty(feilmeldinger)
-          ? valideringer.map(valideringKode => <Validering valideringKode={valideringKode} key={valideringKode} />)
-          : feilmeldinger.map(feilmelding => <ModalBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} key={Utils._uuid()} />)
-      }
+      { innhold }
     </Nav.Modal>
   );
 };
 
 DialogboksValidering.propTypes = {
   avbryt: PT.func.isRequired,
-  valideringer: PT.arrayOf(PT.string),
+  valideringer: PT.arrayOf(PT.shape({
+    kode: PT.string.isRequired,
+    felter: PT.arrayOf(PT.string).isRequired,
+  })),
   feilmeldinger: PT.arrayOf(PT.shape({
     tittel: PT.string,
     innhold: PT.string,

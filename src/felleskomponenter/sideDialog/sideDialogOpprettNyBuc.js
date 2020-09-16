@@ -9,6 +9,8 @@ import * as Api from '../../services/api';
 import * as Utils from '../../utils';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
 import { kodeTilObjekt } from '../../kodeverk';
+import { VedleggVelger } from './VedleggVelger';
+
 import './sideDialogOpprettNyBuc.css';
 
 const TomtFelt = ({ tekst }) => (
@@ -23,7 +25,7 @@ TomtFelt.defaultProps = {
   tekst: 'Velg...',
 };
 
-const SideDialogOpprettNyBuc = ({ behandlingID }) => {
+const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   const [mottakerinstitusjoner, setMottakerinstitusjoner] = useState([]);
 
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
@@ -31,6 +33,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID }) => {
   const [valgtSed, setValgtSed] = useState('');
   const [valgtLand, setValgtLand] = useState('');
   const [valgtMottakerinstitusjon, setValgtMottakerinstitusjon] = useState('');
+  const [valgteVedlegg, setValgteVedlegg] = useState([]);
 
   const [opprettetBucUrl, setOpprettetBucUrl] = useState('');
   const [bucOpprettet, setBucOpprettet] = useState(false);
@@ -63,6 +66,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID }) => {
     setValgtLand('');
     setValgtMottakerinstitusjon('');
     setValgtFagomrade(EKV.Koder.sektor.LA);
+    setValgteVedlegg([]);
     setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
     setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjon: false });
   };
@@ -96,6 +100,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID }) => {
           bucType: valgtBuc,
           mottakerLand: valgtLand,
           mottakerId: valgtMottakerinstitusjon,
+          vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
         });
 
         setBucOpprettet(true);
@@ -202,6 +207,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID }) => {
             <TomtFelt />
             { mottakerinstitusjoner.map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
           </Nav.Select>
+          <VedleggVelger valgteVedlegg={valgteVedlegg} setValgteVedlegg={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
         </Nav.Fieldset>
@@ -218,6 +224,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID }) => {
 
 SideDialogOpprettNyBuc.propTypes = {
   behandlingID: PT.number.isRequired,
+  dokumenter: PT.arrayOf(PT.object).isRequired,
 };
 
 export default SideDialogOpprettNyBuc;

@@ -16,6 +16,12 @@ declare module 'Domene' {
   export type Oppsummering = import('./@types').Oppsummering;
   export type Person = import('./@types').Person;
   export type Videresending = import('./@types').Videresending;
+  export type DokumentOversikt = import('./@types').DokumentOversikt;
+  export type Dokument = import('./@types').Dokument;
+  export type FysiskDokument = import('./@types').FysiskDokument;
+  export type Mottaksretning = import('./@types').Mottaksretning;
+  export type BrevPdfData = import('./@types').BrevPdfData;
+  export type SedPdfData = import('./@types').SedPdfData;
 }
 
 declare module 'melosys-kodeverk' {
