@@ -30,6 +30,7 @@ const SideOppsummering = ({
   if (!oppsummering) return <div />;
 
   const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || '';
+  const behandlingsstatus = renderBehandlingsstatus();
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -66,13 +67,16 @@ const SideOppsummering = ({
             }
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            {
-              renderBehandlingsstatus()
-            }
-          </Nav.Column>
-        </Nav.Row>
+        {
+          behandlingsstatus &&
+          <Nav.Row>
+            <Nav.Column xs="12">
+              {
+                behandlingsstatus
+              }
+            </Nav.Column>
+          </Nav.Row>
+        }
       </Nav.Panel>
     </section>
   );

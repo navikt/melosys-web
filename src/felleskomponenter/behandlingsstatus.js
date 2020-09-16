@@ -52,21 +52,21 @@ const BehandlingsStatus = ({
   let endreBehandlingsStatusValg = [];
   if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = behandlingsstatusMap[oppsummering.behandlingsstatus.kode] || [];
 
+  if (endreBehandlingsStatusValg.length === 0) return null;
+
   return (
     <div className="oppsummering__behandlingsstatus">
-      { endreBehandlingsStatusValg.length !== 0 &&
-        <Fragment>
-          <Mui.KodeTermSelect
-            koder={endreBehandlingsStatusValg}
-            value={behandlingsstatus}
-            onChange={onChange}
-            label="Endre behandlingsstatus:"
-            redigerbar={redigerbart}
-          />
-          <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>Oppdater</Nav.Hovedknapp>
-          {statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{statusmelding}</Nav.AlertStripe></div>}
-        </Fragment>
-      }
+      <Fragment>
+        <Mui.KodeTermSelect
+          koder={endreBehandlingsStatusValg}
+          value={behandlingsstatus}
+          onChange={onChange}
+          label="Endre behandlingsstatus:"
+          redigerbar={redigerbart}
+        />
+        <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>Oppdater</Nav.Hovedknapp>
+        {statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{statusmelding}</Nav.AlertStripe></div>}
+      </Fragment>
     </div>
   );
 };
