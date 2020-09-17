@@ -31,12 +31,12 @@ const HttpResponsDataSelector = createSelector(
 
 const HttpStatusSelector = createSelector(
   HttpResponsDataSelector,
-  httpResponsData => httpResponsData.status
+  httpResponsData => httpResponsData && httpResponsData.status
 );
 
 const HttpMessageSelector = createSelector(
   HttpResponsDataSelector,
-  httpResponsData => httpResponsData.message
+  httpResponsData => httpResponsData && httpResponsData.message
 );
 
 export const FeilmeldingSelector = createSelector(

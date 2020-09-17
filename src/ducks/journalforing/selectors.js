@@ -90,12 +90,12 @@ const JournalforingDataSelector = createSelector(
 
 const HttpStatusSelector = createSelector(
   JournalforingDataSelector,
-  journalforingData => journalforingData.status
+  journalforingData => journalforingData && journalforingData.status
 );
 
 const HttpMessageSelector = createSelector(
   JournalforingDataSelector,
-  journalforingData => journalforingData.message
+  journalforingData => journalforingData && journalforingData.message
 );
 
 export const FeilmeldingSelector = createSelector(
