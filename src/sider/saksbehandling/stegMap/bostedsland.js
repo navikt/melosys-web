@@ -15,9 +15,15 @@ class Bostedsland extends Steg {
 
     const erSokkelSkipEttLand = SokkelSkip.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND);
 
+    const bostedslandFakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, propsLight.avklartefakta);
+
+    const erBegrunnelserPaakrevd = !Bostedsland.finnAvklaring(propsLight.avklartefakta, MKV.Koder.landkoder.NO) && !erSokkelSkipEttLand;
+
+    const harAvklaring = Bostedsland.alleErAvklart(bostedslandFakta, erBegrunnelserPaakrevd);
+
     this.kriterier = [
       {
-        exec: () => erSokkelSkipEttLand,
+        exec: () => erSokkelSkipEttLand && harAvklaring,
         nesteSteg: STEG.ARTIKKEL_11_4,
       },
       {
@@ -51,12 +57,8 @@ class Bostedsland extends Steg {
       const { sakOgBehandling } = saksopplysninger;
       const { eosBarnetrygd = {} } = sakOgBehandling;
 
-      const bostedslandFakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, _propsLight.avklartefakta);
-
-      const erBegrunnelserPaakrevd = !Bostedsland.finnAvklaring(_propsLight.avklartefakta, MKV.Koder.landkoder.NO) && !erSokkelSkipEttLand;
-
       return {
-        harAvklaring: Bostedsland.alleErAvklart(bostedslandFakta, erBegrunnelserPaakrevd),
+        harAvklaring,
         bostedslandFakta,
         harEOSBarnetrygdSak: eosBarnetrygd,
         erBegrunnelserPaakrevd,
