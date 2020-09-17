@@ -143,9 +143,7 @@ export const DialogboksValidering = ({
 
   const valideringerInnhold = valideringer.map(validering => <Valideringsfeil validering={validering} key={validering.kode} />);
 
-  const innhold = Utils._isEmpty(feilmeldinger)
-    ? valideringerInnhold
-    : feilmeldingerInnhold;
+  const innhold = valideringer.length > 0 ? valideringerInnhold : feilmeldingerInnhold;
 
   return (
     <Nav.Modal
