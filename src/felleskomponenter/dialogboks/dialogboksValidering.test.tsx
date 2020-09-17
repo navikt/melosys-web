@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 
-import DialogboksValidering, { Validering, ModalBody, VedtakValideringsfeil } from './dialogboksValidering';
+import DialogboksValidering, { Validering, ModalBody, Valideringsfeil } from './dialogboksValidering';
 
 import MKV from '../../melosyskodeverk';
 
@@ -40,7 +40,7 @@ describe('DialogboksValidering', () => {
 
   it('Viser en liste over vedtakValideringsfeil', () => {
     const dialogboksValidering = shallow(<DialogboksValidering {...props} />);
-    const vedtakValideringsfeil = dialogboksValidering.find(VedtakValideringsfeil);
+    const vedtakValideringsfeil = dialogboksValidering.find(Valideringsfeil);
 
     expect(vedtakValideringsfeil).toHaveLength(2);
     expect(vedtakValideringsfeil.first().props().validering.kode).toBe(props.valideringer[0].kode);
@@ -85,7 +85,7 @@ describe('Validering', () => {
 });
 
 describe('VedtakValideringsfeil', () => {
-  const props: ComponentProps<typeof VedtakValideringsfeil> = {
+  const props: ComponentProps<typeof Valideringsfeil> = {
     validering: {
       kode: 'abc',
       felter: [
@@ -96,7 +96,7 @@ describe('VedtakValideringsfeil', () => {
   };
 
   it('viser Validering', () => {
-    const vedtakValideringsfeil = shallow(<VedtakValideringsfeil {...props} />);
+    const vedtakValideringsfeil = shallow(<Valideringsfeil {...props} />);
     const validering = vedtakValideringsfeil.find(Validering);
 
     expect(validering).toHaveLength(1);
@@ -104,7 +104,7 @@ describe('VedtakValideringsfeil', () => {
   });
 
   it('viser en liste over felter', () => {
-    const vedtakValideringsfeil = shallow(<VedtakValideringsfeil {...props} />);
+    const vedtakValideringsfeil = shallow(<Valideringsfeil {...props} />);
     const ul = vedtakValideringsfeil.find('ul');
     const li = vedtakValideringsfeil.find('li');
 

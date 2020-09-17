@@ -82,7 +82,7 @@ Validering.propTypes = {
   valideringKode: PT.string.isRequired,
 };
 
-export const VedtakValideringsfeil = ({
+export const Valideringsfeil = ({
   validering,
 }: {
   validering: Validering
@@ -110,7 +110,7 @@ export const VedtakValideringsfeil = ({
   </Fragment>
 );
 
-VedtakValideringsfeil.propTypes = {
+Valideringsfeil.propTypes = {
   validering: PT.shape({
     kode: PT.string.isRequired,
     felter: PT.arrayOf(PT.string).isRequired,
@@ -139,19 +139,19 @@ export const DialogboksValidering = ({
     }
   };
 
-  const journalforingValideringInnhold = feilmeldinger.map(feilmelding => <ModalBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} key={Utils._uuid()} />);
+  const feilmeldingerInnhold = feilmeldinger.map(feilmelding => <ModalBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} key={Utils._uuid()} />);
 
-  const vedtakValideringInnhold = valideringer.map(validering => <VedtakValideringsfeil validering={validering} key={validering.kode} />);
+  const valideringerInnhold = valideringer.map(validering => <Valideringsfeil validering={validering} key={validering.kode} />);
 
   const innhold = Utils._isEmpty(feilmeldinger)
-    ? vedtakValideringInnhold
-    : journalforingValideringInnhold;
+    ? valideringerInnhold
+    : feilmeldingerInnhold;
 
   return (
     <Nav.Modal
       className="dialogboksValidering"
       isOpen
-      contentLabel="Valideringer for fattet vedtak"
+      contentLabel="Valideringsmeldinger"
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
