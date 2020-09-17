@@ -1,8 +1,10 @@
 import { createSelector, Selector } from 'reselect';
 import { RootState, StateSection } from 'AppTypes';
 
-import { STATUS } from '../../services/utils';
 import * as Types from './types';
+import * as DucksUtils from '../utils';
+
+import { STATUS } from '../../services/utils';
 
 const VideresendingSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   state => state.videresending,
@@ -53,4 +55,10 @@ export const FeilmeldingSelector = createSelector(
     }
     return [];
   }
+);
+
+export const FeilkoderSelector = createSelector(
+  HttpResponsDataSelector,
+  ReduxStatusSelector,
+  DucksUtils.hentFeilkoder
 );

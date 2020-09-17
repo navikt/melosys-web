@@ -1,7 +1,7 @@
 import { createSelector, Selector } from 'reselect';
 import { RootState, StateSection } from 'AppTypes';
 
-import { STATUS } from '../../services/utils';
+import * as DucksUtils from '../utils';
 import * as Types from './types';
 
 const AnmodningOmUnntakSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
@@ -27,10 +27,5 @@ const HttpResponsDataSelector = createSelector(
 export const FeilkoderSelector = createSelector(
   HttpResponsDataSelector,
   ReduxStatusSelector,
-  (httpResponsData, reduxStatus) => {
-    if (httpResponsData && httpResponsData.feilkoder && reduxStatus === STATUS.ERROR) {
-      return httpResponsData.feilkoder;
-    }
-    return [];
-  }
+  DucksUtils.hentFeilkoder
 );

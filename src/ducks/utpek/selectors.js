@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import { STATUS } from '../../services/utils';
+import * as DucksUtils from '../utils';
 
 const UtpekSelector = createSelector(
   state => state.utpek.data,
@@ -12,13 +12,13 @@ const StatusSelector = createSelector(
   status => status
 );
 
-export const FeilkoderSelector = createSelector(
+const ResponsDataSelector = createSelector(
   UtpekSelector,
+  data => data.data
+);
+
+export const FeilkoderSelector = createSelector(
+  ResponsDataSelector,
   StatusSelector,
-  (utpek, status) => {
-    if (status === STATUS.ERROR) {
-      return utpek.data.feilkoder;
-    }
-    return [];
-  }
+  DucksUtils.hentFeilkoder
 );

@@ -6,6 +6,9 @@
  */
 
 import { createSelector } from 'reselect';
+
+import * as DucksUtils from '../utils';
+
 import { STATUS } from '../../services/utils';
 
 const JournalforingSelector = createSelector(
@@ -109,4 +112,10 @@ export const FeilmeldingSelector = createSelector(
     }
     return [];
   }
+);
+
+export const FeilkoderSelector = createSelector(
+  JournalforingDataSelector,
+  ReduxStatusSelector,
+  DucksUtils.hentFeilkoder
 );

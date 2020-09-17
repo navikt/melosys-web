@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 
+import * as DucksUtils from '../utils';
+
 import { STATUS } from '../../services/utils';
 
 const VedtakSelector = createSelector(
@@ -30,10 +32,5 @@ const ResponsDataSelector = createSelector(
 export const FeilkoderSelector = createSelector(
   ResponsDataSelector,
   StatusSelector,
-  (responsData, status) => {
-    if (status === STATUS.ERROR) {
-      return responsData.feilkoder;
-    }
-    return [];
-  }
+  DucksUtils.hentFeilkoder
 );
