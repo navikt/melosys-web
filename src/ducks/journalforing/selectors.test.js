@@ -7,14 +7,15 @@ import { STATUS } from '../../services/utils';
 
 describe('Journalforingselectors', () => {
   describe('FeilmeldingSelector', () => {
-    it('feilmelding fra response ved 400-feil', () => {
+    it('returnerer feilmelding fra response ved 400-feil', () => {
       const state = DucksTestUtils.lagState({
         journalforing: {
-          status: 'ERROR',
+          status: STATUS.ERROR,
           data: {
             data: {
               status: 400,
               message: 'Funksjonell feil',
+              error: 'Funksjonell feil',
             },
           },
         },
@@ -22,16 +23,18 @@ describe('Journalforingselectors', () => {
 
       const [feilmelding] = selectors.FeilmeldingSelector(state);
       expect(feilmelding.innhold).toEqual('Funksjonell feil');
+      expect(feilmelding.tittel).toEqual('Feil ved journalføring');
     });
 
-    it('generisk feilmelding ved 500-feil', () => {
+    it('returnerer generisk feilmelding ved 500-feil', () => {
       const state = DucksTestUtils.lagState({
         journalforing: {
-          status: 'ERROR',
+          status: STATUS.ERROR,
           data: {
             data: {
               status: 500,
               message: 'Melding som ikke blir brukt',
+              error: 'Funksjonell feil',
             },
           },
         },
@@ -41,12 +44,16 @@ describe('Journalforingselectors', () => {
       expect(feilmelding.tittel).toEqual('Teknisk feil');
     });
 
-    it('tom liste ved ingen feil', () => {
+    it(`returnerer tom liste ved status ${STATUS.OK}`, () => {
       const state = DucksTestUtils.lagState({
         journalforing: {
-          status: 'OK',
+          status: STATUS.OK,
           data: {
-            data: {},
+            data: {
+              status: 500,
+              message: 'Melding som ikke blir brukt',
+              error: 'Funksjonell feil',
+            },
           },
         },
       });

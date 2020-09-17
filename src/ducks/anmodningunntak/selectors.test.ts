@@ -8,6 +8,65 @@ import MKV from '../../melosyskodeverk';
 import { STATUS } from '../../services/utils';
 
 describe('AnmodningOmUnntakselectors', () => {
+  describe('FeilmeldingSelector', () => {
+    it('returnerer feilmelding fra response ved 400-feil', () => {
+      const mockedState = mock<RootState>();
+      const state = instance(mockedState);
+      state.anmodningomunntak = {
+        status: STATUS.ERROR,
+        data: {
+          data: {
+            status: 400,
+            message: 'Funksjonell feil',
+            feilkoder: [],
+            error: 'Funksjonell feil',
+          },
+        },
+      };
+
+      const [feilmelding] = selectors.FeilmeldingSelector(state);
+      expect(feilmelding.innhold).toEqual('Funksjonell feil');
+      expect(feilmelding.tittel).toEqual('Feil ved anmodning om unntak');
+    });
+
+    it('returnerer generisk feilmelding ved 500-feil', () => {
+      const mockedState = mock<RootState>();
+      const state = instance(mockedState);
+      state.anmodningomunntak = {
+        status: STATUS.ERROR,
+        data: {
+          data: {
+            status: 500,
+            message: 'Melding som ikke blir brukt',
+            feilkoder: [],
+            error: 'Funksjonell feil',
+          },
+        },
+      };
+
+      const [feilmelding] = selectors.FeilmeldingSelector(state);
+      expect(feilmelding.tittel).toEqual('Teknisk feil');
+    });
+
+    it(`returnerer tom liste ved status ${STATUS.OK}`, () => {
+      const mockedState = mock<RootState>();
+      const state = instance(mockedState);
+      state.anmodningomunntak = {
+        status: STATUS.OK,
+        data: {
+          data: {
+            status: 500,
+            message: 'Melding som ikke blir brukt',
+            feilkoder: [],
+            error: 'Funksjonell feil',
+          },
+        },
+      };
+
+      const feilmelding = selectors.FeilmeldingSelector(state);
+      expect(feilmelding).toHaveLength(0);
+    });
+  });
   describe('FeilkoderSelector', () => {
     it('returnerer feilkoder ved status ERROR', () => {
       const mockedState = mock<RootState>();

@@ -6,6 +6,62 @@ import MKV from '../../melosyskodeverk';
 import { STATUS } from '../../services/utils';
 
 describe('utpek selectors', () => {
+  describe('FeilmeldingSelector', () => {
+    it('returnerer feilmelding fra response ved 400-feil', () => {
+      const state = DucksTestUtils.lagState({
+        utpek: {
+          status: STATUS.ERROR,
+          data: {
+            data: {
+              status: 400,
+              message: 'Funksjonell feil',
+              error: 'Funksjonell feil',
+            },
+          },
+        },
+      });
+
+      const [feilmelding] = selectors.FeilmeldingSelector(state);
+      expect(feilmelding.innhold).toEqual('Funksjonell feil');
+      expect(feilmelding.tittel).toEqual('Feil ved utpeking');
+    });
+
+    it('returnerer generisk feilmelding ved 500-feil', () => {
+      const state = DucksTestUtils.lagState({
+        utpek: {
+          status: STATUS.ERROR,
+          data: {
+            data: {
+              status: 500,
+              message: 'Melding som ikke blir brukt',
+              error: 'Funksjonell feil',
+            },
+          },
+        },
+      });
+
+      const [feilmelding] = selectors.FeilmeldingSelector(state);
+      expect(feilmelding.tittel).toEqual('Teknisk feil');
+    });
+
+    it(`returnerer tom liste ved status ${STATUS.OK}`, () => {
+      const state = DucksTestUtils.lagState({
+        utpek: {
+          status: STATUS.OK,
+          data: {
+            data: {
+              status: 500,
+              message: 'Melding som ikke blir brukt',
+              error: 'Funksjonell feil',
+            },
+          },
+        },
+      });
+
+      const feilmelding = selectors.FeilmeldingSelector(state);
+      expect(feilmelding).toHaveLength(0);
+    });
+  });
   describe('FeilkoderSelector', () => {
     it('returnerer feilkoder ved status ERROR', () => {
       const state = DucksTestUtils.lagState({

@@ -24,6 +24,23 @@ const HttpResponsDataSelector = createSelector(
   anmodningOmUnntakData => anmodningOmUnntakData.data
 );
 
+const HttpStatusSelector = createSelector(
+  HttpResponsDataSelector,
+  httpResponsData => httpResponsData && httpResponsData.status
+);
+
+const HttpMessageSelector = createSelector(
+  HttpResponsDataSelector,
+  httpResponsData => httpResponsData && httpResponsData.message
+);
+
+export const FeilmeldingSelector = createSelector(
+  ReduxStatusSelector,
+  HttpStatusSelector,
+  HttpMessageSelector,
+  DucksUtils.hentFeilmeldingByStateName('anmodning om unntak')
+);
+
 export const FeilkoderSelector = createSelector(
   HttpResponsDataSelector,
   ReduxStatusSelector,

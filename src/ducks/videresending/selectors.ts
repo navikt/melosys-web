@@ -4,8 +4,6 @@ import { RootState, StateSection } from 'AppTypes';
 import * as Types from './types';
 import * as DucksUtils from '../utils';
 
-import { STATUS } from '../../services/utils';
-
 const VideresendingSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   state => state.videresending,
   videresending => videresending
@@ -40,21 +38,7 @@ export const FeilmeldingSelector = createSelector(
   ReduxStatusSelector,
   HttpStatusSelector,
   HttpMessageSelector,
-  (reduxStatus, httpStatus, httpMessage) => {
-    if (reduxStatus === STATUS.ERROR) {
-      if (httpStatus && httpStatus < 500) {
-        return [{
-          tittel: 'Feil ved videresending',
-          innhold: httpMessage,
-        }];
-      }
-      return [{
-        tittel: 'Teknisk feil',
-        innhold: 'Det oppsto en teknisk feil ved videresending. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.',
-      }];
-    }
-    return [];
-  }
+  DucksUtils.hentFeilmeldingByStateName('videresending')
 );
 
 export const FeilkoderSelector = createSelector(

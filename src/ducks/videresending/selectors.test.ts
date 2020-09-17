@@ -8,7 +8,7 @@ import { STATUS } from '../../services/utils';
 
 describe('Videresendingselectors', () => {
   describe('FeilmeldingSelector', () => {
-    it('feilmelding fra response ved 400-feil', () => {
+    it('returnerer feilmelding fra response ved 400-feil', () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.videresending = {
@@ -25,9 +25,10 @@ describe('Videresendingselectors', () => {
 
       const [feilmelding] = selectors.FeilmeldingSelector(state);
       expect(feilmelding.innhold).toEqual('Funksjonell feil');
+      expect(feilmelding.tittel).toEqual('Feil ved videresending');
     });
 
-    it('generisk feilmelding ved 500-feil', () => {
+    it('returnerer generisk feilmelding ved 500-feil', () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.videresending = {
@@ -46,12 +47,19 @@ describe('Videresendingselectors', () => {
       expect(feilmelding.tittel).toEqual('Teknisk feil');
     });
 
-    it('tom liste ved ingen feil', () => {
+    it(`returnerer tom liste ved status ${STATUS.OK}`, () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.videresending = {
         status: 'OK',
-        data: {},
+        data: {
+          data: {
+            status: 500,
+            message: 'Melding som ikke blir brukt',
+            feilkoder: [],
+            error: 'Funksjonell feil',
+          },
+        },
       };
 
       const feilmelding = selectors.FeilmeldingSelector(state);

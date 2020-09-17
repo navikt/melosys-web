@@ -7,7 +7,7 @@ const UtpekSelector = createSelector(
   utpek => utpek
 );
 
-const StatusSelector = createSelector(
+const ReduxStatusSelector = createSelector(
   state => state.utpek.status,
   status => status
 );
@@ -17,8 +17,30 @@ const ResponsDataSelector = createSelector(
   data => data.data
 );
 
+const HttpResponsDataSelector = createSelector(
+  UtpekSelector,
+  utpek => utpek.data
+);
+
+const HttpStatusSelector = createSelector(
+  HttpResponsDataSelector,
+  httpResponsData => httpResponsData && httpResponsData.status
+);
+
+const HttpMessageSelector = createSelector(
+  HttpResponsDataSelector,
+  httpResponsData => httpResponsData && httpResponsData.message
+);
+
+export const FeilmeldingSelector = createSelector(
+  ReduxStatusSelector,
+  HttpStatusSelector,
+  HttpMessageSelector,
+  DucksUtils.hentFeilmeldingByStateName('utpeking')
+);
+
 export const FeilkoderSelector = createSelector(
   ResponsDataSelector,
-  StatusSelector,
+  ReduxStatusSelector,
   DucksUtils.hentFeilkoder
 );
