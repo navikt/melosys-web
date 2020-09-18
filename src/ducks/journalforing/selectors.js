@@ -6,7 +6,8 @@
  */
 
 import { createSelector } from 'reselect';
-import { STATUS } from '../../services/utils';
+
+import * as DucksUtils from '../utils';
 
 const JournalforingSelector = createSelector(
   state => state.journalforing || {},
@@ -89,24 +90,23 @@ const JournalforingDataSelector = createSelector(
 
 const HttpStatusSelector = createSelector(
   JournalforingDataSelector,
-  journalforingData => journalforingData.status
+  journalforingData => journalforingData && journalforingData.status
 );
 
 const HttpMessageSelector = createSelector(
   JournalforingDataSelector,
-  journalforingData => journalforingData.message
+  journalforingData => journalforingData && journalforingData.message
 );
 
 export const FeilmeldingSelector = createSelector(
   ReduxStatusSelector,
   HttpStatusSelector,
   HttpMessageSelector,
-  (reduxStatus, httpStatus, httpMessage) => {
-    if (reduxStatus === STATUS.ERROR) {
-      return httpStatus < 500
-        ? [{ tittel: 'Feil ved journalføring', innhold: httpMessage }]
-        : [{ tittel: 'Teknisk feil', innhold: 'Det oppsto en teknisk feil ved journalføring. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.' }];
-    }
-    return [];
-  }
+  DucksUtils.hentFeilmeldingByStateName('journalføring')
+);
+
+export const FeilkoderSelector = createSelector(
+  JournalforingDataSelector,
+  ReduxStatusSelector,
+  DucksUtils.hentFeilkoder
 );

@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 
+import * as DucksUtils from '../utils';
+
 import { STATUS } from '../../services/utils';
 
 const VedtakSelector = createSelector(
@@ -12,28 +14,40 @@ const DataSelector = createSelector(
   vedtak => vedtak.data
 );
 
-const StatusSelector = createSelector(
+const ReduxStatusSelector = createSelector(
   VedtakSelector,
-  status => status.status
+  vedtak => vedtak.status
 );
 
 export const ErPendingSelector = createSelector(
-  StatusSelector,
+  ReduxStatusSelector,
   status => status === STATUS.PENDING
 );
 
-const ResponsDataSelector = createSelector(
+const HttpResponsDataSelector = createSelector(
   DataSelector,
   data => data.data
 );
 
+const HttpStatusSelector = createSelector(
+  HttpResponsDataSelector,
+  httpResponsData => httpResponsData && httpResponsData.status
+);
+
+const HttpMessageSelector = createSelector(
+  HttpResponsDataSelector,
+  httpResponsData => httpResponsData && httpResponsData.message
+);
+
+export const FeilmeldingSelector = createSelector(
+  ReduxStatusSelector,
+  HttpStatusSelector,
+  HttpMessageSelector,
+  DucksUtils.hentFeilmeldingByStateName('vedtak')
+);
+
 export const FeilkoderSelector = createSelector(
-  ResponsDataSelector,
-  StatusSelector,
-  (responsData, status) => {
-    if (status === STATUS.ERROR) {
-      return responsData.feilkoder;
-    }
-    return [];
-  }
+  HttpResponsDataSelector,
+  ReduxStatusSelector,
+  DucksUtils.hentFeilkoder
 );

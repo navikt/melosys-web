@@ -1,7 +1,7 @@
 import { createSelector, Selector } from 'reselect';
 import { RootState, StateSection } from 'AppTypes';
 
-import { STATUS } from '../../services/utils';
+import * as DucksUtils from '../utils';
 import * as Types from './types';
 
 const AnmodningOmUnntakSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
@@ -38,19 +38,11 @@ export const FeilmeldingSelector = createSelector(
   ReduxStatusSelector,
   HttpStatusSelector,
   HttpMessageSelector,
-  (reduxStatus, httpStatus, httpMessage) => {
-    if (reduxStatus === STATUS.ERROR) {
-      if (httpStatus && httpStatus < 500) {
-        return [{
-          tittel: 'Feil ved anmodning om unntak',
-          innhold: httpMessage,
-        }];
-      }
-      return [{
-        tittel: 'Teknisk feil',
-        innhold: 'Det oppsto en teknisk feil ved anmodning om unntak. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.',
-      }];
-    }
-    return [];
-  }
+  DucksUtils.hentFeilmeldingByStateName('anmodning om unntak')
+);
+
+export const FeilkoderSelector = createSelector(
+  HttpResponsDataSelector,
+  ReduxStatusSelector,
+  DucksUtils.hentFeilkoder
 );

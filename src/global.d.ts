@@ -24,3 +24,17 @@ declare module 'Domene' {
 declare module 'melosys-kodeverk' {
   export type KTObject = { kode: string, term: string | null };
 }
+
+declare module 'melosys-api' {
+  interface Feilkode {
+    kode: string,
+    felter: string[],
+  }
+
+  export interface ErrorResponse {
+    error: string,
+    status: number,
+    message: string,
+    feilkoder?: Feilkode[],
+  }
+}
