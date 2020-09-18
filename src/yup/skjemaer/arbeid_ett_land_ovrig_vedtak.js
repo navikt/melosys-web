@@ -11,6 +11,7 @@ const VELG_LAND = { melding: 'Velg land' };
 
 const arbeid_ett_land_ovrig_vedtak = object().shape({
   lovvalgsbestemmelse: string()
+    .nullable()
     .required(VELG_EN_BESTEMMELSE),
   forkortLovvalgsperiode: bool().required(),
   tomDato: string()
