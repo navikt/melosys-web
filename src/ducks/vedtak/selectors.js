@@ -43,7 +43,7 @@ export const FeilmeldingSelector = createSelector(
   ReduxStatusSelector,
   HttpStatusSelector,
   HttpMessageSelector,
-  DucksUtils.hentFeilmeldingByStateName('vedtak')
+  DucksUtils.hentFeilmelding
 );
 
 export const FeilkoderSelector = createSelector(

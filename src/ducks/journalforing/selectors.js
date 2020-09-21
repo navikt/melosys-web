@@ -102,7 +102,7 @@ export const FeilmeldingSelector = createSelector(
   ReduxStatusSelector,
   HttpStatusSelector,
   HttpMessageSelector,
-  DucksUtils.hentFeilmeldingByStateName('journalføring')
+  DucksUtils.hentFeilmelding
 );
 
 export const FeilkoderSelector = createSelector(

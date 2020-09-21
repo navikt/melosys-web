@@ -4,24 +4,24 @@ import { RootState, StateSection } from 'AppTypes';
 import * as DucksUtils from '../utils';
 import * as Types from './types';
 
-const AnmodningOmUnntakSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  state => state.anmodningomunntak,
-  anmodningOmUnntak => anmodningOmUnntak
+const FeiletresponsSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
+  state => state.feiletrespons,
+  feiletrespons => feiletrespons
 );
 
 const ReduxStatusSelector = createSelector(
-  AnmodningOmUnntakSelector,
-  anmodningOmUnntak => anmodningOmUnntak.status
+  FeiletresponsSelector,
+  feiletrespons => feiletrespons.status
 );
 
-const AnmodningOmUnntakDataSelector = createSelector(
-  AnmodningOmUnntakSelector,
-  anmodningOmUnntak => anmodningOmUnntak.data
+const FeiletResponsDataSelector = createSelector(
+  FeiletresponsSelector,
+  feiletrespons => feiletrespons.data
 );
 
 const HttpResponsDataSelector = createSelector(
-  AnmodningOmUnntakDataSelector,
-  anmodningOmUnntakData => anmodningOmUnntakData.data
+  FeiletResponsDataSelector,
+  feiletresponsData => feiletresponsData.data
 );
 
 const HttpStatusSelector = createSelector(

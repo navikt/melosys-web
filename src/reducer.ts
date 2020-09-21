@@ -13,6 +13,7 @@ import behandlingsperioderReducer from './ducks/behandlingsperioder';
 import behandlingsresultatReducer from './ducks/behandlingsresultat';
 import dokumenterReducer from './ducks/dokumenter';
 import fagsakerReducer from './ducks/fagsaker';
+import feiletResponseReducer from './ducks/feiletrespons';
 import journalforingReducer from './ducks/journalforing';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import modalerReducer from './ducks/modaler';
@@ -44,6 +45,7 @@ const createRootReducer = (history: History) => combineReducers({
   behandlingsresultat: behandlingsresultatReducer,
   dokumenter: dokumenterReducer,
   fagsaker: fagsakerReducer,
+  feiletrespons: feiletResponseReducer,
   journalforing: journalforingReducer,
   lovvalgsperioder: lovvalgsperioderReducer,
   modaler: modalerReducer,

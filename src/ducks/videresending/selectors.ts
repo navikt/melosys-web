@@ -38,7 +38,7 @@ export const FeilmeldingSelector = createSelector(
   ReduxStatusSelector,
   HttpStatusSelector,
   HttpMessageSelector,
-  DucksUtils.hentFeilmeldingByStateName('videresending')
+  DucksUtils.hentFeilmelding
 );
 
 export const FeilkoderSelector = createSelector(

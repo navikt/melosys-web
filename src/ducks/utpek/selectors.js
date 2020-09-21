@@ -36,7 +36,7 @@ export const FeilmeldingSelector = createSelector(
   ReduxStatusSelector,
   HttpStatusSelector,
   HttpMessageSelector,
-  DucksUtils.hentFeilmeldingByStateName('utpeking')
+  DucksUtils.hentFeilmelding
 );
 
 export const FeilkoderSelector = createSelector(
