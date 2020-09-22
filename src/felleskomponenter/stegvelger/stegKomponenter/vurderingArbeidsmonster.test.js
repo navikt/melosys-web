@@ -1,7 +1,7 @@
 import React from 'react';
 
 import * as KV from '../../../kodeverk';
-import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import MKV from '../../../melosyskodeverk';
 import { lagAvklartfakta } from '../../../regler/avklartefakta';
@@ -52,8 +52,9 @@ describe('LandLinje', () => {
 
   describe('ved klikk på checkbox', () => {
     const landLinje = shallow(<LandLinje {...props} />);
-    const checkbox = landLinje.find(Nav.Checkbox);
-    checkbox.simulate('change');
+    const checkbox = landLinje.find(Mui.Checkbox);
+    const checkboxOnCheck = checkbox.props().onCheck;
+    checkboxOnCheck();
 
     it('lagrer marginalt arbeid avklartfakta', () => {
       expect(props.oppdaterData).toHaveBeenCalledTimes(1);

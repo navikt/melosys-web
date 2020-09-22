@@ -8,6 +8,7 @@ import MKV from '../../../melosyskodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
@@ -49,11 +50,11 @@ export const LandLinje = props => {
   return (
     <div className="land__enkeltlinje">
       <span>{`${landKode.term} (${landKode.kode})`}</span>
-      <Nav.Checkbox
+      <Mui.Checkbox
         disabled={!redigerbart}
         checked={erMarginaltArbeidIArbeidsland === true}
         value={BoolskAvklartfaktaType.SANN}
-        onChange={klikkHandler}
+        onCheck={klikkHandler}
         label="ja"
         className="marginaltArbeidCheckbox"
       />

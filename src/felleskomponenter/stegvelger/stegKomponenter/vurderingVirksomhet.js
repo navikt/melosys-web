@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
+import * as Mui from '../../../felleskomponenter/ui';
 import * as MPT from '../../../proptypes';
 
 import { konverterTilStegData, lagAvklartfakta, slettAvklartfakta } from '../../../regler/avklartefakta';
@@ -28,16 +29,21 @@ const VirksomheterLinje = props => {
     return cleanup;
   }, []);
 
-  const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes('TRUE');
+  const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN);
 
   const virksomhetKlikkHandler = () => {
-    const verdi = virksomhetErValgt ? 'FALSE' : 'TRUE';
+    const verdi = virksomhetErValgt ? KV.Koder.BoolskAvklartfaktaType.USANN : KV.Koder.BoolskAvklartfaktaType.SANN;
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.virksomhetId, verdi));
   };
 
   return (
     <div className="arbeidsgiver__enkeltlinje">
-      <Nav.Checkbox disabled={!redigerbart} checked={virksomhetErValgt === true} onChange={virksomhetKlikkHandler} label={`${virksomheten.navn}`} />
+      <Mui.Checkbox
+        disabled={!redigerbart}
+        checked={virksomhetErValgt === true}
+        onCheck={virksomhetKlikkHandler}
+        label={`${virksomheten.navn}`}
+      />
     </div>
   );
 };

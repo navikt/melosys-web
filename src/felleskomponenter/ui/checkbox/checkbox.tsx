@@ -5,8 +5,13 @@ import * as Nav from '../../../utils/navFrontend';
 type NavCheckboxProps = ComponentProps<typeof Nav.Checkbox>;
 type FilteredNavCheckboxProps = Omit<NavCheckboxProps, 'onChange' | 'onKeyPress'>;
 
+interface onCheckOptions {
+  checked: boolean,
+  value: any,
+}
+
 interface CheckboxProps extends FilteredNavCheckboxProps {
-  onCheck: (checked: boolean) => void,
+  onCheck: (options: onCheckOptions) => void,
 }
 
 class Checkbox extends Component<CheckboxProps> {
@@ -20,12 +25,18 @@ class Checkbox extends Component<CheckboxProps> {
 
     const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter' && this.navCheckbox) {
-        onCheck(!this.navCheckbox.checked);
+        onCheck({
+          checked: !this.navCheckbox.checked,
+          value: rest.value,
+        });
       }
     };
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      onCheck(e.target.checked);
+      onCheck({
+        checked: e.target.checked,
+        value: rest.value,
+      });
     };
 
     return (
