@@ -5,13 +5,13 @@ import * as Nav from '../../../utils/navFrontend';
 type NavCheckboxProps = ComponentProps<typeof Nav.Checkbox>;
 type FilteredNavCheckboxProps = Omit<NavCheckboxProps, 'onChange' | 'onKeyPress'>;
 
-interface onCheckOptions {
+interface onCheckProperties {
   checked: boolean,
   value: any,
 }
 
 interface CheckboxProps extends FilteredNavCheckboxProps {
-  onCheck: (options: onCheckOptions) => void,
+  onCheck: (options: onCheckProperties) => void,
 }
 
 class Checkbox extends Component<CheckboxProps> {
