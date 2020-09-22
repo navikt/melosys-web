@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
-import Select from 'react-select';
 
 import MKV from '../../melosyskodeverk';
 
@@ -11,6 +10,7 @@ import * as Utils from '../../utils';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
 import { kodeTilObjekt } from '../../kodeverk';
 import { VedleggVelger } from './VedleggVelger';
+import MultiSelect from '../multiSelect/multiSelect';
 
 import './sideDialogOpprettNyBuc.css';
 
@@ -199,24 +199,16 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             <TomtFelt tekst="" />
             { tilgjengeligeSeder(valgtBuc).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
           </Nav.Select>
-          <div style={{ margin: '1rem 0' }}>
-            <label style={{ display: 'block', paddingBottom: '0.5rem' }} htmlFor="velgLand">Land</label>
-            <Select
-              id="velgLand"
-              onChange={landEndret}
-              options={MKV.KTObjects.landkoder.map(item => ({ value: item.kode, label: item.term }))}
-              isMulti
-            />
-          </div>
-          <div style={{ margin: '1rem 0' }}>
-            <label style={{ display: 'block', paddingBottom: '0.5rem' }} htmlFor="velgMottakerinstitusjoner">Mottakerinstitusjoner</label>
-            <Select
-              id="velgMottakerinstitusjoner"
-              onChange={mottakerinstitusjonEndret}
-              options={mottakerinstitusjoner.map(item => ({ value: item.id, label: item.navn }))}
-              isMulti
-            />
-          </div>
+          <MultiSelect
+            label="Land"
+            onChange={landEndret}
+            options={MKV.KTObjects.landkoder.map(item => ({ value: item.kode, label: item.term }))}
+          />
+          <MultiSelect
+            label="Mottakerinstitusjoner"
+            onChange={mottakerinstitusjonEndret}
+            options={mottakerinstitusjoner.map(item => ({ value: item.id, label: item.navn }))}
+          />
           <VedleggVelger valgteVedlegg={valgteVedlegg} setValgteVedlegg={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
