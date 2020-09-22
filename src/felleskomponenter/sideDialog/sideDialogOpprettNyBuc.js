@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
+import Select from 'react-select';
 
 import MKV from '../../melosyskodeverk';
 
@@ -31,8 +32,8 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
   const [valgtBuc, setValgtBuc] = useState('');
   const [valgtSed, setValgtSed] = useState('');
-  const [valgtLand, setValgtLand] = useState('');
-  const [valgtMottakerinstitusjon, setValgtMottakerinstitusjon] = useState('');
+  const [valgtLand, setValgtLand] = useState([]);
+  const [valgtMottakerinstitusjon, setValgtMottakerinstitusjon] = useState([]);
   const [valgteVedlegg, setValgteVedlegg] = useState([]);
 
   const [opprettetBucUrl, setOpprettetBucUrl] = useState('');
@@ -63,8 +64,8 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   const resetForm = () => {
     setValgtBuc('');
     setValgtSed('');
-    setValgtLand('');
-    setValgtMottakerinstitusjon('');
+    setValgtLand([]);
+    setValgtMottakerinstitusjon([]);
     setValgtFagomrade(EKV.Koder.sektor.LA);
     setValgteVedlegg([]);
     setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
@@ -99,7 +100,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         const sedResponse = await Api.Eessi.bucer.opprett(behandlingID, {
           bucType: valgtBuc,
           mottakerLand: valgtLand,
-          mottakerId: valgtMottakerinstitusjon,
+          mottakerIder: valgtMottakerinstitusjon,
           vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
         });
 
@@ -163,17 +164,16 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
     setValgtSed(buc ? tilgjengeligeSeder(buc)[0].kode : '');
     hentMottakerinstitusjoner(buc, valgtLand);
   };
-
-  const landEndret = event => {
-    const land = hentValgtKode(event);
+  const landEndret = options => {
+    const land = options ? options.map(item => item.value) : [];
     setValgtLand(land);
     oppdaterFelt('land');
     valider({ land });
     hentMottakerinstitusjoner(valgtBuc, land);
   };
 
-  const mottakerinstitusjonEndret = event => {
-    const mottakerinstitusjon = hentValgtKode(event);
+  const mottakerinstitusjonEndret = options => {
+    const mottakerinstitusjon = options ? options.map(item => item.value) : [];
     setValgtMottakerinstitusjon(mottakerinstitusjon);
     oppdaterFelt('mottakerinstitusjon');
     valider({ mottakerinstitusjon });
@@ -199,14 +199,24 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             <TomtFelt tekst="" />
             { tilgjengeligeSeder(valgtBuc).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
           </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="Land" onChange={landEndret} value={valgtLand} feil={feil('land')}>
-            <TomtFelt />
-            {MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={item.kode}>{`${item.term} (${item.kode})`}</option>))}
-          </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="Mottaker institusjon" onChange={mottakerinstitusjonEndret} value={valgtMottakerinstitusjon} feil={feil('mottakerinstitusjon')}>
-            <TomtFelt />
-            { mottakerinstitusjoner.map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
-          </Nav.Select>
+          <div style={{ margin: '1rem 0' }}>
+            <label style={{ display: 'block', paddingBottom: '0.5rem' }} htmlFor="velgLand">Land</label>
+            <Select
+              id="velgLand"
+              onChange={landEndret}
+              options={MKV.KTObjects.landkoder.map(item => ({ value: item.kode, label: item.term }))}
+              isMulti
+            />
+          </div>
+          <div style={{ margin: '1rem 0' }}>
+            <label style={{ display: 'block', paddingBottom: '0.5rem' }} htmlFor="velgMottakerinstitusjoner">Mottakerinstitusjoner</label>
+            <Select
+              id="velgMottakerinstitusjoner"
+              onChange={mottakerinstitusjonEndret}
+              options={mottakerinstitusjoner.map(item => ({ value: item.id, label: item.navn }))}
+              isMulti
+            />
+          </div>
           <VedleggVelger valgteVedlegg={valgteVedlegg} setValgteVedlegg={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
