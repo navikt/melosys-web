@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
@@ -9,17 +9,27 @@ const Orgnrinput = ({
   hentOrganisasjon,
   defaultOrgnr,
   valideringer,
+  validerVedMount,
 }) => {
   const [orgnr, setOrgnr] = useState(defaultOrgnr);
   const [feil, setFeil] = useState(undefined);
   const [hasFocus, setHasFocus] = useState(false);
 
-  const leggTilOrg = async tillagtOrgnr => {
-    const utlostValidering = valideringer.find(({ validering }) => validering(tillagtOrgnr));
+  const valider = organisasjonsnummer => {
+    const utlostValidering = valideringer.find(({ validering }) => validering(organisasjonsnummer));
     if (utlostValidering) {
       setFeil(utlostValidering.feilmelding);
-      return;
     }
+  };
+
+  useEffect(() => {
+    if (validerVedMount) {
+      valider(orgnr);
+    }
+  }, [validerVedMount]);
+
+  const leggTilOrg = async tillagtOrgnr => {
+    valider(tillagtOrgnr);
 
     const action = await hentOrganisasjon(tillagtOrgnr);
     const { data } = action;
@@ -72,6 +82,7 @@ Orgnrinput.propTypes = {
   redigerbart: PT.bool.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   defaultOrgnr: PT.string,
+  validerVedMount: PT.bool,
   valideringer: PT.arrayOf(PT.shape({
     validering: PT.func.isRequired,
     feilmelding: PT.string.isRequired,
@@ -80,6 +91,7 @@ Orgnrinput.propTypes = {
 
 Orgnrinput.defaultProps = {
   defaultOrgnr: '',
+  validerVedMount: false,
 };
 
 export default Orgnrinput;
