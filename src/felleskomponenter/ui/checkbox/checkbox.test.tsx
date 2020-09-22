@@ -1,4 +1,4 @@
-import React, { ComponentProps, KeyboardEvent } from 'react';
+import React, { ComponentProps, KeyboardEvent, ChangeEvent } from 'react';
 import { mount, shallow } from 'enzyme';
 import { mock, instance } from 'ts-mockito';
 
@@ -18,8 +18,15 @@ describe('Checkbox', () => {
 
   it('kaller onCheck med checkbox-verdi og checkbox-value ved change event', () => {
     const checkbox = shallow(<Checkbox {...props} />);
-    const event = { target: { checked: true } };
-    checkbox.simulate('change', event);
+    const navCheckbox = checkbox.find(Nav.Checkbox);
+    const navCheckboxOnChange = navCheckbox.props().onChange;
+    const mockedEvent = mock<ChangeEvent<HTMLInputElement>>();
+    const event = instance(mockedEvent);
+    const mockedTarget = mock<HTMLInputElement>();
+    event.target = instance(mockedTarget);
+    event.target.checked = true;
+
+    if (navCheckboxOnChange) navCheckboxOnChange(event);
 
     expect(props.onCheck).toHaveBeenCalledTimes(1);
     expect(props.onCheck).toHaveBeenLastCalledWith(expect.objectContaining({
