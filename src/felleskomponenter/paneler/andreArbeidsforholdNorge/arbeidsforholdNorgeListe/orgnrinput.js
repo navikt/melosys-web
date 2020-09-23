@@ -9,7 +9,9 @@ const Orgnrinput = ({
   hentOrganisasjon,
   defaultOrgnr,
   valideringer,
-  validerVedMount,
+  hentVedMount,
+  ikkeFunnetFeilmelding,
+  feilVedHentingFeilmelding,
 }) => {
   const [orgnr, setOrgnr] = useState(defaultOrgnr);
   const [feil, setFeil] = useState(undefined);
@@ -21,12 +23,6 @@ const Orgnrinput = ({
       setFeil(utlostValidering.feilmelding);
     }
   };
-
-  useEffect(() => {
-    if (validerVedMount) {
-      valider(orgnr);
-    }
-  }, [validerVedMount]);
 
   const leggTilOrg = async tillagtOrgnr => {
     valider(tillagtOrgnr);
@@ -40,11 +36,17 @@ const Orgnrinput = ({
     if (orgFunnet) {
       onOrgnrFunnet(organisasjon);
     } else if (httpStatus === 404) {
-      setFeil('Kunne ikke finne organisasjon');
+      setFeil(ikkeFunnetFeilmelding);
     } else {
-      setFeil('Feil ved henting av organisasjon');
+      setFeil(feilVedHentingFeilmelding);
     }
   };
+
+  useEffect(() => {
+    if (hentVedMount) {
+      leggTilOrg(orgnr);
+    }
+  }, [hentVedMount]);
 
   const onChange = e => {
     setFeil(undefined);
@@ -60,7 +62,7 @@ const Orgnrinput = ({
         <Nav.Row>
           <Nav.Column xs="3">
             <Nav.Input
-              label="Org. nr."
+              label="Org.nr."
               onChange={onChange}
               value={orgnr}
               disabled={!redigerbart}
@@ -82,16 +84,20 @@ Orgnrinput.propTypes = {
   redigerbart: PT.bool.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   defaultOrgnr: PT.string,
-  validerVedMount: PT.bool,
+  hentVedMount: PT.bool,
   valideringer: PT.arrayOf(PT.shape({
     validering: PT.func.isRequired,
     feilmelding: PT.string.isRequired,
   })).isRequired,
+  ikkeFunnetFeilmelding: PT.string,
+  feilVedHentingFeilmelding: PT.string,
 };
 
 Orgnrinput.defaultProps = {
   defaultOrgnr: '',
-  validerVedMount: false,
+  hentVedMount: false,
+  ikkeFunnetFeilmelding: 'Kunne ikke finne organisasjon',
+  feilVedHentingFeilmelding: 'Feil ved henting av organisasjon',
 };
 
 export default Orgnrinput;
