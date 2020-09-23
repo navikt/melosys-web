@@ -52,10 +52,8 @@ export class KontaktOpplysninger extends Component {
   finnKontaktopplysninger = async (saksnummer, orgnr) => {
     if (!orgnr) return null;
 
-    const { hentKontaktopplysninger } = this.props;
-
     try {
-      return await hentKontaktopplysninger(saksnummer, orgnr);
+      return await Api.Fagsaker.kontaktopplysninger.hent(saksnummer, orgnr);
     } catch (e) {
       if (e.response.status !== 404) {
         Utils.logger.error(e);
@@ -79,7 +77,7 @@ export class KontaktOpplysninger extends Component {
   fjernOppforing = async () => {
     const { saksnummer, juridiskOrg: { orgnr } } = this.props;
     try {
-      await this.props.slettKontaktopplysninger(saksnummer, orgnr);
+      await Api.Fagsaker.kontaktopplysninger.slett(saksnummer, orgnr);
       this.toggleSkjulInput();
       this.fjernResultat();
       this.settKontaktNavn('');
@@ -102,7 +100,6 @@ export class KontaktOpplysninger extends Component {
 
   validerOgLagreKontakt = async () => {
     const {
-      lagreKontaktopplysninger,
       saksnummer,
       juridiskOrg,
     } = this.props;
@@ -110,7 +107,7 @@ export class KontaktOpplysninger extends Component {
     const { validerOrgnr } = this;
 
     if (validerOrgnr()) {
-      lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, {
+      await Api.Fagsaker.kontaktopplysninger.send(saksnummer, juridiskOrg.orgnr, {
         kontaktnavn: kontaktnavn || null,
         kontaktorgnr: kontaktorgnr || null,
       });
@@ -134,7 +131,7 @@ export class KontaktOpplysninger extends Component {
     if (!kontaktorgnr) return null;
 
     try {
-      return await this.props.hentOrg(kontaktorgnr);
+      return await Api.Organisasjoner.hentOrganisasjon(kontaktorgnr);
     } catch (e) {
       Utils.logger.error(e);
       return null;
@@ -213,12 +210,8 @@ export class KontaktOpplysninger extends Component {
 
 KontaktOpplysninger.propTypes = {
   saksnummer: PT.string.isRequired,
-  lagreKontaktopplysninger: PT.func.isRequired,
-  hentOrg: PT.func.isRequired,
   redigerbart: PT.bool,
   juridiskOrg: PT.object.isRequired,
-  hentKontaktopplysninger: PT.func.isRequired,
-  slettKontaktopplysninger: PT.func.isRequired,
 };
 
 KontaktOpplysninger.defaultProps = {
@@ -229,21 +222,4 @@ const mapStateToProps = state => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
 });
 
-const fagsakerApi = {
-  hentOrg: orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr),
-  lagreKontaktopplysninger: (saksnr, juridiskorgnr, data) => Api.Fagsaker.kontaktopplysninger.send(saksnr, juridiskorgnr, data),
-  hentKontaktopplysninger: (saksnr, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.hent(saksnr, juridiskorgnr),
-  slettKontaktOpplysninger: (saksnr, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.slett(saksnr, juridiskorgnr),
-};
-
-const KontaktOpplysningerWrapper = props => (
-  <KontaktOpplysninger
-    {...props}
-    hentOrg={fagsakerApi.hentOrg}
-    hentKontaktopplysninger={fagsakerApi.hentKontaktopplysninger}
-    lagreKontaktopplysninger={fagsakerApi.lagreKontaktopplysninger}
-    slettKontaktopplysninger={fagsakerApi.slettKontaktOpplysninger}
-  />
-);
-
-export default connect(mapStateToProps)(KontaktOpplysningerWrapper);
+export default connect(mapStateToProps)(KontaktOpplysninger);
