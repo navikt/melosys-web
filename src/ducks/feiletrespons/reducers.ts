@@ -17,7 +17,7 @@ const initalState: StateSection<Types.Data> = {
   Vi ønsker å få tak i resultatet fra det siste feilede api-kallet blant typene nedenfor.
   Vi resetter i tillegg state dersom et av api-kallene er vellykket.
 */
-export default function reducer(state = initalState, action: any): StateSection<Types.Data> {
+export default function reducer(state = initalState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
     case utpekTypes.FEILET:
     case vedtakTypes.FEILET:
@@ -30,7 +30,7 @@ export default function reducer(state = initalState, action: any): StateSection<
     case videresendingTypes.OK:
     case anmodningunntakTypes.OK:
     case journalforingTypes.OK:
-      return { ...initalState };
+      return { ...initalState, status: STATUS.OK };
     default:
       return state;
   }
