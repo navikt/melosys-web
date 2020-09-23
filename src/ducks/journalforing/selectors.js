@@ -7,8 +7,6 @@
 
 import { createSelector } from 'reselect';
 
-import * as DucksUtils from '../utils';
-
 const JournalforingSelector = createSelector(
   state => state.journalforing || {},
   journalforing => journalforing
@@ -76,37 +74,4 @@ export const ErAvsenderPreutfyltSelector = createSelector(
   (avsenderID, avsenderNavn, avsenderType) => (
     Boolean(avsenderID) && Boolean(avsenderNavn) && Boolean(avsenderType)
   )
-);
-
-const ReduxStatusSelector = createSelector(
-  JournalforingSelector,
-  journalforing => journalforing.status
-);
-
-const JournalforingDataSelector = createSelector(
-  JournalforingAlle,
-  journalforing => journalforing.data || {}
-);
-
-const HttpStatusSelector = createSelector(
-  JournalforingDataSelector,
-  journalforingData => journalforingData && journalforingData.status
-);
-
-const HttpMessageSelector = createSelector(
-  JournalforingDataSelector,
-  journalforingData => journalforingData && journalforingData.message
-);
-
-export const FeilmeldingSelector = createSelector(
-  ReduxStatusSelector,
-  HttpStatusSelector,
-  HttpMessageSelector,
-  DucksUtils.hentFeilmeldingByStateName('journalføring')
-);
-
-export const FeilkoderSelector = createSelector(
-  JournalforingDataSelector,
-  ReduxStatusSelector,
-  DucksUtils.hentFeilkoder
 );
