@@ -22,10 +22,12 @@ const Orgnrinput = ({
     if (utlostValidering) {
       setFeil(utlostValidering.feilmelding);
     }
+
+    return !utlostValidering;
   };
 
   const leggTilOrg = async tillagtOrgnr => {
-    valider(tillagtOrgnr);
+    if (!valider(tillagtOrgnr)) return;
 
     const action = await hentOrganisasjon(tillagtOrgnr);
     const { data } = action;

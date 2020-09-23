@@ -20,7 +20,7 @@ import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
 
 import './andreArbeidsforholdNorge.css';
 
-const NorskeArbeidsgivereSed = ({
+export const NorskeArbeidsgivereSed = ({
   redigerbart,
   hentOrganisasjon,
   fields,
