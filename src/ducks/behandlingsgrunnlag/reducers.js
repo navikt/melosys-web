@@ -200,7 +200,7 @@ export default function reducer(state = initialState, action) {
             medfolgendeAndre: null,
           },
           overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
-          norskeArbeidsgivere: dokument.norskeArbeidsgivere || [],
+          norskeArbeidsgivere: dokument.norskeArbeidsgivereSed || [],
           ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
         },
       };

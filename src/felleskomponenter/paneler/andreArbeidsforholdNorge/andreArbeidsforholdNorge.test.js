@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as Nav from '../../../utils/navFrontend';
 
-import { AndreArbeidsforholdNorge } from './andreArbeidsforholdNorge';
+import { AlleNorskeArbeidsgivere, AndreArbeidsforholdNorge } from './andreArbeidsforholdNorge';
 import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
 
 describe('AndreArbeidsforholdNorge', () => {
@@ -21,12 +21,24 @@ describe('AndreArbeidsforholdNorge', () => {
 
     expect(andreArbeidsforholdNorge.find(Nav.EkspanderbartpanelBase)).toHaveLength(1);
   });
+});
+
+describe('AlleNorskeArbeidsgivere', () => {
+  let props = null;
+
+  beforeEach(() => {
+    props = {
+      redigerbart: true,
+      organisasjoner: [],
+      hentOrganisasjon: jest.fn(),
+    };
+  });
 
   it('viser to ArbeidsforholdNorgeListe', () => {
-    const andreArbeidsforholdNorge = shallow(<AndreArbeidsforholdNorge {...props} />);
-    const arbeidsforholdNorgeListe = andreArbeidsforholdNorge.find(ArbeidsforholdNorgeListe);
+    const alleNorskeArbeidsgivere = shallow(<AlleNorskeArbeidsgivere {...props} />);
+    const arbeidsforholdNorgeListe = alleNorskeArbeidsgivere.find(ArbeidsforholdNorgeListe);
 
-    expect(arbeidsforholdNorgeListe).toHaveLength(2);
+    expect(arbeidsforholdNorgeListe).toHaveLength(1);
     arbeidsforholdNorgeListe.forEach(n => {
       const nProps = n.props();
       expect(nProps.redigerbart).toBe(props.redigerbart);

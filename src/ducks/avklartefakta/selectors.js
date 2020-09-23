@@ -127,12 +127,14 @@ export const VirksomheterIPeriodenSelector = createSelector(
   state => behandlingerSelectors.ArbeidsforholdSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => behandlingsgrunnlagSelectors.EkstraArbeidsgivereSelector(state),
+  state => behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector(state),
   state => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
   state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
   (
     arbeidsforholdene,
     organisasjoner,
     ekstraArbeidsgivere,
+    norskeArbeidsgivereSed,
     selvstendigeNaringer,
     foretakUtland
   ) => {
@@ -146,6 +148,7 @@ export const VirksomheterIPeriodenSelector = createSelector(
     return [
       ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
       ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
+      ...norskeArbeidsgivereSed.map(konverterOrganisasjonTilVirksomhet),
       ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
       ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
     ];
@@ -420,15 +423,20 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
   vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
 );
 
-export const AvklarteVirksomheterSelector = createSelector(
-  AvklarteVirksomhetFaktaerSelector,
+const AlleOrganisasjonerSelector = createSelector(
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
-  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
-    const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
+  state => behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector(state),
+  (fagsakOrganisasjoner, soknadOrganisasjoner, norskeArbeidsgivereSed) =>
+    [...fagsakOrganisasjoner, ...soknadOrganisasjoner, ...norskeArbeidsgivereSed]
+);
 
-    return alleAvklarteVirksomhetFaktaer.map(virksomhet => {
+export const AvklarteVirksomheterSelector = createSelector(
+  AvklarteVirksomhetFaktaerSelector,
+  AlleOrganisasjonerSelector,
+  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland) =>
+    alleAvklarteVirksomhetFaktaer.map(virksomhet => {
       const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
       if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
 
@@ -436,26 +444,21 @@ export const AvklarteVirksomheterSelector = createSelector(
       if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
 
       throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
-    });
-  }
+    })
 );
 
 export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
-  state => behandlingerSelectors.OrganisasjonerSelector(state),
-  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  AlleOrganisasjonerSelector,
   state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
   state => behandlingsgrunnlagSelectors.SelvstendigArbeidForetakSelector(state),
   (
     alleAvklarteVirksomhetFaktaer,
-    fagsakOrganisasjoner,
-    soknadOrganisasjoner,
+    alleOrganisasjoner,
     foretakUtland,
     selvstendigArbeidForetak
-  ) => {
-    const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
-
-    return alleAvklarteVirksomhetFaktaer.map(virksomhet => {
+  ) =>
+    alleAvklarteVirksomhetFaktaer.map(virksomhet => {
       const avklartForetakUtland = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
       if (avklartForetakUtland) {
         return avklartForetakUtland.selvstendigNaeringsvirksomhet ? null : konverterForetakUtlandTilVirksomhet(avklartForetakUtland);
@@ -468,8 +471,7 @@ export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(
       if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
 
       throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
-    }).filter(virksomhet => virksomhet);
-  }
+    }).filter(virksomhet => virksomhet)
 );
 
 export const EnVirksomhetErAvklartSelector = createSelector(

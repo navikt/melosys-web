@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes';
@@ -7,14 +8,101 @@ import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import * as Mui from '../../../felleskomponenter/ui';
 import * as Ikoner from '../../../resources/images';
+import * as Utils from '../../../utils';
 
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../ducks/organisasjoner';
+import { EnkeltArbeidsforholdNorge } from './arbeidsforholdNorgeListe/arbeidsforholdNorgeListe';
+import * as OrganisasjonValidering from '../../skjema/validering/generisk/organisasjon';
 
 import PanelHeader from '../../panelHeader/panelHeader';
 import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
 
 import './andreArbeidsforholdNorge.css';
+
+const NorskeArbeidsgivereSed = ({
+  redigerbart,
+  hentOrganisasjon,
+  fields,
+}) => {
+  const elementer = fields.getAll() || [];
+  const feilmelding = 'Ugyldig org.nr. fra SED, sjekk dokument';
+
+  return (
+    <div className="innerArbeidsforholdNorgeListe">
+      {
+        elementer.map((organisasjon, indeks) => {
+          const slett = () => fields.remove(indeks);
+          const key = !Utils._isEmpty(organisasjon) ? organisasjon.orgnr : Utils._uuid();
+          const valideringer = [
+            {
+              validering: orgnr => !OrganisasjonValidering.erOrgnrGyldig(orgnr),
+              feilmelding,
+            },
+          ];
+
+          return (
+            <EnkeltArbeidsforholdNorge
+              key={key}
+              erstatt={() => {}}
+              valideringer={valideringer}
+              hentVedMount
+              redigerbart={redigerbart}
+              hentOrganisasjon={hentOrganisasjon}
+              organisasjon={organisasjon}
+              orgFeilVedHentingTekst={feilmelding}
+              orgIkkeFunnetTekst={feilmelding}
+              slett={slett}
+              slettTekst="Slett arbeidsforhold"
+            />
+          );
+        })
+      }
+    </div>
+  );
+};
+
+NorskeArbeidsgivereSed.propTypes = {
+  hentOrganisasjon: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
+  fields: PT.object.isRequired,
+};
+
+// Samling av norske arbeidsgivere oppgitt i SED, samt arbeidsgivere oppgitt av saksbehandler i Melosys.
+export const AlleNorskeArbeidsgivere = ({
+  organisasjoner,
+  hentOrganisasjon,
+  redigerbart,
+}) => (
+  <>
+    <FieldArray
+      rerenderOnEveryChange
+      name="norskeArbeidsgivereSed"
+      component={NorskeArbeidsgivereSed}
+      props={{
+        redigerbart,
+        hentOrganisasjon,
+      }}
+    />
+    <ArbeidsforholdNorgeListe
+      leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
+      slettTekst="Slett arbeidsforhold"
+      feltNavn="ekstraArbeidsgivere"
+      redigerbart={redigerbart}
+      hentOrganisasjon={hentOrganisasjon}
+      transformerOrgTilElement={org => org.orgnr}
+      findOrganisasjon={orgnr => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === orgnr)}
+      defaultElement={null}
+      elementerInneholderOrg={(orgListe, orgnr) => orgListe.includes(orgnr)}
+    />
+  </>
+);
+
+AlleNorskeArbeidsgivere.propTypes = {
+  organisasjoner: PT.arrayOf(MPT.Organisasjon).isRequired,
+  hentOrganisasjon: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
+};
 
 export const AndreArbeidsforholdNorge = ({
   redigerbart,
@@ -32,16 +120,10 @@ export const AndreArbeidsforholdNorge = ({
         className="undertittel"
         understrek
       />
-      <ArbeidsforholdNorgeListe
-        leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
-        slettTekst="Slett arbeidsforhold"
-        feltNavn="ekstraArbeidsgivere"
+      <AlleNorskeArbeidsgivere
         redigerbart={redigerbart}
+        organisasjoner={organisasjoner}
         hentOrganisasjon={hentOrganisasjon}
-        transformerOrgTilElement={org => org.orgnr}
-        findOrganisasjon={orgnr => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === orgnr)}
-        defaultElement={null}
-        elementerInneholderOrg={(orgListe, orgnr) => orgListe.includes(orgnr)}
       />
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}

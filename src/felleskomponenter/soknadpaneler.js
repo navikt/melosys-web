@@ -117,6 +117,7 @@ const mapStateToProps = state => ({
     arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
     selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
+    norskeArbeidsgivereSed: behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector(state),
     avklartefakta: {
       soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
