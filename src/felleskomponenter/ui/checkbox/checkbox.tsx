@@ -11,7 +11,7 @@ interface onCheckProperties {
 }
 
 interface CheckboxProps extends FilteredNavCheckboxProps {
-  onCheck: (options: onCheckProperties) => void,
+  onCheck: (properties: onCheckProperties) => void,
 }
 
 class Checkbox extends Component<CheckboxProps> {
