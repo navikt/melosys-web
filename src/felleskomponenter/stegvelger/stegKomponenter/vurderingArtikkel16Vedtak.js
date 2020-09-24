@@ -78,7 +78,7 @@ export const Innvilgelse = ({
   gjeldendePeriode,
   renderFritekstFelt,
   vedtaksbrevFritekst,
-  erNyVurdering,
+  visOrienteringsbrevArbeidsgiver,
 }) => {
   const pdfDokumenter = [
     {
@@ -91,7 +91,7 @@ export const Innvilgelse = ({
     },
   ];
 
-  if (!erNyVurdering) {
+  if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
@@ -129,7 +129,7 @@ Innvilgelse.propTypes = {
   gjeldendePeriode: MPT.Periode.isRequired,
   vedtaksbrevFritekst: PT.string.isRequired,
   renderFritekstFelt: PT.func.isRequired,
-  erNyVurdering: PT.bool.isRequired,
+  visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
 };
 
 export const DelvisInnvilgelse = ({
@@ -139,7 +139,7 @@ export const DelvisInnvilgelse = ({
   vedtaksbrevFritekst,
   renderFritekstFelt,
   renderBegrunnelser,
-  erNyVurdering,
+  visOrienteringsbrevArbeidsgiver,
 }) => {
   const pdfDokumenter = [
     {
@@ -152,7 +152,7 @@ export const DelvisInnvilgelse = ({
     },
   ];
 
-  if (!erNyVurdering) {
+  if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
@@ -196,7 +196,7 @@ DelvisInnvilgelse.propTypes = {
   vedtaksbrevFritekst: PT.string.isRequired,
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
-  erNyVurdering: PT.bool.isRequired,
+  visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
 };
 
 export const Avslag = ({
@@ -205,7 +205,7 @@ export const Avslag = ({
   vedtaksbrevFritekst,
   renderFritekstFelt,
   renderBegrunnelser,
-  erNyVurdering,
+  visOrienteringsbrevArbeidsgiver,
 }) => {
   const pdfDokumenter = [
     {
@@ -218,7 +218,7 @@ export const Avslag = ({
     },
   ];
 
-  if (!erNyVurdering) {
+  if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
@@ -256,7 +256,7 @@ Avslag.propTypes = {
   vedtaksbrevFritekst: PT.string.isRequired,
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
-  erNyVurdering: PT.bool.isRequired,
+  visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
 };
 
 export const VurderingArtikkel16Vedtak = ({
@@ -272,6 +272,7 @@ export const VurderingArtikkel16Vedtak = ({
   vilkarBegrunnelser,
   behandlingstype,
   touch,
+  harValgtNorskArbeidsgiver,
 }) => {
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
@@ -320,6 +321,7 @@ export const VurderingArtikkel16Vedtak = ({
   ]);
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const visOrienteringsbrevArbeidsgiver = harValgtNorskArbeidsgiver && !erNyVurdering;
 
   const finnVedtakInnhold = svarType => {
     switch (svarType) {
@@ -330,7 +332,7 @@ export const VurderingArtikkel16Vedtak = ({
           renderFritekstFelt={renderFritekstFelt}
           vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
-          erNyVurdering={erNyVurdering}
+          visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
         return <DelvisInnvilgelse
@@ -340,7 +342,7 @@ export const VurderingArtikkel16Vedtak = ({
           vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           gjeldendePeriode={endretPeriode}
           renderBegrunnelser={renderBegrunnelser}
-          erNyVurdering={erNyVurdering}
+          visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
         return <Avslag
@@ -349,7 +351,7 @@ export const VurderingArtikkel16Vedtak = ({
           renderFritekstFelt={renderFritekstFelt}
           vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
           renderBegrunnelser={renderBegrunnelser}
-          erNyVurdering={erNyVurdering}
+          visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
         />;
       default:
         throw new Error('AnmodningsperiodeSvarType må være satt');
@@ -390,6 +392,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   art_12_2_begrunnelser: PT.arrayOf(PT.string).isRequired,
   touch: PT.func.isRequired,
   formValues: PT.object,
+  harValgtNorskArbeidsgiver: PT.bool.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {

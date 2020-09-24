@@ -395,6 +395,7 @@ class Stegvelger extends Component {
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
+      harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,//TODO: lag selector for dette
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
