@@ -173,7 +173,6 @@ class Saksbehandling extends Component {
       person,
       lovvalgsperiodeFom,
       lovvalgsperiodeTom,
-      oppdaterBehandlingsStatus,
       visHenleggDialogHandle,
       visAvsluttSakSomBortfaltDialogHandle,
       visAvslagSoknadDialogHandle,
@@ -251,7 +250,6 @@ class Saksbehandling extends Component {
                   behandlingID={behandlingID}
                   redigerbart={redigerbart}
                   oppsummering={oppsummering}
-                  oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
                   behandlingsstatusMap={behandlingsstatusMap}
                 />}
               />
@@ -314,7 +312,6 @@ Saksbehandling.propTypes = {
   lagreAllData: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
@@ -408,7 +405,6 @@ const mapDispatchToProps = dispatch => ({
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 

@@ -19,7 +19,7 @@ import Behandlingsmeny from './komponenter/behandlingsmeny';
 import { formSelectors } from '../../ducks/form';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { datalastingOperations } from '../../ducks/datalasting';
 import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 import { vilkarOperations } from '../../ducks/vilkar';
@@ -83,7 +83,6 @@ const Vurderutpeking = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
   visRevurderFagsakDialogHandle,
-  oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
   resetSaksopplysninger,
@@ -192,7 +191,6 @@ const Vurderutpeking = ({
                 behandlingID={behandlingID}
                 redigerbart={redigerbart}
                 oppsummering={oppsummering}
-                oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
                 behandlingsstatusMap={behandlingsstatusMap}
               />}
             />
@@ -236,7 +234,6 @@ Vurderutpeking.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
@@ -292,7 +289,6 @@ const mapDispatchToProps = dispatch => ({
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
   oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Vurderutpeking);

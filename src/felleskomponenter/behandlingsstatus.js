@@ -1,24 +1,25 @@
 import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import moment from 'moment/moment';
+import { connect } from 'react-redux';
 
-import MKV from '../melosyskodeverk';
-import * as KV from '../kodeverk';
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
 import * as Mui from '../felleskomponenter/ui';
 import * as MPT from '../proptypes';
 import * as Utils from '../utils';
 
+import { behandlingerOperations } from '../ducks/behandlinger';
+
 import './behandlingsstatus.css';
 
 const BehandlingsStatus = ({
-  oppdaterBehandlingsStatus,
   oppdaterStatus,
   behandlingID,
   redigerbart,
   oppsummering,
   behandlingsstatusMap,
+  hentBehandling,
 }) => {
   const [behandlingsstatus, setBehandlingsStatus] = React.useState('VELG');
   const [statusmelding, setStatusMelding] = React.useState(null);
@@ -38,10 +39,9 @@ const BehandlingsStatus = ({
     if (behandlingsstatus === 'VELG') {
       return false;
     }
-    const term = KV.kodeTilTerm(behandlingsstatus, MKV.KTObjects.behandlinger.behandlingsstatus);
-    const nyBehandlingsStatus = { kode: behandlingsstatus, term };
+
     oppdaterStatus(behandlingID, behandlingsstatus).then(() => {
-      oppdaterBehandlingsStatus(nyBehandlingsStatus);
+      hentBehandling(behandlingID);
       oppdaterStatusMelding();
     }).catch(Utils.logger.error);
     return true;
@@ -75,9 +75,9 @@ BehandlingsStatus.propTypes = {
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   oppdaterStatus: PT.func,
   behandlingsstatusMap: PT.objectOf(PT.arrayOf(MPT.Kodeverk)).isRequired,
+  hentBehandling: PT.func.isRequired,
 };
 
 BehandlingsStatus.defaultProps = {
@@ -86,4 +86,8 @@ BehandlingsStatus.defaultProps = {
   oppdaterStatus: Api.Behandlinger.status.oppdaterStatus,
 };
 
-export default BehandlingsStatus;
+const mapDispatchToProps = dispatch => ({
+  hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+});
+
+export default connect(null, mapDispatchToProps)(BehandlingsStatus);

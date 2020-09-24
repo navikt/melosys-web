@@ -65,7 +65,6 @@ const Registrering = props => {
     person,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
-    oppdaterBehandlingsStatus,
     lovvalgsland,
     visOppfriskModal,
     behandlingOppfriskes,
@@ -150,7 +149,6 @@ const Registrering = props => {
                 behandlingID={behandlingID}
                 redigerbart={redigerbart}
                 oppsummering={oppsummering}
-                oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
                 behandlingsstatusMap={behandlingsstatusMap}
               />}
             />
@@ -190,7 +188,6 @@ Registrering.propTypes = {
   behandlingstema: PT.string.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   lovvalgsland: MPT.Kodeverk.isRequired,
   visOppfriskModal: PT.func.isRequired,
@@ -231,7 +228,6 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
 

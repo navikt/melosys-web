@@ -14,7 +14,7 @@ import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { datalastingOperations } from '../../ducks/datalasting';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
@@ -70,7 +70,6 @@ const SedBehandling = ({
   behandlingsgrunnlagPeriodeTom,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
-  oppdaterBehandlingsStatus,
   location,
   lastInnSaksopplysninger,
   resetSaksopplysninger,
@@ -148,7 +147,6 @@ const SedBehandling = ({
                 behandlingID={behandlingID}
                 redigerbart={redigerbart}
                 oppsummering={oppsummering}
-                oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
                 behandlingsstatusMap={behandlingsstatusMap}
                 oppdaterStatus={oppdaterStatus}
               />}
@@ -183,7 +181,6 @@ SedBehandling.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   location: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
@@ -228,7 +225,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentBehandlingsgrunnlag: behandlingID => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
