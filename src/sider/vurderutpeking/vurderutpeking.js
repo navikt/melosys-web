@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import { getFormValues } from 'redux-form';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils';
 import * as MPT from '../../proptypes';
+import * as KV from '../../kodeverk';
 
 import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../felleskomponenter/sideOppsummering';
@@ -100,6 +102,7 @@ const Vurderutpeking = ({
   behandlingsgrunnlag,
   dokumentOversikt,
   dokumenter,
+  vurderUtpekingFormValues,
 }) => {
   const { params: { snr: saksnummer } } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -123,6 +126,10 @@ const Vurderutpeking = ({
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
   const forsteSteg = hentForsteSteg(behandlingstema);
+
+  const lovvalgslandFraForm = vurderUtpekingFormValues.lovvalgsland;
+  const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
+  const lovvalgslandKTOBject = visLovvalgsland ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder) : undefined;
 
   return (
     <div className="vurderutpeking">
@@ -162,6 +169,7 @@ const Vurderutpeking = ({
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               arbeidsland={arbeidsland}
+              lovvalgsland={lovvalgslandKTOBject}
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               periodeLabel="Periode fra SED"
@@ -245,10 +253,12 @@ Vurderutpeking.propTypes = {
   behandlingOppfriskes: PT.bool.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
+  vurderUtpekingFormValues: PT.object,
 };
 
 Vurderutpeking.defaultProps = {
   behandlingsgrunnlag: {},
+  vurderUtpekingFormValues: {},
 };
 
 const mapStateToProps = state => ({
@@ -269,6 +279,7 @@ const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
+  vurderUtpekingFormValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
 });
 
 const mapDispatchToProps = dispatch => ({
