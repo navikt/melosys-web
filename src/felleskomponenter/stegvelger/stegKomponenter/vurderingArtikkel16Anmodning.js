@@ -11,6 +11,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
@@ -42,9 +43,13 @@ const TidligereMedlemPeriodeLinje = ({
   const label = `Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`;
 
   return (
-    <Fragment>
-      <Nav.Checkbox feil={feil} disabled={!redigerbart} onChange={() => onChange(periodeID)} label={label} value="something" checked={checked} />
-    </Fragment>
+    <Mui.Checkbox
+      feil={feil}
+      disabled={!redigerbart}
+      onCheck={() => onChange(periodeID)}
+      label={label}
+      checked={checked}
+    />
   );
 };
 

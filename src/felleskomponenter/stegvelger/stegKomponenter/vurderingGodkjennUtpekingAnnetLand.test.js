@@ -21,9 +21,9 @@ describe('vurderingGodkjennUtpekingAnnetLand', () => {
   it('trykk på knapp kaller lagreOgGodkjennUnntaksperioder', () => {
     const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
 
-    const checkbox = komponent.find(Nav.Checkbox);
-    const event = { target: { checked: true } };
-    checkbox.simulate('change', event);
+    const checkbox = komponent.find(Mui.Checkbox);
+    const checkboxOnCheck = checkbox.props().onCheck;
+    checkboxOnCheck({ checked: true });
 
     const hovedknapp = komponent.find(Mui.Knapp);
     hovedknapp.simulate('click');
