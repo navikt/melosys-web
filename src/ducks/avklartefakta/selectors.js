@@ -415,24 +415,40 @@ export const IkkeMarginaleArbeidslandAntallSelector = createSelector(
   ikkeMarginaleArbeidsland => ikkeMarginaleArbeidsland.length
 );
 
-export const AvklarteVirksomheterSelector = createSelector(
+export const AvklarteNorskeVirksomheterSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
-  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
+  (alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
 
     return alleAvklarteVirksomhetFaktaer.map(virksomhet => {
-      const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
-      if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
-
       const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.subjektID);
       if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
-
-      throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
-    });
+      return null;
+    }).filter(virksomhet => virksomhet);
   }
+);
+
+export const AvklarteUtenlandskeVirksomheterSelector = createSelector(
+  AvklarteVirksomhetFaktaerSelector,
+  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (alleAvklarteVirksomhetFaktaer, foretakUtland) => (
+    alleAvklarteVirksomhetFaktaer.map(virksomhet => {
+      const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
+      if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
+      return null;
+    }).filter(virksomhet => virksomhet)
+  )
+);
+
+export const AvklarteVirksomheterSelector = createSelector(
+  AvklarteNorskeVirksomheterSelector,
+  AvklarteUtenlandskeVirksomheterSelector,
+  (avklarteNorskeVirksomheter, avklarteUtenlandskeVirksomheter) => [
+    ...avklarteNorskeVirksomheter,
+    ...avklarteUtenlandskeVirksomheter,
+  ]
 );
 
 export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(

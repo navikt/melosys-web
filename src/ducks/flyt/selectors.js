@@ -59,3 +59,8 @@ export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
     })
   )
 );
+
+export const HarValgtNorskArbeidsgiverSelector = createSelector(
+  state => avklartefaktaSelectors.AvklarteNorskeVirksomheterSelector(state),
+  avklarteNorskeVirksomheter => avklarteNorskeVirksomheter.length > 0
+);

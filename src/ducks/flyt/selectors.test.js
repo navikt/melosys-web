@@ -66,4 +66,16 @@ describe('FlytSelectors', () => {
       expect(selectors.ErIArtikkel13_1FlytSelector(state)).toEqual(forventetResultat);
     });
   });
+
+  describe('HarValgtNorskArbeidsgiverSelector', () => {
+    const { resultFunc } = selectors.HarValgtNorskArbeidsgiverSelector;
+
+    it('returnerer true når norsk virksomhet er valgt', () => {
+      expect(resultFunc([{}])).toBe(true);
+    });
+
+    it('returnerer false når norsk virksomhet ikke er valgt', () => {
+      expect(resultFunc([])).toBe(false);
+    });
+  });
 });
