@@ -383,25 +383,6 @@ describe('Avklartefaktaselectors', () => {
     });
   });
 
-  describe('ErIArtikkel13_1FlytSelector', () => {
-    each([
-      [
-        true,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      ],
-      [
-        false,
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-      ],
-    ]).it('returnerer korrekt verdi', (forventetResultat, behandlingstema) => {
-      const state = lagState({
-        behandlingstema,
-      });
-
-      expect(selectors.ErIArtikkel13_1FlytSelector(state)).toEqual(forventetResultat);
-    });
-  });
-
   describe('AvklarteVirksomheterIkkeNaeringsdrivendeSelector', () => {
     const { resultFunc } = selectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector;
 

@@ -472,11 +472,6 @@ export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(
   }
 );
 
-export const EnVirksomhetErAvklartSelector = createSelector(
-  AvklarteVirksomheterSelector,
-  avklarteVirksomheter => avklarteVirksomheter.length === 1
-);
-
 export const AvklartefaktaVurderingSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering,
   vurdering => vurdering || {}
@@ -490,21 +485,6 @@ export const BostedslandSelector = createSelector(
     const bostedslandkode = hentFaktaVerdi(avklartFakta);
     return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
   }
-);
-
-export const ErIArtikkel13_1FlytSelector = createSelector(
-  state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND
-);
-
-export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
-  AvklartefaktaSelector,
-  avklarteFakta => (
-    avklarteFakta.some(avklartFakta => {
-      if (!avklartFakta.fakta) return false;
-      return avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
-    })
-  )
 );
 
 export const OmfattesILandFaktaSelector = createSelector(

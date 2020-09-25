@@ -39,3 +39,23 @@ export const UtpekingVurderingSelector = createSelector(
       : utfallUtpeking
   )
 );
+
+export const EnVirksomhetErAvklartSelector = createSelector(
+  state => avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
+  avklarteVirksomheter => avklarteVirksomheter.length === 1
+);
+
+export const ErIArtikkel13_1FlytSelector = createSelector(
+  state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND
+);
+
+export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
+  state => avklartefaktaSelectors.AvklartefaktaSelector(state),
+  avklarteFakta => (
+    avklarteFakta.some(avklartFakta => {
+      if (!avklartFakta.fakta) return false;
+      return avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
+    })
+  )
+);

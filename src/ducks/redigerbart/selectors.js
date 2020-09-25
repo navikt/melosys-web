@@ -2,8 +2,8 @@ import { createSelector } from 'reselect';
 
 import MKV from '../../melosyskodeverk';
 
-import { avklartefaktaSelectors } from '../avklartefakta';
 import { behandlingerSelectors } from '../behandlinger';
+import { flytSelectors } from '../flyt';
 import { formSelectors } from '../form';
 
 export const RedigerbartSelector = createSelector(
@@ -50,8 +50,8 @@ export const BrevBestillingRedigerbartSelector = createSelector(
   )
 );
 export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
-  avklartefaktaSelectors.ErIArtikkel13_1FlytSelector,
-  avklartefaktaSelectors.EnVirksomhetErAvklartSelector,
+  flytSelectors.ErIArtikkel13_1FlytSelector,
+  flytSelectors.EnVirksomhetErAvklartSelector,
   formSelectors.BrevBestillingFormSelector,
   (erIArtikkel13_1Flyt, enVirksomhetErAvklart, brevBestillingForm) => {
     const { values: { mottaker } = {} } = brevBestillingForm;

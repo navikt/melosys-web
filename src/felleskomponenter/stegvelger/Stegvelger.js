@@ -21,6 +21,7 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
 import { fagsakSelectors } from '../../ducks/fagsaker';
+import { flytSelectors } from '../../ducks/flyt';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
@@ -607,7 +608,7 @@ const mapStateToProps = state => ({
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  erIDirekteTilArtikkel16Flyt: avklartefaktaSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
+  erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
   utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
   omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
   soknadslandFaktaer: avklartefaktaSelectors.Soknadsland(state),
