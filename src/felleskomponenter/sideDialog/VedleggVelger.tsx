@@ -106,16 +106,6 @@ const VedleggListe = ({
     onAvbryt();
   };
 
-  const alleVedleggErMarkert = alleVedlegg.every(({ id }) => markerteVedlegg.includes(id));
-
-  const markerAlleVedlegg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setMarkerteVedlegg(alleVedlegg.map(({ id }) => id));
-    } else {
-      setMarkerteVedlegg([]);
-    }
-  };
-
   const hentGjeldendeVedlegg = () => (redigerer ? alleVedlegg : valgteVedlegg);
 
   return (
@@ -138,17 +128,6 @@ const VedleggListe = ({
           </tr>
         </thead>
         <tbody>
-          { redigerer &&
-            <tr>
-              <td colSpan={6}>
-                <Nav.Checkbox
-                  onChange={markerAlleVedlegg}
-                  label="Velg alle vedlegg"
-                  checked={alleVedleggErMarkert}
-                />
-              </td>
-            </tr>
-          }
           {
             hentGjeldendeVedlegg().map(enkeltVedlegg =>
               <EnkeltVedlegg
