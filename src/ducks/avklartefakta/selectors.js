@@ -415,11 +415,6 @@ export const IkkeMarginaleArbeidslandAntallSelector = createSelector(
   ikkeMarginaleArbeidsland => ikkeMarginaleArbeidsland.length
 );
 
-export const AvklartefaktaLovvalgKodeSelector = createSelector(
-  state => AvklartefaktaSelector(state).vurdering || {},
-  vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
-);
-
 export const AvklarteVirksomheterSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
   state => behandlingerSelectors.OrganisasjonerSelector(state),
@@ -470,11 +465,6 @@ export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(
       throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
     }).filter(virksomhet => virksomhet);
   }
-);
-
-export const AvklartefaktaVurderingSelector = createSelector(
-  state => AvklartefaktaSelector(state).vurdering,
-  vurdering => vurdering || {}
 );
 
 export const BostedslandSelector = createSelector(
