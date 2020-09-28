@@ -76,15 +76,15 @@ export const getCookie = name => {
 };
 
 const getCacheTS = cacheKey => `${cacheKey}:ts`;
-const getCachedItem = cacheKey => localStorage.getItem(cacheKey);
-const getCachedItemTS = cacheKey => localStorage.getItem(getCacheTS(cacheKey));
+const getCachedItem = cacheKey => sessionStorage.getItem(cacheKey);
+const getCachedItemTS = cacheKey => sessionStorage.getItem(getCacheTS(cacheKey));
 const removeCachedItem = cacheKey => {
-  localStorage.removeItem(cacheKey);
-  localStorage.removeItem(getCacheTS(cacheKey));
+  sessionStorage.removeItem(cacheKey);
+  sessionStorage.removeItem(getCacheTS(cacheKey));
 };
 const setCachedItem = (cacheKey, content) => {
-  localStorage.setItem(cacheKey, content);
-  localStorage.setItem(getCacheTS(cacheKey), Date.now());
+  sessionStorage.setItem(cacheKey, content);
+  sessionStorage.setItem(getCacheTS(cacheKey), Date.now());
 };
 const OIDC_TEST_TOKEN = process.env.REACT_APP_OIDC_TEST_TOKEN;
 
@@ -155,7 +155,7 @@ const cachedFetch = async (url, cacheDurationSec) => {
       // If we don't clone the response, it will be
       // consumed by the time it's returned. This
       // way we're being un-intrusive.
-      if (localStorage.getItem(cacheKey)) {
+      if (sessionStorage.getItem(cacheKey)) {
         console.log('Remove cache item', cacheKey); // eslint-disable-line no-console
         removeCachedItem(cacheKey);
       }
