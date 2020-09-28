@@ -99,8 +99,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         setOppretterBuc(true);
         const sedResponse = await Api.Eessi.bucer.opprett(behandlingID, {
           bucType: valgtBuc,
-          mottakerLand: valgteLand,
-          mottakerIder: valgteMottakerinstitusjoner,
+          mottakerInstitusjoner: valgteMottakerinstitusjoner,
           vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
         });
 

@@ -1,16 +1,16 @@
 import React from 'react';
-import Select from 'react-select';
+import Select, { ValueType } from 'react-select';
 
 import './multiSelect.css';
 
-interface MultiSelectProps {
+interface MultiSelectProps<T> {
   label: string,
-  onChange(options: any[] | null): void,
-  options: any[],
+  onChange(selectedOptions: T[]): void,
+  options: T[],
   feil: any
 }
 
-function MultiSelect(props: MultiSelectProps) {
+function MultiSelect<T extends {value: string, label: string}>(props: MultiSelectProps<T>) {
   const {
     label, onChange, options, feil,
   } = props;
@@ -18,7 +18,13 @@ function MultiSelect(props: MultiSelectProps) {
   return (
     <div className="multiselect">
       <label htmlFor={`select${label}`}>{label}</label>
-      <Select id={`select${label}`} onChange={onChange} options={options} placeholder="Velg..." isMulti />
+      <Select
+        id={`select${label}`}
+        onChange={(selectedOptions: ValueType<T>) => onChange((selectedOptions as T[]))}
+        options={options}
+        placeholder="Velg..."
+        isMulti
+      />
       <div role="alert" aria-live="assertive">
         {feil && <div className="skjemaelement__feilmelding">{feil.feilmelding}</div>}
       </div>
