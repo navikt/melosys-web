@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { Avklartfakta } from 'Domene';
 
 import MKV from '../../melosyskodeverk';
 import * as KV from '../../kodeverk';
@@ -53,7 +54,7 @@ export const ErIArtikkel13_1FlytSelector = createSelector(
 export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
   state => avklartefaktaSelectors.AvklartefaktaSelector(state),
   avklarteFakta => (
-    avklarteFakta.some(avklartFakta => {
+    avklarteFakta.some((avklartFakta: Avklartfakta) => {
       if (!avklartFakta.fakta) return false;
       return avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
     })

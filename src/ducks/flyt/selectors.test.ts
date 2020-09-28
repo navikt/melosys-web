@@ -1,28 +1,14 @@
+import each from 'jest-each';
+
 import * as selectors from './selectors';
 import MKV from '../../melosyskodeverk';
 
 import * as DucksTestUtils from '../test-utils';
 
+import { STATUS } from '../../services/utils';
+
 describe('FlytSelectors', () => {
   describe('UtpekingVurderingSelector', () => {
-    const lagState = behandlingstema => ({
-      behandlinger: {
-        data: {
-          oppsummering: {
-            behandlingstema: {
-              kode: behandlingstema,
-            },
-          },
-        },
-      },
-      behandlingsresultat: {
-        data: {
-          utfallRegistreringUnntak: MKV.Koder.utfallregistreringunntak.GODKJENT,
-          utfallUtpeking: MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
-        },
-      },
-    });
-
     each([
       [
         MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
@@ -34,7 +20,26 @@ describe('FlytSelectors', () => {
       ],
     ]).describe('UtpekingVurderingSelector med behandlingstema %p', (behandlingstema, forventet) => {
       it(`returnerer ${forventet}`, () => {
-        const state = lagState(behandlingstema);
+        const state = DucksTestUtils.lagState({
+          behandlinger: {
+            status: STATUS.OK,
+            data: {
+              oppsummering: {
+                behandlingstema: {
+                  kode: behandlingstema,
+                },
+              },
+            },
+          },
+          behandlingsresultat: {
+            status: STATUS.OK,
+            data: {
+              utfallRegistreringUnntak: MKV.Koder.utfallregistreringunntak.GODKJENT,
+              utfallUtpeking: MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
+            },
+          },
+        });
+
         expect(selectors.UtpekingVurderingSelector(state)).toBe(forventet);
       });
     });
@@ -53,6 +58,7 @@ describe('FlytSelectors', () => {
     ]).it('returnerer korrekt verdi', (forventetResultat, behandlingstema) => {
       const state = DucksTestUtils.lagState({
         behandlinger: {
+          status: STATUS.OK,
           data: {
             oppsummering: {
               behandlingstema: {
