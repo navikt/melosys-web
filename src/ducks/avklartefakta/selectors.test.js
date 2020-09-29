@@ -383,25 +383,6 @@ describe('Avklartefaktaselectors', () => {
     });
   });
 
-  describe('ErIArtikkel13_1FlytSelector', () => {
-    each([
-      [
-        true,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      ],
-      [
-        false,
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-      ],
-    ]).it('returnerer korrekt verdi', (forventetResultat, behandlingstema) => {
-      const state = lagState({
-        behandlingstema,
-      });
-
-      expect(selectors.ErIArtikkel13_1FlytSelector(state)).toEqual(forventetResultat);
-    });
-  });
-
   describe('AvklarteVirksomheterIkkeNaeringsdrivendeSelector', () => {
     const { resultFunc } = selectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector;
 
@@ -721,6 +702,70 @@ describe('Avklartefaktaselectors', () => {
 
       const landkoder = resultat.map(({ kode }) => kode);
       expect(landkoder).toEqual(expect.arrayContaining(['DK', 'NO']));
+    });
+  });
+
+  describe('AvklarteVirksomheterSelector', () => {
+    const { resultFunc } = selectors.AvklarteVirksomheterSelector;
+
+    it('returnerer alle avklarte virksomheter', () => {
+      const resultat = resultFunc([{ virksomhetId: '1' }], [{ virksomhetId: '2' }]);
+      expect(resultat[0].virksomhetId).toBe('1');
+      expect(resultat[1].virksomhetId).toBe('2');
+    });
+  });
+
+  describe('AvklarteNorskeVirksomheterSelector', () => {
+    const { resultFunc } = selectors.AvklarteNorskeVirksomheterSelector;
+
+    it('returnerer alle norske avklarte virksomheter', () => {
+      const alleAvklarteVirksomhetFaktaer = [
+        {
+          subjektID: '1',
+        },
+        {
+          subjektID: '2',
+        },
+      ];
+      const fagsakOrganisasjoner = [
+        {
+          orgnr: '2',
+          forretningsadresse: {},
+        },
+      ];
+      const soknadOrganisasjoner = [
+        {
+          orgnr: '1',
+          forretningsadresse: {},
+        },
+      ];
+
+      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner);
+
+      expect(resultat[0].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[0].subjektID);
+      expect(resultat[1].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[1].subjektID);
+    });
+  });
+
+  describe('AvklarteUtenlandskeVirksomheterSelector', () => {
+    const { resultFunc } = selectors.AvklarteUtenlandskeVirksomheterSelector;
+
+    it('returnerer alle utenlandske avklarte virksomheter', () => {
+      const alleAvklarteVirksomhetFaktaer = [
+        {
+          subjektID: '3',
+        },
+      ];
+      const foretakUtland = [
+        {
+          uuid: '3',
+          adresse: {},
+        },
+      ];
+
+      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, foretakUtland);
+
+      expect(resultat[0].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[0].subjektID);
     });
   });
 });

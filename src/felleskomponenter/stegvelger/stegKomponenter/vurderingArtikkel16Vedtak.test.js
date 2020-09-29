@@ -29,6 +29,7 @@ describe('VurderingArtikkel16Vedtak', () => {
         vedtakstype: MKV.Koder.vedtakstyper.KORRIGERINGSVEDTAK,
         vedtaksbrevFritekst: 'Test',
       },
+      harValgtNorskArbeidsgiver: true,
     };
   });
 

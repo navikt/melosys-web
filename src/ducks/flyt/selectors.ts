@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { Avklartfakta } from 'Domene';
 
 import MKV from '../../melosyskodeverk';
 import * as KV from '../../kodeverk';
@@ -38,4 +39,29 @@ export const UtpekingVurderingSelector = createSelector(
       ? utfallRegistreringUnntak
       : utfallUtpeking
   )
+);
+
+export const EnVirksomhetErAvklartSelector = createSelector(
+  state => avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
+  avklarteVirksomheter => avklarteVirksomheter.length === 1
+);
+
+export const ErIArtikkel13_1FlytSelector = createSelector(
+  state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND
+);
+
+export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
+  state => avklartefaktaSelectors.AvklartefaktaSelector(state),
+  avklarteFakta => (
+    avklarteFakta.some((avklartFakta: Avklartfakta) => {
+      if (!avklartFakta.fakta) return false;
+      return avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
+    })
+  )
+);
+
+export const HarValgtNorskArbeidsgiverSelector = createSelector(
+  state => avklartefaktaSelectors.AvklarteNorskeVirksomheterSelector(state),
+  avklarteNorskeVirksomheter => avklarteNorskeVirksomheter.length > 0
 );

@@ -11,6 +11,7 @@ class Artikkel16Vedtak extends Steg {
     this.komponent = VurderingArtikkel16Vedtak;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
+      harValgtNorskArbeidsgiver: _propsLight.harValgtNorskArbeidsgiver,
     });
     this.beregnRelevantUI = _propsLight => ({
     });
