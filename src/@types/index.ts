@@ -1,3 +1,4 @@
+export type { default as Avklartfakta } from './avklartfakta';
 export type { default as AnmodningOmUnntakBestilling } from './anmodningomunntakbestilling';
 export type { default as Fagsak } from './fagsak';
 export type { default as Oppsummering } from './oppsummering';

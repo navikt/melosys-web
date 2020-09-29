@@ -11,6 +11,7 @@ declare module 'AppTypes' {
 }
 
 declare module 'Domene' {
+  export type Avklartfakta = import('./@types').Avklartfakta;
   export type AnmodningOmUnntakBestilling = import('./@types').AnmodningOmUnntakBestilling;
   export type Fagsak = import('./@types').Fagsak;
   export type Oppsummering = import('./@types').Oppsummering;

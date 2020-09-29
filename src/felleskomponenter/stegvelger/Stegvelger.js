@@ -21,6 +21,7 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
 import { fagsakSelectors } from '../../ducks/fagsaker';
+import { flytSelectors } from '../../ducks/flyt';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
@@ -395,6 +396,7 @@ class Stegvelger extends Component {
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
+      harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -557,6 +559,7 @@ Stegvelger.propTypes = {
   erArbeidEttLand: PT.bool.isRequired,
   videresend: PT.func.isRequired,
   bestillAnmodningsperioder: PT.func.isRequired,
+  harValgtNorskArbeidsgiver: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -606,7 +609,7 @@ const mapStateToProps = state => ({
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  erIDirekteTilArtikkel16Flyt: avklartefaktaSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
+  erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
   utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
   omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
   soknadslandFaktaer: avklartefaktaSelectors.Soknadsland(state),
@@ -618,6 +621,7 @@ const mapStateToProps = state => ({
   maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
+  harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
 });
 
 /* eslint no-alert:off */
