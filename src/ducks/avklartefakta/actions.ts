@@ -4,14 +4,12 @@
  * Dette er action creators som returnerer Redux-klargjorte actions
  * uten support for asynkrone kall.
  */
-
 import * as Types from './types';
 
-/* eslint-disable import/prefer-default-export */
-export function oppdaterAvklartefaktaState(avklartefakta) {
+export function oppdaterAvklartefaktaState(avklartefakta: Types.OppdaterActionData): Types.OppdaterAction {
   return ({
     type: Types.OPPDATER_AVKLARTEFAKTA,
-    avklartefakta,
+    data: avklartefakta,
   });
 }
 
@@ -19,6 +17,6 @@ export function oppdaterAvklartefaktaState(avklartefakta) {
  *
  * @returns {{type: *}}
  */
-export function resetAvklartefaktaState() {
+export function resetAvklartefaktaState(): Types.ResetAction {
   return { type: Types.RESET };
 }
