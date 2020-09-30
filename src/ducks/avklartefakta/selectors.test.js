@@ -722,20 +722,18 @@ describe('Avklartefaktaselectors', () => {
           subjektID: '2',
         },
       ];
-      const fagsakOrganisasjoner = [
+      const alleOrganisasjoner = [
         {
           orgnr: '2',
           forretningsadresse: {},
         },
-      ];
-      const soknadOrganisasjoner = [
         {
           orgnr: '1',
           forretningsadresse: {},
         },
       ];
 
-      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner);
+      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner);
 
       expect(resultat[0].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[0].subjektID);
       expect(resultat[1].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[1].subjektID);
