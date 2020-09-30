@@ -297,17 +297,35 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const pdfDokumenter = formValues.kreverMottakerinstitusjon ? [
       {
-        navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER },
+        navn: 'Forhåndsvis orienteringsbrev til bruker',
+        type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
+        data: {
+          mottaker: MKV.Koder.aktoersroller.BRUKER,
+        },
       },
       {
-        navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true, data: { fritekst: this.props.formValues.fritekstSed },
+        navn: 'Forhåndsvis SED A001',
+        type: EKV.Koder.sedtyper.A001,
+        erSed: true,
+        data: {
+          fritekst: this.props.formValues.fritekstSed,
+        },
       },
     ] : [
       {
-        navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER },
+        navn: 'Forhåndsvis orienteringsbrev til bruker',
+        type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK,
+        data: {
+          mottaker: MKV.Koder.aktoersroller.BRUKER,
+        },
       },
       {
-        navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET },
+        navn: 'Forhåndsvis anmodning til utenlandsk myndighet',
+        type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK,
+        data: {
+          mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
+          fritekst: this.props.formValues.fritekstSed,
+        },
       },
     ];
 

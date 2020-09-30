@@ -56,7 +56,7 @@ function InnerTextAreaComponent({
 }
 
 InnerTextAreaComponent.propTypes = {
-  label: PT.string,
+  label: PT.node,
   placeholder: PT.string,
   maxLength: PT.number,
   visTellerFra: PT.number,
