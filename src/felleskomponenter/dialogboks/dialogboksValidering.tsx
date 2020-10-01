@@ -1,5 +1,6 @@
 import React, { KeyboardEvent, Fragment } from 'react';
 import PT from 'prop-types';
+import { KTObject } from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
@@ -31,15 +32,27 @@ const feilmeldingMap = new Map<string, Feilmelding>([
   ],
 ]);
 
+const hentFeilmeldingTittel = (kontrollKode: string) => {
+  switch (kontrollKode) {
+    case MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE:
+    case MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_OPPL_ARBEIDSSTED:
+    case MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_OPPL_ANDRE_ARBEIDSFORHOLD_NO:
+    case MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_OPPL_ANDRE_ARBEIDSFORHOLD_UTL:
+      return 'Manglende utfylling';
+    default:
+      return 'Feil ved kontroll';
+  }
+};
+
 const hentFeilmelding = (valideringKode: string) => {
   let feilmelding = feilmeldingMap.get(valideringKode);
 
   if (!feilmelding) {
-    const valideringKodeObjekt = KV.kodeTilObjekt(valideringKode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    const valideringKodeObjekt: KTObject = KV.kodeTilObjekt(valideringKode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
     if (valideringKodeObjekt) {
       feilmelding = {
-        tittel: 'Feil ved kontroll',
-        innhold: valideringKodeObjekt.term,
+        tittel: hentFeilmeldingTittel(valideringKodeObjekt.kode),
+        innhold: valideringKodeObjekt.term || '',
       };
     }
   }
