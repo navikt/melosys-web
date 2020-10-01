@@ -84,15 +84,28 @@ describe('Validering', () => {
     expect(modalBody.props().tittel).toBe('Ukjent feil');
   });
 
-  it('viser feilmelding fra kodeverk dersom ingen mapping for feilmelding finnes', () => {
+  it('viser feilmelding fra kodeverk dersom ingen mapping for feilmelding finnes, og kontrollkode stammer fra manglende utfylling av felter', () => {
     const validering = shallow(<Validering valideringKode={MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE} />);
+
+    const modalBody = validering.find(ModalBody);
+    expect(modalBody).toHaveLength(1);
+
+    expect(modalBody.props().tittel).toBe('Manglende utfylling');
+    expect(modalBody.props().innhold).toBe(KV.kodeTilTerm(
+      MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
+      MKV.KTObjects.begrunnelser.kontroll_begrunnelser
+    ));
+  });
+
+  it(`viser feilmelding fra kodeverk dersom ingen mapping for feilmelding finnes, og kontrollkode er ${MKV.Koder.begrunnelser.kontroll_begrunnelser.INGEN_SLUTTDATO}`, () => {
+    const validering = shallow(<Validering valideringKode={MKV.Koder.begrunnelser.kontroll_begrunnelser.INGEN_SLUTTDATO} />);
 
     const modalBody = validering.find(ModalBody);
     expect(modalBody).toHaveLength(1);
 
     expect(modalBody.props().tittel).toBe('Feil ved kontroll');
     expect(modalBody.props().innhold).toBe(KV.kodeTilTerm(
-      MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
+      MKV.Koder.begrunnelser.kontroll_begrunnelser.INGEN_SLUTTDATO,
       MKV.KTObjects.begrunnelser.kontroll_begrunnelser
     ));
   });
