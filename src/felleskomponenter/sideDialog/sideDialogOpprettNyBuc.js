@@ -10,7 +10,7 @@ import * as Utils from '../../utils';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
 import { kodeTilObjekt } from '../../kodeverk';
 import { VedleggVelger } from './VedleggVelger';
-import MultiSelect from '../multiSelect/multiSelect';
+import MultiSelect from '../multiSelect';
 
 import './sideDialogOpprettNyBuc.css';
 

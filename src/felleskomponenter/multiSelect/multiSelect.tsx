@@ -1,28 +1,39 @@
 import React, { CSSProperties } from 'react';
 import Select, { Styles, ValueType } from 'react-select';
 
-import './multiSelect.css';
-
 interface MultiSelectProps<T> {
   label: string,
   onChange(selectedOptions: T[]): void,
   options: T[],
-  feil: any
+  feil?: { feilmelding: string },
+  redigerbart?: boolean,
 }
 
 function MultiSelect<T extends {value: string, label: string}>(props: MultiSelectProps<T>) {
   const {
-    label, onChange, options, feil,
+    label, onChange, options, feil, redigerbart = true,
   } = props;
+
+  const getBorderColor = (hover = false) => {
+    if (hover && redigerbart) return '#0067C5';
+    if (redigerbart && feil) return '#BA3A26';
+    return '#78706A';
+  };
+
+  const getBackgroundColor = () => {
+    if (!redigerbart) return '#E9E7E7';
+    if (feil) return '#F3E3E3';
+    return '#FFFFFF';
+  };
 
   const styles: Styles = {
     control: (provided: CSSProperties) => ({
       ...provided,
-      borderColor: feil ? '#BA3A26' : '#78706A',
+      borderColor: getBorderColor(),
       '&:hover': {
-        borderColor: '#0067C5',
+        borderColor: getBorderColor(true),
       },
-      backgroundColor: feil ? '#F3E3E3' : '#FFFFFF',
+      backgroundColor: getBackgroundColor(),
     }),
     placeholder: (provided: CSSProperties) => ({
       ...provided,
@@ -45,8 +56,10 @@ function MultiSelect<T extends {value: string, label: string}>(props: MultiSelec
   };
 
   return (
-    <div className="multiselect">
-      <label htmlFor={`select${label}`}>{label}</label>
+    <div style={{ margin: '1rem 0', cursor: redigerbart ? 'default' : 'not-allowed' }}>
+      <label htmlFor={`select${label}`} style={{ display: 'block', paddingBottom: '0.5rem' }}>
+        {label}
+      </label>
       <Select
         id={`select${label}`}
         styles={styles}
@@ -54,6 +67,7 @@ function MultiSelect<T extends {value: string, label: string}>(props: MultiSelec
         options={options}
         placeholder="Velg..."
         isMulti
+        isDisabled={!redigerbart}
       />
       <div role="alert" aria-live="assertive">
         {feil && <div className="skjemaelement__feilmelding">{feil.feilmelding}</div>}
