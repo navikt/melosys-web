@@ -3,6 +3,7 @@ import Select, { Styles, ValueType } from 'react-select';
 
 interface MultiSelectProps<T> {
   label: string,
+  values: string[],
   onChange(selectedOptions: T[]): void,
   options: T[],
   feil?: { feilmelding: string },
@@ -11,7 +12,7 @@ interface MultiSelectProps<T> {
 
 function MultiSelect<T extends {value: string, label: string}>(props: MultiSelectProps<T>) {
   const {
-    label, onChange, options, feil, redigerbart = true,
+    label, values, onChange, options, feil, redigerbart = true,
   } = props;
 
   const getBorderColor = (hover = false) => {
@@ -68,6 +69,8 @@ function MultiSelect<T extends {value: string, label: string}>(props: MultiSelec
         placeholder="Velg..."
         isMulti
         isDisabled={!redigerbart}
+        noOptionsMessage={() => ''}
+        value={options.filter(option => values.indexOf(option.value) >= 0)}
       />
       <div role="alert" aria-live="assertive">
         {feil && <div className="skjemaelement__feilmelding">{feil.feilmelding}</div>}

@@ -204,12 +204,14 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             onChange={landEndret}
             options={MKV.KTObjects.landkoder.map(item => ({ value: item.kode, label: item.term }))}
             feil={feil('land')}
+            values={valgteLand}
           />
           <MultiSelect
             label="Mottakerinstitusjoner"
             onChange={mottakerinstitusjonEndret}
             options={tilgjengeligeMottakerinstitusjoner.map(item => ({ value: item.id, label: item.navn }))}
             feil={feil('mottakerinstitusjoner')}
+            values={valgteMottakerinstitusjoner}
           />
           <VedleggVelger valgteVedlegg={valgteVedlegg} setValgteVedlegg={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
