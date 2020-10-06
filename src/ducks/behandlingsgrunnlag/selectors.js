@@ -206,11 +206,6 @@ export const MedfolgendeAndreSelector = createSelector(
   }
 );
 
-export const NorskeArbeidsgivereSedSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlagData => behandlingsgrunnlagData.norskeArbeidsgivere || []
-);
-
 export const OvergangsregelbestemmelserSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlagData => behandlingsgrunnlagData.overgangsregelbestemmelser

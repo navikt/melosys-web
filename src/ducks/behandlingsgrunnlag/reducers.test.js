@@ -235,7 +235,6 @@ describe('behandlingsgrunnlag reducer', () => {
             term: 'Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a',
           },
         ],
-        norskeArbeidsgivere: [],
       },
     };
 
@@ -397,7 +396,6 @@ describe('behandlingsgrunnlag reducer', () => {
               term: 'Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a',
             },
           ],
-          norskeArbeidsgivere: [],
           ytterligereInformasjon: null,
         },
       },

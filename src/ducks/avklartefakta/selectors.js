@@ -127,14 +127,12 @@ export const VirksomheterIPeriodenSelector = createSelector(
   state => behandlingerSelectors.ArbeidsforholdSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => behandlingsgrunnlagSelectors.EkstraArbeidsgivereSelector(state),
-  state => behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector(state),
   state => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
   state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
   (
     arbeidsforholdene,
     organisasjoner,
     ekstraArbeidsgivere,
-    norskeArbeidsgivereSed,
     selvstendigeNaringer,
     foretakUtland
   ) => {
@@ -148,7 +146,6 @@ export const VirksomheterIPeriodenSelector = createSelector(
     return [
       ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
       ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
-      ...norskeArbeidsgivereSed.map(konverterOrganisasjonTilVirksomhet),
       ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
       ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
     ];
@@ -421,9 +418,8 @@ export const IkkeMarginaleArbeidslandAntallSelector = createSelector(
 const AlleOrganisasjonerSelector = createSelector(
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
-  state => behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector(state),
-  (fagsakOrganisasjoner, soknadOrganisasjoner, norskeArbeidsgivereSed) =>
-    [...fagsakOrganisasjoner, ...soknadOrganisasjoner, ...norskeArbeidsgivereSed]
+  (fagsakOrganisasjoner, soknadOrganisasjoner) =>
+    [...fagsakOrganisasjoner, ...soknadOrganisasjoner]
 );
 
 export const AvklarteNorskeVirksomheterSelector = createSelector(

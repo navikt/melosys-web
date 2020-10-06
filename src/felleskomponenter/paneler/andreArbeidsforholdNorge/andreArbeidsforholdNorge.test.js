@@ -2,9 +2,8 @@ import React from 'react';
 
 import * as Nav from '../../../utils/navFrontend';
 
-import { AlleNorskeArbeidsgivere, AndreArbeidsforholdNorge, NorskeArbeidsgivereSed } from './andreArbeidsforholdNorge';
+import { AlleNorskeArbeidsgivere, AndreArbeidsforholdNorge } from './andreArbeidsforholdNorge';
 import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
-import { EnkeltArbeidsforholdNorge } from './arbeidsforholdNorgeListe/arbeidsforholdNorgeListe';
 
 describe('AndreArbeidsforholdNorge', () => {
   let props = null;
@@ -48,26 +47,3 @@ describe('AlleNorskeArbeidsgivere', () => {
   });
 });
 
-describe('NorskeArbeidsgivereSed', () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      redigerbart: true,
-      hentOrganisasjon: jest.fn(),
-      fields: {
-        getAll: jest.fn(() => [
-          { orgnr: '123123123' },
-          { orgnr: '321321321' },
-        ]),
-      },
-    };
-  });
-
-  it('viser to EnkeltArbeidsforholdNorge', () => {
-    const norskeArbeidsgivereSed = shallow(<NorskeArbeidsgivereSed {...props} />);
-    const enkeltArbeidsforholdNorge = norskeArbeidsgivereSed.find(EnkeltArbeidsforholdNorge);
-
-    expect(enkeltArbeidsforholdNorge).toHaveLength(2);
-  });
-});

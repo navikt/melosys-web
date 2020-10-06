@@ -94,7 +94,6 @@ const lagSoeknadFelter = behandlingsgrunnlag => ({
 const lagSedGrunnlagFelter = behandlingsgrunnlag => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
-  norskeArbeidsgivere: behandlingsgrunnlag.norskeArbeidsgivere,
   ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon,
 });
 
