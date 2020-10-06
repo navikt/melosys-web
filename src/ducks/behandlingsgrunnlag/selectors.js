@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 
+import * as Utils from '../../utils';
+
 import { OrganisasjonSelectors } from '../organisasjoner';
 
 import { PersonSelectors } from '../personer';
@@ -152,12 +154,12 @@ export const MaritimtArbeidSelector = createSelector(
 
 export const SkipArbeidSelector = createSelector(
   MaritimtArbeidSelector,
-  maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => !enkeltArbeid.installasjonsLandkode)
+  maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => Utils._isNil(enkeltArbeid.installasjonsLandkode))
 );
 
 export const OffshoreArbeidSelector = createSelector(
   MaritimtArbeidSelector,
-  maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => enkeltArbeid.installasjonsLandkode)
+  maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => !Utils._isNil(enkeltArbeid.installasjonsLandkode))
 );
 
 export const LuftfartBaserSelector = createSelector(
