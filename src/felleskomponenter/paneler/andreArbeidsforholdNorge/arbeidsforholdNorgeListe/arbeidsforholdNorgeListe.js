@@ -124,6 +124,7 @@ export const InnerArbeidsforholdNorgeListe = ({
               organisasjon={organisasjon}
               slett={slett}
               slettTekst={slettTekst}
+              hentVedMount
             />
           );
         })
