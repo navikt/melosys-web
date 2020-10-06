@@ -11,23 +11,24 @@ import * as KV from '../../kodeverk';
 import { doThenDispatch } from '../../services/utils';
 import { formSelectors } from '../form';
 import { behandlingerSelectors } from '../behandlinger';
+import { OrganisasjonOperations } from '../organisasjoner';
 
-/**
- * Operations
- * ----------------------------------------------------------------------------------
- * Dette er Thunk-operasjoner som muliggjør asynkrone kall mot Redux
- * ved å returnere en action-generatoren som en egen funksjon. Denne kjøres deretter
- * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
- *
- */
+const lagState = data => ({ behandlingsgrunnlag: { data } });
 
-// Action Creators
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Behandlingsgrunnlag.hent(behandlingID), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Behandlingsgrunnlag.hent(behandlingID), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: (dispatch, data) => [
+        ...Selectors.EkstraArbeidsgivereSelector(lagState(data)),
+        ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(lagState(data)),
+      ].forEach(orgnr => dispatch(OrganisasjonOperations.hent(orgnr))),
+    }
+  );
 }
 
 export function send(bid, behandlingsgrunnlag) {

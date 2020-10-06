@@ -2,7 +2,6 @@ import reducer from './reducers';
 
 import * as actions from './actions';
 import * as Utils from '../../services/utils';
-import * as BehandlingsgrunnlagActions from '../behandlingsgrunnlag/actions';
 
 describe('organisasjoner reducer', () => {
   let initialState = null;
@@ -23,19 +22,6 @@ describe('organisasjoner reducer', () => {
 
     const reducedState = reducer(initialState, actions.OK(data));
     expect(reducedState).toEqual({ data: [{ orgnr: 810072512 }, { orgnr: 873152362 }], status: Utils.STATUS.OK });
-  });
-
-  it('returnerer ny state ved behandlingsgrunnlag/ok action', () => {
-    const data = {
-      tilleggsData: {
-        organisasjoner: [
-          { orgnr: 873152362 },
-        ],
-      },
-    };
-
-    const reducedState = reducer(initialState, BehandlingsgrunnlagActions.OK(data));
-    expect(reducedState).toEqual({ data: [{ orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 
   it('returnerer ny state ved ok action', () => {

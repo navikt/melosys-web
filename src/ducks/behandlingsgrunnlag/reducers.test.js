@@ -42,9 +42,6 @@ describe('behandlingsgrunnlag reducer', () => {
         data: {
           test: 'testdata',
         },
-        tilleggsData: {
-          testtest: 'testtest',
-        },
       },
     };
     const expectedState = {
@@ -52,9 +49,6 @@ describe('behandlingsgrunnlag reducer', () => {
       data: {
         data: {
           test: 'testdata',
-        },
-        tilleggsData: {
-          testtest: 'testtest',
         },
       },
     };

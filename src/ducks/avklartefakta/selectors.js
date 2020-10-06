@@ -126,7 +126,7 @@ const konverterOrganisasjonTilVirksomhet = org => ({
 export const VirksomheterIPeriodenSelector = createSelector(
   state => behandlingerSelectors.ArbeidsforholdSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
-  state => behandlingsgrunnlagSelectors.EkstraArbeidsgivereSelector(state),
+  state => behandlingsgrunnlagSelectors.ValiderteEkstraArbeidsgivereSelector(state),
   state => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
   state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
   (
