@@ -33,8 +33,8 @@ const IngenSokkelSkipEllerHjemmebaser = ({
     };
   }, []);
 
-  const vedEndring = e => {
-    if (e.target.checked) {
+  const vedEndring = ({ checked }) => {
+    if (checked) {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, null, KV.Koder.BoolskAvklartfaktaType.SANN, null));
     } else {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND));
@@ -49,9 +49,9 @@ const IngenSokkelSkipEllerHjemmebaser = ({
         Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebaser. Fyll ut feltene hvis det er relevant for å vurdere arbeidsland.
       </Nav.AlertStripe>
       <Nav.Fieldset legend="">
-        <Nav.Checkbox
+        <Mui.Checkbox
           label="Arbeid utføres i land som er oppgitt"
-          onChange={vedEndring}
+          onCheck={vedEndring}
           disabled={!redigerbart}
           checked={erChecked}
         />

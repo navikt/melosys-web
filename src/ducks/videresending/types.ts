@@ -1,13 +1,12 @@
+import { ErrorResponse } from 'melosys-api';
+
 export const OK = 'videresending/OK';
 export const FEILET = 'videresending/FEILET';
 export const PENDING = 'videresending/PENDING';
 export const RESET = 'videresending/RESET';
 
 export interface Data {
-  data?: {
-    status?: number,
-    message?: string,
-  }
+  data?: ErrorResponse,
 }
 
 interface ResetAction {

@@ -13,9 +13,32 @@ declare module 'AppTypes' {
 declare module 'Domene' {
   export type Avklartfakta = import('./@types').Avklartfakta;
   export type AnmodningOmUnntakBestilling = import('./@types').AnmodningOmUnntakBestilling;
+  export type Fagsak = import('./@types').Fagsak;
+  export type Oppsummering = import('./@types').Oppsummering;
+  export type Person = import('./@types').Person;
   export type Videresending = import('./@types').Videresending;
+  export type DokumentOversikt = import('./@types').DokumentOversikt;
+  export type Dokument = import('./@types').Dokument;
+  export type FysiskDokument = import('./@types').FysiskDokument;
+  export type Mottaksretning = import('./@types').Mottaksretning;
+  export type BrevPdfData = import('./@types').BrevPdfData;
+  export type SedPdfData = import('./@types').SedPdfData;
 }
 
 declare module 'melosys-kodeverk' {
   export type KTObject = { kode: string, term: string | null };
+}
+
+declare module 'melosys-api' {
+  interface Feilkode {
+    kode: string,
+    felter: string[],
+  }
+
+  export interface ErrorResponse {
+    error: string,
+    status: number,
+    message: string,
+    feilkoder?: Feilkode[],
+  }
 }

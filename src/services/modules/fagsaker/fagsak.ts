@@ -10,7 +10,7 @@ interface SoknadDto {
   },
   land: string[],
 }
-interface OpprettDto {
+interface OpprettReqDto {
   brukerID: string,
   sakstype: string,
   behandlingstema: string,
@@ -18,29 +18,29 @@ interface OpprettDto {
   skalTilordnes: boolean,
   oppgaveID: string,
 }
-export const opprett = (body: OpprettDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/opprett`, body);
+export const opprett = (body: OpprettReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/opprett`, body);
 
-interface HenleggDto {
+interface HenleggReqDto {
   begrunnelseKode: string,
   fritekst: string | null,
 }
-export const henlegg = (saksnummer: string, body: HenleggDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg`, body);
+export const henlegg = (saksnummer: string, body: HenleggReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg`, body);
 
 export const bortfall = (saksnummer: string) => putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/avsluttsaksombortfalt`);
 
-interface VideresendDto {
+interface VideresendReqDto {
   mottakerinstitusjon: string | null,
   fritekst: string | null,
 }
-export const videresend = (saksnummer: string, body: VideresendDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-videresend`, body);
+export const videresend = (saksnummer: string, body: VideresendReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-videresend`, body);
 
 export const avslutt = (saksnummer: string) => putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/avslutt`);
 
-interface UtpekDto {
+interface UtpekReqDto {
   mottakerinstitusjoner: string[],
   fritekstSed: string | null,
   fritekstBrev: string | null,
 }
-export const utpek = (saksnummer: string, body: UtpekDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/utpek`, body);
+export const utpek = (saksnummer: string, body: UtpekReqDto) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/utpek`, body);
 
 export const revurder = (saksnummer: string) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/revurder`, {});

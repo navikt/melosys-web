@@ -1,13 +1,12 @@
+import { ErrorResponse } from 'melosys-api';
+
 export const OK = 'anmodningunntak/OK';
 export const FEILET = 'anmodningunntak/FEILET';
 export const PENDING = 'anmodningunntak/PENDING';
 export const RESET = 'anmodningunntak/RESET';
 
 export interface Data {
-  data?: {
-    status?: number,
-    message?: string,
-  }
+  data?: ErrorResponse,
 }
 
 interface ResetAction {

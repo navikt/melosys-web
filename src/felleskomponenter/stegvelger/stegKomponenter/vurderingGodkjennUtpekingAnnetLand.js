@@ -17,8 +17,8 @@ const VurderingGodkjennUtpekingAnnetLand = ({
 }) => {
   const [varsleUtland, setVarsleUtland] = useState(false);
 
-  const vedEndring = event => {
-    setVarsleUtland(event.target.checked);
+  const vedEndring = ({ checked }) => {
+    setVarsleUtland(checked);
   };
 
   const hovedknappHandler = () => {
@@ -42,9 +42,9 @@ const VurderingGodkjennUtpekingAnnetLand = ({
         redigerbart &&
         <Nav.Row className="sendA012">
           <Nav.Column xs="12">
-            <Nav.Checkbox
+            <Mui.Checkbox
               label="Send A012"
-              onChange={vedEndring}
+              onCheck={vedEndring}
             />
           </Nav.Column>
         </Nav.Row>

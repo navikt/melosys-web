@@ -12,7 +12,7 @@ import * as Skjema from '../../skjema';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -38,7 +38,7 @@ const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) 
 
 const VurderingVedtak = ({
   lovvalgsperioder,
-  soknadsland,
+  arbeidsland,
   redigerbart,
   behandlingID,
   lagreOgFatteVedtak,
@@ -144,7 +144,7 @@ const VurderingVedtak = ({
               <Mottakerinstitusjonvelger
                 form={form}
                 redigerbart={redigerbart}
-                landkode={soknadsland[0]}
+                landkode={arbeidsland[0].kode}
                 bucType={bucType}
               />
             </Nav.Column>
@@ -168,7 +168,7 @@ const VurderingVedtak = ({
 VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
-  soknadsland: PT.arrayOf(PT.string).isRequired,
+  arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
@@ -192,7 +192,7 @@ VurderingVedtak.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
