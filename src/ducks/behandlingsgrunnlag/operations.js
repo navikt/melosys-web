@@ -13,22 +13,24 @@ import { formSelectors } from '../form';
 import { behandlingerSelectors } from '../behandlinger';
 import { OrganisasjonOperations } from '../organisasjoner';
 
-const lagState = data => ({ behandlingsgrunnlag: { data } });
-
 export function hent(behandlingID) {
-  return doThenDispatch(
-    () => Api.Behandlingsgrunnlag.hent(behandlingID), {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    {
-      success: (dispatch, data) => [
-        ...Selectors.EkstraArbeidsgivereSelector(lagState(data)),
-        ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(lagState(data)),
-      ].forEach(orgnr => dispatch(OrganisasjonOperations.hent(orgnr))),
-    }
-  );
+  return (dispatch, getState) => {
+    const thunk = doThenDispatch(
+      () => Api.Behandlingsgrunnlag.hent(behandlingID), {
+        OK: Types.OK,
+        FEILET: Types.FEILET,
+        PENDING: Types.PENDING,
+      },
+      {
+        success: () => [
+          ...Selectors.EkstraArbeidsgivereSelector(getState()),
+          ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(getState()),
+        ].forEach(orgnr => dispatch(OrganisasjonOperations.hent(orgnr))),
+      }
+    );
+
+    return thunk(dispatch, getState);
+  };
 }
 
 export function send(bid, behandlingsgrunnlag) {

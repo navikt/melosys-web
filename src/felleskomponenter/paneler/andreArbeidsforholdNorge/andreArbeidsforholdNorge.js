@@ -22,11 +22,8 @@ export const AndreArbeidsforholdNorge = ({
   hentOrganisasjon,
 }) => {
   const finnOrganisasjon = orgnr => {
-    if (organisasjoner.map(o => o.orgnr).includes(orgnr)) {
-      return organisasjoner.find(o => o.orgnr === orgnr);
-    }
-
-    return ({ orgnr });
+    const org = organisasjoner.find(o => o.orgnr === orgnr);
+    return org || { orgnr };
   };
 
   return (

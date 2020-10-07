@@ -31,10 +31,14 @@ const toJson = async response => {
 
 export const sendResultatTilDispatch = (dispatch, action, callback) => (...data) => {
   const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
+
+  const dispatchedAction = dispatch({ type: action, data: dataSomSkalDispatches });
+
   if (callback && typeof callback === 'function') {
     callback(dispatch, dataSomSkalDispatches);
   }
-  return dispatch({ type: action, data: dataSomSkalDispatches });
+
+  return dispatchedAction;
 };
 
 export const handterFeil = (dispatch, action, callback) => async error => {
