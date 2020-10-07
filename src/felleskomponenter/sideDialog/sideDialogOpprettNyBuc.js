@@ -10,6 +10,7 @@ import * as Utils from '../../utils';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
 import { kodeTilObjekt } from '../../kodeverk';
 import { VedleggVelger } from './VedleggVelger';
+import MultiSelect from '../multiSelect';
 
 import './sideDialogOpprettNyBuc.css';
 
@@ -26,33 +27,33 @@ TomtFelt.defaultProps = {
 };
 
 const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
-  const [mottakerinstitusjoner, setMottakerinstitusjoner] = useState([]);
+  const [tilgjengeligeMottakerinstitusjoner, setTilgjengeligeMottakerinstitusjoner] = useState([]);
 
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
   const [valgtBuc, setValgtBuc] = useState('');
   const [valgtSed, setValgtSed] = useState('');
-  const [valgtLand, setValgtLand] = useState('');
-  const [valgtMottakerinstitusjon, setValgtMottakerinstitusjon] = useState('');
+  const [valgteLand, setValgteLand] = useState([]);
+  const [valgteMottakerinstitusjoner, setValgteMottakerinstitusjoner] = useState([]);
   const [valgteVedlegg, setValgteVedlegg] = useState([]);
 
   const [opprettetBucUrl, setOpprettetBucUrl] = useState('');
   const [bucOpprettet, setBucOpprettet] = useState(false);
   const [oppretterBuc, setOppretterBuc] = useState(false);
-  const [feilmeldinger, setFeilmeldinger] = useState({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
-  const [oppdaterteFelt, setOppdaterteFelt] = useState({ buc: false, land: false, mottakerinstitusjon: false });
+  const [feilmeldinger, setFeilmeldinger] = useState({ buc: undefined, land: undefined, mottakerinstitusjoner: undefined });
+  const [oppdaterteFelt, setOppdaterteFelt] = useState({ buc: false, land: false, mottakerinstitusjoner: false });
   const [alertmelding, setAlertmelding] = useState('');
 
   const hentMottakerinstitusjoner = async (buc, landkode) => {
     if (buc && landkode) {
       try {
         const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(buc, landkode);
-        setMottakerinstitusjoner(institusjoner);
+        setTilgjengeligeMottakerinstitusjoner(institusjoner);
       } catch (e) {
         Utils.logger.error(e);
         setAlertmelding('Finner ingen mottakerinstitusjoner');
       }
     } else {
-      setMottakerinstitusjoner([]);
+      setTilgjengeligeMottakerinstitusjoner([]);
     }
   };
 
@@ -63,12 +64,12 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   const resetForm = () => {
     setValgtBuc('');
     setValgtSed('');
-    setValgtLand('');
-    setValgtMottakerinstitusjon('');
+    setValgteLand([]);
+    setValgteMottakerinstitusjoner([]);
     setValgtFagomrade(EKV.Koder.sektor.LA);
     setValgteVedlegg([]);
-    setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
-    setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjon: false });
+    setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjoner: undefined });
+    setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjoner: false });
   };
 
   const resetState = () => {
@@ -85,12 +86,12 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
 
   const erValidert = () => YupSkjemaer.sed.isValidSync({
     buc: valgtBuc,
-    land: valgtLand,
-    mottakerinstitusjon: valgtMottakerinstitusjon,
+    land: valgteLand,
+    mottakerinstitusjoner: valgteMottakerinstitusjoner,
   });
 
-  const valider = ({ buc = valgtBuc, land = valgtLand, mottakerinstitusjon = valgtMottakerinstitusjon }) =>
-    setFeilmeldinger(lagYupToReduxformErrorMapper(YupSkjemaer.sed)({ buc, land, mottakerinstitusjon }));
+  const valider = ({ buc = valgtBuc, land = valgteLand, mottakerinstitusjoner = valgteMottakerinstitusjoner }) =>
+    setFeilmeldinger(lagYupToReduxformErrorMapper(YupSkjemaer.sed)({ buc, land, mottakerinstitusjoner }));
 
   const sendSed = async () => {
     if (erValidert()) {
@@ -98,8 +99,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         setOppretterBuc(true);
         const sedResponse = await Api.Eessi.bucer.opprett(behandlingID, {
           bucType: valgtBuc,
-          mottakerLand: valgtLand,
-          mottakerId: valgtMottakerinstitusjon,
+          mottakerInstitusjoner: valgteMottakerinstitusjoner,
           vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
         });
 
@@ -114,7 +114,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         setAlertmelding('Saken kunne ikke opprettes i RINA');
       }
     } else {
-      setOppdaterteFelt({ buc: true, land: true, mottakerinstitusjon: true });
+      setOppdaterteFelt({ buc: true, land: true, mottakerinstitusjoner: true });
       valider({});
     }
 
@@ -161,22 +161,22 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
     valider({ buc });
 
     setValgtSed(buc ? tilgjengeligeSeder(buc)[0].kode : '');
-    hentMottakerinstitusjoner(buc, valgtLand);
+    hentMottakerinstitusjoner(buc, valgteLand);
   };
 
-  const landEndret = event => {
-    const land = hentValgtKode(event);
-    setValgtLand(land);
+  const landEndret = options => {
+    const land = options ? options.map(item => item.value) : [];
+    setValgteLand(land);
     oppdaterFelt('land');
     valider({ land });
     hentMottakerinstitusjoner(valgtBuc, land);
   };
 
-  const mottakerinstitusjonEndret = event => {
-    const mottakerinstitusjon = hentValgtKode(event);
-    setValgtMottakerinstitusjon(mottakerinstitusjon);
-    oppdaterFelt('mottakerinstitusjon');
-    valider({ mottakerinstitusjon });
+  const mottakerinstitusjonEndret = options => {
+    const mottakerinstitusjoner = options ? options.map(item => item.value) : [];
+    setValgteMottakerinstitusjoner(mottakerinstitusjoner);
+    oppdaterFelt('mottakerinstitusjoner');
+    valider({ mottakerinstitusjoner });
   };
 
   const displayName = elem => `${elem.kode} - ${elem.term}`;
@@ -199,14 +199,20 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             <TomtFelt tekst="" />
             { tilgjengeligeSeder(valgtBuc).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
           </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="Land" onChange={landEndret} value={valgtLand} feil={feil('land')}>
-            <TomtFelt />
-            {MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={item.kode}>{`${item.term} (${item.kode})`}</option>))}
-          </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="Mottaker institusjon" onChange={mottakerinstitusjonEndret} value={valgtMottakerinstitusjon} feil={feil('mottakerinstitusjon')}>
-            <TomtFelt />
-            { mottakerinstitusjoner.map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
-          </Nav.Select>
+          <MultiSelect
+            label="Land"
+            onChange={landEndret}
+            options={MKV.KTObjects.landkoder.map(item => ({ value: item.kode, label: item.term }))}
+            feil={feil('land')}
+            values={valgteLand}
+          />
+          <MultiSelect
+            label="Mottakerinstitusjoner"
+            onChange={mottakerinstitusjonEndret}
+            options={tilgjengeligeMottakerinstitusjoner.map(item => ({ value: item.id, label: item.navn }))}
+            feil={feil('mottakerinstitusjoner')}
+            values={valgteMottakerinstitusjoner}
+          />
           <VedleggVelger valgteVedlegg={valgteVedlegg} setValgteVedlegg={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
