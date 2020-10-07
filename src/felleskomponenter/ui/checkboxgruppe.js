@@ -3,6 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
+import * as Mui from '.';
 
 const Checkboxgruppe = ({
   legend,
@@ -13,8 +14,8 @@ const Checkboxgruppe = ({
 }) => {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(muligeValg.map(valg => valg.kode).filter(kode => defaultValg.includes(kode)));
 
-  const onChangeHandler = e => {
-    const verdi = e.target.value;
+  const onChangeHandler = ({ value }) => {
+    const verdi = value;
 
     const nyeValgteCheckboxer = valgteCheckboxer.includes(verdi) ? valgteCheckboxer.filter(checkbox => checkbox !== verdi) : [...valgteCheckboxer, verdi];
 
@@ -25,14 +26,14 @@ const Checkboxgruppe = ({
   return (
     <Nav.Fieldset legend={legend}>
       {
-        muligeValg.map(valg => <Nav.Checkbox
+        muligeValg.map(valg => <Mui.Checkbox
           key={valg.kode}
           name="annetBostedsland"
           label={valg.term}
           value={valg.kode}
-          defaultChecked={valgteCheckboxer.includes(valg.kode)}
+          checked={valgteCheckboxer.includes(valg.kode)}
           disabled={disabled}
-          onChange={onChangeHandler}
+          onCheck={onChangeHandler}
         />)
       }
     </Nav.Fieldset>

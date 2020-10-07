@@ -7,6 +7,7 @@ import { ReactComponent as Binders } from './paperclip.svg';
 import { ReactComponent as BrevSendt } from './emailsend.svg';
 import { ReactComponent as Calendar } from './calendar.svg';
 import { ReactComponent as CheckList } from './check-list.svg';
+import { ReactComponent as Eye } from './eye.svg';
 import { ReactComponent as Ferdig } from './ikon-steg-ferdig.svg';
 import { ReactComponent as Feil } from './ikon-steg-feil.svg';
 import { ReactComponent as Filenew } from './line-version-file-new-1.svg';
@@ -39,6 +40,7 @@ export {
   BrevSendt as InnBrev,
   Calendar,
   CheckList,
+  Eye,
   Feil,
   Ferdig,
   Filenew,

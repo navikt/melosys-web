@@ -5,12 +5,8 @@ import { connect } from 'react-redux';
 import * as Nav from '../utils/navFrontend';
 
 import { FellesHandlersContext } from '../contexts';
-import { anmodningunntakSelectors } from '../ducks/anmodningunntak';
 import { modalerOperations, modalerSelectors } from '../ducks/modaler';
-import { vedtakSelectors } from '../ducks/vedtak';
-import { utpekSelectors } from '../ducks/utpek';
-import { journalforingSelectors } from '../ducks/journalforing';
-import { videresendingSelectors } from '../ducks/videresending';
+import { feiletresponsSelectors } from '../ducks/feiletrespons';
 
 import DialogboksOppfriskSak from '../felleskomponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksHenlegg from '../felleskomponenter/dialogboks/dialogboksHenlegg';
@@ -120,13 +116,16 @@ Modals.propTypes = {
   venterPaRevurderFagsak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
-  valideringerFeilkoder: PT.arrayOf(PT.string),
+  behandlingOppfriskes: PT.bool.isRequired,
+  annenBehandlingOppfriskes: PT.bool.isRequired,
+  valideringerFeilkoder: PT.arrayOf(PT.shape({
+    kode: PT.string.isRequired,
+    felter: PT.arrayOf(PT.string).isRequired,
+  })),
   valideringerFeilmeldinger: PT.arrayOf(PT.shape({
     tittel: PT.string.isRequired,
     innhold: PT.string.isRequired,
   })),
-  behandlingOppfriskes: PT.bool.isRequired,
-  annenBehandlingOppfriskes: PT.bool.isRequired,
 };
 
 Modals.defaultProps = {
@@ -141,8 +140,8 @@ const mapStateToProps = state => ({
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
-  valideringerFeilkoder: [...vedtakSelectors.FeilkoderSelector(state), ...utpekSelectors.FeilkoderSelector(state)],
-  valideringerFeilmeldinger: [...journalforingSelectors.FeilmeldingSelector(state), ...videresendingSelectors.FeilmeldingSelector(state), ...anmodningunntakSelectors.FeilmeldingSelector(state)],
+  valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
+  valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
