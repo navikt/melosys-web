@@ -11,23 +11,26 @@ import * as KV from '../../kodeverk';
 import { doThenDispatch } from '../../services/utils';
 import { formSelectors } from '../form';
 import { behandlingerSelectors } from '../behandlinger';
+import { OrganisasjonOperations } from '../organisasjoner';
 
-/**
- * Operations
- * ----------------------------------------------------------------------------------
- * Dette er Thunk-operasjoner som muliggjør asynkrone kall mot Redux
- * ved å returnere en action-generatoren som en egen funksjon. Denne kjøres deretter
- * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
- *
- */
-
-// Action Creators
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Behandlingsgrunnlag.hent(behandlingID), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return (dispatch, getState) => {
+    const thunk = doThenDispatch(
+      () => Api.Behandlingsgrunnlag.hent(behandlingID), {
+        OK: Types.OK,
+        FEILET: Types.FEILET,
+        PENDING: Types.PENDING,
+      },
+      {
+        success: () => [
+          ...Selectors.EkstraArbeidsgivereSelector(getState()),
+          ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(getState()),
+        ].forEach(orgnr => dispatch(OrganisasjonOperations.hent(orgnr))),
+      }
+    );
+
+    return thunk(dispatch, getState);
+  };
 }
 
 export function send(bid, behandlingsgrunnlag) {
@@ -94,7 +97,6 @@ const lagSoeknadFelter = behandlingsgrunnlag => ({
 const lagSedGrunnlagFelter = behandlingsgrunnlag => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
-  norskeArbeidsgivere: behandlingsgrunnlag.norskeArbeidsgivere,
   ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon,
 });
 

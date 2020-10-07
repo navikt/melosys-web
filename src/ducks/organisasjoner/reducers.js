@@ -7,7 +7,6 @@
 
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
-import * as BehandlingsgrunnlagTypes from '../behandlingsgrunnlag/types';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
@@ -25,13 +24,6 @@ const flettOrganisasjoner = (nyeOrganisasjoner, eksisterendeOrganisasjoner) => {
 
 export default function reducer(state = initalState, action) {
   switch (action.type) {
-    case BehandlingsgrunnlagTypes.OK: {
-      if (!action.data.tilleggsData) { return state; }
-      const { organisasjoner } = action.data.tilleggsData;
-      const eksisterendeOrganisasjoner = state.data;
-
-      return { ...state, status: STATUS.OK, data: flettOrganisasjoner(organisasjoner, eksisterendeOrganisasjoner) };
-    }
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:

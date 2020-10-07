@@ -73,39 +73,10 @@ const BehandlingsgrunnnlagDataPropType = PT.shape({
   selvstendigArbeid: SelvstendigArbeidPropType,
   soeknadsland: SoeknadslandPropType,
 });
-const GateAdressePropType = PT.shape({
-  gatenavn: PT.string,
-  gatenummer: PT.string,
-  husbokstav: PT.string,
-  husnummer: PT.string,
-});
-const ForretningsAdressePropType = PT.shape({
-  gateadresse: GateAdressePropType,
-  land: PT.string,
-  postnr: PT.string,
-  poststed: PT.string,
-});
-const OrganisasjonerPropType = PT.arrayOf(PT.shape({
-  forretningsadresse: ForretningsAdressePropType,
-  navn: PT.string,
-  oppstartdato: PT.string,
-  organisasjonsform: PT.string,
-  orgnr: PT.string,
-  postadresse: PT.shape({
-    gateadresse: GateAdressePropType,
-    land: PT.string,
-    postnr: PT.string,
-    poststed: PT.string,
-  }),
-}));
 
-const TilleggsDataPropType = PT.shape({
-  organisasjoner: OrganisasjonerPropType,
-});
 const BehandlingsgrunnlagPropType = PT.shape({
   data: BehandlingsgrunnnlagDataPropType,
   type: PT.string,
-  tilleggsData: TilleggsDataPropType,
 });
 
 export { BehandlingsgrunnlagPropType as Behandlingsgrunnlag };

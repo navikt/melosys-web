@@ -31,13 +31,17 @@ const toJson = async response => {
 
 export const sendResultatTilDispatch = (dispatch, action, { onDispatch, mapDispatchData }) => (...data) => {
   const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
+
+  const dispatchedAction = dispatch({ type: action, data: dataSomSkalDispatches });
+
   if (onDispatch && typeof onDispatch === 'function') {
     onDispatch(dispatch, dataSomSkalDispatches);
   }
   if (mapDispatchData && typeof mapDispatchData === 'function') {
     return dispatch({ type: action, data: mapDispatchData(dataSomSkalDispatches) });
   }
-  return dispatch({ type: action, data: dataSomSkalDispatches });
+
+  return dispatchedAction;
 };
 
 export const handterFeil = (dispatch, action, callback) => async error => {

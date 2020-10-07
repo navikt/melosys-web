@@ -1,7 +1,7 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe } from './arbeidsforholdNorgeListe';
+import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe, EnkeltArbeidsforholdNorge } from './arbeidsforholdNorgeListe';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
 
@@ -52,8 +52,31 @@ describe('InnerArbeidsforholdNorgeListe', () => {
     };
   });
 
-  it('viser en Organisasjon', () => {
+  it('viser en EnkeltArbeidsforholdNorge', () => {
     const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
+    const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(EnkeltArbeidsforholdNorge);
+
+    expect(enkeltArbeidsforholdNorge).toHaveLength(1);
+  });
+});
+
+describe('EnkeltArbeidsforholdNorge', () => {
+  let props = null;
+
+  beforeEach(() => {
+    props = {
+      erstatt: jest.fn(),
+      valideringer: [],
+      redigerbart: true,
+      hentOrganisasjon: jest.fn(),
+      organisasjon: { orgnr: '123123123' },
+      slett: jest.fn(),
+      slettTekst: 'Slett',
+    };
+  });
+
+  it('viser en Organisasjon', () => {
+    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorge {...props} />);
     const organisasjon = innerArbeidsforholdNorgeListe.find(Organisasjon);
     const organisasjonProps = organisasjon.props();
 
@@ -63,7 +86,7 @@ describe('InnerArbeidsforholdNorgeListe', () => {
   });
 
   it('viser en orgnrinput', () => {
-    const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
+    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorge {...props} />);
     const orgnrinput = innerArbeidsforholdNorgeListe.find(Orgnrinput);
 
     expect(orgnrinput).toHaveLength(1);

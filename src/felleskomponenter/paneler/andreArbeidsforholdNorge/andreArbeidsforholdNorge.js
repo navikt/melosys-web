@@ -20,49 +20,56 @@ export const AndreArbeidsforholdNorge = ({
   redigerbart,
   organisasjoner,
   hentOrganisasjon,
-}) => (
-  <div className="andreArbeidsforholdNorge panelSeksjon">
-    <Nav.EkspanderbartpanelBase
-      heading={<PanelHeader tittel={KV.Panel.andreArbeidsforholdNorge.tittel} />}
-      ariaTittel="Panel for andre arbeidsforhold i Norge"
-    >
-      <Mui.Undertittel
-        ikon={Ikoner.Arbeidsgiver}
-        tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.arbeidsforholdINorge}
-        className="undertittel"
-        understrek
-      />
-      <ArbeidsforholdNorgeListe
-        leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
-        slettTekst="Slett arbeidsforhold"
-        feltNavn="ekstraArbeidsgivere"
-        redigerbart={redigerbart}
-        hentOrganisasjon={hentOrganisasjon}
-        transformerOrgTilElement={org => org.orgnr}
-        findOrganisasjon={orgnr => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === orgnr)}
-        defaultElement={null}
-        elementerInneholderOrg={(orgListe, orgnr) => orgListe.includes(orgnr)}
-      />
-      <Mui.Undertittel
-        ikon={Ikoner.Arbeidsgiver}
-        tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.selvstendigNaeringsdrivendeINorge}
-        className="undertittel selvstendigNaeringsvirksomhetUndertittel"
-        understrek
-      />
-      <ArbeidsforholdNorgeListe
-        leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET"
-        slettTekst="Slett virksomhet"
-        feltNavn="selvstendigForetak"
-        redigerbart={redigerbart}
-        hentOrganisasjon={hentOrganisasjon}
-        transformerOrgTilElement={org => ({ orgnr: org.orgnr })}
-        findOrganisasjon={org => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === org.orgnr)}
-        defaultElement={{}}
-        elementerInneholderOrg={(orgListe, orgnr) => orgListe.find(org => org.orgnr === orgnr)}
-      />
-    </Nav.EkspanderbartpanelBase>
-  </div>
-);
+}) => {
+  const finnOrganisasjon = orgnr => {
+    const org = organisasjoner.find(o => o.orgnr === orgnr);
+    return org || { orgnr };
+  };
+
+  return (
+    <div className="andreArbeidsforholdNorge panelSeksjon">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader tittel={KV.Panel.andreArbeidsforholdNorge.tittel} />}
+        ariaTittel="Panel for andre arbeidsforhold i Norge"
+      >
+        <Mui.Undertittel
+          ikon={Ikoner.Arbeidsgiver}
+          tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.arbeidsforholdINorge}
+          className="undertittel"
+          understrek
+        />
+        <ArbeidsforholdNorgeListe
+          leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD"
+          slettTekst="Slett arbeidsforhold"
+          feltNavn="ekstraArbeidsgivere"
+          redigerbart={redigerbart}
+          hentOrganisasjon={hentOrganisasjon}
+          transformerOrgTilElement={org => org.orgnr}
+          findOrganisasjon={finnOrganisasjon}
+          defaultElement={null}
+          elementerInneholderOrg={(orgListe, orgnr) => orgListe.includes(orgnr)}
+        />
+        <Mui.Undertittel
+          ikon={Ikoner.Arbeidsgiver}
+          tekst={KV.Panel.andreArbeidsforholdNorge.undertitler.selvstendigNaeringsdrivendeINorge}
+          className="undertittel selvstendigNaeringsvirksomhetUndertittel"
+          understrek
+        />
+        <ArbeidsforholdNorgeListe
+          leggTilTekst="+ LEGG TIL NY SELVSTENDIG VIRKSOMHET"
+          slettTekst="Slett virksomhet"
+          feltNavn="selvstendigForetak"
+          redigerbart={redigerbart}
+          hentOrganisasjon={hentOrganisasjon}
+          transformerOrgTilElement={org => ({ orgnr: org.orgnr })}
+          findOrganisasjon={org => organisasjoner.find(enkeltOrg => enkeltOrg.orgnr === org.orgnr)}
+          defaultElement={{}}
+          elementerInneholderOrg={(orgListe, orgnr) => orgListe.find(org => org.orgnr === orgnr)}
+        />
+      </Nav.EkspanderbartpanelBase>
+    </div>
+  );
+};
 
 AndreArbeidsforholdNorge.propTypes = {
   redigerbart: PT.bool.isRequired,

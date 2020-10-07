@@ -81,13 +81,13 @@ export const JuridiskArbeidsgiverNorgeSelector = createSelector(
 
 export const EkstraArbeidsgivereSelector = createSelector(
   JuridiskArbeidsgiverNorgeSelector,
-  OrganisasjonSelectors.organisasjonerSelector,
-  (juridiskArbeidsgiver, organisasjoner) => {
-    const { ekstraArbeidsgivere } = juridiskArbeidsgiver;
-    if (!ekstraArbeidsgivere) { return []; }
+  juridiskArbeidsgiver => juridiskArbeidsgiver.ekstraArbeidsgivere || []
+);
 
-    return organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr));
-  }
+export const ValiderteEkstraArbeidsgivereSelector = createSelector(
+  EkstraArbeidsgivereSelector,
+  OrganisasjonSelectors.organisasjonerSelector,
+  (ekstraArbeidsgivere, organisasjoner) => organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr))
 );
 
 export const SelvstendigArbeidSelector = createSelector(
@@ -97,7 +97,12 @@ export const SelvstendigArbeidSelector = createSelector(
 
 export const SelvstendigArbeidForetakSelector = createSelector(
   SelvstendigArbeidSelector,
-  selvstendigArbeid => selvstendigArbeid.selvstendigForetak
+  selvstendigArbeid => selvstendigArbeid.selvstendigForetak || []
+);
+
+export const SelvstendigArbeidForetakOrgnumreSelector = createSelector(
+  SelvstendigArbeidForetakSelector,
+  selvstendigForetak => selvstendigForetak.map(foretak => foretak.orgnr)
 );
 
 export const SelvstendigNaringsvirksomhetSelector = createSelector(
@@ -206,11 +211,6 @@ export const MedfolgendeAndreSelector = createSelector(
     const { medfolgendeAndre } = personopplysninger;
     return allePersoner.find(person => person.fnr === medfolgendeAndre);
   }
-);
-
-export const NorskeArbeidsgivereSedSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlagData => behandlingsgrunnlagData.norskeArbeidsgivere || []
 );
 
 export const OvergangsregelbestemmelserSelector = createSelector(
