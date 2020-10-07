@@ -209,7 +209,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
           <MultiSelect
             label="Mottakerinstitusjoner"
             onChange={mottakerinstitusjonEndret}
-            options={tilgjengeligeMottakerinstitusjoner.map(item => ({ value: item.id, label: item.navn }))}
+            options={tilgjengeligeMottakerinstitusjoner.map(item => ({ value: item.id, label: `${item.landkode} - ${item.navn}` }))}
             feil={feil('mottakerinstitusjoner')}
             values={valgteMottakerinstitusjoner}
           />
