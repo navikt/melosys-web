@@ -111,7 +111,8 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         }
       } catch (e) {
         Utils.logger.error(e);
-        setAlertmelding('Saken kunne ikke opprettes i RINA');
+        if (e.status >= 500) setAlertmelding('Saken kunne ikke opprettes i RINA');
+        else if (e.status >= 400) setAlertmelding(e.body.message);
       }
     } else {
       setOppdaterteFelt({ buc: true, land: true, mottakerinstitusjoner: true });
