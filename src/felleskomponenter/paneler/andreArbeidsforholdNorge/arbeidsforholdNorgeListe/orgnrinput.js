@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
@@ -9,17 +9,25 @@ const Orgnrinput = ({
   hentOrganisasjon,
   defaultOrgnr,
   valideringer,
+  hentVedMount,
+  ikkeFunnetFeilmelding,
+  feilVedHentingFeilmelding,
 }) => {
   const [orgnr, setOrgnr] = useState(defaultOrgnr);
   const [feil, setFeil] = useState(undefined);
   const [hasFocus, setHasFocus] = useState(false);
 
-  const leggTilOrg = async tillagtOrgnr => {
-    const utlostValidering = valideringer.find(({ validering }) => validering(tillagtOrgnr));
+  const valider = organisasjonsnummer => {
+    const utlostValidering = valideringer.find(({ validering }) => validering(organisasjonsnummer));
     if (utlostValidering) {
       setFeil(utlostValidering.feilmelding);
-      return;
     }
+
+    return !utlostValidering;
+  };
+
+  const leggTilOrg = async tillagtOrgnr => {
+    if (!valider(tillagtOrgnr)) return;
 
     const action = await hentOrganisasjon(tillagtOrgnr);
     const { data } = action;
@@ -30,11 +38,17 @@ const Orgnrinput = ({
     if (orgFunnet) {
       onOrgnrFunnet(organisasjon);
     } else if (httpStatus === 404) {
-      setFeil('Kunne ikke finne organisasjon');
+      setFeil(ikkeFunnetFeilmelding);
     } else {
-      setFeil('Feil ved henting av organisasjon');
+      setFeil(feilVedHentingFeilmelding);
     }
   };
+
+  useEffect(() => {
+    if (hentVedMount) {
+      leggTilOrg(orgnr);
+    }
+  }, [hentVedMount]);
 
   const onChange = e => {
     setFeil(undefined);
@@ -50,7 +64,7 @@ const Orgnrinput = ({
         <Nav.Row>
           <Nav.Column xs="3">
             <Nav.Input
-              label="Org. nr."
+              label="Org.nr."
               onChange={onChange}
               value={orgnr}
               disabled={!redigerbart}
@@ -72,14 +86,20 @@ Orgnrinput.propTypes = {
   redigerbart: PT.bool.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   defaultOrgnr: PT.string,
+  hentVedMount: PT.bool,
   valideringer: PT.arrayOf(PT.shape({
     validering: PT.func.isRequired,
     feilmelding: PT.string.isRequired,
   })).isRequired,
+  ikkeFunnetFeilmelding: PT.string,
+  feilVedHentingFeilmelding: PT.string,
 };
 
 Orgnrinput.defaultProps = {
   defaultOrgnr: '',
+  hentVedMount: false,
+  ikkeFunnetFeilmelding: 'Kunne ikke finne organisasjon',
+  feilVedHentingFeilmelding: 'Feil ved henting av organisasjon',
 };
 
 export default Orgnrinput;

@@ -21,6 +21,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
+import { dokumenterSelectors } from '../../ducks/dokumenter';
 
 import './registrering.css';
 
@@ -64,10 +65,11 @@ const Registrering = props => {
     person,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
-    oppdaterBehandlingsStatus,
     lovvalgsland,
     visOppfriskModal,
     behandlingOppfriskes,
+    dokumentOversikt,
+    dokumenter,
   } = props;
 
   const saksnummer = snr;
@@ -147,7 +149,6 @@ const Registrering = props => {
                 behandlingID={behandlingID}
                 redigerbart={redigerbart}
                 oppsummering={oppsummering}
-                oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
                 behandlingsstatusMap={behandlingsstatusMap}
               />}
             />
@@ -157,6 +158,8 @@ const Registrering = props => {
               brevBestillingRedigerbart={redigerbart}
               brevBestillingRedigerbartIArtikkel13={redigerbart}
               redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
             />
           </Nav.Column>
         </Nav.Row>
@@ -185,11 +188,12 @@ Registrering.propTypes = {
   behandlingstema: PT.string.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   lovvalgsland: MPT.Kodeverk.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
+  dokumentOversikt: PT.array.isRequired,
+  dokumenter: PT.array.isRequired,
 };
 Registrering.defaultProps = {
   redigerbart: null,
@@ -214,6 +218,8 @@ const mapStateToProps = state => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -222,7 +228,6 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
 

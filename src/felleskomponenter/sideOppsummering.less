@@ -4,15 +4,6 @@
 .sideOppsummering {
   margin-bottom: 0.5em;
 
-  .oppsummering__detaljer {
-    .beskrivliste-mixin('col');
-    margin-bottom: 1em;
-  }
-
-  .oppsummering__detaljer--rad {
-    .beskrivliste-mixin('row');
-  }
-
   .oppsummering__menylinje {
     display: flex;
     justify-content: flex-end;
@@ -22,6 +13,11 @@
 
   .oppsummering__behandlingsstatus {
     margin: 2em 0 0 0;
+  }
+
+  .saksbehandling__soknadSammendrag {
+    background-color: @white;
+    min-height: 150px;
   }
 }
 

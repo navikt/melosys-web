@@ -21,9 +21,6 @@ export function hentBehandling(behandlingID) {
   });
 }
 
-export function oppdaterBehandlingsStatus(status) {
-  return Actions.oppdaterBehandlingsStatus(status);
-}
 export function resetBehandlingerState() {
   return Actions.resetBenadlingerState();
 }

@@ -14,10 +14,11 @@ import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { datalastingOperations } from '../../ducks/datalasting';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
+import { dokumenterSelectors } from '../../ducks/dokumenter';
 
 import './sedbehandling.css';
 
@@ -69,7 +70,6 @@ const SedBehandling = ({
   behandlingsgrunnlagPeriodeTom,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
-  oppdaterBehandlingsStatus,
   location,
   lastInnSaksopplysninger,
   resetSaksopplysninger,
@@ -82,6 +82,8 @@ const SedBehandling = ({
   visOppfriskModal,
   behandlingOppfriskes,
   apneTidligereBehandlinger,
+  dokumentOversikt,
+  dokumenter,
 }) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
   const { params: { snr: saksnummer } } = match;
@@ -145,7 +147,6 @@ const SedBehandling = ({
                 behandlingID={behandlingID}
                 redigerbart={redigerbart}
                 oppsummering={oppsummering}
-                oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
                 behandlingsstatusMap={behandlingsstatusMap}
                 oppdaterStatus={oppdaterStatus}
               />}
@@ -156,6 +157,8 @@ const SedBehandling = ({
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
               redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
             />
           </Nav.Column>
         </Nav.Row>
@@ -178,7 +181,6 @@ SedBehandling.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   location: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
@@ -191,6 +193,8 @@ SedBehandling.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
+  dokumentOversikt: PT.array.isRequired,
+  dokumenter: PT.array.isRequired,
 };
 
 SedBehandling.defaultProps = {
@@ -216,10 +220,11 @@ const mapStateToProps = state => ({
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentBehandlingsgrunnlag: behandlingID => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),

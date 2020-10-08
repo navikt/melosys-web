@@ -7,7 +7,7 @@ import * as Api from '../services/api';
 import * as Utils from '../utils';
 import MKV from '../melosyskodeverk';
 
-import { useAsyncCallbackState } from '../hooks/useCallbackState';
+import { useAsyncCallbackState } from '../hooks';
 import { SelectWrappedComponent } from './skjema/input/select';
 
 const MOTTAKERINSTITUSJON = 'mottakerinstitusjon';
@@ -26,7 +26,7 @@ export const MottakerinstitusjonvelgerSchema = ({
     return null;
   }
 
-  const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, landkode);
+  const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, [landkode]);
   const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [landkode, bucType]);
 
   useEffect(() => {

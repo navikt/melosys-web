@@ -408,8 +408,7 @@ describe('Avklartefaktaselectors', () => {
           subjektID: '1',
         },
       ];
-      const fagsakOrganisasjoner = [];
-      const soknadOrganisasjoner = [];
+      const alleOrganisasjoner = [];
       const foretakUtland = [
         {
           uuid: '1',
@@ -420,7 +419,7 @@ describe('Avklartefaktaselectors', () => {
 
       const forventetResultat = [];
 
-      expect(resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
+      expect(resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
     });
 
     it('ikke-selvstendige foretakUtland returneres', () => {
@@ -429,8 +428,7 @@ describe('Avklartefaktaselectors', () => {
           subjektID: '1',
         },
       ];
-      const fagsakOrganisasjoner = [];
-      const soknadOrganisasjoner = [];
+      const alleOrganisasjoner = [];
       const foretakUtland = [
         {
           uuid: '1',
@@ -440,7 +438,7 @@ describe('Avklartefaktaselectors', () => {
       ];
       const selvstendigArbeidForetak = [];
 
-      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak);
+      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak);
 
       expect(resultat[0].virksomhetId).toBe('1');
     });
@@ -451,8 +449,7 @@ describe('Avklartefaktaselectors', () => {
           subjektID: '1',
         },
       ];
-      const fagsakOrganisasjoner = [];
-      const soknadOrganisasjoner = [
+      const alleOrganisasjoner = [
         {
           orgnr: '1',
         },
@@ -466,7 +463,7 @@ describe('Avklartefaktaselectors', () => {
 
       const forventetResultat = [];
 
-      expect(resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
+      expect(resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
     });
 
     it('virksomheter som finnes blant organisasjoner returneres', () => {
@@ -478,13 +475,11 @@ describe('Avklartefaktaselectors', () => {
           subjektID: '2',
         },
       ];
-      const fagsakOrganisasjoner = [
+      const alleOrganisasjoner = [
         {
           orgnr: '2',
           forretningsadresse: {},
         },
-      ];
-      const soknadOrganisasjoner = [
         {
           orgnr: '1',
           forretningsadresse: {},
@@ -502,7 +497,7 @@ describe('Avklartefaktaselectors', () => {
         },
       ];
 
-      expect(resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toMatchObject(forventetResultat);
+      expect(resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toMatchObject(forventetResultat);
     });
   });
 
@@ -727,20 +722,18 @@ describe('Avklartefaktaselectors', () => {
           subjektID: '2',
         },
       ];
-      const fagsakOrganisasjoner = [
+      const alleOrganisasjoner = [
         {
           orgnr: '2',
           forretningsadresse: {},
         },
-      ];
-      const soknadOrganisasjoner = [
         {
           orgnr: '1',
           forretningsadresse: {},
         },
       ];
 
-      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner);
+      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner);
 
       expect(resultat[0].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[0].subjektID);
       expect(resultat[1].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[1].subjektID);

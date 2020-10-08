@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import { getFormValues } from 'redux-form';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils';
 import * as MPT from '../../proptypes';
+import * as KV from '../../kodeverk';
 
 import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../felleskomponenter/sideOppsummering';
@@ -17,7 +19,7 @@ import Behandlingsmeny from './komponenter/behandlingsmeny';
 import { formSelectors } from '../../ducks/form';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { datalastingOperations } from '../../ducks/datalasting';
 import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 import { vilkarOperations } from '../../ducks/vilkar';
@@ -28,6 +30,7 @@ import { behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
 
 import stegMap from './stegMap';
 import MKV from '../../melosyskodeverk';
+import { dokumenterSelectors } from '../../ducks/dokumenter';
 
 import './vurderutpeking.css';
 
@@ -80,7 +83,6 @@ const Vurderutpeking = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
   visRevurderFagsakDialogHandle,
-  oppdaterBehandlingsStatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
   resetSaksopplysninger,
@@ -97,6 +99,9 @@ const Vurderutpeking = ({
   behandlingOppfriskes,
   soknadForm,
   behandlingsgrunnlag,
+  dokumentOversikt,
+  dokumenter,
+  vurderUtpekingFormValues,
 }) => {
   const { params: { snr: saksnummer } } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
@@ -120,6 +125,10 @@ const Vurderutpeking = ({
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
 
   const forsteSteg = hentForsteSteg(behandlingstema);
+
+  const lovvalgslandFraForm = vurderUtpekingFormValues.lovvalgsland;
+  const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
+  const lovvalgslandKTOBject = visLovvalgsland ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder) : undefined;
 
   return (
     <div className="vurderutpeking">
@@ -159,6 +168,7 @@ const Vurderutpeking = ({
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               arbeidsland={arbeidsland}
+              lovvalgsland={lovvalgslandKTOBject}
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               periodeLabel="Periode fra SED"
@@ -181,7 +191,6 @@ const Vurderutpeking = ({
                 behandlingID={behandlingID}
                 redigerbart={redigerbart}
                 oppsummering={oppsummering}
-                oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
                 behandlingsstatusMap={behandlingsstatusMap}
               />}
             />
@@ -191,6 +200,8 @@ const Vurderutpeking = ({
               brevBestillingRedigerbart={brevBestillingRedigerbart}
               brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
               redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
             />
           </Nav.Column>
         </Nav.Row>
@@ -223,7 +234,6 @@ Vurderutpeking.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
@@ -238,10 +248,14 @@ Vurderutpeking.propTypes = {
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   soknadForm: PT.object.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
+  dokumentOversikt: PT.array.isRequired,
+  dokumenter: PT.array.isRequired,
+  vurderUtpekingFormValues: PT.object,
 };
 
 Vurderutpeking.defaultProps = {
   behandlingsgrunnlag: {},
+  vurderUtpekingFormValues: {},
 };
 
 const mapStateToProps = state => ({
@@ -260,6 +274,9 @@ const mapStateToProps = state => ({
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
+  vurderUtpekingFormValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -272,7 +289,6 @@ const mapDispatchToProps = dispatch => ({
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
   oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Vurderutpeking);

@@ -1,6 +1,7 @@
 export const informasjonOmBruker = {
   tittel: 'Informasjon om bruker',
   undertitler: {
+    utenlandskID: 'Utenlandsk ID',
     annenOppgittAdresse: 'Annen adresse oppgitt i søknaden som ikke er registrert i TPS:',
     medlemskap: 'Medlemskap',
     kontantytelser: 'Kontantytelser fra NAV',

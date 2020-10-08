@@ -6,10 +6,12 @@ import Undertittel from './undertittel';
 import Elementskrift from './elementskrift';
 import RedigerbarListe from './redigerbarliste';
 import LesMerPanel from './lesmerpanel';
+import Checkbox from './checkbox';
 
 export {
   Knapp,
   KodeTermSelect,
+  Checkbox,
   Checkboxgruppe,
   ListevelgerFlervalg,
   Undertittel,

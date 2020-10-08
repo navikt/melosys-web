@@ -90,7 +90,7 @@ export default function reducer(state = initialState, action) {
         enhetNavn: arbeidssted.enhetNavn || null,
         fartsomradeKode: arbeidssted.fartsomradeKode || null,
         flaggLandkode: arbeidssted.flaggLandkode || null,
-        installasjonsLandkode: arbeidssted.installasjonsLandkode || null,
+        installasjonsLandkode: !Utils._isNil(arbeidssted.installasjonsLandkode) ? arbeidssted.installasjonsLandkode : null,
         territorialfarvann: arbeidssted.territorialfarvann || null,
         foretakNavn: arbeidssted.foretakNavn || null,
         foretakOrgnr: arbeidssted.foretakOrgnr || null,
@@ -200,7 +200,6 @@ export default function reducer(state = initialState, action) {
             medfolgendeAndre: null,
           },
           overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
-          norskeArbeidsgivere: dokument.norskeArbeidsgivere || [],
           ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
         },
       };

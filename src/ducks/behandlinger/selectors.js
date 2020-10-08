@@ -303,8 +303,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   InntekterPrAarMaanedSelector,
   behandlingsgrunnlagSelectors.PeriodeSelector,
   LovvalgsperiodeSelector,
-  behandlingsgrunnlagSelectors.NorskeArbeidsgivereSedSelector,
-  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode, norskeArbeidsgivere) => {
+  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
     let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
@@ -348,11 +347,6 @@ export const ArbeidsgivereNorgeSelector = createSelector(
         }
         return tmpSamling;
       }, []),
-      ...norskeArbeidsgivere.map(norskArbeidsgiver => ({
-        organisasjon: norskArbeidsgiver,
-        arbeidsforholdene: [],
-        inntektListe: [],
-      })),
     ];
   }
 );

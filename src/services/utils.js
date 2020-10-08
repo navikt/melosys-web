@@ -29,12 +29,19 @@ const toJson = async response => {
   }
 };
 
-export const sendResultatTilDispatch = (dispatch, action, callback) => (...data) => {
+export const sendResultatTilDispatch = (dispatch, action, { onDispatch, mapDispatchData }) => (...data) => {
   const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-  if (callback && typeof callback === 'function') {
-    callback(dispatch, dataSomSkalDispatches);
+
+  const dispatchedAction = dispatch({ type: action, data: dataSomSkalDispatches });
+
+  if (onDispatch && typeof onDispatch === 'function') {
+    onDispatch(dispatch, dataSomSkalDispatches);
   }
-  return dispatch({ type: action, data: dataSomSkalDispatches });
+  if (mapDispatchData && typeof mapDispatchData === 'function') {
+    return dispatch({ type: action, data: mapDispatchData(dataSomSkalDispatches) });
+  }
+
+  return dispatchedAction;
 };
 
 export const handterFeil = (dispatch, action, callback) => async error => {
@@ -73,15 +80,15 @@ export const getCookie = name => {
 };
 
 const getCacheTS = cacheKey => `${cacheKey}:ts`;
-const getCachedItem = cacheKey => localStorage.getItem(cacheKey);
-const getCachedItemTS = cacheKey => localStorage.getItem(getCacheTS(cacheKey));
+const getCachedItem = cacheKey => sessionStorage.getItem(cacheKey);
+const getCachedItemTS = cacheKey => sessionStorage.getItem(getCacheTS(cacheKey));
 const removeCachedItem = cacheKey => {
-  localStorage.removeItem(cacheKey);
-  localStorage.removeItem(getCacheTS(cacheKey));
+  sessionStorage.removeItem(cacheKey);
+  sessionStorage.removeItem(getCacheTS(cacheKey));
 };
 const setCachedItem = (cacheKey, content) => {
-  localStorage.setItem(cacheKey, content);
-  localStorage.setItem(getCacheTS(cacheKey), Date.now());
+  sessionStorage.setItem(cacheKey, content);
+  sessionStorage.setItem(getCacheTS(cacheKey), Date.now());
 };
 const OIDC_TEST_TOKEN = process.env.REACT_APP_OIDC_TEST_TOKEN;
 
@@ -152,7 +159,7 @@ const cachedFetch = async (url, cacheDurationSec) => {
       // If we don't clone the response, it will be
       // consumed by the time it's returned. This
       // way we're being un-intrusive.
-      if (localStorage.getItem(cacheKey)) {
+      if (sessionStorage.getItem(cacheKey)) {
         console.log('Remove cache item', cacheKey); // eslint-disable-line no-console
         removeCachedItem(cacheKey);
       }
@@ -311,7 +318,10 @@ export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
       await dispatch({ type: PENDING });
     }
     return api(dispatch, getState)
-      .then(sendResultatTilDispatch(dispatch, OK, callbacks.success))
+      .then(sendResultatTilDispatch(dispatch, OK, {
+        onDispatch: callbacks.success,
+        mapDispatchData: callbacks.mapDispatchData,
+      }))
       .catch(handterFeil(dispatch, FEILET, callbacks.error));
   };
 }
