@@ -32,12 +32,12 @@ export const EnkeltArbeidsforholdNorge = ({
       hentVedMount={hentVedMount}
       redigerbart={redigerbart}
       hentOrganisasjon={hentOrganisasjon}
-      defaultOrgnr={organisasjon.orgnr}
+      defaultOrgnr={organisasjon.orgnr || ''}
       ikkeFunnetFeilmelding={orgIkkeFunnetTekst}
       feilVedHentingFeilmelding={orgFeilVedHentingTekst}
     />
     {
-      !Utils._isEmpty(organisasjon) &&
+      (!Utils._isEmpty(organisasjon) && !Utils._isEmpty(organisasjon.orgnr)) &&
         <Organisasjon
           organisasjon={organisasjon}
           redigerbart={redigerbart}
@@ -124,7 +124,7 @@ export const InnerArbeidsforholdNorgeListe = ({
               organisasjon={organisasjon}
               slett={slett}
               slettTekst={slettTekst}
-              hentVedMount
+              hentVedMount={Boolean(organisasjon.orgnr)}
             />
           );
         })

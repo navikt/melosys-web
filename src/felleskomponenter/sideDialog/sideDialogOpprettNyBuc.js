@@ -111,7 +111,8 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         }
       } catch (e) {
         Utils.logger.error(e);
-        setAlertmelding('Saken kunne ikke opprettes i RINA');
+        if (e.status >= 500) setAlertmelding('Saken kunne ikke opprettes i RINA');
+        else if (e.status >= 400) setAlertmelding(e.body.message);
       }
     } else {
       setOppdaterteFelt({ buc: true, land: true, mottakerinstitusjoner: true });
@@ -209,7 +210,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
           <MultiSelect
             label="Mottakerinstitusjoner"
             onChange={mottakerinstitusjonEndret}
-            options={tilgjengeligeMottakerinstitusjoner.map(item => ({ value: item.id, label: item.navn }))}
+            options={tilgjengeligeMottakerinstitusjoner.map(item => ({ value: item.id, label: `${item.landkode} - ${item.navn}` }))}
             feil={feil('mottakerinstitusjoner')}
             values={valgteMottakerinstitusjoner}
           />
