@@ -86,19 +86,29 @@ export default function reducer(state = initialState, action) {
         })),
       ];
 
-      const lagMaritimtArbeid = arbeidssted => ({
+      const lagMaritimtArbeidAvArbeidsstedOffshore = arbeidssted => ({
         enhetNavn: arbeidssted.enhetNavn || null,
         fartsomradeKode: arbeidssted.fartsomradeKode || null,
         flaggLandkode: arbeidssted.flaggLandkode || null,
-        installasjonsLandkode: !Utils._isNil(arbeidssted.installasjonsLandkode) ? arbeidssted.installasjonsLandkode : null,
+        installasjonsLandkode: arbeidssted.installasjonsLandkode || '',
+        territorialfarvann: arbeidssted.territorialfarvann || null,
+        foretakNavn: arbeidssted.foretakNavn || null,
+        foretakOrgnr: arbeidssted.foretakOrgnr || null,
+      });
+
+      const lagMaritimtArbeidAvArbeidsstedSkip = arbeidssted => ({
+        enhetNavn: arbeidssted.enhetNavn || null,
+        fartsomradeKode: arbeidssted.fartsomradeKode || null,
+        flaggLandkode: arbeidssted.flaggLandkode || null,
+        installasjonsLandkode: arbeidssted.installasjonsLandkode || null,
         territorialfarvann: arbeidssted.territorialfarvann || null,
         foretakNavn: arbeidssted.foretakNavn || null,
         foretakOrgnr: arbeidssted.foretakOrgnr || null,
       });
 
       const maritimtArbeid = [
-        ...dokument.arbeidsstedOffshore.map(lagMaritimtArbeid),
-        ...dokument.arbeidsstedSkip.map(lagMaritimtArbeid),
+        ...dokument.arbeidsstedOffshore.map(lagMaritimtArbeidAvArbeidsstedOffshore),
+        ...dokument.arbeidsstedSkip.map(lagMaritimtArbeidAvArbeidsstedSkip),
       ];
 
       const data = {
