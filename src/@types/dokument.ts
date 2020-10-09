@@ -29,6 +29,7 @@ export interface BrevPdfData {
   mottaker: string | null,
   fritekst: string | null,
   begrunnelseKode: string | null,
+  ytterligereInformasjon: string | null
 }
 
 export interface SedPdfData {
