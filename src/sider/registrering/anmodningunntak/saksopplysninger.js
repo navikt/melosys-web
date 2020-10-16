@@ -12,7 +12,7 @@ import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 
-import Paneler from './komponenter/paneler';
+import { RegistreringMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { datalastingOperations } from '../../../ducks/datalasting';
@@ -381,7 +381,12 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      <Paneler />
+      <RegistreringMenypanelForm
+        menypunkter={[
+          'Person',
+          'Arbeidsforhold og inntekt',
+        ]}
+      />
     </div>
   );
 };

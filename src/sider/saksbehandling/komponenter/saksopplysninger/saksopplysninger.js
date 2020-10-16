@@ -10,7 +10,7 @@ import * as MPT from '../../../../proptypes';
 import Stegvelger from '../../../../felleskomponenter/stegvelger';
 import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
 import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
-import Soknadpaneler from '../../../../felleskomponenter/soknadpaneler';
+import { SoknadMenypanelForm } from '../../../../felleskomponenter/menypanelForm';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
@@ -92,9 +92,8 @@ const Saksopplysninger = ({
         forsteSteg={forsteSteg}
       />
       }
-      <Soknadpaneler
+      <SoknadMenypanelForm
         startOgVisOppfriskModal={startOgVisOppfriskModal}
-        behandlingID={behandlingID}
       />
     </Fragment>
   );
