@@ -14,6 +14,7 @@ import DialogboksAvsluttSakSomBortfalt from '../felleskomponenter/dialogboks/dia
 import DialogboksAvslagSoknad from '../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
 import DialogboksRevurderFagsak from '../felleskomponenter/dialogboks/dialogboksRevurderFagsak';
 import DialogboksValidering from '../felleskomponenter/dialogboks/dialogboksValidering';
+import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/dialogboksEndreBehandlingstema";
 
 Nav.Modal.setAppElement(document.getElementById('root'));
 
@@ -38,6 +39,8 @@ const Modals = ({
   venterPaRevurderFagsak,
   visValideringModal,
   skjulValideringModalDialogHandle,
+  visEndreBehandlingstemaDialog,
+  skjulEndreBehandlingstemaModalDialogHandle,
   valideringerFeilkoder,
   valideringerFeilmeldinger,
   behandlingOppfriskes,
@@ -92,6 +95,12 @@ const Modals = ({
         feilmeldinger={valideringerFeilmeldinger}
       />
     }
+    {
+      visEndreBehandlingstemaDialog &&
+      <DialogboksEndreBehandlingstema
+        avbryt={skjulEndreBehandlingstemaModalDialogHandle}
+      />
+    }
   </Fragment>
 );
 
@@ -116,6 +125,8 @@ Modals.propTypes = {
   venterPaRevurderFagsak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
+  visEndreBehandlingstemaDialog: PT.bool.isRequired,
+  skjulEndreBehandlingstemaModalDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
   valideringerFeilkoder: PT.arrayOf(PT.shape({
@@ -142,6 +153,7 @@ const mapStateToProps = state => ({
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
   valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
   valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
+  visEndreBehandlingstemaDialog: modalerSelectors.ErEndreBehandlingstemaSynligSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -152,6 +164,7 @@ const mapDispatchToProps = dispatch => ({
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
+  skjulEndreBehandlingstemaModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingstema()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
