@@ -101,7 +101,7 @@ const VurderingVedtak = ({
     });
   };
 
-  const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland, lovvalget);
+  const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
 
   return (
     <div className="vedtak">
