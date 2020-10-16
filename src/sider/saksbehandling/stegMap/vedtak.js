@@ -50,9 +50,15 @@ class Vedtak extends Steg {
         });
       }
 
+      const erArtikkel12Lovvalgsbestemmelse = lovvalgKTObject => {
+        if (!lovvalgKTObject) return false;
+
+        return lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2 ||
+          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1;
+      };
+
       if (formValues.kreverMottakerinstitusjon) {
-        if (lovvalgSomKodeTerm &&
-          lovvalgSomKodeTerm.kode !== MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2) {
+        if (erArtikkel12Lovvalgsbestemmelse(lovvalgSomKodeTerm)) {
           pdfDokumenter.push({
             navn: 'Forhåndsvis SED A009',
             type: EKV.Koder.sedtyper.A009,
