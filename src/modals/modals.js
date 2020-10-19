@@ -14,7 +14,7 @@ import DialogboksAvsluttSakSomBortfalt from '../felleskomponenter/dialogboks/dia
 import DialogboksAvslagSoknad from '../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
 import DialogboksRevurderFagsak from '../felleskomponenter/dialogboks/dialogboksRevurderFagsak';
 import DialogboksValidering from '../felleskomponenter/dialogboks/dialogboksValidering';
-import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/dialogboksEndreBehandlingstema";
+import DialogboksEndreBehandlingstema from '../felleskomponenter/dialogboks/dialogboksEndreBehandlingstema';
 
 Nav.Modal.setAppElement(document.getElementById('root'));
 

@@ -1,16 +1,19 @@
-import React, {useEffect, useState} from "react";
-import {connect} from 'react-redux';
-import * as Mui from "../ui";
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import PT from 'prop-types';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
+import Knapperad from '../knapperad';
+
+import * as Utils from '../../utils';
+import * as Mui from '../ui';
 import * as Api from '../../services/api';
-import * as Nav from "../../utils/navFrontend";
-import PT from "prop-types";
-import {behandlingerSelectors} from "../../ducks/behandlinger";
-import Knapperad from "../knapperad";
+import * as Nav from '../../utils/navFrontend';
 
-import './dialogboksEndreBehandlingstema.css'
-import * as Utils from "../../utils";
+import './dialogboksEndreBehandlingstema.css';
 
-function DialogboksEndreBehandlingstema({avbryt, ariaHideApp, hentMuligeBehandlingstema, endreBehandlingstema, ...props}) {
+function DialogboksEndreBehandlingstema({
+  avbryt, ariaHideApp, hentMuligeBehandlingstema, endreBehandlingstema, ...props
+}) {
   const [behandlingstema, setBehandlingstema] = useState(props.behandlingstema);
   const [feilmeldingSelect, setFeilmeldingSelect] = useState(undefined);
   const [muligeBehandlingstema, setMuligeBehandlingstema] = useState([]);
@@ -18,11 +21,11 @@ function DialogboksEndreBehandlingstema({avbryt, ariaHideApp, hentMuligeBehandli
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(window.location, 'behandlingID'));
 
   useEffect(() => {
-    hentMuligeBehandlingstema(behandlingID).then((response) => {
+    hentMuligeBehandlingstema(behandlingID).then(response => {
       setMuligeBehandlingstema(response);
-    }).catch((error) => {
-      console.error(error);
-      setFeilmeldingSelect({feilmelding: error})
+    }).catch(error => {
+      // console.error(error);
+      setFeilmeldingSelect({ feilmelding: error });
     });
   }, []);
 
@@ -34,9 +37,9 @@ function DialogboksEndreBehandlingstema({avbryt, ariaHideApp, hentMuligeBehandli
   const endreBehandlingstemaHandle = () => {
     endreBehandlingstema(behandlingID, behandlingstema).then(() => {
       setSuksess(true);
-    }).catch((error) => {
-      console.error(error);
-      setFeilmeldingSelect({feilmelding: error})
+    }).catch(error => {
+      // console.error(error);
+      setFeilmeldingSelect({ feilmelding: error });
     });
   };
 
@@ -50,18 +53,20 @@ function DialogboksEndreBehandlingstema({avbryt, ariaHideApp, hentMuligeBehandli
       shouldCloseOnOverlayClick
       ariaHideApp={ariaHideApp}>
       {suksess
-        ? <div>
+        ?
+        <div>
           <Nav.typo.Systemtittel className="overskrift">Behandlingstema er blitt oppdatert</Nav.typo.Systemtittel>
-          <div className={"select"}>
-            <Nav.AlertStripe type={"suksess"}>
+          <div className="select">
+            <Nav.AlertStripe type="suksess">
               Behandlingstemaet har blitt endret og oppdatert.
             </Nav.AlertStripe>
           </div>
-          <div className="knapperadcontainer" style={{float:"right"}}>
+          <div className="knapperadcontainer" style={{ float: 'right' }}>
             <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
           </div>
         </div>
-        : <div>
+        :
+        <div>
           <Nav.typo.Systemtittel className="overskrift">Velg nytt behandlingstema</Nav.typo.Systemtittel>
           <div className="select">
             <Mui.KodeTermSelect
@@ -79,7 +84,7 @@ function DialogboksEndreBehandlingstema({avbryt, ariaHideApp, hentMuligeBehandli
               avbrytTekst="AVBRYT"
               bekreft={endreBehandlingstemaHandle}
               bekreftTekst="ENDRE BEHANDLINGSTEMA"
-              redigerbart={true}
+              redigerbart
               bekreftRedigerbart={!!behandlingstema}
             />
           </div>
@@ -87,15 +92,14 @@ function DialogboksEndreBehandlingstema({avbryt, ariaHideApp, hentMuligeBehandli
       }
     </Nav.Modal>
   );
-
 }
 
 DialogboksEndreBehandlingstema.propTypes = {
   behandlingstema: PT.string.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
-  hentMuligeBehandlingstema: PT.func.isRequired,
-  endreBehandlingstema: PT.func.isRequired
+  hentMuligeBehandlingstema: PT.func,
+  endreBehandlingstema: PT.func,
 };
 
 DialogboksEndreBehandlingstema.defaultProps = {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import MKV from '../melosyskodeverk';
@@ -10,9 +10,9 @@ import * as KV from '../kodeverk';
 import Oppsummering from './oppsummering';
 
 import './sideOppsummering.css';
-import {modalerOperations} from "../ducks/modaler";
-import * as Api from "../services/api";
-import * as Utils from "../utils";
+import { modalerOperations } from '../ducks/modaler';
+import * as Api from '../services/api';
+import * as Utils from '../utils';
 
 const SideOppsummering = ({
   arbeidsland,
@@ -30,7 +30,7 @@ const SideOppsummering = ({
   behandlingsgrunnlagPeriodeTom,
   periodeLabel,
   visEndreBehandlingstemaDialogHandle,
-  hentMuligeBehandlingstema
+  hentMuligeBehandlingstema,
 }) => {
   if (!oppsummering) return <div />;
 
@@ -41,7 +41,7 @@ const SideOppsummering = ({
 
   useEffect(() => {
     hentMuligeBehandlingstema(behandlingID)
-      .then((response) =>
+      .then(response =>
         setKanEndreBehandlingstema(response.length !== 0))
       .catch(() => setKanEndreBehandlingstema(false));
   }, []);
@@ -60,7 +60,9 @@ const SideOppsummering = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="12">
-            <Nav.typo.Undertittel className={kanEndreBehandlingstema ? "oppsummering__header" : ""} onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}>{tittel}</Nav.typo.Undertittel>
+            <Nav.typo.Undertittel className={kanEndreBehandlingstema ? 'oppsummering__header' : ''} onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}>
+              {tittel}
+            </Nav.typo.Undertittel>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -113,7 +115,7 @@ SideOppsummering.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string,
   periodeLabel: PT.string,
   visEndreBehandlingstemaDialogHandle: PT.func.isRequired,
-  hentMuligeBehandlingstema: PT.func.isRequired,
+  hentMuligeBehandlingstema: PT.func,
 };
 
 SideOppsummering.defaultProps = {
@@ -132,7 +134,7 @@ SideOppsummering.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema())
+  visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema()),
 });
 
 export default connect(null, mapDispatchToProps)(SideOppsummering);
