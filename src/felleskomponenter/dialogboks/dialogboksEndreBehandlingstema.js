@@ -17,7 +17,7 @@ function DialogboksEndreBehandlingstema({
   const [behandlingstema, setBehandlingstema] = useState(props.behandlingstema);
   const [feilmeldingSelect, setFeilmeldingSelect] = useState(undefined);
   const [muligeBehandlingstema, setMuligeBehandlingstema] = useState([]);
-  const [suksess, setSuksess] = useState(false);
+  const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(window.location, 'behandlingID'));
 
   useEffect(() => {
@@ -36,7 +36,7 @@ function DialogboksEndreBehandlingstema({
 
   const endreBehandlingstemaHandle = () => {
     endreBehandlingstema(behandlingID, behandlingstema).then(() => {
-      setSuksess(true);
+      setBehandlingstemaEndret(true);
     }).catch(error => {
       // console.error(error);
       setFeilmeldingSelect({ feilmelding: error });
@@ -52,7 +52,7 @@ function DialogboksEndreBehandlingstema({
       closeButton={false}
       shouldCloseOnOverlayClick
       ariaHideApp={ariaHideApp}>
-      {suksess
+      {behandlingstemaEndret
         ?
         <div>
           <Nav.typo.Systemtittel className="overskrift">Behandlingstema er blitt oppdatert</Nav.typo.Systemtittel>
@@ -104,8 +104,8 @@ DialogboksEndreBehandlingstema.propTypes = {
 
 DialogboksEndreBehandlingstema.defaultProps = {
   ariaHideApp: true,
-  hentMuligeBehandlingstema: Api.Behandlinger.behandling.hentMuligeBehandlingstema,
-  endreBehandlingstema: Api.Behandlinger.behandling.endreBehandlingstema,
+  hentMuligeBehandlingstema: Api.Behandlinger.tema.hentMuligeBehandlingstema,
+  endreBehandlingstema: Api.Behandlinger.tema.endreBehandlingstema,
 };
 
 const mapStateToProps = state => ({

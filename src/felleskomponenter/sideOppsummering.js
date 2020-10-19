@@ -130,7 +130,7 @@ SideOppsummering.defaultProps = {
   behandlingsgrunnlagPeriodeFom: undefined,
   behandlingsgrunnlagPeriodeTom: undefined,
   periodeLabel: 'Søknadsperiode',
-  hentMuligeBehandlingstema: Api.Behandlinger.behandling.hentMuligeBehandlingstema,
+  hentMuligeBehandlingstema: Api.Behandlinger.tema.hentMuligeBehandlingstema,
 };
 
 const mapDispatchToProps = dispatch => ({
