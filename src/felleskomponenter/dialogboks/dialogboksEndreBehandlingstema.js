@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { behandlingstemaSelectors } from '../../ducks/behandlingstema';
+import { fagsakSelectors } from '../../ducks/fagsaker';
+import { navigeringOperations } from '../../ducks/navigering';
 import Knapperad from '../knapperad';
 
 import * as Mui from '../ui';
 import * as Api from '../../services/api';
 import * as Nav from '../../utils/navFrontend';
+import * as Routing from '../../routing';
 
 import './dialogboksEndreBehandlingstema.css';
 
@@ -17,11 +20,14 @@ function DialogboksEndreBehandlingstema({
   behandlingID,
   hentBehandling,
   muligeBehandlingstema,
+  saksnummer,
+  tilAnnenSide,
   ...props
 }) {
   const [behandlingstema, setBehandlingstema] = useState(undefined);
   const [feilmeldingSelect, setFeilmeldingSelect] = useState(undefined);
   const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
+  const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingstema);
 
   const velgBehandlingstemaHandle = event => {
     setBehandlingstema(event.target.value);
@@ -32,8 +38,9 @@ function DialogboksEndreBehandlingstema({
     Api.Behandlinger.tema.endreBehandlingstema(behandlingID, behandlingstema).then(() => {
       setBehandlingstemaEndret(true);
       hentBehandling(behandlingID);
+      const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
+      if (nyLink !== link) tilAnnenSide(nyLink);
     }).catch(error => {
-      // console.error(error);
       setFeilmeldingSelect({ feilmelding: error.status });
     });
   };
@@ -106,11 +113,13 @@ function DialogboksEndreBehandlingstema({
 
 DialogboksEndreBehandlingstema.propTypes = {
   avbryt: PT.func.isRequired,
-  ariaHideApp: PT.bool.isRequired,
+  ariaHideApp: PT.bool,
   behandlingID: PT.number.isRequired,
   behandlingstema: PT.string.isRequired,
   hentBehandling: PT.func.isRequired,
   muligeBehandlingstema: PT.array.isRequired,
+  saksnummer: PT.string.isRequired,
+  tilAnnenSide: PT.func.isRequired,
 };
 
 DialogboksEndreBehandlingstema.defaultProps = {
@@ -121,10 +130,12 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   muligeBehandlingstema: behandlingstemaSelectors.muligeBehandlingstema(state),
+  saksnummer: fagsakSelectors.SaksnummerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  tilAnnenSide: link => dispatch(navigeringOperations.tilAnnenSide(link)),
 });
 
 
