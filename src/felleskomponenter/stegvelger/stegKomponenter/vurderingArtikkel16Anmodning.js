@@ -327,7 +327,7 @@ class VurderingArtikkel16Anmodning extends Component {
         type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK,
         data: {
           mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-          fritekst: this.props.formValues.fritekstSed,
+          ytterligereInformasjon: this.props.formValues.fritekstSed,
         },
       },
     ];
