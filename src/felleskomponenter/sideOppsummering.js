@@ -40,9 +40,11 @@ const SideOppsummering = ({
   const behandlingsstatus = renderBehandlingsstatus();
 
   useEffect(() => {
-    hentMuligeBehandlingstema(behandlingID)
-      .then(response =>
-        setKanEndreBehandlingstema(response && response.length !== 0));
+    if (behandlingID > 0) {
+      hentMuligeBehandlingstema(behandlingID)
+        .then(response =>
+          setKanEndreBehandlingstema(response && response.length !== 0));
+    }
   }, [behandlingID]);
 
   return (

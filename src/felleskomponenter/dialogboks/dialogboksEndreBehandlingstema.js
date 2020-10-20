@@ -105,12 +105,12 @@ function DialogboksEndreBehandlingstema({
 }
 
 DialogboksEndreBehandlingstema.propTypes = {
-  behandlingstema: PT.string.isRequired,
-  behandlingID: PT.number.isRequired,
   avbryt: PT.func.isRequired,
-  ariaHideApp: PT.bool,
-  muligeBehandlingstema: PT.array.isRequired,
+  ariaHideApp: PT.bool.isRequired,
+  behandlingID: PT.number.isRequired,
+  behandlingstema: PT.string.isRequired,
   hentBehandling: PT.func.isRequired,
+  muligeBehandlingstema: PT.array.isRequired,
 };
 
 DialogboksEndreBehandlingstema.defaultProps = {
@@ -118,8 +118,8 @@ DialogboksEndreBehandlingstema.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   muligeBehandlingstema: behandlingstemaSelectors.muligeBehandlingstema(state),
 });
 
