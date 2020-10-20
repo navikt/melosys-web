@@ -24,7 +24,7 @@ function DialogboksEndreBehandlingstema({
   tilAnnenSide,
   ...props
 }) {
-  const [behandlingstema, setBehandlingstema] = useState(undefined);
+  const [behandlingstema, setBehandlingstema] = useState("");
   const [feilmeldingSelect, setFeilmeldingSelect] = useState(undefined);
   const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingstema);
