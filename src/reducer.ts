@@ -11,6 +11,7 @@ import behandlingerReducer from './ducks/behandlinger';
 import behandlingsgrunnlagReducer from './ducks/behandlingsgrunnlag';
 import behandlingsperioderReducer from './ducks/behandlingsperioder';
 import behandlingsresultatReducer from './ducks/behandlingsresultat';
+import behandlingstemaReducer from './ducks/behandlingstema';
 import dokumenterReducer from './ducks/dokumenter';
 import fagsakerReducer from './ducks/fagsaker';
 import feiletResponseReducer from './ducks/feiletrespons';
@@ -43,6 +44,7 @@ const createRootReducer = (history: History) => combineReducers({
   behandlingsgrunnlag: behandlingsgrunnlagReducer,
   behandlingsperioder: behandlingsperioderReducer,
   behandlingsresultat: behandlingsresultatReducer,
+  behandlingstema: behandlingstemaReducer,
   dokumenter: dokumenterReducer,
   fagsaker: fagsakerReducer,
   feiletrespons: feiletResponseReducer,

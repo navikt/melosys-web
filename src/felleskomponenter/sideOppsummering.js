@@ -11,8 +11,8 @@ import Oppsummering from './oppsummering';
 
 import './sideOppsummering.css';
 import { modalerOperations } from '../ducks/modaler';
-import * as Api from '../services/api';
-import * as Utils from '../utils';
+import { behandlingstemaOperations } from '../ducks/behandlingstema';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 
 const SideOppsummering = ({
   arbeidsland,
@@ -31,20 +31,19 @@ const SideOppsummering = ({
   periodeLabel,
   visEndreBehandlingstemaDialogHandle,
   hentMuligeBehandlingstema,
+  behandlingID,
 }) => {
   if (!oppsummering) return <div />;
 
   const [kanEndreBehandlingstema, setKanEndreBehandlingstema] = useState(false);
   const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || '';
   const behandlingsstatus = renderBehandlingsstatus();
-  const behandlingID = Utils._toInteger(Utils.queryString.getParam(window.location, 'behandlingID'));
 
   useEffect(() => {
     hentMuligeBehandlingstema(behandlingID)
       .then(response =>
-        setKanEndreBehandlingstema(response.length !== 0))
-      .catch(() => setKanEndreBehandlingstema(false));
-  }, []);
+        setKanEndreBehandlingstema(response && response.length !== 0));
+  }, [behandlingID]);
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -115,7 +114,8 @@ SideOppsummering.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string,
   periodeLabel: PT.string,
   visEndreBehandlingstemaDialogHandle: PT.func.isRequired,
-  hentMuligeBehandlingstema: PT.func,
+  hentMuligeBehandlingstema: PT.func.isRequired,
+  behandlingID: PT.number.isRequired,
 };
 
 SideOppsummering.defaultProps = {
@@ -130,11 +130,15 @@ SideOppsummering.defaultProps = {
   behandlingsgrunnlagPeriodeFom: undefined,
   behandlingsgrunnlagPeriodeTom: undefined,
   periodeLabel: 'Søknadsperiode',
-  hentMuligeBehandlingstema: Api.Behandlinger.tema.hentMuligeBehandlingstema,
 };
+
+const mapStateToProps = state => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
   visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema()),
+  hentMuligeBehandlingstema: behandlingID => dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
 });
 
-export default connect(null, mapDispatchToProps)(SideOppsummering);
+export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
