@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import Knapperad from '../knapperad';
 
-import * as Utils from '../../utils';
 import * as Mui from '../ui';
 import * as Api from '../../services/api';
 import * as Nav from '../../utils/navFrontend';
@@ -12,13 +11,12 @@ import * as Nav from '../../utils/navFrontend';
 import './dialogboksEndreBehandlingstema.css';
 
 function DialogboksEndreBehandlingstema({
-  avbryt, ariaHideApp, hentMuligeBehandlingstema, endreBehandlingstema, ...props
+  avbryt, ariaHideApp, hentMuligeBehandlingstema, endreBehandlingstema, behandlingID, hentBehandling, ...props
 }) {
   const [behandlingstema, setBehandlingstema] = useState(props.behandlingstema);
   const [feilmeldingSelect, setFeilmeldingSelect] = useState(undefined);
   const [muligeBehandlingstema, setMuligeBehandlingstema] = useState([]);
   const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
-  const behandlingID = Utils._toInteger(Utils.queryString.getParam(window.location, 'behandlingID'));
 
   useEffect(() => {
     hentMuligeBehandlingstema(behandlingID).then(response => {
@@ -37,6 +35,7 @@ function DialogboksEndreBehandlingstema({
   const endreBehandlingstemaHandle = () => {
     endreBehandlingstema(behandlingID, behandlingstema).then(() => {
       setBehandlingstemaEndret(true);
+      hentBehandling(behandlingID);
     }).catch(error => {
       // console.error(error);
       setFeilmeldingSelect({ feilmelding: error });
@@ -96,10 +95,12 @@ function DialogboksEndreBehandlingstema({
 
 DialogboksEndreBehandlingstema.propTypes = {
   behandlingstema: PT.string.isRequired,
+  behandlingID: PT.number.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
   hentMuligeBehandlingstema: PT.func,
   endreBehandlingstema: PT.func,
+  hentBehandling: PT.func.isRequired,
 };
 
 DialogboksEndreBehandlingstema.defaultProps = {
@@ -110,7 +111,13 @@ DialogboksEndreBehandlingstema.defaultProps = {
 
 const mapStateToProps = state => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+
+});
+
+const mapDispatchToProps = dispatch => ({
+  hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
 });
 
 
-export default connect(mapStateToProps)(DialogboksEndreBehandlingstema);
+export default connect(mapStateToProps, mapDispatchToProps)(DialogboksEndreBehandlingstema);
