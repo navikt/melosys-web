@@ -12,7 +12,7 @@ export const behandlingstemaSelector = createSelector(
   behandlingstema => behandlingstema
 );
 
-export const muligeBehandlingstema = createSelector(
+export const muligeBehandlingstemaSelector = createSelector(
   state => behandlingstemaSelector(state),
   behandlingstema => behandlingstema || []
 );

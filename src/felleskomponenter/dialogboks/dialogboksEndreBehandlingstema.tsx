@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import PT from 'prop-types';
+import { SkjemaelementFeil } from 'nav-frontend-skjema/lib/skjemaelement-feilmelding';
+import { RootState } from 'AppTypes';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { behandlingstemaSelectors } from '../../ducks/behandlingstema';
 import { fagsakSelectors } from '../../ducks/fagsaker';
@@ -14,22 +16,40 @@ import * as Routing from '../../routing';
 
 import './dialogboksEndreBehandlingstema.css';
 
+
+const mapStateToProps = (state: RootState) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  muligeBehandlingstema: behandlingstemaSelectors.muligeBehandlingstemaSelector(state),
+  saksnummer: fagsakSelectors.SaksnummerSelector(state),
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  tilAnnenSide: (link: string) => dispatch(navigeringOperations.tilAnnenSide(link)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface Props { avbryt: () => void }
+
 function DialogboksEndreBehandlingstema({
   avbryt,
-  ariaHideApp,
   behandlingID,
   hentBehandling,
   muligeBehandlingstema,
   saksnummer,
   tilAnnenSide,
   ...props
-}) {
+} : Props & PropsFromRedux) {
   const [behandlingstema, setBehandlingstema] = useState('');
-  const [feilmeldingSelect, setFeilmeldingSelect] = useState(undefined);
+  const [feilmeldingSelect, setFeilmeldingSelect] = useState<SkjemaelementFeil | undefined>();
   const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingstema);
 
-  const velgBehandlingstemaHandle = event => {
+  const velgBehandlingstemaHandle = (event: any) => {
     setBehandlingstema(event.target.value);
     setFeilmeldingSelect(undefined);
   };
@@ -38,11 +58,15 @@ function DialogboksEndreBehandlingstema({
     Api.Behandlinger.tema.endreBehandlingstema(behandlingID, behandlingstema).then(() => {
       setBehandlingstemaEndret(true);
       hentBehandling(behandlingID);
-      const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
-      if (nyLink !== link) tilAnnenSide(nyLink);
-    }).catch(error => {
+    }).catch((error: any) => {
       setFeilmeldingSelect({ feilmelding: error.status });
     });
+  };
+
+  const avbrytHandle = () => {
+    const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
+    if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
+    avbryt();
   };
 
   const renderBehandlingstemaEndret = () => (
@@ -54,7 +78,7 @@ function DialogboksEndreBehandlingstema({
         </Nav.AlertStripe>
       </div>
       <div className="knapperadcontainer" style={{ float: 'right' }}>
-        <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
+        <Mui.Knapp onClick={avbrytHandle}>LUKK</Mui.Knapp>
       </div>
     </div>
   );
@@ -72,7 +96,7 @@ function DialogboksEndreBehandlingstema({
               label=""
               disableForsteValg={!!behandlingstema}
               value={behandlingstema}
-              koder={muligeBehandlingstema.filter(tema => tema.kode !== props.behandlingstema)}
+              koder={muligeBehandlingstema.filter((tema: any) => tema.kode !== props.behandlingstema)}
             />
           </div>
           <div className="knapperadcontainer">
@@ -101,8 +125,7 @@ function DialogboksEndreBehandlingstema({
       contentLabel="Velg nytt behandlingstema"
       onRequestClose={avbryt}
       closeButton={false}
-      shouldCloseOnOverlayClick
-      ariaHideApp={ariaHideApp}>
+      shouldCloseOnOverlayClick>
       { behandlingstemaEndret
         ? renderBehandlingstemaEndret()
         : renderEndreBehandlingstema()
@@ -111,9 +134,9 @@ function DialogboksEndreBehandlingstema({
   );
 }
 
+
 DialogboksEndreBehandlingstema.propTypes = {
   avbryt: PT.func.isRequired,
-  ariaHideApp: PT.bool,
   behandlingID: PT.number.isRequired,
   behandlingstema: PT.string.isRequired,
   hentBehandling: PT.func.isRequired,
@@ -122,21 +145,4 @@ DialogboksEndreBehandlingstema.propTypes = {
   tilAnnenSide: PT.func.isRequired,
 };
 
-DialogboksEndreBehandlingstema.defaultProps = {
-  ariaHideApp: true,
-};
-
-const mapStateToProps = state => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  muligeBehandlingstema: behandlingstemaSelectors.muligeBehandlingstema(state),
-  saksnummer: fagsakSelectors.SaksnummerSelector(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
-  tilAnnenSide: link => dispatch(navigeringOperations.tilAnnenSide(link)),
-});
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(DialogboksEndreBehandlingstema);
+export default connector(DialogboksEndreBehandlingstema);
