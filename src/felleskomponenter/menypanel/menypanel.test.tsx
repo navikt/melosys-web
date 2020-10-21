@@ -37,7 +37,7 @@ describe('MenyPanel', () => {
     expect(sidemenyLinkGroups[1].links[0].label).toBe('Utenlandsoppdraget');
   });
 
-  it('Viser ikke undertitler med ingen menypunkter', () => {
+  it('Viser ikke linkgrupper med ingen linker/menypunkter', () => {
     props.menypunkter = [];
     const menypanel = shallow(<Menypanel {...props} />);
     const sidemeny = menypanel.find(Sidemeny);
@@ -62,22 +62,5 @@ describe('MenyPanel', () => {
     sidemeny = menypanel.find(Sidemeny);
 
     expect(sidemeny.props().linkGroups).toHaveLength(0);
-  });
-
-  it('Viser content for Person-menypunkt', () => {
-    props.menypunkter = [
-      'Person',
-      'Familieforhold',
-    ];
-    const menypanel = shallow(<Menypanel {...props} />);
-    let sidemeny = menypanel.find(Sidemeny);
-    const sidemenyOnClick = sidemeny.props().onClick;
-
-    sidemenyOnClick(0, 1);
-
-    sidemeny = menypanel.find(Sidemeny);
-    expect(sidemeny.props().linkGroups[0].links[1].active).toBe(true);
-    //TODO: expect content to be person-content, må stykke opp menypanel litt for å teste dette
-    expect(false).toBe(true);
   });
 });
