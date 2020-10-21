@@ -99,6 +99,11 @@ export const VURDER_UTPEKING = 'vurder_utpeking';
 export const AVSLAA_UTPEKING = 'avslaa_utpeking';
 export const REGISTRERING_PANELER = 'registrering_paneler';
 export interface RegistreringPanelerFormData {
-  // TODO: implementer
+  oppgittAdresseGatenavn: string,
+  oppgittAdresseHusnummer: string,
+  oppgittAdresseRegion: string,
+  oppgittAdressePostnummer: string,
+  oppgittAdressePoststed: string,
+  oppgittAdresseLand: string,
 }
 export const ARBEID_ETT_LAND_OVRIG_VEDTAK = 'arbeid_ett_land_ovrig_vedtak';
