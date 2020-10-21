@@ -26,6 +26,7 @@ export async function forhandsvisBrev(behandlingID: number, dokumenttypeKode: st
     mottaker: data.mottaker ? data.mottaker : null,
     fritekst: data.fritekst ? data.fritekst : null,
     begrunnelseKode: data.begrunnelseKode ? data.begrunnelseKode : null,
+    ytterligereInformasjon: data.ytterligereInformasjon ? data.ytterligereInformasjon : null,
   };
 
   const response = await Api.Dokumenter.pdf.forhandsvisBrev(behandlingID, dokumenttypeKode, utfyltdata);
