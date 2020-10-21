@@ -12,7 +12,6 @@ interface LinkGroupProps {
   label: string,
   links: Link[],
   onClick: (index: number) => void,
-  theme?: string,
 }
 
 const linkgroupCls = bem('linkgroup');
@@ -22,7 +21,6 @@ const LinkGroup = ({
   label,
   links,
   onClick,
-  theme,
 }: LinkGroupProps) => (
   <div className={linkgroupCls.block}>
     <Nav.typo.Normaltekst className={labelCls}>{label}</Nav.typo.Normaltekst>
@@ -40,7 +38,6 @@ const LinkGroup = ({
           onClick={() => onClick(index)}
           iconSrc={iconSrc}
           iconAltText={iconAltText}
-          theme={theme}
         />
       ))
     }

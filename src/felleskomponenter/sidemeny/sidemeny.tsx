@@ -15,28 +15,18 @@ interface LinkGroupInterface {
   links: Link[],
 }
 
-type ThemeProp = 'arrow';
-
 interface SideMenyProps {
   heading?: string,
   linkGroups: LinkGroupInterface[],
   onClick: (groupIndex: number, linkIndex: number) => void,
-  theme?: ThemeProp,
 }
 
 const SideMeny = ({
   linkGroups,
   heading,
   onClick,
-  theme,
 }: SideMenyProps): JSX.Element => {
-  const sideMenyModifierClassnames = theme ? {
-    [sideMenyCls.modifier(theme)]: theme,
-  } : {};
-
-  const sideMenyRootClassnames = classnames(sideMenyCls.block, {
-    ...sideMenyModifierClassnames,
-  });
+  const sideMenyRootClassnames = classnames(sideMenyCls.block);
 
   return (
     <div className={sideMenyRootClassnames}>

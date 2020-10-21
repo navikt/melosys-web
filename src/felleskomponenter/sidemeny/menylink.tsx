@@ -11,7 +11,6 @@ interface MenyLinkProps {
   active?: boolean,
   iconSrc?: string,
   iconAltText?: string,
-  theme?: string,
 }
 
 const menyLinkCls = bem('meny-link');
@@ -22,9 +21,7 @@ const MenyLink = ({
   onClick,
   iconSrc,
   iconAltText,
-  theme,
 }: MenyLinkProps) => {
-  const arrowTheme = theme === 'arrow';
   const handleOnClick = (event: React.FormEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     onClick();
@@ -37,11 +34,9 @@ const MenyLink = ({
     }
   );
 
-  const containerClassnames = classnames(menyLinkCls.block, {
-    [menyLinkCls.modifier('withArrows')]: arrowTheme,
-  });
+  const containerClassnames = classnames(menyLinkCls.block);
 
-  const labeltype = arrowTheme && active ? 'element' : 'normaltekst';
+  const labeltype = 'normaltekst';
 
   return (
     <li className={containerClassnames} aria-current={active ? true : undefined}>
@@ -54,7 +49,6 @@ const MenyLink = ({
           {label}
           {iconSrc && <img src={iconSrc} alt={iconAltText || ''} className={menyLinkCls.element('icon')} />}
         </TypografiBase>
-        {arrowTheme && active && <span className={menyLinkCls.element('arrow-right')} />}
       </button>
     </li>
   );

@@ -70,34 +70,4 @@
   &__icon {
       margin-left: 1rem;
   }
-
-  &--withArrows {
-      .meny-link__button {
-          &--active {
-              &:before {
-                  display: none;
-              }
-          }
-
-          &:focus {
-              .meny-link__arrow-right {
-                  right: 0;
-                  top: 0px;
-                  border-top: 13px solid transparent;
-                  border-bottom: 13px solid transparent;
-              }
-          }
-      }
-  }
-  &__arrow-right {
-      width: 0;
-      height: 0;
-      border-top: 16px solid transparent;
-      border-bottom: 16px solid transparent;
-      border-left: 17px solid #e7e9e9;
-      position: absolute;
-      right: -3px;
-      top: -3px;
-      background-color: white;
-  }
 }
