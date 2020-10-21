@@ -29,7 +29,8 @@ const LinkGroup = ({
     {
       links.map(({
         label: linkLabel,
-        active, iconSrc,
+        active,
+        iconSrc,
         iconAltText,
       }, index) => (
         <MenyLink
