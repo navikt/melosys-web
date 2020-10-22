@@ -43,7 +43,9 @@ const SideOppsummering = ({
     if (behandlingID > 0) {
       hentMuligeBehandlingstema(behandlingID)
         .then(response =>
-          setKanEndreBehandlingstema(response.data.muligeBehandlingstema && response.data.muligeBehandlingstema.length !== 0));
+          setKanEndreBehandlingstema(response.data.muligeBehandlingstema && response.data.muligeBehandlingstema.length !== 0))
+        .catch(() =>
+          setKanEndreBehandlingstema(false));
     }
   }, [behandlingID]);
 
