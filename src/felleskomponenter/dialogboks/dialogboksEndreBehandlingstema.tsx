@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import PT from 'prop-types';
-import { SkjemaelementFeil } from 'nav-frontend-skjema/lib/skjemaelement-feilmelding';
 import { RootState } from 'AppTypes';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { behandlingstemaSelectors } from '../../ducks/behandlingstema';
@@ -45,13 +44,12 @@ function DialogboksEndreBehandlingstema({
   ...props
 } : Props & PropsFromRedux) {
   const [behandlingstema, setBehandlingstema] = useState('');
-  const [feilmeldingSelect, setFeilmeldingSelect] = useState<SkjemaelementFeil | undefined>();
+  const [generellFeil, setGenerellFeil] = useState('');
   const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingstema);
 
   const velgBehandlingstemaHandle = (event: any) => {
     setBehandlingstema(event.target.value);
-    setFeilmeldingSelect(undefined);
   };
 
   const endreBehandlingstemaHandle = () => {
@@ -59,7 +57,7 @@ function DialogboksEndreBehandlingstema({
       setBehandlingstemaEndret(true);
       hentBehandling(behandlingID);
     }).catch((error: any) => {
-      setFeilmeldingSelect({ feilmelding: error.status });
+      setGenerellFeil(error.message ? error.message : "En feil skjedde ved endring av behandlingstema");
     });
   };
 
@@ -85,13 +83,12 @@ function DialogboksEndreBehandlingstema({
 
   const renderEndreBehandlingstema = () => (
     <div>
-      { muligeBehandlingstema.length && muligeBehandlingstema.length !== 0
+      { !generellFeil
         ?
         <div>
           <Nav.typo.Systemtittel className="overskrift">Velg nytt behandlingstema</Nav.typo.Systemtittel>
           <div className="select">
             <Mui.KodeTermSelect
-              feil={feilmeldingSelect}
               onChange={velgBehandlingstemaHandle}
               label=""
               disableForsteValg={!!behandlingstema}
@@ -112,7 +109,15 @@ function DialogboksEndreBehandlingstema({
         </div>
         :
         <div>
-          Feil
+          <Nav.typo.Systemtittel className="overskrift">Beklager, noe gikk galt</Nav.typo.Systemtittel>
+          <div className="select">
+            <Nav.AlertStripe type="feil">
+              {generellFeil}
+            </Nav.AlertStripe>
+          </div>
+          <div style={{ float: 'right' }}>
+            <Mui.Knapp onClick={avbrytHandle}>LUKK</Mui.Knapp>
+          </div>
         </div>
       }
     </div>
