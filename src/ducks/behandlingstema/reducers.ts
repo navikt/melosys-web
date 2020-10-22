@@ -12,7 +12,7 @@ const initialState = {
   data: [],
 };
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action: Types.Action) {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };

@@ -20,7 +20,7 @@ import './dialogboksEndreBehandlingstema.css';
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  muligeBehandlingstema: behandlingstemaSelectors.muligeBehandlingstemaSelector(state),
+  muligeBehandlingstema: behandlingstemaSelectors.MuligeBehandlingstemaSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
 });
 
@@ -77,7 +77,7 @@ function DialogboksEndreBehandlingstema({
           Behandlingstemaet har blitt endret og oppdatert.
         </Nav.AlertStripe>
       </div>
-      <div className="knapperadcontainer" style={{ float: 'right' }}>
+      <div style={{ float: 'right' }}>
         <Mui.Knapp onClick={avbrytHandle}>LUKK</Mui.Knapp>
       </div>
     </div>
@@ -99,7 +99,7 @@ function DialogboksEndreBehandlingstema({
               koder={muligeBehandlingstema.filter((tema: any) => tema.kode !== props.behandlingstema)}
             />
           </div>
-          <div className="knapperadcontainer">
+          <div>
             <Knapperad
               avbryt={avbryt}
               avbrytTekst="AVBRYT"
