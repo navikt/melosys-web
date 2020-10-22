@@ -36,9 +36,21 @@ const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) 
   return KV.objektTilTerm(lovvalgsbestemmelse);
 };
 
+const finnSedMottakerLand = (arbeidsland, bostedsland, lovvalgsperiode) => {
+  const bostedslandKode = bostedsland.kode;
+
+  if (lovvalgsperiode.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A &&
+    lovvalgsperiode.tilleggBestemmelse === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1) {
+    return bostedslandKode;
+  }
+
+  return arbeidsland[0].kode;
+};
+
 const VurderingVedtak = ({
   lovvalgsperioder,
   arbeidsland,
+  bostedsland,
   redigerbart,
   behandlingID,
   lagreOgFatteVedtak,
@@ -88,6 +100,8 @@ const VurderingVedtak = ({
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
   };
+
+  const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
 
   return (
     <div className="vedtak">
@@ -144,7 +158,7 @@ const VurderingVedtak = ({
               <Mottakerinstitusjonvelger
                 form={form}
                 redigerbart={redigerbart}
-                landkode={arbeidsland[0].kode}
+                landkode={sedMottakerLand}
                 bucType={bucType}
               />
             </Nav.Column>
@@ -168,7 +182,8 @@ const VurderingVedtak = ({
 VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
-  arbeidsland: PT.arrayOf(PT.string).isRequired,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  bostedsland: MPT.Kodeverk,
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
@@ -188,11 +203,13 @@ VurderingVedtak.defaultProps = {
   lovvalgsland: '',
   formValues: {},
   visAntallManederUtland: true,
+  bostedsland: {},
 };
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
