@@ -142,7 +142,7 @@ DialogboksEndreBehandlingstema.propTypes = {
   behandlingstema: PT.string.isRequired,
   hentBehandling: PT.func.isRequired,
   muligeBehandlingstema: PT.array.isRequired,
-  saksnummer: PT.string,
+  saksnummer: PT.string.isRequired,
   tilAnnenSide: PT.func.isRequired,
 };
 
