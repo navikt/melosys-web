@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import PT from 'prop-types';
 import { RootState } from 'AppTypes';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { behandlingstemaSelectors } from '../../ducks/behandlingstema';
 import { fagsakSelectors } from '../../ducks/fagsaker';
@@ -23,7 +25,7 @@ const mapStateToProps = (state: RootState) => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   tilAnnenSide: (link: string) => dispatch(navigeringOperations.tilAnnenSide(link)),
 });
@@ -48,7 +50,7 @@ function DialogboksEndreBehandlingstema({
   const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingstema);
 
-  const velgBehandlingstemaHandle = (event: any) => {
+  const velgBehandlingstemaHandle: ChangeEventHandler<HTMLInputElement> = event => {
     setBehandlingstema(event.target.value);
   };
 
@@ -57,7 +59,7 @@ function DialogboksEndreBehandlingstema({
       setBehandlingstemaEndret(true);
       hentBehandling(behandlingID);
     }).catch((error: any) => {
-      setGenerellFeil(error.message ? error.message : "En feil skjedde ved endring av behandlingstema");
+      setGenerellFeil(error.message ? error.message : 'En feil skjedde ved endring av behandlingstema');
     });
   };
 
@@ -93,7 +95,7 @@ function DialogboksEndreBehandlingstema({
               label=""
               disableForsteValg={!!behandlingstema}
               value={behandlingstema}
-              koder={muligeBehandlingstema.filter((tema: any) => tema.kode !== props.behandlingstema)}
+              koder={muligeBehandlingstema.filter(tema => tema.kode !== props.behandlingstema)}
             />
           </div>
           <div>
