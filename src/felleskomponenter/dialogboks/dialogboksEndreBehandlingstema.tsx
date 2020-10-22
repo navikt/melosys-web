@@ -58,8 +58,8 @@ function DialogboksEndreBehandlingstema({
     Api.Behandlinger.tema.endreBehandlingstema(behandlingID, behandlingstema).then(() => {
       setBehandlingstemaEndret(true);
       hentBehandling(behandlingID);
-    }).catch((error: any) => {
-      setGenerellFeil(error.message ? error.message : 'En feil skjedde ved endring av behandlingstema');
+    }).catch(() => {
+      setGenerellFeil('Behandlingstema ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon');
     });
   };
 
@@ -70,9 +70,8 @@ function DialogboksEndreBehandlingstema({
   };
 
   const renderBehandlingstemaEndret = () => (
-    <div>
-      <Nav.typo.Systemtittel className="overskrift">Behandlingstema er blitt oppdatert</Nav.typo.Systemtittel>
-      <div className="select">
+    <div className="dialogboks">
+      <div className="innhold">
         <Nav.AlertStripe type="suksess">
           Behandlingstemaet har blitt endret og oppdatert.
         </Nav.AlertStripe>
@@ -84,12 +83,12 @@ function DialogboksEndreBehandlingstema({
   );
 
   const renderEndreBehandlingstema = () => (
-    <div>
+    <div className="dialogboks">
       { !generellFeil
         ?
         <div>
           <Nav.typo.Systemtittel className="overskrift">Velg nytt behandlingstema</Nav.typo.Systemtittel>
-          <div className="select">
+          <div className="innhold">
             <Mui.KodeTermSelect
               onChange={velgBehandlingstemaHandle}
               label=""
@@ -111,8 +110,7 @@ function DialogboksEndreBehandlingstema({
         </div>
         :
         <div>
-          <Nav.typo.Systemtittel className="overskrift">Beklager, noe gikk galt</Nav.typo.Systemtittel>
-          <div className="select">
+          <div className="innhold">
             <Nav.AlertStripe type="feil">
               {generellFeil}
             </Nav.AlertStripe>
