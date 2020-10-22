@@ -58,15 +58,11 @@ function DialogboksEndreBehandlingstema({
     Api.Behandlinger.tema.endreBehandlingstema(behandlingID, behandlingstema).then(() => {
       setBehandlingstemaEndret(true);
       hentBehandling(behandlingID);
+      const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
+      if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
     }).catch(() => {
       setGenerellFeil('Behandlingstema ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon');
     });
-  };
-
-  const avbrytHandle = () => {
-    const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
-    if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
-    avbryt();
   };
 
   const renderBehandlingstemaEndret = () => (
@@ -77,7 +73,7 @@ function DialogboksEndreBehandlingstema({
         </Nav.AlertStripe>
       </div>
       <div style={{ float: 'right' }}>
-        <Mui.Knapp onClick={avbrytHandle}>LUKK</Mui.Knapp>
+        <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
       </div>
     </div>
   );
@@ -116,7 +112,7 @@ function DialogboksEndreBehandlingstema({
             </Nav.AlertStripe>
           </div>
           <div style={{ float: 'right' }}>
-            <Mui.Knapp onClick={avbrytHandle}>LUKK</Mui.Knapp>
+            <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
           </div>
         </div>
       }
@@ -146,7 +142,7 @@ DialogboksEndreBehandlingstema.propTypes = {
   behandlingstema: PT.string.isRequired,
   hentBehandling: PT.func.isRequired,
   muligeBehandlingstema: PT.array.isRequired,
-  saksnummer: PT.string.isRequired,
+  saksnummer: PT.string,
   tilAnnenSide: PT.func.isRequired,
 };
 
