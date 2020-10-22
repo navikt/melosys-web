@@ -159,7 +159,7 @@ export const Menypanel = ({
     },
   ];
 
-  const onClick = (groupIndex: number, linkIndex: number) => {
+  const handleClick = (groupIndex: number, linkIndex: number) => {
     setActive([groupIndex, linkIndex]);
   };
 
@@ -194,7 +194,7 @@ export const Menypanel = ({
       <Sidemeny
         heading="Opplysninger"
         linkGroups={linkGroups}
-        onClick={onClick}
+        onClick={handleClick}
       />
       <Nav.Panel className="content">
         { activeContent }
