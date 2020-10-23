@@ -1,7 +1,7 @@
+import Inngang from './inngang';
 import AvslaaUtpeking from './avslaautpeking';
 import GodkjennUtpekingNorge from './godkjennutpekingnorge';
 import GodkjennUtpekingAnnetLand from './godkjennutpekingannetland';
-import Inngang from './inngang';
 import Virksomheter from './virksomheter';
 import VurderUtpeking from './vurderutpeking';
 
