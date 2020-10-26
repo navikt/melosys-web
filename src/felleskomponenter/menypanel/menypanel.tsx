@@ -7,6 +7,9 @@ import * as Nav from '../../utils/navFrontend';
 import MKV from '../../melosyskodeverk';
 
 import Sidemeny from '../sidemeny';
+import {
+  Barnetrygd,
+} from './menypunkter';
 
 import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
@@ -105,7 +108,7 @@ export const Menypanel = ({
         {
           label: 'EU/EØS-barnetrygd',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Barnetrygd />,
         },
         {
           label: 'Arbeidsforhold og inntekt',
