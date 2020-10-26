@@ -12,7 +12,7 @@ import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as Mui from '../../../felleskomponenter/ui';
 
-import Paneler from './komponenter/paneler';
+import { RegistreringMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
@@ -370,7 +370,11 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      <Paneler />
+      <RegistreringMenypanelForm
+        menypunkter={[
+          'Person',
+        ]}
+      />
     </div>
   );
 };

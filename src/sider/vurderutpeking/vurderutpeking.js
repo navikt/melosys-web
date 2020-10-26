@@ -11,9 +11,9 @@ import * as KV from '../../kodeverk';
 import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
-import Soknadpaneler from '../../felleskomponenter/soknadpaneler';
 import Stegvelger from '../../felleskomponenter/stegvelger';
 import { STEG } from '../../felleskomponenter/stegvelger/stegMotor/typer';
+import { SoknadMenypanelForm } from '../../felleskomponenter/menypanelForm';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
 import { formSelectors } from '../../ducks/form';
@@ -153,8 +153,7 @@ const Vurderutpeking = ({
                 forsteSteg={forsteSteg}
               />
             }
-            <Soknadpaneler
-              behandlingID={behandlingID}
+            <SoknadMenypanelForm
               startOgVisOppfriskModal={startOgVisOppfriskModal}
             />
           </Nav.Column>
