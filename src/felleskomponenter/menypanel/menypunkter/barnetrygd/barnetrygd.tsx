@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 
 import * as Nav from '../../../../utils/navFrontend';
+import * as KV from '../../../../kodeverk';
 import * as Utils from '../../../../utils';
 import * as Etiketter from '../etiketter';
 
@@ -24,7 +25,7 @@ export const Barnetrygd = ({
   <Nav.Container fluid className="barnetrygd">
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>EU/EØS-barnetrygd</Nav.typo.Undertittel>
+        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Barnetrygd.tittel}</Nav.typo.Undertittel>
         <Etiketter.FraRegister />
       </Nav.Column>
     </Nav.Row>

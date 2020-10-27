@@ -4,3 +4,8 @@ export const ArbeidsforholdOgInntekt = {
     inntekt: 'Inntekt',
   },
 };
+
+export const Barnetrygd = {
+  tittel: 'EU/EØS-barnetrygd',
+  undertitler: {},
+};
