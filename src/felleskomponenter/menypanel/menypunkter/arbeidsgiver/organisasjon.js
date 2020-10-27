@@ -6,7 +6,6 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
 import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
-import KontaktOpplysninger from '../../../kontaktopplysninger';
 
 import './organisasjon.css';
 
@@ -17,7 +16,6 @@ import './organisasjon.css';
  */
 const Organisasjon = ({
   organisasjon,
-  redigerbart,
   className,
   visNavn,
   visOrgnr,
@@ -34,30 +32,22 @@ const Organisasjon = ({
   return (
     <div className={organisasjonCls}>
       <Nav.Container fluid>
-        {
-          visOrgnr &&
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Nav.typo.Element className="inline">Org.nr. juridisk enhet: </Nav.typo.Element>
-              <Nav.typo.Normaltekst className="inline">{orgnr}</Nav.typo.Normaltekst>
-            </Nav.Column>
-          </Nav.Row>
-        }
         <Nav.Row>
-          <Nav.Column xs="6">
-            <dl className="organisasjon__detaljer">
-              <OrganisasjonsAdresse
-                visNavn={visNavn}
-                visTittel={visAdresseTittel}
-                className="organisasjon__adresse"
-                organisasjon={organisasjon}
-                boldNavn={boldAdresseNavn}
-              />
-            </dl>
+          <Nav.Column xs="4">
+            <OrganisasjonsAdresse
+              visNavn={visNavn}
+              visTittel={visAdresseTittel}
+              organisasjon={organisasjon}
+              boldNavn={boldAdresseNavn}
+            />
           </Nav.Column>
-          <Nav.Column xs="6" className="organisasjon__kontaktopplysninger">
-            <KontaktOpplysninger juridiskOrg={organisasjon} redigerbart={redigerbart} />
-          </Nav.Column>
+          {
+            visOrgnr &&
+            <Nav.Column xs="6">
+              <Nav.typo.Normaltekst style={{ marginTop: '0.5em' }}>Org.nr. juridisk enhet</Nav.typo.Normaltekst>
+              <Nav.typo.Element>{orgnr}</Nav.typo.Element>
+            </Nav.Column>
+          }
         </Nav.Row>
       </Nav.Container>
     </div>
@@ -66,7 +56,6 @@ const Organisasjon = ({
 
 Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
-  redigerbart: PT.bool.isRequired,
   className: PT.string,
   visNavn: PT.bool,
   visOrgnr: PT.bool,

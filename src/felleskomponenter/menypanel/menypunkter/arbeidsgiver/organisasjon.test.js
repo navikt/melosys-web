@@ -21,14 +21,4 @@ describe('organisasjon', () => {
     expect(organisasjonsAdresse).toHaveLength(1);
     expect(organisasjonsAdresse.props().organisasjon).toBe(props.organisasjon);
   });
-
-  it('viser kontaktopplysninger', () => {
-    const organisasjon = shallow(<Organisasjon {...props} />);
-    const kontaktopplysninger = organisasjon.find(KontaktOpplysninger);
-    const kontaktopplysningerProps = kontaktopplysninger.props();
-
-    expect(kontaktopplysninger).toHaveLength(1);
-    expect(kontaktopplysningerProps.redigerbart).toBe(props.redigerbart);
-    expect(kontaktopplysningerProps.juridiskOrg).toBe(props.organisasjon);
-  });
 });

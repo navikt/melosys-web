@@ -11,7 +11,6 @@ import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
-import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
 
 import './arbeidsforhold.css';
 
@@ -47,25 +46,22 @@ export const Arbeidsforholdet = props => {
             <Nav.Row className="arbeidsforhold__enkelt">
               <Nav.Column xs="6">
                 <dl className="arbeidsforholdet__detaljer">
-                  <dt>Fra og med:</dt>
-                  <dd>{ansettelsesPeriode.fom}</dd>
-                  <dt>Til og med:</dt>
-                  <dd>{ansettelsesPeriode.tom}</dd>
                   <dt>Varighet:</dt>
                   <dd>{ansettelsesPeriode.tom ? varighetLabel : '(ikke avsluttet)'}</dd>
                   <dt>Bekreftet</dt>
                   <dd><EnkeltDato dato={sistBekreftet} /></dd>
-                  <dt>Type arbeidsforhold:</dt>
-                  <dd>{arbeidsforholdstype}</dd>
+                  <dt>Virksomhetsnummer:</dt>
+                  <dd>{arbeidsgiver.orgnr}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
                 <dl className="arbeidsforholdet__detaljer">
-                  <dt>Virksomhetsnummer:</dt>
-                  <dd>{arbeidsgiver.orgnr}</dd>
-                  <OrganisasjonsAdresse visNavn={false} className="adresse" organisasjon={arbeidsgiver} />
+                  <dt>Periode</dt>
+                  <dd>{ansettelsesPeriode.fom} - {ansettelsesPeriode.tom}</dd>
                   <dt>A-ordning:</dt>
                   <dd>{Utils.streng.boolTilNorsk(Aordning)}</dd>
+                  <dt>Type arbeidsforhold:</dt>
+                  <dd>{arbeidsforholdstype}</dd>
                 </dl>
               </Nav.Column>
               {arbeidsavtaler && <Arbeidsavtaler arbeidsavtaler={arbeidsavtaler} />}

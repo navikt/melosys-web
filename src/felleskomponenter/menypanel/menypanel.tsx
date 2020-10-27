@@ -8,6 +8,7 @@ import MKV from '../../melosyskodeverk';
 
 import Sidemeny from '../sidemeny';
 import {
+  ArbeidsforholdOgInntekt,
   Barnetrygd,
 } from './menypunkter';
 
@@ -113,7 +114,7 @@ export const Menypanel = ({
         {
           label: 'Arbeidsforhold og inntekt',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <ArbeidsforholdOgInntekt />,
         },
       ],
     },
