@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
-
+import { connect } from 'react-redux';
 import MKV from '../melosyskodeverk';
 
 import * as Nav from '../utils/navFrontend';
@@ -10,6 +10,9 @@ import * as KV from '../kodeverk';
 import Oppsummering from './oppsummering';
 
 import './sideOppsummering.css';
+import { modalerOperations } from '../ducks/modaler';
+import { behandlingstemaOperations } from '../ducks/behandlingstema';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 
 const SideOppsummering = ({
   arbeidsland,
@@ -26,11 +29,25 @@ const SideOppsummering = ({
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
   periodeLabel,
+  visEndreBehandlingstemaDialogHandle,
+  hentMuligeBehandlingstema,
+  behandlingID,
 }) => {
   if (!oppsummering) return <div />;
 
+  const [kanEndreBehandlingstema, setKanEndreBehandlingstema] = useState(false);
   const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || '';
   const behandlingsstatus = renderBehandlingsstatus();
+
+  useEffect(() => {
+    if (behandlingID > 0) {
+      hentMuligeBehandlingstema(behandlingID)
+        .then(response =>
+          setKanEndreBehandlingstema(response.data.muligeBehandlingstema && response.data.muligeBehandlingstema.length !== 0))
+        .catch(() =>
+          setKanEndreBehandlingstema(false));
+    }
+  }, [behandlingID]);
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -46,7 +63,9 @@ const SideOppsummering = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="12">
-            <Nav.typo.Undertittel className="soknadSammendrag__header">{tittel}</Nav.typo.Undertittel>
+            <Nav.typo.Undertittel className={kanEndreBehandlingstema ? 'oppsummering__header' : ''} onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}>
+              {tittel}
+            </Nav.typo.Undertittel>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -98,6 +117,9 @@ SideOppsummering.propTypes = {
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,
   periodeLabel: PT.string,
+  visEndreBehandlingstemaDialogHandle: PT.func.isRequired,
+  hentMuligeBehandlingstema: PT.func.isRequired,
+  behandlingID: PT.number.isRequired,
 };
 
 SideOppsummering.defaultProps = {
@@ -114,4 +136,13 @@ SideOppsummering.defaultProps = {
   periodeLabel: 'Søknadsperiode',
 };
 
-export default SideOppsummering;
+const mapStateToProps = state => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema()),
+  hentMuligeBehandlingstema: behandlingID => dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
