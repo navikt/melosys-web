@@ -1,0 +1,27 @@
+@import '../../constants';
+
+.expandableList {
+  margin-bottom: 1em;
+
+  .list {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 0.5em;
+  }
+
+  .btnContainer {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      text-decoration: underline;
+      display: block;
+      border:0;
+      padding:0;
+      outline: 0;
+      background: transparent;
+      color: @blue-nav;
+      cursor: pointer;
+    }
+  }
+}

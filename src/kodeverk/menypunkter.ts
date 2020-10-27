@@ -5,6 +5,11 @@ export const ArbeidsforholdOgInntekt = {
   },
 };
 
+export const Medlemskap = {
+  tittel: 'Medlemskap',
+  undertitler: {},
+};
+
 export const Barnetrygd = {
   tittel: 'EU/EØS-barnetrygd',
   undertitler: {},

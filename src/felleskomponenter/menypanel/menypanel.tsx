@@ -10,6 +10,7 @@ import Sidemeny from '../sidemeny';
 import {
   ArbeidsforholdOgInntekt,
   Barnetrygd,
+  Medlemskap,
 } from './menypunkter';
 
 import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
@@ -104,7 +105,7 @@ export const Menypanel = ({
         {
           label: 'Medlemskap',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Medlemskap />,
         },
         {
           label: 'EU/EØS-barnetrygd',
