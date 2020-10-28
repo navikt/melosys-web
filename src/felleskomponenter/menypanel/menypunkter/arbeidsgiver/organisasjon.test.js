@@ -2,7 +2,6 @@ import React from 'react';
 
 import Organisasjon from './organisasjon';
 import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
-import KontaktOpplysninger from '../../../kontaktopplysninger';
 
 describe('organisasjon', () => {
   let props = null;
