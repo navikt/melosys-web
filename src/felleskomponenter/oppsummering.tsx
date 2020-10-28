@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import classNames from 'classnames';
-import { KTObject } from 'melosys-kodeverk';
+import { KTObject } from '@navikt/melosys-kodeverk';
 import { Fagsak, Oppsummering as OppsummeringType, Person } from 'Domene';
 
 import * as Utils from '../utils';

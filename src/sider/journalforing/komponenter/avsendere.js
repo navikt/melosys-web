@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import PT from 'prop-types';
-import MKV from 'melosys-kodeverk';
+import MKV from '@navikt/melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as Nav from '../../../utils/navFrontend';

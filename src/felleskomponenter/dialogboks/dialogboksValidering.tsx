@@ -1,6 +1,6 @@
 import React, { KeyboardEvent, Fragment } from 'react';
 import PT from 'prop-types';
-import { KTObject } from 'melosys-kodeverk';
+import { KTObject } from '@navikt/melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
