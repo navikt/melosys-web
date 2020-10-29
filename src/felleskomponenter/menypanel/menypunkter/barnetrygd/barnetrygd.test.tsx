@@ -18,7 +18,7 @@ describe('Barnetrygd', () => {
     };
     const barnetrygd = shallow(<Barnetrygd {...props} />);
 
-    expect(barnetrygd.contains('JA')).toBe(true);
+    expect(barnetrygd.contains('Ja')).toBe(true);
   });
 
   it('viser "NEI" om sakOgBehandling.eosBarnetrygd er false', () => {
@@ -27,6 +27,6 @@ describe('Barnetrygd', () => {
     };
     const barnetrygd = shallow(<Barnetrygd {...props} />);
 
-    expect(barnetrygd.contains('NEI')).toBe(true);
+    expect(barnetrygd.contains('Nei')).toBe(true);
   });
 });
