@@ -21,23 +21,26 @@ export const Barnetrygd = ({
   sakOgBehandling: {
     eosBarnetrygd,
   },
-}: PropsFromRedux) => (
-  <Nav.Container fluid className="barnetrygd">
-    <Nav.Row className="tittel">
-      <Nav.Column xs="12">
-        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Barnetrygd.tittel}</Nav.typo.Undertittel>
-        <Etiketter.FraRegister />
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Nav.typo.Normaltekst>Mottar søkeren EU/EØS-barnetrygd fra NAV?</Nav.typo.Normaltekst>
-      </Nav.Column>
-      <Nav.Column xs="6">
-        {Utils.streng.boolTilNorsk(eosBarnetrygd)}
-      </Nav.Column>
-    </Nav.Row>
-  </Nav.Container>
-);
+}: PropsFromRedux) => {
+  const eosBarnetrygdString = Utils.streng.boolTilNorsk(eosBarnetrygd);
+  const capitalizedEosBarneTrygd = Utils._capitalize(eosBarnetrygdString);
+
+  return (
+    <Nav.Container fluid className="barnetrygd">
+      <Nav.Row className="tittel">
+        <Nav.Column xs="12">
+          <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Barnetrygd.tittel}</Nav.typo.Undertittel>
+          <Etiketter.FraRegister />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.typo.Normaltekst style={{ display: 'inline' }}>Mottar søkeren EU/EØS-barnetrygd fra NAV?</Nav.typo.Normaltekst>
+          <Nav.typo.Element style={{ display: 'inline', marginLeft: '1em' }}>{capitalizedEosBarneTrygd}</Nav.typo.Element>
+        </Nav.Column>
+      </Nav.Row>
+    </Nav.Container>
+  );
+};
 
 export default connector(Barnetrygd);
