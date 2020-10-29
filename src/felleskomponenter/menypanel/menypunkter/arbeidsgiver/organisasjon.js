@@ -7,8 +7,6 @@ import * as MPT from '../../../../proptypes';
 
 import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
 
-import './organisasjon.css';
-
 const Organisasjon = ({
   organisasjon,
   className,
@@ -22,7 +20,7 @@ const Organisasjon = ({
     orgnr,
   } = organisasjon;
 
-  const organisasjonCls = classNames('panelSeksjon', 'organisasjon', className);
+  const organisasjonCls = classNames(className);
 
   return (
     <div className={organisasjonCls}>
