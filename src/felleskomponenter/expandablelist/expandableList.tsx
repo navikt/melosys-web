@@ -1,4 +1,5 @@
 import React, { useState, ReactNode } from 'react';
+import classNames from 'classnames';
 
 import * as Nav from '../../utils/navFrontend';
 
@@ -14,6 +15,7 @@ interface ExpandableListProps<T> {
   btnTextCollapsed: string,
   chevron: boolean,
   expandable: boolean,
+  dividers?: boolean,
 }
 
 function ExpandableList<T>(props: ExpandableListProps<T>) {
@@ -27,6 +29,7 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
     btnTextCollapsed,
     chevron = false,
     expandable = true,
+    dividers = false,
   } = props;
 
   const [collapsed, setCollapsed] = useState(true);
@@ -40,13 +43,17 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
 
   const renderableElements = collapsed ? elements.slice(0, amountOfItemsCollapsed) : elements;
 
+  const elementCls = classNames({
+    divider: dividers,
+  });
+
   return (
     <div className="expandableList">
+      {header}
       <div className="list">
-        {header}
         {
           renderableElements.map(element => (
-            <div key={idFromElement(element)}>
+            <div className={elementCls} key={idFromElement(element)}>
               {renderElement(element)}
             </div>
           ))

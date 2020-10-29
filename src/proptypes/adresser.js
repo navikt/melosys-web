@@ -31,7 +31,7 @@ const StrukturertAdressePropType = PT.shape({
 const MidlertidigAdressePropType = PT.shape({
   adressetype: PT.string,
   strukturertAdresse: StrukturertAdressePropType,
-  UstrukturertAdresse: PT.UstrukturertAdressePropType,
+  ustrukturertAdresse: PT.UstrukturertAdressePropType,
 });
 
 export {

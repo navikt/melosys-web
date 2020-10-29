@@ -93,6 +93,7 @@ export function MedlemskapGruppe(props: MedlemskapGruppeProps) {
             btnTextCollapsed="Vis flere"
             btnTextExpanded="Vis færre"
             chevron
+            dividers
           />
         }
         { perioder.length === 0 && '(ingen data funnet)'}

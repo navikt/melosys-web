@@ -11,6 +11,7 @@ import {
   ArbeidsforholdOgInntekt,
   Barnetrygd,
   Medlemskap,
+  Person,
 } from './menypunkter';
 
 import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
@@ -90,7 +91,7 @@ export const Menypanel = ({
         {
           label: 'Person',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Person />,
         },
         {
           label: 'Familieforhold',

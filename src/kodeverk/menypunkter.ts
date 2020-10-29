@@ -10,6 +10,13 @@ export const Medlemskap = {
   undertitler: {},
 };
 
+export const Person = {
+  tittel: 'Person',
+  undertitler: {
+    annenAdresse: 'Annen adresse',
+  },
+};
+
 export const Barnetrygd = {
   tittel: 'EU/EØS-barnetrygd',
   undertitler: {},

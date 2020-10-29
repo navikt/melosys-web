@@ -13,6 +13,7 @@ type Person = {
   fnr: string,
   sivilstand: KTObject,
   statsborgerskap: KTObject,
+  statsborgerskapDato: string,
   sammensattNavn: string,
   kjoenn: KTObject,
   foedselsdato: string,

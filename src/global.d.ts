@@ -18,6 +18,7 @@ declare module 'Domene' {
   export type Oppsummering = import('./@types').Oppsummering;
   export type Periode = import('./@types').Periode;
   export type Person = import('./@types').Person;
+  export type PersonHistorikk = import('./@types').PersonHistorikk;
   export type Videresending = import('./@types').Videresending;
   export type DokumentOversikt = import('./@types').DokumentOversikt;
   export type Dokument = import('./@types').Dokument;
