@@ -43,7 +43,20 @@ foregår på én side. Følgende routes er satt opp i applikasjonen:
 | /sok | Sok | Dette er grunnsiden som saksbehandleren benytter for å hente søke etter en sak eller hente tidligere behandlede saker. |
 | /saksbehandling | Saksbehandling | Dette er hovedsiden i applikasjonen hvor alle nødvendige felles-komponenter er bygget inn. |
 
-## Utvikling på laptop mot backend i dev-fss
+## Utvikling på laptop
+
+### Bygging
+
+Applikasjonen benytter avhengigheter fra GitHub package registry som krever autentisering for å hentes. Det er derfor nødvendig å opprette et personal access token (PAT)
+fra [GitHub developer settings](https://github.com/settings/tokens), og sette dette i `~/.npmrc` på denne måten, gitt at tokenet er satt i en miljøvariabel `NPM_TOKEN`:
+
+```shell script
+//registry.npmjs.org/:_authToken=${NPM_TOKEN}
+```
+
+(Det er også mulig å sette innholdet av tokenet rett i `~/.npmrc`.)
+
+### Utvikling mot backend i dev-fss
 
 Installer [kubefwd](https://github.com/txn2/kubefwd) eller [Kube Forwarder](https://github.com/pixel-point/kube-forwarder). Start applikasjonen med forwarding mot
 ønsket miljø, f.eks. `kubefwd` mot `t8`:

@@ -35,8 +35,6 @@ jobs:
           # NPM krever tydeligvis en token for å hente pakker fra github packages
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          # FIXME: Hvorfor setter ikke actions/setup-node@v1 riktig registry?
-          npm config set registry https://npm.pkg.github.com/@navikt
           npm i
 
       - name: build css
