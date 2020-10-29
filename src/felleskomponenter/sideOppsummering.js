@@ -6,6 +6,7 @@ import MKV from '../melosyskodeverk';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 import * as KV from '../kodeverk';
+import * as Ikoner from '../resources/images';
 
 import Oppsummering from './oppsummering';
 
@@ -63,8 +64,8 @@ const SideOppsummering = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="12">
-            <Nav.typo.Undertittel className={kanEndreBehandlingstema ? 'oppsummering__header' : ''} onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}>
-              {tittel}
+            <Nav.typo.Undertittel className={kanEndreBehandlingstema ? 'behandlingstema_redigerbar' : ''} onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}>
+              {tittel} {kanEndreBehandlingstema ? <Ikoner.Blyant_Active className="blyant" /> : <Ikoner.Blyant_Disabled className="blyant" />}
             </Nav.typo.Undertittel>
           </Nav.Column>
         </Nav.Row>
