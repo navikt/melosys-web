@@ -38,20 +38,18 @@ export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPerio
         <Nav.Column xs="3">{fom}</Nav.Column>
         <Nav.Column xs="3">{tom}</Nav.Column>
         <Nav.Column xs="6">
-          <dl>
-            <div>
-              <dt>Lovvalgsland:</dt>
-              <dd>{KV.objektTilTerm(land)}</dd>
-            </div>
-            <div>
-              <dt>Status:</dt>
-              <dd>{KV.objektTilTerm(status)}</dd>
-            </div>
-            <div>
-              <dt>Grunnlagshjemmel:</dt>
-              <dd>{KV.objektTilTerm(grunnlagstype)}</dd>
-            </div>
-          </dl>
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Nav.typo.Normaltekst>Lovvalgsland:</Nav.typo.Normaltekst>
+              <Nav.typo.Normaltekst>Status:</Nav.typo.Normaltekst>
+              <Nav.typo.Normaltekst>Grunnlagshjemmel:</Nav.typo.Normaltekst>
+            </Nav.Column>
+            <Nav.Column xs="6">
+              <Nav.typo.Element>{KV.objektTilTerm(land)}</Nav.typo.Element>
+              <Nav.typo.Element>{KV.objektTilTerm(status)}</Nav.typo.Element>
+              <Nav.typo.Element>{KV.objektTilTerm(grunnlagstype)}</Nav.typo.Element>
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Column>
       </Nav.Row>
     </div>
