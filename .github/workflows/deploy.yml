@@ -44,7 +44,10 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
           # NPM krever tydeligvis en token for å hente pakker fra github packages
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: npm i
+        run: |
+          # FIXME: Hvorfor setter ikke actions/setup-node@v1 riktig registry?
+          npm config set registry https://npm.pkg.github.com/@navikt
+          npm i
       - name: build css
         run: npm run build:css
       - name: lint
