@@ -1,0 +1,45 @@
+@import '../../../../constants';
+@import '../../../../utils/mixins';
+
+.medlemskap {
+  .medlemskap__enkelt {
+    .seksjonmixin();
+    border-bottom: 1px solid @gray-dark;
+
+    &:first-child {
+      padding-top: 1em;
+    }
+
+    dl {
+      margin-top: 0;
+
+      div {
+        margin-bottom: 5px;
+      }
+
+      dt, dd {
+        display: inline;
+      }
+
+      dt {
+        font-weight: bold;
+      }
+
+      dd {
+        margin-left: 0.5em;
+      }
+    }
+  }
+
+  .medlemskap__gruppeoverskrift {
+    margin: 1em 0 1em 0;
+  }
+
+  .medlemskapgruppe__liste {
+    border-top: 1px solid @gray-dark;
+  }
+
+  .medlemskap__detaljer {
+    .beskrivliste-mixin('row');
+  }
+}

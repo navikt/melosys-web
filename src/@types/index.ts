@@ -12,3 +12,8 @@ export type {
   BrevPdfData,
   SedPdfData,
 } from './dokument';
+export type {
+  Periode,
+  Lovvalgsperiode,
+} from './periode';
+export type { MedlemskapPeriode } from './medlemskap';

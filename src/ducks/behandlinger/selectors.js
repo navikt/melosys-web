@@ -225,16 +225,19 @@ export const MedlemskapSelector = createSelector(
     const PERIODE_MED_MEDLEMSKAP = 'PMMEDSKP';
     const PERIODE_UTEN_MEDLEMSKAP = 'PUMEDSKP';
     const GYLDIG_MEDLEMSKAP = 'GYLD';
-    const UAVKLART_MEDLEMSKAP = 'UAVK';
     const AVVIST_MEDLEMSKAP = 'AVST';
 
     const { medlemsperiode } = medlemskap;
-    if (!medlemsperiode) return null;
+    if (!medlemsperiode) {
+      return {
+        perioderMed: [],
+        perioderUten: [],
+      };
+    }
 
     return {
       perioderMed: medlemsperiode.filter(periode => KV.objektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP && KV.objektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
       perioderUten: medlemsperiode.filter(periode => KV.objektTilKode(periode.periodetype) === PERIODE_UTEN_MEDLEMSKAP && KV.objektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
-      perioderUavklart: medlemsperiode.filter(periode => KV.objektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
     };
   }
 );
