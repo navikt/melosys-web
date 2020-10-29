@@ -51,7 +51,7 @@ Applikasjonen benytter avhengigheter fra GitHub package registry som krever aute
 fra [GitHub developer settings](https://github.com/settings/tokens), og sette dette i `~/.npmrc` på denne måten, gitt at tokenet er satt i en miljøvariabel `NPM_TOKEN`:
 
 ```shell script
-//registry.npmjs.org/:_authToken=${NPM_TOKEN}
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 ```
 
 (Det er også mulig å sette innholdet av tokenet rett i `~/.npmrc`.)
