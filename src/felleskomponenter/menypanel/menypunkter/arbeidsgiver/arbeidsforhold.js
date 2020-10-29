@@ -16,11 +16,6 @@ import './arbeidsforhold.css';
 
 const uuid = require('uuid/v4');
 
-/** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
- * kun av komponenten Arbeidsforholdene.
- *
- * @param props Et objekt med det aktuelle arbeidsforholdet.
- */
 export const Arbeidsforholdet = props => {
   const {
     ansettelsesPeriode,

@@ -9,11 +9,6 @@ import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
 
 import './organisasjon.css';
 
-/** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
- * kun av komponenten Arbeidsforholdene.
- *
- * @param props Et objekt med det aktuelle arbeidsforholdet.
- */
 const Organisasjon = ({
   organisasjon,
   className,
