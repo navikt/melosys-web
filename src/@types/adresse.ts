@@ -36,4 +36,5 @@ export type {
   GeneriskAdresse,
   UstrukturertAdresse,
   MidlertidigAdresse,
+  StrukturertAdresse,
 };

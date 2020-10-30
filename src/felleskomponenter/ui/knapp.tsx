@@ -1,12 +1,16 @@
 import React from 'react';
 import PT from 'prop-types';
 import { KnappBaseProps } from 'nav-frontend-knapper';
+import classnames from 'classnames';
 
 import * as Nav from '../../utils/navFrontend';
 
 import './knapp.css';
 
-type KnappProps = KnappBaseProps & { ikon?: React.ElementType };
+type KnappProps = KnappBaseProps & {
+  ikon?: React.ElementType,
+  capitalCase?: boolean,
+};
 
 const Knapp = ({
   ikon: Ikon,
@@ -14,15 +18,21 @@ const Knapp = ({
   htmlType,
   type,
   disabled,
+  capitalCase,
+  className,
   ...rest
 }: KnappProps) => {
-  const knappClassname = disabled ? 'disabledKnapp' : 'knapp';
+  const cls = classnames(className, {
+    disabledKnapp: disabled,
+    knapp: !disabled,
+    capitalCase,
+  });
 
   return (
     <Nav.Knapp
       htmlType={htmlType}
       type={type}
-      className={knappClassname}
+      className={cls}
       disabled={disabled}
       {...rest}
     >
@@ -36,6 +46,8 @@ const Knapp = ({
 
 Knapp.propTypes = {
   ikon: PT.elementType,
+  capitalCase: PT.bool,
+  className: PT.string,
   children: PT.node,
   htmlType: PT.oneOf(['submit', 'button', 'reset']),
   type: PT.oneOf(['standard', 'hoved', 'fare', 'flat']),
@@ -44,6 +56,8 @@ Knapp.propTypes = {
 
 Knapp.defaultProps = {
   ikon: undefined,
+  capitalCase: false,
+  className: undefined,
   children: undefined,
   htmlType: 'button',
   type: 'standard',

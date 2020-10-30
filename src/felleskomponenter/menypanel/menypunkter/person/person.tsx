@@ -14,13 +14,12 @@ import GeneriskAdresse from '../../../adresser/generiskAdresse';
 import StrukturertAdresse from '../../../adresser/strukturertAdresse';
 import UstrukturertAdresse from '../../../adresser/ustrukturertAdresse';
 import EnkeltDato from '../../../datoOmrade/enkeltDato';
-import AnnenAdresse from './oppgittAdresseSoknad';
+import AnnenAdresse from './annenadresse';
 // import UtenlandskIdent from './utenlandskIdent';
 import ExpandableList from '../../../expandablelist';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
-import { formSelectors } from '../../../../ducks/form';
 
 import './person.css';
 
@@ -59,7 +58,6 @@ const mapStateToProps = (state: RootState) => ({
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
-  oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -68,7 +66,6 @@ export const Person = ({
   redigerbart,
   person,
   personhistorikk,
-  oppgittAdresseHarVerdier,
 }: PropsFromRedux) => {
   const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } = personhistorikk as PersonHistorikk;
 
@@ -77,8 +74,8 @@ export const Person = ({
   return (
     <div className="person">
       <Nav.Row>
-        <Nav.Column xs="12">
-          <Etiketter.FraRegister className="fraregister__etikett" />
+        <Nav.Column xs="12" className="etikett__container">
+          <Etiketter.FraRegister />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -136,12 +133,20 @@ export const Person = ({
           />
         </Nav.Column>
       </Nav.Row>
-      <AnnenAdresse
-        redigerbart={redigerbart}
-        tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
-        className="oppgittAdresse"
-        oppgittAdresseHarVerdier={oppgittAdresseHarVerdier}
-      />
+      <Nav.Row>
+        <Nav.Column className="etikett__container">
+          <Etiketter.FraSoknad />
+          <Etiketter.ArbeidstakersDel />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="9">
+          <AnnenAdresse
+            redigerbart={redigerbart}
+            className="oppgittAdresse"
+          />
+        </Nav.Column>
+      </Nav.Row>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
+import classnames from 'classnames';
 
 import * as Mui from '../felleskomponenter/ui';
 
@@ -15,12 +16,17 @@ const Knapperad = ({
   spinner,
   bekreftHtmlType,
   avbrytHtmlType,
-}) => (
-  <div className="container__knapperad">
-    <Mui.Knapp htmlType={bekreftHtmlType} type="hoved" onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart} spinner={spinner}>{ bekreftTekst }</Mui.Knapp>
-    <Mui.Knapp htmlType={avbrytHtmlType} onClick={avbryt} disabled={!redigerbart}>{avbrytTekst}</Mui.Knapp>
-  </div>
-);
+  capitalCase,
+}) => {
+  const cls = classnames('container__knapperad');
+
+  return (
+    <div className={cls}>
+      <Mui.Knapp capitalCase={capitalCase} htmlType={bekreftHtmlType} type="hoved" onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart} spinner={spinner}>{ bekreftTekst }</Mui.Knapp>
+      <Mui.Knapp capitalCase={capitalCase} htmlType={avbrytHtmlType} onClick={avbryt} disabled={!redigerbart}>{avbrytTekst}</Mui.Knapp>
+    </div>
+  );
+};
 
 Knapperad.propTypes = {
   bekreft: PT.func,
@@ -32,6 +38,7 @@ Knapperad.propTypes = {
   spinner: PT.bool,
   bekreftHtmlType: PT.string,
   avbrytHtmlType: PT.string,
+  capitalCase: PT.bool,
 };
 
 Knapperad.defaultProps = {
@@ -40,6 +47,7 @@ Knapperad.defaultProps = {
   spinner: false,
   bekreftHtmlType: undefined,
   avbrytHtmlType: undefined,
+  capitalCase: false,
 };
 
 export default Knapperad;

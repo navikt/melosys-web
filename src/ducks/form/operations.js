@@ -7,7 +7,7 @@
  *
  */
 
-import { change, touch } from 'redux-form';
+import { change, touch, untouch } from 'redux-form';
 import * as formActions from './actions';
 import * as Selectors from './selectors';
 
@@ -20,4 +20,11 @@ export const oppdaterAlleSkjemaValideringer = dispatch => validering => {
 export const touchAll = formName => (dispatch, getState) => {
   const fieldNames = [...Object.keys(Selectors.RegisteredFieldsSelector(formName)(getState()))];
   dispatch(touch(formName, ...fieldNames));
+};
+
+export const reset = (formName, fields) => dispatch => {
+  fields.forEach(field => {
+    dispatch(change(formName, field, null));
+    dispatch(untouch(formName, field));
+  });
 };

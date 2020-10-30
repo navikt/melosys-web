@@ -1,3 +1,9 @@
+export type {
+  StrukturertAdresse,
+  UstrukturertAdresse,
+  MidlertidigAdresse,
+  GeneriskAdresse,
+} from './adresse';
 export type { default as Avklartfakta } from './avklartfakta';
 export type { default as AnmodningOmUnntakBestilling } from './anmodningomunntakbestilling';
 export type { default as Fagsak } from './fagsak';

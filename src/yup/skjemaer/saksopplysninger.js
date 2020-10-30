@@ -73,32 +73,32 @@ const saksopplysninger = object().when('$behandlingstema', {
     oppgittAdresseGatenavn: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Gatenavn kreves'
       )),
     }),
     oppgittAdressePostnummer: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Postnummer kreves'
       )),
     }),
     oppgittAdressePoststed: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Poststed kreves'
       )),
     }),
     oppgittAdresseLand: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Land kreves'
       )),
     }),
