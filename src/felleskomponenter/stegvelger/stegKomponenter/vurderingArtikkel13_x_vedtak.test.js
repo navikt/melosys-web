@@ -1,6 +1,6 @@
 import React from 'react';
 import { combineReducers, createStore } from 'redux';
-import * as MKV from 'melosys-kodeverk';
+import * as MKV from '@navikt/melosys-kodeverk';
 
 import { reducer as formReducer } from 'redux-form';
 import { VurderingArtikkel13_x_vedtak } from './vurderingArtikkel13_x_vedtak';

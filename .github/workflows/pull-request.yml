@@ -30,7 +30,10 @@ jobs:
       - name: npm install
         env:
           CYPRESS_INSTALL_BINARY: 0
-        run: npm i
+          # NPM krever tydeligvis en token for å hente pakker fra github packages
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          npm i
 
       - name: build css
         run: npm run build:css

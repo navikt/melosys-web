@@ -1,4 +1,4 @@
-import { KTObject } from 'melosys-kodeverk';
+import { KTObject } from '@navikt/melosys-kodeverk';
 
 export const OK = 'behandlingstema/OK';
 export const FEILET = 'behandlingstema/FEILET';

@@ -1,4 +1,4 @@
-import * as MKV from 'melosys-kodeverk';
+import * as MKV from '@navikt/melosys-kodeverk';
 import * as KV from '../../../src/kodeverk';
 
 const nesteKnappTekst = 'Bekreft og fortsett';

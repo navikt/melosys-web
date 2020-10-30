@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
+import * as MKV from '@navikt/melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
