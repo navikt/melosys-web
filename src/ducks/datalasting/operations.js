@@ -87,19 +87,17 @@ export const resetSaksopplysninger = () => (
 
 export const lagreAllData = () => (
   async dispatch => {
-    try {
-      await Promise.all([
-        dispatch(behandlingsgrunnlagOperations.lagre()),
-        dispatch(vilkarOperations.lagre()),
-        dispatch(avklartefaktaOperations.lagre()),
-        dispatch(behandlingsperioderOperations.lagre()),
-      ]);
+    await Promise.all([
+      dispatch(behandlingsgrunnlagOperations.lagre()),
+      dispatch(vilkarOperations.lagre()),
+      dispatch(avklartefaktaOperations.lagre()),
+      dispatch(behandlingsperioderOperations.lagre()),
+    ]);
 
-      dispatch(anmodningsperioderOperations.lagre());
-      dispatch(lovvalgsperioderOperations.lagre());
-      dispatch(utpekingsperioderOperations.lagre());
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    return Promise.all([
+      dispatch(anmodningsperioderOperations.lagre()),
+      dispatch(lovvalgsperioderOperations.lagre()),
+      dispatch(utpekingsperioderOperations.lagre()),
+    ]);
   }
 );
