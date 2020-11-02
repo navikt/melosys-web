@@ -42,7 +42,7 @@ describe('InnerPanelListe', () => {
       },
       elementKomponent: TestElement,
       elementClassName: 'elementClassName',
-      hentDefaultElement: () => {},
+      hentDefaultElement: () => ({}),
       className: 'className',
       settFeltVerdi: jest.fn(),
     };
