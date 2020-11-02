@@ -217,14 +217,14 @@ export const SoknadOppgittAdresseSelector = createSelector(
     region,
     postnummer,
     poststed,
-    land
+    landkode
   ) => ({
     husnummer,
     gatenavn,
     region,
     postnummer,
     poststed,
-    landkode: land,
+    landkode,
   })
 );
 
