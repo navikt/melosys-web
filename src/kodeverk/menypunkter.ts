@@ -14,6 +14,7 @@ export const Person = {
   tittel: 'Person',
   undertitler: {
     annenAdresse: 'Annen adresse',
+    utenlandskID: 'Utenlandsk ID-nummer',
   },
 };
 

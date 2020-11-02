@@ -31,7 +31,7 @@ const UtfyltAdresse = ({
             style={{ marginRight: '10px' }}
             onClick={e => pencilClickHandler(e)}
           />
-          <Symboler.Slett
+          <Symboler.SlettAlt
             onClick={e => binClickHandler(e)}
           />
         </>

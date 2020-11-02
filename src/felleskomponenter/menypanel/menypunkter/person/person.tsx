@@ -15,7 +15,7 @@ import StrukturertAdresse from '../../../adresser/strukturertAdresse';
 import UstrukturertAdresse from '../../../adresser/ustrukturertAdresse';
 import EnkeltDato from '../../../datoOmrade/enkeltDato';
 import AnnenAdresse from './annenadresse';
-// import UtenlandskIdent from './utenlandskIdent';
+import UtenlandskIdent from './utenlandskident';
 import ExpandableList from '../../../expandablelist';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
@@ -144,6 +144,16 @@ export const Person = ({
           <AnnenAdresse
             redigerbart={redigerbart}
             className="oppgittAdresse"
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="5">
+          {/* Fødested og land */}
+        </Nav.Column>
+        <Nav.Column xs="7">
+          <UtenlandskIdent
+            redigerbart={redigerbart}
           />
         </Nav.Column>
       </Nav.Row>

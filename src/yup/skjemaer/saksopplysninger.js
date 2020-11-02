@@ -20,13 +20,13 @@ const erIkkeBeslutningLovvalgAnnetLand = behandlingstema => behandlingstema !== 
 
 const utenlandskIdent = object().shape({
   ident: string().nullable().required(lagMelding(
-    KV.Panel.informasjonOmBruker.tittel,
-    KV.Panel.informasjonOmBruker.undertitler.utenlandskID,
+    KV.Menypunkter.Person.tittel,
+    KV.Menypunkter.Person.undertitler.utenlandskID,
     'Utenlandsk ID kreves'
   )),
   landkode: string().nullable().required(lagMelding(
-    KV.Panel.informasjonOmBruker.tittel,
-    KV.Panel.informasjonOmBruker.undertitler.utenlandskID,
+    KV.Menypunkter.Person.tittel,
+    KV.Menypunkter.Person.undertitler.utenlandskID,
     'Land for utenlandsk ID kreves'
   )),
 });
