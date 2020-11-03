@@ -9,16 +9,16 @@ import MKV from '../../../../../melosyskodeverk';
 import { UtenlandskIdent } from './types';
 
 interface UtfyltUtenlandskIdentProps {
-  pencilClickHandler: MouseEventHandler,
-  binClickHandler: MouseEventHandler,
+  onPencilClick: MouseEventHandler,
+  onBinClick: MouseEventHandler,
   tittel: string,
   utenlandskeIdenter: UtenlandskIdent[],
   redigerbart: boolean,
 }
 
 const UtfyltUtenlandskIdent = ({
-  pencilClickHandler,
-  binClickHandler,
+  onPencilClick,
+  onBinClick,
   tittel,
   redigerbart,
   utenlandskeIdenter,
@@ -31,10 +31,10 @@ const UtfyltUtenlandskIdent = ({
         <>
           <Symboler.Rediger
             style={{ marginRight: '10px' }}
-            onClick={e => pencilClickHandler(e)}
+            onClick={e => onPencilClick(e)}
           />
           <Symboler.SlettAlt
-            onClick={e => binClickHandler(e)}
+            onClick={e => onBinClick(e)}
           />
         </>
       }

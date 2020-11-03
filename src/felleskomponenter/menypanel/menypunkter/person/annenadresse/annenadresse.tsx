@@ -85,8 +85,8 @@ const AnnenAdresse = ({
       />;
     } else if (oppgittAdresseHarVerdier) {
       return <UtfyltAdresse
-        pencilClickHandler={apneRedigering}
-        binClickHandler={resetFelter}
+        onPencilClick={apneRedigering}
+        onBinClick={resetFelter}
         tittel={tittel}
         adresse={oppgittAdresse}
         redigerbart={redigerbart}

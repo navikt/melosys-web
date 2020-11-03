@@ -7,16 +7,16 @@ import * as Symboler from '../../symboler';
 import StrukturertAdresseKomponent from '../../../../adresser/strukturertAdresse';
 
 interface UtfyltAdresseProps {
-  pencilClickHandler: MouseEventHandler,
-  binClickHandler: MouseEventHandler,
+  onPencilClick: MouseEventHandler,
+  onBinClick: MouseEventHandler,
   tittel: string,
   adresse: StrukturertAdresse,
   redigerbart: boolean,
 }
 
 const UtfyltAdresse = ({
-  pencilClickHandler,
-  binClickHandler,
+  onPencilClick,
+  onBinClick,
   tittel,
   adresse,
   redigerbart,
@@ -29,10 +29,10 @@ const UtfyltAdresse = ({
         <>
           <Symboler.Rediger
             style={{ marginRight: '10px' }}
-            onClick={e => pencilClickHandler(e)}
+            onClick={e => onPencilClick(e)}
           />
           <Symboler.SlettAlt
-            onClick={e => binClickHandler(e)}
+            onClick={e => onBinClick(e)}
           />
         </>
       }

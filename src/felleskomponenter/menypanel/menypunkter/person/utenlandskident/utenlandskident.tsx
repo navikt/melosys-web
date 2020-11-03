@@ -52,8 +52,8 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
       redigerbart={redigerbart}
       tittel={tittel}
       utenlandskeIdenter={felter}
-      pencilClickHandler={() => setRedigerer(true)}
-      binClickHandler={() => fields.removeAll()}
+      onPencilClick={() => setRedigerer(true)}
+      onBinClick={() => fields.removeAll()}
     />;
   }
 
