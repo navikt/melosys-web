@@ -6,7 +6,6 @@ const readPkg = require('read-pkg');
 const pkg = readPkg.sync();
 
 const buildNumber = process.env.BUILD_NUMBER || 'local';
-const version = `${process.env.npm_package_version}`;
 let branchName = process.env.BRANCH_NAME || 'unknown';
 if (branchName === 'unknown') {
   branchName = branch.sync(process.cwd());
@@ -17,7 +16,6 @@ const {
     react: react_lib_versjon,
   },
 } = pkg;
-dotenv.set('REACT_APP_VERSION', version);
 dotenv.set('REACT_APP_BUILD_DATETIME', momentTZ().tz('Europe/Oslo').format('DD/MM/YYYY HH:mm'));
 dotenv.set('REACT_APP_BUILD_VERSION', buildNumber);
 dotenv.set('REACT_APP_BRANCH_NAME', branchName);
