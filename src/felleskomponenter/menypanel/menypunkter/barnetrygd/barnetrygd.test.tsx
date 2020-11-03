@@ -6,19 +6,27 @@ import { Barnetrygd } from './barnetrygd';
 
 describe('Barnetrygd', () => {
   const mockedProps = mock<ComponentProps<typeof Barnetrygd>>();
-  const props = instance(mockedProps);
+  let props = instance(mockedProps);
 
-  it('viser om søker mottar EOSBarnetrygd', () => {
+  beforeEach(() => {
+    props = instance(mockedProps);
+  });
+
+  it('viser "JA" om sakOgBehandling.eosBarnetrygd er true', () => {
     props.sakOgBehandling = {
       eosBarnetrygd: true,
     };
-    let barnetrygd = shallow(<Barnetrygd {...props} />);
+    const barnetrygd = shallow(<Barnetrygd {...props} />);
 
-    expect(barnetrygd.contains('JA')).toBe(true);
+    expect(barnetrygd.contains('Ja')).toBe(true);
+  });
 
-    props.sakOgBehandling.eosBarnetrygd = false;
-    barnetrygd = shallow(<Barnetrygd {...props} />);
+  it('viser "NEI" om sakOgBehandling.eosBarnetrygd er false', () => {
+    props.sakOgBehandling = {
+      eosBarnetrygd: false,
+    };
+    const barnetrygd = shallow(<Barnetrygd {...props} />);
 
-    expect(barnetrygd.contains('NEI')).toBe(true);
+    expect(barnetrygd.contains('Nei')).toBe(true);
   });
 });

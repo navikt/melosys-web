@@ -8,8 +8,6 @@ import Tabell from '../../../tabell/tabell';
 
 import './inntekt.css';
 
-/** Lister alle inntekter fra juridisk arbeidsgiver.
- */
 class Inntekt extends Component {
   state = { visInntektTabell: false };
 
@@ -67,14 +65,6 @@ class Inntekt extends Component {
       ],
     };
 
-    /** Basert på grafInntekt (som nå har gjort en vurdering av sikker vs usikker periode), lag en array-versjon som
-     * kan serveres til Tabell-komponenten. Denne trengs for UU, men vises kun ved klikk.
-     *
-     * Tabell-komponenten er generisk og trenger at hver linje
-     * kommer inn som en ren array og som rendres gjennomsiktig ut i GUI.
-     * All formattering eller komponent-innsett må derfor gjøres her og returnere
-     * en ny ferdigtygget array.
-     */
     const inntektArrayed = omvendtInntektListe
       .map(linje => (
         [

@@ -37,8 +37,6 @@ class Arbeidsavtaler extends Component {
 
     const historiskeArbeidsavtaler = arbeidsavtaler.filter((arbeidsavtalen, index) => index > 0);
 
-    // Tabell-komponenten er agnostisk med tanke på colonner og trenger disse som en array. Gjør derfor
-    // en reducer slik at hvert felt kommer inn i rekkefølge som en array istedet for et key/value-objekt.
     const tabellTilpassetArbeidsavtaler = historiskeArbeidsavtaler.reduce((samling, arbeidsavtale) => {
       const {
         gyldigTil = '-', yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerGammeltAa = '-', endringsdatoStillingsprosent,
@@ -46,7 +44,6 @@ class Arbeidsavtaler extends Component {
       return [...samling, [gyldigTil, yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerGammeltAa, stillingsprosent, <EnkeltDato dato={endringsdatoStillingsprosent} />]];
     }, []);
 
-    // Lag eventuelle elementer som skal rendres ut senere, slik at vi slipper mye logikk i selve return-blokken.
     const visMerKnappElement = historiskeArbeidsavtaler.length > 0 ? (
       <Nav.Knapp
         mini
