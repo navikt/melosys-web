@@ -1,4 +1,3 @@
-const momentTZ = require('moment-timezone');
 const dotenv = require('dotenv-save');
 const branch = require('git-branch');
 const readPkg = require('read-pkg');
@@ -16,7 +15,6 @@ const {
     react: react_lib_versjon,
   },
 } = pkg;
-dotenv.set('REACT_APP_BUILD_DATETIME', momentTZ().tz('Europe/Oslo').format('DD/MM/YYYY HH:mm'));
 dotenv.set('REACT_APP_BUILD_VERSION', buildNumber);
 dotenv.set('REACT_APP_BRANCH_NAME', branchName);
 dotenv.set('REACT_APP_MELOSYS_KODEVERK', kodeverk_versjon);
