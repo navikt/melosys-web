@@ -28,6 +28,10 @@ export const visOppfrisk = () => async dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: true }))
 );
 
+export const visOppfriskOgFortsett = fortsett => async dispatch => (
+  dispatch(Actions.oppdaterOppfrisk({ synlig: true, fortsett }))
+);
+
 export const skjulOppfrisk = () => async dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: false }))
 );

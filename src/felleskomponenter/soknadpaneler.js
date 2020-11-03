@@ -23,12 +23,15 @@ import { vilkarSelectors } from '../ducks/vilkar';
 import { formSelectors } from '../ducks/form';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
+import MKV from '../melosyskodeverk';
+import { soknadspanelSelectors } from '../ducks/soknadspaneler';
 
 const Soknadpaneler = ({
   lagreSoknad,
   fagsaker,
   oppgittAdresseHarVerdier,
   startOgVisOppfriskModal,
+  visSoknadspanel,
 }) => {
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -38,18 +41,24 @@ const Soknadpaneler = ({
     await lagreSoknad();
     startOgVisOppfriskModal();
   };
+  const erEUEØSsak = fagsaker.sakstype && fagsaker.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
+  const synligPanel = erEUEØSsak || visSoknadspanel;
 
   return (
-    <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
-      <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
-      {fagsaker && fagsaker.saksnummer &&
-        <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+    <div>
+      { synligPanel &&
+      <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
+        <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
+        {fagsaker && fagsaker.saksnummer &&
+          <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+        }
+        <ArbeidsgivereNorge />
+        <AndreArbeidsforholdNorge />
+        <AndreArbeidsforholdUtland />
+        <Arbeidssteder />
+      </form>
       }
-      <ArbeidsgivereNorge />
-      <AndreArbeidsforholdNorge />
-      <AndreArbeidsforholdUtland />
-      <Arbeidssteder />
-    </form>
+    </div>
   );
 };
 
@@ -60,12 +69,14 @@ Soknadpaneler.propTypes = {
   behandlingID: PT.number.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  visSoknadspanel: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  visSoknadspanel: soknadspanelSelectors.ErSoknadspanelSynlig(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,

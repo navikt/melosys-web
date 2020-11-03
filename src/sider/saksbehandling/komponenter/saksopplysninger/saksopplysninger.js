@@ -26,7 +26,10 @@ import { formSelectors } from '../../../../ducks/form';
 
 import { stegMap } from '../../stegMap';
 
-const hentForsteSteg = behandlingstype => {
+const hentForsteSteg = (behandlingstype, sakstype) => {
+  if (sakstype !== MKV.Koder.sakstyper.EU_EOS) {
+    return STEG.FTRL_START;
+  }
   switch (behandlingstype) {
     case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
       return STEG.ENDRET_PERIODE;
@@ -39,6 +42,7 @@ const Saksopplysninger = ({
   behandlingstype,
   redigerbart,
   behandlingID,
+  sakstype,
   soknadForm,
   behandlingsgrunnlag,
   behandlingsresultat,
@@ -64,7 +68,7 @@ const Saksopplysninger = ({
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
   const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
-  const forsteSteg = hentForsteSteg(behandlingstype);
+  const forsteSteg = hentForsteSteg(behandlingstype, sakstype);
 
   return (
     <Fragment>
@@ -104,6 +108,7 @@ Saksopplysninger.propTypes = {
   behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
+  sakstype: PT.string.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
@@ -144,6 +149,7 @@ const mapStateToProps = state => ({
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -36,6 +36,14 @@ import Vedtak from './vedtak';
 import EndrePeriode from './endre_periode';
 import Videresend from './videresend';
 import VurderArbeidsland from './vurderarbeidsland';
+import Ftrl_Start from './ftrl_start';
+import Ftrl_Vurdering from './ftrl_vurderinger';
+import Ftrl_Virksomhet from './ftrl_virksomhet';
+import Ftrl_Medlemskap from './ftrl_medlemskap';
+import Ftrl_Avgift from './ftrl_avgift';
+import Ftrl_Representant from './ftrl_representant';
+import Ftrl_Familie from './ftrl_familie';
+import Ftrl_Vedtak from './ftrl_vedtak';
 
 import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 
@@ -78,5 +86,13 @@ export const stegMap = new Map([
   [STEG.VIDERESEND, Videresend],
   [STEG.VURDER_ARBEIDSLAND, VurderArbeidsland],
   [STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK, ArbeidEttLandOvrigVedtak],
+  [STEG.FTRL_START, Ftrl_Start],
+  [STEG.FTRL_VURDERING, Ftrl_Vurdering],
+  [STEG.FTRL_VIRKSOMHET, Ftrl_Virksomhet],
+  [STEG.FTRL_MEDLEMSKAP, Ftrl_Medlemskap],
+  [STEG.FTRL_AVGIFT, Ftrl_Avgift],
+  [STEG.FTRL_REPRESENTANT, Ftrl_Representant],
+  [STEG.FTRL_FAMILIE, Ftrl_Familie],
+  [STEG.FTRL_VEDTAK, Ftrl_Vedtak],
 ]);
 

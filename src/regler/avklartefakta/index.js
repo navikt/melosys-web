@@ -25,6 +25,21 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrun
   }
 );
 
+export const lagAvklartfaktaFaktaListe = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst = null) => (
+  {
+    felt,
+    oppdaterRedux: true,
+    type: avklartefaktaType,
+    innhold: {
+      referanse: felt,
+      subjektID,
+      fakta,
+      begrunnelseKoder,
+      begrunnelseFritekst,
+    },
+  }
+);
+
 export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelseKoder, begrunnelseFritekst = null) => (
   {
     felt,

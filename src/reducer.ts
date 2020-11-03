@@ -24,6 +24,7 @@ import personerReducer from './ducks/personer';
 import saksbehandlerReducer from './ducks/saksbehandler';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
+import soknadspanelReducer from './ducks/soknadspaneler';
 import serverinfoReducer from './ducks/serverinfo';
 import utpekReducer from './ducks/utpek';
 import utpekingsperioderReducer from './ducks/utpekingsperioder';
@@ -57,6 +58,7 @@ const createRootReducer = (history: History) => combineReducers({
   saksbehandler: saksbehandlerReducer,
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
+  soknadspanel: soknadspanelReducer,
   serverinfo: serverinfoReducer,
   utpek: utpekReducer,
   utpekingsperioder: utpekingsperioderReducer,

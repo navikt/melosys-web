@@ -23,5 +23,5 @@ export const SakstypeSelector = createSelector(
 
 export const SakstypeKodeSelector = createSelector(
   SakstypeSelector,
-  sakstype => sakstype.kode
+  sakstype => (sakstype ? sakstype.kode : '')
 );
