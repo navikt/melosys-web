@@ -30,7 +30,7 @@ interface AdresseRadProps {
 
 export const AdresseRad = ({ periode: { fom, tom }, adresseNode }: AdresseRadProps) => (
   <Nav.Row className="adresse__rad">
-    <Nav.Column xs="3">
+    <Nav.Column xs="5">
       { adresseNode }
     </Nav.Column>
     <Nav.Column xs="3">
@@ -48,7 +48,7 @@ interface AdresseHeaderProps {
 
 export const AdresseHeader = ({ adresseTittel }: AdresseHeaderProps) => (
   <Nav.Row>
-    <Nav.Column xs="3">
+    <Nav.Column xs="5">
       <Nav.typo.Element>
         {adresseTittel}
       </Nav.typo.Element>
