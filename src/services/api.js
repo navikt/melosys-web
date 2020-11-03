@@ -5,6 +5,7 @@ import * as Behandlingsgrunnlag from './modules/behandlingsgrunnlag';
 import * as Dokumenter from './modules/dokumenter/';
 import * as Eessi from './modules/eessi/';
 import * as Fagsaker from './modules/fagsaker/';
+import * as Featuretoggle from './modules/featuretoggle';
 import * as Journalforing from './modules/journalforing';
 import * as Lovvalgsperioder from './modules/lovvalgsperioder';
 import * as Personer from './modules/personer';
@@ -28,6 +29,7 @@ export {
   Dokumenter,
   Eessi,
   Fagsaker,
+  Featuretoggle,
   Journalforing,
   Lovvalgsperioder,
   Oppgaver,

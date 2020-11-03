@@ -10,6 +10,7 @@ export const BEHANDLINGSPERIODER = 'behandlinger';
 export const DOKUMENTER = 'dokumenter';
 export const EESSI = 'eessi';
 export const FAGSAKER = 'fagsaker';
+export const FEATURETOGGLE = 'featuretoggle';
 export const JOURNALFORING = 'journalforing';
 export const LOVVALGSPERIODER = 'lovvalgsperioder';
 export const NOTATER = 'notater';
