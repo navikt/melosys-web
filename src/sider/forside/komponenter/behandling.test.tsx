@@ -12,8 +12,7 @@ describe('Behandling', () => {
   const mockedProps = mock<ComponentProps<typeof Behandling>>();
   const props = instance(mockedProps);
 
-  it(`viser ikke behandlingstema ${MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND} i prod`, () => {
-    props.erProdish = true;
+  it(`viser ikke behandlingstema ${MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND}`, () => {
     const behandling = shallow(<Behandling {...props} />);
     const select = behandling.find(Skjema.Select);
     const options = select.find('option');
