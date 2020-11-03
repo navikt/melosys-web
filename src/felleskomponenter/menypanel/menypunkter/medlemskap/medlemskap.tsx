@@ -17,10 +17,6 @@ interface MedlemskapEnkeltPeriodeProps {
   enkeltPeriode: MedlemskapsPeriode,
 }
 
-/** MedlemskapEnkeltPeriode inneholdet ett enkelt medlemskap. Hver søker kan ha
- * flere medlemskap. Se Confluence for definisjon av "medlemskap".
- *
- */
 export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPeriodeProps) {
   const {
     periode,
@@ -38,20 +34,18 @@ export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPerio
         <Nav.Column xs="3">{fom}</Nav.Column>
         <Nav.Column xs="3">{tom}</Nav.Column>
         <Nav.Column xs="6">
-          <dl>
-            <div>
-              <dt>Lovvalgsland:</dt>
-              <dd>{KV.objektTilTerm(land)}</dd>
-            </div>
-            <div>
-              <dt>Status:</dt>
-              <dd>{KV.objektTilTerm(status)}</dd>
-            </div>
-            <div>
-              <dt>Grunnlagshjemmel:</dt>
-              <dd>{KV.objektTilTerm(grunnlagstype)}</dd>
-            </div>
-          </dl>
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Nav.typo.Normaltekst>Lovvalgsland:</Nav.typo.Normaltekst>
+              <Nav.typo.Normaltekst>Status:</Nav.typo.Normaltekst>
+              <Nav.typo.Normaltekst>Grunnlagshjemmel:</Nav.typo.Normaltekst>
+            </Nav.Column>
+            <Nav.Column xs="6">
+              <Nav.typo.Element>{KV.objektTilTerm(land)}</Nav.typo.Element>
+              <Nav.typo.Element>{KV.objektTilTerm(status)}</Nav.typo.Element>
+              <Nav.typo.Element>{KV.objektTilTerm(grunnlagstype)}</Nav.typo.Element>
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Column>
       </Nav.Row>
     </div>
@@ -63,14 +57,6 @@ interface MedlemskapGruppeProps {
   overskrift: string,
 }
 
-/** En MedlemskapGruppe er en gruppering eller samling av flere medlemskap
- * som har samme status eller type, feks "AVVIST", "PERIODE MED MEDLEMSKAP" eller liknende. Grupperingen
- * gjøres i MedlemskapSelector.
- *
- * Målet med grupperingen er at saksbehandler raskere skal kunne finne frem til relevante perioder
- * hvor søkeren har eller ikke har medlemskap. Dette kan være avgjørende for vurdering av søknaden.
- *
- */
 export function MedlemskapGruppe(props: MedlemskapGruppeProps) {
   const { perioder, overskrift = '' } = props;
 
@@ -107,9 +93,6 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-/** Dette er hoved-komponenten for Medlemskap.
- *
- */
 export const Medlemskap = (props: PropsFromRedux) => {
   const { medlemskap } = props;
 
