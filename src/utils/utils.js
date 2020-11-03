@@ -1,18 +1,15 @@
 import { isUndefined as _isUndefined } from 'lodash';
 
 const byggVersjon = process.env.REACT_APP_BUILD_VERSION || '(ukjent)';
-const branchVersjon = process.env.REACT_APP_BRANCH_NAME || '(lokal)';
 
 export function buildinfo() {
   if (byggVersjon === 'local') {
     return {
       byggVersjon,
-      branchVersjon,
     };
   }
   return {
     byggVersjon,
-    branchVersjon,
   };
 }
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
