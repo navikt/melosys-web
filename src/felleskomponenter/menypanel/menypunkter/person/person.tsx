@@ -91,7 +91,6 @@ export const Person = ({
             idFromElement={() => Utils._uuid()}
             renderElement={element => <AdresseRad adresseNode={<GeneriskAdresse adresse={element.bostedsadresse} />} periode={element.periode} />}
             amountOfItemsCollapsed={1}
-            expandable={bostedsadressePerioder.length > 1}
             btnTextCollapsed="Åpne historikk"
             btnTextExpanded="Lukk historikk"
             chevron
@@ -103,7 +102,6 @@ export const Person = ({
             idFromElement={() => Utils._uuid()}
             renderElement={element => <AdresseRad adresseNode={<UstrukturertAdresse adresse={element.postadresse} />} periode={element.periode} />}
             amountOfItemsCollapsed={1}
-            expandable={postadressePerioder.length > 1}
             btnTextCollapsed="Åpne historikk"
             btnTextExpanded="Lukk historikk"
             chevron
@@ -125,7 +123,6 @@ export const Person = ({
               return <AdresseRad adresseNode={adresseNode} periode={periode} />;
             }}
             amountOfItemsCollapsed={1}
-            expandable={midlertidigAdressePerioder.length > 1}
             btnTextCollapsed="Åpne historikk"
             btnTextExpanded="Lukk historikk"
             chevron

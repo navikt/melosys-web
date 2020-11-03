@@ -14,7 +14,6 @@ interface ExpandableListProps<T> {
   btnTextExpanded: string,
   btnTextCollapsed: string,
   chevron: boolean,
-  expandable: boolean,
   dividers?: boolean,
 }
 
@@ -28,7 +27,6 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
     btnTextExpanded,
     btnTextCollapsed,
     chevron = false,
-    expandable = true,
     dividers = false,
   } = props;
 
@@ -42,6 +40,8 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
   const btnText = collapsed ? btnTextCollapsed : btnTextExpanded;
 
   const renderableElements = collapsed ? elements.slice(0, amountOfItemsCollapsed) : elements;
+
+  const expandable = elements.length > amountOfItemsCollapsed;
 
   const elementCls = classNames({
     divider: dividers,

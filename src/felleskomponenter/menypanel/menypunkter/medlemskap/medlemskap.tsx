@@ -89,7 +89,6 @@ export function MedlemskapGruppe(props: MedlemskapGruppeProps) {
             renderElement={periode => <MedlemskapEnkeltPeriode enkeltPeriode={periode} />}
             idFromElement={periode => periode.periodeID}
             amountOfItemsCollapsed={2}
-            expandable={perioder.length > 2}
             btnTextCollapsed="Vis flere"
             btnTextExpanded="Vis færre"
             chevron
