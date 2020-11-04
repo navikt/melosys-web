@@ -144,7 +144,7 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column className="etikett__container">
-          <Etiketter.FraSoknad />
+          <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
           <Etiketter.ArbeidstakersDel />
         </Nav.Column>
       </Nav.Row>
