@@ -5,6 +5,16 @@ export const ArbeidsforholdOgInntekt = {
   },
 };
 
+export const ArbeidsgiverOgvirksomhet = {
+  tittel: 'Arbeidsgiver/virksomhet',
+  undertitler: {
+    arbeidsforholdINorge: 'Arbeidsgiver i Norge',
+    selvstendigNaeringsdrivendeINorge: 'Selvstendig virksomhet i Norge',
+    arbeidsforholdIUtlandet: 'Arbeidsgiver i utlandet',
+    selvstendigNaeringsdrivendeIUtlandet: 'Selvstendig virksomhet i utlandet',
+  },
+};
+
 export const Medlemskap = {
   tittel: 'Medlemskap',
   undertitler: {},
