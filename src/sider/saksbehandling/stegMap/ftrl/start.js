@@ -1,22 +1,22 @@
-import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingFtrlStart from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingFtrlStart';
-import { hentFaktaListe } from '../../../regler/avklartefakta';
-import * as KV from '../../../kodeverk';
+import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingStart from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingStart';
+import { hentFaktaListe } from '../../../../regler/avklartefakta';
+import * as KV from '../../../../kodeverk';
 
-class Ftrl_Start extends Steg {
+class Start extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     const harAvklaring = this.finnAvklaring(propsLight.avklartefakta, propsLight.inngangsvilkaar);
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.FTRL_VURDERING,
+        nesteSteg: STEG.VURDERING,
       },
     ];
-    this.id = STEG.FTRL_START;
+    this.id = STEG.START;
     this.tittel = 'Start';
-    this.komponent = VurderingFtrlStart;
+    this.komponent = VurderingStart;
     this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser,
       alleLandkoder: _propsLight.landkoder,
@@ -37,11 +37,11 @@ class Ftrl_Start extends Steg {
     this.status = FANE_STATUS.OK;
   }
   finnAvklaring = (avklartefakta, inngangsvilkaar) => {
-    const søknadsperiode = hentFaktaListe(KV.Koder.avklartefaktaKoder.FTRL_SOKNADSPERIODE, avklartefakta);
-    const søknadsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.FTRL_SOKNADSLAND, avklartefakta);
+    const søknadsperiode = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSPERIODE, avklartefakta);
+    const søknadsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSLAND, avklartefakta);
     return søknadsperiode.some(periode => periode.fakta[0] && periode.fakta[1])
        && søknadsland.some(land => land.fakta[0])
        && inngangsvilkaar.oppfylt;
   }
 }
-export default Ftrl_Start;
+export default Start;

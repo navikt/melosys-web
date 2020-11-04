@@ -28,7 +28,7 @@ import { stegMap } from '../../stegMap';
 
 const hentForsteSteg = (behandlingstype, sakstype) => {
   if (sakstype === MKV.Koder.sakstyper.FTRL) {
-    return STEG.FTRL_START;
+    return STEG.START;
   }
   switch (behandlingstype) {
     case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
@@ -42,11 +42,11 @@ const Saksopplysninger = ({
   behandlingstype,
   redigerbart,
   behandlingID,
-  sakstype,
   soknadForm,
   behandlingsgrunnlag,
   behandlingsresultat,
   fagsakStatusKode,
+  match,
   tilForsiden,
   lagreVilkarHandler,
   lagreAvklartefaktaHandler,
@@ -63,6 +63,7 @@ const Saksopplysninger = ({
     return null;
   }
 
+  const { params: { stype: sakstype } } = match;
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
@@ -108,7 +109,6 @@ Saksopplysninger.propTypes = {
   behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
-  sakstype: PT.string.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
@@ -149,7 +149,6 @@ const mapStateToProps = state => ({
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -23,4 +23,4 @@ export const VURDER_UTPEKING = 'vurder_utpeking';
 export const AVSLAA_UTPEKING = 'avslaa_utpeking';
 export const REGISTRERING_PANELER = 'registrering_paneler';
 export const ARBEID_ETT_LAND_OVRIG_VEDTAK = 'arbeid_ett_land_ovrig_vedtak';
-export const FTRL_START = 'ftrl_start';
+export const START = 'start';

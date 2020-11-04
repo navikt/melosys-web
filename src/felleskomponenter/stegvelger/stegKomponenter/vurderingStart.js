@@ -13,9 +13,9 @@ import { landTekstFormat } from '../../skjema/landvelger/utils';
 import { lagAvklartfakta, lagAvklartfaktaFaktaListe } from '../../../regler/avklartefakta';
 import { modalerOperations } from '../../../ducks/modaler';
 import { soknadspanelOperations } from '../../../ducks/soknadspaneler';
-import './vurderingFtrlStart.css';
+import './vurderingStart.css';
 
-const VurderingFtrlStart =
+const VurderingStart =
   ({
     bekreftOgFortsett,
     redigerbart,
@@ -30,11 +30,11 @@ const VurderingFtrlStart =
 
     useEffect(() => {
       setErFomForTom(formValues.fom <= formValues.tom);
-      oppdaterData(lagAvklartfaktaFaktaListe(KV.Koder.FTRL_SOKNADSPERIODE, null, [formValues.fom, formValues.tom]));
+      oppdaterData(lagAvklartfaktaFaktaListe(KV.Koder.SOKNADSPERIODE, null, [formValues.fom, formValues.tom]));
     }, [formValues.fom, formValues.tom]);
 
     useEffect(() => {
-      oppdaterData(lagAvklartfakta(KV.Koder.FTRL_SOKNADSLAND, null, formValues.land));
+      oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, null, formValues.land));
     }, [formValues.land]);
 
     const validerLandOgPeriode = () => {
@@ -82,7 +82,7 @@ const VurderingFtrlStart =
           <Nav.Row>
             <Nav.Column xs="5">
               <Skjema.Select label="" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land} onChange={() => setErLandValgt(true)}>
-                {alleLandkoder.map(item => (<option key={item.kode} value={item.term}>{landTekstFormat(item)}</option>))}
+                {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{landTekstFormat(item)}</option>))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
@@ -117,7 +117,7 @@ const omEttÅr = () => {
   return plussEttÅr;
 };
 
-VurderingFtrlStart.propTypes = {
+VurderingStart.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -129,21 +129,21 @@ VurderingFtrlStart.propTypes = {
   visSoknadspanel: PT.func.isRequired,
 };
 
-VurderingFtrlStart.defaultProps = {
+VurderingStart.defaultProps = {
   formValues: {},
 };
 
-const VurderingFtrlStartForm = reduxForm({
+const VurderingStartForm = reduxForm({
   onSubmit: nesteSteg,
-  form: KV.Form.FTRL_START,
+  form: KV.Form.START,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-})(VurderingFtrlStart);
+})(VurderingStart);
 
 const mapStateToProps = state => ({
-  formValues: getFormValues(KV.Form.FTRL_START)(state),
+  formValues: getFormValues(KV.Form.START)(state),
   initialValues: {
     fom: Utils.dato.formatterDatoTilNorsk(new Date()),
     tom: Utils.dato.formatterDatoTilNorsk(omEttÅr()),
@@ -155,4 +155,4 @@ const mapDispatchToProps = dispatch => ({
   visSoknadspanel: () => dispatch(soknadspanelOperations.visSoknadspanel()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingFtrlStartForm);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingStartForm);

@@ -1,17 +1,17 @@
-import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
 
-class Ftrl_Virksomhet extends Steg {
+class Virksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     const harAvklaring = false;
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.FTRL_VIRKSOMHET,
+        nesteSteg: STEG.VIRKSOMHET,
       },
     ];
-    this.id = STEG.FTRL_VIRKSOMHET;
+    this.id = STEG.VIRKSOMHET;
     this.tittel = 'Virksomhet';
     // this.komponent = VurderingFtrlVirksomhet;
     this.samleRelevanteData = _propsLight => ({});
@@ -20,4 +20,4 @@ class Ftrl_Virksomhet extends Steg {
     this.status = FANE_STATUS.OK;
   }
 }
-export default Ftrl_Virksomhet;
+export default Virksomhet;
