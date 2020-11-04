@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -10,6 +10,7 @@ import * as Mui from '../../../../ui';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Ikoner from '../../../../../resources/images';
 
+import RedigerbartElement from '../../redigerbartelement';
 import UtfyltAdresse from './utfyltadresse';
 import Felter from './felter';
 
@@ -46,61 +47,42 @@ const AnnenAdresse = ({
   oppgittAdresseHarVerdier,
   resetOppgittAdresse,
 }: AnnenAdresseProps) => {
-  const [redigerer, setRedigerer] = useState(false);
-  const tittel = KV.Menypunkter.Person.undertitler.annenAdresse;
-
-  const resetFelter = () => {
-    resetOppgittAdresse();
-  };
-  const apneRedigering = () => {
-    setRedigerer(true);
-  };
-  const lukkRedigering = () => {
-    setRedigerer(false);
-  };
-
-  const leggTilAdresse = (
-    <Nav.Fieldset legend={tittel}>
-      <Nav.typo.Normaltekst style={{ marginBottom: '1em' }}>
-        Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes adresse fra register.
-      </Nav.typo.Normaltekst>
-      {
-        redigerbart &&
-        <Mui.Knappelenke
-          onClick={apneRedigering}
-          ikon={Ikoner.Add}
-        >
-          Legg til adresse
-        </Mui.Knappelenke>
-      }
-    </Nav.Fieldset>
-  );
-
-  const hentInnhold = () => {
-    if (redigerer) {
-      return <Felter
-        tittel={tittel}
-        redigerbart={redigerbart}
-        bekreft={lukkRedigering}
-      />;
-    } else if (oppgittAdresseHarVerdier) {
-      return <UtfyltAdresse
-        pencilClickHandler={apneRedigering}
-        binClickHandler={resetFelter}
-        tittel={tittel}
-        adresse={oppgittAdresse}
-        redigerbart={redigerbart}
-      />;
-    }
-
-    return leggTilAdresse;
-  };
-
   const cls = classNames(className);
 
   return (
     <div className={cls}>
-      { hentInnhold() }
+      <RedigerbartElement
+        redigerbart={redigerbart}
+        harData={oppgittAdresseHarVerdier}
+        tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
+        binClickHandler={resetOppgittAdresse}
+        redigererRender={() => (
+          <Felter
+            redigerbart={redigerbart}
+          />
+        )}
+        redigeringUtfortRender={() => (
+          <UtfyltAdresse
+            adresse={oppgittAdresse}
+          />
+        )}
+        ingenDataRender={(apneRedigering => (
+          <>
+            <Nav.typo.Normaltekst style={{ marginBottom: '1em' }}>
+              Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes adresse fra register.
+            </Nav.typo.Normaltekst>
+            {
+              redigerbart &&
+              <Mui.Knappelenke
+                onClick={apneRedigering}
+                ikon={Ikoner.Add}
+              >
+                Legg til adresse
+              </Mui.Knappelenke>
+            }
+          </>
+        ))}
+      />
     </div>
   );
 };
