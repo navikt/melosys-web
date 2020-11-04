@@ -1,19 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
 import { getFormValues, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { RootState } from 'AppTypes';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { KTObject } from '@navikt/melosys-kodeverk';
+
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as Utils from '../../../utils';
-
 import * as KV from '../../../kodeverk';
+
 import { landTekstFormat } from '../../skjema/landvelger/utils';
 import { lagAvklartfakta, lagAvklartfaktaFaktaListe } from '../../../regler/avklartefakta';
 import { modalerOperations } from '../../../ducks/modaler';
 import { soknadspanelOperations } from '../../../ducks/soknadspaneler';
+
 import './vurderingStart.css';
+
+const omEttÅr = () => {
+  const idag = new Date();
+  const plussEttÅr = new Date();
+  plussEttÅr.setMonth(idag.getMonth() + 12);
+  return plussEttÅr;
+};
+
+const mapStateToProps = (state: RootState) => ({
+  formValues: getFormValues(KV.Form.START)(state),
+  initialValues: {
+    fom: Utils.dato.formatterDatoTilNorsk(new Date()),
+    tom: Utils.dato.formatterDatoTilNorsk(omEttÅr()),
+  },
+});
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  visOppfriskDialogOgFortsettHandle: (fortsett: () => void) => dispatch(modalerOperations.visOppfriskOgFortsett(fortsett)),
+  visSoknadspanel: () => dispatch(soknadspanelOperations.visSoknadspanel()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface Props {
+  bekreftOgFortsett: () => void,
+  redigerbart: boolean,
+  oppdaterData: (avklartefakta: any) => void,
+  alleLandkoder: KTObject[],
+  formValues: {fom: string, tom: string, land: string},
+}
 
 const VurderingStart =
   ({
@@ -24,7 +62,7 @@ const VurderingStart =
     alleLandkoder,
     visOppfriskDialogOgFortsettHandle,
     visSoknadspanel,
-  }) => {
+  } : Props & PropsFromRedux) => {
     const [erFomForTom, setErFomForTom] = useState(true);
     const [erLandValgt, setErLandValgt] = useState(true);
 
@@ -42,7 +80,7 @@ const VurderingStart =
       return !!formValues.land && erFomForTom;
     };
 
-    const FortsettHandle = () => {
+    const fortsettHandle = () => {
       if (validerLandOgPeriode()) {
         const fortsett = () => {
           bekreftOgFortsett();
@@ -56,13 +94,14 @@ const VurderingStart =
       <div>
         <Nav.typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.typo.Undertittel>
 
-        <Nav.Fieldset legend="Periode">
+        <Nav.Fieldset legend="Periode" onSubmit={fortsettHandle}>
           <Nav.Row>
             <Nav.Column xs="5">
               <Skjema.Input
                 datoFelt
                 label="Fra og med:"
                 feltNavn="fom"
+                bredde="fullbredde"
                 disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="5">
@@ -70,6 +109,7 @@ const VurderingStart =
                 datoFelt
                 label="Til og med:"
                 feltNavn="tom"
+                bredde="fullbredde"
                 disabled={!redigerbart} />
             </Nav.Column>
           </Nav.Row>
@@ -99,23 +139,12 @@ const VurderingStart =
             disabled={!redigerbart}
             className="fane__navigasjonsknapp"
             data-cy-nesteknapp="knapp_steg0"
-            onClick={FortsettHandle}>Fortsett
+            onClick={fortsettHandle}>Fortsett
           </Nav.Hovedknapp>
         </div>
       </div>
     );
   };
-
-const nesteSteg = (values, dispatch, props) => {
-  props.bekreftOgFortsett();
-};
-
-const omEttÅr = () => {
-  const idag = new Date();
-  const plussEttÅr = new Date();
-  plussEttÅr.setMonth(idag.getMonth() + 12);
-  return plussEttÅr;
-};
 
 VurderingStart.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
@@ -134,7 +163,8 @@ VurderingStart.defaultProps = {
 };
 
 const VurderingStartForm = reduxForm({
-  onSubmit: nesteSteg,
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  onSubmit: (values: any, dispatch: any, props: any) => {},
   form: KV.Form.START,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -142,17 +172,5 @@ const VurderingStartForm = reduxForm({
   updateUnregisteredFields: true,
 })(VurderingStart);
 
-const mapStateToProps = state => ({
-  formValues: getFormValues(KV.Form.START)(state),
-  initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(new Date()),
-    tom: Utils.dato.formatterDatoTilNorsk(omEttÅr()),
-  },
-});
-
-const mapDispatchToProps = dispatch => ({
-  visOppfriskDialogOgFortsettHandle: fortsett => dispatch(modalerOperations.visOppfriskOgFortsett(fortsett)),
-  visSoknadspanel: () => dispatch(soknadspanelOperations.visSoknadspanel()),
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingStartForm);
