@@ -27,7 +27,7 @@ import { formSelectors } from '../../../../ducks/form';
 import { stegMap } from '../../stegMap';
 
 const hentForsteSteg = (behandlingstype, sakstype) => {
-  if (sakstype !== MKV.Koder.sakstyper.EU_EOS) {
+  if (sakstype === MKV.Koder.sakstyper.FTRL) {
     return STEG.FTRL_START;
   }
   switch (behandlingstype) {
