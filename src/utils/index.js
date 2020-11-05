@@ -9,6 +9,7 @@ import * as logger from './logger';
 import * as queryString from './queryString';
 import * as testhelpers from './testhelpers';
 import * as mapping from './mapping';
+import * as person from './person';
 
 import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
@@ -22,6 +23,7 @@ export {
   queryString,
   testhelpers,
   mapping,
+  person,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
   isNil as _isNil,
