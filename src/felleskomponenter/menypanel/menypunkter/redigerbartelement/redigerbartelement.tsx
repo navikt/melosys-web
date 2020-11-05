@@ -7,6 +7,12 @@ import * as Mui from '../../../ui';
 
 import './redigerbartelement.css';
 
+enum Status {
+  Redigerer,
+  RedigeringUtfort,
+  IngenData,
+}
+
 interface RedigerbartElementProps {
   redigererRender: () => ReactNode,
   ingenDataRender?: (apneRedigering: () => void) => ReactNode,
@@ -18,6 +24,7 @@ interface RedigerbartElementProps {
   tittelUnderstrek?: boolean,
   harData: boolean,
   visLagreKnappBareHvisHarData?: boolean,
+  className?: string,
 }
 
 const RedigerbartElement = ({
@@ -31,10 +38,19 @@ const RedigerbartElement = ({
   tittelUnderstrek,
   harData,
   visLagreKnappBareHvisHarData = false,
+  className,
 }: RedigerbartElementProps) => {
-  const [redigerer, setRedigerer] = useState(!ingenDataRender);
+  const hentNesteStatus = (): Status => {
+    if (harData) {
+      return Status.RedigeringUtfort;
+    } else if (ingenDataRender) {
+      return Status.IngenData;
+    }
 
-  const redigeringUtfort = !redigerer && harData;
+    return Status.Redigerer;
+  };
+
+  const [status, setStatus] = useState(hentNesteStatus());
 
   const legendCls = classnames({
     understrek: tittelUnderstrek,
@@ -43,14 +59,15 @@ const RedigerbartElement = ({
   const legend = (
     <div className={legendCls}>
       <span style={{ marginRight: '10px' }}>
-        {TittelIkon && <TittelIkon style={{ marginRight: '5px' }} />}{tittel}
+        {TittelIkon && <TittelIkon style={{ marginRight: '5px' }} />}
+        <Nav.typo.Undertittel style={{ display: 'inline' }}>{tittel}</Nav.typo.Undertittel>
       </span>
       {
-        redigeringUtfort && redigerbart &&
+        status === Status.RedigeringUtfort && redigerbart &&
         <>
           <Symboler.Rediger
             style={{ marginRight: '10px' }}
-            onClick={() => setRedigerer(true)}
+            onClick={() => setStatus(Status.Redigerer)}
           />
           <Symboler.SlettAlt
             onClick={e => binClickHandler(e)}
@@ -61,24 +78,30 @@ const RedigerbartElement = ({
   );
 
   const hentAktivtInnhold = () => {
-    if (redigeringUtfort) return redigeringUtfortRender();
-    else if (redigerer) return redigererRender();
-    else if (ingenDataRender) return ingenDataRender(() => setRedigerer(true));
+    if (status === Status.RedigeringUtfort) return redigeringUtfortRender();
+    else if (status === Status.Redigerer) return redigererRender();
+    else if (status === Status.IngenData && ingenDataRender) {
+      return ingenDataRender(() => setStatus(Status.Redigerer));
+    }
 
     return <></>;
   };
 
-  const visLagreKnapp = redigerer && (visLagreKnappBareHvisHarData ? harData : true);
+  const visLagreKnapp = status === Status.Redigerer && (visLagreKnappBareHvisHarData ? harData : true);
+
+  const lagreClickHandler = () => setStatus(hentNesteStatus());
+
+  const cls = classnames(className, 'redigerbart__element');
 
   return (
-    <div className="redigerbart__element">
+    <div className={cls}>
       <Nav.Fieldset legend={legend}>
         {hentAktivtInnhold()}
       </Nav.Fieldset>
       {
         visLagreKnapp &&
         <Mui.Knapp
-          onClick={() => setRedigerer(false)}
+          onClick={lagreClickHandler}
           capitalCase
           disabled={!redigerbart}
           type="hoved"

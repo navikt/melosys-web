@@ -59,9 +59,9 @@ const Orgnrinput = ({
   const feilmelding = !hasFocus && feil ? { feilmelding: feil } : undefined;
 
   return (
-    <div className="orgnrinput">
+    <div>
       <Nav.Input
-        label="Org.nr."
+        label={<Nav.typo.Element>Organisasjonsnummer</Nav.typo.Element>}
         onChange={onChange}
         value={orgnr}
         disabled={!redigerbart}

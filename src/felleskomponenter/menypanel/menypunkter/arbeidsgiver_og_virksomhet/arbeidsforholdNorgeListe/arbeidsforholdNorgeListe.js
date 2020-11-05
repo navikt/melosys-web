@@ -31,8 +31,8 @@ export const EnkeltArbeidsforholdNorgeRedigerer = ({
   const orgFinnes = !Utils._isEmpty(organisasjon) && !Utils._isEmpty(organisasjon.orgnr);
 
   return (
-    <Nav.Row className="enkeltArbeidsforholdNorge">
-      <Nav.Column xs="4">
+    <Nav.Row className="enkeltArbeidsforholdNorgeRedigerer">
+      <Nav.Column xs="5">
         <Orgnrinput
           onOrgnrFunnet={erstatt}
           valideringer={valideringer}
@@ -54,7 +54,7 @@ export const EnkeltArbeidsforholdNorgeRedigerer = ({
             />
         }
       </Nav.Column>
-      <Nav.Column xs="8">
+      <Nav.Column xs="7">
         {
           orgFinnes &&
           <Kontaktopplysninger
@@ -116,7 +116,6 @@ export const InnerArbeidsforholdNorgeListe = ({
           const organisasjon = findOrganisasjon(element) || {};
           const slett = () => fields.remove(indeks);
           const erstatt = verdi => fields.splice(indeks, 1, transformerOrgTilElement(verdi));
-          const key = !Utils._isEmpty(organisasjon) ? organisasjon.orgnr : Utils._uuid();
           const valideringer = [
             {
               validering: orgnr => !OrganisasjonValidering.erOrgnrGyldig(orgnr),
@@ -130,13 +129,16 @@ export const InnerArbeidsforholdNorgeListe = ({
 
           return (
             <RedigerbartElement
-              key={key}
+              /* eslint-disable-next-line react/no-array-index-key */
+              key={indeks}
+              className="redigerbartElement"
               redigerbart={redigerbart}
               harData={Boolean(organisasjon.orgnr)}
               tittel={`${tittelTekst}${organisasjon.navn ? `: ${organisasjon.navn}` : ''}`}
               tittelIkon={tittelIkon}
               tittelUnderstrek
               binClickHandler={slett}
+              visLagreKnappBareHvisHarData
               redigererRender={() => (
                 <EnkeltArbeidsforholdNorgeRedigerer
                   erstatt={erstatt}
@@ -183,7 +185,7 @@ InnerArbeidsforholdNorgeListe.propTypes = {
   elementerInneholderOrg: PT.func.isRequired,
   saksnummer: PT.string.isRequired,
   tittelTekst: PT.string.isRequired,
-  tittelIkon: PT.node.isRequired,
+  tittelIkon: PT.elementType.isRequired,
   className: PT.string,
 };
 

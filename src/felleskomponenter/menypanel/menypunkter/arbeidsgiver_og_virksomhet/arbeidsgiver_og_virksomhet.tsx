@@ -53,6 +53,9 @@ export const ArbeidsgiverOgVirksomhet = ({
     return org || { orgnr };
   };
 
+  /* eslint-disable-next-line max-len */
+  const arbeidsforholdUtlandHjelpetekst = 'Her legger du inn informasjon om utenlandsk arbeidsgiver som søker er ansatt og lønnet av. Når det ligger informasjon i dette panelet, blir det sendt kopi av A1 til Statlig skatteoppkreving.';
+
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
@@ -110,6 +113,14 @@ export const ArbeidsgiverOgVirksomhet = ({
           ikon={Ikoner.Building}
           tekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdIUtlandet}
           understrek
+          etterTekst={
+            <Nav.Hjelpetekst
+              tittel={arbeidsforholdUtlandHjelpetekst}
+              type={Nav.PopoverOrientering.Hoyre}
+            >
+              {arbeidsforholdUtlandHjelpetekst}
+            </Nav.Hjelpetekst>
+          }
         />
       }
       {
