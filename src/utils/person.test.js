@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Person from './person';
-import * as Utils from '../../../../utils';
+import * as testhelpers from './testhelpers';
 
 describe('Tester person.js:', () => {
   describe('erGyldigFnr', () => {
@@ -15,7 +15,7 @@ describe('Tester person.js:', () => {
     });
 
     test('returnerer true ved riktig fødselsnummer', () => {
-      const generator = new Utils.testhelpers.Generator();
+      const generator = new testhelpers.Generator();
       const mockData1 = generator.generateBirthNumber();
       const mockData2 = generator.generateBirthNumber();
       const mockData3 = generator.generateBirthNumber();
@@ -75,7 +75,7 @@ describe('Tester person.js:', () => {
     });
 
     test('returnerer true ved riktig dnr', () => {
-      const generator = new Utils.testhelpers.Generator();
+      const generator = new testhelpers.Generator();
       const mockData1 = generator.generateDNumber();
       const mockData2 = generator.generateDNumber();
       const mockData3 = generator.generateDNumber();

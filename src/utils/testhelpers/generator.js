@@ -1,4 +1,4 @@
-import * as Utils from '../../utils';
+import * as person from '../person';
 
 class Generator {
   static MALE = 1;
@@ -102,7 +102,7 @@ class Generator {
     }
 
     const birthNumber = `${partialBirthNumber}${k1}${k2}`;
-    if (!Utils.person.erGyldigFnr(birthNumber)) {
+    if (!person.erGyldigFnr(birthNumber)) {
       return this.generateBirthNumber();
     }
 
@@ -120,7 +120,7 @@ class Generator {
     }
 
     const dNumber = `${partialDNumber}${k1}${k2}`;
-    if (!Utils.person.erGyldigDnr(dNumber)) {
+    if (!person.erGyldigDnr(dNumber)) {
       return this.generateDNumber();
     }
 
