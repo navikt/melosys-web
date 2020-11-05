@@ -53,7 +53,7 @@ export const Arbeidssteder = ({
         slettTekst="Slett arbeidssted"
         redigerbart={redigerbart}
         className="arbeidUtland"
-        defaultElement={arbeidUtlandDefaultElement}
+        hentDefaultElement={() => arbeidUtlandDefaultElement}
       />
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}

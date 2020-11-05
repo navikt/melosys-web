@@ -16,14 +16,14 @@ export const InnerPanelListe = ({
   fields,
   elementKomponent,
   elementClassName,
-  defaultElement,
+  hentDefaultElement,
   className,
   settFeltVerdi,
 }) => {
   const panelListeCl = classNames('panelListe', className);
 
   const elementer = fields.getAll();
-  const leggTil = () => fields.push(defaultElement);
+  const leggTil = () => fields.push(hentDefaultElement());
   const ElementKomponent = elementKomponent;
 
   return (
@@ -73,14 +73,14 @@ InnerPanelListe.propTypes = {
   slettTekst: PT.string.isRequired,
   elementKomponent: PT.elementType.isRequired,
   elementClassName: PT.string,
-  defaultElement: PT.any,
+  hentDefaultElement: PT.func,
   className: PT.string,
   settFeltVerdi: PT.func.isRequired,
 };
 
 InnerPanelListe.defaultProps = {
   elementClassName: undefined,
-  defaultElement: {},
+  hentDefaultElement: () => {},
   className: undefined,
 };
 

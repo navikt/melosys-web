@@ -36,7 +36,7 @@ export const AndreArbeidsforholdUtland = ({
         leggTilTekst="+ LEGG TIL NYTT ARBEIDSFORHOLD I UTLANDET"
         slettTekst="Slett arbeidsforhold"
         elementKomponent={EnkeltArbeidsforholdUtland}
-        defaultElement={{ uuid: Utils._uuid() }}
+        hentDefaultElement={() => ({ uuid: Utils._uuid() })}
       />
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
@@ -50,7 +50,7 @@ export const AndreArbeidsforholdUtland = ({
         slettTekst="Slett virksomhet"
         feltNavn="selvstendigNaeringsvirksomhetUtland"
         elementKomponent={EnkeltArbeidsforholdUtland}
-        defaultElement={{ uuid: Utils._uuid() }}
+        hentDefaultElement={() => ({ uuid: Utils._uuid() })}
       />
     </Nav.EkspanderbartpanelBase>
   </div>
