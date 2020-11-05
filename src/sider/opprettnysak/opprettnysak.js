@@ -5,7 +5,6 @@ import { reduxForm, getFormValues, FormSection, SubmissionError } from 'redux-fo
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../../felleskomponenter/skjema';
-import * as Validering from '../../felleskomponenter/skjema/validering';
 import * as Mui from '../../felleskomponenter/ui';
 import * as Ikoner from '../../resources/images';
 import * as KV from '../../kodeverk';
@@ -36,7 +35,7 @@ const OpprettNySak = ({
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const hentOppgaver = async brukerID => {
-    if (Validering.erGyldigFnr(brukerID) || Validering.erGyldigDnr(brukerID)) {
+    if (Utils.person.erGyldigFnr(brukerID) || Utils.person.erGyldigDnr(brukerID)) {
       try {
         const oppgaverResponse = await Api.Oppgaver.sok(brukerID);
         setOppgaver(oppgaverResponse);

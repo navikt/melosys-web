@@ -1,24 +1,8 @@
 /* eslint-disable */
 import * as Person from './person';
-import * as Utils from '../../../../utils';
+import * as testhelpers from './testhelpers';
 
 describe('Tester person.js:', () => {
-  describe('fulltNavn', () => {
-    test('feiler dersom mellomrom i navn mangler', () => {
-      const mockData = 'OlaNordmann';
-      expect(Person.fulltNavn(mockData)).toBe('Du må skrive inn både fornavn og etternavn.');
-    });
-
-    test('returnerer null (dvs ingen feilmelding) dersom navnet har ett eller flere mellomrom', () => {
-      const mockData1 = 'Ola Nordmann';
-      const mockData2 = 'Ola Jensenius Nordmann';
-      const mockData3 = 'Ola Jensenius Hansen Nordmann';
-      expect(Person.fulltNavn(mockData1)).toBe(null);
-      expect(Person.fulltNavn(mockData2)).toBe(null);
-      expect(Person.fulltNavn(mockData3)).toBe(null);
-    })
-  });
-
   describe('erGyldigFnr', () => {
     test('returnerer false ved feil fødselsnummer', () => {
       const mockData1 = '22222222222';
@@ -31,7 +15,7 @@ describe('Tester person.js:', () => {
     });
 
     test('returnerer true ved riktig fødselsnummer', () => {
-      const generator = new Utils.testhelpers.Generator();
+      const generator = new testhelpers.Generator();
       const mockData1 = generator.generateBirthNumber();
       const mockData2 = generator.generateBirthNumber();
       const mockData3 = generator.generateBirthNumber();
@@ -91,7 +75,7 @@ describe('Tester person.js:', () => {
     });
 
     test('returnerer true ved riktig dnr', () => {
-      const generator = new Utils.testhelpers.Generator();
+      const generator = new testhelpers.Generator();
       const mockData1 = generator.generateDNumber();
       const mockData2 = generator.generateDNumber();
       const mockData3 = generator.generateDNumber();
