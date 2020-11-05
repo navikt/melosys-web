@@ -13,6 +13,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
+import MKV from '../../../melosyskodeverk';
 
 import { landTekstFormat } from '../../skjema/landvelger/utils';
 import { lagAvklartfakta, lagAvklartfaktaFaktaListe } from '../../../regler/avklartefakta';
@@ -21,18 +22,11 @@ import { soknadspanelOperations } from '../../../ducks/soknadspaneler';
 
 import './vurderingStart.css';
 
-const omEttÅr = () => {
-  const idag = new Date();
-  const plussEttÅr = new Date();
-  plussEttÅr.setMonth(idag.getMonth() + 12);
-  return plussEttÅr;
-};
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.START)(state),
   initialValues: {
     fom: Utils.dato.formatterDatoTilNorsk(new Date()),
-    tom: Utils.dato.formatterDatoTilNorsk(omEttÅr()),
   },
 });
 
@@ -50,7 +44,7 @@ interface Props {
   redigerbart: boolean,
   oppdaterData: (avklartefakta: any) => void,
   alleLandkoder: KTObject[],
-  formValues: {fom: string, tom: string, land: string},
+  formValues: {fom: string, tom: string, land: string, trygdedekning: string},
 }
 
 const VurderingStart =
@@ -64,10 +58,9 @@ const VurderingStart =
     visSoknadspanel,
   } : Props & PropsFromRedux) => {
     const [erFomForTom, setErFomForTom] = useState(true);
-    const [erLandValgt, setErLandValgt] = useState(true);
+    const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
 
     useEffect(() => {
-      setErFomForTom(formValues.fom <= formValues.tom);
       oppdaterData(lagAvklartfaktaFaktaListe(KV.Koder.SOKNADSPERIODE, null, [formValues.fom, formValues.tom]));
     }, [formValues.fom, formValues.tom]);
 
@@ -75,13 +68,17 @@ const VurderingStart =
       oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, null, formValues.land));
     }, [formValues.land]);
 
-    const validerLandOgPeriode = () => {
-      setErLandValgt(!!formValues.land);
-      return !!formValues.land && erFomForTom;
-    };
+    useEffect(() => {
+      const erPeriodeGyldig =  !formValues.tom || Utils.dato.erGyldigPeriode(formValues.fom, formValues.tom);
+      setErFomForTom(erPeriodeGyldig);
+
+      const erFelteneGyldig = !!formValues.land && !!formValues.trygdedekning && !!formValues.fom && erPeriodeGyldig;
+      setErObligatoriskeFelterFyltInn(erFelteneGyldig);
+
+    }, [formValues.tom, formValues.fom, formValues.land, formValues.trygdedekning]);
 
     const fortsettHandle = () => {
-      if (validerLandOgPeriode()) {
+      if (erObligatoriskeFelterFyltInn) {
         const fortsett = () => {
           bekreftOgFortsett();
           visSoknadspanel();
@@ -96,7 +93,7 @@ const VurderingStart =
 
         <Nav.Fieldset legend="Periode" onSubmit={fortsettHandle}>
           <Nav.Row>
-            <Nav.Column xs="5">
+            <Nav.Column xs="3">
               <Skjema.Input
                 datoFelt
                 label="Fra og med:"
@@ -104,7 +101,7 @@ const VurderingStart =
                 bredde="fullbredde"
                 disabled={!redigerbart} />
             </Nav.Column>
-            <Nav.Column xs="5">
+            <Nav.Column xs="3">
               <Skjema.Input
                 datoFelt
                 label="Til og med:"
@@ -112,31 +109,33 @@ const VurderingStart =
                 bredde="fullbredde"
                 disabled={!redigerbart} />
             </Nav.Column>
+            <Nav.Column xs="5">
+              <Skjema.Select label="Land" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
+                {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{landTekstFormat(item)}</option>))}
+              </Skjema.Select>
+            </Nav.Column>
           </Nav.Row>
           { !erFomForTom &&
           <AlertStripeFeil className="alert">
             Til og med dato kan ikke være tidligere enn fra og med dato.
           </AlertStripeFeil>}
         </Nav.Fieldset>
-        <Nav.Fieldset legend="Land">
+        <Nav.Fieldset legend="Trygdedekning">
           <Nav.Row>
-            <Nav.Column xs="5">
-              <Skjema.Select label="" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land} onChange={() => setErLandValgt(true)}>
-                {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{landTekstFormat(item)}</option>))}
+            <Nav.Column xs="6">
+              <Skjema.Select label="" feltNavn="trygdedekning" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.trygdedekning}>
+                {MKV.KTObjects.trygdedekninger.filter((item: KTObject) => ['HELSEDEL', 'HELSEDEL_MED_SYKE_OG_FORELDREPENGER', 'PENSJONSDEL', 'HELSE_OG_PENSJONSDEL', 'HELSE_OG_PENSJONSDEL_MED_SYKE_OG_FORELDREPENGER'].includes(item.kode) )
+                    .map((item: KTObject) => (<option key={item.kode} value={item.kode}>{item.term}</option>))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
-          { !erLandValgt &&
-          <AlertStripeFeil>
-            Du må velge søknadsland før du kan gå videre.
-          </AlertStripeFeil>}
         </Nav.Fieldset>
 
 
         <div className="fane__knapplinje" >
           <Nav.Hovedknapp
             mini
-            disabled={!redigerbart}
+            disabled={!erObligatoriskeFelterFyltInn}
             className="fane__navigasjonsknapp"
             data-cy-nesteknapp="knapp_steg0"
             onClick={fortsettHandle}>Fortsett

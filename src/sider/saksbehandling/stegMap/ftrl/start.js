@@ -39,7 +39,7 @@ class Start extends Steg {
   finnAvklaring = (avklartefakta, inngangsvilkaar) => {
     const søknadsperiode = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSPERIODE, avklartefakta);
     const søknadsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSLAND, avklartefakta);
-    return søknadsperiode.some(periode => periode.fakta[0] && periode.fakta[1])
+    return søknadsperiode.some(periode => periode.fakta[0])
        && søknadsland.some(land => land.fakta[0])
        && inngangsvilkaar.oppfylt;
   }

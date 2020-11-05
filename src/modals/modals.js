@@ -126,7 +126,7 @@ const Modals = ({
 Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
   visOppfriskDialog: PT.bool.isRequired,
-  visOppfriskDialogOgFortsett: PT.func.isRequired,
+  visOppfriskDialogOgFortsett: PT.func,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   skjulOppfriskModal: PT.func.isRequired,
   lukkOppfriskModal: PT.func.isRequired,
