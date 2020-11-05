@@ -1,62 +1,73 @@
 import React from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
+import classnames from 'classnames';
 
 import * as Utils from '../../../../../utils';
+import * as Mui from '../../../../ui';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Ikoner from '../../../../../resources/images';
 import * as MPT from '../../../../../proptypes';
 import * as OrganisasjonValidering from '../../../../skjema/validering/generisk/organisasjon';
 
+import RedigerbartElement from '../../redigerbartelement';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
+import Kontaktopplysninger from '../../../../kontaktopplysninger';
+import EnkeltArbeidsforholdNorgeRedigeringUtfort from './enkeltArbeidsforholdNorgeRedigeringUtfort';
 
 import './arbeidsforholdNorgeListe.css';
 
-export const EnkeltArbeidsforholdNorge = ({
+export const EnkeltArbeidsforholdNorgeRedigerer = ({
   erstatt,
   valideringer,
   hentVedMount,
   redigerbart,
   hentOrganisasjon,
   organisasjon,
-  slett,
-  slettTekst,
   orgIkkeFunnetTekst,
   orgFeilVedHentingTekst,
-}) => (
-  <div className="enkeltArbeidsforholdNorge">
-    <Orgnrinput
-      onOrgnrFunnet={erstatt}
-      valideringer={valideringer}
-      hentVedMount={hentVedMount}
-      redigerbart={redigerbart}
-      hentOrganisasjon={hentOrganisasjon}
-      defaultOrgnr={organisasjon.orgnr || ''}
-      ikkeFunnetFeilmelding={orgIkkeFunnetTekst}
-      feilVedHentingFeilmelding={orgFeilVedHentingTekst}
-    />
-    {
-      (!Utils._isEmpty(organisasjon) && !Utils._isEmpty(organisasjon.orgnr)) &&
-        <Organisasjon
-          organisasjon={organisasjon}
-          redigerbart={redigerbart}
-          visNavn
-          visAdresseTittel={false}
-          boldAdresseNavn
-        />
-    }
-    {
-      redigerbart &&
-        <Nav.Lenker onClick={slett}>
-          <Ikoner.Bin />
-          <span>{slettTekst}</span>
-        </Nav.Lenker>
-    }
-  </div>
-);
+}) => {
+  const orgFinnes = !Utils._isEmpty(organisasjon) && !Utils._isEmpty(organisasjon.orgnr);
 
-EnkeltArbeidsforholdNorge.propTypes = {
+  return (
+    <Nav.Row className="enkeltArbeidsforholdNorge">
+      <Nav.Column xs="4">
+        <Orgnrinput
+          onOrgnrFunnet={erstatt}
+          valideringer={valideringer}
+          hentVedMount={hentVedMount}
+          redigerbart={redigerbart}
+          hentOrganisasjon={hentOrganisasjon}
+          defaultOrgnr={organisasjon.orgnr || ''}
+          ikkeFunnetFeilmelding={orgIkkeFunnetTekst}
+          feilVedHentingFeilmelding={orgFeilVedHentingTekst}
+        />
+        {
+          orgFinnes &&
+            <Organisasjon
+              organisasjon={organisasjon}
+              redigerbart={redigerbart}
+              visNavn
+              visAdresseTittel={false}
+              boldAdresseNavn
+            />
+        }
+      </Nav.Column>
+      <Nav.Column xs="8">
+        {
+          orgFinnes &&
+          <Kontaktopplysninger
+            redigerbart={redigerbart}
+            juridiskOrg={organisasjon}
+          />
+        }
+      </Nav.Column>
+    </Nav.Row>
+  );
+};
+
+EnkeltArbeidsforholdNorgeRedigerer.propTypes = {
   valideringer: PT.arrayOf(PT.shape({
     validering: PT.func.isRequired,
     feilmelding: PT.string.isRequired,
@@ -64,15 +75,13 @@ EnkeltArbeidsforholdNorge.propTypes = {
   hentVedMount: PT.bool,
   organisasjon: MPT.Organisasjon.isRequired,
   erstatt: PT.func.isRequired,
-  slett: PT.func.isRequired,
-  slettTekst: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   orgIkkeFunnetTekst: PT.string,
   orgFeilVedHentingTekst: PT.string,
 };
 
-EnkeltArbeidsforholdNorge.defaultProps = {
+EnkeltArbeidsforholdNorgeRedigerer.defaultProps = {
   hentVedMount: false,
   orgIkkeFunnetTekst: undefined,
   orgFeilVedHentingTekst: undefined,
@@ -80,7 +89,6 @@ EnkeltArbeidsforholdNorge.defaultProps = {
 
 export const InnerArbeidsforholdNorgeListe = ({
   leggTilTekst,
-  slettTekst,
   fields,
   redigerbart,
   hentOrganisasjon,
@@ -88,6 +96,10 @@ export const InnerArbeidsforholdNorgeListe = ({
   transformerOrgTilElement,
   defaultElement,
   elementerInneholderOrg,
+  saksnummer,
+  tittelTekst,
+  tittelIkon,
+  className,
 }) => {
   const elementer = fields.getAll() || [];
 
@@ -95,8 +107,10 @@ export const InnerArbeidsforholdNorgeListe = ({
     fields.push(defaultElement);
   };
 
+  const cls = classnames(className, 'innerArbeidsforholdNorgeListe');
+
   return (
-    <div className="innerArbeidsforholdNorgeListe">
+    <div className={cls}>
       {
         elementer.map((element, indeks) => {
           const organisasjon = findOrganisasjon(element) || {};
@@ -115,28 +129,51 @@ export const InnerArbeidsforholdNorgeListe = ({
           ];
 
           return (
-            <EnkeltArbeidsforholdNorge
+            <RedigerbartElement
               key={key}
-              erstatt={erstatt}
-              valideringer={valideringer}
               redigerbart={redigerbart}
-              hentOrganisasjon={hentOrganisasjon}
-              organisasjon={organisasjon}
-              slett={slett}
-              slettTekst={slettTekst}
-              hentVedMount={Boolean(organisasjon.orgnr)}
+              harData={Boolean(organisasjon.orgnr)}
+              tittel={`${tittelTekst}${organisasjon.navn ? `: ${organisasjon.navn}` : ''}`}
+              tittelIkon={tittelIkon}
+              tittelUnderstrek
+              binClickHandler={slett}
+              redigererRender={() => (
+                <EnkeltArbeidsforholdNorgeRedigerer
+                  erstatt={erstatt}
+                  valideringer={valideringer}
+                  redigerbart={redigerbart}
+                  hentOrganisasjon={hentOrganisasjon}
+                  organisasjon={organisasjon}
+                  hentVedMount={Boolean(organisasjon.orgnr)}
+                />
+              )}
+              redigeringUtfortRender={() => (
+                <EnkeltArbeidsforholdNorgeRedigeringUtfort
+                  saksnummer={saksnummer}
+                  org={organisasjon}
+                />
+              )}
             />
           );
         })
       }
-      <Nav.Knapp disabled={!redigerbart} onClick={leggTilDefault}>{leggTilTekst}</Nav.Knapp>
+      {
+        redigerbart &&
+        <div className="leggTilKnapp">
+          <Mui.Knappelenke
+            onClick={leggTilDefault}
+            ikon={Ikoner.Add}
+          >
+            {leggTilTekst}
+          </Mui.Knappelenke>
+        </div>
+      }
     </div>
   );
 };
 
 InnerArbeidsforholdNorgeListe.propTypes = {
   leggTilTekst: PT.string.isRequired,
-  slettTekst: PT.string.isRequired,
   fields: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
   findOrganisasjon: PT.func.isRequired,
@@ -144,11 +181,16 @@ InnerArbeidsforholdNorgeListe.propTypes = {
   transformerOrgTilElement: PT.func,
   defaultElement: PT.any,
   elementerInneholderOrg: PT.func.isRequired,
+  saksnummer: PT.string.isRequired,
+  tittelTekst: PT.string.isRequired,
+  tittelIkon: PT.node.isRequired,
+  className: PT.string,
 };
 
 InnerArbeidsforholdNorgeListe.defaultProps = {
   transformerOrgTilElement: verdi => verdi,
   defaultElement: undefined,
+  className: undefined,
 };
 
 const ArbeidsforholdNorgeListe = ({

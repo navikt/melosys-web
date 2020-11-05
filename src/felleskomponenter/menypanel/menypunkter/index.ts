@@ -1,4 +1,5 @@
 export { default as ArbeidsforholdOgInntekt } from './arbeidsforholdOgInntekt';
+export { default as ArbeidsgiverOgVirksomhet } from './arbeidsgiver_og_virksomhet';
 export { default as Barnetrygd } from './barnetrygd';
 export { default as Medlemskap } from './medlemskap';
 export { default as Person } from './person';

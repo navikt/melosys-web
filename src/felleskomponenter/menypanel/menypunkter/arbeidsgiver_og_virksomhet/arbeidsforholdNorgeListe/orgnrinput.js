@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../../../utils/navFrontend';
@@ -60,23 +60,17 @@ const Orgnrinput = ({
 
   return (
     <div className="orgnrinput">
-      <Fragment>
-        <Nav.Row>
-          <Nav.Column xs="3">
-            <Nav.Input
-              label="Org.nr."
-              onChange={onChange}
-              value={orgnr}
-              disabled={!redigerbart}
-              bredde="M"
-              placeholder="Skriv inn..."
-              feil={feilmelding}
-              onFocus={() => setHasFocus(true)}
-              onBlur={() => setHasFocus(false)}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Fragment>
+      <Nav.Input
+        label="Org.nr."
+        onChange={onChange}
+        value={orgnr}
+        disabled={!redigerbart}
+        bredde="fullbredde"
+        placeholder="Skriv inn..."
+        feil={feilmelding}
+        onFocus={() => setHasFocus(true)}
+        onBlur={() => setHasFocus(false)}
+      />
     </div>
   );
 };

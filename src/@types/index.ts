@@ -23,4 +23,5 @@ export type {
   Lovvalgsperiode,
 } from './periode';
 export type { default as PersonHistorikk } from './personhistorikk';
+export type { default as Organisasjon } from './organisasjon';
 export type { MedlemskapPeriode } from './medlemskap';

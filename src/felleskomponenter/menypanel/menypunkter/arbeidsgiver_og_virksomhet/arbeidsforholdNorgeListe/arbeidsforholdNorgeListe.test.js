@@ -1,7 +1,7 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe, EnkeltArbeidsforholdNorge } from './arbeidsforholdNorgeListe';
+import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe, EnkeltArbeidsforholdNorgeRedigerer } from './arbeidsforholdNorgeListe';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
 
@@ -54,7 +54,7 @@ describe('InnerArbeidsforholdNorgeListe', () => {
 
   it('viser en EnkeltArbeidsforholdNorge', () => {
     const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
-    const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(EnkeltArbeidsforholdNorge);
+    const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(EnkeltArbeidsforholdNorgeRedigerer);
 
     expect(enkeltArbeidsforholdNorge).toHaveLength(1);
   });
@@ -76,7 +76,7 @@ describe('EnkeltArbeidsforholdNorge', () => {
   });
 
   it('viser en Organisasjon', () => {
-    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorge {...props} />);
+    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
     const organisasjon = innerArbeidsforholdNorgeListe.find(Organisasjon);
     const organisasjonProps = organisasjon.props();
 
@@ -86,7 +86,7 @@ describe('EnkeltArbeidsforholdNorge', () => {
   });
 
   it('viser en orgnrinput', () => {
-    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorge {...props} />);
+    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
     const orgnrinput = innerArbeidsforholdNorgeListe.find(Orgnrinput);
 
     expect(orgnrinput).toHaveLength(1);
