@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { KTObject } from 'melosys-kodeverk';
-import { RootState } from 'AppTypes';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -13,7 +12,6 @@ import * as Skjema from '../../../felleskomponenter/skjema';
 import * as Api from '../../../services/api';
 
 import { oppgaverOperations } from '../../../ducks/oppgaver';
-import { serverinfoSelectors } from '../../../ducks/serverinfo';
 
 import { useAsyncCallbackState } from '../../../hooks';
 
@@ -26,8 +24,7 @@ const compareTerm = (a: KTObject, b: KTObject) => {
   return a.term.localeCompare(b.term);
 };
 
-const mapStateToProps = (state: RootState) => ({
-  erProdish: serverinfoSelectors.ErProdishSelector(state),
+const mapStateToProps = () => ({
   initialValues: {
     behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
@@ -41,7 +38,6 @@ type BehandlingProps = PropsFromRedux & RouteComponentProps;
 export const Behandling = ({
   handleSubmit,
   history,
-  erProdish,
 }: InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps) => {
   const [statistikk] = useAsyncCallbackState(Api.Statistikk.hent, { aapneBehandlinger: {} });
 
@@ -55,9 +51,9 @@ export const Behandling = ({
     return true;
   };
 
-  const ikkePlukkbareBehandlingstemaer = erProdish ? [
+  const ikkePlukkbareBehandlingstemaer = [
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
-  ] : [];
+  ];
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
 
   return (

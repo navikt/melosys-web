@@ -11,14 +11,7 @@ import { behandlingsperioderOperations } from '../behandlingsperioder';
 import { anmodningsperioderOperations } from '../anmodningsperioder';
 import { anmodningsperiodesvarOperations } from '../anmodningsperiodesvar';
 import { utpekingsperioderOperations } from '../utpekingsperioder';
-import { serverinfoOperations } from '../serverinfo';
 import { dokumenterOperations } from '../dokumenter';
-
-export const lastAppdata = () => (
-  dispatch => {
-    dispatch(serverinfoOperations.hent());
-  }
-);
 
 export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
   dispatch => {
