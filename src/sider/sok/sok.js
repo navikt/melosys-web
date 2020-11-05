@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import FnrValidator from '@navikt/fnrvalidator';
 
 import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
+import * as Utils from '../../utils';
 import Fagsak from '../../felleskomponenter/oppgaveliste/fagsak';
 import SorterbarListe from '../../felleskomponenter/sorterbarListe/sorterbarListe';
 
@@ -32,7 +32,7 @@ export const Sok = ({
 
   if (!sokResultat) return null;
 
-  const sokeFraseErFnrDnr = FnrValidator.idnr(sokefrase).status === 'valid';
+  const sokeFraseErFnrDnr = Utils.person.erGyldigFnr(sokefrase);
   const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til {sokeFraseErFnrDnr ? 'f.nr./d-nr.' : 'saksnummer' } {sokefrase}.</Nav.Panel>;
 
   return (

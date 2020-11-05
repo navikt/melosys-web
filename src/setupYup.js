@@ -1,7 +1,6 @@
 import { addMethod, object, string } from 'yup';
 
 import * as Utils from './utils';
-import * as Person from './felleskomponenter/skjema/validering/generisk/person';
 import * as Organisasjon from './felleskomponenter/skjema/validering/generisk/organisasjon';
 
 import MKV from './melosyskodeverk';
@@ -90,13 +89,13 @@ addMethod(string, 'erNummer', function(message) {
 
 addMethod(string, 'erFnrEllerDnr', function(message) {
   return this.test('er et Fnr eller Dnr', message, function(value) {
-    return Person.erGyldigFnr(value) || Person.erGyldigDnr(value);
+    return Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value);
   });
 });
 
 addMethod(string, 'erFnrEllerDnrEllerOrgnr', function(message) {
   return this.test('er et Fnr, Dnr eller Orgnr', message, function(value) {
-    return Person.erGyldigFnr(value) || Person.erGyldigDnr(value) || Organisasjon.erOrgnrLengde(value);
+    return Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value) || Organisasjon.erOrgnrLengde(value);
   });
 });
 
@@ -125,7 +124,7 @@ addMethod(string, 'harIkkeFnrEllerDnrLengde', function(message) {
   return this.test('er fnr eller dnr lengde', message, function(value) {
     const { path, createError } = this;
 
-    if (Person.erFnrLengde(value) || Person.erDnrLengde(value)) {
+    if (Utils.person.erFnrLengde(value) || Utils.person.erDnrLengde(value)) {
       throw createError({
         path,
         message,

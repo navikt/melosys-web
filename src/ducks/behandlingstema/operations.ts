@@ -7,21 +7,17 @@
  *
  */
 import { doThenDispatch } from '../../services/utils';
-import * as Utils from '../../utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-export function sok(sokefrase) {
-  const sokefraseErIdnr = Utils.person.erGyldigFnr(sokefrase);
-
-  const body = {
-    ident: sokefraseErIdnr ? sokefrase : null,
-    saksnummer: sokefraseErIdnr ? null : sokefrase,
-  };
-
-  return doThenDispatch(() => Api.Fagsaker.sok.send(body), {
+export function hentMuligeBehandlingstema(behandlingID: number) {
+  return doThenDispatch(() => Api.Behandlinger.tema.hentMuligeBehandlingstema(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
+  }, {
+    mapDispatchData: (data: any) => ({
+      muligeBehandlingstema: data,
+    }),
   });
 }

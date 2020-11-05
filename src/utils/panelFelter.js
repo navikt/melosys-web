@@ -1,4 +1,5 @@
 import * as Skjema from '../felleskomponenter/skjema';
+import * as Person from './person';
 
 /** Definer alle felter med validering. Dette objektet brukes også i validForm decorator.
  */
@@ -6,7 +7,7 @@ export const feltGrupper = {
   personOpplysninger: {
     medfolgendeAndre: [value => {
       if (!value) { return null; }
-      return (Skjema.Validering.erGyldigFnr(value) || Skjema.Validering.erGyldigDnr(value)) ? null : 'Ugyldig fnr eller dnr';
+      return (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) ? null : 'Ugyldig fnr eller dnr';
     }],
   },
   inntekt: {
