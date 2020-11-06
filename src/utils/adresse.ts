@@ -7,11 +7,11 @@ const erGeneriskAdresseObjektTomt = (adresse: Partial<GeneriskAdresse>) => (
   && adresse.gateadresse && Object.values(adresse.gateadresse).every(Utils._isNil)
 );
 
-const erStrukturetAdresseObjektTomt = (adresse: Partial<StrukturertAdresse>) => (
+const erStrukturertAdresseObjektTomt = (adresse: Partial<StrukturertAdresse>) => (
   Object.values(adresse).every(value => Utils._isNil(value) && '')
 );
 
 export {
   erGeneriskAdresseObjektTomt,
-  erStrukturetAdresseObjektTomt,
+  erStrukturertAdresseObjektTomt,
 };
