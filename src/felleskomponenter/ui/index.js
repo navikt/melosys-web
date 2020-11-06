@@ -1,4 +1,5 @@
 import Knapp from './knapp';
+import Knappelenke from './knappelenke';
 import { KodeTermSelect } from './kodeTermSelect';
 import Checkboxgruppe from './checkboxgruppe';
 import ListevelgerFlervalg from './listevelgerFlervalg';
@@ -10,6 +11,7 @@ import Checkbox from './checkbox';
 
 export {
   Knapp,
+  Knappelenke,
   KodeTermSelect,
   Checkbox,
   Checkboxgruppe,

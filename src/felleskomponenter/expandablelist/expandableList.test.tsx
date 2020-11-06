@@ -15,7 +15,6 @@ describe('ExpandableList', () => {
       btnTextExpanded="vis mindre"
       btnTextCollapsed="vis flere"
       chevron
-      expandable
     />);
 
     expect(expandableList.contains('e1')).toBe(true);
@@ -25,14 +24,13 @@ describe('ExpandableList', () => {
   it('viser en knapp med tekst og chevron', () => {
     const expandableList = shallow(<ExpandableList
       renderElement={jest.fn(() => <span />)}
-      elements={['hei', 'hei2']}
+      elements={['hei', 'hei2', 'hei3']}
       idFromElement={element => element}
       header="Tittel"
       amountOfItemsCollapsed={2}
       btnTextExpanded="vis mindre"
       btnTextCollapsed="vis flere"
       chevron
-      expandable
     />);
 
     expect(expandableList.exists('button')).toBe(true);
