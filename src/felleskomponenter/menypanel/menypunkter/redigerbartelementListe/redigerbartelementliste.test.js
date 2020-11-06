@@ -1,9 +1,10 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import * as Nav from '../../../../utils/navFrontend';
+import * as Mui from '../../../ui';
 
 import RedigerbartElementListe, { InnerRedigerbartElementListe } from './redigerbartelementliste';
+import RedigerbartElement from '../redigerbartelement';
 
 describe('RedigerbartElementListe', () => {
   let props = null;
@@ -40,36 +41,31 @@ describe('InnerElementlListe', () => {
         remove: jest.fn(),
         push: jest.fn(),
       },
-      elementKomponent: TestElement,
       elementClassName: 'elementClassName',
       defaultElement: {},
       className: 'className',
       settFeltVerdi: jest.fn(),
+      hentNavn: jest.fn(() => 'Navn'),
+      tittelTekst: 'tittel',
+      elementKomponentRedigerer: () => TestElement,
+      elementKomponentRedigeringUtfort: () => TestElement,
+      harData: () => true,
+      tittelIkon: () => <div />,
     };
   });
 
-  it('viser elementer fra fields', () => {
+  it('viser redigerbartElementer', () => {
     const innerRedigerbartElementListe = shallow(<InnerRedigerbartElementListe {...props} />);
-    const elementer = innerRedigerbartElementListe.find(TestElement);
+    const elementer = innerRedigerbartElementListe.find(RedigerbartElement);
 
     expect(elementer).toHaveLength(2);
-    expect(elementer.first().props().overordnetFeltNavn).toBe('liste[0]');
-    expect(elementer.first().props().redigerbart).toBe(props.redigerbart);
-    expect(elementer.first().props().className).toBe(props.elementClassName);
-    expect(elementer.first().props().verdier).toEqual({});
-    expect(elementer.last().props().overordnetFeltNavn).toBe('liste[1]');
-    expect(elementer.last().props().redigerbart).toBe(props.redigerbart);
-    expect(elementer.last().props().className).toBe(props.elementClassName);
-    expect(elementer.first().props().verdier).toEqual({});
   });
 
-  it('viser lenker for å slette elementer', () => {
+  it('kaller fields.remove ved kall til redigerbartElement sin binClickHandler', () => {
     const innerRedigerbartElementListe = shallow(<InnerRedigerbartElementListe {...props} />);
-    const lenker = innerRedigerbartElementListe.find(Nav.Lenker);
+    const elementer = innerRedigerbartElementListe.find(RedigerbartElement);
 
-    expect(lenker).toHaveLength(2);
-
-    lenker.first().simulate('click');
+    elementer.first().props().binClickHandler();
 
     expect(props.fields.remove).toHaveBeenCalledTimes(1);
     expect(props.fields.remove).toHaveBeenLastCalledWith(0);
@@ -77,11 +73,11 @@ describe('InnerElementlListe', () => {
 
   it('viser knapp for å legge til elementer', () => {
     const innerRedigerbartElementListe = shallow(<InnerRedigerbartElementListe {...props} />);
-    const knapp = innerRedigerbartElementListe.find(Nav.Knapp);
+    const knappelenke = innerRedigerbartElementListe.find(Mui.Knappelenke);
 
-    expect(knapp).toHaveLength(1);
+    expect(knappelenke).toHaveLength(1);
 
-    knapp.simulate('click');
+    knappelenke.props().onClick();
 
     expect(props.fields.push).toHaveBeenCalledTimes(1);
     expect(props.fields.push).toHaveBeenLastCalledWith({});

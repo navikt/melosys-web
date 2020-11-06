@@ -4,6 +4,7 @@ import { FieldArray } from 'redux-form';
 import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe, EnkeltArbeidsforholdNorgeRedigerer } from './arbeidsforholdNorgeListe';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
+import RedigerbartElement from '../../redigerbartelement';
 
 describe('ArbeidsforholdNorgeListe', () => {
   let props = null;
@@ -36,7 +37,8 @@ describe('InnerArbeidsforholdNorgeListe', () => {
   beforeEach(() => {
     props = {
       leggTilTekst: 'Legg til',
-      slettTekst: 'Slett',
+      tittelTekst: 'tittel',
+      tittelIkon: () => <span />,
       fields: {
         getAll: jest.fn(() => [
           '123123123',
@@ -49,12 +51,13 @@ describe('InnerArbeidsforholdNorgeListe', () => {
       transformerOrgTilElement: jest.fn(),
       defaultElement: {},
       elementerInneholderOrg: jest.fn(),
+      saksnummer: '13',
     };
   });
 
-  it('viser en EnkeltArbeidsforholdNorge', () => {
+  it('viser en RedigerbartElement', () => {
     const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
-    const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(EnkeltArbeidsforholdNorgeRedigerer);
+    const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(RedigerbartElement);
 
     expect(enkeltArbeidsforholdNorge).toHaveLength(1);
   });
