@@ -55,3 +55,11 @@ export const visRevurderFagsak = () => async dispatch => (
 export const skjulRevurderFagsak = () => async dispatch => (
   dispatch(Actions.oppdaterRevurderFagsak({ synlig: false }))
 );
+
+export const visEndreBehandlingstema = () => async dispatch => (
+  dispatch(Actions.oppdaterEndreBehandlingstema({ synlig: true }))
+);
+
+export const skjulEndreBehandlingstema = () => async dispatch => (
+  dispatch(Actions.oppdaterEndreBehandlingstema({ synlig: false }))
+);

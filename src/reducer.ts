@@ -11,6 +11,7 @@ import behandlingerReducer from './ducks/behandlinger';
 import behandlingsgrunnlagReducer from './ducks/behandlingsgrunnlag';
 import behandlingsperioderReducer from './ducks/behandlingsperioder';
 import behandlingsresultatReducer from './ducks/behandlingsresultat';
+import behandlingstemaReducer from './ducks/behandlingstema';
 import dokumenterReducer from './ducks/dokumenter';
 import fagsakerReducer from './ducks/fagsaker';
 import feiletResponseReducer from './ducks/feiletrespons';
@@ -23,7 +24,6 @@ import personerReducer from './ducks/personer';
 import saksbehandlerReducer from './ducks/saksbehandler';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
-import serverinfoReducer from './ducks/serverinfo';
 import utpekReducer from './ducks/utpek';
 import utpekingsperioderReducer from './ducks/utpekingsperioder';
 import videresendingReducer from './ducks/videresending';
@@ -43,6 +43,7 @@ const createRootReducer = (history: History) => combineReducers({
   behandlingsgrunnlag: behandlingsgrunnlagReducer,
   behandlingsperioder: behandlingsperioderReducer,
   behandlingsresultat: behandlingsresultatReducer,
+  behandlingstema: behandlingstemaReducer,
   dokumenter: dokumenterReducer,
   fagsaker: fagsakerReducer,
   feiletrespons: feiletResponseReducer,
@@ -55,7 +56,6 @@ const createRootReducer = (history: History) => combineReducers({
   saksbehandler: saksbehandlerReducer,
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
-  serverinfo: serverinfoReducer,
   utpek: utpekReducer,
   utpekingsperioder: utpekingsperioderReducer,
   vedtak: vedtakReducer,

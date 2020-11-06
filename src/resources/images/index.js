@@ -5,6 +5,8 @@ import { ReactComponent as Arbeidsgiver } from './ikon-arbeidsgiver.svg';
 import { ReactComponent as Arbeidsforhold } from './ikon-arbeidsforhold.svg';
 import { ReactComponent as Bin } from './bin-1.svg';
 import { ReactComponent as Binders } from './paperclip.svg';
+import { ReactComponent as Blyant_Active } from './blyant-active.svg';
+import { ReactComponent as Blyant_Disabled } from './blyant-disabled.svg';
 import { ReactComponent as BrevSendt } from './emailsend.svg';
 import { ReactComponent as Building } from './building.svg';
 import { ReactComponent as Calendar } from './calendar.svg';
@@ -42,6 +44,8 @@ export {
   Arbeidsforhold,
   Bin,
   Binders,
+  Blyant_Active,
+  Blyant_Disabled,
   BrevSendt as InnBrev,
   Building,
   Calendar,
