@@ -16,7 +16,7 @@ import Modal from 'nav-frontend-modal';
 import Tekstomrade from 'nav-frontend-tekstomrade';
 import Chevron from 'nav-frontend-chevron';
 import { LenkepanelBase } from 'nav-frontend-lenkepanel';
-import { PopoverOrientering } from 'nav-frontend-popover';
+import { PopoverOrientering } from 'nav-frontend-popover';
 
 export {
   AlertStripeAdvarsel, AlertStripe, AlertStripeInfo,
