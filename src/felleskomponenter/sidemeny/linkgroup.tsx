@@ -1,8 +1,8 @@
 import React from 'react';
-import bem from '@navikt/nap-bem-utils';
 
 import * as Nav from '../../utils/navFrontend';
 
+import bem from './bemUtils';
 import MenyLink from './menylink';
 import { Link } from './types';
 
