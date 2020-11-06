@@ -138,6 +138,7 @@ export const InnerArbeidsforholdNorgeListe = ({
               tittelIkon={tittelIkon}
               tittelUnderstrek
               binClickHandler={slett}
+              hentNyStatusVedHarData={false}
               visLagreKnappBareHvisHarData
               redigererRender={() => (
                 <EnkeltArbeidsforholdNorgeRedigerer

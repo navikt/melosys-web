@@ -22,14 +22,17 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
     redigerbart, fields,
   } = props;
   const { push, remove } = fields;
-  const felter = props.fields.getAll() || [];
+  const felter = props.fields.getAll();
   const leggTilTomtFelt = () => push({ ident: '', landkode: '' });
+
+  if (felter === undefined) return null;
 
   return <RedigerbartElement
     redigerbart={redigerbart}
     tittel={KV.Menypunkter.Person.undertitler.utenlandskID}
     binClickHandler={() => fields.removeAll()}
     harData={felter.length !== 0}
+    hentNyStatusVedHarData={false}
     redigererRender={() => (
       <div>
         {

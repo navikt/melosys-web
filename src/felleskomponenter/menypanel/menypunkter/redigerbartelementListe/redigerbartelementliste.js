@@ -52,6 +52,7 @@ export const InnerRedigerbartElementListe = ({
                 tittel={`${tittelTekst}${navn ? `: ${navn}` : ''}`}
                 tittelIkon={tittelIkon}
                 tittelUnderstrek
+                hentNyStatusVedHarData={false}
                 binClickHandler={slett}
                 redigererRender={() => <ElementKomponentRedigerer
                   redigerbart={redigerbart}

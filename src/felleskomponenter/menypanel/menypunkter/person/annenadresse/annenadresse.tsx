@@ -49,6 +49,8 @@ const AnnenAdresse = ({
 }: AnnenAdresseProps) => {
   const cls = classNames(className);
 
+  if (Object.values(oppgittAdresse).every(value => value === undefined)) return null;
+
   return (
     <div className={cls}>
       <RedigerbartElement
@@ -56,6 +58,7 @@ const AnnenAdresse = ({
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         binClickHandler={resetOppgittAdresse}
+        hentNyStatusVedHarData={false}
         redigererRender={() => (
           <Felter
             redigerbart={redigerbart}

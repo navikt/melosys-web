@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MouseEventHandler, ElementType } from 'react';
+import React, { useState, ReactNode, MouseEventHandler, ElementType, useEffect } from 'react';
 import classnames from 'classnames';
 
 import * as Nav from '../../../../utils/navFrontend';
@@ -25,6 +25,7 @@ interface RedigerbartElementProps {
   harData: boolean,
   visLagreKnappBareHvisHarData?: boolean,
   className?: string,
+  hentNyStatusVedHarData?: boolean,
 }
 
 const RedigerbartElement = ({
@@ -39,6 +40,7 @@ const RedigerbartElement = ({
   harData,
   visLagreKnappBareHvisHarData = false,
   className,
+  hentNyStatusVedHarData = false,
 }: RedigerbartElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
@@ -51,6 +53,12 @@ const RedigerbartElement = ({
   };
 
   const [status, setStatus] = useState(hentNesteStatus());
+
+  useEffect(() => {
+    if (!harData || hentNyStatusVedHarData) {
+      setStatus(hentNesteStatus());
+    }
+  }, [harData]);
 
   const legendCls = classnames({
     understrek: tittelUnderstrek,
