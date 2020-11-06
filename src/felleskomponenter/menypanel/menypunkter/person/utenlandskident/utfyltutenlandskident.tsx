@@ -22,8 +22,9 @@ const UtfyltUtenlandskIdent = ({
     </Nav.Row>
     <Nav.Row>
       {
-        utenlandskeIdenter.map(({ ident, landkode }) => (
-          <div key={ident}>
+        utenlandskeIdenter.map(({ ident, landkode }, indeks) => (
+          /* eslint-disable-next-line react/no-array-index-key */
+          <div key={indeks}>
             <Nav.Column xs="6">
               <Nav.typo.Element>{ident}</Nav.typo.Element>
             </Nav.Column>
