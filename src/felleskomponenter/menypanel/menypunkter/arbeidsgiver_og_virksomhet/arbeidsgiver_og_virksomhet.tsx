@@ -11,14 +11,25 @@ import * as Mui from '../../../ui';
 import * as KV from '../../../../kodeverk';
 import * as Etiketter from '../etiketter';
 import * as Ikoner from '../../../../resources/images';
+import * as Utils from '../../../../utils';
 
 import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
+import RedigerbartElementListe from '../redigerbartelementListe';
+import EnkeltArbeidsforholdUtlandRedigerer from './enkeltArbeidsforholdUtlandRedigerer';
+import EnkeltArbeidsforholdUtlandRedigeringUtfort from './enkeltArbeidsforholdUtlandRedigeringUtfort';
 
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../../ducks/organisasjoner';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 
 import './arbeidsgiver_og_virksomhet.css';
+
+const arbeidsforholdUtlandHarData = (element: KV.Form.ArbeidsforholdUtland): boolean => (
+  Boolean(element.navn ||
+    element.orgnr ||
+    Utils._isBoolean(element.selvstendigNaeringsvirksomhet) ||
+    (element.adresse ? Utils.adresse.erStrukturertAdresseObjektTomt(element.adresse) : false))
+);
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
@@ -123,6 +134,20 @@ export const ArbeidsgiverOgVirksomhet = ({
           }
         />
       }
+      <RedigerbartElementListe
+        redigerbart={redigerbart}
+        className="arbeidsforhold__liste"
+        feltNavn="arbeidsforholdUtland"
+        leggTilTekst="Legg til ny arbeidsgiver og kontaktopplysninger"
+        elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
+        elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
+        elementUnderstrek
+        defaultElement={{ uuid: Utils._uuid() }}
+        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
+        tittelTekst="Arbeidsgiver i utlandet"
+        harData={arbeidsforholdUtlandHarData}
+        tittelIkon={Ikoner.Building}
+      />
       {
         selvstendigNaeringsvirksomhetUtland.length === 0 &&
         <Mui.Undertittel
@@ -131,6 +156,20 @@ export const ArbeidsgiverOgVirksomhet = ({
           understrek
         />
       }
+      <RedigerbartElementListe
+        redigerbart={redigerbart}
+        className="arbeidsforhold__liste"
+        leggTilTekst="Legg til selvstendig virksomhet"
+        feltNavn="selvstendigNaeringsvirksomhetUtland"
+        elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
+        elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
+        elementUnderstrek
+        defaultElement={{ uuid: Utils._uuid() }}
+        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
+        tittelTekst="Selvstendig virksomhet i utlandet"
+        harData={arbeidsforholdUtlandHarData}
+        tittelIkon={Ikoner.Man}
+      />
     </Nav.Container>
   );
 };

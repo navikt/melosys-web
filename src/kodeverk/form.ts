@@ -1,3 +1,5 @@
+import { StrukturertAdresse } from 'Domene';
+
 export const BEHANDLINGS_FORM = 'behandlingsform';
 export interface BehandlingsFormData {
   behandlingstema: string,
@@ -6,8 +8,18 @@ export const BREV_BESTILLING = 'brevbestilling';
 export const FORSIDE_JOURNALFORINGS_FORM = 'journalforingsform';
 export const JOURNALFORING = 'journalforing';
 export const JOURNALFORING_SED = 'journalforing_sed';
+
 export const SOKNAD = 'soknad';
+
+export interface ArbeidsforholdUtland {
+  uuid: string,
+  navn?: string,
+  orgnr?: string,
+  selvstendigNaeringsvirksomhet: boolean,
+  adresse?: Partial<StrukturertAdresse>,
+}
 export type SoknadFormData = any;
+
 export const SOK_ETTER_SAK = 'sokEtterSak';
 export const ARTIKKEL_16_ANMODNING = 'artikkel_16_anmodning';
 export const INNGANG = 'inngang';
