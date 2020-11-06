@@ -86,7 +86,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         className="arbeidsforhold__liste"
         saksnummer={saksnummer}
         leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
-        tittelTekst="Arbeidsgiver i Norge"
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdINorge}
         tittelIkon={Ikoner.Building}
         feltNavn="ekstraArbeidsgivere"
         redigerbart={redigerbart}
@@ -108,7 +108,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         className="arbeidsforhold__liste"
         saksnummer={saksnummer}
         leggTilTekst="Legg til selvstendig virksomhet"
-        tittelTekst="Selvstendig virksomhet i Norge"
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
         tittelIkon={Ikoner.Man}
         feltNavn="selvstendigForetak"
         redigerbart={redigerbart}
@@ -144,7 +144,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         elementUnderstrek
         defaultElement={{ uuid: Utils._uuid() }}
         hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
-        tittelTekst="Arbeidsgiver i utlandet"
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Building}
       />
@@ -166,7 +166,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         elementUnderstrek
         defaultElement={{ uuid: Utils._uuid() }}
         hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
-        tittelTekst="Selvstendig virksomhet i utlandet"
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Man}
       />
