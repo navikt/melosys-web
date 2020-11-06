@@ -1,7 +1,7 @@
-import { erAdresseObjektTomt } from './adresse';
+import { erGeneriskAdresseObjektTomt, erStrukturetAdresseObjektTomt } from './adresse';
 
 
-describe('erAdresseObjektTomt', () => {
+describe('erGeneriskAdresseObjektTomt', () => {
   let adresseObjekt = null;
 
   beforeEach(() => {
@@ -19,18 +19,36 @@ describe('erAdresseObjektTomt', () => {
   });
 
   it('Returnerer true for et tomt adresseobjekt', () => {
-    expect(erAdresseObjektTomt(adresseObjekt)).toBe(true);
+    expect(erGeneriskAdresseObjektTomt(adresseObjekt)).toBe(true);
   });
 
   it('Returnerer false for et adresseobjekt som har postnummer', () => {
     adresseObjekt.postnr = '0000';
 
-    expect(erAdresseObjektTomt(adresseObjekt)).toBe(false);
+    expect(erGeneriskAdresseObjektTomt(adresseObjekt)).toBe(false);
   });
 
   it('Returnerer false for et adresseobjekt som har gatenavn', () => {
     adresseObjekt.gateadresse.gatenavn = '0000';
 
-    expect(erAdresseObjektTomt(adresseObjekt)).toBe(false);
+    expect(erGeneriskAdresseObjektTomt(adresseObjekt)).toBe(false);
+  });
+});
+
+describe('erStrukturetAdresseObjektTomt', () => {
+  let adresseObjekt = {};
+
+  beforeEach(() => {
+    adresseObjekt = {};
+  });
+
+  it('Returnerer true for et tomt adresseobjekt', () => {
+    expect(erStrukturetAdresseObjektTomt(adresseObjekt)).toBe(true);
+  });
+
+  it('Returnerer false for et adresseobjekt som har gatenavn', () => {
+    adresseObjekt.gatenavn = '0000';
+
+    expect(erGeneriskAdresseObjektTomt(adresseObjekt)).toBe(false);
   });
 });

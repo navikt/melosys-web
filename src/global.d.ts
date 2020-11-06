@@ -15,6 +15,7 @@ declare module 'Domene' {
   export type Avklartfakta = import('./@types').Avklartfakta;
   export type AnmodningOmUnntakBestilling = import('./@types').AnmodningOmUnntakBestilling;
   export type Fagsak = import('./@types').Fagsak;
+  export type GeneriskAdresse = import('./@types').GeneriskAdresse;
   export type MedlemskapsPeriode = import('./@types').MedlemskapPeriode;
   export type Oppsummering = import('./@types').Oppsummering;
   export type Periode = import('./@types').Periode;
