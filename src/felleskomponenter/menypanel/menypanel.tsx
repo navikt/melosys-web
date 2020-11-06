@@ -170,10 +170,8 @@ export const Menypanel = ({
     setActive([groupIndex, linkIndex]);
   };
 
-  const activeContent = defaultLinkGroups[activeGroupIndex].links[activeLinkIndex].content;
-
-  const linkGroups = defaultLinkGroups
-    .map((linkGroup, groupIndex) => ({
+  const filteredLinkGroups = defaultLinkGroups
+    .map(linkGroup => ({
       label: linkGroup.label,
       links: linkGroup.links
         // Filtrer menypunkter oppgitt i props
@@ -185,16 +183,24 @@ export const Menypanel = ({
           }
 
           return link.renderForBehandlingsgrunnlagtyper.includes(behandlingsgrunnlagtype);
-        })
+        }),
+    }))
+    // Filtrer bort linkgroups med ingen linker/menypunkter
+    .filter(linkGroup => linkGroup.links.length > 0);
+
+  const activeContent = filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content;
+
+  const linkGroups = filteredLinkGroups
+    .map((linkGroup, groupIndex) => ({
+      label: linkGroup.label,
+      links: linkGroup.links
         .map((link, linkIndex) => (
           {
             label: link.label,
             active: groupIndex === activeGroupIndex && linkIndex === activeLinkIndex,
           }
         )),
-    }))
-    // Filtrer bort linkgroups med ingen linker/menypunkter
-    .filter(linkGroup => linkGroup.links.length > 0);
+    }));
 
   return (
     <div className="menypanel">
