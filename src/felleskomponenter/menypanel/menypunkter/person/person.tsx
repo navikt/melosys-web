@@ -30,7 +30,7 @@ interface AdresseRadProps {
 
 export const AdresseRad = ({ periode: { fom, tom }, adresseNode }: AdresseRadProps) => (
   <Nav.Row className="adresse__rad">
-    <Nav.Column xs="3">
+    <Nav.Column xs="5">
       { adresseNode }
     </Nav.Column>
     <Nav.Column xs="3">
@@ -48,9 +48,21 @@ interface AdresseHeaderProps {
 
 export const AdresseHeader = ({ adresseTittel }: AdresseHeaderProps) => (
   <Nav.Row>
-    <Nav.Column xs="3">{adresseTittel}</Nav.Column>
-    <Nav.Column xs="3">Fra og med</Nav.Column>
-    <Nav.Column xs="3">Til og med</Nav.Column>
+    <Nav.Column xs="5">
+      <Nav.typo.Element>
+        {adresseTittel}
+      </Nav.typo.Element>
+    </Nav.Column>
+    <Nav.Column xs="3">
+      <Nav.typo.Element>
+        Fra og med
+      </Nav.typo.Element>
+    </Nav.Column>
+    <Nav.Column xs="3">
+      <Nav.typo.Element>
+        Til og med
+      </Nav.typo.Element>
+    </Nav.Column>
   </Nav.Row>
 );
 
@@ -132,7 +144,7 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column className="etikett__container">
-          <Etiketter.FraSoknad />
+          <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
           <Etiketter.ArbeidstakersDel />
         </Nav.Column>
       </Nav.Row>
