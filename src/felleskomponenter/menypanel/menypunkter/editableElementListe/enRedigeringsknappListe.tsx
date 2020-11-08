@@ -65,10 +65,9 @@ function EnRedigeringsKnappListe<T>({
               const elementContainerCls = classNames({ understrek: elementUnderstrek });
 
               return (
-                <div className={elementContainerCls}>
+                /* eslint-disable-next-line react/no-array-index-key */
+                <div className={elementContainerCls} key={index}>
                   <ElementKomponentRedigerer
-                    /* eslint-disable-next-line react/no-array-index-key */
-                    key={index}
                     redigerbart={redigerbart}
                     overordnetFeltNavn={overordnetFeltNavn}
                     verdier={element}
