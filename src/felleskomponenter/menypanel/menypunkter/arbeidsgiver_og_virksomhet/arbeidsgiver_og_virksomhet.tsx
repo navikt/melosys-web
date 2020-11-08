@@ -24,7 +24,7 @@ import { fagsakSelectors } from '../../../../ducks/fagsaker';
 
 import './arbeidsgiver_og_virksomhet.css';
 
-const arbeidsforholdUtlandHarData = (element: KV.Form.ArbeidsforholdUtland): boolean => (
+const arbeidsforholdUtlandHarData = (elementListe: KV.Form.ArbeidsforholdUtland[], element: KV.Form.ArbeidsforholdUtland): boolean => (
   Boolean(element.navn ||
     element.orgnr ||
     Utils._isBoolean(element.selvstendigNaeringsvirksomhet) ||
@@ -142,8 +142,8 @@ export const ArbeidsgiverOgVirksomhet = ({
         elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
         elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
-        defaultElement={{ uuid: Utils._uuid() }}
-        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
+        hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Building}
@@ -164,8 +164,8 @@ export const ArbeidsgiverOgVirksomhet = ({
         elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
         elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
-        defaultElement={{ uuid: Utils._uuid() }}
-        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
+        hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Man}
