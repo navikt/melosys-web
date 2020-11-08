@@ -5,7 +5,7 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Symboler from '../symboler';
 import * as Mui from '../../../ui';
 
-import './redigerbartelement.css';
+import './editableElement.css';
 
 enum Status {
   Redigerer,
@@ -13,7 +13,7 @@ enum Status {
   IngenData,
 }
 
-interface RedigerbartElementProps {
+interface EditableElementProps {
   redigererRender: () => ReactNode,
   ingenDataRender?: (apneRedigering: () => void) => ReactNode,
   redigeringUtfortRender: () => ReactNode,
@@ -28,7 +28,7 @@ interface RedigerbartElementProps {
   hentNyStatusVedHarData?: boolean,
 }
 
-const RedigerbartElement = ({
+const EditableElement = ({
   redigererRender,
   ingenDataRender,
   redigeringUtfortRender,
@@ -41,7 +41,7 @@ const RedigerbartElement = ({
   visLagreKnappBareHvisHarData = false,
   className,
   hentNyStatusVedHarData = false,
-}: RedigerbartElementProps) => {
+}: EditableElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
       return Status.RedigeringUtfort;
@@ -99,7 +99,7 @@ const RedigerbartElement = ({
 
   const lagreClickHandler = () => setStatus(hentNesteStatus());
 
-  const cls = classnames(className, 'redigerbart__element');
+  const cls = classnames(className, 'editable__element');
 
   return (
     <div className={cls}>
@@ -121,4 +121,4 @@ const RedigerbartElement = ({
   );
 };
 
-export default RedigerbartElement;
+export default EditableElement;

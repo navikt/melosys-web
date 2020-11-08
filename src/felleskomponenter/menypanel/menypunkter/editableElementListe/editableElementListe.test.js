@@ -3,10 +3,10 @@ import { FieldArray } from 'redux-form';
 
 import * as Mui from '../../../ui';
 
-import RedigerbartElementListe, { InnerRedigerbartElementListe } from './redigerbartelementliste';
-import RedigerbartElement from '../redigerbartelement';
+import EditableElementListe, { InnerEditableElementListe } from './editableElementListe';
+import EditableElement from '../editableElement';
 
-describe('RedigerbartElementListe', () => {
+describe('EditableElementListe', () => {
   let props = null;
 
   beforeEach(() => {
@@ -16,8 +16,8 @@ describe('RedigerbartElementListe', () => {
   });
 
   it('viser en fieldArray', () => {
-    const redigerbartElementListe = shallow(<RedigerbartElementListe {...props} />);
-    const fieldArray = redigerbartElementListe.find(FieldArray);
+    const editableElementListe = shallow(<EditableElementListe {...props} />);
+    const fieldArray = editableElementListe.find(FieldArray);
     const fieldArrayProps = fieldArray.props();
 
     expect(fieldArray).toHaveLength(1);
@@ -54,16 +54,16 @@ describe('InnerElementlListe', () => {
     };
   });
 
-  it('viser redigerbartElementer', () => {
-    const innerRedigerbartElementListe = shallow(<InnerRedigerbartElementListe {...props} />);
-    const elementer = innerRedigerbartElementListe.find(RedigerbartElement);
+  it('viser EditableElementer', () => {
+    const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
+    const elementer = innerEditableElementListe.find(EditableElement);
 
     expect(elementer).toHaveLength(2);
   });
 
-  it('kaller fields.remove ved kall til redigerbartElement sin binClickHandler', () => {
-    const innerRedigerbartElementListe = shallow(<InnerRedigerbartElementListe {...props} />);
-    const elementer = innerRedigerbartElementListe.find(RedigerbartElement);
+  it('kaller fields.remove ved kall til EditableElement sin binClickHandler', () => {
+    const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
+    const elementer = innerEditableElementListe.find(EditableElement);
 
     elementer.first().props().binClickHandler();
 
@@ -72,8 +72,8 @@ describe('InnerElementlListe', () => {
   });
 
   it('viser knapp for å legge til elementer', () => {
-    const innerRedigerbartElementListe = shallow(<InnerRedigerbartElementListe {...props} />);
-    const knappelenke = innerRedigerbartElementListe.find(Mui.Knappelenke);
+    const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
+    const knappelenke = innerEditableElementListe.find(Mui.Knappelenke);
 
     expect(knappelenke).toHaveLength(1);
 

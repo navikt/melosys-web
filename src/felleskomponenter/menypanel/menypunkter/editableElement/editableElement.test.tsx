@@ -4,10 +4,10 @@ import { mock, instance } from 'ts-mockito';
 
 import * as Mui from '../../../ui';
 
-import RedigerbartElement from './redigerbartelement';
+import EditableElement from './editableElement';
 
-describe('RedigerbartElement', () => {
-  const mockedProps = mock<ComponentProps<typeof RedigerbartElement>>();
+describe('EditableElement', () => {
+  const mockedProps = mock<ComponentProps<typeof EditableElement>>();
   const props = instance(mockedProps);
 
   props.redigerbart = true;
@@ -15,17 +15,17 @@ describe('RedigerbartElement', () => {
   it('viser innhold etter redigering er utført', () => {
     props.harData = true;
     props.redigeringUtfortRender = jest.fn(() => <span>Redigering utført</span>);
-    const redigerbartelement = shallow(<RedigerbartElement {...props} />);
+    const editableElement = shallow(<EditableElement {...props} />);
 
-    expect(redigerbartelement.contains('Redigering utført')).toBe(true);
+    expect(editableElement.contains('Redigering utført')).toBe(true);
   });
 
   it('viser innhold for ingen data', () => {
     props.harData = false;
     props.ingenDataRender = jest.fn(() => <span>Ingen data funnet</span>);
-    const redigerbartelement = shallow(<RedigerbartElement {...props} />);
+    const editableElement = shallow(<EditableElement {...props} />);
 
-    expect(redigerbartelement.contains('Ingen data funnet')).toBe(true);
+    expect(editableElement.contains('Ingen data funnet')).toBe(true);
   });
 
   it('viser innhold for redigering', () => {
@@ -35,9 +35,9 @@ describe('RedigerbartElement', () => {
       return <div />;
     };
     props.redigererRender = jest.fn(() => <span>Redigerer...</span>);
-    const redigerbartelement = shallow(<RedigerbartElement {...props} />);
+    const editableElement = shallow(<EditableElement {...props} />);
 
-    expect(redigerbartelement.contains('Redigerer...')).toBe(true);
-    expect(redigerbartelement.find(Mui.Knapp)).toHaveLength(1);
+    expect(editableElement.contains('Redigerer...')).toBe(true);
+    expect(editableElement.find(Mui.Knapp)).toHaveLength(1);
   });
 });

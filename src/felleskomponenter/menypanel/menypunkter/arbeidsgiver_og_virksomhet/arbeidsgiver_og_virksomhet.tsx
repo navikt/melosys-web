@@ -14,7 +14,7 @@ import * as Ikoner from '../../../../resources/images';
 import * as Utils from '../../../../utils';
 
 import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
-import RedigerbartElementListe from '../redigerbartelementListe';
+import EditableElementListe from '../editableElementListe';
 import EnkeltArbeidsforholdUtlandRedigerer from './enkeltArbeidsforholdUtlandRedigerer';
 import EnkeltArbeidsforholdUtlandRedigeringUtfort from './enkeltArbeidsforholdUtlandRedigeringUtfort';
 
@@ -134,7 +134,7 @@ export const ArbeidsgiverOgVirksomhet = ({
           }
         />
       }
-      <RedigerbartElementListe
+      <EditableElementListe
         redigerbart={redigerbart}
         className="arbeidsforhold__liste"
         feltNavn="arbeidsforholdUtland"
@@ -156,7 +156,7 @@ export const ArbeidsgiverOgVirksomhet = ({
           understrek
         />
       }
-      <RedigerbartElementListe
+      <EditableElementListe
         redigerbart={redigerbart}
         className="arbeidsforhold__liste"
         leggTilTekst="Legg til selvstendig virksomhet"

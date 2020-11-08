@@ -7,7 +7,7 @@ import * as Mui from '../../../../ui';
 import * as KV from '../../../../../kodeverk';
 import * as Ikoner from '../../../../../resources/images';
 
-import RedigerbartElement from '../../redigerbartelement';
+import EditableElement from '../../editableElement';
 import UtfyltUtenlandskIdent from './utfyltutenlandskident';
 import EnkeltUtenlandskIdentSkjema from './enkeltutenlandskidentskjema';
 
@@ -27,7 +27,7 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
 
   if (felter === undefined) return null;
 
-  return <RedigerbartElement
+  return <EditableElement
     redigerbart={redigerbart}
     tittel={KV.Menypunkter.Person.undertitler.utenlandskID}
     binClickHandler={() => fields.removeAll()}

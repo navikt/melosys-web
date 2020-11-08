@@ -4,7 +4,7 @@ import { FieldArray } from 'redux-form';
 import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe, EnkeltArbeidsforholdNorgeRedigerer } from './arbeidsforholdNorgeListe';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
-import RedigerbartElement from '../../redigerbartelement';
+import EditableElement from '../../editableElement';
 
 describe('ArbeidsforholdNorgeListe', () => {
   let props = null;
@@ -55,11 +55,11 @@ describe('InnerArbeidsforholdNorgeListe', () => {
     };
   });
 
-  it('viser en RedigerbartElement', () => {
+  it('viser en EditableElement', () => {
     const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
-    const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(RedigerbartElement);
+    const editableElement = innerArbeidsforholdNorgeListe.find(EditableElement);
 
-    expect(enkeltArbeidsforholdNorge).toHaveLength(1);
+    expect(editableElement).toHaveLength(1);
   });
 });
 

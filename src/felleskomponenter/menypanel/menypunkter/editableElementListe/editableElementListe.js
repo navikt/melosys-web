@@ -7,11 +7,11 @@ import classNames from 'classnames';
 import * as Mui from '../../../ui';
 import * as Ikoner from '../../../../resources/images';
 
-import RedigerbartElement from '../redigerbartelement';
+import EditableElement from '../editableElement';
 
-import './redigerbartelementliste.css';
+import './editableElementListe.css';
 
-export const InnerRedigerbartElementListe = ({
+export const InnerEditableElementListe = ({
   leggTilTekst,
   redigerbart,
   fields,
@@ -26,7 +26,7 @@ export const InnerRedigerbartElementListe = ({
   tittelIkon,
   elementUnderstrek,
 }) => {
-  const redigerbartElementListeCls = classNames('redigerbartElementListe', className);
+  const EditableElementListeCls = classNames('editableElementListe', className);
   const elementContainerCls = classNames('elementContainer', { understrek: elementUnderstrek });
 
   const elementer = fields.getAll();
@@ -35,7 +35,7 @@ export const InnerRedigerbartElementListe = ({
   const ElementKomponentRedigeringUtfort = elementKomponentRedigeringUtfort;
 
   return (
-    <div className={redigerbartElementListeCls}>
+    <div className={EditableElementListeCls}>
       {
         elementer.map((element, index) => {
           const slett = () => fields.remove(index);
@@ -46,7 +46,7 @@ export const InnerRedigerbartElementListe = ({
           return (
             /* eslint-disable-next-line react/no-array-index-key */
             <div className={elementContainerCls} key={index}>
-              <RedigerbartElement
+              <EditableElement
                 redigerbart={redigerbart}
                 harData={harData(element)}
                 tittel={`${tittelTekst}${navn ? `: ${navn}` : ''}`}
@@ -83,7 +83,7 @@ export const InnerRedigerbartElementListe = ({
   );
 };
 
-InnerRedigerbartElementListe.propTypes = {
+InnerEditableElementListe.propTypes = {
   leggTilTekst: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fields: PT.object.isRequired,
@@ -100,7 +100,7 @@ InnerRedigerbartElementListe.propTypes = {
   elementUnderstrek: PT.bool,
 };
 
-InnerRedigerbartElementListe.defaultProps = {
+InnerEditableElementListe.defaultProps = {
   elementClassName: undefined,
   defaultElement: {},
   className: undefined,
@@ -111,9 +111,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   settFeltVerdi: (field, value) => dispatch(change(ownProps.meta.form, field, value)),
 });
 
-const ConnectedInnerElementListe = connect(null, mapDispatchToProps)(InnerRedigerbartElementListe);
+const ConnectedInnerElementListe = connect(null, mapDispatchToProps)(InnerEditableElementListe);
 
-const RedigerbartElementListe = ({
+const EditableElementListe = ({
   feltNavn,
   ...rest
 }) => (
@@ -125,8 +125,8 @@ const RedigerbartElementListe = ({
   />
 );
 
-RedigerbartElementListe.propTypes = {
+EditableElementListe.propTypes = {
   feltNavn: PT.string.isRequired,
 };
 
-export default RedigerbartElementListe;
+export default EditableElementListe;

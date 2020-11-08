@@ -10,7 +10,7 @@ import * as Ikoner from '../../../../../resources/images';
 import * as MPT from '../../../../../proptypes';
 import * as OrganisasjonValidering from '../../../../skjema/validering/generisk/organisasjon';
 
-import RedigerbartElement from '../../redigerbartelement';
+import EditableElement from '../../editableElement';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
 import Kontaktopplysninger from '../../../../kontaktopplysninger';
@@ -128,10 +128,10 @@ export const InnerArbeidsforholdNorgeListe = ({
           ];
 
           return (
-            <RedigerbartElement
+            <EditableElement
               /* eslint-disable-next-line react/no-array-index-key */
               key={indeks}
-              className="redigerbartElement"
+              className="editableElement"
               redigerbart={redigerbart}
               harData={Boolean(organisasjon.orgnr)}
               tittel={`${tittelTekst}${organisasjon.navn ? `: ${organisasjon.navn}` : ''}`}
