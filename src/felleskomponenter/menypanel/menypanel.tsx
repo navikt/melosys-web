@@ -10,6 +10,7 @@ import Sidemeny from '../sidemeny';
 import {
   ArbeidsforholdOgInntekt,
   ArbeidsgiverOgVirksomhet,
+  Arbeidssteder,
   Barnetrygd,
   Medlemskap,
   Person,
@@ -148,7 +149,7 @@ export const Menypanel = ({
         {
           label: 'Arbeidssteder(er)',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Arbeidssteder />,
         },
         {
           label: 'Om virksomheten i Norge',
