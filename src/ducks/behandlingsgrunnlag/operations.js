@@ -94,6 +94,13 @@ const lagSoeknadFelter = behandlingsgrunnlag => ({
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
 });
 
+const lagFTRLFelter = behandlingsgrunnlag => ({
+  ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  arbeidsinntekt: behandlingsgrunnlag.arbeidsinntekt,
+  arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
+  trygdedekning: behandlingsgrunnlag.trygdedekning,
+});
+
 const lagSedGrunnlagFelter = behandlingsgrunnlag => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
@@ -109,6 +116,8 @@ const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
       return lagSoeknadFelter(behandlingsgrunnlag);
+    case 'ARBEID_I_UTLANDET':
+      return lagFTRLFelter(behandlingsgrunnlag);
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return lagSedGrunnlagFelter(behandlingsgrunnlag);
@@ -133,6 +142,14 @@ export function lagre() {
 
 export function oppdaterPeriode(periode) {
   return dispatch => dispatch(Actions.oppdaterPeriode(periode));
+}
+
+export function oppdaterSoeknadsland(soeknadsland) {
+  return dispatch => dispatch(Actions.oppdaterSoeknadsland(soeknadsland));
+}
+
+export function oppdaterTrygdedekning(trygdedekning) {
+  return dispatch => dispatch(Actions.oppdaterTrygdedekning(trygdedekning));
 }
 
 export function resetState() {

@@ -33,7 +33,7 @@ export const visOppfriskOgFortsett = fortsett => async dispatch => (
 );
 
 export const skjulOppfrisk = () => async dispatch => (
-  dispatch(Actions.oppdaterOppfrisk({ synlig: false }))
+  dispatch(Actions.oppdaterOppfrisk({ synlig: false, fortsett: null }))
 );
 
 export const leggTilBehandlingOppfriskes = behandlingID => async dispatch => (

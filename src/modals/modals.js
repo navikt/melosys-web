@@ -162,6 +162,7 @@ Modals.propTypes = {
 Modals.defaultProps = {
   valideringerFeilkoder: [],
   valideringerFeilmeldinger: [],
+  visOppfriskDialogOgFortsett: undefined,
 };
 
 const mapStateToProps = state => ({

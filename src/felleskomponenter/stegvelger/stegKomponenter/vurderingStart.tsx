@@ -16,23 +16,39 @@ import * as KV from '../../../kodeverk';
 import MKV from '../../../melosyskodeverk';
 
 import { landTekstFormat } from '../../skjema/landvelger/utils';
-import { lagAvklartfakta, lagAvklartfaktaFaktaListe } from '../../../regler/avklartefakta';
 import { modalerOperations } from '../../../ducks/modaler';
 import { soknadspanelOperations } from '../../../ducks/soknadspaneler';
 
 import './vurderingStart.css';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 
-const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.START)(state),
-  initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(new Date()),
-  },
-});
+const mapStateToProps = (state: RootState) => {
+  const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
+  const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(state);
+  const initialTrygdedekning = behandlingsgrunnlagSelectors.TrygdedekningSelector(state);
+  return ({
+    behandlingsgrunnlagFom: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
+    behandlingsgrunnlagTom: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
+    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+    soeknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+    trygdedekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(state),
+    formValues: getFormValues(KV.Form.START)(state),
+    initialValues: {
+      fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
+      tom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.tom),
+      land: initialSoeknadsland && initialSoeknadsland.toString(),
+      trygdedekning: initialTrygdedekning,
+    },
+  });
+};
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visOppfriskDialogOgFortsettHandle: (fortsett: () => void) => dispatch(modalerOperations.visOppfriskOgFortsett(fortsett)),
   visSoknadspanel: () => dispatch(soknadspanelOperations.visSoknadspanel()),
+  oppdaterPeriode: (periode: {fom: string, tom: string}) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  oppdaterSoeknadsland: (soeknadsland: string[]) => dispatch((behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland))),
+  oppdaterTrygdedekning: (trygdedekning: string) => dispatch((behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning))),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -52,30 +68,31 @@ const VurderingStart =
     bekreftOgFortsett,
     redigerbart,
     formValues,
-    oppdaterData,
     alleLandkoder,
     visOppfriskDialogOgFortsettHandle,
     visSoknadspanel,
+    oppdaterPeriode,
+    oppdaterSoeknadsland,
+    oppdaterTrygdedekning,
   } : Props & PropsFromRedux) => {
-    const [erFomForTom, setErFomForTom] = useState(true);
+    const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
     const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
 
-    useEffect(() => {
-      oppdaterData(lagAvklartfaktaFaktaListe(KV.Koder.SOKNADSPERIODE, null, [formValues.fom, formValues.tom]));
-    }, [formValues.fom, formValues.tom]);
+    const oppdaterLokalBehandlingsgrunnlag = () => {
+      oppdaterPeriode({ fom: formValues.fom, tom: formValues.tom });
+      oppdaterSoeknadsland([formValues.land]);
+      oppdaterTrygdedekning(formValues.trygdedekning);
+    };
 
     useEffect(() => {
-      oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, null, formValues.land));
-    }, [formValues.land]);
+      const erTomNullEllerEtterFom = !formValues.tom || Utils.dato.erGyldigPeriode(formValues.fom, formValues.tom);
+      setErPeriodeGyldig(erTomNullEllerEtterFom);
 
-    useEffect(() => {
-      const erPeriodeGyldig =  !formValues.tom || Utils.dato.erGyldigPeriode(formValues.fom, formValues.tom);
-      setErFomForTom(erPeriodeGyldig);
-
-      const erFelteneGyldig = !!formValues.land && !!formValues.trygdedekning && !!formValues.fom && erPeriodeGyldig;
+      const erFelteneGyldig = !!formValues.land && !!formValues.trygdedekning && !!formValues.fom && erTomNullEllerEtterFom;
       setErObligatoriskeFelterFyltInn(erFelteneGyldig);
 
-    }, [formValues.tom, formValues.fom, formValues.land, formValues.trygdedekning]);
+      oppdaterLokalBehandlingsgrunnlag();
+    }, [formValues]);
 
     const fortsettHandle = () => {
       if (erObligatoriskeFelterFyltInn) {
@@ -115,7 +132,7 @@ const VurderingStart =
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
-          { !erFomForTom &&
+          { !erPeriodeGyldig &&
           <AlertStripeFeil className="alert">
             Til og med dato kan ikke være tidligere enn fra og med dato.
           </AlertStripeFeil>}
@@ -124,8 +141,10 @@ const VurderingStart =
           <Nav.Row>
             <Nav.Column xs="6">
               <Skjema.Select label="" feltNavn="trygdedekning" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.trygdedekning}>
-                {MKV.KTObjects.trygdedekninger.filter((item: KTObject) => ['HELSEDEL', 'HELSEDEL_MED_SYKE_OG_FORELDREPENGER', 'PENSJONSDEL', 'HELSE_OG_PENSJONSDEL', 'HELSE_OG_PENSJONSDEL_MED_SYKE_OG_FORELDREPENGER'].includes(item.kode) )
-                    .map((item: KTObject) => (<option key={item.kode} value={item.kode}>{item.term}</option>))}
+                {MKV.KTObjects.trygdedekninger
+                  .filter((item: KTObject) =>
+                    ['HELSEDEL', 'HELSEDEL_MED_SYKE_OG_FORELDREPENGER', 'PENSJONSDEL', 'HELSE_OG_PENSJONSDEL', 'HELSE_OG_PENSJONSDEL_MED_SYKE_OG_FORELDREPENGER'].includes(item.kode))
+                  .map((item: KTObject) => (<option key={item.kode} value={item.kode}>{item.term}</option>))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
@@ -165,7 +184,6 @@ const VurderingStartForm = reduxForm({
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   onSubmit: (values: any, dispatch: any, props: any) => {},
   form: KV.Form.START,
-  enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
