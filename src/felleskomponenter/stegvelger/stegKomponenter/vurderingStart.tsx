@@ -80,7 +80,7 @@ const VurderingStart =
 
     const oppdaterLokalBehandlingsgrunnlag = () => {
       const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
-      const tom = Utils.dato.formatterDatoTilISO(formValues.tom)
+      const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
       oppdaterPeriode({ fom: fom === 'Invalid date' ? '' : fom, tom: tom === 'Invalid date' ? '' : tom });
       oppdaterSoeknadsland([formValues.land]);
       oppdaterTrygdedekning(formValues.trygdedekning);

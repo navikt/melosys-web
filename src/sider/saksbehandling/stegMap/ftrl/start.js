@@ -33,8 +33,7 @@ class Start extends Steg {
     const søknadslandValid = behandlingsgrunnlag.soeknadsland && behandlingsgrunnlag.soeknadsland.landkoder ? behandlingsgrunnlag.soeknadsland.landkoder.length > 0 : false;
     const trygdedekningValid = !!behandlingsgrunnlag.trygdedekning;
 
-    // console.log(søknadslandValid && søknadsperiodeValid && trygdedekningValid && oppfylt);
-    return true;
+    return søknadslandValid && søknadsperiodeValid && trygdedekningValid && oppfylt;
   }
 }
 export default Start;
