@@ -6,10 +6,7 @@ import * as KV from '../../../../kodeverk';
 import * as Ikoner from '../../../../resources/images';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Etiketter from '../etiketter';
-import * as EnkelLand from './enkelLand';
-import * as EnkelOffshore from './enkelOffshore';
-import * as EnkelSkip from './enkelSkip';
-import * as EnkelFly from './enkelFly';
+import * as Enkel from './enkel';
 
 import EditableElementListe from '../editableElementListe';
 
@@ -50,8 +47,8 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidUtland"
-      elementKomponentRedigerer={EnkelLand.Redigerer}
-      elementKomponentRedigeringUtfort={EnkelLand.RedigeringUtfort}
+      elementKomponentRedigerer={Enkel.Land.Redigerer}
+      elementKomponentRedigeringUtfort={Enkel.Land.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
       hentDefaultElement={() => arbeidUtlandDefaultElement}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
@@ -63,10 +60,10 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedOffshore"
-      elementKomponentRedigerer={EnkelOffshore.Redigerer}
-      elementKomponentRedigeringUtfort={EnkelOffshore.RedigeringUtfort}
+      elementKomponentRedigerer={Enkel.Offshore.Redigerer}
+      elementKomponentRedigeringUtfort={Enkel.Offshore.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
-      hentDefaultElement={() => {}}
+      hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
       tittelIkon={Ikoner.Helikopter}
       tittelUnderstrek
@@ -76,10 +73,10 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedSkip"
-      elementKomponentRedigerer={EnkelSkip.Redigerer}
-      elementKomponentRedigeringUtfort={EnkelSkip.RedigeringUtfort}
+      elementKomponentRedigerer={Enkel.Skip.Redigerer}
+      elementKomponentRedigeringUtfort={Enkel.Skip.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
-      hentDefaultElement={() => {}}
+      hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
       tittelIkon={Ikoner.Skip}
       tittelUnderstrek
@@ -89,10 +86,10 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedFly"
-      elementKomponentRedigerer={EnkelFly.Redigerer}
-      elementKomponentRedigeringUtfort={EnkelFly.RedigeringUtfort}
+      elementKomponentRedigerer={Enkel.Fly.Redigerer}
+      elementKomponentRedigeringUtfort={Enkel.Fly.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
-      hentDefaultElement={() => {}}
+      hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
       tittelIkon={Ikoner.Fly}
       tittelUnderstrek
