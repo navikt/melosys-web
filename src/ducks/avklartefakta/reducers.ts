@@ -66,7 +66,6 @@ export default function reducer(state = initialState, action: Types.Action): Sta
       const {
         SOKNADSLAND,
         YRKESAKTIVITET,
-        SOKNADSPERIODE,
         avklartefaktaKoder: {
           AKTIVITET_I_NORGE,
           ARBEID_UTFORES_I_OPPGITT_LAND,
@@ -103,7 +102,6 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[LOENNET_ARBEID_ANTALL_LAND], null),
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[OFFENTLIG_ARBEID_ANTALL_LAND], null),
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[INFORMERT_MYNDIGHET], INFORMERT_MYNDIGHET),
-        ...lagAvklartfaktaObjekterMedKode(avklartefakta[SOKNADSPERIODE], SOKNADSPERIODE),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefaktaUt] };
