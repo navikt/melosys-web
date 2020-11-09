@@ -5,6 +5,7 @@ import * as Behandlingsgrunnlag from './modules/behandlingsgrunnlag';
 import * as Dokumenter from './modules/dokumenter/';
 import * as Eessi from './modules/eessi/';
 import * as Fagsaker from './modules/fagsaker/';
+import * as Featuretoggle from './modules/featuretoggle';
 import * as Journalforing from './modules/journalforing';
 import * as Lovvalgsperioder from './modules/lovvalgsperioder';
 import * as Personer from './modules/personer';
@@ -15,7 +16,6 @@ import * as Registrering from './modules/registrering/';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Saksflyt from './modules/saksflyt';
 import * as Statistikk from './modules/statistikk';
-import * as ServerInfo from './modules/serverinfo';
 import * as Utpekingsperioder from './modules/utpekingsperioder';
 import * as Vilkar from './modules/vilkar';
 
@@ -28,6 +28,7 @@ export {
   Dokumenter,
   Eessi,
   Fagsaker,
+  Featuretoggle,
   Journalforing,
   Lovvalgsperioder,
   Oppgaver,
@@ -37,7 +38,6 @@ export {
   Saksbehandler,
   Saksopplysninger,
   Saksflyt,
-  ServerInfo,
   Statistikk,
   Utpekingsperioder,
   Vilkar,

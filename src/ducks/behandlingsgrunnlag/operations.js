@@ -6,7 +6,6 @@ import * as Types from './types';
 import * as Selectors from './selectors';
 
 import MKV from '../../melosyskodeverk';
-import * as KV from '../../kodeverk';
 
 import { doThenDispatch } from '../../services/utils';
 import { formSelectors } from '../form';
@@ -46,9 +45,7 @@ export function send(bid, behandlingsgrunnlag) {
   );
 }
 
-const hentOvergangsregelbestemmelser = values =>
-  values && values.overgangsregelbestemmelser.map(overgangsregelbestemmelse =>
-    KV.kodeTilObjekt(overgangsregelbestemmelse, MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser));
+const hentOvergangsregelbestemmelser = values => (values ? values.overgangsregelbestemmelser : []);
 
 const temaForSedGrunnlag = behandlingstema => [
   MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,

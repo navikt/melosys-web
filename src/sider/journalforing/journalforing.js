@@ -13,8 +13,6 @@ import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
 
-import * as Person from '../../felleskomponenter/skjema/validering/generisk/person';
-
 import Sticky from '../../felleskomponenter/sticky';
 import PDFDokument from './komponenter/pdfdokument';
 import JournalforingSED from './komponenter/journalforingsed';
@@ -249,7 +247,7 @@ class Journalforing extends Component {
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisBruker = async brukerID => {
-    if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
+    if (!Utils.person.erGyldigFnr(brukerID) && !Utils.person.erGyldigDnr(brukerID)) { return; }
 
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
     settFeltInnhold('brukerNavn', '');
@@ -279,7 +277,7 @@ class Journalforing extends Component {
       settFeltInnhold('avsenderNavn', navn);
     }
 
-    if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
+    if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
       settFeltInnhold('avsenderNavn', '');
       const response = await sokFnrDnr(value);
       if (!response || !response.data) { return false; }
