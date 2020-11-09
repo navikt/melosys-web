@@ -18,9 +18,9 @@ import MKV from '../../../melosyskodeverk';
 import { landTekstFormat } from '../../skjema/landvelger/utils';
 import { modalerOperations } from '../../../ducks/modaler';
 import { soknadspanelOperations } from '../../../ducks/soknadspaneler';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 import './vurderingStart.css';
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
 
 const mapStateToProps = (state: RootState) => {
@@ -79,7 +79,9 @@ const VurderingStart =
     const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
 
     const oppdaterLokalBehandlingsgrunnlag = () => {
-      oppdaterPeriode({ fom: formValues.fom, tom: formValues.tom });
+      const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
+      const tom = Utils.dato.formatterDatoTilISO(formValues.tom)
+      oppdaterPeriode({ fom: fom === 'Invalid date' ? '' : fom, tom: tom === 'Invalid date' ? '' : tom });
       oppdaterSoeknadsland([formValues.land]);
       oppdaterTrygdedekning(formValues.trygdedekning);
     };
@@ -166,11 +168,8 @@ const VurderingStart =
 
 VurderingStart.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  avklartefakta: MPT.AvklartefaktaListe.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  begrunnelser: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
-  oppdaterData: PT.func.isRequired,
   formValues: PT.object,
   visOppfriskDialogOgFortsettHandle: PT.func.isRequired,
   visSoknadspanel: PT.func.isRequired,

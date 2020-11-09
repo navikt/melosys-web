@@ -130,7 +130,6 @@ export function lagre() {
   return (dispatch, getState) => {
     dispatch(oppdaterState());
 
-    console.log("here")
     const behandlingsgrunnlag = Selectors.BehandlingsgrunnlagDataSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());

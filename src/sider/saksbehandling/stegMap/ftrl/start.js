@@ -1,13 +1,11 @@
 import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingStart from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingStart';
-import { hentFaktaListe } from '../../../../regler/avklartefakta';
-import * as KV from '../../../../kodeverk';
 
 class Start extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = this.finnAvklaring(propsLight.avklartefakta, propsLight.inngangsvilkaar);
+    const harAvklaring = this.finnAvklaring(propsLight.behandlingsgrunnlag, propsLight.inngangsvilkaar.oppfylt);
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -18,30 +16,25 @@ class Start extends Steg {
     this.tittel = 'Start';
     this.komponent = VurderingStart;
     this.samleRelevanteData = _propsLight => ({
-      begrunnelser: _propsLight.begrunnelser,
       alleLandkoder: _propsLight.landkoder,
-      avklartefakta: _propsLight.avklartefakta,
       redigerbart: _propsLight.generiskStegRedigerbart,
-      oppfyllerInngangsvilkar: _propsLight.inngangsvilkaar.oppfylt,
-      inngangsvilkaar: _propsLight.inngangsvilkaar,
     });
     this.beregnRelevantUI = _propsLight => {
-      const avklaring = this.finnAvklaring(_propsLight.avklartefakta, _propsLight.inngangsvilkaar);
+      const avklaring = this.finnAvklaring(_propsLight.behandlingsgrunnlag, _propsLight.inngangsvilkaar.oppfylt);
       return ({ harAvklaring: avklaring });
     };
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this.status = FANE_STATUS.OK;
   }
-  finnAvklaring = (avklartefakta, inngangsvilkaar) => {
-    const søknadsperiode = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSPERIODE, avklartefakta);
-    const søknadsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSLAND, avklartefakta);
-    return søknadsperiode.some(periode => periode.fakta[0])
-       && søknadsland.some(land => land.fakta[0])
-       && inngangsvilkaar.oppfylt;
+  finnAvklaring = (behandlingsgrunnlag, oppfylt) => {
+    const søknadsperiodeValid = behandlingsgrunnlag.periode ? !!behandlingsgrunnlag.periode.fom : false;
+    const søknadslandValid = behandlingsgrunnlag.soeknadsland && behandlingsgrunnlag.soeknadsland.landkoder ? behandlingsgrunnlag.soeknadsland.landkoder.length > 0 : false;
+    const trygdedekningValid = !!behandlingsgrunnlag.trygdedekning;
+
+    // console.log(søknadslandValid && søknadsperiodeValid && trygdedekningValid && oppfylt);
+    return true;
   }
 }
 export default Start;
