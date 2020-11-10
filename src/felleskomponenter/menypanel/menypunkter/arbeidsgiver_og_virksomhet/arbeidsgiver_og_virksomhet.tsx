@@ -138,7 +138,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         redigerbart={redigerbart}
         className="arbeidsforhold__liste"
         feltNavn="arbeidsforholdUtland"
-        leggTilTekst="Legg til ny arbeidsgiver og kontaktopplysninger"
+        leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
         elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
         elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
