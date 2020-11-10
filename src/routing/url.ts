@@ -13,7 +13,7 @@ export const lagUrl = (saksnummer: number, behandlingID: number, behandlingstema
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
-      return `/saksbehandling/${saksnummer}/${MKV.Koder.sakstyper.EU_EOS}/?behandlingID=${behandlingID}`;
+      return `/${MKV.Koder.sakstyper.EU_EOS}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
     case MKV.Koder.behandlinger.behandlingstema.TRYGDETID:
     case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED:
@@ -23,7 +23,7 @@ export const lagUrl = (saksnummer: number, behandlingID: number, behandlingstema
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return `/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
     case 'ARBEID_I_UTLANDET':
-      return `/saksbehandling/${saksnummer}/${MKV.Koder.sakstyper.FTRL}/?behandlingID=${behandlingID}`;
+      return `/${MKV.Koder.sakstyper.FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return null;
   }
