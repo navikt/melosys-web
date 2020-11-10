@@ -1,69 +1,69 @@
 import * as Actions from './actions';
 
-export const visHenlegg = () => async dispatch => (
+export const visHenlegg = () => dispatch => (
   dispatch(Actions.oppdaterHenlegg({ synlig: true }))
 );
 
-export const skjulHenlegg = () => async dispatch => (
+export const skjulHenlegg = () => dispatch => (
   dispatch(Actions.oppdaterHenlegg({ synlig: false }))
 );
 
-export const visAvsluttSakSomBortfalt = () => async dispatch => (
+export const visAvsluttSakSomBortfalt = () => dispatch => (
   dispatch(Actions.oppdaterAvsluttSakSomBortfalt({ synlig: true }))
 );
 
-export const skjulAvsluttSakSomBortfalt = () => async dispatch => (
+export const skjulAvsluttSakSomBortfalt = () => dispatch => (
   dispatch(Actions.oppdaterAvsluttSakSomBortfalt({ synlig: false }))
 );
 
-export const visAvslagSoknad = () => async dispatch => (
+export const visAvslagSoknad = () => dispatch => (
   dispatch(Actions.oppdaterAvslagSoknad({ synlig: true }))
 );
 
-export const skjulAvslagSoknad = () => async dispatch => (
+export const skjulAvslagSoknad = () => dispatch => (
   dispatch(Actions.oppdaterAvslagSoknad({ synlig: false }))
 );
 
-export const visOppfrisk = () => async dispatch => (
+export const visOppfrisk = () => dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: true }))
 );
 
-export const visOppfriskOgFortsett = fortsett => async dispatch => (
+export const visOppfriskOgFortsett = fortsett =>  dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: true, fortsett }))
 );
 
-export const skjulOppfrisk = () => async dispatch => (
+export const skjulOppfrisk = () => dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: false, fortsett: null }))
 );
 
-export const leggTilBehandlingOppfriskes = behandlingID => async dispatch => (
+export const leggTilBehandlingOppfriskes = behandlingID => dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ behandlingUnderOppfriskning: behandlingID }))
 );
 
-export const fjernBehandlingOppfriskes = () => async dispatch => (
+export const fjernBehandlingOppfriskes = () => dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ behandlingUnderOppfriskning: null }))
 );
 
-export const visValidering = () => async dispatch => (
+export const visValidering = () => dispatch => (
   dispatch(Actions.oppdaterValidering({ synlig: true }))
 );
 
-export const skjulValidering = () => async dispatch => (
+export const skjulValidering = () => dispatch => (
   dispatch(Actions.oppdaterValidering({ synlig: false }))
 );
 
-export const visRevurderFagsak = () => async dispatch => (
+export const visRevurderFagsak = () => dispatch => (
   dispatch(Actions.oppdaterRevurderFagsak({ synlig: true }))
 );
 
-export const skjulRevurderFagsak = () => async dispatch => (
+export const skjulRevurderFagsak = () => dispatch => (
   dispatch(Actions.oppdaterRevurderFagsak({ synlig: false }))
 );
 
-export const visEndreBehandlingstema = () => async dispatch => (
+export const visEndreBehandlingstema = () => dispatch => (
   dispatch(Actions.oppdaterEndreBehandlingstema({ synlig: true }))
 );
 
-export const skjulEndreBehandlingstema = () => async dispatch => (
+export const skjulEndreBehandlingstema = () => dispatch => (
   dispatch(Actions.oppdaterEndreBehandlingstema({ synlig: false }))
 );
