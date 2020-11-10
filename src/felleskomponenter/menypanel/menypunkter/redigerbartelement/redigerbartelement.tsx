@@ -18,7 +18,7 @@ interface RedigerbartElementProps {
   ingenDataRender?: (apneRedigering: () => void) => ReactNode,
   redigeringUtfortRender: () => ReactNode,
   redigerbart: boolean,
-  binClickHandler: MouseEventHandler,
+  onBinClick: MouseEventHandler,
   tittel: string,
   tittelIkon?: ElementType,
   tittelUnderstrek?: boolean,
@@ -33,7 +33,7 @@ const RedigerbartElement = ({
   ingenDataRender,
   redigeringUtfortRender,
   redigerbart,
-  binClickHandler,
+  onBinClick,
   tittel,
   tittelIkon: TittelIkon,
   tittelUnderstrek,
@@ -78,7 +78,7 @@ const RedigerbartElement = ({
             onClick={() => setStatus(Status.Redigerer)}
           />
           <Symboler.SlettAlt
-            onClick={e => binClickHandler(e)}
+            onClick={onBinClick}
           />
         </>
       }

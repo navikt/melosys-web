@@ -137,7 +137,7 @@ export const InnerArbeidsforholdNorgeListe = ({
               tittel={`${tittelTekst}${organisasjon.navn ? `: ${organisasjon.navn}` : ''}`}
               tittelIkon={tittelIkon}
               tittelUnderstrek
-              binClickHandler={slett}
+              onBinClick={slett}
               hentNyStatusVedHarData={false}
               visLagreKnappBareHvisHarData
               redigererRender={() => (

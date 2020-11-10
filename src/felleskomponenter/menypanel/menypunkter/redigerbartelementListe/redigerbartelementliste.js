@@ -53,7 +53,7 @@ export const InnerRedigerbartElementListe = ({
                 tittelIkon={tittelIkon}
                 tittelUnderstrek
                 hentNyStatusVedHarData={false}
-                binClickHandler={slett}
+                onBinClick={slett}
                 redigererRender={() => <ElementKomponentRedigerer
                   redigerbart={redigerbart}
                   overordnetFeltNavn={overordnetFeltNavn}
