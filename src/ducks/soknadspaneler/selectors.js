@@ -1,4 +1,6 @@
 import { createSelector } from 'reselect';
+import {fagsakSelectors} from "../fagsaker";
+import MKV from "../../melosyskodeverk";
 
 export const SoknadspanelSelector = createSelector(
   state => state.soknadspanel.data,
@@ -7,5 +9,6 @@ export const SoknadspanelSelector = createSelector(
 
 export const ErSoknadspanelSynlig = createSelector(
   SoknadspanelSelector,
-  soknadspaneldata => soknadspaneldata && soknadspaneldata.synlig
+  fagsakSelectors.SakstypeKodeSelector,
+  (soknadspaneldata, sakstype) => (sakstype === MKV.Koder.sakstyper.EU_EOS) || (soknadspaneldata && soknadspaneldata.synlig)
 );

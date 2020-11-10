@@ -23,7 +23,6 @@ import { vilkarSelectors } from '../ducks/vilkar';
 import { formSelectors } from '../ducks/form';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
-import MKV from '../melosyskodeverk';
 import { soknadspanelSelectors } from '../ducks/soknadspaneler';
 
 const Soknadpaneler = ({
@@ -41,12 +40,10 @@ const Soknadpaneler = ({
     await lagreSoknad();
     startOgVisOppfriskModal();
   };
-  const erEUEØSsak = fagsaker.sakstype && fagsaker.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
-  const synligPanel = erEUEØSsak || visSoknadspanel;
 
   return (
     <div>
-      { synligPanel &&
+      { visSoknadspanel &&
       <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
         <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
         {fagsaker && fagsaker.saksnummer &&
