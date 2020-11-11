@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MouseEventHandler, ElementType, useEffect } from 'react';
+import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType, useEffect } from 'react';
 import classnames from 'classnames';
 
 import * as Nav from '../../../../utils/navFrontend';
@@ -26,6 +26,7 @@ interface RedigerbartElementProps {
   visLagreKnappBareHvisHarData?: boolean,
   className?: string,
   hentNyStatusVedHarData?: boolean,
+  onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>,
 }
 
 const RedigerbartElement = ({
@@ -41,6 +42,7 @@ const RedigerbartElement = ({
   visLagreKnappBareHvisHarData = false,
   className,
   hentNyStatusVedHarData = false,
+  onLagreClick,
 }: RedigerbartElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
@@ -97,7 +99,16 @@ const RedigerbartElement = ({
 
   const visLagreKnapp = status === Status.Redigerer && (visLagreKnappBareHvisHarData ? harData : true);
 
-  const lagreClickHandler = () => setStatus(hentNesteStatus());
+  const lagreClickHandler: MouseEventHandler<HTMLButtonElement> = async e => {
+    e.persist();
+
+    if (onLagreClick) {
+      const validert = await onLagreClick(e);
+      if (!validert) return;
+    }
+
+    setStatus(hentNesteStatus());
+  };
 
   const cls = classnames(className, 'redigerbart__element');
 

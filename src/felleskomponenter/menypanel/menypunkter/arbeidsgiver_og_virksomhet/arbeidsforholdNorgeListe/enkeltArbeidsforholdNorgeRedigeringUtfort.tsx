@@ -20,7 +20,12 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
   org,
   saksnummer,
 }: EnkeltArbeidsforholdNorgeRedigeringUtfortProps) => {
-  const [kontaktopplysninger] = useAsyncCallbackState(() => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, org.orgnr), {}, Utils.logger.error, [saksnummer, org.orgnr]);
+  const [kontaktopplysninger] = useAsyncCallbackState(
+    () => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, org.orgnr),
+    { kontaktnavn: null, kontaktorgnr: null },
+    Utils.logger.error,
+    [saksnummer, org.orgnr]
+  );
   const [kontaktopplysningerOrg] = useAsyncCallbackState(() => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr), {}, Utils.logger.error, [kontaktopplysninger.kontaktorgnr]);
 
   return (
