@@ -8,6 +8,7 @@ import { ReactComponent as Binders } from './paperclip.svg';
 import { ReactComponent as Blyant_Active } from './blyant-active.svg';
 import { ReactComponent as Blyant_Disabled } from './blyant-disabled.svg';
 import { ReactComponent as BrevSendt } from './emailsend.svg';
+import { ReactComponent as Building } from './building.svg';
 import { ReactComponent as Calendar } from './calendar.svg';
 import { ReactComponent as CheckList } from './check-list.svg';
 import { ReactComponent as Eye } from './eye.svg';
@@ -20,6 +21,7 @@ import { ReactComponent as InformationCircle } from './infomationcircle.svg';
 import { ReactComponent as IkonSak } from './ikon-sak.svg';
 import { ReactComponent as Inntekt } from './ikon-inntekt.svg';
 import { ReactComponent as Kvinne } from './ikon-kvinne.svg';
+import { ReactComponent as Man } from './man.svg';
 import { ReactComponent as Mann } from './ikon-mann.svg';
 import { ReactComponent as Medlemskap } from './ikon-medlemsskap.svg';
 import { ReactComponent as Minus } from './minus.svg';
@@ -45,6 +47,7 @@ export {
   Blyant_Active,
   Blyant_Disabled,
   BrevSendt as InnBrev,
+  Building,
   Calendar,
   CheckList,
   Eye,
@@ -56,6 +59,7 @@ export {
   InformationCircle,
   Inntekt,
   Kvinne,
+  Man,
   Mann,
   Medlemskap,
   Minus,

@@ -1,7 +1,8 @@
-import bem from '@navikt/nap-bem-utils';
 import classnames from 'classnames';
 import TypografiBase from 'nav-frontend-typografi';
 import * as React from 'react';
+
+import bem from './bemUtils';
 
 import './menylink.css';
 

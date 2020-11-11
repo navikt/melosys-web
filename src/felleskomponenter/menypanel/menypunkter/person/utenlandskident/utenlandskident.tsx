@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { FieldArray, WrappedFieldArrayProps } from 'redux-form';
 
@@ -7,6 +7,7 @@ import * as Mui from '../../../../ui';
 import * as KV from '../../../../../kodeverk';
 import * as Ikoner from '../../../../../resources/images';
 
+import RedigerbartElement from '../../redigerbartelement';
 import UtfyltUtenlandskIdent from './utfyltutenlandskident';
 import EnkeltUtenlandskIdentSkjema from './enkeltutenlandskidentskjema';
 
@@ -17,48 +18,22 @@ type InnerUtenlandskIdComponentProps = WrappedFieldArrayProps<UtenlandskIdent> &
 }
 
 const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
-  const [redigerer, setRedigerer] = useState(false);
-
   const {
     redigerbart, fields,
   } = props;
   const { push, remove } = fields;
-  const felter = props.fields.getAll() || [];
+  const felter = props.fields.getAll();
   const leggTilTomtFelt = () => push({ ident: '', landkode: '' });
 
-  const tittel = KV.Menypunkter.Person.undertitler.utenlandskID;
+  if (felter === undefined) return null;
 
-  if (!redigerer && felter.length === 0) {
-    return (
-      <Nav.Fieldset legend={tittel}>
-        {
-          redigerbart &&
-          <Mui.Knappelenke
-            onClick={() => {
-              setRedigerer(true);
-              leggTilTomtFelt();
-            }}
-            ikon={Ikoner.Add}
-          >
-            Legg til ID-nummer
-          </Mui.Knappelenke>
-        }
-      </Nav.Fieldset>
-    );
-  }
-
-  if (!redigerer) {
-    return <UtfyltUtenlandskIdent
-      redigerbart={redigerbart}
-      tittel={tittel}
-      utenlandskeIdenter={felter}
-      onPencilClick={() => setRedigerer(true)}
-      onBinClick={() => fields.removeAll()}
-    />;
-  }
-
-  return (
-    <Nav.Fieldset legend={tittel}>
+  return <RedigerbartElement
+    redigerbart={redigerbart}
+    tittel={KV.Menypunkter.Person.undertitler.utenlandskID}
+    onBinClick={() => fields.removeAll()}
+    harData={felter.length !== 0}
+    hentNyStatusVedHarData={false}
+    redigererRender={() => (
       <div>
         {
           felter.map((felt, indeks) => <EnkeltUtenlandskIdentSkjema
@@ -82,22 +57,30 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
             </Nav.Column>
           </Nav.Row>
         }
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Mui.Knapp
-              disabled={!redigerbart}
-              mini
-              onClick={() => setRedigerer(false)}
-              type="hoved"
-              style={{ marginTop: '20px' }}
-            >
-              Lagre
-            </Mui.Knapp>
-          </Nav.Column>
-        </Nav.Row>
       </div>
-    </Nav.Fieldset>
-  );
+    )}
+    redigeringUtfortRender={() => (
+      <UtfyltUtenlandskIdent
+        utenlandskeIdenter={felter}
+      />
+    )}
+    ingenDataRender={(apneRedigering => (
+      <>
+        {
+          redigerbart &&
+          <Mui.Knappelenke
+            onClick={() => {
+              apneRedigering();
+              leggTilTomtFelt();
+            }}
+            ikon={Ikoner.Add}
+          >
+            Legg til ID-nummer
+          </Mui.Knappelenke>
+        }
+      </>
+    ))}
+  />;
 };
 
 interface UtenlandskIdWrapperProps {

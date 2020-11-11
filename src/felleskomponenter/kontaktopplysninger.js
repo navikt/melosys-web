@@ -158,7 +158,7 @@ export class KontaktOpplysninger extends Component {
       <Fragment>
         {
           skjulInput &&
-          <Mui.Knapp disabled={!redigerbart} mini onClick={toggleSkjulInput}>+ LEGG TIL KONTAKTOPPLYSNINGER</Mui.Knapp>
+          <Mui.Knapp disabled={!redigerbart} mini onClick={toggleSkjulInput}>+ Legg til kontaktopplysninger</Mui.Knapp>
         }
         {
           !skjulInput &&
@@ -178,7 +178,7 @@ export class KontaktOpplysninger extends Component {
             {
               !sokeResultat &&
               <Nav.Row>
-                <Nav.Column xs="8">
+                <Nav.Column xs="6">
                   <Nav.Input
                     disabled={!redigerbart}
                     feil={orgnrFeilmelding}
@@ -189,8 +189,8 @@ export class KontaktOpplysninger extends Component {
                     placeholder="Skriv inn..."
                   />
                 </Nav.Column>
-                <Nav.Column xs="4">
-                  <Mui.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Mui.Knapp>
+                <Nav.Column xs="6">
+                  <Mui.Knapp onClick={vedKlikkSok} className="sokKnapp">Søk</Mui.Knapp>
                 </Nav.Column>
               </Nav.Row>
             }
@@ -201,7 +201,7 @@ export class KontaktOpplysninger extends Component {
         }
         {
           !skjulInput &&
-          <Mui.Knapp className="fjernOppforingKnapp" disabled={!redigerbart} mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Mui.Knapp>
+          <Mui.Knapp className="fjernOppforingKnapp" disabled={!redigerbart} mini onClick={fjernOppforing}>&times; Fjern oppføring</Mui.Knapp>
         }
       </Fragment>
     );

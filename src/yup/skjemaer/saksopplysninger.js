@@ -36,15 +36,15 @@ const saksopplysninger = object().when('$behandlingstema', {
   then: object().shape({
     arbeidsforholdUtland: array().of(object().shape({
       navn: string().nullable().required(lagMelding(
-        KV.Panel.andreArbeidsforholdUtland.tittel,
-        KV.Panel.andreArbeidsforholdUtland.undertitler.arbeidsforholdIUtlandet,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
         'Navn kreves'
       )),
     })),
     selvstendigNaeringsvirksomhetUtland: array().of(object().shape({
       navn: string().nullable().required(lagMelding(
-        KV.Panel.andreArbeidsforholdUtland.tittel,
-        KV.Panel.andreArbeidsforholdUtland.undertitler.selvstendigNaeringsdrivendeIUtlandet,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
         'Navn kreves'
       )),
     })),

@@ -9,6 +9,7 @@ import MKV from '../../melosyskodeverk';
 import Sidemeny from '../sidemeny';
 import {
   ArbeidsforholdOgInntekt,
+  ArbeidsgiverOgVirksomhet,
   Barnetrygd,
   Medlemskap,
   Person,
@@ -126,7 +127,7 @@ export const Menypanel = ({
         {
           label: 'Arbeidsgiver/virksomhet',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <ArbeidsgiverOgVirksomhet />,
         },
         {
           label: 'Fullmektig',

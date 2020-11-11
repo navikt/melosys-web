@@ -1,5 +1,9 @@
 import React from 'react';
-import PT from 'prop-types';
+import { StrukturertAdresse as StrukturertAdresseType } from 'Domene';
+
+interface StrukturertAdresseProps {
+  adresse: Partial<StrukturertAdresseType>
+}
 
 const StrukturertAdresse = ({
   adresse: {
@@ -10,23 +14,12 @@ const StrukturertAdresse = ({
     poststed,
     landkode,
   },
-}) => (
+}: StrukturertAdresseProps) => (
   <address>
     <div>{gatenavn} {husnummer}</div>
     <div>{postnummer} {poststed}</div>
     <div>{region} {landkode}</div>
   </address>
 );
-
-StrukturertAdresse.propTypes = {
-  adresse: PT.shape({
-    gatenavn: PT.string,
-    husnummer: PT.string,
-    region: PT.string,
-    postnummer: PT.string,
-    poststed: PT.string,
-    landkode: PT.string,
-  }).isRequired,
-};
 
 export default StrukturertAdresse;
