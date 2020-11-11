@@ -31,7 +31,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
   return (
     <div className="enkelt__arbeidsforhold__norge__redigeringutfort">
       <Nav.Row>
-        <Nav.Column xs="3">
+        <Nav.Column xs="5">
           <OrganisasjonsAdresse
             organisasjon={org}
             visNavn={false}
@@ -47,7 +47,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
       <Nav.Row>
         {
           kontaktopplysninger.kontaktnavn &&
-          <Nav.Column xs="3">
+          <Nav.Column xs="5">
             <Nav.typo.Normaltekst>Kontaktperson:</Nav.typo.Normaltekst>
             <Nav.typo.Element>{kontaktopplysninger.kontaktnavn}</Nav.typo.Element>
           </Nav.Column>
@@ -57,7 +57,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
         {
           !Utils._isEmpty(kontaktopplysningerOrg) &&
           <>
-            <Nav.Column xs="3">
+            <Nav.Column xs="5">
               <OrganisasjonsAdresse
                 organisasjon={kontaktopplysningerOrg}
                 visTittel={false}
