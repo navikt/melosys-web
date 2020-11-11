@@ -1,10 +1,9 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import * as Mui from '../../../ui';
-
 import EditableElementListe, { InnerEditableElementListe } from './editableElementListe';
-import EditableElement from '../editableElement';
+import FlereRedigeringsknapperListe from './flereRedigeringsknapperListe';
+import EnRedigeringsknappListe from './enRedigeringsknappListe';
 
 describe('EditableElementListe', () => {
   let props = null;
@@ -54,32 +53,19 @@ describe('InnerElementlListe', () => {
     };
   });
 
-  it('viser EditableElementer', () => {
+  it('viser en FlereRedigeringsknapperListe', () => {
+    props.flereRedigeringsknapper = true;
     const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
-    const elementer = innerEditableElementListe.find(EditableElement);
+    const liste = innerEditableElementListe.find(FlereRedigeringsknapperListe);
 
-    expect(elementer).toHaveLength(2);
+    expect(liste).toHaveLength(1);
   });
 
-  it('kaller fields.remove ved kall til EditableElement sin binClickHandler', () => {
+  it('viser en EnRedigeringsknappListe', () => {
+    props.flereRedigeringsknapper = false;
     const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
-    const elementer = innerEditableElementListe.find(EditableElement);
+    const liste = innerEditableElementListe.find(EnRedigeringsknappListe);
 
-    elementer.first().props().onBinClick();
-
-    expect(props.fields.remove).toHaveBeenCalledTimes(1);
-    expect(props.fields.remove).toHaveBeenLastCalledWith(0);
-  });
-
-  it('viser knapp for å legge til elementer', () => {
-    const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
-    const knappelenke = innerEditableElementListe.find(Mui.Knappelenke);
-
-    expect(knappelenke).toHaveLength(1);
-
-    knappelenke.props().onClick();
-
-    expect(props.fields.push).toHaveBeenCalledTimes(1);
-    expect(props.fields.push).toHaveBeenLastCalledWith({});
+    expect(liste).toHaveLength(1);
   });
 });

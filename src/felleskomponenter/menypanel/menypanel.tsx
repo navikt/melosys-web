@@ -189,7 +189,10 @@ export const Menypanel = ({
     // Filtrer bort linkgroups med ingen linker/menypunkter
     .filter(linkGroup => linkGroup.links.length > 0);
 
-  const activeContent = filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content;
+  const activeContent = filteredLinkGroups.length !== 0 ?
+    filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content
+    :
+    null;
 
   const linkGroups = filteredLinkGroups
     .map((linkGroup, groupIndex) => ({
