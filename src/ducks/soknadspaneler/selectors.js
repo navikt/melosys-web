@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import {fagsakSelectors} from "../fagsaker";
-import MKV from "../../melosyskodeverk";
+import { fagsakSelectors } from '../fagsaker';
+import MKV from '../../melosyskodeverk';
 
 export const SoknadspanelSelector = createSelector(
   state => state.soknadspanel.data,

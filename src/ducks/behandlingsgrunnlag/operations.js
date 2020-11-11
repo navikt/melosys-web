@@ -57,6 +57,7 @@ export function oppdaterState() {
     const behandlingsgrunnlagData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
       ...formSelectors.InngangFormSelector(getState()).values,
+      ...formSelectors.VurderStartFormSelector(getState()).values,
     };
 
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());

@@ -28,7 +28,7 @@ export const visOppfrisk = () => dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: true }))
 );
 
-export const visOppfriskOgFortsett = fortsett =>  dispatch => (
+export const visOppfriskOgFortsett = fortsett => dispatch => (
   dispatch(Actions.oppdaterOppfrisk({ synlig: true, fortsett }))
 );
 

@@ -40,6 +40,10 @@ export const VedtakArtikkel12FormValuesSelector = createSelector(
   vedtakArtikkel12Form => vedtakArtikkel12Form.values
 );
 
+export const VurderStartFormSelector = createSelector(
+  state => getFormState(state, KV.Form.START, {}),
+  start => start
+);
 export const VurderUtpekingFormSelector = createSelector(
   state => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   vurderUtpekingForm => vurderUtpekingForm
