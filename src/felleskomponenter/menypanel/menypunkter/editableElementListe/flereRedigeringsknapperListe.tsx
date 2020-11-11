@@ -64,7 +64,7 @@ function FlereRedigeringsKnapperListe<T>({
                 tittelIkon={tittelIkon}
                 tittelUnderstrek
                 hentNyStatusVedHarData={false}
-                binClickHandler={slett}
+                onBinClick={slett}
                 redigererRender={() => <ElementKomponentRedigerer
                   redigerbart={redigerbart}
                   overordnetFeltNavn={overordnetFeltNavn}

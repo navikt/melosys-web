@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MouseEventHandler, ElementType, useEffect } from 'react';
+import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType, useEffect } from 'react';
 import classnames from 'classnames';
 
 import * as Nav from '../../../../utils/navFrontend';
@@ -18,7 +18,7 @@ interface EditableElementProps {
   ingenDataRender?: (apneRedigering: () => void) => ReactNode,
   redigeringUtfortRender: () => ReactNode,
   redigerbart: boolean,
-  binClickHandler: MouseEventHandler,
+  onBinClick: MouseEventHandler,
   tittel: string,
   tittelIkon?: ElementType,
   tittelUnderstrek?: boolean,
@@ -26,6 +26,7 @@ interface EditableElementProps {
   visLagreKnappBareHvisHarData?: boolean,
   className?: string,
   hentNyStatusVedHarData?: boolean,
+  onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>,
 }
 
 const EditableElement = ({
@@ -33,7 +34,7 @@ const EditableElement = ({
   ingenDataRender,
   redigeringUtfortRender,
   redigerbart,
-  binClickHandler,
+  onBinClick,
   tittel,
   tittelIkon: TittelIkon,
   tittelUnderstrek,
@@ -41,6 +42,7 @@ const EditableElement = ({
   visLagreKnappBareHvisHarData = false,
   className,
   hentNyStatusVedHarData = false,
+  onLagreClick,
 }: EditableElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
@@ -78,7 +80,7 @@ const EditableElement = ({
             onClick={() => setStatus(Status.Redigerer)}
           />
           <Symboler.SlettAlt
-            onClick={e => binClickHandler(e)}
+            onClick={onBinClick}
           />
         </>
       }
@@ -97,7 +99,16 @@ const EditableElement = ({
 
   const visLagreKnapp = status === Status.Redigerer && (visLagreKnappBareHvisHarData ? harData : true);
 
-  const lagreClickHandler = () => setStatus(hentNesteStatus());
+  const lagreClickHandler: MouseEventHandler<HTMLButtonElement> = async e => {
+    e.persist();
+
+    if (onLagreClick) {
+      const validert = await onLagreClick(e);
+      if (!validert) return;
+    }
+
+    setStatus(hentNesteStatus());
+  };
 
   const cls = classnames(className, 'editable__element');
 

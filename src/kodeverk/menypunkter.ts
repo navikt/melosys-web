@@ -5,7 +5,7 @@ export const ArbeidsforholdOgInntekt = {
   },
 };
 
-export const ArbeidsgiverOgvirksomhet = {
+export const ArbeidsgiverOgVirksomhet = {
   tittel: 'Arbeidsgiver/virksomhet',
   undertitler: {
     arbeidsforholdINorge: 'Arbeidsgiver i Norge',

@@ -13,7 +13,7 @@ const EnkeltArbeidsforholdUtlandRedigeringUtfort = ({
   verdier,
 }: EnkeltArbeidsforholdUtlandRedigeringUtfortProps) => (
   <Nav.Row>
-    <Nav.Column xs="4">
+    <Nav.Column xs="5">
       {
         verdier.adresse &&
         <StrukturertAdresse adresse={verdier.adresse} />

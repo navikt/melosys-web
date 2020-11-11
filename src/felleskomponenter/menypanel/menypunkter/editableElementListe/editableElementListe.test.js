@@ -65,7 +65,7 @@ describe('InnerElementlListe', () => {
     const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
     const elementer = innerEditableElementListe.find(EditableElement);
 
-    elementer.first().props().binClickHandler();
+    elementer.first().props().onBinClick();
 
     expect(props.fields.remove).toHaveBeenCalledTimes(1);
     expect(props.fields.remove).toHaveBeenLastCalledWith(0);

@@ -70,7 +70,7 @@ export const ArbeidsgiverOgVirksomhet = ({
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
-        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.ArbeidsgiverOgvirksomhet.tittel}</Nav.typo.Undertittel>
+        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}</Nav.typo.Undertittel>
         <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
         <Etiketter.ArbeidsgiversDel />
       </div>
@@ -78,7 +78,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         ekstraArbeidsgivere.length === 0 &&
         <Mui.Undertittel
           ikon={Ikoner.Building}
-          tekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdINorge}
+          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdINorge}
           understrek
         />
       }
@@ -86,7 +86,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         className="arbeidsforhold__liste"
         saksnummer={saksnummer}
         leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
-        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdINorge}
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdINorge}
         tittelIkon={Ikoner.Building}
         feltNavn="ekstraArbeidsgivere"
         redigerbart={redigerbart}
@@ -100,7 +100,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         selvstendigForetak.length === 0 &&
         <Mui.Undertittel
           ikon={Ikoner.Man}
-          tekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
+          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
           understrek
         />
       }
@@ -108,7 +108,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         className="arbeidsforhold__liste"
         saksnummer={saksnummer}
         leggTilTekst="Legg til selvstendig virksomhet"
-        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
         tittelIkon={Ikoner.Man}
         feltNavn="selvstendigForetak"
         redigerbart={redigerbart}
@@ -122,7 +122,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         arbeidsforholdUtland.length === 0 &&
         <Mui.Undertittel
           ikon={Ikoner.Building}
-          tekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdIUtlandet}
+          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet}
           understrek
           etterTekst={
             <Nav.Hjelpetekst
@@ -138,13 +138,13 @@ export const ArbeidsgiverOgVirksomhet = ({
         redigerbart={redigerbart}
         className="arbeidsforhold__liste"
         feltNavn="arbeidsforholdUtland"
-        leggTilTekst="Legg til ny arbeidsgiver og kontaktopplysninger"
+        leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
         elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
         elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
         hentDefaultElement={() => ({ uuid: Utils._uuid() })}
         hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}
-        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.arbeidsforholdIUtlandet}
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Building}
       />
@@ -152,7 +152,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         selvstendigNaeringsvirksomhetUtland.length === 0 &&
         <Mui.Undertittel
           ikon={Ikoner.Man}
-          tekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
+          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
           understrek
         />
       }
@@ -166,7 +166,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         elementUnderstrek
         hentDefaultElement={() => ({ uuid: Utils._uuid() })}
         hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}
-        tittelTekst={KV.Menypunkter.ArbeidsgiverOgvirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
+        tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Man}
       />

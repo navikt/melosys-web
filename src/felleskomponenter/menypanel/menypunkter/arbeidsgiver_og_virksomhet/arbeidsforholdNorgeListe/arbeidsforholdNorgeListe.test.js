@@ -1,10 +1,13 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import ArbeidsforholdNorgeListe, { InnerArbeidsforholdNorgeListe, EnkeltArbeidsforholdNorgeRedigerer } from './arbeidsforholdNorgeListe';
+import ArbeidsforholdNorgeListe, {
+  InnerArbeidsforholdNorgeListe,
+  EnkeltArbeidsforholdNorgeRedigerer,
+  EnkeltArbeidsforholdNorge,
+} from './arbeidsforholdNorgeListe';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
-import EditableElement from '../../editableElement';
 
 describe('ArbeidsforholdNorgeListe', () => {
   let props = null;
@@ -55,15 +58,15 @@ describe('InnerArbeidsforholdNorgeListe', () => {
     };
   });
 
-  it('viser en EditableElement', () => {
+  it('viser et EnkeltArbeidsforholdNorge', () => {
     const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
-    const editableElement = innerArbeidsforholdNorgeListe.find(EditableElement);
+    const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(EnkeltArbeidsforholdNorge);
 
-    expect(editableElement).toHaveLength(1);
+    expect(enkeltArbeidsforholdNorge).toHaveLength(1);
   });
 });
 
-describe('EnkeltArbeidsforholdNorge', () => {
+describe('EnkeltArbeidsforholdNorgeRedigerer', () => {
   let props = null;
 
   beforeEach(() => {
@@ -75,12 +78,14 @@ describe('EnkeltArbeidsforholdNorge', () => {
       organisasjon: { orgnr: '123123123' },
       slett: jest.fn(),
       slettTekst: 'Slett',
+      kontaktopplysninger: {},
+      onKontaktopplysningerChange: jest.fn(),
     };
   });
 
   it('viser en Organisasjon', () => {
-    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
-    const organisasjon = innerArbeidsforholdNorgeListe.find(Organisasjon);
+    const enkeltArbeidsforholdNorgeRedigerer = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
+    const organisasjon = enkeltArbeidsforholdNorgeRedigerer.find(Organisasjon);
     const organisasjonProps = organisasjon.props();
 
     expect(organisasjon).toHaveLength(1);
@@ -89,8 +94,8 @@ describe('EnkeltArbeidsforholdNorge', () => {
   });
 
   it('viser en orgnrinput', () => {
-    const innerArbeidsforholdNorgeListe = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
-    const orgnrinput = innerArbeidsforholdNorgeListe.find(Orgnrinput);
+    const enkeltArbeidsforholdNorgeRedigerer = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
+    const orgnrinput = enkeltArbeidsforholdNorgeRedigerer.find(Orgnrinput);
 
     expect(orgnrinput).toHaveLength(1);
   });

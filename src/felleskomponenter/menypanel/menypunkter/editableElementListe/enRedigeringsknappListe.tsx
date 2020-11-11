@@ -50,7 +50,7 @@ function EnRedigeringsKnappListe<T>({
       tittel={tittelTekst}
       tittelIkon={tittelIkon}
       tittelUnderstrek={tittelUnderstrek}
-      binClickHandler={fields.removeAll}
+      onBinClick={fields.removeAll}
       harData={harData()}
       hentNyStatusVedHarData={false}
       visLagreKnappBareHvisHarData

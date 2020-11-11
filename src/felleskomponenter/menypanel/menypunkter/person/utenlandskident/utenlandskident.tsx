@@ -30,7 +30,7 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
   return <EditableElement
     redigerbart={redigerbart}
     tittel={KV.Menypunkter.Person.undertitler.utenlandskID}
-    binClickHandler={() => fields.removeAll()}
+    onBinClick={() => fields.removeAll()}
     harData={felter.length !== 0}
     hentNyStatusVedHarData={false}
     redigererRender={() => (
