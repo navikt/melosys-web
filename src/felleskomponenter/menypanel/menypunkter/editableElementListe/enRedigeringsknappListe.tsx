@@ -17,8 +17,8 @@ interface EnRedigeringsKnappListeProps<T> {
   settFeltVerdi: (felt: string, verdi: any) => void,
   tittelUnderstrek: boolean,
   elementUnderstrek?: boolean,
-  elementKomponentRedigerer: ElementType,
-  elementKomponentRedigeringUtfort: ElementType,
+  redigererKomponent: ElementType,
+  redigeringUtfortKomponent: ElementType,
   tittelTekst: string,
   leggTil: () => void,
   leggTilTekst: string,
@@ -32,14 +32,14 @@ function EnRedigeringsKnappListe<T>({
   settFeltVerdi,
   tittelUnderstrek,
   elementUnderstrek = false,
-  elementKomponentRedigerer,
-  elementKomponentRedigeringUtfort,
+  redigererKomponent,
+  redigeringUtfortKomponent,
   tittelTekst,
   leggTil,
   leggTilTekst,
 }: EnRedigeringsKnappListeProps<T>) {
-  const ElementKomponentRedigerer = elementKomponentRedigerer;
-  const ElementKomponentRedigeringUtfort = elementKomponentRedigeringUtfort;
+  const RedigererKomponent = redigererKomponent;
+  const RedigeringUtfortKomponent = redigeringUtfortKomponent;
 
   const elementer = fields.getAll();
 
@@ -67,7 +67,7 @@ function EnRedigeringsKnappListe<T>({
               return (
                 /* eslint-disable-next-line react/no-array-index-key */
                 <div className={elementContainerCls} key={index}>
-                  <ElementKomponentRedigerer
+                  <RedigererKomponent
                     redigerbart={redigerbart}
                     overordnetFeltNavn={overordnetFeltNavn}
                     verdier={element}
@@ -91,7 +91,7 @@ function EnRedigeringsKnappListe<T>({
           }
         </div>
       )}
-      redigeringUtfortRender={() => <ElementKomponentRedigeringUtfort
+      redigeringUtfortRender={() => <RedigeringUtfortKomponent
         verdier={elementer}
       />}
     />

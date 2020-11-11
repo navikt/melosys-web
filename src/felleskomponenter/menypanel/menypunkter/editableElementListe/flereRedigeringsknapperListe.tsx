@@ -17,8 +17,8 @@ interface FlereRedigeringsKnapperListeProps<T> {
   fields: FieldArrayFieldsProps<T>,
   settFeltVerdi: (felt: string, verdi: any) => void,
   elementUnderstrek?: boolean,
-  elementKomponentRedigerer: ElementType,
-  elementKomponentRedigeringUtfort: ElementType,
+  redigererKomponent: ElementType,
+  redigeringUtfortKomponent: ElementType,
   tittelTekst: string,
   leggTil: () => void,
   leggTilTekst: string,
@@ -32,14 +32,14 @@ function FlereRedigeringsKnapperListe<T>({
   fields,
   settFeltVerdi,
   elementUnderstrek = false,
-  elementKomponentRedigerer,
-  elementKomponentRedigeringUtfort,
+  redigererKomponent,
+  redigeringUtfortKomponent,
   tittelTekst,
   leggTil,
   leggTilTekst,
 }: FlereRedigeringsKnapperListeProps<T>) {
-  const ElementKomponentRedigerer = elementKomponentRedigerer;
-  const ElementKomponentRedigeringUtfort = elementKomponentRedigeringUtfort;
+  const RedigererKomponent = redigererKomponent;
+  const RedigeringUtfortKomponent = redigeringUtfortKomponent;
 
   const elementer = fields.getAll();
 
@@ -65,13 +65,13 @@ function FlereRedigeringsKnapperListe<T>({
                 tittelUnderstrek
                 hentNyStatusVedHarData={false}
                 onBinClick={slett}
-                redigererRender={() => <ElementKomponentRedigerer
+                redigererRender={() => <RedigererKomponent
                   redigerbart={redigerbart}
                   overordnetFeltNavn={overordnetFeltNavn}
                   verdier={element}
                   settVerdi={settVerdi}
                 />}
-                redigeringUtfortRender={() => <ElementKomponentRedigeringUtfort
+                redigeringUtfortRender={() => <RedigeringUtfortKomponent
                   verdier={element}
                 />}
               />

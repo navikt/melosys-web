@@ -47,8 +47,8 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidUtland"
-      elementKomponentRedigerer={Enkel.Land.Redigerer}
-      elementKomponentRedigeringUtfort={Enkel.Land.RedigeringUtfort}
+      redigererKomponent={Enkel.Land.Redigerer}
+      redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
       hentDefaultElement={() => arbeidUtlandDefaultElement}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
@@ -60,8 +60,8 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedOffshore"
-      elementKomponentRedigerer={Enkel.Offshore.Redigerer}
-      elementKomponentRedigeringUtfort={Enkel.Offshore.RedigeringUtfort}
+      redigererKomponent={Enkel.Offshore.Redigerer}
+      redigeringUtfortKomponent={Enkel.Offshore.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
@@ -73,8 +73,8 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedSkip"
-      elementKomponentRedigerer={Enkel.Skip.Redigerer}
-      elementKomponentRedigeringUtfort={Enkel.Skip.RedigeringUtfort}
+      redigererKomponent={Enkel.Skip.Redigerer}
+      redigeringUtfortKomponent={Enkel.Skip.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
@@ -86,8 +86,8 @@ const Arbeidssteder = ({
     <EditableElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedFly"
-      elementKomponentRedigerer={Enkel.Fly.Redigerer}
-      elementKomponentRedigeringUtfort={Enkel.Fly.RedigeringUtfort}
+      redigererKomponent={Enkel.Fly.Redigerer}
+      redigeringUtfortKomponent={Enkel.Fly.RedigeringUtfort}
       leggTilTekst="Legg til ny seksjon"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}

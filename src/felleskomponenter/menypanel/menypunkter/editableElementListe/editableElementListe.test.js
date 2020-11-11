@@ -47,8 +47,8 @@ describe('InnerElementlListe', () => {
       settFeltVerdi: jest.fn(),
       hentNavn: jest.fn(() => 'Navn'),
       tittelTekst: 'tittel',
-      elementKomponentRedigerer: () => TestElement,
-      elementKomponentRedigeringUtfort: () => TestElement,
+      redigererKomponent: () => TestElement,
+      redigeringUtfortKomponent: () => TestElement,
       harData: () => true,
       tittelIkon: () => <div />,
     };

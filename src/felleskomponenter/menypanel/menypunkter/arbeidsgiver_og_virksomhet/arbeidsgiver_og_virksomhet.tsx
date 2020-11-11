@@ -139,8 +139,8 @@ export const ArbeidsgiverOgVirksomhet = ({
         className="arbeidsforhold__liste"
         feltNavn="arbeidsforholdUtland"
         leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
-        elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
-        elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
+        redigererKomponent={EnkeltArbeidsforholdUtlandRedigerer}
+        redigeringUtfortKomponent={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
         hentDefaultElement={() => ({ uuid: Utils._uuid() })}
         hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}
@@ -161,8 +161,8 @@ export const ArbeidsgiverOgVirksomhet = ({
         className="arbeidsforhold__liste"
         leggTilTekst="Legg til selvstendig virksomhet"
         feltNavn="selvstendigNaeringsvirksomhetUtland"
-        elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
-        elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
+        redigererKomponent={EnkeltArbeidsforholdUtlandRedigerer}
+        redigeringUtfortKomponent={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
         hentDefaultElement={() => ({ uuid: Utils._uuid() })}
         hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}

@@ -13,8 +13,8 @@ import EnRedigeringsknappListe from './enRedigeringsknappListe';
 interface BaseProps {
   leggTilTekst: string,
   redigerbart: boolean,
-  elementKomponentRedigerer: ElementType,
-  elementKomponentRedigeringUtfort: ElementType,
+  redigererKomponent: ElementType,
+  redigeringUtfortKomponent: ElementType,
   hentDefaultElement: () => any,
   className?: string,
   hentNavn?: (element: any) => string,
@@ -39,8 +39,8 @@ export const InnerEditableElementListe = ({
   leggTilTekst,
   redigerbart,
   fields,
-  elementKomponentRedigerer,
-  elementKomponentRedigeringUtfort,
+  redigererKomponent,
+  redigeringUtfortKomponent,
   hentDefaultElement,
   className,
   hentNavn,
@@ -68,8 +68,8 @@ export const InnerEditableElementListe = ({
             fields={fields}
             settFeltVerdi={settFeltVerdi}
             elementUnderstrek={elementUnderstrek}
-            elementKomponentRedigerer={elementKomponentRedigerer}
-            elementKomponentRedigeringUtfort={elementKomponentRedigeringUtfort}
+            redigererKomponent={redigererKomponent}
+            redigeringUtfortKomponent={redigeringUtfortKomponent}
             tittelTekst={tittelTekst}
             leggTilTekst={leggTilTekst}
             leggTil={leggTil}
@@ -83,8 +83,8 @@ export const InnerEditableElementListe = ({
             settFeltVerdi={settFeltVerdi}
             tittelUnderstrek={tittelUnderstrek}
             elementUnderstrek={elementUnderstrek}
-            elementKomponentRedigerer={elementKomponentRedigerer}
-            elementKomponentRedigeringUtfort={elementKomponentRedigeringUtfort}
+            redigererKomponent={redigererKomponent}
+            redigeringUtfortKomponent={redigeringUtfortKomponent}
             tittelTekst={tittelTekst}
             leggTilTekst={leggTilTekst}
             leggTil={leggTil}
