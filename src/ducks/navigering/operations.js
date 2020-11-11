@@ -6,3 +6,7 @@ export const tilForsiden = () => async dispatch => {
   dispatch(oppgaverOperations.oversikt());
   dispatch(push('/'));
 };
+
+export const tilAnnenSide = link => dispatch => {
+  dispatch(push(link));
+};

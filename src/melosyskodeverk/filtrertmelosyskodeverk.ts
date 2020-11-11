@@ -1,4 +1,4 @@
-import * as MKV from 'melosys-kodeverk';
+import * as MKV from '@navikt/melosys-kodeverk';
 
 import { fjernFlereKoder } from './fjernkoder';
 

@@ -25,7 +25,7 @@ declare module 'Domene' {
   export type SedPdfData = import('./@types').SedPdfData;
 }
 
-declare module 'melosys-kodeverk' {
+declare module '@navikt/melosys-kodeverk' {
   export type KTObject = { kode: string, term: string | null };
 }
 

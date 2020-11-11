@@ -1,4 +1,4 @@
-import { KTObject } from 'melosys-kodeverk';
+import { KTObject } from '@navikt/melosys-kodeverk';
 
 type GeneriskAdresse = {
   gateadresse: {

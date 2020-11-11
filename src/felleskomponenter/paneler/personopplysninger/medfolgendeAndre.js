@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
+import * as Utils from '../../../utils';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes';
-import * as PersonValidering from '../../skjema/validering/generisk/person';
 
 import { beregnAlder } from '../../../utils/dato';
 import GeneriskAdresse from '../../adresser/generiskAdresse';
@@ -18,7 +18,7 @@ function MedfolgendeAndre(props) {
   const sokHandle = () => {
     const { sjekkPerson } = props;
 
-    if (PersonValidering.erGyldigFnr(fnr) || PersonValidering.erGyldigDnr(fnr)) {
+    if (Utils.person.erGyldigFnr(fnr) || Utils.person.erGyldigDnr(fnr)) {
       setDirty(false);
       sjekkPerson(fnr);
     }

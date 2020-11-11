@@ -2,7 +2,7 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { KTObject } from 'melosys-kodeverk';
+import { KTObject } from '@navikt/melosys-kodeverk';
 
 import MKV from '../../../melosyskodeverk';
 

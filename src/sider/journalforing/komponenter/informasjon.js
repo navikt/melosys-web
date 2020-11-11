@@ -10,7 +10,6 @@ import * as MPT from '../../../proptypes/';
 import * as Konstanter from '../../../constants';
 import * as Api from '../../../services/api';
 import * as Ikoner from '../../../resources/images';
-import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
 import * as Mui from '../../../felleskomponenter/ui';
 import AvsenderVelger from './avsendervelger';
 import LenkeListeVelger from './lenkelistevelger';
@@ -102,7 +101,7 @@ class Informasjon extends Component {
     const { settFeltInnhold, hentOgVisBruker } = this.props;
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
-    if (Person.erGyldigFnr(verdi)) {
+    if (Utils.person.erGyldigFnr(verdi)) {
       await this.spinner('brukerNavn');
       const response = await hentOgVisBruker(verdi);
       if (!response) return;

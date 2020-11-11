@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - 'develop'
+      - 'FEATURE/**'
+      - 'FEATURE*'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,11 +26,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.3.1'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
 
       - name: npm install
         env:
           CYPRESS_INSTALL_BINARY: 0
-        run: npm i
+          # NPM krever tydeligvis en token for å hente pakker fra github packages
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          npm i
 
       - name: build css
         run: npm run build:css
