@@ -140,7 +140,7 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, PropsFromRedux>({
       },
     };
 
-    return lagYupToReduxformErrorMapper(YupSkjemaer.saksopplysninger, settings)(values);
+    return lagYupToReduxformErrorMapper(YupSkjemaer.soknad, settings)(values);
   },
 })(Soknad);
 
