@@ -1,4 +1,4 @@
-import { cachedGetAsJson, deleteAsJson, postAsJson } from '../../utils';
+import { getAsJson, deleteAsJson, postAsJson } from '../../utils';
 import { API_BASE_URL, FAGSAKER } from '../../api-constants';
 
 export interface HentResDto {
@@ -6,7 +6,7 @@ export interface HentResDto {
   kontaktnavn: string | null,
 }
 
-export const hent = (saksnr: string, juridiskorgnr: string): Promise<HentResDto> => cachedGetAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnr}/kontaktopplysninger/${juridiskorgnr}`);
+export const hent = (saksnr: string, juridiskorgnr: string): Promise<HentResDto> => getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnr}/kontaktopplysninger/${juridiskorgnr}`);
 
 export interface SendReqDto {
   kontaktorgnr: string | null,
