@@ -11,11 +11,17 @@ declare module 'AppTypes' {
 }
 
 declare module 'Domene' {
+  export type StrukturertAdresse = import('./@types').StrukturertAdresse;
   export type Avklartfakta = import('./@types').Avklartfakta;
   export type AnmodningOmUnntakBestilling = import('./@types').AnmodningOmUnntakBestilling;
   export type Fagsak = import('./@types').Fagsak;
+  export type GeneriskAdresse = import('./@types').GeneriskAdresse;
+  export type MedlemskapsPeriode = import('./@types').MedlemskapPeriode;
   export type Oppsummering = import('./@types').Oppsummering;
+  export type Periode = import('./@types').Periode;
   export type Person = import('./@types').Person;
+  export type PersonHistorikk = import('./@types').PersonHistorikk;
+  export type Organisasjon = import('./@types').Organisasjon;
   export type Videresending = import('./@types').Videresending;
   export type DokumentOversikt = import('./@types').DokumentOversikt;
   export type Dokument = import('./@types').Dokument;

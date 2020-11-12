@@ -1,4 +1,4 @@
-import { isFunction, isNil, isNumber, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set, get, debounce, memoize, uniqBy, has } from 'lodash';
+import { capitalize, isFunction, isNil, isNumber, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set, get, debounce, memoize, uniqBy, has } from 'lodash';
 
 import throttle from 'lodash.throttle';
 
@@ -24,6 +24,7 @@ export {
   testhelpers,
   mapping,
   person,
+  capitalize as _capitalize,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
   isNil as _isNil,

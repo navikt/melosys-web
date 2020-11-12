@@ -14,3 +14,4 @@ export { vurdering_videresend } from './vurdering_videresend';
 export { vurder_utpeking } from './vurder_utpeking';
 export { avslaa_utpeking } from './avslaa_utpeking';
 export { sed } from './sed';
+export { soknad } from './soknad';

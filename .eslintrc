@@ -73,7 +73,9 @@
     "no-extra-semi": "off",
     "@typescript-eslint/no-extra-semi": ["error"],
     // Støtt typescript reference, hvor det trengs tre slash(///)
-    "spaced-comment": ["error", "always", { "markers": ["/"] }]
+    "spaced-comment": ["error", "always", { "markers": ["/"] }],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"]
   },
   "extends": ["react-app","airbnb", "plugin:@typescript-eslint/eslint-recommended"],
   "plugins": [

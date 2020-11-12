@@ -20,7 +20,7 @@ const OrganisasjonsAdresse = ({
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
 
-  const visPostadresse = !Utils.adresse.erAdresseObjektTomt(postadresse);
+  const visPostadresse = !Utils.adresse.erGeneriskAdresseObjektTomt(postadresse);
   const adresse = visPostadresse ? postadresse : forretningsadresse;
   const tittel = visPostadresse ? 'Postadresse' : 'Forretningsadresse';
 

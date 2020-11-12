@@ -6,11 +6,13 @@ import { withRouter } from 'react-router-dom';
 import MKV from '../../../../melosyskodeverk';
 import * as Utils from '../../../../utils';
 import * as MPT from '../../../../proptypes';
+import * as Hooks from '../../../../hooks';
 
 import Stegvelger from '../../../../felleskomponenter/stegvelger';
 import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
 import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
 import Soknadpaneler from '../../../../felleskomponenter/soknadpaneler';
+import { SoknadMenypanelForm } from '../../../../felleskomponenter/menypanelForm';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
@@ -53,6 +55,8 @@ const Saksopplysninger = ({
   oppdaterBehandlingsgrunnlag,
   startOgVisOppfriskModal,
 }) => {
+  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
+
   if (Utils._isNil(redigerbart)) return null;
 
   if (!behandlingID) {
@@ -92,10 +96,19 @@ const Saksopplysninger = ({
         forsteSteg={forsteSteg}
       />
       }
-      <Soknadpaneler
-        startOgVisOppfriskModal={startOgVisOppfriskModal}
-        behandlingID={behandlingID}
-      />
+      {
+        sidemenyToggle === 'enabled' &&
+        <SoknadMenypanelForm
+          startOgVisOppfriskModal={startOgVisOppfriskModal}
+        />
+      }
+      {
+        sidemenyToggle === 'disabled' &&
+        <Soknadpaneler
+          behandlingID={behandlingID}
+          startOgVisOppfriskModal={startOgVisOppfriskModal}
+        />
+      }
     </Fragment>
   );
 };

@@ -229,7 +229,12 @@ export const MedlemskapSelector = createSelector(
     const AVVIST_MEDLEMSKAP = 'AVST';
 
     const { medlemsperiode } = medlemskap;
-    if (!medlemsperiode) return null;
+    if (!medlemsperiode) {
+      return {
+        perioderMed: [],
+        perioderUten: [],
+      };
+    }
 
     return {
       perioderMed: medlemsperiode.filter(periode => KV.objektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP && KV.objektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
