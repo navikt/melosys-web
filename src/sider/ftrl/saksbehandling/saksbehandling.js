@@ -8,6 +8,7 @@ import MKV from '../../../melosyskodeverk';
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
+import * as API from '../../../services/api';
 
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
@@ -30,6 +31,7 @@ import { behandlingsperioderOperations } from '../../../ducks/behandlingsperiode
 import { AvslaattSoknad, HenlagtSak } from '../../eu_eøs/saksbehandling/komponenter/stegErstatter';
 import { stegMap } from './stegMap';
 import './saksbehandling.css';
+import {folketrygdenkodeverkOperations} from "../../../ducks/folketrygdenkodeverk";
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -56,10 +58,12 @@ const behandlingsstatusMap = {
 class Saksbehandling extends Component {
   state = {
     behandlingID: -1,
+    landkoder: [],
   };
 
   componentDidMount() {
     this.lastInnSaksopplysninger();
+    API.Kodeverk.hentLandkoderIso2.then(response => this.setState({landkoder: response}));
   }
 
   componentDidUpdate() {
@@ -90,11 +94,12 @@ class Saksbehandling extends Component {
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
       hentBehandlingsgrunnlag, visOppfriskModal, behandlingOppfriskes,
-      hentDokumentOversikt,
+      hentDokumentOversikt, hentFolketrygdenKodeverk,
     } = this.props;
 
     try {
       await hentFagsaker(snr);
+      await hentFolketrygdenKodeverk;
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -157,7 +162,7 @@ class Saksbehandling extends Component {
       tilForsiden,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
-    const { behandlingID } = this.state;
+    const { behandlingID, landkoder } = this.state;
 
     if (Utils._isNil(redigerbart)) {
       return null;
@@ -191,7 +196,7 @@ class Saksbehandling extends Component {
                 lagreAllData={lagreAllData}
                 oppdaterLokalSoknadHandler={oppdaterBehandlingsgrunnlag}
                 begrunnelser={MKV.KTObjects.begrunnelser}
-                landkoder={MKV.KTObjects.landkoder}
+                landkoder={landkoder}
                 tilForsiden={tilForsiden}
                 stegMap={stegMap}
                 forsteSteg={STEG.START}
@@ -266,6 +271,7 @@ Saksbehandling.propTypes = {
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
+  hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   lagrePerioder: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
@@ -316,6 +322,7 @@ const mapDispatchToProps = dispatch => ({
   hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),
   hentDokumentOversikt: saksnummer => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),

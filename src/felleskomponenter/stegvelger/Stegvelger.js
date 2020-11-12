@@ -363,7 +363,7 @@ class Stegvelger extends Component {
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
-      landkoder: MKV.KTObjects.landkoder,
+      landkoder: props.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
       behandlingstema: props.oppsummering.behandlingstema,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
@@ -562,6 +562,7 @@ Stegvelger.propTypes = {
   bestillAnmodningsperioder: PT.func.isRequired,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
   behandlingsgrunnlag: PT.object.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 Stegvelger.defaultProps = {

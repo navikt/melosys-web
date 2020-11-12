@@ -12,6 +12,7 @@ export const EESSI = 'eessi';
 export const FAGSAKER = 'fagsaker';
 export const FEATURETOGGLE = 'featuretoggle';
 export const JOURNALFORING = 'journalforing';
+export const KODEVERK = 'kodeverk';
 export const LOVVALGSPERIODER = 'lovvalgsperioder';
 export const NOTATER = 'notater';
 export const OPPGAVER = 'oppgaver';
