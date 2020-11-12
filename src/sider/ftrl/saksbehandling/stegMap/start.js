@@ -1,6 +1,6 @@
 import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingStart from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingStart';
+import VurderingStart from '../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingStart';
 
 class Start extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -9,7 +9,7 @@ class Start extends Steg {
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.VURDERING,
+        nesteSteg: STEG.VIRKSOMHET,
       },
     ];
     this.id = STEG.START;

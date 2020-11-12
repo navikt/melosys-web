@@ -1,20 +1,20 @@
 import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingFamilie from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingFamilie";
+import VurderingTrygdeavgift from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingTrygdeavgift";
 
-class Familie extends Steg {
+class Trygdeavgift extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     const harAvklaring = false;
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.VEDTAK_FTRL,
+        nesteSteg: STEG.REPRESENTANT,
       },
     ];
-    this.id = STEG.FAMILIE;
-    this.tittel = 'Familie';
-    this.komponent = VurderingFamilie;
+    this.id = STEG.TRYGDEAVGIFT;
+    this.tittel = 'Trygdeavgift';
+    this.komponent = VurderingTrygdeavgift;
     this.samleRelevanteData = _propsLight => ({});
     this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
     this.handlers = {
@@ -23,4 +23,4 @@ class Familie extends Steg {
     this.status = FANE_STATUS.OK;
   }
 }
-export default Familie;
+export default Trygdeavgift;

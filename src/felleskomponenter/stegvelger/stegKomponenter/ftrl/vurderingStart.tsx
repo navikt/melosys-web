@@ -8,19 +8,19 @@ import { RootState } from 'AppTypes';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { KTObject } from '@navikt/melosys-kodeverk';
 
-import * as MPT from '../../../proptypes';
-import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
-import * as Utils from '../../../utils';
-import * as KV from '../../../kodeverk';
-import MKV from '../../../melosyskodeverk';
+import * as MPT from '../../../../proptypes/index';
+import * as Nav from '../../../../utils/navFrontend';
+import * as Skjema from '../../../skjema/index';
+import * as Utils from '../../../../utils/index';
+import * as KV from '../../../../kodeverk/index';
 
-import { landTekstFormat } from '../../skjema/landvelger/utils';
-import { modalerOperations } from '../../../ducks/modaler';
-import { soknadspanelOperations } from '../../../ducks/soknadspaneler';
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+import { landTekstFormatStoreForbokstaver } from '../../../skjema/landvelger/utils';
+import { modalerOperations } from '../../../../ducks/modaler/index';
+import { soknadspanelOperations } from '../../../../ducks/soknadspaneler/index';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag/index';
 
 import './vurderingStart.css';
+import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 
 
 const mapStateToProps = (state: RootState) => {
@@ -33,6 +33,7 @@ const mapStateToProps = (state: RootState) => {
     soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
     soeknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
     trygdedekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(state),
+    trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     formValues: getFormValues(KV.Form.START)(state),
     initialValues: {
       fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
@@ -74,6 +75,7 @@ const VurderingStart =
     oppdaterPeriode,
     oppdaterSoeknadsland,
     oppdaterTrygdedekning,
+    trygdedekninger,
   } : Props & PropsFromRedux) => {
     const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
     const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
@@ -130,7 +132,7 @@ const VurderingStart =
             </Nav.Column>
             <Nav.Column xs="5">
               <Skjema.Select label="Land" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
-                {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{landTekstFormat(item)}</option>))}
+                {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{landTekstFormatStoreForbokstaver(item)}</option>))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
@@ -143,10 +145,7 @@ const VurderingStart =
           <Nav.Row>
             <Nav.Column xs="6">
               <Skjema.Select label="" feltNavn="trygdedekning" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.trygdedekning}>
-                {MKV.KTObjects.trygdedekninger
-                  .filter((item: KTObject) =>
-                    ['HELSEDEL', 'HELSEDEL_MED_SYKE_OG_FORELDREPENGER', 'PENSJONSDEL', 'HELSE_OG_PENSJONSDEL', 'HELSE_OG_PENSJONSDEL_MED_SYKE_OG_FORELDREPENGER'].includes(item.kode))
-                  .map((item: KTObject) => (<option key={item.kode} value={item.kode}>{item.term}</option>))}
+                {trygdedekninger.map((item: KTObject) => (<option key={item.kode} value={item.kode}>{item.term}</option>))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>

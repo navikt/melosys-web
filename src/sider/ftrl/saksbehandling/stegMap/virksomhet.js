@@ -1,5 +1,6 @@
 import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingVirksomhet from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingVirksomhet";
 
 class Virksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -8,15 +9,17 @@ class Virksomhet extends Steg {
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.VIRKSOMHET,
+        nesteSteg: STEG.BESTEMMELSE,
       },
     ];
     this.id = STEG.VIRKSOMHET;
     this.tittel = 'Virksomhet';
-    // this.komponent = VurderingFtrlVirksomhet;
+    this.komponent = VurderingVirksomhet;
     this.samleRelevanteData = _propsLight => ({});
     this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
-    this.handlers = {};
+    this.handlers = {
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+    };
     this.status = FANE_STATUS.OK;
   }
 }

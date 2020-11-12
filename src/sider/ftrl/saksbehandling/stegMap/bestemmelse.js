@@ -1,24 +1,26 @@
 import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingVurdering from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVurdering';
+import VurderingBestemmelse from '../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingBestemmelse';
 
-class Vurdering extends Steg {
+class Bestemmelse extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     const harAvklaring = false;
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.VIRKSOMHET,
+        nesteSteg: STEG.PERIODER,
       },
     ];
-    this.id = STEG.VURDERING;
-    this.tittel = 'Vurdering';
-    this.komponent = VurderingVurdering;
+    this.id = STEG.BESTEMMELSE;
+    this.tittel = 'Bestemmelse';
+    this.komponent = VurderingBestemmelse;
     this.samleRelevanteData = _propsLight => ({});
     this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
-    this.handlers = {};
+    this.handlers = {
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+    };
     this.status = FANE_STATUS.OK;
   }
 }
-export default Vurdering;
+export default Bestemmelse;
