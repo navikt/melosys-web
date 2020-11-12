@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, SetStateAction, Dispatch } from 'react';
 
 import * as Utils from '../utils';
 
@@ -7,7 +7,7 @@ export const useCallbackState = <StateType>(
   defaultState: StateType,
   errorHandler: (e: Error) => void = Utils.logger.error,
   deps: any[] = []
-): [StateType, (state: StateType) => void] => {
+): [StateType, Dispatch<SetStateAction<StateType>>] => {
   const [state, setState] = useState<StateType>(defaultState);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const useAsyncCallbackState = <StateType>(
   defaultState: StateType,
   errorHandler: (e: Error) => void = Utils.logger.error,
   deps: any[] = []
-): [StateType, (state: StateType) => void] => {
+): [StateType, Dispatch<SetStateAction<StateType>>] => {
   const [state, setState] = useState(defaultState);
 
   useEffect(() => {
