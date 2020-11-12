@@ -20,85 +20,85 @@ const erIkkeBeslutningLovvalgAnnetLand = behandlingstema => behandlingstema !== 
 
 const utenlandskIdent = object().shape({
   ident: string().nullable().required(lagMelding(
-    KV.Panel.informasjonOmBruker.tittel,
-    KV.Panel.informasjonOmBruker.undertitler.utenlandskID,
+    KV.Menypunkter.Person.tittel,
+    KV.Menypunkter.Person.undertitler.utenlandskID,
     'Utenlandsk ID kreves'
   )),
   landkode: string().nullable().required(lagMelding(
-    KV.Panel.informasjonOmBruker.tittel,
-    KV.Panel.informasjonOmBruker.undertitler.utenlandskID,
+    KV.Menypunkter.Person.tittel,
+    KV.Menypunkter.Person.undertitler.utenlandskID,
     'Land for utenlandsk ID kreves'
   )),
 });
 
-const saksopplysninger = object().when('$behandlingstema', {
+const soknad = object().when('$behandlingstema', {
   is: erIkkeBeslutningLovvalgAnnetLand,
   then: object().shape({
     arbeidsforholdUtland: array().of(object().shape({
       navn: string().nullable().required(lagMelding(
-        KV.Panel.andreArbeidsforholdUtland.tittel,
-        KV.Panel.andreArbeidsforholdUtland.undertitler.arbeidsforholdIUtlandet,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
         'Navn kreves'
       )),
     })),
     selvstendigNaeringsvirksomhetUtland: array().of(object().shape({
       navn: string().nullable().required(lagMelding(
-        KV.Panel.andreArbeidsforholdUtland.tittel,
-        KV.Panel.andreArbeidsforholdUtland.undertitler.selvstendigNaeringsdrivendeIUtlandet,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+        KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
         'Navn kreves'
       )),
     })),
     arbeidsstedOffshore: array().of(object().shape({
       enhetNavn: string().nullable().required(lagMelding(
-        KV.Menypunkter.Arbeidssteder.tittel,
-        KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
+        KV.Panel.arbeidssteder.tittel,
+        KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore,
         'Navn kreves'
       )),
     }).uniqueProperty('enhetNavn', lagMelding(
-      KV.Menypunkter.Arbeidssteder.tittel,
-      KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
+      KV.Panel.arbeidssteder.tittel,
+      KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore,
       'Navn på enhet må være unikt'
     ))),
     arbeidsstedSkip: array().of(object().shape({
       enhetNavn: string().nullable().required(lagMelding(
-        KV.Menypunkter.Arbeidssteder.tittel,
-        KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
+        KV.Panel.arbeidssteder.tittel,
+        KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip,
         'Navn kreves'
       )),
     }).uniqueProperty('enhetNavn', lagMelding(
-      KV.Menypunkter.Arbeidssteder.tittel,
-      KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
+      KV.Panel.arbeidssteder.tittel,
+      KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip,
       'Navn på enhet må være unikt'
     ))),
     oppgittAdresseGatenavn: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Gatenavn kreves'
       )),
     }),
     oppgittAdressePostnummer: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Postnummer kreves'
       )),
     }),
     oppgittAdressePoststed: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Poststed kreves'
       )),
     }),
     oppgittAdresseLand: string().nullable().when('$skalOppgittAdresseValideres', {
       is: true,
       then: string().nullable().required(lagMelding(
-        KV.Panel.informasjonOmBruker.tittel,
-        KV.Panel.informasjonOmBruker.undertitler.annenOppgittAdresse,
+        KV.Menypunkter.Person.tittel,
+        KV.Menypunkter.Person.undertitler.annenAdresse,
         'Land kreves'
       )),
     }),
@@ -110,4 +110,4 @@ const saksopplysninger = object().when('$behandlingstema', {
   }),
 });
 
-export { saksopplysninger };
+export { soknad };
