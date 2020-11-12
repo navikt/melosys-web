@@ -233,7 +233,6 @@ export default function reducer(state = initialState, action) {
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [],
-            medfolgendeAndre: null,
           },
           overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
           ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
