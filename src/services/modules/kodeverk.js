@@ -1,5 +1,6 @@
 import { getAsJson } from '../utils';
 import { API_BASE_URL, KODEVERK } from '../api-constants';
+
 const NAV_FELLES = 'nav-felles';
 const MELOSYS_INTERNT = 'melosys-internt';
 

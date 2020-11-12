@@ -1,7 +1,8 @@
 import React from 'react';
-import * as Nav from "../../../../utils/navFrontend";
+import PT from 'prop-types';
+import * as Nav from '../../../../utils/navFrontend';
 
-const VurderingFamilie = (props) => (
+const VurderingFamilie = props => (
   <div>
     <Nav.typo.Undertittel className="undertittel">Skal familiemedlemmer oppgitt i søknaden innvilges medlemskap?</Nav.typo.Undertittel>
     <div className="fane__knapplinje" >
@@ -15,5 +16,9 @@ const VurderingFamilie = (props) => (
     </div>
   </div>
 );
+
+VurderingFamilie.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+};
 
 export default VurderingFamilie;

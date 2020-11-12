@@ -5,7 +5,7 @@ import folketrygdenkodeverkReducers from './reducers';
 
 export {
   folketrygdenkodeverkOperations,
-  folketrygdenkodeverkSelectors
+  folketrygdenkodeverkSelectors,
 };
 
 export default folketrygdenkodeverkReducers;

@@ -1,7 +1,8 @@
 import React from 'react';
-import * as Nav from "../../../../utils/navFrontend";
+import PT from 'prop-types';
+import * as Nav from '../../../../utils/navFrontend';
 
-const VurderingBestemmelse = (props) => (
+const VurderingBestemmelse = props => (
   <div>
     <Nav.typo.Undertittel className="undertittel">Hvilken bestemmelse skal søknaden vurderes etter?</Nav.typo.Undertittel>
     <div className="fane__knapplinje" >
@@ -15,5 +16,9 @@ const VurderingBestemmelse = (props) => (
     </div>
   </div>
 );
+
+VurderingBestemmelse.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+};
 
 export default VurderingBestemmelse;

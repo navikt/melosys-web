@@ -1,7 +1,7 @@
 import React from 'react';
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from '../../../../utils/navFrontend';
 
-const VurderingVedtak = (props) => (
+const VurderingVedtak = () => (
   <div>
     <Nav.typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.typo.Undertittel>
     <div className="fane__knapplinje" >
@@ -10,7 +10,7 @@ const VurderingVedtak = (props) => (
         disabled={false}
         className="fane__navigasjonsknapp"
         data-cy-nesteknapp="knapp_steg0"
-        onClick={() => console.log('Vedtatt')}>Vedta
+        onClick={() => {}}>Vedta
       </Nav.Hovedknapp>
     </div>
   </div>

@@ -7,5 +7,5 @@ export const FolketrygdenkodeverkSelector = createSelector(
 
 export const TrygdedekningerSelector = createSelector(
   FolketrygdenkodeverkSelector,
-  folketrygdenkodeverk => folketrygdenkodeverk.trygdedekninger ? folketrygdenkodeverk.trygdedekninger : []
+  folketrygdenkodeverk => (folketrygdenkodeverk.trygdedekninger ? folketrygdenkodeverk.trygdedekninger : [])
 );

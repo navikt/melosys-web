@@ -1,7 +1,8 @@
 import React from 'react';
-import * as Nav from "../../../../utils/navFrontend";
+import PT from 'prop-types';
+import * as Nav from '../../../../utils/navFrontend';
 
-const VurderingTrygdeavgift = (props) => (
+const VurderingTrygdeavgift = props => (
   <div>
     <Nav.typo.Undertittel className="undertittel">Trygdeavgift</Nav.typo.Undertittel>
     <div className="fane__knapplinje" >
@@ -15,5 +16,9 @@ const VurderingTrygdeavgift = (props) => (
     </div>
   </div>
 );
+
+VurderingTrygdeavgift.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+};
 
 export default VurderingTrygdeavgift;

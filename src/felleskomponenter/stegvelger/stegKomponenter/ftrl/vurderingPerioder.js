@@ -1,7 +1,8 @@
 import React from 'react';
-import * as Nav from "../../../../utils/navFrontend";
+import PT from 'prop-types';
+import * as Nav from '../../../../utils/navFrontend';
 
-const VurderingPerioder = (props) => (
+const VurderingPerioder = props => (
   <div>
     <Nav.typo.Undertittel className="undertittel">Vurder medlemskapsperioder</Nav.typo.Undertittel>
     <div className="fane__knapplinje" >
@@ -15,5 +16,9 @@ const VurderingPerioder = (props) => (
     </div>
   </div>
 );
+
+VurderingPerioder.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+};
 
 export default VurderingPerioder;

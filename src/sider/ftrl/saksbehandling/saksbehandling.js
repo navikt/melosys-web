@@ -31,7 +31,7 @@ import { behandlingsperioderOperations } from '../../../ducks/behandlingsperiode
 import { AvslaattSoknad, HenlagtSak } from '../../eu_eøs/saksbehandling/komponenter/stegErstatter';
 import { stegMap } from './stegMap';
 import './saksbehandling.css';
-import {folketrygdenkodeverkOperations} from "../../../ducks/folketrygdenkodeverk";
+import { folketrygdenkodeverkOperations } from '../../../ducks/folketrygdenkodeverk';
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -63,7 +63,7 @@ class Saksbehandling extends Component {
 
   componentDidMount() {
     this.lastInnSaksopplysninger();
-    API.Kodeverk.hentLandkoderIso2.then(response => this.setState({landkoder: response}));
+    API.Kodeverk.hentLandkoderIso2.then(response => this.setState({ landkoder: response }));
   }
 
   componentDidUpdate() {

@@ -32,7 +32,7 @@ function lagState({
   dokumenter = { status: STATUS.OK, data: {} },
   fagsaker = { status: STATUS.OK, data: {} },
   feiletrespons = { status: STATUS.OK, data: {} },
-  folketrygdenkodeverk = { status: STATUS.OK, data: {}},
+  folketrygdenkodeverk = { status: STATUS.OK, data: {} },
   journalforing = { status: STATUS.OK, data: {} },
   lovvalgsperioder = { status: STATUS.OK, data: [] },
   modaler = { status: STATUS.OK, data: {} },

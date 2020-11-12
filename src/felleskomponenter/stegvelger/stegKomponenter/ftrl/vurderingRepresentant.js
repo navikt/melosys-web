@@ -1,7 +1,8 @@
 import React from 'react';
-import * as Nav from "../../../../utils/navFrontend";
+import PT from 'prop-types';
+import * as Nav from '../../../../utils/navFrontend';
 
-const VurderingRepresentant = (props) => (
+const VurderingRepresentant = props => (
   <div>
     <Nav.typo.Undertittel className="undertittel">Representant i Norge</Nav.typo.Undertittel>
     <div className="fane__knapplinje" >
@@ -15,5 +16,9 @@ const VurderingRepresentant = (props) => (
     </div>
   </div>
 );
+
+VurderingRepresentant.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+};
 
 export default VurderingRepresentant;
