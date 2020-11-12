@@ -1,23 +1,70 @@
-import React, { FormEventHandler, FunctionComponent } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { reduxForm, InjectedFormProps } from 'redux-form';
-import { RootState } from 'AppTypes';
+import React from 'react';
+import PT from 'prop-types';
+import { connect } from 'react-redux';
+import { reduxForm } from 'redux-form';
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
-import * as KV from '../../kodeverk';
-import * as Utils from '../../utils';
+import * as MPT from '../proptypes';
+import * as KV from '../kodeverk';
 
-import Menypanel from '../menypanel';
+import ArbeidsgivereNorge from './paneler/arbeidsgivereNorge';
+import AndreArbeidsforholdNorge from './paneler/andreArbeidsforholdNorge';
+import AndreArbeidsforholdUtland from './paneler/andreArbeidsforholdUtland';
+import Arbeidssteder from './paneler/arbeidssteder';
+import Personopplysninger from './paneler/personopplysninger';
+import PeriodeInntektOgFullmektig from './paneler/periodeInntektOgFullmektig';
 
-import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
-import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { avklartefaktaSelectors } from '../../ducks/avklartefakta';
-import { vilkarSelectors } from '../../ducks/vilkar';
-import { formSelectors } from '../../ducks/form';
+import { fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
+import { saksopplysningerOperations } from '../ducks/saksopplysninger';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../ducks/behandlingsgrunnlag';
+import { avklartefaktaSelectors } from '../ducks/avklartefakta';
+import { behandlingerSelectors } from '../ducks/behandlinger';
+import { vilkarSelectors } from '../ducks/vilkar';
+import { formSelectors } from '../ducks/form';
+import { formatterDatoTilNorsk } from '../utils/dato';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
 
-const mapStateToProps = (state: RootState) => ({
+const Soknadpaneler = ({
+  lagreSoknad,
+  fagsaker,
+  oppgittAdresseHarVerdier,
+  startOgVisOppfriskModal,
+}) => {
+  const overstyrSubmit = event => {
+    event.preventDefault();
+  };
+
+  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
+    await lagreSoknad();
+    startOgVisOppfriskModal();
+  };
+
+  return (
+    <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
+      <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
+      {fagsaker && fagsaker.saksnummer &&
+        <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      }
+      <ArbeidsgivereNorge />
+      <AndreArbeidsforholdNorge />
+      <AndreArbeidsforholdUtland />
+      <Arbeidssteder />
+    </form>
+  );
+};
+
+Soknadpaneler.propTypes = {
+  fagsaker: MPT.Fagsak.isRequired,
+  lagreSoknad: PT.func.isRequired,
+  oppfriskSaksopplysninger: PT.func.isRequired,
+  behandlingID: PT.number.isRequired,
+  oppgittAdresseHarVerdier: PT.bool.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
+};
+
+const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
+  fagsaker: fagsakSelectors.FagsakSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
@@ -36,7 +83,7 @@ const mapStateToProps = (state: RootState) => ({
     arbeidstakerTidligereUtsendt24Mnd: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd,
     arbeidsgiverBetalerArbeidsgiveravgift: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift,
     trygdeavgiftTrukketGjennomSkatt: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt,
-    trygdeavgiftTrukketGjennomSkattDato: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
+    trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
     oppgittAdresseHusnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummer,
     oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
@@ -51,8 +98,8 @@ const mapStateToProps = (state: RootState) => ({
     andelKontrakterINorge: Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
     arbeidstakereRekruttertILand: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).arbeidstakereRekruttertILand,
     ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
-    oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom),
-    oppholdUtlandTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom),
+    oppholdUtlandFom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom),
+    oppholdUtlandTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).oppholdslandkoder,
     arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
     arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
@@ -64,8 +111,8 @@ const mapStateToProps = (state: RootState) => ({
     selvstendigForetak: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
     antallMaanederINorge: behandlingsgrunnlagSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: behandlingsgrunnlagSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
-    soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
-    soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
+    soknadsperiodeFom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
+    soknadsperiodeTom: formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
     arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
     selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
@@ -96,37 +143,13 @@ const mapStateToProps = (state: RootState) => ({
     },
   },
 });
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const Soknad: FunctionComponent<PropsFromRedux & InjectedFormProps<KV.Form.SoknadFormData, PropsFromRedux>> = () => {
-  const submitHandler: FormEventHandler<HTMLFormElement> = event => {
-    event.preventDefault();
-  };
+const mapDispatchToProps = dispatch => ({
+  lagreSoknad: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
+});
 
-  return (
-    <form name="soknad" id="soknad" onSubmit={submitHandler}>
-      <Menypanel
-        menypunkter={[
-          'Person',
-          'Familieforhold',
-          'Medlemskap',
-          'EU/EØS-barnetrygd',
-          'Arbeidsforhold og inntekt',
-          'Arbeidsgiver/virksomhet',
-          'Fullmektig',
-          'Utenlandsoppdraget',
-          'Lønn og godtgjørelser',
-          'Arbeidssteder(er)',
-          'Om virksomheten i Norge',
-          'Øvrig om arbeidstaker',
-        ]}
-      />
-    </form>
-  );
-};
-
-const MenypanelForm = reduxForm<KV.Form.SoknadFormData, PropsFromRedux>({
+const SoknadpanelerForm = reduxForm({
   form: KV.Form.SOKNAD,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -140,8 +163,8 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, PropsFromRedux>({
       },
     };
 
-    return lagYupToReduxformErrorMapper(YupSkjemaer.soknad, settings)(values);
+    return lagYupToReduxformErrorMapper(YupSkjemaer.saksopplysninger, settings)(values);
   },
-})(Soknad);
+})(Soknadpaneler);
 
-export default connector(MenypanelForm);
+export default connect(mapStateToProps, mapDispatchToProps)(SoknadpanelerForm);

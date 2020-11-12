@@ -11,7 +11,9 @@ import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
+import * as Hooks from '../../../hooks';
 
+import Paneler from './komponenter/paneler';
 import { RegistreringMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 import RegisterkontrollTreff from '../../../felleskomponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
@@ -67,6 +69,7 @@ const Saksopplysninger = ({
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
+  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
 
   useEffect(() => {
     lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
@@ -381,12 +384,19 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      <RegistreringMenypanelForm
-        menypunkter={[
-          'Person',
-          'Arbeidsforhold og inntekt',
-        ]}
-      />
+      {
+        sidemenyToggle === 'enabled' &&
+        <RegistreringMenypanelForm
+          menypunkter={[
+            'Person',
+            'Arbeidsforhold og inntekt',
+          ]}
+        />
+      }
+      {
+        sidemenyToggle === 'disabled' &&
+        <Paneler />
+      }
     </div>
   );
 };
