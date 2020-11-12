@@ -63,7 +63,9 @@ class Saksbehandling extends Component {
 
   componentDidMount() {
     this.lastInnSaksopplysninger();
-    API.Kodeverk.hentLandkoderIso2.then(response => this.setState({ landkoder: response }));
+    API.Kodeverk.hentLandkoderIso2
+      .then(response => this.setState({ landkoder: response }))
+      .catch(error => Utils.logger.error(error));
   }
 
   componentDidUpdate() {
@@ -130,13 +132,6 @@ class Saksbehandling extends Component {
     lagrePerioder();
   };
 
-  lagreAvklartefaktaHandler = async () => {
-    const { behandlingID } = this.state;
-    const { sendAvklartefakta, avklartefakta } = this.props;
-
-    return sendAvklartefakta(behandlingID, avklartefakta);
-  };
-
   render() {
     const {
       arbeidsland,
@@ -152,6 +147,7 @@ class Saksbehandling extends Component {
       fagsak,
       fagsakStatusKode,
       lagreAllData,
+      lagreAvklartefakta,
       match,
       oppdaterBehandlingsgrunnlag,
       oppsummering,
@@ -188,10 +184,7 @@ class Saksbehandling extends Component {
               { visStegVelger &&
               <Stegvelger
                 behandlingID={behandlingID}
-                lagreVilkarHandler={() => {}}
-                lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
-                lagreLovvalgsperioderHandler={() => {}}
-                lagreAnmodningsperioderHandler={() => {}}
+                lagreAvklartefaktaHandler={lagreAvklartefakta}
                 oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                 lagreAllData={lagreAllData}
                 oppdaterLokalSoknadHandler={oppdaterBehandlingsgrunnlag}
@@ -244,7 +237,6 @@ class Saksbehandling extends Component {
 
 Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  avklartefakta: MPT.AvklartefaktaListe,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
@@ -273,6 +265,7 @@ Saksbehandling.propTypes = {
   hentFagsaker: PT.func.isRequired,
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
+  lagreAvklartefakta: PT.func.isRequired,
   lagrePerioder: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -287,7 +280,6 @@ Saksbehandling.propTypes = {
 };
 
 Saksbehandling.defaultProps = {
-  avklartefakta: [],
   behandlingsgrunnlag: {},
   fagsak: {},
   oppsummering: undefined,
@@ -297,7 +289,6 @@ Saksbehandling.defaultProps = {
 
 const mapStateToProps = state => ({
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
@@ -324,13 +315,13 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
-  sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

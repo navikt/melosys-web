@@ -520,9 +520,9 @@ Stegvelger.propTypes = {
   valgteVirksomheterIkkeNaeringsDrivende: PT.array,
   vilkar: PT.array.isRequired,
   inngangsvilkaar: MPT.Vilkaar,
-  lagreVilkarHandler: PT.func.isRequired,
+  lagreVilkarHandler: PT.func,
   lagreAvklartefaktaHandler: PT.func.isRequired,
-  lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func,
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
@@ -530,7 +530,7 @@ Stegvelger.propTypes = {
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   oppdaterAnmodningsPerioder: PT.func.isRequired,
-  lagreAnmodningsperioderHandler: PT.func.isRequired,
+  lagreAnmodningsperioderHandler: PT.func,
   lagreUtpekingsperioderHandler: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterAnmodningsperiodesvar: PT.func.isRequired,
@@ -585,6 +585,9 @@ Stegvelger.defaultProps = {
   maritimtarbeid: [],
   hjemmebaser: [],
   inngangsvilkaar: {},
+  lagreVilkarHandler: () => {},
+  lagreLovvalgsperioderHandler: () => {},
+  lagreAnmodningsperioderHandler: () => {},
 };
 
 const mapStateToProps = state => ({
