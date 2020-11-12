@@ -12,6 +12,7 @@ import {
   ArbeidsgiverOgVirksomhet,
   Arbeidssteder,
   Barnetrygd,
+  Fullmektig,
   Medlemskap,
   Person,
 } from './menypunkter';
@@ -133,7 +134,7 @@ export const Menypanel = ({
         {
           label: 'Fullmektig',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Fullmektig />,
         },
         {
           label: 'Utenlandsoppdraget',
