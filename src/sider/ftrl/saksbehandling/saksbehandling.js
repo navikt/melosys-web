@@ -99,7 +99,7 @@ class Saksbehandling extends Component {
 
     try {
       await hentFagsaker(snr);
-      await hentFolketrygdenKodeverk;
+      await hentFolketrygdenKodeverk();
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;

@@ -8,16 +8,15 @@ import { RootState } from 'AppTypes';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { KTObject } from '@navikt/melosys-kodeverk';
 
-import * as MPT from '../../../../proptypes/index';
+import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
-import * as Skjema from '../../../skjema/index';
-import * as Utils from '../../../../utils/index';
-import * as KV from '../../../../kodeverk/index';
+import * as Skjema from '../../../skjema';
+import * as Utils from '../../../../utils';
+import * as KV from '../../../../kodeverk';
 
-import { landTekstFormatStoreForbokstaver } from '../../../skjema/landvelger/utils';
-import { modalerOperations } from '../../../../ducks/modaler/index';
-import { soknadspanelOperations } from '../../../../ducks/soknadspaneler/index';
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag/index';
+import { modalerOperations } from '../../../../ducks/modaler';
+import { soknadspanelOperations } from '../../../../ducks/soknadspaneler';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 
 import './vurderingStart.css';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
@@ -132,7 +131,7 @@ const VurderingStart =
             </Nav.Column>
             <Nav.Column xs="5">
               <Skjema.Select label="Land" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
-                {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{landTekstFormatStoreForbokstaver(item)}</option>))}
+                {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{Utils.land.landTekstFormatStoreForbokstaver(item)}</option>))}
               </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
