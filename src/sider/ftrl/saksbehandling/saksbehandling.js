@@ -63,9 +63,9 @@ class Saksbehandling extends Component {
 
   componentDidMount() {
     this.lastInnSaksopplysninger();
-    API.Kodeverk.hentLandkoderIso2
+    API.Kodeverk.hentLandkoderIso2()
       .then(response => this.setState({ landkoder: response }))
-      .catch(error => Utils.logger.error(error));
+      .catch(Utils.logger.error);
   }
 
   componentDidUpdate() {
@@ -272,7 +272,6 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsgrunnlagState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
-  sendAvklartefakta: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,

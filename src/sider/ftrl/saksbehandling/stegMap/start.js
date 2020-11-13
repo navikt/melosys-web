@@ -19,10 +19,7 @@ class Start extends Steg {
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => {
-      const avklaring = this.finnAvklaring(_propsLight.behandlingsgrunnlag, _propsLight.inngangsvilkaar.oppfylt);
-      return ({ harAvklaring: avklaring });
-    };
+    this.beregnRelevantUI = () => ({ harAvklaring });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

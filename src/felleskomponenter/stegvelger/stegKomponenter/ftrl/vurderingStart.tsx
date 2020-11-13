@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PT from 'prop-types';
 import { getFormValues, reduxForm } from 'redux-form';
 import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
@@ -8,7 +7,6 @@ import { RootState } from 'AppTypes';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { KTObject } from '@navikt/melosys-kodeverk';
 
-import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Skjema from '../../../skjema';
 import * as Utils from '../../../../utils';
@@ -27,11 +25,6 @@ const mapStateToProps = (state: RootState) => {
   const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(state);
   const initialTrygdedekning = behandlingsgrunnlagSelectors.TrygdedekningSelector(state);
   return ({
-    behandlingsgrunnlagFom: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
-    behandlingsgrunnlagTom: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
-    soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
-    soeknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
-    trygdedekning: behandlingsgrunnlagSelectors.TrygdedekningSelector(state),
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
     formValues: getFormValues(KV.Form.START)(state),
     initialValues: {
@@ -156,22 +149,12 @@ const VurderingStart =
             mini
             disabled={!erObligatoriskeFelterFyltInn}
             className="fane__navigasjonsknapp"
-            data-cy-nesteknapp="knapp_steg0"
             onClick={fortsettHandle}>Fortsett
           </Nav.Hovedknapp>
         </div>
       </div>
     );
   };
-
-VurderingStart.propTypes = {
-  bekreftOgFortsett: PT.func.isRequired,
-  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  redigerbart: PT.bool.isRequired,
-  formValues: PT.object,
-  visOppfriskDialogOgFortsettHandle: PT.func.isRequired,
-  visSoknadspanel: PT.func.isRequired,
-};
 
 VurderingStart.defaultProps = {
   formValues: {},
@@ -187,4 +170,4 @@ const VurderingStartForm = reduxForm({
 })(VurderingStart);
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingStartForm);
+export default connector(VurderingStartForm);

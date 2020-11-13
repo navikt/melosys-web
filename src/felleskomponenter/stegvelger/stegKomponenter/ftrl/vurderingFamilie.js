@@ -10,7 +10,6 @@ const VurderingFamilie = props => (
         mini
         disabled={false}
         className="fane__navigasjonsknapp"
-        data-cy-nesteknapp="knapp_steg0"
         onClick={props.bekreftOgFortsett}>Fortsett
       </Nav.Hovedknapp>
     </div>

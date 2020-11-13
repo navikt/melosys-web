@@ -3,6 +3,8 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import loadable from '@loadable/component';
 
+import * as MKV from '@navikt/melosys-kodeverk';
+
 import { FellesHandlersContext } from '../contexts';
 
 const SideLoadingStatus = <div>Laster inn siden...</div>;
@@ -19,20 +21,22 @@ const SedBehandlingLoadable = loadable(() => import('../sider/eu_eøs/sedbehandl
 const OpprettNySakLoadable = loadable(() => import('../sider/opprettnysak'), { fallback: SideLoadingStatus });
 const VurderUtpekingLoadable = loadable(() => import('../sider/vurderutpeking'), { fallback: SideLoadingStatus });
 
+const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
+
 const Routing = () => (
   <FellesHandlersContext.Consumer>
     { fellesHandlers =>
       <Switch>
         <Route exact path="/" render={props => <ForsideLoadable {...props} {...fellesHandlers} />} />
         <Route exact path="/sok" component={SokLoadable} />
-        <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
-        <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/sedbehandling/:snr" render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/EU_EOS/saksbehandling/:snr" render={props => <EuEøsSaksbehandlingLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/FTRL/saksbehandling/:snr" render={props => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />} />
+        <Route exact path={`/${EU_EOS}/registrering/:snr/unntaksperioder`} render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
+        <Route exact path={`/${EU_EOS}/registrering/:snr/anmodningunntak`} render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />
+        <Route path={`/${EU_EOS}/sedbehandling/:snr`} render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />
+        <Route path={`/${EU_EOS}/saksbehandling/:snr`} render={props => <EuEøsSaksbehandlingLoadable {...props} {...fellesHandlers} />} />
+        <Route path={`/${FTRL}/saksbehandling/:snr`} render={props => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" render={props => <JournalforingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/opprettnysak" render={props => <OpprettNySakLoadable {...props} {...fellesHandlers} />} />;
-        <Route path="/vurderutpeking/:snr" render={props => <VurderUtpekingLoadable {...props} {...fellesHandlers} />} />
+        <Route path={`/${EU_EOS}/vurderutpeking/:snr`} render={props => <VurderUtpekingLoadable {...props} {...fellesHandlers} />} />
         <Route component={UkjentSideLoadable} />
       </Switch>
     }

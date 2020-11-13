@@ -9,7 +9,6 @@ const VurderingVedtak = () => (
         mini
         disabled={false}
         className="fane__navigasjonsknapp"
-        data-cy-nesteknapp="knapp_steg0"
         onClick={() => {}}>Vedta
       </Nav.Hovedknapp>
     </div>
