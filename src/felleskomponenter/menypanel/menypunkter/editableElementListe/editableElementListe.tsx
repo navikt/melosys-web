@@ -11,7 +11,7 @@ import FlereRedigeringsknapperListe from './flereRedigeringsknapperListe';
 import EnRedigeringsknappListe from './enRedigeringsknappListe';
 
 interface BaseProps {
-  leggTilTekst: string,
+  leggTilTekst: string | ((elementer: any[]) => string),
   redigerbart: boolean,
   redigererKomponent: ElementType,
   redigeringUtfortKomponent: ElementType,
@@ -56,6 +56,8 @@ export const InnerEditableElementListe = ({
 
   const leggTil = () => fields.push(hentDefaultElement());
 
+  const innerLeggTilTekst = typeof leggTilTekst === 'function' ? leggTilTekst(fields.getAll()) : leggTilTekst;
+
   return (
     <div className={editableElementListeCls}>
       {
@@ -71,7 +73,7 @@ export const InnerEditableElementListe = ({
             redigererKomponent={redigererKomponent}
             redigeringUtfortKomponent={redigeringUtfortKomponent}
             tittelTekst={tittelTekst}
-            leggTilTekst={leggTilTekst}
+            leggTilTekst={innerLeggTilTekst}
             leggTil={leggTil}
           />
           :
@@ -86,7 +88,7 @@ export const InnerEditableElementListe = ({
             redigererKomponent={redigererKomponent}
             redigeringUtfortKomponent={redigeringUtfortKomponent}
             tittelTekst={tittelTekst}
-            leggTilTekst={leggTilTekst}
+            leggTilTekst={innerLeggTilTekst}
             leggTil={leggTil}
           />
       }

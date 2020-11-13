@@ -32,6 +32,10 @@ const ArbeidsstedUtlandErIkkeTomt = (arbeidssted: KV.Form.ArbeidsstedUtland) => 
   !Utils.adresse.erStrukturertAdresseObjektTomt(arbeidssted.adresse);
 };
 
+const hentLeggTilTekst = (tekstVedTomListe: string) => (elementer: any[]) => (
+  elementer.length === 0 ? tekstVedTomListe : 'Legg til ny seksjon'
+);
+
 const arbeidUtlandDefaultElement = {
   adresse: {
     gatenavn: '',
@@ -67,7 +71,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidUtland"
       redigererKomponent={Enkel.Land.Redigerer}
       redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på land')}
       hentDefaultElement={() => arbeidUtlandDefaultElement}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
       tittelIkon={Ikoner.Kontor}
@@ -83,7 +87,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidsstedOffshore"
       redigererKomponent={Enkel.Offshore.Redigerer}
       redigeringUtfortKomponent={Enkel.Offshore.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted offshore')}
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
       tittelIkon={Ikoner.Helikopter}
@@ -99,7 +103,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidsstedSkip"
       redigererKomponent={Enkel.Skip.Redigerer}
       redigeringUtfortKomponent={Enkel.Skip.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på skip')}
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
       tittelIkon={Ikoner.Skip}
@@ -115,7 +119,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidsstedFly"
       redigererKomponent={Enkel.Fly.Redigerer}
       redigeringUtfortKomponent={Enkel.Fly.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på fly')}
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
       tittelIkon={Ikoner.Fly}
