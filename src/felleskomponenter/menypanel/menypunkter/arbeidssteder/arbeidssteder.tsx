@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 
 import * as KV from '../../../../kodeverk';
+import * as Utils from '../../../../utils';
 import * as Ikoner from '../../../../resources/images';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Etiketter from '../etiketter';
@@ -13,6 +14,23 @@ import EditableElementListe from '../editableElementListe';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import './arbeidssteder.css';
+
+type FlattArbeidssted = KV.Form.ArbeidsstedFly |
+  KV.Form.ArbeidsstedOffshore |
+  KV.Form.ArbeidsstedSkip;
+
+const flattArbeidsstedErIkkeTomt = (arbeidssted: FlattArbeidssted) => (
+  Object.values(arbeidssted).some(v => !Utils._isNil(v) && v !== '')
+);
+
+const ArbeidsstedUtlandErIkkeTomt = (arbeidssted: KV.Form.ArbeidsstedUtland) => {
+  return [
+    arbeidssted.arbeidUtlandHjemmekontor,
+    arbeidssted.foretakNavn,
+    arbeidssted.foretakOrgnr,
+  ].some(v => !Utils._isNil(v) && v !== '') ||
+  !Utils.adresse.erStrukturertAdresseObjektTomt(arbeidssted.adresse);
+};
 
 const arbeidUtlandDefaultElement = {
   adresse: {
@@ -54,7 +72,10 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
       tittelIkon={Ikoner.Kontor}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(ArbeidsstedUtlandErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
     <EditableElementListe
@@ -67,7 +88,10 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
       tittelIkon={Ikoner.Helikopter}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(flattArbeidsstedErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
     <EditableElementListe
@@ -80,7 +104,10 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
       tittelIkon={Ikoner.Skip}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(flattArbeidsstedErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
     <EditableElementListe
@@ -93,7 +120,10 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
       tittelIkon={Ikoner.Fly}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(flattArbeidsstedErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
   </div>
