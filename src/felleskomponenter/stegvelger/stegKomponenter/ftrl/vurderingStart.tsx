@@ -53,14 +53,14 @@ interface Props {
   redigerbart: boolean,
   oppdaterData: (avklartefakta: any) => void,
   alleLandkoder: KTObject[],
-  formValues: {fom: string, tom: string, land: string, trygdedekning: string},
+  formValues: {fom?: string, tom?: string, land?: string, trygdedekning?: string},
 }
 
 const VurderingStart =
   ({
     bekreftOgFortsett,
     redigerbart,
-    formValues,
+    formValues = {},
     alleLandkoder,
     visOppfriskDialogOgFortsettHandle,
     visSoknadspanel,
@@ -76,8 +76,8 @@ const VurderingStart =
       const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
       const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
       oppdaterPeriode({ fom: fom === 'Invalid date' ? '' : fom, tom: tom === 'Invalid date' ? '' : tom });
-      oppdaterSoeknadsland([formValues.land]);
-      oppdaterTrygdedekning(formValues.trygdedekning);
+      oppdaterSoeknadsland(formValues.land ? [formValues.land] : []);
+      oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : '');
     };
 
     useEffect(() => {
@@ -91,6 +91,7 @@ const VurderingStart =
     }, [formValues]);
 
     const fortsettHandle = () => {
+      oppdaterLokalBehandlingsgrunnlag();
       if (erObligatoriskeFelterFyltInn) {
         const fortsett = () => {
           bekreftOgFortsett();
@@ -156,9 +157,6 @@ const VurderingStart =
     );
   };
 
-VurderingStart.defaultProps = {
-  formValues: {},
-};
 
 const VurderingStartForm = reduxForm({
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
