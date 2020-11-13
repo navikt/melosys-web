@@ -55,7 +55,7 @@ const Saksopplysninger = ({
 }) => {
   if (Utils._isNil(redigerbart)) return null;
 
-  if (!behandlingID) {
+  if (!behandlingID || behandlingID < 0) {
     return null;
   }
 

@@ -163,6 +163,9 @@ class Saksbehandling extends Component {
     if (Utils._isNil(redigerbart)) {
       return null;
     }
+    if (!behandlingID || behandlingID < 0) {
+      return null;
+    }
 
     const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
