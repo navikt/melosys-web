@@ -19,8 +19,9 @@ const RedigeringUtfort = ({
     </thead>
     <tbody>
       {
-        verdier.map(element => (
-          <tr>
+        verdier.map((element, index) => (
+          /* eslint-disable-next-line react/no-array-index-key */
+          <tr key={index}>
             <td>{element.hjemmebaseNavn}</td>
             <td>{KV.kodeTilTerm(element.typeFlyvninger, MKV.KTObjects.flyvningstyper)}</td>
             <td>{KV.kodeTilTerm(element.hjemmebaseLand, MKV.KTObjects.landkoder)}</td>
