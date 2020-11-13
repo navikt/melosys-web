@@ -23,14 +23,14 @@ const flattArbeidsstedErIkkeTomt = (arbeidssted: FlattArbeidssted) => (
   Object.values(arbeidssted).some(v => !Utils._isNil(v) && v !== '')
 );
 
-const ArbeidsstedUtlandErIkkeTomt = (arbeidssted: KV.Form.ArbeidsstedUtland) => {
-  return [
+const ArbeidsstedUtlandErIkkeTomt = (arbeidssted: KV.Form.ArbeidsstedUtland) => (
+  [
     arbeidssted.arbeidUtlandHjemmekontor,
     arbeidssted.foretakNavn,
     arbeidssted.foretakOrgnr,
   ].some(v => !Utils._isNil(v) && v !== '') ||
-  !Utils.adresse.erStrukturertAdresseObjektTomt(arbeidssted.adresse);
-};
+  !Utils.adresse.erStrukturertAdresseObjektTomt(arbeidssted.adresse)
+);
 
 const hentLeggTilTekst = (tekstVedTomListe: string) => (elementer: any[]) => (
   elementer.length === 0 ? tekstVedTomListe : 'Legg til ny seksjon'
