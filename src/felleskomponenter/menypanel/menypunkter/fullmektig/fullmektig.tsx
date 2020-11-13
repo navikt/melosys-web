@@ -1,48 +1,119 @@
-import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from 'AppTypes';
+import React, { Fragment, useState, useEffect, ChangeEventHandler, MouseEventHandler } from 'react';
+import { Organisasjon } from 'Domene';
 
-import * as KV from '../../../../kodeverk';
-import * as Ikoner from '../../../../resources/images';
+import MKV from '../../../../melosyskodeverk';
+
 import * as Nav from '../../../../utils/navFrontend';
-import * as Etiketter from '../etiketter';
+import * as Utils from '../../../../utils';
+import * as Api from '../../../../services/api';
 
-import EditableElementListe from '../editableElementListe';
-
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
+import Kontaktopplysninger from '../../../kontaktopplysninger';
+import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
+import SokFullmektigOrgProps from './sokFullmektigOrg';
 
 import './fullmektig.css';
 
-const mapStateToProps = (state: RootState) => ({
-  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
-});
+interface FullmektigProps {
+  onRolleChange: (rolle: string, org?: string) => void,
+  redigerbart: boolean,
+  databaseID: number,
+  settRepresentant: (representererKode: string) => void,
+  onClickSlett: MouseEventHandler,
+  onOrgFunnet: (orgnr: string) => void,
+  representererKode: string | null,
+  orgnr: string | null,
+}
 
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
+function Fullmektig(props: FullmektigProps) {
+  const {
+    redigerbart,
+    databaseID = -1,
+    onClickSlett,
+    onOrgFunnet,
+    settRepresentant,
+    onRolleChange,
+    representererKode,
+    orgnr,
+  } = props;
 
-const Fullmektig = ({
-  redigerbart,
-}: PropsFromRedux) => (
-  <div className="fullmektig">
-    <div>
-      <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Fullmektig.tittel}</Nav.typo.Undertittel>
-      <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
-      <Etiketter.ArbeidsgiversDel />
-    </div>
-    {/* <EditableElementListe
-      redigerbart={redigerbart}
-      feltNavn="arbeidUtland"
-      redigererKomponent={Enkel.Land.Redigerer}
-      redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
-      hentDefaultElement={() => arbeidUtlandDefaultElement}
-      tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
-      tittelIkon={Ikoner.Kontor}
-      tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
-      flereRedigeringsknapper={false}
-    /> */}
-  </div>
-);
+  const [org, settOrg] = useState<Partial<Organisasjon>>({});
 
-export default connector(Fullmektig);
+  const onRadioChange: ChangeEventHandler<HTMLInputElement> = event => {
+    onRolleChange(event.target.value, org.orgnr);
+  };
+
+  const hentOrgFraApi = async () => {
+    if (orgnr) {
+      try {
+        const hentetOrg = await Api.Organisasjoner.hentOrganisasjon(orgnr);
+        settOrg(hentetOrg);
+      } catch (e) {
+        Utils.logger.error(e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // TODO: forsøk å fjerne neste linje, må testes dog
+    if (representererKode) settRepresentant(representererKode);
+    hentOrgFraApi();
+  }, [representererKode, orgnr]);
+
+  const databaseIDString = databaseID.toString();
+
+  return (
+    <Nav.Row className="fullmektig">
+      <Nav.Column xs="6">
+        {
+          org &&
+          <Fragment>
+            <Nav.typo.Element>Juridisk enhet</Nav.typo.Element>
+            <OrganisasjonsAdresse organisasjon={org} className="adresse" />
+          </Fragment>
+        }
+        {
+          !org && <SokFullmektigOrgProps
+            onOrgFunnet={onOrgFunnet}
+          />
+        }
+        {
+          org &&
+          <Nav.Fieldset legend="Hvem er dette fullmektig for?" className="radioknapper">
+            <Nav.Radio
+              onChange={onRadioChange}
+              checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
+              label="Arbeidsgiver"
+              value={MKV.Koder.representerer.ARBEIDSGIVER}
+              name={databaseIDString}
+              disabled={!redigerbart}
+            />
+            <Nav.Radio
+              onChange={onRadioChange}
+              checked={representererKode === MKV.Koder.representerer.BRUKER}
+              label="Arbeidstaker"
+              value={MKV.Koder.representerer.BRUKER}
+              name={databaseIDString}
+              disabled={!redigerbart}
+            />
+            <Nav.Radio
+              onChange={onRadioChange}
+              checked={representererKode === MKV.Koder.representerer.BEGGE}
+              label="Både arbeidstaker og arbeidsgiver"
+              value={MKV.Koder.representerer.BEGGE}
+              name={databaseIDString}
+              disabled={!redigerbart}
+            />
+          </Nav.Fieldset>
+        }
+        <Nav.Knapp disabled={!redigerbart} onClick={onClickSlett} type="standard">&times; FJERN FULLMEKTIG</Nav.Knapp>
+      </Nav.Column>
+      <Nav.Column xs="6">
+        {
+          org && <Kontaktopplysninger juridiskOrg={org} redigerbart={redigerbart} />
+        }
+      </Nav.Column>
+    </Nav.Row>
+  );
+}
+
+export default Fullmektig;
