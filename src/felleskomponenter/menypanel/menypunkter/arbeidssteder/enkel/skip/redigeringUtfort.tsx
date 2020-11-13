@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 
 import * as KV from '../../../../../../kodeverk';
 
@@ -6,10 +7,14 @@ import MKV from '../../../../../../melosyskodeverk';
 
 import { RedigeringUtfort as RedigeringUtfortType } from '../types';
 
+import './redigeringUtfort.css';
+
+const cls = classNames('tabell', 'arbeidssted__utland__redigeringutfort');
+
 const RedigeringUtfort = ({
   verdier,
 }: RedigeringUtfortType<KV.Form.ArbeidsstedSkip>) => (
-  <table className="tabell">
+  <table className={cls}>
     <thead>
       <tr>
         <th>Navn på skip</th>
