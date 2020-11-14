@@ -19,6 +19,7 @@ import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import './menypanel.css';
+import { menypanelSelectors } from '../../ducks/menypanel';
 
 const {
   SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
@@ -46,6 +47,7 @@ const hentLinkGroupLabels = (behandlingstema: string): [string, string, string] 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -82,6 +84,7 @@ export const Menypanel = ({
   behandlingsgrunnlagtype,
   behandlingstema,
   menypunkter,
+  visMenypanel,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
@@ -197,15 +200,19 @@ export const Menypanel = ({
     .filter(linkGroup => linkGroup.links.length > 0);
 
   return (
-    <div className="menypanel">
-      <Sidemeny
-        heading="Opplysninger"
-        linkGroups={linkGroups}
-        onClick={handleClick}
-      />
-      <Nav.Panel className="content">
-        { activeContent }
-      </Nav.Panel>
+    <div>
+      { visMenypanel &&
+      <div className="menypanel">
+        <Sidemeny
+          heading="Opplysninger"
+          linkGroups={linkGroups}
+          onClick={handleClick}
+        />
+        <Nav.Panel className="content">
+          { activeContent }
+        </Nav.Panel>
+      </div>
+      }
     </div>
   );
 };

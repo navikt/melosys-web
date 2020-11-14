@@ -9,6 +9,7 @@ import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as API from '../../../services/api';
+import * as Hooks from '../../../hooks';
 
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
@@ -16,6 +17,7 @@ import Behandlingsstatus from '../../../felleskomponenter/behandlingsstatus';
 import Soknadpaneler from '../../../felleskomponenter/soknadpaneler';
 import Stegvelger from '../../../felleskomponenter/stegvelger';
 import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import { SoknadMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 
 import { fagsakOperations, fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -98,6 +100,7 @@ const Saksbehandling = ({
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
+  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
 
   useEffect(() => {
     lastInnSaksopplysninger();
@@ -200,10 +203,19 @@ const Saksbehandling = ({
               forsteSteg={STEG.START}
             />
             }
-            <Soknadpaneler
-              startOgVisOppfriskModal={startOgVisOppfriskModal}
-              behandlingID={behandlingID}
-            />
+            {
+              sidemenyToggle === 'enabled' &&
+              <SoknadMenypanelForm
+                startOgVisOppfriskModal={startOgVisOppfriskModal}
+              />
+            }
+            {
+              sidemenyToggle === 'disabled' &&
+              <Soknadpaneler
+                startOgVisOppfriskModal={startOgVisOppfriskModal}
+                behandlingID={behandlingID}
+              />
+            }
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
