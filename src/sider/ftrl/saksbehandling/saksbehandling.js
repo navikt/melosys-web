@@ -29,7 +29,7 @@ import { datalastingOperations } from '../../../ducks/datalasting';
 import { dokumenterOperations, dokumenterSelectors } from '../../../ducks/dokumenter';
 import { formSelectors } from '../../../ducks/form';
 import { behandlingsperioderOperations } from '../../../ducks/behandlingsperioder';
-import { menypanelOperations } from "../../../ducks/menypanel";
+import { menypanelOperations } from '../../../ducks/menypanel';
 
 import { AvslaattSoknad, HenlagtSak } from '../../eu_eøs/saksbehandling/komponenter/stegErstatter';
 import { stegMap } from './stegMap';
@@ -102,24 +102,6 @@ const Saksbehandling = ({
   const [landkoder, setLandkoder] = useState([]);
   const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
 
-  useEffect(() => {
-    lastInnSaksopplysninger();
-    API.Kodeverk.hentLandkoderIso2()
-      .then(response => setLandkoder(response))
-      .catch(Utils.logger.error);
-
-    return () => {
-      resetFagsakState();
-      resetBehandlingerState();
-      resetBehandlingsgrunnlagState();
-      skjulMenypanel();
-    }
-  }, []);
-
-  useEffect(() => {
-    oppdaterBehandlingIDState();
-  });
-
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, 'behandlingID');
 
@@ -156,6 +138,24 @@ const Saksbehandling = ({
     }
     return false;
   };
+
+  useEffect(() => {
+    lastInnSaksopplysninger();
+    API.Kodeverk.hentLandkoderIso2()
+      .then(response => setLandkoder(response))
+      .catch(Utils.logger.error);
+
+    return () => {
+      resetFagsakState();
+      resetBehandlingerState();
+      resetBehandlingsgrunnlagState();
+      skjulMenypanel();
+    };
+  }, []);
+
+  useEffect(() => {
+    oppdaterBehandlingIDState();
+  });
 
   const oppdaterOgLagreBehandlingerHandler = async () => {
     await oppdaterBehandlingerState({ ...skjema });
