@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -55,58 +55,86 @@ const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
 };
 
-class Saksbehandling extends Component {
-  state = {
-    behandlingID: -1,
-    landkoder: [],
-  };
+const Saksbehandling = ({
+  arbeidsland,
+  behandlingOppfriskes,
+  behandlingsgrunnlag,
+  behandlingsgrunnlagPeriodeFom,
+  behandlingsgrunnlagPeriodeTom,
+  behandlingsresultat,
+  behandlingstema,
+  brevBestillingRedigerbart,
+  brevBestillingRedigerbartIArtikkel13,
+  dokumenter,
+  dokumentOversikt,
+  fagsak,
+  fagsakStatusKode,
+  hentBehandling,
+  hentBehandlingsgrunnlag,
+  hentBehandlingsresultat,
+  hentDokumentOversikt,
+  hentFagsaker,
+  hentFolketrygdenKodeverk,
+  lagreAllData,
+  lagreAvklartefakta,
+  lagrePerioder,
+  location,
+  match,
+  oppdaterBehandlingerState,
+  oppdaterBehandlingsgrunnlag,
+  oppsummering,
+  person,
+  redigerbart,
+  resetBehandlingerState,
+  resetBehandlingsgrunnlagState,
+  resetFagsakState,
+  skjema,
+  soknadForm,
+  startOgVisOppfriskModal,
+  tilForsiden,
+  visOppfriskModal,
+}) => {
+  const [behandlingID, setBehandlingID] = useState(-1);
+  const [landkoder, setLandkoder] = useState([]);
 
-  componentDidMount() {
-    this.lastInnSaksopplysninger();
+  useEffect(() => {
+    lastInnSaksopplysninger();
     API.Kodeverk.hentLandkoderIso2()
-      .then(response => this.setState({ landkoder: response }))
+      .then(response => setLandkoder(response))
       .catch(Utils.logger.error);
-  }
 
-  componentDidUpdate() {
-    this.oppdaterBehandlingIDState();
-  }
+    return () => {
+      resetFagsakState();
+      resetBehandlingerState();
+      resetBehandlingsgrunnlagState();
+    }
+  }, []);
 
-  componentWillUnmount() {
-    this.props.resetFagsakState();
-    this.props.resetBehandlingerState();
-    this.props.resetBehandlingsgrunnlagState();
-  }
+  useEffect(() => {
+    oppdaterBehandlingIDState();
+  });
 
-  oppdaterBehandlingIDState = () => {
-    const { location } = this.props;
-    const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
+  const oppdaterBehandlingIDState = () => {
+    const behandlingIDFraParam = Utils.queryString.getParam(location, 'behandlingID');
 
-    if (Utils._toInteger(behandlingID) !== this.state.behandlingID) {
-      this.setState({ behandlingID: Utils._toInteger(behandlingID) });
+    if (Utils._toInteger(behandlingIDFraParam) !== behandlingID) {
+      setBehandlingID(Utils._toInteger(behandlingIDFraParam));
     }
   };
 
-  lastInnSaksopplysninger = async () => {
-    const { match, location } = this.props;
+  const lastInnSaksopplysninger = async () => {
     const { snr } = match.params;
-    const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
-    this.setState({ behandlingID: Utils._toInteger(behandlingID) });
-
-    const {
-      hentFagsaker, hentBehandling, hentBehandlingsresultat,
-      hentBehandlingsgrunnlag, visOppfriskModal, behandlingOppfriskes,
-      hentDokumentOversikt, hentFolketrygdenKodeverk,
-    } = this.props;
+    const behandlingIDFraParam = Utils.queryString.getParam(location, 'behandlingID');
+    setBehandlingID(Utils._toInteger(behandlingIDFraParam));
 
     try {
       await hentFagsaker(snr);
       await hentFolketrygdenKodeverk();
-      const response = await hentBehandling(behandlingID);
+      const response = await hentBehandling(behandlingIDFraParam);
       const behandling = response.data;
       if (!behandling) return false;
 
-      await hentBehandlingsresultat(behandlingID);
+      await hentBehandlingsresultat(behandlingIDFraParam);
 
       // Sjekk om saken er iferd under oppdatering
       if (behandlingOppfriskes) {
@@ -114,7 +142,7 @@ class Saksbehandling extends Component {
         return false;
       }
 
-      await hentBehandlingsgrunnlag(behandlingID);
+      await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(snr);
       return true;
     } catch (e) {
@@ -123,120 +151,90 @@ class Saksbehandling extends Component {
     return false;
   };
 
-  oppdaterOgLagreBehandlingerHandler = async () => {
-    const {
-      skjema, oppdaterBehandlingerState, lagrePerioder,
-    } = this.props;
+  const oppdaterOgLagreBehandlingerHandler = async () => {
     await oppdaterBehandlingerState({ ...skjema });
 
     lagrePerioder();
   };
 
-  render() {
-    const {
-      arbeidsland,
-      behandlingsgrunnlag,
-      behandlingsgrunnlagPeriodeFom,
-      behandlingsgrunnlagPeriodeTom,
-      behandlingsresultat,
-      behandlingstema,
-      brevBestillingRedigerbart,
-      brevBestillingRedigerbartIArtikkel13,
-      dokumenter,
-      dokumentOversikt,
-      fagsak,
-      fagsakStatusKode,
-      lagreAllData,
-      lagreAvklartefakta,
-      match,
-      oppdaterBehandlingsgrunnlag,
-      oppsummering,
-      person,
-      redigerbart,
-      soknadForm,
-      startOgVisOppfriskModal,
-      tilForsiden,
-    } = this.props;
-    const { params: { snr: saksnummer } } = match;
-    const { behandlingID, landkoder } = this.state;
+  const { params: { snr: saksnummer } } = match;
 
-    if (Utils._isNil(redigerbart)) {
-      return null;
-    }
-    if (!behandlingID || behandlingID < 0) {
-      return null;
-    }
-
-    const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
-    const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-    const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
-    const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
-
-    return (
-      <div className="saksbehandling">
-        <Nav.Container fluid>
-          <Nav.Row>
-            <Nav.Column xs="7">
-              { erHenlagtSak &&
-              <HenlagtSak behandlingsresultat={behandlingsresultat} />
-              }
-              { visAvslaattSoknad &&
-              <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
-              }
-              { visStegVelger &&
-              <Stegvelger
-                behandlingID={behandlingID}
-                lagreAvklartefaktaHandler={lagreAvklartefakta}
-                oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
-                lagreAllData={lagreAllData}
-                oppdaterLokalSoknadHandler={oppdaterBehandlingsgrunnlag}
-                begrunnelser={MKV.KTObjects.begrunnelser}
-                landkoder={landkoder}
-                tilForsiden={tilForsiden}
-                stegMap={stegMap}
-                forsteSteg={STEG.START}
-              />
-              }
-              <Soknadpaneler
-                startOgVisOppfriskModal={startOgVisOppfriskModal}
-                behandlingID={behandlingID}
-              />
-            </Nav.Column>
-            <Nav.Column xs="5">
-              <SideOppsummering
-                behandlingstema={behandlingstema}
-                redigerbart={redigerbart}
-                fagsak={fagsak}
-                oppsummering={oppsummering}
-                person={person}
-                arbeidsland={arbeidsland}
-                behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                renderBehandlingsmeny={() => {}}
-                renderBehandlingsstatus={() => <Behandlingsstatus
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
-                  oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
-                />}
-              />
-              <SideDialog
-                behandlingID={behandlingID}
-                saksnummer={saksnummer}
-                brevBestillingRedigerbart={brevBestillingRedigerbart}
-                brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-                redigerbart={redigerbart}
-                dokumentOversikt={dokumentOversikt}
-                dokumenter={dokumenter}
-              />
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Container>
-      </div>
-    );
+  if (Utils._isNil(redigerbart)) {
+    return null;
   }
-}
+  if (!behandlingID || behandlingID < 0) {
+    return null;
+  }
+
+  const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+  const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+  const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
+  const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
+
+  return (
+    <div className="saksbehandling">
+      <Nav.Container fluid>
+        <Nav.Row>
+          <Nav.Column xs="7">
+            { erHenlagtSak &&
+            <HenlagtSak behandlingsresultat={behandlingsresultat} />
+            }
+            { visAvslaattSoknad &&
+            <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
+            }
+            { visStegVelger &&
+            <Stegvelger
+              behandlingID={behandlingID}
+              lagreAvklartefaktaHandler={lagreAvklartefakta}
+              oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
+              lagreAllData={lagreAllData}
+              oppdaterLokalSoknadHandler={oppdaterBehandlingsgrunnlag}
+              begrunnelser={MKV.KTObjects.begrunnelser}
+              landkoder={landkoder}
+              tilForsiden={tilForsiden}
+              stegMap={stegMap}
+              forsteSteg={STEG.START}
+            />
+            }
+            <Soknadpaneler
+              startOgVisOppfriskModal={startOgVisOppfriskModal}
+              behandlingID={behandlingID}
+            />
+          </Nav.Column>
+          <Nav.Column xs="5">
+            <SideOppsummering
+              behandlingstema={behandlingstema}
+              redigerbart={redigerbart}
+              fagsak={fagsak}
+              oppsummering={oppsummering}
+              person={person}
+              arbeidsland={arbeidsland}
+              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+              renderBehandlingsmeny={() => {}}
+              renderBehandlingsstatus={() => <Behandlingsstatus
+                behandlingID={behandlingID}
+                redigerbart={redigerbart}
+                oppsummering={oppsummering}
+                behandlingsstatusMap={behandlingsstatusMap}
+              />}
+            />
+            <SideDialog
+              behandlingID={behandlingID}
+              saksnummer={saksnummer}
+              brevBestillingRedigerbart={brevBestillingRedigerbart}
+              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+              redigerbart={redigerbart}
+              dokumentOversikt={dokumentOversikt}
+              dokumenter={dokumenter}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      </Nav.Container>
+    </div>
+  );
+};
 
 Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
