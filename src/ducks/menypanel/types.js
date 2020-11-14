@@ -1,0 +1,1 @@
+export const OPPDATER_VIS_MENYPANEL = 'menypanel/OPPDATER_VIS_MENYPANEL';

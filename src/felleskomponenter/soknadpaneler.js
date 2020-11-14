@@ -23,14 +23,14 @@ import { vilkarSelectors } from '../ducks/vilkar';
 import { formSelectors } from '../ducks/form';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
-import { soknadspanelSelectors } from '../ducks/soknadspaneler';
+import { menypanelSelectors } from '../ducks/menypanel';
 
 const Soknadpaneler = ({
   lagreSoknad,
   fagsaker,
   oppgittAdresseHarVerdier,
   startOgVisOppfriskModal,
-  visSoknadspanel,
+  visMenypanel,
 }) => {
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -43,7 +43,7 @@ const Soknadpaneler = ({
 
   return (
     <div>
-      { visSoknadspanel &&
+      { visMenypanel &&
       <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
         <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
         {fagsaker && fagsaker.saksnummer &&
@@ -66,14 +66,14 @@ Soknadpaneler.propTypes = {
   behandlingID: PT.number.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
-  visSoknadspanel: PT.bool.isRequired,
+  visMenypanel: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  visSoknadspanel: soknadspanelSelectors.ErSoknadspanelSynlig(state),
+  visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,

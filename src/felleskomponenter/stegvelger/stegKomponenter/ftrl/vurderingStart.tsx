@@ -13,7 +13,7 @@ import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
 
 import { modalerOperations } from '../../../../ducks/modaler';
-import { soknadspanelOperations } from '../../../../ducks/soknadspaneler';
+import { menypanelOperations } from '../../../../ducks/menypanel';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 
 import './vurderingStart.css';
@@ -38,7 +38,7 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visOppfriskDialogOgFortsettHandle: (fortsett: () => void) => dispatch(modalerOperations.visOppfriskOgFortsett(fortsett)),
-  visSoknadspanel: () => dispatch(soknadspanelOperations.visSoknadspanel()),
+  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: {fom: string, tom: string}) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (soeknadsland: string[]) => dispatch((behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland))),
   oppdaterTrygdedekning: (trygdedekning: string) => dispatch((behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning))),
@@ -63,7 +63,7 @@ const VurderingStart =
     formValues = {},
     alleLandkoder,
     visOppfriskDialogOgFortsettHandle,
-    visSoknadspanel,
+    visMenypanel,
     oppdaterPeriode,
     oppdaterSoeknadsland,
     oppdaterTrygdedekning,
@@ -95,7 +95,7 @@ const VurderingStart =
       if (erObligatoriskeFelterFyltInn) {
         const fortsett = () => {
           bekreftOgFortsett();
-          visSoknadspanel();
+          visMenypanel();
         };
         visOppfriskDialogOgFortsettHandle(fortsett);
       }

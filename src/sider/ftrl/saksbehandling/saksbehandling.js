@@ -27,6 +27,7 @@ import { datalastingOperations } from '../../../ducks/datalasting';
 import { dokumenterOperations, dokumenterSelectors } from '../../../ducks/dokumenter';
 import { formSelectors } from '../../../ducks/form';
 import { behandlingsperioderOperations } from '../../../ducks/behandlingsperioder';
+import { menypanelOperations } from "../../../ducks/menypanel";
 
 import { AvslaattSoknad, HenlagtSak } from '../../eu_eøs/saksbehandling/komponenter/stegErstatter';
 import { stegMap } from './stegMap';
@@ -89,6 +90,7 @@ const Saksbehandling = ({
   resetBehandlingsgrunnlagState,
   resetFagsakState,
   skjema,
+  skjulMenypanel,
   soknadForm,
   startOgVisOppfriskModal,
   tilForsiden,
@@ -107,6 +109,7 @@ const Saksbehandling = ({
       resetFagsakState();
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
+      skjulMenypanel();
     }
   }, []);
 
@@ -274,6 +277,7 @@ Saksbehandling.propTypes = {
   resetBehandlingsgrunnlagState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  skjulMenypanel: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
@@ -322,6 +326,7 @@ const mapDispatchToProps = dispatch => ({
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
+  skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

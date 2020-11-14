@@ -1,1 +1,0 @@
-export const OPPDATER_VIS_SOKNADSPANEL = 'soknadspanel/OPPDATER_VIS_SOKNADSPANEL';

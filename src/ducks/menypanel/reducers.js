@@ -10,7 +10,7 @@ const initalState = {
 
 export default function reducer(state = initalState, action) {
   switch (action.type) {
-    case Types.OPPDATER_VIS_SOKNADSPANEL: {
+    case Types.OPPDATER_VIS_MENYPANEL: {
       return {
         ...state,
         status: STATUS.OK,
