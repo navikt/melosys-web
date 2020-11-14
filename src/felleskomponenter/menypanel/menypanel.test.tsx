@@ -19,6 +19,7 @@ describe('MenyPanel', () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
+    props.visMenypanel = true;
   });
 
   it('Viser bare oppgitte menypunkter', () => {
