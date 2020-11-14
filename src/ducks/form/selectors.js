@@ -208,6 +208,30 @@ export const SoknadOppgittAdresseLandSelector = createSelector(
   soknad => soknad.oppgittAdresseLand
 );
 
+export const SoknadOppgittAdresseSelector = createSelector(
+  SoknadOppgittAdresseHusnummerSelector,
+  SoknadOppgittAdresseGatenavnSelector,
+  SoknadOppgittAdresseRegionSelector,
+  SoknadOppgittAdressePostnummerSelector,
+  SoknadOppgittAdressePoststedSelector,
+  SoknadOppgittAdresseLandSelector,
+  (
+    husnummer,
+    gatenavn,
+    region,
+    postnummer,
+    poststed,
+    landkode
+  ) => ({
+    husnummer,
+    gatenavn,
+    region,
+    postnummer,
+    poststed,
+    landkode,
+  })
+);
+
 export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
   SoknadOppgittAdresseHusnummerSelector,
   SoknadOppgittAdresseGatenavnSelector,

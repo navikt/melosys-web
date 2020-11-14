@@ -1,3 +1,9 @@
+export type {
+  StrukturertAdresse,
+  UstrukturertAdresse,
+  MidlertidigAdresse,
+  GeneriskAdresse,
+} from './adresse';
 export type { default as Avklartfakta } from './avklartfakta';
 export type { default as AnmodningOmUnntakBestilling } from './anmodningomunntakbestilling';
 export type { default as Fagsak } from './fagsak';
@@ -12,3 +18,10 @@ export type {
   BrevPdfData,
   SedPdfData,
 } from './dokument';
+export type {
+  Periode,
+  Lovvalgsperiode,
+} from './periode';
+export type { default as PersonHistorikk } from './personhistorikk';
+export type { default as Organisasjon } from './organisasjon';
+export type { MedlemskapPeriode } from './medlemskap';

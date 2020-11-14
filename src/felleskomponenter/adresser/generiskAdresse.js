@@ -10,7 +10,7 @@ import './generiskAdresse.css';
  *
  */
 const GeneriskAdresse = ({ adresse }) => {
-  const INGEN_TILGJENGELIG_TEKST = '(ingen tilgjengelig)';
+  const INGEN_TILGJENGELIG_TEKST = <>(ingen tilgjengelig)</>;
   if (!adresse) { return INGEN_TILGJENGELIG_TEKST; }
 
   const {

@@ -29,11 +29,12 @@ type StrukturertAdresse = {
 type MidlertidigAdresse = {
   adressetype: string,
   strukturertAdresse: StrukturertAdresse,
-  UstrukturertAdresse: UstrukturertAdresse,
+  ustrukturertAdresse: UstrukturertAdresse,
 };
 
 export type {
   GeneriskAdresse,
   UstrukturertAdresse,
   MidlertidigAdresse,
+  StrukturertAdresse,
 };

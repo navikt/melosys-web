@@ -19,6 +19,11 @@ export const BehandlingsgrunnlagSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag
 );
 
+export const BehandlingsgrunnlagtypeSelector = createSelector(
+  BehandlingsgrunnlagSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.type
+);
+
 export const BehandlingsgrunnlagDataSelector = createSelector(
   BehandlingsgrunnlagSelector,
   behandlingsgrunnlagState => behandlingsgrunnlagState.data || {}
