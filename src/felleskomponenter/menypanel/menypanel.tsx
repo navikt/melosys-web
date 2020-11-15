@@ -88,6 +88,8 @@ export const Menypanel = ({
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
+  if (!visMenypanel) return null;
+
   const defaultLinkGroups: LinkGroup[] = [
     {
       label: hentLinkGroupLabels(behandlingstema)[0],
@@ -200,19 +202,15 @@ export const Menypanel = ({
     .filter(linkGroup => linkGroup.links.length > 0);
 
   return (
-    <div>
-      { visMenypanel &&
-      <div className="menypanel">
-        <Sidemeny
-          heading="Opplysninger"
-          linkGroups={linkGroups}
-          onClick={handleClick}
-        />
-        <Nav.Panel className="content">
-          { activeContent }
-        </Nav.Panel>
-      </div>
-      }
+    <div className="menypanel">
+      <Sidemeny
+        heading="Opplysninger"
+        linkGroups={linkGroups}
+        onClick={handleClick}
+      />
+      <Nav.Panel className="content">
+        { activeContent }
+      </Nav.Panel>
     </div>
   );
 };
