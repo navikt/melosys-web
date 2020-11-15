@@ -5,15 +5,18 @@ import { Aktoer } from 'Domene';
 
 import MKV from '../../../../melosyskodeverk';
 
-import * as Nav from '../../../../utils/navFrontend';
+import * as Mui from '../../../ui';
 import * as Api from '../../../../services/api';
 import * as Utils from '../../../../utils';
 import * as Hooks from '../../../../hooks';
+import * as Ikoner from '../../../../resources/images';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
-import Fullmektig from './fullmektig';
+import EnkeltFullmektig from './enkeltFullmektig';
+
+import './fullmektige.css';
 
 const aktoerTemplate: Aktoer = {
   aktoerID: null,
@@ -97,8 +100,10 @@ const Fullmektige = ({
     setDisableLeggTilFullmektig(false);
   };
 
+  const visLeggTilKnapp = !disableLeggTilFullmektig && redigerbart;
+
   return (
-    <Nav.Container fluid>
+    <div className="fullmektige">
       {
         fullmektige.map((fullmektig, index) => {
           const slettFullmektig = async () => {
@@ -122,22 +127,30 @@ const Fullmektige = ({
           };
 
           return (
-            <Fullmektig
+            <EnkeltFullmektig
               key={fullmektig.databaseID}
-              databaseID={fullmektig.databaseID}
-              representererKode={fullmektig.representererKode}
-              orgnr={fullmektig.orgnr}
+              className="enkelt__fullmektig"
               redigerbart={redigerbart}
-              onClickSlett={slettFullmektig}
-              onOrgFunnet={orgnr => lagreNyFullmektigOgOppdaterLokalt(orgnr, fullmektig.representererKode)}
-              settRepresentant={representererKode => settRepresentant(index, representererKode)}
+              fullmektig={fullmektig}
+              slett={slettFullmektig}
               onRolleChange={onRollechange}
+              onOrgFunnet={orgnr => lagreNyFullmektigOgOppdaterLokalt(orgnr, fullmektig.representererKode)}
+              saksnummer={saksnummer}
             />
           );
         })
       }
-      <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="standard">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
-    </Nav.Container>
+      {
+        visLeggTilKnapp &&
+        <Mui.Knappelenke
+          onClick={apneLeggTilFullmektigDialog}
+          ikon={Ikoner.Add}
+          className="legg__til__knapp"
+        >
+          Legg til ny fullmektig
+        </Mui.Knappelenke>
+      }
+    </div>
   );
 };
 

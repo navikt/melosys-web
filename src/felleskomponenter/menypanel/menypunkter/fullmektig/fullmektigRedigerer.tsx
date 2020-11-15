@@ -1,83 +1,63 @@
-import React, { Fragment, useState, useEffect, ChangeEventHandler, MouseEventHandler } from 'react';
+import React, { ChangeEventHandler } from 'react';
 import { Organisasjon } from 'Domene';
 
 import MKV from '../../../../melosyskodeverk';
 
 import * as Nav from '../../../../utils/navFrontend';
-import * as Utils from '../../../../utils';
-import * as Api from '../../../../services/api';
 
-import Kontaktopplysninger from '../../../kontaktopplysninger';
+import Kontaktopplysninger, { KontaktOpplysning } from '../kontaktopplysninger';
 import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
 import SokFullmektigOrgProps from './sokFullmektigOrg';
 
-import './fullmektig.css';
+import './fullmektigRedigerer.css';
 
-interface FullmektigProps {
+interface FullmektigRedigererProps {
   onRolleChange: (rolle: string, org?: string) => void,
   redigerbart: boolean,
   databaseID: number,
-  settRepresentant: (representererKode: string) => void,
-  onClickSlett: MouseEventHandler,
   onOrgFunnet: (orgnr: string) => void,
   representererKode: string | null,
-  orgnr: string | null,
+  org: Partial<Organisasjon>,
+  onKontaktOpplysningerChange: (kontaktopplysning: KontaktOpplysning) => void,
+  kontaktopplysninger: KontaktOpplysning,
 }
 
-function Fullmektig(props: FullmektigProps) {
+function FullmektigRedigerer(props: FullmektigRedigererProps) {
   const {
     redigerbart,
     databaseID = -1,
-    onClickSlett,
     onOrgFunnet,
-    settRepresentant,
     onRolleChange,
     representererKode,
-    orgnr,
+    org,
+    onKontaktOpplysningerChange,
+    kontaktopplysninger,
   } = props;
-
-  const [org, settOrg] = useState<Partial<Organisasjon>>({});
 
   const onRadioChange: ChangeEventHandler<HTMLInputElement> = event => {
     onRolleChange(event.target.value, org.orgnr);
   };
 
-  const hentOrgFraApi = async () => {
-    if (orgnr) {
-      try {
-        const hentetOrg = await Api.Organisasjoner.hentOrganisasjon(orgnr);
-        settOrg(hentetOrg);
-      } catch (e) {
-        Utils.logger.error(e);
-      }
-    }
-  };
-
-  useEffect(() => {
-    // TODO: forsøk å fjerne neste linje, må testes dog
-    if (representererKode) settRepresentant(representererKode);
-    hentOrgFraApi();
-  }, [representererKode, orgnr]);
-
   const databaseIDString = databaseID.toString();
 
   return (
-    <Nav.Row className="fullmektig">
+    <Nav.Row className="fullmektig__redigerer">
       <Nav.Column xs="6">
+        <SokFullmektigOrgProps
+          onOrgFunnet={onOrgFunnet}
+          defaultOrgnr={org.orgnr || ''}
+        />
         {
-          org &&
-          <Fragment>
-            <Nav.typo.Element>Juridisk enhet</Nav.typo.Element>
-            <OrganisasjonsAdresse organisasjon={org} className="adresse" />
-          </Fragment>
-        }
-        {
-          !org && <SokFullmektigOrgProps
-            onOrgFunnet={onOrgFunnet}
+          org.orgnr &&
+          <OrganisasjonsAdresse
+            organisasjon={org}
+            className="adresse"
+            visNavn={false}
+            visTittel={false}
           />
         }
         {
-          org &&
+          org.orgnr &&
           <Nav.Fieldset legend="Hvem er dette fullmektig for?" className="radioknapper">
             <Nav.Radio
               onChange={onRadioChange}
@@ -105,15 +85,19 @@ function Fullmektig(props: FullmektigProps) {
             />
           </Nav.Fieldset>
         }
-        <Nav.Knapp disabled={!redigerbart} onClick={onClickSlett} type="standard">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
         {
-          org && <Kontaktopplysninger juridiskOrg={org} redigerbart={redigerbart} />
+          org.orgnr &&
+          <Kontaktopplysninger
+            redigerbart={redigerbart}
+            onChange={onKontaktOpplysningerChange}
+            kontaktopplysninger={kontaktopplysninger}
+          />
         }
       </Nav.Column>
     </Nav.Row>
   );
 }
 
-export default Fullmektig;
+export default FullmektigRedigerer;

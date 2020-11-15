@@ -5,20 +5,19 @@ import * as Api from '../../../../services/api';
 
 import { erOrgnrGyldig } from '../../../skjema/validering/generisk/organisasjon';
 
-import './sokFullmektigOrg.css';
-
 interface Feilmelding {
   feilmelding: string,
 }
 
 interface SokFullmektigOrgProps {
   onOrgFunnet: (orgnr: string) => void,
+  defaultOrgnr: string | null,
 }
 
 function SokFullmektigOrg(props: SokFullmektigOrgProps) {
-  const { onOrgFunnet } = props;
+  const { onOrgFunnet, defaultOrgnr } = props;
 
-  const [orgnr, settOrgnr] = useState('');
+  const [orgnr, settOrgnr] = useState(defaultOrgnr || '');
   const [feilmelding, settFeilmelding] = useState<Feilmelding | undefined>(undefined);
 
   const sok = async () => {
@@ -41,18 +40,16 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   };
 
   return (
-    <Nav.Row className="sokFullmektigOrg">
+    <Nav.Row>
       <Nav.Column xs="9">
         <Nav.Input
           label="Skriv inn organisasjonsnummer"
           placeholder="Skriv inn..."
           onChange={vedEndretInput}
+          onBlur={sok}
           value={orgnr}
           feil={feilmelding}
         />
-      </Nav.Column>
-      <Nav.Column xs="3">
-        <Nav.Knapp onClick={sok} type="standard" className="sokKnapp">SØK</Nav.Knapp>
       </Nav.Column>
     </Nav.Row>
   );
