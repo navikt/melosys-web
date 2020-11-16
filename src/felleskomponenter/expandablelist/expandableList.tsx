@@ -1,5 +1,6 @@
 import React, { useState, ReactNode } from 'react';
 import classNames from 'classnames';
+import { Collapse } from 'react-collapse';
 
 import * as Nav from '../../utils/navFrontend';
 
@@ -39,7 +40,8 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
   const chevronDirection = collapsed ? 'ned' : 'opp';
   const btnText = collapsed ? btnTextCollapsed : btnTextExpanded;
 
-  const renderableElements = collapsed ? elements.slice(0, amountOfItemsCollapsed) : elements;
+  const alwaysVisibleElements = elements.slice(0, amountOfItemsCollapsed);
+  const collapsableElements = elements.slice(amountOfItemsCollapsed);
 
   const expandable = elements.length > amountOfItemsCollapsed;
 
@@ -52,12 +54,21 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
       {header}
       <div className="list">
         {
-          renderableElements.map(element => (
+          alwaysVisibleElements.map(element => (
             <div className={elementCls} key={idFromElement(element)}>
               {renderElement(element)}
             </div>
           ))
         }
+        <Collapse isOpened={!collapsed}>
+          {
+            collapsableElements.map(element => (
+              <div className={elementCls} key={idFromElement(element)}>
+                {renderElement(element)}
+              </div>
+            ))
+          }
+        </Collapse>
       </div>
       <div className="btnContainer">
         {
