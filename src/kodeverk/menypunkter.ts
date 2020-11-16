@@ -15,6 +15,16 @@ export const ArbeidsgiverOgVirksomhet = {
   },
 };
 
+export const Arbeidssteder = {
+  tittel: 'Arbeidssted(er) i utlandet',
+  undertitler: {
+    arbeidsstedLand: 'Arbeidssted på land',
+    arbeidsstedOffshore: 'Arbeidssted offshore',
+    arbeidsstedSkip: 'Arbeidssted på skip',
+    arbeidsstedFly: 'Arbeidssted på fly',
+  },
+};
+
 export const Medlemskap = {
   tittel: 'Medlemskap',
   undertitler: {},

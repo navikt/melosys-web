@@ -10,7 +10,7 @@ import * as Mui from '../../../../ui';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Ikoner from '../../../../../resources/images';
 
-import RedigerbartElement from '../../redigerbartelement';
+import EditerbartElement from '../../editerbartElement';
 import UtfyltAdresse from './utfyltadresse';
 import Felter from './felter';
 
@@ -53,7 +53,7 @@ const AnnenAdresse = ({
 
   return (
     <div className={cls}>
-      <RedigerbartElement
+      <EditerbartElement
         redigerbart={redigerbart}
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}

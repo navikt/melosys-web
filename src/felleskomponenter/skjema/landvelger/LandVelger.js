@@ -38,6 +38,7 @@ LandVelger.propTypes = {
   multiLand: PT.bool,
   label: PT.string,
   bredde: PT.string,
+  placeholder: PT.string,
 };
 
 LandVelger.defaultProps = {
@@ -45,6 +46,7 @@ LandVelger.defaultProps = {
   multiLand: false,
   label: undefined,
   bredde: 'XL',
+  placeholder: undefined,
 };
 
 export default LandVelger;

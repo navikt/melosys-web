@@ -10,6 +10,7 @@ import Sidemeny from '../sidemeny';
 import {
   ArbeidsforholdOgInntekt,
   ArbeidsgiverOgVirksomhet,
+  Arbeidssteder,
   Barnetrygd,
   Medlemskap,
   Person,
@@ -153,7 +154,7 @@ export const Menypanel = ({
         {
           label: 'Arbeidssteder(er)',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Arbeidssteder />,
         },
         {
           label: 'Om virksomheten i Norge',
@@ -175,10 +176,8 @@ export const Menypanel = ({
     setActive([groupIndex, linkIndex]);
   };
 
-  const activeContent = defaultLinkGroups[activeGroupIndex].links[activeLinkIndex].content;
-
-  const linkGroups = defaultLinkGroups
-    .map((linkGroup, groupIndex) => ({
+  const filteredLinkGroups = defaultLinkGroups
+    .map(linkGroup => ({
       label: linkGroup.label,
       links: linkGroup.links
         // Filtrer menypunkter oppgitt i props
@@ -190,16 +189,27 @@ export const Menypanel = ({
           }
 
           return link.renderForBehandlingsgrunnlagtyper.includes(behandlingsgrunnlagtype);
-        })
+        }),
+    }))
+    // Filtrer bort linkgroups med ingen linker/menypunkter
+    .filter(linkGroup => linkGroup.links.length > 0);
+
+  const activeContent = filteredLinkGroups.length !== 0 ?
+    filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content
+    :
+    null;
+
+  const linkGroups = filteredLinkGroups
+    .map((linkGroup, groupIndex) => ({
+      label: linkGroup.label,
+      links: linkGroup.links
         .map((link, linkIndex) => (
           {
             label: link.label,
             active: groupIndex === activeGroupIndex && linkIndex === activeLinkIndex,
           }
         )),
-    }))
-    // Filtrer bort linkgroups med ingen linker/menypunkter
-    .filter(linkGroup => linkGroup.links.length > 0);
+    }));
 
   return (
     <div className="menypanel">
