@@ -76,6 +76,7 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
       tittelIkon={Ikoner.Kontor}
       tittelUnderstrek
+      elementUnderstrek
       harData={elementListe => (
         (elementListe.length !== 0) &&
         elementListe.every(ArbeidsstedUtlandErIkkeTomt)
@@ -92,6 +93,7 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
       tittelIkon={Ikoner.Helikopter}
       tittelUnderstrek
+      elementUnderstrek
       harData={elementListe => (
         (elementListe.length !== 0) &&
         elementListe.every(flattArbeidsstedErIkkeTomt)
@@ -108,6 +110,7 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
       tittelIkon={Ikoner.Skip}
       tittelUnderstrek
+      elementUnderstrek
       harData={elementListe => (
         (elementListe.length !== 0) &&
         elementListe.every(flattArbeidsstedErIkkeTomt)
@@ -124,6 +127,7 @@ const Arbeidssteder = ({
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
       tittelIkon={Ikoner.Fly}
       tittelUnderstrek
+      elementUnderstrek
       harData={elementListe => (
         (elementListe.length !== 0) &&
         elementListe.every(flattArbeidsstedErIkkeTomt)

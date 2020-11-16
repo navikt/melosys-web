@@ -62,7 +62,7 @@ function EnRedigeringsKnappListe<T>({
               const settVerdi = (feltNavn: string, verdi: any) => settFeltVerdi(`${overordnetFeltNavn}.${feltNavn}`, verdi);
               const slett = () => fields.remove(index);
 
-              const elementContainerCls = classNames({ understrek: elementUnderstrek });
+              const elementContainerCls = classNames({ element__container__understrek: elementUnderstrek });
 
               return (
                 /* eslint-disable-next-line react/no-array-index-key */
