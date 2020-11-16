@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import * as Mui from '../../../ui';
 import * as Ikoner from '../../../../resources/images';
 
-import EditableElement from '../editableElement';
+import EditerbartElement from '../editerbartElement';
 
 import './enRedigeringsknappListe.css';
 
@@ -44,7 +44,7 @@ function EnRedigeringsKnappListe<T>({
   const elementer = fields.getAll();
 
   return (
-    <EditableElement
+    <EditerbartElement
       className="en__redigeringsknapp__liste"
       redigerbart={redigerbart}
       tittel={tittelTekst}

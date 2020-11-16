@@ -9,7 +9,7 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Etiketter from '../etiketter';
 import * as Enkel from './enkel';
 
-import EditableElementListe from '../editableElementListe';
+import EditerbartElementListe from '../editerbartElementListe';
 
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
@@ -66,7 +66,7 @@ const Arbeidssteder = ({
       <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
       <Etiketter.ArbeidsgiversDel />
     </div>
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidUtland"
       redigererKomponent={Enkel.Land.Redigerer}
@@ -83,7 +83,7 @@ const Arbeidssteder = ({
       )}
       flereRedigeringsknapper={false}
     />
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedOffshore"
       redigererKomponent={Enkel.Offshore.Redigerer}
@@ -100,7 +100,7 @@ const Arbeidssteder = ({
       )}
       flereRedigeringsknapper={false}
     />
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedSkip"
       redigererKomponent={Enkel.Skip.Redigerer}
@@ -117,7 +117,7 @@ const Arbeidssteder = ({
       )}
       flereRedigeringsknapper={false}
     />
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedFly"
       redigererKomponent={Enkel.Fly.Redigerer}
