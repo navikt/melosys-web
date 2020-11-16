@@ -12,7 +12,6 @@ import * as Hooks from '../../../../hooks';
 import * as Ikoner from '../../../../resources/images';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import EnkeltFullmektig from './enkeltFullmektig';
 
@@ -30,16 +29,19 @@ const aktoerTemplate: Aktoer = {
 
 const mapStateToProps = (state: RootState) => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+type FullmektigeProps = PropsFromRedux & {
+  redigerbart: boolean,
+}
+
 const Fullmektige = ({
   redigerbart,
   saksnummer,
-}: PropsFromRedux) => {
+}: FullmektigeProps) => {
   const [fullmektige, setFullmektige] = Hooks.useAsyncCallbackState(() => Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT), [], Utils.logger.error);
   const [disableLeggTilFullmektig, setDisableLeggTilFullmektig] = useState(false);
 

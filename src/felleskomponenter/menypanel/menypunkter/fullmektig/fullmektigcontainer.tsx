@@ -8,14 +8,25 @@ import Fullmektige from './fullmektige';
 
 import './fullmektigcontainer.css';
 
-const Fullmektig = () => (
+interface FullmektigProps {
+  redigerbart: boolean,
+  visArbeidsforholdRolleEtiketter: boolean,
+}
+
+const Fullmektig = ({
+  redigerbart,
+  visArbeidsforholdRolleEtiketter,
+}: FullmektigProps) => (
   <div className="fullmektig__container">
     <div className="tittel">
       <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Fullmektig.tittel}</Nav.typo.Undertittel>
       <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
-      <Etiketter.ArbeidsgiversDel />
+      {
+        visArbeidsforholdRolleEtiketter &&
+        <Etiketter.ArbeidsgiversDel />
+      }
     </div>
-    <Fullmektige />
+    <Fullmektige redigerbart={redigerbart} />
   </div>
 );
 

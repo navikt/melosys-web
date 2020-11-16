@@ -18,7 +18,6 @@ import EditableElementListe from '../editableElementListe';
 import EnkeltArbeidsforholdUtlandRedigerer from './enkeltArbeidsforholdUtlandRedigerer';
 import EnkeltArbeidsforholdUtlandRedigeringUtfort from './enkeltArbeidsforholdUtlandRedigeringUtfort';
 
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../../ducks/organisasjoner';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 
@@ -34,7 +33,6 @@ const arbeidsforholdUtlandHarData = (elementListe: KV.Form.ArbeidsforholdUtland[
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
 const mapStateToProps = (state: RootState) => ({
-  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   ekstraArbeidsgivere: soknadFormValueSelector(state, 'ekstraArbeidsgivere'),
@@ -49,16 +47,22 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+type ArbeidsgiverOgVirksomhetProps = PropsFromRedux & {
+  redigerbart: boolean,
+  visArbeidsforholdRolleEtiketter: boolean,
+}
+
 export const ArbeidsgiverOgVirksomhet = ({
   redigerbart,
   organisasjoner,
   hentOrganisasjon,
   saksnummer,
+  visArbeidsforholdRolleEtiketter,
   ekstraArbeidsgivere = [],
   selvstendigForetak = [],
   arbeidsforholdUtland = [],
   selvstendigNaeringsvirksomhetUtland = [],
-}: PropsFromRedux) => {
+}: ArbeidsgiverOgVirksomhetProps) => {
   const finnOrganisasjon = (orgnr: string) => {
     const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
     return org || { orgnr };
@@ -72,7 +76,10 @@ export const ArbeidsgiverOgVirksomhet = ({
       <div className="tittel">
         <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}</Nav.typo.Undertittel>
         <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
-        <Etiketter.ArbeidsgiversDel />
+        {
+          visArbeidsforholdRolleEtiketter &&
+          <Etiketter.ArbeidsgiversDel />
+        }
       </div>
       {
         ekstraArbeidsgivere.length === 0 &&
