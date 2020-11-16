@@ -1,11 +1,11 @@
 import React from 'react';
 import { FieldArray } from 'redux-form';
 
-import EditableElementListe, { InnerEditableElementListe } from './editableElementListe';
+import EditerbartElementListe, { InnerEditerbartElementListe } from './editerbartElementListe';
 import FlereRedigeringsknapperListe from './flereRedigeringsknapperListe';
 import EnRedigeringsknappListe from './enRedigeringsknappListe';
 
-describe('EditableElementListe', () => {
+describe('EditerbartElementListe', () => {
   let props = null;
 
   beforeEach(() => {
@@ -15,8 +15,8 @@ describe('EditableElementListe', () => {
   });
 
   it('viser en fieldArray', () => {
-    const editableElementListe = shallow(<EditableElementListe {...props} />);
-    const fieldArray = editableElementListe.find(FieldArray);
+    const editerbartElementListe = shallow(<EditerbartElementListe {...props} />);
+    const fieldArray = editerbartElementListe.find(FieldArray);
     const fieldArrayProps = fieldArray.props();
 
     expect(fieldArray).toHaveLength(1);
@@ -55,16 +55,16 @@ describe('InnerElementlListe', () => {
 
   it('viser en FlereRedigeringsknapperListe', () => {
     props.flereRedigeringsknapper = true;
-    const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
-    const liste = innerEditableElementListe.find(FlereRedigeringsknapperListe);
+    const innerEditerbartElementListe = shallow(<InnerEditerbartElementListe {...props} />);
+    const liste = innerEditerbartElementListe.find(FlereRedigeringsknapperListe);
 
     expect(liste).toHaveLength(1);
   });
 
   it('viser en EnRedigeringsknappListe', () => {
     props.flereRedigeringsknapper = false;
-    const innerEditableElementListe = shallow(<InnerEditableElementListe {...props} />);
-    const liste = innerEditableElementListe.find(EnRedigeringsknappListe);
+    const innerEditerbartElementListe = shallow(<InnerEditerbartElementListe {...props} />);
+    const liste = innerEditerbartElementListe.find(EnRedigeringsknappListe);
 
     expect(liste).toHaveLength(1);
   });

@@ -11,7 +11,7 @@ import FlereRedigeringsknapperListe from './flereRedigeringsknapperListe';
 import EnRedigeringsknappListe from './enRedigeringsknappListe';
 
 interface BaseProps {
-  leggTilTekst: string,
+  leggTilTekst: string | ((elementer: any[]) => string),
   redigerbart: boolean,
   redigererKomponent: ElementType,
   redigeringUtfortKomponent: ElementType,
@@ -26,16 +26,16 @@ interface BaseProps {
   flereRedigeringsknapper?: boolean,
 }
 
-type InnerEditableElementListeProps = WrappedFieldArrayProps & BaseProps;
+type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>, ownProps: InnerEditableElementListeProps) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>, ownProps: InnerEditerbartElementListeProps) => ({
   settFeltVerdi: (field: string, value: any) => dispatch(change(ownProps.meta.form, field, value)),
 });
 
 const connector = connect(null, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const InnerEditableElementListe = ({
+export const InnerEditerbartElementListe = ({
   leggTilTekst,
   redigerbart,
   fields,
@@ -51,13 +51,15 @@ export const InnerEditableElementListe = ({
   elementUnderstrek,
   flereRedigeringsknapper = true,
   settFeltVerdi,
-}: InnerEditableElementListeProps & PropsFromRedux) => {
-  const editableElementListeCls = classNames(className);
+}: InnerEditerbartElementListeProps & PropsFromRedux) => {
+  const editerbartElementListeCls = classNames(className);
 
   const leggTil = () => fields.push(hentDefaultElement());
 
+  const innerLeggTilTekst = typeof leggTilTekst === 'function' ? leggTilTekst(fields.getAll()) : leggTilTekst;
+
   return (
-    <div className={editableElementListeCls}>
+    <div className={editerbartElementListeCls}>
       {
         flereRedigeringsknapper ?
           <FlereRedigeringsknapperListe
@@ -71,7 +73,7 @@ export const InnerEditableElementListe = ({
             redigererKomponent={redigererKomponent}
             redigeringUtfortKomponent={redigeringUtfortKomponent}
             tittelTekst={tittelTekst}
-            leggTilTekst={leggTilTekst}
+            leggTilTekst={innerLeggTilTekst}
             leggTil={leggTil}
           />
           :
@@ -86,7 +88,7 @@ export const InnerEditableElementListe = ({
             redigererKomponent={redigererKomponent}
             redigeringUtfortKomponent={redigeringUtfortKomponent}
             tittelTekst={tittelTekst}
-            leggTilTekst={leggTilTekst}
+            leggTilTekst={innerLeggTilTekst}
             leggTil={leggTil}
           />
       }
@@ -94,16 +96,16 @@ export const InnerEditableElementListe = ({
   );
 };
 
-const ConnectedInnerElementListe = connector(InnerEditableElementListe);
+const ConnectedInnerElementListe = connector(InnerEditerbartElementListe);
 
-type EditableElementListeProps = BaseProps & {
+type EditerbartElementListeProps = BaseProps & {
   feltNavn: string,
 };
 
-const EditableElementListe = ({
+const EditerbartElementListe = ({
   feltNavn,
   ...rest
-}: EditableElementListeProps) => (
+}: EditerbartElementListeProps) => (
   <FieldArray
     component={ConnectedInnerElementListe}
     name={feltNavn}
@@ -112,8 +114,8 @@ const EditableElementListe = ({
   />
 );
 
-EditableElementListe.propTypes = {
+EditerbartElementListe.propTypes = {
   feltNavn: PT.string.isRequired,
 };
 
-export default EditableElementListe;
+export default EditerbartElementListe;

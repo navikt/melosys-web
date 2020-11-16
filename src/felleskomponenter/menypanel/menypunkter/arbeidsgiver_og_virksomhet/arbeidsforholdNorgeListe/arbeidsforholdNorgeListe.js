@@ -10,7 +10,7 @@ import * as Ikoner from '../../../../../resources/images';
 import * as MPT from '../../../../../proptypes';
 import * as OrganisasjonValidering from '../../../../skjema/validering/generisk/organisasjon';
 
-import EditableElement from '../../editableElement';
+import EditerbartElement from '../../editerbartElement';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
 import Kontaktopplysninger, { useKontaktOpplysninger } from '../../kontaktopplysninger';
@@ -136,7 +136,7 @@ export const EnkeltArbeidsforholdNorge = ({
   ];
 
   return (
-    <EditableElement
+    <EditerbartElement
       className="redigerbartElement"
       redigerbart={redigerbart}
       harData={Boolean(organisasjon.orgnr)}

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import * as KV from '../../../../../../kodeverk';
-import * as Utils from '../../../../../../utils';
 
 import { StrukturertAdresse } from '../../../../../adresser';
 
@@ -14,8 +13,9 @@ const RedigeringUtfort = ({
 }: RedigeringUtfortType<KV.Form.ArbeidsstedUtland>) => (
   <div className="arbeidssted__utland__redigeringutfort">
     {
-      verdier.map(element => (
-        <StrukturertAdresse key={Utils._uuid()} adresse={element.adresse} />
+      verdier.map((element, index) => (
+        /* eslint-disable-next-line react/no-array-index-key */
+        <StrukturertAdresse key={index} adresse={element.adresse} />
       ))
     }
   </div>

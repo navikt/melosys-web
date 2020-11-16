@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import * as Mui from '../../../ui';
 import * as Ikoner from '../../../../resources/images';
 
-import EditableElement from '../editableElement';
+import EditerbartElement from '../editerbartElement';
 
 import './flereRedigeringsknapperListe.css';
 
@@ -57,7 +57,7 @@ function FlereRedigeringsKnapperListe<T>({
           return (
             /* eslint-disable-next-line react/no-array-index-key */
             <div className={elementContainerCls} key={index}>
-              <EditableElement
+              <EditerbartElement
                 redigerbart={redigerbart}
                 harData={harData(element)}
                 tittel={`${tittelTekst}${navn ? `: ${navn}` : ''}`}

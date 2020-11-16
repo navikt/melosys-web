@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import * as Mui from '../../../ui';
 import * as Ikoner from '../../../../resources/images';
 
-import EditableElement from '../editableElement';
+import EditerbartElement from '../editerbartElement';
 
 import './enRedigeringsknappListe.css';
 
@@ -44,7 +44,7 @@ function EnRedigeringsKnappListe<T>({
   const elementer = fields.getAll();
 
   return (
-    <EditableElement
+    <EditerbartElement
       className="en__redigeringsknapp__liste"
       redigerbart={redigerbart}
       tittel={tittelTekst}
@@ -62,7 +62,7 @@ function EnRedigeringsKnappListe<T>({
               const settVerdi = (feltNavn: string, verdi: any) => settFeltVerdi(`${overordnetFeltNavn}.${feltNavn}`, verdi);
               const slett = () => fields.remove(index);
 
-              const elementContainerCls = classNames({ understrek: elementUnderstrek });
+              const elementContainerCls = classNames({ element__container__understrek: elementUnderstrek });
 
               return (
                 /* eslint-disable-next-line react/no-array-index-key */
@@ -80,7 +80,7 @@ function EnRedigeringsKnappListe<T>({
           }
           {
             redigerbart &&
-            <div className="legg__til__knapp">
+            <div>
               <Mui.Knappelenke
                 onClick={leggTil}
                 ikon={Ikoner.Add}

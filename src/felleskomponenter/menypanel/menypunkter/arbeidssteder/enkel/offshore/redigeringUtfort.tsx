@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 
 import * as KV from '../../../../../../kodeverk';
 
@@ -6,10 +7,14 @@ import MKV from '../../../../../../melosyskodeverk';
 
 import { RedigeringUtfort as RedigeringUtfortType } from '../types';
 
+import './redigeringUtfort.css';
+
+const cls = classNames('tabell', 'arbeidssted__offshore__redigeringutfort');
+
 const RedigeringUtfort = ({
   verdier,
 }: RedigeringUtfortType<KV.Form.ArbeidsstedOffshore>) => (
-  <table className="tabell">
+  <table className={cls}>
     <thead>
       <tr>
         <th>Navn på innretning</th>
@@ -18,8 +23,9 @@ const RedigeringUtfort = ({
     </thead>
     <tbody>
       {
-        verdier.map(element => (
-          <tr>
+        verdier.map((element, index) => (
+          /* eslint-disable-next-line react/no-array-index-key */
+          <tr key={index}>
             <td>{element.enhetNavn}</td>
             <td>{KV.kodeTilTerm(element.installasjonsLandkode, MKV.KTObjects.landkoder)}</td>
           </tr>

@@ -1,14 +1,36 @@
 import React from 'react';
 
 import * as KV from '../../../../kodeverk';
+import * as Utils from '../../../../utils';
 import * as Ikoner from '../../../../resources/images';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Etiketter from '../etiketter';
 import * as Enkel from './enkel';
 
-import EditableElementListe from '../editableElementListe';
+import EditerbartElementListe from '../editerbartElementListe';
 
 import './arbeidssteder.css';
+
+type FlattArbeidssted = KV.Form.ArbeidsstedFly |
+  KV.Form.ArbeidsstedOffshore |
+  KV.Form.ArbeidsstedSkip;
+
+const flattArbeidsstedErIkkeTomt = (arbeidssted: FlattArbeidssted) => (
+  Object.values(arbeidssted).some(v => !Utils._isNil(v) && v !== '')
+);
+
+const ArbeidsstedUtlandErIkkeTomt = (arbeidssted: KV.Form.ArbeidsstedUtland) => (
+  [
+    arbeidssted.arbeidUtlandHjemmekontor,
+    arbeidssted.foretakNavn,
+    arbeidssted.foretakOrgnr,
+  ].some(v => !Utils._isNil(v) && v !== '') ||
+  !Utils.adresse.erStrukturertAdresseObjektTomt(arbeidssted.adresse)
+);
+
+const hentLeggTilTekst = (tekstVedTomListe: string) => (elementer: any[]) => (
+  elementer.length === 0 ? tekstVedTomListe : 'Legg til ny seksjon'
+);
 
 const arbeidUtlandDefaultElement = {
   adresse: {
@@ -42,56 +64,72 @@ const Arbeidssteder = ({
         <Etiketter.ArbeidsgiversDel />
       }
     </div>
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidUtland"
       redigererKomponent={Enkel.Land.Redigerer}
       redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på land')}
       hentDefaultElement={() => arbeidUtlandDefaultElement}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
       tittelIkon={Ikoner.Kontor}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      elementUnderstrek
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(ArbeidsstedUtlandErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedOffshore"
       redigererKomponent={Enkel.Offshore.Redigerer}
       redigeringUtfortKomponent={Enkel.Offshore.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted offshore')}
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
       tittelIkon={Ikoner.Helikopter}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      elementUnderstrek
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(flattArbeidsstedErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedSkip"
       redigererKomponent={Enkel.Skip.Redigerer}
       redigeringUtfortKomponent={Enkel.Skip.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på skip')}
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
       tittelIkon={Ikoner.Skip}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      elementUnderstrek
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(flattArbeidsstedErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
-    <EditableElementListe
+    <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedFly"
       redigererKomponent={Enkel.Fly.Redigerer}
       redigeringUtfortKomponent={Enkel.Fly.RedigeringUtfort}
-      leggTilTekst="Legg til ny seksjon"
+      leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på fly')}
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
       tittelIkon={Ikoner.Fly}
       tittelUnderstrek
-      harData={elementListe => elementListe.length !== 0}
+      elementUnderstrek
+      harData={elementListe => (
+        (elementListe.length !== 0) &&
+        elementListe.every(flattArbeidsstedErIkkeTomt)
+      )}
       flereRedigeringsknapper={false}
     />
   </div>
