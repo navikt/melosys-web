@@ -11,7 +11,7 @@ import * as MPT from '../../../../../proptypes';
 import * as OrganisasjonValidering from '../../../../skjema/validering/generisk/organisasjon';
 import * as Api from '../../../../../services/api';
 
-import RedigerbartElement from '../../redigerbartelement';
+import EditerbartElement from '../../editerbartElement';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
 import Kontaktopplysninger, { finnKontaktopplysninger } from '../../kontaktopplysninger';
@@ -166,7 +166,7 @@ export const EnkeltArbeidsforholdNorge = ({
   ];
 
   return (
-    <RedigerbartElement
+    <EditerbartElement
       className="redigerbartElement"
       redigerbart={redigerbart}
       harData={Boolean(organisasjon.orgnr)}

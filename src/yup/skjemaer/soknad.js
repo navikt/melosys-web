@@ -50,24 +50,24 @@ const soknad = object().when('$behandlingstema', {
     })),
     arbeidsstedOffshore: array().of(object().shape({
       enhetNavn: string().nullable().required(lagMelding(
-        KV.Panel.arbeidssteder.tittel,
-        KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore,
+        KV.Menypunkter.Arbeidssteder.tittel,
+        KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
         'Navn kreves'
       )),
     }).uniqueProperty('enhetNavn', lagMelding(
-      KV.Panel.arbeidssteder.tittel,
-      KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore,
+      KV.Menypunkter.Arbeidssteder.tittel,
+      KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
       'Navn på enhet må være unikt'
     ))),
     arbeidsstedSkip: array().of(object().shape({
       enhetNavn: string().nullable().required(lagMelding(
-        KV.Panel.arbeidssteder.tittel,
-        KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip,
+        KV.Menypunkter.Arbeidssteder.tittel,
+        KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
         'Navn kreves'
       )),
     }).uniqueProperty('enhetNavn', lagMelding(
-      KV.Panel.arbeidssteder.tittel,
-      KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip,
+      KV.Menypunkter.Arbeidssteder.tittel,
+      KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
       'Navn på enhet må være unikt'
     ))),
     oppgittAdresseGatenavn: string().nullable().when('$skalOppgittAdresseValideres', {

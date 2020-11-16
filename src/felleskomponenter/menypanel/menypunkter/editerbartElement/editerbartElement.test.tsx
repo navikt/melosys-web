@@ -4,10 +4,10 @@ import { mock, instance } from 'ts-mockito';
 
 import * as Mui from '../../../ui';
 
-import RedigerbartElement from './redigerbartelement';
+import EditerbartElement from './editerbartElement';
 
-describe('RedigerbartElement', () => {
-  const mockedProps = mock<ComponentProps<typeof RedigerbartElement>>();
+describe('EditerbartElement', () => {
+  const mockedProps = mock<ComponentProps<typeof EditerbartElement>>();
   const props = instance(mockedProps);
 
   props.redigerbart = true;
@@ -15,17 +15,17 @@ describe('RedigerbartElement', () => {
   it('viser innhold etter redigering er utført', () => {
     props.harData = true;
     props.redigeringUtfortRender = jest.fn(() => <span>Redigering utført</span>);
-    const redigerbartelement = shallow(<RedigerbartElement {...props} />);
+    const editerbartElement = shallow(<EditerbartElement {...props} />);
 
-    expect(redigerbartelement.contains('Redigering utført')).toBe(true);
+    expect(editerbartElement.contains('Redigering utført')).toBe(true);
   });
 
   it('viser innhold for ingen data', () => {
     props.harData = false;
     props.ingenDataRender = jest.fn(() => <span>Ingen data funnet</span>);
-    const redigerbartelement = shallow(<RedigerbartElement {...props} />);
+    const editerbartElement = shallow(<EditerbartElement {...props} />);
 
-    expect(redigerbartelement.contains('Ingen data funnet')).toBe(true);
+    expect(editerbartElement.contains('Ingen data funnet')).toBe(true);
   });
 
   it('viser innhold for redigering', () => {
@@ -35,9 +35,9 @@ describe('RedigerbartElement', () => {
       return <div />;
     };
     props.redigererRender = jest.fn(() => <span>Redigerer...</span>);
-    const redigerbartelement = shallow(<RedigerbartElement {...props} />);
+    const editerbartElement = shallow(<EditerbartElement {...props} />);
 
-    expect(redigerbartelement.contains('Redigerer...')).toBe(true);
-    expect(redigerbartelement.find(Mui.Knapp)).toHaveLength(1);
+    expect(editerbartElement.contains('Redigerer...')).toBe(true);
+    expect(editerbartElement.find(Mui.Knapp)).toHaveLength(1);
   });
 });
