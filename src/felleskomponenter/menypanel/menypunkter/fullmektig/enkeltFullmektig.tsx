@@ -7,7 +7,7 @@ import * as Api from '../../../../services/api';
 
 import FullmektigRedigerer from './fullmektigRedigerer';
 import FullmektigRedigeringUtfort from './fullmektigRedigeringUtfort';
-import EditableElement from '../editableElement';
+import EditerbartElement from '../editerbartElement';
 import { useKontaktOpplysninger } from '../kontaktopplysninger';
 
 interface EnkeltFullmektigProps {
@@ -66,7 +66,7 @@ const EnkeltFullmektig = ({
   const cls = classNames(className);
 
   return (
-    <EditableElement
+    <EditerbartElement
       className={cls}
       redigerbart={redigerbart}
       harData={Boolean(fullmektig.representererKode && fullmektig.orgnr)}
