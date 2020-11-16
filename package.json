@@ -14,8 +14,6 @@
   "dependencies": {
     "@loadable/component": "^5.10.3",
     "@navikt/melosys-kodeverk": "5.15.45",
-    "@types/classnames": "^2.2.10",
-    "@types/react-select": "^3.0.20",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",
@@ -161,6 +159,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
+    "@types/react-select": "^3.0.20",
     "@types/redux-form": "^8.2.7",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
