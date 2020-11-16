@@ -23,12 +23,14 @@ import { vilkarSelectors } from '../ducks/vilkar';
 import { formSelectors } from '../ducks/form';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../yup';
+import { menypanelSelectors } from '../ducks/menypanel';
 
 const Soknadpaneler = ({
   lagreSoknad,
   fagsaker,
   oppgittAdresseHarVerdier,
   startOgVisOppfriskModal,
+  visMenypanel,
 }) => {
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -40,16 +42,20 @@ const Soknadpaneler = ({
   };
 
   return (
-    <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
-      <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
-      {fagsaker && fagsaker.saksnummer &&
-        <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+    <div>
+      { visMenypanel &&
+      <form name="soknad" id="soknad" onSubmit={overstyrSubmit}>
+        <Personopplysninger oppgittAdresseHarVerdier={oppgittAdresseHarVerdier} />
+        {fagsaker && fagsaker.saksnummer &&
+          <PeriodeInntektOgFullmektig lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+        }
+        <ArbeidsgivereNorge />
+        <AndreArbeidsforholdNorge />
+        <AndreArbeidsforholdUtland />
+        <Arbeidssteder />
+      </form>
       }
-      <ArbeidsgivereNorge />
-      <AndreArbeidsforholdNorge />
-      <AndreArbeidsforholdUtland />
-      <Arbeidssteder />
-    </form>
+    </div>
   );
 };
 
@@ -60,16 +66,17 @@ Soknadpaneler.propTypes = {
   behandlingID: PT.number.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  visMenypanel: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   fagsaker: fagsakSelectors.FagsakSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
-    medfolgendeAndre: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).medfolgendeAndre,
     inntektNorskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaturalFribolig: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBil,

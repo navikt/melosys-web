@@ -1,27 +1,31 @@
 import MKV from '../melosyskodeverk';
 import * as Constants from '../constants';
 
+const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
+
 export const lagUrl = (saksnummer: number, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
-      return `/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
+      return `/${EU_EOS}/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL:
-      return `/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
+      return `/${EU_EOS}/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER:
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
-      return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+      return `/${EU_EOS}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
     case MKV.Koder.behandlinger.behandlingstema.TRYGDETID:
     case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED:
     case MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM:
-      return `/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+      return `/${EU_EOS}/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
-      return `/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
+      return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
+    case 'ARBEID_I_UTLANDET':
+      return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return null;
   }

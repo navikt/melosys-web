@@ -15,6 +15,7 @@ import behandlingstemaReducer from './ducks/behandlingstema';
 import dokumenterReducer from './ducks/dokumenter';
 import fagsakerReducer from './ducks/fagsaker';
 import feiletResponseReducer from './ducks/feiletrespons';
+import folketrygdenkodeverkReducer from './ducks/folketrygdenkodeverk';
 import journalforingReducer from './ducks/journalforing';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import modalerReducer from './ducks/modaler';
@@ -24,6 +25,7 @@ import personerReducer from './ducks/personer';
 import saksbehandlerReducer from './ducks/saksbehandler';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
+import menypanelReducer from './ducks/menypanel';
 import utpekReducer from './ducks/utpek';
 import utpekingsperioderReducer from './ducks/utpekingsperioder';
 import videresendingReducer from './ducks/videresending';
@@ -47,6 +49,7 @@ const createRootReducer = (history: History) => combineReducers({
   dokumenter: dokumenterReducer,
   fagsaker: fagsakerReducer,
   feiletrespons: feiletResponseReducer,
+  folketrygdenkodeverk: folketrygdenkodeverkReducer,
   journalforing: journalforingReducer,
   lovvalgsperioder: lovvalgsperioderReducer,
   modaler: modalerReducer,
@@ -56,6 +59,7 @@ const createRootReducer = (history: History) => combineReducers({
   saksbehandler: saksbehandlerReducer,
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
+  menypanel: menypanelReducer,
   utpek: utpekReducer,
   utpekingsperioder: utpekingsperioderReducer,
   vedtak: vedtakReducer,

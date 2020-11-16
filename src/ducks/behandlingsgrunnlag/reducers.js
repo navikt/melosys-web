@@ -66,6 +66,32 @@ export default function reducer(state = initialState, action) {
         },
       };
     }
+    case Types.OPPDATER_SOEKNADSLAND: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          data: {
+            ...state.data.data,
+            soeknadsland: {
+              landkoder: action.data.soeknadsland,
+            },
+          },
+        },
+      };
+    }
+    case Types.OPPDATER_TRYGDEDEKNING: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          data: {
+            ...state.data.data,
+            trygdedekning: action.data.trygdedekning,
+          },
+        },
+      };
+    }
     case Types.OPPDATER_BEHANDLINGSGRUNNLAG: {
       const { dokument } = action;
 
@@ -207,10 +233,10 @@ export default function reducer(state = initialState, action) {
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [],
-            medfolgendeAndre: null,
           },
           overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
           ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
+          trygdedekning: dokument.trygdedekning,
         },
       };
 

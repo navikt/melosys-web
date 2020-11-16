@@ -189,6 +189,11 @@ export const SoknadslandSelector = createSelector(
   behandlingsgrunnlag => (behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : [])
 );
 
+export const TrygdedekningSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  behandlingsgrunnlag => behandlingsgrunnlag.trygdedekning || ''
+);
+
 export const PeriodeSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.periode || {}

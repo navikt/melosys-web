@@ -44,6 +44,10 @@ export const ErOppfriskSynligSelector = createSelector(
   OppfriskSelector,
   oppfrisk => oppfrisk.synlig
 );
+export const ErOppfriskSynligOgFortsettSattSelector = createSelector(
+  OppfriskSelector,
+  oppfrisk => (oppfrisk.fortsett ? oppfrisk.fortsett : null)
+);
 
 export const BehandlingUnderOppfriskningSelector = createSelector(
   OppfriskSelector,

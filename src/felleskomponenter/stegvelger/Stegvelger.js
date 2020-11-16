@@ -363,7 +363,7 @@ class Stegvelger extends Component {
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
-      landkoder: MKV.KTObjects.landkoder,
+      landkoder: props.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
       behandlingstema: props.oppsummering.behandlingstema,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
@@ -397,6 +397,7 @@ class Stegvelger extends Component {
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
+      behandlingsgrunnlag: props.behandlingsgrunnlag,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -519,9 +520,9 @@ Stegvelger.propTypes = {
   valgteVirksomheterIkkeNaeringsDrivende: PT.array,
   vilkar: PT.array.isRequired,
   inngangsvilkaar: MPT.Vilkaar,
-  lagreVilkarHandler: PT.func.isRequired,
+  lagreVilkarHandler: PT.func,
   lagreAvklartefaktaHandler: PT.func.isRequired,
-  lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func,
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
@@ -529,7 +530,7 @@ Stegvelger.propTypes = {
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   oppdaterAnmodningsPerioder: PT.func.isRequired,
-  lagreAnmodningsperioderHandler: PT.func.isRequired,
+  lagreAnmodningsperioderHandler: PT.func,
   lagreUtpekingsperioderHandler: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterAnmodningsperiodesvar: PT.func.isRequired,
@@ -560,6 +561,8 @@ Stegvelger.propTypes = {
   videresend: PT.func.isRequired,
   bestillAnmodningsperioder: PT.func.isRequired,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
+  behandlingsgrunnlag: PT.object.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -582,6 +585,9 @@ Stegvelger.defaultProps = {
   maritimtarbeid: [],
   hjemmebaser: [],
   inngangsvilkaar: {},
+  lagreVilkarHandler: () => {},
+  lagreLovvalgsperioderHandler: () => {},
+  lagreAnmodningsperioderHandler: () => {},
 };
 
 const mapStateToProps = state => ({
@@ -622,6 +628,7 @@ const mapStateToProps = state => ({
   hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
+  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
 });
 
 /* eslint no-alert:off */
