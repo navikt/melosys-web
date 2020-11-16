@@ -80,7 +80,7 @@ function EnRedigeringsKnappListe<T>({
           }
           {
             redigerbart &&
-            <div className="legg__til__knapp">
+            <div>
               <Mui.Knappelenke
                 onClick={leggTil}
                 ikon={Ikoner.Add}
