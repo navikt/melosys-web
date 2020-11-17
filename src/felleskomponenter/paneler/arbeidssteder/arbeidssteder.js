@@ -67,6 +67,7 @@ export const Arbeidssteder = ({
         slettTekst="Slett arbeidssted"
         redigerbart={redigerbart}
         className="arbeidsstedOffshore"
+        hentDefaultElement={() => ({})}
       />
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
@@ -80,6 +81,7 @@ export const Arbeidssteder = ({
         slettTekst="Slett arbeidssted"
         redigerbart={redigerbart}
         className="arbeidsstedSkip"
+        hentDefaultElement={() => ({})}
       />
       <Mui.Undertittel
         ikon={Ikoner.Arbeidsgiver}
@@ -93,6 +95,7 @@ export const Arbeidssteder = ({
         slettTekst="Slett arbeidssted"
         redigerbart={redigerbart}
         className="arbeidsstedFly"
+        hentDefaultElement={() => ({})}
       />
     </Nav.EkspanderbartpanelBase>
   </div>
