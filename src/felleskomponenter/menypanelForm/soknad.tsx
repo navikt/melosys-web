@@ -115,6 +115,7 @@ const Soknad: FunctionComponent<PropsFromRedux & InjectedFormProps<KV.Form.Sokna
           'Arbeidsforhold og inntekt',
           'Arbeidsgiver/virksomhet',
           'Fullmektig',
+          'Periode og land',
           'Utenlandsoppdraget',
           'Lønn og godtgjørelser',
           'Arbeidssteder(er)',

@@ -14,6 +14,7 @@ import {
   Barnetrygd,
   Fullmektig,
   Medlemskap,
+  PeriodeOgLand,
   Person,
 } from './menypunkter';
 
@@ -24,6 +25,7 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import './menypanel.css';
 
 const {
+  SØKNAD_A1_YRKESAKTIVE_EØS,
   SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
 } = MKV.Koder.behandlingsgrunnlagtyper;
 
@@ -62,6 +64,7 @@ export type Menypunkt = 'Person' |
   'Arbeidsforhold og inntekt' |
   'Arbeidsgiver/virksomhet' |
   'Fullmektig' |
+  'Periode og land' |
   'Utenlandsoppdraget' |
   'Lønn og godtgjørelser' |
   'Arbeidssteder(er)' |
@@ -151,9 +154,20 @@ export const Menypanel = ({
           />,
         },
         {
+          label: 'Periode og land',
+          active: false,
+          content: <PeriodeOgLand
+            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+            redigerbart={redigerbart}
+          />,
+          // TODO: Skal muligens vises for FTRL-søknad også, i så fall kommer kravet i https://jira.adeo.no/browse/MELOSYS-4234
+          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_YRKESAKTIVE_EØS],
+        },
+        {
           label: 'Utenlandsoppdraget',
           active: false,
           content: <div>Ikke implementert enda</div>,
+          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
         },
         {
           label: 'Lønn og godtgjørelser',
