@@ -1,27 +1,21 @@
-import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Familiemedlem } from 'Domene';
 import { RootState } from 'AppTypes';
 
+import * as Api from '../../../../services/api';
 import * as Etiketter from '../etiketter';
+import * as Ikoner from '../../../../resources/images';
+import * as Mui from '../../../ui';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import ExpandableList from '../../../expandablelist';
 
 import './familieforhold.css';
-
-function filtrerFamiliemedlemmer(familiemedlemmer: Familiemedlem[], finnBarn: boolean) {
-  return familiemedlemmer.filter(familiemedlem =>
-    (finnBarn && familiemedlem.relasjonstype.kode === 'BARN') || (!finnBarn && familiemedlem.relasjonstype.kode !== 'BARN'));
-}
-
-function renderBarnEtikett(alder: number) {
-  return alder < 18 ? (<Etiketter.Under18Aar />) : (<span />);
-}
 
 interface FamilieforholdEnkeltProps {
   familiemedlem: Familiemedlem,
@@ -39,6 +33,8 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
     fnrAnnenForelder,
   } = familiemedlem;
 
+  const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar />) : (<span />));
+
   return (
     <div className="familieforhold__enkelt" aria-label="Enkelt familiemedlem">
       <Nav.Row>
@@ -46,7 +42,7 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
         <Nav.Column xs="2">{fnr}</Nav.Column>
         <Nav.Column xs="2">{erBarn ? Utils.streng.boolTilNorsk(borMedBruker) : sivilstandGyldighetsperiodeFom}</Nav.Column>
         <Nav.Column xs="2">{erBarn ? fnrAnnenForelder : Utils.streng.boolTilNorsk(borMedBruker)}</Nav.Column>
-        <Nav.Column xs="3">{erBarn ? renderBarnEtikett(alder) : relasjonstype.term}</Nav.Column>
+        <Nav.Column xs="3">{erBarn ? renderBarnEtikett() : relasjonstype.term}</Nav.Column>
       </Nav.Row>
     </div>
   );
@@ -67,6 +63,8 @@ export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
   return (
     <div>
       <Nav.typo.Undertittel className="familieforhold__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
+      { familiemedlemmer.length === 0 && '(ingen data funnet)' }
+      { familiemedlemmer.length !== 0 &&
       <Nav.Row>
         <Nav.Column xs="3">{kolonner[0]}</Nav.Column>
         <Nav.Column xs="2">{kolonner[1]}</Nav.Column>
@@ -74,52 +72,83 @@ export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
         <Nav.Column xs="2">{kolonner[3]}</Nav.Column>
         <Nav.Column xs="3">{kolonner[4]}</Nav.Column>
       </Nav.Row>
+      }
       <section className="familieforholdgruppe__liste">
-        {
-          familiemedlemmer.length > 0 &&
-          <ExpandableList
-            elements={familiemedlemmer}
-            renderElement={familiemedlem => <FamilieforholdEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
-            idFromElement={familiemedlem => familiemedlem.fnr}
-            amountOfItemsCollapsed={2}
-            btnTextCollapsed="Vis flere"
-            btnTextExpanded="Vis færre"
-            chevron
-            dividers
-          />
-        }
-        { familiemedlemmer.length === 0 && '(ingen data funnet)'}
+        <ExpandableList
+          elements={familiemedlemmer}
+          renderElement={familiemedlem => <FamilieforholdEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
+          idFromElement={familiemedlem => familiemedlem.fnr}
+          amountOfItemsCollapsed={2}
+          btnTextCollapsed="Vis flere"
+          btnTextExpanded="Vis færre"
+          chevron
+          dividers
+        />
       </section>
     </div>
   );
 }
 
 const mapStateToProps = (state: RootState) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   familiemedlemmer: behandlingerSelectors.FamiliemedlemmerSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
+const mapDispatchToProps = (dispatch: any) => ({
+  oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
+});
 
-export const Familieforhold = ({
+interface FamilieforholdProps {
+  behandlingID: number,
+  familiemedlemmer: Familiemedlem[],
+  oppdaterBehandling(): void,
+}
+
+const Familieforhold = ({
+  behandlingID,
   familiemedlemmer,
-}: PropsFromRedux) => {
-  if (Object.keys(familiemedlemmer).length === 0) { return null; }
+  oppdaterBehandling,
+}: FamilieforholdProps) => {
+  const [feilmelding, setFeilmelding] = useState('');
+
+  const oppfrisk = async () => {
+    try {
+      await Api.Saksopplysninger.oppfrisk(behandlingID, true);
+      oppdaterBehandling();
+    } catch (e) {
+      Utils.logger.error(e);
+      if (e.status >= 500) setFeilmelding('Kunne ikke hente familierelasjoner');
+      else if (e.status >= 400) setFeilmelding(e.body.message);
+    }
+  };
+
+  const barn = familiemedlemmer
+    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode === 'BARN') || [];
+  const ektefellePartnerSamboer = familiemedlemmer
+    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode !== 'BARN') || [];
 
   return (
     <div className="familieforhold">
+      { feilmelding &&
+        <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding}</Nav.AlertStripe>}
+      { familiemedlemmer.length === 0 &&
+        <div className="familieforhold__gruppeoverskrift">
+          <Mui.Knappelenke ikon={Ikoner.Add} onClick={oppfrisk}>Hent opplysninger</Mui.Knappelenke>
+        </div>}
+      { familiemedlemmer.length !== 0 &&
       <FamilieforholdGruppe
-        familiemedlemmer={filtrerFamiliemedlemmer(familiemedlemmer, true)}
+        familiemedlemmer={barn}
         overskrift="Barn"
         kolonner={['Navn', 'F.nr./d-nr.', 'Bor med bruker', 'F.nr annen forelder', '']}
-        erBarn />
+        erBarn />}
+      { familiemedlemmer.length !== 0 &&
       <FamilieforholdGruppe
-        familiemedlemmer={filtrerFamiliemedlemmer(familiemedlemmer, false)}
+        familiemedlemmer={ektefellePartnerSamboer}
         overskrift="Ektefelle/partner/samboer"
         kolonner={['Navn', 'F.nr./d-nr.', 'Fra og med', 'Bor med bruker', 'Relasjon']}
-        erBarn={false} />
+        erBarn={false} />}
     </div>
   );
 };
 
-export default connector(Familieforhold);
+export default connect(mapStateToProps, mapDispatchToProps)(Familieforhold);
