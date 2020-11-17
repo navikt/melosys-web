@@ -54,14 +54,12 @@ const FullmektigRedigeringUtfort = ({
             />
           }
         </Nav.Column>
-        <Nav.Column xs="3">
-          <Nav.Column xs="3">
-            <Nav.typo.Normaltekst style={{ marginTop: '0.5em' }}>Organisasjonsnummer:</Nav.typo.Normaltekst>
-            <Nav.typo.Element>{org.orgnr}</Nav.typo.Element>
-          </Nav.Column>
+        <Nav.Column xs="4">
+          <Nav.typo.Normaltekst style={{ marginTop: '0.5em' }}>Organisasjonsnummer:</Nav.typo.Normaltekst>
+          <Nav.typo.Element>{org.orgnr}</Nav.typo.Element>
         </Nav.Column>
-        <Nav.Column xs="6">
-          <Nav.typo.Element>Hvem er dette fullmektig for?</Nav.typo.Element>
+        <Nav.Column xs="5">
+          <Nav.typo.Element style={{ marginTop: '0.5em' }}>Hvem er dette fullmektig for?</Nav.typo.Element>
           {
             representererKode &&
             <span>
@@ -75,7 +73,7 @@ const FullmektigRedigeringUtfort = ({
       <Nav.Row>
         {
           kontaktopplysninger.kontaktnavn &&
-          <Nav.Column xs="5">
+          <Nav.Column xs="3">
             <Nav.typo.Normaltekst>Kontaktperson:</Nav.typo.Normaltekst>
             <Nav.typo.Element>{kontaktopplysninger.kontaktnavn}</Nav.typo.Element>
           </Nav.Column>
@@ -85,13 +83,13 @@ const FullmektigRedigeringUtfort = ({
         {
           !Utils._isEmpty(kontaktopplysningerOrg) &&
           <>
-            <Nav.Column xs="5">
+            <Nav.Column xs="3">
               <OrganisasjonsAdresse
                 organisasjon={kontaktopplysningerOrg}
                 visTittel={false}
               />
             </Nav.Column>
-            <Nav.Column xs="3">
+            <Nav.Column xs="5">
               <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
               <Nav.typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.typo.Element>
             </Nav.Column>
