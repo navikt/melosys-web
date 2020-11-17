@@ -73,14 +73,13 @@ InnerPanelListe.propTypes = {
   slettTekst: PT.string.isRequired,
   elementKomponent: PT.elementType.isRequired,
   elementClassName: PT.string,
-  hentDefaultElement: PT.func,
+  hentDefaultElement: PT.func.isRequired,
   className: PT.string,
   settFeltVerdi: PT.func.isRequired,
 };
 
 InnerPanelListe.defaultProps = {
   elementClassName: undefined,
-  hentDefaultElement: () => {},
   className: undefined,
 };
 
