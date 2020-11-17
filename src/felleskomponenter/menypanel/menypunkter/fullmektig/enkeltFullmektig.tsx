@@ -72,6 +72,7 @@ const EnkeltFullmektig = ({
       harData={Boolean(fullmektig.representererKode && fullmektig.orgnr)}
       tittel={tittel}
       tittelUnderstrek
+      understrek
       hentNyStatusVedHarData={false}
       onBinClick={slettHandler}
       onLagreClick={lagreKontaktOpplysninger}
