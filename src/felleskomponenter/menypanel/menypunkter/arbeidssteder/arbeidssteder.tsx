@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from 'AppTypes';
 
 import * as KV from '../../../../kodeverk';
 import * as Utils from '../../../../utils';
@@ -10,8 +8,6 @@ import * as Etiketter from '../etiketter';
 import * as Enkel from './enkel';
 
 import EditerbartElementListe from '../editerbartElementListe';
-
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import './arbeidssteder.css';
 
@@ -50,21 +46,23 @@ const arbeidUtlandDefaultElement = {
   arbeidUtlandHjemmekontor: null,
 };
 
-const mapStateToProps = (state: RootState) => ({
-  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
-});
-
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
+interface ArbeidsstederProps {
+  redigerbart: boolean,
+  visArbeidsforholdRolleEtiketter: boolean,
+}
 
 const Arbeidssteder = ({
   redigerbart,
-}: PropsFromRedux) => (
+  visArbeidsforholdRolleEtiketter,
+}: ArbeidsstederProps) => (
   <div className="arbeidssteder">
     <div>
       <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Arbeidssteder.tittel}</Nav.typo.Undertittel>
       <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
-      <Etiketter.ArbeidsgiversDel />
+      {
+        visArbeidsforholdRolleEtiketter &&
+        <Etiketter.ArbeidsgiversDel />
+      }
     </div>
     <EditerbartElementListe
       redigerbart={redigerbart}
@@ -137,4 +135,4 @@ const Arbeidssteder = ({
   </div>
 );
 
-export default connector(Arbeidssteder);
+export default Arbeidssteder;

@@ -8,7 +8,6 @@ import * as Mui from '../../../ui';
 import * as Ikoner from '../../../../resources/images';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import Organisasjon from '../arbeidsgiver/organisasjon';
 import Arbeidsforholdene from '../arbeidsgiver/arbeidsforhold';
@@ -20,14 +19,13 @@ const uuid = require('uuid/v4');
 
 export const ArbeidsgivereEnkeltNorge = props => {
   const {
-    kilde, organisasjon, arbeidsforholdene, inntektListe, redigerbart, wrapIPanel,
+    kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel,
   } = props;
 
   const seksjoner = (
     <Fragment>
       <Organisasjon
         organisasjon={organisasjon}
-        redigerbart={redigerbart}
         className="organisasjonSeksjon"
         visOrgnr
         visAdresseTittel={false}
@@ -70,7 +68,6 @@ ArbeidsgivereEnkeltNorge.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
   inntektListe: MPT.InntektListe.isRequired,
-  redigerbart: PT.bool.isRequired,
   wrapIPanel: PT.bool,
 };
 
@@ -81,7 +78,7 @@ ArbeidsgivereEnkeltNorge.defaultProps = {
 
 export const ArbeidsgivereNorge = props => {
   const {
-    arbeidsgivereNorge, redigerbart,
+    arbeidsgivereNorge,
   } = props;
 
   const wrapIPanel = arbeidsgivereNorge.length > 1;
@@ -89,7 +86,7 @@ export const ArbeidsgivereNorge = props => {
   return (
     <div className="arbeidsgivereNorge panelSeksjon">
       {
-        arbeidsgivereNorge.map(arbeidsgiver => <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} redigerbart={redigerbart} wrapIPanel={wrapIPanel} />)
+        arbeidsgivereNorge.map(arbeidsgiver => <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} wrapIPanel={wrapIPanel} />)
       }
     </div>
   );
@@ -97,12 +94,10 @@ export const ArbeidsgivereNorge = props => {
 
 ArbeidsgivereNorge.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,
-  redigerbart: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
-  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps)(ArbeidsgivereNorge);

@@ -22,6 +22,7 @@ interface EditerbartElementProps {
   tittel: string,
   tittelIkon?: ElementType,
   tittelUnderstrek?: boolean,
+  understrek?: boolean,
   harData: boolean,
   visLagreKnappBareHvisHarData?: boolean,
   className?: string,
@@ -38,6 +39,7 @@ const EditerbartElement = ({
   tittel,
   tittelIkon: TittelIkon,
   tittelUnderstrek,
+  understrek,
   harData,
   visLagreKnappBareHvisHarData = false,
   className,
@@ -110,7 +112,9 @@ const EditerbartElement = ({
     setStatus(hentNesteStatus());
   };
 
-  const cls = classnames(className, 'editerbart__element');
+  const cls = classnames(className, 'editerbart__element', {
+    understrek,
+  });
 
   return (
     <div className={cls}>
@@ -124,6 +128,7 @@ const EditerbartElement = ({
           capitalCase
           disabled={!redigerbart}
           type="hoved"
+          className="lagre__knapp"
         >
           Lagre
         </Mui.Knapp>

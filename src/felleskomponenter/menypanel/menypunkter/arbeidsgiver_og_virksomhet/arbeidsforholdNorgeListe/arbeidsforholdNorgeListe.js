@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 import classnames from 'classnames';
@@ -9,12 +9,11 @@ import * as Nav from '../../../../../utils/navFrontend';
 import * as Ikoner from '../../../../../resources/images';
 import * as MPT from '../../../../../proptypes';
 import * as OrganisasjonValidering from '../../../../skjema/validering/generisk/organisasjon';
-import * as Api from '../../../../../services/api';
 
 import EditerbartElement from '../../editerbartElement';
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
-import Kontaktopplysninger, { finnKontaktopplysninger } from '../../kontaktopplysninger';
+import Kontaktopplysninger, { useKontaktOpplysninger } from '../../kontaktopplysninger';
 import EnkeltArbeidsforholdNorgeRedigeringUtfort from './enkeltArbeidsforholdNorgeRedigeringUtfort';
 
 import './arbeidsforholdNorgeListe.css';
@@ -110,47 +109,18 @@ export const EnkeltArbeidsforholdNorge = ({
   element,
   elementer,
 }) => {
-  const [kontaktopplysninger, setKontaktopplysninger] = useState({ kontaktorgnr: '', kontaktnavn: '' });
-
   const organisasjon = findOrganisasjon(element) || {};
 
-  useEffect(() => {
-    if (!OrganisasjonValidering.erOrgnrGyldig(organisasjon.orgnr)) return;
-
-    finnKontaktopplysninger(saksnummer, organisasjon.orgnr)
-      .then(({ kontaktnavn, kontaktorgnr }) => {
-        setKontaktopplysninger({ kontaktnavn: kontaktnavn || '', kontaktorgnr: kontaktorgnr || '' });
-      });
-  }, [organisasjon.orgnr]);
+  const [
+    kontaktopplysninger,
+    setKontaktopplysninger,
+    slettKontaktOpplysninger,
+    lagreKontaktOpplysninger,
+  ] = useKontaktOpplysninger(saksnummer, organisasjon.orgnr || '');
 
   const slett = () => {
     fields.remove(indeks);
-
-    try {
-      Api.Fagsaker.kontaktopplysninger.slett(saksnummer, organisasjon.orgnr);
-    } catch (e) {
-      if (e.status !== 404) {
-        Utils.logger.error(e);
-      }
-    }
-  };
-
-  const lagreKontaktOpplysninger = () => {
-    if (kontaktopplysninger.kontaktorgnr && !OrganisasjonValidering.erOrgnrGyldig(kontaktopplysninger.kontaktorgnr)) return false;
-
-    const data = {
-      kontaktorgnr: kontaktopplysninger.kontaktorgnr || null,
-      kontaktnavn: kontaktopplysninger.kontaktnavn || null,
-    };
-
-    try {
-      Api.Fagsaker.kontaktopplysninger.send(saksnummer, organisasjon.orgnr, data);
-      return true;
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-
-    return false;
+    slettKontaktOpplysninger();
   };
 
   const erstatt = verdi => fields.splice(indeks, 1, transformerOrgTilElement(verdi));
