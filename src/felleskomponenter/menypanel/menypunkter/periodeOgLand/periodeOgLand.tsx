@@ -27,10 +27,14 @@ const PeriodeOgLand = ({
           <Etiketter.ArbeidsgiversDel />
         }
       </div>
-      <Soknadsperiode
-        redigerbart={redigerbart}
-        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-      />
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Soknadsperiode
+            redigerbart={redigerbart}
+            lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+          />
+        </Nav.Column>
+      </Nav.Row>
     </div>
   );
 };
