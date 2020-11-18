@@ -25,6 +25,11 @@ export const Arbeidssteder = {
   },
 };
 
+export const Fullmektig = {
+  tittel: 'Fullmektig',
+  undertitler: {},
+};
+
 export const Medlemskap = {
   tittel: 'Medlemskap',
   undertitler: {},

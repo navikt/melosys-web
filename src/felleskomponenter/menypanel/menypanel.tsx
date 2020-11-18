@@ -12,12 +12,14 @@ import {
   ArbeidsgiverOgVirksomhet,
   Arbeidssteder,
   Barnetrygd,
+  Fullmektig,
   Medlemskap,
   Person,
 } from './menypunkter';
 
 import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './menypanel.css';
 import { menypanelSelectors } from '../../ducks/menypanel';
@@ -49,6 +51,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -86,10 +89,13 @@ export const Menypanel = ({
   behandlingstema,
   menypunkter,
   visMenypanel,
+  redigerbart,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
   if (!visMenypanel) return null;
+
+  const visArbeidsforholdRolleEtiketter = behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
   const defaultLinkGroups: LinkGroup[] = [
     {
@@ -98,7 +104,10 @@ export const Menypanel = ({
         {
           label: 'Person',
           active: false,
-          content: <Person />,
+          content: <Person
+            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+            redigerbart={redigerbart}
+          />,
         },
         {
           label: 'Familieforhold',
@@ -133,12 +142,18 @@ export const Menypanel = ({
         {
           label: 'Arbeidsgiver/virksomhet',
           active: false,
-          content: <ArbeidsgiverOgVirksomhet />,
+          content: <ArbeidsgiverOgVirksomhet
+            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+            redigerbart={redigerbart}
+          />,
         },
         {
           label: 'Fullmektig',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Fullmektig
+            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+            redigerbart={redigerbart}
+          />,
         },
         {
           label: 'Utenlandsoppdraget',
@@ -154,7 +169,10 @@ export const Menypanel = ({
         {
           label: 'Arbeidssteder(er)',
           active: false,
-          content: <Arbeidssteder />,
+          content: <Arbeidssteder
+            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+            redigerbart={redigerbart}
+          />,
         },
         {
           label: 'Om virksomheten i Norge',

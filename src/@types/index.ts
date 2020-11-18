@@ -25,3 +25,4 @@ export type {
 export type { default as PersonHistorikk } from './personhistorikk';
 export type { default as Organisasjon } from './organisasjon';
 export type { MedlemskapPeriode } from './medlemskap';
+export type { default as Aktoer } from './aktoer';

@@ -18,6 +18,7 @@ import { ReactComponent as Filenew } from './line-version-file-new-1.svg';
 import { ReactComponent as Fly } from './fly.svg';
 import { ReactComponent as Varsel } from './ikon-steg-varsel.svg';
 import { ReactComponent as Globe } from './line-version-globe-1.svg';
+import { ReactComponent as GreenCheckmark } from './green-checkmark.svg';
 import { ReactComponent as Helikopter } from './helikopter.svg';
 import { ReactComponent as InformationCircle } from './infomationcircle.svg';
 import { ReactComponent as IkonSak } from './ikon-sak.svg';
@@ -60,6 +61,7 @@ export {
   Filenew,
   Fly,
   Globe,
+  GreenCheckmark,
   Helikopter,
   IkonSak,
   InformationCircle,
