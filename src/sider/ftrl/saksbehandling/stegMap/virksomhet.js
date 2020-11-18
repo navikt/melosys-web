@@ -15,10 +15,13 @@ class Virksomhet extends Steg {
     this.id = STEG.VIRKSOMHET;
     this.tittel = 'Virksomhet';
     this.komponent = VurderingVirksomhet;
-    this.samleRelevanteData = _propsLight => ({});
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;
   }

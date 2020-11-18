@@ -5,6 +5,8 @@ import * as Utils from '../../utils';
 import { OrganisasjonSelectors } from '../organisasjoner';
 
 import { PersonSelectors } from '../personer';
+import { behandlingerSelectors } from '../behandlinger';
+
 import MKV from '../../melosyskodeverk';
 
 /**
@@ -95,6 +97,12 @@ export const ValiderteEkstraArbeidsgivereSelector = createSelector(
   (ekstraArbeidsgivere, organisasjoner) => organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr))
 );
 
+export const EkstraArbeidsgivereVirksomhetSelector = createSelector(
+  EkstraArbeidsgivereSelector,
+  OrganisasjonSelectors.organisasjonerSelector,
+  (ekstraArbeidsgivere = [], organisasjoner) => organisasjoner.filter(organisasjon => ekstraArbeidsgivere.find(ekstraArbeidsgiver => ekstraArbeidsgiver === organisasjon.orgnr))
+);
+
 export const SelvstendigArbeidSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.selvstendigArbeid || {}
@@ -114,6 +122,29 @@ export const SelvstendigNaringsvirksomhetSelector = createSelector(
   SelvstendigArbeidForetakSelector,
   OrganisasjonSelectors.organisasjonerSelector,
   (selvstendigForetak = [], organisasjoner) => organisasjoner.filter(organisasjon => selvstendigForetak.find(foretak => foretak.orgnr === organisasjon.orgnr))
+);
+
+export const AlleVirksomheterSelector = createSelector(
+  state => behandlingerSelectors.ArbeidsforholdeneSelector(state),
+  state => SelvstendigNaringsvirksomhetSelector(state),
+  state => ForetakUtlandSelector(state),
+  state => EkstraArbeidsgivereVirksomhetSelector(state),
+  (arbeidsforholdene, selvstendigNaringsvirksomhet, foretakUtland, ekstraArbeidsgivere) => {
+    const virksomhetsListe = [];
+    arbeidsforholdene.forEach(arbeidsforhold => {
+      virksomhetsListe.push({ kode: arbeidsforhold.arbeidsgiver.orgnr, term: arbeidsforhold.arbeidsgiver.navn });
+    });
+    selvstendigNaringsvirksomhet.forEach(selvstendigForetak => {
+      virksomhetsListe.push({ kode: selvstendigForetak.orgnr, term: selvstendigForetak.navn });
+    });
+    foretakUtland.forEach(foretak => {
+      virksomhetsListe.push({ kode: foretak.uuid, term: foretak.navn });
+    });
+    ekstraArbeidsgivere.forEach(ekstraArbeidsgiver => {
+      virksomhetsListe.push({ kode: ekstraArbeidsgiver.orgnr, term: ekstraArbeidsgiver.navn });
+    });
+    return virksomhetsListe;
+  }
 );
 
 export const OppholdUtlandSelector = createSelector(

@@ -97,6 +97,11 @@ class Stegvelger extends Component {
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
+  tilbake = () => {
+    this.publiserStegdata();
+    this.validerSoknadOgGaTilSteg(this.beregnForrigeSteg());
+  };
+
   harSoknadFeilmeldinger = () => !Utils._isEmpty(this.props.soknadFeilmeldinger);
 
   gjemSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: false });
@@ -350,6 +355,7 @@ class Stegvelger extends Component {
       avvisUtpeking: this.avvisUtpeking,
       lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
       byggUtpekingsperioder: this.byggUtpekingsperioderHandler,
+      tilbake: this.tilbake,
     };
 
     const { props } = this;
@@ -462,6 +468,11 @@ class Stegvelger extends Component {
   beregnNesteSteg = () => {
     const { aktivtStegNummer } = this.state;
     return aktivtStegNummer + 1;
+  };
+
+  beregnForrigeSteg = () => {
+    const { aktivtStegNummer } = this.state;
+    return aktivtStegNummer - 1;
   };
 
   erSisteSteg(stegNummer) {
