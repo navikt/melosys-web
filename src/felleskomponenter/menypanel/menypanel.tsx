@@ -170,18 +170,18 @@ export const Menypanel = ({
            *  */
           renderForBehandlingsgrunnlagtyper: [],
         },
-        {
-          label: 'Utenlandsoppdraget',
-          active: false,
-          content: <div>Ikke implementert enda</div>,
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
-        },
-        {
-          label: 'Lønn og godtgjørelser',
-          active: false,
-          content: <div>Ikke implementert enda</div>,
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
-        },
+        // {
+        //   label: 'Utenlandsoppdraget',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
+        // {
+        //   label: 'Lønn og godtgjørelser',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
         {
           label: 'Arbeidssteder(er)',
           active: false,
@@ -190,18 +190,18 @@ export const Menypanel = ({
             redigerbart={redigerbart}
           />,
         },
-        {
-          label: 'Om virksomheten i Norge',
-          active: false,
-          content: <div>Ikke implementert enda</div>,
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
-        },
-        {
-          label: 'Øvrig om arbeidstaker',
-          active: false,
-          content: <div>Ikke implementert enda</div>,
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
-        },
+        // {
+        //   label: 'Om virksomheten i Norge',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
+        // {
+        //   label: 'Øvrig om arbeidstaker',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
       ],
     },
   ];
