@@ -4,6 +4,8 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../../../utils/navFrontend';
 
+import Knapperad from '../../../../knapperad';
+
 import './soknadsperiode.css';
 
 const SoknadsperiodeEndring = props => {
@@ -18,36 +20,41 @@ const SoknadsperiodeEndring = props => {
   } = props;
 
   return (
-    <Nav.Row>
-      <Nav.Column xs="12">
-        <Nav.Fieldset legend="Skriv inn korrigert søknadsperiode:">
-          <Nav.Row>
-            <Nav.Column xs="3">
-              <Nav.Input
-                bredde="S"
-                label="Fra og med:"
-                value={soknadsperiodeNyFom}
-                onChange={event => vedFeltEndring('soknadsperiodeNyFom', event.target.value)}
-                onBlur={() => vedFeltFokusUt('soknadsperiodeNyFom')}
-              />
-            </Nav.Column>
-            <Nav.Column xs="3">
-              <Nav.Input
-                bredde="S"
-                label="Til og med:"
-                value={soknadsperiodeNyTom}
-                onChange={event => vedFeltEndring('soknadsperiodeNyTom', event.target.value)}
-                onBlur={() => vedFeltFokusUt('soknadsperiodeNyTom')}
-              />
-            </Nav.Column>
-            <Nav.Column xs="12">
-              <Nav.Hovedknapp disabled={!erDatoerGyldig} onClick={oppdaterPeriode}>Oppdater registeropplysningene</Nav.Hovedknapp>
-              <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
-      </Nav.Column>
-    </Nav.Row>
+    <Nav.Fieldset legend="">
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Nav.Input
+            bredde="S"
+            label="Fra og med:"
+            value={soknadsperiodeNyFom}
+            onChange={event => vedFeltEndring('soknadsperiodeNyFom', event.target.value)}
+            onBlur={() => vedFeltFokusUt('soknadsperiodeNyFom')}
+          />
+        </Nav.Column>
+        <Nav.Column xs="6">
+          <Nav.Input
+            bredde="S"
+            label="Til og med:"
+            value={soknadsperiodeNyTom}
+            onChange={event => vedFeltEndring('soknadsperiodeNyTom', event.target.value)}
+            onBlur={() => vedFeltFokusUt('soknadsperiodeNyTom')}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Knapperad
+            capitalCase
+            avbryt={avbryt}
+            avbrytTekst="Avbryt"
+            bekreft={oppdaterPeriode}
+            bekreftTekst="Lagre"
+            redigerbart
+            bekreftRedigerbart={erDatoerGyldig}
+          />
+        </Nav.Column>
+      </Nav.Row>
+    </Nav.Fieldset>
   );
 };
 
