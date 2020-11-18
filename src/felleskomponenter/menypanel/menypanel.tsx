@@ -163,8 +163,12 @@ export const Menypanel = ({
             redigerbart={redigerbart}
             lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
           />,
-          // TODO: Skal muligens vises for FTRL-søknad også, i så fall kommer kravet i https://jira.adeo.no/browse/MELOSYS-4234
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_YRKESAKTIVE_EØS],
+          /**
+           * TODO: Vises nå for alle grunnlagtyper, men når "Utenlandsoppdraget"-menypunkt er klart,
+           * så skal denne vises bare for papirsøknad.
+           * Om den skal vises for FTRL-søknad i fremtiden blir muligens beskrevet i https://jira.adeo.no/browse/MELOSYS-4234.
+           *  */
+          renderForBehandlingsgrunnlagtyper: [],
         },
         {
           label: 'Utenlandsoppdraget',
