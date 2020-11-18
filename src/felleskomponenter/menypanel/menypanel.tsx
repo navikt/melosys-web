@@ -83,6 +83,7 @@ interface LinkGroup {
 
 type MenypanelProps = PropsFromRedux & {
   menypunkter: Menypunkt[],
+  lagreSoknadOgOppfriskSaksopplysninger: () => void,
 };
 
 export const Menypanel = ({
@@ -90,6 +91,7 @@ export const Menypanel = ({
   behandlingstema,
   menypunkter,
   redigerbart,
+  lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
@@ -159,6 +161,7 @@ export const Menypanel = ({
           content: <PeriodeOgLand
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
           />,
           // TODO: Skal muligens vises for FTRL-søknad også, i så fall kommer kravet i https://jira.adeo.no/browse/MELOSYS-4234
           renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_YRKESAKTIVE_EØS],
