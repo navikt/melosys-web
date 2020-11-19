@@ -35,6 +35,7 @@ import { AvslaattSoknad, HenlagtSak } from '../../eu_eøs/saksbehandling/kompone
 import { stegMap } from './stegMap';
 import './saksbehandling.css';
 import { folketrygdenkodeverkOperations } from '../../../ducks/folketrygdenkodeverk';
+import {oppsummertfaktaOperations} from "../../../ducks/oppsummertfakta";
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -78,6 +79,7 @@ const Saksbehandling = ({
   hentDokumentOversikt,
   hentFagsaker,
   hentFolketrygdenKodeverk,
+  hentOppsummertFakta,
   lagreAllData,
   lagreAvklartefakta,
   lagrePerioder,
@@ -132,6 +134,7 @@ const Saksbehandling = ({
 
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(snr);
+      await hentOppsummertFakta(behandlingIDFraParam);
       return true;
     } catch (e) {
       Utils.logger.error(e);
@@ -279,6 +282,7 @@ Saksbehandling.propTypes = {
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
+  hentOppsummertFakta: PT.func.isRequired,
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
@@ -330,6 +334,7 @@ const mapDispatchToProps = dispatch => ({
   hentDokumentOversikt: saksnummer => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
+  hentOppsummertFakta: bid => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(bid)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),

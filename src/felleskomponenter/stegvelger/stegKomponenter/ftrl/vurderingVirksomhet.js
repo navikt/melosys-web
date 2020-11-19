@@ -8,23 +8,29 @@ import * as Mui from '../../../../felleskomponenter/ui';
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 
 import './vurderingVirksomhet.css';
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from '../../../../ducks/oppsummertfakta';
+import {behandlingerSelectors} from "../../../../ducks/behandlinger";
 
 const VurderingVirksomhet = ({
   virksomheterListe,
   redigerbart,
   bekreftOgFortsett,
   tilbake,
+  lagredeVirksomheter,
+  sendVirksomheter,
+  behandlingID
 }) => {
   const hjelpetekst = 'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. ' +
     'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
-  const [valgtVirksomheter, setValgtVirksomheter] = useState([]);
+  const [valgteVirksomheter, setValgteVirksomheter] = useState(lagredeVirksomheter);
   const [erValgtVirksomheterGyldig, setErValgtVirksomheterGyldig] = useState(false);
 
   useEffect(() => {
-    setErValgtVirksomheterGyldig(valgtVirksomheter.length > 0);
-  }, [valgtVirksomheter]);
+    setErValgtVirksomheterGyldig(valgteVirksomheter.length > 0);
+  }, [valgteVirksomheter]);
 
   const handleFortsett = () => {
+    sendVirksomheter(behandlingID, { virksomheter: valgteVirksomheter });
     bekreftOgFortsett();
   };
 
@@ -43,9 +49,9 @@ const VurderingVirksomhet = ({
 
       <Mui.Checkboxgruppe
         muligeValg={virksomheterListe}
-        onChange={checkedVirksomheter => setValgtVirksomheter(checkedVirksomheter)}
+        onChange={checkedVirksomheter => setValgteVirksomheter(checkedVirksomheter)}
         disabled={!redigerbart}
-        defaultValg={valgtVirksomheter}
+        defaultValg={valgteVirksomheter}
       />
 
       <div className="fane__knapplinje">
@@ -70,10 +76,18 @@ VurderingVirksomhet.propTypes = {
   redigerbart: PT.bool.isRequired,
   tilbake: PT.func.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
+  behandlingID: PT.number.isRequired,
+  lagredeVirksomheter: PT.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   virksomheterListe: behandlingsgrunnlagSelectors.AlleVirksomheterSelector(state),
+  lagredeVirksomheter: oppsummertfaktaSelectors.VirksomheterSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
-export default connect(mapStateToProps, null)(VurderingVirksomhet);
+const mapDispatchToProps = dispatch => ({
+  sendVirksomheter: (behandlingID, virksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingVirksomhet);
