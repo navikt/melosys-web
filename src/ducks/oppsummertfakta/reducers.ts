@@ -19,13 +19,21 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         status: STATUS.OK,
         data: action.data,
       };
-    // case Types.OPPDATER_OPPSUMMERTFAKTA:
-    //   return {
-    //     ...state,
-    //     data: {
-    //       virksomheter: action.data.virksomheter
-    //     }
-    //   };
+    case Types.OPPDATER_VIRKSOMHETER:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          virksomheter: action.data.virksomheter,
+        },
+      };
+    case Types.OPPDATER_OPPSUMMERTFAKTA:
+      return {
+        ...state,
+        data: {
+          virksomheter: action.data.virksomheter,
+        },
+      };
     default:
       return state;
   }

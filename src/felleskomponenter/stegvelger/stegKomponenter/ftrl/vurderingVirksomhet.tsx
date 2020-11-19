@@ -9,7 +9,7 @@ import * as Mui from '../../../../felleskomponenter/ui';
 
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from '../../../../ducks/oppsummertfakta';
+import { oppsummertfaktaOperations } from '../../../../ducks/oppsummertfakta';
 
 import { Virksomheter } from '../../../../@types/avklartfakta';
 import './vurderingVirksomhet.css';
@@ -17,11 +17,11 @@ import './vurderingVirksomhet.css';
 
 const mapStateToProps = (state: RootState) => ({
   virksomheterListe: behandlingsgrunnlagSelectors.AlleVirksomheterSelector(state),
-  lagredeVirksomheter: oppsummertfaktaSelectors.VirksomheterSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  oppdaterVirksomheterState: (virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.oppdaterVirksomheterState(virksomheter)),
   sendVirksomheter: (behandlingID: number, virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
 });
 
@@ -30,7 +30,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
-  bekreftOgFortsett: () => void,
+  bekreft: () => void,
+  lagredeVirksomheter: string[],
+  oppdater: () => void,
   redigerbart: boolean,
   tilbake: () => void,
 }
@@ -38,8 +40,10 @@ interface Props {
 const VurderingVirksomhet =
   ({
     behandlingID,
-    bekreftOgFortsett,
+    bekreft,
     lagredeVirksomheter,
+    oppdater,
+    oppdaterVirksomheterState,
     redigerbart,
     sendVirksomheter,
     tilbake,
@@ -50,13 +54,19 @@ const VurderingVirksomhet =
     const hjelpetekst = 'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. ' +
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
+    const oppdaterVirksomheterOgStegvelger = async () => {
+      await oppdaterVirksomheterState({ virksomheter: valgteVirksomheter });
+      oppdater();
+    };
+
     useEffect(() => {
       setErValgtVirksomheterGyldig(valgteVirksomheter.length > 0);
+      oppdaterVirksomheterOgStegvelger();
     }, [valgteVirksomheter]);
 
     const handleFortsett = () => {
       sendVirksomheter(behandlingID, { virksomheter: valgteVirksomheter });
-      bekreftOgFortsett();
+      bekreft();
     };
 
     return (

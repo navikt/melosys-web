@@ -2,6 +2,7 @@ export const OK = 'oppsummertfakta/OK';
 export const FEILET = 'oppsummertfakta/FEILET';
 export const PENDING = 'oppsummertfakta/PENDING';
 export const OPPDATER_OPPSUMMERTFAKTA = 'oppsummertfakta/OPPDATER_OPPSUMMERTFAKTA';
+export const OPPDATER_VIRKSOMHETER = 'oppsummertfakta/OPPDATERVIRKSOMHETER';
 
 export type Data = {
   virksomheter?: string[]
@@ -21,10 +22,14 @@ export interface OkAction {
   data: any,
 }
 
+export interface OppdaterVirksomheterAction {
+  type: typeof OPPDATER_VIRKSOMHETER,
+  data: Data
+}
 
-export interface OppdaterAction {
+export interface OppdaterOppsummertfaktaAction {
   type: typeof OPPDATER_OPPSUMMERTFAKTA,
   data: Data
 }
 
-export type Action = FeiletAction | PendingAction | OkAction | OppdaterAction;
+export type Action = FeiletAction | PendingAction | OkAction | OppdaterOppsummertfaktaAction | OppdaterVirksomheterAction;

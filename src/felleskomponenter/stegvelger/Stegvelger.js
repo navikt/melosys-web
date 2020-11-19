@@ -37,6 +37,7 @@ import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 import { StegStoreTyper } from '../../regler';
 
 import './stegvelger.css';
+import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
 
 class Stegvelger extends Component {
   state = {
@@ -97,9 +98,20 @@ class Stegvelger extends Component {
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
+  bekreft = () => {
+    this.oppdater();
+    this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
+  };
+
   tilbake = () => {
-    this.publiserStegdata();
+    this.oppdater();
     this.validerSoknadOgGaTilSteg(this.beregnForrigeSteg());
+  };
+
+  oppdater = () => {
+    const { aktivtStegNummer } = this.state;
+    this.props.oppdaterLokalSoknadHandler();
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
   harSoknadFeilmeldinger = () => !Utils._isEmpty(this.props.soknadFeilmeldinger);
@@ -355,7 +367,9 @@ class Stegvelger extends Component {
       avvisUtpeking: this.avvisUtpeking,
       lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
       byggUtpekingsperioder: this.byggUtpekingsperioderHandler,
+      bekreft: this.bekreft,
       tilbake: this.tilbake,
+      oppdater: this.oppdater,
     };
 
     const { props } = this;
@@ -404,6 +418,7 @@ class Stegvelger extends Component {
       hjemmebaser: props.hjemmebaser,
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
       behandlingsgrunnlag: props.behandlingsgrunnlag,
+      lagredeVirksomheter: props.lagredeVirksomheter,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -574,6 +589,7 @@ Stegvelger.propTypes = {
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
   behandlingsgrunnlag: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  lagredeVirksomheter: PT.array.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -640,6 +656,7 @@ const mapStateToProps = state => ({
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
+  lagredeVirksomheter: oppsummertfaktaSelectors.VirksomheterSelector(state),
 });
 
 /* eslint no-alert:off */
