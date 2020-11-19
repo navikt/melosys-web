@@ -7,7 +7,6 @@ import { Action } from 'redux';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Mui from '../../../../felleskomponenter/ui';
 
-import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { oppsummertfaktaOperations } from '../../../../ducks/oppsummertfakta';
 
@@ -16,7 +15,7 @@ import './vurderingVirksomhet.css';
 
 
 const mapStateToProps = (state: RootState) => ({
-  virksomheterListe: behandlingsgrunnlagSelectors.AlleVirksomheterSelector(state),
+  virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 

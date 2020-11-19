@@ -103,6 +103,29 @@ export const ArbeidsforholdSelector = createSelector(
   arbeidsforhold => arbeidsforhold
 );
 
+export const AlleVirksomheterSelector = createSelector(
+  state => ArbeidsforholdeneSelector(state),
+  state => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
+  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  state => behandlingsgrunnlagSelectors.EkstraArbeidsgivereVirksomhetSelector(state),
+  (arbeidsforholdene, selvstendigNaringsvirksomhet, foretakUtland, ekstraArbeidsgivere) => {
+    const virksomhetsListe = [];
+    arbeidsforholdene.forEach(arbeidsforhold => {
+      virksomhetsListe.push({ kode: arbeidsforhold.arbeidsgiver.orgnr, term: arbeidsforhold.arbeidsgiver.navn });
+    });
+    selvstendigNaringsvirksomhet.forEach(selvstendigForetak => {
+      virksomhetsListe.push({ kode: selvstendigForetak.orgnr, term: selvstendigForetak.navn });
+    });
+    foretakUtland.forEach(foretak => {
+      virksomhetsListe.push({ kode: foretak.uuid, term: foretak.navn });
+    });
+    ekstraArbeidsgivere.forEach(ekstraArbeidsgiver => {
+      virksomhetsListe.push({ kode: ekstraArbeidsgiver.orgnr, term: ekstraArbeidsgiver.navn });
+    });
+    return virksomhetsListe;
+  }
+);
+
 /**
  * INNTEKT
  * ---------------------------------------------------------------------------------------
