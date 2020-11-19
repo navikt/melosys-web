@@ -49,7 +49,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
-  bekreftOgFortsett: () => void,
+  bekreft: () => void,
+  oppdater: () => void,
   redigerbart: boolean,
   oppdaterData: (avklartefakta: any) => void,
   alleLandkoder: KTObject[],
@@ -58,12 +59,13 @@ interface Props {
 
 const VurderingStart =
   ({
-    bekreftOgFortsett,
+    bekreft,
     redigerbart,
     formValues = {},
     alleLandkoder,
     visOppfriskDialogOgFortsettHandle,
     visMenypanel,
+    oppdater,
     oppdaterPeriode,
     oppdaterSoeknadsland,
     oppdaterTrygdedekning,
@@ -72,12 +74,15 @@ const VurderingStart =
     const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
     const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
 
-    const oppdaterLokalBehandlingsgrunnlag = () => {
+    const oppdaterLokalBehandlingsgrunnlag = async () => {
       const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
       const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
-      oppdaterPeriode({ fom: fom === 'Invalid date' ? '' : fom, tom: tom === 'Invalid date' ? '' : tom });
-      oppdaterSoeknadsland(formValues.land ? [formValues.land] : []);
-      oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : '');
+      await Promise.all([
+        oppdaterPeriode({ fom: fom === 'Invalid date' ? '' : fom, tom: tom === 'Invalid date' ? '' : tom }),
+        oppdaterSoeknadsland(formValues.land ? [formValues.land] : []),
+        oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : '')
+      ]);
+      oppdater();
     };
 
     useEffect(() => {
@@ -94,7 +99,7 @@ const VurderingStart =
       oppdaterLokalBehandlingsgrunnlag();
       if (erObligatoriskeFelterFyltInn) {
         const fortsett = () => {
-          bekreftOgFortsett();
+          bekreft();
           visMenypanel();
         };
         visOppfriskDialogOgFortsettHandle(fortsett);
