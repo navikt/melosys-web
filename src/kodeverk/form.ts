@@ -18,6 +18,38 @@ export interface ArbeidsforholdUtland {
   selvstendigNaeringsvirksomhet: boolean,
   adresse?: Partial<StrukturertAdresse>,
 }
+export interface ArbeidsstedUtland {
+  adresse: {
+    gatenavn?: string,
+    husnummer?: string,
+    landkode?: string,
+    postnummer?: string,
+    poststed?: string,
+    region?: string,
+  },
+  foretakNavn?: string,
+  foretakOrgnr?: string,
+  arbeidUtlandHjemmekontor?: boolean,
+}
+export interface ArbeidsstedFly {
+  hjemmebaseNavn?: string,
+  hjemmebaseLand?: string,
+  typeFlyvninger?: string,
+}
+interface MaritimtArbeid {
+  enhetNavn?: string,
+  foretakNavn?: string,
+  foretakOrgnr?: string,
+}
+export interface ArbeidsstedOffshore extends MaritimtArbeid {
+  installasjonsLandkode?: string,
+}
+export interface ArbeidsstedSkip extends MaritimtArbeid {
+  fartsomradeKode?: string,
+  flaggLandkode?: string,
+  territorialfarvann?: string,
+}
+
 export type SoknadFormData = any;
 
 export const SOK_ETTER_SAK = 'sokEtterSak';

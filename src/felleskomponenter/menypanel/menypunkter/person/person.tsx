@@ -19,7 +19,6 @@ import UtenlandskIdent from './utenlandskident';
 import ExpandableList from '../../../expandablelist';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import './person.css';
 
@@ -69,16 +68,21 @@ export const AdresseHeader = ({ adresseTittel }: AdresseHeaderProps) => (
 const mapStateToProps = (state: RootState) => ({
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
-  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type PersonProps = PropsFromRedux & {
+  redigerbart: boolean,
+  visArbeidsforholdRolleEtiketter: boolean,
+}
 
 export const Person = ({
   redigerbart,
   person,
   personhistorikk,
-}: PropsFromRedux) => {
+  visArbeidsforholdRolleEtiketter,
+}: PersonProps) => {
   const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } = personhistorikk as PersonHistorikk;
 
   if (Object.keys(person).length === 0) { return null; }
@@ -145,7 +149,10 @@ export const Person = ({
       <Nav.Row>
         <Nav.Column className="etikett__container">
           <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
-          <Etiketter.ArbeidstakersDel />
+          {
+            visArbeidsforholdRolleEtiketter &&
+            <Etiketter.ArbeidstakersDel />
+          }
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

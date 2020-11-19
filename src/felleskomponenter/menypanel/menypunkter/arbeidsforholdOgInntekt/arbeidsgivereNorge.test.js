@@ -81,7 +81,6 @@ describe('ArbeidsgivereEnkeltNorge', () => {
 
     expect(organisasjon).toHaveLength(1);
     expect(organisasjonProps.organisasjon).toBe(props.organisasjon);
-    expect(organisasjonProps.redigerbart).toBe(props.redigerbart);
     expect(arbeidsforholdene).toHaveLength(1);
     expect(arbeidsforholdeneProps.arbeidsforholdene).toBe(props.arbeidsforholdene);
     expect(inntekt).toHaveLength(1);

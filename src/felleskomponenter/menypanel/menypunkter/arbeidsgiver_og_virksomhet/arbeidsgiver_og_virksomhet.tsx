@@ -14,17 +14,16 @@ import * as Ikoner from '../../../../resources/images';
 import * as Utils from '../../../../utils';
 
 import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
-import RedigerbartElementListe from '../redigerbartelementListe';
+import EditerbartElementListe from '../editerbartElementListe';
 import EnkeltArbeidsforholdUtlandRedigerer from './enkeltArbeidsforholdUtlandRedigerer';
 import EnkeltArbeidsforholdUtlandRedigeringUtfort from './enkeltArbeidsforholdUtlandRedigeringUtfort';
 
-import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../../ducks/organisasjoner';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 
 import './arbeidsgiver_og_virksomhet.css';
 
-const arbeidsforholdUtlandHarData = (element: KV.Form.ArbeidsforholdUtland): boolean => (
+const arbeidsforholdUtlandHarData = (elementListe: KV.Form.ArbeidsforholdUtland[], element: KV.Form.ArbeidsforholdUtland): boolean => (
   Boolean(element.navn ||
     element.orgnr ||
     Utils._isBoolean(element.selvstendigNaeringsvirksomhet) ||
@@ -34,7 +33,6 @@ const arbeidsforholdUtlandHarData = (element: KV.Form.ArbeidsforholdUtland): boo
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
 const mapStateToProps = (state: RootState) => ({
-  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   ekstraArbeidsgivere: soknadFormValueSelector(state, 'ekstraArbeidsgivere'),
@@ -49,16 +47,22 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+type ArbeidsgiverOgVirksomhetProps = PropsFromRedux & {
+  redigerbart: boolean,
+  visArbeidsforholdRolleEtiketter: boolean,
+}
+
 export const ArbeidsgiverOgVirksomhet = ({
   redigerbart,
   organisasjoner,
   hentOrganisasjon,
   saksnummer,
+  visArbeidsforholdRolleEtiketter,
   ekstraArbeidsgivere = [],
   selvstendigForetak = [],
   arbeidsforholdUtland = [],
   selvstendigNaeringsvirksomhetUtland = [],
-}: PropsFromRedux) => {
+}: ArbeidsgiverOgVirksomhetProps) => {
   const finnOrganisasjon = (orgnr: string) => {
     const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
     return org || { orgnr };
@@ -72,7 +76,10 @@ export const ArbeidsgiverOgVirksomhet = ({
       <div className="tittel">
         <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}</Nav.typo.Undertittel>
         <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
-        <Etiketter.ArbeidsgiversDel />
+        {
+          visArbeidsforholdRolleEtiketter &&
+          <Etiketter.ArbeidsgiversDel />
+        }
       </div>
       {
         ekstraArbeidsgivere.length === 0 &&
@@ -134,16 +141,16 @@ export const ArbeidsgiverOgVirksomhet = ({
           }
         />
       }
-      <RedigerbartElementListe
+      <EditerbartElementListe
         redigerbart={redigerbart}
         className="arbeidsforhold__liste"
         feltNavn="arbeidsforholdUtland"
         leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
-        elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
-        elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
+        redigererKomponent={EnkeltArbeidsforholdUtlandRedigerer}
+        redigeringUtfortKomponent={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
-        defaultElement={{ uuid: Utils._uuid() }}
-        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
+        hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Building}
@@ -156,16 +163,16 @@ export const ArbeidsgiverOgVirksomhet = ({
           understrek
         />
       }
-      <RedigerbartElementListe
+      <EditerbartElementListe
         redigerbart={redigerbart}
         className="arbeidsforhold__liste"
         leggTilTekst="Legg til selvstendig virksomhet"
         feltNavn="selvstendigNaeringsvirksomhetUtland"
-        elementKomponentRedigerer={EnkeltArbeidsforholdUtlandRedigerer}
-        elementKomponentRedigeringUtfort={EnkeltArbeidsforholdUtlandRedigeringUtfort}
+        redigererKomponent={EnkeltArbeidsforholdUtlandRedigerer}
+        redigeringUtfortKomponent={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
-        defaultElement={{ uuid: Utils._uuid() }}
-        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn}
+        hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+        hentNavn={(element: KV.Form.ArbeidsforholdUtland) => element.navn || ''}
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Man}

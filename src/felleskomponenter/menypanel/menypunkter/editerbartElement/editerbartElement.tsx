@@ -5,7 +5,7 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Symboler from '../symboler';
 import * as Mui from '../../../ui';
 
-import './redigerbartelement.css';
+import './editerbartElement.css';
 
 enum Status {
   Redigerer,
@@ -13,7 +13,7 @@ enum Status {
   IngenData,
 }
 
-interface RedigerbartElementProps {
+interface EditerbartElementProps {
   redigererRender: () => ReactNode,
   ingenDataRender?: (apneRedigering: () => void) => ReactNode,
   redigeringUtfortRender: () => ReactNode,
@@ -22,6 +22,7 @@ interface RedigerbartElementProps {
   tittel: string,
   tittelIkon?: ElementType,
   tittelUnderstrek?: boolean,
+  understrek?: boolean,
   harData: boolean,
   visLagreKnappBareHvisHarData?: boolean,
   className?: string,
@@ -29,7 +30,7 @@ interface RedigerbartElementProps {
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>,
 }
 
-const RedigerbartElement = ({
+const EditerbartElement = ({
   redigererRender,
   ingenDataRender,
   redigeringUtfortRender,
@@ -38,12 +39,13 @@ const RedigerbartElement = ({
   tittel,
   tittelIkon: TittelIkon,
   tittelUnderstrek,
+  understrek,
   harData,
   visLagreKnappBareHvisHarData = false,
   className,
   hentNyStatusVedHarData = false,
   onLagreClick,
-}: RedigerbartElementProps) => {
+}: EditerbartElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
       return Status.RedigeringUtfort;
@@ -110,7 +112,9 @@ const RedigerbartElement = ({
     setStatus(hentNesteStatus());
   };
 
-  const cls = classnames(className, 'redigerbart__element');
+  const cls = classnames(className, 'editerbart__element', {
+    understrek,
+  });
 
   return (
     <div className={cls}>
@@ -124,6 +128,7 @@ const RedigerbartElement = ({
           capitalCase
           disabled={!redigerbart}
           type="hoved"
+          className="lagre__knapp"
         >
           Lagre
         </Mui.Knapp>
@@ -132,4 +137,4 @@ const RedigerbartElement = ({
   );
 };
 
-export default RedigerbartElement;
+export default EditerbartElement;
