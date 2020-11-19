@@ -67,7 +67,7 @@ export type Menypunkt = 'Person' |
   'Periode og land' |
   'Utenlandsoppdraget' |
   'Lønn og godtgjørelser' |
-  'Arbeidssteder(er)' |
+  'Arbeidssted(er)' |
   'Om virksomheten i Norge' |
   'Øvrig om arbeidstaker';
 interface Link {
@@ -183,7 +183,7 @@ export const Menypanel = ({
         //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
         // },
         {
-          label: 'Arbeidssteder(er)',
+          label: 'Arbeidssted(er)',
           active: false,
           content: <Arbeidssteder
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}

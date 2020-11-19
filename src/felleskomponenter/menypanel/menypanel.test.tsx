@@ -23,7 +23,7 @@ describe('MenyPanel', () => {
   it('Viser bare oppgitte menypunkter', () => {
     props.menypunkter = [
       'Person',
-      'Arbeidssteder(er)',
+      'Arbeidssted(er)',
     ];
     const menypanel = shallow(<Menypanel {...props} />);
     const sidemeny = menypanel.find(Sidemeny);
@@ -33,7 +33,7 @@ describe('MenyPanel', () => {
     expect(sidemenyLinkGroups[0].links[0].label).toBe('Person');
 
     expect(sidemenyLinkGroups[1].links).toHaveLength(1);
-    expect(sidemenyLinkGroups[1].links[0].label).toBe('Arbeidssteder(er)');
+    expect(sidemenyLinkGroups[1].links[0].label).toBe('Arbeidssted(er)');
   });
 
   it('Viser ikke linkgrupper med ingen linker/menypunkter', () => {

@@ -137,7 +137,7 @@ const Soknad = ({
           'Periode og land',
           'Utenlandsoppdraget',
           'Lønn og godtgjørelser',
-          'Arbeidssteder(er)',
+          'Arbeidssted(er)',
           'Om virksomheten i Norge',
           'Øvrig om arbeidstaker',
         ]}
