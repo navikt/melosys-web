@@ -4,7 +4,6 @@ import * as Utils from '../../utils';
 
 import { OrganisasjonSelectors } from '../organisasjoner';
 
-import { PersonSelectors } from '../personer';
 import MKV from '../../melosyskodeverk';
 
 /**
