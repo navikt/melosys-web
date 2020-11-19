@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Familiemedlem } from 'Domene';
 import { RootState } from 'AppTypes';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -111,18 +111,15 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
 });
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-interface FamilieforholdProps {
-  behandlingID: number,
-  familiemedlemmer: Familiemedlem[],
-  oppdaterBehandling(): void,
-}
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const Familieforhold = ({
   behandlingID,
   familiemedlemmer,
   oppdaterBehandling,
-}: FamilieforholdProps) => {
+}: PropsFromRedux) => {
   const [feilmelding, setFeilmelding] = useState('');
 
   const oppfrisk = async () => {
@@ -166,4 +163,4 @@ const Familieforhold = ({
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Familieforhold);
+export default connector(Familieforhold);
