@@ -2,6 +2,8 @@ import React from 'react';
 
 import * as Nav from '../../../../../utils/navFrontend';
 
+import Knapperad from '../../../../knapperad';
+
 import SoknadsperiodeEndring from './soknadsperiodeEndring';
 
 describe('SoknadsperiodeEndring', () => {
@@ -75,32 +77,23 @@ describe('SoknadsperiodeEndring', () => {
     });
   });
 
-  describe('Knapp for å oppdatere registeropplysninger', () => {
+  describe('Knapperad', () => {
     const props = lagProps();
     const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
-    const knapp = soknadsperiodeEndring.findWhere(n =>
-      n.type() === Nav.Hovedknapp &&
-      n.children().text() === 'Oppdater registeropplysningene');
-    const knappProps = knapp.props();
+    const knappeRad = soknadsperiodeEndring.find(Knapperad);
+    const knapperadProps = knappeRad.props();
 
     it('vises', () => {
-      expect(knapp).toHaveLength(1);
-      expect(knappProps.onClick).toBe(props.oppdaterPeriode);
-      expect(knappProps.disabled).toBe(!props.erDatoerGyldig);
+      expect(knappeRad).toHaveLength(1);
     });
-  });
 
-  describe('Knapp for å lukke dialog for oppdatering registeropplysninger', () => {
-    const props = lagProps();
-    const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
-    const knapp = soknadsperiodeEndring.findWhere(n =>
-      n.type() === Nav.Knapp &&
-      n.children().text() === 'Avbryt');
-    const knappProps = knapp.props();
+    it('får props for å oppdatere periode', () => {
+      expect(knapperadProps.bekreft).toBe(props.oppdaterPeriode);
+      expect(knapperadProps.bekreftRedigerbart).toBe(props.erDatoerGyldig);
+    });
 
-    it('vises', () => {
-      expect(knapp).toHaveLength(1);
-      expect(knappProps.onClick).toBe(props.avbryt);
+    it('får props for å avbryte endring av periode', () => {
+      expect(knapperadProps.avbryt).toBe(props.avbryt);
     });
   });
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import * as Nav from '../../../../../utils/navFrontend';
+import * as Symboler from '../../symboler';
 
 import SoknadsperiodeEndring from './soknadsperiodeEndring';
 import { Soknadsperiode } from './soknadsperiode';
@@ -25,17 +26,13 @@ describe('Soknadsperiode', () => {
     expect(element.children().first()).not.toBeNull();
   });
 
-  it('viser knapp for å vise dialog for endring av periode, og dialog åpnes ved klikk', () => {
+  it('viser symbol for å vise dialog for endring av periode, og dialog åpnes ved klikk', () => {
     const soknadsperiode = shallow(<Soknadsperiode {...props} />);
-    const knapp = soknadsperiode.findWhere(n =>
-      n.type() === Nav.Hovedknapp &&
-      n.children().text() === 'Endre søknadsperioden');
-    const knappProps = knapp.props();
+    const symbol = soknadsperiode.find(Symboler.Rediger);
 
-    expect(knapp).toHaveLength(1);
-    expect(knappProps.disabled).toBe(!props.redigerbart);
+    expect(symbol).toHaveLength(1);
 
-    knapp.simulate('click');
+    symbol.simulate('click');
 
     const soknadsperiodeEndring = soknadsperiode.find(SoknadsperiodeEndring);
     const soknadsperiodeEndringProps = soknadsperiodeEndring.props();
