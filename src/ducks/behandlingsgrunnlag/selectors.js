@@ -209,15 +209,6 @@ export const PersonOpplysningerSelector = createSelector(
   behandlingsgrunnlag => behandlingsgrunnlag.personOpplysninger || {}
 );
 
-export const MedfolgendeAndreSelector = createSelector(
-  PersonOpplysningerSelector,
-  PersonSelectors.personerSelector,
-  (personopplysninger, allePersoner) => {
-    const { medfolgendeAndre } = personopplysninger;
-    return allePersoner.find(person => person.fnr === medfolgendeAndre);
-  }
-);
-
 export const OvergangsregelbestemmelserSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlagData => behandlingsgrunnlagData.overgangsregelbestemmelser

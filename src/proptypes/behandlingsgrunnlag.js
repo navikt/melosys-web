@@ -43,7 +43,6 @@ const OppholdUtlandPropType = PT.shape({
   studentSemester: PT.string,
 });
 const PersonOpplysningerPropType = PT.shape({
-  medfolgendeAndre: PT.string,
   medfolgendeFamilie: PT.arrayOf(PT.string),
   utenlandskIdent: PT.arrayOf(PT.shape({
     ident: PT.string,
