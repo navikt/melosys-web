@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Familiemedlem } from 'Domene';
 import { RootState } from 'AppTypes';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import * as Api from '../../../../services/api';
 import * as Etiketter from '../etiketter';
@@ -33,16 +34,29 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
     fnrAnnenForelder,
   } = familiemedlem;
 
-  const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar />) : (<span />));
+  const [erKopiert, setErKopiert] = useState(false);
+  useEffect(() => {
+    setErKopiert(false);
+  }, [erKopiert]);
+
+  const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar className="ikon__under18Aar" />) : null);
 
   return (
     <div className="familieforhold__enkelt" aria-label="Enkelt familiemedlem">
       <Nav.Row>
         <Nav.Column xs="3">{sammensattNavn}</Nav.Column>
-        <Nav.Column xs="2">{fnr}</Nav.Column>
+        <Nav.Column xs="3">
+          <span className={erKopiert ? 'fnr__kopiert' : 'fnr'}>
+            <CopyToClipboard
+              text={fnr}
+              onCopy={() => setErKopiert(true)}>
+              <span>{fnr}<Ikoner.Kopier className="ikon__kopier" /></span>
+            </CopyToClipboard>
+          </span>
+        </Nav.Column>
         <Nav.Column xs="2">{erBarn ? Utils.streng.boolTilNorsk(borMedBruker) : sivilstandGyldighetsperiodeFom}</Nav.Column>
         <Nav.Column xs="2">{erBarn ? fnrAnnenForelder : Utils.streng.boolTilNorsk(borMedBruker)}</Nav.Column>
-        <Nav.Column xs="3">{erBarn ? renderBarnEtikett() : relasjonstype.term}</Nav.Column>
+        <Nav.Column xs="2">{erBarn ? renderBarnEtikett() : relasjonstype.term}</Nav.Column>
       </Nav.Row>
     </div>
   );
@@ -51,13 +65,13 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
 interface FamilieforholdGruppeProps {
   familiemedlemmer: Familiemedlem[],
   overskrift: string,
-  kolonner: string[],
+  kolonneHeadinger: string[],
   erBarn: boolean,
 }
 
 export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
   const {
-    familiemedlemmer, overskrift = '', kolonner, erBarn,
+    familiemedlemmer, overskrift = '', kolonneHeadinger, erBarn,
   } = props;
 
   return (
@@ -66,11 +80,11 @@ export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
       { familiemedlemmer.length === 0 && '(ingen data funnet)' }
       { familiemedlemmer.length !== 0 &&
       <Nav.Row>
-        <Nav.Column xs="3">{kolonner[0]}</Nav.Column>
-        <Nav.Column xs="2">{kolonner[1]}</Nav.Column>
-        <Nav.Column xs="2">{kolonner[2]}</Nav.Column>
-        <Nav.Column xs="2">{kolonner[3]}</Nav.Column>
-        <Nav.Column xs="3">{kolonner[4]}</Nav.Column>
+        <Nav.Column xs="3">{kolonneHeadinger[0]}</Nav.Column>
+        <Nav.Column xs="3">{kolonneHeadinger[1]}</Nav.Column>
+        <Nav.Column xs="2">{kolonneHeadinger[2]}</Nav.Column>
+        <Nav.Column xs="2">{kolonneHeadinger[3]}</Nav.Column>
+        <Nav.Column xs="2">{kolonneHeadinger[4]}</Nav.Column>
       </Nav.Row>
       }
       <section className="familieforholdgruppe__liste">
@@ -113,7 +127,7 @@ const Familieforhold = ({
 
   const oppfrisk = async () => {
     try {
-      await Api.Saksopplysninger.oppfrisk(behandlingID, true);
+      await Api.Saksopplysninger.oppfrisk(behandlingID, { medFamilierelasjoner: true });
       oppdaterBehandling();
     } catch (e) {
       Utils.logger.error(e);
@@ -129,23 +143,24 @@ const Familieforhold = ({
 
   return (
     <div className="familieforhold">
+      <Etiketter.FraRegister style={{ float: 'right' }} />
       { feilmelding &&
         <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding}</Nav.AlertStripe>}
       { familiemedlemmer.length === 0 &&
         <div className="familieforhold__gruppeoverskrift">
-          <Mui.Knappelenke ikon={Ikoner.Add} onClick={oppfrisk}>Hent opplysninger</Mui.Knappelenke>
+          <Mui.Knappelenke ikon={Ikoner.HentOpplysninger} onClick={oppfrisk}>Hent opplysninger</Mui.Knappelenke>
         </div>}
       { familiemedlemmer.length !== 0 &&
       <FamilieforholdGruppe
         familiemedlemmer={barn}
         overskrift="Barn"
-        kolonner={['Navn', 'F.nr./d-nr.', 'Bor med bruker', 'F.nr annen forelder', '']}
+        kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Bor med bruker', 'F.nr annen forelder', '']}
         erBarn />}
       { familiemedlemmer.length !== 0 &&
       <FamilieforholdGruppe
         familiemedlemmer={ektefellePartnerSamboer}
         overskrift="Ektefelle/partner/samboer"
-        kolonner={['Navn', 'F.nr./d-nr.', 'Fra og med', 'Bor med bruker', 'Relasjon']}
+        kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Fra og med', 'Bor med bruker', 'Relasjon']}
         erBarn={false} />}
     </div>
   );
