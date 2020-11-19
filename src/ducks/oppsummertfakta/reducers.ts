@@ -24,7 +24,9 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         ...state,
         data: {
           ...state.data,
-          virksomheter: action.data.virksomheter,
+          virksomheter: {
+            orgnummer: action.data.orgnummer,
+          },
         },
       };
     case Types.OPPDATER_OPPSUMMERTFAKTA:

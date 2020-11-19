@@ -5,6 +5,6 @@ export const hent = behandlingID => getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/$
 
 export const send = (behandlingID, dokument) => postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`, dokument);
 
-export const hentOppsummering = behandlingID => getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppsummert`);
+export const hentOppsummering = behandlingID => getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppsummering`);
 
 export const sendVirksomheter = (behandlingID, virksomheter) => postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);

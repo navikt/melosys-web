@@ -1,3 +1,5 @@
+import { Virksomheter } from '../../@types/avklartfakta';
+
 export const OK = 'oppsummertfakta/OK';
 export const FEILET = 'oppsummertfakta/FEILET';
 export const PENDING = 'oppsummertfakta/PENDING';
@@ -5,7 +7,7 @@ export const OPPDATER_OPPSUMMERTFAKTA = 'oppsummertfakta/OPPDATER_OPPSUMMERTFAKT
 export const OPPDATER_VIRKSOMHETER = 'oppsummertfakta/OPPDATERVIRKSOMHETER';
 
 export type Data = {
-  virksomheter?: string[]
+  virksomheter?: Virksomheter
 }
 
 export interface FeiletAction {
@@ -19,12 +21,12 @@ export interface PendingAction {
 
 export interface OkAction {
   type: typeof OK,
-  data: any,
+  data: Data,
 }
 
 export interface OppdaterVirksomheterAction {
   type: typeof OPPDATER_VIRKSOMHETER,
-  data: Data
+  data: Virksomheter
 }
 
 export interface OppdaterOppsummertfaktaAction {

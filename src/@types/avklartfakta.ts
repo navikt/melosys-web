@@ -8,7 +8,7 @@ type Avklartfakta = {
 };
 
 export type Virksomheter = {
-  virksomheter: string[]
+  orgnummer: string[]
 };
 
 export default Avklartfakta;

@@ -120,6 +120,7 @@ const Saksbehandling = ({
     try {
       await hentFagsaker(snr);
       await hentFolketrygdenKodeverk();
+      await hentOppsummertFakta(behandlingIDFraParam);
       const response = await hentBehandling(behandlingIDFraParam);
       const behandling = response.data;
       if (!behandling) return false;
@@ -134,7 +135,6 @@ const Saksbehandling = ({
 
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(snr);
-      await hentOppsummertFakta(behandlingIDFraParam);
       return true;
     } catch (e) {
       Utils.logger.error(e);

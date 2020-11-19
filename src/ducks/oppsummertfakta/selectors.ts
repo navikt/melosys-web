@@ -14,5 +14,10 @@ export const OppsummertFaktaDataSelector: Selector<RootState, Types.Data> = crea
 
 export const VirksomheterSelector = createSelector(
   OppsummertFaktaDataSelector,
-  oppsummertfakta => oppsummertfakta.virksomheter || []
+  oppsummertfakta => oppsummertfakta.virksomheter
+);
+
+export const VirksomheterOrgNrSelector = createSelector(
+  VirksomheterSelector,
+  virksomheter => (virksomheter ? virksomheter.orgnummer : [])
 );

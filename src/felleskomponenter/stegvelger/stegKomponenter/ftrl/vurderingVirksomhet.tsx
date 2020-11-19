@@ -55,7 +55,7 @@ const VurderingVirksomhet =
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
     const oppdaterVirksomheterOgStegvelger = async () => {
-      await oppdaterVirksomheterState({ virksomheter: valgteVirksomheter });
+      await oppdaterVirksomheterState({ orgnummer: valgteVirksomheter });
       oppdater();
     };
 
@@ -65,7 +65,7 @@ const VurderingVirksomhet =
     }, [valgteVirksomheter]);
 
     const handleFortsett = () => {
-      sendVirksomheter(behandlingID, { virksomheter: valgteVirksomheter });
+      sendVirksomheter(behandlingID, { orgnummer: valgteVirksomheter });
       bekreft();
     };
 

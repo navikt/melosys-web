@@ -80,7 +80,7 @@ const VurderingStart =
       await Promise.all([
         oppdaterPeriode({ fom: fom === 'Invalid date' ? '' : fom, tom: tom === 'Invalid date' ? '' : tom }),
         oppdaterSoeknadsland(formValues.land ? [formValues.land] : []),
-        oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : '')
+        oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : ''),
       ]);
       oppdater();
     };
