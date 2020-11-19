@@ -1,12 +1,12 @@
 import React, { ComponentProps } from 'react';
 import { shallow } from 'enzyme';
 
-import * as Nav from '../../utils/navFrontend';
-import * as KV from '../../kodeverk';
+import * as Nav from '../../../utils/navFrontend';
+import * as KV from '../../../kodeverk';
 
 import DialogboksValidering, { Validering, ModalBody, Valideringsfeil } from './dialogboksValidering';
 
-import MKV from '../../melosyskodeverk';
+import MKV from '../../../melosyskodeverk';
 
 describe('DialogboksValidering', () => {
   let props: ComponentProps<typeof DialogboksValidering> = {

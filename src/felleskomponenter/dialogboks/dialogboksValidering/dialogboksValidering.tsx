@@ -2,11 +2,11 @@ import React, { KeyboardEvent, Fragment } from 'react';
 import PT from 'prop-types';
 import { KTObject } from '@navikt/melosys-kodeverk';
 
-import * as Nav from '../../utils/navFrontend';
-import * as KV from '../../kodeverk';
-import * as Utils from '../../utils';
+import * as Nav from '../../../utils/navFrontend';
+import * as KV from '../../../kodeverk';
+import * as Utils from '../../../utils';
 
-import MKV from '../../melosyskodeverk';
+import MKV from '../../../melosyskodeverk';
 
 import './dialogboksValidering.css';
 
