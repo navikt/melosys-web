@@ -1,6 +1,6 @@
-import * as Types from './types';
 import { StateSection } from 'AppTypes';
 import { STATUS } from '../../services/utils';
+import * as Types from './types';
 
 export const initialState: StateSection<Types.Data> = {
   data: {},

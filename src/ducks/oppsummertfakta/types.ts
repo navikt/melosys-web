@@ -27,4 +27,4 @@ export interface OppdaterAction {
   data: Data
 }
 
-export type Action = FeiletAction | PendingAction | OkAction | OppdaterAction ;
+export type Action = FeiletAction | PendingAction | OkAction | OppdaterAction;

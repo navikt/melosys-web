@@ -35,7 +35,7 @@ import { AvslaattSoknad, HenlagtSak } from '../../eu_eøs/saksbehandling/kompone
 import { stegMap } from './stegMap';
 import './saksbehandling.css';
 import { folketrygdenkodeverkOperations } from '../../../ducks/folketrygdenkodeverk';
-import {oppsummertfaktaOperations} from "../../../ducks/oppsummertfakta";
+import { oppsummertfaktaOperations } from '../../../ducks/oppsummertfakta';
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [

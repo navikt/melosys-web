@@ -6,6 +6,6 @@ import oppsummertfaktaReducers from './reducers';
 export {
   oppsummertfaktaOperations,
   oppsummertfaktaSelectors,
-}
+};
 
 export default oppsummertfaktaReducers;

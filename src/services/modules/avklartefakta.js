@@ -7,4 +7,4 @@ export const send = (behandlingID, dokument) => postAsJson(`${API_BASE_URL}${AVK
 
 export const hentOppsummering = behandlingID => getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppsummert`);
 
-export const sendVirksomheter = (behandlingID, virksomheter)=> postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);
+export const sendVirksomheter = (behandlingID, virksomheter) => postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);

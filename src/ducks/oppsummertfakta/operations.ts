@@ -1,17 +1,18 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import { Virksomheter } from '../../@types/avklartfakta';
 
 export function hentOppsummertFakta(behandlingID: number) {
-  return doThenDispatch( () => Api.Avklartefakta.hentOppsummering(behandlingID), {
+  return doThenDispatch(() => Api.Avklartefakta.hentOppsummering(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendVirksomheter(behandlingID: number, virksomheter: any) {
-  return doThenDispatch( () => Api.Avklartefakta.sendVirksomheter(behandlingID, virksomheter), {
+export function sendVirksomheter(behandlingID: number, virksomheter: Virksomheter) {
+  return doThenDispatch(() => Api.Avklartefakta.sendVirksomheter(behandlingID, virksomheter), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

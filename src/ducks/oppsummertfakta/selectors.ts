@@ -1,6 +1,7 @@
 import { createSelector, Selector } from 'reselect';
 import { RootState, StateSection } from 'AppTypes';
 import * as Types from './types';
+
 export const OppsummertFaktaSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   state => state.oppsummertfakta,
   oppsummertfakta => oppsummertfakta
