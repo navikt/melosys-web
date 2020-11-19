@@ -5,13 +5,13 @@ import { Periode } from './periode';
 
 const JuridiskArbeidsgiverNorgePropType = PT.shape({
   andelKontrakterINorge: PT.number,
-  andelRekruttertINorge: PT.number,
   andelOmsetningINorge: PT.number,
   andelOppdragINorge: PT.number,
   antallAdmAnsatte: PT.number,
   antallAnsatte: PT.number,
-  antallUtsendte: PT.number,
+  arbeidstakereRekruttertILand: PT.string,
   ekstraArbeidsgivere: PT.arrayOf(PT.string),
+  utsendteNeste12Mnd: PT.number,
 });
 const BostedPropType = PT.shape({
   antallMaanederINorge: PT.number,
@@ -43,6 +43,7 @@ const OppholdUtlandPropType = PT.shape({
   studentSemester: PT.string,
 });
 const PersonOpplysningerPropType = PT.shape({
+  medfolgendeAndre: PT.string,
   medfolgendeFamilie: PT.arrayOf(PT.string),
   utenlandskIdent: PT.arrayOf(PT.shape({
     ident: PT.string,

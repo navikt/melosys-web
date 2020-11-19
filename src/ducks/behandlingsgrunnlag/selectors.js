@@ -4,6 +4,7 @@ import * as Utils from '../../utils';
 
 import { OrganisasjonSelectors } from '../organisasjoner';
 
+import { PersonSelectors } from '../personer';
 import MKV from '../../melosyskodeverk';
 
 /**
@@ -206,6 +207,15 @@ export const PeriodeTomSelector = createSelector(
 export const PersonOpplysningerSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.personOpplysninger || {}
+);
+
+export const MedfolgendeAndreSelector = createSelector(
+  PersonOpplysningerSelector,
+  PersonSelectors.personerSelector,
+  (personopplysninger, allePersoner) => {
+    const { medfolgendeAndre } = personopplysninger;
+    return allePersoner.find(person => person.fnr === medfolgendeAndre);
+  }
 );
 
 export const OvergangsregelbestemmelserSelector = createSelector(

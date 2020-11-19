@@ -141,12 +141,13 @@ export default function reducer(state = initialState, action) {
           })),
           juridiskArbeidsgiverNorge: {
             antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
+            utsendteNeste12Mnd: dokument.utsendteNeste12Mnd ? strengTilInt(dokument.utsendteNeste12Mnd) : null,
             antallAdmAnsatte: dokument.antallAdmAnsatte ? strengTilInt(dokument.antallAdmAnsatte) : null,
-            antallUtsendte: dokument.antallUtsendte ? strengTilInt(dokument.antallUtsendte) : null,
             andelOmsetningINorge: dokument.andelOmsetningINorge ? strengTilInt(dokument.andelOmsetningINorge) : null,
             andelOppdragINorge: dokument.andelOppdragINorge ? strengTilInt(dokument.andelOppdragINorge) : null,
             andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
-            andelRekruttertINorge: dokument.andelRekruttertINorge ? strengTilInt(dokument.andelRekruttertINorge) : null,
+            arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
+            oppdragsKontrakterIHovedsakInngaattILand: null,
             ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.filter(arbeidsgiver => arbeidsgiver) || [],
           },
           arbeidsgiversBekreftelse: {
@@ -206,6 +207,7 @@ export default function reducer(state = initialState, action) {
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [],
+            medfolgendeAndre: null,
           },
           overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
           ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,

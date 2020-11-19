@@ -119,12 +119,13 @@ describe('behandlingsgrunnlag reducer', () => {
           },
         ],
         antallAnsatte: '12345',
+        utsendteNeste12Mnd: '12345',
         antallAdmAnsatte: '12345',
         andelOmsetningINorge: '12345',
         andelOppdragINorge: '12345',
-        andelRekruttertINorge: '12345',
         andelKontrakterINorge: '12345',
-        antallUtsendte: 12345,
+        arbeidstakereRekruttertILand: 'DE',
+        oppdragsKontrakterIHovedsakInngaattILand: null,
         ekstraArbeidsgivere: [],
         arbeidsgiverBekrefterUtsendelse: true,
         arbeidstakerAnsattUnderUtsendelsen: true,
@@ -221,6 +222,7 @@ describe('behandlingsgrunnlag reducer', () => {
         ],
         utenlandskIdent: '12345',
         medfolgendeFamilie: null,
+        medfolgendeAndre: true,
         overgangsregelbestemmelser: [
           {
             kode: 'FO_1408_1971_ART14_2_A',
@@ -263,12 +265,13 @@ describe('behandlingsgrunnlag reducer', () => {
           ],
           juridiskArbeidsgiverNorge: {
             antallAnsatte: 12345,
+            utsendteNeste12Mnd: 12345,
             antallAdmAnsatte: 12345,
             andelOmsetningINorge: 12345,
             andelOppdragINorge: 12345,
-            andelRekruttertINorge: 12345,
             andelKontrakterINorge: 12345,
-            antallUtsendte: 12345,
+            arbeidstakereRekruttertILand: 'DE',
+            oppdragsKontrakterIHovedsakInngaattILand: null,
             ekstraArbeidsgivere: [],
           },
           arbeidsgiversBekreftelse: {
@@ -379,6 +382,7 @@ describe('behandlingsgrunnlag reducer', () => {
           personOpplysninger: {
             utenlandskIdent: '12345',
             medfolgendeFamilie: [],
+            medfolgendeAndre: null,
           },
           overgangsregelbestemmelser: [
             {
