@@ -18,6 +18,17 @@ const Redigerer = ({
     <Nav.Row>
       <Nav.Column xs="11">
         <Skjema.Input
+          label="Navn på virksomhet"
+          feltNavn={`${overordnetFeltNavn}.foretakNavn`}
+          disabled={!redigerbart}
+          bredde="fullbredde"
+          datoFelt={false}
+        />
+      </Nav.Column>
+    </Nav.Row>
+    <Nav.Row>
+      <Nav.Column xs="11">
+        <Skjema.Input
           label="Gateadresse"
           feltNavn={`${overordnetFeltNavn}.adresse.gatenavn`}
           disabled={!redigerbart}

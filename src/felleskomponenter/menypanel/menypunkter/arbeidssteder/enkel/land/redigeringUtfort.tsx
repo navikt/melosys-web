@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import * as KV from '../../../../../../kodeverk';
+import * as Nav from '../../../../../../utils/navFrontend';
 
 import { StrukturertAdresse } from '../../../../../adresser';
 
@@ -15,7 +16,15 @@ const RedigeringUtfort = ({
     {
       verdier.map((element, index) => (
         /* eslint-disable-next-line react/no-array-index-key */
-        <StrukturertAdresse key={index} adresse={element.adresse} />
+        <Fragment key={index}>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.typo.Element>Navn på virksomhet</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{element.foretakNavn}</Nav.typo.Normaltekst>
+            </Nav.Column>
+          </Nav.Row>
+          <StrukturertAdresse adresse={element.adresse} />
+        </Fragment>
       ))
     }
   </div>
