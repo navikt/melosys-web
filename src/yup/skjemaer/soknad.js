@@ -11,7 +11,7 @@ const lagMelding = (panel, undertittel, felt) => ({
 });
 
 const SLUTTDATO_ER_APEN = lagMelding(
-  KV.Menypunkter.PeriodeOgLand.tittel,
+  KV.Menypunkter.Periode.tittel,
   null,
   'Sluttdato er åpen'
 );

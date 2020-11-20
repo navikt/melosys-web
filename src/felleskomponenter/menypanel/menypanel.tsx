@@ -14,7 +14,7 @@ import {
   Barnetrygd,
   Fullmektig,
   Medlemskap,
-  PeriodeOgLand,
+  Periode,
   Person,
 } from './menypunkter';
 
@@ -64,7 +64,7 @@ export type Menypunkt = 'Person' |
   'Arbeidsforhold og inntekt' |
   'Arbeidsgiver/virksomhet' |
   'Fullmektig' |
-  'Periode og land' |
+  'Periode' |
   'Utenlandsoppdraget' |
   'Lønn og godtgjørelser' |
   'Arbeidssted(er)' |
@@ -156,9 +156,9 @@ export const Menypanel = ({
           />,
         },
         {
-          label: 'Periode og land',
+          label: 'Periode',
           active: false,
-          content: <PeriodeOgLand
+          content: <Periode
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
             lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}

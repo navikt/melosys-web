@@ -4,5 +4,5 @@ export { default as Arbeidssteder } from './arbeidssteder';
 export { default as Barnetrygd } from './barnetrygd';
 export { default as Fullmektig } from './fullmektig';
 export { default as Medlemskap } from './medlemskap';
-export { default as PeriodeOgLand } from './periodeOgLand';
+export { default as Periode } from './periode';
 export { default as Person } from './person';

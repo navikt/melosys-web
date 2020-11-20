@@ -35,8 +35,8 @@ export const Medlemskap = {
   undertitler: {},
 };
 
-export const PeriodeOgLand = {
-  tittel: 'Periode og land',
+export const Periode = {
+  tittel: 'Periode',
   undertitler: {},
 };
 
