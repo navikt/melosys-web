@@ -9,7 +9,7 @@ const FamilieforholdContainer = () => (
   <Nav.Container fluid>
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Familieforhold.tittel}</Nav.typo.Undertittel>
+        <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Familieforhold.tittel}</Nav.typo.Innholdstittel>
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
