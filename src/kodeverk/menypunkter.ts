@@ -16,7 +16,7 @@ export const ArbeidsgiverOgVirksomhet = {
 };
 
 export const Arbeidssteder = {
-  tittel: 'Arbeidssted(er) i utlandet',
+  tittel: 'Arbeidssted(er)',
   undertitler: {
     arbeidsstedLand: 'Arbeidssted på land',
     arbeidsstedOffshore: 'Arbeidssted offshore',
