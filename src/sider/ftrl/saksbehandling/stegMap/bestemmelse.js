@@ -15,10 +15,14 @@ class Bestemmelse extends Steg {
     this.id = STEG.BESTEMMELSE;
     this.tittel = 'Bestemmelse';
     this.komponent = VurderingBestemmelse;
-    this.samleRelevanteData = _propsLight => ({});
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
     };
     this.status = FANE_STATUS.OK;
   }
