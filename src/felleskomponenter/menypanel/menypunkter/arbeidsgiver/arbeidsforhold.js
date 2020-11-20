@@ -7,6 +7,7 @@ import * as Mui from '../../../../felleskomponenter/ui';
 import * as Ikoner from '../../../../resources/images';
 
 import EnkeltDato from '../../../datoOmrade/enkeltDato';
+import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
 import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
@@ -41,21 +42,22 @@ export const Arbeidsforholdet = props => {
             <Nav.Row className="arbeidsforhold__enkelt">
               <Nav.Column xs="6">
                 <dl className="arbeidsforholdet__detaljer">
-                  <dt>Varighet:</dt>
+                  <dt>Varighet</dt>
                   <dd>{ansettelsesPeriode.tom ? varighetLabel : '(ikke avsluttet)'}</dd>
                   <dt>Bekreftet</dt>
                   <dd><EnkeltDato dato={sistBekreftet} /></dd>
-                  <dt>Virksomhetsnummer:</dt>
+                  <dt>Virksomhetsnummer</dt>
                   <dd>{arbeidsgiver.orgnr}</dd>
+                  <OrganisasjonsAdresse visNavn={false} className="adresse" organisasjon={arbeidsgiver} />
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
                 <dl className="arbeidsforholdet__detaljer">
                   <dt>Periode</dt>
                   <dd>{ansettelsesPeriode.fom} - {ansettelsesPeriode.tom}</dd>
-                  <dt>A-ordning:</dt>
+                  <dt>A-ordning</dt>
                   <dd>{Utils.streng.boolTilNorsk(Aordning)}</dd>
-                  <dt>Type arbeidsforhold:</dt>
+                  <dt>Type arbeidsforhold</dt>
                   <dd>{arbeidsforholdstype}</dd>
                 </dl>
               </Nav.Column>

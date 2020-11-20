@@ -43,6 +43,7 @@ const Saksopplysninger = ({
   oppdaterLovvalgsperioder,
   lastInnSaksopplysninger,
   tilForsiden,
+  startOgVisOppfriskModal,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
@@ -375,11 +376,12 @@ const Saksopplysninger = ({
       </form>
       {
         sidemenyToggle === 'enabled' &&
-          <RegistreringMenypanelForm
-            menypunkter={[
-              'Person',
-            ]}
-          />
+        <RegistreringMenypanelForm
+          menypunkter={[
+            'Person',
+          ]}
+          startOgVisOppfriskModal={startOgVisOppfriskModal}
+        />
       }
       {
         sidemenyToggle === 'disabled' &&
@@ -406,6 +408,7 @@ Saksopplysninger.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
   behandlingsresultat: PT.object,
   tilForsiden: PT.func.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {

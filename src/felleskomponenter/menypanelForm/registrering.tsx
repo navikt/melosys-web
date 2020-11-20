@@ -2,12 +2,14 @@ import React, { FormEventHandler } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { RootState } from 'AppTypes';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import * as KV from '../../kodeverk';
 
 import Menypanel, { Menypunkt } from '../menypanel';
 
-import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 
 const mapStateToProps = (state: RootState) => ({
   initialValues: {
@@ -20,22 +22,35 @@ const mapStateToProps = (state: RootState) => ({
   },
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
+  lagreSoknad: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type RegistreringProps = PropsFromRedux & {
   menypunkter: Menypunkt[],
+  startOgVisOppfriskModal: () => void,
 };
 
 const Registrering = ({
   menypunkter,
+  lagreSoknad,
+  startOgVisOppfriskModal,
 }: RegistreringProps & InjectedFormProps<KV.Form.RegistreringPanelerFormData, RegistreringProps>) => {
   const submitHandler: FormEventHandler<HTMLFormElement> = event => {
     event.preventDefault();
   };
 
+  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
+    await lagreSoknad();
+    startOgVisOppfriskModal();
+  };
+
   return (
     <form name="registrering" id="soknad" onSubmit={submitHandler}>
       <Menypanel
+        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
         menypunkter={menypunkter}
       />
     </form>

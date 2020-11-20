@@ -35,6 +35,11 @@ export const Medlemskap = {
   undertitler: {},
 };
 
+export const Periode = {
+  tittel: 'Periode',
+  undertitler: {},
+};
+
 export const Person = {
   tittel: 'Person',
   undertitler: {
@@ -46,4 +51,11 @@ export const Person = {
 export const Barnetrygd = {
   tittel: 'EU/EØS-barnetrygd',
   undertitler: {},
+};
+
+export const Utenlandsoppdraget = {
+  tittel: 'Utenlandskoppdraget',
+  undertitler: {
+    tilleggsopplysninger: 'Tilleggsopplysninger',
+  },
 };

@@ -166,7 +166,12 @@ const finnPanelFeil = errors => {
   const panelFeil = unikePanelerMedFeilNavn.map(panelNavn => ({
     panel: panelNavn,
     feil: panelerOgFeil
-      .map(({ panel, undertittel, melding }) => (panelNavn === panel ? `${undertittel} - ${melding}` : null))
+      .map(({ panel, undertittel, melding }) => {
+        if (panelNavn === panel) {
+          return undertittel ? `${undertittel} - ${melding}` : melding;
+        }
+        return null;
+      })
       .filter(v => v !== null),
   }));
 

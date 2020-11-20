@@ -70,6 +70,7 @@ const Registrering = props => {
     behandlingOppfriskes,
     dokumentOversikt,
     dokumenter,
+    startOgVisOppfriskModal,
   } = props;
 
   const saksnummer = snr;
@@ -126,6 +127,7 @@ const Registrering = props => {
               sed={sed}
               vurderingBegrunnelser={vurderingBegrunnelser}
               tilForsiden={tilForsiden}
+              startOgVisOppfriskModal={startOgVisOppfriskModal}
             />
           </Nav.Column>
           <Nav.Column xs="5">
@@ -194,6 +196,7 @@ Registrering.propTypes = {
   behandlingOppfriskes: PT.bool.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 Registrering.defaultProps = {
   redigerbart: null,

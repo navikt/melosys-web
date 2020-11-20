@@ -1,7 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { mock, instance } from 'ts-mockito';
 import { shallow } from 'enzyme';
-import each from 'jest-each';
 
 import MKV from '../../melosyskodeverk';
 
@@ -25,7 +24,7 @@ describe('MenyPanel', () => {
   it('Viser bare oppgitte menypunkter', () => {
     props.menypunkter = [
       'Person',
-      'Utenlandsoppdraget',
+      'Arbeidssted(er)',
     ];
     const menypanel = shallow(<Menypanel {...props} />);
     const sidemeny = menypanel.find(Sidemeny);
@@ -35,32 +34,13 @@ describe('MenyPanel', () => {
     expect(sidemenyLinkGroups[0].links[0].label).toBe('Person');
 
     expect(sidemenyLinkGroups[1].links).toHaveLength(1);
-    expect(sidemenyLinkGroups[1].links[0].label).toBe('Utenlandsoppdraget');
+    expect(sidemenyLinkGroups[1].links[0].label).toBe('Arbeidssted(er)');
   });
 
   it('Viser ikke linkgrupper med ingen linker/menypunkter', () => {
     props.menypunkter = [];
     const menypanel = shallow(<Menypanel {...props} />);
     const sidemeny = menypanel.find(Sidemeny);
-
-    expect(sidemeny.props().linkGroups).toHaveLength(0);
-  });
-
-  each([
-    'Lønn og godtgjørelser',
-    'Om virksomheten i Norge',
-    'Øvrig om arbeidstaker',
-  ]).it(`Viser menypunkt %p bare ved behandlingsgrunnlagtype ${SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS}`, menypunkt => {
-    props.menypunkter = [menypunkt];
-    props.behandlingsgrunnlagtype = SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
-    let menypanel = shallow(<Menypanel {...props} />);
-    let sidemeny = menypanel.find(Sidemeny);
-
-    expect(sidemeny.props().linkGroups[0].links).toHaveLength(1);
-
-    props.behandlingsgrunnlagtype = SØKNAD_A1_YRKESAKTIVE_EØS;
-    menypanel = shallow(<Menypanel {...props} />);
-    sidemeny = menypanel.find(Sidemeny);
 
     expect(sidemeny.props().linkGroups).toHaveLength(0);
   });
