@@ -114,7 +114,7 @@ export const ArbeidsgiverOgVirksomhet = ({
       <ArbeidsforholdNorgeListe
         className="arbeidsforhold__liste"
         saksnummer={saksnummer}
-        leggTilTekst="Legg til selvstendig virksomhet"
+        leggTilTekst="Legg til selvstendig virksomhet og kontaktopplysninger"
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
         tittelIkon={Ikoner.Man}
         feltNavn="selvstendigForetak"
@@ -145,7 +145,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         redigerbart={redigerbart}
         className="arbeidsforhold__liste"
         feltNavn="arbeidsforholdUtland"
-        leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
+        leggTilTekst="Legg til arbeidsgiver"
         redigererKomponent={EnkeltArbeidsforholdUtlandRedigerer}
         redigeringUtfortKomponent={EnkeltArbeidsforholdUtlandRedigeringUtfort}
         elementUnderstrek
