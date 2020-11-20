@@ -61,6 +61,7 @@ const Saksopplysninger = ({
   lastInnSaksopplysninger,
   lovvalgsperiode,
   tilForsiden,
+  startOgVisOppfriskModal,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
@@ -391,6 +392,7 @@ const Saksopplysninger = ({
             'Person',
             'Arbeidsforhold og inntekt',
           ]}
+          startOgVisOppfriskModal={startOgVisOppfriskModal}
         />
       }
       {
@@ -416,6 +418,7 @@ Saksopplysninger.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
   lovvalgsperiode: MPT.Lovvalgsperiode.isRequired,
   tilForsiden: PT.func.isRequired,
+  startOgVisOppfriskModal: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
