@@ -19,7 +19,7 @@ const PeriodeOgLand = ({
 }: PeriodeOgLandProps) => (
   <div>
     <div style={{ marginBottom: '1em' }}>
-      <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Periode.tittel}</Nav.typo.Undertittel>
+      <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Periode.tittel}</Nav.typo.Innholdstittel>
       <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
       {
         visArbeidsforholdRolleEtiketter &&

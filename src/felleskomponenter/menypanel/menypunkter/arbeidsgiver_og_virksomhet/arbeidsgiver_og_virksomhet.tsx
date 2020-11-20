@@ -74,7 +74,7 @@ export const ArbeidsgiverOgVirksomhet = ({
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
-        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}</Nav.typo.Undertittel>
+        <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}</Nav.typo.Innholdstittel>
         <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
         {
           visArbeidsforholdRolleEtiketter &&

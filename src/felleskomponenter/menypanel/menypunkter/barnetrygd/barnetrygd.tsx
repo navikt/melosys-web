@@ -29,7 +29,7 @@ export const Barnetrygd = ({
     <Nav.Container fluid className="barnetrygd">
       <Nav.Row className="tittel">
         <Nav.Column xs="12">
-          <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Barnetrygd.tittel}</Nav.typo.Undertittel>
+          <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Barnetrygd.tittel}</Nav.typo.Innholdstittel>
           <Etiketter.FraRegister />
         </Nav.Column>
       </Nav.Row>

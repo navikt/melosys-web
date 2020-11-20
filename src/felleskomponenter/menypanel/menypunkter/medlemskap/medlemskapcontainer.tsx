@@ -10,7 +10,7 @@ const MedlemskapContainer = () => (
   <Nav.Container fluid>
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Medlemskap.tittel}</Nav.typo.Undertittel>
+        <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Medlemskap.tittel}</Nav.typo.Innholdstittel>
         <Etiketter.FraRegister />
       </Nav.Column>
     </Nav.Row>
