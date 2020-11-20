@@ -41,7 +41,7 @@ export const Periode = {
 };
 
 export const Person = {
-  tittel: 'Person',
+  tittel: 'Personopplysninger',
   undertitler: {
     annenAdresse: 'Annen adresse',
     utenlandskID: 'Utenlandsk ID-nummer',
