@@ -3,18 +3,17 @@ import React from 'react';
 import * as KV from '../../../../../../kodeverk';
 import * as Nav from '../../../../../../utils/navFrontend';
 import * as Skjema from '../../../../../skjema';
-import * as Symboler from '../../../symboler';
+
+import Sletterad from '../sletterad';
 
 import { Redigerer as RedigererType } from '../types';
-
-import './redigerer.css';
 
 const Redigerer = ({
   redigerbart,
   overordnetFeltNavn,
   slett,
 }: RedigererType<KV.Form.ArbeidsstedOffshore>) => (
-  <div className="arbeidssted__offshore__redigerer">
+  <div>
     <Nav.Row>
       <Nav.Column xs="6">
         <Skjema.Input
@@ -34,10 +33,7 @@ const Redigerer = ({
         />
       </Nav.Column>
     </Nav.Row>
-    <Symboler.SlettElement
-      onClick={slett}
-      className="slett__knapp"
-    />
+    <Sletterad onClick={slett} />
   </div>
 );
 

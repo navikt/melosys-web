@@ -81,7 +81,7 @@ const EditerbartElement = ({
             style={{ marginRight: '10px' }}
             onClick={() => setStatus(Status.Redigerer)}
           />
-          <Symboler.SlettAlt
+          <Symboler.Slett
             onClick={onBinClick}
           />
         </>
