@@ -41,6 +41,55 @@ const FullmektigRedigeringUtfort = ({
 }: FullmektigRedigeringUtfortProps) => {
   const [kontaktopplysningerOrg] = useAsyncCallbackState(() => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr), {}, Utils.logger.error, [kontaktopplysninger.kontaktorgnr]);
 
+  const kontantopplysningerContent = (!kontaktopplysninger.kontaktnavn && !kontaktopplysninger.kontaktorgnr) ?
+    'Ingen kontaktopplysninger oppgitt'
+    :
+    <>
+      <Nav.typo.Element className="kontaktopplysninger__label">Kontaktopplysninger</Nav.typo.Element>
+      <Nav.Row>
+        <Nav.Column xs="3">
+          <Nav.typo.Normaltekst>Kontaktperson:</Nav.typo.Normaltekst>
+          <Nav.typo.Element>{kontaktopplysninger.kontaktnavn || 'Ikke oppgitt'}</Nav.typo.Element>
+        </Nav.Column>
+      </Nav.Row>
+      {
+        !Utils._isEmpty(kontaktopplysningerOrg) ?
+          <>
+            <Nav.Row>
+              {
+                !Utils._isEmpty(kontaktopplysningerOrg) &&
+                <>
+                  <Nav.Column xs="3">
+                    <OrganisasjonsAdresse
+                      organisasjon={kontaktopplysningerOrg}
+                      visTittel={false}
+                    />
+                  </Nav.Column>
+                  <Nav.Column xs="5">
+                    <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
+                    <Nav.typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.typo.Element>
+                  </Nav.Column>
+                </>
+              }
+            </Nav.Row>
+            <Nav.Row className="brevinfo">
+              <Nav.Column xs="12">
+                <Nav.typo.EtikettLiten>
+                  *Brev til arbeidsgiver sendes til denne adressen
+                </Nav.typo.EtikettLiten>
+              </Nav.Column>
+            </Nav.Row>
+          </>
+          :
+          <Nav.Row>
+            <Nav.Column xs="3">
+              <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
+              <Nav.typo.Element>{kontaktopplysningerOrg.orgnr || 'Ikke oppgitt'}</Nav.typo.Element>
+            </Nav.Column>
+          </Nav.Row>
+      }
+    </>;
+
   return (
     <div className="fullmektig__redigering__utfort">
       <Nav.Row>
@@ -69,40 +118,7 @@ const FullmektigRedigeringUtfort = ({
           }
         </Nav.Column>
       </Nav.Row>
-      <Nav.typo.Element className="kontaktopplysninger__label">Kontaktopplysninger</Nav.typo.Element>
-      <Nav.Row>
-        {
-          kontaktopplysninger.kontaktnavn &&
-          <Nav.Column xs="3">
-            <Nav.typo.Normaltekst>Kontaktperson:</Nav.typo.Normaltekst>
-            <Nav.typo.Element>{kontaktopplysninger.kontaktnavn}</Nav.typo.Element>
-          </Nav.Column>
-        }
-      </Nav.Row>
-      <Nav.Row>
-        {
-          !Utils._isEmpty(kontaktopplysningerOrg) &&
-          <>
-            <Nav.Column xs="3">
-              <OrganisasjonsAdresse
-                organisasjon={kontaktopplysningerOrg}
-                visTittel={false}
-              />
-            </Nav.Column>
-            <Nav.Column xs="5">
-              <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
-              <Nav.typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.typo.Element>
-            </Nav.Column>
-          </>
-        }
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          <Nav.typo.EtikettLiten>
-            *Brev til arbeidsgiver sendes til denne adressen
-          </Nav.typo.EtikettLiten>
-        </Nav.Column>
-      </Nav.Row>
+      { kontantopplysningerContent }
     </div>
   );
 };

@@ -51,10 +51,18 @@ const EnkeltArbeidsforholdUtland = ({
     </Nav.Row>
     <Nav.Row>
       <Nav.Column xs="6">
+        <Skjema.Input
+          label="Region"
+          feltNavn={`${overordnetFeltNavn}.adresse.region`}
+          disabled={!redigerbart}
+        />
+      </Nav.Column>
+      <Nav.Column xs="6">
         <Skjema.LandVelger
           label="Land"
           feltNavn={`${overordnetFeltNavn}.adresse.landkode`}
           disabled={!redigerbart}
+          bredde="fullbredde"
         />
       </Nav.Column>
     </Nav.Row>
