@@ -39,7 +39,7 @@ const EnkeltUtenlandskIdentSkjema = ({
         />
       </Nav.Column>
     </Nav.Row>
-    <Symboler.SlettElement
+    <Symboler.Slett
       onClick={slett}
       className="slett__symbol"
     />

@@ -37,6 +37,20 @@ export const Arbeidsforholdet = props => {
     <div className="panelSeksjon arbeidsforholdet">
       <Nav.Container fluid>
         <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={arbeidsgiver.navn} understrek />
+        <Nav.Row>
+          <Nav.Column xs="4">
+            <OrganisasjonsAdresse
+              visNavn={false}
+              visTittel={false}
+              className="adresse"
+              organisasjon={arbeidsgiver}
+            />
+          </Nav.Column>
+          <Nav.Column xs="4">
+            <Nav.typo.Normaltekst style={{ marginTop: '0.5em' }}>Virksomhetsnummer</Nav.typo.Normaltekst>
+            <Nav.typo.Element>{arbeidsgiver.orgnr}</Nav.typo.Element>
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row className="arbeidsforholdet__enkelt">
           <div className="arbeidsforholdene panelSeksjon">
             <Nav.Row className="arbeidsforhold__enkelt">
@@ -46,9 +60,8 @@ export const Arbeidsforholdet = props => {
                   <dd>{ansettelsesPeriode.tom ? varighetLabel : '(ikke avsluttet)'}</dd>
                   <dt>Bekreftet</dt>
                   <dd><EnkeltDato dato={sistBekreftet} /></dd>
-                  <dt>Virksomhetsnummer</dt>
-                  <dd>{arbeidsgiver.orgnr}</dd>
-                  <OrganisasjonsAdresse visNavn={false} className="adresse" organisasjon={arbeidsgiver} />
+                  <dt>Type arbeidsforhold</dt>
+                  <dd>{arbeidsforholdstype}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
@@ -57,8 +70,6 @@ export const Arbeidsforholdet = props => {
                   <dd>{ansettelsesPeriode.fom} - {ansettelsesPeriode.tom}</dd>
                   <dt>A-ordning</dt>
                   <dd>{Utils.streng.boolTilNorsk(Aordning)}</dd>
-                  <dt>Type arbeidsforhold</dt>
-                  <dd>{arbeidsforholdstype}</dd>
                 </dl>
               </Nav.Column>
               {arbeidsavtaler && <Arbeidsavtaler arbeidsavtaler={arbeidsavtaler} />}

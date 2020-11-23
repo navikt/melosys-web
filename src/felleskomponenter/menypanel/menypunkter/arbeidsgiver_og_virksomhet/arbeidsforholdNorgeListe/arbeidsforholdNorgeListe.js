@@ -29,6 +29,8 @@ export const EnkeltArbeidsforholdNorgeRedigerer = ({
   orgFeilVedHentingTekst,
   onKontaktopplysningerChange,
   kontaktopplysninger,
+  onKontaktopplysningerInputBlur,
+  onKontaktopplysningerSlettClick,
 }) => {
   const orgFinnes = !Utils._isEmpty(organisasjon) && !Utils._isEmpty(organisasjon.orgnr);
 
@@ -63,6 +65,9 @@ export const EnkeltArbeidsforholdNorgeRedigerer = ({
             redigerbart={redigerbart}
             onChange={onKontaktopplysningerChange}
             kontaktopplysninger={kontaktopplysninger}
+            onKontaktnavnInputBlur={onKontaktopplysningerInputBlur}
+            onKontaktorgnrInputBlur={onKontaktopplysningerInputBlur}
+            onSlettKnappClick={onKontaktopplysningerSlettClick}
           />
         }
       </Nav.Column>
@@ -87,6 +92,8 @@ EnkeltArbeidsforholdNorgeRedigerer.propTypes = {
     kontaktnavn: PT.string,
     kontaktorgnr: PT.string,
   }).isRequired,
+  onKontaktopplysningerInputBlur: PT.func.isRequired,
+  onKontaktopplysningerSlettClick: PT.func.isRequired,
 };
 
 EnkeltArbeidsforholdNorgeRedigerer.defaultProps = {
@@ -120,7 +127,6 @@ export const EnkeltArbeidsforholdNorge = ({
 
   const slett = () => {
     fields.remove(indeks);
-    slettKontaktOpplysninger();
   };
 
   const erstatt = verdi => fields.splice(indeks, 1, transformerOrgTilElement(verdi));
@@ -145,7 +151,6 @@ export const EnkeltArbeidsforholdNorge = ({
       tittelUnderstrek
       onBinClick={slett}
       hentNyStatusVedHarData={false}
-      onLagreClick={lagreKontaktOpplysninger}
       visLagreKnappBareHvisHarData
       redigererRender={() => (
         <EnkeltArbeidsforholdNorgeRedigerer
@@ -157,6 +162,8 @@ export const EnkeltArbeidsforholdNorge = ({
           hentVedMount={Boolean(organisasjon.orgnr)}
           onKontaktopplysningerChange={setKontaktopplysninger}
           kontaktopplysninger={kontaktopplysninger}
+          onKontaktopplysningerInputBlur={lagreKontaktOpplysninger}
+          onKontaktopplysningerSlettClick={slettKontaktOpplysninger}
         />
       )}
       redigeringUtfortRender={() => (

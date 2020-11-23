@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler } from 'react';
 import { Organisasjon } from 'Domene';
 
 import MKV from '../../../../melosyskodeverk';
@@ -20,6 +20,8 @@ interface FullmektigRedigererProps {
   org: Partial<Organisasjon>,
   onKontaktOpplysningerChange: (kontaktopplysning: KontaktOpplysning) => void,
   kontaktopplysninger: KontaktOpplysning,
+  onKontaktopplysningerInputBlur: FocusEventHandler<HTMLInputElement>,
+  onKontaktopplysningerSlettClick: MouseEventHandler<HTMLButtonElement>,
 }
 
 function FullmektigRedigerer(props: FullmektigRedigererProps) {
@@ -32,6 +34,8 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
     org,
     onKontaktOpplysningerChange,
     kontaktopplysninger,
+    onKontaktopplysningerInputBlur,
+    onKontaktopplysningerSlettClick,
   } = props;
 
   const onRadioChange: ChangeEventHandler<HTMLInputElement> = event => {
@@ -93,6 +97,9 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
             redigerbart={redigerbart}
             onChange={onKontaktOpplysningerChange}
             kontaktopplysninger={kontaktopplysninger}
+            onKontaktnavnInputBlur={onKontaktopplysningerInputBlur}
+            onKontaktorgnrInputBlur={onKontaktopplysningerInputBlur}
+            onSlettKnappClick={onKontaktopplysningerSlettClick}
           />
         }
       </Nav.Column>

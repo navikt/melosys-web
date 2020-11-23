@@ -4,13 +4,12 @@ import { KTObject } from '@navikt/melosys-kodeverk';
 import * as KV from '../../../../../../kodeverk';
 import * as Nav from '../../../../../../utils/navFrontend';
 import * as Skjema from '../../../../../skjema';
-import * as Symboler from '../../../symboler';
+
+import Sletterad from '../sletterad';
 
 import MKV from '../../../../../../melosyskodeverk';
 
 import { Redigerer as RedigererType } from '../types';
-
-import './redigerer.css';
 
 const Redigerer = ({
   redigerbart,
@@ -30,7 +29,7 @@ const Redigerer = ({
   };
 
   return (
-    <div className="arbeidssted__skip__redigerer">
+    <div>
       <Nav.Row>
         <Nav.Column xs="6">
           <Skjema.Input
@@ -42,48 +41,43 @@ const Redigerer = ({
           />
         </Nav.Column>
       </Nav.Row>
-      <div className="andre__rad">
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <Skjema.Select
-              feltNavn={`${overordnetFeltNavn}.fartsomradeKode`}
-              label="Fartsområde"
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Skjema.Select
+            feltNavn={`${overordnetFeltNavn}.fartsomradeKode`}
+            label="Fartsområde"
+            disabled={!redigerbart}
+            onChange={fartsomradeChangeHandler}
+          >
+            {
+              MKV.KTObjects.begrunnelser.fartsomrader.map((omrade: KTObject) => (
+                <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>
+              ))
+            }
+          </Skjema.Select>
+        </Nav.Column>
+        <Nav.Column xs="6">
+          {
+            verdier && verdier.fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
+            <Skjema.LandVelger
+              feltNavn={`${overordnetFeltNavn}.territorialfarvann`}
+              label="Lands territorialfarvann"
               disabled={!redigerbart}
-              onChange={fartsomradeChangeHandler}
-            >
-              {
-                MKV.KTObjects.begrunnelser.fartsomrader.map((omrade: KTObject) => (
-                  <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>
-                ))
-              }
-            </Skjema.Select>
-          </Nav.Column>
-          <Nav.Column xs="6">
-            {
-              verdier && verdier.fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
-              <Skjema.LandVelger
-                feltNavn={`${overordnetFeltNavn}.territorialfarvann`}
-                label="Lands territorialfarvann"
-                disabled={!redigerbart}
-                bredde="fullbredde"
-              />
-            }
-            {
-              verdier && verdier.fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.UTENRIKS &&
-              <Skjema.LandVelger
-                feltNavn={`${overordnetFeltNavn}.flaggLandkode`}
-                label="Flaggstat"
-                disabled={!redigerbart}
-                bredde="fullbredde"
-              />
-            }
-          </Nav.Column>
-        </Nav.Row>
-        <Symboler.SlettElement
-          onClick={slett}
-          className="slett__knapp"
-        />
-      </div>
+              bredde="fullbredde"
+            />
+          }
+          {
+            verdier && verdier.fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.UTENRIKS &&
+            <Skjema.LandVelger
+              feltNavn={`${overordnetFeltNavn}.flaggLandkode`}
+              label="Flaggstat"
+              disabled={!redigerbart}
+              bredde="fullbredde"
+            />
+          }
+        </Nav.Column>
+      </Nav.Row>
+      <Sletterad onClick={slett} />
     </div>
   );
 };
