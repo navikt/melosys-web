@@ -110,7 +110,7 @@ class Stegvelger extends Component {
 
   oppdater = () => {
     const { aktivtStegNummer } = this.state;
-    this.props.oppdaterLokalSoknadHandler();
+    this.props.oppdaterBehandlingsgrunnlag();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
@@ -191,7 +191,7 @@ class Stegvelger extends Component {
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
-    this.props.oppdaterLokalSoknadHandler();
+    this.props.oppdaterBehandlingsgrunnlag();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
@@ -531,7 +531,7 @@ Stegvelger.propTypes = {
   lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
-  oppdaterLokalSoknadHandler: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   soknad_skjema: PT.object,
