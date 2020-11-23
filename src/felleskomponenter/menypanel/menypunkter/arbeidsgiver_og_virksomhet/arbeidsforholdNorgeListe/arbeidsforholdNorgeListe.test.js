@@ -80,6 +80,8 @@ describe('EnkeltArbeidsforholdNorgeRedigerer', () => {
       slettTekst: 'Slett',
       kontaktopplysninger: {},
       onKontaktopplysningerChange: jest.fn(),
+      onKontaktopplysningerInputBlur: jest.fn(),
+      onKontaktopplysningerSlettClick: jest.fn(),
     };
   });
 

@@ -55,7 +55,6 @@ const EnkeltFullmektig = ({
   }, [fullmektig.orgnr]);
 
   const slettHandler = () => {
-    slettKontaktOpplysninger();
     slett();
   };
 
@@ -75,7 +74,6 @@ const EnkeltFullmektig = ({
       understrek
       hentNyStatusVedHarData={false}
       onBinClick={slettHandler}
-      onLagreClick={lagreKontaktOpplysninger}
       visLagreKnappBareHvisHarData
       redigererRender={() => (
         <FullmektigRedigerer
@@ -87,6 +85,8 @@ const EnkeltFullmektig = ({
           onRolleChange={onRolleChange}
           kontaktopplysninger={kontaktopplysninger}
           onKontaktOpplysningerChange={setKontaktopplysninger}
+          onKontaktopplysningerInputBlur={lagreKontaktOpplysninger}
+          onKontaktopplysningerSlettClick={slettKontaktOpplysninger}
         />
       )}
       redigeringUtfortRender={() => (
