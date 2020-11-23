@@ -1,6 +1,6 @@
 import { AppThunk } from 'AppTypes';
 import { doThenDispatch } from '../../services/utils';
-import { Virksomheter } from '../../@types/avklartfakta';
+import { Virksomheter } from 'Domene';
 
 import * as Api from '../../services/api';
 import * as Types from './types';

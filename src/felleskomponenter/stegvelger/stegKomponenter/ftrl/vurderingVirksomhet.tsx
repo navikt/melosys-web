@@ -10,7 +10,7 @@ import * as Mui from '../../../../felleskomponenter/ui';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { oppsummertfaktaOperations } from '../../../../ducks/oppsummertfakta';
 
-import { Virksomheter } from '../../../../@types/avklartfakta';
+import { Virksomheter } from 'Domene';
 import './vurderingVirksomhet.css';
 
 

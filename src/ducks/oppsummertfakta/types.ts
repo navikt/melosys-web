@@ -1,4 +1,4 @@
-import { Virksomheter } from '../../@types/avklartfakta';
+import { Virksomheter } from 'Domene';
 
 export const OK = 'oppsummertfakta/OK';
 export const FEILET = 'oppsummertfakta/FEILET';

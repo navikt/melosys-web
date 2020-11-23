@@ -1,5 +1,5 @@
 import * as Types from './types';
-import { Virksomheter } from '../../@types/avklartfakta';
+import { Virksomheter } from 'Domene';
 
 export function oppdaterVirksomheter(virksomheter: Virksomheter): Types.OppdaterVirksomheterAction {
   return ({
