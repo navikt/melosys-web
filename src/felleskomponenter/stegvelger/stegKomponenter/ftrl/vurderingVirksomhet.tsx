@@ -22,6 +22,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterVirksomheterState: (virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.oppdaterVirksomheterState(virksomheter)),
+  resetOppsummertFakta: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
   sendVirksomheter: (behandlingID: number, virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
 });
 
@@ -45,6 +46,7 @@ const VurderingVirksomhet =
     oppdater,
     oppdaterVirksomheterState,
     redigerbart,
+    resetOppsummertFakta,
     sendVirksomheter,
     tilbake,
     virksomheterListe,
@@ -53,6 +55,12 @@ const VurderingVirksomhet =
     const [erValgtVirksomheterGyldig, setErValgtVirksomheterGyldig] = useState(false);
     const hjelpetekst = 'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. ' +
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
+
+    useEffect( () => {
+      return () => {
+        resetOppsummertFakta();
+      }
+    }, []);
 
     const oppdaterVirksomheterOgStegvelger = async () => {
       await oppdaterVirksomheterState({ orgnummer: valgteVirksomheter });

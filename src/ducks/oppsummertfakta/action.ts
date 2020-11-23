@@ -7,3 +7,7 @@ export function oppdaterVirksomheter(virksomheter: Virksomheter): Types.Oppdater
     data: virksomheter,
   });
 }
+
+export function resetOppsummertFakta(): Types.ResetAction {
+  return { type: Types.RESET_OPPSUMMERTFAKTA };
+}

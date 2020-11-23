@@ -26,3 +26,7 @@ export function sendVirksomheter(behandlingID: number, virksomheter: Virksomhete
 export function oppdaterVirksomheterState(virksomheter: Virksomheter): AppThunk<Types.Action, Types.Action> {
   return dispatch => (dispatch(Actions.oppdaterVirksomheter(virksomheter)));
 }
+
+export function resetOppsummertFakta() {
+  return Actions.resetOppsummertFakta();
+}

@@ -36,6 +36,8 @@ export default function reducer(state = initialState, action: Types.Action): Sta
           virksomheter: action.data.virksomheter,
         },
       };
+    case Types.RESET_OPPSUMMERTFAKTA:
+      return { ...initialState };
     default:
       return state;
   }
