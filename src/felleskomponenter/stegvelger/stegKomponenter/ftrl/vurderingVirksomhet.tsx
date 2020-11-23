@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
+import { Virksomheter } from 'Domene';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Mui from '../../../../felleskomponenter/ui';
@@ -10,7 +11,6 @@ import * as Mui from '../../../../felleskomponenter/ui';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { oppsummertfaktaOperations } from '../../../../ducks/oppsummertfakta';
 
-import { Virksomheter } from 'Domene';
 import './vurderingVirksomhet.css';
 import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 
@@ -56,10 +56,8 @@ const VurderingVirksomhet =
     const hjelpetekst = 'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. ' +
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
-    useEffect( () => {
-      return () => {
-        resetOppsummertFakta();
-      }
+    useEffect(() => () => {
+      resetOppsummertFakta();
     }, []);
 
     const oppdaterVirksomheterOgStegvelger = async () => {
@@ -91,7 +89,7 @@ const VurderingVirksomhet =
         </Nav.typo.Undertittel>
 
         <Mui.Checkboxgruppe
-          muligeValg={virksomheterListe.map((virksomhet: {navn: string, virksomhetId: string}) => { return {kode: virksomhet.virksomhetId, term: virksomhet.navn}})}
+          muligeValg={virksomheterListe.map(virksomhet => ({ kode: virksomhet.virksomhetId, term: virksomhet.navn }))}
           onChange={checkedVirksomheter => setValgteVirksomheter(checkedVirksomheter)}
           disabled={!redigerbart}
           defaultValg={valgteVirksomheter}

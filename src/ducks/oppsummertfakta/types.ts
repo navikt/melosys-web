@@ -6,7 +6,7 @@ export const PENDING = 'oppsummertfakta/PENDING';
 export const OPPDATER_OPPSUMMERTFAKTA = 'oppsummertfakta/OPPDATER_OPPSUMMERTFAKTA';
 export const OPPDATER_VIRKSOMHETER = 'oppsummertfakta/OPPDATERVIRKSOMHETER';
 
-export const RESET_OPPSUMMERTFAKTA = 'oppsummertfakta/RESET_OPPSUMMERTFAKTA';
+export const RESET = 'oppsummertfakta/RESET';
 
 export type Data = {
   virksomheter?: Virksomheter
@@ -27,7 +27,7 @@ export interface OkAction {
 }
 
 export interface ResetAction {
-  type: typeof RESET_OPPSUMMERTFAKTA,
+  type: typeof RESET,
 }
 
 export interface OppdaterVirksomheterAction {

@@ -1,5 +1,5 @@
-import * as Types from './types';
 import { Virksomheter } from 'Domene';
+import * as Types from './types';
 
 export function oppdaterVirksomheter(virksomheter: Virksomheter): Types.OppdaterVirksomheterAction {
   return ({
@@ -9,5 +9,5 @@ export function oppdaterVirksomheter(virksomheter: Virksomheter): Types.Oppdater
 }
 
 export function resetOppsummertFakta(): Types.ResetAction {
-  return { type: Types.RESET_OPPSUMMERTFAKTA };
+  return { type: Types.RESET };
 }
