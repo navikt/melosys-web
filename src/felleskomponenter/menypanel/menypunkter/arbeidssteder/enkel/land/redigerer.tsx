@@ -8,8 +8,6 @@ import Sletterad from '../sletterad';
 
 import { Redigerer as RedigererType } from '../types';
 
-import './redigerer.css';
-
 const Redigerer = ({
   redigerbart,
   overordnetFeltNavn,
