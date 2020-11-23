@@ -94,12 +94,6 @@ export const ValiderteEkstraArbeidsgivereSelector = createSelector(
   (ekstraArbeidsgivere, organisasjoner) => organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr))
 );
 
-export const EkstraArbeidsgivereVirksomhetSelector = createSelector(
-  EkstraArbeidsgivereSelector,
-  OrganisasjonSelectors.organisasjonerSelector,
-  (ekstraArbeidsgivere = [], organisasjoner) => organisasjoner.filter(organisasjon => ekstraArbeidsgivere.find(ekstraArbeidsgiver => ekstraArbeidsgiver === organisasjon.orgnr))
-);
-
 export const SelvstendigArbeidSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.selvstendigArbeid || {}
