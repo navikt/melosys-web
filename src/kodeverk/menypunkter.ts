@@ -59,3 +59,8 @@ export const Utenlandsoppdraget = {
     tilleggsopplysninger: 'Tilleggsopplysninger',
   },
 };
+
+export const Familieforhold = {
+  tittel: 'Familieforhold',
+  undertitler: {},
+};

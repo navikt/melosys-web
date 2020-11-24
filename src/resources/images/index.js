@@ -40,6 +40,8 @@ import { ReactComponent as VedtakAvslatt } from './ikon-vedtak-avslatt.svg';
 import { ReactComponent as VedtakGodkjent } from './ikon-vedtak-godkjent.svg';
 import { ReactComponent as VedakUbehandlet } from './ikon-vedtak-ubehandlet.svg';
 import { ReactComponent as Ukjentkjoenn } from './ikon-ukjentkjonn.svg';
+import { ReactComponent as Kopier } from './file-copy.svg';
+import { ReactComponent as HentOpplysninger } from './folder-add.svg';
 
 export {
   AccountCircle,
@@ -63,11 +65,13 @@ export {
   Globe,
   GreenCheckmark,
   Helikopter,
+  HentOpplysninger,
   IkonSak,
   InformationCircle,
   Inntekt,
   Kvinne,
   Kontor,
+  Kopier,
   Man,
   Mann,
   Medlemskap,

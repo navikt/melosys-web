@@ -3,10 +3,15 @@ import { KTObject } from '@navikt/melosys-kodeverk';
 import { GeneriskAdresse, UstrukturertAdresse, MidlertidigAdresse } from './adresse';
 import { Periode } from './periode';
 
-type Familiemedlemmer = {
+type Familiemedlem = {
   sammensattNavn: string,
   fnr: string,
   relasjonstype: KTObject,
+  alder: number,
+  borMedBruker: boolean,
+  sivilstand: KTObject,
+  sivilstandGyldighetsperiodeFom: string,
+  fnrAnnenForelder: string,
 };
 
 type Person = {
@@ -33,7 +38,10 @@ type Person = {
     },
   },
   erEgenAnsatt: boolean,
-  familiemedlemmer: Familiemedlemmer[],
+  familiemedlemmer: Familiemedlem[],
 };
 
-export default Person;
+export type {
+  Person,
+  Familiemedlem,
+};
