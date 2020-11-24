@@ -44,7 +44,7 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
   return (
     <div className="familieforhold__enkelt" aria-label="Enkelt familiemedlem">
       <Nav.Row>
-        <Nav.Column xs="3">{sammensattNavn}</Nav.Column>
+        <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
           <span className={erKopiert ? 'fnr__kopiert' : 'fnr'}>
             <CopyToClipboard
@@ -56,7 +56,7 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
         </Nav.Column>
         <Nav.Column xs="2">{erBarn ? Utils.streng.boolTilNorsk(borMedBruker) : sivilstandGyldighetsperiodeFom}</Nav.Column>
         <Nav.Column xs="2">{erBarn ? fnrAnnenForelder : Utils.streng.boolTilNorsk(borMedBruker)}</Nav.Column>
-        <Nav.Column xs="2">{erBarn ? renderBarnEtikett() : relasjonstype.term}</Nav.Column>
+        <Nav.Column xs="3">{erBarn ? renderBarnEtikett() : relasjonstype.term}</Nav.Column>
       </Nav.Row>
     </div>
   );
@@ -80,11 +80,11 @@ export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
       { familiemedlemmer.length === 0 && '(ingen data funnet)' }
       { familiemedlemmer.length !== 0 &&
       <Nav.Row>
-        <Nav.Column xs="3">{kolonneHeadinger[0]}</Nav.Column>
+        <Nav.Column xs="2">{kolonneHeadinger[0]}</Nav.Column>
         <Nav.Column xs="3">{kolonneHeadinger[1]}</Nav.Column>
         <Nav.Column xs="2">{kolonneHeadinger[2]}</Nav.Column>
         <Nav.Column xs="2">{kolonneHeadinger[3]}</Nav.Column>
-        <Nav.Column xs="2">{kolonneHeadinger[4]}</Nav.Column>
+        <Nav.Column xs="3">{kolonneHeadinger[4]}</Nav.Column>
       </Nav.Row>
       }
       <section className="familieforholdgruppe__liste">
