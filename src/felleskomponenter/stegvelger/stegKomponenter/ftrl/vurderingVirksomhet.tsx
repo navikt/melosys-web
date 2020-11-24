@@ -61,7 +61,7 @@ const VurderingVirksomhet =
     }, []);
 
     const oppdaterVirksomheterOgStegvelger = async () => {
-      await oppdaterVirksomheterState({ orgnummer: valgteVirksomheter });
+      await oppdaterVirksomheterState({ virksomhetIDer: valgteVirksomheter });
       oppdater();
     };
 
@@ -71,7 +71,7 @@ const VurderingVirksomhet =
     }, [valgteVirksomheter]);
 
     const handleFortsett = () => {
-      sendVirksomheter(behandlingID, { orgnummer: valgteVirksomheter });
+      sendVirksomheter(behandlingID, { virksomhetIDer: valgteVirksomheter });
       bekreft();
     };
 
