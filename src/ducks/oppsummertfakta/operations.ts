@@ -1,5 +1,5 @@
 import { AppThunk } from 'AppTypes';
-import { Virksomheter } from 'Domene';
+import { OppsummertFaktaVirksomheter } from 'Domene';
 import { doThenDispatch } from '../../services/utils';
 
 import * as Api from '../../services/api';
@@ -15,7 +15,7 @@ export function hentOppsummertFakta(behandlingID: number) {
   });
 }
 
-export function sendVirksomheter(behandlingID: number, virksomheter: Virksomheter) {
+export function sendVirksomheter(behandlingID: number, virksomheter: OppsummertFaktaVirksomheter) {
   return doThenDispatch(() => Api.Avklartefakta.sendVirksomheter(behandlingID, virksomheter), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -23,7 +23,7 @@ export function sendVirksomheter(behandlingID: number, virksomheter: Virksomhete
   });
 }
 
-export function oppdaterVirksomheterState(virksomheter: Virksomheter): AppThunk<Types.Action, Types.Action> {
+export function oppdaterVirksomheterState(virksomheter: OppsummertFaktaVirksomheter): AppThunk<Types.Action, Types.Action> {
   return dispatch => (dispatch(Actions.oppdaterVirksomheter(virksomheter)));
 }
 

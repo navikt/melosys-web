@@ -12,12 +12,12 @@ export const OppsummertFaktaDataSelector: Selector<RootState, Types.Data> = crea
   oppsummertfakta => oppsummertfakta.data
 );
 
-export const VirksomheterSelector = createSelector(
+export const OppsumertFaktaVirksomheterSelector = createSelector(
   OppsummertFaktaDataSelector,
   oppsummertfakta => oppsummertfakta.virksomheter
 );
 
-export const VirksomheterOrgNrSelector = createSelector(
-  VirksomheterSelector,
+export const OppsummertFaktaVirksomhetIDerSelector = createSelector(
+  OppsumertFaktaVirksomheterSelector,
   virksomheter => (virksomheter ? virksomheter.virksomhetIDer : [])
 );

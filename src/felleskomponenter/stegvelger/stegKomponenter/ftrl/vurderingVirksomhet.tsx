@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
-import { Virksomheter } from 'Domene';
+import { OppsummertFaktaVirksomheter } from 'Domene';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Mui from '../../../../felleskomponenter/ui';
@@ -21,9 +21,9 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterVirksomheterState: (virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.oppdaterVirksomheterState(virksomheter)),
+  oppdaterVirksomheterState: (virksomheter: OppsummertFaktaVirksomheter) => dispatch(oppsummertfaktaOperations.oppdaterVirksomheterState(virksomheter)),
   resetOppsummertFakta: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
-  sendVirksomheter: (behandlingID: number, virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
+  sendVirksomheter: (behandlingID: number, virksomheter: OppsummertFaktaVirksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

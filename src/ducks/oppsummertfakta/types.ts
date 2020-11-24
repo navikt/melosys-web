@@ -1,4 +1,4 @@
-import { Virksomheter } from 'Domene';
+import { OppsummertFaktaVirksomheter } from 'Domene';
 
 export const OK = 'oppsummertfakta/OK';
 export const FEILET = 'oppsummertfakta/FEILET';
@@ -9,7 +9,7 @@ export const OPPDATER_VIRKSOMHETER = 'oppsummertfakta/OPPDATERVIRKSOMHETER';
 export const RESET = 'oppsummertfakta/RESET';
 
 export type Data = {
-  virksomheter?: Virksomheter
+  virksomheter?: OppsummertFaktaVirksomheter
 }
 
 export interface FeiletAction {
@@ -32,7 +32,7 @@ export interface ResetAction {
 
 export interface OppdaterVirksomheterAction {
   type: typeof OPPDATER_VIRKSOMHETER,
-  data: Virksomheter
+  data: OppsummertFaktaVirksomheter
 }
 
 export interface OppdaterOppsummertfaktaAction {
