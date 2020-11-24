@@ -36,7 +36,7 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
 
   const [erKopiert, setErKopiert] = useState(false);
   useEffect(() => {
-    setErKopiert(false);
+    setTimeout(() => setErKopiert(false), 50);
   }, [erKopiert]);
 
   const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar className="ikon__under18Aar" />) : null);
