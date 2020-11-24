@@ -1,6 +1,6 @@
 import { AppThunk } from 'AppTypes';
+import { Virksomheter } from 'Domene';
 import { doThenDispatch } from '../../services/utils';
-import { Virksomheter } from '../../@types/avklartfakta';
 
 import * as Api from '../../services/api';
 import * as Types from './types';
@@ -25,4 +25,8 @@ export function sendVirksomheter(behandlingID: number, virksomheter: Virksomhete
 
 export function oppdaterVirksomheterState(virksomheter: Virksomheter): AppThunk<Types.Action, Types.Action> {
   return dispatch => (dispatch(Actions.oppdaterVirksomheter(virksomheter)));
+}
+
+export function resetOppsummertFakta() {
+  return Actions.resetOppsummertFakta();
 }

@@ -25,7 +25,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         data: {
           ...state.data,
           virksomheter: {
-            orgnummer: action.data.orgnummer,
+            virksomhetIDer: action.data.virksomhetIDer,
           },
         },
       };
@@ -36,6 +36,8 @@ export default function reducer(state = initialState, action: Types.Action): Sta
           virksomheter: action.data.virksomheter,
         },
       };
+    case Types.RESET:
+      return { ...initialState };
     default:
       return state;
   }

@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
+import { Virksomheter } from 'Domene';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Mui from '../../../../felleskomponenter/ui';
@@ -10,17 +11,18 @@ import * as Mui from '../../../../felleskomponenter/ui';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { oppsummertfaktaOperations } from '../../../../ducks/oppsummertfakta';
 
-import { Virksomheter } from '../../../../@types/avklartfakta';
 import './vurderingVirksomhet.css';
+import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 
 
 const mapStateToProps = (state: RootState) => ({
-  virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
+  virksomheterListe: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterVirksomheterState: (virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.oppdaterVirksomheterState(virksomheter)),
+  resetOppsummertFakta: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
   sendVirksomheter: (behandlingID: number, virksomheter: Virksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
 });
 
@@ -44,6 +46,7 @@ const VurderingVirksomhet =
     oppdater,
     oppdaterVirksomheterState,
     redigerbart,
+    resetOppsummertFakta,
     sendVirksomheter,
     tilbake,
     virksomheterListe,
@@ -53,8 +56,12 @@ const VurderingVirksomhet =
     const hjelpetekst = 'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. ' +
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
+    useEffect(() => () => {
+      resetOppsummertFakta();
+    }, []);
+
     const oppdaterVirksomheterOgStegvelger = async () => {
-      await oppdaterVirksomheterState({ orgnummer: valgteVirksomheter });
+      await oppdaterVirksomheterState({ virksomhetIDer: valgteVirksomheter });
       oppdater();
     };
 
@@ -64,7 +71,7 @@ const VurderingVirksomhet =
     }, [valgteVirksomheter]);
 
     const handleFortsett = () => {
-      sendVirksomheter(behandlingID, { orgnummer: valgteVirksomheter });
+      sendVirksomheter(behandlingID, { virksomhetIDer: valgteVirksomheter });
       bekreft();
     };
 
@@ -82,7 +89,7 @@ const VurderingVirksomhet =
         </Nav.typo.Undertittel>
 
         <Mui.Checkboxgruppe
-          muligeValg={virksomheterListe}
+          muligeValg={virksomheterListe.map(virksomhet => ({ kode: virksomhet.virksomhetId, term: virksomhet.navn }))}
           onChange={checkedVirksomheter => setValgteVirksomheter(checkedVirksomheter)}
           disabled={!redigerbart}
           defaultValg={valgteVirksomheter}

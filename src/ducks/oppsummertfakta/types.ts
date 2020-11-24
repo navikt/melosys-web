@@ -1,10 +1,12 @@
-import { Virksomheter } from '../../@types/avklartfakta';
+import { Virksomheter } from 'Domene';
 
 export const OK = 'oppsummertfakta/OK';
 export const FEILET = 'oppsummertfakta/FEILET';
 export const PENDING = 'oppsummertfakta/PENDING';
 export const OPPDATER_OPPSUMMERTFAKTA = 'oppsummertfakta/OPPDATER_OPPSUMMERTFAKTA';
 export const OPPDATER_VIRKSOMHETER = 'oppsummertfakta/OPPDATERVIRKSOMHETER';
+
+export const RESET = 'oppsummertfakta/RESET';
 
 export type Data = {
   virksomheter?: Virksomheter
@@ -24,6 +26,10 @@ export interface OkAction {
   data: Data,
 }
 
+export interface ResetAction {
+  type: typeof RESET,
+}
+
 export interface OppdaterVirksomheterAction {
   type: typeof OPPDATER_VIRKSOMHETER,
   data: Virksomheter
@@ -34,4 +40,4 @@ export interface OppdaterOppsummertfaktaAction {
   data: Data
 }
 
-export type Action = FeiletAction | PendingAction | OkAction | OppdaterOppsummertfaktaAction | OppdaterVirksomheterAction;
+export type Action = FeiletAction | PendingAction | OkAction | ResetAction | OppdaterOppsummertfaktaAction | OppdaterVirksomheterAction;
