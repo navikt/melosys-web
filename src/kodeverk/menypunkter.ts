@@ -16,7 +16,7 @@ export const ArbeidsgiverOgVirksomhet = {
 };
 
 export const Arbeidssteder = {
-  tittel: 'Arbeidssted(er) i utlandet',
+  tittel: 'Arbeidssted(er)',
   undertitler: {
     arbeidsstedLand: 'Arbeidssted på land',
     arbeidsstedOffshore: 'Arbeidssted offshore',
@@ -35,8 +35,13 @@ export const Medlemskap = {
   undertitler: {},
 };
 
+export const Periode = {
+  tittel: 'Periode',
+  undertitler: {},
+};
+
 export const Person = {
-  tittel: 'Person',
+  tittel: 'Personopplysninger',
   undertitler: {
     annenAdresse: 'Annen adresse',
     utenlandskID: 'Utenlandsk ID-nummer',
@@ -45,5 +50,17 @@ export const Person = {
 
 export const Barnetrygd = {
   tittel: 'EU/EØS-barnetrygd',
+  undertitler: {},
+};
+
+export const Utenlandsoppdraget = {
+  tittel: 'Utenlandskoppdraget',
+  undertitler: {
+    tilleggsopplysninger: 'Tilleggsopplysninger',
+  },
+};
+
+export const Familieforhold = {
+  tittel: 'Familieforhold',
   undertitler: {},
 };

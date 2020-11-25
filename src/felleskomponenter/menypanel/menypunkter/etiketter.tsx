@@ -12,3 +12,5 @@ export const FraSoknad = (props: EtikettProps) => <Nav.EtikettBase {...props} ty
 export const ArbeidstakersDel = (props: EtikettProps) => <Nav.EtikettBase {...props} type="fokus">Arbeidstakers del</Nav.EtikettBase>;
 
 export const ArbeidsgiversDel = (props: EtikettProps) => <Nav.EtikettBase {...props} type="fokus">Arbeidsgivers del</Nav.EtikettBase>;
+
+export const Under18Aar = (props: EtikettProps) => <Nav.EtikettBase {...props} type="info">Under 18 år</Nav.EtikettBase>;

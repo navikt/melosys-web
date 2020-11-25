@@ -14,7 +14,9 @@ import {
   Barnetrygd,
   Fullmektig,
   Medlemskap,
+  Periode,
   Person,
+  Familieforhold,
 } from './menypunkter';
 
 import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
@@ -24,6 +26,7 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import './menypanel.css';
 
 const {
+  SØKNAD_A1_YRKESAKTIVE_EØS,
   SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
 } = MKV.Koder.behandlingsgrunnlagtyper;
 
@@ -62,9 +65,10 @@ export type Menypunkt = 'Person' |
   'Arbeidsforhold og inntekt' |
   'Arbeidsgiver/virksomhet' |
   'Fullmektig' |
+  'Periode' |
   'Utenlandsoppdraget' |
   'Lønn og godtgjørelser' |
-  'Arbeidssteder(er)' |
+  'Arbeidssted(er)' |
   'Om virksomheten i Norge' |
   'Øvrig om arbeidstaker';
 interface Link {
@@ -80,6 +84,7 @@ interface LinkGroup {
 
 type MenypanelProps = PropsFromRedux & {
   menypunkter: Menypunkt[],
+  lagreSoknadOgOppfriskSaksopplysninger: () => void,
 };
 
 export const Menypanel = ({
@@ -87,6 +92,7 @@ export const Menypanel = ({
   behandlingstema,
   menypunkter,
   redigerbart,
+  lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
@@ -107,7 +113,7 @@ export const Menypanel = ({
         {
           label: 'Familieforhold',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Familieforhold />,
         },
       ],
     },
@@ -151,36 +157,52 @@ export const Menypanel = ({
           />,
         },
         {
-          label: 'Utenlandsoppdraget',
+          label: 'Periode',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Periode
+            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+            redigerbart={redigerbart}
+            lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+          />,
+          /**
+           * TODO: Vises nå for alle grunnlagtyper, men når "Utenlandsoppdraget"-menypunkt er klart,
+           * så skal denne vises bare for papirsøknad.
+           * Om den skal vises for FTRL-søknad i fremtiden blir muligens beskrevet i https://jira.adeo.no/browse/MELOSYS-4234.
+           *  */
+          renderForBehandlingsgrunnlagtyper: [],
         },
+        // {
+        //   label: 'Utenlandsoppdraget',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
+        // {
+        //   label: 'Lønn og godtgjørelser',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
         {
-          label: 'Lønn og godtgjørelser',
-          active: false,
-          content: <div>Ikke implementert enda</div>,
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
-        },
-        {
-          label: 'Arbeidssteder(er)',
+          label: 'Arbeidssted(er)',
           active: false,
           content: <Arbeidssteder
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
           />,
         },
-        {
-          label: 'Om virksomheten i Norge',
-          active: false,
-          content: <div>Ikke implementert enda</div>,
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
-        },
-        {
-          label: 'Øvrig om arbeidstaker',
-          active: false,
-          content: <div>Ikke implementert enda</div>,
-          renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
-        },
+        // {
+        //   label: 'Om virksomheten i Norge',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
+        // {
+        //   label: 'Øvrig om arbeidstaker',
+        //   active: false,
+        //   content: <div>Ikke implementert enda</div>,
+        //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
+        // },
       ],
     },
   ];
