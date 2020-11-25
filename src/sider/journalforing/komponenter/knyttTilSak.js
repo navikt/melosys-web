@@ -12,10 +12,13 @@ import * as Mui from '../../../felleskomponenter/ui';
 
 import './knyttTilSak.css';
 
-const KnyttTilSak = props => {
+export const KnyttTilSak = props => {
   const { sak, behandlingstyper, opprettBehandling } = props;
   const { behandlingOversikter } = sak;
   const sisteBehandling = behandlingOversikter[0];
+  const sakInneholderSEDBehandling = behandlingOversikter.some(behandling => (
+    behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SED
+  ));
   const clsElementskrift = { 'border-bottom': 'none' };
 
   if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
@@ -28,7 +31,10 @@ const KnyttTilSak = props => {
           style={clsElementskrift}
         />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
-          <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
+          {
+            !sakInneholderSEDBehandling &&
+            <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
+          }
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />
         </Skjema.RadioGruppe>
         {

@@ -16,6 +16,7 @@ import {
   Medlemskap,
   Periode,
   Person,
+  Familieforhold,
 } from './menypunkter';
 
 import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
@@ -117,7 +118,7 @@ export const Menypanel = ({
         {
           label: 'Familieforhold',
           active: false,
-          content: <div>Ikke implementert enda</div>,
+          content: <Familieforhold />,
         },
       ],
     },

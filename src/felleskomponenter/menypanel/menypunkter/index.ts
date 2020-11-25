@@ -6,3 +6,4 @@ export { default as Fullmektig } from './fullmektig';
 export { default as Medlemskap } from './medlemskap';
 export { default as Periode } from './periode';
 export { default as Person } from './person';
+export { default as Familieforhold } from './familieforhold';
