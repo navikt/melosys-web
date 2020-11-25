@@ -656,7 +656,7 @@ const mapStateToProps = state => ({
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
-  lagredeVirksomheter: oppsummertfaktaSelectors.OppsummertFaktaVirksomhetIDerSelector(state),
+  lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
 });
 
 /* eslint no-alert:off */
