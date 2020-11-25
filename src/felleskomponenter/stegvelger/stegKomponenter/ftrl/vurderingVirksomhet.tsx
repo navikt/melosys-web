@@ -21,8 +21,8 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
   oppdaterVirksomheterState: (virksomheter: OppsummertFaktaVirksomheter) => dispatch(oppsummertfaktaOperations.oppdaterVirksomheterState(virksomheter)),
-  resetOppsummertFakta: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
   sendVirksomheter: (behandlingID: number, virksomheter: OppsummertFaktaVirksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
 });
 
@@ -42,11 +42,11 @@ const VurderingVirksomhet =
   ({
     behandlingID,
     bekreft,
+    hentOppsummertFakta,
     lagredeVirksomheter,
     oppdater,
     oppdaterVirksomheterState,
     redigerbart,
-    resetOppsummertFakta,
     sendVirksomheter,
     tilbake,
     virksomheterListe,
@@ -57,7 +57,7 @@ const VurderingVirksomhet =
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
     useEffect(() => () => {
-      resetOppsummertFakta();
+      hentOppsummertFakta(behandlingID);
     }, []);
 
     const oppdaterVirksomheterOgStegvelger = async () => {
