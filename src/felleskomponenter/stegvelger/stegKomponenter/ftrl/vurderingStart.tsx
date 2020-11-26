@@ -149,6 +149,7 @@ const VurderingStart =
           </Nav.Row>
         </Nav.Fieldset>
 
+
         <div className="fane__knapplinje" >
           <Nav.Hovedknapp
             mini
