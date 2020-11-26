@@ -7,4 +7,8 @@ type Avklartfakta = {
   subjektID: string | null,
 };
 
+export type Virksomheter = {
+  virksomhetIDer: string[]
+};
+
 export default Avklartfakta;

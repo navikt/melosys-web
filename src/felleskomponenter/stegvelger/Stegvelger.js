@@ -37,6 +37,7 @@ import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 import { StegStoreTyper } from '../../regler';
 
 import './stegvelger.css';
+import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
 
 class Stegvelger extends Component {
   state = {
@@ -95,6 +96,22 @@ class Stegvelger extends Component {
   bekreftOgFortsett = () => {
     this.publiserStegdata();
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
+  };
+
+  bekreft = () => {
+    this.oppdater();
+    this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
+  };
+
+  tilbake = () => {
+    this.oppdater();
+    this.validerSoknadOgGaTilSteg(this.beregnForrigeSteg());
+  };
+
+  oppdater = () => {
+    const { aktivtStegNummer } = this.state;
+    this.props.oppdaterBehandlingsgrunnlag();
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
   harSoknadFeilmeldinger = () => !Utils._isEmpty(this.props.soknadFeilmeldinger);
@@ -174,7 +191,7 @@ class Stegvelger extends Component {
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
-    this.props.oppdaterLokalSoknadHandler();
+    this.props.oppdaterBehandlingsgrunnlag();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
@@ -350,6 +367,9 @@ class Stegvelger extends Component {
       avvisUtpeking: this.avvisUtpeking,
       lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
       byggUtpekingsperioder: this.byggUtpekingsperioderHandler,
+      bekreft: this.bekreft,
+      tilbake: this.tilbake,
+      oppdater: this.oppdater,
     };
 
     const { props } = this;
@@ -398,6 +418,7 @@ class Stegvelger extends Component {
       hjemmebaser: props.hjemmebaser,
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
       behandlingsgrunnlag: props.behandlingsgrunnlag,
+      lagredeVirksomheter: props.lagredeVirksomheter,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -464,6 +485,11 @@ class Stegvelger extends Component {
     return aktivtStegNummer + 1;
   };
 
+  beregnForrigeSteg = () => {
+    const { aktivtStegNummer } = this.state;
+    return aktivtStegNummer - 1;
+  };
+
   erSisteSteg(stegNummer) {
     const maksSteg = this.state.aktuelleSteg.length - 1;
     return stegNummer >= maksSteg;
@@ -505,7 +531,7 @@ Stegvelger.propTypes = {
   lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
-  oppdaterLokalSoknadHandler: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   soknad_skjema: PT.object,
@@ -563,6 +589,7 @@ Stegvelger.propTypes = {
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
   behandlingsgrunnlag: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  lagredeVirksomheter: PT.array.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -629,6 +656,7 @@ const mapStateToProps = state => ({
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
+  lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
 });
 
 /* eslint no-alert:off */

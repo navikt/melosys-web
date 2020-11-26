@@ -21,7 +21,8 @@ class Start extends Steg {
     });
     this.beregnRelevantUI = () => ({ harAvklaring });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
     };
     this.status = FANE_STATUS.OK;
   }
