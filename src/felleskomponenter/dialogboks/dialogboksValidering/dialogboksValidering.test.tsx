@@ -110,32 +110,3 @@ describe('Validering', () => {
     ));
   });
 });
-
-describe('VedtakValideringsfeil', () => {
-  const props: ComponentProps<typeof Valideringsfeil> = {
-    validering: {
-      kode: 'abc',
-      felter: [
-        'behandlingsgrunnlag.foretakUtland[1].navn',
-        'behandlingsgrunnlag.arbeidUtland[0].foretakNavn',
-      ],
-    },
-  };
-
-  it('viser Validering', () => {
-    const vedtakValideringsfeil = shallow(<Valideringsfeil {...props} />);
-    const validering = vedtakValideringsfeil.find(Validering);
-
-    expect(validering).toHaveLength(1);
-    expect(validering.props().valideringKode).toBe(props.validering.kode);
-  });
-
-  it('viser en liste over felter', () => {
-    const vedtakValideringsfeil = shallow(<Valideringsfeil {...props} />);
-    const ul = vedtakValideringsfeil.find('ul');
-    const li = vedtakValideringsfeil.find('li');
-
-    expect(ul).toHaveLength(1);
-    expect(li).toHaveLength(2);
-  });
-});
