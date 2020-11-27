@@ -1,9 +1,8 @@
 import React, { ChangeEventHandler, useState } from 'react';
 
+import * as Utils from '../../../../utils';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Api from '../../../../services/api';
-
-import { erOrgnrGyldig, erOrgnrLengde } from '../../../skjema/validering/generisk/organisasjon';
 
 interface Feilmelding {
   feilmelding: string,
@@ -22,7 +21,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
 
   const sok = async (sokOrgnr: string) => {
-    if (!erOrgnrLengde(sokOrgnr)) {
+    if (!Utils.organisasjon.erOrgnrLengde(sokOrgnr)) {
       if (korrekteLengdeOrgnrOppgittMinstEnGang) {
         setFeilmelding({ feilmelding: 'Org.nr. er 9 siffer' });
       }
@@ -31,7 +30,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
 
     setKorrekteLengdeOrgnrOppgittMinstEnGang(true);
 
-    if (erOrgnrGyldig(sokOrgnr)) {
+    if (Utils.organisasjon.erOrgnrGyldig(sokOrgnr)) {
       try {
         await Api.Organisasjoner.hentOrganisasjon(sokOrgnr);
         onOrgFunnet(sokOrgnr);
