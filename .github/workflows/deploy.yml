@@ -91,7 +91,7 @@ jobs:
           VAR: namespace=default,ingress=https://melosys.dev.adeo.no
       - name: get commit message
         run: | # Må hentes med et script fordi pull_request ikke har github.event.head_commit
-          echo "COMMIT_MSG=$(git log --format=%b -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
+          echo "COMMIT_MSG=$(git log --format='%h - %s' -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
       - name: Slack Notification (deploy success)
         if: success()
         uses: rtCamp/action-slack-notify@v1.0.0
@@ -128,7 +128,7 @@ jobs:
           VAR: namespace=q2,ingress=https://melosys-q2.dev.adeo.no
       - name: get commit message
         run: | # Må hentes med et script fordi pull_request ikke har github.event.head_commit
-          echo "COMMIT_MSG=$(git log --format=%b -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
+          echo "COMMIT_MSG=$(git log --format='%h - %s' -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
       - name: Slack Notification (deploy success)
         if: success()
         uses: rtCamp/action-slack-notify@v1.0.0
