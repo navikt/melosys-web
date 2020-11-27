@@ -1,10 +1,10 @@
-import { Medlemskapsperioder } from '../../@types/medlemskapsperioder';
+import { Medlemskapsperiode } from 'Domene';
 
 export const OK = 'medlemskapsperioder/OK';
 export const FEILET = 'medlemskapsperioder/FEILET';
 export const PENDING = 'medlemskapsperioder/PENDING';
 
-export type Data = Medlemskapsperioder[];
+export type Data = Medlemskapsperiode[];
 
 export interface FeiletAction {
   type: typeof FEILET,
