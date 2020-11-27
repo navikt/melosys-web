@@ -19,5 +19,5 @@ export const AlleMedlemskapsperioderSelector = createSelector(
 
 export const BestemmelseSelector = createSelector(
   MedlemskapsperioderDataSelector,
-  medlemskapsperioder => medlemskapsperioder.bestemmelse
+  medlemskapsperioder => (medlemskapsperioder.bestemmelse ? medlemskapsperioder.bestemmelse : '')
 );

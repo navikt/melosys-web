@@ -28,6 +28,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBestemmelse: (bestemmelse: string) => dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(bestemmelse)),
+  opprettMedlemskapsperiodeFraBestemmelse: () => dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiodeFraBestemmelse()),
 });
 
 
@@ -63,6 +64,7 @@ const VurderingBestemmelse =
     vilkaarKodeverk,
     oppdaterBestemmelse,
     oppdater,
+    opprettMedlemskapsperiodeFraBestemmelse,
   } : Props & PropsFromRedux) => {
     const [valgtBestemmelse, setValgtBestemmelse] = useState('');
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
@@ -83,6 +85,11 @@ const VurderingBestemmelse =
 
       setErAlleValgGjort(!!alleVilkårHarSvarJaOgvalgtBegrunnelse);
     }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkår]);
+
+    const handleBefreft = () => {
+      opprettMedlemskapsperiodeFraBestemmelse();
+      bekreft();
+    };
 
     const handleEndreBestemmelse = async (event: any) => {
       setValgtBestemmelse(event.target.value);
@@ -195,7 +202,7 @@ const VurderingBestemmelse =
             mini
             disabled={!erAlleValgGjort}
             className="fane__navigasjonsknapp"
-            onClick={bekreft}>Fortsett
+            onClick={handleBefreft}>Fortsett
           </Nav.Hovedknapp>
         </div>
       </div>
