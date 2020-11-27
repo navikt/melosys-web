@@ -4,7 +4,12 @@ export const OK = 'medlemskapsperioder/OK';
 export const FEILET = 'medlemskapsperioder/FEILET';
 export const PENDING = 'medlemskapsperioder/PENDING';
 
-export type Data = Medlemskapsperiode[];
+export const OPPDATER_BESTEMMELSE = 'medlemskapsperioder/OPPDATER_BESTEMMELSE';
+
+export type Data = {
+  bestemmelse?: string,
+  medlemskapsperioder?: Medlemskapsperiode[];
+}
 
 export interface FeiletAction {
   type: typeof FEILET,
@@ -17,7 +22,12 @@ export interface PendingAction {
 
 export interface OkAction {
   type: typeof OK,
-  data: Data,
+  data: Medlemskapsperiode[],
 }
 
-export type Action = FeiletAction | PendingAction | OkAction;
+export interface OppdaterBestemmelseAction {
+  type: typeof OPPDATER_BESTEMMELSE,
+  data: string,
+}
+
+export type Action = FeiletAction | PendingAction | OkAction | OppdaterBestemmelseAction;

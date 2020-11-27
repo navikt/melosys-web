@@ -11,3 +11,13 @@ export const MedlemskapsperioderDataSelector: Selector<RootState, Types.Data> = 
   MedlemskapsperioderSelector,
   medlemskapsperioder => medlemskapsperioder.data
 );
+
+export const AlleMedlemskapsperioderSelector = createSelector(
+  MedlemskapsperioderDataSelector,
+  medlemskapsperioder => medlemskapsperioder.medlemskapsperioder
+);
+
+export const BestemmelseSelector = createSelector(
+  MedlemskapsperioderDataSelector,
+  medlemskapsperioder => medlemskapsperioder.bestemmelse
+);

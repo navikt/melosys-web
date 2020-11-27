@@ -5,7 +5,8 @@ import VurderingBestemmelse from '../../../../felleskomponenter/stegvelger/stegK
 class Bestemmelse extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = false;
+    const { bestemmelser, medlemskapsperioder, vilkar } = propsLight;
+    const harAvklaring = this.finnAvklaring(bestemmelser, medlemskapsperioder, vilkar);
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -20,7 +21,7 @@ class Bestemmelse extends Steg {
       vilkar: _propsLight.vilkar,
       bestemmelseVilkår: _propsLight.bestemmelser,
     });
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
+    this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
@@ -29,6 +30,13 @@ class Bestemmelse extends Steg {
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
     };
     this.status = FANE_STATUS.OK;
+  }
+  finnAvklaring(bestemmelser, medlemskapsperioder, vilkar){
+    const valgteBestemmelseVilkår = bestemmelser && bestemmelser.find(bestemmelseVilkår => bestemmelseVilkår.bestemmelse === medlemskapsperioder.bestemmelse);
+    const erAlleVilkårUtfyltOgBegrunnelseValgt = valgteBestemmelseVilkår && valgteBestemmelseVilkår.vilkårOgBegrunnelser.filter(vilkårOgBegrunnelse =>
+      vilkar.find(lagretVilkar => (lagretVilkar.oppfylt && lagretVilkar.vilkaar === vilkårOgBegrunnelse.vilkaar) && (vilkårOgBegrunnelse.muligeBegrunnelser.length > 0 ? (lagretVilkar.begrunnelseKoder.length > 0) : true)))
+      .length === valgteBestemmelseVilkår.vilkårOgBegrunnelser.length;
+    return !!erAlleVilkårUtfyltOgBegrunnelseValgt;
   }
 }
 export default Bestemmelse;

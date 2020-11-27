@@ -9,11 +9,13 @@ import * as Utils from '../../../../utils';
 import { BOOLSK_STRING } from '../../../../constants';
 import { vilkarSelectors } from '../../../../ducks/vilkar';
 import { lagBegrunnelse, lagVilkaar } from '../../../../regler/vilkar';
-import { medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
+import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 
 import './vurderingBestemmelse.css';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
 
 
 const mapStateToProps = (state: RootState) => ({
@@ -24,8 +26,12 @@ const mapStateToProps = (state: RootState) => ({
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
 });
 
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  oppdaterBestemmelse: (bestemmelse: string) => dispatch(medlemskapsperioderOperations.oppdaterBestemmelse(bestemmelse)),
+});
 
-const connector = connect(mapStateToProps);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -55,6 +61,8 @@ const VurderingBestemmelse =
     oppdaterData,
     begrunnelserKodeverk,
     vilkaarKodeverk,
+    oppdaterBestemmelse,
+    oppdater,
   } : Props & PropsFromRedux) => {
     const [valgtBestemmelse, setValgtBestemmelse] = useState('');
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
@@ -76,12 +84,18 @@ const VurderingBestemmelse =
       setErAlleValgGjort(!!alleVilkårHarSvarJaOgvalgtBegrunnelse);
     }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkår]);
 
-    const radioVilkårHandler = (event: any) => {
+    const handleEndreBestemmelse = async (event: any) => {
+      setValgtBestemmelse(event.target.value);
+      await oppdaterBestemmelse(event.target.value);
+      oppdater();
+    };
+
+    const handleEndreVilkår = (event: any) => {
       setValgteVilkår(new Map(valgteVilkår.set(event.target.name, event.target.value)));
       oppdaterData(lagVilkaar(event.target.name, event.target.value));
     };
 
-    const selectBegrunnelseHandler = (event: any) => {
+    const handleEndreBegrunnelse = (event: any) => {
       setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
       oppdaterData(lagBegrunnelse(event.target.name, [event.target.value]));
     };
@@ -97,7 +111,7 @@ const VurderingBestemmelse =
                 <Nav.Radio
                   label="Ja"
                   name={vilkaar}
-                  onChange={radioVilkårHandler}
+                  onChange={handleEndreVilkår}
                   checked={valgteVilkår.get(`${vilkaar}`) === BOOLSK_STRING.SANN}
                   value={BOOLSK_STRING.SANN}
                   key={BOOLSK_STRING.SANN}
@@ -108,7 +122,7 @@ const VurderingBestemmelse =
                 <Nav.Radio
                   label="Nei"
                   name={vilkaar}
-                  onChange={radioVilkårHandler}
+                  onChange={handleEndreVilkår}
                   checked={valgteVilkår.get(`${vilkaar}`) === BOOLSK_STRING.USANN}
                   value={BOOLSK_STRING.USANN}
                   key={BOOLSK_STRING.USANN}
@@ -125,7 +139,7 @@ const VurderingBestemmelse =
                 <Nav.Select
                   label=""
                   bredde="fullbredde"
-                  onChange={selectBegrunnelseHandler}
+                  onChange={handleEndreBegrunnelse}
                   name={vilkaar}
                   value={valgteBegrunnelser.get(`${vilkaar}`)}
                 >
@@ -150,7 +164,7 @@ const VurderingBestemmelse =
               <Nav.Select
                 label=""
                 disabled={!redigerbart}
-                onChange={event => setValgtBestemmelse(event.target.value)}
+                onChange={handleEndreBestemmelse}
               >
                 <option disabled={!!valgtBestemmelse} value="" key="">Velg</option>
                 {bestemmelseVilkår.map(bestemmelseMedVilkår => <option key={bestemmelseMedVilkår.bestemmelse} value={bestemmelseMedVilkår.bestemmelse}>{Utils.kodeterm.termFraKTObject(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkår.bestemmelse)}</option>)}

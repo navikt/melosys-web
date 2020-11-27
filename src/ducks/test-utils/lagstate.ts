@@ -35,7 +35,7 @@ function lagState({
   folketrygdenkodeverk = { status: STATUS.OK, data: {} },
   journalforing = { status: STATUS.OK, data: {} },
   lovvalgsperioder = { status: STATUS.OK, data: [] },
-  medlemskapsperioder = { status: STATUS.OK, data: [] },
+  medlemskapsperioder = { status: STATUS.OK, data: {} },
   modaler = { status: STATUS.OK, data: {} },
   oppgaver = { status: STATUS.OK, data: {} },
   oppsummertfakta = { status: STATUS.OK, data: {} },

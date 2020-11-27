@@ -38,6 +38,7 @@ import { StegStoreTyper } from '../../regler';
 
 import './stegvelger.css';
 import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
+import {medlemskapsperioderSelectors} from "../../ducks/medlemskapsperioder";
 
 class Stegvelger extends Component {
   state = {
@@ -420,6 +421,7 @@ class Stegvelger extends Component {
       behandlingsgrunnlag: props.behandlingsgrunnlag,
       lagredeVirksomheter: props.lagredeVirksomheter,
       bestemmelser: props.bestemmelser,
+      medlemskapsperioder: props.medlemskapsperioder,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -592,6 +594,7 @@ Stegvelger.propTypes = {
   behandlingsgrunnlag: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagredeVirksomheter: PT.array.isRequired,
+  medlemskapsperioder: PT.object.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -660,6 +663,7 @@ const mapStateToProps = state => ({
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomheterOrgNrSelector(state),
+  medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
 });
 
 /* eslint no-alert:off */
