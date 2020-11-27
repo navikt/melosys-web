@@ -93,6 +93,11 @@ const VurderingBestemmelse =
     const handleEndreVilkår = (event: any) => {
       setValgteVilkår(new Map(valgteVilkår.set(event.target.name, event.target.value)));
       oppdaterData(lagVilkaar(event.target.name, event.target.value));
+      if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
+        valgteBegrunnelser.delete(event.target.name);
+        setValgteBegrunnelser(new Map(valgteBegrunnelser));
+        oppdaterData(lagBegrunnelse(event.target.name, []));
+      }
     };
 
     const handleEndreBegrunnelse = (event: any) => {
