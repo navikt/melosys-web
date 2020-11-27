@@ -22,6 +22,7 @@ declare module 'Domene' {
   export type Periode = import('./@types').Periode;
   export type Person = import('./@types').Person;
   export type PersonHistorikk = import('./@types').PersonHistorikk;
+  export type OppsummertFaktaVirksomheter = import('./@types').Virksomheter;
   export type Organisasjon = import('./@types').Organisasjon;
   export type Videresending = import('./@types').Videresending;
   export type DokumentOversikt = import('./@types').DokumentOversikt;
@@ -33,6 +34,7 @@ declare module 'Domene' {
   export type Virksomheter = import('./@types').Virksomheter;
   export type Medlemskapsperiode = import('./@types').Medlemskapsperiode;
   export type OppdaterMedlemskapsperiode = import('./@types').OppdaterMedlemskapsperiode
+  export type Familiemedlem = import('./@types').Familiemedlem;
 }
 
 declare module '@navikt/melosys-kodeverk' {

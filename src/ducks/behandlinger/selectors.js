@@ -62,6 +62,10 @@ export const PersonhistorikkSelector = createSelector(
   state => SaksopplysningerSelector(state).personhistorikk || {},
   personhistorikk => personhistorikk
 );
+export const FamiliemedlemmerSelector = createSelector(
+  state => PersonSelector(state).familiemedlemmer || [],
+  familiemedlemmer => familiemedlemmer
+);
 
 export const SEDSelector = createSelector(
   state => SaksopplysningerSelector(state).sed || {},

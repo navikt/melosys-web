@@ -1,0 +1,166 @@
+import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { Familiemedlem } from 'Domene';
+import { RootState } from 'AppTypes';
+import CopyToClipboard from 'react-copy-to-clipboard';
+
+import * as Api from '../../../../services/api';
+import * as Etiketter from '../etiketter';
+import * as Ikoner from '../../../../resources/images';
+import * as Mui from '../../../ui';
+import * as Nav from '../../../../utils/navFrontend';
+import * as Utils from '../../../../utils';
+
+import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
+
+import ExpandableList from '../../../expandablelist';
+
+import './familieforhold.css';
+
+interface FamilieforholdEnkeltProps {
+  familiemedlem: Familiemedlem,
+  erBarn: boolean,
+}
+
+export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEnkeltProps) {
+  const {
+    sammensattNavn,
+    fnr,
+    relasjonstype,
+    alder,
+    borMedBruker,
+    sivilstandGyldighetsperiodeFom,
+    fnrAnnenForelder,
+  } = familiemedlem;
+
+  const [erKopiert, setErKopiert] = useState(false);
+  useEffect(() => {
+    setTimeout(() => setErKopiert(false), 50);
+  }, [erKopiert]);
+
+  const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar className="ikon__under18Aar" />) : null);
+
+  return (
+    <div className="familieforhold__enkelt" aria-label="Enkelt familiemedlem">
+      <Nav.Row>
+        <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
+        <Nav.Column xs="3">
+          <span className={erKopiert ? 'fnr__kopiert' : 'fnr'}>
+            <CopyToClipboard
+              text={fnr}
+              onCopy={() => setErKopiert(true)}>
+              <span>{fnr}<Ikoner.Kopier className="ikon__kopier" /></span>
+            </CopyToClipboard>
+          </span>
+        </Nav.Column>
+        <Nav.Column xs="2">{erBarn ? Utils.streng.boolTilNorsk(borMedBruker) : sivilstandGyldighetsperiodeFom}</Nav.Column>
+        <Nav.Column xs="2">{erBarn ? fnrAnnenForelder : Utils.streng.boolTilNorsk(borMedBruker)}</Nav.Column>
+        <Nav.Column xs="3">{erBarn ? renderBarnEtikett() : relasjonstype.term}</Nav.Column>
+      </Nav.Row>
+    </div>
+  );
+}
+
+interface FamilieforholdGruppeProps {
+  familiemedlemmer: Familiemedlem[],
+  overskrift: string,
+  kolonneHeadinger: string[],
+  erBarn: boolean,
+}
+
+export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
+  const {
+    familiemedlemmer, overskrift = '', kolonneHeadinger, erBarn,
+  } = props;
+
+  return (
+    <div>
+      <Nav.typo.Undertittel className="familieforhold__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
+      { familiemedlemmer.length === 0 && '(ingen data funnet)' }
+      { familiemedlemmer.length !== 0 &&
+      <Nav.Row>
+        <Nav.Column xs="2">{kolonneHeadinger[0]}</Nav.Column>
+        <Nav.Column xs="3">{kolonneHeadinger[1]}</Nav.Column>
+        <Nav.Column xs="2">{kolonneHeadinger[2]}</Nav.Column>
+        <Nav.Column xs="2">{kolonneHeadinger[3]}</Nav.Column>
+        <Nav.Column xs="3">{kolonneHeadinger[4]}</Nav.Column>
+      </Nav.Row>
+      }
+      <section className="familieforholdgruppe__liste">
+        <ExpandableList
+          elements={familiemedlemmer}
+          renderElement={familiemedlem => <FamilieforholdEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
+          idFromElement={familiemedlem => familiemedlem.fnr}
+          amountOfItemsCollapsed={2}
+          btnTextCollapsed="Vis flere"
+          btnTextExpanded="Vis færre"
+          chevron
+          dividers
+        />
+      </section>
+    </div>
+  );
+}
+
+const mapStateToProps = (state: RootState) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  familiemedlemmer: behandlingerSelectors.FamiliemedlemmerSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
+});
+const mapDispatchToProps = (dispatch: any) => ({
+  oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
+});
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+const Familieforhold = ({
+  behandlingID,
+  familiemedlemmer,
+  oppdaterBehandling,
+}: PropsFromRedux) => {
+  const [feilmelding, setFeilmelding] = useState('');
+
+  const oppfrisk = async () => {
+    try {
+      await Api.Saksopplysninger.oppfrisk(behandlingID, { medFamilierelasjoner: true });
+      oppdaterBehandling();
+    } catch (e) {
+      Utils.logger.error(e);
+      if (e.status >= 500) setFeilmelding('Kunne ikke hente familierelasjoner');
+      else if (e.status >= 400) setFeilmelding(e.body.message);
+    }
+  };
+
+  const barn = familiemedlemmer
+    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode === 'BARN') || [];
+  const ektefellePartnerSamboer = familiemedlemmer
+    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode !== 'BARN') || [];
+
+  return (
+    <div className="familieforhold">
+      <Etiketter.FraRegister style={{ float: 'right' }} />
+      { feilmelding &&
+        <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding}</Nav.AlertStripe>}
+      { familiemedlemmer.length === 0 &&
+        <div className="familieforhold__gruppeoverskrift">
+          <Mui.Knappelenke ikon={Ikoner.HentOpplysninger} onClick={oppfrisk}>Hent opplysninger</Mui.Knappelenke>
+        </div>}
+      { familiemedlemmer.length !== 0 &&
+      <FamilieforholdGruppe
+        familiemedlemmer={barn}
+        overskrift="Barn"
+        kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Bor med bruker', 'F.nr annen forelder', '']}
+        erBarn />}
+      { familiemedlemmer.length !== 0 &&
+      <FamilieforholdGruppe
+        familiemedlemmer={ektefellePartnerSamboer}
+        overskrift="Ektefelle/partner/samboer"
+        kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Fra og med', 'Bor med bruker', 'Relasjon']}
+        erBarn={false} />}
+    </div>
+  );
+};
+
+export default connector(Familieforhold);

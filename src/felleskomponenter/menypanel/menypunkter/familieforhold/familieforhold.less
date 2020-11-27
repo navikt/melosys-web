@@ -1,0 +1,39 @@
+@import '../../../../constants';
+@import '../../../../utils/mixins';
+
+.familieforhold {
+  .familieforhold__gruppeoverskrift, .varsel, .row {
+    margin: 1em 0 1em 0;
+  }
+
+  .familieforhold__detaljer {
+    .beskrivliste-mixin('row');
+  }
+
+  .lenke svg {
+    fill: none;
+  }
+
+  .ikon__under18Aar {
+    float: right;
+    padding: 3px;
+  }
+
+  .ikon__kopier {
+    cursor: pointer;
+    width: auto;
+    height: 18px;
+    padding-left: 5px;
+    padding-top: 3px;
+  }
+
+  .fnr {
+    background-color: white;
+    will-change: background-color;
+    transition: 500ms all ease;
+  }
+
+  .fnr__kopiert {
+    background-color: gray;
+  }
+}

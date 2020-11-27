@@ -3,8 +3,7 @@ import * as Skjema from '../felleskomponenter/skjema';
 /** Definer alle felter med validering. Dette objektet brukes også i validForm decorator.
  */
 export const feltGrupper = {
-  personOpplysninger: {
-  },
+  personOpplysninger: {},
   inntekt: {
     inntektNorskIPerioden: [],
     inntektUtenlandskIPerioden: [],

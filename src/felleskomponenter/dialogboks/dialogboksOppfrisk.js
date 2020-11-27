@@ -54,8 +54,7 @@ const Oppfrisk = ({ oppfrisk, lukk }) => {
 
   return (
     <div>
-      <Nav.typo.Systemtittel>Registeropplysninger har blitt oppdatert</Nav.typo.Systemtittel>
-      <Nav.AlertStripe type="suksess">Registeropplysninger i denne behandlingen har blitt oppdatert. Lukk dette vinduet for å fortsette behandlingen.</Nav.AlertStripe>
+      <Nav.AlertStripe type="suksess">Registeropplysningene har blitt oppdatert.</Nav.AlertStripe>
       <div className="knapperadcontainer">
         <Nav.Knapp onClick={lukk}>Lukk</Nav.Knapp>
       </div>

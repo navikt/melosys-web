@@ -19,7 +19,7 @@ const Fullmektig = ({
 }: FullmektigProps) => (
   <div className="fullmektig__container">
     <div className="tittel">
-      <Nav.typo.Undertittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Fullmektig.tittel}</Nav.typo.Undertittel>
+      <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Fullmektig.tittel}</Nav.typo.Innholdstittel>
       <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
       {
         visArbeidsforholdRolleEtiketter &&

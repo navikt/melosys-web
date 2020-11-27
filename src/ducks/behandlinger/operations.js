@@ -32,3 +32,10 @@ export function apneTidligereBehandlinger() {
     Routing.nyFane('sok');
   };
 }
+
+export function oppdaterBehandling() {
+  return (dispatch, getState) => {
+    const behandlingID = Selectors.BehandlingIDSelector(getState());
+    dispatch(hentBehandling(behandlingID));
+  };
+}

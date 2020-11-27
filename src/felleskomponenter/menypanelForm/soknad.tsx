@@ -1,7 +1,9 @@
-import React, { FormEventHandler, FunctionComponent } from 'react';
+import React, { FormEventHandler } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { RootState } from 'AppTypes';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
 import * as KV from '../../kodeverk';
@@ -10,7 +12,7 @@ import * as Utils from '../../utils';
 import Menypanel from '../menypanel';
 
 import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
-import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta';
 import { vilkarSelectors } from '../../ducks/vilkar';
@@ -93,17 +95,35 @@ const mapStateToProps = (state: RootState) => ({
     },
   },
 });
-const connector = connect(mapStateToProps);
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
+  lagreSoknad: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const Soknad: FunctionComponent<PropsFromRedux & InjectedFormProps<KV.Form.SoknadFormData, PropsFromRedux>> = () => {
+type SoknadProps = PropsFromRedux & {
+  startOgVisOppfriskModal: () => void,
+};
+
+const Soknad = ({
+  lagreSoknad,
+  startOgVisOppfriskModal,
+}: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
   const submitHandler: FormEventHandler<HTMLFormElement> = event => {
     event.preventDefault();
+  };
+
+  const lagreSoknadOgOppfriskSaksopplysninger = async () => {
+    await lagreSoknad();
+    startOgVisOppfriskModal();
   };
 
   return (
     <form name="soknad" id="soknad" onSubmit={submitHandler}>
       <Menypanel
+        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
         menypunkter={[
           'Person',
           'Familieforhold',
@@ -112,9 +132,10 @@ const Soknad: FunctionComponent<PropsFromRedux & InjectedFormProps<KV.Form.Sokna
           'Arbeidsforhold og inntekt',
           'Arbeidsgiver/virksomhet',
           'Fullmektig',
+          'Periode',
           'Utenlandsoppdraget',
           'Lønn og godtgjørelser',
-          'Arbeidssteder(er)',
+          'Arbeidssted(er)',
           'Om virksomheten i Norge',
           'Øvrig om arbeidstaker',
         ]}
@@ -123,7 +144,7 @@ const Soknad: FunctionComponent<PropsFromRedux & InjectedFormProps<KV.Form.Sokna
   );
 };
 
-const MenypanelForm = reduxForm<KV.Form.SoknadFormData, PropsFromRedux>({
+const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
   form: KV.Form.SOKNAD,
   enableReinitialize: true,
   destroyOnUnmount: true,

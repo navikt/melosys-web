@@ -17,7 +17,7 @@ export const VirksomheterSelector = createSelector(
   oppsummertfakta => oppsummertfakta.virksomheter
 );
 
-export const VirksomheterOrgNrSelector = createSelector(
+export const VirksomhetIDerSelector = createSelector(
   VirksomheterSelector,
   virksomheter => (virksomheter ? virksomheter.virksomhetIDer : [])
 );
