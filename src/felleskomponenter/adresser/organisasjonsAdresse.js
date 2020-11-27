@@ -25,13 +25,14 @@ const OrganisasjonsAdresse = ({
   const tittel = visPostadresse ? 'Postadresse' : 'Forretningsadresse';
 
   const cl = classNames('organisasjonsAdresse', className);
-  const navnCl = classNames({
+  const navnCls = classNames({
     bold: boldNavn,
+    'break-word': true,
   });
 
   return (
     <div className={cl}>
-      { visNavn && <div className={navnCl}>{navn}</div>}
+      { visNavn && <div className={navnCls}>{navn}</div>}
       { visTittel && <div className="tittel">{tittel}</div>}
       <GeneriskAdresse adresse={adresse} />
     </div>
