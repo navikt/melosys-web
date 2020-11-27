@@ -30,12 +30,15 @@ import { dokumenterOperations, dokumenterSelectors } from '../../../ducks/dokume
 import { formSelectors } from '../../../ducks/form';
 import { behandlingsperioderOperations } from '../../../ducks/behandlingsperioder';
 import { menypanelOperations } from '../../../ducks/menypanel';
+import { folketrygdenkodeverkOperations } from '../../../ducks/folketrygdenkodeverk';
+import { oppsummertfaktaOperations } from '../../../ducks/oppsummertfakta';
+import { vilkarOperations } from '../../../ducks/vilkar';
+import { medlemskapsperioderOperations } from '../../../ducks/medlemskapsperioder';
 
 import { AvslaattSoknad, HenlagtSak } from '../../eu_eøs/saksbehandling/komponenter/stegErstatter';
 import { stegMap } from './stegMap';
 import './saksbehandling.css';
-import { folketrygdenkodeverkOperations } from '../../../ducks/folketrygdenkodeverk';
-import { oppsummertfaktaOperations } from '../../../ducks/oppsummertfakta';
+
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -79,10 +82,12 @@ const Saksbehandling = ({
   hentDokumentOversikt,
   hentFagsaker,
   hentFolketrygdenKodeverk,
+  hentMedlemskapsperioder,
   hentOppsummertFakta,
   lagreAllData,
   lagreAvklartefakta,
   lagrePerioder,
+  lagreVilkar,
   location,
   match,
   oppdaterBehandlingerState,
@@ -102,6 +107,7 @@ const Saksbehandling = ({
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
+  const [bestemmelser, setBestemmelser] = useState([]);
   const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
 
   const oppdaterBehandlingIDState = () => {
@@ -133,6 +139,9 @@ const Saksbehandling = ({
         return false;
       }
 
+      const bestemmelserResponse = await API.Medlemskapsperioder.hentBestemmelserMedVilkår();
+      setBestemmelser(bestemmelserResponse);
+      await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(snr);
       return true;
@@ -198,9 +207,11 @@ const Saksbehandling = ({
               lagreAvklartefaktaHandler={lagreAvklartefakta}
               oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
               lagreAllData={lagreAllData}
+              lagreVilkarHandler={lagreVilkar}
               oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
               begrunnelser={MKV.KTObjects.begrunnelser}
               landkoder={landkoder}
+              bestemmelser={bestemmelser}
               tilForsiden={tilForsiden}
               stegMap={stegMap}
               forsteSteg={STEG.START}
@@ -282,11 +293,13 @@ Saksbehandling.propTypes = {
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
+  hentMedlemskapsperioder: PT.func.isRequired,
   hentOppsummertFakta: PT.func.isRequired,
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
   lagrePerioder: PT.func.isRequired,
+  lagreVilkar: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
@@ -334,10 +347,12 @@ const mapDispatchToProps = dispatch => ({
   hentDokumentOversikt: saksnummer => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
+  hentMedlemskapsperioder: bid => dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(bid)),
   hentOppsummertFakta: bid => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(bid)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
+  lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),

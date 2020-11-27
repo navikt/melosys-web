@@ -14,6 +14,7 @@ export const FEATURETOGGLE = 'featuretoggle';
 export const JOURNALFORING = 'journalforing';
 export const KODEVERK = 'kodeverk';
 export const LOVVALGSPERIODER = 'lovvalgsperioder';
+export const MEDLEMSKAPSPERIODER = 'medlemskapsperioder';
 export const NOTATER = 'notater';
 export const OPPGAVER = 'oppgaver';
 export const ORGANISASJONER = 'organisasjoner';

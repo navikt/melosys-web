@@ -17,12 +17,16 @@ class Bestemmelse extends Steg {
     this.komponent = VurderingBestemmelse;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
+      vilkar: _propsLight.vilkar,
+      bestemmelseVilkår: _propsLight.bestemmelser,
     });
     this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
+      lagreVilkar: propsLight.tilgjengeligeHandlers.lagreVilkar,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
     };
     this.status = FANE_STATUS.OK;
   }

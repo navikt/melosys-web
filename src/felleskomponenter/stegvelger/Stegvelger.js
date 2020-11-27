@@ -419,6 +419,7 @@ class Stegvelger extends Component {
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
       behandlingsgrunnlag: props.behandlingsgrunnlag,
       lagredeVirksomheter: props.lagredeVirksomheter,
+      bestemmelser: props.bestemmelser,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -517,6 +518,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
   behandlingID: PT.number.isRequired,
+  bestemmelser: PT.array,
   arbeidsgivereIPerioden: PT.array,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   arbeidslandMedYrkesaktivitet: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
@@ -596,6 +598,7 @@ Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   bostedsland: null,
+  bestemmelser: [],
   oppsummering: {},
   valgteVirksomheter: [],
   valgteVirksomheterIkkeNaeringsDrivende: [],

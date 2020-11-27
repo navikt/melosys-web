@@ -14,5 +14,15 @@ export const FolketrygdenkodeverkDataSelector: Selector<RootState, Types.Data> =
 
 export const TrygdedekningerSelector = createSelector(
   FolketrygdenkodeverkDataSelector,
-  folketrygdenkodeverk => (folketrygdenkodeverk.trygdedekninger ? folketrygdenkodeverk.trygdedekninger : [])
+  folketrygdenkodeverk => (folketrygdenkodeverk.Trygdedekninger ? folketrygdenkodeverk.Trygdedekninger : [])
+);
+
+export const VilkaarSelector = createSelector(
+  FolketrygdenkodeverkDataSelector,
+  folketrygdenkodeverk => (folketrygdenkodeverk.Vilkaar ? folketrygdenkodeverk.Vilkaar : [])
+);
+
+export const BegrunnelserSelector = createSelector(
+  FolketrygdenkodeverkDataSelector,
+  folketrygdenkodeverk => (folketrygdenkodeverk.begrunnelser ? folketrygdenkodeverk.begrunnelser : [])
 );
