@@ -1,6 +1,6 @@
+import { OppdaterMedlemskapsperiode } from 'Domene';
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from '../utils';
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from '../api-constants';
-import { OppdaterMedlemskapsperiode } from 'Domene';
 
 
 // eslint-disable-next-line import/prefer-default-export
@@ -21,4 +21,4 @@ export const hentBestemmelserMedVilkår = () =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEMSKAPSPERIODER}/bestemmelser`);
 
 export const opprettMedlemskapsperioderFraBestemmelse = (behandlingID: number, bestemmelse: string) =>
-  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/bestemmelser`, {bestemmelse: bestemmelse})
+  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/bestemmelser`, { bestemmelse });

@@ -13,17 +13,18 @@ export default function reducer(state = initialState, action: Types.Action): Sta
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case Types.OK:
+    case Types.OK: {
       const { data: medlemskapsperioder } = action;
       const bestemmelse = medlemskapsperioder.length > 0 ? medlemskapsperioder[0].bestemmelse : '';
       return {
         ...state,
         status: STATUS.OK,
         data: {
-          bestemmelse: bestemmelse,
-          medlemskapsperioder: medlemskapsperioder,
+          bestemmelse,
+          medlemskapsperioder,
         },
       };
+    }
     case Types.OPPDATER_BESTEMMELSE:
       return {
         ...state,

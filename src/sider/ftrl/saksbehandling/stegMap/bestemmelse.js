@@ -31,10 +31,11 @@ class Bestemmelse extends Steg {
     };
     this.status = FANE_STATUS.OK;
   }
-  finnAvklaring(bestemmelser, medlemskapsperioder, vilkar){
+  finnAvklaring = (bestemmelser, medlemskapsperioder, vilkar) => {
     const valgteBestemmelseVilkår = bestemmelser && bestemmelser.find(bestemmelseVilkår => bestemmelseVilkår.bestemmelse === medlemskapsperioder.bestemmelse);
     const erAlleVilkårUtfyltOgBegrunnelseValgt = valgteBestemmelseVilkår && valgteBestemmelseVilkår.vilkårOgBegrunnelser.filter(vilkårOgBegrunnelse =>
-      vilkar.find(lagretVilkar => (lagretVilkar.oppfylt && lagretVilkar.vilkaar === vilkårOgBegrunnelse.vilkaar) && (vilkårOgBegrunnelse.muligeBegrunnelser.length > 0 ? (lagretVilkar.begrunnelseKoder.length > 0) : true)))
+      vilkar.find(lagretVilkar => (lagretVilkar.oppfylt && lagretVilkar.vilkaar === vilkårOgBegrunnelse.vilkaar)
+        && (vilkårOgBegrunnelse.muligeBegrunnelser.length > 0 ? (lagretVilkar.begrunnelseKoder.length > 0) : true)))
       .length === valgteBestemmelseVilkår.vilkårOgBegrunnelser.length;
     return !!erAlleVilkårUtfyltOgBegrunnelseValgt;
   }

@@ -31,14 +31,15 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 import { videresendingOperations } from '../../ducks/videresending';
+import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
+import { medlemskapsperioderSelectors } from '../../ducks/medlemskapsperioder';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 import { StegStoreTyper } from '../../regler';
 
 import './stegvelger.css';
-import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
-import {medlemskapsperioderSelectors} from "../../ducks/medlemskapsperioder";
+
 
 class Stegvelger extends Component {
   state = {
