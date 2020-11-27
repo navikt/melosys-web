@@ -31,7 +31,6 @@ declare module 'Domene' {
   export type Mottaksretning = import('./@types').Mottaksretning;
   export type BrevPdfData = import('./@types').BrevPdfData;
   export type SedPdfData = import('./@types').SedPdfData;
-  export type Virksomheter = import('./@types').Virksomheter;
   export type Medlemskapsperiode = import('./@types').Medlemskapsperiode;
   export type OppdaterMedlemskapsperiode = import('./@types').OppdaterMedlemskapsperiode
   export type Familiemedlem = import('./@types').Familiemedlem;
