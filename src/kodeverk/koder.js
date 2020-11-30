@@ -1,6 +1,8 @@
 // Melosys-kodeverk
 // Se Confluence koder for oversikt
 
+import { BOOLSK_STRING } from '../constants';
+
 export const INNVILGET = 'INNVILGET';
 export const DELVIS_INNVILGET = 'DELVIS_INNVILGET';
 export const AVSLAATT = 'AVSLAATT';
@@ -78,13 +80,8 @@ export const VurderingVesentligAktivitetINorgeTyper = {
   OVER_25_PROSENT: 'OVER_25_PROSENT',
 };
 
-export const BoolskAvklartfaktaType = {
-  SANN: 'TRUE',
-  USANN: 'FALSE',
-};
-
 export const SoknadslandFaktaTyper = {
-  ...BoolskAvklartfaktaType,
+  ...BOOLSK_STRING,
   IKKE_ARBEIDSLAND: 'IKKE_ARBEIDSLAND',
 };
 

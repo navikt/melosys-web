@@ -19,6 +19,7 @@ import { OrganisasjonSelectors } from '../organisasjoner';
 import { utpekingsperioderSelectors } from '../utpekingsperioder';
 
 import { hentFaktaVerdi } from '../../regler/avklartefakta';
+import { BOOLSK_STRING } from '../../constants';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -173,7 +174,7 @@ export const VirksomhetFaktaerSelector = createSelector(
 
 const AvklarteVirksomhetFaktaerSelector = createSelector(
   VirksomhetFaktaerSelector,
-  virksomhetFaktaer => virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN))
+  virksomhetFaktaer => virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes(BOOLSK_STRING.SANN))
 );
 
 export const ArbeidSokkelSkipSelector = createSelector(
@@ -345,7 +346,7 @@ const MarginaltArbeidFaktaerSelector = createSelector(
 
 const MarginaleArbeidslandFaktaerSelector = createSelector(
   MarginaltArbeidFaktaerSelector,
-  marginaltArbeidFakta => marginaltArbeidFakta.filter(enkelt => enkelt.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN))
+  marginaltArbeidFakta => marginaltArbeidFakta.filter(enkelt => enkelt.fakta.includes(BOOLSK_STRING.SANN))
 );
 
 const MarginaleArbeidslandSelector = createSelector(

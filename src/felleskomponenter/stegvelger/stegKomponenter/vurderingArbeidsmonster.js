@@ -11,10 +11,11 @@ import * as KV from '../../../kodeverk';
 import * as Mui from '../../../felleskomponenter/ui';
 
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
-import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
+import { VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
 import { lagTilleggBestemmelse, slettTilleggBestemmelse, konverterTilleggBestemmelseTilStegData } from '../../../regler/tilleggbestemmelser';
+import { BOOLSK_STRING } from '../../../constants';
 
 import './vurderingArbeidsmonster.css';
 
@@ -37,7 +38,7 @@ export const LandLinje = props => {
   const erMarginaltArbeidIArbeidsland = avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes('TRUE');
 
   const klikkHandler = () => {
-    const verdi = erMarginaltArbeidIArbeidsland ? BoolskAvklartfaktaType.USANN : BoolskAvklartfaktaType.SANN;
+    const verdi = erMarginaltArbeidIArbeidsland ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
     oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, landKode.kode, verdi));
 
     /* Ved valg av marginale land(skal ikke ha SED), reinitialize former med mottakerinstitusjoner,
@@ -53,7 +54,7 @@ export const LandLinje = props => {
       <Mui.Checkbox
         disabled={!redigerbart}
         checked={erMarginaltArbeidIArbeidsland === true}
-        value={BoolskAvklartfaktaType.SANN}
+        value={BOOLSK_STRING.SANN}
         onCheck={klikkHandler}
         label="ja"
         className="marginaltArbeidCheckbox"

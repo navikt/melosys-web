@@ -6,8 +6,8 @@ import * as Utils from '../../../../utils';
 
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../regler/avklartefakta';
 import VurderingArbeidsmonster from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArbeidsmonster';
-import { BoolskAvklartfaktaType } from '../../../../kodeverk/koder';
 import Yrkesaktivitet from './yrkesaktivitet';
+import { BOOLSK_STRING } from '../../../../constants';
 
 class Arbeidsmonster extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -130,7 +130,7 @@ class Arbeidsmonster extends Steg {
     const erArbeidMarginaltILand = landkode => (
       marginaltArbeid.some(ma => (
         ma.subjektID === landkode &&
-        hentFaktaVerdi(ma) === BoolskAvklartfaktaType.SANN
+        hentFaktaVerdi(ma) === BOOLSK_STRING.SANN
       ))
     );
     return arbeidsland.map(al => al.kode)
