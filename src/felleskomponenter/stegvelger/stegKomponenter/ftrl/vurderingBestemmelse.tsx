@@ -6,7 +6,6 @@ import { Action } from 'redux';
 
 import MKV from '../../../../melosyskodeverk';
 import * as Nav from '../../../../utils/navFrontend';
-import * as Utils from '../../../../utils';
 
 import { BOOLSK_STRING } from '../../../../constants';
 import { vilkarSelectors } from '../../../../ducks/vilkar';
@@ -14,6 +13,7 @@ import { lagBegrunnelse, lagVilkaar } from '../../../../regler/vilkar';
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
+import { termFraKTObject, termFraNestedKTObject } from '../../../../kodeverk';
 
 import './vurderingBestemmelse.css';
 
@@ -120,7 +120,7 @@ const VurderingBestemmelse =
       <Fragment>
         <Nav.Fieldset
           className="radio"
-          legend={<Fragment>{Utils.kodeterm.termFraKTObject(vilkaarKodeverk, vilkaar)}<Hjelpetekst /></Fragment>}>
+          legend={<Fragment>{termFraKTObject(vilkaarKodeverk, vilkaar)}<Hjelpetekst /></Fragment>}>
           <Nav.Row>
             <Nav.Column xs="1">
               <Nav.Radio
@@ -161,7 +161,7 @@ const VurderingBestemmelse =
                 value={valgteBegrunnelser.get(`${vilkaar}`)}
               >
                 <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}`)}>Velg</option>
-                {muligeBegrunnelser.map(begrunnelse => <option key={begrunnelse} value={begrunnelse}>{Utils.kodeterm.termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}</option>)}
+                {muligeBegrunnelser.map(begrunnelse => <option key={begrunnelse} value={begrunnelse}>{termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}</option>)}
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
@@ -185,7 +185,7 @@ const VurderingBestemmelse =
                 <option disabled={!!valgtBestemmelse} value="" key="">Velg</option>
                 {bestemmelseVilkår.map(bestemmelseMedVilkår =>
                   <option key={bestemmelseMedVilkår.bestemmelse} value={bestemmelseMedVilkår.bestemmelse}>
-                    {Utils.kodeterm.termFraKTObject(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkår.bestemmelse)}
+                    {termFraKTObject(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkår.bestemmelse)}
                   </option>)}
               </Nav.Select>
             </Nav.Column>

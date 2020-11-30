@@ -11,7 +11,6 @@ import * as testhelpers from './testhelpers';
 import * as mapping from './mapping';
 import * as person from './person';
 import * as land from './land';
-import * as kodeterm from './kodeterm';
 
 import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
@@ -27,7 +26,6 @@ export {
   mapping,
   person,
   land,
-  kodeterm,
   capitalize as _capitalize,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
