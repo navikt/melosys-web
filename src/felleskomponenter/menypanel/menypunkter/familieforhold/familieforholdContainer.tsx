@@ -3,7 +3,7 @@ import React from 'react';
 import * as Nav from '../../../../utils/navFrontend';
 import * as KV from '../../../../kodeverk';
 
-import Familieforhold from './familieforhold';
+import Familiemedlemmer from './familiemedlemmer';
 
 const FamilieforholdContainer = () => (
   <Nav.Container fluid>
@@ -14,7 +14,7 @@ const FamilieforholdContainer = () => (
     </Nav.Row>
     <Nav.Row>
       <Nav.Column xs="12">
-        <Familieforhold />
+        <Familiemedlemmer />
       </Nav.Column>
     </Nav.Row>
   </Nav.Container>

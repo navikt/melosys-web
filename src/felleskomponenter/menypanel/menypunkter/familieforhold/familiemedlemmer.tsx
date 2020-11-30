@@ -16,14 +16,14 @@ import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import ExpandableList from '../../../expandablelist';
 
-import './familieforhold.css';
+import './familiemedlemmer.css';
 
-interface FamilieforholdEnkeltProps {
+interface FamiliemedlemmerEnkeltProps {
   familiemedlem: Familiemedlem,
   erBarn: boolean,
 }
 
-export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEnkeltProps) {
+export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: FamiliemedlemmerEnkeltProps) {
   const {
     sammensattNavn,
     fnr,
@@ -42,7 +42,7 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
   const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar className="ikon__under18Aar" />) : null);
 
   return (
-    <div className="familieforhold__enkelt" aria-label="Enkelt familiemedlem">
+    <div className="familiemedlemmer__enkelt" aria-label="Enkelt familiemedlem">
       <Nav.Row>
         <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
@@ -62,21 +62,21 @@ export function FamilieforholdEnkelt({ familiemedlem, erBarn }: FamilieforholdEn
   );
 }
 
-interface FamilieforholdGruppeProps {
+interface FamiliemedlemmerGruppeProps {
   familiemedlemmer: Familiemedlem[],
   overskrift: string,
   kolonneHeadinger: string[],
   erBarn: boolean,
 }
 
-export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
+export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
   const {
     familiemedlemmer, overskrift = '', kolonneHeadinger, erBarn,
   } = props;
 
   return (
     <div>
-      <Nav.typo.Undertittel className="familieforhold__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel className="familiemedlemmer__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
       { familiemedlemmer.length === 0 && '(ingen data funnet)' }
       { familiemedlemmer.length !== 0 &&
       <Nav.Row>
@@ -87,10 +87,10 @@ export function FamilieforholdGruppe(props: FamilieforholdGruppeProps) {
         <Nav.Column xs="3">{kolonneHeadinger[4]}</Nav.Column>
       </Nav.Row>
       }
-      <section className="familieforholdgruppe__liste">
+      <section className="familiemedlemmergruppe__liste">
         <ExpandableList
           elements={familiemedlemmer}
-          renderElement={familiemedlem => <FamilieforholdEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
+          renderElement={familiemedlem => <FamiliemedlemmerEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
           idFromElement={familiemedlem => familiemedlem.fnr}
           amountOfItemsCollapsed={2}
           btnTextCollapsed="Vis flere"
@@ -115,7 +115,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const Familieforhold = ({
+const Familiemedlemmer = ({
   behandlingID,
   familiemedlemmer,
   oppdaterBehandling,
@@ -139,22 +139,22 @@ const Familieforhold = ({
     .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode !== 'BARN') || [];
 
   return (
-    <div className="familieforhold">
+    <div className="familiemedlemmer">
       <Etiketter.FraRegister style={{ float: 'right' }} />
       { feilmelding &&
         <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding}</Nav.AlertStripe>}
       { familiemedlemmer.length === 0 &&
-        <div className="familieforhold__gruppeoverskrift">
+        <div className="familiemedlemmer__gruppeoverskrift">
           <Mui.Knappelenke ikon={Ikoner.HentOpplysninger} onClick={oppfrisk}>Hent opplysninger</Mui.Knappelenke>
         </div>}
       { familiemedlemmer.length !== 0 &&
-      <FamilieforholdGruppe
+      <FamiliemedlemmerGruppe
         familiemedlemmer={barn}
         overskrift="Barn"
         kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Bor med bruker', 'F.nr annen forelder', '']}
         erBarn />}
       { familiemedlemmer.length !== 0 &&
-      <FamilieforholdGruppe
+      <FamiliemedlemmerGruppe
         familiemedlemmer={ektefellePartnerSamboer}
         overskrift="Ektefelle/partner/samboer"
         kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Fra og med', 'Bor med bruker', 'Relasjon']}
@@ -163,4 +163,4 @@ const Familieforhold = ({
   );
 };
 
-export default connector(Familieforhold);
+export default connector(Familiemedlemmer);
