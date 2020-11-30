@@ -7,7 +7,9 @@ export const PENDING = 'folketrygdenkodeverk/PENDING';
 export interface Data {
   Trygdedekninger?: KTObject[]
   Vilkaar?: KTObject[]
-  begrunnelser?: object
+  begrunnelser?: {
+    [key: string]: KTObject[]
+  }
 }
 
 interface FeiletAction {
