@@ -17,7 +17,7 @@ export type Medlemskapsperiode = {
   id: number,
   arbeidsland: string,
   fomDato: string,
-  tomDatp: string,
+  tomDato: string,
   bestemmelse: string,
   innvilgelsesResultat: string,
   trygdedekning: string,
@@ -26,7 +26,7 @@ export type Medlemskapsperiode = {
 
 export type OppdaterMedlemskapsperiode = {
   fomDato: string,
-  tomDatp: string,
+  tomDato: string,
   innvilgelsesResultat: string,
   trygdedekning: string,
 }
