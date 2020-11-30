@@ -42,7 +42,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
   const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar className="ikon__under18Aar" />) : null);
 
   return (
-    <div className="familiemedlemmer__enkelt" aria-label="Enkelt familiemedlem">
+    <div aria-label="Enkelt familiemedlem">
       <Nav.Row>
         <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
@@ -87,7 +87,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
         <Nav.Column xs="3">{kolonneHeadinger[4]}</Nav.Column>
       </Nav.Row>
       }
-      <section className="familiemedlemmergruppe__liste">
+      <section>
         <ExpandableList
           elements={familiemedlemmer}
           renderElement={familiemedlem => <FamiliemedlemmerEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
