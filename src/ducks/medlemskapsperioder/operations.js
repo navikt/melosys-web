@@ -14,7 +14,7 @@ export function hentMedlemskapsperioder(behandlingID) {
   });
 }
 
-export function opprettMedlemskapsperiode(behandlingID, bestemmelse) {
+function opprettMedlemskapsperiode(behandlingID, bestemmelse) {
   return doThenDispatch(() => Api.Medlemskapsperioder.opprettMedlemskapsperioderFraBestemmelse(behandlingID, bestemmelse), {
     OK: Types.OK,
     FEILET: Types.FEILET,
