@@ -1,6 +1,5 @@
 import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 
-import * as OrganisasjonValidering from '../../../skjema/validering/generisk/organisasjon';
 import * as Api from '../../../../services/api';
 import * as Utils from '../../../../utils';
 
@@ -16,7 +15,7 @@ const useKontaktopplysninger = (saksnummer: string, orgnr: string): [
   const [kontaktopplysninger, setKontaktopplysninger] = useState<KontaktOpplysning>({ kontaktorgnr: '', kontaktnavn: '' });
 
   useEffect(() => {
-    if (!OrganisasjonValidering.erOrgnrGyldig(orgnr)) return;
+    if (!Utils.organisasjon.erOrgnrGyldig(orgnr)) return;
 
     finnKontaktopplysninger(saksnummer, orgnr)
       .then(({ kontaktnavn, kontaktorgnr }) => {
@@ -36,7 +35,7 @@ const useKontaktopplysninger = (saksnummer: string, orgnr: string): [
   };
 
   const lagreKontaktOpplysninger = async () => {
-    if (kontaktopplysninger.kontaktorgnr && !OrganisasjonValidering.erOrgnrGyldig(kontaktopplysninger.kontaktorgnr)) return false;
+    if (kontaktopplysninger.kontaktorgnr && !Utils.organisasjon.erOrgnrGyldig(kontaktopplysninger.kontaktorgnr)) return false;
 
     const data = {
       kontaktorgnr: kontaktopplysninger.kontaktorgnr || null,

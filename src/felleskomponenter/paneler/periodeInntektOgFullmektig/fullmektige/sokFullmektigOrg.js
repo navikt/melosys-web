@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import PT from 'prop-types';
 
+import * as Utils from '../../../../utils';
 import * as Nav from '../../../../utils/navFrontend';
-
-import { erOrgnrGyldig } from '../../../skjema/validering/generisk/organisasjon';
 
 import './sokFullmektigOrg.css';
 
@@ -13,7 +12,7 @@ function SokFullmektigOrg(props) {
   const [feilmelding, settFeilmelding] = useState(undefined);
 
   const sok = async () => {
-    if (erOrgnrGyldig(orgnr)) {
+    if (Utils.organisasjon.erOrgnrGyldig(orgnr)) {
       try {
         await hentOrg(orgnr);
         lagreNyFullmektigOgOppdaterLokalt(orgnr);
