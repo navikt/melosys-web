@@ -1,7 +1,6 @@
 import { addMethod, object, string } from 'yup';
 
 import * as Utils from './utils';
-import * as Organisasjon from './felleskomponenter/skjema/validering/generisk/organisasjon';
 
 import MKV from './melosyskodeverk';
 
@@ -95,13 +94,13 @@ addMethod(string, 'erFnrEllerDnr', function(message) {
 
 addMethod(string, 'erFnrEllerDnrEllerOrgnr', function(message) {
   return this.test('er et Fnr, Dnr eller Orgnr', message, function(value) {
-    return Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value) || Organisasjon.erOrgnrLengde(value);
+    return Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value) || Utils.organisasjon.erOrgnrLengde(value);
   });
 });
 
 addMethod(string, 'erOrgnr', function(message) {
   return this.test('er orgnr', message, function(value) {
-    return Organisasjon.erOrgnrGyldig(value);
+    return Utils.organisasjon.erOrgnrGyldig(value);
   });
 });
 
@@ -109,7 +108,7 @@ addMethod(string, 'harIkkeOrgnrLengde', function(message) {
   return this.test('er orgnrlengde', message, function(value) {
     const { path, createError } = this;
 
-    if (Organisasjon.erOrgnrLengde(value)) {
+    if (Utils.organisasjon.erOrgnrLengde(value)) {
       throw createError({
         path,
         message,

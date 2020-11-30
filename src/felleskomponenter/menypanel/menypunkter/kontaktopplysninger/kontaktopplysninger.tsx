@@ -8,7 +8,6 @@ import * as Api from '../../../../services/api';
 import * as Types from './types';
 
 import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
-import { erOrgnrGyldig } from '../../../skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
 
@@ -58,7 +57,7 @@ export const KontaktOpplysninger = ({
   };
 
   const validerOrgnr = (kontaktorgnr: string) => {
-    if (!erOrgnrGyldig(kontaktorgnr)) {
+    if (!Utils.organisasjon.erOrgnrGyldig(kontaktorgnr)) {
       setOrgnrFeilmelding({ feilmelding: 'Ugyldig orgnr' });
       return false;
     }

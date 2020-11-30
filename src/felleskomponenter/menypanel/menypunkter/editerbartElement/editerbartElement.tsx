@@ -25,6 +25,7 @@ interface EditerbartElementProps {
   understrek?: boolean,
   harData: boolean,
   visLagreKnappBareHvisHarData?: boolean,
+  visLagreKnapp?: boolean,
   className?: string,
   hentNyStatusVedHarData?: boolean,
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>,
@@ -42,6 +43,7 @@ const EditerbartElement = ({
   understrek,
   harData,
   visLagreKnappBareHvisHarData = false,
+  visLagreKnapp,
   className,
   hentNyStatusVedHarData = false,
   onLagreClick,
@@ -99,7 +101,9 @@ const EditerbartElement = ({
     return <></>;
   };
 
-  const visLagreKnapp = status === Status.Redigerer && (visLagreKnappBareHvisHarData ? harData : true);
+  const skalRendreLagreKnapp = status === Status.Redigerer
+    && (visLagreKnappBareHvisHarData ? harData : true)
+    && (visLagreKnapp !== undefined ? visLagreKnapp : true);
 
   const lagreClickHandler: MouseEventHandler<HTMLButtonElement> = async e => {
     e.persist();
@@ -122,7 +126,7 @@ const EditerbartElement = ({
         {hentAktivtInnhold()}
       </Nav.Fieldset>
       {
-        visLagreKnapp &&
+        skalRendreLagreKnapp &&
         <Mui.Knapp
           onClick={lagreClickHandler}
           capitalCase

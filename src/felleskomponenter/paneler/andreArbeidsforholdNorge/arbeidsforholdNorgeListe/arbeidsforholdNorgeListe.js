@@ -9,7 +9,6 @@ import * as MPT from '../../../../proptypes';
 
 import Orgnrinput from './orgnrinput';
 import Organisasjon from '../../arbeidsgiver/organisasjon';
-import * as OrganisasjonValidering from '../../../skjema/validering/generisk/organisasjon';
 
 import './arbeidsforholdNorgeListe.css';
 
@@ -105,7 +104,7 @@ export const InnerArbeidsforholdNorgeListe = ({
           const key = !Utils._isEmpty(organisasjon) ? organisasjon.orgnr : Utils._uuid();
           const valideringer = [
             {
-              validering: orgnr => !OrganisasjonValidering.erOrgnrGyldig(orgnr),
+              validering: orgnr => !Utils.organisasjon.erOrgnrGyldig(orgnr),
               feilmelding: 'Ugyldig org.nr.',
             },
             {
