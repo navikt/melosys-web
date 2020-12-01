@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Skjema from '../../../../skjema';
+import * as Utils from '../../../../../utils';
+import * as Api from '../../../../../services/api';
 import * as Symboler from '../../symboler';
 
 import { EnRedigeringsknappListeRedigerer } from '../../editerbartElementListe';
@@ -13,31 +15,48 @@ const Redigerer = ({
   redigerbart,
   overordnetFeltNavn,
   slett,
-}: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeBarn>) => (
-  <Nav.Row className="medfolgende-barn__redigerer">
-    <Nav.Column xs="5">
-      <Skjema.Input
-        label="Fullt navn"
-        feltNavn={`${overordnetFeltNavn}.navn`}
-        disabled={!redigerbart}
-        bredde="fullbredde"
-        datoFelt={false}
+  settVerdi,
+}: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeBarn>) => {
+  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async event => {
+    const idNummer = event.target.value;
+
+    if (Utils.person.erGyldigFnr(idNummer) || Utils.person.erGyldigDnr(idNummer)) {
+      try {
+        const person = await Api.Personer.hentPerson(idNummer);
+        settVerdi('navn', person.sammensattNavn);
+      } catch (e) {
+        if (e.status !== 404) Utils.logger.error(e);
+      }
+    }
+  };
+
+  return (
+    <Nav.Row className="medfolgende-barn__redigerer">
+      <Nav.Column xs="5">
+        <Skjema.Input
+          label="Fullt navn"
+          feltNavn={`${overordnetFeltNavn}.navn`}
+          disabled={!redigerbart}
+          bredde="fullbredde"
+          datoFelt={false}
+        />
+      </Nav.Column>
+      <Nav.Column xs="5">
+        <Skjema.Input
+          label="F.nr./d-nr."
+          feltNavn={`${overordnetFeltNavn}.fnr`}
+          disabled={!redigerbart}
+          bredde="fullbredde"
+          datoFelt={false}
+          onChange={idNummerChangeHandler}
+        />
+      </Nav.Column>
+      <Symboler.Slett
+        onClick={slett}
+        className="slett-symbol"
       />
-    </Nav.Column>
-    <Nav.Column xs="5">
-      <Skjema.Input
-        label="F.nr./d-nr."
-        feltNavn={`${overordnetFeltNavn}.fnr`}
-        disabled={!redigerbart}
-        bredde="fullbredde"
-        datoFelt={false}
-      />
-    </Nav.Column>
-    <Symboler.Slett
-      onClick={slett}
-      className="slett-symbol"
-    />
-  </Nav.Row>
-);
+    </Nav.Row>
+  );
+};
 
 export default Redigerer;
