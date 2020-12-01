@@ -19,7 +19,7 @@ class Bestemmelse extends Steg {
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
       vilkar: _propsLight.vilkar,
-      bestemmelseVilkår: _propsLight.bestemmelser,
+      bestemmelseVilkar: _propsLight.bestemmelser,
     });
     this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
@@ -32,12 +32,12 @@ class Bestemmelse extends Steg {
     this.status = FANE_STATUS.OK;
   }
   finnAvklaring = (bestemmelser, medlemskapsperioder, vilkar) => {
-    const valgteBestemmelseVilkår = bestemmelser && bestemmelser.find(bestemmelseVilkår => bestemmelseVilkår.bestemmelse === medlemskapsperioder.bestemmelse);
-    const erAlleVilkårUtfyltOgBegrunnelseValgt = valgteBestemmelseVilkår && valgteBestemmelseVilkår.vilkårOgBegrunnelser.filter(vilkårOgBegrunnelse =>
-      vilkar.find(lagretVilkar => (lagretVilkar.oppfylt && lagretVilkar.vilkaar === vilkårOgBegrunnelse.vilkaar)
-        && (vilkårOgBegrunnelse.muligeBegrunnelser.length > 0 ? (lagretVilkar.begrunnelseKoder.length > 0) : true)))
-      .length === valgteBestemmelseVilkår.vilkårOgBegrunnelser.length;
-    return !!erAlleVilkårUtfyltOgBegrunnelseValgt;
+    const valgteBestemmelseVilkar = bestemmelser && bestemmelser.find(bestemmelseVilkar => bestemmelseVilkar.bestemmelse === medlemskapsperioder.bestemmelse);
+    const erAlleVilkarUtfyltOgBegrunnelseValgt = valgteBestemmelseVilkar && valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(vilkarOgBegrunnelse =>
+      vilkar.find(lagretVilkar => (lagretVilkar.oppfylt && lagretVilkar.vilkaar === vilkarOgBegrunnelse.vilkaar)
+        && (vilkarOgBegrunnelse.muligeBegrunnelser.length > 0 ? (lagretVilkar.begrunnelseKoder.length > 0) : true)))
+      .length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
+    return !!erAlleVilkarUtfyltOgBegrunnelseValgt;
   }
 }
 export default Bestemmelse;
