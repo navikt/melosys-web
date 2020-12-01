@@ -30,6 +30,7 @@ import { ReactComponent as Mann } from './ikon-mann.svg';
 import { ReactComponent as Medlemskap } from './ikon-medlemsskap.svg';
 import { ReactComponent as Minus } from './minus.svg';
 import { ReactComponent as PaperPlane } from './paperplane.svg';
+import { ReactComponent as ParentAndKid } from './parent-and-kid.svg';
 import { ReactComponent as Pencil } from './pencil-2.svg';
 import { ReactComponent as ParagraphTwoColumns } from './line-version-paragraph-two-columns.svg';
 import { ReactComponent as RemoveOne } from './filled-version-remove-1.svg';
@@ -77,6 +78,7 @@ export {
   Medlemskap,
   Minus,
   PaperPlane,
+  ParentAndKid,
   Pencil,
   ParagraphTwoColumns,
   RemoveOne,
