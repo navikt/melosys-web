@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Familiemedlem } from 'Domene';
 import { RootState } from 'AppTypes';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 import * as Api from '../../../../services/api';
 import * as Etiketter from '../etiketter';
@@ -16,6 +15,7 @@ import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import ExpandableList from '../../../expandablelist';
+import KopierbarTekst from '../kopierbarTekst';
 
 import './familiemedlemmer.css';
 
@@ -35,11 +35,6 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
     fnrAnnenForelder,
   } = familiemedlem;
 
-  const [erKopiert, setErKopiert] = useState(false);
-  useEffect(() => {
-    setTimeout(() => setErKopiert(false), 50);
-  }, [erKopiert]);
-
   const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar className="ikon__under18Aar" />) : null);
 
   return (
@@ -47,13 +42,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
       <Nav.Row>
         <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
-          <span className={erKopiert ? 'fnr__kopiert' : 'fnr'}>
-            <CopyToClipboard
-              text={fnr}
-              onCopy={() => setErKopiert(true)}>
-              <span>{fnr}<Ikoner.Kopier className="ikon__kopier" /></span>
-            </CopyToClipboard>
-          </span>
+          <KopierbarTekst>{fnr}</KopierbarTekst>
         </Nav.Column>
         <Nav.Column xs="2">{erBarn ? Utils.streng.boolTilNorsk(borMedBruker) : sivilstandGyldighetsperiodeFom}</Nav.Column>
         <Nav.Column xs="2">{erBarn ? fnrAnnenForelder : Utils.streng.boolTilNorsk(borMedBruker)}</Nav.Column>

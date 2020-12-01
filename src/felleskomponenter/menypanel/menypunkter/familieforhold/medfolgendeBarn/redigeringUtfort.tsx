@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import * as KV from '../../../../../kodeverk';
 
 import { EnRedigeringsknappListeRedigeringUtfort } from '../../editerbartElementListe';
+import KopierbarTekst from '../../kopierbarTekst';
 
 import './redigeringUtfort.css';
 
@@ -25,7 +26,12 @@ const RedigeringUtfort = ({
           /* eslint-disable-next-line react/no-array-index-key */
           <tr key={index}>
             <td>{element.navn}</td>
-            <td>{element.fnr}</td>
+            <td>
+              {
+                element.fnr &&
+                <KopierbarTekst>{element.fnr.toString()}</KopierbarTekst>
+              }
+            </td>
           </tr>
         ))
       }
