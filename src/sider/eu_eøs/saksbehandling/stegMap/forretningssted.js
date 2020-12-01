@@ -6,6 +6,7 @@ import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../regler/av
 import * as KV from '../../../../kodeverk';
 import * as Utils from '../../../../utils';
 import { hentLovvalgsbestemmelse } from '../../../../regler/lovvalgsbestemmelser';
+import { BOOLSK_STRING } from '../../../../constants';
 
 class Forretningssted extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -13,7 +14,7 @@ class Forretningssted extends Steg {
     const perioder = propsLight.omfattesIAnnetLand ? propsLight.utpekingsperioder : propsLight.lovvalgsperioder;
     const harLovvalgsbestemmelse = this.harLovvalgsbestemmelse(perioder);
     const harAvklartForretningsland = this.harAvklartForretningsland(propsLight);
-    const erOmfattetINorge = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) === KV.Koder.BoolskAvklartfaktaType.SANN;
+    const erOmfattetINorge = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) === BOOLSK_STRING.SANN;
     const erOmfattetNorgeVurdert = this.omfattetNorgeVurdert(propsLight);
 
     const omfattetILandFakta = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
@@ -76,7 +77,7 @@ class Forretningssted extends Steg {
       return false;
     }
 
-    if (sokerOmfattetINorge === KV.Koder.BoolskAvklartfaktaType.SANN) {
+    if (sokerOmfattetINorge === BOOLSK_STRING.SANN) {
       return true;
     }
 

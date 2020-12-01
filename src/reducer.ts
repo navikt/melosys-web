@@ -18,6 +18,7 @@ import feiletResponseReducer from './ducks/feiletrespons';
 import folketrygdenkodeverkReducer from './ducks/folketrygdenkodeverk';
 import journalforingReducer from './ducks/journalforing';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
+import medlemskapsperioderReducer from './ducks/medlemskapsperioder';
 import modalerReducer from './ducks/modaler';
 import oppgaverReducer from './ducks/oppgaver';
 import oppsummertfaktaReducer from './ducks/oppsummertfakta';
@@ -53,6 +54,7 @@ const createRootReducer = (history: History) => combineReducers({
   folketrygdenkodeverk: folketrygdenkodeverkReducer,
   journalforing: journalforingReducer,
   lovvalgsperioder: lovvalgsperioderReducer,
+  medlemskapsperioder: medlemskapsperioderReducer,
   modaler: modalerReducer,
   oppgaver: oppgaverReducer,
   oppsummertfakta: oppsummertfaktaReducer,

@@ -2,6 +2,7 @@ import * as selectors from './selectors';
 import * as KV from '../../kodeverk';
 
 import MKV from '../../melosyskodeverk';
+import { BOOLSK_STRING } from '../../constants';
 
 describe('Avklartefaktaselectors', () => {
   const lagState = ({
@@ -134,7 +135,7 @@ describe('Avklartefaktaselectors', () => {
     const lagSoknadslandFakta = land => ({
       referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
       subjektID: land,
-      fakta: [KV.Koder.BoolskAvklartfaktaType.SANN],
+      fakta: [BOOLSK_STRING.SANN],
     });
 
     each([

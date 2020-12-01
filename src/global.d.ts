@@ -17,7 +17,7 @@ declare module 'Domene' {
   export type AnmodningOmUnntakBestilling = import('./@types').AnmodningOmUnntakBestilling;
   export type Fagsak = import('./@types').Fagsak;
   export type GeneriskAdresse = import('./@types').GeneriskAdresse;
-  export type MedlemskapsPeriode = import('./@types').MedlemskapPeriode;
+  export type MedlPeriode = import('./@types').MedlPeriode;
   export type Oppsummering = import('./@types').Oppsummering;
   export type Periode = import('./@types').Periode;
   export type Person = import('./@types').Person;
@@ -31,6 +31,8 @@ declare module 'Domene' {
   export type Mottaksretning = import('./@types').Mottaksretning;
   export type BrevPdfData = import('./@types').BrevPdfData;
   export type SedPdfData = import('./@types').SedPdfData;
+  export type Medlemskapsperiode = import('./@types').Medlemskapsperiode;
+  export type OppdaterMedlemskapsperiode = import('./@types').OppdaterMedlemskapsperiode
   export type Familiemedlem = import('./@types').Familiemedlem;
 }
 

@@ -31,13 +31,15 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 import { videresendingOperations } from '../../ducks/videresending';
+import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
+import { medlemskapsperioderSelectors } from '../../ducks/medlemskapsperioder';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 import { StegStoreTyper } from '../../regler';
 
 import './stegvelger.css';
-import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
+
 
 class Stegvelger extends Component {
   state = {
@@ -419,6 +421,8 @@ class Stegvelger extends Component {
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
       behandlingsgrunnlag: props.behandlingsgrunnlag,
       lagredeVirksomheter: props.lagredeVirksomheter,
+      bestemmelser: props.bestemmelser,
+      medlemskapsperioder: props.medlemskapsperioder,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -517,6 +521,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
   behandlingID: PT.number.isRequired,
+  bestemmelser: PT.array,
   arbeidsgivereIPerioden: PT.array,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   arbeidslandMedYrkesaktivitet: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
@@ -590,12 +595,14 @@ Stegvelger.propTypes = {
   behandlingsgrunnlag: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagredeVirksomheter: PT.array.isRequired,
+  medlemskapsperioder: PT.object.isRequired,
 };
 
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   bostedsland: null,
+  bestemmelser: [],
   oppsummering: {},
   valgteVirksomheter: [],
   valgteVirksomheterIkkeNaeringsDrivende: [],
@@ -657,6 +664,7 @@ const mapStateToProps = state => ({
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
+  medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
 });
 
 /* eslint no-alert:off */

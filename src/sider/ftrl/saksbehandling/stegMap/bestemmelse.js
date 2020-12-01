@@ -5,7 +5,8 @@ import VurderingBestemmelse from '../../../../felleskomponenter/stegvelger/stegK
 class Bestemmelse extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = false;
+    const { bestemmelser, medlemskapsperioder, vilkar } = propsLight;
+    const harAvklaring = this.finnAvklaring(bestemmelser, medlemskapsperioder, vilkar);
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -15,12 +16,28 @@ class Bestemmelse extends Steg {
     this.id = STEG.BESTEMMELSE;
     this.tittel = 'Bestemmelse';
     this.komponent = VurderingBestemmelse;
-    this.samleRelevanteData = _propsLight => ({});
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+      vilkar: _propsLight.vilkar,
+      bestemmelseVilkar: _propsLight.bestemmelser,
+    });
+    this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
+      lagreVilkar: propsLight.tilgjengeligeHandlers.lagreVilkar,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
     };
     this.status = FANE_STATUS.OK;
+  }
+  finnAvklaring = (bestemmelser, medlemskapsperioder, vilkar) => {
+    const valgteBestemmelseVilkar = bestemmelser && bestemmelser.find(bestemmelseVilkar => bestemmelseVilkar.bestemmelse === medlemskapsperioder.bestemmelse);
+    const erAlleVilkarUtfyltOgBegrunnelseValgt = valgteBestemmelseVilkar && valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(vilkarOgBegrunnelse =>
+      vilkar.find(lagretVilkar => (lagretVilkar.oppfylt && lagretVilkar.vilkaar === vilkarOgBegrunnelse.vilkaar)
+        && (vilkarOgBegrunnelse.muligeBegrunnelser.length > 0 ? (lagretVilkar.begrunnelseKoder.length > 0) : true)))
+      .length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
+    return !!erAlleVilkarUtfyltOgBegrunnelseValgt;
   }
 }
 export default Bestemmelse;

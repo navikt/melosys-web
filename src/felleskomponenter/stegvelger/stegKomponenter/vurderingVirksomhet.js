@@ -7,6 +7,7 @@ import * as MPT from '../../../proptypes';
 
 import { konverterTilStegData, lagAvklartfakta, slettAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
+import { BOOLSK_STRING } from '../../../constants';
 
 import './vurderingArbeidsgiver.css';
 
@@ -29,10 +30,10 @@ const VirksomheterLinje = props => {
     return cleanup;
   }, []);
 
-  const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN);
+  const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes(BOOLSK_STRING.SANN);
 
   const virksomhetKlikkHandler = () => {
-    const verdi = virksomhetErValgt ? KV.Koder.BoolskAvklartfaktaType.USANN : KV.Koder.BoolskAvklartfaktaType.SANN;
+    const verdi = virksomhetErValgt ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.virksomhetId, verdi));
   };
 

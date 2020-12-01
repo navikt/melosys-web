@@ -3,6 +3,7 @@ import React from 'react';
 import * as KV from '../../../kodeverk';
 import * as Mui from '../../../felleskomponenter/ui';
 
+import { BOOLSK_STRING } from '../../../constants';
 import MKV from '../../../melosyskodeverk';
 import { lagAvklartfakta } from '../../../regler/avklartefakta';
 
@@ -61,7 +62,7 @@ describe('LandLinje', () => {
       expect(props.oppdaterData).toHaveBeenLastCalledWith(lagAvklartfakta(
         MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID,
         MKV.Koder.landkoder.DE,
-        KV.Koder.BoolskAvklartfaktaType.USANN
+        BOOLSK_STRING.USANN
       ));
     });
 

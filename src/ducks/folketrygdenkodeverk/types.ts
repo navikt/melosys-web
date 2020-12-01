@@ -5,7 +5,11 @@ export const FEILET = 'folketrygdenkodeverk/FEILET';
 export const PENDING = 'folketrygdenkodeverk/PENDING';
 
 export interface Data {
-  trygdedekninger?: KTObject[]
+  Trygdedekninger?: KTObject[]
+  Vilkaar?: KTObject[]
+  begrunnelser?: {
+    [key: string]: KTObject[]
+  }
 }
 
 interface FeiletAction {

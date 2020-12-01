@@ -1,7 +1,7 @@
 import { KTObject } from '@navikt/melosys-kodeverk';
 import { Periode } from './periode';
 
-export type MedlemskapPeriode = {
+export type MedlPeriode = {
   periodeID: number,
   periode: Periode,
   type: KTObject,

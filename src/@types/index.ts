@@ -21,8 +21,10 @@ export type {
 export type {
   Periode,
   Lovvalgsperiode,
+  Medlemskapsperiode,
+  OppdaterMedlemskapsperiode,
 } from './periode';
 export type { default as PersonHistorikk } from './personhistorikk';
 export type { default as Organisasjon } from './organisasjon';
-export type { MedlemskapPeriode } from './medlemskap';
+export type { MedlPeriode } from './medlemskap';
 export type { default as Aktoer } from './aktoer';
