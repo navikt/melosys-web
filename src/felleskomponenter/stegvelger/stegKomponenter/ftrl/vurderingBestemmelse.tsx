@@ -35,19 +35,19 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface VilkårOgBegrunnelser {
+interface VilkarOgBegrunnelser {
   vilkaar: string,
   muligeBegrunnelser: string[]
 }
 
-interface BestemmelsesVilkår {
+interface BestemmelsesVilkar {
   bestemmelse: string,
-  vilkårOgBegrunnelser: VilkårOgBegrunnelser[],
+  vilkårOgBegrunnelser: VilkarOgBegrunnelser[],
 }
 
 interface Props {
   bekreft: () => void,
-  bestemmelseVilkår: BestemmelsesVilkår[],
+  bestemmelseVilkar: BestemmelsesVilkar[],
   oppdater: () => void,
   tilbake: () => void,
   redigerbart: boolean,
@@ -59,7 +59,7 @@ interface Props {
 const VurderingBestemmelse =
   ({
     bekreft,
-    bestemmelseVilkår,
+    bestemmelseVilkar,
     tilbake,
     redigerbart,
     oppdaterData,
@@ -71,7 +71,7 @@ const VurderingBestemmelse =
   } : Props & PropsFromRedux) => {
     const [valgtBestemmelse, setValgtBestemmelse] = useState('');
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
-    const [valgteVilkår, setValgteVilkår] = useState(new Map());
+    const [valgteVilkar, setValgteVilkar] = useState(new Map());
     const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
 
     const hjelpetekst = 'Her kommer det hjelpetekster for å hjelpe saksbehandler';
@@ -79,14 +79,14 @@ const VurderingBestemmelse =
 
 
     useEffect(() => {
-      const valgteBestemmelseVilkår = bestemmelseVilkår.find(element => element.bestemmelse === valgtBestemmelse);
-      const alleVilkårHarSvarJaOgvalgtBegrunnelse = valgteBestemmelseVilkår && valgteBestemmelseVilkår.vilkårOgBegrunnelser.filter(vilkår =>
-        (valgteVilkår.get(vilkår.vilkaar) === BOOLSK_STRING.SANN) &&
-        (vilkår.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(vilkår.vilkaar) : true))
-        .length === valgteBestemmelseVilkår.vilkårOgBegrunnelser.length;
+      const valgteBestemmelseVilkar = bestemmelseVilkar.find(element => element.bestemmelse === valgtBestemmelse);
+      const alleVilkarHarSvarJaOgvalgtBegrunnelse = valgteBestemmelseVilkar && valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(vilkar =>
+        (valgteVilkar.get(vilkar.vilkaar) === BOOLSK_STRING.SANN) &&
+        (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(vilkar.vilkaar) : true))
+        .length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
 
-      setErAlleValgGjort(!!alleVilkårHarSvarJaOgvalgtBegrunnelse);
-    }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkår]);
+      setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
+    }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
     const handleBefreft = () => {
       opprettMedlemskapsperiodeFraBestemmelse();
@@ -99,8 +99,8 @@ const VurderingBestemmelse =
       oppdater();
     };
 
-    const handleEndreVilkår: ChangeEventHandler<HTMLInputElement> = event => {
-      setValgteVilkår(new Map(valgteVilkår.set(event.target.name, event.target.value)));
+    const handleEndreVilkar: ChangeEventHandler<HTMLInputElement> = event => {
+      setValgteVilkar(new Map(valgteVilkar.set(event.target.name, event.target.value)));
       oppdaterData(lagVilkaar(event.target.name, event.target.value));
       if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
         valgteBegrunnelser.delete(event.target.name);
@@ -116,7 +116,7 @@ const VurderingBestemmelse =
 
     const Alert = () => <Nav.AlertStripe type="feil" className="alerstripe">Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.</Nav.AlertStripe>;
 
-    const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkårOgBegrunnelser) => (
+    const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkarOgBegrunnelser) => (
       <Fragment>
         <Nav.Fieldset
           className="radio"
@@ -126,8 +126,8 @@ const VurderingBestemmelse =
               <Nav.Radio
                 label="Ja"
                 name={vilkaar}
-                onChange={handleEndreVilkår}
-                checked={valgteVilkår.get(`${vilkaar}`) === BOOLSK_STRING.SANN}
+                onChange={handleEndreVilkar}
+                checked={valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.SANN}
                 value={BOOLSK_STRING.SANN}
                 key={BOOLSK_STRING.SANN}
                 disabled={!redigerbart}
@@ -137,8 +137,8 @@ const VurderingBestemmelse =
               <Nav.Radio
                 label="Nei"
                 name={vilkaar}
-                onChange={handleEndreVilkår}
-                checked={valgteVilkår.get(`${vilkaar}`) === BOOLSK_STRING.USANN}
+                onChange={handleEndreVilkar}
+                checked={valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.USANN}
                 value={BOOLSK_STRING.USANN}
                 key={BOOLSK_STRING.USANN}
                 disabled={!redigerbart}
@@ -146,8 +146,8 @@ const VurderingBestemmelse =
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
-        { valgteVilkår.get(`${vilkaar}`) === BOOLSK_STRING.USANN && <Alert />}
-        { muligeBegrunnelser.length > 0 && valgteVilkår.get(`${vilkaar}`) === BOOLSK_STRING.SANN &&
+        { valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.USANN && <Alert />}
+        { muligeBegrunnelser.length > 0 && valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.SANN &&
         <Nav.Fieldset
           className="select"
           legend={<Fragment>Velg særlig grunn<Hjelpetekst /></Fragment>}>
@@ -183,18 +183,18 @@ const VurderingBestemmelse =
                 onChange={handleEndreBestemmelse}
               >
                 <option disabled={!!valgtBestemmelse} value="" key="">Velg</option>
-                {bestemmelseVilkår.map(bestemmelseMedVilkår =>
-                  <option key={bestemmelseMedVilkår.bestemmelse} value={bestemmelseMedVilkår.bestemmelse}>
-                    {finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkår.bestemmelse)}
+                {bestemmelseVilkar.map(bestemmelseMedVilkar =>
+                  <option key={bestemmelseMedVilkar.bestemmelse} value={bestemmelseMedVilkar.bestemmelse}>
+                    {finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkar.bestemmelse)}
                   </option>)}
               </Nav.Select>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
 
-        {bestemmelseVilkår
-          .filter(bestemmelseMedVilkår => bestemmelseMedVilkår.bestemmelse === valgtBestemmelse)
-          .map(bestemmelseMedVilkår => bestemmelseMedVilkår.vilkårOgBegrunnelser.map(vilkaarMedBegrunnelser =>
+        {bestemmelseVilkar
+          .filter(bestemmelseMedVilkar => bestemmelseMedVilkar.bestemmelse === valgtBestemmelse)
+          .map(bestemmelseMedVilkar => bestemmelseMedVilkar.vilkårOgBegrunnelser.map(vilkaarMedBegrunnelser =>
             <Vilkaar key={vilkaarMedBegrunnelser.vilkaar} vilkaar={vilkaarMedBegrunnelser.vilkaar} muligeBegrunnelser={vilkaarMedBegrunnelser.muligeBegrunnelser} />))}
 
         <div className="fane__knapplinje">
