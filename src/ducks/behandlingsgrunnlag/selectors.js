@@ -211,7 +211,7 @@ export const PersonOpplysningerSelector = createSelector(
 
 export const MedfolgendeFamilieSelector = createSelector(
   PersonOpplysningerSelector,
-  personopplysninger => personopplysninger.medfolgendeFamilie
+  personopplysninger => personopplysninger.medfolgendeFamilie || []
 );
 
 export const MedfolgendeBarnSelector = createSelector(
