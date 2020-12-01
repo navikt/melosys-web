@@ -113,7 +113,10 @@ export const Menypanel = ({
         {
           label: 'Familieforhold',
           active: false,
-          content: <Familieforhold />,
+          content: <Familieforhold
+            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+            redigerbart={redigerbart}
+          />,
         },
       ],
     },
