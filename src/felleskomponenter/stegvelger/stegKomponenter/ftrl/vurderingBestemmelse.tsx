@@ -13,7 +13,7 @@ import { lagBegrunnelse, lagVilkaar } from '../../../../regler/vilkar';
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
-import { termFraKTObject, termFraNestedKTObject } from '../../../../kodeverk';
+import { finnTermFraListe, termFraNestedKTObject } from '../../../../kodeverk';
 
 import './vurderingBestemmelse.css';
 
@@ -120,7 +120,7 @@ const VurderingBestemmelse =
       <Fragment>
         <Nav.Fieldset
           className="radio"
-          legend={<Fragment>{termFraKTObject(vilkaarKodeverk, vilkaar)}<Hjelpetekst /></Fragment>}>
+          legend={<Fragment>{finnTermFraListe(vilkaarKodeverk, vilkaar)}<Hjelpetekst /></Fragment>}>
           <Nav.Row>
             <Nav.Column xs="1">
               <Nav.Radio
@@ -185,7 +185,7 @@ const VurderingBestemmelse =
                 <option disabled={!!valgtBestemmelse} value="" key="">Velg</option>
                 {bestemmelseVilkår.map(bestemmelseMedVilkår =>
                   <option key={bestemmelseMedVilkår.bestemmelse} value={bestemmelseMedVilkår.bestemmelse}>
-                    {termFraKTObject(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkår.bestemmelse)}
+                    {finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, bestemmelseMedVilkår.bestemmelse)}
                   </option>)}
               </Nav.Select>
             </Nav.Column>
