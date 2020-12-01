@@ -5,13 +5,13 @@ import * as Nav from '../../../../../../utils/navFrontend';
 
 import { StrukturertAdresse } from '../../../../../adresser';
 
-import { RedigeringUtfort as RedigeringUtfortType } from '../types';
+import { EnRedigeringsknappListeRedigeringUtfort } from '../../../editerbartElementListe';
 
 import './redigeringUtfort.css';
 
 const RedigeringUtfort = ({
   verdier,
-}: RedigeringUtfortType<KV.Form.ArbeidsstedUtland>) => (
+}: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedUtland>) => (
   <div className="arbeidssted__utland__redigeringutfort">
     {
       verdier.map((element, index) => (

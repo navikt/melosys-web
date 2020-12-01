@@ -9,6 +9,23 @@ import EditerbartElement from '../editerbartElement';
 
 import './enRedigeringsknappListe.css';
 
+export interface Redigerer<T> {
+  redigerbart: boolean,
+  overordnetFeltNavn: string,
+  verdier: T,
+  settVerdi: (felt: string, verdi: any) => void,
+  slett: () => void,
+}
+
+export interface RedigeringUtfort<T> {
+  verdier: T[],
+}
+
+/**
+ * TODO: Typene over burde egentlig vært satt med ElementType<T>.
+ * Fikk dessverre ikke til å bruke types for fieldarray i editbartElementListe, så derfor ligger de her.
+ */
+
 interface EnRedigeringsKnappListeProps<T> {
   redigerbart: boolean,
   tittelIkon: ElementType,
