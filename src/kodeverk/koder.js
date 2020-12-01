@@ -152,3 +152,7 @@ export const Opplysningskilder = {
   AAREG_EREG: 'Aa-registeret og Enhetsregisteret',
   INNTEKT: 'Inntektskomponenten',
 };
+
+export const Relasjonsrolle = {
+  BARN: 'BARN',
+};

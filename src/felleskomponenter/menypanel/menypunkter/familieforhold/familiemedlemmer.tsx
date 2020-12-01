@@ -10,6 +10,7 @@ import * as Ikoner from '../../../../resources/images';
 import * as Mui from '../../../ui';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
+import * as KV from '../../../../kodeverk';
 
 import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
@@ -134,9 +135,9 @@ const Familiemedlemmer = ({
   };
 
   const barn = familiemedlemmer
-    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode === 'BARN') || [];
+    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN) || [];
   const ektefellePartnerSamboer = familiemedlemmer
-    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode !== 'BARN') || [];
+    .filter((familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode !== KV.Koder.Relasjonsrolle.BARN) || [];
 
   return (
     <div className="familiemedlemmer">
