@@ -22,8 +22,8 @@ export interface RedigeringUtfort<T> {
 }
 
 /**
- * TODO: Typene over burde egentlig vært satt med ElementType<T>.
- * Fikk dessverre ikke til å bruke types for fieldarray i editbartElementListe, så derfor ligger de her.
+ * Typene over burde egentlig kreves for komponent-props med ElementType<T>.
+ * Fikk dessverre ikke til å bruke typescript med fieldarray i editbartElementListe, så derfor ligger de her.
  */
 
 interface EnRedigeringsKnappListeProps<T> {
