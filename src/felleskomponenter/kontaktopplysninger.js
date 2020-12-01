@@ -9,7 +9,6 @@ import * as Utils from '../utils';
 
 import OrganisasjonsAdresse from './adresser/organisasjonsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
-import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
 
@@ -91,7 +90,7 @@ export class KontaktOpplysninger extends Component {
     const { kontaktorgnr } = this.state;
     const { visFeilmelding } = this;
 
-    if (kontaktorgnr && !erOrgnrGyldig(kontaktorgnr)) {
+    if (kontaktorgnr && !Utils.organisasjon.erOrgnrGyldig(kontaktorgnr)) {
       visFeilmelding('Ugyldig orgnr');
       return false;
     }

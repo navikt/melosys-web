@@ -1,9 +1,8 @@
 import React, { ChangeEventHandler, useState } from 'react';
 
+import * as Utils from '../../../../utils';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Api from '../../../../services/api';
-
-import { erOrgnrGyldig } from '../../../skjema/validering/generisk/organisasjon';
 
 interface Feilmelding {
   feilmelding: string,
@@ -17,26 +16,37 @@ interface SokFullmektigOrgProps {
 function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   const { onOrgFunnet, defaultOrgnr } = props;
 
-  const [orgnr, settOrgnr] = useState(defaultOrgnr || '');
-  const [feilmelding, settFeilmelding] = useState<Feilmelding | undefined>(undefined);
+  const [orgnr, setOrgnr] = useState(defaultOrgnr || '');
+  const [feilmelding, setFeilmelding] = useState<Feilmelding | undefined>(undefined);
+  const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
 
-  const sok = async () => {
-    if (erOrgnrGyldig(orgnr)) {
+  const sok = async (sokOrgnr: string) => {
+    if (!Utils.organisasjon.erOrgnrLengde(sokOrgnr)) {
+      if (korrekteLengdeOrgnrOppgittMinstEnGang) {
+        setFeilmelding({ feilmelding: 'Org.nr. er 9 siffer' });
+      }
+      return;
+    }
+
+    setKorrekteLengdeOrgnrOppgittMinstEnGang(true);
+
+    if (Utils.organisasjon.erOrgnrGyldig(sokOrgnr)) {
       try {
-        await Api.Organisasjoner.hentOrganisasjon(orgnr);
-        onOrgFunnet(orgnr);
+        await Api.Organisasjoner.hentOrganisasjon(sokOrgnr);
+        onOrgFunnet(sokOrgnr);
       } catch (e) {
-        if (e.response.status === 404) settFeilmelding({ feilmelding: 'Kunne ikke finne organisasjon' });
-        else settFeilmelding({ feilmelding: 'Ukjent feil ved søk på org.nr.' });
+        if (e.response.status === 404) setFeilmelding({ feilmelding: 'Kunne ikke finne organisasjon' });
+        else setFeilmelding({ feilmelding: 'Ukjent feil ved søk på org.nr.' });
       }
     } else {
-      settFeilmelding({ feilmelding: 'Ugyldig org.nr.' });
+      setFeilmelding({ feilmelding: 'Ugyldig org.nr.' });
     }
   };
 
   const vedEndretInput: ChangeEventHandler<HTMLInputElement> = event => {
-    settOrgnr(event.target.value);
-    settFeilmelding(undefined);
+    setOrgnr(event.target.value);
+    setFeilmelding(undefined);
+    sok(event.target.value);
   };
 
   return (
@@ -46,7 +56,6 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
           label="Skriv inn organisasjonsnummer"
           placeholder="Skriv inn..."
           onChange={vedEndretInput}
-          onBlur={sok}
           value={orgnr}
           feil={feilmelding}
         />

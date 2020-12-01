@@ -74,7 +74,7 @@ const EnkeltFullmektig = ({
       understrek
       hentNyStatusVedHarData={false}
       onBinClick={slettHandler}
-      visLagreKnappBareHvisHarData
+      visLagreKnapp={Boolean(fullmektig.orgnr)}
       redigererRender={() => (
         <FullmektigRedigerer
           databaseID={fullmektig.databaseID}

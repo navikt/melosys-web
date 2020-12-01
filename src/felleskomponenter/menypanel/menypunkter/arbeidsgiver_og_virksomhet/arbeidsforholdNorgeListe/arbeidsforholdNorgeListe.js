@@ -8,7 +8,6 @@ import * as Mui from '../../../../ui';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Ikoner from '../../../../../resources/images';
 import * as MPT from '../../../../../proptypes';
-import * as OrganisasjonValidering from '../../../../skjema/validering/generisk/organisasjon';
 
 import EditerbartElement from '../../editerbartElement';
 import Orgnrinput from './orgnrinput';
@@ -132,7 +131,7 @@ export const EnkeltArbeidsforholdNorge = ({
   const erstatt = verdi => fields.splice(indeks, 1, transformerOrgTilElement(verdi));
   const valideringer = [
     {
-      validering: orgnr => !OrganisasjonValidering.erOrgnrGyldig(orgnr),
+      validering: orgnr => !Utils.organisasjon.erOrgnrGyldig(orgnr),
       feilmelding: 'Ugyldig org.nr.',
     },
     {
