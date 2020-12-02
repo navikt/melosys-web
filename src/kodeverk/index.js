@@ -32,7 +32,7 @@ const termTilKode = (verdi, muligeValg) => {
   return valgtKodeverkObjekt && objektTilKode(valgtKodeverkObjekt);
 };
 
-function termFraKTObject(kodetermListe, kode) {
+function finnTermFraListe(kodetermListe, kode) {
   for (let i = 0, j = kodetermListe.length; i < j; i += 1) {
     if (kodetermListe[i].kode === kode) {
       return kodetermListe[i].term;
@@ -49,7 +49,7 @@ function termFraNestedKTObject(nestedKTObject, kode) {
       kodetermListe.push(...nestedKTObject[kodeterm]);
     }
   }
-  return termFraKTObject(kodetermListe, kode);
+  return finnTermFraListe(kodetermListe, kode);
 }
 
 export {
@@ -64,7 +64,7 @@ export {
   kodeTilTerm,
   kodeTilObjekt,
   termTilKode,
-  termFraKTObject,
+  finnTermFraListe,
   termFraNestedKTObject,
   Panel,
 };
