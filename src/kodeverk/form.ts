@@ -76,3 +76,4 @@ export interface RegistreringPanelerFormData {
 }
 export const ARBEID_ETT_LAND_OVRIG_VEDTAK = 'arbeid_ett_land_ovrig_vedtak';
 export const START = 'start';
+export const PERIODER = 'PERIODER';

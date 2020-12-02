@@ -1,11 +1,12 @@
-import React, { ChangeEvent, Fragment, useEffect } from 'react';
-import { change, formValues, getFormValues, reduxForm, unregisterField } from 'redux-form';
+import React, { ChangeEvent, Fragment } from 'react';
+import { arrayPush, arrayRemove, change, getFormValues, reduxForm } from 'redux-form';
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { Medlemskapsperiode, OppdaterMedlemskapsperiode } from 'Domene';
+import { v4 as uuidv4 } from 'uuid';
 
 import MKV from '../../../../melosyskodeverk';
 import * as Nav from '../../../../utils/navFrontend';
@@ -14,7 +15,7 @@ import * as KV from '../../../../kodeverk';
 import * as Skjema from '../../../../felleskomponenter/skjema';
 
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
-import { medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
+import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { termFraKTObject } from '../../../../kodeverk';
 
@@ -27,11 +28,14 @@ import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 
 interface PeriodeElementProps {
   index: number,
+  redigerbart: boolean,
+  trygdedekninger: KTObject[],
+  formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean})[]},
   handleFomChange: (value: string, index: number) => void;
   handleTomChange: (value: string, index: number) => void;
   handleTrygdedekningChange: (value: string, index: number) => void;
   handleResultatChange: (value: string, index: number) => void;
-  slettMedlemskapsperiode: (index: number) => void;
+  handleSlett: (index: number) => void;
 }
 const PeriodeElement =
   ({
@@ -43,11 +47,10 @@ const PeriodeElement =
     handleTomChange,
     handleTrygdedekningChange,
     handleResultatChange,
-    slettMedlemskapsperiode,
-  }: PeriodeElementProps & VurderingPerioderProps) => {
+    handleSlett,
+  }: PeriodeElementProps) => {
   const resultater = [{kode: 'INNVILGET',term: 'Innvilget'}, {kode: 'DELVIS_INNVILGET',term: 'Delvis innvilget'}, {kode: 'AVSLAATT',term: 'Avslått'}];
 
-  console.log(formValues.medlemskapsperioder[index].ny)
   return (
     <Fragment>
       <Nav.Fieldset legend="Periode" className="understrek">
@@ -94,8 +97,8 @@ const PeriodeElement =
           </Nav.Column>
         </Nav.Row>
         {
-          redigerbart &&
-          <Nav.Lenker className="slettKnapp" href="#" onClick={() => slettMedlemskapsperiode(index)}>
+          redigerbart && formValues.medlemskapsperioder.length > 1 &&
+          <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)}>
             <Ikoner.Bin2 />
             <span>Slett periode</span>
           </Nav.Lenker>
@@ -126,20 +129,21 @@ function transformInitialMedlemskapsperioder(state: RootState){
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  removeField: (index: number) => dispatch(arrayRemove(KV.Form.PERIODER, 'medlemskapsperioder', index)),
+  changeField: (index: number, data: Medlemskapsperiode & { ny: boolean}) => dispatch(change(KV.Form.PERIODER,`medlemskapsperioder[${index}]`, data)),
+  pushField: (data: { id: string, ny: boolean}) => dispatch(arrayPush(KV.Form.PERIODER, 'medlemskapsperioder', data)),
+  hentMedlemskapsperioder: (behandlingID: number) => dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID)),
 });
 
-const connector = connect(mapStateToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-
 
 interface Props {
   bekreft: () => void,
   oppdater: () => void,
   tilbake: () => void,
   redigerbart: boolean,
-  oppdaterData: (avklartefakta: any) => void,
-  alleLandkoder: KTObject[],
   formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean})[]},
 }
 
@@ -147,137 +151,159 @@ type VurderingPerioderProps = Props & PropsFromRedux;
 
 
 const VurderingPerioder =
-  ({formValues, ...props} : VurderingPerioderProps) => {
-  const hjelpetekst = 'Perioder er foreslått på bakgrunn av periode og dekning det er søkt for, og tidspunkt søknaden ble mottatt. Du har mulighet til å gjøre endringer.';
+  ({
+    formValues,
+    removeField,
+    changeField,
+    pushField,
+    bekreft,
+    tilbake,
+    behandlingID,
+    hentMedlemskapsperioder,
+    trygdedekning,
+    ...props
+  }: VurderingPerioderProps) => {
+    const hjelpetekst = 'Perioder er foreslått på bakgrunn av periode og dekning det er søkt for, og tidspunkt søknaden ble mottatt. Du har mulighet til å gjøre endringer.';
 
-  const handleFomChange = (value: string, index: number) => {
-    handleChange(index, value, null, value, null);
-  };
-  const handleTomChange =  (value: string, index: number) => {
-    handleChange(index, null, value, null, null);
-  };
-  const handleTrygdedekningChange =  (value: string, index: number) => {
-    handleChange(index, null, null, value, null);
-  };
-  const handleResultatChange =  (value: string, index: number) => {
-    handleChange(index, null, null, null, value);
-  };
-
-  const handleChange = (index: number, fomDato: string | null, tomDato: string | null, trygdedekning: string | null, resultat: string | null) => {
-    const oppdatertMedlemskapsperiode =  {
-      fomDato: fomDato ? Utils.dato.formatterDatoTilISO(fomDato) : Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[index].fomDato),
-      tomDato: tomDato ? Utils.dato.formatterDatoTilISO(tomDato) : Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[index].tomDato),
-      trygdedekning: trygdedekning ? trygdedekning : formValues.medlemskapsperioder[index].trygdedekning,
-      innvilgelsesResultat: resultat ? resultat : formValues.medlemskapsperioder[index].innvilgelsesResultat,
+    const handleFomChange = (value: string, index: number) => {
+      handleChange(index, value, null, null, null);
+    };
+    const handleTomChange =  (value: string, index: number) => {
+      handleChange(index, null, value ? value : 'null', null, null);
+    };
+    const handleTrygdedekningChange =  (value: string, index: number) => {
+      handleChange(index, null, null, value, null);
+    };
+    const handleResultatChange =  (value: string, index: number) => {
+      handleChange(index, null, null, null, value);
     };
 
-    if (formValues.medlemskapsperioder[index].ny) {
-      opprettMedlemskapsperiode(oppdatertMedlemskapsperiode);
-    }
-    else {
-      oppdaterMedlemskapsperiode(oppdatertMedlemskapsperiode, formValues.medlemskapsperioder[index].id);
-    }
-  };
+    const handleChange = (index: number, fomDato: string | null, tomDato: string | null, trygdedekning: string | null, resultat: string | null) => {
+      const nyFomDato = fomDato ? Utils.dato.formatterDatoTilISO(fomDato) : Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[index].fomDato);
+      let nyTomDato = tomDato ? Utils.dato.formatterDatoTilISO(tomDato) : Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[index].tomDato);
+      const nyTrygdedekning = trygdedekning ? trygdedekning : formValues.medlemskapsperioder[index].trygdedekning;
+      const nyInnvilgelsesResultat = resultat ? resultat : formValues.medlemskapsperioder[index].innvilgelsesResultat;
 
-  const oppdaterMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, medlemskapsperiodeID: number) => {
-    Api.Medlemskapsperioder.putMedlemskapsperioder(props.behandlingID, medlemskapsperiodeID, oppdatertMedlemskapsperiode)
-       .then(response => {
-         console.log(response)
-       })
-       .catch(Utils.logger.error)
-  };
+      if (!(nyFomDato !== 'Invalid date' && nyTrygdedekning && nyInnvilgelsesResultat)) {
+        return
+      }
 
-  const opprettMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode) => {
-    Api.Medlemskapsperioder.postMedlemskapsperioder(props.behandlingID, oppdatertMedlemskapsperiode)
-       .then(response => {
-         console.log(response)
-       })
-       .catch(Utils.logger.error);
-  };
+      const oppdatertMedlemskapsperiode =  {
+        fomDato: nyFomDato,
+        tomDato: nyTomDato !== 'Invalid date' ? nyTomDato : null,
+        trygdedekning: nyTrygdedekning,
+        innvilgelsesResultat: nyInnvilgelsesResultat,
+      };
 
-  const slettMedlemskapsperiode = (index: number) => {
-    const id = formValues.medlemskapsperioder[index].id;
-    Api.Medlemskapsperioder.deleteMedlemskapsperioder(props.behandlingID, id)
-       .then(()  => {
-         console.log(formValues.medlemskapsperioder.filter(medlemskapsperiode => medlemskapsperiode.id !== id))
-         formValues.medlemskapsperioder = formValues.medlemskapsperioder.filter(medlemskapsperiode => medlemskapsperiode.id !== id);
-       })
-       .catch(Utils.logger.error)
-  };
+      if (formValues.medlemskapsperioder[index].ny) {
+        opprettMedlemskapsperiode(oppdatertMedlemskapsperiode, index);
+      }
+      else {
+        oppdaterMedlemskapsperiode(oppdatertMedlemskapsperiode, formValues.medlemskapsperioder[index].id);
+      }
+    };
 
-  const handleSlett = () => {
+    const oppdaterMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, medlemskapsperiodeID: number) => {
+      Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiodeID, oppdatertMedlemskapsperiode)
+        .catch(Utils.logger.error)
+    };
 
-  };
+    const opprettMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, index: number) => {
+      Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, oppdatertMedlemskapsperiode)
+        .then(response => {
+          changeField(index, {...response,
+            ny: false,
+            tomDato : Utils.dato.formatterDatoTilNorsk(response.tomDato),
+            fomDato : Utils.dato.formatterDatoTilNorsk(response.fomDato)
+          });
+        })
+        .catch(Utils.logger.error);
+    };
 
-  const handleLeggTil = () => {
+    const handleSlett = (index: number) => {
+      const id = formValues.medlemskapsperioder[index].id;
+      Api.Medlemskapsperioder.deleteMedlemskapsperioder(behandlingID, id)
+        .then(()  => {
+          removeField(index);
+        })
+        .catch(Utils.logger.error)
+    };
 
-  };
+    const handleLeggTil = () => {
+      const nyMedlemskapsperiode = {
+        id: uuidv4(),
+        ny: true,
+      };
+      pushField(nyMedlemskapsperiode);
+    };
+
+    const handleBekreft = () => {
+      hentMedlemskapsperioder(behandlingID);
+      bekreft();
+    };
 
 
+    return(
+      <div className="perioder">
+        <Nav.typo.Undertittel className="undertittel">
+          Kontroller foreslåtte medlemskapsperioder
+          <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>
+        </Nav.typo.Undertittel>
 
-  return(
-    <div className="perioder">
-      <Nav.typo.Undertittel className="undertittel">
-        Kontroller foreslåtte medlemskapsperioder
-        <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>
-      </Nav.typo.Undertittel>
+        <div>
+          <Nav.typo.Element className="info_element">Søknad mottatt: </Nav.typo.Element>
+          <Nav.typo.Normaltekst className="info_element">{'03.11.2020'}</Nav.typo.Normaltekst>
+        </div>
+        <div>
+          <Nav.typo.Element className="info_element">Trygdedekning fra søknad: </Nav.typo.Element>
+          <Nav.typo.Normaltekst className="info_element">{termFraKTObject(MKV.KTObjects.trygdedekninger, trygdedekning)}</Nav.typo.Normaltekst>
+        </div>
 
-      <div>
-        <Nav.typo.Element className="info_element">Søknad mottatt: </Nav.typo.Element>
-        <Nav.typo.Normaltekst className="info_element">{'03.11.2020'}</Nav.typo.Normaltekst>
-      </div>
-      <div>
-        <Nav.typo.Element className="info_element">Trygdedekning fra søknad: </Nav.typo.Element>
-        <Nav.typo.Normaltekst className="info_element">{termFraKTObject(MKV.KTObjects.trygdedekninger, props.trygdedekning)}</Nav.typo.Normaltekst>
-      </div>
+        {
+          formValues && formValues.medlemskapsperioder && formValues.medlemskapsperioder.map((medlemskapsperiode: Medlemskapsperiode & { ny: boolean}, index: number) =>
+          <PeriodeElement
+            key={medlemskapsperiode.id}
+            index={index}
+            formValues={formValues}
+            handleFomChange={handleFomChange}
+            handleTomChange={handleTomChange}
+            handleTrygdedekningChange={handleTrygdedekningChange}
+            handleResultatChange={handleResultatChange}
+            handleSlett={handleSlett}
+            {...props} />
+        )}
 
-      {formValues && formValues.medlemskapsperioder.map((medlemskapsperiode, index) =>
-        <PeriodeElement
-          key={medlemskapsperiode.id}
-          index={index}
-          formValues={formValues}
-          handleFomChange={handleFomChange}
-          handleTomChange={handleTomChange}
-          handleTrygdedekningChange={handleTrygdedekningChange}
-          handleResultatChange={handleResultatChange}
-          slettMedlemskapsperiode={slettMedlemskapsperiode}
-          {...props} />
-      )}
-
-      { formValues && formValues.medlemskapsperioder && formValues.medlemskapsperioder.length > 0 &&
         <div className="leggTilKnapp">
           <Mui.Knappelenke
-            onClick={() => console.log("plus")}
+            onClick={handleLeggTil}
             ikon={Ikoner.Add}
           >
             Legg til ny periode
           </Mui.Knappelenke>
         </div>
-      }
 
-      <div className="fane__knapplinje" >
-        <Nav.Knapp
-          mini
-          disabled={!props.redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={props.tilbake}>Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!props.redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={props.bekreft}>Fortsett
-        </Nav.Hovedknapp>
+        <div className="fane__knapplinje" >
+          <Nav.Knapp
+            mini
+            disabled={!props.redigerbart}
+            className="fane__navigasjonsknapp"
+            onClick={tilbake}>Tilbake
+          </Nav.Knapp>
+          <Nav.Hovedknapp
+            mini
+            disabled={!props.redigerbart}
+            className="fane__navigasjonsknapp"
+            onClick={handleBekreft}>Fortsett
+          </Nav.Hovedknapp>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 const VurderingPerioderForm = reduxForm({
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   onSubmit: (values: any, dispatch: any, props: any) => {},
   form: KV.Form.PERIODER,
-  // enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
