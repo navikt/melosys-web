@@ -145,7 +145,7 @@ function erLike(datoEn, datoTo) {
 }
 
 function plussEnDag(dato) {
-  var date = new Date(formatterDatoTilISO(dato));
+  const date = new Date(formatterDatoTilISO(dato));
   date.setDate(date.getDate() + 1);
   return formatterDatoTilNorsk(date);
 }

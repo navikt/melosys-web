@@ -68,7 +68,8 @@ const VurderingBestemmelse =
     oppdater,
     opprettMedlemskapsperiodeFraBestemmelse,
   } : Props & PropsFromRedux) => {
-    const SANN = 'true', USANN = 'false';
+    const SANN = 'true';
+    const USANN = 'false';
     const [valgtBestemmelse, setValgtBestemmelse] = useState('');
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
     const [valgteVilkar, setValgteVilkar] = useState(new Map());
