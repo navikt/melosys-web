@@ -13,6 +13,7 @@ import { oppsummertfaktaOperations } from '../../../../ducks/oppsummertfakta';
 
 import './vurderingVirksomhet.css';
 import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
+import { behandlingsgrunnlagOperations } from '../../../../ducks/behandlingsgrunnlag';
 
 
 const mapStateToProps = (state: RootState) => ({
@@ -24,6 +25,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
   oppdaterVirksomheterState: (virksomheter: OppsummertFaktaVirksomheter) => dispatch(oppsummertfaktaOperations.oppdaterVirksomheterState(virksomheter)),
   sendVirksomheter: (behandlingID: number, virksomheter: OppsummertFaktaVirksomheter) => dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
+  hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -42,6 +44,7 @@ const VurderingVirksomhet =
   ({
     behandlingID,
     bekreft,
+    hentBehandlingsgrunnlag,
     hentOppsummertFakta,
     lagredeVirksomheter,
     oppdater,
@@ -53,12 +56,21 @@ const VurderingVirksomhet =
   } : Props & PropsFromRedux) => {
     const [valgteVirksomheter, setValgteVirksomheter] = useState(lagredeVirksomheter);
     const [erValgtVirksomheterGyldig, setErValgtVirksomheterGyldig] = useState(false);
+    const [erBehandlingsgrunnlagLastetInn, setErBehandlingsgrunnlagLastetInn] = useState(false);
     const hjelpetekst = 'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. ' +
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
-    useEffect(() => () => {
-      hentOppsummertFakta(behandlingID);
+    useEffect(() => {
+      lastInnBehandlingsgrunnlag();
+      return () => {
+        hentOppsummertFakta(behandlingID);
+      }
     }, []);
+
+    const lastInnBehandlingsgrunnlag = async () => {
+      await hentBehandlingsgrunnlag(behandlingID);
+      setErBehandlingsgrunnlagLastetInn(true);
+    };
 
     const oppdaterVirksomheterOgStegvelger = async () => {
       await oppdaterVirksomheterState({ virksomhetIDer: valgteVirksomheter });
@@ -74,6 +86,10 @@ const VurderingVirksomhet =
       sendVirksomheter(behandlingID, { virksomhetIDer: valgteVirksomheter });
       bekreft();
     };
+
+    if (!erBehandlingsgrunnlagLastetInn) {
+      return null;
+    }
 
     return (
       <div>
