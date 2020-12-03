@@ -144,6 +144,12 @@ function erLike(datoEn, datoTo) {
   return moment(datoEn).isSame(datoTo);
 }
 
+function plussEnDag(dato) {
+  var date = new Date(formatterDatoTilISO(dato));
+  date.setDate(date.getDate() + 1);
+  return formatterDatoTilNorsk(date);
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -157,5 +163,6 @@ export {
   erGyldigPeriode,
   erIPeriode,
   erLike,
+  plussEnDag,
   MAX_AR_FREM_I_TID,
 };

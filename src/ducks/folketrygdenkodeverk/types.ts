@@ -10,6 +10,7 @@ export interface Data {
   begrunnelser?: {
     [key: string]: KTObject[]
   }
+  InnvilgelsesResultat?: KTObject[]
 }
 
 interface FeiletAction {
