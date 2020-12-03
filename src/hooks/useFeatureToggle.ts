@@ -14,7 +14,7 @@ const useFeatureToggle = (toggleName: string, deps: unknown[] = []): [Status] =>
 
   const toggleFetched = toggles[toggleName] !== undefined;
 
-  let toggleStatus = null;
+  let toggleStatus: Status | null = null;
 
   if (!toggleFetched) {
     toggleStatus = Status.fetching;
