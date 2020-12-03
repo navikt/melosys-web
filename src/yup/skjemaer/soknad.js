@@ -1,4 +1,4 @@
-import { object, array, string } from 'yup';
+import { object, array, string, lazy, mixed } from 'yup';
 
 import * as KV from '../../kodeverk';
 
@@ -29,6 +29,18 @@ const utenlandskIdent = object().shape({
     KV.Menypunkter.Person.undertitler.utenlandskID,
     'Land for utenlandsk ID kreves'
   )),
+});
+
+const medfolgendeBarn = object().shape({
+  fnr: lazy(value => (value ?
+    string()
+      .erFnrEllerDnr(lagMelding(
+        KV.Menypunkter.Familieforhold.tittel,
+        KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
+        'F.nr./d-nr. er ugyldig'
+      ))
+    :
+    mixed())),
 });
 
 const soknad = object().when('$behandlingstema', {
@@ -107,6 +119,7 @@ const soknad = object().when('$behandlingstema', {
       then: string().required(SLUTTDATO_ER_APEN),
     }),
     utenlandskIdent: array().of(utenlandskIdent),
+    medfolgendeBarn: array().of(medfolgendeBarn),
   }),
 });
 
