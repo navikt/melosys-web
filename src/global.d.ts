@@ -53,3 +53,13 @@ declare module 'melosys-api' {
     feilkoder?: Feilkode[],
   }
 }
+
+declare module 'objectpath' {
+  interface Objectpath {
+    parse: (path: string) => string[],
+    stringify: (tokens: string[]) => string,
+  }
+
+  declare const objectpath: Objectpath;
+  export default objectpath;
+}
