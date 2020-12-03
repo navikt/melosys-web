@@ -50,6 +50,7 @@ export interface ArbeidsstedSkip extends MaritimtArbeid {
   territorialfarvann?: string,
 }
 export interface MedfolgendeBarn {
+  uuid: string,
   fnr?: number,
   navn?: string,
   relasjonsrolle?: string,
