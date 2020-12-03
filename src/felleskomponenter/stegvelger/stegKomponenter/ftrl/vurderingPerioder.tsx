@@ -13,17 +13,17 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
 import * as Skjema from '../../../../felleskomponenter/skjema';
+import * as Mui from '../../../ui';
+import * as Ikoner from '../../../../resources/images';
+import * as Api from '../../../../services/api';
 
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
+import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { finnTermFraListe } from '../../../../kodeverk';
 
 import './vurderingPerioder.css';
-import * as Mui from '../../../ui';
-import * as Ikoner from '../../../../resources/images';
-import * as Api from '../../../../services/api';
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 
 
 interface PeriodeElementProps {
@@ -31,7 +31,7 @@ interface PeriodeElementProps {
   redigerbart: boolean,
   trygdedekninger: KTObject[],
   innvilgelsesResultater: KTObject[],
-  formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean})[]},
+  formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean, feil: string | undefined })[]},
   handleFomChange: (value: string, index: number) => void;
   handleTomChange: (value: string, index: number) => void;
   handleTrygdedekningChange: (value: string, index: number) => void;
@@ -98,6 +98,10 @@ const PeriodeElement =
           </Nav.Column>
         </Nav.Row>
         {
+          formValues.medlemskapsperioder[index].feil &&
+          <Nav.AlertStripe type="feil" style={{marginBottom: "1rem"}}>{formValues.medlemskapsperioder[index].feil}</Nav.AlertStripe>
+        }
+        {
           redigerbart && formValues.medlemskapsperioder.length > 1 &&
           <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)}>
             <Ikoner.Bin2 />
@@ -133,7 +137,8 @@ function transformInitialMedlemskapsperioder(state: RootState){
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   removeField: (index: number) => dispatch(arrayRemove(KV.Form.PERIODER, 'medlemskapsperioder', index)),
-  changeField: (index: number, data: Medlemskapsperiode & { ny: boolean}) => dispatch(change(KV.Form.PERIODER,`medlemskapsperioder[${index}]`, data)),
+  changeField: (index: number, data: Medlemskapsperiode & { ny: boolean, feil: string | undefined}) => dispatch(change(KV.Form.PERIODER,`medlemskapsperioder[${index}]`, data)),
+  changeFieldFeil: (index: number, feil: string | undefined) => dispatch(change(KV.Form.PERIODER,`medlemskapsperioder[${index}].feil`, feil)),
   pushField: (data: { id: string, ny: boolean, fomDato: string | null }) => dispatch(arrayPush(KV.Form.PERIODER, 'medlemskapsperioder', data)),
   hentMedlemskapsperioder: (behandlingID: number) => dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID)),
 });
@@ -147,7 +152,7 @@ interface Props {
   oppdater: () => void,
   tilbake: () => void,
   redigerbart: boolean,
-  formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean})[]},
+  formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean, feil: string | undefined })[]},
 }
 
 type VurderingPerioderProps = Props & PropsFromRedux;
@@ -158,6 +163,7 @@ const VurderingPerioder =
     formValues,
     removeField,
     changeField,
+    changeFieldFeil,
     pushField,
     bekreft,
     tilbake,
@@ -168,14 +174,20 @@ const VurderingPerioder =
     ...props
   }: VurderingPerioderProps) => {
     const [erAllePerioderAvslått, setErAllePerioderAvslått] = useState(false);
-    const [feil, setFeil] = useState(undefined);
+    const [erFortsattDisabled, setErFortsattDisabled] = useState(false);
     const hjelpetekst = 'Perioder er foreslått på bakgrunn av periode og dekning det er søkt for, og tidspunkt søknaden ble mottatt. Du har mulighet til å gjøre endringer.';
 
     useEffect(() => {
       const erAllePerioderAnnetEnnAvslatt = formValues && formValues.medlemskapsperioder.some(medlemskapsperiode => medlemskapsperiode.innvilgelsesResultat !== KV.Koder.AVSLAATT);
       setErAllePerioderAvslått(!erAllePerioderAnnetEnnAvslatt);
-      setFeil(undefined);
+      const erNoenPerioderUfullført = formValues && formValues.medlemskapsperioder.some(medlemskapsperiode => medlemskapsperiode.ny || !erMedlemskapsperiodeFullført(medlemskapsperiode.innvilgelsesResultat, medlemskapsperiode.trygdedekning, medlemskapsperiode.fomDato));
+      const erFeilAktivPaPerioder = formValues && formValues.medlemskapsperioder.some(medlemskapsperiode => !!medlemskapsperiode.feil);
+      setErFortsattDisabled(erNoenPerioderUfullført || erFeilAktivPaPerioder || !erAllePerioderAnnetEnnAvslatt);
     }, [formValues]);
+
+    const erMedlemskapsperiodeFullført = (innvilgelsesResultat: string, trygdedekning: string, fomDato: string) => {
+      return innvilgelsesResultat && trygdedekning && fomDato && fomDato !== 'Invalid date';
+    };
 
     const handleFomChange = (value: string, index: number) => {
       handleChange(index, value, null, null, null);
@@ -196,7 +208,7 @@ const VurderingPerioder =
       const nyTrygdedekning = trygdedekning ? trygdedekning : formValues.medlemskapsperioder[index].trygdedekning;
       const nyInnvilgelsesResultat = resultat ? resultat : formValues.medlemskapsperioder[index].innvilgelsesResultat;
 
-      if (!(nyFomDato !== 'Invalid date' && nyTrygdedekning && nyInnvilgelsesResultat)) {
+      if (!(erMedlemskapsperiodeFullført(nyInnvilgelsesResultat, nyTrygdedekning, nyFomDato))) {
         return
       }
 
@@ -211,15 +223,18 @@ const VurderingPerioder =
         opprettMedlemskapsperiode(oppdatertMedlemskapsperiode, index);
       }
       else {
-        oppdaterMedlemskapsperiode(oppdatertMedlemskapsperiode, formValues.medlemskapsperioder[index].id);
+        oppdaterMedlemskapsperiode(oppdatertMedlemskapsperiode, index, formValues.medlemskapsperioder[index].id);
       }
     };
 
-    const oppdaterMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, medlemskapsperiodeID: number) => {
+    const oppdaterMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, index: number, medlemskapsperiodeID: number) => {
       Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiodeID, oppdatertMedlemskapsperiode)
+        .then(() => {
+           changeFieldFeil(index, undefined);
+        })
         .catch(error => {
           Utils.logger.error(error);
-          setFeil(error.body && error.body.message ? error.body.message : error);
+          changeFieldFeil(index, error.body && error.body.message ? error.body.message : error);
         })
     };
 
@@ -229,12 +244,13 @@ const VurderingPerioder =
           changeField(index, {...response,
             ny: false,
             tomDato : Utils.dato.formatterDatoTilNorsk(response.tomDato),
-            fomDato : Utils.dato.formatterDatoTilNorsk(response.fomDato)
+            fomDato : Utils.dato.formatterDatoTilNorsk(response.fomDato),
+            feil: undefined
           });
         })
         .catch(error => {
           Utils.logger.error(error);
-          setFeil(error.body && error.body.message ? error.body.message : error);
+          changeFieldFeil(index, error.body && error.body.message ? error.body.message : error);
         })
     };
 
@@ -250,7 +266,7 @@ const VurderingPerioder =
         })
         .catch(error => {
           Utils.logger.error(error);
-          setFeil(error.body && error.body.message ? error.body.message : error);
+          changeFieldFeil(index, error.body && error.body.message ? error.body.message : error);
         })
     };
 
@@ -313,10 +329,6 @@ const VurderingPerioder =
           erAllePerioderAvslått &&
           <Nav.AlertStripe type="feil">Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.</Nav.AlertStripe>
         }
-        {
-          !!feil &&
-          <Nav.AlertStripe type="feil">{feil}</Nav.AlertStripe>
-        }
 
         <div className="fane__knapplinje" >
           <Nav.Knapp
@@ -327,7 +339,7 @@ const VurderingPerioder =
           </Nav.Knapp>
           <Nav.Hovedknapp
             mini
-            disabled={!(props.redigerbart) || erAllePerioderAvslått}
+            disabled={!(props.redigerbart) || erFortsattDisabled}
             className="fane__navigasjonsknapp"
             onClick={handleBekreft}>Fortsett
           </Nav.Hovedknapp>
