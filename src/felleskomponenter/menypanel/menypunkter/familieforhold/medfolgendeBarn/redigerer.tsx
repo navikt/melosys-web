@@ -21,7 +21,7 @@ const Redigerer = ({
   const [disableNavnInput, setDisableNavnInput] = useState(false);
   const [visNavnSpinner, setVisNavnSpinner] = useState(false);
 
-  const hentPerson = async (idNummer: string) => {
+  const hentNavn = async (idNummer: string) => {
     if (Utils.person.erGyldigFnr(idNummer) || Utils.person.erGyldigDnr(idNummer)) {
       setVisNavnSpinner(true);
       setDisableNavnInput(true);
@@ -42,12 +42,12 @@ const Redigerer = ({
     setDisableNavnInput(false);
 
     const idNummer = event.target.value;
-    hentPerson(idNummer);
+    hentNavn(idNummer);
   };
 
   useEffect(() => {
     if (verdier.fnr) {
-      hentPerson(verdier.fnr.toString());
+      hentNavn(verdier.fnr.toString());
     }
   }, []);
 
