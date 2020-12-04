@@ -62,5 +62,7 @@ export const Utenlandsoppdraget = {
 
 export const Familieforhold = {
   tittel: 'Familieforhold',
-  undertitler: {},
+  undertitler: {
+    barnMedPaReisen: 'Barn med på reisen',
+  },
 };

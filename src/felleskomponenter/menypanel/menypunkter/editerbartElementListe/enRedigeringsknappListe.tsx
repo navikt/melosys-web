@@ -9,6 +9,23 @@ import EditerbartElement from '../editerbartElement';
 
 import './enRedigeringsknappListe.css';
 
+export interface Redigerer<T> {
+  redigerbart: boolean,
+  overordnetFeltNavn: string,
+  verdier: T,
+  settVerdi: (felt: string, verdi: any) => void,
+  slett: () => void,
+}
+
+export interface RedigeringUtfort<T> {
+  verdier: T[],
+}
+
+/**
+ * Typene over burde egentlig kreves for komponent-props med ElementType<T>.
+ * Fikk dessverre ikke til å bruke typescript med fieldarray i editbartElementListe, så derfor ligger de her.
+ */
+
 interface EnRedigeringsKnappListeProps<T> {
   redigerbart: boolean,
   tittelIkon: ElementType,

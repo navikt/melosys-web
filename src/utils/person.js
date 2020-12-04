@@ -40,7 +40,7 @@ const erGyldigFnr = verdi => {
 /** Validering av d-nummer kjører også mod 11 med samme vekter som fnr.
  * Gjenbruk derfor erGyldigFnr.
  *
- * @param verdi {string} Fødselsnummer
+ * @param verdi Fødselsnummer
  * @returns {boolean|*}
  */
 const erGyldigDnr = verdi => erGyldigFnr(verdi);

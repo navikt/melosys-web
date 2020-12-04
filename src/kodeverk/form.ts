@@ -49,6 +49,12 @@ export interface ArbeidsstedSkip extends MaritimtArbeid {
   flaggLandkode?: string,
   territorialfarvann?: string,
 }
+export interface MedfolgendeBarn {
+  uuid: string,
+  fnr?: number,
+  navn?: string,
+  relasjonsrolle?: string,
+}
 
 export type SoknadFormData = any;
 

@@ -1,20 +1,63 @@
 import React from 'react';
 
 import * as Nav from '../../../../utils/navFrontend';
+import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
+import * as Ikoner from '../../../../resources/images';
+import * as Etiketter from '../etiketter';
+import * as MedfolgendeBarn from './medfolgendeBarn';
 
-import Familieforhold from './familieforhold';
+import Familiemedlemmer from './familiemedlemmer';
+import EditerbartElementListe from '../editerbartElementListe';
 
-const FamilieforholdContainer = () => (
-  <Nav.Container fluid>
-    <Nav.Row className="tittel">
+import './familieforholdContainer.css';
+
+interface FamilieforholdContainerProps {
+  redigerbart: boolean,
+  visArbeidsforholdRolleEtiketter: boolean,
+}
+
+const FamilieforholdContainer = ({
+  redigerbart,
+  visArbeidsforholdRolleEtiketter,
+}: FamilieforholdContainerProps) => (
+  <Nav.Container fluid className="familieforhold-container">
+    <Nav.Row>
       <Nav.Column xs="12">
         <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Familieforhold.tittel}</Nav.typo.Innholdstittel>
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
       <Nav.Column xs="12">
-        <Familieforhold />
+        <Familiemedlemmer />
+      </Nav.Column>
+    </Nav.Row>
+    <Nav.Row>
+      <Nav.Column xs="12" className="etikett-container">
+        <Etiketter.FraSoknad />
+        {
+          visArbeidsforholdRolleEtiketter &&
+          <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />
+        }
+      </Nav.Column>
+    </Nav.Row>
+    <Nav.Row>
+      <Nav.Column xs="12">
+        <EditerbartElementListe
+          redigerbart={redigerbart}
+          feltNavn="medfolgendeBarn"
+          redigererKomponent={MedfolgendeBarn.Redigerer}
+          redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+          leggTilTekst={elementer => (elementer.length > 0 ? 'Legg til ny rad' : 'Legg til barn')}
+          hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+          tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
+          tittelIkon={Ikoner.ParentAndKid}
+          tittelUnderstrek
+          harData={elementListe => (
+            (elementListe.length !== 0) && elementListe.every(v => v)
+          )}
+          flereRedigeringsknapper={false}
+        />
       </Nav.Column>
     </Nav.Row>
   </Nav.Container>

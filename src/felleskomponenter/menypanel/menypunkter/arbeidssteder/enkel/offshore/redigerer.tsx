@@ -6,13 +6,13 @@ import * as Skjema from '../../../../../skjema';
 
 import Sletterad from '../sletterad';
 
-import { Redigerer as RedigererType } from '../types';
+import { EnRedigeringsknappListeRedigerer } from '../../../editerbartElementListe';
 
 const Redigerer = ({
   redigerbart,
   overordnetFeltNavn,
   slett,
-}: RedigererType<KV.Form.ArbeidsstedOffshore>) => (
+}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedOffshore>) => (
   <div>
     <Nav.Row>
       <Nav.Column xs="6">

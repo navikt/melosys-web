@@ -9,7 +9,7 @@ import Sletterad from '../sletterad';
 
 import MKV from '../../../../../../melosyskodeverk';
 
-import { Redigerer as RedigererType } from '../types';
+import { EnRedigeringsknappListeRedigerer } from '../../../editerbartElementListe';
 
 const Redigerer = ({
   redigerbart,
@@ -17,7 +17,7 @@ const Redigerer = ({
   slett,
   settVerdi,
   verdier,
-}: RedigererType<KV.Form.ArbeidsstedSkip>) => {
+}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedSkip>) => {
   const fartsomradeChangeHandler: ChangeEventHandler<HTMLSelectElement> = event => {
     const fartsomrade = event.target.value;
 
