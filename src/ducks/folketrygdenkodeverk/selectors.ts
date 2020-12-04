@@ -26,3 +26,8 @@ export const BegrunnelserSelector = createSelector(
   FolketrygdenkodeverkDataSelector,
   folketrygdenkodeverk => (folketrygdenkodeverk.begrunnelser ? folketrygdenkodeverk.begrunnelser : [])
 );
+
+export const InnvilgelsesResultatSelector = createSelector(
+  FolketrygdenkodeverkDataSelector,
+  folketrygdenkodeverk => (folketrygdenkodeverk.InnvilgelsesResultat ? folketrygdenkodeverk.InnvilgelsesResultat : [])
+);

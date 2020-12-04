@@ -222,3 +222,8 @@ export const YtterligereInformasjonSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlagData => behandlingsgrunnlagData.ytterligereInformasjon
 );
+
+export const MottaksdatoSelector = createSelector(
+  BehandlingsgrunnlagSelector,
+  behandlingsgrunnlagData => behandlingsgrunnlagData.mottaksdato || ''
+);

@@ -3,7 +3,7 @@ import { ReactComponent as Add } from './add.svg';
 import { ReactComponent as AddOne } from './line-version-add-1.svg';
 import { ReactComponent as Arbeidsgiver } from './ikon-arbeidsgiver.svg';
 import { ReactComponent as Arbeidsforhold } from './ikon-arbeidsforhold.svg';
-import { ReactComponent as Bin } from './bin-1.svg';
+import { ReactComponent as Bin } from './bin.svg';
 import { ReactComponent as Binders } from './paperclip.svg';
 import { ReactComponent as Blyant_Active } from './blyant-active.svg';
 import { ReactComponent as Blyant_Disabled } from './blyant-disabled.svg';

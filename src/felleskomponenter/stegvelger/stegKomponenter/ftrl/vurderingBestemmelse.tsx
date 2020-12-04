@@ -7,7 +7,6 @@ import { Action } from 'redux';
 import MKV from '../../../../melosyskodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 
-import { BOOLSK_STRING } from '../../../../constants';
 import { vilkarSelectors } from '../../../../ducks/vilkar';
 import { lagBegrunnelse, lagVilkaar } from '../../../../regler/vilkar';
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
@@ -15,6 +14,7 @@ import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { finnTermFraListe, termFraNestedKTObject } from '../../../../kodeverk';
 
+import { BOOLSK_STRING } from '../../../../constants';
 import './vurderingBestemmelse.css';
 
 

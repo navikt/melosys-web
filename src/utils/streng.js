@@ -18,8 +18,8 @@ export function strengTilBool (value) {
 }
 
 export function tryParseBool(value) {
-  if (value === 'true') return true;
-  if (value === 'false') return false;
+  if (value === 'true' || value === 'TRUE') return true;
+  if (value === 'false' || value === 'FALSE') return false;
   return value; // undefined, null, bool
 }
 
