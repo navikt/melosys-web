@@ -29,6 +29,8 @@ const MedfolgendeBarn = ({
   onCheck,
   onMount,
   onUnmount,
+  begrunnelse,
+  onBegrunnelseChange,
 }) => {
   const radioName = Utils._uuid();
 
@@ -66,6 +68,26 @@ const MedfolgendeBarn = ({
             disabled={!redigerbart}
           />
         </Nav.Fieldset>
+        {
+          omfattet === false &&
+          <Nav.Row>
+            <Nav.Column xs="8">
+              <Nav.Select
+                onChange={e => onBegrunnelseChange(e.target.value)}
+                value={begrunnelse}
+                disabled={!redigerbart}
+                label="Begrunnelse for avslag:"
+              >
+                <option key={Utils._uuid()} value="" disabled>Velg...</option>
+                {
+                  MKV.KTObjects.begrunnelser.medfolgende_barn_begrunnelser.map(({ kode, term }) => (
+                    <option key={kode} value={kode}>{term}</option>
+                  ))
+                }
+              </Nav.Select>
+            </Nav.Column>
+          </Nav.Row>
+        }
       </Nav.Column>
     </Nav.Row>
   );
@@ -79,12 +101,15 @@ MedfolgendeBarn.propTypes = {
   onCheck: PT.func.isRequired,
   onUnmount: PT.func.isRequired,
   onMount: PT.func.isRequired,
+  begrunnelse: PT.string,
+  onBegrunnelseChange: PT.func.isRequired,
 };
 
 MedfolgendeBarn.defaultProps = {
   navn: '',
   idNummer: '',
   omfattet: null,
+  begrunnelse: '',
 };
 
 const VurderingMedfolgendeBarn = ({
@@ -117,9 +142,19 @@ const VurderingMedfolgendeBarn = ({
             }
             return null;
           };
-          const onMount = () => oppdaterData(konverterTilStegData(medfolgendeBarnEnkeltfakta));
-          const onUnmount = () => slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid));
-          const onCheck = value => oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid, value));
+          const begrunnelse = medfolgendeBarnEnkeltfakta.begrunnelseKoder ? medfolgendeBarnEnkeltfakta.begrunnelseKoder[0] : undefined;
+          const onMount = () => {
+            oppdaterData(konverterTilStegData(medfolgendeBarnEnkeltfakta));
+          };
+          const onUnmount = () => {
+            slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid));
+          };
+          const onCheck = value => {
+            oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid, value));
+          };
+          const onBegrunnelseChange = begrunnelseKode => {
+            oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid, [begrunnelseKode]));
+          };
 
           return <MedfolgendeBarn
             key={barn.uuid}
@@ -130,13 +165,13 @@ const VurderingMedfolgendeBarn = ({
             onCheck={onCheck}
             onUnmount={onUnmount}
             onMount={onMount}
+            begrunnelse={begrunnelse}
+            onBegrunnelseChange={onBegrunnelseChange}
           />;
         })
       }
-      <div className="vurdering-medfolgende-barn">
-        <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-        </div>
+      <div className="fane__knapplinje">
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </Nav.Container>
   );
