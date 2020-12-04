@@ -61,17 +61,24 @@ class Stegvelger extends Component {
   async componentDidMount() {
     this.aktiv = true;
 
-    const { behandlingID } = this.props;
+    const { behandlingID, sakstype } = this.props;
     const { aktivtStegNummer } = this.state;
 
-    await Promise.all([
-      this.props.hentMedlemsPerioder(behandlingID),
-      this.props.hentVilkar(behandlingID),
-      this.props.hentAvklartefakta(behandlingID),
-      this.props.hentLovvalgsperioder(behandlingID),
-      this.props.hentAnmodningsperioder(behandlingID),
-      this.props.hentUtpekingsperioder(behandlingID),
-    ]);
+    if (sakstype === MKV.Koder.sakstyper.FTRL) {
+      await Promise.all([
+        this.props.hentVilkar(behandlingID),
+        this.props.hentAvklartefakta(behandlingID),
+      ]);
+    } else {
+      await Promise.all([
+        this.props.hentMedlemsPerioder(behandlingID),
+        this.props.hentVilkar(behandlingID),
+        this.props.hentAvklartefakta(behandlingID),
+        this.props.hentLovvalgsperioder(behandlingID),
+        this.props.hentAnmodningsperioder(behandlingID),
+        this.props.hentUtpekingsperioder(behandlingID),
+      ]);
+    }
 
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
@@ -175,6 +182,7 @@ class Stegvelger extends Component {
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
 
+    const { sakstype } = this.props;
     const { aktivtStegNummer, stegStores } = this.state;
     const {
       vilkaar,
@@ -184,14 +192,21 @@ class Stegvelger extends Component {
 
     const perioderStegState = this.hentPerioderStegState();
 
-    await Promise.all([
-      this.props.oppdaterVilkaar(vilkaar.hent()),
-      this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder(perioderStegState),
-      this.props.oppdaterAnmodningsPerioder(perioderStegState),
-      this.props.oppdaterUtpekingsperioder(perioderStegState),
-      this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
-    ]);
+    if (sakstype === MKV.Koder.sakstyper.FTRL) {
+      await Promise.all([
+        this.props.oppdaterVilkaar(vilkaar.hent()),
+        this.props.oppdaterAvklartefakta(avklartefakta.hent()),
+      ]);
+    } else {
+      await Promise.all([
+        this.props.oppdaterVilkaar(vilkaar.hent()),
+        this.props.oppdaterAvklartefakta(avklartefakta.hent()),
+        this.props.oppdaterLovvalgperioder(perioderStegState),
+        this.props.oppdaterAnmodningsPerioder(perioderStegState),
+        this.props.oppdaterUtpekingsperioder(perioderStegState),
+        this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
+      ]);
+    }
 
     this.props.oppdaterBehandlingsgrunnlag();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
@@ -460,17 +475,23 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
       lagreAnmodningsperioderHandler,
       lagreUtpekingsperioderHandler,
+      sakstype,
     } = this.props;
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
-      await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
-      await lagreAvklartefaktaHandler();
-      await lagreVilkarHandler();
-      await lagreLovvalgsperioderHandler();
-      await lagreAnmodningsperioderHandler();
-      await lagreUtpekingsperioderHandler();
+      if (sakstype === MKV.Koder.sakstyper.FTRL) {
+        await lagreAvklartefaktaHandler();
+        await lagreVilkarHandler();
+      } else {
+        await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
+        await lagreAvklartefaktaHandler();
+        await lagreVilkarHandler();
+        await lagreLovvalgsperioderHandler();
+        await lagreAnmodningsperioderHandler();
+        await lagreUtpekingsperioderHandler();
+      }
 
       if (this.erSisteSteg(nyttStegNummer)) {
         await lagreBehandlingsgrunnlagHandler();
@@ -554,7 +575,7 @@ Stegvelger.propTypes = {
   lagreVilkarHandler: PT.func,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func,
-  oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
+  oppdaterOgLagreBehandlingerHandler: PT.func,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   soknadFeilmeldinger: PT.object.isRequired,
@@ -596,6 +617,7 @@ Stegvelger.propTypes = {
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagredeVirksomheter: PT.array.isRequired,
   medlemskapsperioder: PT.object.isRequired,
+  sakstype: PT.string,
 };
 
 Stegvelger.defaultProps = {
@@ -619,9 +641,11 @@ Stegvelger.defaultProps = {
   maritimtarbeid: [],
   hjemmebaser: [],
   inngangsvilkaar: {},
+  sakstype: '',
   lagreVilkarHandler: () => {},
   lagreLovvalgsperioderHandler: () => {},
   lagreAnmodningsperioderHandler: () => {},
+  oppdaterOgLagreBehandlingerHandler: () => {},
 };
 
 const mapStateToProps = state => ({

@@ -28,7 +28,6 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../
 import { datalastingOperations } from '../../../ducks/datalasting';
 import { dokumenterOperations, dokumenterSelectors } from '../../../ducks/dokumenter';
 import { formSelectors } from '../../../ducks/form';
-import { behandlingsperioderOperations } from '../../../ducks/behandlingsperioder';
 import { menypanelOperations } from '../../../ducks/menypanel';
 import { folketrygdenkodeverkOperations } from '../../../ducks/folketrygdenkodeverk';
 import { oppsummertfaktaOperations } from '../../../ducks/oppsummertfakta';
@@ -86,11 +85,9 @@ const Saksbehandling = ({
   hentOppsummertFakta,
   lagreAllData,
   lagreAvklartefakta,
-  lagrePerioder,
   lagreVilkar,
   location,
   match,
-  oppdaterBehandlingerState,
   oppdaterBehandlingsgrunnlag,
   oppsummering,
   person,
@@ -98,7 +95,6 @@ const Saksbehandling = ({
   resetBehandlingerState,
   resetBehandlingsgrunnlagState,
   resetFagsakState,
-  skjema,
   skjulMenypanel,
   soknadForm,
   startOgVisOppfriskModal,
@@ -169,12 +165,6 @@ const Saksbehandling = ({
     oppdaterBehandlingIDState();
   });
 
-  const oppdaterOgLagreBehandlingerHandler = async () => {
-    await oppdaterBehandlingerState({ ...skjema });
-
-    lagrePerioder();
-  };
-
   const { params: { snr: saksnummer } } = match;
 
   if (Utils._isNil(redigerbart)) {
@@ -205,7 +195,6 @@ const Saksbehandling = ({
             <Stegvelger
               behandlingID={behandlingID}
               lagreAvklartefaktaHandler={lagreAvklartefakta}
-              oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
               lagreAllData={lagreAllData}
               lagreVilkarHandler={lagreVilkar}
               oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
@@ -215,6 +204,7 @@ const Saksbehandling = ({
               tilForsiden={tilForsiden}
               stegMap={stegMap}
               forsteSteg={STEG.START}
+              sakstype={MKV.Koder.sakstyper.FTRL}
             />
             }
             {
@@ -285,7 +275,6 @@ Saksbehandling.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   redigerbart: PT.bool,
-  skjema: PT.object,
   soknadForm: PT.object.isRequired,
   // Funcs
   hentBehandling: PT.func.isRequired,
@@ -298,9 +287,7 @@ Saksbehandling.propTypes = {
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
-  lagrePerioder: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
-  oppdaterBehandlingerState: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsgrunnlagState: PT.func.isRequired,
@@ -317,7 +304,6 @@ Saksbehandling.defaultProps = {
   fagsak: {},
   oppsummering: undefined,
   redigerbart: null,
-  skjema: {},
 };
 
 const mapStateToProps = state => ({
@@ -351,9 +337,7 @@ const mapDispatchToProps = dispatch => ({
   hentOppsummertFakta: bid => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(bid)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
-  lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
-  oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
