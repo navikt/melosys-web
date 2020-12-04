@@ -226,6 +226,7 @@ const VurderingMedfolgendeBarn = ({
           label="Fritekst til avsnitt om barn i vedtaksbrev"
           placeholder="Skriv inn tilleggsinformasjon..."
           maxLength={500}
+          disabled={!redigerbart}
         />
       }
       <div className="fane__knapplinje">
