@@ -29,6 +29,7 @@ import Artikkel16MottaSvar from './artikkel16_motta_svar';
 import Artikkel16Vedtak from './artikkel16_vedtak';
 import VirksomhetType from './virksomhet_type';
 import VesentligVirksomhet from './vesentlig_virksomhet';
+import MedfolgendeBarn from './medfolgende_barn';
 import NormaltDriverVirksomhet from './normalt_driver_virksomhet';
 import Arbeidsmonster from './arbeidsmonster';
 import SokkelSkip from './sokkel_skip';
@@ -66,6 +67,7 @@ export const stegMap = new Map([
   [STEG.ARBEIDSMONSTER, Arbeidsmonster],
   [STEG.VIRKSOMHET_TYPE, VirksomhetType],
   [STEG.VESENTLIG_VIRKSOMHET, VesentligVirksomhet],
+  [STEG.MEDFOLGENDE_BARN, MedfolgendeBarn],
   [STEG.NORMALT_DRIVER_VIRKSOMHET, NormaltDriverVirksomhet],
   [STEG.AKTIVITET, Aktivitet],
   [STEG.BOSTEDSLAND, Bostedsland],
