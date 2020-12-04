@@ -46,9 +46,17 @@ const MedfolgendeBarn = ({
     <Nav.Row className="vurdering-medfolgende-barn__enkelt">
       <Nav.Column xs="12">
         <div className="personalia">
-          <Nav.typo.Element>{navn}</Nav.typo.Element>
-          &nbsp;
-          <Nav.typo.Normaltekst>(F.nr: {idNummer})</Nav.typo.Normaltekst>
+          {
+            navn &&
+            <>
+              <Nav.typo.Element>{navn}</Nav.typo.Element>
+              &nbsp;
+            </>
+          }
+          {
+            idNummer &&
+            <Nav.typo.Normaltekst>(F.nr: {idNummer})</Nav.typo.Normaltekst>
+          }
         </div>
         <Nav.Fieldset legend="" className="radios">
           <Nav.Radio
@@ -127,6 +135,20 @@ const VurderingMedfolgendeBarn = ({
     slettData();
   }, []);
 
+  const visFritekstFelt = vurderingLovvalgBarnFakta.some(af => hentFaktaVerdi(af) === KV.Koder.BoolskAvklartfaktaType.USANN);
+  const medfolgendeBarnFritekst = (vurderingLovvalgBarnFakta.find(af => af.begrunnelseFritekst) || {}).begrunnelseFritekst;
+  const onMedfolgendeBarnFritekstChange = e => {
+    vurderingLovvalgBarnFakta.forEach(af => {
+      oppdaterData(lagAvklartfakta(
+        MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+        af.subjektID,
+        ...af.fakta,
+        [...af.begrunnelseKoder],
+        e.target.value
+      ));
+    });
+  };
+
   return (
     <Nav.Container fluid className="vurdering-medfolgende-barn">
       <Nav.typo.Undertittel className="undertittel">Skal barn oppgitt i søknaden være omfattet av norsk lovgivning?</Nav.typo.Undertittel>
@@ -143,17 +165,33 @@ const VurderingMedfolgendeBarn = ({
             return null;
           };
           const begrunnelse = medfolgendeBarnEnkeltfakta.begrunnelseKoder ? medfolgendeBarnEnkeltfakta.begrunnelseKoder[0] : undefined;
+
           const onMount = () => {
-            oppdaterData(konverterTilStegData(medfolgendeBarnEnkeltfakta));
+            oppdaterData(konverterTilStegData(
+              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+              medfolgendeBarnEnkeltfakta
+            ));
           };
           const onUnmount = () => {
-            slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid));
+            slettData(slettAvklartfakta(
+              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+              barn.uuid
+            ));
           };
           const onCheck = value => {
-            oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid, value));
+            oppdaterData(lagAvklartfakta(
+              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+              barn.uuid,
+              value,
+              []
+            ));
           };
           const onBegrunnelseChange = begrunnelseKode => {
-            oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid, [begrunnelseKode]));
+            oppdaterData(lagAvklartefaktaBegrunnelse(
+              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+              barn.uuid,
+              [begrunnelseKode]
+            ));
           };
 
           return <MedfolgendeBarn
@@ -169,6 +207,16 @@ const VurderingMedfolgendeBarn = ({
             onBegrunnelseChange={onBegrunnelseChange}
           />;
         })
+      }
+      {
+        visFritekstFelt &&
+        <Nav.Textarea
+          value={medfolgendeBarnFritekst || ''}
+          onChange={onMedfolgendeBarnFritekstChange}
+          label="Fritekst til avsnitt om barn i vedtaksbrev"
+          placeholder="Skriv inn tilleggsinformasjon..."
+          maxLength={500}
+        />
       }
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
