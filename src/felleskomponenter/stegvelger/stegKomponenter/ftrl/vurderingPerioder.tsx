@@ -99,8 +99,8 @@ const PeriodeElement =
         }
         {
           redigerbart && formValues.medlemskapsperioder.length > 1 &&
-          <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)}>
-            <Ikoner.Bin2 />
+          <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
+            <Ikoner.Bin />
             <span>Slett periode</span>
           </Nav.Lenker>
         }
@@ -315,7 +315,7 @@ const VurderingPerioder =
               {...props} />)
         }
 
-        <div className="leggTilKnapp">
+        <div className="leggTilKnapp" title="Legg til ny periode">
           <Mui.Knappelenke
             onClick={handleLeggTil}
             ikon={Ikoner.Add}
