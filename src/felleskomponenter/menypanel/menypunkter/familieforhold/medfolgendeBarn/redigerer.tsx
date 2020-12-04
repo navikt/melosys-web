@@ -18,23 +18,29 @@ const Redigerer = ({
   settVerdi,
   verdier,
 }: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeBarn>) => {
-  const [idNummerErAutomatiskUtfylt, setIdNummerErAutomatiskUtfylt] = useState(false);
+  const [disableNavnInput, setDisableNavnInput] = useState(false);
+  const [visNavnSpinner, setVisNavnSpinner] = useState(false);
 
   const hentPerson = async (idNummer: string) => {
-    setIdNummerErAutomatiskUtfylt(false);
-
     if (Utils.person.erGyldigFnr(idNummer) || Utils.person.erGyldigDnr(idNummer)) {
+      setVisNavnSpinner(true);
+      setDisableNavnInput(true);
+
       try {
         const person = await Api.Personer.hentPerson(idNummer);
         settVerdi('navn', person.sammensattNavn);
-        setIdNummerErAutomatiskUtfylt(true);
       } catch (e) {
         if (e.status !== 404) Utils.logger.error(e);
+        setDisableNavnInput(false);
       }
+
+      setVisNavnSpinner(false);
     }
   };
 
   const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async event => {
+    setDisableNavnInput(false);
+
     const idNummer = event.target.value;
     hentPerson(idNummer);
   };
@@ -51,10 +57,14 @@ const Redigerer = ({
         <Skjema.Input
           label="Fullt navn"
           feltNavn={`${overordnetFeltNavn}.navn`}
-          disabled={!redigerbart || idNummerErAutomatiskUtfylt}
+          disabled={!redigerbart || disableNavnInput}
           bredde="fullbredde"
           datoFelt={false}
         />
+        {
+          visNavnSpinner &&
+          <Nav.NavFrontendSpinner className="navn-spinner" />
+        }
       </Nav.Column>
       <Nav.Column xs="5">
         <Skjema.Input
