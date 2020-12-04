@@ -71,7 +71,7 @@ const Arbeidssteder = ({
       redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
       leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på land')}
       hentDefaultElement={() => arbeidUtlandDefaultElement}
-      tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedLand}
+      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}
       tittelIkon={Ikoner.Kontor}
       tittelUnderstrek
       elementUnderstrek
@@ -88,7 +88,7 @@ const Arbeidssteder = ({
       redigeringUtfortKomponent={Enkel.Offshore.RedigeringUtfort}
       leggTilTekst={hentLeggTilTekst('Legg til arbeidssted offshore')}
       hentDefaultElement={() => ({})}
-      tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedOffshore}
+      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore}
       tittelIkon={Ikoner.Helikopter}
       tittelUnderstrek
       elementUnderstrek
@@ -105,7 +105,7 @@ const Arbeidssteder = ({
       redigeringUtfortKomponent={Enkel.Skip.RedigeringUtfort}
       leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på skip')}
       hentDefaultElement={() => ({})}
-      tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedSkip}
+      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip}
       tittelIkon={Ikoner.Skip}
       tittelUnderstrek
       elementUnderstrek
@@ -122,7 +122,7 @@ const Arbeidssteder = ({
       redigeringUtfortKomponent={Enkel.Fly.RedigeringUtfort}
       leggTilTekst={hentLeggTilTekst('Legg til arbeidssted på fly')}
       hentDefaultElement={() => ({})}
-      tittelTekst={KV.Panel.arbeidssteder.undertitler.arbeidsstedFly}
+      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedFly}
       tittelIkon={Ikoner.Fly}
       tittelUnderstrek
       elementUnderstrek

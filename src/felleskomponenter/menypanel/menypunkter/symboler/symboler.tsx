@@ -1,9 +1,7 @@
 import React, { ComponentProps } from 'react';
 
-import * as Mui from '../../ui';
-import * as Ikoner from '../../../resources/images';
-
-import './symboler.css';
+import * as Mui from '../../../ui';
+import * as Ikoner from '../../../../resources/images';
 
 type KnappeLenkeProps = ComponentProps<typeof Mui.Knappelenke>;
 type SymbolProps = Omit<KnappeLenkeProps, 'title' | 'ikon'>;

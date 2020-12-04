@@ -5,7 +5,7 @@ import * as KV from '../../../../../../kodeverk';
 
 import MKV from '../../../../../../melosyskodeverk';
 
-import { RedigeringUtfort as RedigeringUtfortType } from '../types';
+import { EnRedigeringsknappListeRedigeringUtfort } from '../../../editerbartElementListe';
 
 import './redigeringUtfort.css';
 
@@ -13,7 +13,7 @@ const cls = classNames('tabell', 'arbeidssted__offshore__redigeringutfort');
 
 const RedigeringUtfort = ({
   verdier,
-}: RedigeringUtfortType<KV.Form.ArbeidsstedOffshore>) => (
+}: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedOffshore>) => (
   <table className={cls}>
     <thead>
       <tr>

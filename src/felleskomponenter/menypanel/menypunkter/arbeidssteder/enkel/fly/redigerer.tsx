@@ -9,13 +9,13 @@ import Sletterad from '../sletterad';
 
 import MKV from '../../../../../../melosyskodeverk';
 
-import { Redigerer as RedigererType } from '../types';
+import { EnRedigeringsknappListeRedigerer } from '../../../editerbartElementListe';
 
 const Redigerer = ({
   redigerbart,
   overordnetFeltNavn,
   slett,
-}: RedigererType<KV.Form.ArbeidsstedFly>) => (
+}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedFly>) => (
   <div>
     <Nav.Row>
       <Nav.Column xs="6">

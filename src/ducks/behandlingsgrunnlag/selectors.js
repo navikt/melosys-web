@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 import * as Utils from '../../utils';
+import * as KV from '../../kodeverk';
 
 import { OrganisasjonSelectors } from '../organisasjoner';
 
@@ -206,6 +207,24 @@ export const PeriodeTomSelector = createSelector(
 export const PersonOpplysningerSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   behandlingsgrunnlag => behandlingsgrunnlag.personOpplysninger || {}
+);
+
+export const MedfolgendeFamilieSelector = createSelector(
+  PersonOpplysningerSelector,
+  personopplysninger => personopplysninger.medfolgendeFamilie || []
+);
+
+export const MedfolgendeBarnSelector = createSelector(
+  MedfolgendeFamilieSelector,
+  medfolgendeFamilie => medfolgendeFamilie
+    .filter(person => (
+      person.relasjonsrolle === KV.Koder.Relasjonsrolle.BARN
+    ))
+    .map(person => ({
+      uuid: person.uuid,
+      navn: person.navn,
+      fnr: person.fnr,
+    }))
 );
 
 export const OvergangsregelbestemmelserSelector = createSelector(
