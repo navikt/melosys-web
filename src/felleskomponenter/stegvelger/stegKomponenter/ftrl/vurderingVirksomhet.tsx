@@ -60,17 +60,17 @@ const VurderingVirksomhet =
     const hjelpetekst = 'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. ' +
       'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
-    useEffect(() => {
-      lastInnBehandlingsgrunnlag();
-      return () => {
-        hentOppsummertFakta(behandlingID);
-      }
-    }, []);
-
     const lastInnBehandlingsgrunnlag = async () => {
       await hentBehandlingsgrunnlag(behandlingID);
       setErBehandlingsgrunnlagLastetInn(true);
     };
+
+    useEffect(() => {
+      lastInnBehandlingsgrunnlag();
+      return () => {
+        hentOppsummertFakta(behandlingID);
+      };
+    }, []);
 
     const oppdaterVirksomheterOgStegvelger = async () => {
       await oppdaterVirksomheterState({ virksomhetIDer: valgteVirksomheter });
