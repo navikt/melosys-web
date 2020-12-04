@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -131,22 +131,30 @@ const VurderingMedfolgendeBarn = ({
     harAvklaring,
   },
 }) => {
+  const [medfolgendeBarnFritekst, setMedfolgendeBarnFritekst] = useState('');
+
   useEffect(() => () => {
     slettData();
   }, []);
 
   const visFritekstFelt = vurderingLovvalgBarnFakta.some(af => hentFaktaVerdi(af) === KV.Koder.BoolskAvklartfaktaType.USANN);
-  const medfolgendeBarnFritekst = (vurderingLovvalgBarnFakta.find(af => af.begrunnelseFritekst) || {}).begrunnelseFritekst;
-  const onMedfolgendeBarnFritekstChange = e => {
+
+  const oppdaterStegStoreFritekst = fritekst => {
     vurderingLovvalgBarnFakta.forEach(af => {
       oppdaterData(lagAvklartfakta(
         MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
         af.subjektID,
         ...af.fakta,
         [...af.begrunnelseKoder],
-        e.target.value
+        fritekst || null
       ));
     });
+  };
+  const debouncedOppdaterStegStoreFritekst = useCallback(Utils._debounce(oppdaterStegStoreFritekst, 1000), []);
+
+  const onMedfolgendeBarnFritekstChange = e => {
+    setMedfolgendeBarnFritekst(e.target.value);
+    debouncedOppdaterStegStoreFritekst(e.target.value);
   };
 
   return (
