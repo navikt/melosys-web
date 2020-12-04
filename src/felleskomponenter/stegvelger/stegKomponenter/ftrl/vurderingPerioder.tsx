@@ -6,7 +6,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { KTObject } from '@navikt/melosys-kodeverk';
 import { RootState } from 'AppTypes';
 import { Medlemskapsperiode, OppdaterMedlemskapsperiode } from 'Domene';
-import { v4 as uuidv4 } from 'uuid';
 
 import MKV from '../../../../melosyskodeverk';
 import * as Api from '../../../../services/api';
@@ -273,7 +272,7 @@ const VurderingPerioder =
     const handleLeggTil = () => {
       const sistePeriodeTomDato = formValues.medlemskapsperioder.length > 0 && formValues.medlemskapsperioder[formValues.medlemskapsperioder.length - 1].tomDato;
       const nyMedlemskapsperiode = {
-        id: uuidv4(),
+        id: Utils._uuid(),
         ny: true,
         fomDato: sistePeriodeTomDato ? Utils.dato.plussEnDag(sistePeriodeTomDato) : null,
       };
