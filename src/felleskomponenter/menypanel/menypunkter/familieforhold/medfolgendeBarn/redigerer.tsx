@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { useState, useEffect, ChangeEventHandler } from 'react';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
@@ -16,19 +16,34 @@ const Redigerer = ({
   overordnetFeltNavn,
   slett,
   settVerdi,
+  verdier,
 }: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeBarn>) => {
-  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async event => {
-    const idNummer = event.target.value;
+  const [idNummerErAutomatiskUtfylt, setIdNummerErAutomatiskUtfylt] = useState(false);
+
+  const hentPerson = async (idNummer: string) => {
+    setIdNummerErAutomatiskUtfylt(false);
 
     if (Utils.person.erGyldigFnr(idNummer) || Utils.person.erGyldigDnr(idNummer)) {
       try {
         const person = await Api.Personer.hentPerson(idNummer);
         settVerdi('navn', person.sammensattNavn);
+        setIdNummerErAutomatiskUtfylt(true);
       } catch (e) {
         if (e.status !== 404) Utils.logger.error(e);
       }
     }
   };
+
+  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async event => {
+    const idNummer = event.target.value;
+    hentPerson(idNummer);
+  };
+
+  useEffect(() => {
+    if (verdier.fnr) {
+      hentPerson(verdier.fnr.toString());
+    }
+  }, []);
 
   return (
     <Nav.Row className="medfolgende-barn__redigerer">
@@ -36,7 +51,7 @@ const Redigerer = ({
         <Skjema.Input
           label="Fullt navn"
           feltNavn={`${overordnetFeltNavn}.navn`}
-          disabled={!redigerbart}
+          disabled={!redigerbart || idNummerErAutomatiskUtfylt}
           bredde="fullbredde"
           datoFelt={false}
         />
