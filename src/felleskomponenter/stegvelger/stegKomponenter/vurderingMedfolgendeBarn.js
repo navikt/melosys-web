@@ -4,11 +4,22 @@ import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
+import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
+
+import MKV from '../../../melosyskodeverk';
 
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
-import { konverterTilStegData, lagAvklartfakta, lagAvklartefaktaBegrunnelse } from '../../../regler/avklartefakta';
+import {
+  konverterTilStegData,
+  lagAvklartfakta,
+  slettAvklartfakta,
+  lagAvklartefaktaBegrunnelse,
+  hentFaktaVerdi,
+} from '../../../regler/avklartefakta';
+
+import './vurderingMedfolgendeBarn.css';
 
 const MedfolgendeBarn = ({
   navn,
@@ -16,19 +27,32 @@ const MedfolgendeBarn = ({
   omfattet,
   redigerbart,
   onCheck,
+  onMount,
+  onUnmount,
 }) => {
   const radioName = Utils._uuid();
 
+  useEffect(() => {
+    onMount();
+
+    return () => {
+      onUnmount();
+    };
+  }, []);
+
   return (
-    <Nav.Row>
+    <Nav.Row className="vurdering-medfolgende-barn__enkelt">
       <Nav.Column xs="12">
-        <Nav.typo.Element>{navn}</Nav.typo.Element>
-        <Nav.typo.Normaltekst>(F.nr: {idNummer})</Nav.typo.Normaltekst>
-        <Nav.Fieldset legend="">
+        <div className="personalia">
+          <Nav.typo.Element>{navn}</Nav.typo.Element>
+          &nbsp;
+          <Nav.typo.Normaltekst>(F.nr: {idNummer})</Nav.typo.Normaltekst>
+        </div>
+        <Nav.Fieldset legend="" className="radios">
           <Nav.Radio
             name={radioName}
             onChange={e => onCheck(e.target.value)}
-            value
+            value={KV.Koder.BoolskAvklartfaktaType.SANN}
             checked={omfattet === true}
             label="Ja"
             disabled={!redigerbart}
@@ -36,9 +60,9 @@ const MedfolgendeBarn = ({
           <Nav.Radio
             name={radioName}
             onChange={e => onCheck(e.target.value)}
-            value={false}
-            checked={omfattet === true}
-            label="Ja"
+            value={KV.Koder.BoolskAvklartfaktaType.USANN}
+            checked={omfattet === false}
+            label="Nei"
             disabled={!redigerbart}
           />
         </Nav.Fieldset>
@@ -50,9 +74,11 @@ const MedfolgendeBarn = ({
 MedfolgendeBarn.propTypes = {
   navn: PT.string,
   idNummer: PT.string,
-  omfattet: PT.bool,
+  omfattet: PT.oneOf([true, false, null]),
   redigerbart: PT.bool.isRequired,
   onCheck: PT.func.isRequired,
+  onUnmount: PT.func.isRequired,
+  onMount: PT.func.isRequired,
 };
 
 MedfolgendeBarn.defaultProps = {
@@ -72,27 +98,40 @@ const VurderingMedfolgendeBarn = ({
     harAvklaring,
   },
 }) => {
-  useEffect(() => {
-    oppdaterData(konverterTilStegData(vurderingLovvalgBarnFakta));
-
-    return () => {
-      slettData();
-    };
+  useEffect(() => () => {
+    slettData();
   }, []);
 
   return (
-    <Nav.Container fluid>
+    <Nav.Container fluid className="vurdering-medfolgende-barn">
+      <Nav.typo.Undertittel className="undertittel">Skal barn oppgitt i søknaden være omfattet av norsk lovgivning?</Nav.typo.Undertittel>
       {
-        medfolgendeBarn.map(barn => (
-          <MedfolgendeBarn
-            key={Utils._uuid()}
+        medfolgendeBarn.map(barn => {
+          const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find(af => af.subjektID === barn.uuid) || {};
+          const omfattet = () => {
+            const faktaVerdi = hentFaktaVerdi(medfolgendeBarnEnkeltfakta);
+            if (faktaVerdi === KV.Koder.BoolskAvklartfaktaType.SANN) {
+              return true;
+            } else if (faktaVerdi === KV.Koder.BoolskAvklartfaktaType.USANN) {
+              return false;
+            }
+            return null;
+          };
+          const onMount = () => oppdaterData(konverterTilStegData(medfolgendeBarnEnkeltfakta));
+          const onUnmount = () => slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid));
+          const onCheck = value => oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid, value));
+
+          return <MedfolgendeBarn
+            key={barn.uuid}
             navn={barn.navn}
             idNummer={barn.fnr}
             redigerbart={redigerbart}
-            omfattet={}
-            onCheck={}
-          />
-        ))
+            omfattet={omfattet()}
+            onCheck={onCheck}
+            onUnmount={onUnmount}
+            onMount={onMount}
+          />;
+        })
       }
       <div className="vurdering-medfolgende-barn">
         <div className="fane__knapplinje">
@@ -104,7 +143,7 @@ const VurderingMedfolgendeBarn = ({
 };
 
 VurderingMedfolgendeBarn.propTypes = {
-  vurderingLovvalgBarnFakta: MPT.Avklartefakta,
+  vurderingLovvalgBarnFakta: MPT.AvklartefaktaListe,
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
@@ -114,7 +153,7 @@ VurderingMedfolgendeBarn.propTypes = {
 };
 
 VurderingMedfolgendeBarn.defaultProps = {
-  vurderingLovvalgBarnFakta: {},
+  vurderingLovvalgBarnFakta: [],
   tilstand: {},
 };
 
