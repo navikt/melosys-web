@@ -145,7 +145,7 @@ function erLike(datoEn, datoTo) {
 }
 
 function plussEnDag(dato) {
-  return moment(dato,'DD.MM.YYYY').add(1, 'days').format('DD.MM.YYYY');
+  return moment(dato, 'DD.MM.YYYY').add(1, 'days').format('DD.MM.YYYY');
 }
 
 export {
