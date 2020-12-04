@@ -131,7 +131,9 @@ const VurderingMedfolgendeBarn = ({
     harAvklaring,
   },
 }) => {
-  const [medfolgendeBarnFritekst, setMedfolgendeBarnFritekst] = useState('');
+  const medfolgendeBarnMedFritekst = vurderingLovvalgBarnFakta.find(af => af.begrunnelseFritekst);
+  const defaultMedfolgendeBarnFritekst = medfolgendeBarnMedFritekst ? medfolgendeBarnMedFritekst.begrunnelseFritekst : '';
+  const [medfolgendeBarnFritekst, setMedfolgendeBarnFritekst] = useState(defaultMedfolgendeBarnFritekst);
 
   useEffect(() => () => {
     slettData();
