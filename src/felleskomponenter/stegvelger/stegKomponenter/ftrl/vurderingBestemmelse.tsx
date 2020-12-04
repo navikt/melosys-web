@@ -14,6 +14,7 @@ import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { finnTermFraListe, termFraNestedKTObject } from '../../../../kodeverk';
 
+import { BOOLSK_STRING } from '../../../../constants';
 import './vurderingBestemmelse.css';
 
 
@@ -68,8 +69,6 @@ const VurderingBestemmelse =
     oppdater,
     opprettMedlemskapsperiodeFraBestemmelse,
   } : Props & PropsFromRedux) => {
-    const SANN = 'true';
-    const USANN = 'false';
     const [valgtBestemmelse, setValgtBestemmelse] = useState('');
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
     const [valgteVilkar, setValgteVilkar] = useState(new Map());
@@ -82,7 +81,7 @@ const VurderingBestemmelse =
     useEffect(() => {
       const valgteBestemmelseVilkar = bestemmelseVilkar.find(element => element.bestemmelse === valgtBestemmelse);
       const alleVilkarHarSvarJaOgvalgtBegrunnelse = valgteBestemmelseVilkar && valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(vilkar =>
-        (valgteVilkar.get(vilkar.vilkaar) === SANN) &&
+        (valgteVilkar.get(vilkar.vilkaar) === BOOLSK_STRING.SANN) &&
         (vilkar.muligeBegrunnelser.length > 0 ? valgteBegrunnelser.get(vilkar.vilkaar) : true))
         .length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
 
@@ -103,7 +102,7 @@ const VurderingBestemmelse =
     const handleEndreVilkar: ChangeEventHandler<HTMLInputElement> = event => {
       setValgteVilkar(new Map(valgteVilkar.set(event.target.name, event.target.value)));
       oppdaterData(lagVilkaar(event.target.name, event.target.value));
-      if (event.target.value === USANN && valgteBegrunnelser.get(event.target.name)) {
+      if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
         valgteBegrunnelser.delete(event.target.name);
         setValgteBegrunnelser(new Map(valgteBegrunnelser));
         oppdaterData(lagBegrunnelse(event.target.name, []));
@@ -128,9 +127,9 @@ const VurderingBestemmelse =
                 label="Ja"
                 name={vilkaar}
                 onChange={handleEndreVilkar}
-                checked={valgteVilkar.get(`${vilkaar}`) === SANN}
-                value={SANN}
-                key={SANN}
+                checked={valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.SANN}
+                value={BOOLSK_STRING.SANN}
+                key={BOOLSK_STRING.SANN}
                 disabled={!redigerbart}
               />
             </Nav.Column>
@@ -139,16 +138,16 @@ const VurderingBestemmelse =
                 label="Nei"
                 name={vilkaar}
                 onChange={handleEndreVilkar}
-                checked={valgteVilkar.get(`${vilkaar}`) === USANN}
-                value={USANN}
-                key={USANN}
+                checked={valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.USANN}
+                value={BOOLSK_STRING.USANN}
+                key={BOOLSK_STRING.USANN}
                 disabled={!redigerbart}
               />
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
-        { valgteVilkar.get(`${vilkaar}`) === USANN && <Alert />}
-        { muligeBegrunnelser.length > 0 && valgteVilkar.get(`${vilkaar}`) === SANN &&
+        { valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.USANN && <Alert />}
+        { muligeBegrunnelser.length > 0 && valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.SANN &&
         <Nav.Fieldset
           className="select"
           legend={<Fragment>Velg særlig grunn<Hjelpetekst /></Fragment>}>
