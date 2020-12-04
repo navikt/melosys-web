@@ -6,6 +6,7 @@ import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import VurderingMedfolgendeBarn from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingMedfolgendeBarn';
 import { hentFaktaListe } from '../../../regler/avklartefakta';
+import { erVilkarOppfylt } from '../../../regler/vilkar';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -17,8 +18,23 @@ class VesentligVirksomhet extends Steg {
 
     this.kriterier = [
       {
-        exec: () => harAvklaring,
+        exec: (avklartefakta, alleVilkar) => (
+          harAvklaring && (
+            erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar) ||
+            erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar)
+          )
+        ),
         nesteSteg: STEG.VEDTAK,
+      },
+      {
+        exec: (avklartefakta, alleVilkar) => (
+          harAvklaring && erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar)
+        ),
+        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+      },
+      {
+        exec: () => harAvklaring && propsLight.erArbeidEttLandOvrig,
+        nesteSteg: STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK,
       },
     ];
 

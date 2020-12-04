@@ -20,12 +20,11 @@ class Artikkel12_2 extends Steg {
 
     this.kriterier = [
       {
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar),
-        nesteSteg: STEG.VEDTAK,
-      },
-      {
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) && harAvklaring,
-        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+        exec: (avklartefakta, alleVilkar) => (
+          erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar) ||
+          (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar) && harAvklaring)
+        ),
+        nesteSteg: STEG.MEDFOLGENDE_BARN,
       },
       {
         exec: (avklartefakta, alleVilkar) => (
