@@ -4,7 +4,7 @@ export type {
   MidlertidigAdresse,
   GeneriskAdresse,
 } from './adresse';
-export type { default as Avklartfakta } from './avklartfakta';
+export type { default as Avklartfakta, Virksomheter } from './avklartfakta';
 export type { default as AnmodningOmUnntakBestilling } from './anmodningomunntakbestilling';
 export type { default as Fagsak } from './fagsak';
 export type { default as Oppsummering } from './oppsummering';
@@ -21,8 +21,10 @@ export type {
 export type {
   Periode,
   Lovvalgsperiode,
+  Medlemskapsperiode,
+  OppdaterMedlemskapsperiode,
 } from './periode';
 export type { default as PersonHistorikk } from './personhistorikk';
 export type { default as Organisasjon } from './organisasjon';
-export type { MedlemskapPeriode } from './medlemskap';
+export type { MedlPeriode } from './medlemskap';
 export type { default as Aktoer } from './aktoer';

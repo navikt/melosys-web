@@ -14,6 +14,7 @@ import {
 } from '../../../regler/avklartefakta';
 import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
+import { BOOLSK_STRING } from '../../../constants';
 
 import './vurderingForretningssted.css';
 import {
@@ -164,9 +165,9 @@ export const VurderingForretningssted = props => {
   }, []);
 
   const avklartfaktaEndret = e => {
-    if (e === KV.Koder.BoolskAvklartfaktaType.SANN) {
+    if (e === BOOLSK_STRING.SANN) {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO));
-    } else if (e === KV.Koder.BoolskAvklartfaktaType.USANN) {
+    } else if (e === BOOLSK_STRING.USANN) {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND));
     } else {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, e));
@@ -181,8 +182,8 @@ export const VurderingForretningssted = props => {
   const avklartLand = hentFaktaVerdi(omfattetILand) || '';
 
   const avklartefaktaTyper = [
-    { label: 'Norge', type: KV.Koder.BoolskAvklartfaktaType.SANN },
-    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN },
+    { label: 'Norge', type: BOOLSK_STRING.SANN },
+    { label: 'Annet', type: BOOLSK_STRING.USANN },
   ];
 
   return (

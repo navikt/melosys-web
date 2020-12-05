@@ -7,15 +7,13 @@ import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import * as SkjemaUtils from '../utils';
 
-import { landTekstFormat } from './utils';
-
 import * as MPT from '../../../proptypes';
 import './landvelger.css';
 
 const MultiLandEnkelt = ({ landObjekt, slettLandHandler }) => (
   <div className="landliste__linje">
     <div className="landliste__linje__navn">
-      {landTekstFormat(landObjekt)}
+      {Utils.land.landTekstFormat(landObjekt)}
     </div>
     <Nav.Knapp
       mini
@@ -56,7 +54,7 @@ function MultiLand(props) {
 
   const finnFlereLand = verdi => (
     props.landkoder.filter(land => (
-      landTekstFormat(land)
+      Utils.land.landTekstFormat(land)
         .toLowerCase()
         .includes(verdi.toLowerCase())
     ))

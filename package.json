@@ -13,7 +13,7 @@
   "readme": "README.md",
   "dependencies": {
     "@loadable/component": "^5.10.3",
-    "@navikt/melosys-kodeverk": "5.15.45",
+    "@navikt/melosys-kodeverk": "5.15.50",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",
@@ -163,6 +163,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-select": "^3.0.20",
     "@types/redux-form": "^8.2.7",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "body-parser": "^1.19.0",
