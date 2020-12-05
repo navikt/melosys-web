@@ -12,9 +12,9 @@ class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const vurderingLovvalgBarnFakta = hentFaktaListe(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, this._propsLight.avklartefakta);
+    const vurderingLovvalgBarnFakta = hentFaktaListe(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, propsLight.avklartefakta);
 
-    const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta);
+    const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
     this.kriterier = [
       {
@@ -56,13 +56,15 @@ class VesentligVirksomhet extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  harAvklaring = avklartefakta => avklartefakta.every(enkeltFakta => (
-    enkeltFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN) ||
-      (
-        enkeltFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.USANN) &&
-        enkeltFakta.begrunnelseKoder.length > 0
-      )
-  ))
+  harAvklaring = (vurderingLovvalgBarnFakta, behandlingsgrunnlagMedfolgendeBarn) => (
+    (vurderingLovvalgBarnFakta.length === behandlingsgrunnlagMedfolgendeBarn.length) &&
+    vurderingLovvalgBarnFakta.every(enkeltFakta => (
+      enkeltFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN) ||
+        (
+          enkeltFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.USANN) &&
+          enkeltFakta.begrunnelseKoder.length > 0
+        )
+    )))
 }
 
 export default VesentligVirksomhet;
