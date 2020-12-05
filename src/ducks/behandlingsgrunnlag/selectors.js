@@ -216,9 +216,15 @@ export const MedfolgendeFamilieSelector = createSelector(
 
 export const MedfolgendeBarnSelector = createSelector(
   MedfolgendeFamilieSelector,
-  medfolgendeFamilie => medfolgendeFamilie.filter(person => (
-    person.relasjonsrolle === KV.Koder.Relasjonsrolle.BARN
-  ))
+  medfolgendeFamilie => medfolgendeFamilie
+    .filter(person => (
+      person.relasjonsrolle === KV.Koder.Relasjonsrolle.BARN
+    ))
+    .map(person => ({
+      uuid: person.uuid,
+      navn: person.navn,
+      fnr: person.fnr,
+    }))
 );
 
 export const OvergangsregelbestemmelserSelector = createSelector(

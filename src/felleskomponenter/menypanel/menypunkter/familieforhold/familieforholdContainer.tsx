@@ -1,6 +1,7 @@
 import React from 'react';
 
 import * as Nav from '../../../../utils/navFrontend';
+import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
 import * as Ikoner from '../../../../resources/images';
 import * as Etiketter from '../etiketter';
@@ -48,7 +49,7 @@ const FamilieforholdContainer = ({
           redigererKomponent={MedfolgendeBarn.Redigerer}
           redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
           leggTilTekst={elementer => (elementer.length > 0 ? 'Legg til ny rad' : 'Legg til barn')}
-          hentDefaultElement={() => {}}
+          hentDefaultElement={() => ({ uuid: Utils._uuid() })}
           tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
           tittelIkon={Ikoner.ParentAndKid}
           tittelUnderstrek

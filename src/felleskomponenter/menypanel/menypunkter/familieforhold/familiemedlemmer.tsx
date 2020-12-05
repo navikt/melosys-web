@@ -38,7 +38,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
   const renderBarnEtikett = () => (alder < 18 ? (<Etiketter.Under18Aar className="ikon__under18Aar" />) : null);
 
   return (
-    <div aria-label="Enkelt familiemedlem">
+    <div aria-label="Enkelt familiemedlem" className="familiemedlemmer__enkelt">
       <Nav.Row>
         <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
@@ -69,7 +69,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
       <Nav.typo.Undertittel className="familiemedlemmer__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
       { familiemedlemmer.length === 0 && '(ingen data funnet)' }
       { familiemedlemmer.length !== 0 &&
-      <Nav.Row>
+      <Nav.Row className="header">
         <Nav.Column xs="2">{kolonneHeadinger[0]}</Nav.Column>
         <Nav.Column xs="3">{kolonneHeadinger[1]}</Nav.Column>
         <Nav.Column xs="2">{kolonneHeadinger[2]}</Nav.Column>

@@ -5,6 +5,7 @@ import * as Types from './types';
 import { strengTilInt } from '../../utils/streng';
 import { formatterDatoTilISO } from '../../utils/dato';
 import * as Utils from '../../utils';
+import * as KV from '../../kodeverk';
 
 const lagNullableAdresse = adresse => {
   if (Utils._isNil(adresse)) {
@@ -205,7 +206,12 @@ export default function reducer(state = initialState, action) {
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
-            medfolgendeFamilie: dokument.medfolgendeBarn,
+            medfolgendeFamilie: dokument.medfolgendeBarn.map(enkeltBarn => ({
+              uuid: enkeltBarn.uuid,
+              navn: enkeltBarn.navn,
+              fnr: enkeltBarn.fnr,
+              relasjonsrolle: KV.Koder.Relasjonsrolle.BARN,
+            })),
           },
           overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
           ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,

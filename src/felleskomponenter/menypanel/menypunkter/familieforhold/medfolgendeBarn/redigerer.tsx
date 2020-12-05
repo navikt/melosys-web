@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { useState, useEffect, ChangeEventHandler } from 'react';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
@@ -16,19 +16,40 @@ const Redigerer = ({
   overordnetFeltNavn,
   slett,
   settVerdi,
+  verdier,
 }: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeBarn>) => {
-  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async event => {
-    const idNummer = event.target.value;
+  const [disableNavnInput, setDisableNavnInput] = useState(false);
+  const [visNavnSpinner, setVisNavnSpinner] = useState(false);
 
+  const hentNavn = async (idNummer: string) => {
     if (Utils.person.erGyldigFnr(idNummer) || Utils.person.erGyldigDnr(idNummer)) {
+      setVisNavnSpinner(true);
+      setDisableNavnInput(true);
+
       try {
         const person = await Api.Personer.hentPerson(idNummer);
         settVerdi('navn', person.sammensattNavn);
       } catch (e) {
         if (e.status !== 404) Utils.logger.error(e);
+        setDisableNavnInput(false);
       }
+
+      setVisNavnSpinner(false);
     }
   };
+
+  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async event => {
+    setDisableNavnInput(false);
+
+    const idNummer = event.target.value;
+    hentNavn(idNummer);
+  };
+
+  useEffect(() => {
+    if (verdier.fnr) {
+      hentNavn(verdier.fnr.toString());
+    }
+  }, []);
 
   return (
     <Nav.Row className="medfolgende-barn__redigerer">
@@ -36,10 +57,14 @@ const Redigerer = ({
         <Skjema.Input
           label="Fullt navn"
           feltNavn={`${overordnetFeltNavn}.navn`}
-          disabled={!redigerbart}
+          disabled={!redigerbart || disableNavnInput}
           bredde="fullbredde"
           datoFelt={false}
         />
+        {
+          visNavnSpinner &&
+          <Nav.NavFrontendSpinner className="navn-spinner" />
+        }
       </Nav.Column>
       <Nav.Column xs="5">
         <Skjema.Input
