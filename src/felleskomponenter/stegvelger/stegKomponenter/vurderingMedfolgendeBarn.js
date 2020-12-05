@@ -236,6 +236,10 @@ const VurderingMedfolgendeBarn = ({
           disabled={!redigerbart}
         />
       }
+      {
+        medfolgendeBarn.length === 0 &&
+        <Nav.AlertStripeInfo>Ingen barn oppgitt i søknaden</Nav.AlertStripeInfo>
+      }
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
