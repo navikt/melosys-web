@@ -19,7 +19,7 @@ const RegistreringUnntaksperioderLoadable = loadable(() => import('../sider/eu_e
 const RegistreringAnmodningunntakLoadable = loadable(() => import('../sider/eu_eøs/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
 const SedBehandlingLoadable = loadable(() => import('../sider/eu_eøs/sedbehandling'), { fallback: SideLoadingStatus });
 const OpprettNySakLoadable = loadable(() => import('../sider/opprettnysak'), { fallback: SideLoadingStatus });
-const VurderUtpekingLoadable = loadable(() => import('../sider/vurderutpeking'), { fallback: SideLoadingStatus });
+const VurderUtpekingLoadable = loadable(() => import('../sider/eu_eøs/vurderutpeking'), { fallback: SideLoadingStatus });
 
 const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
 

@@ -1,10 +1,10 @@
-import MKV from '../../../melosyskodeverk';
+import MKV from '../../../../melosyskodeverk';
 
-import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingUtpekt from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
+import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingUtpekt from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
 
-import { hentLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
+import { hentLovvalgsbestemmelse } from '../../../../regler/lovvalgsbestemmelser';
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
