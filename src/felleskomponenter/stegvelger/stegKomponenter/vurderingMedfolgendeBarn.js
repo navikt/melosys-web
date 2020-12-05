@@ -152,7 +152,7 @@ const VurderingMedfolgendeBarn = ({
       ));
     });
   };
-  const debouncedOppdaterStegStoreFritekst = useCallback(Utils._debounce(oppdaterStegStoreFritekst, 1000), []);
+  const debouncedOppdaterStegStoreFritekst = useCallback(Utils._debounce(oppdaterStegStoreFritekst, 1000), [vurderingLovvalgBarnFakta]);
 
   const onMedfolgendeBarnFritekstChange = e => {
     setMedfolgendeBarnFritekst(e.target.value);
@@ -164,7 +164,7 @@ const VurderingMedfolgendeBarn = ({
       <Nav.typo.Undertittel className="undertittel">Skal barn oppgitt i søknaden være omfattet av norsk lovgivning?</Nav.typo.Undertittel>
       {
         medfolgendeBarn.map(barn => {
-          const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find(af => af.subjektID === barn.uuid) || {};
+          const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find(af => af.subjektID === barn.uuid);
           const omfattet = () => {
             const faktaVerdi = hentFaktaVerdi(medfolgendeBarnEnkeltfakta);
             if (faktaVerdi === KV.Koder.BoolskAvklartfaktaType.SANN) {
@@ -174,13 +174,18 @@ const VurderingMedfolgendeBarn = ({
             }
             return null;
           };
-          const begrunnelse = medfolgendeBarnEnkeltfakta.begrunnelseKoder ? medfolgendeBarnEnkeltfakta.begrunnelseKoder[0] : undefined;
+          const begrunnelse = (
+            medfolgendeBarnEnkeltfakta
+            && medfolgendeBarnEnkeltfakta.begrunnelseKoder.length > 0
+          ) ? medfolgendeBarnEnkeltfakta.begrunnelseKoder[0] : undefined;
 
           const onMount = () => {
-            oppdaterData(konverterTilStegData(
-              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
-              medfolgendeBarnEnkeltfakta
-            ));
+            if (medfolgendeBarnEnkeltfakta) {
+              oppdaterData(konverterTilStegData(
+                MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+                medfolgendeBarnEnkeltfakta
+              ));
+            }
           };
           const onUnmount = () => {
             slettData(slettAvklartfakta(
