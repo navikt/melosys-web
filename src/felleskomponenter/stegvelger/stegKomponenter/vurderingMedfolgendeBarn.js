@@ -143,13 +143,15 @@ const VurderingMedfolgendeBarn = ({
 
   const oppdaterStegStoreFritekst = fritekst => {
     vurderingLovvalgBarnFakta.forEach(af => {
-      oppdaterData(lagAvklartfakta(
-        MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
-        af.subjektID,
-        ...af.fakta,
-        [...af.begrunnelseKoder],
-        fritekst || null
-      ));
+      if (hentFaktaVerdi(af) === KV.Koder.BoolskAvklartfaktaType.USANN) {
+        oppdaterData(lagAvklartfakta(
+          MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+          af.subjektID,
+          ...af.fakta,
+          [...af.begrunnelseKoder],
+          fritekst || null
+        ));
+      }
     });
   };
   const debouncedOppdaterStegStoreFritekst = useCallback(Utils._debounce(oppdaterStegStoreFritekst, 1000), [vurderingLovvalgBarnFakta]);
