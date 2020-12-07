@@ -55,7 +55,7 @@ const MedfolgendeBarn = ({
           }
           {
             idNummer &&
-            <Nav.typo.Normaltekst>(F.nr: {idNummer})</Nav.typo.Normaltekst>
+            <Nav.typo.Normaltekst>(F.nr/d-nr.: {idNummer})</Nav.typo.Normaltekst>
           }
         </div>
         <Nav.Fieldset legend="" className="radios">
