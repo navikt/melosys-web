@@ -18,9 +18,9 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         exec: avklartefakta => {
           const garDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
 
-          return harValgtArbeidsgiver && garDirekteTilArtikkel16;
+          return harValgtArbeidsgiver && (garDirekteTilArtikkel16 || propsLight.erArbeidEttLandOvrig);
         },
-        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+        nesteSteg: STEG.MEDFOLGENDE_BARN,
       },
       {
         exec: () => {
@@ -29,10 +29,6 @@ class SaksbehandlingVirksomheter extends Virksomheter {
           return harValgtArbeidsgiver && erToEllerFlereLand;
         },
         nesteSteg: STEG.VURDER_ARBEIDSLAND,
-      },
-      {
-        exec: () => harValgtArbeidsgiver && propsLight.erArbeidEttLandOvrig,
-        nesteSteg: STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK,
       },
       {
         exec: avklartefakta => {
