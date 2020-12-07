@@ -44,7 +44,9 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
         <Nav.Column xs="3">
           <KopierbarTekst>{fnr}</KopierbarTekst>
         </Nav.Column>
-        <Nav.Column xs="2">{erBarn ? Utils.streng.boolTilNorsk(borMedBruker) : sivilstandGyldighetsperiodeFom}</Nav.Column>
+        <Nav.Column xs="2">
+          {erBarn ? Utils.streng.boolTilNorsk(borMedBruker) : Utils.dato.formatterDatoTilNorsk(sivilstandGyldighetsperiodeFom)}
+        </Nav.Column>
         <Nav.Column xs="2">{erBarn ? fnrAnnenForelder : Utils.streng.boolTilNorsk(borMedBruker)}</Nav.Column>
         <Nav.Column xs="3">{erBarn ? renderBarnEtikett() : relasjonstype.term}</Nav.Column>
       </Nav.Row>
