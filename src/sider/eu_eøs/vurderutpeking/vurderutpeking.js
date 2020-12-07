@@ -3,36 +3,36 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { getFormValues } from 'redux-form';
 
-import * as Nav from '../../utils/navFrontend';
-import * as Utils from '../../utils';
-import * as MPT from '../../proptypes';
-import * as KV from '../../kodeverk';
-import * as Hooks from '../../hooks';
+import * as Nav from '../../../utils/navFrontend';
+import * as Utils from '../../../utils';
+import * as MPT from '../../../proptypes';
+import * as KV from '../../../kodeverk';
+import * as Hooks from '../../../hooks';
 
-import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
-import SideOppsummering from '../../felleskomponenter/sideOppsummering';
-import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
-import Stegvelger from '../../felleskomponenter/stegvelger';
-import { STEG } from '../../felleskomponenter/stegvelger/stegMotor/typer';
-import Soknadpaneler from '../../felleskomponenter/soknadpaneler';
-import { SoknadMenypanelForm } from '../../felleskomponenter/menypanelForm';
+import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
+import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
+import Behandlingsstatus from '../../../felleskomponenter/behandlingsstatus';
+import Stegvelger from '../../../felleskomponenter/stegvelger';
+import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import Soknadpaneler from '../../../felleskomponenter/soknadpaneler';
+import { SoknadMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
-import { formSelectors } from '../../ducks/form';
-import { redigerbartSelectors } from '../../ducks/redigerbart';
-import { fagsakSelectors } from '../../ducks/fagsaker';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { datalastingOperations } from '../../ducks/datalasting';
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
-import { vilkarOperations } from '../../ducks/vilkar';
-import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta';
-import { anmodningsperioderOperations } from '../../ducks/anmodningsperioder';
-import { lovvalgsperioderOperations } from '../../ducks/lovvalgsperioder';
-import { behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
+import { formSelectors } from '../../../ducks/form';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
+import { fagsakSelectors } from '../../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { datalastingOperations } from '../../../ducks/datalasting';
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../../ducks/behandlingsgrunnlag';
+import { vilkarOperations } from '../../../ducks/vilkar';
+import { avklartefaktaSelectors, avklartefaktaOperations } from '../../../ducks/avklartefakta';
+import { anmodningsperioderOperations } from '../../../ducks/anmodningsperioder';
+import { lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder';
+import { behandlingsperioderOperations } from '../../../ducks/behandlingsperioder';
 
 import stegMap from './stegMap';
-import MKV from '../../melosyskodeverk';
-import { dokumenterSelectors } from '../../ducks/dokumenter';
+import MKV from '../../../melosyskodeverk';
+import { dokumenterSelectors } from '../../../ducks/dokumenter';
 
 import './vurderutpeking.css';
 

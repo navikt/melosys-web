@@ -5,7 +5,7 @@ import GodkjennUtpekingAnnetLand from './godkjennutpekingannetland';
 import Virksomheter from './virksomheter';
 import VurderUtpeking from './vurderutpeking';
 
-import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
+import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
 
 const stegMap = new Map([
   [STEG.INNGANG, Inngang],

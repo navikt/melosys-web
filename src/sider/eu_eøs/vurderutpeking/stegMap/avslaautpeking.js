@@ -1,6 +1,6 @@
-import Steg from '../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { STEG, FANE_STATUS } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingAvslaaUtpeking from '../../../felleskomponenter/stegvelger/stegKomponenter/vurderingAvslaaUtpeking';
+import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
+import { STEG, FANE_STATUS } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
+import VurderingAvslaaUtpeking from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingAvslaaUtpeking';
 
 class AvslaaUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
