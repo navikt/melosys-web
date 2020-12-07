@@ -15,6 +15,7 @@ interface BaseProps {
   redigerbart: boolean,
   redigererKomponent: ElementType,
   redigeringUtfortKomponent: ElementType,
+  ingenDataKomponent?: ElementType,
   hentDefaultElement: () => any,
   className?: string,
   hentNavn?: (element: any) => string,
@@ -41,6 +42,7 @@ export const InnerEditerbartElementListe = ({
   fields,
   redigererKomponent,
   redigeringUtfortKomponent,
+  ingenDataKomponent,
   hentDefaultElement,
   className,
   hentNavn,
@@ -72,6 +74,7 @@ export const InnerEditerbartElementListe = ({
             elementUnderstrek={elementUnderstrek}
             redigererKomponent={redigererKomponent}
             redigeringUtfortKomponent={redigeringUtfortKomponent}
+            ingenDataKomponent={ingenDataKomponent}
             tittelTekst={tittelTekst}
             leggTilTekst={innerLeggTilTekst}
             leggTil={leggTil}
@@ -87,6 +90,7 @@ export const InnerEditerbartElementListe = ({
             elementUnderstrek={elementUnderstrek}
             redigererKomponent={redigererKomponent}
             redigeringUtfortKomponent={redigeringUtfortKomponent}
+            ingenDataKomponent={ingenDataKomponent}
             tittelTekst={tittelTekst}
             leggTilTekst={innerLeggTilTekst}
             leggTil={leggTil}
