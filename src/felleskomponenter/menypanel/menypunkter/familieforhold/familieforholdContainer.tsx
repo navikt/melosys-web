@@ -48,6 +48,7 @@ const FamilieforholdContainer = ({
           feltNavn="medfolgendeBarn"
           redigererKomponent={MedfolgendeBarn.Redigerer}
           redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+          ingenDataKomponent={MedfolgendeBarn.IngenData}
           leggTilTekst={elementer => (elementer.length > 0 ? 'Legg til ny rad' : 'Legg til barn')}
           hentDefaultElement={() => ({ uuid: Utils._uuid() })}
           tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}

@@ -19,6 +19,7 @@ interface FlereRedigeringsKnapperListeProps<T> {
   elementUnderstrek?: boolean,
   redigererKomponent: ElementType,
   redigeringUtfortKomponent: ElementType,
+  ingenDataKomponent?: ElementType,
   tittelTekst: string,
   leggTil: () => void,
   leggTilTekst: string,
@@ -34,12 +35,14 @@ function FlereRedigeringsKnapperListe<T>({
   elementUnderstrek = false,
   redigererKomponent,
   redigeringUtfortKomponent,
+  ingenDataKomponent,
   tittelTekst,
   leggTil,
   leggTilTekst,
 }: FlereRedigeringsKnapperListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
+  const IngenDataKomponent = ingenDataKomponent;
 
   const elementer = fields.getAll();
 
@@ -74,6 +77,7 @@ function FlereRedigeringsKnapperListe<T>({
                 redigeringUtfortRender={() => <RedigeringUtfortKomponent
                   verdier={element}
                 />}
+                ingenDataRender={IngenDataKomponent ? () => <IngenDataKomponent /> : undefined}
               />
             </div>
           );

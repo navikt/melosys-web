@@ -36,6 +36,7 @@ interface EnRedigeringsKnappListeProps<T> {
   elementUnderstrek?: boolean,
   redigererKomponent: ElementType,
   redigeringUtfortKomponent: ElementType,
+  ingenDataKomponent?: ElementType,
   tittelTekst: string,
   leggTil: () => void,
   leggTilTekst: string,
@@ -51,12 +52,14 @@ function EnRedigeringsKnappListe<T>({
   elementUnderstrek = false,
   redigererKomponent,
   redigeringUtfortKomponent,
+  ingenDataKomponent,
   tittelTekst,
   leggTil,
   leggTilTekst,
 }: EnRedigeringsKnappListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
+  const IngenDataKomponent = ingenDataKomponent;
 
   const elementer = fields.getAll();
 
@@ -111,6 +114,28 @@ function EnRedigeringsKnappListe<T>({
       redigeringUtfortRender={() => <RedigeringUtfortKomponent
         verdier={elementer}
       />}
+      ingenDataRender={apneRedigering => (
+        <>
+          {
+            IngenDataKomponent &&
+            <div className="ingen__data__container">
+              <IngenDataKomponent />
+            </div>
+          }
+          {
+            redigerbart &&
+            <Mui.Knappelenke
+              onClick={() => {
+                apneRedigering();
+                leggTil();
+              }}
+              ikon={Ikoner.Add}
+            >
+              {leggTilTekst}
+            </Mui.Knappelenke>
+          }
+        </>
+      )}
     />
   );
 }
