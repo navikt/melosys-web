@@ -1,6 +1,5 @@
-import * as KV from '../../../../kodeverk';
-
 import MKV from '../../../../melosyskodeverk';
+import { BOOLSK_STRING } from '../../../../constants';
 
 import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
 import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
@@ -59,9 +58,9 @@ class VesentligVirksomhet extends Steg {
   harAvklaring = (vurderingLovvalgBarnFakta, behandlingsgrunnlagMedfolgendeBarn) => (
     (vurderingLovvalgBarnFakta.length === behandlingsgrunnlagMedfolgendeBarn.length) &&
     vurderingLovvalgBarnFakta.every(enkeltFakta => (
-      enkeltFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.SANN) ||
+      enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
         (
-          enkeltFakta.fakta.includes(KV.Koder.BoolskAvklartfaktaType.USANN) &&
+          enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) &&
           enkeltFakta.begrunnelseKoder.length > 0
         )
     )))

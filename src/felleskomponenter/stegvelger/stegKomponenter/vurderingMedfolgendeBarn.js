@@ -4,10 +4,10 @@ import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
-import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 
 import MKV from '../../../melosyskodeverk';
+import { BOOLSK_STRING } from '../../../constants';
 
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 
@@ -62,7 +62,7 @@ const MedfolgendeBarn = ({
           <Nav.Radio
             name={radioName}
             onChange={e => onCheck(e.target.value)}
-            value={KV.Koder.BoolskAvklartfaktaType.SANN}
+            value={BOOLSK_STRING.SANN}
             checked={omfattet === true}
             label="Ja"
             disabled={!redigerbart}
@@ -70,7 +70,7 @@ const MedfolgendeBarn = ({
           <Nav.Radio
             name={radioName}
             onChange={e => onCheck(e.target.value)}
-            value={KV.Koder.BoolskAvklartfaktaType.USANN}
+            value={BOOLSK_STRING.USANN}
             checked={omfattet === false}
             label="Nei"
             disabled={!redigerbart}
@@ -139,11 +139,11 @@ const VurderingMedfolgendeBarn = ({
     slettData();
   }, []);
 
-  const visFritekstFelt = vurderingLovvalgBarnFakta.some(af => hentFaktaVerdi(af) === KV.Koder.BoolskAvklartfaktaType.USANN);
+  const visFritekstFelt = vurderingLovvalgBarnFakta.some(af => hentFaktaVerdi(af) === BOOLSK_STRING.USANN);
 
   const oppdaterStegStoreFritekst = fritekst => {
     vurderingLovvalgBarnFakta.forEach(af => {
-      if (hentFaktaVerdi(af) === KV.Koder.BoolskAvklartfaktaType.USANN) {
+      if (hentFaktaVerdi(af) === BOOLSK_STRING.USANN) {
         oppdaterData(lagAvklartfakta(
           MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
           af.subjektID,
@@ -169,9 +169,9 @@ const VurderingMedfolgendeBarn = ({
           const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find(af => af.subjektID === barn.uuid);
           const omfattet = () => {
             const faktaVerdi = hentFaktaVerdi(medfolgendeBarnEnkeltfakta);
-            if (faktaVerdi === KV.Koder.BoolskAvklartfaktaType.SANN) {
+            if (faktaVerdi === BOOLSK_STRING.SANN) {
               return true;
-            } else if (faktaVerdi === KV.Koder.BoolskAvklartfaktaType.USANN) {
+            } else if (faktaVerdi === BOOLSK_STRING.USANN) {
               return false;
             }
             return null;
