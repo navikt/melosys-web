@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 import { Organisasjon } from 'Domene';
@@ -50,6 +50,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ArbeidsgiverOgVirksomhetProps = PropsFromRedux & {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
+  behandlingsgrunnlagEtikett: ReactNode,
 }
 
 export const ArbeidsgiverOgVirksomhet = ({
@@ -62,6 +63,7 @@ export const ArbeidsgiverOgVirksomhet = ({
   selvstendigForetak = [],
   arbeidsforholdUtland = [],
   selvstendigNaeringsvirksomhetUtland = [],
+  behandlingsgrunnlagEtikett,
 }: ArbeidsgiverOgVirksomhetProps) => {
   const finnOrganisasjon = (orgnr: string) => {
     const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
@@ -75,10 +77,10 @@ export const ArbeidsgiverOgVirksomhet = ({
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
         <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}</Nav.typo.Innholdstittel>
-        <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
+        <span>{behandlingsgrunnlagEtikett}</span>
         {
           visArbeidsforholdRolleEtiketter &&
-          <Etiketter.ArbeidsgiversDel />
+          <Etiketter.ArbeidsgiversDel style={{ marginLeft: '0.3em' }} />
         }
       </div>
       {

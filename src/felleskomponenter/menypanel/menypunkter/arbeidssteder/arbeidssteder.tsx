@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import * as KV from '../../../../kodeverk';
 import * as Utils from '../../../../utils';
@@ -49,19 +49,21 @@ const arbeidUtlandDefaultElement = {
 interface ArbeidsstederProps {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
+  behandlingsgrunnlagEtikett: ReactNode,
 }
 
 const Arbeidssteder = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
+  behandlingsgrunnlagEtikett,
 }: ArbeidsstederProps) => (
   <div className="arbeidssteder">
     <div>
       <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Arbeidssteder.tittel}</Nav.typo.Innholdstittel>
-      <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
+      <span>{behandlingsgrunnlagEtikett}</span>
       {
         visArbeidsforholdRolleEtiketter &&
-        <Etiketter.ArbeidsgiversDel />
+        <Etiketter.ArbeidsgiversDel style={{ marginLeft: '0.3em' }} />
       }
     </div>
     <EditerbartElementListe

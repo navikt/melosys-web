@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
@@ -15,11 +15,13 @@ import './familieforholdContainer.css';
 interface FamilieforholdContainerProps {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
+  behandlingsgrunnlagEtikett: ReactNode,
 }
 
 const FamilieforholdContainer = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
+  behandlingsgrunnlagEtikett,
 }: FamilieforholdContainerProps) => (
   <Nav.Container fluid className="familieforhold-container">
     <Nav.Row>
@@ -34,7 +36,7 @@ const FamilieforholdContainer = ({
     </Nav.Row>
     <Nav.Row>
       <Nav.Column xs="12" className="etikett-container">
-        <Etiketter.FraSoknad />
+        <span>{behandlingsgrunnlagEtikett}</span>
         {
           visArbeidsforholdRolleEtiketter &&
           <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />

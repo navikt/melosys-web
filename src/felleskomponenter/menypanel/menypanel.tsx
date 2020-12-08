@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 
 import * as Nav from '../../utils/navFrontend';
+import * as Etiketter from './etiketter';
 
 import MKV from '../../melosyskodeverk';
 
@@ -51,6 +52,7 @@ const hentLinkGroupLabels = (behandlingstema: string): [string, string, string] 
 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
@@ -90,6 +92,7 @@ type MenypanelProps = PropsFromRedux & {
 export const Menypanel = ({
   behandlingsgrunnlagtype,
   behandlingstema,
+  behandlingstype,
   menypunkter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
@@ -97,6 +100,10 @@ export const Menypanel = ({
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
   const visArbeidsforholdRolleEtiketter = behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const behandlingsgrunnlagEtikett = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ?
+    <Etiketter.FraSed />
+    :
+    <Etiketter.FraSoknad />;
 
   const defaultLinkGroups: LinkGroup[] = [
     {
@@ -108,6 +115,7 @@ export const Menypanel = ({
           content: <Person
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
           />,
         },
         {
@@ -116,6 +124,7 @@ export const Menypanel = ({
           content: <Familieforhold
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
           />,
         },
       ],
@@ -149,6 +158,7 @@ export const Menypanel = ({
           content: <ArbeidsgiverOgVirksomhet
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
           />,
         },
         {
@@ -157,6 +167,7 @@ export const Menypanel = ({
           content: <Fullmektig
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
           />,
         },
         {
@@ -166,6 +177,7 @@ export const Menypanel = ({
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
             lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+            behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
           />,
           /**
            * TODO: Vises nå for alle grunnlagtyper, men når "Utenlandsoppdraget"-menypunkt er klart,
@@ -192,6 +204,7 @@ export const Menypanel = ({
           content: <Arbeidssteder
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
           />,
         },
         // {

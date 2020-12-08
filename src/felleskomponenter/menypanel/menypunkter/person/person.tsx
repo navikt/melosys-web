@@ -75,6 +75,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type PersonProps = PropsFromRedux & {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
+  behandlingsgrunnlagEtikett: ReactNode,
 }
 
 export const Person = ({
@@ -82,6 +83,7 @@ export const Person = ({
   person,
   personhistorikk,
   visArbeidsforholdRolleEtiketter,
+  behandlingsgrunnlagEtikett,
 }: PersonProps) => {
   const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } = personhistorikk as PersonHistorikk;
 
@@ -148,10 +150,10 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column className="etikett__container">
-          <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
+          <span>{behandlingsgrunnlagEtikett}</span>
           {
             visArbeidsforholdRolleEtiketter &&
-            <Etiketter.ArbeidstakersDel />
+            <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />
           }
         </Nav.Column>
       </Nav.Row>

@@ -12,6 +12,7 @@ type PersonContainerProps = ComponentProps<typeof Person>;
 const PersonContainer = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
+  behandlingsgrunnlagEtikett,
 }: PersonContainerProps) => (
   <Nav.Container fluid className="barnetrygd">
     <Nav.Row className="tittel">
@@ -24,6 +25,7 @@ const PersonContainer = ({
         <Person
           redigerbart={redigerbart}
           visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+          behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
         />
       </Nav.Column>
     </Nav.Row>
