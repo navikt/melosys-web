@@ -143,14 +143,14 @@ const Familiemedlemmer = ({
       { familiemedlemmer.length !== 0 &&
       <FamiliemedlemmerGruppe
         familiemedlemmer={barn}
-        ingenFamiliemedlemmerTekst="(Fant ingen barn)"
+        ingenFamiliemedlemmerTekst="Fant ingen barn"
         overskrift="Barn"
         kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Bor med bruker', 'F.nr annen forelder', '']}
         erBarn />}
       { familiemedlemmer.length !== 0 &&
       <FamiliemedlemmerGruppe
         familiemedlemmer={ektefellePartnerSamboer}
-        ingenFamiliemedlemmerTekst="(Fant ingen ektefelle/partner/samboer)"
+        ingenFamiliemedlemmerTekst="Fant ingen ektefelle/partner/samboer"
         overskrift="Ektefelle/partner/samboer"
         kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Fra og med', 'Bor med bruker', 'Relasjon']}
         erBarn={false} />}
