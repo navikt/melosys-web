@@ -6,7 +6,7 @@ import { PersonHistorikk, Periode } from 'Domene';
 import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
-import * as Etiketter from '../etiketter';
+import * as Etiketter from '../../etiketter';
 
 import PersonInfo from './personinfo';
 

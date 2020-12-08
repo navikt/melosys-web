@@ -5,7 +5,7 @@ import { RootState } from 'AppTypes';
 import * as Nav from '../../../../utils/navFrontend';
 import * as KV from '../../../../kodeverk';
 import * as Utils from '../../../../utils';
-import * as Etiketter from '../etiketter';
+import * as Etiketter from '../../etiketter';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 

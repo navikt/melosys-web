@@ -9,7 +9,7 @@ import { formValueSelector } from 'redux-form';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Mui from '../../../ui';
 import * as KV from '../../../../kodeverk';
-import * as Etiketter from '../etiketter';
+import * as Etiketter from '../../etiketter';
 import * as Ikoner from '../../../../resources/images';
 import * as Utils from '../../../../utils';
 

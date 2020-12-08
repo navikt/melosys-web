@@ -4,7 +4,7 @@ import { Familiemedlem } from 'Domene';
 import { RootState } from 'AppTypes';
 
 import * as Api from '../../../../services/api';
-import * as Etiketter from '../etiketter';
+import * as Etiketter from '../../etiketter';
 import * as Ikoner from '../../../../resources/images';
 import * as Mui from '../../../ui';
 import * as Nav from '../../../../utils/navFrontend';

@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
-import * as Etiketter from '../etiketter';
+import * as Etiketter from '../../etiketter';
 
 import Fullmektige from './fullmektige';
 

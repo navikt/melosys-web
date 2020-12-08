@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from '../../utils/navFrontend';
 
 type NavEtikettBaseProps = ComponentProps<typeof Nav.EtikettBase>;
 type EtikettProps = Omit<NavEtikettBaseProps, 'type'>;
