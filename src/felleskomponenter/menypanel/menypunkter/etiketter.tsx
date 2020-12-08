@@ -9,6 +9,8 @@ export const FraRegister = (props: EtikettProps) => <Nav.EtikettBase {...props} 
 
 export const FraSoknad = (props: EtikettProps) => <Nav.EtikettBase {...props} type="fokus">Fra søknad</Nav.EtikettBase>;
 
+export const FraSed = (props: EtikettProps) => <Nav.EtikettBase {...props} type="fokus">Fra SED</Nav.EtikettBase>;
+
 export const ArbeidstakersDel = (props: EtikettProps) => <Nav.EtikettBase {...props} type="fokus">Arbeidstakers del</Nav.EtikettBase>;
 
 export const ArbeidsgiversDel = (props: EtikettProps) => <Nav.EtikettBase {...props} type="fokus">Arbeidsgivers del</Nav.EtikettBase>;
