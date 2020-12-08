@@ -9,16 +9,19 @@ class Trygdeavgift extends Steg {
     this.kriterier = [
       {
         exec: () => harAvklaring,
-        nesteSteg: STEG.REPRESENTANT,
+        nesteSteg: STEG.VEDTAK_FTRL,
       },
     ];
     this.id = STEG.TRYGDEAVGIFT;
     this.tittel = 'Trygdeavgift';
     this.komponent = VurderingTrygdeavgift;
-    this.samleRelevanteData = _propsLight => ({});
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
+    this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;
   }

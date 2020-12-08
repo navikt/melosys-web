@@ -1,4 +1,5 @@
 import * as Anmodningsperioder from './modules/anmodningsperioder/';
+import * as Avgift from './modules/avgift';
 import * as Avklartefakta from './modules/avklartefakta';
 import * as Behandlinger from './modules/behandlinger';
 import * as Behandlingsgrunnlag from './modules/behandlingsgrunnlag';
@@ -24,6 +25,7 @@ import * as Vilkar from './modules/vilkar';
 
 export {
   Anmodningsperioder,
+  Avgift,
   Avklartefakta,
   Behandlinger,
   Behandlingsgrunnlag,
