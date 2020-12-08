@@ -56,6 +56,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
 
 interface FamiliemedlemmerGruppeProps {
   familiemedlemmer: Familiemedlem[],
+  ingenFamiliemedlemmerTekst: string,
   overskrift: string,
   kolonneHeadinger: string[],
   erBarn: boolean,
@@ -63,13 +64,13 @@ interface FamiliemedlemmerGruppeProps {
 
 export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
   const {
-    familiemedlemmer, overskrift = '', kolonneHeadinger, erBarn,
+    familiemedlemmer, ingenFamiliemedlemmerTekst, overskrift = '', kolonneHeadinger, erBarn,
   } = props;
 
   return (
     <div>
       <Nav.typo.Undertittel className="familiemedlemmer__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
-      { familiemedlemmer.length === 0 && '(ingen data funnet)' }
+      { familiemedlemmer.length === 0 && ingenFamiliemedlemmerTekst }
       { familiemedlemmer.length !== 0 &&
       <Nav.Row className="header">
         <Nav.Column xs="2">{kolonneHeadinger[0]}</Nav.Column>
@@ -142,12 +143,14 @@ const Familiemedlemmer = ({
       { familiemedlemmer.length !== 0 &&
       <FamiliemedlemmerGruppe
         familiemedlemmer={barn}
+        ingenFamiliemedlemmerTekst="(Fant ingen barn)"
         overskrift="Barn"
         kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Bor med bruker', 'F.nr annen forelder', '']}
         erBarn />}
       { familiemedlemmer.length !== 0 &&
       <FamiliemedlemmerGruppe
         familiemedlemmer={ektefellePartnerSamboer}
+        ingenFamiliemedlemmerTekst="(Fant ingen ektefelle/partner/samboer)"
         overskrift="Ektefelle/partner/samboer"
         kolonneHeadinger={['Navn', 'F.nr./d-nr.', 'Fra og med', 'Bor med bruker', 'Relasjon']}
         erBarn={false} />}
