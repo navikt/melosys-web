@@ -27,7 +27,7 @@ const FamilieforholdContainer = ({
         <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>{KV.Menypunkter.Familieforhold.tittel}</Nav.typo.Innholdstittel>
       </Nav.Column>
     </Nav.Row>
-    <Nav.Row>
+    <Nav.Row className="familiemedlemmer-row">
       <Nav.Column xs="12">
         <Familiemedlemmer />
       </Nav.Column>
