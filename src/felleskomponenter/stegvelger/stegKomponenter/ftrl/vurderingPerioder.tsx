@@ -362,7 +362,7 @@ const VurderingPerioderForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurder_perioder)(values)
+  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_perioder)(values)
 })(VurderingPerioder);
 
 export default connector(VurderingPerioderForm);

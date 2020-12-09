@@ -20,7 +20,7 @@ const erFeilAktivPåPerioder = (medlemskapsperioder) => {
   return medlemskapsperioder && medlemskapsperioder.some(medlemskapsperiode => !!medlemskapsperiode.feil);
 };
 
-const vurder_perioder = object().shape({
+const vurdering_perioder = object().shape({
   medlemskapsperioder: array().of(object().shape({
     id: string()
       .required(NOE_SKJEDDE),
@@ -55,4 +55,4 @@ const vurder_perioder = object().shape({
     })
 });
 
-export { vurder_perioder };
+export { vurdering_perioder };

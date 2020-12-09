@@ -5,7 +5,7 @@ import VurderingTrygdeavgift from '../../../../felleskomponenter/stegvelger/steg
 class Trygdeavgift extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = false;
+    const harAvklaring = propsLight.vurder_trygdeavgift_valid;
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -21,6 +21,7 @@ class Trygdeavgift extends Steg {
     this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;

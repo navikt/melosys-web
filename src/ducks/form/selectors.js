@@ -55,6 +55,16 @@ export const VurderPerioderValid = createSelector(
   errors => Utils._isEmpty(errors)
 );
 
+export const VurderTrygdeavgiftFormSelector = createSelector(
+  state => getFormState(state, KV.Form.TRYGDEAVGIFT, {}),
+  trygdeavgift => trygdeavgift
+);
+
+export const VurderTrygdeavgiftFormValid = createSelector(
+  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
+  errors => Utils._isEmpty(errors)
+);
+
 export const VurderUtpekingFormSelector = createSelector(
   state => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   vurderUtpekingForm => vurderUtpekingForm
