@@ -4,7 +4,6 @@ import {
   array,
   bool,
   number,
-  lazy
 } from 'yup';
 
 import MKV from '../../melosyskodeverk';
@@ -44,7 +43,7 @@ const vurdering_trygdeavgift = object().shape({
       erSkattepliktig: bool(),
       betalerArbeidsgiverAvgift: bool(),
       særligAvgiftsgruppe: string().nullable(),
-    })
+    }),
   }),
   avgiftsBeregning: object().shape({
     avgiftspliktigLønnNorge: number(),
@@ -73,12 +72,12 @@ const vurdering_trygdeavgift = object().shape({
       avgiftPerMd: number()
         .required(),
     })),
-    }),
+  }),
   erAvgiftsLoennUgyldig: string()
     .when('avgiftsLoenn', {
       is: sjekkOmAvgiftsLoennErUgyldig,
       then: string()
-        .required(NOE_SKJEDDE)
+        .required(NOE_SKJEDDE),
     }),
 });
 

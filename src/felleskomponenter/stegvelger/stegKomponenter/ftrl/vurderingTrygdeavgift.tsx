@@ -16,12 +16,11 @@ import * as Skjema from '../../../skjema';
 
 import { AvgiftsBeregning, AvgiftsLoenn, Avgiftsperiode } from '../../../../@types/avgift';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { finnTermFraListe } from '../../../../kodeverk';
-import { lagYupToReduxformErrorMapper,  Skjemaer as YupSkjemaer } from '../../../../yup';
+import { formSelectors } from '../../../../ducks/form';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../../yup';
 import { BOOLSK, BOOLSK_STRING } from '../../../../constants';
 
 import './vurderingTrygdeavgift.css';
-import { formSelectors } from '../../../../ducks/form';
 
 
 interface InntektsInformasjonProps {
@@ -47,7 +46,7 @@ const InntektsInformasjonComponent =
     erAvgiftsLoennGyldig,
     erTabellÅpen,
     erVirksomhetNorsk,
-     erSærligAvgiftsGruppeValgt,
+    erSærligAvgiftsGruppeValgt,
     handleBeregnClick,
     handleSærligAvgiftsgruppeRadioChange,
     handleAvgiftspliktigLønnInputChange,
@@ -66,7 +65,7 @@ const InntektsInformasjonComponent =
     function mapTabell(avgiftsperioder: Avgiftsperiode[] | undefined) {
       return avgiftsperioder && avgiftsperioder.map(avgiftsperiode =>
         [`${Utils.dato.formatterDatoTilNorsk(avgiftsperiode.fom)} - ${Utils.dato.formatterDatoTilNorsk(avgiftsperiode.tom)}`,
-          finnTermFraListe(MKV.KTObjects.trygdedekninger, avgiftsperiode.trygdedekning),
+          KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, avgiftsperiode.trygdedekning),
           avgiftsperiode.avgiftssats,
           `${avgiftsperiode.avgiftPerMd} kroner`]);
     }
@@ -173,7 +172,7 @@ const InntektsInformasjonComponent =
                 <Skjema.Select
                   label=""
                   feltNavn={erVirksomhetNorsk ? 'avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe' : 'avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe'}
-                  emptyFieldText={'Velg gruppe'}
+                  emptyFieldText="Velg gruppe"
                   emptyFieldDisabled={(erVirksomhetNorsk
                     ? formValues.avgiftsLoenn.inntektsInformasjonNorge && formValues.avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe
                     : formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe) !== 'TRUE'}
@@ -190,16 +189,16 @@ const InntektsInformasjonComponent =
         { (erVirksomhetNorsk
           ? formValues.avgiftsLoenn.inntektsInformasjonNorge &&
             formValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
-          : formValues.avgiftsLoenn.inntektsInformasjonUtland &&
-            formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
+          : formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt
+            === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
         )
           ?
           <Nav.AlertStripeInfo>
             {erVirksomhetNorsk
               ? formValues.avgiftsLoenn.inntektsInformasjonNorge &&
-              finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt)
+              KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt)
               : formValues.avgiftsLoenn.inntektsInformasjonUtland &&
-              finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt)}
+              KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt)}
           </Nav.AlertStripeInfo>
           :
           <Nav.Row>
@@ -279,12 +278,14 @@ const VurderingTrygdeavgift =
       async function lastInnAvgiftsLoenn() {
         const response = await Api.Avgift.hentLoenn(behandlingID);
         changeField('avgiftsLoenn', response);
-        if (response){
-          response.inntektsInformasjonNorge && response.inntektsInformasjonNorge.særligAvgiftsgruppe !== undefined
-            && erSærligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.inntektsInformasjonNorge.særligAvgiftsgruppe);
-          response.inntektsInformasjonUtland && response.inntektsInformasjonUtland.særligAvgiftsgruppe !== undefined
-            && erSærligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.inntektsInformasjonUtland.særligAvgiftsgruppe);
-          setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt))
+        if (response) {
+          if (response.inntektsInformasjonNorge && response.inntektsInformasjonNorge.særligAvgiftsgruppe !== undefined) {
+            erSærligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.inntektsInformasjonNorge.særligAvgiftsgruppe);
+          }
+          if (response.inntektsInformasjonUtland && response.inntektsInformasjonUtland.særligAvgiftsgruppe !== undefined) {
+            erSærligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.inntektsInformasjonUtland.særligAvgiftsgruppe);
+          }
+          setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt));
         }
       }
       lastInnAvgiftsLoenn();
@@ -293,7 +294,7 @@ const VurderingTrygdeavgift =
     useEffect(() => {
       oppdater();
       setErAvgiftsLoennGyldig(vurder_trygdeavgift_valid);
-    },[vurder_trygdeavgift_valid]);
+    }, [vurder_trygdeavgift_valid]);
 
     useEffect(() => {
       if (formValues && formValues.avgiftsLoenn && erAvgiftsLoennGyldig) {
@@ -304,16 +305,21 @@ const VurderingTrygdeavgift =
     function handleSærligAvgiftsgruppeRadioChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
       const erSærligAvgiftsgruppe = Utils.streng.tryParseBool(event.target.value);
       setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', erSærligAvgiftsgruppe)));
-      changeField(erNorskVirksomhet ? 'avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe' : 'avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe', erSærligAvgiftsgruppe ? 'TRUE' : null);
+      changeField(
+        erNorskVirksomhet ? 'avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe' : 'avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe',
+        erSærligAvgiftsgruppe ? 'TRUE' : null
+      );
     }
 
     function handleAvgiftspliktigLønnInputChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
       setAvgiftspliktigLoenn(erNorskVirksomhet
         ? { ...avgiftspliktigLoenn, avgiftspliktigLønnNorge: parseInt(event.target.value, 10) }
         : { ...avgiftspliktigLoenn, avgiftspliktigLønnUtland: parseInt(event.target.value, 10) });
-      erNorskVirksomhet
-        ? changeField('avgiftsBeregning', {...formValues.avgiftsBeregning, avgiftspliktigLønnNorge: parseInt(event.target.value, 10)})
-        : changeField('avgiftsBeregning', {...formValues.avgiftsBeregning, avgiftspliktigLønnUtland: parseInt(event.target.value, 10)});
+      if (erNorskVirksomhet) {
+        changeField('avgiftsBeregning', { ...formValues.avgiftsBeregning, avgiftspliktigLønnNorge: parseInt(event.target.value, 10) });
+      } else {
+        changeField('avgiftsBeregning', { ...formValues.avgiftsBeregning, avgiftspliktigLønnUtland: parseInt(event.target.value, 10) });
+      }
     }
 
     async function handleBeregnClick(erNorskVirksomhet: boolean) {
@@ -361,7 +367,8 @@ const VurderingTrygdeavgift =
         </Nav.Row>
 
         {
-          formValues && formValues.avgiftsLoenn && (formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE || formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
+          formValues && formValues.avgiftsLoenn &&
+          (formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE || formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
           <InntektsInformasjonComponent
             key="norskVirksomhet"
             erVirksomhetNorsk
@@ -377,7 +384,8 @@ const VurderingTrygdeavgift =
           />
         }
         {
-          formValues && formValues.avgiftsLoenn && (formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET || formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
+          formValues && formValues.avgiftsLoenn &&
+          (formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET || formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
           <InntektsInformasjonComponent
             key="utenlandskVirksomhet"
             erVirksomhetNorsk={false}
@@ -418,7 +426,7 @@ const VurderingTrygdeavgiftForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_trygdeavgift)(values)
+  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_trygdeavgift)(values),
 })(VurderingTrygdeavgift);
 
 export default connector(VurderingTrygdeavgiftForm);

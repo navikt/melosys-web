@@ -7,18 +7,18 @@ import * as KV from '../../kodeverk';
 
 const NOE_SKJEDDE = { melding: 'Noe skjedde' };
 
-const allePerioderErAvslått = (medlemskapsperioder) => {
+const allePerioderErAvslått = medlemskapsperioder => {
   if (!medlemskapsperioder) return false;
   const erAllePerioderAnnetEnnAvslatt = medlemskapsperioder.some(medlemskapsperiode => medlemskapsperiode.innvilgelsesResultat !== KV.Koder.AVSLAATT);
   return !erAllePerioderAnnetEnnAvslatt;
 };
-const erNoenPerioderUfullført = (medlemskapsperioder) => {
-  return medlemskapsperioder && medlemskapsperioder.some(medlemskapsperiode => medlemskapsperiode.ny ||
-    !(medlemskapsperiode.innvilgelsesResultat && medlemskapsperiode.trygdedekning && medlemskapsperiode.fomDato && medlemskapsperiode.fomDato !== 'Invalid date'));
-};
-const erFeilAktivPåPerioder = (medlemskapsperioder) => {
-  return medlemskapsperioder && medlemskapsperioder.some(medlemskapsperiode => !!medlemskapsperiode.feil);
-};
+const erNoenPerioderUfullført = medlemskapsperioder => (
+  medlemskapsperioder && medlemskapsperioder.some(medlemskapsperiode => medlemskapsperiode.ny ||
+    !(medlemskapsperiode.innvilgelsesResultat && medlemskapsperiode.trygdedekning && medlemskapsperiode.fomDato && medlemskapsperiode.fomDato !== 'Invalid date'))
+);
+const erFeilAktivPåPerioder = medlemskapsperioder => (
+  medlemskapsperioder && medlemskapsperioder.some(medlemskapsperiode => !!medlemskapsperiode.feil)
+);
 
 const vurdering_perioder = object().shape({
   medlemskapsperioder: array().of(object().shape({
@@ -33,26 +33,26 @@ const vurdering_perioder = object().shape({
       .required(NOE_SKJEDDE),
     trygdedekning: string()
       .required(NOE_SKJEDDE),
-    medlemskapstype: string()
+    medlemskapstype: string(),
   })),
   alleMedlemskapsperioderAvslått: string()
     .when('medlemskapsperioder', {
       is: allePerioderErAvslått,
       then: string()
-        .required(NOE_SKJEDDE)
+        .required(NOE_SKJEDDE),
     }),
   noenPerioderUfullført: string()
     .when('medlemskapsperioder', {
       is: erNoenPerioderUfullført,
       then: string()
-        .required(NOE_SKJEDDE)
+        .required(NOE_SKJEDDE),
     }),
   feilAktivPåPerioder: string()
     .when('medlemskapsperioder', {
       is: erFeilAktivPåPerioder,
       then: string()
-        .required(NOE_SKJEDDE)
-    })
+        .required(NOE_SKJEDDE),
+    }),
 });
 
 export { vurdering_perioder };
