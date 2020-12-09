@@ -24,6 +24,7 @@ import { ReactComponent as InformationCircle } from './infomationcircle.svg';
 import { ReactComponent as IkonSak } from './ikon-sak.svg';
 import { ReactComponent as Inntekt } from './ikon-inntekt.svg';
 import { ReactComponent as Kalkulator } from './kalkulator.svg';
+import { ReactComponent as Kalkulator_Disabled } from './kalkulator-disabled.svg';
 import { ReactComponent as Kvinne } from './ikon-kvinne.svg';
 import { ReactComponent as Kontor } from './kontor.svg';
 import { ReactComponent as Man } from './man.svg';
@@ -72,6 +73,7 @@ export {
   InformationCircle,
   Inntekt,
   Kalkulator,
+  Kalkulator_Disabled,
   Kvinne,
   Kontor,
   Kopier,

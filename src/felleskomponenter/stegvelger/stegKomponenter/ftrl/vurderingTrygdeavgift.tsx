@@ -20,6 +20,7 @@ interface InntektsInformasjonProps {
   avgiftsBeregning: AvgiftsBeregning | undefined,
   avgiftsLoenn: AvgiftsLoenn | undefined,
   avgiftspliktigLoenn: AvgiftsBeregning,
+  erAvgiftsLoennGyldig: boolean,
   erTabellÅpen: Map<string, boolean>,
   erVirksomhetNorsk: boolean,
   handleBeregnClick: (erVirksomhetNorsk: boolean) => void,
@@ -36,6 +37,7 @@ const InntektsInformasjonComponent =
     avgiftsBeregning,
     avgiftsLoenn,
     avgiftspliktigLoenn,
+    erAvgiftsLoennGyldig,
     erTabellÅpen,
     erVirksomhetNorsk,
     handleBeregnClick,
@@ -236,8 +238,9 @@ const InntektsInformasjonComponent =
               <Nav.Knapp
                 className="beregn_knapp"
                 onClick={() => handleBeregnClick(erVirksomhetNorsk)}
+                disabled={!erAvgiftsLoennGyldig}
               >
-                <Ikoner.Kalkulator className="beregn_ikon" />
+                {erAvgiftsLoennGyldig ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
                 <span>Beregn foreløpig trygdeavgift</span>
               </Nav.Knapp>
             </Nav.Column>
@@ -277,7 +280,7 @@ const VurderingTrygdeavgift =
     const [avgiftsLoenn, setAvgiftsLoenn] = useState<AvgiftsLoenn>();
     const [avgiftsBeregning, setAvgiftsBeregning] = useState<AvgiftsBeregning|undefined>();
     const [erTabellÅpen, setErTabellÅpen] = useState(new Map());
-    const [erAvgiftsLoennGyldig, setErAvgiftsLoennGyldig] = useState(true);
+    const [erAvgiftsLoennGyldig, setErAvgiftsLoennGyldig] = useState(false);
     const [avgiftspliktigLoenn, setAvgiftspliktigLoenn] = useState<AvgiftsBeregning>({ avgiftspliktigLønnNorge: -1, avgiftspliktigLønnUtland: -1 });
     const [feil, setFeil] = useState();
 
@@ -313,9 +316,9 @@ const VurderingTrygdeavgift =
     useEffect(() => {
       if (avgiftsLoenn && sjekkOmAvgiftsLoennErGyldig(avgiftsLoenn)) {
         Api.Avgift.sendLoenn(behandlingID, avgiftsLoenn);
-        setErAvgiftsLoennGyldig(false);
-      } else {
         setErAvgiftsLoennGyldig(true);
+      } else {
+        setErAvgiftsLoennGyldig(false);
       }
     }, [avgiftsLoenn]);
 
@@ -413,6 +416,7 @@ const VurderingTrygdeavgift =
             avgiftsBeregning={avgiftsBeregning}
             avgiftsLoenn={avgiftsLoenn}
             avgiftspliktigLoenn={avgiftspliktigLoenn}
+            erAvgiftsLoennGyldig={erAvgiftsLoennGyldig}
             erTabellÅpen={erTabellÅpen}
             handleBeregnClick={handleBeregnClick}
             handleErSkattepliktigRadioChange={handleErSkattepliktigRadioChange}
@@ -431,6 +435,7 @@ const VurderingTrygdeavgift =
             avgiftsBeregning={avgiftsBeregning}
             avgiftsLoenn={avgiftsLoenn}
             avgiftspliktigLoenn={avgiftspliktigLoenn}
+            erAvgiftsLoennGyldig={erAvgiftsLoennGyldig}
             erTabellÅpen={erTabellÅpen}
             handleBeregnClick={handleBeregnClick}
             handleErSkattepliktigRadioChange={handleErSkattepliktigRadioChange}
@@ -451,7 +456,7 @@ const VurderingTrygdeavgift =
           </Nav.Knapp>
           <Nav.Hovedknapp
             mini
-            disabled={!redigerbart || erAvgiftsLoennGyldig}
+            disabled={!redigerbart || !erAvgiftsLoennGyldig}
             className="fane__navigasjonsknapp"
             onClick={bekreft}>Fortsett
           </Nav.Hovedknapp>
