@@ -100,6 +100,8 @@ export const Menypanel = ({
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
   const visArbeidsforholdRolleEtiketter = behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const visBehandlingsgrunnlagData = !(behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
+    behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE);
   const behandlingsgrunnlagEtikett = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ?
     <Etiketter.FraSed />
     :
@@ -116,6 +118,7 @@ export const Menypanel = ({
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
             behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
+            visBehandlingsgrunnlagData={visBehandlingsgrunnlagData}
           />,
         },
         {
@@ -125,6 +128,7 @@ export const Menypanel = ({
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
             behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
+            visBehandlingsgrunnlagData={visBehandlingsgrunnlagData}
           />,
         },
       ],

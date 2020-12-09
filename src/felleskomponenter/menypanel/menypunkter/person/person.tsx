@@ -76,6 +76,7 @@ type PersonProps = PropsFromRedux & {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
   behandlingsgrunnlagEtikett: ReactNode,
+  visBehandlingsgrunnlagData: boolean,
 }
 
 export const Person = ({
@@ -84,6 +85,7 @@ export const Person = ({
   personhistorikk,
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
+  visBehandlingsgrunnlagData,
 }: PersonProps) => {
   const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } = personhistorikk as PersonHistorikk;
 
@@ -148,33 +150,38 @@ export const Person = ({
           />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column className="etikett__container">
-          <span>{behandlingsgrunnlagEtikett}</span>
-          {
-            visArbeidsforholdRolleEtiketter &&
-            <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />
-          }
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="9">
-          <AnnenAdresse
-            redigerbart={redigerbart}
-            className="oppgittAdresse"
-          />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="5">
-          {/* Fødested og land */}
-        </Nav.Column>
-        <Nav.Column xs="7">
-          <UtenlandskIdent
-            redigerbart={redigerbart}
-          />
-        </Nav.Column>
-      </Nav.Row>
+      {
+        visBehandlingsgrunnlagData &&
+        <>
+          <Nav.Row>
+            <Nav.Column className="etikett__container">
+              <span>{behandlingsgrunnlagEtikett}</span>
+              {
+                visArbeidsforholdRolleEtiketter &&
+                <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />
+              }
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="9">
+              <AnnenAdresse
+                redigerbart={redigerbart}
+                className="oppgittAdresse"
+              />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="5">
+              {/* Fødested og land */}
+            </Nav.Column>
+            <Nav.Column xs="7">
+              <UtenlandskIdent
+                redigerbart={redigerbart}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        </>
+      }
     </div>
   );
 };

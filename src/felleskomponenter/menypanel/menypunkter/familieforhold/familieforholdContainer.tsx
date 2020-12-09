@@ -16,12 +16,14 @@ interface FamilieforholdContainerProps {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
   behandlingsgrunnlagEtikett: ReactNode,
+  visBehandlingsgrunnlagData: boolean,
 }
 
 const FamilieforholdContainer = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
+  visBehandlingsgrunnlagData,
 }: FamilieforholdContainerProps) => (
   <Nav.Container fluid className="familieforhold-container">
     <Nav.Row>
@@ -34,35 +36,40 @@ const FamilieforholdContainer = ({
         <Familiemedlemmer />
       </Nav.Column>
     </Nav.Row>
-    <Nav.Row>
-      <Nav.Column xs="12" className="etikett-container">
-        <span>{behandlingsgrunnlagEtikett}</span>
-        {
-          visArbeidsforholdRolleEtiketter &&
-          <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />
-        }
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      <Nav.Column xs="12">
-        <EditerbartElementListe
-          redigerbart={redigerbart}
-          feltNavn="medfolgendeBarn"
-          redigererKomponent={MedfolgendeBarn.Redigerer}
-          redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
-          ingenDataKomponent={MedfolgendeBarn.IngenData}
-          leggTilTekst={elementer => (elementer.length > 0 ? 'Legg til ny rad' : 'Legg til barn')}
-          hentDefaultElement={() => ({ uuid: Utils._uuid() })}
-          tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
-          tittelIkon={Ikoner.ParentAndKid}
-          tittelUnderstrek
-          harData={elementListe => (
-            (elementListe.length !== 0) && elementListe.every(v => v)
-          )}
-          flereRedigeringsknapper={false}
-        />
-      </Nav.Column>
-    </Nav.Row>
+    {
+      visBehandlingsgrunnlagData &&
+      <>
+        <Nav.Row>
+          <Nav.Column xs="12" className="etikett-container">
+            <span>{behandlingsgrunnlagEtikett}</span>
+            {
+              visArbeidsforholdRolleEtiketter &&
+              <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />
+            }
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <EditerbartElementListe
+              redigerbart={redigerbart}
+              feltNavn="medfolgendeBarn"
+              redigererKomponent={MedfolgendeBarn.Redigerer}
+              redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+              ingenDataKomponent={MedfolgendeBarn.IngenData}
+              leggTilTekst={elementer => (elementer.length > 0 ? 'Legg til ny rad' : 'Legg til barn')}
+              hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+              tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
+              tittelIkon={Ikoner.ParentAndKid}
+              tittelUnderstrek
+              harData={elementListe => (
+                (elementListe.length !== 0) && elementListe.every(v => v)
+              )}
+              flereRedigeringsknapper={false}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      </>
+    }
   </Nav.Container>
 );
 
