@@ -33,18 +33,18 @@ function sjekkOmAvgiftsLoennErUgyldig(avgiftsLønn) {
 
 const vurdering_trygdeavgift = object().shape({
   avgiftsLoenn: object().shape({
-    lønnsforhold: string(),
+    lønnsforhold: string().nullable(),
     inntektsInformasjonNorge: object().shape({
       erSkattepliktig: bool(),
       betalerArbeidsgiverAvgift: bool(),
       særligAvgiftsgruppe: string().nullable(),
-    }),
+    }).nullable(),
     inntektsInformasjonUtland: object().shape({
       erSkattepliktig: bool(),
       betalerArbeidsgiverAvgift: bool(),
       særligAvgiftsgruppe: string().nullable(),
-    }),
-  }),
+    }).nullable(),
+  }).nullable(),
   avgiftsBeregning: object().shape({
     avgiftspliktigLønnNorge: number(),
     avgiftsperioderNorge: array().of(object().shape({
