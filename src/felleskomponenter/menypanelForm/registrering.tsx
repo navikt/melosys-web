@@ -7,7 +7,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import * as KV from '../../kodeverk';
 
-import Menypanel, { Menypunkt } from '../menypanel';
+import Menypanel from '../menypanel';
 
 import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
 
@@ -29,12 +29,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type RegistreringProps = PropsFromRedux & {
-  menypunkter: Menypunkt[],
   startOgVisOppfriskModal: () => void,
 };
 
 const Registrering = ({
-  menypunkter,
   lagreSoknad,
   startOgVisOppfriskModal,
 }: RegistreringProps & InjectedFormProps<KV.Form.RegistreringPanelerFormData, RegistreringProps>) => {
@@ -51,7 +49,6 @@ const Registrering = ({
     <form name="registrering" id="soknad" onSubmit={submitHandler}>
       <Menypanel
         lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-        menypunkter={menypunkter}
       />
     </form>
   );

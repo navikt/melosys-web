@@ -388,12 +388,6 @@ const Saksopplysninger = ({
       {
         sidemenyToggle === 'enabled' &&
         <RegistreringMenypanelForm
-          menypunkter={[
-            'Person',
-            'Medlemskap',
-            'EU/EØS-barnetrygd',
-            'Arbeidsforhold og inntekt',
-          ]}
           startOgVisOppfriskModal={startOgVisOppfriskModal}
         />
       }
