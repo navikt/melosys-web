@@ -106,16 +106,17 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type PropsFromRedux = ConnectedProps<typeof connector> & {
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type FamiliemedlemmerProps = PropsFromRedux & {
   setMenypanelFeilmelding: (feilmelding: string) => void
-};
+}
 
 const Familiemedlemmer = ({
   behandlingID,
   familiemedlemmer,
   oppdaterBehandling,
   setMenypanelFeilmelding,
-}: PropsFromRedux) => {
+}: FamiliemedlemmerProps) => {
   const [harOppfrisket, setHarOppfrisket] = useState(false);
 
   const oppfrisk = async () => {
