@@ -20,16 +20,22 @@ import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunn
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../../yup';
+import { formSelectors } from '../../../../ducks/form';
 
 import './vurderingPerioder.css';
 
+
+interface formValuesProp {
+  medlemskapsperioder: (Medlemskapsperiode & { ny: boolean, feil: string | undefined })[]
+}
 
 interface PeriodeElementProps {
   index: number,
   redigerbart: boolean,
   trygdedekninger: KTObject[],
   innvilgelsesResultater: KTObject[],
-  formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean, feil: string | undefined })[]},
+  formValues: formValuesProp,
   handleFomChange: (value: string, index: number) => void;
   handleTomChange: (value: string, index: number) => void;
   handleTrygdedekningChange: (value: string, index: number) => void;
@@ -129,6 +135,7 @@ const mapStateToProps = (state: RootState) => ({
   trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
+  erVurderingPerioderValid: formSelectors.VurderPerioderValid(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -148,7 +155,7 @@ interface Props {
   oppdater: () => void,
   tilbake: () => void,
   redigerbart: boolean,
-  formValues: { medlemskapsperioder: (Medlemskapsperiode & { ny: boolean, feil: string | undefined })[]},
+  formValues: formValuesProp,
 }
 
 type VurderingPerioderProps = Props & PropsFromRedux;
@@ -162,14 +169,15 @@ const VurderingPerioder =
     pushField,
     bekreft,
     tilbake,
+    oppdater,
     behandlingID,
     hentMedlemskapsperioder,
     valgtTrygdedekning,
     mottaksdato,
+    erVurderingPerioderValid,
     ...props
   }: VurderingPerioderProps) => {
     const [erAllePerioderAvslått, setErAllePerioderAvslått] = useState(false);
-    const [erFortsattDisabled, setErFortsattDisabled] = useState(false);
     const hjelpetekst = 'Perioder er foreslått på bakgrunn av periode og dekning det er søkt for, og tidspunkt søknaden ble mottatt. Du har mulighet til å gjøre endringer.';
 
     const erMedlemskapsperiodeFullført = (innvilgelsesResultat: string, trygdedekning: string, fomDato: string) => (
@@ -179,11 +187,11 @@ const VurderingPerioder =
     useEffect(() => {
       const erAllePerioderAnnetEnnAvslatt = formValues && formValues.medlemskapsperioder.some(medlemskapsperiode => medlemskapsperiode.innvilgelsesResultat !== KV.Koder.AVSLAATT);
       setErAllePerioderAvslått(!erAllePerioderAnnetEnnAvslatt);
-      const erNoenPerioderUfullført = formValues && formValues.medlemskapsperioder.some(medlemskapsperiode =>
-        medlemskapsperiode.ny || !erMedlemskapsperiodeFullført(medlemskapsperiode.innvilgelsesResultat, medlemskapsperiode.trygdedekning, medlemskapsperiode.fomDato));
-      const erFeilAktivPaPerioder = formValues && formValues.medlemskapsperioder.some(medlemskapsperiode => !!medlemskapsperiode.feil);
-      setErFortsattDisabled(erNoenPerioderUfullført || erFeilAktivPaPerioder || !erAllePerioderAnnetEnnAvslatt);
     }, [formValues]);
+
+    useEffect(() => {
+      oppdater();
+    }, [erVurderingPerioderValid]);
 
     const oppdaterMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, index: number, medlemskapsperiodeID: number) => {
       Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiodeID, oppdatertMedlemskapsperiode)
@@ -338,7 +346,7 @@ const VurderingPerioder =
           </Nav.Knapp>
           <Nav.Hovedknapp
             mini
-            disabled={!(props.redigerbart) || erFortsattDisabled}
+            disabled={!(props.redigerbart) || !erVurderingPerioderValid}
             className="fane__navigasjonsknapp"
             onClick={handleBekreft}>Fortsett
           </Nav.Hovedknapp>
@@ -354,6 +362,7 @@ const VurderingPerioderForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_perioder)(values),
 })(VurderingPerioder);
 
 export default connector(VurderingPerioderForm);

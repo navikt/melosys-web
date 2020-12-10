@@ -5,7 +5,7 @@ import VurderingPerioder from '../../../../felleskomponenter/stegvelger/stegKomp
 class Perioder extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = true;
+    const harAvklaring = propsLight.vurder_periode_valid;
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -21,6 +21,7 @@ class Perioder extends Steg {
     this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;
