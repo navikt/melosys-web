@@ -20,6 +20,6 @@ export const Slett = (props: SymbolProps) => (
     {...props}
     onClick={props.onClick}
     title="Slett"
-    ikon={Ikoner.Bin}
+    ikon={Ikoner.Bin_Large}
   />
 );
