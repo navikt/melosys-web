@@ -95,6 +95,7 @@ export const Menypanel = ({
   lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
+  const [menypanelFeilmelding, setMenypanelFeilmelding] = useState('');
 
   const visArbeidsforholdRolleEtiketter = behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
@@ -116,6 +117,7 @@ export const Menypanel = ({
           content: <Familieforhold
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            setMenypanelFeilmelding={setMenypanelFeilmelding}
           />,
         },
       ],
@@ -250,16 +252,19 @@ export const Menypanel = ({
     }));
 
   return (
-    <div className="menypanel">
-      <Sidemeny
-        heading="Opplysninger"
-        linkGroups={linkGroups}
-        onClick={handleClick}
-      />
-      <Nav.Panel className="content">
-        { activeContent }
-      </Nav.Panel>
-    </div>
+    <>
+      { menypanelFeilmelding && <Nav.AlertStripe type="feil" className="varsel">{menypanelFeilmelding}</Nav.AlertStripe> }
+      <div className="menypanel">
+        <Sidemeny
+          heading="Opplysninger"
+          linkGroups={linkGroups}
+          onClick={handleClick}
+        />
+        <Nav.Panel className="content">
+          { activeContent }
+        </Nav.Panel>
+      </div>
+    </>
   );
 };
 
