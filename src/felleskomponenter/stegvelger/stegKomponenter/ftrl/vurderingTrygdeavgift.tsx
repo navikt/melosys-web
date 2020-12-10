@@ -94,7 +94,7 @@ const InntektsInformasjonComponent =
 
     if (!formValues.avgiftsLoenn) return null;
     return (
-      <div className="understrek">
+      <div className="overstrek">
         <Nav.Row>
           <Nav.typo.Undertittel className="sub_undertittel">{erVirksomhetNorsk ? 'Fra Norge' : 'Fra utlandet'}</Nav.typo.Undertittel>
           <div className="column">
@@ -171,6 +171,7 @@ const InntektsInformasjonComponent =
                   : erSærligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true) &&
                 <Skjema.Select
                   label=""
+                  disabled={!redigerbart}
                   feltNavn={erVirksomhetNorsk ? 'avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe' : 'avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe'}
                   emptyFieldText="Velg gruppe"
                   emptyFieldDisabled={(erVirksomhetNorsk
@@ -193,15 +194,25 @@ const InntektsInformasjonComponent =
             === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
         )
           ?
-          <Nav.AlertStripeInfo>
-            {erVirksomhetNorsk
-              ? formValues.avgiftsLoenn.inntektsInformasjonNorge &&
-              KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt)
-              : formValues.avgiftsLoenn.inntektsInformasjonUtland &&
-              KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt)}
-          </Nav.AlertStripeInfo>
+          <div>
+            <Nav.AlertStripeInfo className="alertstripe__info">
+              {erVirksomhetNorsk
+                ? formValues.avgiftsLoenn.inntektsInformasjonNorge &&
+                KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt)
+                : formValues.avgiftsLoenn.inntektsInformasjonUtland &&
+                KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt)}
+            </Nav.AlertStripeInfo>
+            {
+              !erVirksomhetNorsk && formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.betalerArbeidsgiverAvgift &&
+              <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+            }
+          </div>
           :
           <Nav.Row>
+            {
+              !erVirksomhetNorsk && formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.betalerArbeidsgiverAvgift &&
+              <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+            }
             <Nav.Column xs="4">
               <Nav.Input
                 label="Avgiftspliktig inntekt per måned"
@@ -218,9 +229,9 @@ const InntektsInformasjonComponent =
               <Nav.Knapp
                 className="beregn_knapp"
                 onClick={() => handleBeregnClick(erVirksomhetNorsk)}
-                disabled={!erAvgiftsLoennGyldig}
+                disabled={!redigerbart || !erAvgiftsLoennGyldig}
               >
-                {erAvgiftsLoennGyldig ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
+                {erAvgiftsLoennGyldig && redigerbart ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
                 <span>Beregn foreløpig trygdeavgift</span>
               </Nav.Knapp>
             </Nav.Column>
@@ -272,7 +283,6 @@ const VurderingTrygdeavgift =
     const [erAvgiftsLoennGyldig, setErAvgiftsLoennGyldig] = useState(false);
     const [erSærligAvgiftsGruppeValgt, setErSærligAvgiftsGruppeValgt] = useState(new Map());
     const [avgiftspliktigLoenn, setAvgiftspliktigLoenn] = useState<AvgiftsBeregning>({ avgiftspliktigLønnNorge: -1, avgiftspliktigLønnUtland: -1 });
-    const [feil, setFeil] = useState();
 
     useEffect(() => {
       async function lastInnAvgiftsLoenn() {
@@ -332,7 +342,7 @@ const VurderingTrygdeavgift =
       <div>
         <Nav.typo.Undertittel className="undertittel">Trygdeavgift</Nav.typo.Undertittel>
 
-        <Nav.Row className="understrek">
+        <Nav.Row>
           <Nav.Column xs="6">
             <Nav.Fieldset legend="Hvor mottar søker inntekt fra?">
               <Skjema.Radio
@@ -342,6 +352,7 @@ const VurderingTrygdeavgift =
                 key={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
                 id={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
                 className=""
+                disabled={!redigerbart}
                 defaultChecked={formValues && formValues.avgiftsLoenn && formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               />
               <Skjema.Radio
@@ -351,6 +362,7 @@ const VurderingTrygdeavgift =
                 key={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
                 id={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
                 className=""
+                disabled={!redigerbart}
                 defaultChecked={formValues && formValues.avgiftsLoenn && formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               />
               <Skjema.Radio
@@ -360,6 +372,7 @@ const VurderingTrygdeavgift =
                 key={MKV.Koder.loenn_forhold.DELT_LØNN}
                 id={MKV.Koder.loenn_forhold.DELT_LØNN}
                 className=""
+                disabled={!redigerbart}
                 defaultChecked={formValues && formValues.avgiftsLoenn && formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN}
               />
             </Nav.Fieldset>
