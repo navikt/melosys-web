@@ -286,7 +286,7 @@ interface Props {
 
 const VurderingTrygdeavgift =
   ({
-    bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, formValid, formSyncErrors, saerligeavgiftsgrupper
+    bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, formValid, formSyncErrors, saerligeavgiftsgrupper,
   }: Props & PropsFromRedux) => {
     const [erTabellÅpen, setErTabellÅpen] = useState(new Map());
     const [erStegGyldig, setErStegGyldig] = useState(false);
