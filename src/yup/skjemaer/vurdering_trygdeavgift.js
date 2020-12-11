@@ -55,9 +55,9 @@ function sjekkOmAvgiftsberegningIkkeErBeregnet(avgiftsgrunnlag, avgiftsberegning
     case MKV.Koder.loenn_forhold.LØNN_FRA_NORGE:
       return !avgiftsberegning.avgiftspliktigLønnNorge;
     case MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET:
-      return !avgiftsberegning.avgiftsperioderUtland;
+      return !avgiftsberegning.avgiftspliktigLønnUtland;
     case MKV.Koder.loenn_forhold.DELT_LØNN:
-      return !avgiftsberegning.avgiftspliktigLønnNorge || !avgiftsberegning.avgiftsperioderUtland;
+      return !avgiftsberegning.avgiftspliktigLønnNorge || !avgiftsberegning.avgiftspliktigLønnUtland;
     default:
       return true;
   }
@@ -84,7 +84,7 @@ const vurdering_trygdeavgift = object().shape({
       fom: string()
         .required(),
       tom: string()
-        .required(),
+        .nullable(),
       trygdedekning: string()
         .required(),
       avgiftssats: number()
@@ -97,7 +97,7 @@ const vurdering_trygdeavgift = object().shape({
       fom: string()
         .required(),
       tom: string()
-        .required(),
+        .nullable(),
       trygdedekning: string()
         .required(),
       avgiftssats: number()

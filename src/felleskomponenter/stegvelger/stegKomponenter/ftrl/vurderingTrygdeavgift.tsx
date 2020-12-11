@@ -221,8 +221,8 @@ const TrygdeavgiftsgrunnlagComponent =
                   <Nav.Column xs="4">
                     <Nav.Input
                       label="Avgiftspliktig inntekt per måned"
-                      value={(erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== -1 && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
-                        (!erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== -1 && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) || 0}
+                      value={(erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
+                        (!erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) || 0}
                       bredde="fullbredde"
                       onChange={event => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
                       inputMode="numeric"
@@ -294,32 +294,25 @@ const VurderingTrygdeavgift =
     const [oppdatertAvgiftsberegning, setOppdatertAvgiftsberegning] = useState<OppdaterAvgiftsberegning>({ avgiftspliktigLønnNorge: null, avgiftspliktigLønnUtland: null });
 
     useEffect(() => {
-      async function lastInnAvgiftsgrunnlag() {
-        const avgiftsgrunnlag = await Api.Trygdeavgift.hentGrunnlag(behandlingID)
-          .then((response: Avgiftsgrunnlag) => {
-            if (response.trygdeavgiftsgrunnlagNorge && response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== undefined) {
-              erSærligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
-            }
-            if (response.trygdeavgiftsgrunnlagUtland && response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe !== undefined) {
-              erSærligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe);
-            }
-            setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt));
-          })
-          .catch(Utils.logger.error);
-        changeField('avgiftsgrunnlag', avgiftsgrunnlag);
-      }
+      Api.Trygdeavgift.hentGrunnlag(behandlingID)
+        .then((response: Avgiftsgrunnlag) => {
+          if (response.trygdeavgiftsgrunnlagNorge && response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== undefined) {
+            erSærligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
+          }
+          if (response.trygdeavgiftsgrunnlagUtland && response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe !== undefined) {
+            erSærligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe);
+          }
+          setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt));
+          changeField('avgiftsgrunnlag', response);
+        })
+        .catch(Utils.logger.error);
 
-      async function lastInnAvgiftsberegning() {
-        const avgiftsberegning = await Api.Trygdeavgift.hentBeregning(behandlingID)
-          .then((response: Avgiftsberegning) => {
-            setOppdatertAvgiftsberegning({ avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge, avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland });
-          })
-          .catch(Utils.logger.error);
-        changeField('avgiftsberegning', avgiftsberegning);
-      }
-
-      lastInnAvgiftsgrunnlag();
-      lastInnAvgiftsberegning();
+      Api.Trygdeavgift.hentBeregning(behandlingID)
+        .then((response: Avgiftsberegning) => {
+          setOppdatertAvgiftsberegning({ avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge, avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland });
+          changeField('avgiftsberegning', response);
+        })
+        .catch(Utils.logger.error);
     }, []);
 
     useEffect(() => {
