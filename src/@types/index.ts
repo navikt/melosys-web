@@ -28,3 +28,9 @@ export type { default as PersonHistorikk } from './personhistorikk';
 export type { default as Organisasjon } from './organisasjon';
 export type { MedlPeriode } from './medlemskap';
 export type { default as Aktoer } from './aktoer';
+export type {
+  Trygdeavgiftsgrunnlag,
+  AvgiftsLoenn,
+  Avgiftsperiode,
+  AvgiftsBeregning,
+} from './trygdeavgift';

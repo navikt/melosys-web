@@ -34,6 +34,9 @@ declare module 'Domene' {
   export type Medlemskapsperiode = import('./@types').Medlemskapsperiode;
   export type OppdaterMedlemskapsperiode = import('./@types').OppdaterMedlemskapsperiode
   export type Familiemedlem = import('./@types').Familiemedlem;
+  export type AvgiftsLoenn = import('./@types').AvgiftsLoenn;
+  export type Avgiftsperiode = import('./@types').Avgiftsperiode;
+  export type AvgiftsBeregning = import('./@types').AvgiftsBeregning;
 }
 
 declare module '@navikt/melosys-kodeverk' {

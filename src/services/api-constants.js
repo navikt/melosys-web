@@ -25,6 +25,7 @@ export const SAKSFLYT = 'saksflyt';
 export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const STATISTIKK = 'statistikk';
 export const SVAR = 'svar';
+export const TRYGDEAVGIFT = 'trygdeavgift';
 export const UNNTAKSPERIODER = 'unntaksperioder';
 export const UTPEKING = 'utpeking';
 export const UTPEKINGSPERIODER = 'utpekingsperioder';
