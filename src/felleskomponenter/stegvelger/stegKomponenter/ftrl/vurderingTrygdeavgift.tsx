@@ -17,6 +17,7 @@ import * as Skjema from '../../../skjema';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { formSelectors } from '../../../../ducks/form';
+import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../../yup';
 import { BOOLSK, BOOLSK_STRING } from '../../../../constants';
 
@@ -37,6 +38,7 @@ interface TrygdeavgiftsgrunnlagProps {
   handleSærligAvgiftsgruppeRadioChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void,
   handleAvgiftspliktigLønnInputChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void,
   redigerbart: boolean,
+  saerligeavgiftsgrupper: KTObject[]
 }
 
 const TrygdeavgiftsgrunnlagComponent =
@@ -51,6 +53,7 @@ const TrygdeavgiftsgrunnlagComponent =
     handleSærligAvgiftsgruppeRadioChange,
     handleAvgiftspliktigLønnInputChange,
     redigerbart,
+    saerligeavgiftsgrupper,
   }: TrygdeavgiftsgrunnlagProps) => {
     const Hjelpetekst = () => (
       <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Under}>
@@ -178,7 +181,7 @@ const TrygdeavgiftsgrunnlagComponent =
                     ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
                     : formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe) !== 'TRUE'}
                 >
-                  {MKV.KTObjects.saerligeavgiftsgrupper.map((saerligavgiftsgruppe: KTObject) =>
+                  {saerligeavgiftsgrupper.map((saerligavgiftsgruppe: KTObject) =>
                     <option key={saerligavgiftsgruppe.kode} value={saerligavgiftsgruppe.kode}>{saerligavgiftsgruppe.term}</option>)}
                 </Skjema.Select>
               }
@@ -259,6 +262,7 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.TRYGDEAVGIFT)(state),
   formValid: formSelectors.VurderTrygdeavgiftFormValid(state),
   formSyncErrors: getFormSyncErrors(KV.Form.TRYGDEAVGIFT)(state),
+  saerligeavgiftsgrupper: folketrygdenkodeverkSelectors.SaerligeavgiftsgrupperSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -282,7 +286,7 @@ interface Props {
 
 const VurderingTrygdeavgift =
   ({
-    bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, formValid, formSyncErrors,
+    bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, formValid, formSyncErrors, saerligeavgiftsgrupper
   }: Props & PropsFromRedux) => {
     const [erTabellÅpen, setErTabellÅpen] = useState(new Map());
     const [erStegGyldig, setErStegGyldig] = useState(false);
@@ -438,6 +442,7 @@ const VurderingTrygdeavgift =
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
             redigerbart={redigerbart}
             formSyncErrors={formSyncErrors}
+            saerligeavgiftsgrupper={saerligeavgiftsgrupper}
           />
         }
         {
@@ -455,6 +460,7 @@ const VurderingTrygdeavgift =
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
             redigerbart={redigerbart}
             formSyncErrors={formSyncErrors}
+            saerligeavgiftsgrupper={saerligeavgiftsgrupper}
           />
         }
 
