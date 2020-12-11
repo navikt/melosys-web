@@ -31,7 +31,7 @@ interface ILinksBuilder {
   build: () => Link[],
 }
 
-class LinkGroupsBuilder implements ILinksBuilder {
+class LinksBuilder implements ILinksBuilder {
   private readonly links: Link[] = [];
   private readonly contentProps: ContentProps;
 
@@ -152,4 +152,4 @@ class LinkGroupsBuilder implements ILinksBuilder {
   }
 }
 
-export default LinkGroupsBuilder;
+export default LinksBuilder;
