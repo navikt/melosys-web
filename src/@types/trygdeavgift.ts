@@ -1,16 +1,24 @@
-export type Trygdeavgiftsgrunnlag = {
-  erSkattepliktig?: boolean | null,
-  betalerArbeidsgiverAvgift?: boolean | null,
-  særligAvgiftsgruppe?: string | null,
-  vurderingTrygdeavgiftNorskInntekt?: string,
-  vurderingTrygdeavgiftUtenlandskInntekt?: string,
+export type AvgiftsgrunnlagInfo = {
+  erSkattepliktig: boolean | null,
+  betalerArbeidsgiverAvgift: boolean | null,
+  særligAvgiftsgruppe: string | null,
 }
 
-export type AvgiftsLoenn = {
-  lønnsforhold?: string | null,
-  trygdeavgiftsgrunnlagNorge?: Trygdeavgiftsgrunnlag | null,
-  trygdeavgiftsgrunnlagUtland?: Trygdeavgiftsgrunnlag | null,
+export type OppdaterAvgiftsgrunnlag = {
+  lønnsforhold: string | null,
+  trygdeavgiftsgrunnlagNorge: AvgiftsgrunnlagInfo | null,
+  trygdeavgiftsgrunnlagUtland: AvgiftsgrunnlagInfo | null,
+}
+
+export type Avgiftsgrunnlag = OppdaterAvgiftsgrunnlag & {
+  vurderingTrygdeavgiftNorskInntekt: string | null,
+  vurderingTrygdeavgiftUtenlandskInntekt: string | null,
 };
+
+export type OppdaterAvgiftsberegning = {
+  avgiftspliktigLønnNorge: number | null,
+  avgiftspliktigLønnUtland: number | null,
+}
 
 export type Avgiftsperiode = {
   fom: string,
@@ -20,9 +28,7 @@ export type Avgiftsperiode = {
   avgiftPerMd: number,
 }
 
-export type AvgiftsBeregning = {
-  avgiftspliktigLønnNorge: number | null,
-  avgiftsperioderNorge?: Avgiftsperiode[],
-  avgiftspliktigLønnUtland: number | null,
-  avgiftsperioderUtland?: Avgiftsperiode[],
+export type Avgiftsberegning = OppdaterAvgiftsberegning & {
+  avgiftsperioderNorge: Avgiftsperiode[],
+  avgiftsperioderUtland: Avgiftsperiode[],
 }

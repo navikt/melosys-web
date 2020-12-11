@@ -29,8 +29,10 @@ export type { default as Organisasjon } from './organisasjon';
 export type { MedlPeriode } from './medlemskap';
 export type { default as Aktoer } from './aktoer';
 export type {
-  Trygdeavgiftsgrunnlag,
-  AvgiftsLoenn,
+  OppdaterAvgiftsgrunnlag,
+  AvgiftsgrunnlagInfo,
   Avgiftsperiode,
-  AvgiftsBeregning,
+  Avgiftsgrunnlag,
+  OppdaterAvgiftsberegning,
+  Avgiftsberegning,
 } from './trygdeavgift';
