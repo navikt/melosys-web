@@ -1,7 +1,6 @@
 import React, { useState, ReactNode } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
-import { Xknapp } from 'nav-frontend-ikonknapper';
 
 import * as Nav from '../../utils/navFrontend';
 
@@ -256,9 +255,9 @@ export const Menypanel = ({
   return (
     <>
       { menypanelFeilmelding &&
-      <Nav.AlertStripe type="feil" className="varsel">
+      <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
         {menypanelFeilmelding}
-        <Xknapp form="kompakt" onClick={() => { setMenypanelFeilmelding(''); }} />
+        <Nav.Xknapp form="kompakt" onClick={() => { setMenypanelFeilmelding(''); }} />
       </Nav.AlertStripe> }
       <div className="menypanel">
         <Sidemeny
