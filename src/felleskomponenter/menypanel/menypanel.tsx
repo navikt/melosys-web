@@ -42,7 +42,9 @@ export const Menypanel = ({
     behandlingstema,
     behandlingstype,
     behandlingsgrunnlagtype,
-    lagreSoknadOgOppfriskSaksopplysninger,
+    handlers: {
+      lagreSoknadOgOppfriskSaksopplysninger,
+    },
   });
 
   const handleClick = (groupIndex: number, linkIndex: number) => {

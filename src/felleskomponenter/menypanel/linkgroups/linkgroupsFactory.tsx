@@ -34,7 +34,9 @@ interface createLinkGroupsConfig {
   behandlingstype: string,
   behandlingsgrunnlagtype: string,
   redigerbart: boolean,
-  lagreSoknadOgOppfriskSaksopplysninger: () => void,
+  handlers: {
+    lagreSoknadOgOppfriskSaksopplysninger: () => void,
+  }
 }
 
 class LinkGroupsFactory {
@@ -43,7 +45,9 @@ class LinkGroupsFactory {
     behandlingstype,
     behandlingsgrunnlagtype,
     redigerbart,
-    lagreSoknadOgOppfriskSaksopplysninger,
+    handlers: {
+      lagreSoknadOgOppfriskSaksopplysninger,
+    },
   }: createLinkGroupsConfig): LinkGroup[] {
     const contentProps: ContentProps = {
       visArbeidsforholdRolleEtiketter: behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
