@@ -1,7 +1,5 @@
 import React from 'react';
 import { RootState } from 'AppTypes';
-import { ThunkDispatch } from 'redux-thunk';
-import { Action } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { getFormValues, reduxForm } from 'redux-form';
 import { Medlemskapsperiode } from 'Domene';
@@ -19,6 +17,7 @@ import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkod
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { formSelectors } from '../../../../ducks/form';
 import { HTMLEditor } from '../../../htmleditor';
+import PdfLenkeListe from '../../../pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
@@ -50,13 +49,10 @@ const mapStateToProps = (state: RootState) => ({
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
-  formValues: getFormValues(KV.Form.VEDTAK),
+  formValues: getFormValues(KV.Form.VEDTAK)(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -66,12 +62,15 @@ interface Props {
   tilbake: () => void,
   redigerbart: boolean,
   alleLandkoder: KTObject[],
+  formValues: {
+    fritekstInnledning: HTMLElement,
+    fritekstBegrunnelse: HTMLElement,
+  }
 }
 
 const VurderingVedtak =
   ({
     bekreft,
-    oppdater,
     tilbake,
     redigerbart,
     medlemskapsperioder,
@@ -79,8 +78,19 @@ const VurderingVedtak =
     soknadsland,
     alleLandkoder,
     trygdeavgiftFormValues,
-    formValues,
+    behandlingID,
   }: Props & PropsFromRedux) => {
+    const PdfDokument = [
+      {
+        navn: <Ikoner.Se />,
+        type: 'MELDING_FORVENTET_SAKSBEHANDLINGSTID',
+        data: {
+          fritekst: 'dummy-fritekst',
+          mottaker: 'BRUKER',
+        },
+      },
+    ];
+
     function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
       return perioder && perioder.map(medlemskapsperiode =>
         [`Fra. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} Til. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato)}`,
@@ -93,17 +103,33 @@ const VurderingVedtak =
         [
           <Nav.typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.typo.Normaltekst>,
           'Deloitte',
-          <span><Ikoner.Se /></span>,
+          <span>
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={PdfDokument} />
+          </span>,
         ],
         [
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til Skatteetaten</Nav.typo.Normaltekst>,
           'Skatteetaten',
-          <span><Ikoner.Se /> <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} /></span>,
+          <span>
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={PdfDokument} />
+            <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
+          </span>,
         ],
         [
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
           'Dag Fossum',
-          <span><Ikoner.Se /> <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} /></span>,
+          <span>
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={PdfDokument} />
+            <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
+          </span>,
+        ],
+        [
+          <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
+          'Dag Fossum',
+          <span>
+            <Ikoner.Se />
+            <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
+          </span>,
         ],
       ];
     }
@@ -137,30 +163,30 @@ const VurderingVedtak =
           </Nav.Column>
         </Nav.Row>
 
-        { trygdeavgiftFormValues && [MKV.Koder.loenn_forhold.LØNN_FRA_NORGE, MKV.Koder.loenn_forhold.DELT_LØNN].includes(trygdeavgiftFormValues.avgiftsLoenn)
-          && trygdeavgiftFormValues.avgiftsLoenn.inntektsInformasjonNorge &&
+        { trygdeavgiftFormValues && trygdeavgiftFormValues.avgiftsgrunnlag
+          && [MKV.Koder.loenn_forhold.LØNN_FRA_NORGE, MKV.Koder.loenn_forhold.DELT_LØNN].includes(trygdeavgiftFormValues.avgiftsgrunnlag.lønnsforhold) &&
           <div style={{ marginTop: '2rem', marginBottom: '0.5rem' }}>
             <Ikoner.Inntekt className="trygdeavgift_ikon" />
             <Nav.typo.Normaltekst>
               {getTrygdeavgiftString(
                 KV.finnTermFraListe(
                   MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt,
-                  trygdeavgiftFormValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt
+                  trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt
                 ),
                 'norsk inntekt'
               )}
             </Nav.typo.Normaltekst>
           </div>
         }
-        { trygdeavgiftFormValues && [MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET, MKV.Koder.loenn_forhold.DELT_LØNN].includes(trygdeavgiftFormValues.avgiftsLoenn)
-          && trygdeavgiftFormValues.avgiftsLoenn.inntektsInformasjonUtland &&
+        { trygdeavgiftFormValues && trygdeavgiftFormValues.avgiftsgrunnlag
+            && [MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET, MKV.Koder.loenn_forhold.DELT_LØNN].includes(trygdeavgiftFormValues.avgiftsgrunnlag.lønnsforhold) &&
           <div>
             <Ikoner.Inntekt className="trygdeavgift_ikon" />
             <Nav.typo.Normaltekst>
               {getTrygdeavgiftString(
                 KV.finnTermFraListe(
                   MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt,
-                  trygdeavgiftFormValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt
+                  trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt
                 ),
                 'utenlandsk inntekt'
               )}
@@ -168,14 +194,18 @@ const VurderingVedtak =
           </div>
         }
 
-        <Nav.typo.Element className="fritekst_overskrift">Fritekst til innleding<Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst></Nav.typo.Element>
+        <Nav.typo.Element className="fritekst_overskrift" tag="h3">
+          Fritekst til innleding <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst>
+        </Nav.typo.Element>
         <HTMLEditor
           feltNavn="fritekstInnledning"
           className="fritekst_editor"
           placeholder="Skriv inn tekst til orienteringsbrev..."
         />
 
-        <Nav.typo.Element className="fritekst_overskrift">Fritekst til begrunnelse<Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst></Nav.typo.Element>
+        <Nav.typo.Element className="fritekst_overskrift" tag="h3">
+          Fritekst til begrunnelse <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst>
+        </Nav.typo.Element>
         <HTMLEditor
           feltNavn="fritekstBegrunnelse"
           className="fritekst_editor"
@@ -183,7 +213,6 @@ const VurderingVedtak =
         />
 
         <TabellComponent rader={mapVedtakRader()} kolonner={[{ navn: 'Dokumenter', bredde: '60%' }, { navn: 'Mottaker', bredde: '25%' }, { navn: '', bredde: '15%' }]} />
-
 
         <div className="fane__knapplinje">
           <Nav.Knapp

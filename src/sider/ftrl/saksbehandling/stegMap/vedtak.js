@@ -5,6 +5,7 @@ import VurderingVedtak from '../../../../felleskomponenter/stegvelger/stegKompon
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+    const harAvklaring = true;
     this.kriterier = [
       {
         exec: () => true,
@@ -18,7 +19,7 @@ class Vedtak extends Steg {
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.redigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
+    this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
