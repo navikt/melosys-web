@@ -8,50 +8,83 @@ import {
 
 import MKV from '../../melosyskodeverk';
 
-const NOE_SKJEDDE = { melding: 'Noe skjedde' };
+const AVGIFTSGRUNNLAG_FEIL = { melding: 'Avgiftsgrunnlag er ikke gyldig' };
+const LØNNSFORHOLD_FEIL = { melding: 'Lønnsforhold er ikke gyldig' };
+const TRYGDEAVGIFTSGRUNNLAGNORGE_FEIL = { melding: 'TrygdeavgiftsgrunnlagNorge er ikke gyldig' };
+const TRYGDEAVGIFTSGRUNNLAGUTLAND_FEIL = { melding: 'TrygdeavgiftsgrunnlagUtland er ikke gyldig' };
+const AVGIFTSBEREGNING_FEIL = { melding: 'Avgiftsberegning er ikke beregnet' };
 
-function erInntektsInformasjonValid(inntektsinformasjon) {
-  return (inntektsinformasjon
-    && (inntektsinformasjon.erSkattepliktig || inntektsinformasjon.erSkattepliktig === false)
-    && (inntektsinformasjon.betalerArbeidsgiverAvgift || inntektsinformasjon.betalerArbeidsgiverAvgift === false)
-    && (inntektsinformasjon.særligAvgiftsgruppe === null || (!!inntektsinformasjon.særligAvgiftsgruppe && inntektsinformasjon.særligAvgiftsgruppe !== 'TRUE')));
+function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag) {
+  return (trygdeavgiftsgrunnlag
+    && (trygdeavgiftsgrunnlag.erSkattepliktig || trygdeavgiftsgrunnlag.erSkattepliktig === false)
+    && (trygdeavgiftsgrunnlag.betalerArbeidsgiverAvgift || trygdeavgiftsgrunnlag.betalerArbeidsgiverAvgift === false)
+    && (trygdeavgiftsgrunnlag.særligAvgiftsgruppe === null || (!!trygdeavgiftsgrunnlag.særligAvgiftsgruppe && trygdeavgiftsgrunnlag.særligAvgiftsgruppe !== 'TRUE')));
 }
 
-function sjekkOmAvgiftsLoennErUgyldig(avgiftsLønn) {
-  if (!avgiftsLønn || !avgiftsLønn.lønnsforhold) return true;
-  switch (avgiftsLønn.lønnsforhold) {
+function sjekkOmTrygdeavgiftsgrunnlagNorgeErUgyldig(avgiftsgrunnlag) {
+  if (!avgiftsgrunnlag) return true;
+  return !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge);
+}
+
+function sjekkOmTrygdeavgiftsgrunnlagUtlandErUgyldig(avgiftsgrunnlag) {
+  if (!avgiftsgrunnlag) return true;
+  return !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland);
+}
+
+function sjekkOmLønnsforholdErUgyldig(avgiftsgrunnlag) {
+  return (!avgiftsgrunnlag || !avgiftsgrunnlag.lønnsforhold);
+}
+
+function sjekkOmAvgiftsgrunnlagErUgyldig(avgiftsgrunnlag) {
+  if (!avgiftsgrunnlag || !avgiftsgrunnlag.lønnsforhold) return true;
+  switch (avgiftsgrunnlag.lønnsforhold) {
     case MKV.Koder.loenn_forhold.LØNN_FRA_NORGE:
-      return !erInntektsInformasjonValid(avgiftsLønn.inntektsInformasjonNorge);
+      return !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge);
     case MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET:
-      return !erInntektsInformasjonValid(avgiftsLønn.inntektsInformasjonUtland);
+      return !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland);
     case MKV.Koder.loenn_forhold.DELT_LØNN:
-      return !(erInntektsInformasjonValid(avgiftsLønn.inntektsInformasjonNorge) && erInntektsInformasjonValid(avgiftsLønn.inntektsInformasjonUtland));
+      return !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge) || !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland);
     default:
-      return false;
+      return true;
   }
 }
 
+function sjekkOmAvgiftsberegningIkkeErBeregnet(avgiftsgrunnlag, avgiftsberegning) {
+  if (!avgiftsgrunnlag || !avgiftsgrunnlag.lønnsforhold || !avgiftsberegning) return true;
+  switch (avgiftsgrunnlag.lønnsforhold) {
+    case MKV.Koder.loenn_forhold.LØNN_FRA_NORGE:
+      return !avgiftsberegning.avgiftspliktigLønnNorge;
+    case MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET:
+      return !avgiftsberegning.avgiftspliktigLønnUtland;
+    case MKV.Koder.loenn_forhold.DELT_LØNN:
+      return !avgiftsberegning.avgiftspliktigLønnNorge || !avgiftsberegning.avgiftspliktigLønnUtland;
+    default:
+      return true;
+  }
+}
+
+
 const vurdering_trygdeavgift = object().shape({
-  avgiftsLoenn: object().shape({
+  avgiftsgrunnlag: object().shape({
     lønnsforhold: string().nullable(),
-    inntektsInformasjonNorge: object().shape({
+    trygdeavgiftsgrunnlagNorge: object().shape({
       erSkattepliktig: bool(),
       betalerArbeidsgiverAvgift: bool(),
       særligAvgiftsgruppe: string().nullable(),
     }).nullable(),
-    inntektsInformasjonUtland: object().shape({
+    trygdeavgiftsgrunnlagUtland: object().shape({
       erSkattepliktig: bool(),
       betalerArbeidsgiverAvgift: bool(),
       særligAvgiftsgruppe: string().nullable(),
     }).nullable(),
   }).nullable(),
-  avgiftsBeregning: object().shape({
-    avgiftspliktigLønnNorge: number(),
+  avgiftsberegning: object().shape({
+    avgiftspliktigLønnNorge: number().nullable(),
     avgiftsperioderNorge: array().of(object().shape({
       fom: string()
         .required(),
       tom: string()
-        .required(),
+        .nullable(),
       trygdedekning: string()
         .required(),
       avgiftssats: number()
@@ -59,12 +92,12 @@ const vurdering_trygdeavgift = object().shape({
       avgiftPerMd: number()
         .required(),
     })),
-    avgiftspliktigLønnUtland: number(),
+    avgiftspliktigLønnUtland: number().nullable(),
     avgiftsperioderUtland: array().of(object().shape({
       fom: string()
         .required(),
       tom: string()
-        .required(),
+        .nullable(),
       trygdedekning: string()
         .required(),
       avgiftssats: number()
@@ -73,11 +106,35 @@ const vurdering_trygdeavgift = object().shape({
         .required(),
     })),
   }),
-  erAvgiftsLoennUgyldig: string()
-    .when('avgiftsLoenn', {
-      is: sjekkOmAvgiftsLoennErUgyldig,
+  erAvgiftsgrunnlagUgyldig: string()
+    .when('avgiftsgrunnlag', {
+      is: sjekkOmAvgiftsgrunnlagErUgyldig,
       then: string()
-        .required(NOE_SKJEDDE),
+        .required(AVGIFTSGRUNNLAG_FEIL),
+    }),
+  erLønnsforholdUgyldig: string()
+    .when('avgiftsgrunnlag', {
+      is: sjekkOmLønnsforholdErUgyldig,
+      then: string()
+        .required(LØNNSFORHOLD_FEIL),
+    }),
+  erTrygdeavgiftsgrunnlagNorgeUgyldig: string()
+    .when('avgiftsgrunnlag', {
+      is: sjekkOmTrygdeavgiftsgrunnlagNorgeErUgyldig,
+      then: string()
+        .required(TRYGDEAVGIFTSGRUNNLAGNORGE_FEIL),
+    }),
+  erTrygdeavgiftsgrunnlagUtlandUgyldig: string()
+    .when('avgiftsgrunnlag', {
+      is: sjekkOmTrygdeavgiftsgrunnlagUtlandErUgyldig,
+      then: string()
+        .required(TRYGDEAVGIFTSGRUNNLAGUTLAND_FEIL),
+    }),
+  erAvgiftsberegningBeregnet: string()
+    .when(['avgiftsgrunnlag', 'avgiftsberegning'], {
+      is: sjekkOmAvgiftsberegningIkkeErBeregnet,
+      then: string()
+        .required(AVGIFTSBEREGNING_FEIL),
     }),
 });
 

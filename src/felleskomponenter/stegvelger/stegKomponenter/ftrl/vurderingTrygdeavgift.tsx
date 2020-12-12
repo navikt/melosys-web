@@ -2,9 +2,10 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import { RootState } from 'AppTypes';
 import { connect, ConnectedProps } from 'react-redux';
 import { KTObject } from '@navikt/melosys-kodeverk';
-import { change, getFormValues, reduxForm } from 'redux-form';
+import { change, getFormSyncErrors, getFormValues, reduxForm } from 'redux-form';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
+import { Avgiftsgrunnlag, AvgiftsgrunnlagInfo, OppdaterAvgiftsberegning, Avgiftsberegning, Avgiftsperiode } from 'Domene';
 
 import MKV from '../../../../melosyskodeverk';
 import * as Nav from '../../../../utils/navFrontend';
@@ -14,44 +15,46 @@ import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
 import * as Skjema from '../../../skjema';
 
-import { AvgiftsBeregning, AvgiftsLoenn, Avgiftsperiode } from '../../../../@types/avgift';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { formSelectors } from '../../../../ducks/form';
+import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../../yup';
 import { BOOLSK, BOOLSK_STRING } from '../../../../constants';
 
 import './vurderingTrygdeavgift.css';
 
 
-interface InntektsInformasjonProps {
+interface TrygdeavgiftsgrunnlagProps {
   formValues: {
-    avgiftsBeregning: AvgiftsBeregning | undefined,
-    avgiftsLoenn: AvgiftsLoenn | undefined
+    avgiftsberegning: Avgiftsberegning | undefined,
+    avgiftsgrunnlag: Avgiftsgrunnlag | undefined
   },
-  avgiftspliktigLoenn: AvgiftsBeregning,
-  erAvgiftsLoennGyldig: boolean,
+  oppdatertAvgiftsberegning: OppdaterAvgiftsberegning,
   erTabellÅpen: Map<string, boolean>,
   erVirksomhetNorsk: boolean,
   erSærligAvgiftsGruppeValgt: Map<string, boolean>,
+  formSyncErrors: any,
   handleBeregnClick: (erVirksomhetNorsk: boolean) => void,
   handleSærligAvgiftsgruppeRadioChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void,
   handleAvgiftspliktigLønnInputChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void,
   redigerbart: boolean,
+  saerligeavgiftsgrupper: KTObject[]
 }
 
-const InntektsInformasjonComponent =
+const TrygdeavgiftsgrunnlagComponent =
   ({
     formValues,
-    avgiftspliktigLoenn,
-    erAvgiftsLoennGyldig,
+    oppdatertAvgiftsberegning,
     erTabellÅpen,
     erVirksomhetNorsk,
     erSærligAvgiftsGruppeValgt,
+    formSyncErrors,
     handleBeregnClick,
     handleSærligAvgiftsgruppeRadioChange,
     handleAvgiftspliktigLønnInputChange,
     redigerbart,
-  }: InntektsInformasjonProps) => {
+    saerligeavgiftsgrupper,
+  }: TrygdeavgiftsgrunnlagProps) => {
     const Hjelpetekst = () => (
       <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Under}>
         {'Du skal velge "ja" dersom søker tilhører en spesiell gruppe og det kan ha betydning for trygdeavgiften. Dette gjelder følgende grupper:'}
@@ -92,7 +95,7 @@ const InntektsInformasjonComponent =
       );
     };
 
-    if (!formValues.avgiftsLoenn) return null;
+    if (!formValues.avgiftsgrunnlag) return null;
     return (
       <div className="overstrek">
         <Nav.Row>
@@ -102,18 +105,18 @@ const InntektsInformasjonComponent =
               <Skjema.Radio
                 className="column"
                 label="Ja"
-                feltNavn={erVirksomhetNorsk ? 'avgiftsLoenn.inntektsInformasjonNorge.erSkattepliktig' : 'avgiftsLoenn.inntektsInformasjonUtland.erSkattepliktig'}
+                feltNavn={erVirksomhetNorsk ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig'}
                 value={BOOLSK.SANN}
                 disabled={!redigerbart}
-                id={erVirksomhetNorsk ? 'inntektsInformasjonNorge.erSkattepliktig' : 'inntektsInformasjonUtland.erSkattepliktig'}
+                id={erVirksomhetNorsk ? 'trygdeavgiftsgrunnlagNorge.erSkattepliktig' : 'trygdeavgiftsgrunnlagUtland.erSkattepliktig'}
               />
               <Skjema.Radio
                 className="column"
                 label="Nei"
-                feltNavn={erVirksomhetNorsk ? 'avgiftsLoenn.inntektsInformasjonNorge.erSkattepliktig' : 'avgiftsLoenn.inntektsInformasjonUtland.erSkattepliktig'}
+                feltNavn={erVirksomhetNorsk ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig'}
                 value={BOOLSK.USANN}
                 disabled={!redigerbart}
-                id={erVirksomhetNorsk ? 'inntektsInformasjonNorge.erIkkeSkattepliktig' : 'inntektsInformasjonUtland.erIkkeSkattepliktig'}
+                id={erVirksomhetNorsk ? 'trygdeavgiftsgrunnlagNorge.erIkkeSkattepliktig' : 'trygdeavgiftsgrunnlagUtland.erIkkeSkattepliktig'}
               />
             </Nav.Fieldset>
           </div>
@@ -123,18 +126,18 @@ const InntektsInformasjonComponent =
               <Skjema.Radio
                 className="column"
                 label="Ja"
-                feltNavn={erVirksomhetNorsk ? 'avgiftsLoenn.inntektsInformasjonNorge.betalerArbeidsgiverAvgift' : 'avgiftsLoenn.inntektsInformasjonUtland.betalerArbeidsgiverAvgift'}
+                feltNavn={erVirksomhetNorsk ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift'}
                 value={BOOLSK.SANN}
                 disabled={!redigerbart}
-                id={erVirksomhetNorsk ? 'inntektsInformasjonNorge.betalerArbeidsgiverAvgift' : 'inntektsInformasjonUtland.betalerArbeidsgiverAvgift'}
+                id={erVirksomhetNorsk ? 'trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift' : 'trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift'}
               />
               <Skjema.Radio
                 className="column"
                 label="Nei"
-                feltNavn={erVirksomhetNorsk ? 'avgiftsLoenn.inntektsInformasjonNorge.betalerArbeidsgiverAvgift' : 'avgiftsLoenn.inntektsInformasjonUtland.betalerArbeidsgiverAvgift'}
+                feltNavn={erVirksomhetNorsk ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift'}
                 value={BOOLSK.USANN}
                 disabled={!redigerbart}
-                id={erVirksomhetNorsk ? 'inntektsInformasjonNorge.betalerIkkeArbeidsgiverAvgift' : 'inntektsInformasjonUtland.betalerIkkeArbeidsgiverAvgift'}
+                id={erVirksomhetNorsk ? 'trygdeavgiftsgrunnlagNorge.betalerIkkeArbeidsgiverAvgift' : 'trygdeavgiftsgrunnlagUtland.betalerIkkeArbeidsgiverAvgift'}
               />
             </Nav.Fieldset>
           </div>
@@ -172,13 +175,13 @@ const InntektsInformasjonComponent =
                 <Skjema.Select
                   label=""
                   disabled={!redigerbart}
-                  feltNavn={erVirksomhetNorsk ? 'avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe' : 'avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe'}
+                  feltNavn={erVirksomhetNorsk ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe'}
                   emptyFieldText="Velg gruppe"
                   emptyFieldDisabled={(erVirksomhetNorsk
-                    ? formValues.avgiftsLoenn.inntektsInformasjonNorge && formValues.avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe
-                    : formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe) !== 'TRUE'}
+                    ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
+                    : formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe) !== 'TRUE'}
                 >
-                  {MKV.KTObjects.saerligeavgiftsgrupper.map((saerligavgiftsgruppe: KTObject) =>
+                  {saerligeavgiftsgrupper.map((saerligavgiftsgruppe: KTObject) =>
                     <option key={saerligavgiftsgruppe.kode} value={saerligavgiftsgruppe.kode}>{saerligavgiftsgruppe.term}</option>)}
                 </Skjema.Select>
               }
@@ -187,62 +190,66 @@ const InntektsInformasjonComponent =
           </div>
         </Nav.Row>
 
-        { (erVirksomhetNorsk
-          ? formValues.avgiftsLoenn.inntektsInformasjonNorge &&
-            formValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
-          : formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt
-            === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
-        )
-          ?
-          <div>
-            <Nav.AlertStripeInfo className="alertstripe__info">
-              {erVirksomhetNorsk
-                ? formValues.avgiftsLoenn.inntektsInformasjonNorge &&
-                KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonNorge.vurderingTrygdeavgiftNorskInntekt)
-                : formValues.avgiftsLoenn.inntektsInformasjonUtland &&
-                KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsLoenn.inntektsInformasjonUtland.vurderingTrygdeavgiftUtenlandskInntekt)}
-            </Nav.AlertStripeInfo>
-            {
-              !erVirksomhetNorsk && formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.betalerArbeidsgiverAvgift &&
-              <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
-            }
-          </div>
-          :
-          <Nav.Row>
-            {
-              !erVirksomhetNorsk && formValues.avgiftsLoenn.inntektsInformasjonUtland && formValues.avgiftsLoenn.inntektsInformasjonUtland.betalerArbeidsgiverAvgift &&
-              <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
-            }
-            <Nav.Column xs="4">
-              <Nav.Input
-                label="Avgiftspliktig inntekt per måned"
-                value={(erVirksomhetNorsk && avgiftspliktigLoenn.avgiftspliktigLønnNorge !== -1 && avgiftspliktigLoenn.avgiftspliktigLønnNorge) ||
-                  (!erVirksomhetNorsk && avgiftspliktigLoenn.avgiftspliktigLønnUtland !== -1 && avgiftspliktigLoenn.avgiftspliktigLønnUtland) || 0}
-                bredde="fullbredde"
-                onChange={event => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
-                inputMode="numeric"
-                pattern="[0-9]*"
-                disabled={!redigerbart}
-              />
-            </Nav.Column>
-            <Nav.Column xs="4">
-              <Nav.Knapp
-                className="beregn_knapp"
-                onClick={() => handleBeregnClick(erVirksomhetNorsk)}
-                disabled={!redigerbart || !erAvgiftsLoennGyldig}
-              >
-                {erAvgiftsLoennGyldig && redigerbart ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
-                <span>Beregn foreløpig trygdeavgift</span>
-              </Nav.Knapp>
-            </Nav.Column>
-          </Nav.Row>
+        {
+          (erVirksomhetNorsk
+            ? formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
+            : formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
+          )
+            ?
+            <div>
+              <Nav.AlertStripeInfo className="alertstripe__info">
+                {erVirksomhetNorsk
+                  ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge &&
+                  KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt)
+                  : formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland &&
+                  KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt)}
+              </Nav.AlertStripeInfo>
+              {
+                !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
+                <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+              }
+            </div>
+            :
+            <Nav.Row>
+              {
+                !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
+                <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+              }
+              {
+                (erVirksomhetNorsk ? !formSyncErrors.erTrygdeavgiftsgrunnlagNorgeUgyldig : !formSyncErrors.erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
+                <>
+                  <Nav.Column xs="4">
+                    <Nav.Input
+                      label="Avgiftspliktig inntekt per måned"
+                      value={(erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
+                        (!erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) || 0}
+                      bredde="fullbredde"
+                      onChange={event => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      disabled={!redigerbart}
+                    />
+                  </Nav.Column>
+                  <Nav.Column xs="4">
+                    <Nav.Knapp
+                      className="beregn_knapp"
+                      onClick={() => handleBeregnClick(erVirksomhetNorsk)}
+                      disabled={!redigerbart}
+                    >
+                      {redigerbart ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
+                      <span>Beregn foreløpig trygdeavgift</span>
+                    </Nav.Knapp>
+                  </Nav.Column>
+                </>
+              }
+            </Nav.Row>
         }
 
         {
-          (erVirksomhetNorsk ? erTabellÅpen.get('norskVirksomhet') : erTabellÅpen.get('utenlandskVirksomhet')) && formValues.avgiftsBeregning &&
+          (erVirksomhetNorsk ? erTabellÅpen.get('norskVirksomhet') : erTabellÅpen.get('utenlandskVirksomhet')) && formValues.avgiftsberegning &&
           <Nav.Row>
             <Nav.Column xs="12">
-              <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsBeregning.avgiftsperioderNorge : formValues.avgiftsBeregning.avgiftsperioderNorge)} />
+              <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsberegning.avgiftsperioderNorge : formValues.avgiftsberegning.avgiftsperioderNorge)} />
             </Nav.Column>
           </Nav.Row>
         }
@@ -253,7 +260,9 @@ const InntektsInformasjonComponent =
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formValues: getFormValues(KV.Form.TRYGDEAVGIFT)(state),
-  vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
+  formValid: formSelectors.VurderTrygdeavgiftFormValid(state),
+  formSyncErrors: getFormSyncErrors(KV.Form.TRYGDEAVGIFT)(state),
+  saerligeavgiftsgrupper: folketrygdenkodeverkSelectors.SaerligeavgiftsgrupperSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -270,71 +279,103 @@ interface Props {
   tilbake: () => void,
   redigerbart: boolean,
   formValues: {
-    avgiftsLoenn: AvgiftsLoenn,
-    avgiftsBeregning: AvgiftsBeregning | undefined,
+    avgiftsgrunnlag: Avgiftsgrunnlag,
+    avgiftsberegning: Avgiftsberegning,
   }
 }
 
 const VurderingTrygdeavgift =
   ({
-    bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, vurder_trygdeavgift_valid,
+    bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, formValid, formSyncErrors, saerligeavgiftsgrupper,
   }: Props & PropsFromRedux) => {
     const [erTabellÅpen, setErTabellÅpen] = useState(new Map());
-    const [erAvgiftsLoennGyldig, setErAvgiftsLoennGyldig] = useState(false);
+    const [erStegGyldig, setErStegGyldig] = useState(false);
     const [erSærligAvgiftsGruppeValgt, setErSærligAvgiftsGruppeValgt] = useState(new Map());
-    const [avgiftspliktigLoenn, setAvgiftspliktigLoenn] = useState<AvgiftsBeregning>({ avgiftspliktigLønnNorge: -1, avgiftspliktigLønnUtland: -1 });
+    const [oppdatertAvgiftsberegning, setOppdatertAvgiftsberegning] = useState<OppdaterAvgiftsberegning>({ avgiftspliktigLønnNorge: null, avgiftspliktigLønnUtland: null });
 
     useEffect(() => {
-      async function lastInnAvgiftsLoenn() {
-        const response = await Api.Avgift.hentLoenn(behandlingID);
-        changeField('avgiftsLoenn', response);
-        if (response) {
-          if (response.inntektsInformasjonNorge && response.inntektsInformasjonNorge.særligAvgiftsgruppe !== undefined) {
-            erSærligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.inntektsInformasjonNorge.særligAvgiftsgruppe);
+      Api.Trygdeavgift.hentGrunnlag(behandlingID)
+        .then((response: Avgiftsgrunnlag) => {
+          if (response.trygdeavgiftsgrunnlagNorge && response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== undefined) {
+            erSærligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
           }
-          if (response.inntektsInformasjonUtland && response.inntektsInformasjonUtland.særligAvgiftsgruppe !== undefined) {
-            erSærligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.inntektsInformasjonUtland.særligAvgiftsgruppe);
+          if (response.trygdeavgiftsgrunnlagUtland && response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe !== undefined) {
+            erSærligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe);
           }
           setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt));
-        }
-      }
-      lastInnAvgiftsLoenn();
+          changeField('avgiftsgrunnlag', response);
+        })
+        .catch(Utils.logger.error);
+
+      Api.Trygdeavgift.hentBeregning(behandlingID)
+        .then((response: Avgiftsberegning) => {
+          setOppdatertAvgiftsberegning({ avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge, avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland });
+          changeField('avgiftsberegning', response);
+        })
+        .catch(Utils.logger.error);
     }, []);
 
     useEffect(() => {
       oppdater();
-      setErAvgiftsLoennGyldig(vurder_trygdeavgift_valid);
-    }, [vurder_trygdeavgift_valid]);
+      setErStegGyldig(formValid);
+    }, [formValid]);
+
+    function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag: AvgiftsgrunnlagInfo | null | undefined) {
+      return (trygdeavgiftsgrunnlag
+        && (trygdeavgiftsgrunnlag.erSkattepliktig || trygdeavgiftsgrunnlag.erSkattepliktig === false)
+        && (trygdeavgiftsgrunnlag.betalerArbeidsgiverAvgift || trygdeavgiftsgrunnlag.betalerArbeidsgiverAvgift === false)
+        && (trygdeavgiftsgrunnlag.særligAvgiftsgruppe === null || (!!trygdeavgiftsgrunnlag.særligAvgiftsgruppe && trygdeavgiftsgrunnlag.særligAvgiftsgruppe !== 'TRUE')));
+    }
+
+    function erAvgiftsgrunnlagGyldig(avgiftsgrunnlag: Avgiftsgrunnlag) {
+      if (!avgiftsgrunnlag || !avgiftsgrunnlag.lønnsforhold) return false;
+      switch (avgiftsgrunnlag.lønnsforhold) {
+        case MKV.Koder.loenn_forhold.LØNN_FRA_NORGE:
+          return !!erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge);
+        case MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET:
+          return !!erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland);
+        case MKV.Koder.loenn_forhold.DELT_LØNN:
+          return !!erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge) && !!erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland);
+        default:
+          return false;
+      }
+    }
 
     useEffect(() => {
-      if (formValues && formValues.avgiftsLoenn && erAvgiftsLoennGyldig) {
-        Api.Avgift.sendLoenn(behandlingID, formValues.avgiftsLoenn);
+      if (formValues && formValues.avgiftsgrunnlag && erAvgiftsgrunnlagGyldig(formValues.avgiftsgrunnlag)) {
+        Api.Trygdeavgift.sendGrunnlag(behandlingID, {
+          lønnsforhold: formValues.avgiftsgrunnlag.lønnsforhold,
+          trygdeavgiftsgrunnlagNorge: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge || null,
+          trygdeavgiftsgrunnlagUtland: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland || null,
+        })
+          .then((response: Avgiftsgrunnlag) => {
+            changeField('avgiftsgrunnlag', response);
+          })
+          .catch(Utils.logger.error);
       }
-    }, [formValues && formValues.avgiftsLoenn, erAvgiftsLoennGyldig]);
+    }, [formValues && formValues.avgiftsgrunnlag]);
 
     function handleSærligAvgiftsgruppeRadioChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
       const erSærligAvgiftsgruppe = Utils.streng.tryParseBool(event.target.value);
       setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', erSærligAvgiftsgruppe)));
       changeField(
-        erNorskVirksomhet ? 'avgiftsLoenn.inntektsInformasjonNorge.særligAvgiftsgruppe' : 'avgiftsLoenn.inntektsInformasjonUtland.særligAvgiftsgruppe',
+        erNorskVirksomhet ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe',
         erSærligAvgiftsgruppe ? 'TRUE' : null
       );
     }
 
     function handleAvgiftspliktigLønnInputChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
-      setAvgiftspliktigLoenn(erNorskVirksomhet
-        ? { ...avgiftspliktigLoenn, avgiftspliktigLønnNorge: parseInt(event.target.value, 10) }
-        : { ...avgiftspliktigLoenn, avgiftspliktigLønnUtland: parseInt(event.target.value, 10) });
-      if (erNorskVirksomhet) {
-        changeField('avgiftsBeregning', { ...formValues.avgiftsBeregning, avgiftspliktigLønnNorge: parseInt(event.target.value, 10) });
-      } else {
-        changeField('avgiftsBeregning', { ...formValues.avgiftsBeregning, avgiftspliktigLønnUtland: parseInt(event.target.value, 10) });
-      }
+      setOppdatertAvgiftsberegning(erNorskVirksomhet
+        ? { ...oppdatertAvgiftsberegning, avgiftspliktigLønnNorge: parseInt(event.target.value, 10) }
+        : { ...oppdatertAvgiftsberegning, avgiftspliktigLønnUtland: parseInt(event.target.value, 10) });
     }
 
-    async function handleBeregnClick(erNorskVirksomhet: boolean) {
-      const hentetAvgiftsBeregning = await Api.Avgift.sendBeregning(behandlingID, avgiftspliktigLoenn);
-      changeField('avgiftsBeregning', hentetAvgiftsBeregning);
+    function handleBeregnClick(erNorskVirksomhet: boolean) {
+      Api.Trygdeavgift.sendBeregning(behandlingID, oppdatertAvgiftsberegning)
+        .then((response: Avgiftsberegning) => {
+          changeField('avgiftsberegning', response);
+        })
+        .catch(Utils.logger.error);
       setErTabellÅpen(new Map(erTabellÅpen.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', true)));
     }
 
@@ -347,70 +388,72 @@ const VurderingTrygdeavgift =
             <Nav.Fieldset legend="Hvor mottar søker inntekt fra?">
               <Skjema.Radio
                 label="Norsk virksomhet"
-                feltNavn="avgiftsLoenn.lønnsforhold"
+                feltNavn="avgiftsgrunnlag.lønnsforhold"
                 value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
                 key={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
                 id={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
                 className=""
                 disabled={!redigerbart}
-                defaultChecked={formValues && formValues.avgiftsLoenn && formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
+                defaultChecked={formValues && formValues.avgiftsgrunnlag && formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               />
               <Skjema.Radio
-                feltNavn="avgiftsLoenn.lønnsforhold"
+                feltNavn="avgiftsgrunnlag.lønnsforhold"
                 label="Utenlandsk virksomhet"
                 value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
                 key={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
                 id={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
                 className=""
                 disabled={!redigerbart}
-                defaultChecked={formValues && formValues.avgiftsLoenn && formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
+                defaultChecked={formValues && formValues.avgiftsgrunnlag && formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               />
               <Skjema.Radio
                 label="Norsk og utenlandsk virksomhet"
-                feltNavn="avgiftsLoenn.lønnsforhold"
+                feltNavn="avgiftsgrunnlag.lønnsforhold"
                 value={MKV.Koder.loenn_forhold.DELT_LØNN}
                 key={MKV.Koder.loenn_forhold.DELT_LØNN}
                 id={MKV.Koder.loenn_forhold.DELT_LØNN}
                 className=""
                 disabled={!redigerbart}
-                defaultChecked={formValues && formValues.avgiftsLoenn && formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN}
+                defaultChecked={formValues && formValues.avgiftsgrunnlag && formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN}
               />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
 
         {
-          formValues && formValues.avgiftsLoenn &&
-          (formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE || formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
-          <InntektsInformasjonComponent
+          formValues && formValues.avgiftsgrunnlag &&
+          (formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE || formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
+          <TrygdeavgiftsgrunnlagComponent
             key="norskVirksomhet"
             erVirksomhetNorsk
             formValues={formValues}
-            avgiftspliktigLoenn={avgiftspliktigLoenn}
-            erAvgiftsLoennGyldig={erAvgiftsLoennGyldig}
+            oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
             erTabellÅpen={erTabellÅpen}
             erSærligAvgiftsGruppeValgt={erSærligAvgiftsGruppeValgt}
             handleBeregnClick={handleBeregnClick}
             handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
             redigerbart={redigerbart}
+            formSyncErrors={formSyncErrors}
+            saerligeavgiftsgrupper={saerligeavgiftsgrupper}
           />
         }
         {
-          formValues && formValues.avgiftsLoenn &&
-          (formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET || formValues.avgiftsLoenn.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
-          <InntektsInformasjonComponent
+          formValues && formValues.avgiftsgrunnlag &&
+          (formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET || formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
+          <TrygdeavgiftsgrunnlagComponent
             key="utenlandskVirksomhet"
             erVirksomhetNorsk={false}
             formValues={formValues}
-            avgiftspliktigLoenn={avgiftspliktigLoenn}
-            erAvgiftsLoennGyldig={erAvgiftsLoennGyldig}
+            oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
             erTabellÅpen={erTabellÅpen}
             erSærligAvgiftsGruppeValgt={erSærligAvgiftsGruppeValgt}
             handleBeregnClick={handleBeregnClick}
             handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
             redigerbart={redigerbart}
+            formSyncErrors={formSyncErrors}
+            saerligeavgiftsgrupper={saerligeavgiftsgrupper}
           />
         }
 
@@ -423,7 +466,7 @@ const VurderingTrygdeavgift =
           </Nav.Knapp>
           <Nav.Hovedknapp
             mini
-            disabled={!redigerbart || !erAvgiftsLoennGyldig}
+            disabled={!redigerbart || !erStegGyldig}
             className="fane__navigasjonsknapp"
             onClick={bekreft}>Fortsett
           </Nav.Hovedknapp>

@@ -62,7 +62,12 @@ export const VurderTrygdeavgiftFormSelector = createSelector(
 
 export const VurderTrygdeavgiftFormValid = createSelector(
   state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
-  errors => Utils._isEmpty(errors)
+  errors => {
+    if (Utils._isEmpty(errors)) {
+      return true;
+    }
+    return !errors.erAvgiftsgrunnlagUgyldig && !errors.erAvgiftsberegningBeregnet;
+  }
 );
 
 export const VurderUtpekingFormSelector = createSelector(
