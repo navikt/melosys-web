@@ -52,9 +52,9 @@ interface TrygdeavgiftsgrunnlagProps {
     avgiftsgrunnlag: Avgiftsgrunnlag | undefined
   },
   oppdatertAvgiftsberegning: OppdaterAvgiftsberegning,
-  erTabellÅpen: Map<string, boolean>,
+  erTabellApen: Map<string, boolean>,
   erVirksomhetNorsk: boolean,
-  erSærligAvgiftsGruppeValgt: Map<string, boolean>,
+  erSaerligAvgiftsGruppeValgt: Map<string, boolean>,
   formSyncErrors: any,
   handleBeregnClick: (erVirksomhetNorsk: boolean) => void,
   handleSærligAvgiftsgruppeRadioChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void,
@@ -67,9 +67,9 @@ const TrygdeavgiftsgrunnlagComponent =
   ({
     formValues,
     oppdatertAvgiftsberegning,
-    erTabellÅpen,
+    erTabellApen,
     erVirksomhetNorsk,
-    erSærligAvgiftsGruppeValgt,
+    erSaerligAvgiftsGruppeValgt,
     formSyncErrors,
     handleBeregnClick,
     handleSærligAvgiftsgruppeRadioChange,
@@ -150,8 +150,8 @@ const TrygdeavgiftsgrunnlagComponent =
                 name={`${erVirksomhetNorsk ? 'norskVirksomhet' : 'utenlandskVirksomhet'}særligAvgiftsgruppe`}
                 onChange={event => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
                 checked={erVirksomhetNorsk
-                  ? erSærligAvgiftsGruppeValgt.get('norskVirksomhet') === true
-                  : erSærligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true}
+                  ? erSaerligAvgiftsGruppeValgt.get('norskVirksomhet') === true
+                  : erSaerligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true}
                 value={BOOLSK_STRING.SANN}
                 disabled={!redigerbart}
               />
@@ -161,15 +161,15 @@ const TrygdeavgiftsgrunnlagComponent =
                 name={`${erVirksomhetNorsk ? 'norskVirksomhet' : 'utenlandskVirksomhet'}særligAvgiftsgruppe`}
                 onChange={event => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
                 checked={erVirksomhetNorsk
-                  ? erSærligAvgiftsGruppeValgt.get('norskVirksomhet') === false
-                  : erSærligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === false}
+                  ? erSaerligAvgiftsGruppeValgt.get('norskVirksomhet') === false
+                  : erSaerligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === false}
                 value={BOOLSK_STRING.USANN}
                 disabled={!redigerbart}
               />
               {
                 (erVirksomhetNorsk
-                  ? erSærligAvgiftsGruppeValgt.get('norskVirksomhet') === true
-                  : erSærligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true) &&
+                  ? erSaerligAvgiftsGruppeValgt.get('norskVirksomhet') === true
+                  : erSaerligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true) &&
                 <Skjema.Select
                   label=""
                   disabled={!redigerbart}
@@ -244,7 +244,7 @@ const TrygdeavgiftsgrunnlagComponent =
         }
 
         {
-          (erVirksomhetNorsk ? erTabellÅpen.get('norskVirksomhet') : erTabellÅpen.get('utenlandskVirksomhet')) && formValues.avgiftsberegning &&
+          (erVirksomhetNorsk ? erTabellApen.get('norskVirksomhet') : erTabellApen.get('utenlandskVirksomhet')) && formValues.avgiftsberegning &&
           <Nav.Row>
             <Nav.Column xs="12">
               <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsberegning.avgiftsperioderNorge : formValues.avgiftsberegning.avgiftsperioderNorge)} />
@@ -286,21 +286,21 @@ const VurderingTrygdeavgift =
   ({
     bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, formValid, formSyncErrors, saerligeavgiftsgrupper,
   }: Props & PropsFromRedux) => {
-    const [erTabellÅpen, setErTabellÅpen] = useState(new Map());
+    const [erTabellApen, setErTabellApen] = useState(new Map());
     const [erStegGyldig, setErStegGyldig] = useState(false);
-    const [erSærligAvgiftsGruppeValgt, setErSærligAvgiftsGruppeValgt] = useState(new Map());
+    const [erSaerligAvgiftsGruppeValgt, setErSaerligAvgiftsGruppeValgt] = useState(new Map());
     const [oppdatertAvgiftsberegning, setOppdatertAvgiftsberegning] = useState<OppdaterAvgiftsberegning>({ avgiftspliktigLønnNorge: null, avgiftspliktigLønnUtland: null });
 
     useEffect(() => {
       Api.Trygdeavgift.hentGrunnlag(behandlingID)
         .then((response: Avgiftsgrunnlag) => {
           if (response.trygdeavgiftsgrunnlagNorge && response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== undefined) {
-            erSærligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
+            erSaerligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
           }
           if (response.trygdeavgiftsgrunnlagUtland && response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe !== undefined) {
-            erSærligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe);
+            erSaerligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe);
           }
-          setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt));
+          setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
           changeField('avgiftsgrunnlag', response);
         })
         .catch(Utils.logger.error);
@@ -355,7 +355,7 @@ const VurderingTrygdeavgift =
 
     function handleSærligAvgiftsgruppeRadioChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
       const erSærligAvgiftsgruppe = Utils.streng.tryParseBool(event.target.value);
-      setErSærligAvgiftsGruppeValgt(new Map(erSærligAvgiftsGruppeValgt.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', erSærligAvgiftsgruppe)));
+      setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', erSærligAvgiftsgruppe)));
       changeField(
         erNorskVirksomhet ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe',
         erSærligAvgiftsgruppe ? 'TRUE' : null
@@ -374,7 +374,7 @@ const VurderingTrygdeavgift =
           changeField('avgiftsberegning', response);
         })
         .catch(Utils.logger.error);
-      setErTabellÅpen(new Map(erTabellÅpen.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', true)));
+      setErTabellApen(new Map(erTabellApen.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', true)));
     }
 
     return (
@@ -422,8 +422,8 @@ const VurderingTrygdeavgift =
             erVirksomhetNorsk
             formValues={formValues}
             oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
-            erTabellÅpen={erTabellÅpen}
-            erSærligAvgiftsGruppeValgt={erSærligAvgiftsGruppeValgt}
+            erTabellApen={erTabellApen}
+            erSaerligAvgiftsGruppeValgt={erSaerligAvgiftsGruppeValgt}
             handleBeregnClick={handleBeregnClick}
             handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
@@ -439,8 +439,8 @@ const VurderingTrygdeavgift =
             erVirksomhetNorsk={false}
             formValues={formValues}
             oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
-            erTabellÅpen={erTabellÅpen}
-            erSærligAvgiftsGruppeValgt={erSærligAvgiftsGruppeValgt}
+            erTabellApen={erTabellApen}
+            erSaerligAvgiftsGruppeValgt={erSaerligAvgiftsGruppeValgt}
             handleBeregnClick={handleBeregnClick}
             handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
