@@ -200,7 +200,7 @@ const VurderingVedtak =
         <HTMLEditor
           feltNavn="fritekstInnledning"
           className="fritekst_editor"
-          placeholder="Skriv inn tekst til orienteringsbrev..."
+          placeholder="Skriv inn tilleggsinformasjon til innledning..."
         />
 
         <Nav.typo.Element className="fritekst_overskrift" tag="h3">
@@ -209,7 +209,7 @@ const VurderingVedtak =
         <HTMLEditor
           feltNavn="fritekstBegrunnelse"
           className="fritekst_editor"
-          placeholder="Skriv inn tekst til orienteringsbrev..."
+          placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         />
 
         <TabellComponent rader={mapVedtakRader()} kolonner={[{ navn: 'Dokumenter', bredde: '60%' }, { navn: 'Mottaker', bredde: '25%' }, { navn: '', bredde: '15%' }]} />
