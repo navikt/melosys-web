@@ -8,6 +8,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
+import * as Hooks from '../../../hooks';
 import { formSelectors } from '../../../ducks/form';
 import MKV from '../../../melosyskodeverk';
 
@@ -22,6 +23,25 @@ const OpprettFagsak = props => {
   const { sakstyper, behandlingstemaer } = props;
   const { journalforingSkjemaVerdier } = props;
   const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
+
+  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.folketrygden');
+
+  if (sidemenyToggle === 'fetching') return null;
+
+  if (sidemenyToggle === 'enabled') {
+    if (sakstyper.findIndex(sakstype => sakstype.kode === 'FTRL') === -1) {
+      sakstyper.push({
+        kode: 'FTRL',
+        term: 'Folketrygdloven',
+      });
+    }
+    if (behandlingstemaer.findIndex(behandlingstema => behandlingstema.kode === 'ARBEID_I_UTLANDET') === -1) {
+      behandlingstemaer.push({
+        kode: 'ARBEID_I_UTLANDET',
+        term: 'Arbeid i utlandet',
+      });
+    }
+  }
 
   const art16 = [
     KV.kodeTilObjekt(
