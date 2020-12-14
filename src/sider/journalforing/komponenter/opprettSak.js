@@ -24,11 +24,11 @@ const OpprettFagsak = props => {
   const { journalforingSkjemaVerdier } = props;
   const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
 
-  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.folketrygden');
+  const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden');
 
-  if (sidemenyToggle === 'fetching') return null;
+  if (folketrygdenToggle === 'fetching') return null;
 
-  if (sidemenyToggle === 'enabled') {
+  if (folketrygdenToggle === 'enabled') {
     if (sakstyper.findIndex(sakstype => sakstype.kode === 'FTRL') === -1) {
       sakstyper.push({
         kode: 'FTRL',
