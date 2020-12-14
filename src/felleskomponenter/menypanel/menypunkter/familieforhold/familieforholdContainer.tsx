@@ -15,11 +15,13 @@ import './familieforholdContainer.css';
 interface FamilieforholdContainerProps {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
+  setMenypanelFeilmelding: (feilmelding: string) => void
 }
 
 const FamilieforholdContainer = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
+  setMenypanelFeilmelding,
 }: FamilieforholdContainerProps) => (
   <Nav.Container fluid className="familieforhold-container">
     <Nav.Row>
@@ -29,7 +31,7 @@ const FamilieforholdContainer = ({
     </Nav.Row>
     <Nav.Row className="familiemedlemmer-row">
       <Nav.Column xs="12">
-        <Familiemedlemmer />
+        <Familiemedlemmer setMenypanelFeilmelding={setMenypanelFeilmelding} />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
