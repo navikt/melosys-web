@@ -24,7 +24,7 @@ const OpprettFagsak = props => {
   const { journalforingSkjemaVerdier } = props;
   const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
 
-  const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden');
+  const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden.mvp');
 
   if (folketrygdenToggle === 'fetching') return null;
 
