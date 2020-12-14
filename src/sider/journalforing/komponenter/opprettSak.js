@@ -98,24 +98,26 @@ const OpprettFagsak = props => {
             </Nav.Fieldset>
           </Fragment>
           }
-          <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
-            <Nav.Row className="">
-              <Nav.Column xs="6">
-                <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
-              </Nav.Column>
-              <Nav.Column xs="6">
-                <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
           { valgtBehandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET &&
-            <Nav.Fieldset legend="Land:">
-              <Nav.Row className="">
-                <Nav.Column xs="12">
-                  <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
-                </Nav.Column>
-              </Nav.Row>
-            </Nav.Fieldset>
+            <Fragment>
+              <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
+                <Nav.Row className="">
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                  </Nav.Column>
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Land:">
+                <Nav.Row className="">
+                  <Nav.Column xs="12">
+                    <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Fieldset>
+            </Fragment>
           }
         </Fragment>
       }
