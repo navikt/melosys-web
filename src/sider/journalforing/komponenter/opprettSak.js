@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { change, getFormValues } from 'redux-form';
+import { change } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Skjema from '../../../felleskomponenter/skjema/';
@@ -22,8 +22,17 @@ export const OpprettSakTittel = () => (
 const OpprettFagsak = props => {
   const { sakstyper, behandlingstemaer } = props;
   const { journalforingSkjemaVerdier } = props;
-  const { formValues } = props;
-  const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
+  const { settFeltInnhold } = props;
+  const { opprettnysak_behandlingstema: valgtBehandlingstema, sakstype: valgtSakstype } = journalforingSkjemaVerdier;
+
+  useEffect(() => {
+    settFeltInnhold(
+      'opprettnysak_behandlingstema',
+      valgtSakstype === MKV.Koder.sakstyper.FTRL
+        ? MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+        : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
+    );
+  }, [valgtSakstype]);
 
   const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden.mvp');
 
@@ -66,7 +75,7 @@ const OpprettFagsak = props => {
         {
           behandlingstemaer &&
           behandlingstemaer
-            .filter(elem => (formValues && formValues.sakstype === MKV.Koder.sakstyper.FTRL
+            .filter(elem => (valgtSakstype === MKV.Koder.sakstyper.FTRL
               ? elem.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
               : elem.kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET))
             .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
@@ -133,16 +142,14 @@ OpprettFagsak.propTypes = {
   behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   journalforingSkjemaVerdier: PT.object,
-  formValues: PT.object,
+  settFeltInnhold: PT.func.isRequired,
 };
 
 OpprettFagsak.defaultProps = {
   journalforingSkjemaVerdier: {},
-  formValues: {},
 };
 const mapStateToProps = state => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
-  formValues: getFormValues('journalforing')(state),
 });
 
 const mapDispatchToProps = dispatch => ({
