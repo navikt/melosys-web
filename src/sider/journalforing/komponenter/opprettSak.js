@@ -29,17 +29,13 @@ const OpprettFagsak = props => {
   if (folketrygdenToggle === 'fetching') return null;
 
   if (folketrygdenToggle === 'enabled') {
-    if (sakstyper.findIndex(sakstype => sakstype.kode === 'FTRL') === -1) {
-      sakstyper.push({
-        kode: 'FTRL',
-        term: 'Folketrygdloven',
-      });
+    if (sakstyper.findIndex(sakstype => sakstype.kode === MKV.Koder.sakstyper.FTRL) === -1) {
+      sakstyper.push(MKV.KTObjects.sakstyper.find(({ kode }) =>
+        kode === MKV.Koder.sakstyper.FTRL));
     }
-    if (behandlingstemaer.findIndex(behandlingstema => behandlingstema.kode === 'ARBEID_I_UTLANDET') === -1) {
-      behandlingstemaer.push({
-        kode: 'ARBEID_I_UTLANDET',
-        term: 'Arbeid i utlandet',
-      });
+    if (behandlingstemaer.findIndex(behandlingstema => behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET) === -1) {
+      behandlingstemaer.push(MKV.KTObjects.behandlinger.behandlingstema.find(({ kode }) =>
+        kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET));
     }
   }
 
@@ -112,7 +108,7 @@ const OpprettFagsak = props => {
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>
-          { valgtBehandlingstema !== 'ARBEID_I_UTLANDET' &&
+          { valgtBehandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET &&
             <Nav.Fieldset legend="Land:">
               <Nav.Row className="">
                 <Nav.Column xs="12">
