@@ -112,13 +112,15 @@ const OpprettFagsak = props => {
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>
-          <Nav.Fieldset legend="Land:">
-            <Nav.Row className="">
-              <Nav.Column xs="12">
-                <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
+          { valgtBehandlingstema !== 'ARBEID_I_UTLANDET' &&
+            <Nav.Fieldset legend="Land:">
+              <Nav.Row className="">
+                <Nav.Column xs="12">
+                  <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
+                </Nav.Column>
+              </Nav.Row>
+            </Nav.Fieldset>
+          }
         </Fragment>
       }
     </div>

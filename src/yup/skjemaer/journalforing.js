@@ -35,6 +35,15 @@ const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) => (
   ].includes(behandlingstema)
 );
 
+const kreverLand = (journalforingHensikt, behandlingstema) => (
+  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+    'ARBEID_I_UTLANDET',
+  ].includes(behandlingstema)
+);
+
 const anmodningOmUnntak = (journalforingHensikt, behandlingstema) =>
   kreverPeriodeOgLand(journalforingHensikt, behandlingstema) &&
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
@@ -115,7 +124,7 @@ const journalforing = object().shape({
   journalforingSoknadsland: array().of(string())
     .ensure()
     .when(['journalforingHensikt', 'opprettnysak_behandlingstema'], {
-      is: kreverPeriodeOgLand,
+      is: kreverLand,
       then: array().of(string())
         .min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
