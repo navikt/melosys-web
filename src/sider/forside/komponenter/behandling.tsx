@@ -53,6 +53,7 @@ export const Behandling = ({
 
   const ikkePlukkbareBehandlingstemaer = [
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
+    'ARBEID_I_UTLANDET',
   ];
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
 
