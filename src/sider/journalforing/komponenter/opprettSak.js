@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { change } from 'redux-form';
+import { change, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Skjema from '../../../felleskomponenter/skjema/';
@@ -22,6 +22,7 @@ export const OpprettSakTittel = () => (
 const OpprettFagsak = props => {
   const { sakstyper, behandlingstemaer } = props;
   const { journalforingSkjemaVerdier } = props;
+  const { formValues } = props;
   const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
 
   const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden.mvp');
@@ -64,7 +65,11 @@ const OpprettFagsak = props => {
       <Skjema.Select feltNavn="opprettnysak_behandlingstema" bredde="fullbredde" label="Behandlingstema">
         {
           behandlingstemaer &&
-          behandlingstemaer.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
+          behandlingstemaer
+            .filter(elem => (formValues && formValues.sakstype === MKV.Koder.sakstyper.FTRL
+              ? elem.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+              : elem.kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET))
+            .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
         }
       </Skjema.Select>
       {skalViseSoknadsperiodeOgLand(valgtBehandlingstema) &&
@@ -128,13 +133,16 @@ OpprettFagsak.propTypes = {
   behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   journalforingSkjemaVerdier: PT.object,
+  formValues: PT.object,
 };
 
 OpprettFagsak.defaultProps = {
   journalforingSkjemaVerdier: {},
+  formValues: {},
 };
 const mapStateToProps = state => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
+  formValues: getFormValues('journalforing')(state),
 });
 
 const mapDispatchToProps = dispatch => ({
