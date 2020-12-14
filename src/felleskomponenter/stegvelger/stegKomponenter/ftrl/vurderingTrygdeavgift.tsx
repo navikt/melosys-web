@@ -153,7 +153,6 @@ const TrygdeavgiftsgrunnlagComponent =
                   ? erSærligAvgiftsGruppeValgt.get('norskVirksomhet') === true
                   : erSærligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true}
                 value={BOOLSK_STRING.SANN}
-                key={BOOLSK_STRING.SANN}
                 disabled={!redigerbart}
               />
               <Nav.Radio
@@ -165,7 +164,6 @@ const TrygdeavgiftsgrunnlagComponent =
                   ? erSærligAvgiftsGruppeValgt.get('norskVirksomhet') === false
                   : erSærligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === false}
                 value={BOOLSK_STRING.USANN}
-                key={BOOLSK_STRING.USANN}
                 disabled={!redigerbart}
               />
               {
@@ -390,7 +388,6 @@ const VurderingTrygdeavgift =
                 label="Norsk virksomhet"
                 feltNavn="avgiftsgrunnlag.lønnsforhold"
                 value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
-                key={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
                 id={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
                 className=""
                 disabled={!redigerbart}
@@ -400,7 +397,6 @@ const VurderingTrygdeavgift =
                 feltNavn="avgiftsgrunnlag.lønnsforhold"
                 label="Utenlandsk virksomhet"
                 value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
-                key={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
                 id={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
                 className=""
                 disabled={!redigerbart}
@@ -410,7 +406,6 @@ const VurderingTrygdeavgift =
                 label="Norsk og utenlandsk virksomhet"
                 feltNavn="avgiftsgrunnlag.lønnsforhold"
                 value={MKV.Koder.loenn_forhold.DELT_LØNN}
-                key={MKV.Koder.loenn_forhold.DELT_LØNN}
                 id={MKV.Koder.loenn_forhold.DELT_LØNN}
                 className=""
                 disabled={!redigerbart}
@@ -424,7 +419,6 @@ const VurderingTrygdeavgift =
           formValues && formValues.avgiftsgrunnlag &&
           (formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE || formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
           <TrygdeavgiftsgrunnlagComponent
-            key="norskVirksomhet"
             erVirksomhetNorsk
             formValues={formValues}
             oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
@@ -442,7 +436,6 @@ const VurderingTrygdeavgift =
           formValues && formValues.avgiftsgrunnlag &&
           (formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET || formValues.avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN) &&
           <TrygdeavgiftsgrunnlagComponent
-            key="utenlandskVirksomhet"
             erVirksomhetNorsk={false}
             formValues={formValues}
             oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
