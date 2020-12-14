@@ -13,7 +13,7 @@
   "readme": "README.md",
   "dependencies": {
     "@loadable/component": "^5.10.3",
-    "@navikt/melosys-kodeverk": "^5.15.52",
+    "@navikt/melosys-kodeverk": "5.15.55",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",

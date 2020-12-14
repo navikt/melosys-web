@@ -104,14 +104,18 @@ const VurderingVedtak =
           <Nav.typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.typo.Normaltekst>,
           'Deloitte',
           <span>
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={PdfDokument} />
+            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+              <Ikoner.Se />
+            </a>
           </span>,
         ],
         [
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til Skatteetaten</Nav.typo.Normaltekst>,
           'Skatteetaten',
           <span>
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={PdfDokument} />
+            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+              <Ikoner.Se />
+            </a>
             <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
           </span>,
         ],
@@ -119,7 +123,9 @@ const VurderingVedtak =
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
           'Dag Fossum',
           <span>
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={PdfDokument} />
+            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+              <Ikoner.Se />
+            </a>
             <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
           </span>,
         ],
@@ -127,7 +133,9 @@ const VurderingVedtak =
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
           'Dag Fossum',
           <span>
-            <Ikoner.Se />
+            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+              <Ikoner.Se />
+            </a>
             <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
           </span>,
         ],
