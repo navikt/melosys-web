@@ -59,6 +59,7 @@ interface Props {
   bekreft: () => void,
   oppdater: () => void,
   tilbake: () => void,
+  tilForsiden: () => void,
   redigerbart: boolean,
   alleLandkoder: KTObject[],
   formValues: {
@@ -69,7 +70,6 @@ interface Props {
 
 const VurderingVedtak =
   ({
-    bekreft,
     tilbake,
     redigerbart,
     medlemskapsperioder,
@@ -77,6 +77,7 @@ const VurderingVedtak =
     soknadsland,
     alleLandkoder,
     trygdeavgiftFormValues,
+    tilForsiden,
   }: Props & PropsFromRedux) => {
     function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
       return perioder && perioder.map(medlemskapsperiode =>
@@ -220,7 +221,7 @@ const VurderingVedtak =
             mini
             disabled={!redigerbart}
             className="fane__navigasjonsknapp"
-            onClick={bekreft}>Fortsett
+            onClick={tilForsiden}>Fatt vedtak
           </Nav.Hovedknapp>
         </div>
       </div>
