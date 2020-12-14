@@ -17,7 +17,6 @@ import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkod
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { formSelectors } from '../../../../ducks/form';
 import { HTMLEditor } from '../../../htmleditor';
-import PdfLenkeListe from '../../../pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
@@ -78,19 +77,7 @@ const VurderingVedtak =
     soknadsland,
     alleLandkoder,
     trygdeavgiftFormValues,
-    behandlingID,
   }: Props & PropsFromRedux) => {
-    const PdfDokument = [
-      {
-        navn: <Ikoner.Se />,
-        type: 'MELDING_FORVENTET_SAKSBEHANDLINGSTID',
-        data: {
-          fritekst: 'dummy-fritekst',
-          mottaker: 'BRUKER',
-        },
-      },
-    ];
-
     function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
       return perioder && perioder.map(medlemskapsperiode =>
         [`Fra. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} Til. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato)}`,
@@ -104,7 +91,7 @@ const VurderingVedtak =
           <Nav.typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.typo.Normaltekst>,
           'Deloitte',
           <span>
-            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
               <Ikoner.Se />
             </a>
           </span>,
@@ -113,7 +100,7 @@ const VurderingVedtak =
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til Skatteetaten</Nav.typo.Normaltekst>,
           'Skatteetaten',
           <span>
-            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
               <Ikoner.Se />
             </a>
             <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
@@ -123,7 +110,7 @@ const VurderingVedtak =
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
           'Dag Fossum',
           <span>
-            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
               <Ikoner.Se />
             </a>
             <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
@@ -133,7 +120,7 @@ const VurderingVedtak =
           <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
           'Dag Fossum',
           <span>
-            <a target="_blank" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
+            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
               <Ikoner.Se />
             </a>
             <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
