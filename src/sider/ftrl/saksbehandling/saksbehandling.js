@@ -105,6 +105,7 @@ const Saksbehandling = ({
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
   const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
+  const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden');
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, 'behandlingID');
@@ -173,6 +174,7 @@ const Saksbehandling = ({
   if (!behandlingID || behandlingID < 0) {
     return null;
   }
+  if (folketrygdenToggle === 'fetching' || folketrygdenToggle === 'disabled') return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
