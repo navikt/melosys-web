@@ -114,7 +114,7 @@ const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
       return lagSoeknadFelter(behandlingsgrunnlag);
-    case 'ARBEID_I_UTLANDET':
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET:
       return lagFTRLFelter(behandlingsgrunnlag);
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
