@@ -482,7 +482,7 @@ const VurderingTrygdeavgiftForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: values => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_trygdeavgift)(values),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_trygdeavgift),
 })(VurderingTrygdeavgift);
 
 export default connector(VurderingTrygdeavgiftForm);
