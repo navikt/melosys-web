@@ -2,6 +2,8 @@ import React from 'react';
 
 import * as Skjema from '../../skjema';
 
+import MKV from '../../../melosyskodeverk';
+
 import RegisterKontrollTreff from '../../registerkontrollTreff';
 import { VurderingUtpekt } from './vurderingUtpekt';
 
@@ -22,6 +24,7 @@ describe('VurderingUtpekt', () => {
       handleSubmit: jest.fn(),
       formValues: {},
       lovvalgsperiode: { fom: '', tom: '' },
+      behandlingstema: MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
     };
   });
 
