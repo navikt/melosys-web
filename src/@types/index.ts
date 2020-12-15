@@ -32,4 +32,5 @@ export type {
   Avgiftsperiode,
   Avgiftsgrunnlag,
   Avgiftsberegning,
+  AvgiftsgrunnlagInfo,
 } from './trygdeavgift';
