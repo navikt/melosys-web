@@ -151,7 +151,13 @@ const Saksbehandling = ({
   useEffect(() => {
     lastInnSaksopplysninger();
     API.Kodeverk.hentLandkoderIso2()
-      .then(response => setLandkoder(response))
+      .then(response => {
+        setLandkoder(response.sort((a, b) => {
+          if (a.term > b.term) return 1;
+          if (b.term > a.term) return -1;
+          return 0;
+        }));
+      })
       .catch(Utils.logger.error);
 
     return () => {
