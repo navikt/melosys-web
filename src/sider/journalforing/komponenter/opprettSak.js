@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
@@ -8,6 +8,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
+import * as Hooks from '../../../hooks';
 import { formSelectors } from '../../../ducks/form';
 import MKV from '../../../melosyskodeverk';
 
@@ -21,7 +22,32 @@ export const OpprettSakTittel = () => (
 const OpprettFagsak = props => {
   const { sakstyper, behandlingstemaer } = props;
   const { journalforingSkjemaVerdier } = props;
-  const { opprettnysak_behandlingstema: valgtBehandlingstema } = journalforingSkjemaVerdier;
+  const { settFeltInnhold } = props;
+  const { opprettnysak_behandlingstema: valgtBehandlingstema, sakstype: valgtSakstype } = journalforingSkjemaVerdier;
+
+  useEffect(() => {
+    settFeltInnhold(
+      'opprettnysak_behandlingstema',
+      valgtSakstype === MKV.Koder.sakstyper.FTRL
+        ? MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+        : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
+    );
+  }, [valgtSakstype]);
+
+  const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden.mvp');
+
+  if (folketrygdenToggle === 'fetching') return null;
+
+  if (folketrygdenToggle === 'enabled') {
+    if (sakstyper.findIndex(sakstype => sakstype.kode === MKV.Koder.sakstyper.FTRL) === -1) {
+      sakstyper.push(MKV.KTObjects.sakstyper.find(({ kode }) =>
+        kode === MKV.Koder.sakstyper.FTRL));
+    }
+    if (behandlingstemaer.findIndex(behandlingstema => behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET) === -1) {
+      behandlingstemaer.push(MKV.KTObjects.behandlinger.behandlingstema.find(({ kode }) =>
+        kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET));
+    }
+  }
 
   const art16 = [
     KV.kodeTilObjekt(
@@ -48,7 +74,11 @@ const OpprettFagsak = props => {
       <Skjema.Select feltNavn="opprettnysak_behandlingstema" bredde="fullbredde" label="Behandlingstema">
         {
           behandlingstemaer &&
-          behandlingstemaer.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
+          behandlingstemaer
+            .filter(elem => (valgtSakstype === MKV.Koder.sakstyper.FTRL
+              ? elem.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+              : elem.kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET))
+            .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
         }
       </Skjema.Select>
       {skalViseSoknadsperiodeOgLand(valgtBehandlingstema) &&
@@ -82,23 +112,27 @@ const OpprettFagsak = props => {
             </Nav.Fieldset>
           </Fragment>
           }
-          <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
-            <Nav.Row className="">
-              <Nav.Column xs="6">
-                <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
-              </Nav.Column>
-              <Nav.Column xs="6">
-                <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
-          <Nav.Fieldset legend="Land:">
-            <Nav.Row className="">
-              <Nav.Column xs="12">
-                <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
+          { valgtBehandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET &&
+            <Fragment>
+              <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
+                <Nav.Row className="">
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                  </Nav.Column>
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Land:">
+                <Nav.Row className="">
+                  <Nav.Column xs="12">
+                    <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Fieldset>
+            </Fragment>
+          }
         </Fragment>
       }
     </div>
@@ -108,6 +142,7 @@ OpprettFagsak.propTypes = {
   behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   journalforingSkjemaVerdier: PT.object,
+  settFeltInnhold: PT.func.isRequired,
 };
 
 OpprettFagsak.defaultProps = {
