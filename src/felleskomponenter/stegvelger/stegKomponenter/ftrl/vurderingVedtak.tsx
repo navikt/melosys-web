@@ -131,6 +131,7 @@ const VurderingVedtak =
     }
 
     function getTrygdeavgiftString(sentence: string, boldWord: string) {
+      if (!sentence) return null;
       const part1 = sentence.slice(0, sentence.indexOf(boldWord));
       const part2 = sentence.slice(sentence.indexOf(boldWord) + boldWord.length, sentence.length);
       return <>{part1}<b>{boldWord}</b>{part2}</>;
@@ -142,7 +143,7 @@ const VurderingVedtak =
 
         <TabellComponent rader={mapPeriodeRader(medlemskapsperioder)} kolonner={[{ navn: 'Periode', bredde: '42%' }, { navn: 'Dekning', bredde: '33%' }, { navn: 'Resultat', bredde: '23%' }]} />
 
-        <Nav.Row>
+        <Nav.Row className="margin_bottom">
           <Nav.Column xs="5">
             <Nav.typo.Element className="info">Arbeidsland</Nav.typo.Element>
             <Nav.typo.Normaltekst className="info">
@@ -161,7 +162,7 @@ const VurderingVedtak =
 
         { trygdeavgiftFormValues && trygdeavgiftFormValues.avgiftsgrunnlag
           && [MKV.Koder.loenn_forhold.LØNN_FRA_NORGE, MKV.Koder.loenn_forhold.DELT_LØNN].includes(trygdeavgiftFormValues.avgiftsgrunnlag.lønnsforhold) &&
-          <div style={{ marginTop: '2rem', marginBottom: '0.5rem' }}>
+          <div style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
             <Ikoner.Inntekt className="trygdeavgift_ikon" />
             <Nav.typo.Normaltekst>
               {getTrygdeavgiftString(
@@ -176,7 +177,7 @@ const VurderingVedtak =
         }
         { trygdeavgiftFormValues && trygdeavgiftFormValues.avgiftsgrunnlag
             && [MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET, MKV.Koder.loenn_forhold.DELT_LØNN].includes(trygdeavgiftFormValues.avgiftsgrunnlag.lønnsforhold) &&
-          <div>
+          <div style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
             <Ikoner.Inntekt className="trygdeavgift_ikon" />
             <Nav.typo.Normaltekst>
               {getTrygdeavgiftString(
