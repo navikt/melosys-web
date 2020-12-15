@@ -247,7 +247,7 @@ const TrygdeavgiftsgrunnlagComponent =
           (erVirksomhetNorsk ? erTabellApen.get('norskVirksomhet') : erTabellApen.get('utenlandskVirksomhet')) && formValues.avgiftsberegning &&
           <Nav.Row>
             <Nav.Column xs="12">
-              <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsberegning.avgiftsperioderNorge : formValues.avgiftsberegning.avgiftsperioderNorge)} />
+              <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsberegning.avgiftsperioderNorge : formValues.avgiftsberegning.avgiftsperioderUtland)} />
             </Nav.Column>
           </Nav.Row>
         }
