@@ -21,7 +21,7 @@ import './vurderingBestemmelse.css';
 const mapStateToProps = (state: RootState) => ({
   vilkarListe: vilkarSelectors.VilkarSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
+  bestemmelse: medlemskapsperioderSelectors.BestemmelseSelector(state),
   vilkaarKodeverk: folketrygdenkodeverkSelectors.VilkaarSelector(state),
   begrunnelserKodeverk: folketrygdenkodeverkSelectors.BegrunnelserSelector(state),
 });
@@ -53,6 +53,7 @@ interface Props {
   redigerbart: boolean,
   oppdaterData: (data: any) => void,
   vilkar: []
+  lagreVilkar: () => void,
 }
 
 
@@ -68,6 +69,9 @@ const VurderingBestemmelse =
     oppdaterBestemmelse,
     oppdater,
     opprettMedlemskapsperiodeFraBestemmelse,
+    vilkarListe,
+    bestemmelse,
+    lagreVilkar,
   } : Props & PropsFromRedux) => {
     const [valgtBestemmelse, setValgtBestemmelse] = useState('');
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
@@ -77,6 +81,23 @@ const VurderingBestemmelse =
     const hjelpetekst = 'Her kommer det hjelpetekster for å hjelpe saksbehandler';
     const Hjelpetekst = () => (<Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>);
 
+    const handleEndreBestemmelse = async (nyBestemmelse: string) => {
+      setValgtBestemmelse(nyBestemmelse);
+      await oppdaterBestemmelse(nyBestemmelse);
+      oppdater();
+    };
+
+    useEffect(() => {
+      handleEndreBestemmelse(bestemmelse);
+      vilkarListe.forEach((vilkar: any) => {
+        valgteVilkar.set(vilkar.vilkaar, vilkar.oppfylt ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN);
+        if (vilkar.begrunnelseKoder && vilkar.begrunnelseKoder.length === 1) {
+          valgteBegrunnelser.set(vilkar.vilkaar, vilkar.begrunnelseKoder[0]);
+        }
+      });
+      setValgteVilkar(new Map(valgteVilkar));
+      setValgteBegrunnelser(new Map(valgteBegrunnelser));
+    }, []);
 
     useEffect(() => {
       const valgteBestemmelseVilkar = bestemmelseVilkar.find(element => element.bestemmelse === valgtBestemmelse);
@@ -86,17 +107,14 @@ const VurderingBestemmelse =
         .length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
 
       setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
+      if (alleVilkarHarSvarJaOgvalgtBegrunnelse) {
+        lagreVilkar();
+      }
     }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
     const handleBefreft = () => {
       opprettMedlemskapsperiodeFraBestemmelse();
       bekreft();
-    };
-
-    const handleEndreBestemmelse: ChangeEventHandler<HTMLSelectElement> = async event => {
-      setValgtBestemmelse(event.target.value);
-      await oppdaterBestemmelse(event.target.value);
-      oppdater();
     };
 
     const handleEndreVilkar: ChangeEventHandler<HTMLInputElement> = event => {
@@ -180,7 +198,8 @@ const VurderingBestemmelse =
               <Nav.Select
                 label=""
                 disabled={!redigerbart}
-                onChange={handleEndreBestemmelse}
+                onChange={event => handleEndreBestemmelse(event.target.value)}
+                value={valgtBestemmelse}
               >
                 <option disabled={!!valgtBestemmelse} value="" key="">Velg</option>
                 {bestemmelseVilkar.map(bestemmelseMedVilkar =>

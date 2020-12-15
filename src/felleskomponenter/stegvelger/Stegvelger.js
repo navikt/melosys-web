@@ -67,7 +67,6 @@ class Stegvelger extends Component {
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
       await Promise.all([
         this.props.hentVilkar(behandlingID),
-        this.props.hentAvklartefakta(behandlingID),
       ]);
     } else {
       await Promise.all([
@@ -195,7 +194,6 @@ class Stegvelger extends Component {
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
       await Promise.all([
         this.props.oppdaterVilkaar(vilkaar.hent()),
-        this.props.oppdaterAvklartefakta(avklartefakta.hent()),
       ]);
     } else {
       await Promise.all([
@@ -482,10 +480,7 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
-      if (sakstype === MKV.Koder.sakstyper.FTRL) {
-        await lagreAvklartefaktaHandler();
-        await lagreVilkarHandler();
-      } else {
+      if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
         await lagreAvklartefaktaHandler();
         await lagreVilkarHandler();
