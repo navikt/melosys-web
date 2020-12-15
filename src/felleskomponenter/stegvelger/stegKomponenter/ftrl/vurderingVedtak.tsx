@@ -48,7 +48,7 @@ const mapStateToProps = (state: RootState) => ({
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
-  formValues: getFormValues(KV.Form.VEDTAK)(state),
+  formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -232,7 +232,7 @@ const VurderingVedtak =
 const VurderingVedtakForm = reduxForm({
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   onSubmit: (values: any, dispatch: any, props: any) => {},
-  form: KV.Form.VEDTAK,
+  form: KV.Form.FTRL_VEDTAK,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
