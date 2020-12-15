@@ -17,6 +17,7 @@ class Trygdeavgift extends Steg {
     this.komponent = VurderingTrygdeavgift;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
+      erStegGyldig: harAvklaring,
     });
     this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {

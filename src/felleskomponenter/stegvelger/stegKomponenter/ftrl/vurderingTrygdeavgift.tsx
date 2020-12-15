@@ -291,6 +291,7 @@ interface Props {
     avgiftsgrunnlag: Avgiftsgrunnlag,
     avgiftsberegning: Avgiftsberegning,
   }
+  erStegGyldig: boolean
 }
 
 const VurderingTrygdeavgift =
@@ -306,9 +307,9 @@ const VurderingTrygdeavgift =
     saerligeavgiftsgrupper,
     erTrygdeavgiftsgrunnlagNorgeUgyldig,
     erTrygdeavgiftsgrunnlagUtlandUgyldig,
+    erStegGyldig,
   }: Props & PropsFromRedux) => {
     const [erTabellApen, setErTabellApen] = useState(new Map());
-    const [erStegGyldig, setErStegGyldig] = useState(false);
     const [erSaerligAvgiftsGruppeValgt, setErSaerligAvgiftsGruppeValgt] = useState(new Map());
     const [oppdatertAvgiftsberegning, setOppdatertAvgiftsberegning] = useState<OppdaterAvgiftsberegning>({ avgiftspliktigLønnNorge: null, avgiftspliktigLønnUtland: null });
 
@@ -336,7 +337,6 @@ const VurderingTrygdeavgift =
 
     useEffect(() => {
       oppdater();
-      setErStegGyldig(formValid);
     }, [formValid]);
 
     function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag: AvgiftsgrunnlagInfo | null | undefined) {
