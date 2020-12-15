@@ -18,7 +18,7 @@ const RedigeringUtfort = ({
     <thead>
       <tr>
         <th>Navn på innretning</th>
-        <th>Landsokkel</th>
+        <th>Lands sokkel</th>
       </tr>
     </thead>
     <tbody>

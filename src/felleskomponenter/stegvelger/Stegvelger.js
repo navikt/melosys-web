@@ -67,7 +67,6 @@ class Stegvelger extends Component {
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
       await Promise.all([
         this.props.hentVilkar(behandlingID),
-        this.props.hentAvklartefakta(behandlingID),
       ]);
     } else {
       await Promise.all([
@@ -195,7 +194,6 @@ class Stegvelger extends Component {
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
       await Promise.all([
         this.props.oppdaterVilkaar(vilkaar.hent()),
-        this.props.oppdaterAvklartefakta(avklartefakta.hent()),
       ]);
     } else {
       await Promise.all([
@@ -434,6 +432,7 @@ class Stegvelger extends Component {
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
+      medfolgendeBarn: props.medfolgendeBarn,
       behandlingsgrunnlag: props.behandlingsgrunnlag,
       lagredeVirksomheter: props.lagredeVirksomheter,
       bestemmelser: props.bestemmelser,
@@ -483,10 +482,7 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
-      if (sakstype === MKV.Koder.sakstyper.FTRL) {
-        await lagreAvklartefaktaHandler();
-        await lagreVilkarHandler();
-      } else {
+      if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
         await lagreAvklartefaktaHandler();
         await lagreVilkarHandler();
@@ -615,6 +611,7 @@ Stegvelger.propTypes = {
   videresend: PT.func.isRequired,
   bestillAnmodningsperioder: PT.func.isRequired,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
+  medfolgendeBarn: PT.array.isRequired,
   behandlingsgrunnlag: PT.object.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagredeVirksomheter: PT.array.isRequired,
@@ -692,6 +689,7 @@ const mapStateToProps = state => ({
   hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
+  medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),

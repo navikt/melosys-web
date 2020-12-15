@@ -38,7 +38,7 @@ export const Arbeidsforholdet = props => {
       <Nav.Container fluid>
         <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={arbeidsgiver.navn} understrek />
         <Nav.Row>
-          <Nav.Column xs="4">
+          <Nav.Column xs="6">
             <OrganisasjonsAdresse
               visNavn={false}
               visTittel={false}
@@ -47,8 +47,8 @@ export const Arbeidsforholdet = props => {
             />
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.typo.Normaltekst style={{ marginTop: '0.5em' }}>Virksomhetsnummer</Nav.typo.Normaltekst>
-            <Nav.typo.Element>{arbeidsgiver.orgnr}</Nav.typo.Element>
+            <Nav.typo.Element style={{ marginTop: '0.5em' }}>Virksomhetsnummer</Nav.typo.Element>
+            <Nav.typo.Normaltekst>{arbeidsgiver.orgnr}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="arbeidsforholdet__enkelt">

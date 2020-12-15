@@ -1,0 +1,269 @@
+import React, { useEffect, useState, useCallback } from 'react';
+import { connect } from 'react-redux';
+import PT from 'prop-types';
+
+import * as MPT from '../../../proptypes';
+import * as Utils from '../../../utils';
+import * as Nav from '../../../utils/navFrontend';
+
+import MKV from '../../../melosyskodeverk';
+import { BOOLSK_STRING } from '../../../constants';
+
+import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+
+import {
+  konverterTilStegData,
+  lagAvklartfakta,
+  slettAvklartfakta,
+  lagAvklartefaktaBegrunnelse,
+  hentFaktaVerdi,
+} from '../../../regler/avklartefakta';
+
+import './vurderingMedfolgendeBarn.css';
+
+const MedfolgendeBarn = ({
+  navn,
+  idNummer,
+  omfattet,
+  redigerbart,
+  onCheck,
+  onMount,
+  onUnmount,
+  begrunnelse,
+  onBegrunnelseChange,
+}) => {
+  const radioName = Utils._uuid();
+
+  useEffect(() => {
+    onMount();
+
+    return () => {
+      onUnmount();
+    };
+  }, []);
+
+  return (
+    <Nav.Row className="vurdering-medfolgende-barn__enkelt">
+      <Nav.Column xs="12">
+        <div className="personalia">
+          {
+            navn &&
+            <>
+              <Nav.typo.Element>{navn}</Nav.typo.Element>
+              &nbsp;
+            </>
+          }
+          {
+            idNummer &&
+            <Nav.typo.Normaltekst>(F.nr/d-nr.: {idNummer})</Nav.typo.Normaltekst>
+          }
+        </div>
+        <Nav.Fieldset legend="" className="radios">
+          <Nav.Radio
+            name={radioName}
+            onChange={e => onCheck(e.target.value)}
+            value={BOOLSK_STRING.SANN}
+            checked={omfattet === true}
+            label="Ja"
+            disabled={!redigerbart}
+          />
+          <Nav.Radio
+            name={radioName}
+            onChange={e => onCheck(e.target.value)}
+            value={BOOLSK_STRING.USANN}
+            checked={omfattet === false}
+            label="Nei"
+            disabled={!redigerbart}
+          />
+        </Nav.Fieldset>
+        {
+          omfattet === false &&
+          <Nav.Row>
+            <Nav.Column xs="8">
+              <Nav.Select
+                onChange={e => onBegrunnelseChange(e.target.value)}
+                value={begrunnelse}
+                disabled={!redigerbart}
+                label="Begrunnelse for avslag:"
+              >
+                <option key={Utils._uuid()} value="" disabled>Velg...</option>
+                {
+                  MKV.KTObjects.begrunnelser.medfolgende_barn_begrunnelser.map(({ kode, term }) => (
+                    <option key={kode} value={kode}>{term}</option>
+                  ))
+                }
+              </Nav.Select>
+            </Nav.Column>
+          </Nav.Row>
+        }
+      </Nav.Column>
+    </Nav.Row>
+  );
+};
+
+MedfolgendeBarn.propTypes = {
+  navn: PT.string,
+  idNummer: PT.string,
+  omfattet: PT.oneOf([true, false, null]),
+  redigerbart: PT.bool.isRequired,
+  onCheck: PT.func.isRequired,
+  onUnmount: PT.func.isRequired,
+  onMount: PT.func.isRequired,
+  begrunnelse: PT.string,
+  onBegrunnelseChange: PT.func.isRequired,
+};
+
+MedfolgendeBarn.defaultProps = {
+  navn: '',
+  idNummer: '',
+  omfattet: null,
+  begrunnelse: '',
+};
+
+const VurderingMedfolgendeBarn = ({
+  vurderingLovvalgBarnFakta,
+  medfolgendeBarn,
+  bekreftOgFortsett,
+  redigerbart,
+  oppdaterData,
+  slettData,
+  tilstand: {
+    harAvklaring,
+  },
+}) => {
+  const medfolgendeBarnMedFritekst = vurderingLovvalgBarnFakta.find(af => af.begrunnelseFritekst);
+  const defaultMedfolgendeBarnFritekst = medfolgendeBarnMedFritekst ? medfolgendeBarnMedFritekst.begrunnelseFritekst : '';
+  const [medfolgendeBarnFritekst, setMedfolgendeBarnFritekst] = useState(defaultMedfolgendeBarnFritekst);
+
+  useEffect(() => () => {
+    slettData();
+  }, []);
+
+  const visFritekstFelt = vurderingLovvalgBarnFakta.some(af => hentFaktaVerdi(af) === BOOLSK_STRING.USANN);
+
+  const oppdaterStegStoreFritekst = fritekst => {
+    vurderingLovvalgBarnFakta.forEach(af => {
+      if (hentFaktaVerdi(af) === BOOLSK_STRING.USANN) {
+        oppdaterData(lagAvklartfakta(
+          MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+          af.subjektID,
+          ...af.fakta,
+          [...af.begrunnelseKoder],
+          fritekst || null
+        ));
+      }
+    });
+  };
+  const debouncedOppdaterStegStoreFritekst = useCallback(Utils._debounce(oppdaterStegStoreFritekst, 1000), [vurderingLovvalgBarnFakta]);
+
+  const onMedfolgendeBarnFritekstChange = e => {
+    setMedfolgendeBarnFritekst(e.target.value);
+    debouncedOppdaterStegStoreFritekst(e.target.value);
+  };
+
+  return (
+    <Nav.Container fluid className="vurdering-medfolgende-barn">
+      <Nav.typo.Undertittel className="undertittel">Skal barn oppgitt i søknaden være omfattet av norsk lovgivning?</Nav.typo.Undertittel>
+      {
+        medfolgendeBarn.map(barn => {
+          const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find(af => af.subjektID === barn.uuid);
+          const omfattet = () => {
+            const faktaVerdi = hentFaktaVerdi(medfolgendeBarnEnkeltfakta);
+            if (faktaVerdi === BOOLSK_STRING.SANN) {
+              return true;
+            } else if (faktaVerdi === BOOLSK_STRING.USANN) {
+              return false;
+            }
+            return null;
+          };
+          const begrunnelse = (
+            medfolgendeBarnEnkeltfakta
+            && medfolgendeBarnEnkeltfakta.begrunnelseKoder.length > 0
+          ) ? medfolgendeBarnEnkeltfakta.begrunnelseKoder[0] : undefined;
+
+          const onMount = () => {
+            if (medfolgendeBarnEnkeltfakta) {
+              oppdaterData(konverterTilStegData(
+                MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+                medfolgendeBarnEnkeltfakta
+              ));
+            }
+          };
+          const onUnmount = () => {
+            slettData(slettAvklartfakta(
+              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+              barn.uuid
+            ));
+          };
+          const onCheck = value => {
+            oppdaterData(lagAvklartfakta(
+              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+              barn.uuid,
+              value,
+              []
+            ));
+          };
+          const onBegrunnelseChange = begrunnelseKode => {
+            oppdaterData(lagAvklartefaktaBegrunnelse(
+              MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+              barn.uuid,
+              [begrunnelseKode]
+            ));
+          };
+
+          return <MedfolgendeBarn
+            key={barn.uuid}
+            navn={barn.navn}
+            idNummer={barn.fnr}
+            redigerbart={redigerbart}
+            omfattet={omfattet()}
+            onCheck={onCheck}
+            onUnmount={onUnmount}
+            onMount={onMount}
+            begrunnelse={begrunnelse}
+            onBegrunnelseChange={onBegrunnelseChange}
+          />;
+        })
+      }
+      {
+        visFritekstFelt &&
+        <Nav.Textarea
+          value={medfolgendeBarnFritekst || ''}
+          onChange={onMedfolgendeBarnFritekstChange}
+          label="Fritekst til avsnitt om barn i vedtaksbrev"
+          placeholder="Skriv inn tilleggsinformasjon..."
+          maxLength={500}
+          disabled={!redigerbart}
+        />
+      }
+      {
+        medfolgendeBarn.length === 0 &&
+        <Nav.AlertStripeInfo>Ingen barn oppgitt i søknaden</Nav.AlertStripeInfo>
+      }
+      <div className="fane__knapplinje">
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+      </div>
+    </Nav.Container>
+  );
+};
+
+VurderingMedfolgendeBarn.propTypes = {
+  vurderingLovvalgBarnFakta: MPT.AvklartefaktaListe,
+  bekreftOgFortsett: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
+  medfolgendeBarn: PT.arrayOf(PT.object).isRequired,
+  tilstand: PT.object,
+};
+
+VurderingMedfolgendeBarn.defaultProps = {
+  vurderingLovvalgBarnFakta: [],
+  tilstand: {},
+};
+
+const mapStateToProps = state => ({
+  medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
+});
+
+export default connect(mapStateToProps)(VurderingMedfolgendeBarn);

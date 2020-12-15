@@ -12,8 +12,8 @@ import './redigeringUtfort.css';
 
 const Header = () => (
   <Nav.Row className="header">
-    <Nav.Column xs="6">Navn</Nav.Column>
     <Nav.Column xs="6">F.nr./d-nr.</Nav.Column>
+    <Nav.Column xs="6">Navn</Nav.Column>
   </Nav.Row>
 );
 
@@ -27,13 +27,13 @@ const Rad = ({
   idNummer,
 }: RadProps) => (
   <Nav.Row className="rad">
-    <Nav.Column xs="6">{navn}</Nav.Column>
     <Nav.Column xs="6">
       {
         idNummer &&
         <KopierbarTekst>{idNummer.toString()}</KopierbarTekst>
       }
     </Nav.Column>
+    <Nav.Column xs="6">{navn}</Nav.Column>
   </Nav.Row>
 );
 
