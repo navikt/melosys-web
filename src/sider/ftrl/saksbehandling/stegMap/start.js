@@ -26,7 +26,7 @@ class Start extends Steg {
     };
     this.status = FANE_STATUS.OK;
   }
-  finnAvklaring = (behandlingsgrunnlag) => {
+  finnAvklaring = behandlingsgrunnlag => {
     const søknadsperiodeValid = behandlingsgrunnlag.periode ? !!behandlingsgrunnlag.periode.fom : false;
     const søknadslandValid = behandlingsgrunnlag.soeknadsland && behandlingsgrunnlag.soeknadsland.landkoder ? behandlingsgrunnlag.soeknadsland.landkoder.length > 0 : false;
     const trygdedekningValid = !!behandlingsgrunnlag.trygdedekning;
