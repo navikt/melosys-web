@@ -24,7 +24,7 @@ function InnerHTMLEditorComponent
 }: InnerHtmlEditorComponentProps) {
   const [currentEditorState, setCurrentEditorState] = useState(EditorState.createEmpty());
 
-  const onEditorStateChange = (editorState: any) => {
+  const onEditorStateChange = (editorState: EditorState) => {
     setCurrentEditorState(editorState);
     input.onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())));
   };

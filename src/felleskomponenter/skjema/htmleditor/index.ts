@@ -1,5 +1,3 @@
 import HTMLEditor from './htmleditor';
 
-export {
-  HTMLEditor,
-};
+export default HTMLEditor;

@@ -10,13 +10,13 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
 import * as Ikoner from '../../../../resources/images';
+import * as Skjema from '../../../skjema';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { medlemskapsperioderSelectors } from '../../../../ducks/medlemskapsperioder';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { behandlingsgrunnlagSelectors } from '../../../../ducks/behandlingsgrunnlag';
 import { formSelectors } from '../../../../ducks/form';
-import { HTMLEditor } from '../../../htmleditor';
 
 import './vurderingVedtak.css';
 
@@ -194,7 +194,7 @@ const VurderingVedtak =
         <Nav.typo.Element className="fritekst_overskrift" tag="h3">
           Fritekst til innleding <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst>
         </Nav.typo.Element>
-        <HTMLEditor
+        <Skjema.HTMLEditor
           feltNavn="fritekstInnledning"
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til innledning..."
@@ -203,7 +203,7 @@ const VurderingVedtak =
         <Nav.typo.Element className="fritekst_overskrift" tag="h3">
           Fritekst til begrunnelse <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst>
         </Nav.typo.Element>
-        <HTMLEditor
+        <Skjema.HTMLEditor
           feltNavn="fritekstBegrunnelse"
           className="fritekst_editor"
           placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
