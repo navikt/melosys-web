@@ -44,6 +44,41 @@ export const VurderStartFormSelector = createSelector(
   state => getFormState(state, KV.Form.START, {}),
   start => start
 );
+
+export const VurderPerioderFormSelector = createSelector(
+  state => getFormState(state, KV.Form.PERIODER, {}),
+  perioder => perioder
+);
+
+export const VurderPerioderValid = createSelector(
+  state => VurderPerioderFormSelector(state).syncErrors || {},
+  errors => Utils._isEmpty(errors)
+);
+
+export const VurderTrygdeavgiftFormSelector = createSelector(
+  state => getFormState(state, KV.Form.TRYGDEAVGIFT, {}),
+  trygdeavgift => trygdeavgift
+);
+
+export const VurderTrygdeavgiftFormValid = createSelector(
+  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
+  errors => {
+    if (Utils._isEmpty(errors)) {
+      return true;
+    }
+    return !errors.erAvgiftsgrunnlagUgyldig && !errors.erAvgiftsberegningBeregnet;
+  }
+);
+export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagNorgeUgyldig = createSelector(
+  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
+  errors => !!errors.erTrygdeavgiftsgrunnlagNorgeUgyldig
+);
+
+export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig = createSelector(
+  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
+  errors => !!errors.erTrygdeavgiftsgrunnlagUtlandUgyldig
+);
+
 export const VurderUtpekingFormSelector = createSelector(
   state => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   vurderUtpekingForm => vurderUtpekingForm

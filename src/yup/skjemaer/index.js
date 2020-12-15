@@ -15,3 +15,5 @@ export { vurder_utpeking } from './vurder_utpeking';
 export { avslaa_utpeking } from './avslaa_utpeking';
 export { sed } from './sed';
 export { soknad } from './soknad';
+export { vurdering_perioder } from './vurdering_perioder';
+export { vurdering_trygdeavgift } from './vurdering_trygdeavgift';

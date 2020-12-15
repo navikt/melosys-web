@@ -31,3 +31,7 @@ export const InnvilgelsesResultatSelector = createSelector(
   FolketrygdenkodeverkDataSelector,
   folketrygdenkodeverk => (folketrygdenkodeverk.InnvilgelsesResultat ? folketrygdenkodeverk.InnvilgelsesResultat : [])
 );
+export const SaerligeavgiftsgrupperSelector = createSelector(
+  FolketrygdenkodeverkDataSelector,
+  folketrygdenkodeverk => (folketrygdenkodeverk.Saerligeavgiftsgrupper ? folketrygdenkodeverk.Saerligeavgiftsgrupper : [])
+);

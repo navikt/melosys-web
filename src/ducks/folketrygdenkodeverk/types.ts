@@ -11,6 +11,7 @@ export interface Data {
     [key: string]: KTObject[]
   }
   InnvilgelsesResultat?: KTObject[]
+  Saerligeavgiftsgrupper?: KTObject[]
 }
 
 interface FeiletAction {
