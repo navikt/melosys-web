@@ -69,6 +69,15 @@ export const VurderTrygdeavgiftFormValid = createSelector(
     return !errors.erAvgiftsgrunnlagUgyldig && !errors.erAvgiftsberegningBeregnet;
   }
 );
+export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagNorgeUgyldig = createSelector(
+  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
+  errors => !!errors.erTrygdeavgiftsgrunnlagNorgeUgyldig
+);
+
+export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig = createSelector(
+  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
+  errors => !!errors.erTrygdeavgiftsgrunnlagUtlandUgyldig
+);
 
 export const VurderUtpekingFormSelector = createSelector(
   state => getFormState(state, KV.Form.VURDER_UTPEKING, {}),

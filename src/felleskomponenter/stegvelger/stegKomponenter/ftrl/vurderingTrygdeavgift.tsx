@@ -2,7 +2,7 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import { RootState } from 'AppTypes';
 import { connect, ConnectedProps } from 'react-redux';
 import { KTObject } from '@navikt/melosys-kodeverk';
-import { change, getFormSyncErrors, getFormValues, reduxForm } from 'redux-form';
+import { change, getFormValues, reduxForm } from 'redux-form';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { Avgiftsgrunnlag, Avgiftsberegning, Avgiftsperiode, AvgiftsgrunnlagInfo } from 'Domene';
@@ -56,7 +56,8 @@ interface TrygdeavgiftsgrunnlagProps {
   erTabellApen: Map<string, boolean>,
   erVirksomhetNorsk: boolean,
   erSaerligAvgiftsGruppeValgt: Map<string, boolean>,
-  formSyncErrors: any,
+  erTrygdeavgiftsgrunnlagNorgeUgyldig: boolean,
+  erTrygdeavgiftsgrunnlagUtlandUgyldig: boolean
   handleBeregnClick: (erVirksomhetNorsk: boolean) => void,
   handleSærligAvgiftsgruppeRadioChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void,
   handleAvgiftspliktigLønnInputChange: (event: ChangeEvent<HTMLInputElement>, erVirksomhetNorsk: boolean) => void,
@@ -71,7 +72,8 @@ const TrygdeavgiftsgrunnlagComponent =
     erTabellApen,
     erVirksomhetNorsk,
     erSaerligAvgiftsGruppeValgt,
-    formSyncErrors,
+    erTrygdeavgiftsgrunnlagNorgeUgyldig,
+    erTrygdeavgiftsgrunnlagUtlandUgyldig,
     handleBeregnClick,
     handleSærligAvgiftsgruppeRadioChange,
     handleAvgiftspliktigLønnInputChange,
@@ -112,45 +114,6 @@ const TrygdeavgiftsgrunnlagComponent =
             <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
           }
         </div>
-      );
-    };
-
-    const VurderingsutfallTrygdeavgift = () => {
-      if (!formValues || !formValues.avgiftsgrunnlag) return null;
-      return (
-        <Nav.Row>
-          {
-            !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
-            <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
-          }
-          {
-            (erVirksomhetNorsk ? !formSyncErrors.erTrygdeavgiftsgrunnlagNorgeUgyldig : !formSyncErrors.erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
-            <>
-              <Nav.Column xs="4">
-                <Nav.Input
-                  label="Avgiftspliktig inntekt per måned"
-                  value={(erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
-                  (!erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) || 0}
-                  bredde="fullbredde"
-                  onChange={event => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  disabled={!redigerbart}
-                />
-              </Nav.Column>
-              <Nav.Column xs="4">
-                <Nav.Knapp
-                  className="beregn_knapp"
-                  onClick={() => handleBeregnClick(erVirksomhetNorsk)}
-                  disabled={!redigerbart}
-                >
-                  {redigerbart ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
-                  <span>Beregn foreløpig trygdeavgift</span>
-                </Nav.Knapp>
-              </Nav.Column>
-            </>
-          }
-        </Nav.Row>
       );
     };
 
@@ -255,7 +218,39 @@ const TrygdeavgiftsgrunnlagComponent =
             ?
             <VurderingsutfallIngenTrygdeavgift />
             :
-            <VurderingsutfallTrygdeavgift />
+            <Nav.Row>
+              {
+                !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
+                <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+              }
+              {
+                (erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
+                <>
+                  <Nav.Column xs="4">
+                    <Nav.Input
+                      label="Avgiftspliktig inntekt per måned"
+                      value={(erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
+                      (!erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) || 0}
+                      bredde="fullbredde"
+                      onChange={event => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      disabled={!redigerbart}
+                    />
+                  </Nav.Column>
+                  <Nav.Column xs="4">
+                    <Nav.Knapp
+                      className="beregn_knapp"
+                      onClick={() => handleBeregnClick(erVirksomhetNorsk)}
+                      disabled={!redigerbart}
+                    >
+                      {redigerbart ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
+                      <span>Beregn foreløpig trygdeavgift</span>
+                    </Nav.Knapp>
+                  </Nav.Column>
+                </>
+              }
+            </Nav.Row>
         }
 
         {
@@ -274,8 +269,9 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formValues: getFormValues(KV.Form.TRYGDEAVGIFT)(state),
   formValid: formSelectors.VurderTrygdeavgiftFormValid(state),
-  formSyncErrors: getFormSyncErrors(KV.Form.TRYGDEAVGIFT)(state),
   saerligeavgiftsgrupper: folketrygdenkodeverkSelectors.SaerligeavgiftsgrupperSelector(state),
+  erTrygdeavgiftsgrunnlagNorgeUgyldig: formSelectors.VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagNorgeUgyldig(state),
+  erTrygdeavgiftsgrunnlagUtlandUgyldig: formSelectors.VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -299,7 +295,17 @@ interface Props {
 
 const VurderingTrygdeavgift =
   ({
-    bekreft, oppdater, tilbake, redigerbart, behandlingID, formValues, changeField, formValid, formSyncErrors, saerligeavgiftsgrupper,
+    bekreft,
+    oppdater,
+    tilbake,
+    redigerbart,
+    behandlingID,
+    formValues,
+    changeField,
+    formValid,
+    saerligeavgiftsgrupper,
+    erTrygdeavgiftsgrunnlagNorgeUgyldig,
+    erTrygdeavgiftsgrunnlagUtlandUgyldig,
   }: Props & PropsFromRedux) => {
     const [erTabellApen, setErTabellApen] = useState(new Map());
     const [erStegGyldig, setErStegGyldig] = useState(false);
@@ -443,7 +449,8 @@ const VurderingTrygdeavgift =
             handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
             redigerbart={redigerbart}
-            formSyncErrors={formSyncErrors}
+            erTrygdeavgiftsgrunnlagNorgeUgyldig={erTrygdeavgiftsgrunnlagNorgeUgyldig}
+            erTrygdeavgiftsgrunnlagUtlandUgyldig={erTrygdeavgiftsgrunnlagUtlandUgyldig}
             saerligeavgiftsgrupper={saerligeavgiftsgrupper}
           />
         }
@@ -460,7 +467,8 @@ const VurderingTrygdeavgift =
             handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
             handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
             redigerbart={redigerbart}
-            formSyncErrors={formSyncErrors}
+            erTrygdeavgiftsgrunnlagNorgeUgyldig={erTrygdeavgiftsgrunnlagNorgeUgyldig}
+            erTrygdeavgiftsgrunnlagUtlandUgyldig={erTrygdeavgiftsgrunnlagUtlandUgyldig}
             saerligeavgiftsgrupper={saerligeavgiftsgrupper}
           />
         }
