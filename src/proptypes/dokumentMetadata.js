@@ -2,7 +2,7 @@
 import PT from 'prop-types';
 
 const DokumentMetadataPropType = PT.shape({
-  navn: PT.oneOfType([PT.string, PT.object]),
+  navn: PT.string,
   type: PT.string,
   data: PT.object,
   erSed: PT.bool,
