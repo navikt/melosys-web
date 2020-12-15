@@ -138,7 +138,7 @@ const VurderingVedtak =
     }
 
     return (
-      <div>
+      <div className="vurderingVedtak">
         <Nav.typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.typo.Undertittel>
 
         <TabellComponent rader={mapPeriodeRader(medlemskapsperioder)} kolonner={[{ navn: 'Periode', bredde: '42%' }, { navn: 'Dekning', bredde: '33%' }, { navn: 'Resultat', bredde: '23%' }]} />
