@@ -382,7 +382,7 @@ const VurderingTrygdeavgift =
         <Nav.typo.Undertittel className="undertittel">Trygdeavgift</Nav.typo.Undertittel>
 
         <Nav.Row>
-          <Nav.Column xs="6">
+          <Nav.Column xs="12">
             <Nav.Fieldset legend="Hvor mottar søker inntekt fra?">
               <Skjema.Radio
                 label="Norsk virksomhet"
