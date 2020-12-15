@@ -195,7 +195,7 @@ const TrygdeavgiftsgrunnlagComponent =
           )
             ?
             <div>
-              <Nav.AlertStripeInfo className="alertstripe__info">
+              <Nav.AlertStripeInfo className={`${erVirksomhetNorsk ? 'alertstripe__advarsel' : 'alertstripe__info'}`}>
                 {erVirksomhetNorsk
                   ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge &&
                   KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt)
