@@ -13,7 +13,7 @@ const toolbar = {
   list: { inDropdown: true },
 };
 
-type InnerHtmlEditorComponentProps = WrappedFieldProps & {
+type InnerHtmlEditorComponentProps = {
   [x: string]: any,
 };
 
@@ -21,7 +21,7 @@ function InnerHTMLEditorComponent
 ({
   input,
   ...rest
-}: InnerHtmlEditorComponentProps) {
+}: InnerHtmlEditorComponentProps & WrappedFieldProps) {
   const [currentEditorState, setCurrentEditorState] = useState(EditorState.createEmpty());
 
   const onEditorStateChange = (editorState: EditorState) => {
@@ -47,10 +47,9 @@ function InnerHTMLEditorComponent
   );
 }
 
-interface HtmleditorProps {
+interface HtmleditorProps extends InnerHtmlEditorComponentProps{
   feltNavn: string;
   className: string,
-  [X: string]: any,
 }
 
 function HTMLEditor
