@@ -5,7 +5,7 @@ import VurderingStart from '../../../../felleskomponenter/stegvelger/stegKompone
 class Start extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = this.finnAvklaring(propsLight.behandlingsgrunnlag, propsLight.inngangsvilkaar.oppfylt);
+    const harAvklaring = this.finnAvklaring(propsLight.behandlingsgrunnlag);
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -26,12 +26,12 @@ class Start extends Steg {
     };
     this.status = FANE_STATUS.OK;
   }
-  finnAvklaring = (behandlingsgrunnlag, oppfylt) => {
+  finnAvklaring = (behandlingsgrunnlag) => {
     const søknadsperiodeValid = behandlingsgrunnlag.periode ? !!behandlingsgrunnlag.periode.fom : false;
     const søknadslandValid = behandlingsgrunnlag.soeknadsland && behandlingsgrunnlag.soeknadsland.landkoder ? behandlingsgrunnlag.soeknadsland.landkoder.length > 0 : false;
     const trygdedekningValid = !!behandlingsgrunnlag.trygdedekning;
 
-    return søknadslandValid && søknadsperiodeValid && trygdedekningValid && oppfylt;
+    return søknadslandValid && søknadsperiodeValid && trygdedekningValid;
   }
 }
 export default Start;
