@@ -1,12 +1,6 @@
-import { Avgiftsberegning, Avgiftsgrunnlag } from 'Domene';
+import { Avgiftsberegning, Avgiftsgrunnlag, AvgiftsgrunnlagInfo } from 'Domene';
 import { getAsJson, putAsJson } from '../utils';
 import { API_BASE_URL, TRYGDEAVGIFT } from '../api-constants';
-
-export type AvgiftsgrunnlagInfo = {
-  erSkattepliktig: boolean | null,
-  betalerArbeidsgiverAvgift: boolean | null,
-  særligAvgiftsgruppe: string | null,
-}
 
 export type OppdaterAvgiftsgrunnlag = {
   lønnsforhold: string | null,
