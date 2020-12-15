@@ -98,6 +98,7 @@ export const Menypanel = ({
   lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
+  const [menypanelFeilmelding, setMenypanelFeilmelding] = useState('');
 
   if (!visMenypanel) return null;
 
@@ -121,6 +122,7 @@ export const Menypanel = ({
           content: <Familieforhold
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             redigerbart={redigerbart}
+            setMenypanelFeilmelding={setMenypanelFeilmelding}
           />,
         },
       ],
@@ -217,6 +219,7 @@ export const Menypanel = ({
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
     setActive([groupIndex, linkIndex]);
+    setMenypanelFeilmelding('');
   };
 
   const filteredLinkGroups = defaultLinkGroups
@@ -255,16 +258,23 @@ export const Menypanel = ({
     }));
 
   return (
-    <div className="menypanel">
-      <Sidemeny
-        heading="Opplysninger"
-        linkGroups={linkGroups}
-        onClick={handleClick}
-      />
-      <Nav.Panel className="content">
-        { activeContent }
-      </Nav.Panel>
-    </div>
+    <>
+      { menypanelFeilmelding &&
+      <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
+        {menypanelFeilmelding}
+        <Nav.Xknapp form="kompakt" onClick={() => { setMenypanelFeilmelding(''); }} />
+      </Nav.AlertStripe> }
+      <div className="menypanel">
+        <Sidemeny
+          heading="Opplysninger"
+          linkGroups={linkGroups}
+          onClick={handleClick}
+        />
+        <Nav.Panel className="content">
+          { activeContent }
+        </Nav.Panel>
+      </div>
+    </>
   );
 };
 
