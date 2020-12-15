@@ -71,7 +71,7 @@ const VurderingStart =
     oppdaterSoeknadsland,
     oppdaterTrygdedekning,
     trygdedekninger,
-    lagreBehandlingsgrunnlag
+    lagreBehandlingsgrunnlag,
   } : Props & PropsFromRedux) => {
     const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
     const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
@@ -85,7 +85,9 @@ const VurderingStart =
         oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : ''),
       ]);
       oppdater();
-      erFelteneGyldig && lagreBehandlingsgrunnlag();
+      if (erFelteneGyldig) {
+        lagreBehandlingsgrunnlag();
+      }
     };
 
     useEffect(() => {
