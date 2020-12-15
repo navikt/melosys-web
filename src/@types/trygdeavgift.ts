@@ -1,24 +1,9 @@
-export type AvgiftsgrunnlagInfo = {
-  erSkattepliktig: boolean | null,
-  betalerArbeidsgiverAvgift: boolean | null,
-  særligAvgiftsgruppe: string | null,
-}
-
-export type OppdaterAvgiftsgrunnlag = {
-  lønnsforhold: string | null,
-  trygdeavgiftsgrunnlagNorge: AvgiftsgrunnlagInfo | null,
-  trygdeavgiftsgrunnlagUtland: AvgiftsgrunnlagInfo | null,
-}
+import { OppdaterAvgiftsberegning, OppdaterAvgiftsgrunnlag } from '../services/modules/trygdeavgift';
 
 export type Avgiftsgrunnlag = OppdaterAvgiftsgrunnlag & {
   vurderingTrygdeavgiftNorskInntekt: string | null,
   vurderingTrygdeavgiftUtenlandskInntekt: string | null,
 };
-
-export type OppdaterAvgiftsberegning = {
-  avgiftspliktigLønnNorge: number | null,
-  avgiftspliktigLønnUtland: number | null,
-}
 
 export type Avgiftsperiode = {
   fom: string,
