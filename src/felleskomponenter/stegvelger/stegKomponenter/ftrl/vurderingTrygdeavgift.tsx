@@ -293,7 +293,7 @@ const VurderingTrygdeavgift =
 
     useEffect(() => {
       Api.Trygdeavgift.hentGrunnlag(behandlingID)
-        .then((response: Avgiftsgrunnlag) => {
+        .then(response => {
           if (response.trygdeavgiftsgrunnlagNorge && response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== undefined) {
             erSaerligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
           }
@@ -306,7 +306,7 @@ const VurderingTrygdeavgift =
         .catch(Utils.logger.error);
 
       Api.Trygdeavgift.hentBeregning(behandlingID)
-        .then((response: Avgiftsberegning) => {
+        .then(response => {
           setOppdatertAvgiftsberegning({ avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge, avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland });
           changeField('avgiftsberegning', response);
         })
@@ -346,7 +346,7 @@ const VurderingTrygdeavgift =
           trygdeavgiftsgrunnlagNorge: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge || null,
           trygdeavgiftsgrunnlagUtland: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland || null,
         })
-          .then((response: Avgiftsgrunnlag) => {
+          .then(response => {
             changeField('avgiftsgrunnlag', response);
           })
           .catch(Utils.logger.error);
@@ -370,7 +370,7 @@ const VurderingTrygdeavgift =
 
     function handleBeregnClick(erNorskVirksomhet: boolean) {
       Api.Trygdeavgift.sendBeregning(behandlingID, oppdatertAvgiftsberegning)
-        .then((response: Avgiftsberegning) => {
+        .then(response => {
           changeField('avgiftsberegning', response);
         })
         .catch(Utils.logger.error);
