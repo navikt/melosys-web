@@ -22,7 +22,7 @@ import { SoknadMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 import { fagsakOperations, fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
-import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { avklartefaktaOperations } from '../../../ducks/avklartefakta';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { datalastingOperations } from '../../../ducks/datalasting';
@@ -230,7 +230,7 @@ const Saksbehandling = ({
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              arbeidsland={arbeidsland}
+              arbeidsland={landkoder && landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))}
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               renderBehandlingsmeny={() => {}}
@@ -309,7 +309,7 @@ Saksbehandling.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
