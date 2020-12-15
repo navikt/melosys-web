@@ -100,7 +100,7 @@ const TrygdeavgiftsgrunnlagComponent =
       <div className="overstrek">
         <Nav.Row>
           <Nav.typo.Undertittel className="sub_undertittel">{erVirksomhetNorsk ? 'Fra Norge' : 'Fra utlandet'}</Nav.typo.Undertittel>
-          <div className="column">
+          <Nav.Column xs="4">
             <Nav.Fieldset legend="Er søker skattepliktig?">
               <Skjema.Radio
                 className="column"
@@ -119,9 +119,9 @@ const TrygdeavgiftsgrunnlagComponent =
                 id={erVirksomhetNorsk ? 'trygdeavgiftsgrunnlagNorge.erIkkeSkattepliktig' : 'trygdeavgiftsgrunnlagUtland.erIkkeSkattepliktig'}
               />
             </Nav.Fieldset>
-          </div>
+          </Nav.Column>
 
-          <div className="column extra_left_margin">
+          <Nav.Column xs="4">
             <Nav.Fieldset legend="Betaler virksomheten arbeideravgift?">
               <Skjema.Radio
                 className="column"
@@ -140,9 +140,9 @@ const TrygdeavgiftsgrunnlagComponent =
                 id={erVirksomhetNorsk ? 'trygdeavgiftsgrunnlagNorge.betalerIkkeArbeidsgiverAvgift' : 'trygdeavgiftsgrunnlagUtland.betalerIkkeArbeidsgiverAvgift'}
               />
             </Nav.Fieldset>
-          </div>
+          </Nav.Column>
 
-          <div className="column extra_left_margin">
+          <Nav.Column xs="4">
             <Nav.Fieldset legend={<div>Tilhører søker en spesiell gruppe?<Hjelpetekst /></div>}>
               <Nav.Radio
                 className="column"
@@ -185,7 +185,7 @@ const TrygdeavgiftsgrunnlagComponent =
               }
 
             </Nav.Fieldset>
-          </div>
+          </Nav.Column>
         </Nav.Row>
 
         {
