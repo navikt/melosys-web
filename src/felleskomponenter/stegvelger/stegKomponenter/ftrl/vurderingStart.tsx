@@ -42,6 +42,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   oppdaterPeriode: (periode: {fom: string, tom: string}) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (soeknadsland: string[]) => dispatch((behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland))),
   oppdaterTrygdedekning: (trygdedekning: string) => dispatch((behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning))),
+  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -70,11 +71,12 @@ const VurderingStart =
     oppdaterSoeknadsland,
     oppdaterTrygdedekning,
     trygdedekninger,
+    lagreBehandlingsgrunnlag,
   } : Props & PropsFromRedux) => {
     const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
     const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
 
-    const oppdaterLokalBehandlingsgrunnlag = async () => {
+    const oppdaterLokalBehandlingsgrunnlag = async (erFelteneGyldig: boolean) => {
       const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
       const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
       await Promise.all([
@@ -83,6 +85,9 @@ const VurderingStart =
         oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : ''),
       ]);
       oppdater();
+      if (erFelteneGyldig) {
+        lagreBehandlingsgrunnlag();
+      }
     };
 
     useEffect(() => {
@@ -92,11 +97,11 @@ const VurderingStart =
       const erFelteneGyldig = !!formValues.land && !!formValues.trygdedekning && !!formValues.fom && erTomNullEllerEtterFom;
       setErObligatoriskeFelterFyltInn(erFelteneGyldig);
 
-      oppdaterLokalBehandlingsgrunnlag();
+      oppdaterLokalBehandlingsgrunnlag(erFelteneGyldig);
     }, [formValues]);
 
     const fortsettHandle = () => {
-      oppdaterLokalBehandlingsgrunnlag();
+      oppdaterLokalBehandlingsgrunnlag(erObligatoriskeFelterFyltInn);
       if (erObligatoriskeFelterFyltInn) {
         const fortsett = () => {
           bekreft();

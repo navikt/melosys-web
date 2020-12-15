@@ -62,7 +62,7 @@ const EnkeltVedlegg = ({
       </td>
       <td>
         { !redigerer &&
-          <Mui.Knapp type="flat" ikon={Ikoner.Bin} onClick={slettVedlegg} />
+          <Mui.Knapp type="flat" ikon={Ikoner.Bin_Large} onClick={slettVedlegg} />
         }
       </td>
     </tr>

@@ -102,7 +102,7 @@ const TrygdeavgiftsgrunnlagComponent =
       if (!formValues || !formValues.avgiftsgrunnlag) return null;
       return (
         <div>
-          <Nav.AlertStripeInfo className="alertstripe__info">
+          <Nav.AlertStripeInfo className={`${erVirksomhetNorsk ? 'stor_margin_bottom' : 'liten_margin_bottom'}`}>
             {erVirksomhetNorsk
               ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge &&
               KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt)
@@ -111,7 +111,7 @@ const TrygdeavgiftsgrunnlagComponent =
           </Nav.AlertStripeInfo>
           {
             !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
-            <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+            <Nav.AlertStripeAdvarsel className="stor_margin_bottom">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
           }
         </div>
       );
@@ -119,7 +119,7 @@ const TrygdeavgiftsgrunnlagComponent =
 
     if (!formValues.avgiftsgrunnlag) return null;
     return (
-      <div className="overstrek">
+      <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
         <Nav.Row>
           <Nav.typo.Undertittel className="sub_undertittel">{erVirksomhetNorsk ? 'Fra Norge' : 'Fra utlandet'}</Nav.typo.Undertittel>
           <Nav.Column xs="4">
@@ -221,7 +221,7 @@ const TrygdeavgiftsgrunnlagComponent =
             <Nav.Row>
               {
                 !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
-                <Nav.AlertStripeAdvarsel className="alertstripe__advarsel">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+                <Nav.AlertStripeAdvarsel className="stor_margin_bottom">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
               }
               {
                 (erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
@@ -257,7 +257,7 @@ const TrygdeavgiftsgrunnlagComponent =
           (erVirksomhetNorsk ? erTabellApen.get('norskVirksomhet') : erTabellApen.get('utenlandskVirksomhet')) && formValues.avgiftsberegning &&
           <Nav.Row>
             <Nav.Column xs="12">
-              <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsberegning.avgiftsperioderNorge : formValues.avgiftsberegning.avgiftsperioderNorge)} />
+              <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsberegning.avgiftsperioderNorge : formValues.avgiftsberegning.avgiftsperioderUtland)} />
             </Nav.Column>
           </Nav.Row>
         }

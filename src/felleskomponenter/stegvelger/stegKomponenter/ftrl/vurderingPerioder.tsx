@@ -106,7 +106,7 @@ const PeriodeElement =
         {
           redigerbart && formValues.medlemskapsperioder.length > 1 &&
           <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
-            <Ikoner.Bin />
+            <Ikoner.Bin_Small />
             <span>Slett periode</span>
           </Nav.Lenker>
         }

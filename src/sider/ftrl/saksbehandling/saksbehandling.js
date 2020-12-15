@@ -22,7 +22,7 @@ import { SoknadMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 import { fagsakOperations, fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
-import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { avklartefaktaOperations } from '../../../ducks/avklartefakta';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { datalastingOperations } from '../../../ducks/datalasting';
@@ -105,6 +105,7 @@ const Saksbehandling = ({
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
   const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
+  const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden.mvp');
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, 'behandlingID');
@@ -150,7 +151,13 @@ const Saksbehandling = ({
   useEffect(() => {
     lastInnSaksopplysninger();
     API.Kodeverk.hentLandkoderIso2()
-      .then(response => setLandkoder(response))
+      .then(response => {
+        setLandkoder(response.sort((a, b) => {
+          if (a.term > b.term) return 1;
+          if (b.term > a.term) return -1;
+          return 0;
+        }));
+      })
       .catch(Utils.logger.error);
 
     return () => {
@@ -173,6 +180,7 @@ const Saksbehandling = ({
   if (!behandlingID || behandlingID < 0) {
     return null;
   }
+  if (folketrygdenToggle === 'fetching' || folketrygdenToggle === 'disabled') return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
@@ -228,7 +236,7 @@ const Saksbehandling = ({
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              arbeidsland={arbeidsland}
+              arbeidsland={landkoder && landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))}
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               renderBehandlingsmeny={() => {}}
@@ -307,7 +315,7 @@ Saksbehandling.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
