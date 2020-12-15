@@ -69,7 +69,7 @@ export const ArbeidsgiverOgVirksomhet = ({
   };
 
   /* eslint-disable-next-line max-len */
-  const arbeidsforholdUtlandHjelpetekst = 'Her legger du inn informasjon om utenlandsk arbeidsgiver som søker er ansatt og lønnet av. Når det ligger informasjon i dette panelet, blir det sendt kopi av vedtak og A1 til Statlig skatteoppkreving. Du skal ikke legge til utenlandsk oppdragsgiver her.';
+  const arbeidsforholdUtlandHjelpetekst = 'Her legger du inn informasjon om utenlandsk arbeidsgiver som søker er ansatt og lønnet av. Når det ligger informasjon i dette menypunktet, blir det sendt kopi av vedtak og A1 til Statlig skatteoppkreving. Du skal ikke legge til utenlandsk oppdragsgiver her.';
 
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
