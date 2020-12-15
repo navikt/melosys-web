@@ -38,6 +38,7 @@ export const VurderingUtpekt = ({
   formValues,
   lovvalgsperiode,
   ytterligereInformasjon,
+  behandlingstema,
 }) => {
   useEffect(() => {
     if (lovvalgsland) {
@@ -75,6 +76,10 @@ export const VurderingUtpekt = ({
   const lovvalgslandFraForm = formValues.lovvalgsland;
   const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
   const lovvalgslandTerm = KV.kodeTilTerm(lovvalgslandFraForm, MKV.KTObjects.landkoder);
+  const lovvalgsbestemmelser = behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE ?
+    MKV.Kodekombinasjoner.valgbareLovvalgsbestemmelserSEDA003
+    :
+    MKV.Kodekombinasjoner.alleLovvalg;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -109,7 +114,7 @@ export const VurderingUtpekt = ({
           >
             <option disabled key="VELG" value="">Velg</option>
             {
-              MKV.Kodekombinasjoner.alleLovvalg.map(kodeObjekt => (
+              lovvalgsbestemmelser.map(kodeObjekt => (
                 <option key={Utils._uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>
               ))
             }
@@ -210,6 +215,7 @@ VurderingUtpekt.propTypes = {
   formValues: PT.object,
   lovvalgsperiode: MPT.Periode.isRequired,
   ytterligereInformasjon: PT.string,
+  behandlingstema: PT.string.isRequired,
 };
 
 VurderingUtpekt.defaultProps = {
@@ -234,6 +240,7 @@ const mapStateToProps = (state, ownProps) => ({
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
   ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
 });
 
 const nesteSteg = (values, dispatch, props) => {
