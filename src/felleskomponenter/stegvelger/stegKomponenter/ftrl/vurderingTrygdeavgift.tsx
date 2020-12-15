@@ -5,7 +5,7 @@ import { KTObject } from '@navikt/melosys-kodeverk';
 import { change, getFormSyncErrors, getFormValues, reduxForm } from 'redux-form';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
-import { Avgiftsgrunnlag, AvgiftsgrunnlagInfo, OppdaterAvgiftsberegning, Avgiftsberegning, Avgiftsperiode } from 'Domene';
+import { Avgiftsgrunnlag, Avgiftsberegning, Avgiftsperiode } from 'Domene';
 
 import MKV from '../../../../melosyskodeverk';
 import * as Nav from '../../../../utils/navFrontend';
@@ -19,6 +19,7 @@ import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { formSelectors } from '../../../../ducks/form';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../../yup';
+import { AvgiftsgrunnlagInfo, OppdaterAvgiftsberegning } from '../../../../services/modules/trygdeavgift';
 import { BOOLSK, BOOLSK_STRING } from '../../../../constants';
 
 import './vurderingTrygdeavgift.css';
