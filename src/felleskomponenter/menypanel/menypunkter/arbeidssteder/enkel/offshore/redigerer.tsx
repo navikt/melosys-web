@@ -26,7 +26,7 @@ const Redigerer = ({
       </Nav.Column>
       <Nav.Column xs="6">
         <Skjema.LandVelger
-          label="Landsokkel"
+          label="Lands sokkel"
           feltNavn={`${overordnetFeltNavn}.installasjonsLandkode`}
           disabled={!redigerbart}
           bredde="fullbredde"
