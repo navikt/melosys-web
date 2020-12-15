@@ -26,7 +26,7 @@ class Bestemmelse extends Steg {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
-      lagreVilkar: propsLight.tilgjengeligeHandlers.lagreVilkar,
+      lagreVilkar: propsLight.tilgjengeligeHandlers.lagreVilkarHandler,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
     };
     this.status = FANE_STATUS.OK;

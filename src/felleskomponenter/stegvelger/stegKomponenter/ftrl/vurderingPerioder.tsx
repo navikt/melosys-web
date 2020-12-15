@@ -351,6 +351,7 @@ const VurderingPerioderForm = reduxForm({
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   onSubmit: (values: any, dispatch: any, props: any) => {},
   form: KV.Form.PERIODER,
+  enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
