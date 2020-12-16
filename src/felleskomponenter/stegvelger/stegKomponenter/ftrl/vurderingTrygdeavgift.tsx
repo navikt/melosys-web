@@ -216,44 +216,46 @@ const TrygdeavgiftsgrunnlagComponent =
         {
           (erVirksomhetNorsk
             ? formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
-            : formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV
-          )
-            ?
+            : formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) &&
             <VurderingsutfallIngenTrygdeavgift />
-            :
-            <Nav.Row>
-              {
-                !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
-                <Nav.AlertStripeAdvarsel className="stor_margin_bottom">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
-              }
-              {
-                (erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
-                <>
-                  <Nav.Column xs="4">
-                    <Nav.Input
-                      label="Avgiftspliktig inntekt per måned"
-                      value={(erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
-                      (!erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) || 0}
-                      bredde="fullbredde"
-                      onChange={event => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      disabled={!redigerbart}
-                    />
-                  </Nav.Column>
-                  <Nav.Column xs="4">
-                    <Nav.Knapp
-                      className="beregn_knapp"
-                      onClick={() => handleBeregnClick(erVirksomhetNorsk)}
-                      disabled={!redigerbart}
-                    >
-                      {redigerbart ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
-                      <span>Beregn foreløpig trygdeavgift</span>
-                    </Nav.Knapp>
-                  </Nav.Column>
-                </>
-              }
-            </Nav.Row>
+        }
+        {
+          (erVirksomhetNorsk
+            ? formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_TRYGDEAVGIFT_NAV
+            : formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_TRYGDEAVGIFT_NAV) &&
+          <Nav.Row>
+            {
+              !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
+              <Nav.AlertStripeAdvarsel className="stor_margin_bottom">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
+            }
+            {
+              (erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
+              <>
+                <Nav.Column xs="4">
+                  <Nav.Input
+                    label="Avgiftspliktig inntekt per måned"
+                    value={(erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnNorge) ||
+                    (!erVirksomhetNorsk && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland !== null && oppdatertAvgiftsberegning.avgiftspliktigLønnUtland) || 0}
+                    bredde="fullbredde"
+                    onChange={event => handleAvgiftspliktigLønnInputChange(event, erVirksomhetNorsk)}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    disabled={!redigerbart}
+                  />
+                </Nav.Column>
+                <Nav.Column xs="4">
+                  <Nav.Knapp
+                    className="beregn_knapp"
+                    onClick={() => handleBeregnClick(erVirksomhetNorsk)}
+                    disabled={!redigerbart}
+                  >
+                    {redigerbart ? <Ikoner.Kalkulator className="beregn_ikon" /> : <Ikoner.Kalkulator_Disabled className="beregn_ikon" /> }
+                    <span>Beregn foreløpig trygdeavgift</span>
+                  </Nav.Knapp>
+                </Nav.Column>
+              </>
+            }
+          </Nav.Row>
         }
 
         {
