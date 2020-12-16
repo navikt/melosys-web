@@ -62,21 +62,30 @@ export const VurderTrygdeavgiftFormSelector = createSelector(
 
 export const VurderTrygdeavgiftFormValid = createSelector(
   state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
-  errors => {
-    if (Utils._isEmpty(errors)) {
-      return true;
-    }
-    return !errors.erAvgiftsgrunnlagUgyldig && !errors.erAvgiftsberegningBeregnet;
-  }
+  errors => Utils._isEmpty(errors)
 );
 export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagNorgeUgyldig = createSelector(
-  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
-  errors => !!errors.erTrygdeavgiftsgrunnlagNorgeUgyldig
+  state => VurderTrygdeavgiftFormSelector(state).values,
+  trygdeavgift => {
+    if (!trygdeavgift || !trygdeavgift.avgiftsgrunnlag || !trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge) return true;
+    return !(
+      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig || trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig === false)
+      && (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift || trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift === false)
+      && (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe === null || (!!trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe && trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== 'TRUE'))
+    );
+  }
 );
 
 export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig = createSelector(
-  state => VurderTrygdeavgiftFormSelector(state).syncErrors || {},
-  errors => !!errors.erTrygdeavgiftsgrunnlagUtlandUgyldig
+  state => VurderTrygdeavgiftFormSelector(state).values,
+  trygdeavgift => {
+    if (!trygdeavgift || !trygdeavgift.avgiftsgrunnlag || !trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland) return true;
+    return !(
+      (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig || trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig === false)
+      && (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift || trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift === false)
+      && (trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe === null || (!!trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe && trygdeavgift.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe !== 'TRUE'))
+    );
+  }
 );
 
 export const VurderUtpekingFormSelector = createSelector(
