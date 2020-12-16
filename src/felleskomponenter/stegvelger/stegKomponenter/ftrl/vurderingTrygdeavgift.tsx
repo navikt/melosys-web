@@ -369,6 +369,12 @@ const VurderingTrygdeavgift =
         })
           .then(response => {
             changeField('avgiftsgrunnlag', response);
+            if (response && response.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
+              setErTabellApen(new Map(erTabellApen.set('norskVirksomhet', false)));
+            }
+            if (response && response.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
+              setErTabellApen(new Map(erTabellApen.set('utenlandskVirksomhet', false)));
+            }
           })
           .catch(Utils.logger.error);
       }
