@@ -31,12 +31,15 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../
 import { utpekOperations } from '../../ducks/utpek';
 import { utpekingsperioderOperations, utpekingsperioderSelectors } from '../../ducks/utpekingsperioder';
 import { videresendingOperations } from '../../ducks/videresending';
+import { oppsummertfaktaSelectors } from '../../ducks/oppsummertfakta';
+import { medlemskapsperioderSelectors } from '../../ducks/medlemskapsperioder';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 import { StegStoreTyper } from '../../regler';
 
 import './stegvelger.css';
+
 
 class Stegvelger extends Component {
   state = {
@@ -58,17 +61,23 @@ class Stegvelger extends Component {
   async componentDidMount() {
     this.aktiv = true;
 
-    const { behandlingID } = this.props;
+    const { behandlingID, sakstype } = this.props;
     const { aktivtStegNummer } = this.state;
 
-    await Promise.all([
-      this.props.hentMedlemsPerioder(behandlingID),
-      this.props.hentVilkar(behandlingID),
-      this.props.hentAvklartefakta(behandlingID),
-      this.props.hentLovvalgsperioder(behandlingID),
-      this.props.hentAnmodningsperioder(behandlingID),
-      this.props.hentUtpekingsperioder(behandlingID),
-    ]);
+    if (sakstype === MKV.Koder.sakstyper.FTRL) {
+      await Promise.all([
+        this.props.hentVilkar(behandlingID),
+      ]);
+    } else {
+      await Promise.all([
+        this.props.hentMedlemsPerioder(behandlingID),
+        this.props.hentVilkar(behandlingID),
+        this.props.hentAvklartefakta(behandlingID),
+        this.props.hentLovvalgsperioder(behandlingID),
+        this.props.hentAnmodningsperioder(behandlingID),
+        this.props.hentUtpekingsperioder(behandlingID),
+      ]);
+    }
 
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
@@ -95,6 +104,22 @@ class Stegvelger extends Component {
   bekreftOgFortsett = () => {
     this.publiserStegdata();
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
+  };
+
+  bekreft = () => {
+    this.oppdater();
+    this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
+  };
+
+  tilbake = () => {
+    this.oppdater();
+    this.validerSoknadOgGaTilSteg(this.beregnForrigeSteg());
+  };
+
+  oppdater = () => {
+    const { aktivtStegNummer } = this.state;
+    this.props.oppdaterBehandlingsgrunnlag();
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
   harSoknadFeilmeldinger = () => !Utils._isEmpty(this.props.soknadFeilmeldinger);
@@ -156,6 +181,7 @@ class Stegvelger extends Component {
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
 
+    const { sakstype } = this.props;
     const { aktivtStegNummer, stegStores } = this.state;
     const {
       vilkaar,
@@ -165,16 +191,22 @@ class Stegvelger extends Component {
 
     const perioderStegState = this.hentPerioderStegState();
 
-    await Promise.all([
-      this.props.oppdaterVilkaar(vilkaar.hent()),
-      this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder(perioderStegState),
-      this.props.oppdaterAnmodningsPerioder(perioderStegState),
-      this.props.oppdaterUtpekingsperioder(perioderStegState),
-      this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
-    ]);
+    if (sakstype === MKV.Koder.sakstyper.FTRL) {
+      await Promise.all([
+        this.props.oppdaterVilkaar(vilkaar.hent()),
+      ]);
+    } else {
+      await Promise.all([
+        this.props.oppdaterVilkaar(vilkaar.hent()),
+        this.props.oppdaterAvklartefakta(avklartefakta.hent()),
+        this.props.oppdaterLovvalgperioder(perioderStegState),
+        this.props.oppdaterAnmodningsPerioder(perioderStegState),
+        this.props.oppdaterUtpekingsperioder(perioderStegState),
+        this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
+      ]);
+    }
 
-    this.props.oppdaterLokalSoknadHandler();
+    this.props.oppdaterBehandlingsgrunnlag();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
@@ -350,6 +382,9 @@ class Stegvelger extends Component {
       avvisUtpeking: this.avvisUtpeking,
       lagreOgGodkjennUnntaksperioder: this.lagreOgGodkjennUnntaksperioder,
       byggUtpekingsperioder: this.byggUtpekingsperioderHandler,
+      bekreft: this.bekreft,
+      tilbake: this.tilbake,
+      oppdater: this.oppdater,
     };
 
     const { props } = this;
@@ -363,7 +398,7 @@ class Stegvelger extends Component {
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
-      landkoder: MKV.KTObjects.landkoder,
+      landkoder: props.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
       behandlingstema: props.oppsummering.behandlingstema,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
@@ -397,6 +432,13 @@ class Stegvelger extends Component {
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
       harValgtNorskArbeidsgiver: props.harValgtNorskArbeidsgiver,
+      medfolgendeBarn: props.medfolgendeBarn,
+      behandlingsgrunnlag: props.behandlingsgrunnlag,
+      lagredeVirksomheter: props.lagredeVirksomheter,
+      bestemmelser: props.bestemmelser,
+      medlemskapsperioder: props.medlemskapsperioder,
+      vurder_periode_valid: props.vurder_periode_valid,
+      vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -434,17 +476,20 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
       lagreAnmodningsperioderHandler,
       lagreUtpekingsperioderHandler,
+      sakstype,
     } = this.props;
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
-      await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
-      await lagreAvklartefaktaHandler();
-      await lagreVilkarHandler();
-      await lagreLovvalgsperioderHandler();
-      await lagreAnmodningsperioderHandler();
-      await lagreUtpekingsperioderHandler();
+      if (sakstype !== MKV.Koder.sakstyper.FTRL) {
+        await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
+        await lagreAvklartefaktaHandler();
+        await lagreVilkarHandler();
+        await lagreLovvalgsperioderHandler();
+        await lagreAnmodningsperioderHandler();
+        await lagreUtpekingsperioderHandler();
+      }
 
       if (this.erSisteSteg(nyttStegNummer)) {
         await lagreBehandlingsgrunnlagHandler();
@@ -461,6 +506,11 @@ class Stegvelger extends Component {
   beregnNesteSteg = () => {
     const { aktivtStegNummer } = this.state;
     return aktivtStegNummer + 1;
+  };
+
+  beregnForrigeSteg = () => {
+    const { aktivtStegNummer } = this.state;
+    return aktivtStegNummer - 1;
   };
 
   erSisteSteg(stegNummer) {
@@ -490,6 +540,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
   behandlingID: PT.number.isRequired,
+  bestemmelser: PT.array,
   arbeidsgivereIPerioden: PT.array,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   arbeidslandMedYrkesaktivitet: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
@@ -504,7 +555,7 @@ Stegvelger.propTypes = {
   lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
-  oppdaterLokalSoknadHandler: PT.func.isRequired,
+  oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   soknad_skjema: PT.object,
@@ -519,17 +570,17 @@ Stegvelger.propTypes = {
   valgteVirksomheterIkkeNaeringsDrivende: PT.array,
   vilkar: PT.array.isRequired,
   inngangsvilkaar: MPT.Vilkaar,
-  lagreVilkarHandler: PT.func.isRequired,
+  lagreVilkarHandler: PT.func,
   lagreAvklartefaktaHandler: PT.func.isRequired,
-  lagreLovvalgsperioderHandler: PT.func.isRequired,
-  oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func,
+  oppdaterOgLagreBehandlingerHandler: PT.func,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   soknadFeilmeldinger: PT.object.isRequired,
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   oppdaterAnmodningsPerioder: PT.func.isRequired,
-  lagreAnmodningsperioderHandler: PT.func.isRequired,
+  lagreAnmodningsperioderHandler: PT.func,
   lagreUtpekingsperioderHandler: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterAnmodningsperiodesvar: PT.func.isRequired,
@@ -560,12 +611,21 @@ Stegvelger.propTypes = {
   videresend: PT.func.isRequired,
   bestillAnmodningsperioder: PT.func.isRequired,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
+  medfolgendeBarn: PT.array.isRequired,
+  behandlingsgrunnlag: PT.object.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  lagredeVirksomheter: PT.array.isRequired,
+  medlemskapsperioder: PT.object.isRequired,
+  sakstype: PT.string,
+  vurder_periode_valid: PT.bool.isRequired,
+  vurder_trygdeavgift_valid: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   bostedsland: null,
+  bestemmelser: [],
   oppsummering: {},
   valgteVirksomheter: [],
   valgteVirksomheterIkkeNaeringsDrivende: [],
@@ -582,6 +642,11 @@ Stegvelger.defaultProps = {
   maritimtarbeid: [],
   hjemmebaser: [],
   inngangsvilkaar: {},
+  sakstype: '',
+  lagreVilkarHandler: () => {},
+  lagreLovvalgsperioderHandler: () => {},
+  lagreAnmodningsperioderHandler: () => {},
+  oppdaterOgLagreBehandlingerHandler: () => {},
 };
 
 const mapStateToProps = state => ({
@@ -602,6 +667,8 @@ const mapStateToProps = state => ({
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
+  vurder_periode_valid: formSelectors.VurderPerioderValid(state),
+  vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   valgteVirksomheterIkkeNaeringsDrivende: avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
@@ -622,6 +689,10 @@ const mapStateToProps = state => ({
   hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
   erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
   harValgtNorskArbeidsgiver: flytSelectors.HarValgtNorskArbeidsgiverSelector(state),
+  medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
+  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
+  lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
+  medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
 });
 
 /* eslint no-alert:off */

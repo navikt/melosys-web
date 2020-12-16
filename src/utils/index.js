@@ -10,6 +10,7 @@ import * as queryString from './queryString';
 import * as testhelpers from './testhelpers';
 import * as mapping from './mapping';
 import * as person from './person';
+import * as land from './land';
 import * as organisasjon from './organisasjon';
 
 import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
@@ -25,6 +26,7 @@ export {
   testhelpers,
   mapping,
   person,
+  land,
   organisasjon,
   capitalize as _capitalize,
   isUndefined as _isUndefined,

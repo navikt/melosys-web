@@ -24,6 +24,7 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './menypanel.css';
+import { menypanelSelectors } from '../../ducks/menypanel';
 
 const {
   SØKNAD_A1_YRKESAKTIVE_EØS,
@@ -52,6 +53,7 @@ const hentLinkGroupLabels = (behandlingstema: string): [string, string, string] 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
@@ -91,11 +93,14 @@ export const Menypanel = ({
   behandlingsgrunnlagtype,
   behandlingstema,
   menypunkter,
+  visMenypanel,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState('');
+
+  if (!visMenypanel) return null;
 
   const visArbeidsforholdRolleEtiketter = behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 

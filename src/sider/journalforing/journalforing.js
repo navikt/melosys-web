@@ -217,7 +217,7 @@ class Journalforing extends Component {
     const fom = journalforingPeriodeFraOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed) : null;
     const tom = journalforingPeriodeTilOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed) : null;
     const fagsak = {
-      sakstype: MKV.Koder.sakstyper.EU_EOS,
+      sakstype: journalforingSkjemaVerdier.sakstype,
       soknadsperiode: {
         fom,
         tom,

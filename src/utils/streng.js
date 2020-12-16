@@ -18,8 +18,8 @@ export function strengTilBool (value) {
 }
 
 export function tryParseBool(value) {
-  if (value === 'true') return true;
-  if (value === 'false') return false;
+  if (value === 'true' || value === 'TRUE') return true;
+  if (value === 'false' || value === 'FALSE') return false;
   return value; // undefined, null, bool
 }
 
@@ -37,7 +37,7 @@ export function storeForbokstaver() {
   return (
     tekst &&
     tekst.replace(
-      /\w\S*/g,
+      /(\w|\u00C6|\u00D8|\u00C5)\S*/g,
       ord => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase()
     )
   );

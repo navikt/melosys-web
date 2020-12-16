@@ -24,6 +24,23 @@ export function oppdaterPeriode(periode) {
   });
 }
 
+export function oppdaterSoeknadsland(soeknadsland) {
+  return ({
+    type: Types.OPPDATER_SOEKNADSLAND,
+    data: {
+      soeknadsland,
+    },
+  });
+}
+
+export function oppdaterTrygdedekning(trygdedekning) {
+  return ({
+    type: Types.OPPDATER_TRYGDEDEKNING,
+    data: {
+      trygdedekning,
+    },
+  });
+}
 /** Tømmer avklartefakta-state når komponenten unmounter
  *
  * @returns {{type: *}}
