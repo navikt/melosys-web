@@ -37,7 +37,7 @@ export function storeForbokstaver() {
   return (
     tekst &&
     tekst.replace(
-      /\w\S*/g,
+      /(\w|\u00C6|\u00D8|\u00C5)\S*/g,
       ord => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase()
     )
   );

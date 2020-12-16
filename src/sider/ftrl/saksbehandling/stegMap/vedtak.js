@@ -5,6 +5,7 @@ import VurderingVedtak from '../../../../felleskomponenter/stegvelger/stegKompon
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+    const harAvklaring = true;
     this.kriterier = [
       {
         exec: () => true,
@@ -14,10 +15,16 @@ class Vedtak extends Steg {
     this.id = STEG.VEDTAK_FTRL;
     this.tittel = 'Vedtak';
     this.komponent = VurderingVedtak;
-    this.samleRelevanteData = _propsLight => ({});
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
+    this.samleRelevanteData = _propsLight => ({
+      alleLandkoder: _propsLight.landkoder,
+      redigerbart: _propsLight.redigerbart,
+    });
+    this.beregnRelevantUI = _propsLight => ({ harAvklaring });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
+      tilForsiden: propsLight.tilgjengeligeHandlers.tilForsiden,
     };
     this.status = FANE_STATUS.OK;
   }

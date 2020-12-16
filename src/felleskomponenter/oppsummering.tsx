@@ -66,7 +66,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     sammensattNavn,
   } = person;
 
-  const arbeidslandTilSetning = (land: KTObject[]) => (land && land.length > 0 ? Utils.streng.arrayTilKonjunksjon(land.map(enkeltLand => enkeltLand.term)) : 'Ukjent');
+  const arbeidslandTilSetning = (land: KTObject[]) => (land && land.length > 0 ? Utils.streng.arrayTilKonjunksjon(land.map(enkeltLand => Utils.streng.storeForbokstaver(enkeltLand.term))) : 'Ukjent');
 
   const lovvalgslandTilSetning = (landObject: KTObject) => (landObject.term ? Utils.streng.arrayTilKonjunksjon(landObject.term) : 'Ukjent');
 
