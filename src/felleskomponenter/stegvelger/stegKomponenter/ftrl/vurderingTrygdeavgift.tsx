@@ -102,13 +102,16 @@ const TrygdeavgiftsgrunnlagComponent =
       if (!formValues || !formValues.avgiftsgrunnlag) return null;
       return (
         <div>
-          <Nav.AlertStripeInfo className={`${erVirksomhetNorsk ? 'stor_margin_bottom' : 'liten_margin_bottom'}`}>
-            {erVirksomhetNorsk
-              ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge &&
-              KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt)
-              : formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland &&
-              KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt)}
-          </Nav.AlertStripeInfo>
+          {
+            (erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
+            <Nav.AlertStripeInfo className={`${erVirksomhetNorsk ? 'stor_margin_bottom' : 'liten_margin_bottom'}`}>
+              {erVirksomhetNorsk
+                ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge &&
+                KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt)
+                : formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland &&
+                KV.finnTermFraListe(MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt, formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt)}
+            </Nav.AlertStripeInfo>
+          }
           {
             !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
             <Nav.AlertStripeAdvarsel className="stor_margin_bottom">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
