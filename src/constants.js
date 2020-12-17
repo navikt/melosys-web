@@ -17,4 +17,7 @@ export const BOOLSK_STRING = {
   USANN: 'FALSE',
 };
 
+export const NORSK_VIRKSOMHET = 'norskVirksomhet';
+export const UTENLANDSK_VIRKSOMHET = 'utenlandskVirksomhet';
+
 export const URL_BASENAME = process.env.APP_PATH_PREFIX || '/melosys';

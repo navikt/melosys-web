@@ -20,9 +20,10 @@ import { formSelectors } from '../../../../ducks/form';
 import { folketrygdenkodeverkSelectors } from '../../../../ducks/folketrygdenkodeverk';
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../../yup';
 import { OppdaterAvgiftsberegning } from '../../../../services/modules/trygdeavgift';
-import { BOOLSK, BOOLSK_STRING } from '../../../../constants';
+import { BOOLSK, BOOLSK_STRING, NORSK_VIRKSOMHET, UTENLANDSK_VIRKSOMHET } from '../../../../constants';
 
 import './vurderingTrygdeavgift.css';
+
 
 const PeriodeTabellComponent = ({ perioder }: { perioder: string[][] | undefined }) => {
   if (!perioder) return null;
@@ -172,29 +173,29 @@ const TrygdeavgiftsgrunnlagComponent =
               <Nav.Radio
                 className="column"
                 label="Ja"
-                name={`${erVirksomhetNorsk ? 'norskVirksomhet' : 'utenlandskVirksomhet'}særligAvgiftsgruppe`}
+                name={`${erVirksomhetNorsk ? NORSK_VIRKSOMHET : UTENLANDSK_VIRKSOMHET}særligAvgiftsgruppe`}
                 onChange={event => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
                 checked={erVirksomhetNorsk
-                  ? erSaerligAvgiftsGruppeValgt.get('norskVirksomhet') === true
-                  : erSaerligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true}
+                  ? erSaerligAvgiftsGruppeValgt.get(NORSK_VIRKSOMHET) === true
+                  : erSaerligAvgiftsGruppeValgt.get(UTENLANDSK_VIRKSOMHET) === true}
                 value={BOOLSK_STRING.SANN}
                 disabled={!redigerbart}
               />
               <Nav.Radio
                 className="column"
                 label="Nei"
-                name={`${erVirksomhetNorsk ? 'norskVirksomhet' : 'utenlandskVirksomhet'}særligAvgiftsgruppe`}
+                name={`${erVirksomhetNorsk ? NORSK_VIRKSOMHET : UTENLANDSK_VIRKSOMHET}særligAvgiftsgruppe`}
                 onChange={event => handleSærligAvgiftsgruppeRadioChange(event, erVirksomhetNorsk)}
                 checked={erVirksomhetNorsk
-                  ? erSaerligAvgiftsGruppeValgt.get('norskVirksomhet') === false
-                  : erSaerligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === false}
+                  ? erSaerligAvgiftsGruppeValgt.get(NORSK_VIRKSOMHET) === false
+                  : erSaerligAvgiftsGruppeValgt.get(UTENLANDSK_VIRKSOMHET) === false}
                 value={BOOLSK_STRING.USANN}
                 disabled={!redigerbart}
               />
               {
                 (erVirksomhetNorsk
-                  ? erSaerligAvgiftsGruppeValgt.get('norskVirksomhet') === true
-                  : erSaerligAvgiftsGruppeValgt.get('utenlandskVirksomhet') === true) &&
+                  ? erSaerligAvgiftsGruppeValgt.get(NORSK_VIRKSOMHET) === true
+                  : erSaerligAvgiftsGruppeValgt.get(UTENLANDSK_VIRKSOMHET) === true) &&
                 <Skjema.Select
                   label=""
                   disabled={!redigerbart}
@@ -259,7 +260,7 @@ const TrygdeavgiftsgrunnlagComponent =
         }
 
         {
-          (erVirksomhetNorsk ? erTabellApen.get('norskVirksomhet') : erTabellApen.get('utenlandskVirksomhet')) && formValues.avgiftsberegning &&
+          (erVirksomhetNorsk ? erTabellApen.get(NORSK_VIRKSOMHET) : erTabellApen.get(UTENLANDSK_VIRKSOMHET)) && formValues.avgiftsberegning &&
           <Nav.Row>
             <Nav.Column xs="12">
               <PeriodeTabellComponent perioder={mapTabell(erVirksomhetNorsk ? formValues.avgiftsberegning.avgiftsperioderNorge : formValues.avgiftsberegning.avgiftsperioderUtland)} />
@@ -322,10 +323,10 @@ const VurderingTrygdeavgift =
       Api.Trygdeavgift.hentGrunnlag(behandlingID)
         .then(response => {
           if (response.trygdeavgiftsgrunnlagNorge && response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe !== undefined) {
-            erSaerligAvgiftsGruppeValgt.set('norskVirksomhet', !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
+            erSaerligAvgiftsGruppeValgt.set(NORSK_VIRKSOMHET, !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe);
           }
           if (response.trygdeavgiftsgrunnlagUtland && response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe !== undefined) {
-            erSaerligAvgiftsGruppeValgt.set('utenlandskVirksomhet', !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe);
+            erSaerligAvgiftsGruppeValgt.set(UTENLANDSK_VIRKSOMHET, !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe);
           }
           setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
           changeField('avgiftsgrunnlag', response);
@@ -368,17 +369,17 @@ const VurderingTrygdeavgift =
     function handleGrunnlagResponse(avgiftsgrunnlag: Avgiftsgrunnlag) {
       if (!avgiftsgrunnlag) return;
       if (avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
-        setErTabellApen(new Map(erTabellApen.set('norskVirksomhet', false)));
+        setErTabellApen(new Map(erTabellApen.set(NORSK_VIRKSOMHET, false)));
       }
       if (avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
-        setErTabellApen(new Map(erTabellApen.set('utenlandskVirksomhet', false)));
+        setErTabellApen(new Map(erTabellApen.set(UTENLANDSK_VIRKSOMHET, false)));
       }
       if (avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE) {
-        erSaerligAvgiftsGruppeValgt.delete('utenlandskVirksomhet');
+        erSaerligAvgiftsGruppeValgt.delete(UTENLANDSK_VIRKSOMHET);
         setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
       }
       if (avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET) {
-        erSaerligAvgiftsGruppeValgt.delete('norskVirksomhet');
+        erSaerligAvgiftsGruppeValgt.delete(NORSK_VIRKSOMHET);
         setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
       }
     }
@@ -400,7 +401,7 @@ const VurderingTrygdeavgift =
 
     function handleSærligAvgiftsgruppeRadioChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
       const erSærligAvgiftsgruppe = Utils.streng.tryParseBool(event.target.value);
-      setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', erSærligAvgiftsgruppe)));
+      setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt.set(erNorskVirksomhet ? NORSK_VIRKSOMHET : UTENLANDSK_VIRKSOMHET, erSærligAvgiftsgruppe)));
       changeField(
         erNorskVirksomhet ? 'avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe' : 'avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe',
         erSærligAvgiftsgruppe ? 'TRUE' : null
@@ -419,7 +420,7 @@ const VurderingTrygdeavgift =
           changeField('avgiftsberegning', response);
         })
         .catch(Utils.logger.error);
-      setErTabellApen(new Map(erTabellApen.set(erNorskVirksomhet ? 'norskVirksomhet' : 'utenlandskVirksomhet', true)));
+      setErTabellApen(new Map(erTabellApen.set(erNorskVirksomhet ? NORSK_VIRKSOMHET : UTENLANDSK_VIRKSOMHET, true)));
     }
 
     return (
