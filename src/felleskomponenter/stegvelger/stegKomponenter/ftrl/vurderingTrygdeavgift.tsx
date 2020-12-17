@@ -223,14 +223,14 @@ const TrygdeavgiftsgrunnlagComponent =
           (erVirksomhetNorsk
             ? formValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_TRYGDEAVGIFT_NAV
             : formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_TRYGDEAVGIFT_NAV) &&
-          <Nav.Row>
+          <div>
             {
               !erVirksomhetNorsk && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland && formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.betalerArbeidsgiverAvgift &&
               <Nav.AlertStripeAdvarsel className="stor_margin_bottom">Du har oppgitt at utenlandsk virksomhet betaler arbeidsavgift.</Nav.AlertStripeAdvarsel>
             }
             {
               (erVirksomhetNorsk ? !erTrygdeavgiftsgrunnlagNorgeUgyldig : !erTrygdeavgiftsgrunnlagUtlandUgyldig) &&
-              <>
+              <Nav.Row>
                 <Nav.Column xs="4">
                   <Nav.Input
                     label="Avgiftspliktig inntekt per måned"
@@ -253,9 +253,9 @@ const TrygdeavgiftsgrunnlagComponent =
                     <span>Beregn foreløpig trygdeavgift</span>
                   </Nav.Knapp>
                 </Nav.Column>
-              </>
+              </Nav.Row>
             }
-          </Nav.Row>
+          </div>
         }
 
         {
