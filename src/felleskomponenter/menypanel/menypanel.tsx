@@ -3,6 +3,9 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from 'AppTypes';
 
 import * as Nav from '../../utils/navFrontend';
+import * as Etiketter from './etiketter';
+
+import MKV from '../../melosyskodeverk';
 
 import Sidemeny from '../sidemeny';
 
@@ -13,6 +16,10 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './menypanel.css';
+
+const {
+  SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
+} = MKV.Koder.behandlingsgrunnlagtyper;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
@@ -37,15 +44,21 @@ export const Menypanel = ({
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
 
-  const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
+  const contentProps = {
+    visArbeidsforholdRolleEtiketter: behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
+    visBehandlingsgrunnlagData: !(behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
+      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE),
+    behandlingsgrunnlagEtikett: behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
     redigerbart,
+    lagreSoknadOgOppfriskSaksopplysninger,
+  };
+
+  const linkGroupsFactory = new LinkGroupsFactory({
     behandlingstema,
-    behandlingstype,
     behandlingsgrunnlagtype,
-    handlers: {
-      lagreSoknadOgOppfriskSaksopplysninger,
-    },
+    contentProps,
   });
+  const linkGroupsWithContent = linkGroupsFactory.createLinkGroups();
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
     setActive([groupIndex, linkIndex]);

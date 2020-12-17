@@ -1,16 +1,8 @@
-import React from 'react';
-
-import * as Etiketter from '../etiketter';
-
 import MKV from '../../../melosyskodeverk';
 
 import { LinkGroup, ContentProps } from './types';
 import LinkgroupsBuilder from './linkgroupsBuilder';
 import LinksBuilder from './linksBuilder';
-
-const {
-  SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-} = MKV.Koder.behandlingsgrunnlagtyper;
 
 const {
   UTSENDT_ARBEIDSTAKER,
@@ -29,34 +21,24 @@ const {
   TRYGDETID,
 } = MKV.Koder.behandlinger.behandlingstema;
 
-interface createLinkGroupsConfig {
+export interface LinkGroupsFactoryConfig {
   behandlingstema: string,
-  behandlingstype: string,
   behandlingsgrunnlagtype: string,
-  redigerbart: boolean,
-  handlers: {
-    lagreSoknadOgOppfriskSaksopplysninger: () => void,
-  }
+  contentProps: ContentProps,
 }
 
 class LinkGroupsFactory {
-  static createLinkGroups({
-    behandlingstema,
-    behandlingstype,
-    behandlingsgrunnlagtype,
-    redigerbart,
-    handlers: {
-      lagreSoknadOgOppfriskSaksopplysninger,
-    },
-  }: createLinkGroupsConfig): LinkGroup[] {
-    const contentProps: ContentProps = {
-      visArbeidsforholdRolleEtiketter: behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-      visBehandlingsgrunnlagData: !(behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
-        behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE),
-      behandlingsgrunnlagEtikett: behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
-      redigerbart,
-      lagreSoknadOgOppfriskSaksopplysninger,
-    };
+  private readonly config: LinkGroupsFactoryConfig;
+
+  constructor(config: LinkGroupsFactoryConfig) {
+    this.config = config;
+  }
+
+  createLinkGroups(): LinkGroup[] {
+    const {
+      behandlingstema,
+      contentProps,
+    } = this.config;
 
     switch (behandlingstema) {
       case UTSENDT_ARBEIDSTAKER:
