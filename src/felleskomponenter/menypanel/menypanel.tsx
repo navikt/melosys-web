@@ -55,7 +55,6 @@ export const Menypanel = ({
 
   const linkGroupsFactory = new LinkGroupsFactory({
     behandlingstema,
-    behandlingsgrunnlagtype,
     contentProps,
   });
   const linkGroupsWithContent = linkGroupsFactory.createLinkGroups();

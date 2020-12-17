@@ -23,7 +23,6 @@ const {
 
 export interface LinkGroupsFactoryConfig {
   behandlingstema: string,
-  behandlingsgrunnlagtype: string,
   contentProps: ContentProps,
 }
 
