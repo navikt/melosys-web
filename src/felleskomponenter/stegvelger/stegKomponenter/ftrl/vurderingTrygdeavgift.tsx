@@ -365,6 +365,24 @@ const VurderingTrygdeavgift =
       }
     }
 
+    function handleGrunnlagResponse(avgiftsgrunnlag: Avgiftsgrunnlag) {
+      if (!avgiftsgrunnlag) return;
+      if (avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
+        setErTabellApen(new Map(erTabellApen.set('norskVirksomhet', false)));
+      }
+      if (avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
+        setErTabellApen(new Map(erTabellApen.set('utenlandskVirksomhet', false)));
+      }
+      if (avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE) {
+        erSaerligAvgiftsGruppeValgt.delete('utenlandskVirksomhet');
+        setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
+      }
+      if (avgiftsgrunnlag.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET) {
+        erSaerligAvgiftsGruppeValgt.delete('norskVirksomhet');
+        setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
+      }
+    }
+
     useEffect(() => {
       if (formValues && formValues.avgiftsgrunnlag && erAvgiftsgrunnlagGyldig(formValues.avgiftsgrunnlag)) {
         Api.Trygdeavgift.sendGrunnlag(behandlingID, {
@@ -374,12 +392,7 @@ const VurderingTrygdeavgift =
         })
           .then(response => {
             changeField('avgiftsgrunnlag', response);
-            if (response && response.vurderingTrygdeavgiftNorskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
-              setErTabellApen(new Map(erTabellApen.set('norskVirksomhet', false)));
-            }
-            if (response && response.vurderingTrygdeavgiftUtenlandskInntekt === MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_INGEN_TRYGDEAVGIFT_NAV) {
-              setErTabellApen(new Map(erTabellApen.set('utenlandskVirksomhet', false)));
-            }
+            handleGrunnlagResponse(response);
           })
           .catch(Utils.logger.error);
       }
