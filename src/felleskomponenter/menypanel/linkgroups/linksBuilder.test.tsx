@@ -10,6 +10,7 @@ describe('LinksBuilder', () => {
       behandlingsgrunnlagEtikett: <span />,
       visBehandlingsgrunnlagData: true,
       lagreSoknadOgOppfriskSaksopplysninger: jest.fn(),
+      setMenypanelFeilmelding: jest.fn(),
     };
 
     const linksBuilder = new LinksBuilder(props);
