@@ -8,8 +8,6 @@ import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as SkjemaUtils from '../utils';
 
-import { landTekstFormat } from './utils';
-
 import './landvelger.css';
 
 export class EnkeltLand extends Component {
@@ -19,16 +17,28 @@ export class EnkeltLand extends Component {
   };
 
   componentDidMount = () => {
-    const { value } = this.props.input;
-    const { landkoder } = this.props;
-    const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
-    const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
+    const inputVerdi = this.lagInputVerdi();
     this.setInputVerdi(inputVerdi);
   };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.input.value !== this.props.input.value) {
+      const inputVerdi = this.lagInputVerdi();
+      this.setInputVerdi(inputVerdi);
+    }
+  }
 
   setInputVerdi = verdi => {
     this.setState({ inputVerdi: verdi });
   };
+
+  lagInputVerdi = () => {
+    const { value } = this.props.input;
+    const { landkoder } = this.props;
+    const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
+    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : '';
+    return inputVerdi;
+  }
 
   reduxOppdaterLand = landkode => {
     if (!landkode) {
@@ -73,7 +83,7 @@ export class EnkeltLand extends Component {
     const { landkoder } = this.props;
     if (!inputVerdi) return [];
     return landkoder.filter(land => (
-      landTekstFormat(land)
+      Utils.land.landTekstFormat(land)
         .toLowerCase()
         .includes(inputVerdi.toLowerCase())
     ));
@@ -97,7 +107,7 @@ export class EnkeltLand extends Component {
 
     if (landkodeObjekt) {
       this.reduxOppdaterLand(landkodeObjekt.kode);
-      this.setState({ inputVerdi: landTekstFormat(landkodeObjekt), error: null });
+      this.setState({ inputVerdi: Utils.land.landTekstFormat(landkodeObjekt), error: null });
     } else {
       this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
     }

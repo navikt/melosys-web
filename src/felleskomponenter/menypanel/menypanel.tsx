@@ -16,6 +16,7 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './menypanel.css';
+import { menypanelSelectors } from '../../ducks/menypanel';
 
 const {
   SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
@@ -25,6 +26,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
@@ -39,10 +41,14 @@ export const Menypanel = ({
   behandlingsgrunnlagtype,
   behandlingstema,
   behandlingstype,
+  visMenypanel,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
+  const [menypanelFeilmelding, setMenypanelFeilmelding] = useState('');
+
+  if (!visMenypanel) return null;
 
   const contentProps = {
     visArbeidsforholdRolleEtiketter: behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
@@ -51,6 +57,7 @@ export const Menypanel = ({
     behandlingsgrunnlagEtikett: behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
+    setMenypanelFeilmelding,
   };
 
   const linkGroupsFactory = new LinkGroupsFactory({
@@ -61,6 +68,7 @@ export const Menypanel = ({
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
     setActive([groupIndex, linkIndex]);
+    setMenypanelFeilmelding('');
   };
 
   const activeContent = linkGroupsWithContent.length !== 0 ?
@@ -81,16 +89,23 @@ export const Menypanel = ({
     }));
 
   return (
-    <div className="menypanel">
-      <Sidemeny
-        heading="Opplysninger"
-        linkGroups={linkGroups}
-        onClick={handleClick}
-      />
-      <Nav.Panel className="content">
-        { activeContent }
-      </Nav.Panel>
-    </div>
+    <>
+      { menypanelFeilmelding &&
+      <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
+        {menypanelFeilmelding}
+        <Nav.Xknapp form="kompakt" onClick={() => { setMenypanelFeilmelding(''); }} />
+      </Nav.AlertStripe> }
+      <div className="menypanel">
+        <Sidemeny
+          heading="Opplysninger"
+          linkGroups={linkGroups}
+          onClick={handleClick}
+        />
+        <Nav.Panel className="content">
+          { activeContent }
+        </Nav.Panel>
+      </div>
+    </>
   );
 };
 

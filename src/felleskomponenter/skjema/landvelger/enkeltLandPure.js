@@ -5,8 +5,9 @@ import classnames from 'classnames';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
+import * as Utils from '../../../utils';
 
-import { landTekstFormat, lagDatalistID } from './utils';
+import { lagDatalistID } from './utils';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -37,7 +38,7 @@ class EnkeltLandPure extends Component {
     const { value } = this.props;
     const { landkoder } = this.props;
     const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
-    const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
+    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : '';
     this.setInputVerdi(inputVerdi);
   };
 
@@ -66,7 +67,7 @@ class EnkeltLandPure extends Component {
     const { landkoder } = this.props;
     if (!inputVerdi) return [];
     return landkoder.filter(land => (
-      landTekstFormat(land)
+      Utils.land.landTekstFormat(land)
         .toLowerCase()
         .includes(inputVerdi.toLowerCase())
     ));
@@ -91,7 +92,7 @@ class EnkeltLandPure extends Component {
 
     if (landkodeObjekt) {
       this.oppdaterLand(landkodeObjekt.kode);
-      this.setState({ inputVerdi: landTekstFormat(landkodeObjekt), error: null });
+      this.setState({ inputVerdi: Utils.land.landTekstFormat(landkodeObjekt), error: null });
     } else {
       this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
     }
@@ -141,7 +142,7 @@ class EnkeltLandPure extends Component {
         <div className="landliste__dataliste">
           <datalist id={dataListID}>
             {
-              MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))
+              MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={Utils.land.landTekstFormat(item)} />))
             }
           </datalist>
         </div>

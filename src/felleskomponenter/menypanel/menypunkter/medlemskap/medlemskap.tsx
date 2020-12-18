@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { MedlemskapsPeriode } from 'Domene';
+import { MedlPeriode } from 'Domene';
 import { RootState } from 'AppTypes';
 
 import * as KV from '../../../../kodeverk';
@@ -14,7 +14,7 @@ import ExpandableList from '../../../expandablelist';
 import './medlemskap.css';
 
 interface MedlemskapEnkeltPeriodeProps {
-  enkeltPeriode: MedlemskapsPeriode,
+  enkeltPeriode: MedlPeriode,
 }
 
 export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPeriodeProps) {
@@ -53,7 +53,7 @@ export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPerio
 }
 
 interface MedlemskapGruppeProps {
-  perioder: MedlemskapsPeriode[],
+  perioder: MedlPeriode[],
   overskrift: string,
 }
 

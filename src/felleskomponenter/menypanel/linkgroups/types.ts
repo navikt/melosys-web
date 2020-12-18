@@ -31,4 +31,5 @@ export interface ContentProps {
   behandlingsgrunnlagEtikett: ReactNode,
   visBehandlingsgrunnlagData: boolean,
   lagreSoknadOgOppfriskSaksopplysninger: () => void,
+  setMenypanelFeilmelding: (feilmelding: string) => void,
 }

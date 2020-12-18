@@ -16,6 +16,7 @@ import { formSelectors } from '../../../ducks/form';
 import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import MKV from '../../../melosyskodeverk';
+import { BOOLSK_STRING } from '../../../constants';
 
 import './vurderingVurderarbeidsland.css';
 
@@ -35,13 +36,13 @@ const IngenSokkelSkipEllerHjemmebaser = ({
 
   const vedEndring = ({ checked }) => {
     if (checked) {
-      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, null, KV.Koder.BoolskAvklartfaktaType.SANN, null));
+      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, null, BOOLSK_STRING.SANN, null));
     } else {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND));
     }
   };
 
-  const erChecked = hentFaktaVerdi(arbeidUtforesIOppgittLandFakta) === KV.Koder.BoolskAvklartfaktaType.SANN;
+  const erChecked = hentFaktaVerdi(arbeidUtforesIOppgittLandFakta) === BOOLSK_STRING.SANN;
 
   return (
     <Fragment>

@@ -11,6 +11,7 @@ import {
   beregnAlder,
   erGyldigPeriode,
   erLike,
+  plussEnDag,
 } from './dato';
 
 import MockDate from 'mockdate';
@@ -295,6 +296,26 @@ describe('dato.js:', () => {
       [false, '2019-04-23T10:02:52.031Z', '2019-04-23T10:02:59.031Z'],
     ]).it('returnerer %p for %p og %p', (forventetResultat, datoEn, datoTo) => {
       expect(erLike(datoEn, datoTo)).toBe(forventetResultat);
+    });
+  });
+
+  describe('plussEnDag', () => {
+    test('31. oktober blir 1. november', () => {
+      const dato = '31.10.2020';
+      const forventetDato = '01.11.2020';
+      expect(plussEnDag(dato)).toBe(forventetDato);
+    });
+
+    test('28. februar blir 29. februar på skuddår', () => {
+      const dato = '28.02.2020';
+      const forventetDato = '29.02.2020';
+      expect(plussEnDag(dato)).toBe(forventetDato);
+    });
+
+    test('28. februar blir 1. mars', () => {
+      const dato = '28.02.2019';
+      const forventetDato = '01.03.2019';
+      expect(plussEnDag(dato)).toBe(forventetDato);
     });
   });
 });

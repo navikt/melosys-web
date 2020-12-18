@@ -17,11 +17,12 @@ declare module 'Domene' {
   export type AnmodningOmUnntakBestilling = import('./@types').AnmodningOmUnntakBestilling;
   export type Fagsak = import('./@types').Fagsak;
   export type GeneriskAdresse = import('./@types').GeneriskAdresse;
-  export type MedlemskapsPeriode = import('./@types').MedlemskapPeriode;
+  export type MedlPeriode = import('./@types').MedlPeriode;
   export type Oppsummering = import('./@types').Oppsummering;
   export type Periode = import('./@types').Periode;
   export type Person = import('./@types').Person;
   export type PersonHistorikk = import('./@types').PersonHistorikk;
+  export type OppsummertFaktaVirksomheter = import('./@types').Virksomheter;
   export type Organisasjon = import('./@types').Organisasjon;
   export type Videresending = import('./@types').Videresending;
   export type DokumentOversikt = import('./@types').DokumentOversikt;
@@ -30,7 +31,13 @@ declare module 'Domene' {
   export type Mottaksretning = import('./@types').Mottaksretning;
   export type BrevPdfData = import('./@types').BrevPdfData;
   export type SedPdfData = import('./@types').SedPdfData;
+  export type Medlemskapsperiode = import('./@types').Medlemskapsperiode;
+  export type OppdaterMedlemskapsperiode = import('./@types').OppdaterMedlemskapsperiode
   export type Familiemedlem = import('./@types').Familiemedlem;
+  export type Avgiftsgrunnlag = import('./@types').Avgiftsgrunnlag;
+  export type Avgiftsberegning = import('./@types').Avgiftsberegning;
+  export type Avgiftsperiode = import('./@types').Avgiftsperiode;
+  export type AvgiftsgrunnlagInfo = import('./@types').AvgiftsgrunnlagInfo;
 }
 
 declare module '@navikt/melosys-kodeverk' {

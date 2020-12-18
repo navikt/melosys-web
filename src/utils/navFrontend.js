@@ -17,6 +17,7 @@ import Tekstomrade from 'nav-frontend-tekstomrade';
 import Chevron from 'nav-frontend-chevron';
 import { LenkepanelBase } from 'nav-frontend-lenkepanel';
 import { PopoverOrientering } from 'nav-frontend-popover';
+import { Xknapp } from 'nav-frontend-ikonknapper';
 
 export {
   AlertStripeAdvarsel, AlertStripe, AlertStripeInfo,
@@ -37,4 +38,5 @@ export {
   Chevron,
   LenkepanelBase,
   PopoverOrientering,
+  Xknapp,
 };

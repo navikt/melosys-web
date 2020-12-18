@@ -17,6 +17,7 @@ interface FamilieforholdContainerProps {
   visArbeidsforholdRolleEtiketter: boolean,
   behandlingsgrunnlagEtikett: ReactNode,
   visBehandlingsgrunnlagData: boolean,
+  setMenypanelFeilmelding: (feilmelding: string) => void
 }
 
 const FamilieforholdContainer = ({
@@ -24,6 +25,7 @@ const FamilieforholdContainer = ({
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
   visBehandlingsgrunnlagData,
+  setMenypanelFeilmelding,
 }: FamilieforholdContainerProps) => (
   <Nav.Container fluid className="familieforhold-container">
     <Nav.Row>
@@ -33,7 +35,7 @@ const FamilieforholdContainer = ({
     </Nav.Row>
     <Nav.Row className="familiemedlemmer-row">
       <Nav.Column xs="12">
-        <Familiemedlemmer />
+        <Familiemedlemmer setMenypanelFeilmelding={setMenypanelFeilmelding} />
       </Nav.Column>
     </Nav.Row>
     {

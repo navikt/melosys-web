@@ -107,22 +107,27 @@ const mapDispatchToProps = (dispatch: any) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
+type FamiliemedlemmerProps = PropsFromRedux & {
+  setMenypanelFeilmelding: (feilmelding: string) => void
+}
 
 const Familiemedlemmer = ({
   behandlingID,
   familiemedlemmer,
   oppdaterBehandling,
-}: PropsFromRedux) => {
-  const [feilmelding, setFeilmelding] = useState('');
+  setMenypanelFeilmelding,
+}: FamiliemedlemmerProps) => {
+  const [harOppfrisket, setHarOppfrisket] = useState(false);
 
   const oppfrisk = async () => {
     try {
       await Api.Saksopplysninger.oppfrisk(behandlingID, { medFamilierelasjoner: true });
       oppdaterBehandling();
+      setHarOppfrisket(true);
     } catch (e) {
       Utils.logger.error(e);
-      if (e.status >= 500) setFeilmelding('Kunne ikke hente familierelasjoner');
-      else if (e.status >= 400) setFeilmelding(e.body.message);
+      if (e.status >= 500) setMenypanelFeilmelding('Ikke svar fra TPS. Prøv igjen senere.');
+      else if (e.status >= 400) setMenypanelFeilmelding(e.body.message);
     }
   };
 
@@ -134,12 +139,12 @@ const Familiemedlemmer = ({
   return (
     <div className="familiemedlemmer">
       <Etiketter.FraRegister style={{ float: 'right' }} />
-      { feilmelding &&
-        <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding}</Nav.AlertStripe>}
       { familiemedlemmer.length === 0 &&
         <div className="familiemedlemmer__gruppeoverskrift">
           <Mui.Knappelenke ikon={Ikoner.HentOpplysninger} onClick={oppfrisk}>Hent opplysninger</Mui.Knappelenke>
         </div>}
+      { harOppfrisket && familiemedlemmer.length === 0 &&
+        <div style={{ paddingLeft: '16px', fontStyle: 'italic' }}>Fant ingen familieforhold</div>}
       { familiemedlemmer.length !== 0 &&
       <FamiliemedlemmerGruppe
         familiemedlemmer={barn}

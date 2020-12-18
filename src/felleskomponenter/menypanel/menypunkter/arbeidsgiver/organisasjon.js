@@ -26,7 +26,7 @@ const Organisasjon = ({
     <div className={organisasjonCls}>
       <Nav.Container fluid>
         <Nav.Row>
-          <Nav.Column xs="4">
+          <Nav.Column xs="6">
             <OrganisasjonsAdresse
               visNavn={visNavn}
               visTittel={visAdresseTittel}
@@ -37,8 +37,8 @@ const Organisasjon = ({
           {
             visOrgnr &&
             <Nav.Column xs="6">
-              <Nav.typo.Normaltekst style={{ marginTop: '0.5em' }}>Org.nr. juridisk enhet</Nav.typo.Normaltekst>
-              <Nav.typo.Element>{orgnr}</Nav.typo.Element>
+              <Nav.typo.Element style={{ marginTop: '0.5em' }}>Org.nr. juridisk enhet</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{orgnr}</Nav.typo.Normaltekst>
             </Nav.Column>
           }
         </Nav.Row>

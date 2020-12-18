@@ -144,6 +144,10 @@ function erLike(datoEn, datoTo) {
   return moment(datoEn).isSame(datoTo);
 }
 
+function plussEnDag(dato) {
+  return moment(dato, 'DD.MM.YYYY').add(1, 'days').format('DD.MM.YYYY');
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -157,5 +161,6 @@ export {
   erGyldigPeriode,
   erIPeriode,
   erLike,
+  plussEnDag,
   MAX_AR_FREM_I_TID,
 };

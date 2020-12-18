@@ -171,9 +171,6 @@ export const Person = ({
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Column xs="5">
-              {/* Fødested og land */}
-            </Nav.Column>
             <Nav.Column xs="7">
               <UtenlandskIdent
                 redigerbart={redigerbart}

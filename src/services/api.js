@@ -7,7 +7,9 @@ import * as Eessi from './modules/eessi/';
 import * as Fagsaker from './modules/fagsaker/';
 import * as Featuretoggle from './modules/featuretoggle';
 import * as Journalforing from './modules/journalforing';
+import * as Kodeverk from './modules/kodeverk';
 import * as Lovvalgsperioder from './modules/lovvalgsperioder';
+import * as Medlemskapsperioder from './modules/medlemskapsperioder';
 import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
 import * as Saksopplysninger from './modules/saksopplysninger';
@@ -16,6 +18,7 @@ import * as Registrering from './modules/registrering/';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Saksflyt from './modules/saksflyt';
 import * as Statistikk from './modules/statistikk';
+import * as Trygdeavgift from './modules/trygdeavgift';
 import * as Utpekingsperioder from './modules/utpekingsperioder';
 import * as Vilkar from './modules/vilkar';
 
@@ -30,7 +33,9 @@ export {
   Fagsaker,
   Featuretoggle,
   Journalforing,
+  Kodeverk,
   Lovvalgsperioder,
+  Medlemskapsperioder,
   Oppgaver,
   Organisasjoner,
   Personer,
@@ -39,6 +44,7 @@ export {
   Saksopplysninger,
   Saksflyt,
   Statistikk,
+  Trygdeavgift,
   Utpekingsperioder,
   Vilkar,
 };
