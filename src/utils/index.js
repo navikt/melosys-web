@@ -8,7 +8,6 @@ import * as streng from './streng';
 import * as logger from './logger';
 import * as queryString from './queryString';
 import * as testhelpers from './testhelpers';
-import * as mapping from './mapping';
 import * as person from './person';
 import * as land from './land';
 import * as organisasjon from './organisasjon';
@@ -24,7 +23,6 @@ export {
   logger,
   queryString,
   testhelpers,
-  mapping,
   person,
   land,
   organisasjon,

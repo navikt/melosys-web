@@ -14,7 +14,6 @@ import * as Hooks from '../../../hooks';
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../../felleskomponenter/behandlingsstatus';
-import Soknadpaneler from '../../../felleskomponenter/soknadpaneler';
 import Stegvelger from '../../../felleskomponenter/stegvelger';
 import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
 import { SoknadMenypanelForm } from '../../../felleskomponenter/menypanelForm';
@@ -104,7 +103,6 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
-  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
   const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden.mvp');
 
   const oppdaterBehandlingIDState = () => {
@@ -215,19 +213,9 @@ const Saksbehandling = ({
               sakstype={MKV.Koder.sakstyper.FTRL}
             />
             }
-            {
-              sidemenyToggle === 'enabled' &&
-              <SoknadMenypanelForm
-                startOgVisOppfriskModal={startOgVisOppfriskModal}
-              />
-            }
-            {
-              sidemenyToggle === 'disabled' &&
-              <Soknadpaneler
-                startOgVisOppfriskModal={startOgVisOppfriskModal}
-                behandlingID={behandlingID}
-              />
-            }
+            <SoknadMenypanelForm
+              startOgVisOppfriskModal={startOgVisOppfriskModal}
+            />
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
