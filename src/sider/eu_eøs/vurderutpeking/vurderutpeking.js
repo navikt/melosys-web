@@ -7,7 +7,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
-import * as Hooks from '../../../hooks';
 
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
