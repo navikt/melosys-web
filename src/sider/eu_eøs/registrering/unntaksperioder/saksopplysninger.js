@@ -11,9 +11,7 @@ import * as Api from '../../../../services/api';
 import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Mui from '../../../../felleskomponenter/ui';
-import * as Hooks from '../../../../hooks';
 
-import Paneler from './komponenter/paneler';
 import { RegistreringMenypanelForm } from '../../../../felleskomponenter/menypanelForm';
 import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../../../../felleskomponenter/registerkontrollTreff';
@@ -56,7 +54,6 @@ const Saksopplysninger = ({
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = React.useState('');
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
-  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
 
   const { params: { snr: saksnummer } } = match;
   React.useEffect(() => {
@@ -374,21 +371,14 @@ const Saksopplysninger = ({
           </div>
         </div>
       </form>
-      {
-        sidemenyToggle === 'enabled' &&
-        <RegistreringMenypanelForm
-          menypunkter={[
-            'Person',
-            'Medlemskap',
-            'EU/EØS-barnetrygd',
-          ]}
-          startOgVisOppfriskModal={startOgVisOppfriskModal}
-        />
-      }
-      {
-        sidemenyToggle === 'disabled' &&
-        <Paneler />
-      }
+      <RegistreringMenypanelForm
+        menypunkter={[
+          'Person',
+          'Medlemskap',
+          'EU/EØS-barnetrygd',
+        ]}
+        startOgVisOppfriskModal={startOgVisOppfriskModal}
+      />
     </div>
   );
 };

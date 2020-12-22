@@ -7,14 +7,12 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
-import * as Hooks from '../../../hooks';
 
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../../felleskomponenter/behandlingsstatus';
 import Stegvelger from '../../../felleskomponenter/stegvelger';
 import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import Soknadpaneler from '../../../felleskomponenter/soknadpaneler';
 import { SoknadMenypanelForm } from '../../../felleskomponenter/menypanelForm';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
@@ -105,8 +103,6 @@ const Vurderutpeking = ({
   dokumenter,
   vurderUtpekingFormValues,
 }) => {
-  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
-
   const { params: { snr: saksnummer } } = match;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
@@ -157,19 +153,9 @@ const Vurderutpeking = ({
                 forsteSteg={forsteSteg}
               />
             }
-            {
-              sidemenyToggle === 'enabled' &&
-              <SoknadMenypanelForm
-                startOgVisOppfriskModal={startOgVisOppfriskModal}
-              />
-            }
-            {
-              sidemenyToggle === 'disabled' &&
-              <Soknadpaneler
-                behandlingID={behandlingID}
-                startOgVisOppfriskModal={startOgVisOppfriskModal}
-              />
-            }
+            <SoknadMenypanelForm
+              startOgVisOppfriskModal={startOgVisOppfriskModal}
+            />
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
