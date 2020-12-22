@@ -102,7 +102,7 @@ export const Menypanel = ({
           onClick={handleClick}
         />
         <Nav.Panel className="content">
-          { activeContent }
+          { activeContent || <div /> }
         </Nav.Panel>
       </div>
     </>
