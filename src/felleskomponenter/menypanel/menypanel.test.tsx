@@ -82,8 +82,6 @@ describe('MenyPanel', () => {
 
   each([
     BESLUTNING_LOVVALG_ANNET_LAND,
-    REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-    REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
     ANMODNING_OM_UNNTAK_HOVEDREGEL,
     ØVRIGE_SED_MED,
     ØVRIGE_SED_UFM,
@@ -103,6 +101,22 @@ describe('MenyPanel', () => {
     expect(sidemenyLinkGroups[0].links[4].label).toBe('Arbeidsforhold og inntekt');
   });
 
+  each([
+    REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+    REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+  ]).it('Viser korrekte menypunkter for behandlingstema %p', behandlingstema => {
+    props.behandlingstema = behandlingstema;
+    const menypanel = shallow(<Menypanel {...props} />);
+    const sidemeny = menypanel.find(Sidemeny);
+    const sidemenyLinkGroups = sidemeny.props().linkGroups;
+
+    expect(sidemenyLinkGroups[0].label).toBe('FRA REGISTER');
+    expect(sidemenyLinkGroups[0].links).toHaveLength(4);
+    expect(sidemenyLinkGroups[0].links[0].label).toBe('Person');
+    expect(sidemenyLinkGroups[0].links[1].label).toBe('Familieforhold');
+    expect(sidemenyLinkGroups[0].links[2].label).toBe('Medlemskap');
+    expect(sidemenyLinkGroups[0].links[3].label).toBe('EU/EØS-barnetrygd');
+  });
 
   each([
     BESLUTNING_LOVVALG_NORGE,

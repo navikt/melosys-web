@@ -64,9 +64,18 @@ class LinkGroupsFactory {
             .build())
           .build();
       }
-      case BESLUTNING_LOVVALG_ANNET_LAND:
       case REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
-      case REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
+      case REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE: {
+        return new LinkgroupsBuilder()
+          .addFraRegister(new LinksBuilder(contentProps)
+            .addPerson()
+            .addFamilieForhold()
+            .addMedlemskap()
+            .addEUEOSBarnetrygd()
+            .build())
+          .build();
+      }
+      case BESLUTNING_LOVVALG_ANNET_LAND:
       case ANMODNING_OM_UNNTAK_HOVEDREGEL:
       case ØVRIGE_SED_MED:
       case ØVRIGE_SED_UFM:
