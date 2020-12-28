@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { SoknadFeilmeldinger } from './soknadFeilmeldinger';
+import { BehandlingsgrunnlagFeilmeldinger } from './behandlingsgrunnlagFeilmeldinger';
 
-describe('SoknadFeilmeldinger', () => {
+describe('BehandlingsgrunnlagFeilmeldinger', () => {
   let props = null;
 
   beforeEach(() => {
@@ -25,9 +25,9 @@ describe('SoknadFeilmeldinger', () => {
   });
 
   it('viser en liste over paneler som har feil', () => {
-    const soknadFeilmeldinger = shallow(<SoknadFeilmeldinger {...props} />);
+    const behandlingsgrunnlagFeilmeldinger = shallow(<BehandlingsgrunnlagFeilmeldinger {...props} />);
 
-    const lis = soknadFeilmeldinger.find('li');
+    const lis = behandlingsgrunnlagFeilmeldinger.find('li');
 
     expect(lis.containsMatchingElement('Soknadsperiode'));
     expect(lis.containsMatchingElement('Personlig info'));
@@ -35,8 +35,8 @@ describe('SoknadFeilmeldinger', () => {
 
   it('viser ingenting hvis ingen panelfeil', () => {
     props.panelFeil = [];
-    const soknadFeilmeldinger = shallow(<SoknadFeilmeldinger {...props} />);
+    const behandlingsgrunnlagFeilmeldinger = shallow(<BehandlingsgrunnlagFeilmeldinger {...props} />);
 
-    expect(soknadFeilmeldinger.isEmptyRender()).toBe(true);
+    expect(behandlingsgrunnlagFeilmeldinger.isEmptyRender()).toBe(true);
   });
 });

@@ -5,10 +5,10 @@ import { formSelectors } from '../../ducks/form';
 
 import * as Nav from '../../utils/navFrontend';
 
-import './soknadFeilmeldinger.css';
+import './behandlingsgrunnlagFeilmeldinger.css';
 
 
-export const SoknadFeilmeldinger = ({ panelFeil }) => {
+export const BehandlingsgrunnlagFeilmeldinger = ({ panelFeil }) => {
   if (panelFeil.length === 0) return null;
 
   return (
@@ -32,14 +32,14 @@ export const SoknadFeilmeldinger = ({ panelFeil }) => {
   );
 };
 
-SoknadFeilmeldinger.propTypes = {
+BehandlingsgrunnlagFeilmeldinger.propTypes = {
   panelFeil: PT.arrayOf(PT.shape({
     feil: PT.arrayOf(PT.string),
     panel: PT.string.isRequired,
   })),
 };
 
-SoknadFeilmeldinger.defaultProps = {
+BehandlingsgrunnlagFeilmeldinger.defaultProps = {
   panelFeil: [],
 };
 
@@ -47,4 +47,4 @@ const mapStateToProps = state => ({
   panelFeil: formSelectors.PanelFeilSelector(state),
 });
 
-export default connect(mapStateToProps)(SoknadFeilmeldinger);
+export default connect(mapStateToProps)(BehandlingsgrunnlagFeilmeldinger);
