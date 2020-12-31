@@ -1,12 +1,12 @@
-import React, { useState, ReactNode } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from 'AppTypes';
+import React, { useState, ReactNode } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "AppTypes";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import Sidemeny from '../sidemeny';
+import Sidemeny from "../sidemeny";
 import {
   ArbeidsforholdOgInntekt,
   ArbeidsgiverOgVirksomhet,
@@ -17,42 +17,40 @@ import {
   Periode,
   Person,
   Familieforhold,
-} from './menypunkter';
+} from "./menypunkter";
 
-import { behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { redigerbartSelectors } from '../../ducks/redigerbart';
+import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
-import './menypanel.css';
-import { menypanelSelectors } from '../../ducks/menypanel';
+import "./menypanel.css";
+import { menypanelSelectors } from "../../ducks/menypanel";
 
 const {
-  SØKNAD_A1_YRKESAKTIVE_EØS,
   SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
 } = MKV.Koder.behandlingsgrunnlagtyper;
 
-const hentLinkGroupLabels = (behandlingstema: string): [string, string, string] => {
-  const visSEDLabels = behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE ||
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
+const hentLinkGroupLabels = (
+  behandlingstema: string
+): [string, string, string] => {
+  const visSEDLabels =
+    behandlingstema ===
+      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE ||
+    behandlingstema ===
+      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
   if (visSEDLabels) {
-    return [
-      'FRA REGISTER OG SED',
-      'FRA REGISTER',
-      'FRA SED',
-    ];
+    return ["FRA REGISTER OG SED", "FRA REGISTER", "FRA SED"];
   }
 
-  return [
-    'FRA REGISTER OG SØKNAD',
-    'FRA REGISTER',
-    'FRA SØKNAD',
-  ];
+  return ["FRA REGISTER OG SØKNAD", "FRA REGISTER", "FRA SØKNAD"];
 };
 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(
+    state
+  ),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
@@ -60,33 +58,34 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export type Menypunkt = 'Person' |
-  'Familieforhold' |
-  'Medlemskap' |
-  'EU/EØS-barnetrygd' |
-  'Arbeidsforhold og inntekt' |
-  'Arbeidsgiver/virksomhet' |
-  'Fullmektig' |
-  'Periode' |
-  'Utenlandsoppdraget' |
-  'Lønn og godtgjørelser' |
-  'Arbeidssted(er)' |
-  'Om virksomheten i Norge' |
-  'Øvrig om arbeidstaker';
+export type Menypunkt =
+  | "Person"
+  | "Familieforhold"
+  | "Medlemskap"
+  | "EU/EØS-barnetrygd"
+  | "Arbeidsforhold og inntekt"
+  | "Arbeidsgiver/virksomhet"
+  | "Fullmektig"
+  | "Periode"
+  | "Utenlandsoppdraget"
+  | "Lønn og godtgjørelser"
+  | "Arbeidssted(er)"
+  | "Om virksomheten i Norge"
+  | "Øvrig om arbeidstaker";
 interface Link {
-  label: Menypunkt,
-  active: boolean,
-  content: ReactNode,
-  renderForBehandlingsgrunnlagtyper?: string[],
+  label: Menypunkt;
+  active: boolean;
+  content: ReactNode;
+  renderForBehandlingsgrunnlagtyper?: string[];
 }
 interface LinkGroup {
-  label: string,
-  links: Link[],
+  label: string;
+  links: Link[];
 }
 
 type MenypanelProps = PropsFromRedux & {
-  menypunkter: Menypunkt[],
-  lagreSoknadOgOppfriskSaksopplysninger: () => void,
+  menypunkter: Menypunkt[];
+  lagreSoknadOgOppfriskSaksopplysninger: () => void;
 };
 
 export const Menypanel = ({
@@ -97,33 +96,40 @@ export const Menypanel = ({
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
-  const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
-  const [menypanelFeilmelding, setMenypanelFeilmelding] = useState('');
+  const [[activeGroupIndex, activeLinkIndex], setActive] = useState<
+    [number, number]
+  >([0, 0]);
+  const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
 
   if (!visMenypanel) return null;
 
-  const visArbeidsforholdRolleEtiketter = behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const visArbeidsforholdRolleEtiketter =
+    behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
   const defaultLinkGroups: LinkGroup[] = [
     {
       label: hentLinkGroupLabels(behandlingstema)[0],
       links: [
         {
-          label: 'Person',
+          label: "Person",
           active: false,
-          content: <Person
-            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-            redigerbart={redigerbart}
-          />,
+          content: (
+            <Person
+              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+              redigerbart={redigerbart}
+            />
+          ),
         },
         {
-          label: 'Familieforhold',
+          label: "Familieforhold",
           active: false,
-          content: <Familieforhold
-            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-            redigerbart={redigerbart}
-            setMenypanelFeilmelding={setMenypanelFeilmelding}
-          />,
+          content: (
+            <Familieforhold
+              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+              redigerbart={redigerbart}
+              setMenypanelFeilmelding={setMenypanelFeilmelding}
+            />
+          ),
         },
       ],
     },
@@ -131,17 +137,17 @@ export const Menypanel = ({
       label: hentLinkGroupLabels(behandlingstema)[1],
       links: [
         {
-          label: 'Medlemskap',
+          label: "Medlemskap",
           active: false,
           content: <Medlemskap />,
         },
         {
-          label: 'EU/EØS-barnetrygd',
+          label: "EU/EØS-barnetrygd",
           active: false,
           content: <Barnetrygd />,
         },
         {
-          label: 'Arbeidsforhold og inntekt',
+          label: "Arbeidsforhold og inntekt",
           active: false,
           content: <ArbeidsforholdOgInntekt />,
         },
@@ -151,29 +157,37 @@ export const Menypanel = ({
       label: hentLinkGroupLabels(behandlingstema)[2],
       links: [
         {
-          label: 'Arbeidsgiver/virksomhet',
+          label: "Arbeidsgiver/virksomhet",
           active: false,
-          content: <ArbeidsgiverOgVirksomhet
-            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-            redigerbart={redigerbart}
-          />,
+          content: (
+            <ArbeidsgiverOgVirksomhet
+              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+              redigerbart={redigerbart}
+            />
+          ),
         },
         {
-          label: 'Fullmektig',
+          label: "Fullmektig",
           active: false,
-          content: <Fullmektig
-            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-            redigerbart={redigerbart}
-          />,
+          content: (
+            <Fullmektig
+              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+              redigerbart={redigerbart}
+            />
+          ),
         },
         {
-          label: 'Periode',
+          label: "Periode",
           active: false,
-          content: <Periode
-            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-            redigerbart={redigerbart}
-            lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-          />,
+          content: (
+            <Periode
+              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+              redigerbart={redigerbart}
+              lagreSoknadOgOppfriskSaksopplysninger={
+                lagreSoknadOgOppfriskSaksopplysninger
+              }
+            />
+          ),
           /**
            * TODO: Vises nå for alle grunnlagtyper, men når "Utenlandsoppdraget"-menypunkt er klart,
            * så skal denne vises bare for papirsøknad.
@@ -194,12 +208,14 @@ export const Menypanel = ({
         //   renderForBehandlingsgrunnlagtyper: [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS],
         // },
         {
-          label: 'Arbeidssted(er)',
+          label: "Arbeidssted(er)",
           active: false,
-          content: <Arbeidssteder
-            visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-            redigerbart={redigerbart}
-          />,
+          content: (
+            <Arbeidssteder
+              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+              redigerbart={redigerbart}
+            />
+          ),
         },
         // {
         //   label: 'Om virksomheten i Norge',
@@ -219,60 +235,65 @@ export const Menypanel = ({
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
     setActive([groupIndex, linkIndex]);
-    setMenypanelFeilmelding('');
+    setMenypanelFeilmelding("");
   };
 
   const filteredLinkGroups = defaultLinkGroups
-    .map(linkGroup => ({
+    .map((linkGroup) => ({
       label: linkGroup.label,
       links: linkGroup.links
         // Filtrer menypunkter oppgitt i props
-        .filter(link => menypunkter.includes(link.label))
+        .filter((link) => menypunkter.includes(link.label))
         // Filtrer på behandlingsgrunnlagtype, (for å kunne skille mellom papir- og elektronisk søknad)
-        .filter(link => {
-          if (!link.renderForBehandlingsgrunnlagtyper || link.renderForBehandlingsgrunnlagtyper.length === 0) {
+        .filter((link) => {
+          if (
+            !link.renderForBehandlingsgrunnlagtyper ||
+            link.renderForBehandlingsgrunnlagtyper.length === 0
+          ) {
             return true;
           }
 
-          return link.renderForBehandlingsgrunnlagtyper.includes(behandlingsgrunnlagtype);
+          return link.renderForBehandlingsgrunnlagtyper.includes(
+            behandlingsgrunnlagtype
+          );
         }),
     }))
     // Filtrer bort linkgroups med ingen linker/menypunkter
-    .filter(linkGroup => linkGroup.links.length > 0);
+    .filter((linkGroup) => linkGroup.links.length > 0);
 
-  const activeContent = filteredLinkGroups.length !== 0 ?
-    filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content
-    :
-    null;
+  const activeContent =
+    filteredLinkGroups.length !== 0
+      ? filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content
+      : null;
 
-  const linkGroups = filteredLinkGroups
-    .map((linkGroup, groupIndex) => ({
-      label: linkGroup.label,
-      links: linkGroup.links
-        .map((link, linkIndex) => (
-          {
-            label: link.label,
-            active: groupIndex === activeGroupIndex && linkIndex === activeLinkIndex,
-          }
-        )),
-    }));
+  const linkGroups = filteredLinkGroups.map((linkGroup, groupIndex) => ({
+    label: linkGroup.label,
+    links: linkGroup.links.map((link, linkIndex) => ({
+      label: link.label,
+      active: groupIndex === activeGroupIndex && linkIndex === activeLinkIndex,
+    })),
+  }));
 
   return (
     <>
-      { menypanelFeilmelding &&
-      <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
-        {menypanelFeilmelding}
-        <Nav.Xknapp form="kompakt" onClick={() => { setMenypanelFeilmelding(''); }} />
-      </Nav.AlertStripe> }
+      {menypanelFeilmelding && (
+        <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
+          {menypanelFeilmelding}
+          <Nav.Xknapp
+            form="kompakt"
+            onClick={() => {
+              setMenypanelFeilmelding("");
+            }}
+          />
+        </Nav.AlertStripe>
+      )}
       <div className="menypanel">
         <Sidemeny
           heading="Opplysninger"
           linkGroups={linkGroups}
           onClick={handleClick}
         />
-        <Nav.Panel className="content">
-          { activeContent }
-        </Nav.Panel>
+        <Nav.Panel className="content">{activeContent}</Nav.Panel>
       </div>
     </>
   );

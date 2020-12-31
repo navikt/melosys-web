@@ -1,18 +1,11 @@
-import React, { ComponentProps } from 'react';
-import { mock, instance } from 'ts-mockito';
-import { shallow } from 'enzyme';
+import React, { ComponentProps } from "react";
+import { mock, instance } from "ts-mockito";
+import { shallow } from "enzyme";
 
-import MKV from '../../melosyskodeverk';
+import { Menypanel } from "./menypanel";
+import Sidemeny from "../sidemeny";
 
-import { Menypanel } from './menypanel';
-import Sidemeny from '../sidemeny';
-
-const {
-  SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-  SØKNAD_A1_YRKESAKTIVE_EØS,
-} = MKV.Koder.behandlingsgrunnlagtyper;
-
-describe('MenyPanel', () => {
+describe("MenyPanel", () => {
   const mockedProps = mock<ComponentProps<typeof Menypanel>>();
   let props = instance(mockedProps);
 
@@ -21,23 +14,20 @@ describe('MenyPanel', () => {
     props.visMenypanel = true;
   });
 
-  it('Viser bare oppgitte menypunkter', () => {
-    props.menypunkter = [
-      'Person',
-      'Arbeidssted(er)',
-    ];
+  it("Viser bare oppgitte menypunkter", () => {
+    props.menypunkter = ["Person", "Arbeidssted(er)"];
     const menypanel = shallow(<Menypanel {...props} />);
     const sidemeny = menypanel.find(Sidemeny);
 
     const sidemenyLinkGroups = sidemeny.props().linkGroups;
     expect(sidemenyLinkGroups[0].links).toHaveLength(1);
-    expect(sidemenyLinkGroups[0].links[0].label).toBe('Person');
+    expect(sidemenyLinkGroups[0].links[0].label).toBe("Person");
 
     expect(sidemenyLinkGroups[1].links).toHaveLength(1);
-    expect(sidemenyLinkGroups[1].links[0].label).toBe('Arbeidssted(er)');
+    expect(sidemenyLinkGroups[1].links[0].label).toBe("Arbeidssted(er)");
   });
 
-  it('Viser ikke linkgrupper med ingen linker/menypunkter', () => {
+  it("Viser ikke linkgrupper med ingen linker/menypunkter", () => {
     props.menypunkter = [];
     const menypanel = shallow(<Menypanel {...props} />);
     const sidemeny = menypanel.find(Sidemeny);
