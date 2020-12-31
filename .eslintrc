@@ -1,7 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
   "rules": {
-    "indent": ["error", 2, { "SwitchCase": 1 }],
     "space-before-function-paren": "off",
     "no-underscore-dangle": "off",
     "camelcase": "off",
@@ -12,20 +11,28 @@
     "react/jsx-wrap-multilines": "off",
     "react/jsx-closing-bracket-location": "off",
     "react/jsx-indent": "off",
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "never"
-    }],
-    "max-len": ["error", 200, 4],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+      }
+    ],
     "no-return-assign": ["error", "except-parens"],
     "wrap-iife": "off",
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [2, {"varsIgnorePattern": "_", "argsIgnorePattern": "_"}],
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }
+    ],
     "react/jsx-filename-extension": [0],
-    "arrow-parens": ["error", "as-needed"],
     // Tillat import av ts-filer uten å spesifisere extension(.ts, .tsx)
     "import/extensions": [
       "error",
@@ -40,7 +47,10 @@
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
-    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api"] }],
+    "import/no-unresolved": [
+      2,
+      { "ignore": ["AppTypes", "Domene", "melosys-api"] }
+    ],
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
     "jsx-a11y/aria-role": 2,
@@ -48,13 +58,16 @@
     "jsx-a11y/href-no-hash": [0],
     "jsx-a11y/alt-text": 2,
     "jsx-a11y/img-redundant-alt": 2,
-    "jsx-a11y/label-has-for": [ 2, {
-      "components": [ "Label" ],
-      "required": {
-        "every": [ "nesting", "id" ]
-      },
-      "allowChildren": true
-    }],
+    "jsx-a11y/label-has-for": [
+      2,
+      {
+        "components": ["Label"],
+        "required": {
+          "every": ["nesting", "id"]
+        },
+        "allowChildren": true
+      }
+    ],
     "jsx-a11y/mouse-events-have-key-events": 2,
     "jsx-a11y/no-onchange": 2,
     "jsx-a11y/interactive-supports-focus": 2,
@@ -63,13 +76,16 @@
     "jsx-a11y/role-has-required-aria-props": 2,
     "jsx-a11y/role-supports-aria-props": 2,
     "jsx-a11y/tabindex-no-positive": 2,
-    "jsx-a11y/no-noninteractive-tabindex" : "off",
-    "jsx-a11y/anchor-is-valid": [ "error", {
-      "components": [ "Link" ],
-      "specialLink": [ "to" ]
-    }],
+    "jsx-a11y/no-noninteractive-tabindex": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["to"]
+      }
+    ],
     "linebreak-style": "off",
-    "no-bitwise": [ "error", {"allow" : ["^"]} ],
+    "no-bitwise": ["error", { "allow": ["^"] }],
     "no-extra-semi": "off",
     "@typescript-eslint/no-extra-semi": ["error"],
     // Støtt typescript reference, hvor det trengs tre slash(///)
@@ -77,12 +93,15 @@
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"]
   },
-  "extends": ["react-app","airbnb", "plugin:@typescript-eslint/eslint-recommended"],
-  "plugins": [
-    "jsx-a11y",
-    "jest",
-    "@typescript-eslint"
+  "extends": [
+    "react-app",
+    "airbnb",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "prettier",
+    "prettier/@typescript-eslint",
+    "prettier/react"
   ],
+  "plugins": ["jsx-a11y", "jest", "@typescript-eslint"],
   "env": {
     "browser": true,
     "jest/globals": true
