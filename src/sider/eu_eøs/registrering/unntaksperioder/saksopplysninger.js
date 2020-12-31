@@ -54,6 +54,7 @@ const Saksopplysninger = ({
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = React.useState('');
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
+  const [registreringPending, setRegistreringPending] = React.useState(false);
 
   const { params: { snr: saksnummer } } = match;
   React.useEffect(() => {
@@ -224,16 +225,24 @@ const Saksopplysninger = ({
       }
     }
 
+    setRegistreringPending(true);
+
     switch (unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
         godkjenn()
           .then(tilForsiden)
-          .catch(Utils.logger.error);
+          .catch(e => {
+            setRegistreringPending(false);
+            Utils.logger.error(e);
+          });
         return true;
       case KV.Koder.Unntaksperiode.DELVIS_GODKJENT:
         delvisGodkjenn()
           .then(tilForsiden)
-          .catch(Utils.logger.error);
+          .catch(e => {
+            setRegistreringPending(false);
+            Utils.logger.error(e);
+          });
         return true;
       case KV.Koder.Unntaksperiode.AVSLAG: {
         const ikkegodkjenn = {
@@ -242,7 +251,10 @@ const Saksopplysninger = ({
         };
         Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
           .then(tilForsiden)
-          .catch(Utils.logger.error);
+          .catch(e => {
+            setRegistreringPending(false);
+            Utils.logger.error(e);
+          });
         return true;
       }
       default:
@@ -364,7 +376,7 @@ const Saksopplysninger = ({
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
+                  <Nav.Hovedknapp spinner={registreringPending} autoDisableVedSpinner onClick={() => submitRegistrering()} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
                 </Nav.Column>
               </Nav.Row>
             </div>

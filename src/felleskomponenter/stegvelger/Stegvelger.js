@@ -225,14 +225,15 @@ class Stegvelger extends Component {
       revurderBegrunnelse: data.revurderBegrunnelse || null,
     };
 
-    fattVedtak(behandlingID, vedtakBody);
+    return fattVedtak(behandlingID, vedtakBody);
   };
 
-  lagreOgFatteVedtak = data => {
-    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+  lagreOgFatteVedtak = async data => {
+    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
       await this.props.lagreAllData();
-      this.fatteVedtakHandler(data);
-    });
+      return this.fatteVedtakHandler(data);
+    }
+    return Promise.resolve();
   };
 
   utpekHandler = data => {
@@ -244,36 +245,39 @@ class Stegvelger extends Component {
       fritekstBrev: data.fritekstBrev || null,
     };
 
-    utpek(saksnummer, utpekBody);
+    return utpek(saksnummer, utpekBody);
   };
 
-  lagreOgUtpek = data => {
-    this.sjekkOgVisBehandlingsgrunnlagFeilmeldinger(async () => {
+  lagreOgUtpek = async data => {
+    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
       await this.props.lagreAllData();
-      this.utpekHandler(data);
-    });
+      return this.utpekHandler(data);
+    }
+    return Promise.resolve();
   };
 
   avvisUtpekingHandler = data => {
     const { avvisUtpeking } = this.props;
 
-    avvisUtpeking(data);
+    return avvisUtpeking(data);
   };
 
-  avvisUtpeking = data => {
-    this.sjekkOgVisBehandlingsgrunnlagFeilmeldinger(async () => {
+  avvisUtpeking = async data => {
+    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
       await this.props.lagreAllData();
-      this.avvisUtpekingHandler(data);
-    });
+      return this.avvisUtpekingHandler(data);
+    }
+    return Promise.resolve();
   };
 
-  lagreOgBestillAnmodningsperioder = bestilling => {
+  lagreOgBestillAnmodningsperioder = async bestilling => {
     const { behandlingID, lagreAllData, bestillAnmodningsperioder } = this.props;
 
-    this.sjekkOgVisBehandlingsgrunnlagFeilmeldinger(async () => {
+    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
       await lagreAllData();
-      bestillAnmodningsperioder(behandlingID, bestilling);
-    });
+      return bestillAnmodningsperioder(behandlingID, bestilling);
+    }
+    return Promise.resolve();
   };
 
   godkjennUnntaksperioder = async data => {
@@ -290,35 +294,38 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgGodkjennUnntaksperioder = data => {
-    this.sjekkOgVisBehandlingsgrunnlagFeilmeldinger(async () => {
+  lagreOgGodkjennUnntaksperioder = async data => {
+    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
       await this.props.lagreAllData();
-      this.godkjennUnntaksperioder(data);
-    });
+      return this.godkjennUnntaksperioder(data);
+    }
+    return Promise.resolve();
   };
 
-  videresendSoknad = (mottakerinstitusjon, fritekst) => {
-    this.sjekkOgVisBehandlingsgrunnlagFeilmeldinger(async () => {
-      const {
-        saksnummer,
-        videresend,
-        lagreAllData,
-      } = this.props;
+  videresendSoknad = async (mottakerinstitusjon, fritekst) => {
+    const {
+      saksnummer,
+      videresend,
+      lagreAllData,
+    } = this.props;
 
+    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
       const body = { mottakerinstitusjon, fritekst };
 
       await lagreAllData();
-      videresend(saksnummer, body);
-    });
+      return videresend(saksnummer, body);
+    }
+    return Promise.resolve();
   };
 
-  sjekkOgVisSoknadFeilmeldinger = ingenFeilmeldingerCallback => {
-    if (this.harSoknadFeilmeldinger()) {
-      this.visSoknadFeilmeldinger();
-    } else {
-      this.gjemSoknadFeilmeldinger();
-      if (ingenFeilmeldingerCallback) ingenFeilmeldingerCallback();
+  validerOgVisBehandlingsgrunnlagFeilmeldinger = () => {
+    if (this.harBehandlingsgrunnlagFeilmeldinger()) {
+      this.visBehandlingsgrunnlagFeilmeldinger();
+      return false;
     }
+
+    this.gjemBehandlingsgrunnlagFeilmeldinger();
+    return true;
   };
 
   byggLovvalgsperioderHandler = () => {
@@ -352,7 +359,7 @@ class Stegvelger extends Component {
       fritekstSed: data.fritekstSed || null,
     };
 
-    return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);
+    return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData);
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -455,9 +462,9 @@ class Stegvelger extends Component {
   };
 
   validerSoknadOgGaTilSteg = nyttStegNummer => {
-    this.sjekkOgVisBehandlingsgrunnlagFeilmeldinger(() => {
+    if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
       this.tilSteg(nyttStegNummer);
-    });
+    }
   };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -8,6 +8,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Skjema from '../../skjema';
+import * as Hooks from '../../../hooks';
 
 import Begrunnelser from '../../begrunnelser';
 import PdfLenkeListe from '../../pdfLenkeListe';
@@ -274,6 +275,9 @@ export const VurderingArtikkel16Vedtak = ({
   touch,
   harValgtNorskArbeidsgiver,
 }) => {
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
   const validerForm = () => {
@@ -282,16 +286,23 @@ export const VurderingArtikkel16Vedtak = ({
     return formIsValid;
   };
 
-  const vedKlikk = () => {
+  const vedKlikk = async () => {
     if (!validerForm()) return;
 
-    lagreOgFatteVedtak({
+    setVedtakPending(true);
+
+    await lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
       mottakerinstitusjoner: null,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
+
+    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
   };
 
   const renderBegrunnelser = useCallback(() => (
@@ -372,7 +383,7 @@ export const VurderingArtikkel16Vedtak = ({
               className="vedtakstype"
             />
           }
-          <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
+          <Nav.Hovedknapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
         </Nav.Column>
       </Nav.Row>
     </Fragment>

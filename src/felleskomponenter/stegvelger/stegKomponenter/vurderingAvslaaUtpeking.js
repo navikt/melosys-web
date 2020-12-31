@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector, isValid } from 'redux-form';
@@ -8,6 +8,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../../felleskomponenter/skjema';
 import * as KV from '../../../kodeverk';
 import * as Mui from '../../../felleskomponenter/ui';
+import * as Hooks from '../../../hooks';
 
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
@@ -27,6 +28,9 @@ export const VurderingAvslaaUtpeking = ({
   touchAll,
   formIsValid,
 }) => {
+  const [avslagPending, setAvslagPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis SED A004',
@@ -50,8 +54,26 @@ export const VurderingAvslaaUtpeking = ({
     return formIsValid;
   };
 
+  const avsluttOgSendSed = async (values, dispatch, props) => {
+    setAvslagPending(true);
+
+    const body = {
+      fritekst: values.fritekst || null,
+      nyttLovvalgsland: values.nyttLovvalgsland || null,
+      begrunnelseUtenlandskMyndighet: values.begrunnelseUtenlandskMyndighet,
+      vilSendeAnmodningOmMerInformasjon: values.vilSendeAnmodningOmMerInformasjon,
+    };
+
+    await props.avvisUtpeking(body);
+
+    // avvis-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setAvslagPending(false);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(avsluttOgSendSed)}>
       <Nav.typo.Undertittel className="stegTittel">Avvis utpeking — informasjon til SED</Nav.typo.Undertittel>
       {
         redigerbart &&
@@ -82,7 +104,7 @@ export const VurderingAvslaaUtpeking = ({
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
         </Fragment>
       }
-      <Mui.Knapp mini disabled={!redigerbart} htmlType="submit" type="hoved">AVSLUTT OG SEND SED</Mui.Knapp>
+      <Mui.Knapp mini spinner={avslagPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit" type="hoved">AVSLUTT OG SEND SED</Mui.Knapp>
     </form>
   );
 };
@@ -122,19 +144,7 @@ const mapDispatchToProps = dispatch => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.AVSLAA_UTPEKING)),
 });
 
-const avsluttOgSendSed = (values, dispatch, props) => {
-  const body = {
-    fritekst: values.fritekst || null,
-    nyttLovvalgsland: values.nyttLovvalgsland || null,
-    begrunnelseUtenlandskMyndighet: values.begrunnelseUtenlandskMyndighet,
-    vilSendeAnmodningOmMerInformasjon: values.vilSendeAnmodningOmMerInformasjon,
-  };
-
-  props.avvisUtpeking(body);
-};
-
 const VurderingAvslaaUtpekingForm = reduxForm({
-  onSubmit: avsluttOgSendSed,
   form: KV.Form.AVSLAA_UTPEKING,
   enableReinitialize: true,
   destroyOnUnmount: true,

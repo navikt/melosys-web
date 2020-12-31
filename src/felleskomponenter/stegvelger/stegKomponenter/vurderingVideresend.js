@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getFormValues, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
@@ -9,6 +9,7 @@ import MKV from '../../../melosyskodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
+import * as Hooks from '../../../hooks';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
@@ -45,9 +46,23 @@ export const VurderingVideresend = ({
     },
   ];
 
+  const [videresendPending, setVideresendPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
+  const videresendSoknad = async (values, dispatch, props) => {
+    setVideresendPending(true);
+
+    await props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst);
+
+    // Videresend-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setVideresendPending(false);
+    }
+  };
+
   return (
     <div className="videresendSoknad">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(videresendSoknad)}>
         <Nav.typo.Undertittel>Videresending av søknad</Nav.typo.Undertittel>
         <Nav.Row>
           <Nav.Column xs="8">
@@ -84,7 +99,7 @@ export const VurderingVideresend = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp disabled={!redigerbart} htmlType="submit">
+            <Nav.Hovedknapp spinner={videresendPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit">
               VIDERESEND SØKNAD
             </Nav.Hovedknapp>
           </Nav.Column>
@@ -112,10 +127,7 @@ VurderingVideresend.defaultProps = {
   formValues: {},
 };
 
-const videresendSoknad = (values, dispatch, props) => props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst);
-
 const VurderingVideresendForm = reduxForm({
-  onSubmit: videresendSoknad,
   form: KV.Form.VURDERING_VIDERESEND,
   enableReinitialize: true,
   destroyOnUnmount: true,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { getFormValues, isValid, reduxForm } from 'redux-form';
 import PT from 'prop-types';
@@ -11,12 +11,12 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
+import * as Hooks from '../../../hooks';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
-import { vedtakSelectors } from '../../../ducks/vedtak';
 import { flytSelectors } from '../../../ducks/flyt';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
@@ -60,11 +60,13 @@ const VurderingVedtak = ({
   formIsValid,
   formValues,
   form,
-  vedtakLastes,
   visAntallManederUtland,
   pdfDokumenter,
   erArtikkel11_4,
 }) => {
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
@@ -77,7 +79,6 @@ const VurderingVedtak = ({
   const lovvalgSomTerm = finnLovvalgSomTerm(lovvalgSomKodeTerm, tilleggBestemmelseSomKodeTerm);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const erSoknadEllerNyVurdering = MKVUtils.erSoknad(behandlingstema) || erNyVurdering;
-  const fattVedtakDisabled = !redigerbart;
   const bucType = erArtikkel11_4 ? EKV.Koder.buctyper.legislation.LA_BUC_05 : EKV.Koder.buctyper.legislation.LA_BUC_04;
 
   const validerForm = () => {
@@ -88,10 +89,12 @@ const VurderingVedtak = ({
     return formIsValid;
   };
 
-  const fattVedtak = () => {
+  const fattVedtak = async () => {
     if (!validerForm()) return;
 
-    lagreOgFatteVedtak({
+    setVedtakPending(true);
+
+    await lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
       fritekstSed: formValues.fritekstSed,
@@ -99,6 +102,11 @@ const VurderingVedtak = ({
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
+
+    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
   };
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
@@ -171,7 +179,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp spinner={vedtakLastes} disabled={fattVedtakDisabled} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
+            <Nav.Hovedknapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} onClick={fattVedtak}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -193,7 +201,6 @@ VurderingVedtak.propTypes = {
   formValues: PT.object,
   touch: PT.func.isRequired,
   form: PT.string.isRequired,
-  vedtakLastes: PT.bool.isRequired,
   visAntallManederUtland: PT.bool,
   pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
   erArtikkel11_4: PT.bool.isRequired,
@@ -214,7 +221,6 @@ const mapStateToProps = state => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
-  vedtakLastes: vedtakSelectors.ErPendingSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state),
   erArtikkel11_4: flytSelectors.ErIArtikkel11_4Selector(state),

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -12,6 +12,7 @@ import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 import * as Mui from '../../ui';
+import * as Hooks from '../../../hooks';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
@@ -107,6 +108,9 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   soknadsperiode,
   informertMyndighetFakta,
 }) => {
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelseSomSkalLagres));
@@ -197,8 +201,36 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
 
   const skalSendeSed = sjekkSkalSendeSed(formValues);
 
+  const fattVedtak = async (values, dispatch, props) => {
+    setVedtakPending(true);
+
+    if (values.forkortLovvalgsperiode) {
+      await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
+    }
+
+    let mottakerinstitusjoner = null;
+    if (art11_5_ErValgt(values)) {
+      mottakerinstitusjoner = values.mottakerLand ? [values.mottakerinstitusjon] : [];
+    } else if (art11_3B_ErValgt(values)) {
+      mottakerinstitusjoner = values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id);
+    }
+
+    await props.lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: values.vedtaksbrevFritekst,
+      mottakerinstitusjoner,
+      vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: values.vedtakstypebegrunnelse,
+    });
+
+    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="vurderingArbeidEttLandOvrigVedtak">
+    <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArbeidEttLandOvrigVedtak">
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
@@ -329,7 +361,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
-      <Mui.Knapp disabled={!redigerbart} htmlType="submit" type="hoved">FATT VEDTAK</Mui.Knapp>
+      <Mui.Knapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit" type="hoved">FATT VEDTAK</Mui.Knapp>
     </form>
   );
 };
@@ -413,29 +445,7 @@ const mapDispatchToProps = dispatch => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK)),
 });
 
-const fattVedtak = async (values, dispatch, props) => {
-  if (values.forkortLovvalgsperiode) {
-    await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
-  }
-
-  let mottakerinstitusjoner = null;
-  if (art11_5_ErValgt(values)) {
-    mottakerinstitusjoner = values.mottakerLand ? [values.mottakerinstitusjon] : [];
-  } else if (art11_3B_ErValgt(values)) {
-    mottakerinstitusjoner = values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id);
-  }
-
-  props.lagreOgFatteVedtak({
-    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-    fritekst: values.vedtaksbrevFritekst,
-    mottakerinstitusjoner,
-    vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    revurderBegrunnelse: values.vedtakstypebegrunnelse,
-  });
-};
-
 const VurderingArbeidEttLandOvrigVedtakForm = reduxForm({
-  onSubmit: fattVedtak,
   form: KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,

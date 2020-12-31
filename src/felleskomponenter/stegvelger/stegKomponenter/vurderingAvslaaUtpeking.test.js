@@ -57,11 +57,4 @@ describe('VurderingAvslaaUtpeking', () => {
 
     expect(avsluttKnapp).toHaveLength(1);
   });
-
-  it('viser en form som tar handleSubmit som onSubmit-prop', () => {
-    const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
-    const form = vurderingAvslaaUtpeking.find('form');
-
-    expect(form.props().onSubmit).toBe(props.handleSubmit);
-  });
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -7,6 +7,7 @@ import MKV from '../../../melosyskodeverk';
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
+import * as Hooks from '../../../hooks';
 import * as VilkarSelectors from '../../../ducks/vilkar/selectors';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
@@ -31,6 +32,9 @@ const VurderingAvslag12_x_og_16 = ({
   formIsValid,
   formValues,
 }) => {
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const pdfDokumenter = [
@@ -67,16 +71,23 @@ const VurderingAvslag12_x_og_16 = ({
     return formIsValid;
   };
 
-  const avslaa = () => {
+  const avslaa = async () => {
     if (!validerForm()) return;
 
-    lagreOgFatteVedtak({
+    setVedtakPending(true);
+
+    await lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
       mottakerinstitusjoner: null,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
+
+    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
   };
 
   return (
@@ -129,7 +140,7 @@ const VurderingAvslag12_x_og_16 = ({
         <Skjema.Vedtakstype redigerbart={redigerbart} />
       }
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-      <Nav.Hovedknapp disabled={!redigerbart} onClick={avslaa}>
+      <Nav.Hovedknapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} onClick={avslaa}>
         Fatt vedtak
       </Nav.Hovedknapp>
     </div>

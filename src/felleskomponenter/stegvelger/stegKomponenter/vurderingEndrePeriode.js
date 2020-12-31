@@ -31,6 +31,8 @@ export class VurderingEndrePeriode extends React.Component {
     begrunnelseFeilmelding: undefined,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
     fritekstSed: '',
+    vedtakFeilmelding: null,
+    endringPending: false,
   };
 
   componentDidMount() {
@@ -112,11 +114,15 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   vedKlikkEndrePeriode = async () => {
+    this.setState({ vedtakFeilmelding: null });
+
     const { endreVedtak, tilForsiden } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
     const { begrunnelse, fritekstSed } = this.state;
 
     if (validerAlt()) {
+      this.setState({ endringPending: true });
+
       await sendEndretLovvalgsPeriode();
 
       const data = {
@@ -124,8 +130,14 @@ export class VurderingEndrePeriode extends React.Component {
         fritekst: null,
         fritekstSed,
       };
-      await endreVedtak(data);
-      tilForsiden();
+
+      try {
+        await endreVedtak(data);
+        tilForsiden();
+      } catch (e) {
+        this.setState({ endringPending: false });
+        this.setState({ vedtakFeilmelding: e.body.message });
+      }
     }
   };
 
@@ -165,6 +177,8 @@ export class VurderingEndrePeriode extends React.Component {
       begrunnelseFeilmelding,
       opprinneligLovvalgsperiode: { fom, tom },
       fritekstSed,
+      vedtakFeilmelding,
+      endringPending,
     } = this.state;
 
     const endretPeriodeBegrunnelse = begrunnelse;
@@ -262,7 +276,11 @@ export class VurderingEndrePeriode extends React.Component {
           </Nav.Row>
         }
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
-        <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
+        {
+          vedtakFeilmelding &&
+          <div className="skjemaelement__feilmelding vedtakfeilmelding">{vedtakFeilmelding}</div>
+        }
+        <Nav.Hovedknapp spinner={endringPending} autoDisableVedSpinner disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
     );
   }
