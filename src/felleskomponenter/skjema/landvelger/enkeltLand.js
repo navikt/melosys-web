@@ -17,16 +17,28 @@ export class EnkeltLand extends Component {
   };
 
   componentDidMount = () => {
-    const { value } = this.props.input;
-    const { landkoder } = this.props;
-    const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
-    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : '';
+    const inputVerdi = this.lagInputVerdi();
     this.setInputVerdi(inputVerdi);
   };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.input.value !== this.props.input.value) {
+      const inputVerdi = this.lagInputVerdi();
+      this.setInputVerdi(inputVerdi);
+    }
+  }
 
   setInputVerdi = verdi => {
     this.setState({ inputVerdi: verdi });
   };
+
+  lagInputVerdi = () => {
+    const { value } = this.props.input;
+    const { landkoder } = this.props;
+    const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
+    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : '';
+    return inputVerdi;
+  }
 
   reduxOppdaterLand = landkode => {
     if (!landkode) {

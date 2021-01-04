@@ -63,6 +63,29 @@ function EnRedigeringsKnappListe<T>({
 
   const elementer = fields.getAll();
 
+  const ingenDataRender = IngenDataKomponent ?
+    (apneRedigering: () => void) => (
+      <>
+        <div className="ingen__data__container">
+          <IngenDataKomponent />
+        </div>
+        {
+          redigerbart &&
+          <Mui.Knappelenke
+            onClick={() => {
+              apneRedigering();
+              leggTil();
+            }}
+            ikon={Ikoner.Add}
+          >
+            {leggTilTekst}
+          </Mui.Knappelenke>
+        }
+      </>
+    )
+    :
+    undefined;
+
   return (
     <EditerbartElement
       className="en__redigeringsknapp__liste"
@@ -114,28 +137,7 @@ function EnRedigeringsKnappListe<T>({
       redigeringUtfortRender={() => <RedigeringUtfortKomponent
         verdier={elementer}
       />}
-      ingenDataRender={apneRedigering => (
-        <>
-          {
-            IngenDataKomponent &&
-            <div className="ingen__data__container">
-              <IngenDataKomponent />
-            </div>
-          }
-          {
-            redigerbart &&
-            <Mui.Knappelenke
-              onClick={() => {
-                apneRedigering();
-                leggTil();
-              }}
-              ikon={Ikoner.Add}
-            >
-              {leggTilTekst}
-            </Mui.Knappelenke>
-          }
-        </>
-      )}
+      ingenDataRender={ingenDataRender}
     />
   );
 }

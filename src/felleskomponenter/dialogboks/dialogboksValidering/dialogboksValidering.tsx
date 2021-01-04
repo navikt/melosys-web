@@ -5,7 +5,6 @@ import { KTObject } from '@navikt/melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
-import * as Hooks from '../../../hooks';
 
 import MKV from '../../../melosyskodeverk';
 
@@ -103,28 +102,12 @@ export const Valideringsfeil = ({
 }: {
   validering: Validering
 }) => {
-  const [sidemenyToggle] = Hooks.useFeatureToggle('melosys.sidemeny');
-
-  if (sidemenyToggle === 'fetching') return null;
-
   const felter = validering.felter.map(felt => {
-    let menypunkt: string | null = null;
-    let entryNr: number | null = null;
-    let feltNavn: string | null = null;
-
-    if (sidemenyToggle === 'enabled') {
-      ({
-        menypunkt,
-        entryNr,
-        felt: feltNavn,
-      } = mapBehandlingsgrunnlagpathTilMenypunkt(felt));
-    } else if (sidemenyToggle === 'disabled') {
-      ({
-        panel: menypunkt,
-        panelEntryNr: entryNr,
-        felt: feltNavn,
-      } = Utils.mapping.mapBehandlingsgrunnlagpathTilGUI(felt));
-    }
+    const {
+      menypunkt,
+      entryNr,
+      felt: feltNavn,
+    } = mapBehandlingsgrunnlagpathTilMenypunkt(felt);
 
     const key = `${menypunkt}${entryNr}${feltNavn}`;
     const tekst = menypunkt && feltNavn ? `${menypunkt} - ${feltNavn}` : null;

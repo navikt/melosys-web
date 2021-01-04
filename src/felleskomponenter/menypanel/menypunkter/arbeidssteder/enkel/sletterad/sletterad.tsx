@@ -16,7 +16,7 @@ const Sletterad = ({
     <Mui.Knappelenke
       onClick={onClick}
       title="Slett"
-      ikon={Ikoner.Bin_Large}
+      ikon={Ikoner.Bin}
       className="slett__knapp"
     >
       Slett seksjon
