@@ -9,9 +9,6 @@ import {
 import MKV from '../../melosyskodeverk';
 
 const AVGIFTSGRUNNLAG_FEIL = { melding: 'Avgiftsgrunnlag er ikke gyldig' };
-const LØNNSFORHOLD_FEIL = { melding: 'Lønnsforhold er ikke gyldig' };
-const TRYGDEAVGIFTSGRUNNLAGNORGE_FEIL = { melding: 'TrygdeavgiftsgrunnlagNorge er ikke gyldig' };
-const TRYGDEAVGIFTSGRUNNLAGUTLAND_FEIL = { melding: 'TrygdeavgiftsgrunnlagUtland er ikke gyldig' };
 const AVGIFTSBEREGNING_FEIL = { melding: 'Avgiftsberegning er ikke beregnet' };
 
 function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag) {
@@ -19,20 +16,6 @@ function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag) {
     && (trygdeavgiftsgrunnlag.erSkattepliktig || trygdeavgiftsgrunnlag.erSkattepliktig === false)
     && (trygdeavgiftsgrunnlag.betalerArbeidsgiverAvgift || trygdeavgiftsgrunnlag.betalerArbeidsgiverAvgift === false)
     && (trygdeavgiftsgrunnlag.særligAvgiftsgruppe === null || (!!trygdeavgiftsgrunnlag.særligAvgiftsgruppe && trygdeavgiftsgrunnlag.særligAvgiftsgruppe !== 'TRUE')));
-}
-
-function sjekkOmTrygdeavgiftsgrunnlagNorgeErUgyldig(avgiftsgrunnlag) {
-  if (!avgiftsgrunnlag) return true;
-  return !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge);
-}
-
-function sjekkOmTrygdeavgiftsgrunnlagUtlandErUgyldig(avgiftsgrunnlag) {
-  if (!avgiftsgrunnlag) return true;
-  return !erTrygdeavgiftsgrunnlagGyldig(avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland);
-}
-
-function sjekkOmLønnsforholdErUgyldig(avgiftsgrunnlag) {
-  return (!avgiftsgrunnlag || !avgiftsgrunnlag.lønnsforhold);
 }
 
 function sjekkOmAvgiftsgrunnlagErUgyldig(avgiftsgrunnlag) {
@@ -123,24 +106,6 @@ const vurdering_trygdeavgift = object().shape({
       is: sjekkOmAvgiftsgrunnlagErUgyldig,
       then: string()
         .required(AVGIFTSGRUNNLAG_FEIL),
-    }),
-  erLønnsforholdUgyldig: string()
-    .when('avgiftsgrunnlag', {
-      is: sjekkOmLønnsforholdErUgyldig,
-      then: string()
-        .required(LØNNSFORHOLD_FEIL),
-    }),
-  erTrygdeavgiftsgrunnlagNorgeUgyldig: string()
-    .when('avgiftsgrunnlag', {
-      is: sjekkOmTrygdeavgiftsgrunnlagNorgeErUgyldig,
-      then: string()
-        .required(TRYGDEAVGIFTSGRUNNLAGNORGE_FEIL),
-    }),
-  erTrygdeavgiftsgrunnlagUtlandUgyldig: string()
-    .when('avgiftsgrunnlag', {
-      is: sjekkOmTrygdeavgiftsgrunnlagUtlandErUgyldig,
-      then: string()
-        .required(TRYGDEAVGIFTSGRUNNLAGUTLAND_FEIL),
     }),
   erAvgiftsberegningBeregnet: string()
     .when(['avgiftsgrunnlag', 'avgiftsberegning'], {
