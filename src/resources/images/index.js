@@ -3,8 +3,7 @@ import { ReactComponent as Add } from './add.svg';
 import { ReactComponent as AddOne } from './line-version-add-1.svg';
 import { ReactComponent as Arbeidsgiver } from './ikon-arbeidsgiver.svg';
 import { ReactComponent as Arbeidsforhold } from './ikon-arbeidsforhold.svg';
-import { ReactComponent as Bin_Large } from './bin-large.svg';
-import { ReactComponent as Bin_Small } from './bin-small.svg';
+import { ReactComponent as Bin } from './bin-small.svg';
 import { ReactComponent as Binders } from './paperclip.svg';
 import { ReactComponent as Blyant_Active } from './blyant-active.svg';
 import { ReactComponent as Blyant_Disabled } from './blyant-disabled.svg';
@@ -13,6 +12,7 @@ import { ReactComponent as Building } from './building.svg';
 import { ReactComponent as Calendar } from './calendar.svg';
 import { ReactComponent as CheckList } from './check-list.svg';
 import { ReactComponent as Eye } from './eye.svg';
+import { ReactComponent as Forhandsvis } from './forhandsvis.svg';
 import { ReactComponent as Ferdig } from './ikon-steg-ferdig.svg';
 import { ReactComponent as Feil } from './ikon-steg-feil.svg';
 import { ReactComponent as Filenew } from './line-version-file-new-1.svg';
@@ -37,7 +37,6 @@ import { ReactComponent as ParentAndKid } from './parent-and-kid.svg';
 import { ReactComponent as Pencil } from './pencil-2.svg';
 import { ReactComponent as ParagraphTwoColumns } from './line-version-paragraph-two-columns.svg';
 import { ReactComponent as RemoveOne } from './filled-version-remove-1.svg';
-import { ReactComponent as Se } from './se.svg';
 import { ReactComponent as Skip } from './skip.svg';
 import { ReactComponent as Svar } from './reply.svg';
 import { ReactComponent as Ubehandlet } from './ikon-steg-ubehandlet.svg';
@@ -54,8 +53,7 @@ export {
   AddOne,
   Arbeidsgiver,
   Arbeidsforhold,
-  Bin_Large,
-  Bin_Small,
+  Bin,
   Binders,
   Blyant_Active,
   Blyant_Disabled,
@@ -64,6 +62,7 @@ export {
   Calendar,
   CheckList,
   Eye,
+  Forhandsvis,
   Feil,
   Ferdig,
   Filenew,
@@ -89,7 +88,6 @@ export {
   Pencil,
   ParagraphTwoColumns,
   RemoveOne,
-  Se,
   Skip,
   Svar,
   Varsel,
