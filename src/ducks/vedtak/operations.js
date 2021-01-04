@@ -39,6 +39,28 @@ export function fatt(behandlingID, body) {
   );
 }
 
+export function endre(behandlingID, body) {
+  return doThenDispatch(
+    () => Api.Saksflyt.Vedtak.endre(behandlingID, body),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      success: dispatch => {
+        dispatch(modalerOperations.skjulValidering());
+        dispatch(navigeringOperations.tilForsiden());
+      },
+      error: (dispatch, data) => {
+        if (DucksUtils.harFeilkode(data) && DucksUtils.harFeilmelding(data)) {
+          dispatch(modalerOperations.visValidering());
+        }
+      },
+    }
+  );
+}
+
 export function avslaSoknad(behandlingID, data) {
   const body = {
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,

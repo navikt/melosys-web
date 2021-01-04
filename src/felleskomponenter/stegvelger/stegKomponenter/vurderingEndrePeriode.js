@@ -47,6 +47,12 @@ export class VurderingEndrePeriode extends React.Component {
     if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
 
     this.initialiserBegrunnelseState();
+
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
@@ -116,7 +122,7 @@ export class VurderingEndrePeriode extends React.Component {
   vedKlikkEndrePeriode = async () => {
     this.setState({ vedtakFeilmelding: null });
 
-    const { endreVedtak, tilForsiden } = this.props;
+    const { endreVedtak } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
     const { begrunnelse, fritekstSed } = this.state;
 
@@ -131,12 +137,10 @@ export class VurderingEndrePeriode extends React.Component {
         fritekstSed,
       };
 
-      try {
-        await endreVedtak(data);
-        tilForsiden();
-      } catch (e) {
+      await endreVedtak(data);
+
+      if (this._isMounted) {
         this.setState({ endringPending: false });
-        this.setState({ vedtakFeilmelding: e.body.message });
       }
     }
   };
@@ -291,7 +295,6 @@ VurderingEndrePeriode.propTypes = {
   lovvalgsPeriode: PT.object.isRequired,
   endreDatoOgSendLovvalgsperioderHandler: PT.func.isRequired,
   fomDato: PT.string,
-  tilForsiden: PT.func.isRequired,
   endreVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,

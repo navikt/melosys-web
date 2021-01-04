@@ -22,7 +22,6 @@ class EndrePeriode extends Steg {
       aarsakEndringPeriodeAvklartfakta: hentFakta(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, _propsLight.avklartefakta),
     });
     this.handlers = {
-      tilForsiden: this._propsLight.tilgjengeligeHandlers.tilForsiden,
       endreVedtak: this._propsLight.tilgjengeligeHandlers.endreVedtak,
       endreDatoOgSendLovvalgsperioderHandler: this._propsLight.tilgjengeligeHandlers.endreDatoOgSendLovvalgsperioderHandler,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
