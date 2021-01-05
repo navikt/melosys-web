@@ -26,18 +26,12 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 import "./menypanel.css";
 import { menypanelSelectors } from "../../ducks/menypanel";
 
-const {
-  SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-} = MKV.Koder.behandlingsgrunnlagtyper;
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
-const hentLinkGroupLabels = (
-  behandlingstema: string
-): [string, string, string] => {
+const hentLinkGroupLabels = (behandlingstema: string): [string, string, string] => {
   const visSEDLabels =
-    behandlingstema ===
-      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE ||
-    behandlingstema ===
-      MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE ||
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
   if (visSEDLabels) {
     return ["FRA REGISTER OG SED", "FRA REGISTER", "FRA SED"];
@@ -48,9 +42,7 @@ const hentLinkGroupLabels = (
 
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(
-    state
-  ),
+  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
@@ -96,15 +88,12 @@ export const Menypanel = ({
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
 }: MenypanelProps) => {
-  const [[activeGroupIndex, activeLinkIndex], setActive] = useState<
-    [number, number]
-  >([0, 0]);
+  const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
 
   if (!visMenypanel) return null;
 
-  const visArbeidsforholdRolleEtiketter =
-    behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const visArbeidsforholdRolleEtiketter = behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
   const defaultLinkGroups: LinkGroup[] = [
     {
@@ -114,10 +103,7 @@ export const Menypanel = ({
           label: "Person",
           active: false,
           content: (
-            <Person
-              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-              redigerbart={redigerbart}
-            />
+            <Person visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter} redigerbart={redigerbart} />
           ),
         },
         {
@@ -170,10 +156,7 @@ export const Menypanel = ({
           label: "Fullmektig",
           active: false,
           content: (
-            <Fullmektig
-              visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-              redigerbart={redigerbart}
-            />
+            <Fullmektig visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter} redigerbart={redigerbart} />
           ),
         },
         {
@@ -183,9 +166,7 @@ export const Menypanel = ({
             <Periode
               visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
               redigerbart={redigerbart}
-              lagreSoknadOgOppfriskSaksopplysninger={
-                lagreSoknadOgOppfriskSaksopplysninger
-              }
+              lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
             />
           ),
           /**
@@ -246,25 +227,18 @@ export const Menypanel = ({
         .filter((link) => menypunkter.includes(link.label))
         // Filtrer på behandlingsgrunnlagtype, (for å kunne skille mellom papir- og elektronisk søknad)
         .filter((link) => {
-          if (
-            !link.renderForBehandlingsgrunnlagtyper ||
-            link.renderForBehandlingsgrunnlagtyper.length === 0
-          ) {
+          if (!link.renderForBehandlingsgrunnlagtyper || link.renderForBehandlingsgrunnlagtyper.length === 0) {
             return true;
           }
 
-          return link.renderForBehandlingsgrunnlagtyper.includes(
-            behandlingsgrunnlagtype
-          );
+          return link.renderForBehandlingsgrunnlagtyper.includes(behandlingsgrunnlagtype);
         }),
     }))
     // Filtrer bort linkgroups med ingen linker/menypunkter
     .filter((linkGroup) => linkGroup.links.length > 0);
 
   const activeContent =
-    filteredLinkGroups.length !== 0
-      ? filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content
-      : null;
+    filteredLinkGroups.length !== 0 ? filteredLinkGroups[activeGroupIndex].links[activeLinkIndex].content : null;
 
   const linkGroups = filteredLinkGroups.map((linkGroup, groupIndex) => ({
     label: linkGroup.label,
@@ -288,11 +262,7 @@ export const Menypanel = ({
         </Nav.AlertStripe>
       )}
       <div className="menypanel">
-        <Sidemeny
-          heading="Opplysninger"
-          linkGroups={linkGroups}
-          onClick={handleClick}
-        />
+        <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
         <Nav.Panel className="content">{activeContent}</Nav.Panel>
       </div>
     </>
