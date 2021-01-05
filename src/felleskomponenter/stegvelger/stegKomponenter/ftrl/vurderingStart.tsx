@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { getFormValues, reduxForm } from 'redux-form';
 import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
@@ -76,6 +76,9 @@ const VurderingStart =
     const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
     const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
 
+    const hjelpetekst = 'Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.';
+    const Hjelpetekst = () => (<Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>);
+
     const oppdaterLokalBehandlingsgrunnlag = async (erFelteneGyldig: boolean) => {
       const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
       const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
@@ -134,7 +137,7 @@ const VurderingStart =
                 disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="5">
-              <Skjema.Select label="Arbeidsland" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
+              <Skjema.Select label={<Fragment><b>Arbeidsland</b><Hjelpetekst/></Fragment>} feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
                 {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{Utils.land.landTekstFormatStoreForbokstaver(item)}</option>))}
               </Skjema.Select>
             </Nav.Column>
