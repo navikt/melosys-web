@@ -137,6 +137,9 @@
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check ."
   },
+  "prettier": {
+    "printWidth": 120
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
