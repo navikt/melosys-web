@@ -78,8 +78,10 @@ const VurderingBestemmelse =
     const [valgteVilkar, setValgteVilkar] = useState(new Map());
     const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
 
-    const hjelpetekst = 'Her kommer det hjelpetekster for å hjelpe saksbehandler';
-    const Hjelpetekst = () => (<Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>);
+    const hjelpetekster = new Map([
+      ['SAERLIG_GRUNN', 'Nedtrekksmenyen inneholder grupper av personer som kan tas opp etter en rimelighetsvurdering i tilfeller der en søknad om medlemskap vurderes etter § 2-8 andre ledd.'],
+      ['FTRL_2_8_FORUTGÅENDE_TRYGDETID', 'Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.'],
+    ]);
 
     const handleEndreBestemmelse = async (nyBestemmelse: string) => {
       setValgtBestemmelse(nyBestemmelse);
@@ -138,7 +140,13 @@ const VurderingBestemmelse =
       <Fragment>
         <Nav.Fieldset
           className="radio"
-          legend={<Fragment>{finnTermFraListe(vilkaarKodeverk, vilkaar)}<Hjelpetekst /></Fragment>}>
+          legend={
+            <Fragment>
+              {finnTermFraListe(vilkaarKodeverk, vilkaar)}
+              {hjelpetekster.get(vilkaar) &&
+                <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekster.get(vilkaar)} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekster.get(vilkaar)}</Nav.Hjelpetekst>
+              }
+            </Fragment>}>
           <Nav.Row>
             <Nav.Column xs="1">
               <Nav.Radio
@@ -168,7 +176,12 @@ const VurderingBestemmelse =
         { muligeBegrunnelser.length > 0 && valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.SANN &&
         <Nav.Fieldset
           className="select"
-          legend={<Fragment>Velg særlig grunn<Hjelpetekst /></Fragment>}>
+          legend={
+            <Fragment>
+              Velg særlig grunn
+              <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekster.get('SAERLIG_GRUNN')} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekster.get('SAERLIG_GRUNN')}</Nav.Hjelpetekst>
+            </Fragment>
+          }>
           <Nav.Row>
             <Nav.Column xs="7">
               <Nav.Select
