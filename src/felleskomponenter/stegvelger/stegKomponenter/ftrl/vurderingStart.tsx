@@ -134,7 +134,7 @@ const VurderingStart =
                 disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="5">
-              <Skjema.Select label="Land" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
+              <Skjema.Select label="Arbeidsland" feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
                 {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{Utils.land.landTekstFormatStoreForbokstaver(item)}</option>))}
               </Skjema.Select>
             </Nav.Column>
