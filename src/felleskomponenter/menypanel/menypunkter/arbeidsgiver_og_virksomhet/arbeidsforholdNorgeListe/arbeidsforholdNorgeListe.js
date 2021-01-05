@@ -151,6 +151,7 @@ export const EnkeltArbeidsforholdNorge = ({
       onBinClick={slett}
       hentNyStatusVedHarData={false}
       visLagreKnappBareHvisHarData
+      visAlltidBin
       redigererRender={() => (
         <EnkeltArbeidsforholdNorgeRedigerer
           erstatt={erstatt}

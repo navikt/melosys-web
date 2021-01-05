@@ -2,16 +2,12 @@ import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType,
 import classnames from 'classnames';
 
 import * as Nav from '../../../../utils/navFrontend';
-import * as Symboler from '../symboler';
 import * as Mui from '../../../ui';
 
-import './editerbartElement.css';
+import Legend from './legend';
+import { Status } from './types';
 
-enum Status {
-  Redigerer,
-  RedigeringUtfort,
-  IngenData,
-}
+import './editerbartElement.css';
 
 interface EditerbartElementProps {
   redigererRender: () => ReactNode,
@@ -29,6 +25,7 @@ interface EditerbartElementProps {
   className?: string,
   hentNyStatusVedHarData?: boolean,
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>,
+  visAlltidBin?: boolean,
 }
 
 const EditerbartElement = ({
@@ -37,8 +34,9 @@ const EditerbartElement = ({
   redigeringUtfortRender,
   redigerbart,
   onBinClick,
+  visAlltidBin = false,
   tittel,
-  tittelIkon: TittelIkon,
+  tittelIkon,
   tittelUnderstrek,
   understrek,
   harData,
@@ -65,31 +63,6 @@ const EditerbartElement = ({
       setStatus(hentNesteStatus());
     }
   }, [harData]);
-
-  const legendCls = classnames({
-    understrek: tittelUnderstrek,
-  });
-
-  const legend = (
-    <div className={legendCls}>
-      <span style={{ marginRight: '10px' }}>
-        {TittelIkon && <TittelIkon style={{ marginRight: '5px' }} />}
-        <Nav.typo.Undertittel style={{ display: 'inline' }}>{tittel}</Nav.typo.Undertittel>
-      </span>
-      {
-        status === Status.RedigeringUtfort && redigerbart &&
-        <>
-          <Symboler.Rediger
-            style={{ marginRight: '10px' }}
-            onClick={() => setStatus(Status.Redigerer)}
-          />
-          <Symboler.Slett
-            onClick={onBinClick}
-          />
-        </>
-      }
-    </div>
-  );
 
   const hentAktivtInnhold = () => {
     if (status === Status.RedigeringUtfort) return redigeringUtfortRender();
@@ -119,6 +92,17 @@ const EditerbartElement = ({
   const cls = classnames(className, 'editerbart__element', {
     understrek,
   });
+
+  const legend = <Legend
+    redigerbart={redigerbart}
+    tittelIkon={tittelIkon}
+    tittel={tittel}
+    tittelUnderstrek={tittelUnderstrek}
+    onBinClick={onBinClick}
+    status={status}
+    onPencilClick={() => setStatus(Status.Redigerer)}
+    visAlltidBin={visAlltidBin}
+  />;
 
   return (
     <div className={cls}>
