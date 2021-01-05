@@ -55,7 +55,7 @@ SelectWrappedComponent.defaultProps = {
 };
 
 SelectWrappedComponent.propTypes = {
-  label: PT.string.isRequired,
+  label: PT.oneOfType([PT.string, PT.object]).isRequired,
   children: PT.node,
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
