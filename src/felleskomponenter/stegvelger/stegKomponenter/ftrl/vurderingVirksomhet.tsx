@@ -92,7 +92,7 @@ const VurderingVirksomhet =
     }
 
     return (
-      <div>
+      <div className="vurderingVirksomhet">
         <Nav.typo.Undertittel className="undertittel">
           Velg virksomhet
           <Nav.Hjelpetekst

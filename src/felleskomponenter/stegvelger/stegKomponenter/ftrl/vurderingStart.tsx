@@ -115,7 +115,7 @@ const VurderingStart =
     };
 
     return (
-      <div>
+      <div className="vurderingStart">
         <Nav.typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.typo.Undertittel>
 
         <Nav.Fieldset legend="Periode" onSubmit={fortsettHandle}>
@@ -137,7 +137,7 @@ const VurderingStart =
                 disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="5">
-              <Skjema.Select label={<Fragment><b>Arbeidsland</b><Hjelpetekst/></Fragment>} feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
+              <Skjema.Select label={<Fragment><b>Arbeidsland</b><Hjelpetekst /></Fragment>} feltNavn="land" emptyFieldText="Velg" emptyFieldDisabled={!!formValues.land}>
                 {alleLandkoder.map(item => (<option key={item.kode} value={item.kode}>{Utils.land.landTekstFormatStoreForbokstaver(item)}</option>))}
               </Skjema.Select>
             </Nav.Column>

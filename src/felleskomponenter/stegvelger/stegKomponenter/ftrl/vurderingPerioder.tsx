@@ -294,7 +294,7 @@ const VurderingPerioder =
 
 
     return (
-      <div className="perioder">
+      <div className="vurderingPerioder">
         <Nav.typo.Undertittel className="undertittel">
           Kontroller foreslåtte medlemskapsperioder
           <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>

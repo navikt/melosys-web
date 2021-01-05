@@ -426,7 +426,7 @@ const VurderingTrygdeavgift =
     }
 
     return (
-      <div>
+      <div className="vurderingTrygdeavgift">
         <Nav.typo.Undertittel className="undertittel">Trygdeavgift</Nav.typo.Undertittel>
 
         <Nav.Row>
