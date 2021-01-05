@@ -1,11 +1,7 @@
-name: Push
+name: Build
 
-on:
-  pull_request:
-    branches:
-      - 'develop'
-      - 'FEATURE/**'
-      - 'FEATURE*'
+on: pull_request
+
 jobs:
   build:
     runs-on: ubuntu-latest
