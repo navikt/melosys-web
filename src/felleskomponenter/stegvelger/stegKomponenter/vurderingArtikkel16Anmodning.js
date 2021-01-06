@@ -134,6 +134,7 @@ class VurderingArtikkel16Anmodning extends Component {
     begrunnelserFeilmelding: undefined,
     begrunnelseFritekstBrevFeilmelding: undefined,
     begrunnelseFritekstSedFeilmelding: undefined,
+    anmodningPending: false,
   };
 
   componentDidMount() {
@@ -141,10 +142,14 @@ class VurderingArtikkel16Anmodning extends Component {
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
     oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1));
     oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
+
+    this._isMounted = true;
   }
 
   componentWillUnmount() {
     this.props.slettData();
+
+    this._isMounted = false;
   }
 
   lagBestillAnmodningsperioderBody = () => ({
@@ -154,12 +159,9 @@ class VurderingArtikkel16Anmodning extends Component {
 
   lagreBehandlingerOgBestillAnmodningsperioder = async () => {
     const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder } = this.props;
-    try {
-      await oppdaterOgLagreBehandlinger();
-      lagreOgBestillAnmodningsperioder(this.lagBestillAnmodningsperioderBody());
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+
+    await oppdaterOgLagreBehandlinger();
+    return lagreOgBestillAnmodningsperioder(this.lagBestillAnmodningsperioderBody());
   };
 
   vedUnntakFraBestemmelseEndring = async event => {
@@ -259,8 +261,15 @@ class VurderingArtikkel16Anmodning extends Component {
 
   validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
+      this.setState({ anmodningPending: true });
+
       await this.byggAnmodningsperioder();
-      this.lagreBehandlingerOgBestillAnmodningsperioder();
+      await this.lagreBehandlingerOgBestillAnmodningsperioder();
+
+      // Anmodning-operation navigerer til forside, og komponenten kan derfor være unmountet.
+      if (this._isMounted) {
+        this.setState({ anmodningPending: false });
+      }
     }
   };
 
@@ -292,6 +301,7 @@ class VurderingArtikkel16Anmodning extends Component {
       begrunnelseFritekstBrevFeilmelding,
       begrunnelseFritekstSedFeilmelding,
       lovvalgFeilmelding,
+      anmodningPending,
     } = this.state;
 
     const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
@@ -495,7 +505,7 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={validerOgLagreBehandling}>
+              <Nav.Hovedknapp spinner={anmodningPending} autoDisableVedSpinner disabled={!redigerbart} onClick={validerOgLagreBehandling}>
                 Send brevene
               </Nav.Hovedknapp>
             </Nav.Column>

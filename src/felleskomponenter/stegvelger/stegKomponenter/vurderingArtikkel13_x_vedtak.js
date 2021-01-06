@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -12,6 +12,7 @@ import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 import * as Mui from '../../ui';
+import * as Hooks from '../../../hooks';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 
@@ -44,6 +45,9 @@ export const VurderingArtikkel13_x_vedtak = ({
   behandlingstype,
   soknadsperiode,
 }) => {
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const forkortLovvalgsperiode = () => endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
@@ -89,8 +93,30 @@ export const VurderingArtikkel13_x_vedtak = ({
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
   const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
+  const fattVedtak = async (values, dispatch, props) => {
+    setVedtakPending(true);
+
+    if (values.forkortLovvalgsperiode) {
+      await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
+    }
+
+    await props.lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
+      fritekst: values.vedtaksbrevFritekst,
+      fritekstSed: values.fritekstSed,
+      mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
+      vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: values.vedtakstypebegrunnelse,
+    });
+
+    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="vurderingArtikkel13_x_vedtak">
+    <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArtikkel13_x_vedtak">
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       {
         redigerbart &&
@@ -160,7 +186,7 @@ export const VurderingArtikkel13_x_vedtak = ({
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
-      <Mui.Knapp disabled={!redigerbart} htmlType="submit" type="hoved">FATT VEDTAK</Mui.Knapp>
+      <Mui.Knapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit" type="hoved">FATT VEDTAK</Mui.Knapp>
     </form>
   );
 };
@@ -232,23 +258,7 @@ const mapDispatchToProps = dispatch => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_X_VEDTAK)),
 });
 
-const fattVedtak = async (values, dispatch, props) => {
-  if (values.forkortLovvalgsperiode) {
-    await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
-  }
-
-  props.lagreOgFatteVedtak({
-    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
-    fritekst: values.vedtaksbrevFritekst,
-    fritekstSed: values.fritekstSed,
-    mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
-    vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    revurderBegrunnelse: values.vedtakstypebegrunnelse,
-  });
-};
-
 const VurderingArtikkel13_x_vedtak_form = reduxForm({
-  onSubmit: fattVedtak,
   form: KV.Form.ARTIKKEL_13_X_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,

@@ -31,6 +31,8 @@ export class VurderingEndrePeriode extends React.Component {
     begrunnelseFeilmelding: undefined,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
     fritekstSed: '',
+    vedtakFeilmelding: null,
+    endringPending: false,
   };
 
   componentDidMount() {
@@ -45,6 +47,12 @@ export class VurderingEndrePeriode extends React.Component {
     if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
 
     this.initialiserBegrunnelseState();
+
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
@@ -112,11 +120,15 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   vedKlikkEndrePeriode = async () => {
-    const { endreVedtak, tilForsiden } = this.props;
+    this.setState({ vedtakFeilmelding: null });
+
+    const { endreVedtak } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
     const { begrunnelse, fritekstSed } = this.state;
 
     if (validerAlt()) {
+      this.setState({ endringPending: true });
+
       await sendEndretLovvalgsPeriode();
 
       const data = {
@@ -124,8 +136,12 @@ export class VurderingEndrePeriode extends React.Component {
         fritekst: null,
         fritekstSed,
       };
+
       await endreVedtak(data);
-      tilForsiden();
+
+      if (this._isMounted) {
+        this.setState({ endringPending: false });
+      }
     }
   };
 
@@ -165,6 +181,8 @@ export class VurderingEndrePeriode extends React.Component {
       begrunnelseFeilmelding,
       opprinneligLovvalgsperiode: { fom, tom },
       fritekstSed,
+      vedtakFeilmelding,
+      endringPending,
     } = this.state;
 
     const endretPeriodeBegrunnelse = begrunnelse;
@@ -262,7 +280,11 @@ export class VurderingEndrePeriode extends React.Component {
           </Nav.Row>
         }
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
-        <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
+        {
+          vedtakFeilmelding &&
+          <div className="skjemaelement__feilmelding vedtakfeilmelding">{vedtakFeilmelding}</div>
+        }
+        <Nav.Hovedknapp spinner={endringPending} autoDisableVedSpinner disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
     );
   }
@@ -273,7 +295,6 @@ VurderingEndrePeriode.propTypes = {
   lovvalgsPeriode: PT.object.isRequired,
   endreDatoOgSendLovvalgsperioderHandler: PT.func.isRequired,
   fomDato: PT.string,
-  tilForsiden: PT.func.isRequired,
   endreVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues, change } from 'redux-form';
 import PT from 'prop-types';
@@ -11,6 +11,7 @@ import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Skjema from '../../skjema';
+import * as Hooks from '../../../hooks';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
@@ -51,6 +52,9 @@ export const VurderingArtikkel13UtpekLand = ({
   byggUtpekingsperioder: gjenopprettOpprinneligUtpekingsperiode,
   endreUtpekingsperiode,
 }) => {
+  const [utpekingPending, setUtpekingPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   useEffect(() => {
     oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
 
@@ -69,15 +73,22 @@ export const VurderingArtikkel13UtpekLand = ({
   const vedKlikkUtpek = async () => {
     if (!validerForm()) return;
 
+    setUtpekingPending(true);
+
     if (formValues.forkortUtpekingsperiode) {
       await endreUtpekingsperiode(utpekingsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
     }
 
-    lagreOgUtpek({
+    await lagreOgUtpek({
       mottakerinstitusjoner: formValues.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
       fritekstSed: formValues.fritekstSed,
       fritekstBrev: formValues.fritekstOrienteringsbrev,
     });
+
+    // Utpeking-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setUtpekingPending(false);
+    }
   };
 
   const endreLovvalgsland = land => {
@@ -210,7 +221,7 @@ export const VurderingArtikkel13UtpekLand = ({
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Hovedknapp onClick={vedKlikkUtpek} disabled={!redigerbart} type="hoved">FATT VEDTAK</Nav.Hovedknapp>
+      <Nav.Hovedknapp onClick={vedKlikkUtpek} spinner={utpekingPending} autoDisableVedSpinner disabled={!redigerbart} type="hoved">FATT VEDTAK</Nav.Hovedknapp>
     </div>
   );
 };

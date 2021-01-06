@@ -4,6 +4,7 @@ import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Mui from '../../ui';
+import * as Hooks from '../../../hooks';
 
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
@@ -16,15 +17,24 @@ const VurderingGodkjennUtpekingAnnetLand = ({
   behandlingID,
 }) => {
   const [varsleUtland, setVarsleUtland] = useState(false);
+  const [godkjenningPending, setGodkjenningPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
 
-  const vedEndring = ({ checked }) => {
+  const sendA012CheckHandler = ({ checked }) => {
     setVarsleUtland(checked);
   };
 
-  const hovedknappHandler = () => {
-    lagreOgGodkjennUnntaksperioder({
+  const hovedknappClickHandler = async () => {
+    setGodkjenningPending(true);
+
+    await lagreOgGodkjennUnntaksperioder({
       varsleUtland,
     });
+
+    // godkjenn-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setGodkjenningPending(false);
+    }
   };
 
   const dokumenter = [
@@ -44,7 +54,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
           <Nav.Column xs="12">
             <Mui.Checkbox
               label="Send A012"
-              onCheck={vedEndring}
+              onCheck={sendA012CheckHandler}
             />
           </Nav.Column>
         </Nav.Row>
@@ -58,7 +68,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
       }
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
-          <Mui.Knapp type="hoved" disabled={!redigerbart} onClick={hovedknappHandler}>Bekreft</Mui.Knapp>
+          <Mui.Knapp type="hoved" spinner={godkjenningPending} autoDisableVedSpinner disabled={!redigerbart} onClick={hovedknappClickHandler}>Bekreft</Mui.Knapp>
         </Nav.Column>
       </Nav.Row>
     </Fragment>

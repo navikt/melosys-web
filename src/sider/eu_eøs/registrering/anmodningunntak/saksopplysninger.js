@@ -68,6 +68,7 @@ const Saksopplysninger = ({
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
+  const [registreringPending, setRegistreringPending] = useState(false);
 
   useEffect(() => {
     lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
@@ -209,6 +210,8 @@ const Saksopplysninger = ({
       }
     }
 
+    setRegistreringPending(true);
+
     try {
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
@@ -216,6 +219,7 @@ const Saksopplysninger = ({
       Utils.logger.error(e);
       return false;
     } finally {
+      setRegistreringPending(false);
       tilForsiden();
     }
     return true;
@@ -375,7 +379,7 @@ const Saksopplysninger = ({
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og send</Nav.Hovedknapp>
+                  <Nav.Hovedknapp spinner={registreringPending} autoDisableVedSpinner onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og send</Nav.Hovedknapp>
                 </Nav.Column>
               </Nav.Row>
             </div>
