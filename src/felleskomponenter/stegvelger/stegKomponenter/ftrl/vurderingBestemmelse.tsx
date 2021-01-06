@@ -77,9 +77,12 @@ const VurderingBestemmelse =
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
     const [valgteVilkar, setValgteVilkar] = useState(new Map());
     const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
+    const SAERLIG_GRUNN = 'SAERLIG_GRUNN';
 
-    const hjelpetekst = 'Her kommer det hjelpetekster for å hjelpe saksbehandler';
-    const Hjelpetekst = () => (<Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>);
+    const hjelpetekster = new Map([
+      [SAERLIG_GRUNN, 'Nedtrekksmenyen inneholder grupper av personer som kan tas opp etter en rimelighetsvurdering i tilfeller der en søknad om medlemskap vurderes etter § 2-8 andre ledd.'],
+      [MKV.Koder.vilkaar.FTRL_2_8_FORUTGÅENDE_TRYGDETID, 'Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.'],
+    ]);
 
     const handleEndreBestemmelse = async (nyBestemmelse: string) => {
       setValgtBestemmelse(nyBestemmelse);
@@ -134,59 +137,73 @@ const VurderingBestemmelse =
 
     const Alert = () => <Nav.AlertStripe type="feil" className="alerstripe">Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.</Nav.AlertStripe>;
 
-    const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkarOgBegrunnelser) => (
-      <Fragment>
-        <Nav.Fieldset
-          className="radio"
-          legend={<Fragment>{finnTermFraListe(vilkaarKodeverk, vilkaar)}<Hjelpetekst /></Fragment>}>
-          <Nav.Row>
-            <Nav.Column xs="1">
-              <Nav.Radio
-                label="Ja"
-                name={vilkaar}
-                onChange={handleEndreVilkar}
-                checked={valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.SANN}
-                value={BOOLSK_STRING.SANN}
-                key={BOOLSK_STRING.SANN}
-                disabled={!redigerbart}
-              />
-            </Nav.Column>
-            <Nav.Column xs="1">
-              <Nav.Radio
-                label="Nei"
-                name={vilkaar}
-                onChange={handleEndreVilkar}
-                checked={valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.USANN}
-                value={BOOLSK_STRING.USANN}
-                key={BOOLSK_STRING.USANN}
-                disabled={!redigerbart}
-              />
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
-        { valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.USANN && <Alert />}
-        { muligeBegrunnelser.length > 0 && valgteVilkar.get(`${vilkaar}`) === BOOLSK_STRING.SANN &&
-        <Nav.Fieldset
-          className="select"
-          legend={<Fragment>Velg særlig grunn<Hjelpetekst /></Fragment>}>
-          <Nav.Row>
-            <Nav.Column xs="7">
-              <Nav.Select
-                label=""
-                bredde="fullbredde"
-                onChange={handleEndreBegrunnelse}
-                name={vilkaar}
-                value={valgteBegrunnelser.get(`${vilkaar}`)}
-              >
-                <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}`)}>Velg</option>
-                {muligeBegrunnelser.map(begrunnelse => <option key={begrunnelse} value={begrunnelse}>{termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}</option>)}
-              </Nav.Select>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
-        }
-      </Fragment>
-    );
+    const Vilkaar = ({ vilkaar, muligeBegrunnelser }: VilkarOgBegrunnelser) => {
+      const hjelpetekstForVilkaar = hjelpetekster.get(vilkaar);
+      const valgteVilkarForVilkaar = valgteVilkar.get(`${vilkaar}`);
+
+      return (
+        <Fragment>
+          <Nav.Fieldset
+            className="radio"
+            legend={
+              <Fragment>
+                {finnTermFraListe(vilkaarKodeverk, vilkaar)}
+                {hjelpetekstForVilkaar && <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekstForVilkaar} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekstForVilkaar}</Nav.Hjelpetekst>}
+              </Fragment>}>
+            <Nav.Row>
+              <Nav.Column xs="1">
+                <Nav.Radio
+                  label="Ja"
+                  name={vilkaar}
+                  onChange={handleEndreVilkar}
+                  checked={valgteVilkarForVilkaar === BOOLSK_STRING.SANN}
+                  value={BOOLSK_STRING.SANN}
+                  key={BOOLSK_STRING.SANN}
+                  disabled={!redigerbart}
+                />
+              </Nav.Column>
+              <Nav.Column xs="1">
+                <Nav.Radio
+                  label="Nei"
+                  name={vilkaar}
+                  onChange={handleEndreVilkar}
+                  checked={valgteVilkarForVilkaar === BOOLSK_STRING.USANN}
+                  value={BOOLSK_STRING.USANN}
+                  key={BOOLSK_STRING.USANN}
+                  disabled={!redigerbart}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+          { valgteVilkarForVilkaar === BOOLSK_STRING.USANN && <Alert />}
+          { muligeBegrunnelser.length > 0 && valgteVilkarForVilkaar === BOOLSK_STRING.SANN &&
+          <Nav.Fieldset
+            className="select"
+            legend={
+              <Fragment>
+                Velg særlig grunn
+                <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekster.get(SAERLIG_GRUNN)} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekster.get(SAERLIG_GRUNN)}</Nav.Hjelpetekst>
+              </Fragment>
+            }>
+            <Nav.Row>
+              <Nav.Column xs="7">
+                <Nav.Select
+                  label=""
+                  bredde="fullbredde"
+                  onChange={handleEndreBegrunnelse}
+                  name={vilkaar}
+                  value={valgteBegrunnelser.get(`${vilkaar}`)}
+                >
+                  <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}`)}>Velg</option>
+                  {muligeBegrunnelser.map(begrunnelse => <option key={begrunnelse} value={begrunnelse}>{termFraNestedKTObject(begrunnelserKodeverk, begrunnelse)}</option>)}
+                </Nav.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+          }
+        </Fragment>
+      );
+    };
 
     return (
       <div className="vurderingBestemmelse">
