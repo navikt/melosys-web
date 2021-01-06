@@ -8,8 +8,8 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './htmleditor.css';
 
 const toolbar = {
-  options: ['inline', 'list', 'link', 'history'],
-  inline: { options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'] },
+  options: ['inline', 'fontSize', 'list', 'link', 'history'],
+  inline: { options: ['bold', 'italic', 'underline', 'strikethrough'] },
   list: { inDropdown: true },
 };
 

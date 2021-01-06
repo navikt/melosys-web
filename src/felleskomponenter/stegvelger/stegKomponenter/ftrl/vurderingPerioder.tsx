@@ -106,7 +106,7 @@ const PeriodeElement =
         {
           redigerbart && formValues.medlemskapsperioder.length > 1 &&
           <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
-            <Ikoner.Bin_Small />
+            <Ikoner.Bin />
             <span>Slett periode</span>
           </Nav.Lenker>
         }
@@ -294,7 +294,7 @@ const VurderingPerioder =
 
 
     return (
-      <div className="perioder">
+      <div className="vurderingPerioder">
         <Nav.typo.Undertittel className="undertittel">
           Kontroller foreslåtte medlemskapsperioder
           <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekst}</Nav.Hjelpetekst>

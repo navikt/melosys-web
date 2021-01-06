@@ -68,6 +68,7 @@ function FlereRedigeringsKnapperListe<T>({
                 tittelUnderstrek
                 hentNyStatusVedHarData={false}
                 onBinClick={slett}
+                visAlltidBin
                 redigererRender={() => <RedigererKomponent
                   redigerbart={redigerbart}
                   overordnetFeltNavn={overordnetFeltNavn}

@@ -252,7 +252,7 @@ const Saksbehandling = ({
 };
 
 Saksbehandling.propTypes = {
-  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,

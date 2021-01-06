@@ -59,6 +59,7 @@ const AnnenAdresse = ({
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
         hentNyStatusVedHarData={false}
+        visAlltidBin={oppgittAdresseHarVerdier}
         redigererRender={() => (
           <Felter
             redigerbart={redigerbart}

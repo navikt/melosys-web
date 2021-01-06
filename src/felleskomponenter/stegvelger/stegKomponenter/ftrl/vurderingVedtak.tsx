@@ -20,20 +20,32 @@ import { formSelectors } from '../../../../ducks/form';
 
 import './vurderingVedtak.css';
 
-const TabellComponent = ({ rader, kolonner }: { rader: (string| JSX.Element)[][] | undefined, kolonner: { navn: string, bredde: string }[] }) => {
+interface TabellComponentProps {
+  rader: {
+    verdi: string | JSX.Element,
+    style?: string,
+  }[][],
+  kolonner: {
+    verdi: string,
+    bredde: string,
+    style?: string,
+  }[]
+}
+
+const TabellComponent = ({ rader, kolonner }: TabellComponentProps) => {
   if (!rader || !kolonner) return null;
   return (
     <table className="periode_tabell">
       <tbody>
         <tr>
           {kolonner.map(kolonne =>
-            <th key={Utils._uuid()} style={{ width: kolonne.bredde }}>{kolonne.navn}</th>)
+            <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>{kolonne.verdi}</th>)
           }
         </tr>
         {rader.map(rad =>
           <tr className="border_bottom" key={Utils._uuid()}>
-            {rad.map(listeElement =>
-              <td key={Utils._uuid()}>{listeElement}</td>)
+            {rad.map(radElement =>
+              <td key={Utils._uuid()} className={`${radElement.style}`}>{radElement.verdi}</td>)
             }
           </tr>)
         }
@@ -79,53 +91,43 @@ const VurderingVedtak =
     trygdeavgiftFormValues,
     tilForsiden,
   }: Props & PropsFromRedux) => {
+    const midlertidigStatiskPdfLinke = 'https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger';
     function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
-      return perioder && perioder.map(medlemskapsperiode =>
-        [`Fra. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} Til. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato)}`,
-          KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, medlemskapsperiode.trygdedekning),
-          KV.finnTermFraListe(innvilgelsesResultater, medlemskapsperiode.innvilgelsesResultat)]);
+      return perioder
+        ? perioder.map(medlemskapsperiode =>
+          [
+            { verdi: `Fra. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato)} Til. ${Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato)}` },
+            { verdi: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, medlemskapsperiode.trygdedekning) },
+            { verdi: KV.finnTermFraListe(innvilgelsesResultater, medlemskapsperiode.innvilgelsesResultat) },
+          ])
+        : [];
     }
 
     function mapVedtakRader() {
       return [
         [
-          <Nav.typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.typo.Normaltekst>,
-          'Deloitte',
-          <span>
-            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
-              <Ikoner.Se />
-            </a>
-          </span>,
+          { verdi: <Nav.typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.typo.Normaltekst> },
+          { verdi: 'Deloitte' },
+          { verdi: <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}><Ikoner.Forhandsvis /></a>, style: 'midtstilt' },
+          { verdi: <></> },
         ],
         [
-          <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til Skatteetaten</Nav.typo.Normaltekst>,
-          'Skatteetaten',
-          <span>
-            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
-              <Ikoner.Se />
-            </a>
-            <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
-          </span>,
+          { verdi: <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til Skatteetaten</Nav.typo.Normaltekst> },
+          { verdi: 'Skatteetaten' },
+          { verdi: <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}><Ikoner.Forhandsvis /></a>, style: 'midtstilt' },
+          { verdi: <Ikoner.Bin />, style: 'midtstilt' },
         ],
         [
-          <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
-          'Dag Fossum',
-          <span>
-            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
-              <Ikoner.Se />
-            </a>
-            <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
-          </span>,
+          { verdi: <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst> },
+          { verdi: 'Dag Fossum' },
+          { verdi: <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}><Ikoner.Forhandsvis /></a>, style: 'midtstilt' },
+          { verdi: <Ikoner.Bin />, style: 'midtstilt' },
         ],
         [
-          <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst>,
-          'Dag Fossum',
-          <span>
-            <a target="_blank" rel="noopener noreferrer" href="https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger">
-              <Ikoner.Se />
-            </a>
-            <Ikoner.Bin_Large style={{ marginLeft: '0.5rem' }} />
-          </span>,
+          { verdi: <Nav.typo.Normaltekst className="lenke">Kopi av vedtak om frivillig medlemskap til bruker</Nav.typo.Normaltekst> },
+          { verdi: 'Dag Fossum' },
+          { verdi: <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}><Ikoner.Forhandsvis /></a>, style: 'midtstilt' },
+          { verdi: <Ikoner.Bin />, style: 'midtstilt' },
         ],
       ];
     }
@@ -141,7 +143,7 @@ const VurderingVedtak =
       <div className="vurderingVedtak">
         <Nav.typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.typo.Undertittel>
 
-        <TabellComponent rader={mapPeriodeRader(medlemskapsperioder)} kolonner={[{ navn: 'Periode', bredde: '42%' }, { navn: 'Dekning', bredde: '33%' }, { navn: 'Resultat', bredde: '23%' }]} />
+        <TabellComponent rader={mapPeriodeRader(medlemskapsperioder)} kolonner={[{ verdi: 'Periode', bredde: '42%' }, { verdi: 'Dekning', bredde: '33%' }, { verdi: 'Resultat', bredde: '23%' }]} />
 
         <Nav.Row className="margin_bottom">
           <Nav.Column xs="5">
@@ -209,7 +211,14 @@ const VurderingVedtak =
           placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         />
 
-        <TabellComponent rader={mapVedtakRader()} kolonner={[{ navn: 'Dokumenter', bredde: '60%' }, { navn: 'Mottaker', bredde: '25%' }, { navn: '', bredde: '15%' }]} />
+        <TabellComponent
+          rader={mapVedtakRader()}
+          kolonner={[
+            { verdi: 'Dokumenter', bredde: '60%' },
+            { verdi: 'Mottaker', bredde: '20%' },
+            { verdi: 'Forhåndsvis', bredde: '10%', style: 'normal_font_weight midtstilt' },
+            { verdi: 'Slett', bredde: '10%', style: 'normal_font_weight midtstilt' }]}
+        />
 
         <div className="fane__knapplinje">
           <Nav.Knapp

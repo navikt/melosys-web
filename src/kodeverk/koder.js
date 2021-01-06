@@ -21,6 +21,12 @@ export const Unntaksperiode = {
   DELVIS_GODKJENT: 'DELVIS_GODKJENT',
   AVSLAG: 'AVSLAG',
 };
+
+export const VurderingTrygdeavgiftVirksomhetTyper = {
+  NORSK: 'NORSK',
+  UTENLANDSK: 'UTENLANDSK',
+};
+
 export const VurderingSokkelSkipTyper = {
   SKIP_NORSK_TERRITORIAL: 'SKIP_NORSK_TERRITORIAL',
   SKIP_ETT_LAND: 'SKIP_ETT_LAND',
