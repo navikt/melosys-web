@@ -77,10 +77,11 @@ const VurderingBestemmelse =
     const [valgteBegrunnelser, setValgteBegrunnelser] = useState(new Map());
     const [valgteVilkar, setValgteVilkar] = useState(new Map());
     const [erAlleValgGjort, setErAlleValgGjort] = useState(false);
+    const SAERLIG_GRUNN = 'SAERLIG_GRUNN';
 
     const hjelpetekster = new Map([
-      ['SAERLIG_GRUNN', 'Nedtrekksmenyen inneholder grupper av personer som kan tas opp etter en rimelighetsvurdering i tilfeller der en søknad om medlemskap vurderes etter § 2-8 andre ledd.'],
-      ['FTRL_2_8_FORUTGÅENDE_TRYGDETID', 'Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.'],
+      [SAERLIG_GRUNN, 'Nedtrekksmenyen inneholder grupper av personer som kan tas opp etter en rimelighetsvurdering i tilfeller der en søknad om medlemskap vurderes etter § 2-8 andre ledd.'],
+      [MKV.Koder.vilkaar.FTRL_2_8_FORUTGÅENDE_TRYGDETID, 'Husk at perioder med trygdetid fra andre EØS-land sidestilles med norsk trygdetid.'],
     ]);
 
     const handleEndreBestemmelse = async (nyBestemmelse: string) => {
@@ -181,7 +182,7 @@ const VurderingBestemmelse =
             legend={
               <Fragment>
                 Velg særlig grunn
-                <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekster.get('SAERLIG_GRUNN')} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekster.get('SAERLIG_GRUNN')}</Nav.Hjelpetekst>
+                <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekster.get(SAERLIG_GRUNN)} type={Nav.PopoverOrientering.Hoyre}>{hjelpetekster.get(SAERLIG_GRUNN)}</Nav.Hjelpetekst>
               </Fragment>
             }>
             <Nav.Row>
