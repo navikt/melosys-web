@@ -1,32 +1,29 @@
-import React, { Fragment } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React, { Fragment } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-import MKV from '../../../../../melosyskodeverk';
-import * as Utils from '../../../../../utils';
-import * as MPT from '../../../../../proptypes';
+import MKV from "../../../../../melosyskodeverk";
+import * as Utils from "../../../../../utils";
+import * as MPT from "../../../../../proptypes";
 
-import Stegvelger from '../../../../../felleskomponenter/stegvelger';
-import { STEG } from '../../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
-import { SoknadMenypanelForm } from '../../../../../felleskomponenter/menypanelForm';
+import Stegvelger from "../../../../../felleskomponenter/stegvelger";
+import { STEG } from "../../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { HenlagtSak, AvslaattSoknad } from "../stegErstatter";
+import { SoknadMenypanelForm } from "../../../../../felleskomponenter/menypanelForm";
 
-import { fagsakSelectors } from '../../../../../ducks/fagsaker';
-import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
-import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
-import {
-  behandlingsgrunnlagOperations,
-  behandlingsgrunnlagSelectors,
-} from '../../../../../ducks/behandlingsgrunnlag';
+import { fagsakSelectors } from "../../../../../ducks/fagsaker";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../../ducks/behandlingsgrunnlag";
 
-import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
-import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
-import { formSelectors } from '../../../../../ducks/form';
+import { avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
+import { formSelectors } from "../../../../../ducks/form";
 
-import { stegMap } from '../../stegMap';
+import { stegMap } from "../../stegMap";
 
-const hentForsteSteg = behandlingstype => {
+const hentForsteSteg = (behandlingstype) => {
   switch (behandlingstype) {
     case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
       return STEG.ENDRET_PERIODE;
@@ -60,41 +57,38 @@ const Saksopplysninger = ({
   }
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-  const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
+  const erAvslaattSoknad =
+    behandlingsresultat.behandlingsresultatTypeKode ===
+    MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
   const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
-  const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
+  const behandlingsgrunnlagErKlart = !(
+    Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
+  );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
   const forsteSteg = hentForsteSteg(behandlingstype);
 
   return (
     <Fragment>
-      { erHenlagtSak &&
-      <HenlagtSak behandlingsresultat={behandlingsresultat} />
-      }
-      {
-        visAvslaattSoknad &&
-        <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
-      }
-      { visStegVelger &&
-      <Stegvelger
-        behandlingID={behandlingID}
-        lagreVilkarHandler={lagreVilkarHandler}
-        lagreAvklartefaktaHandler={lagreAvklartefaktaHandler}
-        lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
-        lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
-        oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
-        lagreAllData={lagreAllData}
-        oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
-        begrunnelser={MKV.KTObjects.begrunnelser}
-        landkoder={MKV.KTObjects.landkoder}
-        tilForsiden={tilForsiden}
-        stegMap={stegMap}
-        forsteSteg={forsteSteg}
-      />
-      }
-      <SoknadMenypanelForm
-        startOgVisOppfriskModal={startOgVisOppfriskModal}
-      />
+      {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+      {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+      {visStegVelger && (
+        <Stegvelger
+          behandlingID={behandlingID}
+          lagreVilkarHandler={lagreVilkarHandler}
+          lagreAvklartefaktaHandler={lagreAvklartefaktaHandler}
+          lagreLovvalgsperioderHandler={lagreLovvalgsperioderHandler}
+          lagreAnmodningsperioderHandler={lagreAnmodningsperioderHandler}
+          oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingerHandler}
+          lagreAllData={lagreAllData}
+          oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
+          begrunnelser={MKV.KTObjects.begrunnelser}
+          landkoder={MKV.KTObjects.landkoder}
+          tilForsiden={tilForsiden}
+          stegMap={stegMap}
+          forsteSteg={forsteSteg}
+        />
+      )}
+      <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
     </Fragment>
   );
 };
@@ -135,7 +129,7 @@ Saksopplysninger.defaultProps = {
   inngangForm: {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
@@ -145,7 +139,7 @@ const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   sendBehandlingsgrunnlag: (bid, dokument) => dispatch(behandlingsgrunnlagOperations.send(bid, dokument)),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });

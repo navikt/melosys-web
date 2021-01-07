@@ -1,25 +1,23 @@
-import React, { useEffect } from 'react';
-import PT from 'prop-types';
+import React, { useEffect } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Mui from '../../../felleskomponenter/ui';
-import * as MPT from '../../../proptypes';
+import * as Nav from "../../../utils/navFrontend";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as MPT from "../../../proptypes";
 
-import { konverterTilStegData, lagAvklartfakta, slettAvklartfakta } from '../../../regler/avklartefakta';
-import * as KV from '../../../kodeverk';
-import { BOOLSK_STRING } from '../../../constants';
+import { konverterTilStegData, lagAvklartfakta, slettAvklartfakta } from "../../../regler/avklartefakta";
+import * as KV from "../../../kodeverk";
+import { BOOLSK_STRING } from "../../../constants";
 
-import './vurderingArbeidsgiver.css';
+import "./vurderingArbeidsgiver.css";
 
 /**
  * Enkeltsjekkboks for ett arbeidsgiver.
  *
  * @param props Objekt Diverse props (se propTypes)
  */
-const VirksomheterLinje = props => {
-  const {
-    virksomheten, avklartVirksomhet, redigerbart, oppdaterData, slettData,
-  } = props;
+const VirksomheterLinje = (props) => {
+  const { virksomheten, avklartVirksomhet, redigerbart, oppdaterData, slettData } = props;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
@@ -68,31 +66,34 @@ VirksomheterLinje.defaultProps = {
  *
  * @param props Objekt Diverse props Se prop types
  */
-const VirksomheterListe = props => {
-  const {
-    virksomheterIPerioden, redigerbart, avklarteVirksomheter, oppdaterData, slettData,
-  } = props;
+const VirksomheterListe = (props) => {
+  const { virksomheterIPerioden, redigerbart, avklarteVirksomheter, oppdaterData, slettData } = props;
 
   const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
-    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvstendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
+    <Nav.AlertStripe type="advarsel">
+      Finner ingen arbeidsgivere, selvstendig næringsdrivende eller frilansere fra saksopplysninger.
+    </Nav.AlertStripe>
   );
 
   return (
     <div>
-      {virksomheterIPerioden.map(virksomheten => {
-        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.virksomhetId);
+      {virksomheterIPerioden.map((virksomheten) => {
+        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(
+          (enkeltAvklaring) => enkeltAvklaring.subjektID === virksomheten.virksomhetId
+        );
 
         const key = `avklartVirksomhet${virksomheten.virksomhetId}`;
-        return <VirksomheterLinje
-          virksomheten={virksomheten}
-          avklartVirksomhet={avklartfaktaForVirksomhet}
-          key={key}
-          redigerbart={redigerbart}
-          oppdaterData={oppdaterData}
-          slettData={slettData}
-        />;
-      })
-      }
+        return (
+          <VirksomheterLinje
+            virksomheten={virksomheten}
+            avklartVirksomhet={avklartfaktaForVirksomhet}
+            key={key}
+            redigerbart={redigerbart}
+            oppdaterData={oppdaterData}
+            slettData={slettData}
+          />
+        );
+      })}
       {ingenVirksomheterVarsel}
     </div>
   );
@@ -117,17 +118,17 @@ VirksomheterListe.defaultProps = {
  *
  * @param props
  */
-const VurderingVirksomhet = props => {
-  const {
-    bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, slettData,
-  } = props;
+const VurderingVirksomhet = (props) => {
+  const { bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, slettData } = props;
   const { harAvklaring, virksomheter } = tilstand;
 
-  useEffect(() => (
-    function cleanup() {
-      slettData();
-    }
-  ), []);
+  useEffect(
+    () =>
+      function cleanup() {
+        slettData();
+      },
+    []
+  );
 
   return (
     <div className="vurderingArbeidsgiver">
@@ -139,7 +140,14 @@ const VurderingVirksomhet = props => {
           {...props}
         />
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg3" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp
+            disabled={!(redigerbart && harAvklaring)}
+            className="fane__navigasjonsknapp"
+            data-cy-nesteknapp="knapp_steg3"
+            onClick={bekreftOgFortsett}
+          >
+            Bekreft og fortsett
+          </Nav.Knapp>
         </div>
       </div>
     </div>

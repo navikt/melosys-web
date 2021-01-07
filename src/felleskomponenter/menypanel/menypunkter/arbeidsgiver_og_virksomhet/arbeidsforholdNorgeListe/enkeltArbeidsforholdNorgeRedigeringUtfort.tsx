@@ -1,19 +1,19 @@
-import React from 'react';
-import { Organisasjon } from 'Domene';
+import React from "react";
+import { Organisasjon } from "Domene";
 
-import * as Api from '../../../../../services/api';
-import * as Nav from '../../../../../utils/navFrontend';
-import * as Utils from '../../../../../utils';
+import * as Api from "../../../../../services/api";
+import * as Nav from "../../../../../utils/navFrontend";
+import * as Utils from "../../../../../utils";
 
-import { useAsyncCallbackState } from '../../../../../hooks';
+import { useAsyncCallbackState } from "../../../../../hooks";
 
-import OrganisasjonsAdresse from '../../../../adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from "../../../../adresser/organisasjonsAdresse";
 
-import './enkeltArbeidsforholdNorgeRedigeringUtfort.css';
+import "./enkeltArbeidsforholdNorgeRedigeringUtfort.css";
 
 interface EnkeltArbeidsforholdNorgeRedigeringUtfortProps {
-  org: Organisasjon,
-  saksnummer: string
+  org: Organisasjon;
+  saksnummer: string;
 }
 
 const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
@@ -26,28 +26,30 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
     Utils.logger.error,
     [saksnummer, org.orgnr]
   );
-  const [kontaktopplysningerOrg] = useAsyncCallbackState(() => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr), {}, Utils.logger.error, [kontaktopplysninger.kontaktorgnr]);
+  const [kontaktopplysningerOrg] = useAsyncCallbackState(
+    () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr),
+    {},
+    Utils.logger.error,
+    [kontaktopplysninger.kontaktorgnr]
+  );
 
-  const kontaktopplysningerContent = (!kontaktopplysninger.kontaktnavn && !kontaktopplysninger.kontaktorgnr) ?
-    'Ingen kontaktopplysninger oppgitt'
-    :
-    <>
-      <Nav.typo.Element>Kontaktopplysninger</Nav.typo.Element>
-      <Nav.Row>
-        <Nav.Column xs="5">
-          <Nav.typo.Normaltekst>Kontaktperson:</Nav.typo.Normaltekst>
-          <Nav.typo.Element>{kontaktopplysninger.kontaktnavn || 'Ikke oppgitt'}</Nav.typo.Element>
-        </Nav.Column>
-      </Nav.Row>
-      {
-        !Utils._isEmpty(kontaktopplysningerOrg) ?
+  const kontaktopplysningerContent =
+    !kontaktopplysninger.kontaktnavn && !kontaktopplysninger.kontaktorgnr ? (
+      "Ingen kontaktopplysninger oppgitt"
+    ) : (
+      <>
+        <Nav.typo.Element>Kontaktopplysninger</Nav.typo.Element>
+        <Nav.Row>
+          <Nav.Column xs="5">
+            <Nav.typo.Normaltekst>Kontaktperson:</Nav.typo.Normaltekst>
+            <Nav.typo.Element>{kontaktopplysninger.kontaktnavn || "Ikke oppgitt"}</Nav.typo.Element>
+          </Nav.Column>
+        </Nav.Row>
+        {!Utils._isEmpty(kontaktopplysningerOrg) ? (
           <>
             <Nav.Row>
               <Nav.Column xs="5">
-                <OrganisasjonsAdresse
-                  organisasjon={kontaktopplysningerOrg}
-                  visTittel={false}
-                />
+                <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false} />
               </Nav.Column>
               <Nav.Column xs="3">
                 <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
@@ -56,38 +58,33 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
             </Nav.Row>
             <Nav.Row>
               <Nav.Column xs="12">
-                <Nav.typo.EtikettLiten>
-                  *Brev til arbeidsgiver sendes til denne adressen
-                </Nav.typo.EtikettLiten>
+                <Nav.typo.EtikettLiten>*Brev til arbeidsgiver sendes til denne adressen</Nav.typo.EtikettLiten>
               </Nav.Column>
             </Nav.Row>
           </>
-          :
+        ) : (
           <Nav.Row>
             <Nav.Column xs="5">
               <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
-              <Nav.typo.Element>{kontaktopplysningerOrg.orgnr || 'Ikke oppgitt'}</Nav.typo.Element>
+              <Nav.typo.Element>{kontaktopplysningerOrg.orgnr || "Ikke oppgitt"}</Nav.typo.Element>
             </Nav.Column>
           </Nav.Row>
-      }
-    </>;
+        )}
+      </>
+    );
 
   return (
     <div className="enkelt__arbeidsforhold__norge__redigeringutfort">
       <Nav.Row>
         <Nav.Column xs="5">
-          <OrganisasjonsAdresse
-            organisasjon={org}
-            visNavn={false}
-            visTittel={false}
-          />
+          <OrganisasjonsAdresse organisasjon={org} visNavn={false} visTittel={false} />
         </Nav.Column>
         <Nav.Column xs="3">
-          <Nav.typo.Normaltekst style={{ marginTop: '0.5em' }}>Organisasjonsnummer:</Nav.typo.Normaltekst>
+          <Nav.typo.Normaltekst style={{ marginTop: "0.5em" }}>Organisasjonsnummer:</Nav.typo.Normaltekst>
           <Nav.typo.Element>{org.orgnr}</Nav.typo.Element>
         </Nav.Column>
       </Nav.Row>
-      { kontaktopplysningerContent }
+      {kontaktopplysningerContent}
     </div>
   );
 };

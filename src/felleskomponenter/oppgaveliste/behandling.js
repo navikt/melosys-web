@@ -1,20 +1,15 @@
-import React from 'react';
-import PT from 'prop-types';
-import { Link } from 'react-router-dom';
+import React from "react";
+import PT from "prop-types";
+import { Link } from "react-router-dom";
 
-import * as Nav from '../../utils/navFrontend';
-import * as KV from '../../kodeverk';
-import EnkeltDato from '../datoOmrade/enkeltDato';
+import * as Nav from "../../utils/navFrontend";
+import * as KV from "../../kodeverk";
+import EnkeltDato from "../datoOmrade/enkeltDato";
 
-import './behandling.css';
+import "./behandling.css";
 
 const BehandlingPanel = ({ behandling, kanVises }) => {
-  const {
-    behandlingstema,
-    behandlingstype,
-    behandlingsstatus,
-    opprettetDato,
-  } = behandling;
+  const { behandlingstema, behandlingstype, behandlingsstatus, opprettetDato } = behandling;
 
   return (
     <Nav.Panel className="behandling">
@@ -23,25 +18,22 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
           <Nav.Column xs="12" md="5">
             <dl className="behandling__meta">
               <dt>Behandlingstema:</dt>
-              <dd>{KV.objektTilTerm(behandlingstema) || '(ukjent)'}</dd>
+              <dd>{KV.objektTilTerm(behandlingstema) || "(ukjent)"}</dd>
               <dt>Opprettelsesdato:</dt>
-              <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
+              <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="behandling__meta">
               <dt>Behandlingstype:</dt>
-              <dd>{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
+              <dd>{KV.objektTilTerm(behandlingstype) || "(ukjent)"}</dd>
               <dt>Behandlingsstatus:</dt>
-              <dd>{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
+              <dd>{KV.objektTilTerm(behandlingsstatus) || "(ukjent)"}</dd>
             </dl>
           </Nav.Column>
         </Nav.Column>
         <Nav.Column xs="12" md="3">
-          {
-            kanVises &&
-            <Nav.Knapp>VIS BEHANDLING</Nav.Knapp>
-          }
+          {kanVises && <Nav.Knapp>VIS BEHANDLING</Nav.Knapp>}
         </Nav.Column>
       </Nav.Row>
     </Nav.Panel>

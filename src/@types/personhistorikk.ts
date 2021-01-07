@@ -1,19 +1,19 @@
-import { GeneriskAdresse, MidlertidigAdresse, UstrukturertAdresse } from './adresse';
-import { Periode } from './periode';
+import { GeneriskAdresse, MidlertidigAdresse, UstrukturertAdresse } from "./adresse";
+import { Periode } from "./periode";
 
 type Personhistorikk = {
   bostedsadressePerioder: {
-    bostedsadresse: GeneriskAdresse,
-    periode: Periode,
-  }[],
+    bostedsadresse: GeneriskAdresse;
+    periode: Periode;
+  }[];
   postadressePerioder: {
-    postadresse: UstrukturertAdresse,
-    periode: Periode,
-  }[],
+    postadresse: UstrukturertAdresse;
+    periode: Periode;
+  }[];
   midlertidigAdressePerioder: {
-    midlertidigAdresse: MidlertidigAdresse,
-    periode: Periode,
-  }[],
+    midlertidigAdresse: MidlertidigAdresse;
+    periode: Periode;
+  }[];
 };
 
 export default Personhistorikk;

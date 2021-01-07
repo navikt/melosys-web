@@ -1,12 +1,12 @@
-import * as Utils from '../../utils';
+import * as Utils from "../../utils";
 
 const skalReturnereFeilmelding = (meta, errorConfig) => {
   if (!errorConfig) return true;
 
   return (
-    (errorConfig.submitFailed === meta.submitFailed) &&
-    (errorConfig.active === meta.active) &&
-    (errorConfig.touched === meta.touched)
+    errorConfig.submitFailed === meta.submitFailed &&
+    errorConfig.active === meta.active &&
+    errorConfig.touched === meta.touched
   );
 };
 

@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { change, Field, formValueSelector, FieldArray } from 'redux-form';
-import * as PT from 'prop-types';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { change, Field, formValueSelector, FieldArray } from "redux-form";
+import * as PT from "prop-types";
 
-import * as Api from '../services/api';
-import * as Utils from '../utils';
-import MKV from '../melosyskodeverk';
+import * as Api from "../services/api";
+import * as Utils from "../utils";
+import MKV from "../melosyskodeverk";
 
-import { useAsyncCallbackState } from '../hooks';
-import { SelectWrappedComponent } from './skjema/input/select';
+import { useAsyncCallbackState } from "../hooks";
+import { SelectWrappedComponent } from "./skjema/input/select";
 
-const MOTTAKERINSTITUSJON = 'mottakerinstitusjon';
-const KREVER_MOTTAKERINSTITUSJON = 'kreverMottakerinstitusjon';
+const MOTTAKERINSTITUSJON = "mottakerinstitusjon";
+const KREVER_MOTTAKERINSTITUSJON = "kreverMottakerinstitusjon";
 
 export const MottakerinstitusjonvelgerSchema = ({
   redigerbart,
@@ -27,7 +27,10 @@ export const MottakerinstitusjonvelgerSchema = ({
   }
 
   const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, [landkode]);
-  const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [landkode, bucType]);
+  const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [
+    landkode,
+    bucType,
+  ]);
 
   useEffect(() => {
     oppdaterKreverMottakerinstitusjon(!Utils._isEmpty(mottakerinstitusjoner));
@@ -49,7 +52,11 @@ export const MottakerinstitusjonvelgerSchema = ({
       data-cy={data_cy}
       {...rest}
     >
-      {mottakerinstitusjoner.map(institusjon => <option key={institusjon.id} value={institusjon.id}>{institusjon.navn}</option>)}
+      {mottakerinstitusjoner.map((institusjon) => (
+        <option key={institusjon.id} value={institusjon.id}>
+          {institusjon.navn}
+        </option>
+      ))}
     </SelectWrappedComponent>
   );
 };
@@ -64,16 +71,10 @@ MottakerinstitusjonvelgerSchema.propTypes = {
 };
 
 MottakerinstitusjonvelgerSchema.defaultProps = {
-  label: 'Velg utenlandsk institusjon som skal motta SED',
+  label: "Velg utenlandsk institusjon som skal motta SED",
 };
 
-const Mottakerinstitusjonvelger = ({
-  redigerbart,
-  landkode,
-  bucType,
-  oppdaterKreverMottakerinstitusjon,
-  data_cy,
-}) => (
+const Mottakerinstitusjonvelger = ({ redigerbart, landkode, bucType, oppdaterKreverMottakerinstitusjon, data_cy }) => (
   <Field
     name={MOTTAKERINSTITUSJON}
     component={MottakerinstitusjonvelgerSchema}
@@ -97,23 +98,25 @@ Mottakerinstitusjonvelger.propTypes = {
 };
 
 Mottakerinstitusjonvelger.defaultProps = {
-  data_cy: 'mottakerinstitusjoner',
+  data_cy: "mottakerinstitusjoner",
 };
 
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  oppdaterKreverMottakerinstitusjon: kreverMottakerinstitusjon => dispatch(change(ownProps.form, KREVER_MOTTAKERINSTITUSJON, kreverMottakerinstitusjon)),
+  oppdaterKreverMottakerinstitusjon: (kreverMottakerinstitusjon) =>
+    dispatch(change(ownProps.form, KREVER_MOTTAKERINSTITUSJON, kreverMottakerinstitusjon)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mottakerinstitusjonvelger);
 
 const mapStateToPropsFlervalg = (state, ownProps) => ({
-  hentFelt: feltnavn => formValueSelector(ownProps.form)(state, feltnavn),
+  hentFelt: (feltnavn) => formValueSelector(ownProps.form)(state, feltnavn),
 });
 
-const mapDispatchToPropsFlervalg = dispatch => ({
-  oppdaterKreverMottakerinstitusjon: (form, feltnavn) => kreverMottakerinstitusjon => dispatch(change(form, feltnavn, kreverMottakerinstitusjon)),
+const mapDispatchToPropsFlervalg = (dispatch) => ({
+  oppdaterKreverMottakerinstitusjon: (form, feltnavn) => (kreverMottakerinstitusjon) =>
+    dispatch(change(form, feltnavn, kreverMottakerinstitusjon)),
 });
 
 const MottakerinstitusjonvelgerFlervalgInner = ({
@@ -125,7 +128,7 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
   bucType,
   data_cy,
 }) =>
-  fields.map(mottakerinstitusjon =>
+  fields.map((mottakerinstitusjon) => (
     <Field
       key={`${mottakerinstitusjon}.id`}
       name={`${mottakerinstitusjon}.id`}
@@ -135,10 +138,14 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
         bucType,
         landkode: hentFelt(`${mottakerinstitusjon}.kode`),
         label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
-        oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(form, `${mottakerinstitusjon}.kreverMottakerinstitusjon`),
+        oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(
+          form,
+          `${mottakerinstitusjon}.kreverMottakerinstitusjon`
+        ),
         data_cy,
       }}
-    />);
+    />
+  ));
 
 MottakerinstitusjonvelgerFlervalgInner.propTypes = {
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
@@ -151,22 +158,18 @@ MottakerinstitusjonvelgerFlervalgInner.propTypes = {
 };
 
 MottakerinstitusjonvelgerFlervalgInner.defaultProps = {
-  data_cy: 'mottakerinstitusjoner',
+  data_cy: "mottakerinstitusjoner",
 };
 
-const MottakerinstitusjonvelgerFlervalgWrapper = ({
-  feltnavn,
-  ...rest
-}) => (
-  <FieldArray
-    name={feltnavn}
-    component={MottakerinstitusjonvelgerFlervalgInner}
-    props={{ ...rest }}
-  />
+const MottakerinstitusjonvelgerFlervalgWrapper = ({ feltnavn, ...rest }) => (
+  <FieldArray name={feltnavn} component={MottakerinstitusjonvelgerFlervalgInner} props={{ ...rest }} />
 );
 
 MottakerinstitusjonvelgerFlervalgWrapper.propTypes = {
   feltnavn: PT.string.isRequired,
 };
 
-export const MottakerinstitusjonvelgerFlervalg = connect(mapStateToPropsFlervalg, mapDispatchToPropsFlervalg)(MottakerinstitusjonvelgerFlervalgWrapper);
+export const MottakerinstitusjonvelgerFlervalg = connect(
+  mapStateToPropsFlervalg,
+  mapDispatchToPropsFlervalg
+)(MottakerinstitusjonvelgerFlervalgWrapper);

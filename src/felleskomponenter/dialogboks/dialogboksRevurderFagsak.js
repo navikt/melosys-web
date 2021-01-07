@@ -1,18 +1,13 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import Knapperad from '../knapperad';
+import Knapperad from "../knapperad";
 
-import './dialogboksRevurderFagsak.css';
+import "./dialogboksRevurderFagsak.css";
 
-export const DialogboksRevurderFagsak = ({
-  bekreft,
-  avbryt,
-  ariaHideApp,
-  spinner,
-}) => (
+export const DialogboksRevurderFagsak = ({ bekreft, avbryt, ariaHideApp, spinner }) => (
   <Nav.Modal
     className="dialogboksRevurderFagsak"
     isOpen
@@ -20,7 +15,8 @@ export const DialogboksRevurderFagsak = ({
     onRequestClose={avbryt}
     closeButton={false}
     shouldCloseOnOverlayClick
-    ariaHideApp={ariaHideApp}>
+    ariaHideApp={ariaHideApp}
+  >
     <Nav.typo.Systemtittel className="overskrift">Vurder vedtak på nytt</Nav.typo.Systemtittel>
     <Knapperad
       bekreft={bekreft}

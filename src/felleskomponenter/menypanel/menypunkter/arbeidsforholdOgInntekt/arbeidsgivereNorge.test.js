@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import * as Mui from '../../../../felleskomponenter/ui';
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import { ArbeidsgivereNorge, ArbeidsgivereEnkeltNorge } from './arbeidsgivereNorge';
+import { ArbeidsgivereNorge, ArbeidsgivereEnkeltNorge } from "./arbeidsgivereNorge";
 
-import Organisasjon from '../arbeidsgiver/organisasjon';
-import Arbeidsforholdene from '../arbeidsgiver/arbeidsforhold';
-import Inntekt from '../arbeidsgiver/inntekt';
+import Organisasjon from "../arbeidsgiver/organisasjon";
+import Arbeidsforholdene from "../arbeidsgiver/arbeidsforhold";
+import Inntekt from "../arbeidsgiver/inntekt";
 
-describe('ArbeidsgivereNorge', () => {
+describe("ArbeidsgivereNorge", () => {
   let props = null;
 
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('ArbeidsgivereNorge', () => {
     };
   });
 
-  it('lister ut alle arbeidsgivere i Norge', () => {
+  it("lister ut alle arbeidsgivere i Norge", () => {
     const arbeidsgivereNorge = shallow(<ArbeidsgivereNorge {...props} />);
     const arbeidsgivereNorgeListe = arbeidsgivereNorge.find(ArbeidsgivereEnkeltNorge);
 
@@ -35,18 +35,15 @@ describe('ArbeidsgivereNorge', () => {
     expect(arbeidsgivereNorgeListe.first().props().inntektListe).toBe(props.arbeidsgivereNorge[0].inntektListe);
   });
 
-  it('wrapper ikke arbeidsgiver i panel ved 1 arbeidsgiver', () => {
+  it("wrapper ikke arbeidsgiver i panel ved 1 arbeidsgiver", () => {
     const arbeidsgivereNorge = shallow(<ArbeidsgivereNorge {...props} />);
     const arbeidsgivereNorgeListe = arbeidsgivereNorge.find(ArbeidsgivereEnkeltNorge);
 
     expect(arbeidsgivereNorgeListe.first().props().wrapIPanel).toBe(false);
   });
 
-  it('wrapper arbeidsgiver i panel ved 2 arbeidsgivere', () => {
-    props.arbeidsgivereNorge = [
-      ...props.arbeidsgivereNorge,
-      ...props.arbeidsgivereNorge,
-    ];
+  it("wrapper arbeidsgiver i panel ved 2 arbeidsgivere", () => {
+    props.arbeidsgivereNorge = [...props.arbeidsgivereNorge, ...props.arbeidsgivereNorge];
     const arbeidsgivereNorge = shallow(<ArbeidsgivereNorge {...props} />);
     const arbeidsgivereNorgeListe = arbeidsgivereNorge.find(ArbeidsgivereEnkeltNorge);
 
@@ -54,14 +51,14 @@ describe('ArbeidsgivereNorge', () => {
   });
 });
 
-describe('ArbeidsgivereEnkeltNorge', () => {
+describe("ArbeidsgivereEnkeltNorge", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      kilde: 'Skatteetaten',
+      kilde: "Skatteetaten",
       organisasjon: {
-        navn: 'NAV Oslo',
+        navn: "NAV Oslo",
       },
       arbeidsforholdene: [],
       inntektListe: [],
@@ -70,7 +67,7 @@ describe('ArbeidsgivereEnkeltNorge', () => {
     };
   });
 
-  it('viser organisasjon, arbeidsforhold og inntekt', () => {
+  it("viser organisasjon, arbeidsforhold og inntekt", () => {
     const arbeidsgivereEnkeltNorge = shallow(<ArbeidsgivereEnkeltNorge {...props} />);
     const organisasjon = arbeidsgivereEnkeltNorge.find(Organisasjon);
     const organisasjonProps = organisasjon.props();
@@ -87,7 +84,7 @@ describe('ArbeidsgivereEnkeltNorge', () => {
     expect(inntektProps.inntektListe).toBe(props.inntektListe);
   });
 
-  it('kan wrappes i panel', () => {
+  it("kan wrappes i panel", () => {
     props.wrapIPanel = true;
     let arbeidsgivereEnkeltNorge = shallow(<ArbeidsgivereEnkeltNorge {...props} />);
 

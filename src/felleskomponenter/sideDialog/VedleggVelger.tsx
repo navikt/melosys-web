@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { FysiskDokument } from 'Domene';
+import React, { useState } from "react";
+import { FysiskDokument } from "Domene";
 
-import * as Nav from '../../utils/navFrontend';
-import * as Mui from '../ui';
-import * as Ikoner from '../../resources/images';
-import * as Utils from '../../utils';
+import * as Nav from "../../utils/navFrontend";
+import * as Mui from "../ui";
+import * as Ikoner from "../../resources/images";
+import * as Utils from "../../utils";
 
-import PdfLink, { lagPdfUrl } from './pdfLink';
+import PdfLink, { lagPdfUrl } from "./pdfLink";
 
-import './VedleggVelger.css';
+import "./VedleggVelger.css";
 
 interface EnkeltVedleggProps {
-  vedlegg: FysiskDokument,
-  leggTilVedlegg: () => void,
-  fjernVedlegg: () => void,
-  slettVedlegg: () => void,
-  vedleggErMarkert: boolean,
-  redigerer: boolean,
+  vedlegg: FysiskDokument;
+  leggTilVedlegg: () => void;
+  fjernVedlegg: () => void;
+  slettVedlegg: () => void;
+  vedleggErMarkert: boolean;
+  redigerer: boolean;
 }
 
 const EnkeltVedlegg = ({
@@ -35,21 +35,19 @@ const EnkeltVedlegg = ({
     }
   };
 
-  const apnePdf = () => window.open(lagPdfUrl(vedlegg.journalpostID, vedlegg.dokumentID), '_blank');
+  const apnePdf = () => window.open(lagPdfUrl(vedlegg.journalpostID, vedlegg.dokumentID), "_blank");
 
   return (
     <tr>
-      { redigerer ?
+      {redigerer ? (
         <td>
           <Nav.Checkbox onChange={checkboxChangeHandler} checked={vedleggErMarkert} label="&nbsp;" />
-        </td> : <td />
-      }
+        </td>
+      ) : (
+        <td />
+      )}
       <td>
-        <PdfLink
-          journalpostID={vedlegg.journalpostID}
-          dokumentID={vedlegg.dokumentID}
-          tittel={vedlegg.tittel}
-        />
+        <PdfLink journalpostID={vedlegg.journalpostID} dokumentID={vedlegg.dokumentID} tittel={vedlegg.tittel} />
       </td>
       <td>
         <span>{vedlegg.avsenderEllerMottaker}</span>
@@ -60,22 +58,18 @@ const EnkeltVedlegg = ({
       <td>
         <Mui.Knapp ikon={Ikoner.Eye} onClick={apnePdf} />
       </td>
-      <td>
-        { !redigerer &&
-          <Mui.Knapp type="flat" ikon={Ikoner.Bin} onClick={slettVedlegg} />
-        }
-      </td>
+      <td>{!redigerer && <Mui.Knapp type="flat" ikon={Ikoner.Bin} onClick={slettVedlegg} />}</td>
     </tr>
   );
 };
 
 interface VedleggListeProps {
-  valgteVedlegg: FysiskDokument[],
-  alleVedlegg: FysiskDokument[],
-  redigerer: boolean,
-  onAvbryt: () => void,
-  onLeggTil: (markerteVedlegg: string[]) => void,
-  onSlettVedlegg: (vedleggID: string) => void,
+  valgteVedlegg: FysiskDokument[];
+  alleVedlegg: FysiskDokument[];
+  redigerer: boolean;
+  onAvbryt: () => void;
+  onLeggTil: (markerteVedlegg: string[]) => void;
+  onSlettVedlegg: (vedleggID: string) => void;
 }
 
 const VedleggListe = ({
@@ -89,7 +83,7 @@ const VedleggListe = ({
   const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>([]);
 
   const markerVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg, vedleggID]);
-  const fjernVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg.filter(id => id !== vedleggID)]);
+  const fjernVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg.filter((id) => id !== vedleggID)]);
   const vedleggErMarkert = (vedleggID: string) => markerteVedlegg.includes(vedleggID);
 
   const slettVedlegg = (vedleggID: string) => {
@@ -128,46 +122,43 @@ const VedleggListe = ({
           </tr>
         </thead>
         <tbody>
-          {
-            hentGjeldendeVedlegg().map(enkeltVedlegg =>
-              <EnkeltVedlegg
-                key={enkeltVedlegg.id}
-                vedlegg={enkeltVedlegg}
-                leggTilVedlegg={() => markerVedlegg(enkeltVedlegg.id)}
-                fjernVedlegg={() => fjernVedlegg(enkeltVedlegg.id)}
-                slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
-                vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
-                redigerer={redigerer}
-              />)
-          }
+          {hentGjeldendeVedlegg().map((enkeltVedlegg) => (
+            <EnkeltVedlegg
+              key={enkeltVedlegg.id}
+              vedlegg={enkeltVedlegg}
+              leggTilVedlegg={() => markerVedlegg(enkeltVedlegg.id)}
+              fjernVedlegg={() => fjernVedlegg(enkeltVedlegg.id)}
+              slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+              vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
+              redigerer={redigerer}
+            />
+          ))}
         </tbody>
       </table>
-      { redigerer &&
+      {redigerer && (
         <>
-          <Mui.Knapp onClick={leggTilMarkerteVedleggHandler} ikon={Ikoner.AddOne}>Legg til markerte vedlegg</Mui.Knapp>
+          <Mui.Knapp onClick={leggTilMarkerteVedleggHandler} ikon={Ikoner.AddOne}>
+            Legg til markerte vedlegg
+          </Mui.Knapp>
           <Mui.Knapp onClick={avbrytHandler}>Avbryt</Mui.Knapp>
         </>
-      }
+      )}
     </Nav.Row>
   );
 };
 
 interface VedleggVelgerProps {
-  dokumenter: FysiskDokument[],
-  valgteVedlegg: FysiskDokument[],
-  setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void,
+  dokumenter: FysiskDokument[];
+  valgteVedlegg: FysiskDokument[];
+  setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void;
 }
 
-export const VedleggVelger = ({
-  dokumenter,
-  valgteVedlegg,
-  setValgteVedlegg,
-}: VedleggVelgerProps) => {
+export const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
 
-  const harValgteVedlegg = (valgteVedlegg && valgteVedlegg.length > 0);
+  const harValgteVedlegg = valgteVedlegg && valgteVedlegg.length > 0;
   const skalViseVedleggListe = harValgteVedlegg || redigerer;
 
   const onAvbrytHandler = () => {
@@ -176,7 +167,7 @@ export const VedleggVelger = ({
 
   const onLeggTilHandler = (markerteVedlegg: string[]) => {
     toggleRedigerer();
-    setValgteVedlegg(dokumenter.filter(v => markerteVedlegg.includes(v.id)));
+    setValgteVedlegg(dokumenter.filter((v) => markerteVedlegg.includes(v.id)));
   };
 
   const onSlettVedleggHandler = (vedleggID: string) => {
@@ -186,7 +177,7 @@ export const VedleggVelger = ({
   return (
     <Nav.Row className="vedleggvelger">
       <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
-      { skalViseVedleggListe &&
+      {skalViseVedleggListe && (
         <VedleggListe
           redigerer={redigerer}
           onAvbryt={onAvbrytHandler}
@@ -195,11 +186,12 @@ export const VedleggVelger = ({
           valgteVedlegg={valgteVedlegg}
           alleVedlegg={dokumenter}
         />
-      }
-      { !redigerer &&
-        <Mui.Knapp onClick={() => toggleRedigerer()} ikon={Ikoner.AddOne}>Legg til vedlegg</Mui.Knapp>
-      }
+      )}
+      {!redigerer && (
+        <Mui.Knapp onClick={() => toggleRedigerer()} ikon={Ikoner.AddOne}>
+          Legg til vedlegg
+        </Mui.Knapp>
+      )}
     </Nav.Row>
   );
 };
-

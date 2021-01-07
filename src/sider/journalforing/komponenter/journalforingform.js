@@ -1,25 +1,25 @@
-import React, { Fragment } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import { reduxForm, getFormValues, change } from 'redux-form';
+import React, { Fragment } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import { reduxForm, getFormValues, change } from "redux-form";
 
-import * as Ikoner from '../../../resources/images';
-import * as KV from '../../../kodeverk';
-import * as Utils from '../../../utils';
-import * as MPT from '../../../proptypes';
-import * as Skjema from '../../../felleskomponenter/skjema';
-import * as Mui from '../../../felleskomponenter/ui';
+import * as Ikoner from "../../../resources/images";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
+import * as MPT from "../../../proptypes";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 
-import MKV, { Utils as MKVUtils } from '../../../melosyskodeverk';
-import { BOOLSK } from '../../../constants';
-import { journalforingSelectors } from '../../../ducks/journalforing';
-import Informasjon from '../komponenter/informasjon';
-import FagsakVelger from './fagsakVelger';
-import SendForvaltningsMelding from './sendForvaltningsMelding';
-import Fotknapper from './fotknapper';
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
+import { BOOLSK } from "../../../constants";
+import { journalforingSelectors } from "../../../ducks/journalforing";
+import Informasjon from "../komponenter/informasjon";
+import FagsakVelger from "./fagsakVelger";
+import SendForvaltningsMelding from "./sendForvaltningsMelding";
+import Fotknapper from "./fotknapper";
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
-const JournalforingForm = props => {
+const JournalforingForm = (props) => {
   const {
     journalpostID,
     hoveddokumentID,
@@ -36,7 +36,8 @@ const JournalforingForm = props => {
     kanSubmittes,
     handleSubmit,
   } = props;
-  const visForvaltningsMelding = formValues.saksnummer === '-1' && MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema);
+  const visForvaltningsMelding =
+    formValues.saksnummer === "-1" && MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -48,20 +49,27 @@ const JournalforingForm = props => {
         hentOgVisBruker={hentOgVisBruker}
         hentOgVisRepresentant={hentOgVisRepresentant}
       />
-      <Mui.Undertittel tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
+      <Mui.Undertittel
+        tekst="Knytt til brukers eksisterende sak eller opprett ny sak"
+        ikon={Ikoner.CheckList}
+        className="undertittel oversteUndertittel"
+      />
       <FagsakVelger
         sakstyper={MKV.KTObjects.sakstyper.filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)}
         behandlingstemaer={behandlingstemaer}
         fagsakListe={fagsakListe}
         settJournalforingHensikt={settJournalforingHensikt}
       />
-      {
-        visForvaltningsMelding &&
+      {visForvaltningsMelding && (
         <Fragment>
-          <Mui.Undertittel tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
+          <Mui.Undertittel
+            tekst="Melding om saksbehandlingstid"
+            ikon={Ikoner.PaperPlane}
+            className="undertittel oversteUndertittel"
+          />
           <SendForvaltningsMelding avsenderType={formValues.avsenderType} settFeltInnhold={settFeltInnhold} />
         </Fragment>
-      }
+      )}
       <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
       <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
     </form>
@@ -88,30 +96,37 @@ JournalforingForm.propTypes = {
 
 JournalforingForm.defaultProps = {
   formValues: {},
-  hoveddokumentID: '',
+  hoveddokumentID: "",
 };
 
-const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
-const mapStateToProps = state => {
+const toVedleggMedProps = (vedlegg) =>
+  vedlegg.reduce((acc, d, index) => {
+    acc[`tittel_${index}`] = d.tittel;
+    return acc;
+  }, {});
+const mapStateToProps = (state) => {
   const avsenderType = journalforingSelectors.AvsenderTypeSelector(state);
 
   return {
     erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
     formValues: getFormValues(KV.Form.JOURNALFORING)(state),
     initialValues: {
-      avsenderType: (journalforingSelectors.ErAvsenderPreutfyltSelector(state) && avsenderType === MKV.Koder.avsendertyper.PERSON) ? MKV.Koder.avsendertyper.PERSON : avsenderType,
+      avsenderType:
+        journalforingSelectors.ErAvsenderPreutfyltSelector(state) && avsenderType === MKV.Koder.avsendertyper.PERSON
+          ? MKV.Koder.avsendertyper.PERSON
+          : avsenderType,
       behandlingstype: null,
-      saksnummer: '',
+      saksnummer: "",
       brukerID: journalforingSelectors.BrukerIDSelector(state),
       erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
       avsenderID: journalforingSelectors.AvsenderIDSelector(state),
       avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
       arbeidsgiverID: null,
-      representantID: '',
-      representantRepresenterer: '',
+      representantID: "",
+      representantRepresenterer: "",
       mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
       hoveddokument: {
-        tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || 'Uten tittel',
+        tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",
         logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
       },
       vedlegg: {
@@ -130,8 +145,9 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
+const mapDispatchToProps = (dispatch) => ({
+  settJournalforingHensikt: (journalforingHensikt) =>
+    dispatch(change(KV.Form.JOURNALFORING, "journalforingHensikt", journalforingHensikt)),
 });
 
 const form = {

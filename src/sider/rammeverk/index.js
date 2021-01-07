@@ -1,3 +1,3 @@
-import Rammeverk from './rammeverk';
+import Rammeverk from "./rammeverk";
 
 export default Rammeverk;

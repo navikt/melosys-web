@@ -1,37 +1,31 @@
-import { createSelector, Selector } from 'reselect';
-import { RootState, StateSection } from 'AppTypes';
+import { createSelector, Selector } from "reselect";
+import { RootState, StateSection } from "AppTypes";
 
-import * as DucksUtils from '../utils';
-import * as Types from './types';
+import * as DucksUtils from "../utils";
+import * as Types from "./types";
 
 const FeiletresponsSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  state => state.feiletrespons,
-  feiletrespons => feiletrespons
+  (state) => state.feiletrespons,
+  (feiletrespons) => feiletrespons
 );
 
-const ReduxStatusSelector = createSelector(
-  FeiletresponsSelector,
-  feiletrespons => feiletrespons.status
-);
+const ReduxStatusSelector = createSelector(FeiletresponsSelector, (feiletrespons) => feiletrespons.status);
 
-const FeiletResponsDataSelector = createSelector(
-  FeiletresponsSelector,
-  feiletrespons => feiletrespons.data
-);
+const FeiletResponsDataSelector = createSelector(FeiletresponsSelector, (feiletrespons) => feiletrespons.data);
 
 const HttpResponsDataSelector = createSelector(
   FeiletResponsDataSelector,
-  feiletresponsData => feiletresponsData.data
+  (feiletresponsData) => feiletresponsData.data
 );
 
 const HttpStatusSelector = createSelector(
   HttpResponsDataSelector,
-  httpResponsData => httpResponsData && httpResponsData.status
+  (httpResponsData) => httpResponsData && httpResponsData.status
 );
 
 const HttpMessageSelector = createSelector(
   HttpResponsDataSelector,
-  httpResponsData => httpResponsData && httpResponsData.message
+  (httpResponsData) => httpResponsData && httpResponsData.message
 );
 
 export const FeilmeldingSelector = createSelector(
@@ -41,8 +35,4 @@ export const FeilmeldingSelector = createSelector(
   DucksUtils.hentFeilmelding
 );
 
-export const FeilkoderSelector = createSelector(
-  HttpResponsDataSelector,
-  ReduxStatusSelector,
-  DucksUtils.hentFeilkoder
-);
+export const FeilkoderSelector = createSelector(HttpResponsDataSelector, ReduxStatusSelector, DucksUtils.hentFeilkoder);

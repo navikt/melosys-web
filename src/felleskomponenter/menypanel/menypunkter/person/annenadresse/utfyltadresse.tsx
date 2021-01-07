@@ -1,16 +1,12 @@
-import React from 'react';
-import { StrukturertAdresse } from 'Domene';
+import React from "react";
+import { StrukturertAdresse } from "Domene";
 
-import StrukturertAdresseKomponent from '../../../../adresser/strukturertAdresse';
+import StrukturertAdresseKomponent from "../../../../adresser/strukturertAdresse";
 
 interface UtfyltAdresseProps {
-  adresse: StrukturertAdresse,
+  adresse: StrukturertAdresse;
 }
 
-const UtfyltAdresse = ({
-  adresse,
-}: UtfyltAdresseProps) => (
-  <StrukturertAdresseKomponent adresse={adresse} />
-);
+const UtfyltAdresse = ({ adresse }: UtfyltAdresseProps) => <StrukturertAdresseKomponent adresse={adresse} />;
 
 export default UtfyltAdresse;

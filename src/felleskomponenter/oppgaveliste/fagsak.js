@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import * as MPT from '../../proptypes';
-import * as Ikoner from '../../resources/images';
-import * as Nav from '../../utils/navFrontend';
-import * as KV from '../../kodeverk';
-import * as Routing from '../../routing';
+import * as MPT from "../../proptypes";
+import * as Ikoner from "../../resources/images";
+import * as Nav from "../../utils/navFrontend";
+import * as KV from "../../kodeverk";
+import * as Routing from "../../routing";
 
-import Behandling from './behandling';
-import PanelHeader from '../panelHeader/panelHeader';
-import EnkeltDato from '../datoOmrade/enkeltDato';
-import { DatoOmradeDescription } from '../datoOmrade/datoOmrade';
-import sorterElementerEtterDato from '../sorterbarListe/sorterElementerEtterDato';
+import Behandling from "./behandling";
+import PanelHeader from "../panelHeader/panelHeader";
+import EnkeltDato from "../datoOmrade/enkeltDato";
+import { DatoOmradeDescription } from "../datoOmrade/datoOmrade";
+import sorterElementerEtterDato from "../sorterbarListe/sorterElementerEtterDato";
 
-import './fagsak.css';
+import "./fagsak.css";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -20,43 +20,33 @@ import './fagsak.css';
  * seg inn på den.
  */
 const Fagsak = ({ sak }) => {
-  const {
-    opprettetDato,
-    sakstype,
-    saksstatus,
-    saksnummer,
-    behandlingOversikter,
-  } = sak;
+  const { opprettetDato, sakstype, saksstatus, saksnummer, behandlingOversikter } = sak;
   const VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND = 0;
-  const {
-    periode,
-    land,
-  } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
+  const { periode, land } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-  const customMargin = { marginLeft: '1em' };
+  const landListeSomStreng = land ? land.join(", ") : "(ukjent)";
+  const customMargin = { marginLeft: "1em" };
 
-  const sorterteBehandlinger = behandlingOversikter.slice().sort(sorterElementerEtterDato('descending', 'opprettetDato'));
+  const sorterteBehandlinger = behandlingOversikter
+    .slice()
+    .sort(sorterElementerEtterDato("descending", "opprettetDato"));
 
   return (
     <Nav.Panel className="fagsak">
-      <PanelHeader
-        ikon={Ikoner.IkonSak}
-        tittel={tittel}
-        undertittel="" />
+      <PanelHeader ikon={Ikoner.IkonSak} tittel={tittel} undertittel="" />
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12" md="5">
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
-              <dd>{KV.objektTilTerm(saksstatus) || '(ukjent)'}</dd>
+              <dd>{KV.objektTilTerm(saksstatus) || "(ukjent)"}</dd>
               <DatoOmradeDescription label="Periode: " periode={periode} />
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
               <dt>Opprettet:</dt>
-              <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
+              <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
               <dt>Land:</dt>
               <dd>{landListeSomStreng}</dd>
             </dl>
@@ -71,10 +61,13 @@ const Fagsak = ({ sak }) => {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
-          {
-            sorterteBehandlinger.map(behandling =>
-              <Behandling key={behandling.behandlingID} behandling={behandling} link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)} />)
-          }
+          {sorterteBehandlinger.map((behandling) => (
+            <Behandling
+              key={behandling.behandlingID}
+              behandling={behandling}
+              link={Routing.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstema.kode)}
+            />
+          ))}
         </Nav.Row>
       </Nav.Container>
     </Nav.Panel>

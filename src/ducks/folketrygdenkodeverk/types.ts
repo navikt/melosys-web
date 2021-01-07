@@ -1,31 +1,31 @@
-import { KTObject } from '@navikt/melosys-kodeverk';
+import { KTObject } from "@navikt/melosys-kodeverk";
 
-export const OK = 'folketrygdenkodeverk/OK';
-export const FEILET = 'folketrygdenkodeverk/FEILET';
-export const PENDING = 'folketrygdenkodeverk/PENDING';
+export const OK = "folketrygdenkodeverk/OK";
+export const FEILET = "folketrygdenkodeverk/FEILET";
+export const PENDING = "folketrygdenkodeverk/PENDING";
 
 export interface Data {
-  Trygdedekninger?: KTObject[]
-  Vilkaar?: KTObject[]
+  Trygdedekninger?: KTObject[];
+  Vilkaar?: KTObject[];
   begrunnelser?: {
-    [key: string]: KTObject[]
-  }
-  InnvilgelsesResultat?: KTObject[]
-  Saerligeavgiftsgrupper?: KTObject[]
+    [key: string]: KTObject[];
+  };
+  InnvilgelsesResultat?: KTObject[];
+  Saerligeavgiftsgrupper?: KTObject[];
 }
 
 interface FeiletAction {
-  type: typeof FEILET,
-  data: any,
+  type: typeof FEILET;
+  data: any;
 }
 
 interface PendingAction {
-  type: typeof PENDING,
+  type: typeof PENDING;
 }
 
 interface OkAction {
-  type: typeof OK,
-  data: Data,
+  type: typeof OK;
+  data: Data;
 }
 
 export type Action = FeiletAction | PendingAction | OkAction;

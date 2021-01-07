@@ -1,8 +1,8 @@
-import EditerbartElementListe from './editerbartElementListe';
+import EditerbartElementListe from "./editerbartElementListe";
 
 export type {
   Redigerer as EnRedigeringsknappListeRedigerer,
   RedigeringUtfort as EnRedigeringsknappListeRedigeringUtfort,
-} from './enRedigeringsknappListe';
+} from "./enRedigeringsknappListe";
 
 export default EditerbartElementListe;

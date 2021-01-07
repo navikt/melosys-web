@@ -1,21 +1,13 @@
-import React, { useState } from 'react';
-import PT from 'prop-types';
+import React, { useState } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Mui from '..';
-import * as Ikoner from '../../../resources/images';
+import * as Nav from "../../../utils/navFrontend";
+import * as Mui from "..";
+import * as Ikoner from "../../../resources/images";
 
-import './element.css';
+import "./element.css";
 
-const Element = ({
-  kode,
-  term,
-  onFjern,
-  onAngreFjern,
-  fjernbar,
-  redigerbar,
-  defaultFjernet,
-}) => {
+const Element = ({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defaultFjernet }) => {
   const [fjernet, setFjernet] = useState(defaultFjernet);
 
   const fjern = () => {
@@ -31,19 +23,20 @@ const Element = ({
   return (
     <Nav.Row className="element">
       <Nav.Column xs="6">{term}</Nav.Column>
-      {
-        fjernbar &&
+      {fjernbar && (
         <Nav.Column xs="6">
-          {
-            !fjernet &&
-            <Mui.Knapp ikon={Ikoner.RemoveOne} disabled={!redigerbar} onClick={fjern}>FJERN</Mui.Knapp>
-          }
-          {
-            fjernet &&
-            <Mui.Knapp ikon={Ikoner.AddOne} disabled={!redigerbar} onClick={angreFjern}>ANGRE FJERN</Mui.Knapp>
-          }
+          {!fjernet && (
+            <Mui.Knapp ikon={Ikoner.RemoveOne} disabled={!redigerbar} onClick={fjern}>
+              FJERN
+            </Mui.Knapp>
+          )}
+          {fjernet && (
+            <Mui.Knapp ikon={Ikoner.AddOne} disabled={!redigerbar} onClick={angreFjern}>
+              ANGRE FJERN
+            </Mui.Knapp>
+          )}
         </Nav.Column>
-      }
+      )}
     </Nav.Row>
   );
 };

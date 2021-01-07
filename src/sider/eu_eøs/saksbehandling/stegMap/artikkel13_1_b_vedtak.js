@@ -1,19 +1,19 @@
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingArtikkel13_x_vedtak from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel13_x_vedtak';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingArtikkel13_x_vedtak from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel13_x_vedtak";
 
 class Artikkel13_1_b_vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this.kriterier = [];
     this.id = STEG.ARTIKKEL_13_1_B_VEDTAK;
-    this.tittel = 'Vedtak';
+    this.tittel = "Vedtak";
     this.komponent = VurderingArtikkel13_x_vedtak;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({
-      overskrift: 'Omfattet av norsk lovgivning etter artikkel 13 nr. 1 bokstav b',
+    this.beregnRelevantUI = (_propsLight) => ({
+      overskrift: "Omfattet av norsk lovgivning etter artikkel 13 nr. 1 bokstav b",
     });
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,

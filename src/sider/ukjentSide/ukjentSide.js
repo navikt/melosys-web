@@ -1,14 +1,14 @@
-import PT from 'prop-types';
-import React from 'react';
+import PT from "prop-types";
+import React from "react";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import './ukjentSide.css';
+import "./ukjentSide.css";
 
 /* eslint arrow-body-style:off */
 const UkjentSide = ({ location }) => {
   const logdata = {
-    message: 'Ukjent Side',
+    message: "Ukjent Side",
     data: {
       url: location.pathname,
     },

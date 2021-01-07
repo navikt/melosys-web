@@ -1,4 +1,4 @@
-import * as Types from '../journalforing/types';
+import * as Types from "../journalforing/types";
 
 /**
  * Actions
@@ -8,8 +8,8 @@ import * as Types from '../journalforing/types';
  */
 
 export function resetJournalforing() {
-  return ({
+  return {
     type: Types.RESET,
     data: {},
-  });
+  };
 }

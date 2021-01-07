@@ -7,15 +7,15 @@
  *
  */
 
-import * as Api from '../../services/api';
-import { doThenDispatch } from '../../services/utils';
+import * as Api from "../../services/api";
+import { doThenDispatch } from "../../services/utils";
 
-import * as Types from './types';
-import * as Actions from '../vilkar/actions';
-import * as Selectors from './selectors';
-import * as Constants from './constants';
+import * as Types from "./types";
+import * as Actions from "../vilkar/actions";
+import * as Selectors from "./selectors";
+import * as Constants from "./constants";
 
-import { behandlingerSelectors } from '../behandlinger';
+import { behandlingerSelectors } from "../behandlinger";
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Vilkar.hent(behandlingID), {
@@ -33,7 +33,8 @@ function send(behandlingID, body) {
   });
 }
 
-const filtrerVilkar = vilkar => vilkar.filter(enkeltVilkar => !Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.includes(enkeltVilkar.vilkaar));
+const filtrerVilkar = (vilkar) =>
+  vilkar.filter((enkeltVilkar) => !Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.includes(enkeltVilkar.vilkaar));
 
 export function lagre() {
   return (dispatch, getState) => {
@@ -47,7 +48,7 @@ export function lagre() {
 }
 
 export function oppdaterState(skjema) {
-  return dispatch => (dispatch(Actions.oppdaterState(skjema)));
+  return (dispatch) => dispatch(Actions.oppdaterState(skjema));
 }
 
 export function resetState() {

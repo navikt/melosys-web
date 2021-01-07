@@ -1,29 +1,24 @@
-import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { MedlPeriode } from 'Domene';
-import { RootState } from 'AppTypes';
+import React from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { MedlPeriode } from "Domene";
+import { RootState } from "AppTypes";
 
-import * as KV from '../../../../kodeverk';
-import * as Nav from '../../../../utils/navFrontend';
-import * as Utils from '../../../../utils';
+import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../utils/navFrontend";
+import * as Utils from "../../../../utils";
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
-import ExpandableList from '../../../expandablelist';
+import ExpandableList from "../../../expandablelist";
 
-import './medlemskap.css';
+import "./medlemskap.css";
 
 interface MedlemskapEnkeltPeriodeProps {
-  enkeltPeriode: MedlPeriode,
+  enkeltPeriode: MedlPeriode;
 }
 
 export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPeriodeProps) {
-  const {
-    periode,
-    status,
-    grunnlagstype,
-    land,
-  } = enkeltPeriode;
+  const { periode, status, grunnlagstype, land } = enkeltPeriode;
 
   const fom = Utils.dato.formatterDatoTilNorsk(periode.fom);
   const tom = Utils.dato.formatterDatoTilNorsk(periode.tom);
@@ -53,12 +48,12 @@ export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPerio
 }
 
 interface MedlemskapGruppeProps {
-  perioder: MedlPeriode[],
-  overskrift: string,
+  perioder: MedlPeriode[];
+  overskrift: string;
 }
 
 export function MedlemskapGruppe(props: MedlemskapGruppeProps) {
-  const { perioder, overskrift = '' } = props;
+  const { perioder, overskrift = "" } = props;
 
   return (
     <div>
@@ -68,20 +63,19 @@ export function MedlemskapGruppe(props: MedlemskapGruppeProps) {
         <Nav.Column xs="3">Til og med</Nav.Column>
       </Nav.Row>
       <section className="medlemskapgruppe__liste">
-        {
-          perioder.length > 0 &&
+        {perioder.length > 0 && (
           <ExpandableList
             elements={perioder}
-            renderElement={periode => <MedlemskapEnkeltPeriode enkeltPeriode={periode} />}
-            idFromElement={periode => periode.periodeID}
+            renderElement={(periode) => <MedlemskapEnkeltPeriode enkeltPeriode={periode} />}
+            idFromElement={(periode) => periode.periodeID}
             amountOfItemsCollapsed={2}
             btnTextCollapsed="Vis flere"
             btnTextExpanded="Vis færre"
             chevron
             dividers
           />
-        }
-        { perioder.length === 0 && '(ingen data funnet)'}
+        )}
+        {perioder.length === 0 && "(ingen data funnet)"}
       </section>
     </div>
   );

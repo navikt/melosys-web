@@ -1,43 +1,40 @@
-import React, { Component, Fragment } from 'react';
-import PT from 'prop-types';
-import classNames from 'classnames';
-import { Field } from 'redux-form';
+import React, { Component, Fragment } from "react";
+import PT from "prop-types";
+import classNames from "classnames";
+import { Field } from "redux-form";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Utils from '../../../utils';
-import * as SkjemaUtils from '../utils';
+import * as Nav from "../../../utils/navFrontend";
+import * as Utils from "../../../utils";
+import * as SkjemaUtils from "../utils";
 
-import './customRadioPanelGruppe.css';
+import "./customRadioPanelGruppe.css";
 
-export const CustomRadioPanelElement = ({
-  tittel,
-  data,
-}) => (
+export const CustomRadioPanelElement = ({ tittel, data }) => (
   <div className="customRadioPanelElement">
     <Nav.typo.Undertittel>{tittel}</Nav.typo.Undertittel>
     <dl>
-      {
-        data.map(({ term, description }) => {
-          if (!description) return null;
+      {data.map(({ term, description }) => {
+        if (!description) return null;
 
-          return (
-            <Fragment key={Utils._uuid()}>
-              <dt>{term}</dt>
-              <dd>{description}</dd>
-            </Fragment>
-          );
-        })
-      }
+        return (
+          <Fragment key={Utils._uuid()}>
+            <dt>{term}</dt>
+            <dd>{description}</dd>
+          </Fragment>
+        );
+      })}
     </dl>
   </div>
 );
 
 CustomRadioPanelElement.propTypes = {
   tittel: PT.node,
-  data: PT.arrayOf(PT.shape({
-    term: PT.string.isRequired,
-    description: PT.node,
-  })).isRequired,
+  data: PT.arrayOf(
+    PT.shape({
+      term: PT.string.isRequired,
+      description: PT.node,
+    })
+  ).isRequired,
 };
 
 CustomRadioPanelElement.defaultProps = {
@@ -60,18 +57,16 @@ class CustomRadioPanel extends Component {
   }
 
   render() {
-    const {
-      checked, disabled, innhold, footer, feltNavn, inputProps, value, onChange, notify,
-    } = this.props;
+    const { checked, disabled, innhold, footer, feltNavn, inputProps, value, onChange, notify } = this.props;
 
     const { hasFocus } = this.state;
 
-    const cls = classNames('customRadioPanel', {
-      'customRadioPanel--checked': checked === true && !disabled,
-      'customRadioPanel--focused': hasFocus === true && !disabled,
-      'customRadioPanel--disabled': disabled === true,
+    const cls = classNames("customRadioPanel", {
+      "customRadioPanel--checked": checked === true && !disabled,
+      "customRadioPanel--focused": hasFocus === true && !disabled,
+      "customRadioPanel--disabled": disabled === true,
     });
-    const onChangeAndNotify = event => {
+    const onChangeAndNotify = (event) => {
       if (notify) notify(event.target.value);
       onChange(event);
     };
@@ -93,9 +88,7 @@ class CustomRadioPanel extends Component {
           />
           <div className="radioPanel__innhold">{innhold}</div>
         </label>
-        {
-          checked && footer
-        }
+        {checked && footer}
       </Fragment>
     );
   }
@@ -121,22 +114,27 @@ CustomRadioPanel.defaultProps = {
   footer: null,
 };
 
-const CustomRadioPanelGruppe = props => {
+const CustomRadioPanelGruppe = (props) => {
   const {
-    radios, feltNavn, legend, input: { onChange, value: currentCheckedValue }, meta, notify,
+    radios,
+    feltNavn,
+    legend,
+    input: { onChange, value: currentCheckedValue },
+    meta,
+    notify,
   } = props;
 
   const { touched, active } = meta;
-  const feil = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
+  const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
   return (
     <Nav.SkjemaGruppe className="customRadioPanelGruppe" feil={feil}>
       <Nav.Fieldset legend={legend}>
-        {radios.map(radio => (
+        {radios.map((radio) => (
           <CustomRadioPanel
             feltNavn={feltNavn}
             key={`${feltNavn}-${radio.value}`}
-            onChange={event => onChange(event.target.value)}
+            onChange={(event) => onChange(event.target.value)}
             value={radio.value}
             checked={currentCheckedValue === radio.value}
             {...radio}
@@ -158,11 +156,13 @@ CustomRadioPanelGruppe.propTypes = {
 };
 
 CustomRadioPanelGruppe.defaultProps = {
-  legend: '',
+  legend: "",
   notify: undefined,
 };
 
-const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (<Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} />);
+const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (
+  <Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} />
+);
 CustomRadioPanelGruppeReduxForm.propTypes = { feltNavn: PT.string.isRequired };
 
 export default CustomRadioPanelGruppeReduxForm;

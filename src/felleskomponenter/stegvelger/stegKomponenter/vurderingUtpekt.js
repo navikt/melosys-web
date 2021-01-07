@@ -1,51 +1,52 @@
-import React, { useEffect, Fragment } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import { reduxForm, getFormValues } from 'redux-form';
+import React, { useEffect, Fragment } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import { reduxForm, getFormValues } from "redux-form";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as KV from '../../../kodeverk';
-import * as Skjema from '../../skjema';
-import * as MPT from '../../../proptypes';
-import * as Utils from '../../../utils';
+import * as Nav from "../../../utils/navFrontend";
+import * as KV from "../../../kodeverk";
+import * as Skjema from "../../skjema";
+import * as MPT from "../../../proptypes";
+import * as Utils from "../../../utils";
 
-import MKV from '../../../melosyskodeverk';
-import RegisterKontrollTreff from '../../registerkontrollTreff';
+import MKV from "../../../melosyskodeverk";
+import RegisterKontrollTreff from "../../registerkontrollTreff";
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
-import { flytSelectors } from '../../../ducks/flyt';
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { flytSelectors } from "../../../ducks/flyt";
 
-import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
-import { konverterLovvalgslandTilStegData, lagLovvalgsland } from '../../../regler/lovvalgsland';
-import { konverterLovvalgsperiodeTilStegData, lagLovvalgsperiode, slettLovvalgsperiode } from '../../../regler/lovvalgsperiode';
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from "../../../regler/lovvalgsbestemmelser";
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../regler/lovvalgsland";
+import {
+  konverterLovvalgsperiodeTilStegData,
+  lagLovvalgsperiode,
+  slettLovvalgsperiode,
+} from "../../../regler/lovvalgsperiode";
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
-import './vurderingUtpekt.css';
+import "./vurderingUtpekt.css";
 
-const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleLovvalg.filter(({ kode }) => (
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1 ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2 ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3 ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4 ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2A ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3 ||
-  kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4
-));
+const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleLovvalg.filter(
+  ({ kode }) =>
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1 ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2 ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3 ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4 ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2A ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3 ||
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4
+);
 
 export const VurderingUtpekt = ({
   vurderingBegrunnelser,
   slettData,
   oppdaterData,
   redigerbart,
-  tilstand: {
-    harAvklaring,
-    lovvalgsbestemmelse,
-    lovvalgsland,
-  },
+  tilstand: { harAvklaring, lovvalgsbestemmelse, lovvalgsland },
   handleSubmit,
   formValues,
   lovvalgsperiode,
@@ -76,10 +77,12 @@ export const VurderingUtpekt = ({
 
   useEffect(() => {
     if (formValid()) {
-      oppdaterData(lagLovvalgsperiode({
-        fomDato: Utils.dato.formatterDatoTilISO(formValues.fom),
-        tomDato: Utils.dato.formatterDatoTilISO(formValues.tom),
-      }));
+      oppdaterData(
+        lagLovvalgsperiode({
+          fomDato: Utils.dato.formatterDatoTilISO(formValues.fom),
+          tomDato: Utils.dato.formatterDatoTilISO(formValues.tom),
+        })
+      );
     } else {
       slettData(slettLovvalgsperiode());
     }
@@ -88,52 +91,48 @@ export const VurderingUtpekt = ({
   const lovvalgslandFraForm = formValues.lovvalgsland;
   const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
   const lovvalgslandTerm = KV.kodeTilTerm(lovvalgslandFraForm, MKV.KTObjects.landkoder);
-  const lovvalgsbestemmelser = behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE ?
-    lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt
-    :
-    MKV.Kodekombinasjoner.alleLovvalg;
+  const lovvalgsbestemmelser =
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
+      ? lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt
+      : MKV.Kodekombinasjoner.alleLovvalg;
 
   return (
     <form onSubmit={handleSubmit}>
       <Nav.typo.Undertittel className="stegTittel">Vurder lovvalgsbeslutningen (A003)</Nav.typo.Undertittel>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          {
-            vurderingBegrunnelser.length > 0 &&
+          {vurderingBegrunnelser.length > 0 && (
             <Fragment>
               <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
               <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
             </Fragment>
-          }
+          )}
         </Nav.Column>
       </Nav.Row>
-      {
-        visLovvalgsland &&
+      {visLovvalgsland && (
         <Nav.Row className="rad">
           <Nav.Column xs="5">
             <Nav.typo.Element>Lovvalgsland</Nav.typo.Element>
             <Nav.typo.Normaltekst>{lovvalgslandTerm}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
-      }
+      )}
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.typo.Element>Grunnlag</Nav.typo.Element>
-          <Skjema.Select
-            feltNavn="lovvalgsbestemmelse"
-            label=""
-            disabled={!redigerbart}
-          >
-            <option disabled key="VELG" value="">Velg</option>
-            {
-              lovvalgsbestemmelser.map(kodeObjekt => (
-                <option key={Utils._uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>
-              ))
-            }
+          <Skjema.Select feltNavn="lovvalgsbestemmelse" label="" disabled={!redigerbart}>
+            <option disabled key="VELG" value="">
+              Velg
+            </option>
+            {lovvalgsbestemmelser.map((kodeObjekt) => (
+              <option key={Utils._uuid()} value={kodeObjekt.kode}>
+                {kodeObjekt.term}
+              </option>
+            ))}
           </Skjema.Select>
         </Nav.Column>
       </Nav.Row>
-      {(redigerbart || formValues.overgangsregelbestemmelser) &&
+      {(redigerbart || formValues.overgangsregelbestemmelser) && (
         <Nav.Row className="rad">
           <Nav.Column xs="5">
             <Nav.typo.Element>Overgangsregler gjelder:</Nav.typo.Element>
@@ -147,37 +146,27 @@ export const VurderingUtpekt = ({
             />
           </Nav.Column>
         </Nav.Row>
-      }
+      )}
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           <Nav.typo.Element>Lovvalgsperiode</Nav.typo.Element>
           <Nav.Row>
             <Nav.Column xs="6">
-              <Skjema.Input
-                datoFelt
-                label="Fra og med"
-                feltNavn="fom"
-                disabled={!redigerbart}
-              />
+              <Skjema.Input datoFelt label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="6">
-              <Skjema.Input
-                datoFelt
-                label="Til og med"
-                feltNavn="tom"
-                disabled={!redigerbart}
-              />
+              <Skjema.Input datoFelt label="Til og med" feltNavn="tom" disabled={!redigerbart} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="rad">
-        { ytterligereInformasjon &&
+        {ytterligereInformasjon && (
           <Nav.Column xs="12">
             <Nav.typo.Element>Ytterligere informasjon fra SED</Nav.typo.Element>
             <Nav.typo.Normaltekst>{ytterligereInformasjon}</Nav.typo.Normaltekst>
           </Nav.Column>
-        }
+        )}
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="5">
@@ -206,7 +195,9 @@ export const VurderingUtpekt = ({
         </Nav.Column>
       </Nav.Row>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp">Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp">
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </form>
   );
@@ -245,10 +236,12 @@ const mapStateToProps = (state, ownProps) => ({
   initialValues: {
     fom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
     tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-    lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || '',
+    lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
     lovvalgsland: ownProps.tilstand.lovvalgsland,
     utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
-    overgangsregelbestemmelser: behandlingsgrunnlagSelectors.OvergangsregelbestemmelserSelector(state).map(o => o.kode),
+    overgangsregelbestemmelser: behandlingsgrunnlagSelectors
+      .OvergangsregelbestemmelserSelector(state)
+      .map((o) => o.kode),
   },
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
   ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),

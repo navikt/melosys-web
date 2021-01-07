@@ -1,16 +1,16 @@
-import React from 'react';
-import * as EKV from 'eessi-kodeverk';
+import React from "react";
+import * as EKV from "eessi-kodeverk";
 
-import { VurderingArbeidEttLandOvrigVedtak } from './vurderingArbeidEttLandOvrigVedtak';
-import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
-import PdfLenkeListe from '../../pdfLenkeListe';
+import { VurderingArbeidEttLandOvrigVedtak } from "./vurderingArbeidEttLandOvrigVedtak";
+import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
+import PdfLenkeListe from "../../pdfLenkeListe";
 
-import * as KV from '../../../kodeverk';
-import * as Skjema from '../../skjema';
+import * as KV from "../../../kodeverk";
+import * as Skjema from "../../skjema";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-describe('VurderingArbeidEttLandOvrigVedtak', () => {
+describe("VurderingArbeidEttLandOvrigVedtak", () => {
   let props = null;
 
   beforeEach(() => {
@@ -32,19 +32,20 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       form: KV.Form.ARBEID_ETT_LAND_OVRIG_VEDTAK,
       handleSubmit: jest.fn(),
-      behandlingsgrunnlagFom: '',
-      behandlingsgrunnlagTom: '',
-      soknadsperiode: { tom: '', fom: '' },
+      behandlingsgrunnlagFom: "",
+      behandlingsgrunnlagTom: "",
+      soknadsperiode: { tom: "", fom: "" },
     };
   });
 
-  describe('ved art11_5', () => {
+  describe("ved art11_5", () => {
     beforeEach(() => {
-      props.formValues.lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5;
+      props.formValues.lovvalgsbestemmelse =
+        MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5;
     });
 
-    describe('viser nødvendige felter dersom', () => {
-      test('man velger å informere utenlandsk trygdemyndighet', () => {
+    describe("viser nødvendige felter dersom", () => {
+      test("man velger å informere utenlandsk trygdemyndighet", () => {
         props.formValues.informerUtenlandskTrygdemyndighet = true;
         props.formValues.kreverMottakerinstitusjon = true;
         props.formValues.mottakerLand = MKV.Koder.landkoder.DE;
@@ -52,89 +53,100 @@ describe('VurderingArbeidEttLandOvrigVedtak', () => {
         const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
 
         const mottakerinstitusjoner = vurderingArbeidEttLandOvrigVedtak.find(Mottakerinstitusjonvelger);
-        const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(n =>
-          n.type() === Skjema.Textarea &&
-          n.props().label === 'Ytterligere informasjon til SED (valgfri)');
+        const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
+          (n) => n.type() === Skjema.Textarea && n.props().label === "Ytterligere informasjon til SED (valgfri)"
+        );
         const pdfLenkeListe = vurderingArbeidEttLandOvrigVedtak.find(PdfLenkeListe);
 
         expect(mottakerinstitusjoner).toHaveLength(1);
         expect(ytterligereInformasjon).toHaveLength(1);
-        expect(pdfLenkeListe.props().dokumenter).toEqual(expect.arrayContaining([
-          expect.objectContaining({
-            type: EKV.Koder.sedtyper.A010,
-          }),
-        ]));
+        expect(pdfLenkeListe.props().dokumenter).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              type: EKV.Koder.sedtyper.A010,
+            }),
+          ])
+        );
       });
     });
 
-    describe('gjemmer unødvendige felter dersom', () => {
-      test('man velger å informere utenlandsk trygdemyndighet, men ingen mottakerinstitusjoner finnes for valgt land', () => {
+    describe("gjemmer unødvendige felter dersom", () => {
+      test("man velger å informere utenlandsk trygdemyndighet, men ingen mottakerinstitusjoner finnes for valgt land", () => {
         props.formValues.informerUtenlandskTrygdemyndighet = true;
         props.formValues.kreverMottakerinstitusjon = false;
         const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
 
         const mottakerinstitusjoner = vurderingArbeidEttLandOvrigVedtak.find(Mottakerinstitusjonvelger);
-        const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(n =>
-          n.type() === Skjema.Textarea &&
-          n.props().label === 'Ytterligere informasjon til SED (valgfri)');
+        const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
+          (n) => n.type() === Skjema.Textarea && n.props().label === "Ytterligere informasjon til SED (valgfri)"
+        );
         const pdfLenkeListe = vurderingArbeidEttLandOvrigVedtak.find(PdfLenkeListe);
 
         expect(mottakerinstitusjoner).toHaveLength(0);
         expect(ytterligereInformasjon).toHaveLength(0);
-        expect(pdfLenkeListe.props().dokumenter).not.toEqual(expect.arrayContaining([
-          expect.objectContaining({
-            type: EKV.Koder.sedtyper.A010,
-          }),
-        ]));
+        expect(pdfLenkeListe.props().dokumenter).not.toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              type: EKV.Koder.sedtyper.A010,
+            }),
+          ])
+        );
       });
 
-      test('man velger å ikke informere utenlandsk trygdemyndighet', () => {
+      test("man velger å ikke informere utenlandsk trygdemyndighet", () => {
         props.formValues.informerUtenlandskTrygdemyndighet = false;
         const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
 
         const mottakerinstitusjoner = vurderingArbeidEttLandOvrigVedtak.find(Mottakerinstitusjonvelger);
-        const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(n =>
-          n.type() === Skjema.Textarea &&
-          n.props().label === 'Ytterligere informasjon til SED (valgfri)');
+        const ytterligereInformasjon = vurderingArbeidEttLandOvrigVedtak.findWhere(
+          (n) => n.type() === Skjema.Textarea && n.props().label === "Ytterligere informasjon til SED (valgfri)"
+        );
         const pdfLenkeListe = vurderingArbeidEttLandOvrigVedtak.find(PdfLenkeListe);
 
         expect(mottakerinstitusjoner).toHaveLength(0);
         expect(ytterligereInformasjon).toHaveLength(0);
-        expect(pdfLenkeListe.props().dokumenter).not.toEqual(expect.arrayContaining([
-          expect.objectContaining({
-            type: EKV.Koder.sedtyper.A010,
-          }),
-        ]));
+        expect(pdfLenkeListe.props().dokumenter).not.toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              type: EKV.Koder.sedtyper.A010,
+            }),
+          ])
+        );
       });
     });
   });
 
-  describe('ved 11_3B', () => {
+  describe("ved 11_3B", () => {
     let vurderingArbeidEttLandOvrigVedtak = null;
 
     beforeEach(() => {
-      props.formValues.lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
+      props.formValues.lovvalgsbestemmelse =
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
       vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
     });
 
-    it('viser periodeforkorter', () => {
+    it("viser periodeforkorter", () => {
       expect(vurderingArbeidEttLandOvrigVedtak.find(Skjema.PeriodeForkorter)).toHaveLength(1);
     });
 
-    it('viser fritekst til vedtaksbrev', () => {
-      expect(vurderingArbeidEttLandOvrigVedtak.findWhere(n =>
-        n.type() === Skjema.Textarea &&
-        n.props().label === 'Fritekst til vedtaksbrev')).toHaveLength(1);
+    it("viser fritekst til vedtaksbrev", () => {
+      expect(
+        vurderingArbeidEttLandOvrigVedtak.findWhere(
+          (n) => n.type() === Skjema.Textarea && n.props().label === "Fritekst til vedtaksbrev"
+        )
+      ).toHaveLength(1);
     });
 
-    it('viser mottakerinstitusjonsvelgerFlervalg', () => {
+    it("viser mottakerinstitusjonsvelgerFlervalg", () => {
       expect(vurderingArbeidEttLandOvrigVedtak.find(MottakerinstitusjonvelgerFlervalg)).toHaveLength(1);
     });
 
-    it('viser ytterligere informasjon til SED', () => {
-      expect(vurderingArbeidEttLandOvrigVedtak.findWhere(n =>
-        n.type() === Skjema.Textarea &&
-        n.props().label === 'Ytterligere informasjon til SED (valgfri)')).toHaveLength(1);
+    it("viser ytterligere informasjon til SED", () => {
+      expect(
+        vurderingArbeidEttLandOvrigVedtak.findWhere(
+          (n) => n.type() === Skjema.Textarea && n.props().label === "Ytterligere informasjon til SED (valgfri)"
+        )
+      ).toHaveLength(1);
     });
   });
 });

@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import * as Utils from '../../utils';
+import * as Utils from "../../utils";
 
-import { Sok } from './sok';
-import SorterbarListe from '../../felleskomponenter/sorterbarListe/sorterbarListe';
+import { Sok } from "./sok";
+import SorterbarListe from "../../felleskomponenter/sorterbarListe/sorterbarListe";
 
-describe('Sok', () => {
+describe("Sok", () => {
   let props = null;
 
   const getItemPrototype = Storage.prototype.getItem;
@@ -21,7 +21,7 @@ describe('Sok', () => {
     Storage.prototype.getItem = getItemPrototype;
   });
 
-  it('viser en sorterbarliste ved søk på fnr med ett resultat', () => {
+  it("viser en sorterbarliste ved søk på fnr med ett resultat", () => {
     const generator = new Utils.testhelpers.Generator();
     Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
     props.sokResultat = [{}];
@@ -34,7 +34,7 @@ describe('Sok', () => {
     expect(sorterbarListeProps.elementer).toBe(props.sokResultat);
   });
 
-  it('viser ikke sorterbarliste ved søk på fnr uten resultat', () => {
+  it("viser ikke sorterbarliste ved søk på fnr uten resultat", () => {
     const generator = new Utils.testhelpers.Generator();
     Storage.prototype.getItem = jest.fn(() => generator.generateBirthNumber());
     const sok = shallow(<Sok {...props} />);

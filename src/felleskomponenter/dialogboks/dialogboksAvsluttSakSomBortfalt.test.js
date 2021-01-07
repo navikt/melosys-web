@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import { DialogboksAvsluttSakSomBortfalt } from './dialogboksAvsluttSakSomBortfalt';
-import Knapperad from '../knapperad';
+import { DialogboksAvsluttSakSomBortfalt } from "./dialogboksAvsluttSakSomBortfalt";
+import Knapperad from "../knapperad";
 
-describe('DialogboksAvsluttSakSomBortfalt', () => {
+describe("DialogboksAvsluttSakSomBortfalt", () => {
   let props = null;
 
   beforeEach(() => {
@@ -18,12 +18,12 @@ describe('DialogboksAvsluttSakSomBortfalt', () => {
     };
   });
 
-  it('viser en Nav Modal', () => {
+  it("viser en Nav Modal", () => {
     const dialogboks = shallow(<DialogboksAvsluttSakSomBortfalt {...props} />);
     expect(dialogboks.exists(Nav.Modal)).toBe(true);
   });
 
-  it('sender korrekte handlere til en knapperad', () => {
+  it("sender korrekte handlere til en knapperad", () => {
     const dialogboks = shallow(<DialogboksAvsluttSakSomBortfalt {...props} />);
     const knapperad = dialogboks.find(Knapperad);
 

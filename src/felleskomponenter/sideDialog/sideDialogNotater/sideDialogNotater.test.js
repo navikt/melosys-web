@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import SideDialogNotater from './sideDialogNotater';
+import SideDialogNotater from "./sideDialogNotater";
 
-describe('SideDialogNotater', () => {
+describe("SideDialogNotater", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      saksnummer: '1',
+      saksnummer: "1",
       redigerbart: true,
     };
   });
 
-  it('vises uten å krasje', () => {
+  it("vises uten å krasje", () => {
     shallow(<SideDialogNotater {...props} />);
   });
 });

@@ -1,7 +1,11 @@
-import { unset, get, set, cloneDeep } from 'lodash';
+import { unset, get, set, cloneDeep } from "lodash";
 
 const fjernKode = (kodeverk, path, kode) => {
-  set(kodeverk.KTObjects, path, get(kodeverk.KTObjects, path).filter(KTObject => KTObject.kode !== kode));
+  set(
+    kodeverk.KTObjects,
+    path,
+    get(kodeverk.KTObjects, path).filter((KTObject) => KTObject.kode !== kode)
+  );
   const pathMedKode = `${path}.${kode}`;
   unset(kodeverk.Koder, pathMedKode);
   unset(kodeverk.Terms, pathMedKode);

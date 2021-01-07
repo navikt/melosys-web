@@ -1,6 +1,6 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import { GeneriskAdresse } from './adresser';
+import { GeneriskAdresse } from "./adresser";
 
 const OrgnummerNavnPropType = PT.shape({
   orgnummer: PT.string,

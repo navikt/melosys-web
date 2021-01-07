@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PT from 'prop-types';
+import React, { Component } from "react";
+import PT from "prop-types";
 
-import './sticky.css';
+import "./sticky.css";
 
 class Sticky extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.stickyDOM = null;
-    this.setDomRef = element => {
+    this.setDomRef = (element) => {
       this.stickyDOM = element;
     };
   }
@@ -16,18 +16,18 @@ class Sticky extends Component {
     const { stickyDOM } = this;
     this.settInnledendeHoyde(stickyDOM);
     this.oppdaterVedScroll();
-    window.addEventListener('scroll', this.oppdaterVedScroll);
+    window.addEventListener("scroll", this.oppdaterVedScroll);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.oppdaterVedScroll);
+    window.removeEventListener("scroll", this.oppdaterVedScroll);
   }
 
   /** Setter høydeplassering til elementet ved oppstart. Dette trenger vi for
    * referanse senere for å beregne på hvilket punkt sticky skal slå inn.
    * @param element
    */
-  settInnledendeHoyde = element => {
+  settInnledendeHoyde = (element) => {
     this.stickyStartY = element.getBoundingClientRect().top + window.pageYOffset;
   };
 
@@ -38,26 +38,21 @@ class Sticky extends Component {
     const { stickyDOM, stickyStartY } = this;
     const scrollTopp = document.documentElement.scrollTop || document.body.scrollTop;
     if (scrollTopp >= stickyStartY) {
-      stickyDOM.classList.add('erSticky');
+      stickyDOM.classList.add("erSticky");
     } else {
-      stickyDOM.classList.remove('erSticky');
+      stickyDOM.classList.remove("erSticky");
     }
 
-    const scrollContainer = document.getElementsByClassName('journalforing__skjema__scroll')[0];
+    const scrollContainer = document.getElementsByClassName("journalforing__skjema__scroll")[0];
     const skjemaScrollTopp = scrollContainer.getBoundingClientRect().y;
     scrollContainer.style.height = `calc(100vh - ${Math.round(skjemaScrollTopp + 20)}px)`;
-  }
+  };
 
   render() {
-    const {
-      className, children,
-    } = this.props;
+    const { className, children } = this.props;
 
     return (
-      <div
-        ref={this.setDomRef}
-        className={`Sticky ${className}`}
-      >
+      <div ref={this.setDomRef} className={`Sticky ${className}`}>
         {children}
       </div>
     );
@@ -70,7 +65,7 @@ Sticky.propTypes = {
 };
 
 Sticky.defaultProps = {
-  className: '',
+  className: "",
 };
 
 export default Sticky;

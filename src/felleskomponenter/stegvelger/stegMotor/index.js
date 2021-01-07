@@ -1,3 +1,3 @@
-import StegMotor from './StegMotor';
+import StegMotor from "./StegMotor";
 
 export default StegMotor;

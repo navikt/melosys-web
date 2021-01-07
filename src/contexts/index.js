@@ -1,7 +1,3 @@
-import FellesHandlersContext, { FellesHandlersProvider } from './fellesHandlers';
+import FellesHandlersContext, { FellesHandlersProvider } from "./fellesHandlers";
 
-export {
-  FellesHandlersContext,
-  FellesHandlersProvider,
-};
-
+export { FellesHandlersContext, FellesHandlersProvider };

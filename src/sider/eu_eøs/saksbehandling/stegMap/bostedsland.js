@@ -1,23 +1,26 @@
-import MKV from '../../../../melosyskodeverk';
-import * as KV from '../../../../kodeverk';
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingBostedsland from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingBostedsland';
+import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingBostedsland from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingBostedsland";
 
-import { hentFakta, hentFaktaVerdi } from '../../../../regler/avklartefakta';
-import SokkelSkip from './sokkel_skip';
-import * as Utils from '../../../../utils';
-
+import { hentFakta, hentFaktaVerdi } from "../../../../regler/avklartefakta";
+import SokkelSkip from "./sokkel_skip";
+import * as Utils from "../../../../utils";
 
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const erSokkelSkipEttLand = SokkelSkip.finnAvklaring(propsLight.avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND);
+    const erSokkelSkipEttLand = SokkelSkip.finnAvklaring(
+      propsLight.avklartefakta,
+      KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND
+    );
 
     const bostedslandFakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, propsLight.avklartefakta);
 
-    const erBegrunnelserPaakrevd = !Bostedsland.finnAvklaring(propsLight.avklartefakta, MKV.Koder.landkoder.NO) && !erSokkelSkipEttLand;
+    const erBegrunnelserPaakrevd =
+      !Bostedsland.finnAvklaring(propsLight.avklartefakta, MKV.Koder.landkoder.NO) && !erSokkelSkipEttLand;
 
     const harAvklaring = Bostedsland.alleErAvklart(bostedslandFakta, erBegrunnelserPaakrevd);
 
@@ -27,14 +30,14 @@ class Bostedsland extends Steg {
         nesteSteg: STEG.ARTIKKEL_11_4,
       },
       {
-        exec: avklartefakta => {
+        exec: (avklartefakta) => {
           const harBostedslandNorge = Bostedsland.finnAvklaring(avklartefakta, MKV.Koder.landkoder.NO);
           return harBostedslandNorge;
         },
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {
-        exec: avklartefakta => {
+        exec: (avklartefakta) => {
           const bostedsfakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, avklartefakta);
           const bostedsland = hentFaktaVerdi(bostedsfakta);
           const { begrunnelseKoder = [] } = bostedsfakta;
@@ -46,13 +49,13 @@ class Bostedsland extends Steg {
     ];
 
     this.id = STEG.BOSTEDSLAND;
-    this.tittel = 'Bosted';
+    this.tittel = "Bosted";
     this.komponent = VurderingBostedsland;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       begrunnelser: _propsLight.begrunnelser.bosted || [],
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = (_propsLight) => {
       const { saksopplysninger = {} } = _propsLight;
       const { sakOgBehandling } = saksopplysninger;
       const { eosBarnetrygd = {} } = sakOgBehandling;
@@ -67,21 +70,23 @@ class Bostedsland extends Steg {
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+    const enkeltFakta = avklartefakta.find((fakta) => fakta.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
 
-    if (!enkeltFakta) { return false; }
+    if (!enkeltFakta) {
+      return false;
+    }
     return enkeltFakta.fakta && enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 
   static alleErAvklart = (bostedslandFakta, begrunnelserPaaKrevd) => {
     const bostedsland = hentFaktaVerdi(bostedslandFakta);
-    if (Utils._isNil(bostedsland) || bostedsland === '') {
+    if (Utils._isNil(bostedsland) || bostedsland === "") {
       return false;
     }
     const { begrunnelseKoder } = bostedslandFakta;

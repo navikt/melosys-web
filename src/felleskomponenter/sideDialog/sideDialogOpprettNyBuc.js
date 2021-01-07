@@ -1,47 +1,49 @@
-import React, { useState } from 'react';
-import PT from 'prop-types';
-import * as EKV from 'eessi-kodeverk';
+import React, { useState } from "react";
+import PT from "prop-types";
+import * as EKV from "eessi-kodeverk";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as Nav from '../../utils/navFrontend';
-import * as Api from '../../services/api';
-import * as Utils from '../../utils';
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
-import { kodeTilObjekt } from '../../kodeverk';
-import { VedleggVelger } from './VedleggVelger';
-import MultiSelect from '../multiSelect';
+import * as Nav from "../../utils/navFrontend";
+import * as Api from "../../services/api";
+import * as Utils from "../../utils";
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
+import { kodeTilObjekt } from "../../kodeverk";
+import { VedleggVelger } from "./VedleggVelger";
+import MultiSelect from "../multiSelect";
 
-import './sideDialogOpprettNyBuc.css';
+import "./sideDialogOpprettNyBuc.css";
 
-const TomtFelt = ({ tekst }) => (
-  <option value="">{tekst}</option>
-);
+const TomtFelt = ({ tekst }) => <option value="">{tekst}</option>;
 
 TomtFelt.propTypes = {
   tekst: PT.string,
 };
 
 TomtFelt.defaultProps = {
-  tekst: 'Velg...',
+  tekst: "Velg...",
 };
 
 const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   const [tilgjengeligeMottakerinstitusjoner, setTilgjengeligeMottakerinstitusjoner] = useState([]);
 
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
-  const [valgtBuc, setValgtBuc] = useState('');
-  const [valgtSed, setValgtSed] = useState('');
+  const [valgtBuc, setValgtBuc] = useState("");
+  const [valgtSed, setValgtSed] = useState("");
   const [valgteLand, setValgteLand] = useState([]);
   const [valgteMottakerinstitusjoner, setValgteMottakerinstitusjoner] = useState([]);
   const [valgteVedlegg, setValgteVedlegg] = useState([]);
 
-  const [opprettetBucUrl, setOpprettetBucUrl] = useState('');
+  const [opprettetBucUrl, setOpprettetBucUrl] = useState("");
   const [bucOpprettet, setBucOpprettet] = useState(false);
   const [oppretterBuc, setOppretterBuc] = useState(false);
-  const [feilmeldinger, setFeilmeldinger] = useState({ buc: undefined, land: undefined, mottakerinstitusjoner: undefined });
+  const [feilmeldinger, setFeilmeldinger] = useState({
+    buc: undefined,
+    land: undefined,
+    mottakerinstitusjoner: undefined,
+  });
   const [oppdaterteFelt, setOppdaterteFelt] = useState({ buc: false, land: false, mottakerinstitusjoner: false });
-  const [alertmelding, setAlertmelding] = useState('');
+  const [alertmelding, setAlertmelding] = useState("");
 
   const hentMottakerinstitusjoner = async (buc, landkode) => {
     if (buc && landkode) {
@@ -50,20 +52,20 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         setTilgjengeligeMottakerinstitusjoner(institusjoner);
       } catch (e) {
         Utils.logger.error(e);
-        setAlertmelding('Finner ingen mottakerinstitusjoner');
+        setAlertmelding("Finner ingen mottakerinstitusjoner");
       }
     } else {
       setTilgjengeligeMottakerinstitusjoner([]);
     }
   };
 
-  const overstyrSubmit = event => {
+  const overstyrSubmit = (event) => {
     event.preventDefault();
   };
 
   const resetForm = () => {
-    setValgtBuc('');
-    setValgtSed('');
+    setValgtBuc("");
+    setValgtSed("");
     setValgteLand([]);
     setValgteMottakerinstitusjoner([]);
     setValgtFagomrade(EKV.Koder.sektor.LA);
@@ -75,8 +77,8 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   const resetState = () => {
     setBucOpprettet(false);
     setOppretterBuc(false);
-    setOpprettetBucUrl('');
-    setAlertmelding('');
+    setOpprettetBucUrl("");
+    setAlertmelding("");
   };
 
   const resetKomponent = () => {
@@ -84,11 +86,12 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
     resetState();
   };
 
-  const erValidert = () => YupSkjemaer.sed.isValidSync({
-    buc: valgtBuc,
-    land: valgteLand,
-    mottakerinstitusjoner: valgteMottakerinstitusjoner,
-  });
+  const erValidert = () =>
+    YupSkjemaer.sed.isValidSync({
+      buc: valgtBuc,
+      land: valgteLand,
+      mottakerinstitusjoner: valgteMottakerinstitusjoner,
+    });
 
   const valider = ({ buc = valgtBuc, land = valgteLand, mottakerinstitusjoner = valgteMottakerinstitusjoner }) =>
     setFeilmeldinger(lagYupToReduxformErrorMapper(YupSkjemaer.sed)({ buc, land, mottakerinstitusjoner }));
@@ -106,12 +109,12 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         setBucOpprettet(true);
         if (sedResponse) {
           setOpprettetBucUrl(sedResponse.rinaUrl);
-          setAlertmelding('');
+          setAlertmelding("");
           resetForm();
         }
       } catch (e) {
         Utils.logger.error(e);
-        if (e.status >= 500) setAlertmelding('Saken kunne ikke opprettes i RINA');
+        if (e.status >= 500) setAlertmelding("Saken kunne ikke opprettes i RINA");
         else if (e.status >= 400) setAlertmelding(e.body.message);
       }
     } else {
@@ -137,52 +140,53 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   ];
   const ignorerteHBucer = EKV.KTObjects.buctyper.horizontal.filter(({ kode }) => !tilgjengeligeHBucer.includes(kode));
 
-  const tilgjengeligeBucer = fagomrade => EKV.Selectors.hentBucTyperForFagomrade(fagomrade).filter(buc => !ignorerteHBucer.includes(buc));
+  const tilgjengeligeBucer = (fagomrade) =>
+    EKV.Selectors.hentBucTyperForFagomrade(fagomrade).filter((buc) => !ignorerteHBucer.includes(buc));
 
-  const tilgjengeligeSeder = buc => EKV.Selectors.hentSedTyperForBuc(buc);
+  const tilgjengeligeSeder = (buc) => EKV.Selectors.hentSedTyperForBuc(buc);
 
-  const hentValgtKode = event => event.target.value;
+  const hentValgtKode = (event) => event.target.value;
 
-  const oppdaterFelt = felt => {
+  const oppdaterFelt = (felt) => {
     const prevState = { ...oppdaterteFelt };
     prevState[felt] = true;
     setOppdaterteFelt(prevState);
   };
 
-  const fagomradeEndret = event => {
+  const fagomradeEndret = (event) => {
     const fagomrade = hentValgtKode(event);
-    setValgtBuc('');
+    setValgtBuc("");
     setValgtFagomrade(fagomrade);
   };
 
-  const bucEndret = event => {
+  const bucEndret = (event) => {
     const buc = hentValgtKode(event);
     setValgtBuc(buc);
-    oppdaterFelt('buc');
+    oppdaterFelt("buc");
     valider({ buc });
 
-    setValgtSed(buc ? tilgjengeligeSeder(buc)[0].kode : '');
+    setValgtSed(buc ? tilgjengeligeSeder(buc)[0].kode : "");
     hentMottakerinstitusjoner(buc, valgteLand);
   };
 
-  const landEndret = options => {
-    const land = options ? options.map(item => item.value) : [];
+  const landEndret = (options) => {
+    const land = options ? options.map((item) => item.value) : [];
     setValgteLand(land);
-    oppdaterFelt('land');
+    oppdaterFelt("land");
     valider({ land });
     hentMottakerinstitusjoner(valgtBuc, land);
   };
 
-  const mottakerinstitusjonEndret = options => {
-    const mottakerinstitusjoner = options ? options.map(item => item.value) : [];
+  const mottakerinstitusjonEndret = (options) => {
+    const mottakerinstitusjoner = options ? options.map((item) => item.value) : [];
     setValgteMottakerinstitusjoner(mottakerinstitusjoner);
-    oppdaterFelt('mottakerinstitusjoner');
+    oppdaterFelt("mottakerinstitusjoner");
     valider({ mottakerinstitusjoner });
   };
 
-  const displayName = elem => `${elem.kode} - ${elem.term}`;
+  const displayName = (elem) => `${elem.kode} - ${elem.term}`;
 
-  const feil = felt => (oppdaterteFelt[felt] ? feilmeldinger[felt] : undefined);
+  const feil = (felt) => (oppdaterteFelt[felt] ? feilmeldinger[felt] : undefined);
 
   return (
     <div className="sedbestilling">
@@ -190,40 +194,67 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         <Nav.Fieldset legend="">
           <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade}>
             <TomtFelt />
-            { tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
+            {tilgjengeligeFagomrader.map((fagomrade) => (
+              <option key={fagomrade.kode} value={fagomrade.kode}>
+                {fagomrade.term}
+              </option>
+            ))}
           </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="BUC" onChange={bucEndret} value={valgtBuc} feil={feil('buc')}>
+          <Nav.Select bredde="fullbredde" label="BUC" onChange={bucEndret} value={valgtBuc} feil={feil("buc")}>
             <TomtFelt />
-            { tilgjengeligeBucer(valgtFagomrade).map(buc => <option key={buc.kode} value={buc.kode}>{displayName(buc)}</option>) }
+            {tilgjengeligeBucer(valgtFagomrade).map((buc) => (
+              <option key={buc.kode} value={buc.kode}>
+                {displayName(buc)}
+              </option>
+            ))}
           </Nav.Select>
           <Nav.Select bredde="fullbredde" label="SED" value={valgtSed} disabled>
             <TomtFelt tekst="" />
-            { tilgjengeligeSeder(valgtBuc).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
+            {tilgjengeligeSeder(valgtBuc).map((forsteSed) => (
+              <option key={forsteSed.kode} value={forsteSed.kode}>
+                {displayName(forsteSed)}
+              </option>
+            ))}
           </Nav.Select>
           <MultiSelect
             label="Land"
             onChange={landEndret}
-            options={MKV.KTObjects.landkoder.map(item => ({ value: item.kode, label: item.term }))}
-            feil={feil('land')}
+            options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
+            feil={feil("land")}
             values={valgteLand}
           />
           <MultiSelect
             label="Mottakerinstitusjoner"
             onChange={mottakerinstitusjonEndret}
-            options={tilgjengeligeMottakerinstitusjoner.map(item => ({ value: item.id, label: `${item.landkode} - ${item.navn}` }))}
-            feil={feil('mottakerinstitusjoner')}
+            options={tilgjengeligeMottakerinstitusjoner.map((item) => ({
+              value: item.id,
+              label: `${item.landkode} - ${item.navn}`,
+            }))}
+            feil={feil("mottakerinstitusjoner")}
             values={valgteMottakerinstitusjoner}
           />
           <VedleggVelger valgteVedlegg={valgteVedlegg} setValgteVedlegg={setValgteVedlegg} dokumenter={dokumenter} />
-          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
-          <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
+          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
+            Opprett ny BUC
+          </Nav.Hovedknapp>
+          &nbsp;
+          <Nav.Knapp type="standard" onClick={resetKomponent}>
+            Avbryt utfylling
+          </Nav.Knapp>
         </Nav.Fieldset>
-        {(opprettetBucUrl && bucOpprettet) &&
+        {opprettetBucUrl && bucOpprettet && (
           <Nav.AlertStripe type="suksess" className="varsel">
-            Saken er nå opprettet i RINA <Nav.Lenker href={opprettetBucUrl} target="_blank">{opprettetBucUrl}</Nav.Lenker>
-          </Nav.AlertStripe>}
-        {alertmelding &&
-          <Nav.AlertStripe type="advarsel" className="varsel">{alertmelding}</Nav.AlertStripe>}
+            Saken er nå opprettet i RINA{" "}
+            <Nav.Lenker href={opprettetBucUrl} target="_blank">
+              {opprettetBucUrl}
+            </Nav.Lenker>
+          </Nav.AlertStripe>
+        )}
+        {alertmelding && (
+          <Nav.AlertStripe type="advarsel" className="varsel">
+            {alertmelding}
+          </Nav.AlertStripe>
+        )}
       </form>
     </div>
   );

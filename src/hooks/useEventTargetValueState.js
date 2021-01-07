@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-const useEventTargetValueState = defaultState => {
+const useEventTargetValueState = (defaultState) => {
   const [state, setState] = useState(defaultState);
 
-  const setEventTargetValueState = event => {
+  const setEventTargetValueState = (event) => {
     setState(event.target.value);
   };
 

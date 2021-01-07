@@ -1,32 +1,32 @@
-import React from 'react';
-import PT from 'prop-types';
-import { Field } from 'redux-form';
+import React from "react";
+import PT from "prop-types";
+import { Field } from "redux-form";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Utils from '../../../utils';
+import * as Nav from "../../../utils/navFrontend";
+import * as Utils from "../../../utils";
 
-import { normaliserInputDato } from '../../../utils/dato';
+import { normaliserInputDato } from "../../../utils/dato";
 
-import '../skjema.css';
+import "../skjema.css";
 
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
-function InnerInputComponent({
-  input, label, onBlur, onChange, ...rest
-}) {
-  const { meta: { error, touched, active } } = rest;
+function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
+  const {
+    meta: { error, touched, active },
+  } = rest;
 
-  const feil = (error && touched && !active) ? { feilmelding: rest.meta.error } : undefined;
+  const feil = error && touched && !active ? { feilmelding: rest.meta.error } : undefined;
   /* Vi forventer at meta.error er en string eller et objekt */
   if (feil && Utils._isObject(feil.feilmelding)) feil.feilmelding = feil.feilmelding.melding;
 
-  const innerBlur = e => {
+  const innerBlur = (e) => {
     if (onBlur) onBlur(e);
     input.onBlur(e);
   };
 
-  const innerChange = e => {
+  const innerChange = (e) => {
     if (onChange) onChange(e);
     input.onChange(e);
   };
@@ -58,12 +58,9 @@ InnerInputComponent.defaultProps = {
   onChange: undefined,
 };
 
-
-function Input({
-  feltNavn, bredde, datoFelt, ...rest
-}) {
+function Input({ feltNavn, bredde, datoFelt, ...rest }) {
   const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
-  const placeholderTekst = datoFelt ? 'ddmmåå' : null;
+  const placeholderTekst = datoFelt ? "ddmmåå" : null;
 
   return (
     <Field
@@ -84,7 +81,7 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
-  bredde: 'fullbredde',
+  bredde: "fullbredde",
   datoFelt: false,
 };
 

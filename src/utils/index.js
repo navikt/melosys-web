@@ -1,25 +1,60 @@
-import { capitalize, isFunction, isNil, isNumber, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set, get, debounce, memoize, uniqBy, has } from 'lodash';
+import {
+  capitalize,
+  isFunction,
+  isNil,
+  isNumber,
+  isUndefined,
+  isString,
+  isEmpty,
+  isObject,
+  isBoolean,
+  toInteger,
+  round,
+  set,
+  get,
+  debounce,
+  memoize,
+  uniqBy,
+  has,
+} from "lodash";
 
-import throttle from 'lodash.throttle';
+import throttle from "lodash.throttle";
 
-import * as adresse from './adresse';
-import * as dato from './dato';
-import * as streng from './streng';
-import * as logger from './logger';
-import * as queryString from './queryString';
-import * as testhelpers from './testhelpers';
-import * as person from './person';
-import * as land from './land';
-import * as organisasjon from './organisasjon';
+import * as adresse from "./adresse";
+import * as dato from "./dato";
+import * as streng from "./streng";
+import * as logger from "./logger";
+import * as queryString from "./queryString";
+import * as testhelpers from "./testhelpers";
+import * as person from "./person";
+import * as land from "./land";
+import * as organisasjon from "./organisasjon";
 
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
+import {
+  buildinfo,
+  delay,
+  fn,
+  isJSON,
+  verdiSomNullable,
+  queryParamsTilObjekt,
+  erPropertyUnik,
+  finnVerdierMedKey,
+} from "./utils";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey,
+  buildinfo,
+  delay,
+  fn,
+  isJSON,
+  verdiSomNullable,
+  queryParamsTilObjekt,
+  erPropertyUnik,
+  finnVerdierMedKey,
   adresse,
-  dato, streng,
+  dato,
+  streng,
   logger,
   queryString,
   testhelpers,

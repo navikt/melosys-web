@@ -1,12 +1,12 @@
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
-import * as DucksUtils from '../utils';
-import * as Utils from '../../utils';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
+import * as DucksUtils from "../utils";
+import * as Utils from "../../utils";
 
-import { modalerOperations } from '../modaler';
-import { behandlingerSelectors } from '../behandlinger';
-import { navigeringOperations } from '../navigering';
+import { modalerOperations } from "../modaler";
+import { behandlingerSelectors } from "../behandlinger";
+import { navigeringOperations } from "../navigering";
 
 export function utpek(saksnummer, body) {
   return doThenDispatch(
@@ -17,7 +17,7 @@ export function utpek(saksnummer, body) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {
+      success: (dispatch) => {
         dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
       },

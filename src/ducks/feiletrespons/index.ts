@@ -1,9 +1,7 @@
-import * as feiletresponsSelectors from './selectors';
+import * as feiletresponsSelectors from "./selectors";
 
-import feiletresponsReducers from './reducers';
+import feiletresponsReducers from "./reducers";
 
-export {
-  feiletresponsSelectors,
-};
+export { feiletresponsSelectors };
 
 export default feiletresponsReducers;

@@ -1,20 +1,20 @@
-import React from 'react';
-import { FieldArray } from 'redux-form';
+import React from "react";
+import { FieldArray } from "redux-form";
 
-import EditerbartElementListe, { InnerEditerbartElementListe } from './editerbartElementListe';
-import FlereRedigeringsknapperListe from './flereRedigeringsknapperListe';
-import EnRedigeringsknappListe from './enRedigeringsknappListe';
+import EditerbartElementListe, { InnerEditerbartElementListe } from "./editerbartElementListe";
+import FlereRedigeringsknapperListe from "./flereRedigeringsknapperListe";
+import EnRedigeringsknappListe from "./enRedigeringsknappListe";
 
-describe('EditerbartElementListe', () => {
+describe("EditerbartElementListe", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      feltNavn: 'arbeidUtland',
+      feltNavn: "arbeidUtland",
     };
   });
 
-  it('viser en fieldArray', () => {
+  it("viser en fieldArray", () => {
     const editerbartElementListe = shallow(<EditerbartElementListe {...props} />);
     const fieldArray = editerbartElementListe.find(FieldArray);
     const fieldArrayProps = fieldArray.props();
@@ -24,28 +24,28 @@ describe('EditerbartElementListe', () => {
   });
 });
 
-describe('InnerElementlListe', () => {
+describe("InnerElementlListe", () => {
   let props = null;
 
   const TestElement = () => <div>Element</div>;
 
   beforeEach(() => {
     props = {
-      leggTilTekst: 'Legg til',
-      slettTekst: 'Slett',
+      leggTilTekst: "Legg til",
+      slettTekst: "Slett",
       redigerbart: true,
       fields: {
         getAll: jest.fn(() => [{}, {}]),
-        name: 'liste',
+        name: "liste",
         remove: jest.fn(),
         push: jest.fn(),
       },
-      elementClassName: 'elementClassName',
+      elementClassName: "elementClassName",
       defaultElement: {},
-      className: 'className',
+      className: "className",
       settFeltVerdi: jest.fn(),
-      hentNavn: jest.fn(() => 'Navn'),
-      tittelTekst: 'tittel',
+      hentNavn: jest.fn(() => "Navn"),
+      tittelTekst: "tittel",
       redigererKomponent: () => TestElement,
       redigeringUtfortKomponent: () => TestElement,
       harData: () => true,
@@ -53,7 +53,7 @@ describe('InnerElementlListe', () => {
     };
   });
 
-  it('viser en FlereRedigeringsknapperListe', () => {
+  it("viser en FlereRedigeringsknapperListe", () => {
     props.flereRedigeringsknapper = true;
     const innerEditerbartElementListe = shallow(<InnerEditerbartElementListe {...props} />);
     const liste = innerEditerbartElementListe.find(FlereRedigeringsknapperListe);
@@ -61,7 +61,7 @@ describe('InnerElementlListe', () => {
     expect(liste).toHaveLength(1);
   });
 
-  it('viser en EnRedigeringsknappListe', () => {
+  it("viser en EnRedigeringsknappListe", () => {
     props.flereRedigeringsknapper = false;
     const innerEditerbartElementListe = shallow(<InnerEditerbartElementListe {...props} />);
     const liste = innerEditerbartElementListe.find(EnRedigeringsknappListe);

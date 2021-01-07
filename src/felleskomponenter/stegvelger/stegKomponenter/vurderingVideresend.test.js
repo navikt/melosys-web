@@ -1,14 +1,14 @@
-import React from 'react';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import React from "react";
+import { combineReducers, createStore } from "redux";
+import { reducer as formReducer } from "redux-form";
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from "../../../utils/navFrontend";
 
-import { VurderingVideresend } from './vurderingVideresend';
-import PdfLenkeListe from '../../pdfLenkeListe';
-import * as Skjema from '../../skjema';
+import { VurderingVideresend } from "./vurderingVideresend";
+import PdfLenkeListe from "../../pdfLenkeListe";
+import * as Skjema from "../../skjema";
 
-describe('Vurderingvideresend', () => {
+describe("Vurderingvideresend", () => {
   let props = null;
 
   beforeEach(() => {
@@ -16,21 +16,23 @@ describe('Vurderingvideresend', () => {
       redigerbart: true,
       behandlingID: 4,
       videresendSoknad: jest.fn(),
-      bostedsland: { kode: 'SE', term: 'Sverige' },
+      bostedsland: { kode: "SE", term: "Sverige" },
       handleSubmit: jest.fn(),
-      form: 'form',
+      form: "form",
     };
   });
 
-  it('viser fritekst til orienteringsbrev', () => {
+  it("viser fritekst til orienteringsbrev", () => {
     const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
 
-    expect(vurderingVideresend.findWhere(n =>
-      n.type() === Skjema.Textarea &&
-      n.props().label === 'Fritekst til orienteringsbrev')).toHaveLength(1);
+    expect(
+      vurderingVideresend.findWhere(
+        (n) => n.type() === Skjema.Textarea && n.props().label === "Fritekst til orienteringsbrev"
+      )
+    ).toHaveLength(1);
   });
 
-  it('viser en PdfLenkeListe med korrekte props', () => {
+  it("viser en PdfLenkeListe med korrekte props", () => {
     const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
 
     const pdfLenkeListe = vurderingVideresend.find(PdfLenkeListe);
@@ -40,14 +42,14 @@ describe('Vurderingvideresend', () => {
     expect(pdfLenkeListeProps.behandlingID).toBe(props.behandlingID);
   });
 
-  it('viser ikke pdfLenkeListe dersom ikke redigerbart', () => {
+  it("viser ikke pdfLenkeListe dersom ikke redigerbart", () => {
     props.redigerbart = false;
     const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
 
     expect(vurderingVideresend.find(PdfLenkeListe)).toHaveLength(0);
   });
 
-  describe('viser en hovedknapp', () => {
+  describe("viser en hovedknapp", () => {
     let hovedknapp = null;
     let form = null;
 
@@ -55,19 +57,19 @@ describe('Vurderingvideresend', () => {
       const store = createStore(combineReducers({ form: formReducer }));
       const vurderingVideresend = shallow(<VurderingVideresend {...props} store={store} />);
 
-      form = vurderingVideresend.find('form');
+      form = vurderingVideresend.find("form");
       hovedknapp = vurderingVideresend.find(Nav.Hovedknapp);
     });
 
-    it('har korrekte props', () => {
+    it("har korrekte props", () => {
       const hovedknappProps = hovedknapp.props();
 
       expect(hovedknapp).toHaveLength(1);
       expect(hovedknappProps.disabled).toBe(!props.redigerbart);
     });
 
-    it('kaller videresendSoknad-prop ved klikk', () => {
-      form.simulate('submit');
+    it("kaller videresendSoknad-prop ved klikk", () => {
+      form.simulate("submit");
       expect(props.handleSubmit).toHaveBeenCalledTimes(1);
     });
   });

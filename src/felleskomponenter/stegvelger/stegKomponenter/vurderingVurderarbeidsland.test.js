@@ -1,14 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import * as Mui from '../../ui';
+import * as Mui from "../../ui";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import { VurderingVurderarbeidsland } from './vurderingVurderarbeidsland';
-import SokkelSkipListe from '../../../felleskomponenter/sokkelskipliste';
+import { VurderingVurderarbeidsland } from "./vurderingVurderarbeidsland";
+import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 
-
-describe('VurderingVurderarbeidsland', () => {
+describe("VurderingVurderarbeidsland", () => {
   let props = null;
 
   beforeEach(() => {
@@ -28,15 +27,17 @@ describe('VurderingVurderarbeidsland', () => {
       redigerbart: true,
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
-      maritimtArbeid: [{
-        enhetNavn: 'Dunfjæder',
-        fartsomradeKode: 'INNENRIKS',
-        flaggLandkode: 'GB',
-        installasjonsLandkode: 'GB',
-        territorialfarvann: 'GB',
-        foretakNavn: 'SWECO NORGE AS',
-        foretakOrgnr: '967032271',
-      }],
+      maritimtArbeid: [
+        {
+          enhetNavn: "Dunfjæder",
+          fartsomradeKode: "INNENRIKS",
+          flaggLandkode: "GB",
+          installasjonsLandkode: "GB",
+          territorialfarvann: "GB",
+          foretakNavn: "SWECO NORGE AS",
+          foretakOrgnr: "967032271",
+        },
+      ],
       hjemmebaser: [MKV.Koder.landkoder.DE],
       soknadsland: [],
       arbeidsland: [],
@@ -45,13 +46,13 @@ describe('VurderingVurderarbeidsland', () => {
     };
   });
 
-  it('viser en Sokkelskipliste', () => {
+  it("viser en Sokkelskipliste", () => {
     const vurderingVurderarbeidsland = shallow(<VurderingVurderarbeidsland {...props} />);
 
     expect(vurderingVurderarbeidsland.find(SokkelSkipListe)).toHaveLength(1);
   });
 
-  it('viser to RedigerbarListe', () => {
+  it("viser to RedigerbarListe", () => {
     const vurderingVurderarbeidsland = shallow(<VurderingVurderarbeidsland {...props} />);
 
     expect(vurderingVurderarbeidsland.find(Mui.RedigerbarListe)).toHaveLength(2);

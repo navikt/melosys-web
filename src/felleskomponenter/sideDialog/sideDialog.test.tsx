@@ -1,35 +1,35 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+import React from "react";
+import { shallow } from "enzyme";
 
-import { FaneViser, FaneViserProps } from './sideDialog';
+import { FaneViser, FaneViserProps } from "./sideDialog";
 
-import SideDialogDokumenter from './sideDialogDokumenter';
-import SideDialogBrevBestillilng from './brevBestilling';
-import SideDialogSedBestilling from './sideDialogOpprettNyBuc';
-import SideDialogBesvarSed from './sideDialogBesvarSed';
+import SideDialogDokumenter from "./sideDialogDokumenter";
+import SideDialogBrevBestillilng from "./brevBestilling";
+import SideDialogSedBestilling from "./sideDialogOpprettNyBuc";
+import SideDialogBesvarSed from "./sideDialogBesvarSed";
 
-describe('SideDialog', () => {
-  describe('FaneViser', () => {
+describe("SideDialog", () => {
+  describe("FaneViser", () => {
     let props: FaneViserProps;
 
     beforeEach(() => {
       props = {
-        navn: 'dokumenter',
+        navn: "dokumenter",
         behandlingID: 4,
-        saksnummer: '4',
+        saksnummer: "4",
         brevBestillingRedigerbartIArtikkel13: false,
         brevBestillingRedigerbart: false,
         redigerbart: true,
         dokumentOversikt: [
           {
-            journalpostID: '321',
+            journalpostID: "321",
             journalforingDato: null,
             mottattDato: null,
-            avsenderEllerMottaker: 'avsendernavn',
-            mottaksretning: { kode: 'INN', term: 'Inngående' },
+            avsenderEllerMottaker: "avsendernavn",
+            mottaksretning: { kode: "INN", term: "Inngående" },
             hoveddokument: {
-              tittel: 'tittel',
-              dokumentID: '123',
+              tittel: "tittel",
+              dokumentID: "123",
               logiskeVedlegg: [],
             },
             vedlegg: [],
@@ -39,9 +39,9 @@ describe('SideDialog', () => {
       };
     });
 
-    describe('Navn-prop styrer visning av', () => {
-      it('SideDialogDokumenter', () => {
-        props.navn = 'dokumenter';
+    describe("Navn-prop styrer visning av", () => {
+      it("SideDialogDokumenter", () => {
+        props.navn = "dokumenter";
         const faner = shallow(<FaneViser {...props} />);
 
         const sideDialogDokumenter = faner.find(SideDialogDokumenter);
@@ -49,14 +49,14 @@ describe('SideDialog', () => {
         expect(sideDialogDokumenter.props().dokumentOversikt.length).toEqual(1);
       });
 
-      it('SideDialogBrevBestillilng', () => {
+      it("SideDialogBrevBestillilng", () => {
         type BrevbestillingMockProps = {
-          behandlingID: number,
-          redigerbart: boolean,
-          brevBestillingRedigerbartIArtikkel13: boolean
+          behandlingID: number;
+          redigerbart: boolean;
+          brevBestillingRedigerbartIArtikkel13: boolean;
         };
 
-        props.navn = 'brevbestilling';
+        props.navn = "brevbestilling";
         const faner = shallow(<FaneViser {...props} />);
 
         const sideDialogBrevBestilling = faner.find(SideDialogBrevBestillilng);
@@ -68,8 +68,8 @@ describe('SideDialog', () => {
         expect(childProps.brevBestillingRedigerbartIArtikkel13).toBe(props.brevBestillingRedigerbartIArtikkel13);
       });
 
-      it('SideDialogSedBestilling', () => {
-        props.navn = 'sedbestilling';
+      it("SideDialogSedBestilling", () => {
+        props.navn = "sedbestilling";
         const faner = shallow(<FaneViser {...props} />);
 
         const sideDialogSedBestilling = faner.find(SideDialogSedBestilling);
@@ -77,8 +77,8 @@ describe('SideDialog', () => {
         expect(sideDialogSedBestilling.props().behandlingID).toBe(props.behandlingID);
       });
 
-      it('SideDialogBesvarSed', () => {
-        props.navn = 'besvarsed';
+      it("SideDialogBesvarSed", () => {
+        props.navn = "besvarsed";
         const faner = shallow(<FaneViser {...props} />);
 
         const sideDialogBesvarSed = faner.find(SideDialogBesvarSed);

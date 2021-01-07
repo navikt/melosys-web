@@ -1,6 +1,6 @@
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingStart from '../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingStart';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingStart from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingStart";
 
 class Start extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -13,9 +13,9 @@ class Start extends Steg {
       },
     ];
     this.id = STEG.START;
-    this.tittel = 'Start';
+    this.tittel = "Start";
     this.komponent = VurderingStart;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
@@ -26,12 +26,15 @@ class Start extends Steg {
     };
     this.status = FANE_STATUS.OK;
   }
-  finnAvklaring = behandlingsgrunnlag => {
+  finnAvklaring = (behandlingsgrunnlag) => {
     const søknadsperiodeValid = behandlingsgrunnlag.periode ? !!behandlingsgrunnlag.periode.fom : false;
-    const søknadslandValid = behandlingsgrunnlag.soeknadsland && behandlingsgrunnlag.soeknadsland.landkoder ? behandlingsgrunnlag.soeknadsland.landkoder.length > 0 : false;
+    const søknadslandValid =
+      behandlingsgrunnlag.soeknadsland && behandlingsgrunnlag.soeknadsland.landkoder
+        ? behandlingsgrunnlag.soeknadsland.landkoder.length > 0
+        : false;
     const trygdedekningValid = !!behandlingsgrunnlag.trygdedekning;
 
     return søknadslandValid && søknadsperiodeValid && trygdedekningValid;
-  }
+  };
 }
 export default Start;

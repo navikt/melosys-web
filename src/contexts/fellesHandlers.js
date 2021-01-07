@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { stringify } from 'qs';
-import { withRouter } from 'react-router-dom';
-import PT from 'prop-types';
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { stringify } from "qs";
+import { withRouter } from "react-router-dom";
+import PT from "prop-types";
 
-import * as Utils from '../utils';
-import * as Api from '../services/api';
+import * as Utils from "../utils";
+import * as Api from "../services/api";
 
-import { fagsakSelectors } from '../ducks/fagsaker';
-import { datalastingOperations } from '../ducks/datalasting';
-import { behandlingsgrunnlagOperations } from '../ducks/behandlingsgrunnlag';
-import { oppgaverOperations } from '../ducks/oppgaver';
-import { vedtakOperations } from '../ducks/vedtak';
-import { saksopplysningerOperations } from '../ducks/saksopplysninger';
-import { behandlingerOperations } from '../ducks/behandlinger';
-import { modalerOperations, modalerSelectors } from '../ducks/modaler';
-import { navigeringOperations } from '../ducks/navigering';
+import { fagsakSelectors } from "../ducks/fagsaker";
+import { datalastingOperations } from "../ducks/datalasting";
+import { behandlingsgrunnlagOperations } from "../ducks/behandlingsgrunnlag";
+import { oppgaverOperations } from "../ducks/oppgaver";
+import { vedtakOperations } from "../ducks/vedtak";
+import { saksopplysningerOperations } from "../ducks/saksopplysninger";
+import { behandlingerOperations } from "../ducks/behandlinger";
+import { modalerOperations, modalerSelectors } from "../ducks/modaler";
+import { navigeringOperations } from "../ducks/navigering";
 
 const FellesHandlersContext = React.createContext({});
 export default FellesHandlersContext;
@@ -48,7 +48,7 @@ const FellesHandlersProviderUnconnected = ({
   tilForsiden,
 }) => {
   const [venterPaRevurderFagsak, setVenterPaRevurderFagsak] = useState(false);
-  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   const lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
@@ -71,7 +71,7 @@ const FellesHandlersProviderUnconnected = ({
   const annenBehandlingOppfriskes = behandlingUnderOppfriskning !== null && !behandlingOppfriskes;
 
   const tilOpprettNySak = () => {
-    history.push('/opprettnysak');
+    history.push("/opprettnysak");
   };
 
   const skjulOppfriskModalOgNavigerTilForside = () => {
@@ -111,9 +111,9 @@ const FellesHandlersProviderUnconnected = ({
     lagreOgLukk();
   };
 
-  const henleggSak = async data => Api.Fagsaker.fagsak.henlegg(saksnummer, data);
+  const henleggSak = async (data) => Api.Fagsaker.fagsak.henlegg(saksnummer, data);
 
-  const henleggHandle = async data => {
+  const henleggHandle = async (data) => {
     try {
       await lagreAllData();
       await henleggSak(data);
@@ -124,7 +124,7 @@ const FellesHandlersProviderUnconnected = ({
     }
   };
 
-  const avslaaSoknadHandle = async data => {
+  const avslaaSoknadHandle = async (data) => {
     try {
       await lagreAllData();
       avslaSoknad(behandlingID, data);
@@ -167,11 +167,7 @@ const FellesHandlersProviderUnconnected = ({
     startOgVisOppfriskModal,
   };
 
-  return (
-    <FellesHandlersContext.Provider value={fellesHandlers}>
-      {children}
-    </FellesHandlersContext.Provider>
-  );
+  return <FellesHandlersContext.Provider value={fellesHandlers}>{children}</FellesHandlersContext.Provider>;
 };
 
 FellesHandlersProviderUnconnected.propTypes = {
@@ -210,19 +206,21 @@ FellesHandlersProviderUnconnected.defaultProps = {
   saksnummer: undefined,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
-  tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
+  tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
+    oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaSoknad(behandlingID, data)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
-  oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
-  leggTilBehandlingOppfriskes: behandlingID => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
+    dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+  oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
+  leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
@@ -238,4 +236,6 @@ const mapDispatchToProps = dispatch => ({
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
 });
 
-export const FellesHandlersProvider = withRouter(connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected));
+export const FellesHandlersProvider = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected)
+);

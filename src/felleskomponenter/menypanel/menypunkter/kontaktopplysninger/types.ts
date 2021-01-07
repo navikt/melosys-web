@@ -1,4 +1,4 @@
 export interface KontaktOpplysning {
-  kontaktorgnr?: string,
-  kontaktnavn?: string,
+  kontaktorgnr?: string;
+  kontaktnavn?: string;
 }

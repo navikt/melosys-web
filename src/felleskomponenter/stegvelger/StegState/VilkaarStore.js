@@ -1,5 +1,5 @@
-import StegState from './StegState';
-import * as Utils from '../../../utils';
+import StegState from "./StegState";
+import * as Utils from "../../../utils";
 
 class VilkaarStore extends StegState {
   oppdaterfelt = (eksisterendeData, nyData) => {
@@ -25,14 +25,9 @@ class VilkaarStore extends StegState {
   hent = () => {
     const vilkaar = {};
     const { stegStore } = this;
-    stegStore.forEach(steg => {
-      Object.keys(steg).forEach(key => {
-        const {
-          oppfylt,
-          begrunnelse,
-          fritekst,
-          fritekstEngelsk,
-        } = steg[key];
+    stegStore.forEach((steg) => {
+      Object.keys(steg).forEach((key) => {
+        const { oppfylt, begrunnelse, fritekst, fritekstEngelsk } = steg[key];
 
         if (!Utils._isNil(oppfylt) && Utils._isNil(vilkaar[key])) {
           vilkaar[key] = oppfylt;

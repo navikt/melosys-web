@@ -1,22 +1,22 @@
-import React from 'react';
-import { FieldArray } from 'redux-form';
+import React from "react";
+import { FieldArray } from "redux-form";
 
 import ArbeidsforholdNorgeListe, {
   InnerArbeidsforholdNorgeListe,
   EnkeltArbeidsforholdNorgeRedigerer,
   EnkeltArbeidsforholdNorge,
-} from './arbeidsforholdNorgeListe';
-import Orgnrinput from './orgnrinput';
-import Organisasjon from '../../arbeidsgiver/organisasjon';
+} from "./arbeidsforholdNorgeListe";
+import Orgnrinput from "./orgnrinput";
+import Organisasjon from "../../arbeidsgiver/organisasjon";
 
-describe('ArbeidsforholdNorgeListe', () => {
+describe("ArbeidsforholdNorgeListe", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      leggTilTekst: 'Legg til',
-      slettTekst: 'Sett',
-      feltNavn: 'feltnavn',
+      leggTilTekst: "Legg til",
+      slettTekst: "Sett",
+      feltNavn: "feltnavn",
       redigerbart: true,
       hentOrganisasjon: jest.fn(),
       leggTil: jest.fn(),
@@ -24,7 +24,7 @@ describe('ArbeidsforholdNorgeListe', () => {
     };
   });
 
-  it('Viser en FieldArray med InnerArbeidsforholdNorgeListe', () => {
+  it("Viser en FieldArray med InnerArbeidsforholdNorgeListe", () => {
     const arbeidsforholdNorgeListe = shallow(<ArbeidsforholdNorgeListe {...props} />);
     const fieldArray = arbeidsforholdNorgeListe.find(FieldArray);
     const fieldArrayProps = fieldArray.props();
@@ -34,31 +34,29 @@ describe('ArbeidsforholdNorgeListe', () => {
   });
 });
 
-describe('InnerArbeidsforholdNorgeListe', () => {
+describe("InnerArbeidsforholdNorgeListe", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      leggTilTekst: 'Legg til',
-      tittelTekst: 'tittel',
+      leggTilTekst: "Legg til",
+      tittelTekst: "tittel",
       tittelIkon: () => <span />,
       fields: {
-        getAll: jest.fn(() => [
-          '123123123',
-        ]),
+        getAll: jest.fn(() => ["123123123"]),
       },
       redigerbart: true,
       hentOrganisasjon: jest.fn(),
       leggTil: jest.fn(),
-      findOrganisasjon: jest.fn(() => ({ orgnr: '123123123' })),
+      findOrganisasjon: jest.fn(() => ({ orgnr: "123123123" })),
       transformerOrgTilElement: jest.fn(),
       defaultElement: {},
       elementerInneholderOrg: jest.fn(),
-      saksnummer: '13',
+      saksnummer: "13",
     };
   });
 
-  it('viser et EnkeltArbeidsforholdNorge', () => {
+  it("viser et EnkeltArbeidsforholdNorge", () => {
     const innerArbeidsforholdNorgeListe = shallow(<InnerArbeidsforholdNorgeListe {...props} />);
     const enkeltArbeidsforholdNorge = innerArbeidsforholdNorgeListe.find(EnkeltArbeidsforholdNorge);
 
@@ -66,7 +64,7 @@ describe('InnerArbeidsforholdNorgeListe', () => {
   });
 });
 
-describe('EnkeltArbeidsforholdNorgeRedigerer', () => {
+describe("EnkeltArbeidsforholdNorgeRedigerer", () => {
   let props = null;
 
   beforeEach(() => {
@@ -75,9 +73,9 @@ describe('EnkeltArbeidsforholdNorgeRedigerer', () => {
       valideringer: [],
       redigerbart: true,
       hentOrganisasjon: jest.fn(),
-      organisasjon: { orgnr: '123123123' },
+      organisasjon: { orgnr: "123123123" },
       slett: jest.fn(),
-      slettTekst: 'Slett',
+      slettTekst: "Slett",
       kontaktopplysninger: {},
       onKontaktopplysningerChange: jest.fn(),
       onKontaktopplysningerInputBlur: jest.fn(),
@@ -85,17 +83,17 @@ describe('EnkeltArbeidsforholdNorgeRedigerer', () => {
     };
   });
 
-  it('viser en Organisasjon', () => {
+  it("viser en Organisasjon", () => {
     const enkeltArbeidsforholdNorgeRedigerer = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
     const organisasjon = enkeltArbeidsforholdNorgeRedigerer.find(Organisasjon);
     const organisasjonProps = organisasjon.props();
 
     expect(organisasjon).toHaveLength(1);
-    expect(organisasjonProps.organisasjon).toEqual({ orgnr: '123123123' });
+    expect(organisasjonProps.organisasjon).toEqual({ orgnr: "123123123" });
     expect(organisasjonProps.redigerbart).toBe(props.redigerbart);
   });
 
-  it('viser en orgnrinput', () => {
+  it("viser en orgnrinput", () => {
     const enkeltArbeidsforholdNorgeRedigerer = shallow(<EnkeltArbeidsforholdNorgeRedigerer {...props} />);
     const orgnrinput = enkeltArbeidsforholdNorgeRedigerer.find(Orgnrinput);
 

@@ -1,84 +1,53 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 export const ModalerSelector = createSelector(
-  state => state.modaler.data,
-  modaler => modaler
+  (state) => state.modaler.data,
+  (modaler) => modaler
 );
 
-export const AvslagSoknadSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.avslagSoknad
-);
+export const AvslagSoknadSelector = createSelector(ModalerSelector, (modaler) => modaler.avslagSoknad);
 
-export const ErAvslagSoknadSynligSelector = createSelector(
-  AvslagSoknadSelector,
-  avslagSoknad => avslagSoknad.synlig
-);
+export const ErAvslagSoknadSynligSelector = createSelector(AvslagSoknadSelector, (avslagSoknad) => avslagSoknad.synlig);
 
 export const AvsluttSakSomBortfaltSelector = createSelector(
   ModalerSelector,
-  modaler => modaler.avsluttSakSomBortfalt
+  (modaler) => modaler.avsluttSakSomBortfalt
 );
 
 export const ErAvsluttSakSomBortfaltSynligSelector = createSelector(
   AvsluttSakSomBortfaltSelector,
-  avsluttSakSomBortfalt => avsluttSakSomBortfalt.synlig
+  (avsluttSakSomBortfalt) => avsluttSakSomBortfalt.synlig
 );
 
-export const HenleggSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.henlegg
-);
+export const HenleggSelector = createSelector(ModalerSelector, (modaler) => modaler.henlegg);
 
-export const ErHenleggSynligSelector = createSelector(
-  HenleggSelector,
-  henlegg => henlegg.synlig
-);
+export const ErHenleggSynligSelector = createSelector(HenleggSelector, (henlegg) => henlegg.synlig);
 
-export const OppfriskSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.oppfrisk
-);
+export const OppfriskSelector = createSelector(ModalerSelector, (modaler) => modaler.oppfrisk);
 
-export const ErOppfriskSynligSelector = createSelector(
-  OppfriskSelector,
-  oppfrisk => oppfrisk.synlig
-);
-export const ErOppfriskSynligOgFortsettSattSelector = createSelector(
-  OppfriskSelector,
-  oppfrisk => (oppfrisk.fortsett ? oppfrisk.fortsett : null)
+export const ErOppfriskSynligSelector = createSelector(OppfriskSelector, (oppfrisk) => oppfrisk.synlig);
+export const ErOppfriskSynligOgFortsettSattSelector = createSelector(OppfriskSelector, (oppfrisk) =>
+  oppfrisk.fortsett ? oppfrisk.fortsett : null
 );
 
 export const BehandlingUnderOppfriskningSelector = createSelector(
   OppfriskSelector,
-  oppfrisk => oppfrisk.behandlingUnderOppfriskning
+  (oppfrisk) => oppfrisk.behandlingUnderOppfriskning
 );
 
-export const ValideringSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.validering
-);
+export const ValideringSelector = createSelector(ModalerSelector, (modaler) => modaler.validering);
 
-export const ErValideringSynligSelector = createSelector(
-  ValideringSelector,
-  validering => validering.synlig
-);
+export const ErValideringSynligSelector = createSelector(ValideringSelector, (validering) => validering.synlig);
 
-export const RevurderFagsakSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.revurderFagsak
-);
+export const RevurderFagsakSelector = createSelector(ModalerSelector, (modaler) => modaler.revurderFagsak);
 
 export const ErRevurderFagsakSynligSelector = createSelector(
   RevurderFagsakSelector,
-  revurderFagsak => revurderFagsak.synlig
+  (revurderFagsak) => revurderFagsak.synlig
 );
 
-export const EndreBehandlingstemaSelector = createSelector(
-  ModalerSelector,
-  modaler => modaler.endreBehandlingstema
-);
+export const EndreBehandlingstemaSelector = createSelector(ModalerSelector, (modaler) => modaler.endreBehandlingstema);
 export const ErEndreBehandlingstemaSynligSelector = createSelector(
   EndreBehandlingstemaSelector,
-  endreBehandlingstema => endreBehandlingstema.synlig
+  (endreBehandlingstema) => endreBehandlingstema.synlig
 );

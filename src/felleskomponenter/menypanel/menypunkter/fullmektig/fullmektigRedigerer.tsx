@@ -1,27 +1,27 @@
-import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler } from 'react';
-import { Organisasjon } from 'Domene';
+import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler } from "react";
+import { Organisasjon } from "Domene";
 
-import MKV from '../../../../melosyskodeverk';
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from '../../../../utils/navFrontend';
+import * as Nav from "../../../../utils/navFrontend";
 
-import Kontaktopplysninger, { KontaktOpplysning } from '../kontaktopplysninger';
-import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
-import SokFullmektigOrgProps from './sokFullmektigOrg';
+import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
+import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
+import SokFullmektigOrgProps from "./sokFullmektigOrg";
 
-import './fullmektigRedigerer.css';
+import "./fullmektigRedigerer.css";
 
 interface FullmektigRedigererProps {
-  onRolleChange: (rolle: string, org?: string) => void,
-  redigerbart: boolean,
-  databaseID: number,
-  onOrgFunnet: (orgnr: string) => void,
-  representererKode: string | null,
-  org: Partial<Organisasjon>,
-  onKontaktOpplysningerChange: (kontaktopplysning: KontaktOpplysning) => void,
-  kontaktopplysninger: KontaktOpplysning,
-  onKontaktopplysningerInputBlur: FocusEventHandler<HTMLInputElement>,
-  onKontaktopplysningerSlettClick: MouseEventHandler<HTMLButtonElement>,
+  onRolleChange: (rolle: string, org?: string) => void;
+  redigerbart: boolean;
+  databaseID: number;
+  onOrgFunnet: (orgnr: string) => void;
+  representererKode: string | null;
+  org: Partial<Organisasjon>;
+  onKontaktOpplysningerChange: (kontaktopplysning: KontaktOpplysning) => void;
+  kontaktopplysninger: KontaktOpplysning;
+  onKontaktopplysningerInputBlur: FocusEventHandler<HTMLInputElement>;
+  onKontaktopplysningerSlettClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 function FullmektigRedigerer(props: FullmektigRedigererProps) {
@@ -38,7 +38,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
     onKontaktopplysningerSlettClick,
   } = props;
 
-  const onRadioChange: ChangeEventHandler<HTMLInputElement> = event => {
+  const onRadioChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onRolleChange(event.target.value, org.orgnr);
   };
 
@@ -47,21 +47,9 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
   return (
     <Nav.Row className="fullmektig__redigerer">
       <Nav.Column xs="6">
-        <SokFullmektigOrgProps
-          onOrgFunnet={onOrgFunnet}
-          defaultOrgnr={org.orgnr || ''}
-        />
-        {
-          org.orgnr &&
-          <OrganisasjonsAdresse
-            organisasjon={org}
-            className="adresse"
-            visNavn={false}
-            visTittel={false}
-          />
-        }
-        {
-          org.orgnr &&
+        <SokFullmektigOrgProps onOrgFunnet={onOrgFunnet} defaultOrgnr={org.orgnr || ""} />
+        {org.orgnr && <OrganisasjonsAdresse organisasjon={org} className="adresse" visNavn={false} visTittel={false} />}
+        {org.orgnr && (
           <Nav.Fieldset legend="Hvem er dette fullmektig for?" className="radioknapper">
             <Nav.Radio
               onChange={onRadioChange}
@@ -88,11 +76,10 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
               disabled={!redigerbart}
             />
           </Nav.Fieldset>
-        }
+        )}
       </Nav.Column>
       <Nav.Column xs="6">
-        {
-          org.orgnr &&
+        {org.orgnr && (
           <Kontaktopplysninger
             redigerbart={redigerbart}
             onChange={onKontaktOpplysningerChange}
@@ -101,7 +88,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
             onKontaktorgnrInputBlur={onKontaktopplysningerInputBlur}
             onSlettKnappClick={onKontaktopplysningerSlettClick}
           />
-        }
+        )}
       </Nav.Column>
     </Nav.Row>
   );

@@ -1,10 +1,10 @@
-import * as EKV from 'eessi-kodeverk';
-import * as KV from '../../../../kodeverk';
+import * as EKV from "eessi-kodeverk";
+import * as KV from "../../../../kodeverk";
 
-import MKV from '../../../../melosyskodeverk';
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingVedtak from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVedtak';
+import MKV from "../../../../melosyskodeverk";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingVedtak from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVedtak";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -16,16 +16,19 @@ class Vedtak extends Steg {
       },
     ];
     this.id = STEG.VEDTAK;
-    this.tittel = 'Vedtak';
+    this.tittel = "Vedtak";
     this.komponent = VurderingVedtak;
-    this.samleRelevanteData = _propsLight => {
+    this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
       const erNyVurdering = _propsLight.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-      const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(_propsLight.valgteLovvalgsVilkarBestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+      const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(
+        _propsLight.valgteLovvalgsVilkarBestemmelse,
+        MKV.Kodekombinasjoner.alleLovvalg
+      );
 
       const pdfDokumenter = [
         {
-          navn: 'Forhåndsvis vedtaksbrev og A1',
+          navn: "Forhåndsvis vedtaksbrev og A1",
           type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
           data: {
             mottaker: MKV.Koder.aktoersroller.BRUKER,
@@ -38,11 +41,13 @@ class Vedtak extends Steg {
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
       ];
 
-      if (lovvalgSomKodeTerm &&
-          visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-          !erNyVurdering) {
+      if (
+        lovvalgSomKodeTerm &&
+        visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
+        !erNyVurdering
+      ) {
         pdfDokumenter.push({
-          navn: 'Orienteringsbrev til arbeidsgiver',
+          navn: "Orienteringsbrev til arbeidsgiver",
           type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
           data: {
             mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
@@ -50,17 +55,19 @@ class Vedtak extends Steg {
         });
       }
 
-      const erArtikkel12Lovvalgsbestemmelse = lovvalgKTObject => {
+      const erArtikkel12Lovvalgsbestemmelse = (lovvalgKTObject) => {
         if (!lovvalgKTObject) return false;
 
-        return lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2 ||
-          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1;
+        return (
+          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2 ||
+          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1
+        );
       };
 
       if (formValues.kreverMottakerinstitusjon) {
         if (erArtikkel12Lovvalgsbestemmelse(lovvalgSomKodeTerm)) {
           pdfDokumenter.push({
-            navn: 'Forhåndsvis SED A009',
+            navn: "Forhåndsvis SED A009",
             type: EKV.Koder.sedtyper.A009,
             erSed: true,
             data: {
@@ -69,7 +76,7 @@ class Vedtak extends Steg {
           });
         } else {
           pdfDokumenter.push({
-            navn: 'Forhåndsvis SED A010',
+            navn: "Forhåndsvis SED A010",
             type: EKV.Koder.sedtyper.A010,
             erSed: true,
             data: {

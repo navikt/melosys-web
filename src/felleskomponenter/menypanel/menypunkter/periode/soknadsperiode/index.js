@@ -1,3 +1,3 @@
-import Soknadsperiode from './soknadsperiode';
+import Soknadsperiode from "./soknadsperiode";
 
 export default Soknadsperiode;

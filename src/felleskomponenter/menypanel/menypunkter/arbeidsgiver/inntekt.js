@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import ReactHighcharts from 'react-highcharts';
+import React, { Component } from "react";
+import ReactHighcharts from "react-highcharts";
 
-import * as MPT from '../../../../proptypes';
-import * as Nav from '../../../../utils/navFrontend';
-import * as Utils from '../../../../utils';
-import Tabell from '../../../tabell/tabell';
+import * as MPT from "../../../../proptypes";
+import * as Nav from "../../../../utils/navFrontend";
+import * as Utils from "../../../../utils";
+import Tabell from "../../../tabell/tabell";
 
-import './inntekt.css';
+import "./inntekt.css";
 
 class Inntekt extends Component {
   state = { visInntektTabell: false };
 
-  toggleInntektTabellHandler = e => {
+  toggleInntektTabellHandler = (e) => {
     e.preventDefault();
     this.setState({ visInntektTabell: !this.state.visInntektTabell });
   };
@@ -31,66 +31,60 @@ class Inntekt extends Component {
         enabled: false,
       },
       title: {
-        text: '',
+        text: "",
       },
       chart: {
-        type: 'column',
-        description: 'Grafen viser utvikling i inntekt knyttet til juridisk arbeidsgiver eller virksomhet.',
+        type: "column",
+        description: "Grafen viser utvikling i inntekt knyttet til juridisk arbeidsgiver eller virksomhet.",
       },
       yAxis: {
         min: 0,
         title: {
-          text: '',
+          text: "",
         },
-        labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
+        labels: { style: { fontSize: "13px", fontWeight: "bold" } },
       },
       xAxis: {
-        categories: inntektListe.map(linje => Utils.dato.formatterKortDatoTilNorsk(linje.aarMaaned)),
+        categories: inntektListe.map((linje) => Utils.dato.formatterKortDatoTilNorsk(linje.aarMaaned)),
         crosshair: true,
-        description: 'Perioder med inntekt.',
-        labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
+        description: "Perioder med inntekt.",
+        labels: { style: { fontSize: "13px", fontWeight: "bold" } },
       },
       plotOptions: {
         series: {
-          stacking: 'normal',
+          stacking: "normal",
         },
       },
       series: [
         {
-          name: 'Samlet  i én periode',
-          data: inntektListe.map(linje => linje.beloep),
-          color: '#0067c5',
-          description: 'Inntekt',
+          name: "Samlet  i én periode",
+          data: inntektListe.map((linje) => linje.beloep),
+          color: "#0067c5",
+          description: "Inntekt",
         },
       ],
     };
 
-    const inntektArrayed = omvendtInntektListe
-      .map(linje => (
-        [
-          Utils.dato.formatterKortDatoTilNorsk(linje.aarMaaned),
-          Utils._round(linje.beloep, 2),
-        ]));
+    const inntektArrayed = omvendtInntektListe.map((linje) => [
+      Utils.dato.formatterKortDatoTilNorsk(linje.aarMaaned),
+      Utils._round(linje.beloep, 2),
+    ]);
 
     const uuTabell = this.state.visInntektTabell ? (
       <div>
         <Nav.typo.Undertittel>Inntekt</Nav.typo.Undertittel>
-        <Tabell
-          kolonneNavn={['Periode', 'Samlet inntekt']}
-          tabellData={inntektArrayed}
-          linjerPerSide={6}
-        />
+        <Tabell kolonneNavn={["Periode", "Samlet inntekt"]} tabellData={inntektArrayed} linjerPerSide={6} />
       </div>
     ) : null;
 
-    const harMinstEnInntekt = inntektListe.some(inntekt => inntekt.beloep > 0);
+    const harMinstEnInntekt = inntektListe.some((inntekt) => inntekt.beloep > 0);
 
     const inntektInnhold = harMinstEnInntekt && (
       <div className="inntekt">
         <div className="inntekt__graf">
           <ReactHighcharts config={grafConfig} />
           <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
-            { this.state.visInntektTabell ? 'Skjul tabellen' : 'Vis grafen som tabell' }
+            {this.state.visInntektTabell ? "Skjul tabellen" : "Vis grafen som tabell"}
           </Nav.Knapp>
         </div>
         {uuTabell}

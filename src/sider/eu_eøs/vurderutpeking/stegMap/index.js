@@ -1,11 +1,11 @@
-import Inngang from './inngang';
-import AvslaaUtpeking from './avslaautpeking';
-import GodkjennUtpekingNorge from './godkjennutpekingnorge';
-import GodkjennUtpekingAnnetLand from './godkjennutpekingannetland';
-import Virksomheter from './virksomheter';
-import VurderUtpeking from './vurderutpeking';
+import Inngang from "./inngang";
+import AvslaaUtpeking from "./avslaautpeking";
+import GodkjennUtpekingNorge from "./godkjennutpekingnorge";
+import GodkjennUtpekingAnnetLand from "./godkjennutpekingannetland";
+import Virksomheter from "./virksomheter";
+import VurderUtpeking from "./vurderutpeking";
 
-import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
+import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 const stegMap = new Map([
   [STEG.INNGANG, Inngang],

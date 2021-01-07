@@ -1,11 +1,11 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import { Periode } from './periode';
-import { Permisjoner } from './permisjon';
-import { TimerTimelonnet } from './timerTimelonnet';
-import { Arbeidsavtale } from './arbeidsavtale';
-import { InntektListe } from './inntekt';
+import { Periode } from "./periode";
+import { Permisjoner } from "./permisjon";
+import { TimerTimelonnet } from "./timerTimelonnet";
+import { Arbeidsavtale } from "./arbeidsavtale";
+import { InntektListe } from "./inntekt";
 
 const ArbeidsforholdetPropType = PT.shape({
   arbeidsforholdID: PT.string,
@@ -25,7 +25,4 @@ const ArbeidsforholdetPropType = PT.shape({
 
 const ArbeidsforholdenePropType = PT.arrayOf(ArbeidsforholdetPropType);
 
-export {
-  ArbeidsforholdenePropType as Arbeidsforholdene,
-  ArbeidsforholdetPropType as Arbeidsforholdet,
-};
+export { ArbeidsforholdenePropType as Arbeidsforholdene, ArbeidsforholdetPropType as Arbeidsforholdet };

@@ -1,6 +1,6 @@
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
 
 export function hentKodeverkForFolketrygden() {
   return doThenDispatch(() => Api.Kodeverk.hentFolketrygdenKodeverk(), {

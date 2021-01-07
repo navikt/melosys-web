@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import { DialogboksRevurderFagsak } from './dialogboksRevurderFagsak';
-import Knapperad from '../knapperad';
+import { DialogboksRevurderFagsak } from "./dialogboksRevurderFagsak";
+import Knapperad from "../knapperad";
 
-describe('DialogboksRevurderFagsak', () => {
+describe("DialogboksRevurderFagsak", () => {
   let props = null;
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('DialogboksRevurderFagsak', () => {
     };
   });
 
-  it('viser en nav modal med korrekte props', () => {
+  it("viser en nav modal med korrekte props", () => {
     const dialogboksRevurderFagsak = shallow(<DialogboksRevurderFagsak {...props} />);
     const modal = dialogboksRevurderFagsak.find(Nav.Modal);
     const modalProps = modal.props();
@@ -29,7 +29,7 @@ describe('DialogboksRevurderFagsak', () => {
     expect(modalProps.closeButton).toBe(false);
   });
 
-  it('viser en knapperad med korrekte props', () => {
+  it("viser en knapperad med korrekte props", () => {
     const dialogboksRevurderFagsak = shallow(<DialogboksRevurderFagsak {...props} />);
     const knapperad = dialogboksRevurderFagsak.find(Knapperad);
     const knapperadProps = knapperad.props();

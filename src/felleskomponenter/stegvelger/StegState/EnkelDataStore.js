@@ -1,5 +1,5 @@
-import StegState from './StegState';
-import * as Utils from '../../../utils';
+import StegState from "./StegState";
+import * as Utils from "../../../utils";
 
 class EnkelDataStore extends StegState {
   oppdaterfelt = (eksisterendeData, nyData) => {
@@ -12,8 +12,8 @@ class EnkelDataStore extends StegState {
   hent = () => {
     const { stegStore } = this;
     let data = null;
-    stegStore.forEach(steg => {
-      Object.keys(steg).forEach(key => {
+    stegStore.forEach((steg) => {
+      Object.keys(steg).forEach((key) => {
         const stegData = steg[key];
         if (!Utils._isNil(stegData) && Utils._isNil(data)) {
           data = stegData;

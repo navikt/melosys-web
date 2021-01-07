@@ -7,13 +7,13 @@
  *
  */
 
-import * as Api from '../../services/api';
-import { doThenDispatch } from '../../services/utils';
-import * as Types from './types';
-import * as Actions from './actions';
-import * as Selectors from './selectors';
+import * as Api from "../../services/api";
+import { doThenDispatch } from "../../services/utils";
+import * as Types from "./types";
+import * as Actions from "./actions";
+import * as Selectors from "./selectors";
 
-import { behandlingerSelectors } from '../behandlinger';
+import { behandlingerSelectors } from "../behandlinger";
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Avklartefakta.hent(behandlingID), {
@@ -40,7 +40,7 @@ export function lagre() {
 }
 
 export function oppdaterAvklarteFaktaState(skjema) {
-  return dispatch => (dispatch(Actions.oppdaterAvklartefaktaState(skjema)));
+  return (dispatch) => dispatch(Actions.oppdaterAvklartefaktaState(skjema));
 }
 
 export function resetAvklartefaktaState() {

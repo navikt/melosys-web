@@ -1,3 +1,3 @@
-import SedBehandling from './sedbehandling';
+import SedBehandling from "./sedbehandling";
 
 export default SedBehandling;

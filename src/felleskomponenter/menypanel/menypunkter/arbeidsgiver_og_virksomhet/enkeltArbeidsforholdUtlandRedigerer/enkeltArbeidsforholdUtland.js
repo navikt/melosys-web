@@ -1,29 +1,17 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../../../utils/navFrontend';
-import * as Skjema from '../../../../skjema';
+import * as Nav from "../../../../../utils/navFrontend";
+import * as Skjema from "../../../../skjema";
 
-const EnkeltArbeidsforholdUtland = ({
-  redigerbart,
-  overordnetFeltNavn,
-  className,
-}) => (
+const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className }) => (
   <div className={className}>
     <Nav.Row>
       <Nav.Column xs="6">
-        <Skjema.Input
-          label="Navn på virksomheten"
-          feltNavn={`${overordnetFeltNavn}.navn`}
-          disabled={!redigerbart}
-        />
+        <Skjema.Input label="Navn på virksomheten" feltNavn={`${overordnetFeltNavn}.navn`} disabled={!redigerbart} />
       </Nav.Column>
       <Nav.Column xs="6">
-        <Skjema.Input
-          label="Registreringsnummer"
-          feltNavn={`${overordnetFeltNavn}.orgnr`}
-          disabled={!redigerbart}
-        />
+        <Skjema.Input label="Registreringsnummer" feltNavn={`${overordnetFeltNavn}.orgnr`} disabled={!redigerbart} />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
@@ -35,11 +23,7 @@ const EnkeltArbeidsforholdUtland = ({
         />
       </Nav.Column>
       <Nav.Column xs="3">
-        <Skjema.Input
-          label="Poststed"
-          feltNavn={`${overordnetFeltNavn}.adresse.poststed`}
-          disabled={!redigerbart}
-        />
+        <Skjema.Input label="Poststed" feltNavn={`${overordnetFeltNavn}.adresse.poststed`} disabled={!redigerbart} />
       </Nav.Column>
       <Nav.Column xs="3">
         <Skjema.Input
@@ -51,11 +35,7 @@ const EnkeltArbeidsforholdUtland = ({
     </Nav.Row>
     <Nav.Row>
       <Nav.Column xs="6">
-        <Skjema.Input
-          label="Region"
-          feltNavn={`${overordnetFeltNavn}.adresse.region`}
-          disabled={!redigerbart}
-        />
+        <Skjema.Input label="Region" feltNavn={`${overordnetFeltNavn}.adresse.region`} disabled={!redigerbart} />
       </Nav.Column>
       <Nav.Column xs="6">
         <Skjema.LandVelger

@@ -5,31 +5,35 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector, Selector } from 'reselect';
-import { RootState, StateSection } from 'AppTypes';
-import { DokumentOversikt, FysiskDokument, Mottaksretning } from 'Domene';
+import { createSelector, Selector } from "reselect";
+import { RootState, StateSection } from "AppTypes";
+import { DokumentOversikt, FysiskDokument, Mottaksretning } from "Domene";
 
-import MKV from '../../melosyskodeverk';
-import * as Types from './types';
+import MKV from "../../melosyskodeverk";
+import * as Types from "./types";
 
 export const DokumenterSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  state => state.dokumenter,
-  dokumenter => dokumenter
+  (state) => state.dokumenter,
+  (dokumenter) => dokumenter
 );
 
 const DokumenterDataSelector: Selector<RootState, Types.Data> = createSelector(
   DokumenterSelector,
-  dokumenter => dokumenter.data
+  (dokumenter) => dokumenter.data
 );
 
 export const DokumentOversiktSelector: Selector<RootState, DokumentOversikt[]> = createSelector(
   DokumenterDataSelector,
-  dokumenter => dokumenter.dokumentOversikt || []
+  (dokumenter) => dokumenter.dokumentOversikt || []
 );
 
 const lagID = (journalpostID: string, dokumentID: string) => `${journalpostID}-${dokumentID}`;
 
-export const hentDato = (mottaksretning: Mottaksretning, mottattDato: string | null, journalforingDato: string | null) => {
+export const hentDato = (
+  mottaksretning: Mottaksretning,
+  mottattDato: string | null,
+  journalforingDato: string | null
+) => {
   if (mottaksretning.kode === MKV.Koder.mottaksretning.INN && mottattDato) {
     return mottattDato;
   }
@@ -40,11 +44,7 @@ export const hentDato = (mottaksretning: Mottaksretning, mottattDato: string | n
 const lagHoveddokument = ({
   journalpostID,
   avsenderEllerMottaker,
-  hoveddokument: {
-    tittel,
-    dokumentID,
-    logiskeVedlegg,
-  },
+  hoveddokument: { tittel, dokumentID, logiskeVedlegg },
   mottaksretning,
   mottattDato,
   journalforingDato,
@@ -90,5 +90,6 @@ export const VedleggSelector = createSelector(
 export const AlleFysiskeDokumentSelector = createSelector(
   VedleggSelector,
   HoveddokumentSelector,
-  (vedlegg: FysiskDokument[], hoveddokument: FysiskDokument[]) => ([] as FysiskDokument[]).concat(...vedlegg, ...hoveddokument)
+  (vedlegg: FysiskDokument[], hoveddokument: FysiskDokument[]) =>
+    ([] as FysiskDokument[]).concat(...vedlegg, ...hoveddokument)
 );

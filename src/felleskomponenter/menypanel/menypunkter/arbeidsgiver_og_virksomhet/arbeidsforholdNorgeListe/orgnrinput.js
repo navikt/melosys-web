@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import PT from 'prop-types';
+import React, { useState, useEffect } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../../../utils/navFrontend';
+import * as Nav from "../../../../../utils/navFrontend";
 
 const Orgnrinput = ({
   onOrgnrFunnet,
@@ -17,7 +17,7 @@ const Orgnrinput = ({
   const [feil, setFeil] = useState(undefined);
   const [hasFocus, setHasFocus] = useState(false);
 
-  const valider = organisasjonsnummer => {
+  const valider = (organisasjonsnummer) => {
     const utlostValidering = valideringer.find(({ validering }) => validering(organisasjonsnummer));
     if (utlostValidering) {
       setFeil(utlostValidering.feilmelding);
@@ -26,7 +26,7 @@ const Orgnrinput = ({
     return !utlostValidering;
   };
 
-  const leggTilOrg = async tillagtOrgnr => {
+  const leggTilOrg = async (tillagtOrgnr) => {
     if (!valider(tillagtOrgnr)) return;
 
     const action = await hentOrganisasjon(tillagtOrgnr);
@@ -50,7 +50,7 @@ const Orgnrinput = ({
     }
   }, [hentVedMount]);
 
-  const onChange = e => {
+  const onChange = (e) => {
     setFeil(undefined);
     setOrgnr(e.target.value);
     leggTilOrg(e.target.value);
@@ -81,19 +81,21 @@ Orgnrinput.propTypes = {
   hentOrganisasjon: PT.func.isRequired,
   defaultOrgnr: PT.string,
   hentVedMount: PT.bool,
-  valideringer: PT.arrayOf(PT.shape({
-    validering: PT.func.isRequired,
-    feilmelding: PT.string.isRequired,
-  })).isRequired,
+  valideringer: PT.arrayOf(
+    PT.shape({
+      validering: PT.func.isRequired,
+      feilmelding: PT.string.isRequired,
+    })
+  ).isRequired,
   ikkeFunnetFeilmelding: PT.string,
   feilVedHentingFeilmelding: PT.string,
 };
 
 Orgnrinput.defaultProps = {
-  defaultOrgnr: '',
+  defaultOrgnr: "",
   hentVedMount: false,
-  ikkeFunnetFeilmelding: 'Kunne ikke finne organisasjon',
-  feilVedHentingFeilmelding: 'Feil ved henting av organisasjon',
+  ikkeFunnetFeilmelding: "Kunne ikke finne organisasjon",
+  feilVedHentingFeilmelding: "Feil ved henting av organisasjon",
 };
 
 export default Orgnrinput;

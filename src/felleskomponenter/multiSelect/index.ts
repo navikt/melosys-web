@@ -1,3 +1,3 @@
-import MultiSelect from './multiSelect';
+import MultiSelect from "./multiSelect";
 
 export default MultiSelect;

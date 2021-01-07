@@ -1,8 +1,8 @@
-import React from 'react';
-import PT from 'prop-types';
-import { Field } from 'redux-form';
-import * as Nav from '../../../utils/navFrontend';
-import * as SkjemaUtils from '../utils';
+import React from "react";
+import PT from "prop-types";
+import { Field } from "redux-form";
+import * as Nav from "../../../utils/navFrontend";
+import * as SkjemaUtils from "../utils";
 
 /** Returnerer en tekst som gir brukeren en indikasjon på hvor mange tegn
  * hun har igjen eller hvor mange tegn hun har overskridet. visTellerFra gjør at denne teksten ikke vises
@@ -28,17 +28,9 @@ function getTellerTekst(antallTegn, maxLength, visTellerFra) {
   return null;
 }
 
-function InnerTextAreaComponent({
-  label,
-  placeholder,
-  maxLength,
-  visTellerFra,
-  input,
-  meta,
-  ...rest
-}) {
+function InnerTextAreaComponent({ label, placeholder, maxLength, visTellerFra, input, meta, ...rest }) {
   const { touched, active } = meta;
-  const feil = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
+  const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
   const inputProps = { ...input, ...rest, feil };
 
@@ -48,8 +40,7 @@ function InnerTextAreaComponent({
       label={label}
       maxLength={20}
       placeholder={placeholder}
-      tellerTekst={antallTegn =>
-        getTellerTekst(antallTegn, maxLength, visTellerFra)}
+      tellerTekst={(antallTegn) => getTellerTekst(antallTegn, maxLength, visTellerFra)}
       {...inputProps}
     />
   );
@@ -74,13 +65,7 @@ InnerTextAreaComponent.defaultProps = {
 };
 
 function Textarea({ feltNavn, ...rest }) {
-  return (
-    <Field
-      name={feltNavn}
-      component={InnerTextAreaComponent}
-      props={rest}
-    />
-  );
+  return <Field name={feltNavn} component={InnerTextAreaComponent} props={rest} />;
 }
 
 Textarea.propTypes = {

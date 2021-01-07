@@ -1,21 +1,21 @@
-import React from 'react';
+import React from "react";
 
-import Arbeidsforhold, { Arbeidsforholdet } from './arbeidsforhold';
+import Arbeidsforhold, { Arbeidsforholdet } from "./arbeidsforhold";
 
-describe('arbeidsforhold', () => {
+describe("arbeidsforhold", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
       arbeidsforholdene: [
         {
-          arbeidsforholdID: '1234',
+          arbeidsforholdID: "1234",
         },
       ],
     };
   });
 
-  it('lister ut arbeidsforhold', () => {
+  it("lister ut arbeidsforhold", () => {
     const arbeidsforhold = shallow(<Arbeidsforhold {...props} />);
     const arbeidsforholdene = arbeidsforhold.find(Arbeidsforholdet);
 
@@ -24,7 +24,7 @@ describe('arbeidsforhold', () => {
   });
 });
 
-describe('arbeidsforholdet', () => {
+describe("arbeidsforholdet", () => {
   let props = null;
 
   beforeEach(() => {
@@ -32,13 +32,13 @@ describe('arbeidsforholdet', () => {
       arbeidsforholdet: {
         ansettelsesPeriode: {},
         arbeidsgiver: {
-          navn: 'NAV',
+          navn: "NAV",
         },
       },
     };
   });
 
-  it('vises uten å krasje', () => {
+  it("vises uten å krasje", () => {
     shallow(<Arbeidsforholdet {...props} />);
   });
 });

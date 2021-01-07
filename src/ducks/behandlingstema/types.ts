@@ -1,32 +1,32 @@
-import { KTObject } from '@navikt/melosys-kodeverk';
+import { KTObject } from "@navikt/melosys-kodeverk";
 
-export const OK = 'behandlingstema/OK';
-export const FEILET = 'behandlingstema/FEILET';
-export const PENDING = 'behandlingstema/PENDING';
+export const OK = "behandlingstema/OK";
+export const FEILET = "behandlingstema/FEILET";
+export const PENDING = "behandlingstema/PENDING";
 
-export const HENT_MULIGE_BEHANDLINGSTEMA = 'behandlingstema/HENT_MULIGE_BEHANDLINGSTEMA';
+export const HENT_MULIGE_BEHANDLINGSTEMA = "behandlingstema/HENT_MULIGE_BEHANDLINGSTEMA";
 
 export interface Data {
-  muligeBehandlingstema?: KTObject[]
+  muligeBehandlingstema?: KTObject[];
 }
 
 interface HentMuligeBehandlingstemaAction {
-  type: typeof HENT_MULIGE_BEHANDLINGSTEMA,
-  data: any,
+  type: typeof HENT_MULIGE_BEHANDLINGSTEMA;
+  data: any;
 }
 
 interface FeiletAction {
-  type: typeof FEILET,
-  data: any,
+  type: typeof FEILET;
+  data: any;
 }
 
 interface PendingAction {
-  type: typeof PENDING,
+  type: typeof PENDING;
 }
 
 interface OkAction {
-  type: typeof OK,
-  data: any,
+  type: typeof OK;
+  data: any;
 }
 
 export type Action = HentMuligeBehandlingstemaAction | FeiletAction | PendingAction | OkAction;

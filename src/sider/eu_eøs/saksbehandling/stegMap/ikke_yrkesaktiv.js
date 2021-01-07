@@ -1,6 +1,6 @@
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingIkkeYrkesaktiv from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingIkkeYrkesaktiv';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingIkkeYrkesaktiv from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingIkkeYrkesaktiv";
 
 class IkkeYrkesaktiv extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -12,7 +12,7 @@ class IkkeYrkesaktiv extends Steg {
       },
     ];
     this.id = STEG.IKKE_YRKESAKTIV;
-    this.tittel = 'Ikke yrkesaktiv';
+    this.tittel = "Ikke yrkesaktiv";
     this.komponent = VurderingIkkeYrkesaktiv;
     this.samleRelevanteData = () => ({});
     this.beregnRelevantUI = () => ({});

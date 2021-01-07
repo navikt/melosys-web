@@ -1,35 +1,36 @@
-import React, { KeyboardEvent, Fragment } from 'react';
-import PT from 'prop-types';
-import { KTObject } from '@navikt/melosys-kodeverk';
+import React, { KeyboardEvent, Fragment } from "react";
+import PT from "prop-types";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as KV from '../../../kodeverk';
-import * as Utils from '../../../utils';
+import * as Nav from "../../../utils/navFrontend";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import mapBehandlingsgrunnlagpathTilMenypunkt from './mapBehandlingsgrunnlagpathTilMenypunkt';
+import mapBehandlingsgrunnlagpathTilMenypunkt from "./mapBehandlingsgrunnlagpathTilMenypunkt";
 
-import './dialogboksValidering.css';
+import "./dialogboksValidering.css";
 
 interface Feilmelding {
-  tittel: string,
-  innhold: string,
+  tittel: string;
+  innhold: string;
 }
 
 const feilmeldingMap = new Map<string, Feilmelding>([
   [
     MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
     {
-      tittel: 'Overlappende periode',
-      innhold: 'Du kan ikke fatte vedtak fordi det ligger en overlappende periode i MEDL. Du må endre søknadsperioden eller perioden som er registrert i MEDL, slik at de ikke overlapper.',
+      tittel: "Overlappende periode",
+      innhold:
+        "Du kan ikke fatte vedtak fordi det ligger en overlappende periode i MEDL. Du må endre søknadsperioden eller perioden som er registrert i MEDL, slik at de ikke overlapper.",
     },
   ],
   [
     MKV.Koder.begrunnelser.kontroll_begrunnelser.PERIODEN_OVER_24_MD,
     {
-      tittel: 'Periode over 24 måneder',
-      innhold: 'Du kan ikke fatte vedtak etter artikkel 12.',
+      tittel: "Periode over 24 måneder",
+      innhold: "Du kan ikke fatte vedtak etter artikkel 12.",
     },
   ],
 ]);
@@ -40,9 +41,9 @@ const hentFeilmeldingTittel = (kontrollKode: string) => {
     case MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_OPPL_ARBEIDSSTED:
     case MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_OPPL_ANDRE_ARBEIDSFORHOLD_NO:
     case MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_OPPL_ANDRE_ARBEIDSFORHOLD_UTL:
-      return 'Manglende utfylling';
+      return "Manglende utfylling";
     default:
-      return 'Feil ved kontroll';
+      return "Feil ved kontroll";
   }
 };
 
@@ -50,19 +51,22 @@ const hentFeilmelding = (valideringKode: string) => {
   let feilmelding = feilmeldingMap.get(valideringKode);
 
   if (!feilmelding) {
-    const valideringKodeObjekt: KTObject = KV.kodeTilObjekt(valideringKode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    const valideringKodeObjekt: KTObject = KV.kodeTilObjekt(
+      valideringKode,
+      MKV.KTObjects.begrunnelser.kontroll_begrunnelser
+    );
     if (valideringKodeObjekt) {
       feilmelding = {
         tittel: hentFeilmeldingTittel(valideringKodeObjekt.kode),
-        innhold: valideringKodeObjekt.term || '',
+        innhold: valideringKodeObjekt.term || "",
       };
     }
   }
 
   if (!feilmelding) {
     return {
-      tittel: 'Ukjent feil',
-      innhold: '',
+      tittel: "Ukjent feil",
+      innhold: "",
     };
   }
 
@@ -82,55 +86,42 @@ ModalBody.propTypes = {
 };
 
 interface ValideringProps {
-  valideringKode: string,
+  valideringKode: string;
 }
 
 export const Validering = ({ valideringKode }: ValideringProps) => {
   const { tittel, innhold } = hentFeilmelding(valideringKode);
 
-  return (
-    <ModalBody tittel={tittel} innhold={innhold} />
-  );
+  return <ModalBody tittel={tittel} innhold={innhold} />;
 };
 
 Validering.propTypes = {
   valideringKode: PT.string.isRequired,
 };
 
-export const Valideringsfeil = ({
-  validering,
-}: {
-  validering: Validering
-}) => {
-  const felter = validering.felter.map(felt => {
-    const {
-      menypunkt,
-      entryNr,
-      felt: feltNavn,
-    } = mapBehandlingsgrunnlagpathTilMenypunkt(felt);
+export const Valideringsfeil = ({ validering }: { validering: Validering }) => {
+  const felter = validering.felter
+    .map((felt) => {
+      const { menypunkt, entryNr, felt: feltNavn } = mapBehandlingsgrunnlagpathTilMenypunkt(felt);
 
-    const key = `${menypunkt}${entryNr}${feltNavn}`;
-    const tekst = menypunkt && feltNavn ? `${menypunkt} - ${feltNavn}` : null;
+      const key = `${menypunkt}${entryNr}${feltNavn}`;
+      const tekst = menypunkt && feltNavn ? `${menypunkt} - ${feltNavn}` : null;
 
-    if (!tekst) return null;
+      if (!tekst) return null;
 
-    return (
-      <li key={key}>{tekst}</li>
-    );
-  }).filter(felt => felt);
+      return <li key={key}>{tekst}</li>;
+    })
+    .filter((felt) => felt);
 
   return (
     <Fragment>
       <Validering valideringKode={validering.kode} />
-      {
-        felter.length > 0 &&
+      {felter.length > 0 && (
         <Fragment>
           Sjekk følgende felt(er):
-          <ul>
-            { felter }
-          </ul>
+          <ul>{felter}</ul>
         </Fragment>
-      }
+      )}
     </Fragment>
   );
 };
@@ -143,30 +134,30 @@ Valideringsfeil.propTypes = {
 };
 
 interface Validering {
-  kode: string,
-  felter: string[],
+  kode: string;
+  felter: string[];
 }
 
 interface DialogboksValideringProps {
-  avbryt: () => void,
-  valideringer: Validering[],
-  feilmeldinger: Feilmelding[],
+  avbryt: () => void;
+  valideringer: Validering[];
+  feilmeldinger: Feilmelding[];
 }
 
-export const DialogboksValidering = ({
-  avbryt,
-  valideringer,
-  feilmeldinger,
-}: DialogboksValideringProps) => {
+export const DialogboksValidering = ({ avbryt, valideringer, feilmeldinger }: DialogboksValideringProps) => {
   const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       avbryt();
     }
   };
 
-  const feilmeldingerInnhold = feilmeldinger.map(feilmelding => <ModalBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} key={Utils._uuid()} />);
+  const feilmeldingerInnhold = feilmeldinger.map((feilmelding) => (
+    <ModalBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} key={Utils._uuid()} />
+  ));
 
-  const valideringerInnhold = valideringer.map(validering => <Valideringsfeil validering={validering} key={validering.kode} />);
+  const valideringerInnhold = valideringer.map((validering) => (
+    <Valideringsfeil validering={validering} key={validering.kode} />
+  ));
 
   const innhold = valideringer.length > 0 ? valideringerInnhold : feilmeldingerInnhold;
 
@@ -189,21 +180,25 @@ export const DialogboksValidering = ({
       >
         &times;
       </span>
-      { innhold }
+      {innhold}
     </Nav.Modal>
   );
 };
 
 DialogboksValidering.propTypes = {
   avbryt: PT.func.isRequired,
-  valideringer: PT.arrayOf(PT.shape({
-    kode: PT.string.isRequired,
-    felter: PT.arrayOf(PT.string).isRequired,
-  })),
-  feilmeldinger: PT.arrayOf(PT.shape({
-    tittel: PT.string,
-    innhold: PT.string,
-  })),
+  valideringer: PT.arrayOf(
+    PT.shape({
+      kode: PT.string.isRequired,
+      felter: PT.arrayOf(PT.string).isRequired,
+    })
+  ),
+  feilmeldinger: PT.arrayOf(
+    PT.shape({
+      tittel: PT.string,
+      innhold: PT.string,
+    })
+  ),
 };
 
 DialogboksValidering.defaultProps = {

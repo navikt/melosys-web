@@ -1,19 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../../../../utils/navFrontend';
-import * as KV from '../../../../../kodeverk';
+import * as Nav from "../../../../../utils/navFrontend";
+import * as KV from "../../../../../kodeverk";
 
-import MKV from '../../../../../melosyskodeverk';
+import MKV from "../../../../../melosyskodeverk";
 
-import { UtenlandskIdent } from './types';
+import { UtenlandskIdent } from "./types";
 
 interface UtfyltUtenlandskIdentProps {
-  utenlandskeIdenter: UtenlandskIdent[],
+  utenlandskeIdenter: UtenlandskIdent[];
 }
 
-const UtfyltUtenlandskIdent = ({
-  utenlandskeIdenter,
-}: UtfyltUtenlandskIdentProps) => (
+const UtfyltUtenlandskIdent = ({ utenlandskeIdenter }: UtfyltUtenlandskIdentProps) => (
   <>
     <Nav.Row>
       <Nav.Column xs="6">
@@ -21,22 +19,19 @@ const UtfyltUtenlandskIdent = ({
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
-      {
-        utenlandskeIdenter.map(({ ident, landkode }, indeks) => (
-          /* eslint-disable-next-line react/no-array-index-key */
-          <div key={indeks}>
-            <Nav.Column xs="6">
-              <Nav.typo.Element>{ident}</Nav.typo.Element>
-            </Nav.Column>
-            <Nav.Column xs="6">
-              {
-                landkode &&
-                <Nav.typo.Normaltekst>{KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
-              }
-            </Nav.Column>
-          </div>
-        ))
-      }
+      {utenlandskeIdenter.map(({ ident, landkode }, indeks) => (
+        /* eslint-disable-next-line react/no-array-index-key */
+        <div key={indeks}>
+          <Nav.Column xs="6">
+            <Nav.typo.Element>{ident}</Nav.typo.Element>
+          </Nav.Column>
+          <Nav.Column xs="6">
+            {landkode && (
+              <Nav.typo.Normaltekst>{KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
+            )}
+          </Nav.Column>
+        </div>
+      ))}
     </Nav.Row>
   </>
 );

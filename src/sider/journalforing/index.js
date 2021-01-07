@@ -1,3 +1,3 @@
-import Journalforing from './journalforing';
+import Journalforing from "./journalforing";
 
 export default Journalforing;

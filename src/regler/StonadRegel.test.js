@@ -1,8 +1,8 @@
-import StonadRegel from './StonadRegel';
+import StonadRegel from "./StonadRegel";
 
-describe('Tester regler for stonad', () => {
-  describe('mottarEOSBarnetrygdFraNav', () => {
-    test('returnerer true ved EOSBarnetrygdFraNAV === true', () => {
+describe("Tester regler for stonad", () => {
+  describe("mottarEOSBarnetrygdFraNav", () => {
+    test("returnerer true ved EOSBarnetrygdFraNAV === true", () => {
       const mockSkjema = {};
       const mockSaksopplysning = { sakOgBehandling: { eosBarnetrygd: true } };
 
@@ -11,7 +11,7 @@ describe('Tester regler for stonad', () => {
       expect(stonadRegel.mottarEOSBarnetrygdFraNav().status).toBe(true);
     });
 
-    test('returnerer false ved EOSBarnetrygdFraNAV === false', () => {
+    test("returnerer false ved EOSBarnetrygdFraNAV === false", () => {
       const mockSkjema = {};
       const mockSaksopplysning = { sakOgBehandling: { eosBarnetrygd: false } };
 
@@ -20,7 +20,7 @@ describe('Tester regler for stonad', () => {
       expect(stonadRegel.mottarEOSBarnetrygdFraNav().status).toBe(false);
     });
 
-    test('returnerer false ved EOSBarnetrygdFraNAV === null', () => {
+    test("returnerer false ved EOSBarnetrygdFraNAV === null", () => {
       const mockSkjema = {};
       const mockSaksopplysning = { sakOgBehandling: { eosBarnetrygd: null } };
 

@@ -1,14 +1,14 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import { vilkarOperations as operations, vilkarTypes as types } from './index';
+import { vilkarOperations as operations, vilkarTypes as types } from "./index";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('vilkar operations', () => {
+describe("vilkar operations", () => {
   let initialState = null;
 
   beforeEach(() => {
@@ -27,12 +27,9 @@ describe('vilkar operations', () => {
     };
   });
 
-  describe('hent', () => {
-    it('henter vilkar og lager OK action', async () => {
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.OK, data: {} },
-      ];
+  describe("hent", () => {
+    it("henter vilkar og lager OK action", async () => {
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
       const store = mockStore(initialState);
       const bid = 5;
@@ -44,14 +41,11 @@ describe('vilkar operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('lager FEILET ved feil i api-kall', async () => {
-      const error = new Error('feil ved kall til Api');
+    it("lager FEILET ved feil i api-kall", async () => {
+      const error = new Error("feil ved kall til Api");
       fetch.mockReject(error);
 
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.FEILET, data: error.toString() },
-      ];
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
 
       const store = mockStore(initialState);
       const bid = 5;
@@ -64,8 +58,8 @@ describe('vilkar operations', () => {
     });
   });
 
-  describe('lagre', () => {
-    it('filtrerer bort Inngangsvilkaar når vilkaar lagres og lager OK action', async () => {
+  describe("lagre", () => {
+    it("filtrerer bort Inngangsvilkaar når vilkaar lagres og lager OK action", async () => {
       initialState.vilkar.data = [
         {
           vilkaar: MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
@@ -75,10 +69,7 @@ describe('vilkar operations', () => {
         },
       ];
 
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.OK, data: {} },
-      ];
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
       const store = mockStore(initialState);
 
@@ -87,7 +78,7 @@ describe('vilkar operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
 
       expect(fetch).toHaveBeenLastCalledWith(
-        '/api/vilkaar/4',
+        "/api/vilkaar/4",
         expect.objectContaining({
           body: JSON.stringify([
             {
@@ -98,31 +89,25 @@ describe('vilkar operations', () => {
       );
     });
 
-    it('lager FEILET ved feil i api-kall', async () => {
-      const error = new Error('feil ved kall til Api');
+    it("lager FEILET ved feil i api-kall", async () => {
+      const error = new Error("feil ved kall til Api");
       fetch.mockReject(error);
 
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.FEILET, data: error.toString() },
-      ];
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
 
       const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith('/api/vilkaar/4', expect.anything());
+      expect(fetch).toHaveBeenLastCalledWith("/api/vilkaar/4", expect.anything());
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
-  describe('oppdaterState', () => {
-    it('lager OPPDATER_BEHANDLINGSGRUNNLAG action', () => {
-      const vilkar = [
-        { vilkaar: 'test' },
-        { vilkaar: 'test2' },
-      ];
+  describe("oppdaterState", () => {
+    it("lager OPPDATER_BEHANDLINGSGRUNNLAG action", () => {
+      const vilkar = [{ vilkaar: "test" }, { vilkaar: "test2" }];
 
       const expectedActions = [
         {
@@ -141,8 +126,8 @@ describe('vilkar operations', () => {
     });
   });
 
-  describe('resetState', () => {
-    it('lager RESET action', () => {
+  describe("resetState", () => {
+    it("lager RESET action", () => {
       const expectedActions = [
         {
           type: types.RESET,

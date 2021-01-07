@@ -1,25 +1,25 @@
-import React, { Fragment, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { change } from 'redux-form';
-import PT from 'prop-types';
+import React, { Fragment, useEffect } from "react";
+import { connect } from "react-redux";
+import { change } from "redux-form";
+import PT from "prop-types";
 
-import * as Skjema from '../../../felleskomponenter/skjema/';
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes/';
-import * as Utils from '../../../utils';
-import * as KV from '../../../kodeverk';
-import * as Hooks from '../../../hooks';
-import { formSelectors } from '../../../ducks/form';
-import MKV from '../../../melosyskodeverk';
+import * as Skjema from "../../../felleskomponenter/skjema/";
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes/";
+import * as Utils from "../../../utils";
+import * as KV from "../../../kodeverk";
+import * as Hooks from "../../../hooks";
+import { formSelectors } from "../../../ducks/form";
+import MKV from "../../../melosyskodeverk";
 
-import './opprettSak.css';
+import "./opprettSak.css";
 
 export const OpprettSakTittel = () => (
   <div className="enkeltSak__meta">
     <Nav.typo.Element>Opprett ny sak</Nav.typo.Element>
   </div>
 );
-const OpprettFagsak = props => {
+const OpprettFagsak = (props) => {
   const { sakstyper, behandlingstemaer } = props;
   const { journalforingSkjemaVerdier } = props;
   const { settFeltInnhold } = props;
@@ -27,25 +27,31 @@ const OpprettFagsak = props => {
 
   useEffect(() => {
     settFeltInnhold(
-      'opprettnysak_behandlingstema',
+      "opprettnysak_behandlingstema",
       valgtSakstype === MKV.Koder.sakstyper.FTRL
         ? MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
         : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
     );
   }, [valgtSakstype]);
 
-  const [folketrygdenToggle] = Hooks.useFeatureToggle('melosys.folketrygden.mvp');
+  const [folketrygdenToggle] = Hooks.useFeatureToggle("melosys.folketrygden.mvp");
 
-  if (folketrygdenToggle === 'fetching') return null;
+  if (folketrygdenToggle === "fetching") return null;
 
-  if (folketrygdenToggle === 'enabled') {
-    if (sakstyper.findIndex(sakstype => sakstype.kode === MKV.Koder.sakstyper.FTRL) === -1) {
-      sakstyper.push(MKV.KTObjects.sakstyper.find(({ kode }) =>
-        kode === MKV.Koder.sakstyper.FTRL));
+  if (folketrygdenToggle === "enabled") {
+    if (sakstyper.findIndex((sakstype) => sakstype.kode === MKV.Koder.sakstyper.FTRL) === -1) {
+      sakstyper.push(MKV.KTObjects.sakstyper.find(({ kode }) => kode === MKV.Koder.sakstyper.FTRL));
     }
-    if (behandlingstemaer.findIndex(behandlingstema => behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET) === -1) {
-      behandlingstemaer.push(MKV.KTObjects.behandlinger.behandlingstema.find(({ kode }) =>
-        kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET));
+    if (
+      behandlingstemaer.findIndex(
+        (behandlingstema) => behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+      ) === -1
+    ) {
+      behandlingstemaer.push(
+        MKV.KTObjects.behandlinger.behandlingstema.find(
+          ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+        )
+      );
     }
   }
 
@@ -60,59 +66,83 @@ const OpprettFagsak = props => {
     ),
   ];
 
-  const skalViseSoknadsperiodeOgLand = behandlingstema => ![
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
-    MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
-  ].includes(behandlingstema);
+  const skalViseSoknadsperiodeOgLand = (behandlingstema) =>
+    ![
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
+      MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
+      MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+    ].includes(behandlingstema);
 
   return (
     <div className="panelramme">
       <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
-        { sakstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
+        {sakstyper.map((elem) => (
+          <option key={elem.kode} value={elem.kode}>
+            {elem.term}
+          </option>
+        ))}
       </Skjema.Select>
       <Skjema.Select feltNavn="opprettnysak_behandlingstema" bredde="fullbredde" label="Behandlingstema">
-        {
-          behandlingstemaer &&
+        {behandlingstemaer &&
           behandlingstemaer
-            .filter(elem => (valgtSakstype === MKV.Koder.sakstyper.FTRL
-              ? elem.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
-              : elem.kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET))
-            .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
-        }
+            .filter((elem) =>
+              valgtSakstype === MKV.Koder.sakstyper.FTRL
+                ? elem.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+                : elem.kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+            )
+            .map((elem) => (
+              <option key={elem.kode} value={elem.kode}>
+                {elem.term}
+              </option>
+            ))}
       </Skjema.Select>
-      {skalViseSoknadsperiodeOgLand(valgtBehandlingstema) &&
+      {skalViseSoknadsperiodeOgLand(valgtBehandlingstema) && (
         <Fragment>
-          { valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
-          <Fragment>
-            <Nav.Fieldset legend="Unntak fra lovvalgsland:">
-              <Nav.Row className="">
-                <Nav.Column xs="12">
-                  <Skjema.LandVelger label="Velg ett land:" feltNavn="journalforingUnntakFraLovvalgsland" multiLand={false} />
-                </Nav.Column>
-              </Nav.Row>
-            </Nav.Fieldset>
-            <Nav.Fieldset legend="Lovvalgsbestemmelse">
-              <Nav.Row className="">
-                <Nav.Column xs="12">
-                  <Skjema.Select label="Artikkelen det gjelder:" feltNavn="journalforingLovvalgsbestemmelse">
-                    { art16.map(kodeObjekt => <option key={Utils._uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
-                  </Skjema.Select>
-                </Nav.Column>
-              </Nav.Row>
-            </Nav.Fieldset>
-            <Nav.Fieldset legend="Unntak fra lovvalgsbestemmelse">
-              <Nav.Row className="">
-                <Nav.Column xs="12">
-                  <Skjema.Select label="Artikkelen det søkes unntak fra:" feltNavn="journalforingUnntakFraLovvalgsbestemmelse">
-                    { MKV.Kodekombinasjoner.unntaksbestemmelser.map(kodeObjekt => <option key={Utils._uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
-                  </Skjema.Select>
-                </Nav.Column>
-              </Nav.Row>
-            </Nav.Fieldset>
-          </Fragment>
-          }
-          { valgtBehandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET &&
+          {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL && (
+            <Fragment>
+              <Nav.Fieldset legend="Unntak fra lovvalgsland:">
+                <Nav.Row className="">
+                  <Nav.Column xs="12">
+                    <Skjema.LandVelger
+                      label="Velg ett land:"
+                      feltNavn="journalforingUnntakFraLovvalgsland"
+                      multiLand={false}
+                    />
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Lovvalgsbestemmelse">
+                <Nav.Row className="">
+                  <Nav.Column xs="12">
+                    <Skjema.Select label="Artikkelen det gjelder:" feltNavn="journalforingLovvalgsbestemmelse">
+                      {art16.map((kodeObjekt) => (
+                        <option key={Utils._uuid()} value={kodeObjekt.kode}>
+                          {kodeObjekt.term}
+                        </option>
+                      ))}
+                    </Skjema.Select>
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Unntak fra lovvalgsbestemmelse">
+                <Nav.Row className="">
+                  <Nav.Column xs="12">
+                    <Skjema.Select
+                      label="Artikkelen det søkes unntak fra:"
+                      feltNavn="journalforingUnntakFraLovvalgsbestemmelse"
+                    >
+                      {MKV.Kodekombinasjoner.unntaksbestemmelser.map((kodeObjekt) => (
+                        <option key={Utils._uuid()} value={kodeObjekt.kode}>
+                          {kodeObjekt.term}
+                        </option>
+                      ))}
+                    </Skjema.Select>
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Fieldset>
+            </Fragment>
+          )}
+          {valgtBehandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET && (
             <Fragment>
               <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
                 <Nav.Row className="">
@@ -127,14 +157,18 @@ const OpprettFagsak = props => {
               <Nav.Fieldset legend="Land:">
                 <Nav.Row className="">
                   <Nav.Column xs="12">
-                    <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
+                    <Skjema.LandVelger
+                      feltNavn="journalforingSoknadsland"
+                      multiLand
+                      errorConfig={{ submitFailed: true }}
+                    />
                   </Nav.Column>
                 </Nav.Row>
               </Nav.Fieldset>
             </Fragment>
-          }
+          )}
         </Fragment>
-      }
+      )}
     </div>
   );
 };
@@ -148,11 +182,11 @@ OpprettFagsak.propTypes = {
 OpprettFagsak.defaultProps = {
   journalforingSkjemaVerdier: {},
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
-const mapDispatchToProps = dispatch => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
+const mapDispatchToProps = (dispatch) => ({
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change("journalforing", feltNavn, verdi)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(OpprettFagsak);

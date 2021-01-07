@@ -1,14 +1,14 @@
-import React from 'react';
-import PT from 'prop-types';
-import classnames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import classnames from "classnames";
 
-import { FANE_STATUS, STEG } from '../stegMotor/typer';
+import { FANE_STATUS, STEG } from "../stegMotor/typer";
 
-import * as Ikoner from '../../../resources/images';
+import * as Ikoner from "../../../resources/images";
 
-import './stegIkon.css';
+import "./stegIkon.css";
 
-const erVedtakSteg = id => (
+const erVedtakSteg = (id) =>
   id === STEG.VEDTAK ||
   id === STEG.ENDRET_PERIODE ||
   id === STEG.AVSLAG_12_X_OG_16 ||
@@ -27,8 +27,7 @@ const erVedtakSteg = id => (
   id === STEG.ARTIKKEL_13_4_VEDTAK ||
   id === STEG.ARTIKKEL_13_4_UTPEK_LAND ||
   id === STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK ||
-  id === STEG.VEDTAK_FTRL
-);
+  id === STEG.VEDTAK_FTRL;
 
 const ikonVelger = (id, status) => {
   const IKONER = {
@@ -53,19 +52,17 @@ const ikonVelger = (id, status) => {
   return IKONER.STEG[status];
 };
 
-const StegIkon = props => {
-  const {
-    id, aktivtSteg, status, tittel, onClick, tilgjengelig,
-  } = props;
+const StegIkon = (props) => {
+  const { id, aktivtSteg, status, tittel, onClick, tilgjengelig } = props;
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
   const Ikon = ikonVelger(id, status);
 
   const cl = classnames(
-    'stegIkon',
-    (!erTilgjengelig ? 'stegIkon-utilgjengelig' : ''),
-    (aktivtSteg && 'stegIkon--aktiv'),
-    (aktivtSteg && !erTilgjengelig && 'stegIkon--aktiv--utilgjengelig')
+    "stegIkon",
+    !erTilgjengelig ? "stegIkon-utilgjengelig" : "",
+    aktivtSteg && "stegIkon--aktiv",
+    aktivtSteg && !erTilgjengelig && "stegIkon--aktiv--utilgjengelig"
   );
 
   const knappKlasser = classnames({
@@ -77,10 +74,7 @@ const StegIkon = props => {
   return (
     <li className={cl}>
       <button onClick={onClick} className="stegIkon__knapp">
-        <Ikon
-          className={knappKlasser}
-          aria-disabled={!tilgjengelig}
-        />
+        <Ikon className={knappKlasser} aria-disabled={!tilgjengelig} />
         <div className="stegIkon__tittel" dangerouslySetInnerHTML={{ __html: tittel }} />
       </button>
     </li>

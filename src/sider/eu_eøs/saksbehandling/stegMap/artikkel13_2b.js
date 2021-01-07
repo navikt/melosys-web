@@ -1,12 +1,12 @@
-import * as KV from '../../../../kodeverk';
-import * as Utils from '../../../../utils';
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
 
-import MKV from '../../../../melosyskodeverk';
+import MKV from "../../../../melosyskodeverk";
 
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingArtikkel13_2b from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel13_2b';
-import { hentFakta, hentFaktaVerdi } from '../../../../regler/avklartefakta';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingArtikkel13_2b from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel13_2b";
+import { hentFakta, hentFaktaVerdi } from "../../../../regler/avklartefakta";
 
 class Artikkel13_2_b extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -28,12 +28,12 @@ class Artikkel13_2_b extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_13_2_B;
-    this.tittel = 'Vurdering av 13.2 b';
+    this.tittel = "Vurdering av 13.2 b";
     this.komponent = VurderingArtikkel13_2b;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = (_propsLight) => {
       const omfattesILandFakta = Artikkel13_2_b.hentOmfattesILandFakta(_propsLight.avklartefakta);
 
       return {
@@ -44,18 +44,19 @@ class Artikkel13_2_b extends Steg {
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
 
-  static hentOmfattesILandFakta = avklarteFakta => hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, avklarteFakta);
+  static hentOmfattesILandFakta = (avklarteFakta) =>
+    hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, avklarteFakta);
 
-  static harAvklaring = avklarteFakta => {
+  static harAvklaring = (avklarteFakta) => {
     const omfattesILandFakta = Artikkel13_2_b.hentOmfattesILandFakta(avklarteFakta);
     const omfattesILand = hentFaktaVerdi(omfattesILandFakta);
 
-    return !(Utils._isNil(omfattesILand) || omfattesILand === '');
+    return !(Utils._isNil(omfattesILand) || omfattesILand === "");
   };
 }
 

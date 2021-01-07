@@ -1,16 +1,19 @@
-import * as Api from '../services/api';
-import * as Utils from '../utils';
+import * as Api from "../services/api";
+import * as Utils from "../utils";
 
-import { useAsyncCallbackState } from './useCallbackState';
+import { useAsyncCallbackState } from "./useCallbackState";
 
 export enum Status {
-  fetching = 'fetching',
-  enabled = 'enabled',
-  disabled = 'disabled',
+  fetching = "fetching",
+  enabled = "enabled",
+  disabled = "disabled",
 }
 
 const useFeatureToggle = (toggleName: string, deps: unknown[] = []): [Status] => {
-  const [toggles] = useAsyncCallbackState(() => Api.Featuretoggle.hent([toggleName]), {}, Utils.logger.error, [toggleName, ...deps]);
+  const [toggles] = useAsyncCallbackState(() => Api.Featuretoggle.hent([toggleName]), {}, Utils.logger.error, [
+    toggleName,
+    ...deps,
+  ]);
 
   const toggleFetched = toggles[toggleName] !== undefined;
 

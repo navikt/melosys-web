@@ -1,3 +1,3 @@
-import EditerbartElement from './editerbartElement';
+import EditerbartElement from "./editerbartElement";
 
 export default EditerbartElement;

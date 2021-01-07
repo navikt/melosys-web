@@ -1,5 +1,5 @@
-import MKV from './filtrertmelosyskodeverk';
-import * as Utils from '../utils/';
+import MKV from "./filtrertmelosyskodeverk";
+import * as Utils from "../utils/";
 
 export const alleLovvalg = [
   ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,

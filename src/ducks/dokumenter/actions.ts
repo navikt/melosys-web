@@ -5,10 +5,10 @@
  * uten support for asynkrone kall.
  */
 
-import * as Types from './types';
+import * as Types from "./types";
 
 export function reset(): Types.Action {
-  return ({
+  return {
     type: Types.RESET,
-  });
+  };
 }

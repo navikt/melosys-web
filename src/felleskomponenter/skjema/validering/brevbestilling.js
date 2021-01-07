@@ -1,46 +1,37 @@
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-const harBlankMelding = (verdi, melding = 'Velg et element i nedtrekkslisten') => ((verdi === '') ? melding : false);
-const harTekstMelding = (tekst, melding = 'Tekstfeltet må fylles ut') => ((tekst && tekst.length > 0) ? false : melding);
+const harBlankMelding = (verdi, melding = "Velg et element i nedtrekkslisten") => (verdi === "" ? melding : false);
+const harTekstMelding = (tekst, melding = "Tekstfeltet må fylles ut") => (tekst && tekst.length > 0 ? false : melding);
 
-const brevbestillingGenerellValidering = verdier => {
-  const mottaker = (
-    harBlankMelding(verdier.mottaker) ||
-    false
-  );
-  const dokumenttypeKode = (
-    harBlankMelding(verdier.dokumenttypeKode) ||
-    false
-  );
+const brevbestillingGenerellValidering = (verdier) => {
+  const mottaker = harBlankMelding(verdier.mottaker) || false;
+  const dokumenttypeKode = harBlankMelding(verdier.dokumenttypeKode) || false;
   return {
     mottaker,
     dokumenttypeKode,
   };
 };
-const mangelBrevValidering = verdier => {
-  const fritekst = (
-    harTekstMelding(verdier.fritekst) ||
-    false
-  );
+const mangelBrevValidering = (verdier) => {
+  const fritekst = harTekstMelding(verdier.fritekst) || false;
   return {
     fritekst,
   };
 };
-const brevbestillingSituasjonsbetingetValidering = verdier => {
+const brevbestillingSituasjonsbetingetValidering = (verdier) => {
   const { dokumenttypeKode } = verdier;
-  return dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER ? mangelBrevValidering(verdier) : {};
+  return dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER
+    ? mangelBrevValidering(verdier)
+    : {};
 };
 
-const brevbestillingValidering = verdier => (
-  {
-    ...brevbestillingGenerellValidering(verdier),
-    ...brevbestillingSituasjonsbetingetValidering(verdier),
-  }
-);
+const brevbestillingValidering = (verdier) => ({
+  ...brevbestillingGenerellValidering(verdier),
+  ...brevbestillingSituasjonsbetingetValidering(verdier),
+});
 
 const erSkjemaGyldig = (verdier, brevbestillingHensikt) => {
   const verdiKopi = { ...verdier, brevbestillingHensikt };
   const validering = brevbestillingValidering(verdiKopi);
-  return Object.values(validering).every(enkeltValidering => enkeltValidering === false);
+  return Object.values(validering).every((enkeltValidering) => enkeltValidering === false);
 };
 export { brevbestillingValidering, erSkjemaGyldig };

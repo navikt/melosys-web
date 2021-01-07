@@ -1,10 +1,10 @@
-import MKV from '../../../../melosyskodeverk';
+import MKV from "../../../../melosyskodeverk";
 
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingUtpekt from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingUtpekt from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingUtpekt";
 
-import { hentLovvalgsbestemmelse } from '../../../../regler/lovvalgsbestemmelser';
+import { hentLovvalgsbestemmelse } from "../../../../regler/lovvalgsbestemmelser";
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -32,7 +32,8 @@ class VurderUtpeking extends Steg {
     const harAvklaring = this.harAvklaring(utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid);
 
     const lovvalgNorge = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE;
-    const lovvalgAnnetLand = behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
+    const lovvalgAnnetLand =
+      behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
     this.kriterier = [
       {
@@ -49,12 +50,12 @@ class VurderUtpeking extends Steg {
       },
     ];
     this.id = STEG.VURDER_UTPEKING;
-    this.tittel = 'Vurdering';
+    this.tittel = "Vurdering";
     this.komponent = VurderingUtpekt;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       redigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({
+    this.beregnRelevantUI = (_propsLight) => ({
       harAvklaring,
       lovvalgsbestemmelse,
       lovvalgsland,
@@ -62,18 +63,14 @@ class VurderUtpeking extends Steg {
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
 
-  utpekingGodkjent = utpekingVurdering => (
-    utpekingVurdering === MKV.Koder.utfallregistreringunntak.GODKJENT
-  );
+  utpekingGodkjent = (utpekingVurdering) => utpekingVurdering === MKV.Koder.utfallregistreringunntak.GODKJENT;
 
-  utpekingIkkeGodkjent = utpekingVurdering => (
-    utpekingVurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT
-  );
+  utpekingIkkeGodkjent = (utpekingVurdering) => utpekingVurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT;
 
   harAvklaring = (utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid) => {
     if (this.utpekingGodkjent(utpekingVurdering)) {

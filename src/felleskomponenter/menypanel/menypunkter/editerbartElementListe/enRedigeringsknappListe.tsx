@@ -1,24 +1,24 @@
-import React, { ElementType } from 'react';
-import { FieldArrayFieldsProps } from 'redux-form';
-import classNames from 'classnames';
+import React, { ElementType } from "react";
+import { FieldArrayFieldsProps } from "redux-form";
+import classNames from "classnames";
 
-import * as Mui from '../../../ui';
-import * as Ikoner from '../../../../resources/images';
+import * as Mui from "../../../ui";
+import * as Ikoner from "../../../../resources/images";
 
-import EditerbartElement from '../editerbartElement';
+import EditerbartElement from "../editerbartElement";
 
-import './enRedigeringsknappListe.css';
+import "./enRedigeringsknappListe.css";
 
 export interface Redigerer<T> {
-  redigerbart: boolean,
-  overordnetFeltNavn: string,
-  verdier: T,
-  settVerdi: (felt: string, verdi: any) => void,
-  slett: () => void,
+  redigerbart: boolean;
+  overordnetFeltNavn: string;
+  verdier: T;
+  settVerdi: (felt: string, verdi: any) => void;
+  slett: () => void;
 }
 
 export interface RedigeringUtfort<T> {
-  verdier: T[],
+  verdier: T[];
 }
 
 /**
@@ -27,19 +27,19 @@ export interface RedigeringUtfort<T> {
  */
 
 interface EnRedigeringsKnappListeProps<T> {
-  redigerbart: boolean,
-  tittelIkon: ElementType,
-  harData: () => boolean,
-  fields: FieldArrayFieldsProps<T>,
-  settFeltVerdi: (felt: string, verdi: any) => void,
-  tittelUnderstrek: boolean,
-  elementUnderstrek?: boolean,
-  redigererKomponent: ElementType,
-  redigeringUtfortKomponent: ElementType,
-  ingenDataKomponent?: ElementType,
-  tittelTekst: string,
-  leggTil: () => void,
-  leggTilTekst: string,
+  redigerbart: boolean;
+  tittelIkon: ElementType;
+  harData: () => boolean;
+  fields: FieldArrayFieldsProps<T>;
+  settFeltVerdi: (felt: string, verdi: any) => void;
+  tittelUnderstrek: boolean;
+  elementUnderstrek?: boolean;
+  redigererKomponent: ElementType;
+  redigeringUtfortKomponent: ElementType;
+  ingenDataKomponent?: ElementType;
+  tittelTekst: string;
+  leggTil: () => void;
+  leggTilTekst: string;
 }
 
 function EnRedigeringsKnappListe<T>({
@@ -63,28 +63,26 @@ function EnRedigeringsKnappListe<T>({
 
   const elementer = fields.getAll();
 
-  const ingenDataRender = IngenDataKomponent ?
-    (apneRedigering: () => void) => (
-      <>
-        <div className="ingen__data__container">
-          <IngenDataKomponent />
-        </div>
-        {
-          redigerbart &&
-          <Mui.Knappelenke
-            onClick={() => {
-              apneRedigering();
-              leggTil();
-            }}
-            ikon={Ikoner.Add}
-          >
-            {leggTilTekst}
-          </Mui.Knappelenke>
-        }
-      </>
-    )
-    :
-    undefined;
+  const ingenDataRender = IngenDataKomponent
+    ? (apneRedigering: () => void) => (
+        <>
+          <div className="ingen__data__container">
+            <IngenDataKomponent />
+          </div>
+          {redigerbart && (
+            <Mui.Knappelenke
+              onClick={() => {
+                apneRedigering();
+                leggTil();
+              }}
+              ikon={Ikoner.Add}
+            >
+              {leggTilTekst}
+            </Mui.Knappelenke>
+          )}
+        </>
+      )
+    : undefined;
 
   return (
     <EditerbartElement
@@ -99,44 +97,37 @@ function EnRedigeringsKnappListe<T>({
       visLagreKnappBareHvisHarData
       redigererRender={() => (
         <div>
-          {
-            elementer.map((element, index) => {
-              const overordnetFeltNavn = `${fields.name}[${index}]`;
-              const settVerdi = (feltNavn: string, verdi: any) => settFeltVerdi(`${overordnetFeltNavn}.${feltNavn}`, verdi);
-              const slett = () => fields.remove(index);
+          {elementer.map((element, index) => {
+            const overordnetFeltNavn = `${fields.name}[${index}]`;
+            const settVerdi = (feltNavn: string, verdi: any) =>
+              settFeltVerdi(`${overordnetFeltNavn}.${feltNavn}`, verdi);
+            const slett = () => fields.remove(index);
 
-              const elementContainerCls = classNames({ element__container__understrek: elementUnderstrek });
+            const elementContainerCls = classNames({ element__container__understrek: elementUnderstrek });
 
-              return (
-                /* eslint-disable-next-line react/no-array-index-key */
-                <div className={elementContainerCls} key={index}>
-                  <RedigererKomponent
-                    redigerbart={redigerbart}
-                    overordnetFeltNavn={overordnetFeltNavn}
-                    verdier={element}
-                    settVerdi={settVerdi}
-                    slett={slett}
-                  />
-                </div>
-              );
-            })
-          }
-          {
-            redigerbart &&
+            return (
+              /* eslint-disable-next-line react/no-array-index-key */
+              <div className={elementContainerCls} key={index}>
+                <RedigererKomponent
+                  redigerbart={redigerbart}
+                  overordnetFeltNavn={overordnetFeltNavn}
+                  verdier={element}
+                  settVerdi={settVerdi}
+                  slett={slett}
+                />
+              </div>
+            );
+          })}
+          {redigerbart && (
             <div>
-              <Mui.Knappelenke
-                onClick={leggTil}
-                ikon={Ikoner.Add}
-              >
+              <Mui.Knappelenke onClick={leggTil} ikon={Ikoner.Add}>
                 {leggTilTekst}
               </Mui.Knappelenke>
             </div>
-          }
+          )}
         </div>
       )}
-      redigeringUtfortRender={() => <RedigeringUtfortKomponent
-        verdier={elementer}
-      />}
+      redigeringUtfortRender={() => <RedigeringUtfortKomponent verdier={elementer} />}
       ingenDataRender={ingenDataRender}
     />
   );

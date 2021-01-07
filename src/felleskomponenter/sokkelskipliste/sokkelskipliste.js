@@ -1,8 +1,8 @@
-import React from 'react';
-import PT from 'prop-types';
-import * as MPT from '../../proptypes';
+import React from "react";
+import PT from "prop-types";
+import * as MPT from "../../proptypes";
 
-import SokkelSkipEnkelt from './sokkelskipenkelt';
+import SokkelSkipEnkelt from "./sokkelskipenkelt";
 
 const SokkelSkipListe = ({
   sokkelEllerSkipListe,
@@ -19,14 +19,18 @@ const SokkelSkipListe = ({
   className,
 }) => (
   <div className={className}>
-    { maritimtArbeid.map((enkelt, index) => (
+    {maritimtArbeid.map((enkelt, index) => (
       <SokkelSkipEnkelt
         key={enkelt.enhetNavn}
         maritimtArbeid={enkelt}
-        sokkelEllerSkip={sokkelEllerSkipListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}
-        arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}
-        arbeidslandTypeAvklartfakta={installasjonArbeidslandTypeListe.find(avklartfakta => avklartfakta.subjektID === enkelt.enhetNavn)}
-        arbeidslandFakta={arbeidslandListe.find(avklartfakta => avklartfakta.subjektID === enkelt.enhetNavn)}
+        sokkelEllerSkip={sokkelEllerSkipListe.find((avklartFakta) => avklartFakta.subjektID === enkelt.enhetNavn)}
+        arbeidslandAvklartfakta={installasjonArbeidslandListe.find(
+          (avklartFakta) => avklartFakta.subjektID === enkelt.enhetNavn
+        )}
+        arbeidslandTypeAvklartfakta={installasjonArbeidslandTypeListe.find(
+          (avklartfakta) => avklartfakta.subjektID === enkelt.enhetNavn
+        )}
+        arbeidslandFakta={arbeidslandListe.find((avklartfakta) => avklartfakta.subjektID === enkelt.enhetNavn)}
         index={index}
         begrunnelser={begrunnelser}
         redigerbart={redigerbart}
@@ -34,7 +38,8 @@ const SokkelSkipListe = ({
         avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelserEndretHandler}
         oppdaterData={oppdaterData}
         slettData={slettData}
-      />))}
+      />
+    ))}
   </div>
 );
 

@@ -24,15 +24,11 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add(
-  'selectNth',
-  { prevSubject: 'element' },
-  (subject, pos) => {
-    cy.wrap(subject)
-      .children('option')
-      .eq(pos)
-      .then(e => {
-        cy.wrap(subject).select(e.val());
-      });
-  }
-);
+Cypress.Commands.add("selectNth", { prevSubject: "element" }, (subject, pos) => {
+  cy.wrap(subject)
+    .children("option")
+    .eq(pos)
+    .then((e) => {
+      cy.wrap(subject).select(e.val());
+    });
+});

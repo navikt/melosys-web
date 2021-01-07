@@ -1,3 +1,3 @@
-import AnnenAdresse from './annenadresse';
+import AnnenAdresse from "./annenadresse";
 
 export default AnnenAdresse;

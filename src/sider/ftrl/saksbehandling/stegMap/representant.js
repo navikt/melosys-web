@@ -1,6 +1,6 @@
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingRepresentant from '../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingRepresentant';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingRepresentant from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingRepresentant";
 
 class Reprensentant extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -13,10 +13,10 @@ class Reprensentant extends Steg {
       },
     ];
     this.id = STEG.REPRESENTANT;
-    this.tittel = 'Representant';
+    this.tittel = "Representant";
     this.komponent = VurderingRepresentant;
-    this.samleRelevanteData = _propsLight => ({});
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
+    this.samleRelevanteData = (_propsLight) => ({});
+    this.beregnRelevantUI = (_propsLight) => ({ harAvklaring: false });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

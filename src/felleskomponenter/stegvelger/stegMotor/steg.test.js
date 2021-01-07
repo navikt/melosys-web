@@ -1,8 +1,7 @@
-import Steg from './steg';
-import { STEG, FANE_STATUS } from './typer';
+import Steg from "./steg";
+import { STEG, FANE_STATUS } from "./typer";
 
-
-describe('Steg', () => {
+describe("Steg", () => {
   class Inngangssteg extends Steg {
     constructor(propslight, posisjon) {
       super(propslight, posisjon);
@@ -24,8 +23,8 @@ describe('Steg', () => {
     }
   }
 
-  describe('byggSteg', () => {
-    it('setter status FEIL dersom beregnRelevantUI returnerer null', () => {
+  describe("byggSteg", () => {
+    it("setter status FEIL dersom beregnRelevantUI returnerer null", () => {
       const inngangssteg = new Inngangssteg({}, 1);
       inngangssteg.beregnRelevantUI = jest.fn(() => null);
       const byggetSteg = inngangssteg.byggSteg();
@@ -33,7 +32,7 @@ describe('Steg', () => {
       expect(byggetSteg.status).toBe(FANE_STATUS.FEIL);
     });
 
-    it('setter status OK dersom steget har avklaring', () => {
+    it("setter status OK dersom steget har avklaring", () => {
       const inngangssteg = new Inngangssteg({}, 1);
       inngangssteg.beregnRelevantUI = jest.fn(() => ({ harAvklaring: true }));
       const byggetSteg = inngangssteg.byggSteg();
@@ -41,7 +40,7 @@ describe('Steg', () => {
       expect(byggetSteg.status).toBe(FANE_STATUS.OK);
     });
 
-    it('setter status UBEHANDLET dersom steget ikke har avklaring', () => {
+    it("setter status UBEHANDLET dersom steget ikke har avklaring", () => {
       const inngangssteg = new Inngangssteg({}, 1);
       inngangssteg.beregnRelevantUI = jest.fn(() => ({ harAvklaring: false }));
       const byggetSteg = inngangssteg.byggSteg();
@@ -50,8 +49,8 @@ describe('Steg', () => {
     });
   });
 
-  describe('nesteSteg', () => {
-    it('returnerer første steg med matchende kriterie', () => {
+  describe("nesteSteg", () => {
+    it("returnerer første steg med matchende kriterie", () => {
       const inngangssteg = new Inngangssteg({}, 1);
       const nesteSteg = inngangssteg.nesteSteg();
 

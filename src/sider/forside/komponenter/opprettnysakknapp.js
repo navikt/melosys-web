@@ -1,16 +1,16 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Mui from '../../../felleskomponenter/ui';
-import * as Ikoner from '../../../resources/images';
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Ikoner from "../../../resources/images";
 
-import './opprettnysakknapp.css';
+import "./opprettnysakknapp.css";
 
-const OpprettNySakKnapp = ({
-  onClick,
-}) => (
+const OpprettNySakKnapp = ({ onClick }) => (
   <div className="opprettNySak">
-    <Mui.Knapp onClick={onClick} type="flat" ikon={Ikoner.AddOne}>OPPRETT SAK</Mui.Knapp>
+    <Mui.Knapp onClick={onClick} type="flat" ikon={Ikoner.AddOne}>
+      OPPRETT SAK
+    </Mui.Knapp>
   </div>
 );
 

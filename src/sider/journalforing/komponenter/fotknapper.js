@@ -1,17 +1,16 @@
-import React from 'react';
-import * as PT from 'prop-types';
+import React from "react";
+import * as PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Mui from '../../../felleskomponenter/ui';
+import * as Nav from "../../../utils/navFrontend";
+import * as Mui from "../../../felleskomponenter/ui";
 
-const Fotknapper = ({
-  avbrytJournalforing,
-  kanSubmittes,
-}) => (
+const Fotknapper = ({ avbrytJournalforing, kanSubmittes }) => (
   <div className="journalforing__fotknapper">
     <Nav.Row>
       <Nav.Column xs="6">
-        <Mui.Knapp type="hoved" htmlType="submit" disabled={!kanSubmittes}>JOURNALFØR</Mui.Knapp>
+        <Mui.Knapp type="hoved" htmlType="submit" disabled={!kanSubmittes}>
+          JOURNALFØR
+        </Mui.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
         <Mui.Knapp onClick={avbrytJournalforing}>Avbryt Journalføring</Mui.Knapp>
