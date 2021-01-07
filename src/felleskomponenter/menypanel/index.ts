@@ -1,4 +1,3 @@
-import Menypanel, { Menypunkt } from './menypanel';
+import Menypanel from "./menypanel";
 
-export type { Menypunkt };
 export default Menypanel;

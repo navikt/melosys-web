@@ -1,44 +1,42 @@
-import React, { Component } from 'react';
-import PT from 'prop-types';
+import React, { Component } from "react";
+import PT from "prop-types";
 
-import MKV from '../../../../melosyskodeverk';
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from '../../../../utils/navFrontend';
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar, slettVilkar } from '../../../../regler/vilkar';
+import * as Nav from "../../../../utils/navFrontend";
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar, slettVilkar } from "../../../../regler/vilkar";
 
-import * as Mui from '../../../ui';
+import * as Mui from "../../../ui";
 
 class MultiVilkaar extends Component {
   constructor() {
     super();
     this.VilkaarKode16 = MKV.Koder.vilkaar.FO_883_2004_ART16_1;
-    this.AVSLAG = 'AVSLAG';
+    this.AVSLAG = "AVSLAG";
   }
 
   componentDidMount() {
-    const {
-      oppdaterData, vilkaar12, vilkaarKode12, vilkaar16,
-    } = this.props;
+    const { oppdaterData, vilkaar12, vilkaarKode12, vilkaar16 } = this.props;
     oppdaterData(konverterTilStegData(vilkaarKode12, vilkaar12));
-    oppdaterData(konverterTilStegData('art16_1', vilkaar16));
+    oppdaterData(konverterTilStegData("art16_1", vilkaar16));
   }
 
-  vilkaarEndret = event => {
+  vilkaarEndret = (event) => {
     const { value } = event.target;
     const { oppdaterData, slettData, vilkaarKode12 } = this.props;
 
     if (value === vilkaarKode12) {
       oppdaterData(lagVilkaar(vilkaarKode12, true));
-      slettData(slettVilkar('art16_1_avslag'));
-      slettData(slettVilkar('art16_1_anmodning'));
+      slettData(slettVilkar("art16_1_avslag"));
+      slettData(slettVilkar("art16_1_anmodning"));
     } else if (value === this.VilkaarKode16) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
-      slettData(slettVilkar('art16_1_avslag'));
-      oppdaterData(lagVilkaar('art16_1_anmodning', true));
+      slettData(slettVilkar("art16_1_avslag"));
+      oppdaterData(lagVilkaar("art16_1_anmodning", true));
     } else if (value === this.AVSLAG) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
-      slettData(slettVilkar('art16_1_anmodning'));
-      oppdaterData(lagVilkaar('art16_1_avslag', false));
+      slettData(slettVilkar("art16_1_anmodning"));
+      oppdaterData(lagVilkaar("art16_1_avslag", false));
     }
   };
 
@@ -47,25 +45,23 @@ class MultiVilkaar extends Component {
     oppdaterData(lagBegrunnelse(id, value));
   };
 
-  fritekstEndret = event => {
+  fritekstEndret = (event) => {
     const { value, id } = event.target;
     const { oppdaterData } = this.props;
     oppdaterData(lagBegrunnelse(id, null, value));
   };
 
-  hentAvslagBegrunnelser = () => (
-    this.props.vilkaar16 ? (this.props.vilkaar16.begrunnelseKoder || []) : []
-  );
+  hentAvslagBegrunnelser = () => (this.props.vilkaar16 ? this.props.vilkaar16.begrunnelseKoder || [] : []);
 
-  render () {
-    const {
-      redigerbart, vilkaar12, vilkaarKode12, vilkaarNavn12, begrunnelser12, vilkaar16,
-    } = this.props;
+  render() {
+    const { redigerbart, vilkaar12, vilkaarKode12, vilkaarNavn12, begrunnelser12, vilkaar16 } = this.props;
 
     const innvilgelse = vilkaar12.oppfylt;
     const anmodningOmUnntak = vilkaar12.oppfylt === false && vilkaar16.oppfylt === true;
     const avslag = vilkaar12.oppfylt === false && vilkaar16.oppfylt === false;
-    const visFritekstfelt = this.hentAvslagBegrunnelser().includes(MKV.Koder.begrunnelser.art16_1_avslag.SAERLIG_AVSLAGSGRUNN);
+    const visFritekstfelt = this.hentAvslagBegrunnelser().includes(
+      MKV.Koder.begrunnelser.art16_1_avslag.SAERLIG_AVSLAGSGRUNN
+    );
 
     return (
       <div>
@@ -103,39 +99,39 @@ class MultiVilkaar extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12" md="10" lg="8">
-              { vilkaar12.oppfylt === false && (
+              {vilkaar12.oppfylt === false && (
                 <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
                   <Mui.ListevelgerFlervalg
                     muligeValg={begrunnelser12}
                     label="Legg til begrunnelse for ikke oppfylt:"
                     tillatFritekst={false}
-                    onChange={e => this.begrunnelseEndret(e, vilkaarKode12)}
+                    onChange={(e) => this.begrunnelseEndret(e, vilkaarKode12)}
                     defaultElementer={vilkaar12.begrunnelseKoder}
                     disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               )}
-              { vilkaar16.oppfylt === false && (
+              {vilkaar16.oppfylt === false && (
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
                   <Mui.ListevelgerFlervalg
                     muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
                     tillatFritekst={false}
-                    onChange={e => this.begrunnelseEndret(e, 'art16_1_avslag')}
+                    onChange={(e) => this.begrunnelseEndret(e, "art16_1_avslag")}
                     defaultElementer={vilkaar16.begrunnelseKoder}
                     disabled={!redigerbart}
                   />
-                  { visFritekstfelt &&
+                  {visFritekstfelt && (
                     <Nav.Textarea
                       id="art16_1_avslag"
                       label="Begrunnelse for avslag (fritekst):"
                       maxLength={255}
                       bredde="fullbredde"
-                      value={vilkaar16.begrunnelseFritekst || ''}
+                      value={vilkaar16.begrunnelseFritekst || ""}
                       onChange={this.fritekstEndret}
                       disabled={!redigerbart}
                     />
-                  }
+                  )}
                 </Nav.Fieldset>
               )}
             </Nav.Column>
@@ -157,7 +153,6 @@ MultiVilkaar.propTypes = {
   vilkaar16: PT.object.isRequired,
 };
 
-MultiVilkaar.defaultProps = {
-};
+MultiVilkaar.defaultProps = {};
 
 export default MultiVilkaar;

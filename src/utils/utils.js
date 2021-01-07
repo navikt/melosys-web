@@ -1,9 +1,9 @@
-import { isUndefined as _isUndefined } from 'lodash';
+import { isUndefined as _isUndefined } from "lodash";
 
-const byggVersjon = process.env.REACT_APP_BUILD_VERSION || '(ukjent)';
+const byggVersjon = process.env.REACT_APP_BUILD_VERSION || "(ukjent)";
 
 export function buildinfo() {
-  if (byggVersjon === 'local') {
+  if (byggVersjon === "local") {
     return {
       byggVersjon,
     };
@@ -12,14 +12,14 @@ export function buildinfo() {
     byggVersjon,
   };
 }
-export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * parser et funksjonsargument som funksjon.
  * @param value
  * @returns {*}
  */
 export function fn(value) {
-  return typeof value === 'function' ? value : () => value;
+  return typeof value === "function" ? value : () => value;
 }
 
 /**
@@ -29,7 +29,7 @@ export function fn(value) {
  */
 export function isJSON(str) {
   try {
-    return (JSON.parse(str) && !!str);
+    return JSON.parse(str) && !!str;
   } catch (e) {
     return false;
   }
@@ -44,15 +44,15 @@ export function verdiSomNullable(verdi) {
  */
 export function queryParamsTilObjekt(sporreStreng) {
   return sporreStreng
-    .replace('?', '')
-    .split('&')
+    .replace("?", "")
+    .split("&")
     .reduce((samling, enkeltSporring) => {
-      const [key, value] = enkeltSporring.split('=');
+      const [key, value] = enkeltSporring.split("=");
       return key ? { ...samling, [key]: value } : { ...samling };
     }, {});
 }
 
-export function erPropertyUnik(array, mapper = x => x) {
+export function erPropertyUnik(array, mapper = (x) => x) {
   return array.length === [...new Set(array.map(mapper))].length;
 }
 
@@ -62,7 +62,7 @@ function finnVerdierMedKeyHjelper(obj, key, list, finnParent) {
   let result = list;
 
   if (obj instanceof Array) {
-    Object.keys(obj).forEach(objKey => {
+    Object.keys(obj).forEach((objKey) => {
       result = result.concat(finnVerdierMedKeyHjelper(obj[objKey], key, [], finnParent));
     });
     return result;
@@ -76,8 +76,8 @@ function finnVerdierMedKeyHjelper(obj, key, list, finnParent) {
     }
   }
 
-  if ((typeof obj === 'object')) {
-    Object.keys(obj).forEach(objKey => {
+  if (typeof obj === "object") {
+    Object.keys(obj).forEach((objKey) => {
       result = result.concat(finnVerdierMedKeyHjelper(obj[objKey], key, [], finnParent));
     });
   }

@@ -1,6 +1,6 @@
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingVedtak from '../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingVedtak';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingVedtak from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingVedtak";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -13,13 +13,13 @@ class Vedtak extends Steg {
       },
     ];
     this.id = STEG.VEDTAK_FTRL;
-    this.tittel = 'Vedtak';
+    this.tittel = "Vedtak";
     this.komponent = VurderingVedtak;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.redigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring });
+    this.beregnRelevantUI = (_propsLight) => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,

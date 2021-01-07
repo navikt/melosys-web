@@ -1,6 +1,6 @@
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { STEG, FANE_STATUS } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingAvslaaUtpeking from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingAvslaaUtpeking';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingAvslaaUtpeking from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingAvslaaUtpeking";
 
 class AvslaaUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -8,17 +8,17 @@ class AvslaaUtpeking extends Steg {
 
     this.kriterier = [];
     this.id = STEG.AVSLAA_UTPEKING;
-    this.tittel = 'Avvis utpeking';
+    this.tittel = "Avvis utpeking";
     this.komponent = VurderingAvslaaUtpeking;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = (_propsLight) => {
       const harAvklaring = true;
 
-      return ({
+      return {
         harAvklaring,
-      });
+      };
     };
     this.handlers = {
       avvisUtpeking: propsLight.tilgjengeligeHandlers.avvisUtpeking,

@@ -1,6 +1,6 @@
-import { useEffect, useState, SetStateAction, Dispatch } from 'react';
+import { useEffect, useState, SetStateAction, Dispatch } from "react";
 
-import * as Utils from '../utils';
+import * as Utils from "../utils";
 
 export const useCallbackState = <StateType>(
   callback: () => StateType,
@@ -12,7 +12,7 @@ export const useCallbackState = <StateType>(
 
   useEffect(() => {
     // Kaller callback og oppdaterer state dersom alle dependencies finnes
-    if (deps.every(dep => !Utils._isEmpty(dep))) {
+    if (deps.every((dep) => !Utils._isEmpty(dep))) {
       try {
         setState(callback());
       } catch (e) {
@@ -36,9 +36,9 @@ export const useAsyncCallbackState = <StateType>(
     let isMounted = true;
 
     // Kaller callback og oppdaterer state dersom alle dependencies finnes
-    if (deps.every(dep => !Utils._isEmpty(dep))) {
+    if (deps.every((dep) => !Utils._isEmpty(dep))) {
       try {
-        asyncCallback().then(result => {
+        asyncCallback().then((result) => {
           if (isMounted) {
             setState(result);
           }
@@ -55,4 +55,3 @@ export const useAsyncCallbackState = <StateType>(
 
   return [state, setState];
 };
-

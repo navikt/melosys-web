@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import classNames from 'classnames';
-import { Aktoer, Organisasjon } from 'Domene';
+import React, { useState, useEffect } from "react";
+import classNames from "classnames";
+import { Aktoer, Organisasjon } from "Domene";
 
-import * as Utils from '../../../../utils';
-import * as Api from '../../../../services/api';
+import * as Utils from "../../../../utils";
+import * as Api from "../../../../services/api";
 
-import FullmektigRedigerer from './fullmektigRedigerer';
-import FullmektigRedigeringUtfort from './fullmektigRedigeringUtfort';
-import EditerbartElement from '../editerbartElement';
-import { useKontaktOpplysninger } from '../kontaktopplysninger';
+import FullmektigRedigerer from "./fullmektigRedigerer";
+import FullmektigRedigeringUtfort from "./fullmektigRedigeringUtfort";
+import EditerbartElement from "../editerbartElement";
+import { useKontaktOpplysninger } from "../kontaktopplysninger";
 
 interface EnkeltFullmektigProps {
-  className?: string,
-  fullmektig: Aktoer,
-  redigerbart: boolean,
-  slett: () => void,
-  onRolleChange: (rolle: string, org?: string) => void,
-  onOrgFunnet: (orgnr: string) => void,
-  saksnummer: string,
+  className?: string;
+  fullmektig: Aktoer;
+  redigerbart: boolean;
+  slett: () => void;
+  onRolleChange: (rolle: string, org?: string) => void;
+  onOrgFunnet: (orgnr: string) => void;
+  saksnummer: string;
 }
 
 const EnkeltFullmektig = ({
@@ -37,7 +37,7 @@ const EnkeltFullmektig = ({
     setKontaktopplysninger,
     slettKontaktOpplysninger,
     lagreKontaktOpplysninger,
-  ] = useKontaktOpplysninger(saksnummer, fullmektig.orgnr || '');
+  ] = useKontaktOpplysninger(saksnummer, fullmektig.orgnr || "");
 
   const hentOrgFraApi = async (orgnr: string) => {
     try {
@@ -60,7 +60,7 @@ const EnkeltFullmektig = ({
 
   if (fullmektig.orgnr ? !orgForsoktHentet : false) return null;
 
-  const tittel = `Fullmektig: ${org.navn || ''}`;
+  const tittel = `Fullmektig: ${org.navn || ""}`;
 
   const cls = classNames(className);
 
@@ -75,6 +75,7 @@ const EnkeltFullmektig = ({
       hentNyStatusVedHarData={false}
       onBinClick={slettHandler}
       visLagreKnapp={Boolean(fullmektig.orgnr)}
+      visAlltidBin
       redigererRender={() => (
         <FullmektigRedigerer
           databaseID={fullmektig.databaseID}

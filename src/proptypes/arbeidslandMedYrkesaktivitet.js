@@ -1,6 +1,6 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
-import { Kodeverk } from './kodeverk';
+import PT from "prop-types";
+import { Kodeverk } from "./kodeverk";
 
 const ArbeidslandMedYrkesaktivitet = PT.shape({
   land: Kodeverk.isRequired,

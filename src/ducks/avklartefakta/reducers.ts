@@ -4,27 +4,30 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-import { StateSection } from 'AppTypes';
-import { Avklartfakta } from 'Domene';
+import { StateSection } from "AppTypes";
+import { Avklartfakta } from "Domene";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import { STATUS } from '../../services/utils';
-import * as Utils from '../../utils';
-import * as Types from './types';
-import * as KV from '../../kodeverk';
+import { STATUS } from "../../services/utils";
+import * as Utils from "../../utils";
+import * as Types from "./types";
+import * as KV from "../../kodeverk";
 
 export const initialState: StateSection<Types.Data> = {
   data: [],
   status: STATUS.NOT_STARTED,
 };
 
-const lagAvklartfaktaObjekterMedKode = (avklarteFakta: Avklartfakta[], avklartefaktaKode: string | null): Avklartfakta[] => {
+const lagAvklartfaktaObjekterMedKode = (
+  avklarteFakta: Avklartfakta[],
+  avklartefaktaKode: string | null
+): Avklartfakta[] => {
   if (Utils._isNil(avklarteFakta)) {
     return [];
   }
 
-  return avklarteFakta.map(enkeltAvklaring => ({
+  return avklarteFakta.map((enkeltAvklaring) => ({
     avklartefaktaKode,
     referanse: enkeltAvklaring.referanse,
     fakta: enkeltAvklaring.fakta,
@@ -76,10 +79,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
           LOENNET_ARBEID_ANTALL_LAND,
           OFFENTLIG_ARBEID_ANTALL_LAND,
         },
-        referanseKoder: {
-          INSTALLASJON_ARBEIDSLAND,
-          INSTALLASJON_ARBEIDSLAND_TYPE,
-        },
+        referanseKoder: { INSTALLASJON_ARBEIDSLAND, INSTALLASJON_ARBEIDSLAND_TYPE },
       } = KV.Koder;
 
       const avklartefaktaUt = [
@@ -104,7 +104,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[OFFENTLIG_ARBEID_ANTALL_LAND], null),
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[INFORMERT_MYNDIGHET], INFORMERT_MYNDIGHET),
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[VURDERING_LOVVALG_BARN], VURDERING_LOVVALG_BARN),
-      ].filter(fakta => fakta !== null);
+      ].filter((fakta) => fakta !== null);
 
       return { ...state, data: [...avklartefaktaUt] };
     }

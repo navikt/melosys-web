@@ -1,27 +1,25 @@
-import React, { useEffect } from 'react';
-import PT from 'prop-types';
+import React, { useEffect } from "react";
+import PT from "prop-types";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
 
-import MultiVilkaar from './felles/multiVilkaar';
+import MultiVilkaar from "./felles/multiVilkaar";
 
-const VurderingArtikkel12_2 = props => {
-  const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
-  } = props;
+const VurderingArtikkel12_2 = (props) => {
+  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData } = props;
 
-  useEffect(() => (
-    function cleanup() {
-      slettData();
-    }
-  ), []);
+  useEffect(
+    () =>
+      function cleanup() {
+        slettData();
+      },
+    []
+  );
 
-  const {
-    art12_2, art16_1, harAvklaring,
-  } = tilstand;
+  const { art12_2, art16_1, harAvklaring } = tilstand;
 
   return (
     <div>
@@ -36,7 +34,13 @@ const VurderingArtikkel12_2 = props => {
         vilkaar16={art16_1}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp
+          disabled={!(redigerbart && harAvklaring)}
+          className="fane__navigasjonsknapp"
+          onClick={bekreftOgFortsett}
+        >
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import { Kodeverk } from './kodeverk';
-import { BehandligOversikt } from './behandlingOversikt';
+import { Kodeverk } from "./kodeverk";
+import { BehandligOversikt } from "./behandlingOversikt";
 
 const FagsakPropType = PT.shape({
   saksnummer: PT.string,

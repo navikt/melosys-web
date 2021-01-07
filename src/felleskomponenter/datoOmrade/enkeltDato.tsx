@@ -1,11 +1,11 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import { formatterDatoTilNorsk } from '../../utils/dato';
+import { formatterDatoTilNorsk } from "../../utils/dato";
 
 interface EnkeltDatoProps {
-  dato?: string,
-  visTidspunkt?: boolean,
+  dato?: string;
+  visTidspunkt?: boolean;
 }
 
 /** EnkeltDato gjør det lettere å følge UU der datoer skal benyttes i tillegg til at
@@ -17,7 +17,7 @@ function EnkeltDato(props: EnkeltDatoProps) {
   const { dato, visTidspunkt } = props;
   const lesbarDato = formatterDatoTilNorsk(dato, visTidspunkt);
 
-  return (dato ? <time dateTime={dato}>{lesbarDato}</time> : <>-</>);
+  return dato ? <time dateTime={dato}>{lesbarDato}</time> : <>-</>;
 }
 
 EnkeltDato.propTypes = {
@@ -26,9 +26,8 @@ EnkeltDato.propTypes = {
 };
 
 EnkeltDato.defaultProps = {
-  dato: '',
+  dato: "",
   visTidspunkt: false,
 };
-
 
 export default EnkeltDato;

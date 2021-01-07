@@ -1,5 +1,5 @@
-import PT from 'prop-types';
-import * as MPT from './index';
+import PT from "prop-types";
+import * as MPT from "./index";
 
 const FagsakOppsummeringPropType = PT.shape({
   saksnummer: PT.string,

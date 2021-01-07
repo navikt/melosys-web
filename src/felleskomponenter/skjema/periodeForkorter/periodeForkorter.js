@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
-import PT from 'prop-types';
+import React, { Fragment } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../index';
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../index";
 
 const PeriodeForkorter = ({
   className,
@@ -17,7 +17,7 @@ const PeriodeForkorter = ({
   tomLabel,
   tomFeltNavn,
 }) => {
-  const onCheckboxClick = e => {
+  const onCheckboxClick = (e) => {
     if (!e.target.checked) {
       if (onUncheck) onUncheck();
     }
@@ -27,20 +27,19 @@ const PeriodeForkorter = ({
     <div className={className}>
       <Nav.Row className={checkboxClassName}>
         <Nav.Column xs="8">
-          <Skjema.Checkbox feltNavn={checkboxFeltnavn} label={checkboxLabel} disabled={!redigerbart} onClick={onCheckboxClick} />
+          <Skjema.Checkbox
+            feltNavn={checkboxFeltnavn}
+            label={checkboxLabel}
+            disabled={!redigerbart}
+            onClick={onCheckboxClick}
+          />
         </Nav.Column>
       </Nav.Row>
-      {
-        forkortPeriode &&
+      {forkortPeriode && (
         <Fragment>
           <Nav.Row>
             <Nav.Column xs="3">
-              <Skjema.Input
-                bredde="fullbredde"
-                label={fomLabel}
-                disabled
-                feltNavn={fomFeltNavn}
-              />
+              <Skjema.Input bredde="fullbredde" label={fomLabel} disabled feltNavn={fomFeltNavn} />
             </Nav.Column>
             <Nav.Column xs="3">
               <Skjema.Input
@@ -53,7 +52,7 @@ const PeriodeForkorter = ({
             </Nav.Column>
           </Nav.Row>
         </Fragment>
-      }
+      )}
     </div>
   );
 };
@@ -75,10 +74,10 @@ PeriodeForkorter.propTypes = {
 PeriodeForkorter.defaultProps = {
   className: undefined,
   checkboxClassName: undefined,
-  checkboxLabel: '',
+  checkboxLabel: "",
   onUncheck: undefined,
-  fomLabel: '',
-  tomLabel: '',
+  fomLabel: "",
+  tomLabel: "",
   forkortPeriode: false,
 };
 

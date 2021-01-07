@@ -1,5 +1,5 @@
-import { Inngang } from '../../../../felleskomponenter/stegvelger/stegMap';
-import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
+import { Inngang } from "../../../../felleskomponenter/stegvelger/stegMap";
+import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 class VurderUtpekingInngang extends Inngang {
   constructor(propsLight, stegPosisjon) {

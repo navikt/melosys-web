@@ -1,11 +1,8 @@
-import * as modalerOperations from './operations';
-import * as modalerSelectors from './selectors';
+import * as modalerOperations from "./operations";
+import * as modalerSelectors from "./selectors";
 
-import modalerReducers from './reducers';
+import modalerReducers from "./reducers";
 
-export {
-  modalerOperations,
-  modalerSelectors,
-};
+export { modalerOperations, modalerSelectors };
 
 export default modalerReducers;

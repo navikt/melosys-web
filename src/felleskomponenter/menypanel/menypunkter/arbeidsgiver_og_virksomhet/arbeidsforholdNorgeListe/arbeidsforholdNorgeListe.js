@@ -1,21 +1,21 @@
-import React from 'react';
-import PT from 'prop-types';
-import { FieldArray } from 'redux-form';
-import classnames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import { FieldArray } from "redux-form";
+import classnames from "classnames";
 
-import * as Utils from '../../../../../utils';
-import * as Mui from '../../../../ui';
-import * as Nav from '../../../../../utils/navFrontend';
-import * as Ikoner from '../../../../../resources/images';
-import * as MPT from '../../../../../proptypes';
+import * as Utils from "../../../../../utils";
+import * as Mui from "../../../../ui";
+import * as Nav from "../../../../../utils/navFrontend";
+import * as Ikoner from "../../../../../resources/images";
+import * as MPT from "../../../../../proptypes";
 
-import EditerbartElement from '../../editerbartElement';
-import Orgnrinput from './orgnrinput';
-import Organisasjon from '../../arbeidsgiver/organisasjon';
-import Kontaktopplysninger, { useKontaktOpplysninger } from '../../kontaktopplysninger';
-import EnkeltArbeidsforholdNorgeRedigeringUtfort from './enkeltArbeidsforholdNorgeRedigeringUtfort';
+import EditerbartElement from "../../editerbartElement";
+import Orgnrinput from "./orgnrinput";
+import Organisasjon from "../../arbeidsgiver/organisasjon";
+import Kontaktopplysninger, { useKontaktOpplysninger } from "../../kontaktopplysninger";
+import EnkeltArbeidsforholdNorgeRedigeringUtfort from "./enkeltArbeidsforholdNorgeRedigeringUtfort";
 
-import './arbeidsforholdNorgeListe.css';
+import "./arbeidsforholdNorgeListe.css";
 
 export const EnkeltArbeidsforholdNorgeRedigerer = ({
   erstatt,
@@ -42,24 +42,22 @@ export const EnkeltArbeidsforholdNorgeRedigerer = ({
           hentVedMount={hentVedMount}
           redigerbart={redigerbart}
           hentOrganisasjon={hentOrganisasjon}
-          defaultOrgnr={organisasjon.orgnr || ''}
+          defaultOrgnr={organisasjon.orgnr || ""}
           ikkeFunnetFeilmelding={orgIkkeFunnetTekst}
           feilVedHentingFeilmelding={orgFeilVedHentingTekst}
         />
-        {
-          orgFinnes &&
-            <Organisasjon
-              organisasjon={organisasjon}
-              redigerbart={redigerbart}
-              visNavn
-              visAdresseTittel={false}
-              boldAdresseNavn
-            />
-        }
+        {orgFinnes && (
+          <Organisasjon
+            organisasjon={organisasjon}
+            redigerbart={redigerbart}
+            visNavn
+            visAdresseTittel={false}
+            boldAdresseNavn
+          />
+        )}
       </Nav.Column>
       <Nav.Column xs="7">
-        {
-          orgFinnes &&
+        {orgFinnes && (
           <Kontaktopplysninger
             redigerbart={redigerbart}
             onChange={onKontaktopplysningerChange}
@@ -68,17 +66,19 @@ export const EnkeltArbeidsforholdNorgeRedigerer = ({
             onKontaktorgnrInputBlur={onKontaktopplysningerInputBlur}
             onSlettKnappClick={onKontaktopplysningerSlettClick}
           />
-        }
+        )}
       </Nav.Column>
     </Nav.Row>
   );
 };
 
 EnkeltArbeidsforholdNorgeRedigerer.propTypes = {
-  valideringer: PT.arrayOf(PT.shape({
-    validering: PT.func.isRequired,
-    feilmelding: PT.string.isRequired,
-  })).isRequired,
+  valideringer: PT.arrayOf(
+    PT.shape({
+      validering: PT.func.isRequired,
+      feilmelding: PT.string.isRequired,
+    })
+  ).isRequired,
   hentVedMount: PT.bool,
   organisasjon: MPT.Organisasjon.isRequired,
   erstatt: PT.func.isRequired,
@@ -122,21 +122,21 @@ export const EnkeltArbeidsforholdNorge = ({
     setKontaktopplysninger,
     slettKontaktOpplysninger,
     lagreKontaktOpplysninger,
-  ] = useKontaktOpplysninger(saksnummer, organisasjon.orgnr || '');
+  ] = useKontaktOpplysninger(saksnummer, organisasjon.orgnr || "");
 
   const slett = () => {
     fields.remove(indeks);
   };
 
-  const erstatt = verdi => fields.splice(indeks, 1, transformerOrgTilElement(verdi));
+  const erstatt = (verdi) => fields.splice(indeks, 1, transformerOrgTilElement(verdi));
   const valideringer = [
     {
-      validering: orgnr => !Utils.organisasjon.erOrgnrGyldig(orgnr),
-      feilmelding: 'Ugyldig org.nr.',
+      validering: (orgnr) => !Utils.organisasjon.erOrgnrGyldig(orgnr),
+      feilmelding: "Ugyldig org.nr.",
     },
     {
-      validering: orgnr => elementerInneholderOrg(elementer, orgnr) && orgnr !== organisasjon.orgnr,
-      feilmelding: 'Organisasjon er allerede lagt til',
+      validering: (orgnr) => elementerInneholderOrg(elementer, orgnr) && orgnr !== organisasjon.orgnr,
+      feilmelding: "Organisasjon er allerede lagt til",
     },
   ];
 
@@ -145,12 +145,13 @@ export const EnkeltArbeidsforholdNorge = ({
       className="redigerbartElement"
       redigerbart={redigerbart}
       harData={Boolean(organisasjon.orgnr)}
-      tittel={`${tittelTekst}${organisasjon.navn ? `: ${organisasjon.navn}` : ''}`}
+      tittel={`${tittelTekst}${organisasjon.navn ? `: ${organisasjon.navn}` : ""}`}
       tittelIkon={tittelIkon}
       tittelUnderstrek
       onBinClick={slett}
       hentNyStatusVedHarData={false}
       visLagreKnappBareHvisHarData
+      visAlltidBin
       redigererRender={() => (
         <EnkeltArbeidsforholdNorgeRedigerer
           erstatt={erstatt}
@@ -166,10 +167,7 @@ export const EnkeltArbeidsforholdNorge = ({
         />
       )}
       redigeringUtfortRender={() => (
-        <EnkeltArbeidsforholdNorgeRedigeringUtfort
-          saksnummer={saksnummer}
-          org={organisasjon}
-        />
+        <EnkeltArbeidsforholdNorgeRedigeringUtfort saksnummer={saksnummer} org={organisasjon} />
       )}
     />
   );
@@ -214,41 +212,35 @@ export const InnerArbeidsforholdNorgeListe = ({
     fields.push(defaultElement);
   };
 
-  const cls = classnames(className, 'innerArbeidsforholdNorgeListe');
+  const cls = classnames(className, "innerArbeidsforholdNorgeListe");
 
   return (
     <div className={cls}>
-      {
-        elementer.map((element, indeks) => (
-          <EnkeltArbeidsforholdNorge
-            /* eslint-disable-next-line react/no-array-index-key */
-            key={indeks}
-            fields={fields}
-            redigerbart={redigerbart}
-            hentOrganisasjon={hentOrganisasjon}
-            findOrganisasjon={findOrganisasjon}
-            transformerOrgTilElement={transformerOrgTilElement}
-            elementerInneholderOrg={elementerInneholderOrg}
-            saksnummer={saksnummer}
-            tittelTekst={tittelTekst}
-            tittelIkon={tittelIkon}
-            indeks={indeks}
-            element={element}
-            elementer={elementer}
-          />
-        ))
-      }
-      {
-        redigerbart &&
+      {elementer.map((element, indeks) => (
+        <EnkeltArbeidsforholdNorge
+          /* eslint-disable-next-line react/no-array-index-key */
+          key={indeks}
+          fields={fields}
+          redigerbart={redigerbart}
+          hentOrganisasjon={hentOrganisasjon}
+          findOrganisasjon={findOrganisasjon}
+          transformerOrgTilElement={transformerOrgTilElement}
+          elementerInneholderOrg={elementerInneholderOrg}
+          saksnummer={saksnummer}
+          tittelTekst={tittelTekst}
+          tittelIkon={tittelIkon}
+          indeks={indeks}
+          element={element}
+          elementer={elementer}
+        />
+      ))}
+      {redigerbart && (
         <div className="leggTilKnapp">
-          <Mui.Knappelenke
-            onClick={leggTilDefault}
-            ikon={Ikoner.Add}
-          >
+          <Mui.Knappelenke onClick={leggTilDefault} ikon={Ikoner.Add}>
             {leggTilTekst}
           </Mui.Knappelenke>
         </div>
-      }
+      )}
     </div>
   );
 };
@@ -269,21 +261,13 @@ InnerArbeidsforholdNorgeListe.propTypes = {
 };
 
 InnerArbeidsforholdNorgeListe.defaultProps = {
-  transformerOrgTilElement: verdi => verdi,
+  transformerOrgTilElement: (verdi) => verdi,
   defaultElement: undefined,
   className: undefined,
 };
 
-const ArbeidsforholdNorgeListe = ({
-  feltNavn,
-  ...rest
-}) => (
-  <FieldArray
-    rerenderOnEveryChange
-    name={feltNavn}
-    component={InnerArbeidsforholdNorgeListe}
-    props={{ ...rest }}
-  />
+const ArbeidsforholdNorgeListe = ({ feltNavn, ...rest }) => (
+  <FieldArray rerenderOnEveryChange name={feltNavn} component={InnerArbeidsforholdNorgeListe} props={{ ...rest }} />
 );
 
 ArbeidsforholdNorgeListe.propTypes = {

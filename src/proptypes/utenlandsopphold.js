@@ -1,6 +1,6 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import { Periode } from './periode';
+import { Periode } from "./periode";
 
 const UtenlandsoppholdLinjePropType = PT.shape({
   periode: Periode,
@@ -10,7 +10,4 @@ const UtenlandsoppholdLinjePropType = PT.shape({
 
 const UtenlandsoppholdPropType = PT.arrayOf(UtenlandsoppholdLinjePropType);
 
-export {
-  UtenlandsoppholdLinjePropType as UtenlandsoppholdLinje,
-  UtenlandsoppholdPropType as Utenlandsopphold,
-};
+export { UtenlandsoppholdLinjePropType as UtenlandsoppholdLinje, UtenlandsoppholdPropType as Utenlandsopphold };

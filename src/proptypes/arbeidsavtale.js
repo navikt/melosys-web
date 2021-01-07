@@ -1,6 +1,6 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
-import { Kodeverk } from './kodeverk';
+import PT from "prop-types";
+import { Kodeverk } from "./kodeverk";
 
 const ArbeidsavtalePropType = PT.shape({
   gyldigTil: PT.string,
@@ -19,7 +19,4 @@ const ArbeidsavtalePropType = PT.shape({
 
 const ArbeidsavtalerPropType = PT.arrayOf(ArbeidsavtalePropType);
 
-export {
-  ArbeidsavtalePropType as Arbeidsavtale,
-  ArbeidsavtalerPropType as Arbeidsavtaler,
-};
+export { ArbeidsavtalePropType as Arbeidsavtale, ArbeidsavtalerPropType as Arbeidsavtaler };

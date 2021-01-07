@@ -1,4 +1,4 @@
-import * as Skjema from '../felleskomponenter/skjema';
+import * as Skjema from "../felleskomponenter/skjema";
 
 /** Definer alle felter med validering. Dette objektet brukes også i validForm decorator.
  */
@@ -9,22 +9,25 @@ export const feltGrupper = {
     inntektUtenlandskIPerioden: [],
   },
   oppholdUtland: {
-    studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
-    studieLand: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
-    studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
+    studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann("studentIEOS", value, props)],
+    studieLand: [(value, props) => Skjema.Validering.avhengerAvSann("studentIEOS", value, props)],
+    studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann("studentIEOS", value, props)],
   },
   bosted: {
     intensjonOmRetur: [],
     familiesBosted: [],
   },
   bekreftelser: {
-    arbeidsgiverBekrefterUtsendelse: [value => Skjema.Validering.erPakrevet(value)],
-    arbeidstakerAnsattUnderUtsendelsen: [value => Skjema.Validering.erPakrevet(value)],
-    erstatterArbeidstakerenUtsendte: [value => Skjema.Validering.erPakrevet(value)],
-    arbeidstakerTidligereUtsendt24Mnd: [value => Skjema.Validering.erPakrevet(value)],
-    arbeidsgiverBetalerArbeidsgiveravgift: [value => Skjema.Validering.erPakrevet(value)],
-    trygdeavgiftTrukketGjennomSkatt: [value => Skjema.Validering.erPakrevet(value)],
-    trygdeavgiftTrukketGjennomSkattDato: [value => Skjema.Validering.erPakrevet(value), value => Skjema.Validering.erDato(value)],
+    arbeidsgiverBekrefterUtsendelse: [(value) => Skjema.Validering.erPakrevet(value)],
+    arbeidstakerAnsattUnderUtsendelsen: [(value) => Skjema.Validering.erPakrevet(value)],
+    erstatterArbeidstakerenUtsendte: [(value) => Skjema.Validering.erPakrevet(value)],
+    arbeidstakerTidligereUtsendt24Mnd: [(value) => Skjema.Validering.erPakrevet(value)],
+    arbeidsgiverBetalerArbeidsgiveravgift: [(value) => Skjema.Validering.erPakrevet(value)],
+    trygdeavgiftTrukketGjennomSkatt: [(value) => Skjema.Validering.erPakrevet(value)],
+    trygdeavgiftTrukketGjennomSkattDato: [
+      (value) => Skjema.Validering.erPakrevet(value),
+      (value) => Skjema.Validering.erDato(value),
+    ],
   },
   selvstendigArbeid: {
     erSelvstendig: [],
@@ -39,8 +42,8 @@ export const feltGrupper = {
   },
   avklartefakta: {
     avklartefaktaSoknadsland: [],
-    avklartefaktaPeriodeFraOgMed: [value => Skjema.Validering.erPakrevet(value)],
-    avklartefaktaPeriodeTilOgMed: [value => Skjema.Validering.erPakrevet(value)],
+    avklartefaktaPeriodeFraOgMed: [(value) => Skjema.Validering.erPakrevet(value)],
+    avklartefaktaPeriodeTilOgMed: [(value) => Skjema.Validering.erPakrevet(value)],
     avklartefaktaYrkesgruppe: [],
     avklartefaktaAnsattINorskSelskap: [],
     avklartefaktaErstatterTidligereUtsendt: [],
@@ -64,8 +67,5 @@ export const feltGrupper = {
  *
  * @param grupper Objekt med felter gruppert.
  */
-export const alleFeltNavn = grupper => (Object.keys(grupper).reduce(
-  (samling, gruppe) =>
-    ([...samling, ...Object.keys(grupper[gruppe])])
-  , []
-));
+export const alleFeltNavn = (grupper) =>
+  Object.keys(grupper).reduce((samling, gruppe) => [...samling, ...Object.keys(grupper[gruppe])], []);

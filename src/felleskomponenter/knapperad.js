@@ -1,10 +1,10 @@
-import React from 'react';
-import PT from 'prop-types';
-import classnames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import classnames from "classnames";
 
-import * as Mui from '../felleskomponenter/ui';
+import * as Mui from "../felleskomponenter/ui";
 
-import './knapperad.css';
+import "./knapperad.css";
 
 const Knapperad = ({
   bekreft,
@@ -18,12 +18,23 @@ const Knapperad = ({
   avbrytHtmlType,
   capitalCase,
 }) => {
-  const cls = classnames('container__knapperad');
+  const cls = classnames("container__knapperad");
 
   return (
     <div className={cls}>
-      <Mui.Knapp capitalCase={capitalCase} htmlType={bekreftHtmlType} type="hoved" onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart} spinner={spinner}>{ bekreftTekst }</Mui.Knapp>
-      <Mui.Knapp capitalCase={capitalCase} htmlType={avbrytHtmlType} onClick={avbryt} disabled={!redigerbart}>{avbrytTekst}</Mui.Knapp>
+      <Mui.Knapp
+        capitalCase={capitalCase}
+        htmlType={bekreftHtmlType}
+        type="hoved"
+        onClick={bekreft}
+        disabled={!redigerbart || !bekreftRedigerbart}
+        spinner={spinner}
+      >
+        {bekreftTekst}
+      </Mui.Knapp>
+      <Mui.Knapp capitalCase={capitalCase} htmlType={avbrytHtmlType} onClick={avbryt} disabled={!redigerbart}>
+        {avbrytTekst}
+      </Mui.Knapp>
     </div>
   );
 };

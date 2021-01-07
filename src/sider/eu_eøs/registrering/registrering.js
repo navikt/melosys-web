@@ -1,53 +1,82 @@
 /* eslint no-alert:off, consistent-return:off */
-import React from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
+import React from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import * as Utils from '../../../utils';
-import * as Routing from '../../../routing';
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
+import * as Utils from "../../../utils";
+import * as Routing from "../../../routing";
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
 
-import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
-import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
-import Behandlingsstatus from '../../../felleskomponenter/behandlingsstatus';
-import Behandlingsmeny from './komponenter/behandlingsmeny';
-import { fagsakOperations, fagsakSelectors } from '../../../ducks/fagsaker';
-import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
-import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
-import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
-import { oppgaverOperations } from '../../../ducks/oppgaver';
-import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { dokumenterSelectors } from '../../../ducks/dokumenter';
+import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
+import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
+import Behandlingsmeny from "./komponenter/behandlingsmeny";
+import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
+import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { oppgaverOperations } from "../../../ducks/oppgaver";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
-import './registrering.css';
+import "./registrering.css";
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
   ],
 };
 
-const Registrering = props => {
+const Registrering = (props) => {
   const {
-    match: { params: { snr } },
+    match: {
+      params: { snr },
+    },
     tilForsiden,
     tilbakeleggOppgave,
     location,
@@ -74,7 +103,7 @@ const Registrering = props => {
   } = props;
 
   const saksnummer = snr;
-  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   const lastInnSaksopplysninger = async () => {
     try {
@@ -110,8 +139,8 @@ const Registrering = props => {
   };
 
   const apneTidligereBehandlinger = () => {
-    sessionStorage.setItem('sokefrase', person.fnr);
-    Routing.nyFane('sok');
+    sessionStorage.setItem("sokefrase", person.fnr);
+    Routing.nyFane("sok");
   };
 
   if (Utils._isNil(redigerbart)) return null;
@@ -140,19 +169,23 @@ const Registrering = props => {
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               lovvalgsland={lovvalgsland}
-              renderBehandlingsmeny={() => <Behandlingsmeny
-                redigerbart={redigerbart}
-                lagreOgLukkHandle={lagreOgLukk}
-                tilbakeleggeHandle={tilbakeleggHandle}
-                apneTidligereBehandlinger={apneTidligereBehandlinger}
-                oppfriskSaksopplysningerHandle={visOppfriskModal}
-              />}
-              renderBehandlingsstatus={() => <Behandlingsstatus
-                behandlingID={behandlingID}
-                redigerbart={redigerbart}
-                oppsummering={oppsummering}
-                behandlingsstatusMap={behandlingsstatusMap}
-              />}
+              renderBehandlingsmeny={() => (
+                <Behandlingsmeny
+                  redigerbart={redigerbart}
+                  lagreOgLukkHandle={lagreOgLukk}
+                  tilbakeleggeHandle={tilbakeleggHandle}
+                  apneTidligereBehandlinger={apneTidligereBehandlinger}
+                  oppfriskSaksopplysningerHandle={visOppfriskModal}
+                />
+              )}
+              renderBehandlingsstatus={() => (
+                <Behandlingsstatus
+                  behandlingID={behandlingID}
+                  redigerbart={redigerbart}
+                  oppsummering={oppsummering}
+                  behandlingsstatusMap={behandlingsstatusMap}
+                />
+              )}
             />
             <SideDialog
               saksnummer={saksnummer}
@@ -208,7 +241,7 @@ Registrering.defaultProps = {
   lovvalgsperiodeTom: undefined,
   vurderingBegrunnelser: [],
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
@@ -225,13 +258,14 @@ const mapStateToProps = state => ({
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
-  hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
-  hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+const mapDispatchToProps = (dispatch) => ({
+  hentAvklartefakta: (behandlingID) => dispatch(avklartefaktaOperations.hent(behandlingID)),
+  hentBehandling: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
-  hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
+  hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) =>
+    oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registrering);

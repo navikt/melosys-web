@@ -1,11 +1,11 @@
-import { OppsummertFaktaVirksomheter } from 'Domene';
-import * as Types from './types';
+import { OppsummertFaktaVirksomheter } from "Domene";
+import * as Types from "./types";
 
 export function oppdaterVirksomheter(virksomheter: OppsummertFaktaVirksomheter): Types.OppdaterVirksomheterAction {
-  return ({
+  return {
     type: Types.OPPDATER_VIRKSOMHETER,
     data: virksomheter,
-  });
+  };
 }
 
 export function resetOppsummertFakta(): Types.ResetAction {

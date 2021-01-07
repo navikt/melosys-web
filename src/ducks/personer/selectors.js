@@ -5,11 +5,10 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 /* eslint import/prefer-default-export:"off" */
 export const personerSelector = createSelector(
-  state => state.personer.data,
-  personer => personer
+  (state) => state.personer.data,
+  (personer) => personer
 );
-

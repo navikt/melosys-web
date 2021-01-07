@@ -1,17 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../../../../utils/navFrontend';
-import * as Skjema from '../../../../skjema';
+import * as Nav from "../../../../../utils/navFrontend";
+import * as Skjema from "../../../../skjema";
 
-import './felter.css';
+import "./felter.css";
 
 interface Felter {
-  redigerbart: boolean,
+  redigerbart: boolean;
 }
 
-const Felter = ({
-  redigerbart,
-}: Felter) => (
+const Felter = ({ redigerbart }: Felter) => (
   <div className="felter">
     <dl className="person__detaljer">
       <Nav.Row>

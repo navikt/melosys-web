@@ -1,39 +1,33 @@
-import React from 'react';
-import PT from 'prop-types';
-import classNames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import classNames from "classnames";
 
-import * as MPT from '../../proptypes';
-import * as Utils from '../../utils';
+import * as MPT from "../../proptypes";
+import * as Utils from "../../utils";
 
-import GeneriskAdresse from './generiskAdresse';
+import GeneriskAdresse from "./generiskAdresse";
 
-import './organisasjonsAdresse.css';
+import "./organisasjonsAdresse.css";
 
-const OrganisasjonsAdresse = ({
-  organisasjon,
-  className,
-  visNavn,
-  visTittel,
-  boldNavn,
-}) => {
+const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, boldNavn }) => {
   const { postadresse, forretningsadresse, navn } = organisasjon;
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
 
   const visPostadresse = !Utils.adresse.erGeneriskAdresseObjektTomt(postadresse);
   const adresse = visPostadresse ? postadresse : forretningsadresse;
-  const tittel = visPostadresse ? 'Postadresse' : 'Forretningsadresse';
+  const tittel = visPostadresse ? "Postadresse" : "Forretningsadresse";
 
-  const cl = classNames('organisasjonsAdresse', className);
+  const cl = classNames("organisasjonsAdresse", className);
   const navnCls = classNames({
     bold: boldNavn,
-    'break-word': true,
+    "break-word": true,
   });
 
   return (
     <div className={cl}>
-      { visNavn && <div className={navnCls}>{navn}</div>}
-      { visTittel && <div className="tittel">{tittel}</div>}
+      {visNavn && <div className={navnCls}>{navn}</div>}
+      {visTittel && <div className="tittel">{tittel}</div>}
       <GeneriskAdresse adresse={adresse} />
     </div>
   );
@@ -48,7 +42,7 @@ OrganisasjonsAdresse.propTypes = {
 };
 
 OrganisasjonsAdresse.defaultProps = {
-  className: '',
+  className: "",
   visNavn: true,
   visTittel: true,
   boldNavn: false,

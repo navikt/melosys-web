@@ -1,18 +1,16 @@
-import React from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
+import React from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import Knapperad from '../knapperad';
+import Knapperad from "../knapperad";
 
-import { redigerbartSelectors } from '../../ducks/redigerbart';
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
-import './dialogboksAvsluttSakSomBortfalt.css';
+import "./dialogboksAvsluttSakSomBortfalt.css";
 
-export const DialogboksAvsluttSakSomBortfalt = ({
-  avsluttSakSomBortfalt, avbryt, redigerbart, ariaHideApp,
-}) => (
+export const DialogboksAvsluttSakSomBortfalt = ({ avsluttSakSomBortfalt, avbryt, redigerbart, ariaHideApp }) => (
   <Nav.Modal
     className="dialogboksAvsluttSakSomBortfalt"
     isOpen
@@ -20,7 +18,8 @@ export const DialogboksAvsluttSakSomBortfalt = ({
     onRequestClose={avbryt}
     closeButton={false}
     shouldCloseOnOverlayClick
-    ariaHideApp={ariaHideApp}>
+    ariaHideApp={ariaHideApp}
+  >
     <Nav.typo.Systemtittel className="overskrift">Avslutt sak som bortfalt</Nav.typo.Systemtittel>
     <Knapperad
       bekreft={avsluttSakSomBortfalt}
@@ -43,7 +42,7 @@ DialogboksAvsluttSakSomBortfalt.defaultProps = {
   ariaHideApp: true,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.ModalAvsluttSomBortfaltRedigerbartSelector(state),
 });
 

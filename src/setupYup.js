@@ -1,14 +1,14 @@
-import { addMethod, object, string } from 'yup';
+import { addMethod, object, string } from "yup";
 
-import * as Utils from './utils';
+import * as Utils from "./utils";
 
-import MKV from './melosyskodeverk';
+import MKV from "./melosyskodeverk";
 
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
-addMethod(object, 'uniqueProperty', function (propertyName, message) {
-  return this.test('unique', message, function (value) {
+addMethod(object, "uniqueProperty", function (propertyName, message) {
+  return this.test("unique", message, function (value) {
     if (!value || !value[propertyName]) {
       return true;
     }
@@ -19,7 +19,7 @@ addMethod(object, 'uniqueProperty', function (propertyName, message) {
 
     const subOptions = options.slice(0, currentIndex);
 
-    if (subOptions.some(option => option[propertyName] === value[propertyName])) {
+    if (subOptions.some((option) => option[propertyName] === value[propertyName])) {
       throw this.createError({
         path: `${path}.${propertyName}`,
         message,
@@ -30,27 +30,27 @@ addMethod(object, 'uniqueProperty', function (propertyName, message) {
   });
 });
 
-addMethod(string, 'erGyldigDato', function(message) {
-  return this.test('er gyldig dato', message, function(value) {
+addMethod(string, "erGyldigDato", function (message) {
+  return this.test("er gyldig dato", message, function (value) {
     return Boolean(Utils.dato.vaskInputDato(value));
   });
 });
 
-addMethod(string, 'endretPeriodeErGyldig', function (message) {
-  return this.test('periode er gyldig', message, function(value) {
+addMethod(string, "endretPeriodeErGyldig", function (message) {
+  return this.test("periode er gyldig", message, function (value) {
     const { soknadsperiode } = this.options.context;
 
     /** Hvis åpen periode, ikke valider perioden */
     if (!soknadsperiode.tom) return true;
 
-    if (value === '') return false;
+    if (value === "") return false;
 
     return Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, Utils.dato.formatterDatoTilISO(value));
   });
 });
 
-addMethod(string, 'erEtterDatofelt', function(felt, message) {
-  return this.test('erEtterFraDato', message, function(value) {
+addMethod(string, "erEtterDatofelt", function (felt, message) {
+  return this.test("erEtterFraDato", message, function (value) {
     const { [felt]: fomDato } = this.parent;
     const tomDato = value;
 
@@ -58,11 +58,11 @@ addMethod(string, 'erEtterDatofelt', function(felt, message) {
   });
 });
 
-addMethod(string, 'erIkkeBlank', function(message) {
-  return this.test('er ikke blank', message, function(value) {
+addMethod(string, "erIkkeBlank", function (message) {
+  return this.test("er ikke blank", message, function (value) {
     const { path } = this;
 
-    if (value === '') {
+    if (value === "") {
       throw this.createError({
         path,
         message,
@@ -73,8 +73,8 @@ addMethod(string, 'erIkkeBlank', function(message) {
   });
 });
 
-addMethod(string, 'erNummer', function(message) {
-  return this.test('er et nummer', message, function(value) {
+addMethod(string, "erNummer", function (message) {
+  return this.test("er et nummer", message, function (value) {
     const { path } = this;
 
     if (new RegExp(/^\d+$/).test(value)) return true;
@@ -86,26 +86,28 @@ addMethod(string, 'erNummer', function(message) {
   });
 });
 
-addMethod(string, 'erFnrEllerDnr', function(message) {
-  return this.test('er et Fnr eller Dnr', message, function(value) {
+addMethod(string, "erFnrEllerDnr", function (message) {
+  return this.test("er et Fnr eller Dnr", message, function (value) {
     return Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value);
   });
 });
 
-addMethod(string, 'erFnrEllerDnrEllerOrgnr', function(message) {
-  return this.test('er et Fnr, Dnr eller Orgnr', message, function(value) {
-    return Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value) || Utils.organisasjon.erOrgnrLengde(value);
+addMethod(string, "erFnrEllerDnrEllerOrgnr", function (message) {
+  return this.test("er et Fnr, Dnr eller Orgnr", message, function (value) {
+    return (
+      Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value) || Utils.organisasjon.erOrgnrLengde(value)
+    );
   });
 });
 
-addMethod(string, 'erOrgnr', function(message) {
-  return this.test('er orgnr', message, function(value) {
+addMethod(string, "erOrgnr", function (message) {
+  return this.test("er orgnr", message, function (value) {
     return Utils.organisasjon.erOrgnrGyldig(value);
   });
 });
 
-addMethod(string, 'harIkkeOrgnrLengde', function(message) {
-  return this.test('er orgnrlengde', message, function(value) {
+addMethod(string, "harIkkeOrgnrLengde", function (message) {
+  return this.test("er orgnrlengde", message, function (value) {
     const { path, createError } = this;
 
     if (Utils.organisasjon.erOrgnrLengde(value)) {
@@ -119,8 +121,8 @@ addMethod(string, 'harIkkeOrgnrLengde', function(message) {
   });
 });
 
-addMethod(string, 'harIkkeFnrEllerDnrLengde', function(message) {
-  return this.test('er fnr eller dnr lengde', message, function(value) {
+addMethod(string, "harIkkeFnrEllerDnrLengde", function (message) {
+  return this.test("er fnr eller dnr lengde", message, function (value) {
     const { path, createError } = this;
 
     if (Utils.person.erFnrLengde(value) || Utils.person.erDnrLengde(value)) {
@@ -134,9 +136,13 @@ addMethod(string, 'harIkkeFnrEllerDnrLengde', function(message) {
   });
 });
 
-addMethod(string, 'siblingIs', function(sibling, predicate, message) {
-  return this.test('siblingIs', message, function() {
-    const { options: { parent }, createError, path } = this;
+addMethod(string, "siblingIs", function (sibling, predicate, message) {
+  return this.test("siblingIs", message, function () {
+    const {
+      options: { parent },
+      createError,
+      path,
+    } = this;
     const siblingValue = parent[sibling];
 
     if (Utils._isFunction(predicate)) {
@@ -157,8 +163,8 @@ addMethod(string, 'siblingIs', function(sibling, predicate, message) {
   });
 });
 
-addMethod(string, 'erLandKode', function(message) {
-  return this.test('erLandKode', message, function(value) {
+addMethod(string, "erLandKode", function (message) {
+  return this.test("erLandKode", message, function (value) {
     const { createError, path } = this;
 
     if (!Utils._has(MKV.Koder.landkoder, value)) {

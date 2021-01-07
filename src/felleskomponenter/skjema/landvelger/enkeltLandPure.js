@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import PT from 'prop-types';
-import classnames from 'classnames';
+import React, { Component } from "react";
+import PT from "prop-types";
+import classnames from "classnames";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import * as KV from '../../../kodeverk';
-import * as Utils from '../../../utils';
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
 
-import { lagDatalistID } from './utils';
+import { lagDatalistID } from "./utils";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import './landvelger.css';
+import "./landvelger.css";
 
 class EnkeltLandPure extends Component {
   state = {
-    inputVerdi: '',
+    inputVerdi: "",
     error: null,
   };
 
@@ -23,14 +23,13 @@ class EnkeltLandPure extends Component {
     this.oppdaterInputVerdi();
   };
 
-  componentDidUpdate = prevProps => {
-    if (prevProps.value !== this.props.value ||
-      prevProps.landkoder !== this.props.landkoder) {
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.value !== this.props.value || prevProps.landkoder !== this.props.landkoder) {
       this.oppdaterInputVerdi();
     }
   };
 
-  setInputVerdi = verdi => {
+  setInputVerdi = (verdi) => {
     this.setState({ inputVerdi: verdi });
   };
 
@@ -38,20 +37,20 @@ class EnkeltLandPure extends Component {
     const { value } = this.props;
     const { landkoder } = this.props;
     const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
-    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : '';
+    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : "";
     this.setInputVerdi(inputVerdi);
   };
 
-  oppdaterLand = landkode => {
+  oppdaterLand = (landkode) => {
     const { onChange } = this.props;
     onChange(landkode);
   };
 
-  fokusInnHandler = e => {
+  fokusInnHandler = (e) => {
     e.target.select();
   };
 
-  inputTastNedHandler = e => {
+  inputTastNedHandler = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
       this.fokusUtHandler();
@@ -63,17 +62,15 @@ class EnkeltLandPure extends Component {
    * @param inputVerdi
    * @returns {*}
    */
-  finnFlereLand = inputVerdi => {
+  finnFlereLand = (inputVerdi) => {
     const { landkoder } = this.props;
     if (!inputVerdi) return [];
-    return landkoder.filter(land => (
-      Utils.land.landTekstFormat(land)
-        .toLowerCase()
-        .includes(inputVerdi.toLowerCase())
-    ));
+    return landkoder.filter((land) =>
+      Utils.land.landTekstFormat(land).toLowerCase().includes(inputVerdi.toLowerCase())
+    );
   };
 
-  finnEttLand = inputVerdi => {
+  finnEttLand = (inputVerdi) => {
     const landListe = this.finnFlereLand(inputVerdi);
     return landListe.length === 1 ? landListe[0] : false;
   };
@@ -94,11 +91,11 @@ class EnkeltLandPure extends Component {
       this.oppdaterLand(landkodeObjekt.kode);
       this.setState({ inputVerdi: Utils.land.landTekstFormat(landkodeObjekt), error: null });
     } else {
-      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
+      this.setState({ error: "Finner ikke landet du har skrevet inn." });
     }
   };
 
-  inputEndringHandler = e => {
+  inputEndringHandler = (e) => {
     const inputVerdi = e.target.value;
     this.setState({ inputVerdi });
   };
@@ -107,17 +104,13 @@ class EnkeltLandPure extends Component {
     this.setState({ error: null });
   };
 
-  render () {
-    const {
-      fokusInnHandler, fokusUtHandler, inputTastNedHandler, inputEndringHandler,
-    } = this;
+  render() {
+    const { fokusInnHandler, fokusUtHandler, inputTastNedHandler, inputEndringHandler } = this;
 
-    const {
-      label, bredde, className, disabled,
-    } = this.props;
+    const { label, bredde, className, disabled } = this.props;
 
     const { inputVerdi } = this.state;
-    const { error: landError = '' } = this.state;
+    const { error: landError = "" } = this.state;
     const feilObjekt = landError ? { feilmelding: `${landError}` } : null;
 
     const cl = classnames({ landliste__linje__input: true, [className]: true });
@@ -141,9 +134,9 @@ class EnkeltLandPure extends Component {
         />
         <div className="landliste__dataliste">
           <datalist id={dataListID}>
-            {
-              MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={Utils.land.landTekstFormat(item)} />))
-            }
+            {MKV.KTObjects.landkoder.map((item) => (
+              <option key={item.kode} value={Utils.land.landTekstFormat(item)} />
+            ))}
           </datalist>
         </div>
       </div>
@@ -164,10 +157,10 @@ EnkeltLandPure.propTypes = {
 };
 
 EnkeltLandPure.defaultProps = {
-  className: '',
-  label: '',
-  feil: '',
-  bredde: 'fullbredde',
+  className: "",
+  label: "",
+  feil: "",
+  bredde: "fullbredde",
   disabled: false,
   changeOnEmptyValue: false,
 };

@@ -1,4 +1,1 @@
-export {
-  Slett,
-  Rediger,
-} from './symboler';
+export { Slett, Rediger } from "./symboler";

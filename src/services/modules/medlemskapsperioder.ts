@@ -1,7 +1,6 @@
-import { OppdaterMedlemskapsperiode } from 'Domene';
-import { deleteAsJson, getAsJson, postAsJson, putAsJson } from '../utils';
-import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from '../api-constants';
-
+import { OppdaterMedlemskapsperiode } from "Domene";
+import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
+import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../api-constants";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getMedlemskapsperioder = (behandlingID: number) =>
@@ -15,7 +14,6 @@ export const putMedlemskapsperioder = (behandlingID: number, medlemskapsID: numb
 
 export const deleteMedlemskapsperioder = (behandlingID: number, medlemskapsID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`);
-
 
 export const hentBestemmelserMedVilkår = () =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${MEDLEMSKAPSPERIODER}/bestemmelser`);

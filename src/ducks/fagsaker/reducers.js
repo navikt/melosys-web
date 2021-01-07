@@ -4,9 +4,9 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-import * as Types from './types';
+import * as Types from "./types";
 
-import { STATUS } from '../../services/utils';
+import { STATUS } from "../../services/utils";
 
 export const initialState = {
   data: {},

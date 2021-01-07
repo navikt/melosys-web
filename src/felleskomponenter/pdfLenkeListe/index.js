@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import PT from 'prop-types';
-import * as MPT from '../../proptypes';
-import { dokumenterOperations } from '../../ducks/dokumenter';
-import * as Nav from '../../utils/navFrontend';
+import React, { Component } from "react";
+import PT from "prop-types";
+import * as MPT from "../../proptypes";
+import { dokumenterOperations } from "../../ducks/dokumenter";
+import * as Nav from "../../utils/navFrontend";
 
-import './pdfLenkeListe.css';
+import "./pdfLenkeListe.css";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 class PdfLenkeListe extends Component {
   state = {
     feilmelding: false,
   };
 
-  setGeneriskFeil = erSed => {
-    this.setState({ feilmelding: `Det oppstod en feil da ${erSed ? 'SED' : 'brevet'} skulle forhåndsvises!` });
+  setGeneriskFeil = (erSed) => {
+    this.setState({ feilmelding: `Det oppstod en feil da ${erSed ? "SED" : "brevet"} skulle forhåndsvises!` });
   };
 
-  klikk = async dokument => {
+  klikk = async (dokument) => {
     const { behandlingID, vedKlikk } = this.props;
     const { setGeneriskFeil } = this;
 
@@ -55,11 +55,7 @@ class PdfLenkeListe extends Component {
 
   lagDokumentLenke(dokument) {
     return (
-      <button
-        onClick={() => this.klikk(dokument)}
-        key={uuid()}
-        type="button"
-      >
+      <button onClick={() => this.klikk(dokument)} key={uuid()} type="button">
         {dokument.navn}
       </button>
     );
@@ -68,10 +64,12 @@ class PdfLenkeListe extends Component {
   render() {
     return (
       <div className="pdfLenkeListe">
-        { this.props.dokumenter.map(dokument => this.lagDokumentLenke(dokument)) }
-        { this.state.feilmelding &&
-          <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe>
-        }
+        {this.props.dokumenter.map((dokument) => this.lagDokumentLenke(dokument))}
+        {this.state.feilmelding && (
+          <Nav.AlertStripe type="advarsel" className="varsel">
+            {this.state.feilmelding}
+          </Nav.AlertStripe>
+        )}
       </div>
     );
   }

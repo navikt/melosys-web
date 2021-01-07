@@ -1,12 +1,12 @@
-import * as Types from './types';
+import * as Types from "./types";
 
-import { STATUS } from '../../services/utils';
-import reducer, { initialState } from './reducers';
+import { STATUS } from "../../services/utils";
+import reducer, { initialState } from "./reducers";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-describe('behandlingsgrunnlag reducer', () => {
-  it('setter status pending ved action.type PENDING', () => {
+describe("behandlingsgrunnlag reducer", () => {
+  it("setter status pending ved action.type PENDING", () => {
     const action = {
       type: Types.PENDING,
     };
@@ -20,7 +20,7 @@ describe('behandlingsgrunnlag reducer', () => {
     expect(nextState).toEqual(expectedState);
   });
 
-  it('setter status error ved action.type FEILET', () => {
+  it("setter status error ved action.type FEILET", () => {
     const action = {
       type: Types.FEILET,
       data: {},
@@ -35,12 +35,12 @@ describe('behandlingsgrunnlag reducer', () => {
     expect(nextState).toEqual(expectedState);
   });
 
-  it('Merger state ved action.type OK', () => {
+  it("Merger state ved action.type OK", () => {
     const action = {
       type: Types.OK,
       data: {
         data: {
-          test: 'testdata',
+          test: "testdata",
         },
       },
     };
@@ -48,7 +48,7 @@ describe('behandlingsgrunnlag reducer', () => {
       status: STATUS.OK,
       data: {
         data: {
-          test: 'testdata',
+          test: "testdata",
         },
       },
     };
@@ -58,7 +58,7 @@ describe('behandlingsgrunnlag reducer', () => {
     expect(nextState).toEqual(expectedState);
   });
 
-  it('Oppdaterer periode ved action.type OPPDATER_PERIODE', () => {
+  it("Oppdaterer periode ved action.type OPPDATER_PERIODE", () => {
     initialState.data.data = {
       ...initialState.data.data,
       bosted: {},
@@ -68,8 +68,8 @@ describe('behandlingsgrunnlag reducer', () => {
       type: Types.OPPDATER_PERIODE,
       data: {
         periode: {
-          fom: 'dato1',
-          tom: 'dato2',
+          fom: "dato1",
+          tom: "dato2",
         },
       },
     };
@@ -78,8 +78,8 @@ describe('behandlingsgrunnlag reducer', () => {
       data: {
         data: {
           periode: {
-            fom: 'dato1',
-            tom: 'dato2',
+            fom: "dato1",
+            tom: "dato2",
           },
           bosted: {},
         },
@@ -91,39 +91,39 @@ describe('behandlingsgrunnlag reducer', () => {
     expect(nextState).toEqual(expectedState);
   });
 
-  it('Oppdaterer behandlingsgrunnlag ved action.type OPPDATER_BEHANDLINGSGRUNNLAG', () => {
+  it("Oppdaterer behandlingsgrunnlag ved action.type OPPDATER_BEHANDLINGSGRUNNLAG", () => {
     const action = {
       type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
       dokument: {
-        inntektNorskIPerioden: '1',
-        inntektUtenlandskIPerioden: '2',
-        inntektNaeringIPerioden: '12345',
-        inntektNaturalFribil: '4',
-        inntektNaturalFribolig: '5',
-        inntektNaturalIAnnet: '6',
+        inntektNorskIPerioden: "1",
+        inntektUtenlandskIPerioden: "2",
+        inntektNaeringIPerioden: "12345",
+        inntektNaturalFribil: "4",
+        inntektNaturalFribolig: "5",
+        inntektNaturalIAnnet: "6",
         inntektErInnrapporteringspliktig: true,
         inntektTrygdeavgiftBlirTrukket: true,
         arbeidUtland: [
           {
             adresse: {
-              gatenavn: 'test',
-              husnummer: 'test',
-              landkode: 'NO',
-              postnummer: 'test',
-              poststed: 'test',
-              region: 'test',
+              gatenavn: "test",
+              husnummer: "test",
+              landkode: "NO",
+              postnummer: "test",
+              poststed: "test",
+              region: "test",
             },
-            foretakNavn: 'test',
-            foretakOrgnr: '12345',
+            foretakNavn: "test",
+            foretakOrgnr: "12345",
             arbeidUtlandHjemmekontor: true,
           },
         ],
-        antallAnsatte: '12345',
-        antallAdmAnsatte: '12345',
-        andelOmsetningINorge: '12345',
-        andelOppdragINorge: '12345',
-        andelRekruttertINorge: '12345',
-        andelKontrakterINorge: '12345',
+        antallAnsatte: "12345",
+        antallAdmAnsatte: "12345",
+        andelOmsetningINorge: "12345",
+        andelOppdragINorge: "12345",
+        andelRekruttertINorge: "12345",
+        andelKontrakterINorge: "12345",
         antallUtsendte: 12345,
         ekstraArbeidsgivere: [],
         arbeidsgiverBekrefterUtsendelse: true,
@@ -132,18 +132,18 @@ describe('behandlingsgrunnlag reducer', () => {
         arbeidstakerTidligereUtsendt24Mnd: true,
         arbeidsgiverBetalerArbeidsgiveravgift: true,
         trygdeavgiftTrukketGjennomSkatt: true,
-        trygdeavgiftTrukketGjennomSkattDato: '11.11.11',
-        oppholdUtlandFom: '11.11.11',
-        oppholdUtlandTom: '11.11.11',
+        trygdeavgiftTrukketGjennomSkattDato: "11.11.11",
+        oppholdUtlandFom: "11.11.11",
+        oppholdUtlandTom: "11.11.11",
         oppholdsland: [],
-        ektefelleEllerBarnINorge: 'test',
-        studentSemester: 'test',
-        studentFinansieringKode: 'test',
+        ektefelleEllerBarnINorge: "test",
+        studentSemester: "test",
+        studentFinansieringKode: "test",
         arbeidsforholdUtland: [
           {
-            uuid: '12ff23dc4',
-            navn: 'Abcdef',
-            orgnr: '123456789',
+            uuid: "12ff23dc4",
+            navn: "Abcdef",
+            orgnr: "123456789",
             selvstendigNaeringsvirksomhet: false,
             adresse: {
               gatenavn: null,
@@ -157,9 +157,9 @@ describe('behandlingsgrunnlag reducer', () => {
         ],
         selvstendigNaeringsvirksomhetUtland: [
           {
-            uuid: '12ff23dc4',
-            navn: 'fedcba',
-            orgnr: '123456789',
+            uuid: "12ff23dc4",
+            navn: "fedcba",
+            orgnr: "123456789",
             selvstendigNaeringsvirksomhet: true,
             adresse: {
               gatenavn: null,
@@ -174,63 +174,63 @@ describe('behandlingsgrunnlag reducer', () => {
         intensjonOmRetur: true,
         antallMaanederINorge: 11,
         EOSBarnetrygdFraNAV: true,
-        oppgittAdresseGatenavn: '12345',
-        oppgittAdresseHusnummer: '12345',
-        oppgittAdresseRegion: '12345',
-        oppgittAdressePostnummer: '12345',
-        oppgittAdressePoststed: '12345',
-        oppgittAdresseLand: '12345',
+        oppgittAdresseGatenavn: "12345",
+        oppgittAdresseHusnummer: "12345",
+        oppgittAdresseRegion: "12345",
+        oppgittAdressePostnummer: "12345",
+        oppgittAdressePoststed: "12345",
+        oppgittAdresseLand: "12345",
         arbeidsstedOffshore: [
           {
-            enhetNavn: '12345',
+            enhetNavn: "12345",
             fartsomradeKode: null,
             flaggLandkode: null,
-            installasjonsLandkode: '12345',
+            installasjonsLandkode: "12345",
             territorialfarvann: null,
-            foretakNavn: '12345',
-            foretakOrgnr: '12345',
+            foretakNavn: "12345",
+            foretakOrgnr: "12345",
           },
         ],
         arbeidsstedSkip: [
           {
-            enhetNavn: '12345',
-            fartsomradeKode: '12345',
-            flaggLandkode: '12345',
+            enhetNavn: "12345",
+            fartsomradeKode: "12345",
+            flaggLandkode: "12345",
             installasjonsLandkode: null,
-            territorialfarvann: '12345',
-            foretakNavn: '12345',
-            foretakOrgnr: '12345',
+            territorialfarvann: "12345",
+            foretakNavn: "12345",
+            foretakOrgnr: "12345",
           },
         ],
         arbeidsstedFly: [
           {
-            hjemmebaseNavn: 'Gardermoen',
+            hjemmebaseNavn: "Gardermoen",
             hjemmebaseLand: MKV.Koder.landkoder.NO,
             typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
           },
         ],
         soknadsland: [],
-        soknadsperiodeFom: '11.11.11',
-        soknadsperiodeTom: '11.11.11',
+        soknadsperiodeFom: "11.11.11",
+        soknadsperiodeTom: "11.11.11",
         erSelvstendig: true,
         selvstendigForetak: [
           {
-            orgnr: '12345',
+            orgnr: "12345",
             fortsetterEtterArbeidIUtlandet: true,
           },
         ],
-        utenlandskIdent: '12345',
+        utenlandskIdent: "12345",
         medfolgendeBarn: [
           {
-            fnr: '31031779459',
-            navn: 'BRÅKETE GYNGEHEST',
-            relasjonsrolle: 'BARN',
+            fnr: "31031779459",
+            navn: "BRÅKETE GYNGEHEST",
+            relasjonsrolle: "BARN",
           },
         ],
         overgangsregelbestemmelser: [
           {
-            kode: 'FO_1408_1971_ART14_2_A',
-            term: 'Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a',
+            kode: "FO_1408_1971_ART14_2_A",
+            term: "Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a",
           },
         ],
       },
@@ -245,9 +245,9 @@ describe('behandlingsgrunnlag reducer', () => {
             inntektUtenlandskIPerioden: 2,
             inntektNaeringIPerioden: null,
             inntektNaturalytelser: {
-              friBil: '4',
-              friBolig: '5',
-              friAnnet: '6',
+              friBil: "4",
+              friBolig: "5",
+              friAnnet: "6",
             },
             inntektErInnrapporteringspliktig: true,
             inntektTrygdeavgiftBlirTrukket: true,
@@ -255,15 +255,15 @@ describe('behandlingsgrunnlag reducer', () => {
           arbeidUtland: [
             {
               adresse: {
-                gatenavn: 'test',
-                husnummer: 'test',
-                landkode: 'NO',
-                postnummer: 'test',
-                poststed: 'test',
-                region: 'test',
+                gatenavn: "test",
+                husnummer: "test",
+                landkode: "NO",
+                postnummer: "test",
+                poststed: "test",
+                region: "test",
               },
-              foretakNavn: 'test',
-              foretakOrgnr: '12345',
+              foretakNavn: "test",
+              foretakOrgnr: "12345",
               arbeidUtlandHjemmekontor: true,
             },
           ],
@@ -284,12 +284,12 @@ describe('behandlingsgrunnlag reducer', () => {
             arbeidstakerTidligereUtsendt24Mnd: true,
             arbeidsgiverBetalerArbeidsgiveravgift: true,
             trygdeavgiftTrukketGjennomSkatt: true,
-            trygdeavgiftTrukketGjennomSkattDato: '2011-11-11',
+            trygdeavgiftTrukketGjennomSkattDato: "2011-11-11",
           },
           oppholdUtland: {
             oppholdsPeriode: {
-              fom: '2011-11-11',
-              tom: '2011-11-11',
+              fom: "2011-11-11",
+              tom: "2011-11-11",
             },
             oppholdslandkoder: [],
             ektefelleEllerBarnINorge: null,
@@ -298,9 +298,9 @@ describe('behandlingsgrunnlag reducer', () => {
           },
           foretakUtland: [
             {
-              uuid: '12ff23dc4',
-              navn: 'Abcdef',
-              orgnr: '123456789',
+              uuid: "12ff23dc4",
+              navn: "Abcdef",
+              orgnr: "123456789",
               selvstendigNaeringsvirksomhet: false,
               adresse: {
                 gatenavn: null,
@@ -312,9 +312,9 @@ describe('behandlingsgrunnlag reducer', () => {
               },
             },
             {
-              uuid: '12ff23dc4',
-              navn: 'fedcba',
-              orgnr: '123456789',
+              uuid: "12ff23dc4",
+              navn: "fedcba",
+              orgnr: "123456789",
               selvstendigNaeringsvirksomhet: true,
               adresse: {
                 gatenavn: null,
@@ -331,37 +331,37 @@ describe('behandlingsgrunnlag reducer', () => {
             antallMaanederINorge: null,
             EOSBarnetrygdFraNAV: true,
             oppgittAdresse: {
-              gatenavn: '12345',
-              husnummer: '12345',
-              region: '12345',
-              postnummer: '12345',
-              poststed: '12345',
-              landkode: '12345',
+              gatenavn: "12345",
+              husnummer: "12345",
+              region: "12345",
+              postnummer: "12345",
+              poststed: "12345",
+              landkode: "12345",
             },
           },
           maritimtArbeid: [
             {
-              enhetNavn: '12345',
+              enhetNavn: "12345",
               fartsomradeKode: null,
               flaggLandkode: null,
-              installasjonsLandkode: '12345',
+              installasjonsLandkode: "12345",
               territorialfarvann: null,
-              foretakNavn: '12345',
-              foretakOrgnr: '12345',
+              foretakNavn: "12345",
+              foretakOrgnr: "12345",
             },
             {
-              enhetNavn: '12345',
-              fartsomradeKode: '12345',
-              flaggLandkode: '12345',
+              enhetNavn: "12345",
+              fartsomradeKode: "12345",
+              flaggLandkode: "12345",
               installasjonsLandkode: null,
-              territorialfarvann: '12345',
-              foretakNavn: '12345',
-              foretakOrgnr: '12345',
+              territorialfarvann: "12345",
+              foretakNavn: "12345",
+              foretakOrgnr: "12345",
             },
           ],
           luftfartBaser: [
             {
-              hjemmebaseNavn: 'Gardermoen',
+              hjemmebaseNavn: "Gardermoen",
               hjemmebaseLand: MKV.Koder.landkoder.NO,
               typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
             },
@@ -370,32 +370,32 @@ describe('behandlingsgrunnlag reducer', () => {
             landkoder: [],
           },
           periode: {
-            fom: '2011-11-11',
-            tom: '2011-11-11',
+            fom: "2011-11-11",
+            tom: "2011-11-11",
           },
           selvstendigArbeid: {
             erSelvstendig: true,
             selvstendigForetak: [
               {
-                orgnr: '12345',
+                orgnr: "12345",
                 fortsetterEtterArbeidIUtlandet: true,
               },
             ],
           },
           personOpplysninger: {
-            utenlandskIdent: '12345',
+            utenlandskIdent: "12345",
             medfolgendeFamilie: [
               {
-                fnr: '31031779459',
-                navn: 'BRÅKETE GYNGEHEST',
-                relasjonsrolle: 'BARN',
+                fnr: "31031779459",
+                navn: "BRÅKETE GYNGEHEST",
+                relasjonsrolle: "BARN",
               },
             ],
           },
           overgangsregelbestemmelser: [
             {
-              kode: 'FO_1408_1971_ART14_2_A',
-              term: 'Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a',
+              kode: "FO_1408_1971_ART14_2_A",
+              term: "Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a",
             },
           ],
           ytterligereInformasjon: null,

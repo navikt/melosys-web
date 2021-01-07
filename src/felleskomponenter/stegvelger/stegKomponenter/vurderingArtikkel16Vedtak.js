@@ -1,27 +1,28 @@
-import React, { Fragment, useCallback } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, isValid, getFormValues } from 'redux-form';
-import PT from 'prop-types';
-import MKV from '../../../melosyskodeverk';
+import React, { Fragment, useCallback, useState } from "react";
+import { connect } from "react-redux";
+import { reduxForm, isValid, getFormValues } from "redux-form";
+import PT from "prop-types";
+import MKV from "../../../melosyskodeverk";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import * as KV from '../../../kodeverk';
-import * as Skjema from '../../skjema';
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
+import * as KV from "../../../kodeverk";
+import * as Skjema from "../../skjema";
+import * as Hooks from "../../../hooks";
 
-import Begrunnelser from '../../begrunnelser';
-import PdfLenkeListe from '../../pdfLenkeListe';
-import DatoOmrade from '../../datoOmrade/datoOmrade';
+import Begrunnelser from "../../begrunnelser";
+import PdfLenkeListe from "../../pdfLenkeListe";
+import DatoOmrade from "../../datoOmrade/datoOmrade";
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
-import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
-import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
-import { vilkarSelectors } from '../../../ducks/vilkar';
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
+import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
+import { vilkarSelectors } from "../../../ducks/vilkar";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
-import './vurderingArtikkel16Vedtak.css';
+import "./vurderingArtikkel16Vedtak.css";
 
 export const VurderingArtikkel16VedtakBegrunnelser = ({
   art12_1_begrunnelser,
@@ -37,27 +38,20 @@ export const VurderingArtikkel16VedtakBegrunnelser = ({
 
   return (
     <Fragment>
-      {
-        art12_1_begrunnelser.length > 0 &&
+      {art12_1_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 1."
           valgteBegrunnelser={[...art12_1_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[
-            ...MKV.KTObjects.begrunnelser.art12_1_begrunnelser,
-            ...muligeVirksomhetBegrunnelser,
-          ]}
+          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_1_begrunnelser, ...muligeVirksomhetBegrunnelser]}
         />
-      }
-      { art12_2_begrunnelser.length > 0 &&
+      )}
+      {art12_2_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 2."
           valgteBegrunnelser={[...art12_2_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[
-            ...MKV.KTObjects.begrunnelser.art12_2_begrunnelser,
-            ...muligeVirksomhetBegrunnelser,
-          ]}
+          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_2_begrunnelser, ...muligeVirksomhetBegrunnelser]}
         />
-      }
+      )}
       <Begrunnelser
         label="Søkeren fyller ikke kriteriene for artikkel 16 nr. 1."
         fritekst="Utenlandske trygdemyndigheter har avslått anmodningen om unntak"
@@ -82,7 +76,7 @@ export const Innvilgelse = ({
 }) => {
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev og A1',
+      navn: "Forhåndsvis vedtaksbrev og A1",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
         fritekst: vedtaksbrevFritekst,
@@ -93,7 +87,7 @@ export const Innvilgelse = ({
 
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
-      navn: 'Brev til arbeidsgiver',
+      navn: "Brev til arbeidsgiver",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
@@ -103,16 +97,16 @@ export const Innvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>
+        Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.
+      </Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="7">
-          { renderFritekstFelt() }
-        </Nav.Column>
+        <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
@@ -143,7 +137,7 @@ export const DelvisInnvilgelse = ({
 }) => {
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev og A1',
+      navn: "Forhåndsvis vedtaksbrev og A1",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
         fritekst: vedtaksbrevFritekst,
@@ -154,7 +148,7 @@ export const DelvisInnvilgelse = ({
 
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
-      navn: 'Brev til arbeidsgiver',
+      navn: "Brev til arbeidsgiver",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
@@ -164,21 +158,20 @@ export const DelvisInnvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>
+        Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av
+        søknadsperioden
+      </Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="7">
-          { renderBegrunnelser() }
-        </Nav.Column>
+        <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="7">
-          { renderFritekstFelt() }
-        </Nav.Column>
+        <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
@@ -209,7 +202,7 @@ export const Avslag = ({
 }) => {
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev',
+      navn: "Forhåndsvis vedtaksbrev",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
         fritekst: vedtaksbrevFritekst,
@@ -220,7 +213,7 @@ export const Avslag = ({
 
   if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
-      navn: 'Brev til arbeidsgiver',
+      navn: "Brev til arbeidsgiver",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
@@ -232,14 +225,10 @@ export const Avslag = ({
     <Fragment>
       <Nav.typo.Undertittel>Avslag</Nav.typo.Undertittel>
       <Nav.Row>
-        <Nav.Column xs="7">
-          { renderBegrunnelser() }
-        </Nav.Column>
+        <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="7">
-          { renderFritekstFelt() }
-        </Nav.Column>
+        <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
@@ -274,87 +263,102 @@ export const VurderingArtikkel16Vedtak = ({
   touch,
   harValgtNorskArbeidsgiver,
 }) => {
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
   const validerForm = () => {
-    touch('vedtakstype');
-    touch('vedtakstypebegrunnelse');
+    touch("vedtakstype");
+    touch("vedtakstypebegrunnelse");
     return formIsValid;
   };
 
-  const vedKlikk = () => {
+  const vedKlikk = async () => {
     if (!validerForm()) return;
 
-    lagreOgFatteVedtak({
+    setVedtakPending(true);
+
+    await lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: formValues.vedtaksbrevFritekst,
       mottakerinstitusjoner: null,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
     });
+
+    // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
   };
 
-  const renderBegrunnelser = useCallback(() => (
-    <VurderingArtikkel16VedtakBegrunnelser
-      art12_1_begrunnelser={art_12_1_begrunnelser}
-      art12_2_begrunnelser={art_12_2_begrunnelser}
-      vilkarBegrunnelser={vilkarBegrunnelser}
-    />
-  ), [
-    art_12_1_begrunnelser,
-    art_12_2_begrunnelser,
-    vilkarBegrunnelser,
-  ]);
+  const renderBegrunnelser = useCallback(
+    () => (
+      <VurderingArtikkel16VedtakBegrunnelser
+        art12_1_begrunnelser={art_12_1_begrunnelser}
+        art12_2_begrunnelser={art_12_2_begrunnelser}
+        vilkarBegrunnelser={vilkarBegrunnelser}
+      />
+    ),
+    [art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser]
+  );
 
-  const renderFritekstFelt = useCallback(() => (
-    <Skjema.Textarea
-      feltNavn="vedtaksbrevFritekst"
-      label="Fritekst til vedtaksbrev"
-      placeholder="Skriv inn tekst til vedtaksbrevet..."
-      maxLength={500}
-      visTellerFra={500}
-      disabled={!redigerbart}
-    />
-  ), [
-    formValues.vedtaksbrevFritekst,
-    redigerbart,
-  ]);
+  const renderFritekstFelt = useCallback(
+    () => (
+      <Skjema.Textarea
+        feltNavn="vedtaksbrevFritekst"
+        label="Fritekst til vedtaksbrev"
+        placeholder="Skriv inn tekst til vedtaksbrevet..."
+        maxLength={500}
+        visTellerFra={500}
+        disabled={!redigerbart}
+      />
+    ),
+    [formValues.vedtaksbrevFritekst, redigerbart]
+  );
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const visOrienteringsbrevArbeidsgiver = harValgtNorskArbeidsgiver && !erNyVurdering;
 
-  const finnVedtakInnhold = svarType => {
+  const finnVedtakInnhold = (svarType) => {
     switch (svarType) {
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
-        return <Innvilgelse
-          redigerbart={redigerbart}
-          behandlingID={behandlingID}
-          renderFritekstFelt={renderFritekstFelt}
-          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-          gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
-          visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
-        />;
+        return (
+          <Innvilgelse
+            redigerbart={redigerbart}
+            behandlingID={behandlingID}
+            renderFritekstFelt={renderFritekstFelt}
+            vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
+            gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
+            visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
+          />
+        );
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
-        return <DelvisInnvilgelse
-          redigerbart={redigerbart}
-          behandlingID={behandlingID}
-          renderFritekstFelt={renderFritekstFelt}
-          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-          gjeldendePeriode={endretPeriode}
-          renderBegrunnelser={renderBegrunnelser}
-          visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
-        />;
+        return (
+          <DelvisInnvilgelse
+            redigerbart={redigerbart}
+            behandlingID={behandlingID}
+            renderFritekstFelt={renderFritekstFelt}
+            vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
+            gjeldendePeriode={endretPeriode}
+            renderBegrunnelser={renderBegrunnelser}
+            visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
+          />
+        );
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
-        return <Avslag
-          redigerbart={redigerbart}
-          behandlingID={behandlingID}
-          renderFritekstFelt={renderFritekstFelt}
-          vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-          renderBegrunnelser={renderBegrunnelser}
-          visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
-        />;
+        return (
+          <Avslag
+            redigerbart={redigerbart}
+            behandlingID={behandlingID}
+            renderFritekstFelt={renderFritekstFelt}
+            vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
+            renderBegrunnelser={renderBegrunnelser}
+            visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
+          />
+        );
       default:
-        throw new Error('AnmodningsperiodeSvarType må være satt');
+        throw new Error("AnmodningsperiodeSvarType må være satt");
     }
   };
 
@@ -362,17 +366,13 @@ export const VurderingArtikkel16Vedtak = ({
 
   return (
     <Fragment>
-      { vedtakInnhold }
+      {vedtakInnhold}
       <Nav.Row>
         <Nav.Column xs="7" className="fane__fot">
-          {
-            erNyVurdering &&
-            <Skjema.Vedtakstype
-              redigerbart={redigerbart}
-              className="vedtakstype"
-            />
-          }
-          <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
+          {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} className="vedtakstype" />}
+          <Nav.Hovedknapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} onClick={vedKlikk}>
+            FATT VEDTAK
+          </Nav.Hovedknapp>
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -406,14 +406,15 @@ const VurderingArtikkel16VedtakForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_vedtak, {
-    context: {
-      behandlingstype: props.behandlingstype,
-    },
-  })(values),
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_vedtak, {
+      context: {
+        behandlingstype: props.behandlingstype,
+      },
+    })(values),
 })(VurderingArtikkel16Vedtak);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),

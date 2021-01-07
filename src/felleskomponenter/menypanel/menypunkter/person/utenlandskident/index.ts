@@ -1,3 +1,3 @@
-import UtenlandskIdent from './utenlandskident';
+import UtenlandskIdent from "./utenlandskident";
 
 export default UtenlandskIdent;

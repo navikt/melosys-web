@@ -1,12 +1,12 @@
-import { StateSection } from 'AppTypes';
+import { StateSection } from "AppTypes";
 
-import { STATUS } from '../../services/utils';
-import * as Types from './types';
-import { utpekTypes } from '../utpek';
-import { vedtakTypes } from '../vedtak';
-import { videresendingTypes } from '../videresending';
-import { anmodningunntakTypes } from '../anmodningunntak';
-import { journalforingTypes } from '../journalforing';
+import { STATUS } from "../../services/utils";
+import * as Types from "./types";
+import { utpekTypes } from "../utpek";
+import { vedtakTypes } from "../vedtak";
+import { videresendingTypes } from "../videresending";
+import { anmodningunntakTypes } from "../anmodningunntak";
+import { journalforingTypes } from "../journalforing";
 
 const initalState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,

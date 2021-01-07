@@ -1,10 +1,10 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from "../../../utils/navFrontend";
 
-import VedtakstypeBegrunnelseSkjema from './vedtakstypebegrunnelseskjema';
-import VedtakstypeSkjema from './vedtakstypeskjema';
+import VedtakstypeBegrunnelseSkjema from "./vedtakstypebegrunnelseskjema";
+import VedtakstypeSkjema from "./vedtakstypeskjema";
 
 const Vedtakstype = ({
   className,
@@ -16,11 +16,7 @@ const Vedtakstype = ({
 }) => (
   <Nav.Row className={className}>
     <Nav.Column xs="6">
-      <VedtakstypeSkjema
-        redigerbart={redigerbart}
-        feltNavn={vedtakstypeFeltNavn}
-        label={vedtakstypeLabel}
-      />
+      <VedtakstypeSkjema redigerbart={redigerbart} feltNavn={vedtakstypeFeltNavn} label={vedtakstypeLabel} />
       <VedtakstypeBegrunnelseSkjema
         redigerbart={redigerbart}
         feltNavn={vedtakstypebegrunnelseFeltNavn}
@@ -41,10 +37,10 @@ Vedtakstype.propTypes = {
 
 Vedtakstype.defaultProps = {
   className: undefined,
-  vedtakstypeFeltNavn: 'vedtakstype',
-  vedtakstypebegrunnelseFeltNavn: 'vedtakstypebegrunnelse',
-  vedtakstypeLabel: 'Hvilken type vedtak skal fattes?',
-  vedtakstypebegrunnelseLabel: 'Bakgrunn for nytt vedtak',
+  vedtakstypeFeltNavn: "vedtakstype",
+  vedtakstypebegrunnelseFeltNavn: "vedtakstypebegrunnelse",
+  vedtakstypeLabel: "Hvilken type vedtak skal fattes?",
+  vedtakstypebegrunnelseLabel: "Bakgrunn for nytt vedtak",
 };
 
 export default Vedtakstype;

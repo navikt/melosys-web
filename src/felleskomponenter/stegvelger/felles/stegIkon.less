@@ -1,4 +1,4 @@
-@import '../../../constants';
+@import "../../../constants";
 
 .stegIkon {
   display: flex;
@@ -23,8 +23,9 @@
     &:active,
     &:focus,
     &:hover {
-      .stegIkon__enkeltSteg, .stegIkon__vedtak {
-        transform:scale(1.1);
+      .stegIkon__enkeltSteg,
+      .stegIkon__vedtak {
+        transform: scale(1.1);
       }
     }
 
@@ -50,22 +51,22 @@
     }
   }
 
-
-  .stegIkon__enkeltSteg, .stegIkon__vedtak {
+  .stegIkon__enkeltSteg,
+  .stegIkon__vedtak {
     display: flex;
     position: relative;
-    background-repeat:no-repeat;
-    background-size:contain;
-    background-color:transparent;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: transparent;
     width: 30px;
     height: 30px;
     min-height: 30px;
     min-width: 30px;
-    margin:0.5em;
-    border:0;
-    cursor:pointer;
-    transition:all 0.1s;
-    outline:none;
+    margin: 0.5em;
+    border: 0;
+    cursor: pointer;
+    transition: all 0.1s;
+    outline: none;
   }
 
   .stegIkon__enkeltSteg {
@@ -74,12 +75,12 @@
 
   .stegIkon__knapp-utilgjengelig {
     cursor: default;
-    pointer-events:none;
+    pointer-events: none;
   }
 
   .stegIkon__tittel {
     position: relative;
-    font-size: .9em;
+    font-size: 0.9em;
     text-align: center;
     white-space: normal;
     width: 70px;

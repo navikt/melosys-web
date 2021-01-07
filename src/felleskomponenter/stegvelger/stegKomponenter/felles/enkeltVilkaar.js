@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react';
-import PT from 'prop-types';
-import * as Nav from '../../../../utils/navFrontend';
-import * as MPT from '../../../../proptypes';
-import * as Mui from '../../../ui';
+import React, { useEffect } from "react";
+import PT from "prop-types";
+import * as Nav from "../../../../utils/navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../ui";
 
-import { BOOLSK } from '../../../../constants';
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../../regler/vilkar';
+import { BOOLSK } from "../../../../constants";
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from "../../../../regler/vilkar";
 
-const EnkeltVilkaar = props => {
+const EnkeltVilkaar = (props) => {
   const {
-    redigerbart, begrunnelser,
-    tittel, labelOppfylt, labelIkkeOppfylt,
-    vilkaar, vilkaarKode,
+    redigerbart,
+    begrunnelser,
+    tittel,
+    labelOppfylt,
+    labelIkkeOppfylt,
+    vilkaar,
+    vilkaarKode,
     oppdaterData,
   } = props;
 
@@ -19,11 +23,11 @@ const EnkeltVilkaar = props => {
     oppdaterData(konverterTilStegData(vilkaarKode, vilkaar));
   }, []);
 
-  const radioEndringHandler = event => {
+  const radioEndringHandler = (event) => {
     oppdaterData(lagVilkaar(vilkaarKode, event.target.value));
   };
 
-  const listevalgEndringHandler = event => {
+  const listevalgEndringHandler = (event) => {
     oppdaterData(lagBegrunnelse(vilkaarKode, event.value));
   };
 
@@ -65,8 +69,8 @@ const EnkeltVilkaar = props => {
               />
             </Nav.Fieldset>
           </Nav.Column>
-        </Nav.Row>)
-      }
+        </Nav.Row>
+      )}
     </div>
   );
 };
@@ -84,7 +88,7 @@ EnkeltVilkaar.propTypes = {
 
 EnkeltVilkaar.defaultProps = {
   begrunnelser: [],
-  tittel: '',
+  tittel: "",
 };
 
 export default EnkeltVilkaar;

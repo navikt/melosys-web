@@ -1,3 +1,3 @@
-import Vurderutpeking from './vurderutpeking';
+import Vurderutpeking from "./vurderutpeking";
 
 export default Vurderutpeking;

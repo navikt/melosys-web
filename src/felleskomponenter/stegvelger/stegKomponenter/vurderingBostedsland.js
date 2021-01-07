@@ -1,40 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import PT from 'prop-types';
-import classnames from 'classnames';
+import React, { useEffect, useState } from "react";
+import PT from "prop-types";
+import classnames from "classnames";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import * as KV from '../../../kodeverk';
-import * as Nav from '../../../utils/navFrontend';
-import * as Utils from '../../../utils';
-import * as MPT from '../../../proptypes';
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../utils/navFrontend";
+import * as Utils from "../../../utils";
+import * as MPT from "../../../proptypes";
 
-import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
-import * as Mui from '../../ui';
+import EnkeltLandPure from "../../skjema/landvelger/enkeltLandPure";
+import * as Mui from "../../ui";
 
-import { BOOLSK } from '../../../constants';
+import { BOOLSK } from "../../../constants";
 import {
-  avklartefaktaType, lagAvklartfakta, konverterTilStegData,
-  lagAvklartefaktaBegrunnelse, hentFaktaVerdi,
-} from '../../../regler/avklartefakta';
+  avklartefaktaType,
+  lagAvklartfakta,
+  konverterTilStegData,
+  lagAvklartefaktaBegrunnelse,
+  hentFaktaVerdi,
+} from "../../../regler/avklartefakta";
 
-import './vurderingBostedsland.css';
+import "./vurderingBostedsland.css";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 const Avklaringer = ({ avklaringer }) => (
   <div>
     <ul className="betingelser__liste">
-      {
-        avklaringer.map(({ tekst, status }) => {
-          let iconClassName;
-          if (status === undefined) {
-            iconClassName = 'liste__element--varsel';
-          }
-          const cl = classnames({ liste__element: true, [iconClassName]: true });
-          return (<li key={uuid()} className={cl}>{tekst}</li>);
-        })
-      }
+      {avklaringer.map(({ tekst, status }) => {
+        let iconClassName;
+        if (status === undefined) {
+          iconClassName = "liste__element--varsel";
+        }
+        const cl = classnames({ liste__element: true, [iconClassName]: true });
+        return (
+          <li key={uuid()} className={cl}>
+            {tekst}
+          </li>
+        );
+      })}
     </ul>
   </div>
 );
@@ -47,10 +52,8 @@ Avklaringer.defaultProps = {
   avklaringer: [],
 };
 
-const VurderingBostedsland = props => {
-  const {
-    bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData,
-  } = props;
+const VurderingBostedsland = (props) => {
+  const { bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData } = props;
 
   useEffect(() => {
     const { bostedslandFakta } = tilstand;
@@ -61,9 +64,7 @@ const VurderingBostedsland = props => {
     return cleanup;
   }, []);
 
-  const {
-    bostedslandFakta, harAvklaring, erBegrunnelserPaakrevd,
-  } = tilstand;
+  const { bostedslandFakta, harAvklaring, erBegrunnelserPaakrevd } = tilstand;
 
   const erBosattINorge = () => {
     const bostedsland = hentFaktaVerdi(bostedslandFakta);
@@ -75,8 +76,8 @@ const VurderingBostedsland = props => {
 
   const [erNorgeValgt, setNorgeErValgt] = useState(erBosattINorge());
 
-  const radioEndringHandler = event => {
-    if (event.target.value === 'true') {
+  const radioEndringHandler = (event) => {
+    if (event.target.value === "true") {
       setNorgeErValgt(BOOLSK.SANN);
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, MKV.Koder.landkoder.NO, null));
     } else {
@@ -85,15 +86,15 @@ const VurderingBostedsland = props => {
     }
   };
 
-  const landEndretHandler = landKode => {
+  const landEndretHandler = (landKode) => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, landKode));
   };
 
-  const begrunnelseEndret = begrunnelseKoder => {
+  const begrunnelseEndret = (begrunnelseKoder) => {
     oppdaterData(lagAvklartefaktaBegrunnelse(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, begrunnelseKoder));
   };
 
-  const eksisterendeLand = hentFaktaVerdi(bostedslandFakta) || '';
+  const eksisterendeLand = hentFaktaVerdi(bostedslandFakta) || "";
 
   return (
     <div className="vurderingBostedsland">
@@ -118,20 +119,20 @@ const VurderingBostedsland = props => {
                 checked={erNorgeValgt === BOOLSK.USANN}
                 disabled={!redigerbart}
               />
-              {erNorgeValgt === false &&
-              <Nav.Row>
-                <Nav.Column xs="8" md="6" lg="4">
-                  <EnkeltLandPure
-                    label="Velg land:"
-                    value={eksisterendeLand}
-                    onChange={landEndretHandler}
-                    changeOnEmptyValue
-                    landkoder={MKV.KTObjects.landkoder}
-                    disabled={!redigerbart}
-                  />
-                </Nav.Column>
-              </Nav.Row>
-              }
+              {erNorgeValgt === false && (
+                <Nav.Row>
+                  <Nav.Column xs="8" md="6" lg="4">
+                    <EnkeltLandPure
+                      label="Velg land:"
+                      value={eksisterendeLand}
+                      onChange={landEndretHandler}
+                      changeOnEmptyValue
+                      landkoder={MKV.KTObjects.landkoder}
+                      disabled={!redigerbart}
+                    />
+                  </Nav.Column>
+                </Nav.Row>
+              )}
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -152,7 +153,13 @@ const VurderingBostedsland = props => {
         )}
       </div>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp
+          disabled={!(redigerbart && harAvklaring)}
+          className="fane__navigasjonsknapp"
+          onClick={bekreftOgFortsett}
+        >
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );

@@ -1,3 +1,3 @@
-import * as navigeringOperations from './operations';
+import * as navigeringOperations from "./operations";
 
 export { navigeringOperations };

@@ -1,11 +1,11 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
-import * as KV from '../../../kodeverk';
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../../skjema";
+import * as KV from "../../../kodeverk";
 
-const VurderingTjenestemann = props => {
+const VurderingTjenestemann = (props) => {
   const { bekreftOgFortsett } = props;
 
   return (
@@ -28,7 +28,9 @@ const VurderingTjenestemann = props => {
         />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );

@@ -1,27 +1,21 @@
 // selector(s)
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 export const FagsakSelector = createSelector(
-  state => (state.fagsaker.data ? state.fagsaker.data : {}),
-  fagsak => fagsak
+  (state) => (state.fagsaker.data ? state.fagsaker.data : {}),
+  (fagsak) => fagsak
 );
 
 export const SaksnummerSelector = createSelector(
-  state => (state.fagsaker.data ? state.fagsaker.data.saksnummer : ''),
-  saksnummer => saksnummer
+  (state) => (state.fagsaker.data ? state.fagsaker.data.saksnummer : ""),
+  (saksnummer) => saksnummer
 );
 
 export const FagsakStatusSelector = createSelector(
-  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ''),
-  fagsakStatus => fagsakStatus
+  (state) => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ""),
+  (fagsakStatus) => fagsakStatus
 );
 
-export const SakstypeSelector = createSelector(
-  FagsakSelector,
-  fagsak => fagsak.sakstype
-);
+export const SakstypeSelector = createSelector(FagsakSelector, (fagsak) => fagsak.sakstype);
 
-export const SakstypeKodeSelector = createSelector(
-  SakstypeSelector,
-  sakstype => (sakstype ? sakstype.kode : '')
-);
+export const SakstypeKodeSelector = createSelector(SakstypeSelector, (sakstype) => (sakstype ? sakstype.kode : ""));

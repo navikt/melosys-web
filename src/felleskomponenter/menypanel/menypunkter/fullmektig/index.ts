@@ -1,3 +1,3 @@
-import Fullmektig from './fullmektigcontainer';
+import Fullmektig from "./fullmektigcontainer";
 
 export default Fullmektig;

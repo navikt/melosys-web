@@ -1,10 +1,10 @@
-import React from 'react';
-import { createStore, combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import React from "react";
+import { createStore, combineReducers } from "redux";
+import { reducer as formReducer } from "redux-form";
 
-import { MottakerinstitusjonvelgerFlervalg } from './mottakerinstitusjonvelger';
+import { MottakerinstitusjonvelgerFlervalg } from "./mottakerinstitusjonvelger";
 
-describe('MottakerinstutusjonvelgerFlervalg', () => {
+describe("MottakerinstutusjonvelgerFlervalg", () => {
   let props = null;
 
   beforeEach(() => {
@@ -12,17 +12,17 @@ describe('MottakerinstutusjonvelgerFlervalg', () => {
     fetch.mockResponse(JSON.stringify({}));
 
     props = {
-      feltnavn: 'feltnavn',
+      feltnavn: "feltnavn",
       oppdaterKreverMottakerinstitusjon: jest.fn(),
       redigerbart: true,
       hentFelt: jest.fn(),
-      form: 'form',
+      form: "form",
       fields: {},
-      bucType: 'buctype',
+      bucType: "buctype",
     };
   });
 
-  it('vises uten å krasje', () => {
+  it("vises uten å krasje", () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     shallow(<MottakerinstitusjonvelgerFlervalg {...props} store={store} />);

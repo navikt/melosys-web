@@ -3,8 +3,8 @@ export const ANTALL_TALL_I_DNR = 11;
 export const ANTALL_TALL_I_ORGNR = 9;
 
 export const JOURNALFORING_HENSIKT = {
-  KNYTT: 'KNYTT',
-  OPPRETT: 'OPPRETT',
+  KNYTT: "KNYTT",
+  OPPRETT: "OPPRETT",
 };
 
 export const BOOLSK = {
@@ -13,8 +13,8 @@ export const BOOLSK = {
 };
 
 export const BOOLSK_STRING = {
-  SANN: 'TRUE',
-  USANN: 'FALSE',
+  SANN: "TRUE",
+  USANN: "FALSE",
 };
 
-export const URL_BASENAME = process.env.APP_PATH_PREFIX || '/melosys';
+export const URL_BASENAME = process.env.APP_PATH_PREFIX || "/melosys";

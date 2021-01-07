@@ -1,20 +1,21 @@
-import React, { Fragment } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import { reduxForm, formValueSelector, isValid } from 'redux-form';
-import * as EKV from 'eessi-kodeverk';
+import React, { Fragment, useState } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import { reduxForm, formValueSelector, isValid } from "redux-form";
+import * as EKV from "eessi-kodeverk";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../../felleskomponenter/skjema';
-import * as KV from '../../../kodeverk';
-import * as Mui from '../../../felleskomponenter/ui';
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { formOperations } from '../../../ducks/form';
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { formOperations } from "../../../ducks/form";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
 export const VurderingAvslaaUtpeking = ({
   redigerbart,
@@ -27,9 +28,12 @@ export const VurderingAvslaaUtpeking = ({
   touchAll,
   formIsValid,
 }) => {
+  const [avslagPending, setAvslagPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis SED A004',
+      navn: "Forhåndsvis SED A004",
       type: EKV.Koder.sedtyper.A004,
       erSed: true,
       data: {
@@ -50,11 +54,28 @@ export const VurderingAvslaaUtpeking = ({
     return formIsValid;
   };
 
+  const avsluttOgSendSed = async (values, dispatch, props) => {
+    setAvslagPending(true);
+
+    const body = {
+      fritekst: values.fritekst || null,
+      nyttLovvalgsland: values.nyttLovvalgsland || null,
+      begrunnelseUtenlandskMyndighet: values.begrunnelseUtenlandskMyndighet,
+      vilSendeAnmodningOmMerInformasjon: values.vilSendeAnmodningOmMerInformasjon,
+    };
+
+    await props.avvisUtpeking(body);
+
+    // avvis-operation navigerer til forside, og komponenten kan derfor være unmountet.
+    if (isMounted.current) {
+      setAvslagPending(false);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(avsluttOgSendSed)}>
       <Nav.typo.Undertittel className="stegTittel">Avvis utpeking — informasjon til SED</Nav.typo.Undertittel>
-      {
-        redigerbart &&
+      {redigerbart && (
         <Fragment>
           <Skjema.Textarea
             label="Begrunnelse til utenlandsk myndighet (engelsk)"
@@ -63,9 +84,17 @@ export const VurderingAvslaaUtpeking = ({
             visTellerFra={500}
             maxLength={500}
           />
-          <Skjema.RadioGruppe label="Anmodning om mer informasjon vil bli sendt" feltNavn="vilSendeAnmodningOmMerInformasjon">
+          <Skjema.RadioGruppe
+            label="Anmodning om mer informasjon vil bli sendt"
+            feltNavn="vilSendeAnmodningOmMerInformasjon"
+          >
             <Skjema.Radio disabled={!redigerbart} feltNavn="vilSendeAnmodningOmMerInformasjon" value label="Ja" />
-            <Skjema.Radio disabled={!redigerbart} feltNavn="vilSendeAnmodningOmMerInformasjon" value={false} label="Nei" />
+            <Skjema.Radio
+              disabled={!redigerbart}
+              feltNavn="vilSendeAnmodningOmMerInformasjon"
+              value={false}
+              label="Nei"
+            />
           </Skjema.RadioGruppe>
           <Skjema.LandVelger
             feltNavn="nyttLovvalgsland"
@@ -81,8 +110,17 @@ export const VurderingAvslaaUtpeking = ({
           />
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
         </Fragment>
-      }
-      <Mui.Knapp mini disabled={!redigerbart} htmlType="submit" type="hoved">AVSLUTT OG SEND SED</Mui.Knapp>
+      )}
+      <Mui.Knapp
+        mini
+        spinner={avslagPending}
+        autoDisableVedSpinner
+        disabled={!redigerbart}
+        htmlType="submit"
+        type="hoved"
+      >
+        AVSLUTT OG SEND SED
+      </Mui.Knapp>
     </form>
   );
 };
@@ -101,40 +139,28 @@ VurderingAvslaaUtpeking.propTypes = {
 };
 
 VurderingAvslaaUtpeking.defaultProps = {
-  fritekst: '',
-  nyttLovvalgsland: '',
-  begrunnelseUtenlandskMyndighet: '',
+  fritekst: "",
+  nyttLovvalgsland: "",
+  begrunnelseUtenlandskMyndighet: "",
   vilSendeAnmodningOmMerInformasjon: false,
 };
 
 const avslaaUtpekingFormValueSelector = formValueSelector(KV.Form.AVSLAA_UTPEKING);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  fritekst: avslaaUtpekingFormValueSelector(state, 'fritekst'),
-  nyttLovvalgsland: avslaaUtpekingFormValueSelector(state, 'nyttLovvalgsland'),
-  begrunnelseUtenlandskMyndighet: avslaaUtpekingFormValueSelector(state, 'begrunnelseUtenlandskMyndighet'),
-  vilSendeAnmodningOmMerInformasjon: avslaaUtpekingFormValueSelector(state, 'vilSendeAnmodningOmMerInformasjon'),
+  fritekst: avslaaUtpekingFormValueSelector(state, "fritekst"),
+  nyttLovvalgsland: avslaaUtpekingFormValueSelector(state, "nyttLovvalgsland"),
+  begrunnelseUtenlandskMyndighet: avslaaUtpekingFormValueSelector(state, "begrunnelseUtenlandskMyndighet"),
+  vilSendeAnmodningOmMerInformasjon: avslaaUtpekingFormValueSelector(state, "vilSendeAnmodningOmMerInformasjon"),
   formIsValid: isValid(KV.Form.AVSLAA_UTPEKING)(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.AVSLAA_UTPEKING)),
 });
 
-const avsluttOgSendSed = (values, dispatch, props) => {
-  const body = {
-    fritekst: values.fritekst || null,
-    nyttLovvalgsland: values.nyttLovvalgsland || null,
-    begrunnelseUtenlandskMyndighet: values.begrunnelseUtenlandskMyndighet,
-    vilSendeAnmodningOmMerInformasjon: values.vilSendeAnmodningOmMerInformasjon,
-  };
-
-  props.avvisUtpeking(body);
-};
-
 const VurderingAvslaaUtpekingForm = reduxForm({
-  onSubmit: avsluttOgSendSed,
   form: KV.Form.AVSLAA_UTPEKING,
   enableReinitialize: true,
   destroyOnUnmount: true,

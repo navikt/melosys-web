@@ -1,15 +1,15 @@
-import * as Utils from '../utils';
+import * as Utils from "../utils";
 
 const lagYupToReduxformErrorMapper = (schema, settings) => {
-  if (!schema) throw new Error('Schema kan ikke være falsy');
+  if (!schema) throw new Error("Schema kan ikke være falsy");
 
-  return values => {
+  return (values) => {
     const formErrors = {};
 
     try {
       schema.validateSync(values, { abortEarly: false, ...settings });
     } catch (errors) {
-      errors.inner.forEach(error => {
+      errors.inner.forEach((error) => {
         Utils._set(formErrors, error.path, error.message);
       });
     }

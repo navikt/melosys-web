@@ -1,30 +1,30 @@
-import { ErrorResponse } from 'melosys-api';
+import { ErrorResponse } from "melosys-api";
 
-export const OK = 'videresending/OK';
-export const FEILET = 'videresending/FEILET';
-export const PENDING = 'videresending/PENDING';
-export const RESET = 'videresending/RESET';
+export const OK = "videresending/OK";
+export const FEILET = "videresending/FEILET";
+export const PENDING = "videresending/PENDING";
+export const RESET = "videresending/RESET";
 
 export interface Data {
-  data?: ErrorResponse,
+  data?: ErrorResponse;
 }
 
 interface ResetAction {
-  type: typeof RESET,
+  type: typeof RESET;
 }
 
 interface FeiletAction {
-  type: typeof FEILET,
-  data: any,
+  type: typeof FEILET;
+  data: any;
 }
 
 interface PendingAction {
-  type: typeof PENDING,
+  type: typeof PENDING;
 }
 
 interface OkAction {
-  type: typeof OK,
-  data: any,
+  type: typeof OK;
+  data: any;
 }
 
 export type Action = ResetAction | FeiletAction | PendingAction | OkAction;

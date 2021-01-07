@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import MKV from '../../../../../melosyskodeverk';
+import MKV from "../../../../../melosyskodeverk";
 
-import * as KV from '../../../../../kodeverk';
-import * as MPT from '../../../../../proptypes';
+import * as KV from "../../../../../kodeverk";
+import * as MPT from "../../../../../proptypes";
 
-import StegerstatterBase from './stegerstatterBase';
+import StegerstatterBase from "./stegerstatterBase";
 
 function hentBegrunnelse(begrunnelseKoder) {
   if (!begrunnelseKoder || begrunnelseKoder.length === 0) {
-    return 'Ukjent grunn';
+    return "Ukjent grunn";
   }
   return KV.kodeTilTerm(begrunnelseKoder[0], MKV.KTObjects.begrunnelser.henleggelsesgrunner);
 }
@@ -25,17 +25,11 @@ function hentBeskrivelse(behandlingsresultat) {
 const HenlagtSak = ({ behandlingsresultat }) => {
   const beskrivelse = hentBeskrivelse(behandlingsresultat);
 
-  return (
-    <StegerstatterBase
-      tittel="Saken er henlagt:"
-      beskrivelse={beskrivelse}
-    />
-  );
+  return <StegerstatterBase tittel="Saken er henlagt:" beskrivelse={beskrivelse} />;
 };
 
 HenlagtSak.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
 };
-
 
 export default HenlagtSak;

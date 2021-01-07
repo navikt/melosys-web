@@ -1,24 +1,17 @@
-import React from 'react';
-import PT from 'prop-types';
-import classNames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import classNames from "classnames";
 
-import * as Nav from '../../../../utils/navFrontend';
-import * as MPT from '../../../../proptypes';
+import * as Nav from "../../../../utils/navFrontend";
+import * as MPT from "../../../../proptypes";
 
-import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 
-const Organisasjon = ({
-  organisasjon,
-  className,
-  visNavn,
-  visOrgnr,
-  visAdresseTittel,
-  boldAdresseNavn,
-}) => {
-  if (!organisasjon) { return null; }
-  const {
-    orgnr,
-  } = organisasjon;
+const Organisasjon = ({ organisasjon, className, visNavn, visOrgnr, visAdresseTittel, boldAdresseNavn }) => {
+  if (!organisasjon) {
+    return null;
+  }
+  const { orgnr } = organisasjon;
 
   const organisasjonCls = classNames(className);
 
@@ -34,13 +27,12 @@ const Organisasjon = ({
               boldNavn={boldAdresseNavn}
             />
           </Nav.Column>
-          {
-            visOrgnr &&
+          {visOrgnr && (
             <Nav.Column xs="6">
-              <Nav.typo.Element style={{ marginTop: '0.5em' }}>Org.nr. juridisk enhet</Nav.typo.Element>
+              <Nav.typo.Element style={{ marginTop: "0.5em" }}>Org.nr. juridisk enhet</Nav.typo.Element>
               <Nav.typo.Normaltekst>{orgnr}</Nav.typo.Normaltekst>
             </Nav.Column>
-          }
+          )}
         </Nav.Row>
       </Nav.Container>
     </div>

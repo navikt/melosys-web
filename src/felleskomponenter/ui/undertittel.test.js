@@ -1,29 +1,28 @@
-import React from 'react';
+import React from "react";
 
-import * as Ikoner from '../../resources/images';
-import * as Nav from '../../utils/navFrontend';
+import * as Ikoner from "../../resources/images";
+import * as Nav from "../../utils/navFrontend";
 
-import Undertittel from './undertittel';
+import Undertittel from "./undertittel";
 
-
-describe('undertittel', () => {
+describe("undertittel", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
       ikon: Ikoner.ParagraphTwoColumns,
-      tekst: 'Tittel',
-      className: 'klasse',
+      tekst: "Tittel",
+      className: "klasse",
     };
   });
 
-  it('viser en nav undertittel', () => {
+  it("viser en nav undertittel", () => {
     const undertittel = shallow(<Undertittel {...props} />);
 
     expect(undertittel.find(Nav.typo.Undertittel)).toHaveLength(1);
   });
 
-  it('viser et ikon', () => {
+  it("viser et ikon", () => {
     const undertittel = shallow(<Undertittel {...props} />);
     const ikon = undertittel.find(props.ikon);
 

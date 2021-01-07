@@ -1,57 +1,78 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PT from 'prop-types';
-import { getFormValues } from 'redux-form';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import PT from "prop-types";
+import { getFormValues } from "redux-form";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Utils from '../../../utils';
-import * as MPT from '../../../proptypes';
-import * as KV from '../../../kodeverk';
+import * as Nav from "../../../utils/navFrontend";
+import * as Utils from "../../../utils";
+import * as MPT from "../../../proptypes";
+import * as KV from "../../../kodeverk";
 
-import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
-import SideOppsummering from '../../../felleskomponenter/sideOppsummering';
-import Behandlingsstatus from '../../../felleskomponenter/behandlingsstatus';
-import Stegvelger from '../../../felleskomponenter/stegvelger';
-import { STEG } from '../../../felleskomponenter/stegvelger/stegMotor/typer';
-import { SoknadMenypanelForm } from '../../../felleskomponenter/menypanelForm';
-import Behandlingsmeny from './komponenter/behandlingsmeny';
+import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
+import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
+import Stegvelger from "../../../felleskomponenter/stegvelger";
+import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
+import Behandlingsmeny from "./komponenter/behandlingsmeny";
 
-import { formSelectors } from '../../../ducks/form';
-import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { datalastingOperations } from '../../../ducks/datalasting';
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../../ducks/behandlingsgrunnlag';
-import { vilkarOperations } from '../../../ducks/vilkar';
-import { avklartefaktaSelectors, avklartefaktaOperations } from '../../../ducks/avklartefakta';
-import { anmodningsperioderOperations } from '../../../ducks/anmodningsperioder';
-import { lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder';
-import { behandlingsperioderOperations } from '../../../ducks/behandlingsperioder';
+import { formSelectors } from "../../../ducks/form";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { datalastingOperations } from "../../../ducks/datalasting";
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnlag";
+import { vilkarOperations } from "../../../ducks/vilkar";
+import { avklartefaktaSelectors, avklartefaktaOperations } from "../../../ducks/avklartefakta";
+import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder";
+import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
+import { behandlingsperioderOperations } from "../../../ducks/behandlingsperioder";
 
-import stegMap from './stegMap';
-import MKV from '../../../melosyskodeverk';
-import { dokumenterSelectors } from '../../../ducks/dokumenter';
+import stegMap from "./stegMap";
+import MKV from "../../../melosyskodeverk";
+import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
-import './vurderutpeking.css';
+import "./vurderutpeking.css";
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
   ],
   [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
 };
 
-const hentForsteSteg = behandlingstema => {
+const hentForsteSteg = (behandlingstema) => {
   switch (behandlingstema) {
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return STEG.VURDER_UTPEKING;
@@ -103,8 +124,10 @@ const Vurderutpeking = ({
   dokumenter,
   vurderUtpekingFormValues,
 }) => {
-  const { params: { snr: saksnummer } } = match;
-  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
+  const {
+    params: { snr: saksnummer },
+  } = match;
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
@@ -122,21 +145,24 @@ const Vurderutpeking = ({
     return null;
   }
 
-  const behandlingsgrunnlagErKlart = !(Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0);
+  const behandlingsgrunnlagErKlart = !(
+    Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
+  );
 
   const forsteSteg = hentForsteSteg(behandlingstema);
 
   const lovvalgslandFraForm = vurderUtpekingFormValues.lovvalgsland;
   const visLovvalgsland = lovvalgslandFraForm && lovvalgslandFraForm !== MKV.Koder.landkoder.NO;
-  const lovvalgslandKTOBject = visLovvalgsland ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder) : undefined;
+  const lovvalgslandKTOBject = visLovvalgsland
+    ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder)
+    : undefined;
 
   return (
     <div className="vurderutpeking">
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="7">
-            {
-              behandlingsgrunnlagErKlart &&
+            {behandlingsgrunnlagErKlart && (
               <Stegvelger
                 behandlingID={behandlingID}
                 stegMap={stegMap}
@@ -152,10 +178,8 @@ const Vurderutpeking = ({
                 tilForsiden={tilForsiden}
                 forsteSteg={forsteSteg}
               />
-            }
-            <SoknadMenypanelForm
-              startOgVisOppfriskModal={startOgVisOppfriskModal}
-            />
+            )}
+            <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
@@ -171,27 +195,31 @@ const Vurderutpeking = ({
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               periodeLabel="Periode fra SED"
-              renderBehandlingsmeny={() => <Behandlingsmeny
-                redigerbart={behandlingsmenyRedigerbart}
-                lagreOgLukkHandle={lagreOgLukk}
-                tilbakeleggeHandle={tilbakeleggOppgave}
-                visHenleggDialogHandle={visHenleggDialogHandle}
-                apneTidligereBehandlinger={apneTidligereBehandlinger}
-                visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                visHenleggSak
-                visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                visAvslagManglendeOpplysninger
-                visOppfriskSaksopplysninger
-                oppfriskSaksopplysningerHandle={visOppfriskModal}
-                visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                visRevurderFagsak
-              />}
-              renderBehandlingsstatus={() => <Behandlingsstatus
-                behandlingID={behandlingID}
-                redigerbart={redigerbart}
-                oppsummering={oppsummering}
-                behandlingsstatusMap={behandlingsstatusMap}
-              />}
+              renderBehandlingsmeny={() => (
+                <Behandlingsmeny
+                  redigerbart={behandlingsmenyRedigerbart}
+                  lagreOgLukkHandle={lagreOgLukk}
+                  tilbakeleggeHandle={tilbakeleggOppgave}
+                  visHenleggDialogHandle={visHenleggDialogHandle}
+                  apneTidligereBehandlinger={apneTidligereBehandlinger}
+                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                  visHenleggSak
+                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                  visAvslagManglendeOpplysninger
+                  visOppfriskSaksopplysninger
+                  oppfriskSaksopplysningerHandle={visOppfriskModal}
+                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                  visRevurderFagsak
+                />
+              )}
+              renderBehandlingsstatus={() => (
+                <Behandlingsstatus
+                  behandlingID={behandlingID}
+                  redigerbart={redigerbart}
+                  oppsummering={oppsummering}
+                  behandlingsstatusMap={behandlingsstatusMap}
+                />
+              )}
             />
             <SideDialog
               behandlingID={behandlingID}
@@ -257,7 +285,7 @@ Vurderutpeking.defaultProps = {
   vurderUtpekingFormValues: {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
@@ -266,8 +294,12 @@ const mapStateToProps = state => ({
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
-  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
+  behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
+  ),
+  behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
+  ),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
@@ -278,8 +310,9 @@ const mapStateToProps = state => ({
   vurderUtpekingFormValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+const mapDispatchToProps = (dispatch) => ({
+  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
+    dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),

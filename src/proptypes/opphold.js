@@ -1,6 +1,6 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
-import { Periode } from './periode';
+import PT from "prop-types";
+import { Periode } from "./periode";
 
 const OppholdEnkeltPropType = PT.shape({
   landkode: PT.string,
@@ -14,7 +14,4 @@ const OppholdPeriodePropType = PT.shape({
   periode: Periode,
 });
 
-export {
-  OppholdLandPropType as OppholdLand,
-  OppholdPeriodePropType as OppholdPeriode,
-};
+export { OppholdLandPropType as OppholdLand, OppholdPeriodePropType as OppholdPeriode };

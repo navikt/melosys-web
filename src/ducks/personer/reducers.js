@@ -5,8 +5,8 @@
  * action types som sendes inn sammen med dataene.
  */
 
-import { STATUS } from '../../services/utils';
-import * as Types from './types';
+import { STATUS } from "../../services/utils";
+import * as Types from "./types";
 
 const initalState = {
   status: STATUS.NOT_STARTED,
@@ -15,7 +15,9 @@ const initalState = {
 
 const flettPersoner = (nyePersoner, eksisterendePersoner) => {
   const normalisertPersonArray = Array.isArray(nyePersoner) ? [...nyePersoner] : [nyePersoner];
-  const kunNye = normalisertPersonArray.filter(person => !eksisterendePersoner.find(eksisterende => eksisterende.fnr === person.fnr));
+  const kunNye = normalisertPersonArray.filter(
+    (person) => !eksisterendePersoner.find((eksisterende) => eksisterende.fnr === person.fnr)
+  );
   return [...eksisterendePersoner, ...kunNye];
 };
 

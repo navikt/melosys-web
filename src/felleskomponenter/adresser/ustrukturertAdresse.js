@@ -1,15 +1,13 @@
-import React from 'react';
-import PT from 'prop-types';
-import uuid from 'uuid';
+import React from "react";
+import PT from "prop-types";
+import uuid from "uuid";
 
 const UstrukturertAdresse = ({ adresse: { adresselinjer, landkode } }) => (
   <address>
-    {
-      adresselinjer.map(adresse => {
-        if (!adresse) return null;
-        return <div key={uuid()}>{adresse}</div>;
-      })
-    }
+    {adresselinjer.map((adresse) => {
+      if (!adresse) return null;
+      return <div key={uuid()}>{adresse}</div>;
+    })}
     {landkode}
   </address>
 );

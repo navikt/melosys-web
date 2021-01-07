@@ -1,21 +1,21 @@
-import React, { useState, ReactNode } from 'react';
-import classNames from 'classnames';
-import { Collapse } from 'react-collapse';
+import React, { useState, ReactNode } from "react";
+import classNames from "classnames";
+import { Collapse } from "react-collapse";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import './expandableList.css';
+import "./expandableList.css";
 
 interface ExpandableListProps<T> {
-  renderElement: (element: T) => ReactNode,
-  idFromElement: (element: T) => string | number,
-  elements: T[],
-  header?: ReactNode,
-  amountOfItemsCollapsed: number,
-  btnTextExpanded: string,
-  btnTextCollapsed: string,
-  chevron: boolean,
-  dividers?: boolean,
+  renderElement: (element: T) => ReactNode;
+  idFromElement: (element: T) => string | number;
+  elements: T[];
+  header?: ReactNode;
+  amountOfItemsCollapsed: number;
+  btnTextExpanded: string;
+  btnTextCollapsed: string;
+  chevron: boolean;
+  dividers?: boolean;
 }
 
 function ExpandableList<T>(props: ExpandableListProps<T>) {
@@ -37,7 +37,7 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
     setCollapsed(!collapsed);
   };
 
-  const chevronDirection = collapsed ? 'ned' : 'opp';
+  const chevronDirection = collapsed ? "ned" : "opp";
   const btnText = collapsed ? btnTextCollapsed : btnTextExpanded;
 
   const alwaysVisibleElements = elements.slice(0, amountOfItemsCollapsed);
@@ -53,31 +53,26 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
     <div className="expandableList">
       {header}
       <div className="list">
-        {
-          alwaysVisibleElements.map(element => (
+        {alwaysVisibleElements.map((element) => (
+          <div className={elementCls} key={idFromElement(element)}>
+            {renderElement(element)}
+          </div>
+        ))}
+        <Collapse isOpened={!collapsed}>
+          {collapsableElements.map((element) => (
             <div className={elementCls} key={idFromElement(element)}>
               {renderElement(element)}
             </div>
-          ))
-        }
-        <Collapse isOpened={!collapsed}>
-          {
-            collapsableElements.map(element => (
-              <div className={elementCls} key={idFromElement(element)}>
-                {renderElement(element)}
-              </div>
-            ))
-          }
+          ))}
         </Collapse>
       </div>
       <div className="btnContainer">
-        {
-          expandable &&
+        {expandable && (
           <button type="button" onClick={toggleCollapsed}>
             {btnText}
-            { chevron && <Nav.Chevron type={chevronDirection} />}
+            {chevron && <Nav.Chevron type={chevronDirection} />}
           </button>
-        }
+        )}
       </div>
     </div>
   );

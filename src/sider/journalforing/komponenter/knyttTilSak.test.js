@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Skjema from "../../../felleskomponenter/skjema";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import { KnyttTilSak } from './knyttTilSak';
+import { KnyttTilSak } from "./knyttTilSak";
 
-describe('KnyttTilSak', () => {
+describe("KnyttTilSak", () => {
   let props = null;
 
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe('KnyttTilSak', () => {
     const radios = knyttTilSak.find(Skjema.Radio);
 
     expect(radios).toHaveLength(2);
-    expect(radios.first().props().label).toBe('Opprett ny behandling');
+    expect(radios.first().props().label).toBe("Opprett ny behandling");
   });
 
   it(`Ikke vis knapp for å opprette ny behandling dersom minst 1 behandling har behandlingstype ${MKV.Koder.behandlinger.behandlingstyper.SED}`, () => {
@@ -42,6 +42,6 @@ describe('KnyttTilSak', () => {
     const radios = knyttTilSak.find(Skjema.Radio);
 
     expect(radios).toHaveLength(1);
-    expect(radios.first().props().label).not.toBe('Opprett ny behandling');
+    expect(radios.first().props().label).not.toBe("Opprett ny behandling");
   });
 });

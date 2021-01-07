@@ -1,27 +1,20 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Nav from '../utils/navFrontend';
-import * as KV from '../kodeverk';
+import * as Nav from "../utils/navFrontend";
+import * as KV from "../kodeverk";
 
-import './begrunnelser.css';
+import "./begrunnelser.css";
 
-const Begrunnelser = ({
-  label,
-  valgteBegrunnelser,
-  muligeBegrunnelser,
-  fritekst,
-}) => (
+const Begrunnelser = ({ label, valgteBegrunnelser, muligeBegrunnelser, fritekst }) => (
   <div className="begrunnelser">
-    <Nav.typo.Element className="begrunnelseTittel">
-      {label}
-    </Nav.typo.Element>
-    {
-      valgteBegrunnelser.map(begrunnelse => <div className="begrunnelse" key={begrunnelse}>{KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}</div>)
-    }
-    {
-      fritekst && <div className="begrunnelse">{fritekst}</div>
-    }
+    <Nav.typo.Element className="begrunnelseTittel">{label}</Nav.typo.Element>
+    {valgteBegrunnelser.map((begrunnelse) => (
+      <div className="begrunnelse" key={begrunnelse}>
+        {KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}
+      </div>
+    ))}
+    {fritekst && <div className="begrunnelse">{fritekst}</div>}
   </div>
 );
 
@@ -35,7 +28,7 @@ Begrunnelser.propTypes = {
 Begrunnelser.defaultProps = {
   valgteBegrunnelser: [],
   muligeBegrunnelser: [],
-  fritekst: '',
+  fritekst: "",
 };
 
 export default Begrunnelser;

@@ -1,11 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PT from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import PT from "prop-types";
 
-import * as Nav from '../utils/navFrontend';
-import * as Utils from '../utils';
+import * as Nav from "../utils/navFrontend";
+import * as Utils from "../utils";
 
-import './withErrorHandling.css';
+import "./withErrorHandling.css";
 
 /** Dette er komponenten for selve feilmeldingsgrensesnittet. Det kan teknisk sett være flere av denne i en view,
  * men Melosys viser den feilen som ansees som mest alvorlig.
@@ -14,7 +14,13 @@ import './withErrorHandling.css';
  */
 const FeilKomponent = ({ feilobjekt }) => (
   <div className="error-message">
-    <Nav.AlertStripeAdvarsel>{ feilobjekt.status } : { feilobjekt.statusText }<br />{ feilobjekt.fetchdata.timestamp}<br />{ feilobjekt.message }</Nav.AlertStripeAdvarsel>
+    <Nav.AlertStripeAdvarsel>
+      {feilobjekt.status} : {feilobjekt.statusText}
+      <br />
+      {feilobjekt.fetchdata.timestamp}
+      <br />
+      {feilobjekt.message}
+    </Nav.AlertStripeAdvarsel>
   </div>
 );
 
@@ -33,7 +39,10 @@ const parseStructuredPayload = (melding, payload) => {
 
   const { status, message: statusText } = fetchdata;
   return {
-    status, statusText, melding, fetchdata,
+    status,
+    statusText,
+    melding,
+    fetchdata,
   };
 };
 const parseErrorObject = (kontekst, currentReduxState) => {
@@ -59,15 +68,15 @@ const parseErrorObject = (kontekst, currentReduxState) => {
  * @param WrappedComponent React-komponenten som wrappes.
  */
 
-const withErrorHandling = (kontekster, WrappedComponent) => props => {
-  const ErrorComponent = errorProps => {
+const withErrorHandling = (kontekster, WrappedComponent) => (props) => {
+  const ErrorComponent = (errorProps) => {
     const { reduxRootState } = errorProps;
     const feilSamling = [];
 
-    kontekster.forEach(kontekst => {
+    kontekster.forEach((kontekst) => {
       const currentReduxState = reduxRootState[kontekst.navn];
       const { status: feilStatus } = currentReduxState;
-      if (feilStatus === 'ERROR') {
+      if (feilStatus === "ERROR") {
         const eobj = parseErrorObject(kontekst, currentReduxState);
         feilSamling.push(eobj);
       }
@@ -75,7 +84,7 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
 
     // Dersom ingen feilstatus er funnet returner wrappet component.
     if (feilSamling.length === 0) {
-      return (<WrappedComponent {...props} />);
+      return <WrappedComponent {...props} />;
     }
 
     // Finn hvilke feil kode(r) som finnes og legg til kun 1 alert stripe.
@@ -84,18 +93,26 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
 
     // Dersom 404 så skal både alertstripe og kompoonent vises.
     if (feilSamling[0].status === 404) {
-      return (<div {...props} className="errorContainer"><FeilKomponent feilobjekt={feilSamling[0]} /></div>);
+      return (
+        <div {...props} className="errorContainer">
+          <FeilKomponent feilobjekt={feilSamling[0]} />
+        </div>
+      );
     }
     // alle andre feilkoder gir full stopp uten å vise komponenten.
-    return (<div className="errorContainer"><FeilKomponent feilobjekt={feilSamling[0]} /></div>);
+    return (
+      <div className="errorContainer">
+        <FeilKomponent feilobjekt={feilSamling[0]} />
+      </div>
+    );
   };
 
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     reduxRootState: state,
   });
 
   const ReturnComponent = connect(mapStateToProps)(ErrorComponent);
 
-  return (<ReturnComponent />);
+  return <ReturnComponent />;
 };
 export default withErrorHandling;

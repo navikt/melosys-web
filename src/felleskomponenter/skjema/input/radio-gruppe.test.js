@@ -1,25 +1,25 @@
-import React from 'react';
+import React from "react";
 
-import RadioGruppe, { RadioGruppeWrappedComponent } from './radio-gruppe';
+import RadioGruppe, { RadioGruppeWrappedComponent } from "./radio-gruppe";
 
-describe('RadioGruppe', () => {
+describe("RadioGruppe", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      feltNavn: '',
-      legend: '',
-      label: '',
+      feltNavn: "",
+      legend: "",
+      label: "",
     };
   });
 
-  it('viser en redux form Field komponent med korrekte props', () => {
-    props.children = 'children';
-    props.feltNavn = 'feltnavn';
-    props.legend = 'legend';
-    props.label = 'label';
+  it("viser en redux form Field komponent med korrekte props", () => {
+    props.children = "children";
+    props.feltNavn = "feltnavn";
+    props.legend = "legend";
+    props.label = "label";
     const radioGruppe = shallow(<RadioGruppe {...props} />);
-    const fieldProps = radioGruppe.find('Field').props();
+    const fieldProps = radioGruppe.find("Field").props();
 
     expect(fieldProps.name).toBe(props.feltNavn);
     expect(fieldProps.props.feltNavn).toBe(props.feltNavn);
@@ -29,28 +29,28 @@ describe('RadioGruppe', () => {
   });
 });
 
-describe('RadioGruppeWrappedComponent', () => {
+describe("RadioGruppeWrappedComponent", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      feltNavn: '',
-      children: '',
+      feltNavn: "",
+      children: "",
       meta: {},
-      legend: '',
-      label: '',
+      legend: "",
+      label: "",
     };
   });
 
-  it('viser et Nav Fieldset', () => {
+  it("viser et Nav Fieldset", () => {
     const radioGruppeWrappedComponent = shallow(<RadioGruppeWrappedComponent {...props} />);
 
-    expect(radioGruppeWrappedComponent.find('Fieldset')).toHaveLength(1);
+    expect(radioGruppeWrappedComponent.find("Fieldset")).toHaveLength(1);
   });
 
-  it('viser en label', () => {
+  it("viser en label", () => {
     const radioGruppeWrappedComponent = shallow(<RadioGruppeWrappedComponent {...props} />);
 
-    expect(radioGruppeWrappedComponent.find('label')).toHaveLength(1);
+    expect(radioGruppeWrappedComponent.find("label")).toHaveLength(1);
   });
 });

@@ -1,9 +1,9 @@
-import React from 'react';
-import PT from 'prop-types';
-import * as Nav from '../../../utils/navFrontend';
-import LandVelger from '../../skjema/landvelger';
+import React from "react";
+import PT from "prop-types";
+import * as Nav from "../../../utils/navFrontend";
+import LandVelger from "../../skjema/landvelger";
 
-const VurderingAktivitet = props => {
+const VurderingAktivitet = (props) => {
   const { bekreftOgFortsett, tilstand } = props;
   const { harAvklaring } = tilstand;
 
@@ -13,7 +13,9 @@ const VurderingAktivitet = props => {
         <LandVelger feltNavn="avklartefaktaAktivitetLand" multiland={false} />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!harAvklaring} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!harAvklaring} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );

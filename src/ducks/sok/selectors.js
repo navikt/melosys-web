@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 /**
  * Selectors
@@ -8,6 +8,6 @@ import { createSelector } from 'reselect';
  */
 /* eslint-disable import/prefer-default-export */
 export const FagsakSokSelector = createSelector(
-  state => (state.sok.data.fagsakListe ? state.sok.data.fagsakListe : []),
-  sokResultat => sokResultat || []
+  (state) => (state.sok.data.fagsakListe ? state.sok.data.fagsakListe : []),
+  (sokResultat) => sokResultat || []
 );

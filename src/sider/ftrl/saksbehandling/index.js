@@ -1,3 +1,3 @@
-import Saksbehandling from './saksbehandling';
+import Saksbehandling from "./saksbehandling";
 
 export default Saksbehandling;

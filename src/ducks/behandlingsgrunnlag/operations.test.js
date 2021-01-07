@@ -1,16 +1,16 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as types from './types';
-import * as operations from './operations';
-import * as KV from '../../kodeverk';
+import * as types from "./types";
+import * as operations from "./operations";
+import * as KV from "../../kodeverk";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('Behandlingsgrunnlag operations', () => {
+describe("Behandlingsgrunnlag operations", () => {
   let initialState = null;
 
   beforeEach(() => {
@@ -62,7 +62,7 @@ describe('Behandlingsgrunnlag operations', () => {
     };
   });
 
-  describe('lagre', () => {
+  describe("lagre", () => {
     each([
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
@@ -70,13 +70,10 @@ describe('Behandlingsgrunnlag operations', () => {
       MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
-    ]).it('lagrer soeknadData ved behandlingstema %p', async behandlingstema => {
+    ]).it("lagrer soeknadData ved behandlingstema %p", async (behandlingstema) => {
       initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
 
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.OK, data: {} },
-      ];
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
       const store = mockStore(initialState);
 
@@ -84,7 +81,7 @@ describe('Behandlingsgrunnlag operations', () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        '/api/behandlingsgrunnlag/4',
+        "/api/behandlingsgrunnlag/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -110,7 +107,7 @@ describe('Behandlingsgrunnlag operations', () => {
     each([
       MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
       MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-    ]).it('lagrer SedGrunnlagData ved behandlingstema %p', async behandlingstema => {
+    ]).it("lagrer SedGrunnlagData ved behandlingstema %p", async (behandlingstema) => {
       initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
 
       initialState.form[KV.Form.VURDER_UTPEKING].values = {
@@ -129,7 +126,7 @@ describe('Behandlingsgrunnlag operations', () => {
 
       expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
-        '/api/behandlingsgrunnlag/4',
+        "/api/behandlingsgrunnlag/4",
         expect.objectContaining({
           body: JSON.stringify({
             data: {
@@ -151,15 +148,12 @@ describe('Behandlingsgrunnlag operations', () => {
       );
     });
 
-    it('lager FEILET ved feil i api-kall', async () => {
-      const error = new Error('feil ved kall til Api');
+    it("lager FEILET ved feil i api-kall", async () => {
+      const error = new Error("feil ved kall til Api");
       fetch.resetMocks();
       fetch.mockReject(error);
 
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.FEILET, data: error.toString() },
-      ];
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
 
       const store = mockStore(initialState);
 
@@ -169,32 +163,29 @@ describe('Behandlingsgrunnlag operations', () => {
     });
   });
 
-  describe('hent', () => {
-    it('henter behandlingsgrunnlag og lager OK action', async () => {
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.OK, data: {} },
-      ];
+  describe("hent", () => {
+    it("henter behandlingsgrunnlag og lager OK action", async () => {
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
       const store = mockStore(initialState);
 
       await store.dispatch(operations.hent(4));
 
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith('/api/behandlingsgrunnlag/4', expect.anything());
+      expect(fetch).toHaveBeenLastCalledWith("/api/behandlingsgrunnlag/4", expect.anything());
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
-  describe('oppdaterPeriode', () => {
-    it('lager OPPDATER_PERIODE action', () => {
+  describe("oppdaterPeriode", () => {
+    it("lager OPPDATER_PERIODE action", () => {
       const expectedActions = [
         {
           type: types.OPPDATER_PERIODE,
           data: {
             periode: {
-              fom: 'fom',
-              tom: 'tom',
+              fom: "fom",
+              tom: "tom",
             },
           },
         },
@@ -202,14 +193,14 @@ describe('Behandlingsgrunnlag operations', () => {
 
       const store = mockStore(initialState);
 
-      store.dispatch(operations.oppdaterPeriode({ tom: 'tom', fom: 'fom' }));
+      store.dispatch(operations.oppdaterPeriode({ tom: "tom", fom: "fom" }));
 
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
-  describe('resetState', () => {
-    it('lager RESET action', () => {
+  describe("resetState", () => {
+    it("lager RESET action", () => {
       const expectedActions = [
         {
           type: types.RESET,
@@ -224,20 +215,20 @@ describe('Behandlingsgrunnlag operations', () => {
     });
   });
 
-  describe('oppdaterState', () => {
-    it('lager OPPDATER_BEHANDLINGSGRUNNLAG action', () => {
+  describe("oppdaterState", () => {
+    it("lager OPPDATER_BEHANDLINGSGRUNNLAG action", () => {
       initialState.form[KV.Form.SOKNAD].values = {
         arbeidsforholdUtland: {},
       };
       initialState.form[KV.Form.INNGANG].values = {
-        soknadsland: ['DK'],
+        soknadsland: ["DK"],
       };
       const expectedActions = [
         {
           type: types.OPPDATER_BEHANDLINGSGRUNNLAG,
           dokument: {
             arbeidsforholdUtland: {},
-            soknadsland: ['DK'],
+            soknadsland: ["DK"],
           },
         },
       ];

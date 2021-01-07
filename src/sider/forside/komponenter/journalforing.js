@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { withRouter } from 'react-router-dom';
-import PT from 'prop-types';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { reduxForm } from "redux-form";
+import { withRouter } from "react-router-dom";
+import PT from "prop-types";
 
-import * as KV from '../../../kodeverk';
-import * as Nav from '../../../utils/navFrontend';
-import { oppgaverOperations } from '../../../ducks/oppgaver';
-import * as Skjema from '../../../felleskomponenter/skjema';
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../utils/navFrontend";
+import { oppgaverOperations } from "../../../ducks/oppgaver";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 class Journalforing extends Component {
-  submitOgVideresend = async values => {
+  submitOgVideresend = async (values) => {
     const { sendSkjema, history } = this.props;
     const redirectURL = await sendSkjema(values.fagomrade);
     history.push(redirectURL);
   };
-  overrideDefaultSubmit = event => {
+  overrideDefaultSubmit = (event) => {
     event.preventDefault();
   };
   render() {
@@ -32,7 +32,9 @@ class Journalforing extends Component {
               <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" disabled />
             </div>
           </Skjema.RadioGruppe>
-          <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)} disabled={!redigerbart}>Journalfør dokument</Nav.Knapp>
+          <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)} disabled={!redigerbart}>
+            Journalfør dokument
+          </Nav.Knapp>
         </form>
       </Nav.Panel>
     );
@@ -52,14 +54,19 @@ Journalforing.defaultProps = {
 
 const mapStateToProps = () => ({
   initialValues: {
-    fagomrade: 'MED',
+    fagomrade: "MED",
   },
 });
 const mapDispatchToProps = () => ({
-  sendSkjema: fagomrade => oppgaverOperations.sendJournalOppgave(fagomrade),
+  sendSkjema: (fagomrade) => oppgaverOperations.sendJournalOppgave(fagomrade),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: KV.Form.FORSIDE_JOURNALFORINGS_FORM,
-  onSubmit: () => {},
-})(withRouter((Journalforing))));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  reduxForm({
+    form: KV.Form.FORSIDE_JOURNALFORINGS_FORM,
+    onSubmit: () => {},
+  })(withRouter(Journalforing))
+);

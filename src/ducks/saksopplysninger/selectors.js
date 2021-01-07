@@ -5,9 +5,9 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 export const SaksopplysningerSelector = createSelector(
-  state => state.saksopplysninger.data,
-  saksopplysninger => saksopplysninger
+  (state) => state.saksopplysninger.data,
+  (saksopplysninger) => saksopplysninger
 );

@@ -1,5 +1,5 @@
-import MKV from '../melosyskodeverk';
-import * as Constants from '../constants';
+import MKV from "../melosyskodeverk";
+import * as Constants from "../constants";
 
 const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
 

@@ -1,8 +1,8 @@
-import * as selectors from './selectors';
+import * as selectors from "./selectors";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-describe('FagsakerSelectors', () => {
+describe("FagsakerSelectors", () => {
   const lagState = ({ sakstype }) => ({
     fagsaker: {
       data: {
@@ -11,8 +11,8 @@ describe('FagsakerSelectors', () => {
     },
   });
 
-  describe('SakstypeKodeSelector', () => {
-    it('returnerer korrekt sakstypekode', () => {
+  describe("SakstypeKodeSelector", () => {
+    it("returnerer korrekt sakstypekode", () => {
       const sakstype = { kode: MKV.Koder.sakstyper.EU_EOS };
       const state = lagState({ sakstype });
 

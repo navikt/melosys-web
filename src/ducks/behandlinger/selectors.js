@@ -5,76 +5,73 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
-import moment from 'moment/moment';
+import { createSelector } from "reselect";
+import moment from "moment/moment";
 
-import MKV from '../../melosyskodeverk';
-import { datoDiff } from '../../utils/dato';
-import * as KV from '../../kodeverk';
-import * as behandlingsgrunnlagSelectors from '../behandlingsgrunnlag/selectors';
-import { anmodningsperioderSelectors } from '../anmodningsperioder';
-import * as lovvalgsperioderSelectors from '../lovvalgsperioder/selectors';
+import MKV from "../../melosyskodeverk";
+import { datoDiff } from "../../utils/dato";
+import * as KV from "../../kodeverk";
+import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors";
+import { anmodningsperioderSelectors } from "../anmodningsperioder";
+import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
 
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingerSelector = createSelector(
-  state => (state.behandlinger.data ? state.behandlinger.data : {}),
-  behandling => behandling
+  (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
+  (behandling) => behandling
 );
 export const BehandlingIDSelector = createSelector(
-  state => BehandlingerSelector(state).behandlingID || -1,
-  behandlingID => behandlingID
+  (state) => BehandlingerSelector(state).behandlingID || -1,
+  (behandlingID) => behandlingID
 );
 export const OppsummeringSelector = createSelector(
-  state => BehandlingerSelector(state).oppsummering || {},
-  oppsummering => oppsummering
+  (state) => BehandlingerSelector(state).oppsummering || {},
+  (oppsummering) => oppsummering
 );
-export const BehandlingstypeKodeSelector = createSelector(
-  OppsummeringSelector,
-  oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
+export const BehandlingstypeKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
+  oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : ""
 );
-export const BehandlingstemaKodeSelector = createSelector(
-  OppsummeringSelector,
-  oppsummering => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : '')
+export const BehandlingstemaKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
+  oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : ""
 );
-export const BehandlingsstatusKodeSelector = createSelector(
-  OppsummeringSelector,
-  oppsummering => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : '')
+export const BehandlingsstatusKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
+  oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : ""
 );
 
 export const ErArtikkel16AnmodningSendtSelector = createSelector(
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
-  anmodningsperioderSendtUtland => anmodningsperioderSendtUtland
+  (anmodningsperioderSendtUtland) => anmodningsperioderSendtUtland
 );
 
 export const SaksopplysningerSelector = createSelector(
-  state => BehandlingerSelector(state).saksopplysninger || {},
-  saksopplysninger => saksopplysninger
+  (state) => BehandlingerSelector(state).saksopplysninger || {},
+  (saksopplysninger) => saksopplysninger
 );
 export const SakOgBehandlingSelector = createSelector(
-  state => SaksopplysningerSelector(state).sakOgBehandling || {},
-  sakOgBehandling => sakOgBehandling
+  (state) => SaksopplysningerSelector(state).sakOgBehandling || {},
+  (sakOgBehandling) => sakOgBehandling
 );
 export const PersonSelector = createSelector(
-  state => SaksopplysningerSelector(state).person || {},
-  person => person
+  (state) => SaksopplysningerSelector(state).person || {},
+  (person) => person
 );
 export const PersonhistorikkSelector = createSelector(
-  state => SaksopplysningerSelector(state).personhistorikk || {},
-  personhistorikk => personhistorikk
+  (state) => SaksopplysningerSelector(state).personhistorikk || {},
+  (personhistorikk) => personhistorikk
 );
 export const FamiliemedlemmerSelector = createSelector(
-  state => PersonSelector(state).familiemedlemmer || [],
-  familiemedlemmer => familiemedlemmer
+  (state) => PersonSelector(state).familiemedlemmer || [],
+  (familiemedlemmer) => familiemedlemmer
 );
 
 export const SEDSelector = createSelector(
-  state => SaksopplysningerSelector(state).sed || {},
-  sed => sed
+  (state) => SaksopplysningerSelector(state).sed || {},
+  (sed) => sed
 );
 
 export const LovvalgsperiodeSelector = createSelector(
   lovvalgsperioderSelectors.LovvalgsperiodeSelector,
-  state => SEDSelector(state).lovvalgsperiode || {},
+  (state) => SEDSelector(state).lovvalgsperiode || {},
   (lovvalgsperiode, sedLovvalgsperiode) => {
     const { fomDato, tomDato } = lovvalgsperiode;
     return fomDato ? { fom: fomDato, tom: tomDato } : sedLovvalgsperiode;
@@ -83,28 +80,28 @@ export const LovvalgsperiodeSelector = createSelector(
 
 export const LovvalgsperiodeFomSelector = createSelector(
   LovvalgsperiodeSelector,
-  lovvalgsperiode => lovvalgsperiode.fom
+  (lovvalgsperiode) => lovvalgsperiode.fom
 );
 
 export const LovvalgsperiodeTomSelector = createSelector(
   LovvalgsperiodeSelector,
-  lovvalgsperiode => lovvalgsperiode.tom
+  (lovvalgsperiode) => lovvalgsperiode.tom
 );
 
-const landkodeTilKodeverksobjekt = landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
+const landkodeTilKodeverksobjekt = (landkode) => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
 export const LovvalgslandSelector = createSelector(
-  state => SEDSelector(state).lovvalgslandKode || '',
-  lovvalgsland => landkodeTilKodeverksobjekt(lovvalgsland) || {}
+  (state) => SEDSelector(state).lovvalgslandKode || "",
+  (lovvalgsland) => landkodeTilKodeverksobjekt(lovvalgsland) || {}
 );
 
 export const OrganisasjonerSelector = createSelector(
-  state => SaksopplysningerSelector(state).organisasjoner || [],
-  organisasjoner => organisasjoner
+  (state) => SaksopplysningerSelector(state).organisasjoner || [],
+  (organisasjoner) => organisasjoner
 );
 
 export const ArbeidsforholdSelector = createSelector(
-  state => SaksopplysningerSelector(state).arbeidsforhold || [],
-  arbeidsforhold => arbeidsforhold
+  (state) => SaksopplysningerSelector(state).arbeidsforhold || [],
+  (arbeidsforhold) => arbeidsforhold
 );
 
 /**
@@ -126,7 +123,7 @@ export const ArbeidsforholdSelector = createSelector(
  *
  * @param arbeidsInntektMaanedListe Det opprinnelige objektet for inntekten.
  */
-const lagFlatInntektListe = arbeidsInntektMaanedListe => (
+const lagFlatInntektListe = (arbeidsInntektMaanedListe) =>
   arbeidsInntektMaanedListe.reduce((samling, enkeltMaaned) => {
     const { arbeidsInntektInformasjon, aarMaaned } = enkeltMaaned;
     if (!arbeidsInntektInformasjon) return [];
@@ -139,8 +136,7 @@ const lagFlatInntektListe = arbeidsInntektMaanedListe => (
     }, []);
 
     return [...samling, ...inntekterForEnkeltMaaned];
-  }, [])
-);
+  }, []);
 
 /**
  * Inntekter fra samme opplysningspliktigID kan ha flere typer og dermed komme inn som
@@ -151,13 +147,18 @@ const lagFlatInntektListe = arbeidsInntektMaanedListe => (
  * Funksjonen nedenfor traverserer alle intekter og summerer de som kommer fra samme opplysningspliktigID.
  * @param flatInntektListe Den flate inntektslisten som inneholder alle del-inntekter.
  */
-const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
+const summerInntektsTyperFraSammeOpplysningspliktig = (flatInntektListe) =>
   flatInntektListe.reduce((samling, enkeltInntekt) => {
-    const eksisterendeInntektFunnetVedIndeks = samling
-      .findIndex(element => (element.opplysningspliktigID === enkeltInntekt.opplysningspliktigID) && element.aarMaaned === enkeltInntekt.aarMaaned);
+    const eksisterendeInntektFunnetVedIndeks = samling.findIndex(
+      (element) =>
+        element.opplysningspliktigID === enkeltInntekt.opplysningspliktigID &&
+        element.aarMaaned === enkeltInntekt.aarMaaned
+    );
 
-    const nyEnkeltInntekt = eksisterendeInntektFunnetVedIndeks > -1 ? samling[eksisterendeInntektFunnetVedIndeks] : enkeltInntekt;
-    nyEnkeltInntekt.beloep = eksisterendeInntektFunnetVedIndeks > -1 ? nyEnkeltInntekt.beloep + enkeltInntekt.beloep : nyEnkeltInntekt.beloep;
+    const nyEnkeltInntekt =
+      eksisterendeInntektFunnetVedIndeks > -1 ? samling[eksisterendeInntektFunnetVedIndeks] : enkeltInntekt;
+    nyEnkeltInntekt.beloep =
+      eksisterendeInntektFunnetVedIndeks > -1 ? nyEnkeltInntekt.beloep + enkeltInntekt.beloep : nyEnkeltInntekt.beloep;
     nyEnkeltInntekt.beloep = Math.max(nyEnkeltInntekt.beloep, 0);
 
     // Dersom ingen eksisterende inntekt på opplysningspliktigID ble funnet vil eksisterendeInntektFunnetVedIndeks være 0
@@ -165,8 +166,7 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
     const nySamling = samling.filter((enkelt, indeks) => indeks !== eksisterendeInntektFunnetVedIndeks);
 
     return [...nySamling, nyEnkeltInntekt];
-  }, [])
-);
+  }, []);
 
 /** Denne funksjonen filtrerer inntekten som finnes innenfor den relevante perioden (søknadsdato minus 6 måneder)
  * Dersom det ikke finnes inntekt, vil den sette inntekten til 0 slik at denne måneden fortsatt kommer med
@@ -178,36 +178,42 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
  * @returns {any[]}
  */
 const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
-  const filtrerteInntekterFraOpplysningspliktig = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
-  if (filtrerteInntekterFraOpplysningspliktig.length === 0) { return []; }
+  const filtrerteInntekterFraOpplysningspliktig = inntekter.filter((inntekt) => inntekt.opplysningspliktigID === orgnr);
+  if (filtrerteInntekterFraOpplysningspliktig.length === 0) {
+    return [];
+  }
 
   const startDato = relevantPeriode.fom;
-  const antallMaaneder = parseInt(datoDiff(relevantPeriode.fom, relevantPeriode.tom, 'months'), 10) + 1;
+  const antallMaaneder = parseInt(datoDiff(relevantPeriode.fom, relevantPeriode.tom, "months"), 10) + 1;
 
-  if (relevantPeriode.fom === 'Invalid date' || relevantPeriode.tom === 'Invalid date') { return ([]); }
+  if (relevantPeriode.fom === "Invalid date" || relevantPeriode.tom === "Invalid date") {
+    return [];
+  }
 
-  return Array(antallMaaneder).fill({}).map((verdi, index) => {
-    const aarMaaned = moment(startDato).add(index, 'months').format('YYYY-MM');
+  return Array(antallMaaneder)
+    .fill({})
+    .map((verdi, index) => {
+      const aarMaaned = moment(startDato).add(index, "months").format("YYYY-MM");
 
-    const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
+      const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(
+        (enkeltInntekt) => enkeltInntekt.aarMaaned === aarMaaned
+      );
 
-    return eksisterendeInntektFunnetVedIndeks > -1
-      ?
-      filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
-      :
-      { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
-  });
+      return eksisterendeInntektFunnetVedIndeks > -1
+        ? filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
+        : { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+    });
 };
 
 export const InntektSelector = createSelector(
-  state => SaksopplysningerSelector(state).inntekt || {},
-  inntekt => inntekt
+  (state) => SaksopplysningerSelector(state).inntekt || {},
+  (inntekt) => inntekt
 );
 
 // {inntekt:[{opplysningspliktigID: "973063804", beloep: 30000, aarMaaned: "2017-12"}]}
 export const InntekterPrAarMaanedSelector = createSelector(
-  state => SaksopplysningerSelector(state).inntekt || {},
-  inntekt => {
+  (state) => SaksopplysningerSelector(state).inntekt || {},
+  (inntekt) => {
     if (!inntekt) return [];
     const { arbeidsInntektMaanedListe } = inntekt;
     if (!arbeidsInntektMaanedListe) return [];
@@ -218,19 +224,22 @@ export const InntekterPrAarMaanedSelector = createSelector(
 );
 
 export const BekreftelserSelector = createSelector(
-  state => (state.behandlinger.data ? {} : {}),
-  bekreftelser => bekreftelser
+  (state) => (state.behandlinger.data ? {} : {}),
+  (bekreftelser) => bekreftelser
 );
 
 export const MedlemskapSelector = createSelector(
-  state => (state.behandlinger.data && state.behandlinger.data.saksopplysninger ? state.behandlinger.data.saksopplysninger.medlemskap : {}),
-  medlemskap => {
+  (state) =>
+    state.behandlinger.data && state.behandlinger.data.saksopplysninger
+      ? state.behandlinger.data.saksopplysninger.medlemskap
+      : {},
+  (medlemskap) => {
     // Medlemskapskoder fra kodeverk
-    const PERIODE_MED_MEDLEMSKAP = 'PMMEDSKP';
-    const PERIODE_UTEN_MEDLEMSKAP = 'PUMEDSKP';
-    const GYLDIG_MEDLEMSKAP = 'GYLD';
-    const UAVKLART_MEDLEMSKAP = 'UAVK';
-    const AVVIST_MEDLEMSKAP = 'AVST';
+    const PERIODE_MED_MEDLEMSKAP = "PMMEDSKP";
+    const PERIODE_UTEN_MEDLEMSKAP = "PUMEDSKP";
+    const GYLDIG_MEDLEMSKAP = "GYLD";
+    const UAVKLART_MEDLEMSKAP = "UAVK";
+    const AVVIST_MEDLEMSKAP = "AVST";
 
     const { medlemsperiode } = medlemskap;
     if (!medlemsperiode) {
@@ -241,9 +250,17 @@ export const MedlemskapSelector = createSelector(
     }
 
     return {
-      perioderMed: medlemsperiode.filter(periode => KV.objektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP && KV.objektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
-      perioderUten: medlemsperiode.filter(periode => KV.objektTilKode(periode.periodetype) === PERIODE_UTEN_MEDLEMSKAP && KV.objektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
-      perioderUavklart: medlemsperiode.filter(periode => KV.objektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
+      perioderMed: medlemsperiode.filter(
+        (periode) =>
+          KV.objektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP &&
+          KV.objektTilKode(periode.status) === GYLDIG_MEDLEMSKAP
+      ),
+      perioderUten: medlemsperiode.filter(
+        (periode) =>
+          KV.objektTilKode(periode.periodetype) === PERIODE_UTEN_MEDLEMSKAP &&
+          KV.objektTilKode(periode.status) !== AVVIST_MEDLEMSKAP
+      ),
+      perioderUavklart: medlemsperiode.filter((periode) => KV.objektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
     };
   }
 );
@@ -255,29 +272,33 @@ export const MedlemskapSelector = createSelector(
  * i arbeidsforholdet dersom det finnes.
  */
 export const ArbeidsforholdeneSelector = createSelector(
-  state => ArbeidsforholdSelector(state),
-  state => OrganisasjonerSelector(state),
-  state => InntekterPrAarMaanedSelector(state),
-  (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
-    if (!arbeidsforhold || !organisasjoner || !inntekt) return [];
-    const arbeid = { ...item };
-    arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
-    arbeid.inntekt = inntekt.filter(linje => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];
-    return arbeid;
-  }))
+  (state) => ArbeidsforholdSelector(state),
+  (state) => OrganisasjonerSelector(state),
+  (state) => InntekterPrAarMaanedSelector(state),
+  (arbeidsforhold, organisasjoner, inntekt) =>
+    arbeidsforhold.map((item) => {
+      if (!arbeidsforhold || !organisasjoner || !inntekt) return [];
+      const arbeid = { ...item };
+      arbeid.arbeidsgiver = organisasjoner.find((org) => org.orgnr === arbeid.arbeidsgiverID) || {};
+      arbeid.inntekt = inntekt.filter((linje) => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];
+      return arbeid;
+    })
 );
 /** Finner alle organisasjonsnummer som er listet i arbeidsforhold.
  * Det er range i arbeidsforhold som avgjør hvilke organisasjoner som selectoren
  * regner som relevante å vise.
  */
 export const OrganisasjonSelector = createSelector(
-  state => OrganisasjonerSelector(state),
-  state => ArbeidsforholdeneSelector(state),
+  (state) => OrganisasjonerSelector(state),
+  (state) => ArbeidsforholdeneSelector(state),
   (organisasjoner, arbeidsforholdene) => {
     // Lag en array med orgnummer (arbeidsgiverID)
-    const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiverID], []);
+    const alleRelevanteOrgnummer = arbeidsforholdene.reduce(
+      (samling, element) => [...samling, element.arbeidsgiverID],
+      []
+    );
     // Filter organisasjoner hvis orgnr er inkludert i arrayen alleRelevanteOrgnummer.
-    return organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnr));
+    return organisasjoner.filter((item) => alleRelevanteOrgnummer.includes(item.orgnr));
   }
 );
 /** Hjelpefunksjon for ArbeidsgivereNorgeSelector. Funksjonen bygger en ny gruppe av et arbeidsforhold
@@ -288,14 +309,12 @@ export const OrganisasjonSelector = createSelector(
  * @param relevantPeriode
  * @returns {{arbeidsforholdene: *[], organisasjon: *, inntekter: any[]}}
  */
-const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => (
-  {
-    kilde: KV.Koder.Opplysningskilder.AAREG_EREG,
-    arbeidsforholdene: [arbeidsforholdet],
-    organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID) || {},
-    inntektListe: filtrerOgSpreInntekt(relevantPeriode, arbeidsforholdet.opplysningspliktigID, inntekter),
-  }
-);
+const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => ({
+  kilde: KV.Koder.Opplysningskilder.AAREG_EREG,
+  arbeidsforholdene: [arbeidsforholdet],
+  organisasjon: organisasjoner.find((org) => org.orgnr === arbeidsforholdet.opplysningspliktigID) || {},
+  inntektListe: filtrerOgSpreInntekt(relevantPeriode, arbeidsforholdet.opplysningspliktigID, inntekter),
+});
 
 /** Denne funksjonen gjør følgende:
  * 1. Itererer alle arbeidsforhold og grupperer de inn etter opplysningspliktigID (dvs juridisk arbeidsgiver)
@@ -327,12 +346,12 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       soknadPeriodeSlutt = sedLovvalgsperiodeTom;
     }
 
-    const relevantPeriodeStart = moment(soknadPeriodeStart, 'YYYY-MM-DD')
-      .subtract(6, 'months')
-      .format('YYYY-MM-DD');
+    const relevantPeriodeStart = moment(soknadPeriodeStart, "YYYY-MM-DD").subtract(6, "months").format("YYYY-MM-DD");
 
-    let relevantPeriodeSlutt = moment(soknadPeriodeSlutt, 'YYYY-MM-DD') < moment() ? soknadPeriodeSlutt : moment().format('YYYY-MM-DD');
-    if (moment(relevantPeriodeSlutt, 'YYYY-MM-DD').isBefore(moment(soknadPeriodeStart, 'YYYY-MM-DD'))) relevantPeriodeSlutt = soknadPeriodeStart;
+    let relevantPeriodeSlutt =
+      moment(soknadPeriodeSlutt, "YYYY-MM-DD") < moment() ? soknadPeriodeSlutt : moment().format("YYYY-MM-DD");
+    if (moment(relevantPeriodeSlutt, "YYYY-MM-DD").isBefore(moment(soknadPeriodeStart, "YYYY-MM-DD")))
+      relevantPeriodeSlutt = soknadPeriodeStart;
 
     const relevantPeriode = {
       fom: relevantPeriodeStart,
@@ -344,10 +363,11 @@ export const ArbeidsgivereNorgeSelector = createSelector(
         const tmpSamling = [...samling];
 
         // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
-        const arbeidsforholdEksistererVedIndeks = samling
-          .findIndex(enkelt =>
-            enkelt.arbeidsforholdene.some(enkeltforhold =>
-              enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID));
+        const arbeidsforholdEksistererVedIndeks = samling.findIndex((enkelt) =>
+          enkelt.arbeidsforholdene.some(
+            (enkeltforhold) => enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID
+          )
+        );
 
         if (arbeidsforholdEksistererVedIndeks > -1) {
           tmpSamling[arbeidsforholdEksistererVedIndeks].arbeidsforholdene.push(arbeidsforholdet);
@@ -362,32 +382,32 @@ export const ArbeidsgivereNorgeSelector = createSelector(
 
 export const ErEndretPeriodeSelector = createSelector(
   BehandlingstypeKodeSelector,
-  behandlingstype => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
+  (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
 );
 
 export const ErAnmodningOmUnntakHovedRegelSelector = createSelector(
   BehandlingstemaKodeSelector,
-  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
 );
 
 export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(
   BehandlingstemaKodeSelector,
-  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+  (behandlingstema) =>
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
 );
 
 export const ErRegistreringUnntakNorskTrygdOvrigeSelector = createSelector(
   BehandlingstemaKodeSelector,
-  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
+  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
 );
 
 export const ErUtlMyndUtpektSegSelvSelector = createSelector(
   BehandlingstemaKodeSelector,
-  behandlingstema => behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
+  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
 );
 
-export const ErArbeidEttLand = createSelector(
-  BehandlingstemaKodeSelector,
-  behandlingstema => [
+export const ErArbeidEttLand = createSelector(BehandlingstemaKodeSelector, (behandlingstema) =>
+  [
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG,
@@ -399,12 +419,11 @@ export const ErRegistreringAvUnntaksperioderSelector = createSelector(
   ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
   ErRegistreringUnntakNorskTrygdOvrigeSelector,
   ErUtlMyndUtpektSegSelvSelector,
-  (ErRegistreringUnntakNorskTrygdUtstasjonering, ErRegistreringUnntakNorskTrygdOvrige, ErUtlMyndUtpektSegSelv) => (
+  (ErRegistreringUnntakNorskTrygdUtstasjonering, ErRegistreringUnntakNorskTrygdOvrige, ErUtlMyndUtpektSegSelv) =>
     ErRegistreringUnntakNorskTrygdUtstasjonering || ErRegistreringUnntakNorskTrygdOvrige || ErUtlMyndUtpektSegSelv
-  )
 );
 
 export const ErStatusAnmodningUnntakSendtSelector = createSelector(
   BehandlingsstatusKodeSelector,
-  behandlingsstatus => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT
+  (behandlingsstatus) => behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT
 );

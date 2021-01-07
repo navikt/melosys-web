@@ -1,3 +1,3 @@
-import OpprettNySak from './opprettnysak';
+import OpprettNySak from "./opprettnysak";
 
 export default OpprettNySak;

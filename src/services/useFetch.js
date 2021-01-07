@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 /* eslint-disable no-console */
 const useFetch = (url, dependencies) => {
   const [isLoading, setLoadState] = useState(false);
@@ -7,17 +7,17 @@ const useFetch = (url, dependencies) => {
     setLoadState(true);
     // fetch('http://localhost:3002/api/personer/?fnr=17117802280')
     fetch(url)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch');
+          throw new Error("Failed to fetch");
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         setLoadState(false);
         setFetchedData({ ...fetchedData, data });
       })
-      .catch(err => {
+      .catch((err) => {
         setLoadState(false);
         console.dir(err);
       });

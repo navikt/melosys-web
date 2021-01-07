@@ -1,26 +1,29 @@
-import React, { useEffect } from 'react';
-import PT from 'prop-types';
+import React, { useEffect } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
 
-import { arrayTilKonjunksjon } from '../../../utils/streng';
+import { arrayTilKonjunksjon } from "../../../utils/streng";
 
-import EnkeltVilkaar from './felles/enkeltVilkaar';
+import EnkeltVilkaar from "./felles/enkeltVilkaar";
 
-const VurderingVesentligVirksomhet = props => {
-  const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter,
-  } = props;
+const VurderingVesentligVirksomhet = (props) => {
+  const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter } = props;
   const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
 
-  useEffect(() => (
-    function cleanup() {
-      slettData();
-    }
-  ), []);
+  useEffect(
+    () =>
+      function cleanup() {
+        slettData();
+      },
+    []
+  );
 
-  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
+  const arbeidsgivereTekst =
+    valgteVirksomheter.length > 0
+      ? `${arrayTilKonjunksjon(valgteVirksomheter.map((virksomhet) => virksomhet.navn))}`
+      : "";
 
   return (
     <div>
@@ -35,13 +38,20 @@ const VurderingVesentligVirksomhet = props => {
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg6" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp
+          disabled={!(redigerbart && harAvklaring)}
+          className="fane__navigasjonsknapp"
+          data-cy-nesteknapp="knapp_steg6"
+          onClick={bekreftOgFortsett}
+        >
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );
 };
 
-VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
+VurderingVesentligVirksomhet.ID = "VESENTLIG_VIRKSOMHET";
 
 VurderingVesentligVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,

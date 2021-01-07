@@ -1,3 +1,3 @@
-import Lesmerpanel from './lesmerpanel';
+import Lesmerpanel from "./lesmerpanel";
 
 export default Lesmerpanel;

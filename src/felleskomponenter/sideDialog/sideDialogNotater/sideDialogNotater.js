@@ -1,23 +1,23 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import PT from 'prop-types';
+import React, { useState, useEffect, Fragment } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Mui from '../../../felleskomponenter/ui';
-import * as Utils from '../../../utils';
-import * as Api from '../../../services/api';
-import * as KV from '../../../kodeverk';
+import * as Nav from "../../../utils/navFrontend";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Utils from "../../../utils";
+import * as Api from "../../../services/api";
+import * as KV from "../../../kodeverk";
 
-import MKV from '../../../melosyskodeverk';
-import Notat from './notat';
-import Knapperad from '../../../felleskomponenter/knapperad';
+import MKV from "../../../melosyskodeverk";
+import Notat from "./notat";
+import Knapperad from "../../../felleskomponenter/knapperad";
 
-import './sideDialogNotater.css';
+import "./sideDialogNotater.css";
 
 const sortNotaterByOpprettetDato = (forsteNotat, andreNotat) => {
   const { endretDato: forsteEndretDato } = forsteNotat;
   const { endretDato: andreEndretDato } = andreNotat;
 
-  const datoDiff = Utils.dato.datoDiffPure(forsteEndretDato, andreEndretDato, 'seconds');
+  const datoDiff = Utils.dato.datoDiffPure(forsteEndretDato, andreEndretDato, "seconds");
   return -datoDiff;
 };
 
@@ -28,13 +28,10 @@ const lagNotatOverskrift = (behandlingstype, behandlingstema) => {
   return `${behandlingstypeString} - ${behandlingstemaString}`;
 };
 
-const SideDialogNotater = ({
-  saksnummer,
-  redigerbart,
-}) => {
+const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   const [notater, setNotater] = useState([]);
   const [leggTilNotatDialogSynlig, setLeggTilNotatDialogSynlig] = useState(false);
-  const [nyttNotatTekst, setNyttNotatTekst] = useState('');
+  const [nyttNotatTekst, setNyttNotatTekst] = useState("");
 
   const hentNotater = async () => {
     try {
@@ -52,14 +49,14 @@ const SideDialogNotater = ({
   const maksTekstLengde = 500;
   const disableLagreKnapp = nyttNotatTekst.length > maksTekstLengde;
 
-  const oppdaterNotatState = oppdatertNotat => {
-    setNotater(prevNotater => prevNotater.map(notat => (
-      notat.notatId === oppdatertNotat.notatId ? oppdatertNotat : notat
-    )));
+  const oppdaterNotatState = (oppdatertNotat) => {
+    setNotater((prevNotater) =>
+      prevNotater.map((notat) => (notat.notatId === oppdatertNotat.notatId ? oppdatertNotat : notat))
+    );
   };
 
-  const leggTilNotatState = nyttNotat => {
-    setNotater(prevNotater => [...prevNotater, nyttNotat]);
+  const leggTilNotatState = (nyttNotat) => {
+    setNotater((prevNotater) => [...prevNotater, nyttNotat]);
   };
 
   const oppdaterNotat = async (notatID, tekst) => {
@@ -81,10 +78,10 @@ const SideDialogNotater = ({
 
   const avbrytLeggTilNotat = () => {
     skjulLeggTilNotatDialog();
-    setNyttNotatTekst('');
+    setNyttNotatTekst("");
   };
 
-  const endreNyttNotatTekst = e => {
+  const endreNyttNotatTekst = (e) => {
     setNyttNotatTekst(e.target.value);
   };
 
@@ -94,47 +91,42 @@ const SideDialogNotater = ({
 
       leggTilNotatState(nyttNotat);
       skjulLeggTilNotatDialog();
-      setNyttNotatTekst('');
+      setNyttNotatTekst("");
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
   /* eslint-disable-next-line max-len */
-  const skrivInnNotatLabel = 'Her kan du notere særlige vurderinger eller handlinger du gjør, for eksempel at du innhenter opplysninger. Notater brukes for å holde oversikt over hva som er gjort i saken, men lagres ikke som saksdokumenter.';
+  const skrivInnNotatLabel =
+    "Her kan du notere særlige vurderinger eller handlinger du gjør, for eksempel at du innhenter opplysninger. Notater brukes for å holde oversikt over hva som er gjort i saken, men lagres ikke som saksdokumenter.";
 
   return (
     <Nav.Panel>
-      {
-        notater.length > 0 &&
+      {notater.length > 0 && (
         <div className="notater">
-          {
-            notater
-              .sort(sortNotaterByOpprettetDato)
-              .map(notat => {
-                const overskrift = lagNotatOverskrift(notat.behandlingstypeKode, notat.behandlingstemaKode);
-                const onUpdate = tekst => oppdaterNotat(notat.notatId, tekst);
+          {notater.sort(sortNotaterByOpprettetDato).map((notat) => {
+            const overskrift = lagNotatOverskrift(notat.behandlingstypeKode, notat.behandlingstemaKode);
+            const onUpdate = (tekst) => oppdaterNotat(notat.notatId, tekst);
 
-                return (
-                  <Notat
-                    key={Utils._uuid()}
-                    redigerbart={notat.redigerbar}
-                    tekst={notat.tekst}
-                    opprettetDato={notat.registrertDato}
-                    endretDato={notat.endretDato}
-                    forfatter={notat.registrertAvNavn}
-                    onUpdate={onUpdate}
-                    overskrift={overskrift}
-                    maksTekstLengde={maksTekstLengde}
-                  />
-                );
-              })
-          }
+            return (
+              <Notat
+                key={Utils._uuid()}
+                redigerbart={notat.redigerbar}
+                tekst={notat.tekst}
+                opprettetDato={notat.registrertDato}
+                endretDato={notat.endretDato}
+                forfatter={notat.registrertAvNavn}
+                onUpdate={onUpdate}
+                overskrift={overskrift}
+                maksTekstLengde={maksTekstLengde}
+              />
+            );
+          })}
         </div>
-      }
+      )}
       <div>
-        {
-          leggTilNotatDialogSynlig &&
+        {leggTilNotatDialogSynlig && (
           <Fragment>
             <Nav.Textarea
               label={skrivInnNotatLabel}
@@ -152,11 +144,12 @@ const SideDialogNotater = ({
               redigerbart
             />
           </Fragment>
-        }
-        {
-          !leggTilNotatDialogSynlig &&
-          <Mui.Knapp disabled={!redigerbart} type="hoved" onClick={visLeggTilNotatDialog}>LEGG TIL NYTT NOTAT</Mui.Knapp>
-        }
+        )}
+        {!leggTilNotatDialogSynlig && (
+          <Mui.Knapp disabled={!redigerbart} type="hoved" onClick={visLeggTilNotatDialog}>
+            LEGG TIL NYTT NOTAT
+          </Mui.Knapp>
+        )}
       </div>
     </Nav.Panel>
   );

@@ -1,42 +1,42 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { withRouter } from 'react-router-dom';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import * as EKV from 'eessi-kodeverk';
+import React, { useState, useEffect, Fragment } from "react";
+import { withRouter } from "react-router-dom";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import * as EKV from "eessi-kodeverk";
 
-import MKV from '../../../../melosyskodeverk';
+import MKV from "../../../../melosyskodeverk";
 
-import * as KV from '../../../../kodeverk';
-import * as Utils from '../../../../utils';
-import * as Api from '../../../../services/api';
-import * as MPT from '../../../../proptypes';
-import * as Nav from '../../../../utils/navFrontend';
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as Api from "../../../../services/api";
+import * as MPT from "../../../../proptypes";
+import * as Nav from "../../../../utils/navFrontend";
 
-import { RegistreringMenypanelForm } from '../../../../felleskomponenter/menypanelForm';
-import RegisterkontrollTreff from '../../../../felleskomponenter/registerkontrollTreff';
-import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
-import { datalastingOperations } from '../../../../ducks/datalasting';
-import { anmodningsperioderSelectors } from '../../../../ducks/anmodningsperioder';
-import { anmodningsperiodesvarSelectors } from '../../../../ducks/anmodningsperiodesvar';
-import { lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
+import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
+import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
+import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { datalastingOperations } from "../../../../ducks/datalasting";
+import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
+import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
+import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
-import '../saksopplysninger.css';
-import { DatoOmradeMedVarighet } from '../../../../felleskomponenter/datoOmrade/datoOmrade';
-import { lagYupToReduxformErrorMapper } from '../../../../yup';
-import { delvisInnvilgelseSkjema, avslagSkjema } from './validering/anmodningunntakSkjema';
-import PdfLenkeListe from '../../../../felleskomponenter/pdfLenkeListe';
+import "../saksopplysninger.css";
+import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade/datoOmrade";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
+import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
-const LinkForhandsvisningSed = ({
-  redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk,
-}) => {
+const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk }) => {
   let pdfDokument = [];
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
-    pdfDokument = [{ navn: 'Forhåndsvis SED A011', type: EKV.Koder.sedtyper.A011, erSed: true }];
-  } else if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE
-    || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG) {
-    pdfDokument = [{ navn: 'Forhåndsvis SED A002', type: EKV.Koder.sedtyper.A002, erSed: true }];
+    pdfDokument = [{ navn: "Forhåndsvis SED A011", type: EKV.Koder.sedtyper.A011, erSed: true }];
+  } else if (
+    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
+    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG
+  ) {
+    pdfDokument = [{ navn: "Forhåndsvis SED A002", type: EKV.Koder.sedtyper.A002, erSed: true }];
   }
 
   return redigerbart && <PdfLenkeListe vedKlikk={vedKlikk} behandlingID={behandlingID} dokumenter={pdfDokument} />;
@@ -61,13 +61,16 @@ const Saksopplysninger = ({
   tilForsiden,
   startOgVisOppfriskModal,
 }) => {
-  const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
-  const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
-  const [endretPeriodeFom, setEndretPeriodeFom] = useState('');
-  const [endretPeriodeTom, setEndretPeriodeTom] = useState('');
+  const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
+    MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
+  );
+  const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
+  const [endretPeriodeFom, setEndretPeriodeFom] = useState("");
+  const [endretPeriodeTom, setEndretPeriodeTom] = useState("");
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
+  const [registreringPending, setRegistreringPending] = useState(false);
 
   useEffect(() => {
     lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
@@ -129,11 +132,11 @@ const Saksopplysninger = ({
     return Utils._isEmpty(valideringsresultat);
   };
 
-  const overstyrSubmit = event => {
+  const overstyrSubmit = (event) => {
     event.preventDefault();
   };
 
-  const textAreaOnChange = event => {
+  const textAreaOnChange = (event) => {
     setBegrunnelseFritekst(event.target.value);
   };
 
@@ -151,10 +154,13 @@ const Saksopplysninger = ({
       case INNVILGELSE:
         return makeResponse(tomPeriode, null);
       case DELVIS_INNVILGELSE:
-        return makeResponse({
-          fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
-          tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
-        }, begrunnelseFritekst);
+        return makeResponse(
+          {
+            fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
+            tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
+          },
+          begrunnelseFritekst
+        );
       case AVSLAG:
         return makeResponse(tomPeriode, begrunnelseFritekst);
       default:
@@ -169,12 +175,12 @@ const Saksopplysninger = ({
 
     const fomISO = Utils.dato.formatterDatoTilISO(fom);
     const tomISO = Utils.dato.formatterDatoTilISO(tom);
-    const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
+    const varighet = Utils.dato.datoDiff(fomISO, tomISO, "years");
 
     if (varighet <= 0) {
-      return 'Ugyldig periode';
+      return "Ugyldig periode";
     } else if (varighet > 5) {
-      return 'Perioden overstiger 5 år';
+      return "Perioden overstiger 5 år";
     }
     return null;
   };
@@ -186,7 +192,7 @@ const Saksopplysninger = ({
     return (
       <Nav.Row className="seksjon">
         <Nav.Column xs="8">
-          <Nav.AlertStripe className="feilmelding" type="advarsel" >
+          <Nav.AlertStripe className="feilmelding" type="advarsel">
             {durationWarningMessage}
           </Nav.AlertStripe>
         </Nav.Column>
@@ -209,6 +215,8 @@ const Saksopplysninger = ({
       }
     }
 
+    setRegistreringPending(true);
+
     try {
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
@@ -216,6 +224,7 @@ const Saksopplysninger = ({
       Utils.logger.error(e);
       return false;
     } finally {
+      setRegistreringPending(false);
       tilForsiden();
     }
     return true;
@@ -251,7 +260,7 @@ const Saksopplysninger = ({
     return null;
   }
 
-  const endreAnmodningsperiodeSvarType = e => setAnmodningsperiodeSvarType(e.target.value);
+  const endreAnmodningsperiodeSvarType = (e) => setAnmodningsperiodeSvarType(e.target.value);
 
   const unikRadioButtonGruppeID = uuid();
 
@@ -266,7 +275,9 @@ const Saksopplysninger = ({
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.typo.Element>Land:</Nav.typo.Element>
-                  <Nav.typo.Normaltekst>{KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})</Nav.typo.Normaltekst>
+                  <Nav.typo.Normaltekst>
+                    {KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})
+                  </Nav.typo.Normaltekst>
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
@@ -274,8 +285,7 @@ const Saksopplysninger = ({
                   <DatoOmradeMedVarighet periode={sed.lovvalgsperiode} label="Søknadsperiode" />
                 </Nav.Column>
               </Nav.Row>
-              {
-                vurderingBegrunnelser.length > 0 &&
+              {vurderingBegrunnelser.length > 0 && (
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
                     <Fragment>
@@ -284,7 +294,7 @@ const Saksopplysninger = ({
                     </Fragment>
                   </Nav.Column>
                 </Nav.Row>
-              }
+              )}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
@@ -310,20 +320,22 @@ const Saksopplysninger = ({
                               bredde="fullbredde"
                               label="Startdato"
                               value={endretPeriodeFom}
-                              onChange={e => oppdaterDato(e, setEndretPeriodeFom)}
-                              onBlur={e => formaterDato(e, setEndretPeriodeFom)}
+                              onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
+                              onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
                               feil={feilmeldinger.fom}
-                              disabled={!redigerbart} />
+                              disabled={!redigerbart}
+                            />
                           </Nav.Column>
                           <Nav.Column xs="3">
                             <Nav.Input
                               bredde="fullbredde"
                               label="Sluttdato"
                               value={endretPeriodeTom}
-                              onChange={e => oppdaterDato(e, setEndretPeriodeTom)}
-                              onBlur={e => formaterDato(e, setEndretPeriodeTom)}
+                              onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
+                              onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
                               feil={feilmeldinger.tom}
-                              disabled={!redigerbart} />
+                              disabled={!redigerbart}
+                            />
                           </Nav.Column>
                         </Nav.Row>
                         <Nav.Row>
@@ -335,7 +347,8 @@ const Saksopplysninger = ({
                               value={begrunnelseFritekst}
                               maxLength={255}
                               feil={feilmeldinger.fritekst}
-                              bredde="fullbredde" />
+                              bredde="fullbredde"
+                            />
                           </Nav.Column>
                         </Nav.Row>
                       </Fragment>
@@ -360,7 +373,8 @@ const Saksopplysninger = ({
                       value={begrunnelseFritekst}
                       maxLength={255}
                       feil={feilmeldinger.fritekst}
-                      bredde="fullbredde" />
+                      bredde="fullbredde"
+                    />
                   </Nav.Column>
                 </Nav.Row>
               )}
@@ -375,22 +389,21 @@ const Saksopplysninger = ({
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og send</Nav.Hovedknapp>
+                  <Nav.Hovedknapp
+                    spinner={registreringPending}
+                    autoDisableVedSpinner
+                    onClick={() => submitRegistrering()}
+                    disabled={!redigerbart}
+                  >
+                    Bekreft og send
+                  </Nav.Hovedknapp>
                 </Nav.Column>
               </Nav.Row>
             </div>
           </div>
         </div>
       </form>
-      <RegistreringMenypanelForm
-        menypunkter={[
-          'Person',
-          'Medlemskap',
-          'EU/EØS-barnetrygd',
-          'Arbeidsforhold og inntekt',
-        ]}
-        startOgVisOppfriskModal={startOgVisOppfriskModal}
-      />
+      <RegistreringMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
     </div>
   );
 };
@@ -419,16 +432,18 @@ Saksopplysninger.defaultProps = {
   anmodningsperiodeID: undefined,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodeSvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
-  lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) => datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
+const mapDispatchToProps = (dispatch) => ({
+  oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
+    dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
+  lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) =>
+    datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

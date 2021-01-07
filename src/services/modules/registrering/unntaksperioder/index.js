@@ -1,3 +1,3 @@
-import { send } from './unntaksperioder';
+import { send } from "./unntaksperioder";
 
 export { send };

@@ -1,24 +1,20 @@
-import React from 'react';
+import React from "react";
 
-import * as Skjema from '../../../../skjema';
-import * as Nav from '../../../../../utils/navFrontend';
-import * as Symboler from '../../symboler';
+import * as Skjema from "../../../../skjema";
+import * as Nav from "../../../../../utils/navFrontend";
+import * as Symboler from "../../symboler";
 
-import Landvelger from '../../../../skjema/landvelger';
+import Landvelger from "../../../../skjema/landvelger";
 
-import './enkeltutenlandskidentskjema.css';
+import "./enkeltutenlandskidentskjema.css";
 
 interface EnkeltUtenlandskIdentSkjemaProps {
-  slett: () => void,
-  redigerbart: boolean,
-  overordnetFeltNavn: string,
+  slett: () => void;
+  redigerbart: boolean;
+  overordnetFeltNavn: string;
 }
 
-const EnkeltUtenlandskIdentSkjema = ({
-  overordnetFeltNavn,
-  slett,
-  redigerbart,
-}: EnkeltUtenlandskIdentSkjemaProps) => (
+const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }: EnkeltUtenlandskIdentSkjemaProps) => (
   <div className="enkeltUtenlandskIdentSkjema">
     <Nav.Row>
       <Nav.Column xs="5">
@@ -39,10 +35,7 @@ const EnkeltUtenlandskIdentSkjema = ({
         />
       </Nav.Column>
     </Nav.Row>
-    <Symboler.Slett
-      onClick={slett}
-      className="slett__symbol"
-    />
+    <Symboler.Slett onClick={slett} className="slett__symbol" />
   </div>
 );
 

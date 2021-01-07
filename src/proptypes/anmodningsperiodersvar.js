@@ -1,5 +1,5 @@
-import PT from 'prop-types';
-import { Periode } from './periode';
+import PT from "prop-types";
+import { Periode } from "./periode";
 
 const AnmodningsperioderSvarProptype = PT.shape({
   begrunnelseFritekst: PT.string,

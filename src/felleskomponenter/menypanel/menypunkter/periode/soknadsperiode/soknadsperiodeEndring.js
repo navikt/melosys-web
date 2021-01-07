@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import * as Nav from '../../../../../utils/navFrontend';
+import * as Nav from "../../../../../utils/navFrontend";
 
-import Knapperad from '../../../../knapperad';
+import Knapperad from "../../../../knapperad";
 
-import './soknadsperiode.css';
+import "./soknadsperiode.css";
 
-const SoknadsperiodeEndring = props => {
+const SoknadsperiodeEndring = (props) => {
   const {
     soknadsperiodeNyFom,
     soknadsperiodeNyTom,
@@ -27,8 +27,8 @@ const SoknadsperiodeEndring = props => {
             bredde="S"
             label="Fra og med:"
             value={soknadsperiodeNyFom}
-            onChange={event => vedFeltEndring('soknadsperiodeNyFom', event.target.value)}
-            onBlur={() => vedFeltFokusUt('soknadsperiodeNyFom')}
+            onChange={(event) => vedFeltEndring("soknadsperiodeNyFom", event.target.value)}
+            onBlur={() => vedFeltFokusUt("soknadsperiodeNyFom")}
           />
         </Nav.Column>
         <Nav.Column xs="6">
@@ -36,8 +36,8 @@ const SoknadsperiodeEndring = props => {
             bredde="S"
             label="Til og med:"
             value={soknadsperiodeNyTom}
-            onChange={event => vedFeltEndring('soknadsperiodeNyTom', event.target.value)}
-            onBlur={() => vedFeltFokusUt('soknadsperiodeNyTom')}
+            onChange={(event) => vedFeltEndring("soknadsperiodeNyTom", event.target.value)}
+            onBlur={() => vedFeltFokusUt("soknadsperiodeNyTom")}
           />
         </Nav.Column>
       </Nav.Row>

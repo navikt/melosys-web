@@ -1,6 +1,6 @@
-import DomeneRegel from './DomeneRegel';
+import DomeneRegel from "./DomeneRegel";
 
-import { datoDiff, formatterDatoTilISO } from '../utils/dato';
+import { datoDiff, formatterDatoTilISO } from "../utils/dato";
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
  * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
@@ -20,7 +20,7 @@ import { datoDiff, formatterDatoTilISO } from '../utils/dato';
  * {status: false, tekst: 'Har IKKE forutgående bosted i Norge'}
  */
 class ArbeidRegel extends DomeneRegel {
-  erArbeidsforholdetRelevantForSoknadsperioden = ansettelsesPeriode => {
+  erArbeidsforholdetRelevantForSoknadsperioden = (ansettelsesPeriode) => {
     const { skjema } = this;
     const { oppholdUtlandFom, oppholdUtlandTom } = skjema;
     const { fom: ansattStartDato, tom: ansattSluttDato } = ansettelsesPeriode;
@@ -28,15 +28,15 @@ class ArbeidRegel extends DomeneRegel {
     const oppholdStartDato = formatterDatoTilISO(oppholdUtlandFom);
     const oppholdSluttDato = formatterDatoTilISO(oppholdUtlandTom);
 
-    const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 1;
-    const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;
+    const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, "days") >= 1;
+    const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, "days") <= 0;
 
-    const positivTekst = 'Arbeidsforholdet er relevant innenfor søknadsperioden.';
-    const negativTekst = 'Arbeidsforholdet er IKKE relevant innenfor søknadsperioden.';
+    const positivTekst = "Arbeidsforholdet er relevant innenfor søknadsperioden.";
+    const negativTekst = "Arbeidsforholdet er IKKE relevant innenfor søknadsperioden.";
 
-    const erRelevant = (erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt);
+    const erRelevant = erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
     return this.byggRegelSvar(erRelevant, positivTekst, negativTekst);
-  }
+  };
 }
 
 export default ArbeidRegel;

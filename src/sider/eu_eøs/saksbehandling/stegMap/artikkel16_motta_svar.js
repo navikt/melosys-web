@@ -1,12 +1,12 @@
-import MKV from '../../../../melosyskodeverk';
+import MKV from "../../../../melosyskodeverk";
 
-import * as Utils from '../../../../utils';
+import * as Utils from "../../../../utils";
 
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingArtikkel16MottaSvar from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16MottaSvar';
-import { hentFakta } from '../../../../regler/avklartefakta';
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../../yup';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingArtikkel16MottaSvar from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16MottaSvar";
+import { hentFakta } from "../../../../regler/avklartefakta";
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
 
 class Artikkel16MottaSvar extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -18,24 +18,27 @@ class Artikkel16MottaSvar extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_16_MOTTA_SVAR;
-    this.tittel = 'Artikkel 16.1 Svar';
+    this.tittel = "Artikkel 16.1 Svar";
     this.komponent = VurderingArtikkel16MottaSvar;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({
-      svarAnmodningUnntakAvklartfakta: hentFakta(MKV.Koder.avklartefaktatyper.SVAR_ANMODNING_UNNTAK, _propsLight.avklartefakta),
+    this.beregnRelevantUI = (_propsLight) => ({
+      svarAnmodningUnntakAvklartfakta: hentFakta(
+        MKV.Koder.avklartefaktatyper.SVAR_ANMODNING_UNNTAK,
+        _propsLight.avklartefakta
+      ),
       harAvklaring: Artikkel16MottaSvar.finnAvklaring(_propsLight.anmodningsperiodesvarForm),
     });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
 
-  static finnAvklaring = anmodningsperiodesvar => {
+  static finnAvklaring = (anmodningsperiodesvar) => {
     const { endretPeriode, anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
     if (!anmodningsperiodeSvarType) return false;
@@ -48,7 +51,7 @@ class Artikkel16MottaSvar extends Steg {
     if (!Utils._isEmpty(ugyldigeFelter)) return false;
 
     return true;
-  }
+  };
 }
 
 export default Artikkel16MottaSvar;

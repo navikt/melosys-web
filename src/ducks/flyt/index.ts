@@ -1,3 +1,3 @@
-import * as flytSelectors from './selectors';
+import * as flytSelectors from "./selectors";
 
 export { flytSelectors };

@@ -1,9 +1,9 @@
-import * as OrganisasjonOperations from './operations';
-import * as OrganisasjonSelectors from './selectors';
+import * as OrganisasjonOperations from "./operations";
+import * as OrganisasjonSelectors from "./selectors";
 // import * as OrganisasjonActions from './actions';
 // import * as OrganisasjonTypes from './types';
 
-import OrganisasjonReducers from './reducers';
+import OrganisasjonReducers from "./reducers";
 
 export {
   OrganisasjonOperations,
@@ -12,4 +12,3 @@ export {
   // OrganisasjonActions,
 };
 export default OrganisasjonReducers;
-

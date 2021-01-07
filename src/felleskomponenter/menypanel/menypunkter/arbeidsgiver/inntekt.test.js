@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactHighcharts from 'react-highcharts';
+import React from "react";
+import ReactHighcharts from "react-highcharts";
 
-import * as Nav from '../../../../utils/navFrontend';
+import * as Nav from "../../../../utils/navFrontend";
 
-import Tabell from '../../../tabell/tabell';
-import Inntekt from './inntekt';
+import Tabell from "../../../tabell/tabell";
+import Inntekt from "./inntekt";
 
-describe('inntekt', () => {
+describe("inntekt", () => {
   let props = null;
 
   beforeEach(() => {
@@ -15,13 +15,13 @@ describe('inntekt', () => {
     };
   });
 
-  it('viser ingenting ved tom inntektliste', () => {
+  it("viser ingenting ved tom inntektliste", () => {
     const inntekt = shallow(<Inntekt {...props} />);
 
     expect(inntekt.isEmptyRender()).toBe(true);
   });
 
-  it('viser en graf dersom det finnes minst 1 inntekt', () => {
+  it("viser en graf dersom det finnes minst 1 inntekt", () => {
     props.inntektListe = [
       {
         beloep: 10000,
@@ -33,7 +33,7 @@ describe('inntekt', () => {
     expect(graf).toHaveLength(1);
   });
 
-  it('viser tabell ved klikk på knapp', () => {
+  it("viser tabell ved klikk på knapp", () => {
     props.inntektListe = [
       {
         beloep: 10000,
@@ -43,7 +43,7 @@ describe('inntekt', () => {
     const knapp = inntekt.find(Nav.Knapp);
 
     const event = { preventDefault: jest.fn() };
-    knapp.simulate('click', event);
+    knapp.simulate("click", event);
 
     expect(inntekt.find(Tabell)).toHaveLength(1);
   });

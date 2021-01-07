@@ -1,17 +1,17 @@
-import React, { Fragment } from 'react';
-import PT from 'prop-types';
-import moment from 'moment/moment';
-import { connect } from 'react-redux';
+import React, { Fragment } from "react";
+import PT from "prop-types";
+import moment from "moment/moment";
+import { connect } from "react-redux";
 
-import * as Api from '../services/api';
-import * as Nav from '../utils/navFrontend';
-import * as Mui from '../felleskomponenter/ui';
-import * as MPT from '../proptypes';
-import * as Utils from '../utils';
+import * as Api from "../services/api";
+import * as Nav from "../utils/navFrontend";
+import * as Mui from "../felleskomponenter/ui";
+import * as MPT from "../proptypes";
+import * as Utils from "../utils";
 
-import { behandlingerOperations } from '../ducks/behandlinger';
+import { behandlingerOperations } from "../ducks/behandlinger";
 
-import './behandlingsstatus.css';
+import "./behandlingsstatus.css";
 
 const BehandlingsStatus = ({
   oppdaterStatus,
@@ -21,36 +21,39 @@ const BehandlingsStatus = ({
   behandlingsstatusMap,
   hentBehandling,
 }) => {
-  const [behandlingsstatus, setBehandlingsStatus] = React.useState('VELG');
+  const [behandlingsstatus, setBehandlingsStatus] = React.useState("VELG");
   const [statusmelding, setStatusMelding] = React.useState(null);
 
-  const onChange = event => {
+  const onChange = (event) => {
     const { value } = event.currentTarget;
     setBehandlingsStatus(value);
     setStatusMelding(null);
   };
 
   const oppdaterStatusMelding = () => {
-    const hhmm = moment().format('HH:mm');
+    const hhmm = moment().format("HH:mm");
     setStatusMelding(`Behandlingstatus ble oppdatert ${hhmm}`);
   };
 
   const sendOppdatering = () => {
-    if (behandlingsstatus === 'VELG') {
+    if (behandlingsstatus === "VELG") {
       return false;
     }
 
-    oppdaterStatus(behandlingID, behandlingsstatus).then(() => {
-      hentBehandling(behandlingID);
-      oppdaterStatusMelding();
-    }).catch(Utils.logger.error);
+    oppdaterStatus(behandlingID, behandlingsstatus)
+      .then(() => {
+        hentBehandling(behandlingID);
+        oppdaterStatusMelding();
+      })
+      .catch(Utils.logger.error);
     return true;
   };
 
   if (!oppsummering) return <div />;
 
   let endreBehandlingsStatusValg = [];
-  if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = behandlingsstatusMap[oppsummering.behandlingsstatus.kode] || [];
+  if (oppsummering.behandlingsstatus)
+    endreBehandlingsStatusValg = behandlingsstatusMap[oppsummering.behandlingsstatus.kode] || [];
 
   if (endreBehandlingsStatusValg.length === 0) return null;
 
@@ -64,8 +67,17 @@ const BehandlingsStatus = ({
           label="Endre behandlingsstatus:"
           redigerbar={redigerbart}
         />
-        <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>Oppdater</Nav.Hovedknapp>
-        {statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{statusmelding}</Nav.AlertStripe></div>}
+        <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>
+          Oppdater
+        </Nav.Hovedknapp>
+        {statusmelding && (
+          <div>
+            <br />
+            <Nav.AlertStripe type="suksess" className="varsel">
+              {statusmelding}
+            </Nav.AlertStripe>
+          </div>
+        )}
       </Fragment>
     </div>
   );
@@ -86,8 +98,8 @@ BehandlingsStatus.defaultProps = {
   oppdaterStatus: Api.Behandlinger.status.oppdaterStatus,
 };
 
-const mapDispatchToProps = dispatch => ({
-  hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+const mapDispatchToProps = (dispatch) => ({
+  hentBehandling: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
 });
 
 export default connect(null, mapDispatchToProps)(BehandlingsStatus);

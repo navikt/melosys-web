@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import * as Skjema from './skjema';
+import * as Skjema from "./skjema";
 
-import { Brukernavnskjema } from './brukernavnskjema';
+import { Brukernavnskjema } from "./brukernavnskjema";
 
-describe('brukernavnskjema', () => {
+describe("brukernavnskjema", () => {
   let props = null;
 
   beforeEach(() => {
@@ -12,13 +12,13 @@ describe('brukernavnskjema', () => {
     fetch.mockResponse(JSON.stringify({}));
 
     props = {
-      form: 'Journalforing_SED',
+      form: "Journalforing_SED",
       settFormBruker: jest.fn(),
       resetFelter: jest.fn(),
     };
   });
 
-  it('viser en skjema.input', () => {
+  it("viser en skjema.input", () => {
     const brukernavnskjema = shallow(<Brukernavnskjema {...props} />);
 
     expect(brukernavnskjema.find(Skjema.Input)).toHaveLength(1);

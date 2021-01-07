@@ -6,18 +6,22 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
 
 export function hentMuligeBehandlingstema(behandlingID: number) {
-  return doThenDispatch(() => Api.Behandlinger.tema.hentMuligeBehandlingstema(behandlingID), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  }, {
-    mapDispatchData: (data: any) => ({
-      muligeBehandlingstema: data,
-    }),
-  });
+  return doThenDispatch(
+    () => Api.Behandlinger.tema.hentMuligeBehandlingstema(behandlingID),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    {
+      mapDispatchData: (data: any) => ({
+        muligeBehandlingstema: data,
+      }),
+    }
+  );
 }

@@ -1,9 +1,9 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from "@testing-library/react-hooks";
 
-import { useAsyncCallbackState, useCallbackState } from './useCallbackState';
+import { useAsyncCallbackState, useCallbackState } from "./useCallbackState";
 
-describe('useCallbackState', () => {
-  it('tar imot et callback og lagrer resultatet til state', async () => {
+describe("useCallbackState", () => {
+  it("tar imot et callback og lagrer resultatet til state", async () => {
     const sum = (a: number, b: number) => a + b;
     const { result } = renderHook(() => useCallbackState(() => sum(1, 2), 0));
 
@@ -12,8 +12,8 @@ describe('useCallbackState', () => {
   });
 });
 
-describe('useAsyncCallbackState', () => {
-  it('tar imot et async callback og lagrer resultatet til state', async () => {
+describe("useAsyncCallbackState", () => {
+  it("tar imot et async callback og lagrer resultatet til state", async () => {
     const asyncSum = async (a: number, b: number) => a + b;
 
     const rh = renderHook(() => useAsyncCallbackState(() => asyncSum(1, 2), 0));

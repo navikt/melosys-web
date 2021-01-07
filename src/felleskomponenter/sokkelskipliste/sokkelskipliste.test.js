@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import SokkelSkipListe from './sokkelskipliste';
-import SokkelSkipEnkelt from './sokkelskipenkelt';
+import SokkelSkipListe from "./sokkelskipliste";
+import SokkelSkipEnkelt from "./sokkelskipenkelt";
 
-describe('Sokkelskipliste', () => {
+describe("Sokkelskipliste", () => {
   let props = null;
 
   beforeEach(() => {
@@ -11,19 +11,21 @@ describe('Sokkelskipliste', () => {
       sokkelEllerSkipListe: [],
       installasjonArbeidslandListe: [],
       installasjonArbeidslandTypeListe: [],
-      maritimtArbeid: [{
-        enhetNavn: 'Dunfjæder',
-        fartsomradeKode: 'INNENRIKS',
-        flaggLandkode: 'GB',
-        installasjonsLandkode: 'GB',
-        territorialfarvann: 'GB',
-        foretakNavn: 'SWECO NORGE AS',
-        foretakOrgnr: '96703227',
-      }],
+      maritimtArbeid: [
+        {
+          enhetNavn: "Dunfjæder",
+          fartsomradeKode: "INNENRIKS",
+          flaggLandkode: "GB",
+          installasjonsLandkode: "GB",
+          territorialfarvann: "GB",
+          foretakNavn: "SWECO NORGE AS",
+          foretakOrgnr: "96703227",
+        },
+      ],
       begrunnelser: [
         {
-          kode: 'kode',
-          term: 'term',
+          kode: "kode",
+          term: "term",
         },
       ],
       redigerbart: true,
@@ -34,7 +36,7 @@ describe('Sokkelskipliste', () => {
     };
   });
 
-  it('viser en liste over sokkelskip', () => {
+  it("viser en liste over sokkelskip", () => {
     const sokkelskipliste = shallow(<SokkelSkipListe {...props} />);
 
     expect(sokkelskipliste.find(SokkelSkipEnkelt)).toHaveLength(1);

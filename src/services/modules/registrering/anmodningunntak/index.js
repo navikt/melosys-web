@@ -1,3 +1,3 @@
-import { send } from './anmodningunntak';
+import { send } from "./anmodningunntak";
 
 export { send };

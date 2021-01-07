@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import MKV from '../../../../../melosyskodeverk';
+import MKV from "../../../../../melosyskodeverk";
 
-import * as KV from '../../../../../kodeverk';
+import * as KV from "../../../../../kodeverk";
 
-import Henlagtsak from './henlagtSak';
-import StegerstatterBase from './stegerstatterBase';
+import Henlagtsak from "./henlagtSak";
+import StegerstatterBase from "./stegerstatterBase";
 
-describe('Henlagtsak', () => {
+describe("Henlagtsak", () => {
   let props = null;
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('Henlagtsak', () => {
     };
   });
 
-  it('Bruker begrunnelseKoder som beskrivelse hvis ingen fritekst er oppgitt', () => {
+  it("Bruker begrunnelseKoder som beskrivelse hvis ingen fritekst er oppgitt", () => {
     const henlagtsak = shallow(<Henlagtsak {...props} />);
 
     const beskrivelseTerm = henlagtsak.find(StegerstatterBase).props().beskrivelse;
@@ -29,8 +29,8 @@ describe('Henlagtsak', () => {
     expect(props.behandlingsresultat.begrunnelseKoder).toContain(beskrivelseKode);
   });
 
-  it('Bruker fritekst som beskrivelse hvis fritekst er oppgitt', () => {
-    props.behandlingsresultat.begrunnelseFritekst = 'Fritekst';
+  it("Bruker fritekst som beskrivelse hvis fritekst er oppgitt", () => {
+    props.behandlingsresultat.begrunnelseFritekst = "Fritekst";
     const henlagtsak = shallow(<Henlagtsak {...props} />);
 
     expect(henlagtsak.find(StegerstatterBase).props().beskrivelse).toBe(props.behandlingsresultat.begrunnelseFritekst);

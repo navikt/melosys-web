@@ -1,15 +1,15 @@
-import React from 'react';
-import { KTObject } from '@navikt/melosys-kodeverk';
+import React from "react";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
-import * as KV from '../../../../../../kodeverk';
-import * as Nav from '../../../../../../utils/navFrontend';
-import * as Skjema from '../../../../../skjema';
+import * as KV from "../../../../../../kodeverk";
+import * as Nav from "../../../../../../utils/navFrontend";
+import * as Skjema from "../../../../../skjema";
 
-import Sletterad from '../sletterad';
+import Sletterad from "../sletterad";
 
-import MKV from '../../../../../../melosyskodeverk';
+import MKV from "../../../../../../melosyskodeverk";
 
-import { EnRedigeringsknappListeRedigerer } from '../../../editerbartElementListe';
+import { EnRedigeringsknappListeRedigerer } from "../../../editerbartElementListe";
 
 const Redigerer = ({
   redigerbart,
@@ -35,9 +35,11 @@ const Redigerer = ({
           feltNavn={`${overordnetFeltNavn}.typeFlyvninger`}
           disabled={!redigerbart}
         >
-          {
-            MKV.KTObjects.flyvningstyper.map((type: KTObject) => <option key={type.kode} value={type.kode}>{type.term}</option>)
-          }
+          {MKV.KTObjects.flyvningstyper.map((type: KTObject) => (
+            <option key={type.kode} value={type.kode}>
+              {type.term}
+            </option>
+          ))}
         </Skjema.Select>
       </Nav.Column>
       <Nav.Column xs="6">

@@ -1,3 +1,3 @@
-import Barnetrygd from './barnetrygd';
+import Barnetrygd from "./barnetrygd";
 
 export default Barnetrygd;
