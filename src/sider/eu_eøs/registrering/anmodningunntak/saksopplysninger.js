@@ -387,12 +387,6 @@ const Saksopplysninger = ({
         </div>
       </form>
       <RegistreringMenypanelForm
-        menypunkter={[
-          'Person',
-          'Medlemskap',
-          'EU/EØS-barnetrygd',
-          'Arbeidsforhold og inntekt',
-        ]}
         startOgVisOppfriskModal={startOgVisOppfriskModal}
       />
     </div>

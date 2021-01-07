@@ -124,21 +124,6 @@ const Soknad = ({
     <form name="soknad" id="soknad" onSubmit={submitHandler}>
       <Menypanel
         lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-        menypunkter={[
-          'Person',
-          'Familieforhold',
-          'Medlemskap',
-          'EU/EØS-barnetrygd',
-          'Arbeidsforhold og inntekt',
-          'Arbeidsgiver/virksomhet',
-          'Fullmektig',
-          'Periode',
-          'Utenlandsoppdraget',
-          'Lønn og godtgjørelser',
-          'Arbeidssted(er)',
-          'Om virksomheten i Norge',
-          'Øvrig om arbeidstaker',
-        ]}
       />
     </form>
   );

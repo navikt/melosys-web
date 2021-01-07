@@ -6,7 +6,7 @@ import { PersonHistorikk, Periode } from 'Domene';
 import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
-import * as Etiketter from '../etiketter';
+import * as Etiketter from '../../etiketter';
 
 import PersonInfo from './personinfo';
 
@@ -75,6 +75,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type PersonProps = PropsFromRedux & {
   redigerbart: boolean,
   visArbeidsforholdRolleEtiketter: boolean,
+  behandlingsgrunnlagEtikett: ReactNode,
+  visBehandlingsgrunnlagData: boolean,
 }
 
 export const Person = ({
@@ -82,6 +84,8 @@ export const Person = ({
   person,
   personhistorikk,
   visArbeidsforholdRolleEtiketter,
+  behandlingsgrunnlagEtikett,
+  visBehandlingsgrunnlagData,
 }: PersonProps) => {
   const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } = personhistorikk as PersonHistorikk;
 
@@ -146,30 +150,35 @@ export const Person = ({
           />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column className="etikett__container">
-          <Etiketter.FraSoknad style={{ marginRight: '0.3em' }} />
-          {
-            visArbeidsforholdRolleEtiketter &&
-            <Etiketter.ArbeidstakersDel />
-          }
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="9">
-          <AnnenAdresse
-            redigerbart={redigerbart}
-            className="oppgittAdresse"
-          />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          <UtenlandskIdent
-            redigerbart={redigerbart}
-          />
-        </Nav.Column>
-      </Nav.Row>
+      {
+        visBehandlingsgrunnlagData &&
+        <>
+          <Nav.Row>
+            <Nav.Column className="etikett__container">
+              <span>{behandlingsgrunnlagEtikett}</span>
+              {
+                visArbeidsforholdRolleEtiketter &&
+                <Etiketter.ArbeidstakersDel style={{ marginLeft: '0.3em' }} />
+              }
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="9">
+              <AnnenAdresse
+                redigerbart={redigerbart}
+                className="oppgittAdresse"
+              />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <UtenlandskIdent
+                redigerbart={redigerbart}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        </>
+      }
     </div>
   );
 };
