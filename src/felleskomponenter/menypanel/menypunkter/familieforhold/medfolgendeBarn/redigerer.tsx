@@ -1,15 +1,15 @@
-import React, { useState, useEffect, ChangeEventHandler } from 'react';
+import React, { useState, useEffect, ChangeEventHandler } from "react";
 
-import * as KV from '../../../../../kodeverk';
-import * as Nav from '../../../../../utils/navFrontend';
-import * as Skjema from '../../../../skjema';
-import * as Utils from '../../../../../utils';
-import * as Api from '../../../../../services/api';
-import * as Symboler from '../../symboler';
+import * as KV from "../../../../../kodeverk";
+import * as Nav from "../../../../../utils/navFrontend";
+import * as Skjema from "../../../../skjema";
+import * as Utils from "../../../../../utils";
+import * as Api from "../../../../../services/api";
+import * as Symboler from "../../symboler";
 
-import { EnRedigeringsknappListeRedigerer } from '../../editerbartElementListe';
+import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
 
-import './redigerer.css';
+import "./redigerer.css";
 
 const Redigerer = ({
   redigerbart,
@@ -28,7 +28,7 @@ const Redigerer = ({
 
       try {
         const person = await Api.Personer.hentPerson(idNummer);
-        settVerdi('navn', person.sammensattNavn);
+        settVerdi("navn", person.sammensattNavn);
       } catch (e) {
         if (e.status !== 404) Utils.logger.error(e);
         setDisableNavnInput(false);
@@ -38,7 +38,7 @@ const Redigerer = ({
     }
   };
 
-  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async event => {
+  const idNummerChangeHandler: ChangeEventHandler<HTMLInputElement> = async (event) => {
     setDisableNavnInput(false);
 
     const idNummer = event.target.value;
@@ -71,15 +71,9 @@ const Redigerer = ({
           bredde="fullbredde"
           datoFelt={false}
         />
-        {
-          visNavnSpinner &&
-          <Nav.NavFrontendSpinner className="navn-spinner" />
-        }
+        {visNavnSpinner && <Nav.NavFrontendSpinner className="navn-spinner" />}
       </Nav.Column>
-      <Symboler.Slett
-        onClick={slett}
-        className="slett-symbol"
-      />
+      <Symboler.Slett onClick={slett} className="slett-symbol" />
     </Nav.Row>
   );
 };

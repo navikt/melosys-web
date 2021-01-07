@@ -1,12 +1,12 @@
-import reducer from './reducers';
+import reducer from "./reducers";
 
-import * as types from './types';
-import * as actions from './actions';
-import * as Utils from '../../services/utils';
+import * as types from "./types";
+import * as actions from "./actions";
+import * as Utils from "../../services/utils";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-describe('vilkar reducer', () => {
+describe("vilkar reducer", () => {
   let initialState = null;
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('vilkar reducer', () => {
     initialState = {
       data: [
         {
-          vilkaar: 'testvilkaar',
+          vilkaar: "testvilkaar",
         },
         {
           vilkaar: MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,

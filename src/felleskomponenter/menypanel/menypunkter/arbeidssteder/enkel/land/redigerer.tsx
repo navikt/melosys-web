@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import * as KV from '../../../../../../kodeverk';
-import * as Nav from '../../../../../../utils/navFrontend';
-import * as Skjema from '../../../../../skjema';
+import * as KV from "../../../../../../kodeverk";
+import * as Nav from "../../../../../../utils/navFrontend";
+import * as Skjema from "../../../../../skjema";
 
-import Sletterad from '../sletterad';
+import Sletterad from "../sletterad";
 
-import { EnRedigeringsknappListeRedigerer } from '../../../editerbartElementListe';
+import { EnRedigeringsknappListeRedigerer } from "../../../editerbartElementListe";
 
 const Redigerer = ({
   redigerbart,

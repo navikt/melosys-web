@@ -1,19 +1,11 @@
-import React from 'react';
-import PT from 'prop-types';
-import { submit, Field } from 'redux-form';
-import { Checkbox as NavCheckbox } from 'nav-frontend-skjema';
-import '../skjema.css';
+import React from "react";
+import PT from "prop-types";
+import { submit, Field } from "redux-form";
+import { Checkbox as NavCheckbox } from "nav-frontend-skjema";
+import "../skjema.css";
 
-function InnerCheckboxComponent({
-  input,
-  meta,
-  label,
-  submitOnChange,
-  onClick,
-  disabled,
-  className,
-}) {
-  const feil = (meta.error && meta.touched && !meta.active) ? { feilmelding: meta.error } : undefined;
+function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, disabled, className }) {
+  const feil = meta.error && meta.touched && !meta.active ? { feilmelding: meta.error } : undefined;
 
   function onChange(...args) {
     if (submitOnChange) {

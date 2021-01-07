@@ -1,8 +1,8 @@
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import { LinkGroup, ContentProps } from './types';
-import LinkgroupsBuilder from './linkgroupsBuilder';
-import LinksBuilder from './linksBuilder';
+import { LinkGroup, ContentProps } from "./types";
+import LinkgroupsBuilder from "./linkgroupsBuilder";
+import LinksBuilder from "./linksBuilder";
 
 const {
   UTSENDT_ARBEIDSTAKER,
@@ -22,8 +22,8 @@ const {
 } = MKV.Koder.behandlinger.behandlingstema;
 
 export interface LinkGroupsFactoryConfig {
-  behandlingstema: string,
-  contentProps: ContentProps,
+  behandlingstema: string;
+  contentProps: ContentProps;
 }
 
 class LinkGroupsFactory {
@@ -34,10 +34,7 @@ class LinkGroupsFactory {
   }
 
   createLinkGroups(): LinkGroup[] {
-    const {
-      behandlingstema,
-      contentProps,
-    } = this.config;
+    const { behandlingstema, contentProps } = this.config;
 
     switch (behandlingstema) {
       case UTSENDT_ARBEIDSTAKER:
@@ -47,32 +44,26 @@ class LinkGroupsFactory {
       case ARBEID_ETT_LAND_ØVRIG:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
         return new LinkgroupsBuilder()
-          .addFraRegisterOgSoknad(new LinksBuilder(contentProps)
-            .addPerson()
-            .addFamilieForhold()
-            .build())
-          .addFraRegister(new LinksBuilder(contentProps)
-            .addMedlemskap()
-            .addEUEOSBarnetrygd()
-            .addArbeidsforholdOgInntekt()
-            .build())
-          .addFraSoknad(new LinksBuilder(contentProps)
-            .addArbeidsgiverEllervirksomhet()
-            .addFullmektig()
-            .addPeriode()
-            .addArbeidssteder()
-            .build())
+          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegister(
+            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
+          )
+          .addFraSoknad(
+            new LinksBuilder(contentProps)
+              .addArbeidsgiverEllervirksomhet()
+              .addFullmektig()
+              .addPeriode()
+              .addArbeidssteder()
+              .build()
+          )
           .build();
       }
       case REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
       case REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE: {
         return new LinkgroupsBuilder()
-          .addFraRegister(new LinksBuilder(contentProps)
-            .addPerson()
-            .addFamilieForhold()
-            .addMedlemskap()
-            .addEUEOSBarnetrygd()
-            .build())
+          .addFraRegister(
+            new LinksBuilder(contentProps).addPerson().addFamilieForhold().addMedlemskap().addEUEOSBarnetrygd().build()
+          )
           .build();
       }
       case BESLUTNING_LOVVALG_ANNET_LAND:
@@ -81,32 +72,31 @@ class LinkGroupsFactory {
       case ØVRIGE_SED_UFM:
       case TRYGDETID: {
         return new LinkgroupsBuilder()
-          .addFraRegister(new LinksBuilder(contentProps)
-            .addPerson()
-            .addFamilieForhold()
-            .addMedlemskap()
-            .addEUEOSBarnetrygd()
-            .addArbeidsforholdOgInntekt()
-            .build())
+          .addFraRegister(
+            new LinksBuilder(contentProps)
+              .addPerson()
+              .addFamilieForhold()
+              .addMedlemskap()
+              .addEUEOSBarnetrygd()
+              .addArbeidsforholdOgInntekt()
+              .build()
+          )
           .build();
       }
       case BESLUTNING_LOVVALG_NORGE: {
         return new LinkgroupsBuilder()
-          .addFraRegisterOgSED(new LinksBuilder(contentProps)
-            .addPerson()
-            .addFamilieForhold()
-            .build())
-          .addFraRegister(new LinksBuilder(contentProps)
-            .addMedlemskap()
-            .addEUEOSBarnetrygd()
-            .addArbeidsforholdOgInntekt()
-            .build())
-          .addFraSED(new LinksBuilder(contentProps)
-            .addArbeidsgiverEllervirksomhet()
-            .addFullmektig()
-            .addPeriode()
-            .addArbeidssteder()
-            .build())
+          .addFraRegisterOgSED(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegister(
+            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
+          )
+          .addFraSED(
+            new LinksBuilder(contentProps)
+              .addArbeidsgiverEllervirksomhet()
+              .addFullmektig()
+              .addPeriode()
+              .addArbeidssteder()
+              .build()
+          )
           .build();
       }
       default:

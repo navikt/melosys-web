@@ -1,14 +1,14 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import MKV from '../../../../../melosyskodeverk';
+import MKV from "../../../../../melosyskodeverk";
 
-import * as Utils from '../../../../../utils';
-import * as Nav from '../../../../../utils/navFrontend';
-import * as MPT from '../../../../../proptypes';
-import './endrePeriode.css';
+import * as Utils from "../../../../../utils";
+import * as Nav from "../../../../../utils/navFrontend";
+import * as MPT from "../../../../../proptypes";
+import "./endrePeriode.css";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 const EndrePeriode = ({
   endrePeriode,
@@ -21,19 +21,17 @@ const EndrePeriode = ({
   feilmeldinger,
   redigerbart,
 }) => {
-  const {
-    fom, tom, begrunnelse, fritekst,
-  } = endrePeriode;
+  const { fom, tom, begrunnelse, fritekst } = endrePeriode;
 
   const tilPeriode = (fomDato, tomDato) => ({
     fom: Utils.dato.formatterDatoTilNorsk(fomDato),
     tom: Utils.dato.formatterDatoTilNorsk(tomDato),
   });
 
-  const hentLovvalgsperiode = props => (
+  const hentLovvalgsperiode = (props) =>
     !Utils._isEmpty(props.lovvalgsperiode)
       ? tilPeriode(props.lovvalgsperiode.fomDato, props.lovvalgsperiode.tomDato)
-      : tilPeriode(props.sedLovvalgsperiode.fom, props.sedLovvalgsperiode.tom));
+      : tilPeriode(props.sedLovvalgsperiode.fom, props.sedLovvalgsperiode.tom);
 
   React.useEffect(() => {
     const periode = hentLovvalgsperiode({ lovvalgsperiode, sedLovvalgsperiode });
@@ -63,46 +61,54 @@ const EndrePeriode = ({
             bredde="fullbredde"
             label="Startdato"
             value={fom}
-            onChange={e => oppdaterFelt(e, oppdaterFom)}
-            onBlur={e => formaterDato(e, oppdaterFom)}
+            onChange={(e) => oppdaterFelt(e, oppdaterFom)}
+            onBlur={(e) => formaterDato(e, oppdaterFom)}
             feil={feilmeldinger.fom}
-            disabled={!redigerbart} />
+            disabled={!redigerbart}
+          />
         </Nav.Column>
         <Nav.Column xs="3">
           <Nav.Input
             bredde="fullbredde"
             label="Sluttdato"
             value={tom}
-            onChange={e => oppdaterFelt(e, oppdaterTom)}
-            onBlur={e => formaterDato(e, oppdaterTom)}
+            onChange={(e) => oppdaterFelt(e, oppdaterTom)}
+            onBlur={(e) => formaterDato(e, oppdaterTom)}
             feil={feilmeldinger.tom}
-            disabled={!redigerbart} />
+            disabled={!redigerbart}
+          />
         </Nav.Column>
         <Nav.Column xs="12">
           <Nav.Select
             bredde="xl"
             label="Begrunnelse for endret periode"
-            onChange={e => oppdaterFelt(e, oppdaterBegrunnelse)}
+            onChange={(e) => oppdaterFelt(e, oppdaterBegrunnelse)}
             disabled={!redigerbart}
             feil={feilmeldinger.begrunnelse}
             defaultValue="0"
           >
-            <option key={uuid()} value="0" disabled>Velg i listen</option>
-            {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map(kodeobjekt =>
-              <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
+            <option key={uuid()} value="0" disabled>
+              Velg i listen
+            </option>
+            {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map((kodeobjekt) => (
+              <option key={kodeobjekt.kode} value={kodeobjekt.kode}>
+                {kodeobjekt.term}
+              </option>
+            ))}
           </Nav.Select>
         </Nav.Column>
-        {fritekstPaakrevd() &&
-        <Nav.Column xs="6">
-          <Nav.Textarea
-            label="Skriv inn begrunnelse for endring av periode..."
-            maxLength={255}
-            onChange={e => oppdaterFelt(e, oppdaterFritekst)}
-            value={fritekst}
-            feil={feilmeldinger.fritekst}
-            disabled={!redigerbart} />
-        </Nav.Column>
-        }
+        {fritekstPaakrevd() && (
+          <Nav.Column xs="6">
+            <Nav.Textarea
+              label="Skriv inn begrunnelse for endring av periode..."
+              maxLength={255}
+              onChange={(e) => oppdaterFelt(e, oppdaterFritekst)}
+              value={fritekst}
+              feil={feilmeldinger.fritekst}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+        )}
       </React.Fragment>
     </div>
   );

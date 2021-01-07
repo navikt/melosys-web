@@ -1,26 +1,26 @@
-import { useState, useEffect, SetStateAction, Dispatch } from 'react';
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 
-import * as Api from '../../../../services/api';
-import * as Utils from '../../../../utils';
+import * as Api from "../../../../services/api";
+import * as Utils from "../../../../utils";
 
-import finnKontaktopplysninger from './finnKontaktopplysninger';
-import { KontaktOpplysning } from './types';
+import finnKontaktopplysninger from "./finnKontaktopplysninger";
+import { KontaktOpplysning } from "./types";
 
-const useKontaktopplysninger = (saksnummer: string, orgnr: string): [
-  KontaktOpplysning,
-  Dispatch<SetStateAction<KontaktOpplysning>>,
-  () => void,
-  () => Promise<boolean>,
-] => {
-  const [kontaktopplysninger, setKontaktopplysninger] = useState<KontaktOpplysning>({ kontaktorgnr: '', kontaktnavn: '' });
+const useKontaktopplysninger = (
+  saksnummer: string,
+  orgnr: string
+): [KontaktOpplysning, Dispatch<SetStateAction<KontaktOpplysning>>, () => void, () => Promise<boolean>] => {
+  const [kontaktopplysninger, setKontaktopplysninger] = useState<KontaktOpplysning>({
+    kontaktorgnr: "",
+    kontaktnavn: "",
+  });
 
   useEffect(() => {
     if (!Utils.organisasjon.erOrgnrGyldig(orgnr)) return;
 
-    finnKontaktopplysninger(saksnummer, orgnr)
-      .then(({ kontaktnavn, kontaktorgnr }) => {
-        setKontaktopplysninger({ kontaktnavn: kontaktnavn || undefined, kontaktorgnr: kontaktorgnr || undefined });
-      });
+    finnKontaktopplysninger(saksnummer, orgnr).then(({ kontaktnavn, kontaktorgnr }) => {
+      setKontaktopplysninger({ kontaktnavn: kontaktnavn || undefined, kontaktorgnr: kontaktorgnr || undefined });
+    });
   }, [orgnr]);
 
   const slettKontaktOpplysninger = async () => {
@@ -35,7 +35,8 @@ const useKontaktopplysninger = (saksnummer: string, orgnr: string): [
   };
 
   const lagreKontaktOpplysninger = async () => {
-    if (kontaktopplysninger.kontaktorgnr && !Utils.organisasjon.erOrgnrGyldig(kontaktopplysninger.kontaktorgnr)) return false;
+    if (kontaktopplysninger.kontaktorgnr && !Utils.organisasjon.erOrgnrGyldig(kontaktopplysninger.kontaktorgnr))
+      return false;
 
     const data = {
       kontaktorgnr: kontaktopplysninger.kontaktorgnr || null,
@@ -52,12 +53,7 @@ const useKontaktopplysninger = (saksnummer: string, orgnr: string): [
     return false;
   };
 
-  return [
-    kontaktopplysninger,
-    setKontaktopplysninger,
-    slettKontaktOpplysninger,
-    lagreKontaktOpplysninger,
-  ];
+  return [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger];
 };
 
 export default useKontaktopplysninger;

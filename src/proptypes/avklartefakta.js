@@ -1,5 +1,5 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
+import PT from "prop-types";
 
 const AvklartefaktaPropType = PT.shape({
   avklartefaktaKode: PT.string,
@@ -12,7 +12,4 @@ const AvklartefaktaPropType = PT.shape({
 
 const AvklartefaktaListePropType = PT.arrayOf(AvklartefaktaPropType);
 
-export {
-  AvklartefaktaPropType as Avklartefakta,
-  AvklartefaktaListePropType as AvklartefaktaListe,
-};
+export { AvklartefaktaPropType as Avklartefakta, AvklartefaktaListePropType as AvklartefaktaListe };

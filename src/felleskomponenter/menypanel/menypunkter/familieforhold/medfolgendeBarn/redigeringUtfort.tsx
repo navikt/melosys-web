@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../../../../utils/navFrontend';
-import * as KV from '../../../../../kodeverk';
+import * as Nav from "../../../../../utils/navFrontend";
+import * as KV from "../../../../../kodeverk";
 
-import { EnRedigeringsknappListeRedigeringUtfort } from '../../editerbartElementListe';
-import KopierbarTekst from '../../kopierbarTekst';
+import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
+import KopierbarTekst from "../../kopierbarTekst";
 
-import ExpandableList from '../../../../expandablelist';
+import ExpandableList from "../../../../expandablelist";
 
-import './redigeringUtfort.css';
+import "./redigeringUtfort.css";
 
 const Header = () => (
   <Nav.Row className="header">
@@ -18,37 +18,24 @@ const Header = () => (
 );
 
 interface RadProps {
-  navn?: string,
-  idNummer?: number,
+  navn?: string;
+  idNummer?: number;
 }
 
-const Rad = ({
-  navn,
-  idNummer,
-}: RadProps) => (
+const Rad = ({ navn, idNummer }: RadProps) => (
   <Nav.Row className="rad">
-    <Nav.Column xs="6">
-      {
-        idNummer &&
-        <KopierbarTekst>{idNummer.toString()}</KopierbarTekst>
-      }
-    </Nav.Column>
+    <Nav.Column xs="6">{idNummer && <KopierbarTekst>{idNummer.toString()}</KopierbarTekst>}</Nav.Column>
     <Nav.Column xs="6">{navn}</Nav.Column>
   </Nav.Row>
 );
 
-const RedigeringUtfort = ({
-  verdier,
-}: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeBarn>) => (
+const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeBarn>) => (
   <div className="medfolgende-barn__redigeringutfort">
     <ExpandableList
       elements={verdier}
       header={<Header />}
-      renderElement={barn => <Rad
-        navn={barn.navn}
-        idNummer={barn.fnr}
-      />}
-      idFromElement={barn => barn.uuid}
+      renderElement={(barn) => <Rad navn={barn.navn} idNummer={barn.fnr} />}
+      idFromElement={(barn) => barn.uuid}
       amountOfItemsCollapsed={2}
       btnTextCollapsed="Vis flere"
       btnTextExpanded="Vis færre"

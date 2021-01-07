@@ -1,15 +1,11 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from "../../../utils/navFrontend";
 
-import './avsendervelger.css';
+import "./avsendervelger.css";
 
-const PreutfyltAvsender = ({
-  className,
-  avsenderID,
-  avsenderNavn,
-}) => (
+const PreutfyltAvsender = ({ className, avsenderID, avsenderNavn }) => (
   <div className={className}>
     <Nav.typo.Element className="linje">Avsender ID</Nav.typo.Element>
     <Nav.typo.Normaltekst className="linje">{avsenderID}</Nav.typo.Normaltekst>

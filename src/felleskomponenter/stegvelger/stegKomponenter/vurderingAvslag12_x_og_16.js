@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, isValid, getFormValues } from 'redux-form';
-import PT from 'prop-types';
-import MKV from '../../../melosyskodeverk';
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { reduxForm, isValid, getFormValues } from "redux-form";
+import PT from "prop-types";
+import MKV from "../../../melosyskodeverk";
 
-import * as KV from '../../../kodeverk';
-import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
-import * as Hooks from '../../../hooks';
-import * as VilkarSelectors from '../../../ducks/vilkar/selectors';
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../../skjema";
+import * as Hooks from "../../../hooks";
+import * as VilkarSelectors from "../../../ducks/vilkar/selectors";
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 
-import PdfLenkeListe from '../../pdfLenkeListe';
-import Begrunnelser from '../../begrunnelser';
+import PdfLenkeListe from "../../pdfLenkeListe";
+import Begrunnelser from "../../begrunnelser";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
@@ -39,7 +39,7 @@ const VurderingAvslag12_x_og_16 = ({
 
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev',
+      navn: "Forhåndsvis vedtaksbrev",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
@@ -50,7 +50,7 @@ const VurderingAvslag12_x_og_16 = ({
 
   if (!erNyVurdering) {
     pdfDokumenter.push({
-      navn: 'Orientering til arbeidsgiver om avslag',
+      navn: "Orientering til arbeidsgiver om avslag",
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
@@ -66,8 +66,8 @@ const VurderingAvslag12_x_og_16 = ({
   ];
 
   const validerForm = () => {
-    touch('vedtakstype');
-    touch('vedtakstypebegrunnelse');
+    touch("vedtakstype");
+    touch("vedtakstypebegrunnelse");
     return formIsValid;
   };
 
@@ -92,37 +92,29 @@ const VurderingAvslag12_x_og_16 = ({
 
   return (
     <div>
-      <Nav.typo.Undertittel>
-        Avslag
-      </Nav.typo.Undertittel>
-      {valgte_art_12_1_begrunnelser.length > 0 &&
+      <Nav.typo.Undertittel>Avslag</Nav.typo.Undertittel>
+      {valgte_art_12_1_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"
           valgteBegrunnelser={[...valgte_art_12_1_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[
-            ...MKV.KTObjects.begrunnelser.art12_1_begrunnelser,
-            ...muligeVirksomhetBegrunnelser,
-          ]}
+          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_1_begrunnelser, ...muligeVirksomhetBegrunnelser]}
         />
-      }
-      {valgte_art_12_2_begrunnelser.length > 0 &&
+      )}
+      {valgte_art_12_2_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12, nr. 2:"
           valgteBegrunnelser={[...valgte_art_12_2_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[
-            ...MKV.KTObjects.begrunnelser.art12_2_begrunnelser,
-            ...muligeVirksomhetBegrunnelser,
-          ]}
+          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_2_begrunnelser, ...muligeVirksomhetBegrunnelser]}
         />
-      }
-      {(valgte_art_16_1_begrunnelser.length > 0 || art16_1_fritekst) &&
+      )}
+      {(valgte_art_16_1_begrunnelser.length > 0 || art16_1_fritekst) && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 16, nr. 1:"
           valgteBegrunnelser={valgte_art_16_1_begrunnelser}
           muligeBegrunnelser={MKV.KTObjects.begrunnelser.art16_1_avslag}
           fritekst={art16_1_fritekst}
         />
-      }
+      )}
       <Nav.Row>
         <Nav.Column xs="8">
           <Skjema.Textarea
@@ -135,10 +127,7 @@ const VurderingAvslag12_x_og_16 = ({
           />
         </Nav.Column>
       </Nav.Row>
-      {
-        erNyVurdering &&
-        <Skjema.Vedtakstype redigerbart={redigerbart} />
-      }
+      {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
       <Nav.Hovedknapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} onClick={avslaa}>
         Fatt vedtak
@@ -163,7 +152,7 @@ VurderingAvslag12_x_og_16.propTypes = {
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {
-  art16_1_fritekst: '',
+  art16_1_fritekst: "",
   redigerbart: true,
   formValues: {},
 };
@@ -174,14 +163,15 @@ const VurderingAvslagArtikkel12Og16Form = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.avslag_artikkel_12_og_16, {
-    context: {
-      behandlingstype: props.behandlingstype,
-    },
-  })(values),
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(YupSkjemaer.avslag_artikkel_12_og_16, {
+      context: {
+        behandlingstype: props.behandlingstype,
+      },
+    })(values),
 })(VurderingAvslag12_x_og_16);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   valgte_art_12_1_begrunnelser: VilkarSelectors.art12_1_begrunnelserSelector(state),
   valgte_art_12_2_begrunnelser: VilkarSelectors.art12_2_begrunnelserSelector(state),
   valgte_art_16_1_begrunnelser: VilkarSelectors.art16_1_begrunnelserSelector(state),

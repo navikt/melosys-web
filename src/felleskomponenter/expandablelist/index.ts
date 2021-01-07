@@ -1,3 +1,3 @@
-import expandableList from './expandableList';
+import expandableList from "./expandableList";
 
 export default expandableList;

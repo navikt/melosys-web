@@ -1,7 +1,7 @@
-import OppholdRegel from './OppholdRegel';
-import ArbeidRegel from './ArbeidRegel';
-import StudierRegel from './StudierRegel';
-import StonadRegel from './StonadRegel';
+import OppholdRegel from "./OppholdRegel";
+import ArbeidRegel from "./ArbeidRegel";
+import StudierRegel from "./StudierRegel";
+import StonadRegel from "./StonadRegel";
 
 class Regler {
   constructor(skjema = {}, saksopplysninger = {}) {

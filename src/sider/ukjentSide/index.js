@@ -1,3 +1,3 @@
-import UkjentSide from './ukjentSide';
+import UkjentSide from "./ukjentSide";
 
 export default UkjentSide;

@@ -1,10 +1,7 @@
-import * as menypanelOperations from './operations';
-import * as menypanelSelectors from './selectors';
-import menypanelReducers from './reducers';
+import * as menypanelOperations from "./operations";
+import * as menypanelSelectors from "./selectors";
+import menypanelReducers from "./reducers";
 
-export {
-  menypanelOperations,
-  menypanelSelectors,
-};
+export { menypanelOperations, menypanelSelectors };
 
 export default menypanelReducers;

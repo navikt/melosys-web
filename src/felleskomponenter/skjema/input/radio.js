@@ -1,10 +1,10 @@
-import React from 'react';
-import PT from 'prop-types';
-import { touch, Field } from 'redux-form';
+import React from "react";
+import PT from "prop-types";
+import { touch, Field } from "redux-form";
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from "../../../utils/navFrontend";
 
-import '../skjema.css';
+import "../skjema.css";
 
 function InnerInputComponent({
   input,
@@ -19,7 +19,7 @@ function InnerInputComponent({
   const gjeldendeFeltVerdi = input.value;
   const radioButtonVerdi = rest.value;
 
-  const feil = (meta.error && meta.touched && !meta.active) ? { feilmelding: meta.error } : undefined;
+  const feil = meta.error && meta.touched && !meta.active ? { feilmelding: meta.error } : undefined;
 
   return (
     <Nav.Radio
@@ -53,15 +53,17 @@ InnerInputComponent.propTypes = {
  * 'true'/'false'. Normaliser disse scenarioene, men returner alle andre
  * radioknapp-valg som urørt.
  */
-const normaliserReduxBoolean = valg => {
-  if (valg === 'true') { return true; }
-  if (valg === 'false') { return false; }
+const normaliserReduxBoolean = (valg) => {
+  if (valg === "true") {
+    return true;
+  }
+  if (valg === "false") {
+    return false;
+  }
   return valg;
 };
 
-function Radio({
-  id, feltNavn, className, ...rest
-}) {
+function Radio({ id, feltNavn, className, ...rest }) {
   return (
     <Field
       name={feltNavn}
@@ -75,7 +77,7 @@ function Radio({
 }
 
 Radio.defaultProps = {
-  className: '',
+  className: "",
   id: undefined,
 };
 

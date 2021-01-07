@@ -1,12 +1,12 @@
 /* eslint-disable consistent-return */
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingForretningssted from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingForretningssted';
-import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../regler/avklartefakta';
-import * as KV from '../../../../kodeverk';
-import * as Utils from '../../../../utils';
-import { hentLovvalgsbestemmelse } from '../../../../regler/lovvalgsbestemmelser';
-import { BOOLSK_STRING } from '../../../../constants';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingForretningssted from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingForretningssted";
+import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../regler/avklartefakta";
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import { hentLovvalgsbestemmelse } from "../../../../regler/lovvalgsbestemmelser";
+import { BOOLSK_STRING } from "../../../../constants";
 
 class Forretningssted extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -14,12 +14,14 @@ class Forretningssted extends Steg {
     const perioder = propsLight.omfattesIAnnetLand ? propsLight.utpekingsperioder : propsLight.lovvalgsperioder;
     const harLovvalgsbestemmelse = this.harLovvalgsbestemmelse(perioder);
     const harAvklartForretningsland = this.harAvklartForretningsland(propsLight);
-    const erOmfattetINorge = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) === BOOLSK_STRING.SANN;
+    const erOmfattetINorge =
+      hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) ===
+      BOOLSK_STRING.SANN;
     const erOmfattetNorgeVurdert = this.omfattetNorgeVurdert(propsLight);
 
     const omfattetILandFakta = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
     const omfattetILandFaktaVerdi = hentFaktaVerdi(omfattetILandFakta);
-    const erOmfattetILandIkkeNorge = omfattetILandFaktaVerdi && omfattetILandFaktaVerdi !== 'NO';
+    const erOmfattetILandIkkeNorge = omfattetILandFaktaVerdi && omfattetILandFaktaVerdi !== "NO";
 
     this.kriterier = [
       {
@@ -27,21 +29,25 @@ class Forretningssted extends Steg {
         nesteSteg: STEG.ARTIKKEL_13_1_B_VEDTAK,
       },
       {
-        exec: () => harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetNorgeVurdert && erOmfattetILandIkkeNorge,
+        exec: () =>
+          harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetNorgeVurdert && erOmfattetILandIkkeNorge,
         nesteSteg: STEG.ARTIKKEL_13_1_B_UTPEK_LAND,
       },
     ];
     this.id = STEG.FORRETNINGSSTED;
-    this.tittel = 'Vurdering av 13.1.b';
+    this.tittel = "Vurdering av 13.1.b";
     this.komponent = VurderingForretningssted;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       valgteVirksomheter: _propsLight.valgteVirksomheterIkkeNaeringsDrivende,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
-    this.beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = (_propsLight) => {
       const lovvalgsbestemmelse = hentLovvalgsbestemmelse(perioder);
-      const avklarteForretningsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, _propsLight.avklartefakta);
+      const avklarteForretningsland = hentFaktaListe(
+        KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED,
+        _propsLight.avklartefakta
+      );
       const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, _propsLight.avklartefakta);
       const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, _propsLight.avklartefakta);
       const harOmfattetAvklaring = this.harOmfattetAvklaring(_propsLight);
@@ -58,17 +64,17 @@ class Forretningssted extends Steg {
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this.status = FANE_STATUS.OK;
   }
 
-  harLovvalgsbestemmelse = perioder => {
+  harLovvalgsbestemmelse = (perioder) => {
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(perioder);
     return !Utils._isNil(lovvalgsbestemmelse);
   };
 
-  harOmfattetAvklaring = propsLight => {
+  harOmfattetAvklaring = (propsLight) => {
     const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta);
     const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
 
@@ -84,19 +90,23 @@ class Forretningssted extends Steg {
     return !Utils._isNil(hentFaktaVerdi(omfattetILand));
   };
 
-  omfattetNorgeVurdert = propsLight => {
-    const omfattetNorgeAvklarteFakta = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta);
+  omfattetNorgeVurdert = (propsLight) => {
+    const omfattetNorgeAvklarteFakta = hentFakta(
+      KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE,
+      propsLight.avklartefakta
+    );
     return !Utils._isEmpty(omfattetNorgeAvklarteFakta);
   };
-  harAvklartForretningsland = propsLight => {
-    const avklarteForretningsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, propsLight.avklartefakta);
+  harAvklartForretningsland = (propsLight) => {
+    const avklarteForretningsland = hentFaktaListe(
+      KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED,
+      propsLight.avklartefakta
+    );
 
-    return propsLight.valgteVirksomheterIkkeNaeringsDrivende.every(vv => (
-      avklarteForretningsland.some(afl => (
-        afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl))
-      ))
-    ));
-  }
+    return propsLight.valgteVirksomheterIkkeNaeringsDrivende.every((vv) =>
+      avklarteForretningsland.some((afl) => afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl)))
+    );
+  };
 }
 
 export default Forretningssted;

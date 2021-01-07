@@ -1,49 +1,48 @@
-import React, { Fragment } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import { formSelectors } from '../../ducks/form';
+import React, { Fragment } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import { formSelectors } from "../../ducks/form";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import './behandlingsgrunnlagFeilmeldinger.css';
-
+import "./behandlingsgrunnlagFeilmeldinger.css";
 
 export const BehandlingsgrunnlagFeilmeldinger = ({ panelFeil }) => {
   if (panelFeil.length === 0) return null;
 
   return (
-    <Nav.AlertStripe className="feilmelding" type="advarsel" >
+    <Nav.AlertStripe className="feilmelding" type="advarsel">
       Ugyldige felter. Sjekk følgende panel(er):
       <ul>
-        {
-          panelFeil.map(({ panel, feil }) => (
-            <Fragment key={panel}>
-              <li>{panel}</li>
-              {
-                feil.map(enkeltFeil => (
-                  <li className="feilElement" key={enkeltFeil}>{enkeltFeil}</li>
-                ))
-              }
-            </Fragment>
-          ))
-        }
+        {panelFeil.map(({ panel, feil }) => (
+          <Fragment key={panel}>
+            <li>{panel}</li>
+            {feil.map((enkeltFeil) => (
+              <li className="feilElement" key={enkeltFeil}>
+                {enkeltFeil}
+              </li>
+            ))}
+          </Fragment>
+        ))}
       </ul>
     </Nav.AlertStripe>
   );
 };
 
 BehandlingsgrunnlagFeilmeldinger.propTypes = {
-  panelFeil: PT.arrayOf(PT.shape({
-    feil: PT.arrayOf(PT.string),
-    panel: PT.string.isRequired,
-  })),
+  panelFeil: PT.arrayOf(
+    PT.shape({
+      feil: PT.arrayOf(PT.string),
+      panel: PT.string.isRequired,
+    })
+  ),
 };
 
 BehandlingsgrunnlagFeilmeldinger.defaultProps = {
   panelFeil: [],
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   panelFeil: formSelectors.PanelFeilSelector(state),
 });
 

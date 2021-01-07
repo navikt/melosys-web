@@ -1,5 +1,5 @@
-import Landvelger from './LandVelger';
-import EnkeltLandPure from './enkeltLandPure';
+import Landvelger from "./LandVelger";
+import EnkeltLandPure from "./enkeltLandPure";
 
 export { EnkeltLandPure };
 export default Landvelger;

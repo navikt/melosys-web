@@ -7,12 +7,12 @@
  *
  */
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
-import * as Routing from '../../routing';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
+import * as Routing from "../../routing";
 
 /**
  * Hent Soknad
@@ -33,10 +33,10 @@ export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
   };
 
   // TODO legge på logging
-  return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch(error => error);
+  return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch((error) => error);
 };
 
-export const sendBehandlingsOppgave = async data => {
+export const sendBehandlingsOppgave = async (data) => {
   const { behandlingstema: valgtBehandlingstema } = data;
 
   const oppgave = {
@@ -45,13 +45,15 @@ export const sendBehandlingsOppgave = async data => {
 
   const response = await Api.Oppgaver.sendPlukk(oppgave);
   const { saksnummer, behandlingID, behandlingstema } = response;
-  if (!saksnummer) { return false; }
+  if (!saksnummer) {
+    return false;
+  }
 
   return Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
 };
 
-export const sendJournalOppgave = async fagomrade => {
-  const behandlingstyper = fagomrade === 'MED' ? [] : [fagomrade];
+export const sendJournalOppgave = async (fagomrade) => {
+  const behandlingstyper = fagomrade === "MED" ? [] : [fagomrade];
 
   const oppgave = {
     oppgavetype: MKV.Koder.oppgavetyper.JFR,
@@ -60,6 +62,8 @@ export const sendJournalOppgave = async fagomrade => {
   };
   const response = await Api.Oppgaver.sendPlukk(oppgave);
   const { oppgaveID, journalpostID } = response;
-  if (!(oppgaveID || journalpostID)) { return false; }
+  if (!(oppgaveID || journalpostID)) {
+    return false;
+  }
   return `/journalforing/${journalpostID}/${oppgaveID}`;
 };

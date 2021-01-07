@@ -1,5 +1,5 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import { Fagsak } from './fagsak';
+import { Fagsak } from "./fagsak";
 
 export const FagsakSokListe = PT.arrayOf(Fagsak);

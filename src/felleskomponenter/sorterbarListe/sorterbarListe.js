@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import PT from 'prop-types';
+import React, { useState } from "react";
+import PT from "prop-types";
 
-import * as Utils from '../../utils';
-import * as Nav from '../../utils/navFrontend';
+import * as Utils from "../../utils";
+import * as Nav from "../../utils/navFrontend";
 
-import sorterElementerEtterDato from './sorterElementerEtterDato';
+import sorterElementerEtterDato from "./sorterElementerEtterDato";
 
-import './sorterbarListe.css';
+import "./sorterbarListe.css";
 
 const SorterbarListe = ({
   elementer,
@@ -17,12 +17,12 @@ const SorterbarListe = ({
   radioGroupName,
   className,
 }) => {
-  const defaultOrder = defaultChecked === 'nyeste' ? 'descending' : 'ascending';
+  const defaultOrder = defaultChecked === "nyeste" ? "descending" : "ascending";
   const [sortOrder, setSortOrder] = useState(defaultOrder);
 
   if (!elementer) return null;
 
-  const handleSortOrderChange = event => {
+  const handleSortOrderChange = (event) => {
     setSortOrder(event.target.value);
   };
 
@@ -32,28 +32,27 @@ const SorterbarListe = ({
 
   return (
     <div className={className}>
-      {
-        elementer.length > 1 &&
+      {elementer.length > 1 && (
         <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend={sortingLegend}>
           <div>
             <Nav.Radio
               name={uniqueName}
               label="Nyeste først"
               value="descending"
-              defaultChecked={defaultChecked === 'nyeste'}
+              defaultChecked={defaultChecked === "nyeste"}
             />
             <Nav.Radio
               name={uniqueName}
               label="Eldste først"
               value="ascending"
-              defaultChecked={defaultChecked === 'eldste'}
+              defaultChecked={defaultChecked === "eldste"}
             />
           </div>
         </Nav.Fieldset>
-      }
-      {
-        sorterteElementer.map(oppgave => <Component key={Utils._uuid()} sak={oppgave} />)
-      }
+      )}
+      {sorterteElementer.map((oppgave) => (
+        <Component key={Utils._uuid()} sak={oppgave} />
+      ))}
     </div>
   );
 };
@@ -70,7 +69,7 @@ SorterbarListe.propTypes = {
 
 SorterbarListe.defaultProps = {
   elementer: [],
-  defaultChecked: 'eldste',
+  defaultChecked: "eldste",
   radioGroupName: undefined,
   className: undefined,
 };

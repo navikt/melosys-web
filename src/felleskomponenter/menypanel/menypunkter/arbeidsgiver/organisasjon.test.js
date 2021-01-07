@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import Organisasjon from './organisasjon';
-import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
+import Organisasjon from "./organisasjon";
+import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 
-describe('organisasjon', () => {
+describe("organisasjon", () => {
   let props = null;
 
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('organisasjon', () => {
     };
   });
 
-  it('viser organisasjonsadresse', () => {
+  it("viser organisasjonsadresse", () => {
     const organisasjon = shallow(<Organisasjon {...props} />);
     const organisasjonsAdresse = organisasjon.find(OrganisasjonsAdresse);
 

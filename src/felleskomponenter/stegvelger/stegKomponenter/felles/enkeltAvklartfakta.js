@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import PT from 'prop-types';
-import * as Nav from '../../../../utils/navFrontend';
-import * as MPT from '../../../../proptypes';
-import * as Mui from '../../../ui';
+import React, { useEffect } from "react";
+import PT from "prop-types";
+import * as Nav from "../../../../utils/navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../ui";
 
 import {
   hentFaktaVerdi,
@@ -10,16 +10,20 @@ import {
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
   slettAvklartfakta,
-} from '../../../../regler/avklartefakta';
+} from "../../../../regler/avklartefakta";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
-const EnkeltAvklartfakta = props => {
+const EnkeltAvklartfakta = (props) => {
   const {
-    redigerbart, begrunnelser, tittel,
+    redigerbart,
+    begrunnelser,
+    tittel,
     avklartefaktaTyper,
-    avklartfakta, avklartfaktaKode,
-    oppdaterData, onChange,
+    avklartfakta,
+    avklartfaktaKode,
+    oppdaterData,
+    onChange,
   } = props;
 
   const fakta = hentFaktaVerdi(avklartfakta);
@@ -34,7 +38,7 @@ const EnkeltAvklartfakta = props => {
     return cleanup;
   }, []);
 
-  const radioEndringHandler = event => {
+  const radioEndringHandler = (event) => {
     oppdaterData(lagAvklartfakta(avklartfaktaKode, null, event.target.value));
 
     if (onChange) {
@@ -42,7 +46,7 @@ const EnkeltAvklartfakta = props => {
     }
   };
 
-  const listevalgEndringHandler = event => {
+  const listevalgEndringHandler = (event) => {
     oppdaterData(lagAvklartefaktaBegrunnelse(avklartfaktaKode, null, [event.value]));
   };
 
@@ -51,18 +55,17 @@ const EnkeltAvklartfakta = props => {
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.Fieldset legend={tittel}>
-            {
-              avklartefaktaTyper.map(af =>
-                <Nav.Radio
-                  key={uuid()}
-                  name={avklartfaktaKode}
-                  label={af.label}
-                  value={af.type}
-                  checked={fakta === af.type}
-                  onChange={radioEndringHandler}
-                  disabled={!redigerbart || af.disabled}
-                />)
-            }
+            {avklartefaktaTyper.map((af) => (
+              <Nav.Radio
+                key={uuid()}
+                name={avklartfaktaKode}
+                label={af.label}
+                value={af.type}
+                checked={fakta === af.type}
+                onChange={radioEndringHandler}
+                disabled={!redigerbart || af.disabled}
+              />
+            ))}
           </Nav.Fieldset>
         </Nav.Column>
       </Nav.Row>
@@ -80,8 +83,8 @@ const EnkeltAvklartfakta = props => {
               />
             </Nav.Fieldset>
           </Nav.Column>
-        </Nav.Row>)
-      }
+        </Nav.Row>
+      )}
     </div>
   );
 };
@@ -102,7 +105,6 @@ EnkeltAvklartfakta.defaultProps = {
   begrunnelser: [],
   onChange: null,
   slettData: null,
-
 };
 
 export default EnkeltAvklartfakta;

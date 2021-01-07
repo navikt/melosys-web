@@ -7,14 +7,14 @@
  *
  */
 
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
-import * as DucksUtils from '../utils';
-import MKV from '../../melosyskodeverk';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
+import * as DucksUtils from "../utils";
+import MKV from "../../melosyskodeverk";
 
-import { modalerOperations } from '../modaler';
-import { navigeringOperations } from '../navigering';
+import { modalerOperations } from "../modaler";
+import { navigeringOperations } from "../navigering";
 
 /* eslint-disable import/prefer-default-export */
 export function fatt(behandlingID, body) {
@@ -26,7 +26,7 @@ export function fatt(behandlingID, body) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {
+      success: (dispatch) => {
         dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
       },
@@ -48,7 +48,7 @@ export function endre(behandlingID, body) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {
+      success: (dispatch) => {
         dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
       },
@@ -79,7 +79,7 @@ export function avslaSoknad(behandlingID, data) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {
+      success: (dispatch) => {
         dispatch(modalerOperations.skjulAvslagSoknad());
         dispatch(navigeringOperations.tilForsiden());
       },

@@ -1,31 +1,27 @@
-import React, { useEffect, Fragment } from 'react';
-import PT from 'prop-types';
-import uuid from 'uuid';
+import React, { useEffect, Fragment } from "react";
+import PT from "prop-types";
+import uuid from "uuid";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as Nav from '../../utils/navFrontend';
-import * as KV from '../../kodeverk';
-import * as MPT from '../../proptypes';
+import * as Nav from "../../utils/navFrontend";
+import * as KV from "../../kodeverk";
+import * as MPT from "../../proptypes";
 
-import {
-  hentFaktaVerdi,
-  konverterTilStegData,
-  slettAvklartfakta,
-} from '../../regler/avklartefakta';
+import { hentFaktaVerdi, konverterTilStegData, slettAvklartfakta } from "../../regler/avklartefakta";
 
-import './sokkelskipenkelt.css';
+import "./sokkelskipenkelt.css";
 
-const ArbeidslandRadioButtons = props => {
+const ArbeidslandRadioButtons = (props) => {
   const { landliste, onChange, arbeidslandType } = props;
 
-  if (landliste.every(land => !land.kode)) return 'Ingen flaggland, sokkelland eller territorialfarvannsland valgt.';
+  if (landliste.every((land) => !land.kode)) return "Ingen flaggland, sokkelland eller territorialfarvannsland valgt.";
 
-  const utfylteLand = landliste.filter(land => land.kode);
+  const utfylteLand = landliste.filter((land) => land.kode);
 
   const unikRadioButtonGruppeID = uuid();
 
-  return utfylteLand.map(land => (
+  return utfylteLand.map((land) => (
     <Nav.Radio
       onChange={() => onChange(land)}
       checked={arbeidslandType === land.term}
@@ -38,19 +34,21 @@ const ArbeidslandRadioButtons = props => {
 };
 
 ArbeidslandRadioButtons.propTypes = {
-  landliste: PT.arrayOf(PT.shape({
-    term: PT.string.isRequired,
-    kode: PT.string,
-  })).isRequired,
+  landliste: PT.arrayOf(
+    PT.shape({
+      term: PT.string.isRequired,
+      kode: PT.string,
+    })
+  ).isRequired,
   onChange: PT.func.isRequired,
   arbeidlandType: PT.string,
 };
 
 ArbeidslandRadioButtons.defaultProps = {
-  arbeidslandType: '',
+  arbeidslandType: "",
 };
 
-const SokkelSkipEnkelt = props => {
+const SokkelSkipEnkelt = (props) => {
   const {
     maritimtArbeid,
     sokkelEllerSkip,
@@ -65,9 +63,7 @@ const SokkelSkipEnkelt = props => {
     slettData,
   } = props;
 
-  const {
-    enhetNavn, flaggLandkode, installasjonsLandkode, territorialfarvann,
-  } = maritimtArbeid;
+  const { enhetNavn, flaggLandkode, installasjonsLandkode, territorialfarvann } = maritimtArbeid;
 
   const { begrunnelseKoder } = sokkelEllerSkip;
   const installasjonsType = hentFaktaVerdi(sokkelEllerSkip);
@@ -81,7 +77,9 @@ const SokkelSkipEnkelt = props => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sokkelEllerSkip));
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
     oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND), arbeidslandFakta);
-    oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta));
+    oppdaterData(
+      konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta)
+    );
     const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn));
       slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn));
@@ -91,13 +89,11 @@ const SokkelSkipEnkelt = props => {
     return cleanup;
   }, []);
 
-  const sokkelSkipEndret = e => (
-    avklartefaktaEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn, e.target.value)
-  );
+  const sokkelSkipEndret = (e) =>
+    avklartefaktaEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn, e.target.value);
 
-  const begrunnelserEndret = e => (
-    avklartefaktaBegrunnelserEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn, e.target.value)
-  );
+  const begrunnelserEndret = (e) =>
+    avklartefaktaBegrunnelserEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn, e.target.value);
 
   const arbeidslandEndret = (land = {}) => {
     avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn, land.kode);
@@ -117,17 +113,18 @@ const SokkelSkipEnkelt = props => {
           onChange={sokkelSkipEndret}
           value={SOKKEL}
           checked={installasjonsType === SOKKEL}
-          label="Sokkel" />
+          label="Sokkel"
+        />
         <Nav.Radio
           name={key}
           disabled={sokkelSkipDisabled}
           onChange={sokkelSkipEndret}
           checked={installasjonsType === SKIP}
           value={SKIP}
-          label="Skip" />
+          label="Skip"
+        />
       </Nav.Column>
-      {
-        installasjonsType === SOKKEL &&
+      {installasjonsType === SOKKEL && (
         <Fragment>
           <Nav.Column xs="2">
             <Nav.Select
@@ -136,21 +133,26 @@ const SokkelSkipEnkelt = props => {
               id="installasjonsTypeBegrunnelser"
               label="Begrunnelse hvis sokkel"
               onChange={begrunnelserEndret}
-              value={begrunnelseKoder[0]} >
+              value={begrunnelseKoder[0]}
+            >
               <option key={null} value={null} />
-              {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
+              {begrunnelser.map((enkelt) => (
+                <option key={enkelt.kode} value={enkelt.kode}>
+                  {enkelt.term}
+                </option>
+              ))}
             </Nav.Select>
           </Nav.Column>
           <Nav.Column xs="1"></Nav.Column>
         </Fragment>
-      }
+      )}
       <Nav.Column xs="4">
         <Nav.Fieldset disabled={sokkelSkipDisabled} legend="Velg arbeidsland">
           <ArbeidslandRadioButtons
             landliste={[
-              { term: 'Flaggland', kode: flaggLandkode },
-              { term: 'Sokkelland', kode: installasjonsLandkode },
-              { term: 'Territorialfarvannsland', kode: territorialfarvann },
+              { term: "Flaggland", kode: flaggLandkode },
+              { term: "Sokkelland", kode: installasjonsLandkode },
+              { term: "Territorialfarvannsland", kode: territorialfarvann },
             ]}
             onChange={arbeidslandEndret}
             arbeidslandType={arbeidslandType}

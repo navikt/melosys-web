@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 /**
  * Selectors
@@ -8,6 +8,6 @@ import { createSelector } from 'reselect';
  */
 /* eslint-disable import/prefer-default-export */
 export const MineSakerSelector = createSelector(
-  state => state.oppgaver.data || {},
-  minesaker => minesaker
+  (state) => state.oppgaver.data || {},
+  (minesaker) => minesaker
 );

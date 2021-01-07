@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { TextareaControlled, SkjemaGruppe } from 'nav-frontend-skjema';
-import { Knapp } from 'nav-frontend-knapper';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { TextareaControlled, SkjemaGruppe } from "nav-frontend-skjema";
+import { Knapp } from "nav-frontend-knapper";
 
-import './sideDialogMelding.css';
+import "./sideDialogMelding.css";
 
 class SideDialogMelding extends Component {
-  sendMessage = event => {
+  sendMessage = (event) => {
     event.preventDefault();
   };
 

@@ -1,27 +1,23 @@
-import React, { useState } from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import { Field, WrappedFieldProps } from 'redux-form';
+import React, { useState } from "react";
+import { EditorState, convertToRaw } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import { Field, WrappedFieldProps } from "redux-form";
 
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import './htmleditor.css';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import "./htmleditor.css";
 
 const toolbar = {
-  options: ['inline', 'fontSize', 'list', 'link', 'history'],
-  inline: { options: ['bold', 'italic', 'underline', 'strikethrough'] },
+  options: ["inline", "fontSize", "list", "link", "history"],
+  inline: { options: ["bold", "italic", "underline", "strikethrough"] },
   list: { inDropdown: true },
 };
 
 type InnerHtmlEditorComponentProps = {
-  [x: string]: any,
+  [x: string]: any;
 };
 
-function InnerHTMLEditorComponent
-({
-  input,
-  ...rest
-}: InnerHtmlEditorComponentProps & WrappedFieldProps) {
+function InnerHTMLEditorComponent({ input, ...rest }: InnerHtmlEditorComponentProps & WrappedFieldProps) {
   const [currentEditorState, setCurrentEditorState] = useState(EditorState.createEmpty());
 
   const onEditorStateChange = (editorState: EditorState) => {
@@ -30,7 +26,8 @@ function InnerHTMLEditorComponent
   };
 
   const inputProps = {
-    ...input, ...rest,
+    ...input,
+    ...rest,
   };
 
   return (
@@ -41,31 +38,19 @@ function InnerHTMLEditorComponent
         wrapperClassName="wrapper"
         editorClassName="editor"
         onEditorStateChange={onEditorStateChange}
-        placeholder={rest.placeholder || ''}
+        placeholder={rest.placeholder || ""}
       />
     </div>
   );
 }
 
-interface HtmleditorProps extends InnerHtmlEditorComponentProps{
+interface HtmleditorProps extends InnerHtmlEditorComponentProps {
   feltNavn: string;
-  className: string,
+  className: string;
 }
 
-function HTMLEditor
-({
-  feltNavn,
-  className,
-  ...rest
-}: HtmleditorProps) {
-  return (
-    <Field
-      name={feltNavn}
-      className={className}
-      component={InnerHTMLEditorComponent}
-      props={rest}
-    />
-  );
+function HTMLEditor({ feltNavn, className, ...rest }: HtmleditorProps) {
+  return <Field name={feltNavn} className={className} component={InnerHTMLEditorComponent} props={rest} />;
 }
 
 export default HTMLEditor;

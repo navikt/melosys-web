@@ -1,10 +1,10 @@
-import React, { ComponentProps } from 'react';
-import { mock, instance } from 'ts-mockito';
-import { shallow } from 'enzyme';
+import React, { ComponentProps } from "react";
+import { mock, instance } from "ts-mockito";
+import { shallow } from "enzyme";
 
-import { Barnetrygd } from './barnetrygd';
+import { Barnetrygd } from "./barnetrygd";
 
-describe('Barnetrygd', () => {
+describe("Barnetrygd", () => {
   const mockedProps = mock<ComponentProps<typeof Barnetrygd>>();
   let props = instance(mockedProps);
 
@@ -18,7 +18,7 @@ describe('Barnetrygd', () => {
     };
     const barnetrygd = shallow(<Barnetrygd {...props} />);
 
-    expect(barnetrygd.contains('Ja')).toBe(true);
+    expect(barnetrygd.contains("Ja")).toBe(true);
   });
 
   it('viser "NEI" om sakOgBehandling.eosBarnetrygd er false', () => {
@@ -27,6 +27,6 @@ describe('Barnetrygd', () => {
     };
     const barnetrygd = shallow(<Barnetrygd {...props} />);
 
-    expect(barnetrygd.contains('Nei')).toBe(true);
+    expect(barnetrygd.contains("Nei")).toBe(true);
   });
 });

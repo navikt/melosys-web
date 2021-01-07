@@ -1,25 +1,25 @@
-import { ErrorResponse } from 'melosys-api';
+import { ErrorResponse } from "melosys-api";
 
-export const OK = 'vedtak/OK';
-export const FEILET = 'vedtak/FEILET';
-export const PENDING = 'vedtak/PENDING';
+export const OK = "vedtak/OK";
+export const FEILET = "vedtak/FEILET";
+export const PENDING = "vedtak/PENDING";
 
 export interface Data {
-  data?: ErrorResponse,
+  data?: ErrorResponse;
 }
 
 interface FeiletAction {
-  type: typeof FEILET,
-  data: any,
+  type: typeof FEILET;
+  data: any;
 }
 
 interface PendingAction {
-  type: typeof PENDING,
+  type: typeof PENDING;
 }
 
 interface OkAction {
-  type: typeof OK,
-  data: any,
+  type: typeof OK;
+  data: any;
 }
 
 export type Action = FeiletAction | PendingAction | OkAction;

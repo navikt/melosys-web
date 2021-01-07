@@ -1,44 +1,44 @@
-import React from 'react';
+import React from "react";
 
-import KodeTermSelect from './kodeTermSelect';
+import KodeTermSelect from "./kodeTermSelect";
 
-describe('KodeTermSelect', () => {
+describe("KodeTermSelect", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
       koder: [],
-      value: '',
+      value: "",
       onChange: jest.fn(),
-      label: '',
+      label: "",
       feil: undefined,
       disableForsteValg: false,
       redigerbart: true,
     };
   });
 
-  it('viser en Nav Select først', () => {
+  it("viser en Nav Select først", () => {
     const komponent = shallow(<KodeTermSelect {...props} />);
-    expect(komponent.first().is('Select')).toBe(true);
+    expect(komponent.first().is("Select")).toBe(true);
   });
 
-  describe('Nav Select', () => {
-    it('har ett valg når koder prop er tom', () => {
+  describe("Nav Select", () => {
+    it("har ett valg når koder prop er tom", () => {
       props.koder = [];
       const komponent = shallow(<KodeTermSelect {...props} />);
-      expect(komponent.find('option')).toHaveLength(1);
+      expect(komponent.find("option")).toHaveLength(1);
     });
 
-    it('mapper koder prop til valg i dropdownlist', () => {
+    it("mapper koder prop til valg i dropdownlist", () => {
       props.koder = [
-        { kode: '', term: '' },
-        { kode: '', term: '' },
+        { kode: "", term: "" },
+        { kode: "", term: "" },
       ];
       const komponent = shallow(<KodeTermSelect {...props} />);
-      expect(komponent.find('option')).toHaveLength(3);
+      expect(komponent.find("option")).toHaveLength(3);
     });
 
-    it('setter disabled til det motsatte av redigerbar prop', () => {
+    it("setter disabled til det motsatte av redigerbar prop", () => {
       props.redigerbart = true;
       let komponent = shallow(<KodeTermSelect {...props} />);
       expect(komponent.props().disabled).toBe(false);
@@ -48,14 +48,14 @@ describe('KodeTermSelect', () => {
       expect(komponent.props().disabled).toBe(true);
     });
 
-    describe('valg', () => {
-      it('tekst er hentet fra term fra kode prop', () => {
+    describe("valg", () => {
+      it("tekst er hentet fra term fra kode prop", () => {
         props.koder = [
-          { kode: '', term: '' },
-          { kode: '', term: 'testterm' },
+          { kode: "", term: "" },
+          { kode: "", term: "testterm" },
         ];
         const komponent = shallow(<KodeTermSelect {...props} />);
-        expect(komponent.find('option').last().text()).toBe('testterm');
+        expect(komponent.find("option").last().text()).toBe("testterm");
       });
     });
   });

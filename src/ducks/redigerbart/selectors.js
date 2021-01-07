@@ -1,18 +1,18 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import { behandlingerSelectors } from '../behandlinger';
-import { flytSelectors } from '../flyt';
-import { formSelectors } from '../form';
+import { behandlingerSelectors } from "../behandlinger";
+import { flytSelectors } from "../flyt";
+import { formSelectors } from "../form";
 
 export const RedigerbartSelector = createSelector(
-  state => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
-  redigerbart => redigerbart
+  (state) => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
+  (redigerbart) => redigerbart
 );
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
-  state => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
-  redigerbart => redigerbart
+  (state) => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
+  (redigerbart) => redigerbart
 );
 export const GeneriskStegRedigerbartSelector = createSelector(
   RedigerbartSelector,
@@ -33,21 +33,18 @@ export const PanelerRedigerbartSelector = createSelector(
     erBehandleAnmodningOmUnntak,
     erRegistreringUnntakNorskTrygdUtstasjonering,
     erRegistreringUnntakNorskTrygdOvrige
-  ) => (
+  ) =>
     !erEndretPeriode &&
     !erBehandleAnmodningOmUnntak &&
     !erRegistreringUnntakNorskTrygdUtstasjonering &&
     !erRegistreringUnntakNorskTrygdOvrige &&
     redigerbart &&
     !erArtikkel16AnmodningSendt
-  )
 );
 export const BrevBestillingRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => (
-    redigerbart && !erArtikkel16AnmodningSendt
-  )
+  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
 export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
   flytSelectors.ErIArtikkel13_1FlytSelector,
@@ -63,15 +60,14 @@ export const BehandlingsmenyRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErStatusAnmodningUnntakSendtSelector,
   behandlingerSelectors.ErEndretPeriodeSelector,
-  (redigerbart, erStatusAnmodningunntakSendt, erEndretPeriode) => (
+  (redigerbart, erStatusAnmodningunntakSendt, erEndretPeriode) =>
     erEndretPeriode || erStatusAnmodningunntakSendt || redigerbart
-  )
 );
 export const ModalHenleggRedigerbartSelector = createSelector(
   BehandlingsmenyRedigerbartSelector,
-  redigerbart => redigerbart
+  (redigerbart) => redigerbart
 );
 export const ModalAvsluttSomBortfaltRedigerbartSelector = createSelector(
   BehandlingsmenyRedigerbartSelector,
-  redigerbart => redigerbart
+  (redigerbart) => redigerbart
 );

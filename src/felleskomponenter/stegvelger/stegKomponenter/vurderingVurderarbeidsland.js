@@ -1,33 +1,36 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import { connect } from 'react-redux';
-import PT from 'prop-types';
-import { formValueSelector } from 'redux-form';
+import React, { useEffect, useState, Fragment } from "react";
+import { connect } from "react-redux";
+import PT from "prop-types";
+import { formValueSelector } from "redux-form";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as KV from '../../../kodeverk';
-import * as MPT from '../../../proptypes';
-import * as Utils from '../../../utils';
-import * as Mui from '../../../felleskomponenter/ui';
-import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta, lagAvklartefaktaBegrunnelse, slettAvklartfakta } from '../../../regler/avklartefakta';
+import * as Nav from "../../../utils/navFrontend";
+import * as KV from "../../../kodeverk";
+import * as MPT from "../../../proptypes";
+import * as Utils from "../../../utils";
+import * as Mui from "../../../felleskomponenter/ui";
+import {
+  hentFaktaVerdi,
+  konverterTilStegData,
+  lagAvklartfakta,
+  lagAvklartefaktaBegrunnelse,
+  slettAvklartfakta,
+} from "../../../regler/avklartefakta";
 
-import SokkelSkipListe from '../../../felleskomponenter/sokkelskipliste';
+import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 
-import { formSelectors } from '../../../ducks/form';
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import MKV from '../../../melosyskodeverk';
-import { BOOLSK_STRING } from '../../../constants';
+import { formSelectors } from "../../../ducks/form";
+import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import MKV from "../../../melosyskodeverk";
+import { BOOLSK_STRING } from "../../../constants";
 
-import './vurderingVurderarbeidsland.css';
+import "./vurderingVurderarbeidsland.css";
 
-const IngenSokkelSkipEllerHjemmebaser = ({
-  oppdaterData,
-  slettData,
-  redigerbart,
-  arbeidUtforesIOppgittLandFakta,
-}) => {
+const IngenSokkelSkipEllerHjemmebaser = ({ oppdaterData, slettData, redigerbart, arbeidUtforesIOppgittLandFakta }) => {
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, arbeidUtforesIOppgittLandFakta));
+    oppdaterData(
+      konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, arbeidUtforesIOppgittLandFakta)
+    );
 
     return () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND));
@@ -36,7 +39,9 @@ const IngenSokkelSkipEllerHjemmebaser = ({
 
   const vedEndring = ({ checked }) => {
     if (checked) {
-      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, null, BOOLSK_STRING.SANN, null));
+      oppdaterData(
+        lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, null, BOOLSK_STRING.SANN, null)
+      );
     } else {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND));
     }
@@ -47,7 +52,8 @@ const IngenSokkelSkipEllerHjemmebaser = ({
   return (
     <Fragment>
       <Nav.AlertStripe type="info">
-        Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebaser. Fyll ut feltene hvis det er relevant for å vurdere arbeidsland.
+        Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebaser. Fyll ut feltene hvis det er
+        relevant for å vurdere arbeidsland.
       </Nav.AlertStripe>
       <Nav.Fieldset legend="">
         <Mui.Checkbox
@@ -99,10 +105,10 @@ export const VurderingVurderarbeidsland = ({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    soknadslandFaktaListe.forEach(fakta => {
+    soknadslandFaktaListe.forEach((fakta) => {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKNADSLAND, fakta));
     });
-    arbeidslandFaktaListe.forEach(fakta => {
+    arbeidslandFaktaListe.forEach((fakta) => {
       oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, fakta));
     });
 
@@ -118,23 +124,34 @@ export const VurderingVurderarbeidsland = ({
      * Dette blir litt hacky. StegStore tillater bare overskriving av alle SOKNADSLAND-fakta fra inngangssteg,
      * så SOKNADSLAND-fakta må i utgangspunktet bygges på nytt her.
      */
-    soknadsland.forEach(land => {
-      const fakta = soknadslandFaktaListe.find(enkeltFakta => enkeltFakta.subjektID === land);
+    soknadsland.forEach((land) => {
+      const fakta = soknadslandFaktaListe.find((enkeltFakta) => enkeltFakta.subjektID === land);
       const faktaVerdi = hentFaktaVerdi(fakta);
 
       if (!fakta) {
         // Soknadsland er lagt til på normal måte
-        oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, []));
+        oppdaterData(
+          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, [])
+        );
       } else if (faktaVerdi === KV.Koder.SoknadslandFaktaTyper.USANN) {
         // Soknadsland er lagt til ved angring av fjerning
-        oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, []));
+        oppdaterData(
+          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, [])
+        );
       } else {
         // Soknadsland er ikke endret på
-        oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, faktaVerdi, fakta.begrunnelseKoder));
+        oppdaterData(
+          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, faktaVerdi, fakta.begrunnelseKoder)
+        );
       }
     });
     fjernedeSoknadsland.forEach(({ land, begrunnelse }) => {
-      if (land) oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.USANN, [begrunnelse]));
+      if (land)
+        oppdaterData(
+          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.USANN, [
+            begrunnelse,
+          ])
+        );
     });
   };
 
@@ -146,8 +163,8 @@ export const VurderingVurderarbeidsland = ({
     slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
 
     arbeidsland
-      .filter(land => land)
-      .forEach(land => {
+      .filter((land) => land)
+      .forEach((land) => {
         oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, land, null));
       });
   };
@@ -156,15 +173,27 @@ export const VurderingVurderarbeidsland = ({
     if (mounted) genererArbeidslandFakta();
   }, [arbeidsland.toString(), mounted]);
 
-  const fjernSoknadsland = land => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND, null));
+  const fjernSoknadsland = (land) => {
+    oppdaterData(
+      lagAvklartfakta(
+        KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+        land,
+        KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND,
+        null
+      )
+    );
   };
 
-  const angreFjernSoknadsland = land => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, null));
+  const angreFjernSoknadsland = (land) => {
+    oppdaterData(
+      lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, null)
+    );
   };
 
-  const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(maritimtArbeid, enkeltMaritimtArbeid => enkeltMaritimtArbeid.enhetNavn);
+  const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(
+    maritimtArbeid,
+    (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn
+  );
 
   const avklartefaktaEndret = (type, subjektID, verdi) => {
     oppdaterData(lagAvklartfakta(type, subjektID, verdi, null));
@@ -174,17 +203,16 @@ export const VurderingVurderarbeidsland = ({
     oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, [verdi]));
   };
 
-  const innhold = harIngenMaritimeArbeidEllerHjemmebaser ?
+  const innhold = harIngenMaritimeArbeidEllerHjemmebaser ? (
     <IngenSokkelSkipEllerHjemmebaser
       oppdaterData={oppdaterData}
       slettData={slettData}
       redigerbart={redigerbart}
       arbeidUtforesIOppgittLandFakta={arbeidUtforesIOppgittLandFakta}
     />
-    :
+  ) : (
     <Fragment>
-      {
-        maritimtArbeid.length > 0 &&
+      {maritimtArbeid.length > 0 && (
         <Fragment>
           <Nav.typo.Element className="undertittel">Vurdering sokkel/skip</Nav.typo.Element>
           <SokkelSkipListe
@@ -202,14 +230,13 @@ export const VurderingVurderarbeidsland = ({
             slettData={slettData}
           />
         </Fragment>
-      }
-      {
-        hjemmebaser.length > 0 &&
+      )}
+      {hjemmebaser.length > 0 && (
         <Nav.Row className="borderBottom">
           <Nav.Column xs="6">
             <Nav.typo.Element className="undertittel">Hjemmebaser</Nav.typo.Element>
             <Mui.RedigerbarListe
-              elementer={hjemmebaser.map(base => ({
+              elementer={hjemmebaser.map((base) => ({
                 kode: base,
                 term: `${KV.kodeTilTerm(base, MKV.KTObjects.landkoder)} (${base})`,
                 fjernbar: false,
@@ -217,12 +244,12 @@ export const VurderingVurderarbeidsland = ({
             />
           </Nav.Column>
         </Nav.Row>
-      }
+      )}
       <Nav.Row>
         <Nav.Column xs="6">
           <Nav.typo.Element className="undertittel">Land fra inngangsvilkår:</Nav.typo.Element>
           <Mui.RedigerbarListe
-            elementer={soknadsland.map(kode => ({
+            elementer={soknadsland.map((kode) => ({
               kode,
               term: `${KV.kodeTilTerm(kode, MKV.KTObjects.landkoder)} (${kode})`,
               defaultFjernet: fjernedeArbeidsland.includes(kode),
@@ -233,14 +260,22 @@ export const VurderingVurderarbeidsland = ({
           />
         </Nav.Column>
       </Nav.Row>
-    </Fragment>;
+    </Fragment>
+  );
 
   return (
     <div className="vurderingVurderArbeidsland">
       <Nav.typo.Undertittel className="overskrift">Vurder arbeidsland</Nav.typo.Undertittel>
-      { innhold }
+      {innhold}
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg4" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp
+          disabled={!(redigerbart && harAvklaring)}
+          className="fane__navigasjonsknapp"
+          data-cy-nesteknapp="knapp_steg4"
+          onClick={bekreftOgFortsett}
+        >
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );
@@ -266,10 +301,12 @@ VurderingVurderarbeidsland.propTypes = {
   maritimtArbeid: PT.array,
   hjemmebaser: PT.arrayOf(PT.string),
   soknadsland: PT.arrayOf(PT.string).isRequired,
-  fjernedeSoknadsland: PT.arrayOf(PT.shape({
-    land: PT.string,
-    begrunnelse: PT.string,
-  })).isRequired,
+  fjernedeSoknadsland: PT.arrayOf(
+    PT.shape({
+      land: PT.string,
+      begrunnelse: PT.string,
+    })
+  ).isRequired,
   arbeidsland: PT.arrayOf(PT.string).isRequired,
   fjernedeArbeidsland: PT.arrayOf(PT.string),
 };
@@ -282,11 +319,11 @@ VurderingVurderarbeidsland.defaultProps = {
 
 const inngangFormValuesSelector = formValueSelector(KV.Form.INNGANG);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   maritimtArbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
-  soknadsland: inngangFormValuesSelector(state, 'soknadsland'),
-  fjernedeSoknadsland: inngangFormValuesSelector(state, 'fjernedeLand'),
+  soknadsland: inngangFormValuesSelector(state, "soknadsland"),
+  fjernedeSoknadsland: inngangFormValuesSelector(state, "fjernedeLand"),
   arbeidsland: avklartefaktaSelectors.ArbeidslandSelector(state),
   fjernedeArbeidsland: avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector(state),
 });

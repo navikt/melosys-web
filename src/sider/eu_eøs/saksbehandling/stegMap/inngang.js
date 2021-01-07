@@ -1,5 +1,5 @@
-import { Inngang } from '../../../../felleskomponenter/stegvelger/stegMap';
-import { STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
+import { Inngang } from "../../../../felleskomponenter/stegvelger/stegMap";
+import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 class SaksbehandlingInngang extends Inngang {
   constructor(propsLight, stegPosisjon) {
@@ -10,15 +10,11 @@ class SaksbehandlingInngang extends Inngang {
 
     this.kriterier = [
       {
-        exec: () =>
-          harAvklaring &&
-          propsLight.erSoknadArbeidFlereLand,
+        exec: () => harAvklaring && propsLight.erSoknadArbeidFlereLand,
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        exec: () =>
-          harAvklaring &&
-          propsLight.erArbeidEttLandOvrig,
+        exec: () => harAvklaring && propsLight.erArbeidEttLandOvrig,
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {

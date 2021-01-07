@@ -1,10 +1,10 @@
-import StegMotor from './StegMotor';
+import StegMotor from "./StegMotor";
 
-import { STEG } from './typer';
-import Steg from './steg';
+import { STEG } from "./typer";
+import Steg from "./steg";
 
-describe('Stegmotor', () => {
-  describe('beregnAlleSteg', () => {
+describe("Stegmotor", () => {
+  describe("beregnAlleSteg", () => {
     class Inngangssteg extends Steg {
       constructor(propslight, posisjon) {
         super(propslight, posisjon);
@@ -44,7 +44,7 @@ describe('Stegmotor', () => {
       [STEG.YRKESAKTIVITET, YrkesaktivitetSteg],
     ]);
 
-    it('beregner alle steg i en flyt', () => {
+    it("beregner alle steg i en flyt", () => {
       const props = {};
       const forsteSteg = STEG.INNGANG;
       const stegmotor = new StegMotor(props, stegMap, forsteSteg);
@@ -55,16 +55,15 @@ describe('Stegmotor', () => {
       expect(alleSteg[2].id).toBe(STEG.ENDRET_PERIODE);
     });
 
-    each([
-      STEG.INNGANG,
-      STEG.ENDRET_PERIODE,
-      STEG.YRKESAKTIVITET,
-    ]).it('Starter med det oppgitte første steget %p', forsteSteg => {
-      const props = {};
-      const stegmotor = new StegMotor(props, stegMap, forsteSteg);
-      const alleSteg = stegmotor.beregnAlleSteg();
+    each([STEG.INNGANG, STEG.ENDRET_PERIODE, STEG.YRKESAKTIVITET]).it(
+      "Starter med det oppgitte første steget %p",
+      (forsteSteg) => {
+        const props = {};
+        const stegmotor = new StegMotor(props, stegMap, forsteSteg);
+        const alleSteg = stegmotor.beregnAlleSteg();
 
-      expect(alleSteg[0].id).toBe(forsteSteg);
-    });
+        expect(alleSteg[0].id).toBe(forsteSteg);
+      }
+    );
   });
 });

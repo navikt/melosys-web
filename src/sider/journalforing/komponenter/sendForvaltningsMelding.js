@@ -1,20 +1,23 @@
-import React, { Fragment, useEffect } from 'react';
-import PT from 'prop-types';
+import React, { Fragment, useEffect } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../../felleskomponenter/skjema';
-import * as KV from '../../../kodeverk';
-import { BOOLSK } from '../../../constants';
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as KV from "../../../kodeverk";
+import { BOOLSK } from "../../../constants";
 
 const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
-  const avsenderErFullmelktig = (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG || avsenderType === KV.AvsenderTyper.FULLMEKTIG);
+  const avsenderErFullmelktig =
+    avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG || avsenderType === KV.AvsenderTyper.FULLMEKTIG;
 
-  useEffect(() =>
-    () => {
+  useEffect(
+    () => () => {
       if (!avsenderErFullmelktig) {
-        settFeltInnhold('representantKontaktPerson', '');
+        settFeltInnhold("representantKontaktPerson", "");
       }
-    }, [avsenderType]);
+    },
+    [avsenderType]
+  );
 
   return (
     <div className="sendForvaltningsmelding">
@@ -31,16 +34,14 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
           value={BOOLSK.SANN}
         />
-        { avsenderErFullmelktig &&
-        <Fragment>
-          <Nav.typo.Element>Oppgi kontaktperson hos fullmektig som skal motta meldingen hvis dette er oppgitt</Nav.typo.Element>
-          <Skjema.Input
-            feltNavn="representantKontaktPerson"
-            label=""
-            placeholder="Skriv inn..."
-          />
-        </Fragment>
-        }
+        {avsenderErFullmelktig && (
+          <Fragment>
+            <Nav.typo.Element>
+              Oppgi kontaktperson hos fullmektig som skal motta meldingen hvis dette er oppgitt
+            </Nav.typo.Element>
+            <Skjema.Input feltNavn="representantKontaktPerson" label="" placeholder="Skriv inn..." />
+          </Fragment>
+        )}
       </Skjema.RadioGruppe>
     </div>
   );

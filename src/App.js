@@ -1,11 +1,9 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import Rammeverk from './sider/rammeverk';
+import Rammeverk from "./sider/rammeverk";
 
-export function App({
-  children,
-}) {
+export function App({ children }) {
   return (
     <div className="App">
       <Rammeverk>{children}</Rammeverk>

@@ -1,4 +1,3 @@
-
 /*
  * Selectors
  * -----------------------------------------------------------------------------------------
@@ -6,90 +5,90 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as KV from '../../kodeverk';
-import * as Utils from '../../utils';
+import * as KV from "../../kodeverk";
+import * as Utils from "../../utils";
 
-import { behandlingerSelectors } from '../behandlinger';
-import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
-import { OrganisasjonSelectors } from '../organisasjoner';
-import { utpekingsperioderSelectors } from '../utpekingsperioder';
+import { behandlingerSelectors } from "../behandlinger";
+import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { OrganisasjonSelectors } from "../organisasjoner";
+import { utpekingsperioderSelectors } from "../utpekingsperioder";
 
-import { hentFaktaVerdi } from '../../regler/avklartefakta';
-import { BOOLSK_STRING } from '../../constants';
+import { hentFaktaVerdi } from "../../regler/avklartefakta";
+import { BOOLSK_STRING } from "../../constants";
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
  */
 const avklartFaktaTemplate = {
-  referanse: '',
+  referanse: "",
   avklartefaktaKode: null,
   fakta: [],
-  subjektID: '',
+  subjektID: "",
   begrunnelseKoder: [],
   begrunnelseFritekst: null,
 };
 
 /* Hovedselector for alle avklarte fakta. */
 export const AvklartefaktaSelector = createSelector(
-  state => (state.avklartefakta.data ? state.avklartefakta.data : []),
-  avklartefakta => avklartefakta || []
+  (state) => (state.avklartefakta.data ? state.avklartefakta.data : []),
+  (avklartefakta) => avklartefakta || []
 );
 
-export const SoknadslandFaktaerSelector = createSelector(
-  AvklartefaktaSelector,
-  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
+export const SoknadslandFaktaerSelector = createSelector(AvklartefaktaSelector, (avklartefakta) =>
+  avklartefakta.filter((enkelt) => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
 );
 
-export const IkkeGyldigeSoknadslandFaktaerSelector = createSelector(
-  SoknadslandFaktaerSelector,
-  soknadslandFaktaer => soknadslandFaktaer.filter(fakta => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.USANN)
+export const IkkeGyldigeSoknadslandFaktaerSelector = createSelector(SoknadslandFaktaerSelector, (soknadslandFaktaer) =>
+  soknadslandFaktaer.filter((fakta) => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.USANN)
 );
 
 export const IkkeArbeidslandSoknadslandFaktaerSelector = createSelector(
   SoknadslandFaktaerSelector,
-  soknadslandFaktaer => soknadslandFaktaer.filter(fakta => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND)
+  (soknadslandFaktaer) =>
+    soknadslandFaktaer.filter((fakta) => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND)
 );
 
-export const IkkeArbeidslandSoknadslandSelector = createSelector(
-  IkkeArbeidslandSoknadslandFaktaerSelector,
-  faktaer => faktaer.map(fakta => fakta.subjektID)
+export const IkkeArbeidslandSoknadslandSelector = createSelector(IkkeArbeidslandSoknadslandFaktaerSelector, (faktaer) =>
+  faktaer.map((fakta) => fakta.subjektID)
 );
 
 export const VurderingUnntakPeriode = createSelector(
-  state => AvklartefaktaSelector(state) || [],
-  alleAvklartefakta => (
-    alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === KV.Koder.avklartefaktaKoder.VURDERING_UNNTAK_PERIODE) || {}
-  )
+  (state) => AvklartefaktaSelector(state) || [],
+  (alleAvklartefakta) =>
+    alleAvklartefakta.find(
+      (avklaring) => avklaring.avklartefaktaKode === KV.Koder.avklartefaktaKoder.VURDERING_UNNTAK_PERIODE
+    ) || {}
 );
 /* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
  * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
  * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
  */
 export const Soknadsland = createSelector(
-  state => SoknadslandFaktaerSelector(state),
-  state => behandlingsgrunnlagSelectors.SoknadslandSelector(state),
-  (soknadslandFaktaer, alleLandISoknaden) => (
-    alleLandISoknaden.map(enkeltLand => (
-      soknadslandFaktaer.find(avklaring => avklaring.subjektID === enkeltLand) ||
-      {
-        ...avklartFaktaTemplate,
-        referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
-        subjektID: enkeltLand,
-        fakta: ['TRUE'],
-      }
-    ))
-  )
+  (state) => SoknadslandFaktaerSelector(state),
+  (state) => behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+  (soknadslandFaktaer, alleLandISoknaden) =>
+    alleLandISoknaden.map(
+      (enkeltLand) =>
+        soknadslandFaktaer.find((avklaring) => avklaring.subjektID === enkeltLand) || {
+          ...avklartFaktaTemplate,
+          referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
+          subjektID: enkeltLand,
+          fakta: ["TRUE"],
+        }
+    )
 );
 
 /* Avklart fakta om søker er yrkesaktiv, ytelsesmottaker etc. */
 export const Yrkesgruppe = createSelector(
-  state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESGRUPPE);
+  (state) => AvklartefaktaSelector(state),
+  (alleAvklarteFakta) => {
+    const avklartFakta = alleAvklarteFakta.find(
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESGRUPPE
+    );
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -97,15 +96,17 @@ export const Yrkesgruppe = createSelector(
 
 /* Avklart fakta om søker er ordinær arbeidstaker, selvstendig næringsdrivende, begge deler eller tjenesteperson. */
 export const Yrkesaktivitet = createSelector(
-  state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESAKTIVITET);
+  (state) => AvklartefaktaSelector(state),
+  (alleAvklarteFakta) => {
+    const avklartFakta = alleAvklarteFakta.find(
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESAKTIVITET
+    );
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
 );
 
-const konverterForetakUtlandTilVirksomhet = foretakUtland => ({
+const konverterForetakUtlandTilVirksomhet = (foretakUtland) => ({
   navn: foretakUtland.navn,
   virksomhetId: foretakUtland.uuid,
   adresse: {
@@ -113,7 +114,7 @@ const konverterForetakUtlandTilVirksomhet = foretakUtland => ({
   },
 });
 
-const konverterOrganisasjonTilVirksomhet = org => ({
+const konverterOrganisasjonTilVirksomhet = (org) => ({
   navn: org.navn,
   virksomhetId: org.orgnr,
   adresse: {
@@ -125,24 +126,20 @@ const konverterOrganisasjonTilVirksomhet = org => ({
  * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
 export const VirksomheterIPeriodenSelector = createSelector(
-  state => behandlingerSelectors.ArbeidsforholdSelector(state),
-  state => behandlingerSelectors.OrganisasjonerSelector(state),
-  state => behandlingsgrunnlagSelectors.ValiderteEkstraArbeidsgivereSelector(state),
-  state => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
-  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (
-    arbeidsforholdene,
-    organisasjoner,
-    ekstraArbeidsgivere,
-    selvstendigeNaringer,
-    foretakUtland
-  ) => {
-    const relevanteOrganisasjoner = organisasjoner.filter(organisasjonen => {
-      const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
+  (state) => behandlingerSelectors.ArbeidsforholdSelector(state),
+  (state) => behandlingerSelectors.OrganisasjonerSelector(state),
+  (state) => behandlingsgrunnlagSelectors.ValiderteEkstraArbeidsgivereSelector(state),
+  (state) => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
+  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer, foretakUtland) => {
+    const relevanteOrganisasjoner = organisasjoner.filter((organisasjonen) => {
+      const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(
+        (forholdet) => forholdet.opplysningspliktigID === organisasjonen.orgnr
+      );
       return organisasjonenHarArbeidsforhold;
     });
 
-    const foretakUtlandMedNavn = foretakUtland.filter(foretak => foretak.navn);
+    const foretakUtlandMedNavn = foretakUtland.filter((foretak) => foretak.navn);
 
     return [
       ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
@@ -158,13 +155,15 @@ export const VirksomheterIPeriodenSelector = createSelector(
  * dvs "FALSE" som fakta.
  */
 export const VirksomhetFaktaerSelector = createSelector(
-  state => AvklartefaktaSelector(state),
-  state => VirksomheterIPeriodenSelector(state),
+  (state) => AvklartefaktaSelector(state),
+  (state) => VirksomheterIPeriodenSelector(state),
   (alleAvklarteFakta, alleVirksomheter) => {
-    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET);
+    const avklartefakta = alleAvklarteFakta.filter(
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET
+    );
 
     return alleVirksomheter.reduce((virksomhetFaktaer, virksomhet) => {
-      const eksisterendeVirksomhetFakta = avklartefakta.find(fakta => fakta.subjektID === virksomhet.virksomhetId);
+      const eksisterendeVirksomhetFakta = avklartefakta.find((fakta) => fakta.subjektID === virksomhet.virksomhetId);
 
       if (eksisterendeVirksomhetFakta) return [...virksomhetFaktaer, eksisterendeVirksomhetFakta];
       return virksomhetFaktaer;
@@ -172,15 +171,16 @@ export const VirksomhetFaktaerSelector = createSelector(
   }
 );
 
-const AvklarteVirksomhetFaktaerSelector = createSelector(
-  VirksomhetFaktaerSelector,
-  virksomhetFaktaer => virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes(BOOLSK_STRING.SANN))
+const AvklarteVirksomhetFaktaerSelector = createSelector(VirksomhetFaktaerSelector, (virksomhetFaktaer) =>
+  virksomhetFaktaer.filter((virksomhet) => virksomhet.fakta.includes(BOOLSK_STRING.SANN))
 );
 
 export const ArbeidSokkelSkipSelector = createSelector(
-  state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
+  (state) => AvklartefaktaSelector(state),
+  (alleAvklarteFakta) => {
+    const avklartFakta = alleAvklarteFakta.find(
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP
+    );
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -191,18 +191,18 @@ export const ArbeidSokkelSkipSelector = createSelector(
  * Redux Form kan lese.
  */
 export const SokkelEllerSkipSelector = createSelector(
-  state => AvklartefaktaSelector(state),
-  state => behandlingsgrunnlagSelectors.MaritimtArbeidSelector(state),
+  (state) => AvklartefaktaSelector(state),
+  (state) => behandlingsgrunnlagSelectors.MaritimtArbeidSelector(state),
   (alleAvklarteFakta, alleMaritimeArbeid) => {
     // Selectoren lager 2 lister - en for avklart fakta for arbeidsland for hvert sokkel / skip
     // og én for avklartfakta om installasjonen er sokkel eller skip.
 
     const arbeidsland = alleAvklarteFakta
-      .filter(avklaring => avklaring.referanse === KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND)
-      .map(avklaring => avklaring.fakta[0]);
+      .filter((avklaring) => avklaring.referanse === KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND)
+      .map((avklaring) => avklaring.fakta[0]);
 
     const sokkelEllerSkip = alleAvklarteFakta
-      .filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP)
+      .filter((avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP)
       .map((avklaring, index) => ({
         installasjonsType: avklaring.fakta[0],
         arbeidsland: arbeidsland[index],
@@ -226,34 +226,30 @@ export const SokkelEllerSkipSelector = createSelector(
  */
 
 const SoknadslandSelector = createSelector(
-  state => Soknadsland(state) || [],
-  avklartefaktaLandListe => (avklartefaktaLandListe
-    .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
-    .map(avklartfakta => avklartfakta.subjektID))
+  (state) => Soknadsland(state) || [],
+  (avklartefaktaLandListe) =>
+    avklartefaktaLandListe
+      .filter((avklartfakta) => avklartfakta.fakta.includes("TRUE"))
+      .map((avklartfakta) => avklartfakta.subjektID)
 );
 
 const MaritimeArbeidslandSelector = createSelector(
-  state => SokkelEllerSkipSelector(state),
-  sokkelEllerSkipListe => (sokkelEllerSkipListe
-    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland)
-    .filter(arbeidsland => arbeidsland))
+  (state) => SokkelEllerSkipSelector(state),
+  (sokkelEllerSkipListe) =>
+    sokkelEllerSkipListe.map((sokkelEllerSkip) => sokkelEllerSkip.arbeidsland).filter((arbeidsland) => arbeidsland)
 );
 
 export const ArbeidslandSelector = createSelector(
-  state => SoknadslandSelector(state),
-  state => MaritimeArbeidslandSelector(state),
-  state => behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  (state) => SoknadslandSelector(state),
+  (state) => MaritimeArbeidslandSelector(state),
+  (state) => behandlingerSelectors.BehandlingstemaKodeSelector(state),
   IkkeArbeidslandSoknadslandSelector,
-  state => behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
-  (
-    soknadsland,
-    maritimeArbeidsland,
-    behandlingstema,
-    IkkeArbeidslandSoknadland,
-    hjemmebaser
-  ) => {
+  (state) => behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
+  (soknadsland, maritimeArbeidsland, behandlingstema, IkkeArbeidslandSoknadland, hjemmebaser) => {
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
-      const vurderteArbeidsland = [...hjemmebaser, ...soknadsland, ...maritimeArbeidsland].filter(land => !IkkeArbeidslandSoknadland.includes(land));
+      const vurderteArbeidsland = [...hjemmebaser, ...soknadsland, ...maritimeArbeidsland].filter(
+        (land) => !IkkeArbeidslandSoknadland.includes(land)
+      );
       const unikeVurderteArbeidsland = [...new Set(vurderteArbeidsland)];
       return unikeVurderteArbeidsland;
     }
@@ -263,49 +259,35 @@ export const ArbeidslandSelector = createSelector(
   }
 );
 
-const erLonnetArbeidNorge = arbeidsgivereNorge => (
-  arbeidsgivereNorge.length > 0
-);
+const erLonnetArbeidNorge = (arbeidsgivereNorge) => arbeidsgivereNorge.length > 0;
 
-const erLonnetArbeidUtland = (land, arbeidUtland, foretakUtland) => (
-  arbeidUtland.some(arbeid => (
-    arbeid.adresse.landkode === land
-  )) ||
+const erLonnetArbeidUtland = (land, arbeidUtland, foretakUtland) =>
+  arbeidUtland.some((arbeid) => arbeid.adresse.landkode === land) ||
   foretakUtland
-    .filter(foretak => !foretak.selvstendigNaeringsvirksomhet)
-    .some(foretak => (
-      foretak.adresse.landkode === land
-    ))
-);
+    .filter((foretak) => !foretak.selvstendigNaeringsvirksomhet)
+    .some((foretak) => foretak.adresse.landkode === land);
 
-const erSelvstendigNaeringsvirksomhetNorge = selvstendigArbeid => (
-  selvstendigArbeid.erSelvstendig &&
-  selvstendigArbeid.selvstendigForetak.length > 0
-);
+const erSelvstendigNaeringsvirksomhetNorge = (selvstendigArbeid) =>
+  selvstendigArbeid.erSelvstendig && selvstendigArbeid.selvstendigForetak.length > 0;
 
-const erSelvstendigNaeringsvirksomhetUtland = (land, foretakUtland) => (
+const erSelvstendigNaeringsvirksomhetUtland = (land, foretakUtland) =>
   foretakUtland
-    .filter(foretak => foretak.selvstendigNaeringsvirksomhet)
-    .some(foretak => (
-      foretak.adresse.landkode === land
-    ))
-);
+    .filter((foretak) => foretak.selvstendigNaeringsvirksomhet)
+    .some((foretak) => foretak.adresse.landkode === land);
 
 export const ArbeidslandKTSelector = createSelector(
-  state => ArbeidslandSelector(state),
-  arbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))
+  (state) => ArbeidslandSelector(state),
+  (arbeidsland) => MKV.KTObjects.landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
 );
 
-const byggLandMedYrkesAktivitet = ({
-  land,
-  arbeidUtland,
-  foretakUtland,
-  selvstendigArbeid,
-  arbeidsgivereNorge,
-}) => {
+const byggLandMedYrkesAktivitet = ({ land, arbeidUtland, foretakUtland, selvstendigArbeid, arbeidsgivereNorge }) => {
   const erNorge = land.kode === MKV.Koder.landkoder.NO;
-  const erLonnetArbeid = erNorge ? erLonnetArbeidNorge(arbeidsgivereNorge) : erLonnetArbeidUtland(land.kode, arbeidUtland, foretakUtland);
-  const erSelvstendigNaeringsvirksomhet = erNorge ? erSelvstendigNaeringsvirksomhetNorge(selvstendigArbeid) : erSelvstendigNaeringsvirksomhetUtland(land.kode, foretakUtland);
+  const erLonnetArbeid = erNorge
+    ? erLonnetArbeidNorge(arbeidsgivereNorge)
+    : erLonnetArbeidUtland(land.kode, arbeidUtland, foretakUtland);
+  const erSelvstendigNaeringsvirksomhet = erNorge
+    ? erSelvstendigNaeringsvirksomhetNorge(selvstendigArbeid)
+    : erSelvstendigNaeringsvirksomhetUtland(land.kode, foretakUtland);
 
   return {
     land,
@@ -316,18 +298,12 @@ const byggLandMedYrkesAktivitet = ({
 
 export const ArbeidslandMedYrkesAktivitetSelector = createSelector(
   ArbeidslandKTSelector,
-  state => behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
-  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  state => behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state),
-  state => behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
-  (
-    arbeidsland,
-    arbeidUtland,
-    foretakUtland,
-    selvstendigArbeid,
-    arbeidsgivereNorge
-  ) => (
-    arbeidsland.map(land => (
+  (state) => behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
+  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (state) => behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state),
+  (state) => behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
+  (arbeidsland, arbeidUtland, foretakUtland, selvstendigArbeid, arbeidsgivereNorge) =>
+    arbeidsland.map((land) =>
       byggLandMedYrkesAktivitet({
         land,
         arbeidUtland,
@@ -335,115 +311,104 @@ export const ArbeidslandMedYrkesAktivitetSelector = createSelector(
         selvstendigArbeid,
         arbeidsgivereNorge,
       })
-    ))
-  )
+    )
 );
 
-const MarginaltArbeidFaktaerSelector = createSelector(
-  AvklartefaktaSelector,
-  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID)
+const MarginaltArbeidFaktaerSelector = createSelector(AvklartefaktaSelector, (avklartefakta) =>
+  avklartefakta.filter((enkelt) => enkelt.referanse === MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID)
 );
 
-const MarginaleArbeidslandFaktaerSelector = createSelector(
-  MarginaltArbeidFaktaerSelector,
-  marginaltArbeidFakta => marginaltArbeidFakta.filter(enkelt => enkelt.fakta.includes(BOOLSK_STRING.SANN))
+const MarginaleArbeidslandFaktaerSelector = createSelector(MarginaltArbeidFaktaerSelector, (marginaltArbeidFakta) =>
+  marginaltArbeidFakta.filter((enkelt) => enkelt.fakta.includes(BOOLSK_STRING.SANN))
 );
 
 const MarginaleArbeidslandSelector = createSelector(
-  state => MarginaleArbeidslandFaktaerSelector(state) || [],
-  marginaleArbeidslandFaktaer => marginaleArbeidslandFaktaer.map(fakta => fakta.subjektID)
+  (state) => MarginaleArbeidslandFaktaerSelector(state) || [],
+  (marginaleArbeidslandFaktaer) => marginaleArbeidslandFaktaer.map((fakta) => fakta.subjektID)
 );
 
 export const MarginaleArbeidslandKTSelector = createSelector(
-  state => MarginaleArbeidslandSelector(state) || [],
-  marginaleArbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => marginaleArbeidsland.includes(landkodeObjekt.kode))
+  (state) => MarginaleArbeidslandSelector(state) || [],
+  (marginaleArbeidsland) =>
+    MKV.KTObjects.landkoder.filter((landkodeObjekt) => marginaleArbeidsland.includes(landkodeObjekt.kode))
 );
 
 export const IkkeMarginaleArbeidslandSelector = createSelector(
-  state => ArbeidslandSelector(state) || [],
-  state => MarginaleArbeidslandSelector(state) || [],
-  (arbeidsland, marginaleArbeidsland) => arbeidsland.filter(land => !marginaleArbeidsland.includes(land))
+  (state) => ArbeidslandSelector(state) || [],
+  (state) => MarginaleArbeidslandSelector(state) || [],
+  (arbeidsland, marginaleArbeidsland) => arbeidsland.filter((land) => !marginaleArbeidsland.includes(land))
 );
 
 export const IkkeMarginaleArbeidslandKTSelector = createSelector(
-  state => IkkeMarginaleArbeidslandSelector(state) || [],
-  ikkeMarginaleArbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => ikkeMarginaleArbeidsland.includes(landkodeObjekt.kode))
+  (state) => IkkeMarginaleArbeidslandSelector(state) || [],
+  (ikkeMarginaleArbeidsland) =>
+    MKV.KTObjects.landkoder.filter((landkodeObjekt) => ikkeMarginaleArbeidsland.includes(landkodeObjekt.kode))
 );
 
-const overlappende = (liste1, liste2) => liste1.filter(element => liste2.includes(element));
+const overlappende = (liste1, liste2) => liste1.filter((element) => liste2.includes(element));
 
 export const LandMedVesentligEllerRegistrertArbeidSelector = createSelector(
-  state => IkkeMarginaleArbeidslandSelector(state) || [],
-  state => ArbeidslandSelector(state) || [],
-  state => behandlingsgrunnlagSelectors.ForetakUtlandLandkodeSelector(state) || [],
-  state => behandlingsgrunnlagSelectors.ArbeidUtlandLandkodeSelector(state) || [],
-  (
-    ikkeMarginaleArbeidsland,
-    arbeidsland,
-    foretakUtland,
-    arbeidUtland
-  ) => (
-    [
-      ...new Set([
-        ...ikkeMarginaleArbeidsland,
-        ...overlappende(arbeidsland, foretakUtland),
-        ...overlappende(arbeidsland, arbeidUtland),
-      ]),
-    ]
-  )
+  (state) => IkkeMarginaleArbeidslandSelector(state) || [],
+  (state) => ArbeidslandSelector(state) || [],
+  (state) => behandlingsgrunnlagSelectors.ForetakUtlandLandkodeSelector(state) || [],
+  (state) => behandlingsgrunnlagSelectors.ArbeidUtlandLandkodeSelector(state) || [],
+  (ikkeMarginaleArbeidsland, arbeidsland, foretakUtland, arbeidUtland) => [
+    ...new Set([
+      ...ikkeMarginaleArbeidsland,
+      ...overlappende(arbeidsland, foretakUtland),
+      ...overlappende(arbeidsland, arbeidUtland),
+    ]),
+  ]
 );
 
 export const LandSomKreverSEDSelector = createSelector(
-  state => LandMedVesentligEllerRegistrertArbeidSelector(state) || [],
-  state => utpekingsperioderSelectors.LovvalgslandSelector(state),
-  (landSomKreverSED, utpektLovvalgsland) => (
-    [
-      ...new Set([
-        ...landSomKreverSED,
-        ...(utpektLovvalgsland ? [utpektLovvalgsland] : []),
-      ]),
-    ]
-  )
+  (state) => LandMedVesentligEllerRegistrertArbeidSelector(state) || [],
+  (state) => utpekingsperioderSelectors.LovvalgslandSelector(state),
+  (landSomKreverSED, utpektLovvalgsland) => [
+    ...new Set([...landSomKreverSED, ...(utpektLovvalgsland ? [utpektLovvalgsland] : [])]),
+  ]
 );
 
 export const LandSomKreverSEDKTSelector = createSelector(
-  state => LandSomKreverSEDSelector(state),
-  arbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))
+  (state) => LandSomKreverSEDSelector(state),
+  (arbeidsland) => MKV.KTObjects.landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
 );
 
 export const IkkeMarginaleArbeidslandAntallSelector = createSelector(
   IkkeMarginaleArbeidslandSelector,
-  ikkeMarginaleArbeidsland => ikkeMarginaleArbeidsland.length
+  (ikkeMarginaleArbeidsland) => ikkeMarginaleArbeidsland.length
 );
 
 const AlleOrganisasjonerSelector = createSelector(
-  state => behandlingerSelectors.OrganisasjonerSelector(state),
-  state => OrganisasjonSelectors.organisasjonerSelector(state),
-  (fagsakOrganisasjoner, soknadOrganisasjoner) =>
-    [...fagsakOrganisasjoner, ...soknadOrganisasjoner]
+  (state) => behandlingerSelectors.OrganisasjonerSelector(state),
+  (state) => OrganisasjonSelectors.organisasjonerSelector(state),
+  (fagsakOrganisasjoner, soknadOrganisasjoner) => [...fagsakOrganisasjoner, ...soknadOrganisasjoner]
 );
 
 export const AvklarteNorskeVirksomheterSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
   AlleOrganisasjonerSelector,
   (alleAvklarteVirksomhetFaktaer, alleOrganisasjoner) =>
-    alleAvklarteVirksomhetFaktaer.map(virksomhet => {
-      const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.subjektID);
-      if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
-      return null;
-    }).filter(virksomhet => virksomhet)
+    alleAvklarteVirksomhetFaktaer
+      .map((virksomhet) => {
+        const avklartOrganisasjon = alleOrganisasjoner.find((org) => org.orgnr === virksomhet.subjektID);
+        if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
+        return null;
+      })
+      .filter((virksomhet) => virksomhet)
 );
 
 export const AvklarteUtenlandskeVirksomheterSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
-  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  (alleAvklarteVirksomhetFaktaer, foretakUtland) => (
-    alleAvklarteVirksomhetFaktaer.map(virksomhet => {
-      const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
-      if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
-      return null;
-    }).filter(virksomhet => virksomhet)
-  )
+  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (alleAvklarteVirksomhetFaktaer, foretakUtland) =>
+    alleAvklarteVirksomhetFaktaer
+      .map((virksomhet) => {
+        const avklartForetak = foretakUtland.find((foretak) => foretak.uuid === virksomhet.subjektID);
+        if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
+        return null;
+      })
+      .filter((virksomhet) => virksomhet)
 );
 
 export const AvklarteVirksomheterSelector = createSelector(
@@ -458,50 +423,49 @@ export const AvklarteVirksomheterSelector = createSelector(
 export const AvklarteVirksomheterIkkeNaeringsdrivendeSelector = createSelector(
   AvklarteVirksomhetFaktaerSelector,
   AlleOrganisasjonerSelector,
-  state => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
-  state => behandlingsgrunnlagSelectors.SelvstendigArbeidForetakSelector(state),
-  (
-    alleAvklarteVirksomhetFaktaer,
-    alleOrganisasjoner,
-    foretakUtland,
-    selvstendigArbeidForetak
-  ) =>
-    alleAvklarteVirksomhetFaktaer.map(virksomhet => {
-      const avklartForetakUtland = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
-      if (avklartForetakUtland) {
-        return avklartForetakUtland.selvstendigNaeringsvirksomhet ? null : konverterForetakUtlandTilVirksomhet(avklartForetakUtland);
-      }
+  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (state) => behandlingsgrunnlagSelectors.SelvstendigArbeidForetakSelector(state),
+  (alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak) =>
+    alleAvklarteVirksomhetFaktaer
+      .map((virksomhet) => {
+        const avklartForetakUtland = foretakUtland.find((foretak) => foretak.uuid === virksomhet.subjektID);
+        if (avklartForetakUtland) {
+          return avklartForetakUtland.selvstendigNaeringsvirksomhet
+            ? null
+            : konverterForetakUtlandTilVirksomhet(avklartForetakUtland);
+        }
 
-      const avklartSelvstendigArbeid = selvstendigArbeidForetak.find(foretak => foretak.orgnr === virksomhet.subjektID);
-      if (avklartSelvstendigArbeid) return null;
+        const avklartSelvstendigArbeid = selvstendigArbeidForetak.find(
+          (foretak) => foretak.orgnr === virksomhet.subjektID
+        );
+        if (avklartSelvstendigArbeid) return null;
 
-      const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.subjektID);
-      if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
+        const avklartOrganisasjon = alleOrganisasjoner.find((org) => org.orgnr === virksomhet.subjektID);
+        if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
 
-      throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
-    }).filter(virksomhet => virksomhet)
+        throw new Error("Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon");
+      })
+      .filter((virksomhet) => virksomhet)
 );
 
 export const BostedslandSelector = createSelector(
-  state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+  (state) => AvklartefaktaSelector(state),
+  (alleAvklarteFakta) => {
+    const avklartFakta = alleAvklarteFakta.find(
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND
+    );
     if (!avklartFakta) return null;
     const bostedslandkode = hentFaktaVerdi(avklartFakta);
-    return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
+    return MKV.KTObjects.landkoder.find((enkeltLand) => enkeltLand.kode === bostedslandkode);
   }
 );
 
-export const OmfattesILandFaktaSelector = createSelector(
-  AvklartefaktaSelector,
-  avklarteFakta => (
-    avklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND)
-  )
+export const OmfattesILandFaktaSelector = createSelector(AvklartefaktaSelector, (avklarteFakta) =>
+  avklarteFakta.find((avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND)
 );
 
-export const OmfattesILandSelector = createSelector(
-  OmfattesILandFaktaSelector,
-  omfattesILandFakta => hentFaktaVerdi(omfattesILandFakta)
+export const OmfattesILandSelector = createSelector(OmfattesILandFaktaSelector, (omfattesILandFakta) =>
+  hentFaktaVerdi(omfattesILandFakta)
 );
 
 export const OmfattesINorgeSelector = createSelector(
@@ -516,22 +480,20 @@ export const OmfattesIAnnetLandSelector = createSelector(
   (omfattesILand, omfattesILandFakta) => Utils._isObject(omfattesILandFakta) && omfattesILand !== MKV.Koder.landkoder.NO
 );
 
-export const OffentligArbeidAntallLandFaktaSelector = createSelector(
-  AvklartefaktaSelector,
-  avklartefakta => avklartefakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND)
+export const OffentligArbeidAntallLandFaktaSelector = createSelector(AvklartefaktaSelector, (avklartefakta) =>
+  avklartefakta.find((avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND)
 );
 
 export const OffentligArbeidAntallLandFaktaVerdiSelector = createSelector(
   OffentligArbeidAntallLandFaktaSelector,
-  offentligArbeidAntallLandFakta => hentFaktaVerdi(offentligArbeidAntallLandFakta)
+  (offentligArbeidAntallLandFakta) => hentFaktaVerdi(offentligArbeidAntallLandFakta)
 );
 
-export const LoennetArbeidAntallLandFaktaSelector = createSelector(
-  AvklartefaktaSelector,
-  avklartefakta => avklartefakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND)
+export const LoennetArbeidAntallLandFaktaSelector = createSelector(AvklartefaktaSelector, (avklartefakta) =>
+  avklartefakta.find((avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND)
 );
 
 export const LoennetArbeidAntallLandFaktaVerdiSelector = createSelector(
   LoennetArbeidAntallLandFaktaSelector,
-  loennetArbeidAntallLandFakta => hentFaktaVerdi(loennetArbeidAntallLandFakta)
+  (loennetArbeidAntallLandFakta) => hentFaktaVerdi(loennetArbeidAntallLandFakta)
 );

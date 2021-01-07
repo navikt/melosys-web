@@ -1,9 +1,9 @@
-import * as EKV from 'eessi-kodeverk';
+import * as EKV from "eessi-kodeverk";
 
-import MKV from '../../../../melosyskodeverk';
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { STEG, FANE_STATUS } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingVedtak from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVedtak';
+import MKV from "../../../../melosyskodeverk";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingVedtak from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVedtak";
 
 class GodkjennUtpekingNorge extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,14 +11,14 @@ class GodkjennUtpekingNorge extends Steg {
 
     this.kriterier = [];
     this.id = STEG.GODKJENN_UTPEKING_NORGE;
-    this.tittel = 'Vedtak';
+    this.tittel = "Vedtak";
     this.komponent = VurderingVedtak;
-    this.samleRelevanteData = _propsLight => {
+    this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
 
       const pdfDokumenter = [
         {
-          navn: 'Forhåndsvis vedtaksbrev og A1',
+          navn: "Forhåndsvis vedtaksbrev og A1",
           type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
           data: {
             mottaker: MKV.Koder.aktoersroller.BRUKER,
@@ -26,7 +26,7 @@ class GodkjennUtpekingNorge extends Steg {
           },
         },
         {
-          navn: 'Forhåndsvis SED A012',
+          navn: "Forhåndsvis SED A012",
           type: EKV.Koder.sedtyper.A012,
           erSed: true,
           data: {
@@ -41,12 +41,12 @@ class GodkjennUtpekingNorge extends Steg {
         pdfDokumenter,
       };
     };
-    this.beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = (_propsLight) => {
       const harAvklaring = true;
 
-      return ({
+      return {
         harAvklaring,
-      });
+      };
     };
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,

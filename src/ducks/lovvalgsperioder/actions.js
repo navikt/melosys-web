@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as Types from "./types";
 
 /**
  * Actions
@@ -9,10 +9,10 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function oppdaterLovvalgsperioderState(dokument) {
-  return ({
+  return {
     type: Types.OPPDATER_LOVVALGSPERIODER,
     data: dokument,
-  });
+  };
 }
 
 /** Tømmer avklartefakta-state når komponenten unmounter
@@ -24,11 +24,11 @@ export function resetLovvalgsperioderState() {
 }
 
 export function endrePeriode(fomdato, tomdato) {
-  return ({
+  return {
     type: Types.ENDRE_PERIODE,
     data: {
       fomdato,
       tomdato,
     },
-  });
+  };
 }

@@ -1,4 +1,4 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
 const Utpekingsperiode = PT.shape({
   fomDato: PT.string,
@@ -10,7 +10,4 @@ const Utpekingsperiode = PT.shape({
 
 const Utpekingsperioder = PT.arrayOf(Utpekingsperiode);
 
-export {
-  Utpekingsperiode,
-  Utpekingsperioder,
-};
+export { Utpekingsperiode, Utpekingsperioder };

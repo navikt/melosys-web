@@ -1,21 +1,21 @@
-import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { reduxForm, InjectedFormProps } from 'redux-form';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { KTObject } from '@navikt/melosys-kodeverk';
+import React from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { reduxForm, InjectedFormProps } from "redux-form";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import * as KV from '../../../kodeverk';
-import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../../felleskomponenter/skjema';
-import * as Api from '../../../services/api';
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Api from "../../../services/api";
 
-import { oppgaverOperations } from '../../../ducks/oppgaver';
+import { oppgaverOperations } from "../../../ducks/oppgaver";
 
-import { useAsyncCallbackState } from '../../../hooks';
+import { useAsyncCallbackState } from "../../../hooks";
 
-import './behandling.css';
+import "./behandling.css";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -34,7 +34,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type BehandlingProps = PropsFromRedux & RouteComponentProps;
 
-
 export const Behandling = ({
   handleSubmit,
   history,
@@ -45,7 +44,9 @@ export const Behandling = ({
     const redirectURL = await handleSubmit(form);
 
     /* eslint-disable no-alert */
-    if (!redirectURL) { return alert('Ingen oppgaver finnes'); }
+    if (!redirectURL) {
+      return alert("Ingen oppgaver finnes");
+    }
     /* eslint-enable */
     history.push(redirectURL);
     return true;
@@ -55,7 +56,8 @@ export const Behandling = ({
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
   ];
-  const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
+  const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) =>
+    !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
 
   return (
     <Nav.Panel className="forside__sidepanel sidepanel__behandling">
@@ -63,20 +65,20 @@ export const Behandling = ({
       <p>Velg behandlingstema for å få tildelt en sak.</p>
       <form className="behandling__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>
-          <Nav.Column xs="12" >
+          <Nav.Column xs="12">
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
-              {
-                MKV.KTObjects.behandlinger.behandlingstema
-                  .filter(behandlingstemaErPlukkbart)
-                  .sort(compareTerm)
-                  .map(({ kode, term }: KTObject) => {
-                    const antallAapneBehandlinger = statistikk.aapneBehandlinger[kode] || 0;
+              {MKV.KTObjects.behandlinger.behandlingstema
+                .filter(behandlingstemaErPlukkbart)
+                .sort(compareTerm)
+                .map(({ kode, term }: KTObject) => {
+                  const antallAapneBehandlinger = statistikk.aapneBehandlinger[kode] || 0;
 
-                    return (
-                      <option key={kode} value={kode}>{term}&nbsp;&nbsp;({antallAapneBehandlinger})</option>
-                    );
-                  })
-              }
+                  return (
+                    <option key={kode} value={kode}>
+                      {term}&nbsp;&nbsp;({antallAapneBehandlinger})
+                    </option>
+                  );
+                })}
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
@@ -89,7 +91,7 @@ export const Behandling = ({
 const BehandlngForm = reduxForm<KV.Form.BehandlingsFormData, BehandlingProps>({
   form: KV.Form.BEHANDLINGS_FORM,
   destroyOnUnmount: false,
-  onSubmit: form => oppgaverOperations.sendBehandlingsOppgave(form),
+  onSubmit: (form) => oppgaverOperations.sendBehandlingsOppgave(form),
 })(Behandling);
 
 export default withRouter(connector(BehandlngForm));

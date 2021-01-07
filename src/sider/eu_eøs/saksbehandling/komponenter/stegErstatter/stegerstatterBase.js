@@ -1,9 +1,9 @@
-import React from 'react';
-import PT from 'prop-types';
+import React from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../../../utils/navFrontend';
+import * as Nav from "../../../../../utils/navFrontend";
 
-import './stegerstatterBase.css';
+import "./stegerstatterBase.css";
 
 const StegerstatterBase = ({ tittel, beskrivelse }) => (
   <section className="panelSeksjon stegerstatter">
@@ -11,7 +11,7 @@ const StegerstatterBase = ({ tittel, beskrivelse }) => (
       <Nav.Row>
         <Nav.typo.Systemtittel>{tittel}</Nav.typo.Systemtittel>
       </Nav.Row>
-      <p>{ beskrivelse }</p>
+      <p>{beskrivelse}</p>
     </Nav.Panel>
   </section>
 );

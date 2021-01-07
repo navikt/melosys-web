@@ -1,3 +1,3 @@
-import EnkeltArbeidsforholdUtlandRedigeringUtfort from './enkeltArbeidsforholdUtlandRedigeringUtfort';
+import EnkeltArbeidsforholdUtlandRedigeringUtfort from "./enkeltArbeidsforholdUtlandRedigeringUtfort";
 
 export default EnkeltArbeidsforholdUtlandRedigeringUtfort;

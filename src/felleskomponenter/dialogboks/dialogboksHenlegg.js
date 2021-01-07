@@ -1,34 +1,34 @@
-import React, { Component } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import PdfLenkeListe from '../pdfLenkeListe';
-import * as Mui from '../ui';
-import Knapperad from '../knapperad';
+import PdfLenkeListe from "../pdfLenkeListe";
+import * as Mui from "../ui";
+import Knapperad from "../knapperad";
 
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { redigerbartSelectors } from '../../ducks/redigerbart';
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
-import './dialogboksHenlegg.css';
+import "./dialogboksHenlegg.css";
 
 export class DialogboksHenleggSak extends Component {
   state = {
-    begrunnelseKode: '',
+    begrunnelseKode: "",
     feilmeldingSelect: undefined,
     feilmeldingFritekst: undefined,
-    fritekst: '',
+    fritekst: "",
   };
 
-  velgBegrunnelseHandle = event => {
+  velgBegrunnelseHandle = (event) => {
     const begrunnelseKode = event.target.value;
     this.setState({ begrunnelseKode, feilmeldingSelect: undefined });
   };
 
-  erBegrunnelseValgt = () => this.state.begrunnelseKode !== '';
+  erBegrunnelseValgt = () => this.state.begrunnelseKode !== "";
 
   vedKlikkLenke = async () => {
     const begrunnelsePassertValidering = this.validerBegrunnelse();
@@ -40,7 +40,7 @@ export class DialogboksHenleggSak extends Component {
   validerBegrunnelse = () => {
     const { erBegrunnelseValgt } = this;
     if (!erBegrunnelseValgt()) {
-      this.setState({ feilmeldingSelect: { feilmelding: 'Ingen begrunnelse valgt' } });
+      this.setState({ feilmeldingSelect: { feilmelding: "Ingen begrunnelse valgt" } });
     }
     return erBegrunnelseValgt();
   };
@@ -49,16 +49,16 @@ export class DialogboksHenleggSak extends Component {
     const { fritekstValgt, fritekstTom } = this;
     const fritekstValideringPassert = !(fritekstValgt() && fritekstTom());
     if (!fritekstValideringPassert) {
-      this.setState({ feilmeldingFritekst: { feilmelding: 'Mangler fritekst' } });
+      this.setState({ feilmeldingFritekst: { feilmelding: "Mangler fritekst" } });
     }
     return fritekstValideringPassert;
   };
 
   fritekstValgt = () => this.state.begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
 
-  fritekstTom = () => this.state.fritekst === '';
+  fritekstTom = () => this.state.fritekst === "";
 
-  fritekstOnchange = event => {
+  fritekstOnchange = (event) => {
     const fritekst = event.target.value;
     this.oppdaterTekst(fritekst);
     this.fjernFeilmeldingFritekst();
@@ -66,14 +66,14 @@ export class DialogboksHenleggSak extends Component {
 
   fjernFeilmeldingFritekst = () => this.setState({ feilmeldingFritekst: undefined });
 
-  oppdaterTekst = fritekst => this.setState({ fritekst });
+  oppdaterTekst = (fritekst) => this.setState({ fritekst });
 
   vedKlikkHenlegg = () => {
     if (!(this.validerBegrunnelse() && this.validerFritekst())) return;
 
     const { begrunnelseKode } = this.state;
     let { fritekst } = this.state;
-    if (fritekst === '') fritekst = null;
+    if (fritekst === "") fritekst = null;
     this.props.henleggHandle({
       begrunnelseKode,
       fritekst,
@@ -81,36 +81,27 @@ export class DialogboksHenleggSak extends Component {
   };
 
   render() {
-    const {
-      avbryt,
-      behandlingID,
-      redigerbart,
-      ariaHideApp,
-    } = this.props;
+    const { avbryt, behandlingID, redigerbart, ariaHideApp } = this.props;
 
-    const {
-      begrunnelseKode,
-      feilmeldingSelect,
-      fritekst,
-      feilmeldingFritekst,
-    } = this.state;
+    const { begrunnelseKode, feilmeldingSelect, fritekst, feilmeldingFritekst } = this.state;
 
-    const {
-      vedKlikkHenlegg,
-      erBegrunnelseValgt,
-    } = this;
+    const { vedKlikkHenlegg, erBegrunnelseValgt } = this;
 
-    const data = erBegrunnelseValgt() ? {
-      begrunnelseKode,
-      fritekst: fritekst === '' ? null : fritekst,
-      mottaker: MKV.Koder.aktoersroller.BRUKER,
-    } : {};
+    const data = erBegrunnelseValgt()
+      ? {
+          begrunnelseKode,
+          fritekst: fritekst === "" ? null : fritekst,
+          mottaker: MKV.Koder.aktoersroller.BRUKER,
+        }
+      : {};
 
-    const pdfDokumenter = [{
-      navn: 'Forhåndsvis brev',
-      type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
-      data,
-    }];
+    const pdfDokumenter = [
+      {
+        navn: "Forhåndsvis brev",
+        type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
+        data,
+      },
+    ];
 
     const visTekstFelt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
     return (
@@ -121,7 +112,8 @@ export class DialogboksHenleggSak extends Component {
         onRequestClose={avbryt}
         closeButton={false}
         shouldCloseOnOverlayClick
-        ariaHideApp={ariaHideApp}>
+        ariaHideApp={ariaHideApp}
+      >
         <div>
           <Nav.typo.Systemtittel className="overskrift">Henlegg saken</Nav.typo.Systemtittel>
           <Mui.KodeTermSelect
@@ -133,12 +125,17 @@ export class DialogboksHenleggSak extends Component {
             disableForsteValg={erBegrunnelseValgt()}
             redigerbar={redigerbart}
           />
-          {
-            visTekstFelt && <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={this.fritekstOnchange} value={fritekst} />
-          }
-          {
-            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={this.vedKlikkLenke} />
-          }
+          {visTekstFelt && (
+            <Nav.Textarea
+              feil={feilmeldingFritekst}
+              label="Fritekst"
+              onChange={this.fritekstOnchange}
+              value={fritekst}
+            />
+          )}
+          {redigerbart && (
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={this.vedKlikkLenke} />
+          )}
           <Knapperad
             bekreft={vedKlikkHenlegg}
             bekreftTekst="HENLEGG SAKEN"
@@ -165,7 +162,7 @@ DialogboksHenleggSak.defaultProps = {
   ariaHideApp: true,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   redigerbart: redigerbartSelectors.ModalHenleggRedigerbartSelector(state),
 });

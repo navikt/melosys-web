@@ -1,4 +1,4 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
 const VilkaarPropType = PT.shape({
   vilkaar: PT.string,

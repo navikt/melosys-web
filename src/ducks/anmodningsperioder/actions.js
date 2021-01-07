@@ -1,10 +1,10 @@
-import * as Types from './types';
+import * as Types from "./types";
 
 export function oppdaterAnmodningsperioder(anmodningsperioder) {
-  return ({
+  return {
     type: Types.OPPDATER_ANMODNINGSPERIODER,
     anmodningsperioder,
-  });
+  };
 }
 
 export function resetAnmodningsperioderState() {

@@ -1,6 +1,6 @@
-import { StateSection } from 'AppTypes';
-import { STATUS } from '../../services/utils';
-import * as Types from './types';
+import { StateSection } from "AppTypes";
+import { STATUS } from "../../services/utils";
+import * as Types from "./types";
 
 export const initialState: StateSection<Types.Data> = {
   data: {},
@@ -15,7 +15,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
       const { data: medlemskapsperioder } = action;
-      const bestemmelse = medlemskapsperioder.length > 0 ? medlemskapsperioder[0].bestemmelse : '';
+      const bestemmelse = medlemskapsperioder.length > 0 ? medlemskapsperioder[0].bestemmelse : "";
       return {
         ...state,
         status: STATUS.OK,

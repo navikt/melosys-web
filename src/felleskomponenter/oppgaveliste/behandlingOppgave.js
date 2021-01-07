@@ -1,30 +1,28 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames';
-import PT from 'prop-types';
+import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
+import classNames from "classnames";
+import PT from "prop-types";
 
-import * as MPT from '../../proptypes';
-import * as Ikoner from '../../resources/images';
-import * as Nav from '../../utils/navFrontend';
-import * as KV from '../../kodeverk';
-import * as Routing from '../../routing';
+import * as MPT from "../../proptypes";
+import * as Ikoner from "../../resources/images";
+import * as Nav from "../../utils/navFrontend";
+import * as KV from "../../kodeverk";
+import * as Routing from "../../routing";
 
-import PanelHeader from '../panelHeader/panelHeader';
-import EnkeltDato from '../datoOmrade/enkeltDato';
-import { formatterDatoTilNorsk } from '../../utils/dato';
+import PanelHeader from "../panelHeader/panelHeader";
+import EnkeltDato from "../datoOmrade/enkeltDato";
+import { formatterDatoTilNorsk } from "../../utils/dato";
 
-import './behandlingOppgave.css';
+import "./behandlingOppgave.css";
 
-const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) => (
-  stengt ?
-    <div>
-      {children}
-    </div>
-    :
+const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) =>
+  stengt ? (
+    <div>{children}</div>
+  ) : (
     <Link to={link} className="behandlingOppgave__link">
       {children}
     </Link>
-);
+  );
 
 BehandlingOppgavesLinjeWrapper.propTypes = {
   link: PT.string.isRequired,
@@ -38,16 +36,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * seg inn på den.
  */
 const BehandlingOppgave = ({ sak }) => {
-  const {
-    sammensattNavn,
-    sakstype,
-    saksnummer,
-    behandling,
-    aktivTil,
-    periode,
-    land,
-    fnr,
-  } = sak;
+  const { sammensattNavn, sakstype, saksnummer, behandling, aktivTil, periode, land, fnr } = sak;
 
   const {
     behandlingID,
@@ -63,15 +52,15 @@ const BehandlingOppgave = ({ sak }) => {
   const { fom, tom } = periode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
   const link = Routing.lagUrl(saksnummer, behandlingID, behandlingstema.kode);
-  const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-  const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
+  const landListeSomStreng = land ? land.join(", ") : "(ukjent)";
+  const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
   const cl = classNames({
     behandlingOppgave: true,
     behandlingOppgave__stengt: erUnderOppdatering,
   });
 
-  const kolonneBredder = ['3', '4', '3', '2'];
+  const kolonneBredder = ["3", "4", "3", "2"];
 
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
@@ -88,13 +77,17 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Behandlingstema:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingstema) || '(ukjent)'}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        {KV.objektTilTerm(behandlingstema) || "(ukjent)"}
+                      </dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[2]}>
                       <dt className="behandlingOppgave__meta__term">Frist:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj"><EnkeltDato dato={aktivTil} /></dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        <EnkeltDato dato={aktivTil} />
+                      </dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>
@@ -105,13 +98,17 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        {KV.objektTilTerm(behandlingsstatus) || "(ukjent)"}
+                      </dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[2]}>
                       <dt className="behandlingOppgave__meta__term">Svarfrist:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj"><EnkeltDato dato={svarFrist} /></dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        <EnkeltDato dato={svarFrist} />
+                      </dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>
@@ -122,13 +119,17 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Behandlingstype:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        {KV.objektTilTerm(behandlingstype) || "(ukjent)"}
+                      </dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[2]}>
                       <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(endretDato)}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        {oppdateringStatus || formatterDatoTilNorsk(endretDato)}
+                      </dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>
@@ -139,13 +140,17 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        {fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}
+                      </dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[2]}>
                       <dt className="behandlingOppgave__meta__term">Opprettelsesdato:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={registrertDato} /> || '(ukjent)'}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        {<EnkeltDato dato={registrertDato} /> || "(ukjent)"}
+                      </dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>

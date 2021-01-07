@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { Link, ContentProps } from './types';
+import { Link, ContentProps } from "./types";
 
 import {
   ArbeidsforholdOgInntekt,
@@ -12,65 +12,69 @@ import {
   Periode,
   Person,
   Familieforhold,
-} from '../menypunkter';
+} from "../menypunkter";
 
 interface ILinksBuilder {
-  addPerson: () => ILinksBuilder,
-  addFamilieForhold: () => ILinksBuilder,
-  addMedlemskap: () => ILinksBuilder,
-  addEUEOSBarnetrygd: () => ILinksBuilder,
-  addArbeidsforholdOgInntekt: () => ILinksBuilder,
-  addArbeidsgiverEllervirksomhet: () => ILinksBuilder,
-  addFullmektig: () => ILinksBuilder,
-  addPeriode: () => ILinksBuilder,
+  addPerson: () => ILinksBuilder;
+  addFamilieForhold: () => ILinksBuilder;
+  addMedlemskap: () => ILinksBuilder;
+  addEUEOSBarnetrygd: () => ILinksBuilder;
+  addArbeidsforholdOgInntekt: () => ILinksBuilder;
+  addArbeidsgiverEllervirksomhet: () => ILinksBuilder;
+  addFullmektig: () => ILinksBuilder;
+  addPeriode: () => ILinksBuilder;
   // addUtenlandsoppdraget: () => ILinksBuilder,
   // addLonnOgGodtgjorelser: () => ILinksBuilder,
-  addArbeidssteder: () => ILinksBuilder,
+  addArbeidssteder: () => ILinksBuilder;
   // addOmVirksomhetenINorge: () => ILinksBuilder,
   // addOvrigOmArbeidstaker: () => ILinksBuilder,
-  build: () => Link[],
+  build: () => Link[];
 }
 
 class LinksBuilder implements ILinksBuilder {
   private readonly links: Link[] = [];
   private readonly contentProps: ContentProps;
 
-  constructor (props: ContentProps) {
+  constructor(props: ContentProps) {
     this.contentProps = props;
   }
 
   public addPerson() {
     this.links.push({
-      label: 'Person',
+      label: "Person",
       active: false,
-      content: <Person
-        visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
-        redigerbart={this.contentProps.redigerbart}
-        behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
-        visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
-      />,
+      content: (
+        <Person
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+          visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
+        />
+      ),
     });
     return this;
   }
 
   public addFamilieForhold() {
     this.links.push({
-      label: 'Familieforhold',
+      label: "Familieforhold",
       active: false,
-      content: <Familieforhold
-        visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
-        redigerbart={this.contentProps.redigerbart}
-        behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
-        visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
-        setMenypanelFeilmelding={this.contentProps.setMenypanelFeilmelding}
-      />,
+      content: (
+        <Familieforhold
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+          visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
+          setMenypanelFeilmelding={this.contentProps.setMenypanelFeilmelding}
+        />
+      ),
     });
     return this;
   }
 
   public addMedlemskap() {
     this.links.push({
-      label: 'Medlemskap',
+      label: "Medlemskap",
       active: false,
       content: <Medlemskap />,
     });
@@ -79,7 +83,7 @@ class LinksBuilder implements ILinksBuilder {
 
   public addEUEOSBarnetrygd() {
     this.links.push({
-      label: 'EU/EØS-barnetrygd',
+      label: "EU/EØS-barnetrygd",
       active: false,
       content: <Barnetrygd />,
     });
@@ -88,7 +92,7 @@ class LinksBuilder implements ILinksBuilder {
 
   public addArbeidsforholdOgInntekt() {
     this.links.push({
-      label: 'Arbeidsforhold og inntekt',
+      label: "Arbeidsforhold og inntekt",
       active: false,
       content: <ArbeidsforholdOgInntekt />,
     });
@@ -97,53 +101,61 @@ class LinksBuilder implements ILinksBuilder {
 
   public addArbeidsgiverEllervirksomhet() {
     this.links.push({
-      label: 'Arbeidsgiver/virksomhet',
+      label: "Arbeidsgiver/virksomhet",
       active: false,
-      content: <ArbeidsgiverOgVirksomhet
-        visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
-        redigerbart={this.contentProps.redigerbart}
-        behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
-      />,
+      content: (
+        <ArbeidsgiverOgVirksomhet
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
     });
     return this;
   }
 
   public addFullmektig() {
     this.links.push({
-      label: 'Fullmektig',
+      label: "Fullmektig",
       active: false,
-      content: <Fullmektig
-        visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
-        redigerbart={this.contentProps.redigerbart}
-        behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
-      />,
+      content: (
+        <Fullmektig
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
     });
     return this;
   }
 
   public addPeriode() {
     this.links.push({
-      label: 'Periode',
+      label: "Periode",
       active: false,
-      content: <Periode
-        visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
-        redigerbart={this.contentProps.redigerbart}
-        lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
-        behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
-      />,
+      content: (
+        <Periode
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
     });
     return this;
   }
 
   public addArbeidssteder() {
     this.links.push({
-      label: 'Arbeidssted(er)',
+      label: "Arbeidssted(er)",
       active: false,
-      content: <Arbeidssteder
-        visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
-        redigerbart={this.contentProps.redigerbart}
-        behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
-      />,
+      content: (
+        <Arbeidssteder
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
     });
     return this;
   }

@@ -1,8 +1,8 @@
-import React from 'react';
-import * as Nav from '../../utils/navFrontend';
-import DialogboksOppfriskBehandling from './dialogboksOppfrisk';
+import React from "react";
+import * as Nav from "../../utils/navFrontend";
+import DialogboksOppfriskBehandling from "./dialogboksOppfrisk";
 
-describe('DialogboksOppfrisk', () => {
+describe("DialogboksOppfrisk", () => {
   let props = null;
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('DialogboksOppfrisk', () => {
     };
   });
 
-  it('viser en nav modal med korrekte props', () => {
+  it("viser en nav modal med korrekte props", () => {
     const dialogboksOppfriskBehandling = shallow(<DialogboksOppfriskBehandling {...props} />);
     const modal = dialogboksOppfriskBehandling.find(Nav.Modal);
     const modalProps = modal.props();

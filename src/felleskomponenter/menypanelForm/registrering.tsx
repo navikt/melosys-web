@@ -1,15 +1,15 @@
-import React, { FormEventHandler } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { reduxForm, InjectedFormProps } from 'redux-form';
-import { RootState } from 'AppTypes';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import React, { FormEventHandler } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { reduxForm, InjectedFormProps } from "redux-form";
+import { RootState } from "AppTypes";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
-import * as KV from '../../kodeverk';
+import * as KV from "../../kodeverk";
 
-import Menypanel from '../menypanel';
+import Menypanel from "../menypanel";
 
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from '../../ducks/behandlingsgrunnlag';
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
 
 const mapStateToProps = (state: RootState) => ({
   initialValues: {
@@ -29,14 +29,14 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type RegistreringProps = PropsFromRedux & {
-  startOgVisOppfriskModal: () => void,
+  startOgVisOppfriskModal: () => void;
 };
 
 const Registrering = ({
   lagreSoknad,
   startOgVisOppfriskModal,
 }: RegistreringProps & InjectedFormProps<KV.Form.RegistreringPanelerFormData, RegistreringProps>) => {
-  const submitHandler: FormEventHandler<HTMLFormElement> = event => {
+  const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
   };
 
@@ -47,9 +47,7 @@ const Registrering = ({
 
   return (
     <form name="registrering" id="soknad" onSubmit={submitHandler}>
-      <Menypanel
-        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-      />
+      <Menypanel lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
     </form>
   );
 };

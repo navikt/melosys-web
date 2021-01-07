@@ -1,22 +1,22 @@
-import React, { Fragment } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Fragment } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
 
-import * as Nav from '../utils/navFrontend';
+import * as Nav from "../utils/navFrontend";
 
-import { FellesHandlersContext } from '../contexts';
-import { modalerOperations, modalerSelectors } from '../ducks/modaler';
-import { feiletresponsSelectors } from '../ducks/feiletrespons';
+import { FellesHandlersContext } from "../contexts";
+import { modalerOperations, modalerSelectors } from "../ducks/modaler";
+import { feiletresponsSelectors } from "../ducks/feiletrespons";
 
-import DialogboksOppfriskSak from '../felleskomponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksHenlegg from '../felleskomponenter/dialogboks/dialogboksHenlegg';
-import DialogboksAvsluttSakSomBortfalt from '../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
-import DialogboksAvslagSoknad from '../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
-import DialogboksRevurderFagsak from '../felleskomponenter/dialogboks/dialogboksRevurderFagsak';
-import DialogboksValidering from '../felleskomponenter/dialogboks/dialogboksValidering';
-import DialogboksEndreBehandlingstema from '../felleskomponenter/dialogboks/dialogboksEndreBehandlingstema';
+import DialogboksOppfriskSak from "../felleskomponenter/dialogboks/dialogboksOppfrisk";
+import DialogboksHenlegg from "../felleskomponenter/dialogboks/dialogboksHenlegg";
+import DialogboksAvsluttSakSomBortfalt from "../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt";
+import DialogboksAvslagSoknad from "../felleskomponenter/dialogboks/dialogboksAvslagSoknad";
+import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/dialogboksRevurderFagsak";
+import DialogboksValidering from "../felleskomponenter/dialogboks/dialogboksValidering";
+import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/dialogboksEndreBehandlingstema";
 
-Nav.Modal.setAppElement(document.getElementById('root'));
+Nav.Modal.setAppElement(document.getElementById("root"));
 
 const Modals = ({
   skjulOppfriskModalOgNavigerTilForside,
@@ -54,8 +54,7 @@ const Modals = ({
 
   return (
     <Fragment>
-      {
-        visOppfriskDialog && !visOppfriskDialogOgFortsett &&
+      {visOppfriskDialog && !visOppfriskDialogOgFortsett && (
         <DialogboksOppfriskSak
           oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
           avbryt={skjulOppfriskModal}
@@ -64,9 +63,8 @@ const Modals = ({
           behandlingOppfriskes={behandlingOppfriskes}
           annenBehandlingOppfriskes={annenBehandlingOppfriskes}
         />
-      }
-      {
-        visOppfriskDialog && visOppfriskDialogOgFortsett &&
+      )}
+      {visOppfriskDialog && visOppfriskDialogOgFortsett && (
         <DialogboksOppfriskSak
           oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
           avbryt={skjulOppfriskModal}
@@ -75,50 +73,34 @@ const Modals = ({
           behandlingOppfriskes
           annenBehandlingOppfriskes={annenBehandlingOppfriskes}
         />
-      }
-      {
-        visHenleggDialog &&
-        <DialogboksHenlegg
-          avbryt={skjulHenleggDialogHandle}
-          henleggHandle={henleggHandle}
-        />
-      }
-      {
-        visAvslagSoknadDialog &&
-        <DialogboksAvslagSoknad
-          avbryt={skjulAvslagSoknadDialogHandle}
-          avslaaSoknadHandle={avslaaSoknadHandle}
-        />
-      }
-      {
-        visAvsluttSakSomBortfaltDialog &&
+      )}
+      {visHenleggDialog && <DialogboksHenlegg avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
+      {visAvslagSoknadDialog && (
+        <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
+      )}
+      {visAvsluttSakSomBortfaltDialog && (
         <DialogboksAvsluttSakSomBortfalt
           avbryt={skjulAvsluttSakSomBortfaltDialogHandle}
           avsluttSakSomBortfalt={avsluttSakSomBortfalt}
         />
-      }
-      {
-        visRevurderFagsak &&
+      )}
+      {visRevurderFagsak && (
         <DialogboksRevurderFagsak
           avbryt={skjulRevurderFagsakDialogHandle}
           bekreft={revurderFagsak}
           spinner={venterPaRevurderFagsak}
         />
-      }
-      {
-        visValideringModal &&
+      )}
+      {visValideringModal && (
         <DialogboksValidering
           avbryt={skjulValideringModalDialogHandle}
           valideringer={valideringerFeilkoder}
           feilmeldinger={valideringerFeilmeldinger}
         />
-      }
-      {
-        visEndreBehandlingstemaDialog &&
-        <DialogboksEndreBehandlingstema
-          avbryt={skjulEndreBehandlingstemaModalDialogHandle}
-        />
-      }
+      )}
+      {visEndreBehandlingstemaDialog && (
+        <DialogboksEndreBehandlingstema avbryt={skjulEndreBehandlingstemaModalDialogHandle} />
+      )}
     </Fragment>
   );
 };
@@ -149,14 +131,18 @@ Modals.propTypes = {
   skjulEndreBehandlingstemaModalDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
-  valideringerFeilkoder: PT.arrayOf(PT.shape({
-    kode: PT.string.isRequired,
-    felter: PT.arrayOf(PT.string).isRequired,
-  })),
-  valideringerFeilmeldinger: PT.arrayOf(PT.shape({
-    tittel: PT.string.isRequired,
-    innhold: PT.string.isRequired,
-  })),
+  valideringerFeilkoder: PT.arrayOf(
+    PT.shape({
+      kode: PT.string.isRequired,
+      felter: PT.arrayOf(PT.string).isRequired,
+    })
+  ),
+  valideringerFeilmeldinger: PT.arrayOf(
+    PT.shape({
+      tittel: PT.string.isRequired,
+      innhold: PT.string.isRequired,
+    })
+  ),
 };
 
 Modals.defaultProps = {
@@ -165,7 +151,7 @@ Modals.defaultProps = {
   visOppfriskDialogOgFortsett: undefined,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   visOppfriskDialog: modalerSelectors.ErOppfriskSynligSelector(state),
   visOppfriskDialogOgFortsett: modalerSelectors.ErOppfriskSynligOgFortsettSattSelector(state),
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
@@ -178,9 +164,10 @@ const mapStateToProps = state => ({
   visEndreBehandlingstemaDialog: modalerSelectors.ErEndreBehandlingstemaSynligSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   skjulOppfriskModal: () => dispatch(modalerOperations.skjulOppfrisk()),
-  lukkOppfriskModal: () => dispatch(modalerOperations.skjulOppfrisk()) && dispatch(modalerOperations.fjernBehandlingOppfriskes()),
+  lukkOppfriskModal: () =>
+    dispatch(modalerOperations.skjulOppfrisk()) && dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
@@ -193,7 +180,6 @@ const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
 
 export default () => (
   <FellesHandlersContext.Consumer>
-    { fellesHandlers => <ConnectedModals {...fellesHandlers} />}
+    {(fellesHandlers) => <ConnectedModals {...fellesHandlers} />}
   </FellesHandlersContext.Consumer>
 );
-

@@ -1,13 +1,13 @@
-import Regler from './Regler';
+import Regler from "./Regler";
 
-import { anmodningsperiodesvartype } from './anmodningsperiodesvar';
-import { avklartefaktaType } from './avklartefakta';
-import { lovvalgsbestemmelseType } from './lovvalgsbestemmelser';
-import { tilleggBestemmelseType } from './tilleggbestemmelser';
-import { unntakfrabestemmelseType } from './unntakfrabestemmelse';
-import { vilkaarType } from './vilkar';
-import { lovvalgsperiodeType } from './lovvalgsperiode';
-import { lovvalgslandType } from './lovvalgsland';
+import { anmodningsperiodesvartype } from "./anmodningsperiodesvar";
+import { avklartefaktaType } from "./avklartefakta";
+import { lovvalgsbestemmelseType } from "./lovvalgsbestemmelser";
+import { tilleggBestemmelseType } from "./tilleggbestemmelser";
+import { unntakfrabestemmelseType } from "./unntakfrabestemmelse";
+import { vilkaarType } from "./vilkar";
+import { lovvalgsperiodeType } from "./lovvalgsperiode";
+import { lovvalgslandType } from "./lovvalgsland";
 
 const StegStoreTyper = {
   Anmodningsperiodersvar: anmodningsperiodesvartype,

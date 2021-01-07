@@ -1,3 +1,3 @@
-import SideDialogNotater from './sideDialogNotater';
+import SideDialogNotater from "./sideDialogNotater";
 
 export default SideDialogNotater;

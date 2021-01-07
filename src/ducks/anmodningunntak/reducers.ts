@@ -1,7 +1,7 @@
-import { StateSection } from 'AppTypes';
+import { StateSection } from "AppTypes";
 
-import { STATUS } from '../../services/utils';
-import * as Types from './types';
+import { STATUS } from "../../services/utils";
+import * as Types from "./types";
 
 const initalState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,

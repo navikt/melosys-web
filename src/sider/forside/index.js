@@ -1,3 +1,3 @@
-import Forside from './forside';
+import Forside from "./forside";
 
 export default Forside;

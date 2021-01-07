@@ -1,3 +1,3 @@
-import { Oppsummering } from './oppsummering';
+import { Oppsummering } from "./oppsummering";
 
 export { Oppsummering };

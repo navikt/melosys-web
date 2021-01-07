@@ -6,18 +6,18 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as Api from '../../services/api';
-import { doThenDispatch } from '../../services/utils';
-import * as Types from './types';
-import * as Actions from './actions';
-import * as Selectors from './selectors';
+import * as Api from "../../services/api";
+import { doThenDispatch } from "../../services/utils";
+import * as Types from "./types";
+import * as Actions from "./actions";
+import * as Selectors from "./selectors";
 
-import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
-import { lovvalgsperioderSelectors } from '../lovvalgsperioder';
-import { anmodningsperioderSelectors } from '../anmodningsperioder';
-import { behandlingerSelectors } from '../behandlinger';
+import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { lovvalgsperioderSelectors } from "../lovvalgsperioder";
+import { anmodningsperioderSelectors } from "../anmodningsperioder";
+import { behandlingerSelectors } from "../behandlinger";
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Anmodningsperioder.hent(behandlingID), {
@@ -39,12 +39,18 @@ export function lagre() {
   return (dispatch, getState) => {
     const anmodningsperioder = Selectors.AnmodningsperioderSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    const anmodningsperioderErSendtUtlandet = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(getState());
+    const anmodningsperioderErSendtUtlandet = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(
+      getState()
+    );
 
     if (anmodningsperioderErSendtUtlandet) return null;
 
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    return dispatch(send(bid, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) }));
+    return dispatch(
+      send(bid, {
+        anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties),
+      })
+    );
   };
 }
 
@@ -53,21 +59,23 @@ const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
   const soknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
-  const unntakFraLovvalgsland = soknadsland.join('');
+  const unntakFraLovvalgsland = soknadsland.join("");
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
-  return [{
-    id: null,
-    fomDato: periode.fom,
-    tomDato: periode.tom,
-    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
-    tilleggBestemmelse: stegState.tilleggbestemmelse,
-    lovvalgsland: MKV.Koder.landkoder.NO,
-    unntakFraBestemmelse: unntakFraBestemmelse || null,
-    unntakFraLovvalgsland,
-    medlemskapsperiodeID: medlemskapsperiodeID || null,
-    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
-  }];
+  return [
+    {
+      id: null,
+      fomDato: periode.fom,
+      tomDato: periode.tom,
+      lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
+      tilleggBestemmelse: stegState.tilleggbestemmelse,
+      lovvalgsland: MKV.Koder.landkoder.NO,
+      unntakFraBestemmelse: unntakFraBestemmelse || null,
+      unntakFraLovvalgsland,
+      medlemskapsperiodeID: medlemskapsperiodeID || null,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    },
+  ];
 };
 
 const byggAnmodningsperioder = (stegState, reduxState) => {
@@ -82,7 +90,9 @@ const byggAnmodningsperioder = (stegState, reduxState) => {
 
 export function oppdaterAnmodningsperioderState(stegState) {
   return (dispatch, getState) => {
-    const anmodningsperioderErSendtUtland = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(getState());
+    const anmodningsperioderErSendtUtland = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(
+      getState()
+    );
     if (anmodningsperioderErSendtUtland) return;
 
     if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.unntakfrabestemmelse) {
@@ -95,5 +105,5 @@ export function oppdaterAnmodningsperioderState(stegState) {
 }
 
 export function resetAnmodningsperioderState() {
-  return dispatch => dispatch(Actions.resetAnmodningsperioderState());
+  return (dispatch) => dispatch(Actions.resetAnmodningsperioderState());
 }

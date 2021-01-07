@@ -1,15 +1,15 @@
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as Api from '../../services/api';
-import { doThenDispatch } from '../../services/utils';
-import * as Types from './types';
-import * as Actions from './actions';
-import * as Selectors from './selectors';
+import * as Api from "../../services/api";
+import { doThenDispatch } from "../../services/utils";
+import * as Types from "./types";
+import * as Actions from "./actions";
+import * as Selectors from "./selectors";
 
-import { avklartefaktaSelectors } from '../avklartefakta';
-import { behandlingsgrunnlagSelectors } from '../behandlingsgrunnlag';
-import { behandlingerSelectors } from '../behandlinger';
-import { flytSelectors } from '../flyt';
+import { avklartefaktaSelectors } from "../avklartefakta";
+import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
+import { behandlingerSelectors } from "../behandlinger";
+import { flytSelectors } from "../flyt";
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Utpekingsperioder.hent(behandlingID), {
@@ -41,13 +41,15 @@ const byggUtpekingsperiode = (stegState, reduxState) => {
   const lovvalgsland = stegState.lovvalgsland || avklartefaktaSelectors.OmfattesILandSelector(reduxState);
   if (!lovvalgsland) return [];
 
-  return [{
-    fomDato: periode.fom,
-    tomDato: periode.tom,
-    lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-    tilleggsbestemmelse: stegState.tilleggbestemmelse,
-    lovvalgsland,
-  }];
+  return [
+    {
+      fomDato: periode.fom,
+      tomDato: periode.tom,
+      lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+      tilleggsbestemmelse: stegState.tilleggbestemmelse,
+      lovvalgsland,
+    },
+  ];
 };
 
 const byggUtpekingsperioder = (stegState, reduxState) => {
@@ -74,9 +76,7 @@ const byggUtpekingsperioder = (stegState, reduxState) => {
 
 export function oppdaterUtpekingsperioderState(stegState) {
   return (dispatch, getState) => {
-    if (stegState.lovvalgsbestemmelse ||
-      stegState.tilleggbestemmelse ||
-      stegState.lovvalgsland) {
+    if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.lovvalgsland) {
       const utpekingsperioder = byggUtpekingsperioder(stegState, getState());
       dispatch(Actions.oppdaterUtpekingsperioder(utpekingsperioder));
     } else {
@@ -86,9 +86,9 @@ export function oppdaterUtpekingsperioderState(stegState) {
 }
 
 export function resetUtpekingsperioderState() {
-  return dispatch => dispatch(Actions.resetUtpekingsperioderState());
+  return (dispatch) => dispatch(Actions.resetUtpekingsperioderState());
 }
 
 export function endrePeriode(fomDato, tomDato) {
-  return dispatch => dispatch(Actions.endrePeriode(fomDato, tomDato));
+  return (dispatch) => dispatch(Actions.endrePeriode(fomDato, tomDato));
 }

@@ -1,32 +1,31 @@
-import React from 'react';
-import PT from 'prop-types';
-import classNames from 'classnames';
-import { KTObject } from '@navikt/melosys-kodeverk';
-import { Fagsak, Oppsummering as OppsummeringType, Person } from 'Domene';
+import React from "react";
+import PT from "prop-types";
+import classNames from "classnames";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import { Fagsak, Oppsummering as OppsummeringType, Person } from "Domene";
 
-import * as Utils from '../utils';
-import * as KV from '../kodeverk';
-import * as MPT from '../proptypes';
-import * as Nav from '../utils/navFrontend';
+import * as Utils from "../utils";
+import * as KV from "../kodeverk";
+import * as MPT from "../proptypes";
+import * as Nav from "../utils/navFrontend";
 
+import EnkeltDato from "./datoOmrade/enkeltDato";
 
-import EnkeltDato from './datoOmrade/enkeltDato';
-
-import './oppsummering.css';
+import "./oppsummering.css";
 
 interface OppsummeringProps {
-  arbeidsland?: KTObject[],
-  oppholdsland?: KTObject[],
-  lovvalgsland?: KTObject,
-  fagsak: Fagsak,
-  oppsummering: OppsummeringType,
-  person: Person,
-  behandlingsgrunnlagPeriodeFom?: string,
-  behandlingsgrunnlagPeriodeTom?: string,
-  lovvalgsperiodeFom?: string,
-  lovvalgsperiodeTom?: string,
-  periodeLabel: string,
-  className?: string,
+  arbeidsland?: KTObject[];
+  oppholdsland?: KTObject[];
+  lovvalgsland?: KTObject;
+  fagsak: Fagsak;
+  oppsummering: OppsummeringType;
+  person: Person;
+  behandlingsgrunnlagPeriodeFom?: string;
+  behandlingsgrunnlagPeriodeTom?: string;
+  lovvalgsperiodeFom?: string;
+  lovvalgsperiodeTom?: string;
+  periodeLabel: string;
+  className?: string;
 }
 
 const Oppsummering = (props: OppsummeringProps) => {
@@ -46,33 +45,23 @@ const Oppsummering = (props: OppsummeringProps) => {
   } = props;
   if (!oppsummering) return <div />;
 
-  const {
-    saksnummer,
-    sakstype,
-    saksstatus,
-    registrertDato,
-  } = fagsak;
+  const { saksnummer, sakstype, saksstatus, registrertDato } = fagsak;
 
-  const {
-    behandlingstype,
-    behandlingsstatus,
-    endretDato,
-    endretAvNavn,
-    sisteOpplysningerHentetDato,
-  } = oppsummering;
+  const { behandlingstype, behandlingsstatus, endretDato, endretAvNavn, sisteOpplysningerHentetDato } = oppsummering;
 
-  const {
-    fnr,
-    sammensattNavn,
-  } = person;
+  const { fnr, sammensattNavn } = person;
 
-  const arbeidslandTilSetning = (land: KTObject[]) => (land && land.length > 0 ? Utils.streng.arrayTilKonjunksjon(land.map(enkeltLand => Utils.streng.storeForbokstaver(enkeltLand.term))) : 'Ukjent');
+  const arbeidslandTilSetning = (land: KTObject[]) =>
+    land && land.length > 0
+      ? Utils.streng.arrayTilKonjunksjon(land.map((enkeltLand) => Utils.streng.storeForbokstaver(enkeltLand.term)))
+      : "Ukjent";
 
-  const lovvalgslandTilSetning = (landObject: KTObject) => (landObject.term ? Utils.streng.arrayTilKonjunksjon(landObject.term) : 'Ukjent');
+  const lovvalgslandTilSetning = (landObject: KTObject) =>
+    landObject.term ? Utils.streng.arrayTilKonjunksjon(landObject.term) : "Ukjent";
 
-  const cl = classNames(className, 'oppsummering');
+  const cl = classNames(className, "oppsummering");
 
-  const kolonneBredder = ['5', '6'] as const;
+  const kolonneBredder = ["5", "6"] as const;
 
   return (
     <div aria-label="behandlingsinformasjon" className={cl}>
@@ -96,7 +85,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       </dl>
 
       <dl>
-        { arbeidsland && arbeidsland.length > 0 &&
+        {arbeidsland && arbeidsland.length > 0 && (
           <Nav.Row>
             <Nav.Column xs={kolonneBredder[0]}>
               <dt>Arbeidsland:</dt>
@@ -105,8 +94,8 @@ const Oppsummering = (props: OppsummeringProps) => {
               <dd>{arbeidslandTilSetning(arbeidsland)}</dd>
             </Nav.Column>
           </Nav.Row>
-        }
-        { lovvalgsland && !Utils._isEmpty(lovvalgsland) &&
+        )}
+        {lovvalgsland && !Utils._isEmpty(lovvalgsland) && (
           <Nav.Row>
             <Nav.Column xs={kolonneBredder[0]}>
               <dt>Lovvalgsland:</dt>
@@ -115,8 +104,8 @@ const Oppsummering = (props: OppsummeringProps) => {
               <dd>{lovvalgslandTilSetning(lovvalgsland)}</dd>
             </Nav.Column>
           </Nav.Row>
-        }
-        { oppholdsland && oppholdsland.length > 0 &&
+        )}
+        {oppholdsland && oppholdsland.length > 0 && (
           <Nav.Row>
             <Nav.Column xs={kolonneBredder[0]}>
               <dt>Oppholdsland:</dt>
@@ -125,27 +114,31 @@ const Oppsummering = (props: OppsummeringProps) => {
               <dd>{arbeidslandTilSetning(oppholdsland)}</dd>
             </Nav.Column>
           </Nav.Row>
-        }
-        { (behandlingsgrunnlagPeriodeFom || behandlingsgrunnlagPeriodeTom) &&
+        )}
+        {(behandlingsgrunnlagPeriodeFom || behandlingsgrunnlagPeriodeTom) && (
           <Nav.Row>
             <Nav.Column xs={kolonneBredder[0]}>
               <dt>{periodeLabel}</dt>
             </Nav.Column>
             <Nav.Column xs={kolonneBredder[1]}>
-              <dd>{behandlingsgrunnlagPeriodeFom || 'ukjent'} - {behandlingsgrunnlagPeriodeTom}</dd>
+              <dd>
+                {behandlingsgrunnlagPeriodeFom || "ukjent"} - {behandlingsgrunnlagPeriodeTom}
+              </dd>
             </Nav.Column>
           </Nav.Row>
-        }
-        { (lovvalgsperiodeFom || lovvalgsperiodeTom) &&
+        )}
+        {(lovvalgsperiodeFom || lovvalgsperiodeTom) && (
           <Nav.Row>
             <Nav.Column xs={kolonneBredder[0]}>
               <dt>Lovvalgsperiode:</dt>
             </Nav.Column>
             <Nav.Column xs={kolonneBredder[1]}>
-              <dd>{lovvalgsperiodeFom || 'ukjent'} - {lovvalgsperiodeTom}</dd>
+              <dd>
+                {lovvalgsperiodeFom || "ukjent"} - {lovvalgsperiodeTom}
+              </dd>
             </Nav.Column>
           </Nav.Row>
-        }
+        )}
       </dl>
 
       <dl>
@@ -162,7 +155,7 @@ const Oppsummering = (props: OppsummeringProps) => {
             <dt>Saksnummer:</dt>
           </Nav.Column>
           <Nav.Column xs={kolonneBredder[1]}>
-            <dd>{saksnummer || '-'}</dd>
+            <dd>{saksnummer || "-"}</dd>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -197,7 +190,9 @@ const Oppsummering = (props: OppsummeringProps) => {
             <dt>Behandling opprettet:</dt>
           </Nav.Column>
           <Nav.Column xs={kolonneBredder[1]}>
-            <dd><EnkeltDato dato={registrertDato} /></dd>
+            <dd>
+              <EnkeltDato dato={registrertDato} />
+            </dd>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -205,7 +200,9 @@ const Oppsummering = (props: OppsummeringProps) => {
             <dt>Behandling sist oppdatert:</dt>
           </Nav.Column>
           <Nav.Column xs={kolonneBredder[1]}>
-            <dd><EnkeltDato dato={endretDato} visTidspunkt /></dd>
+            <dd>
+              <EnkeltDato dato={endretDato} visTidspunkt />
+            </dd>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -224,7 +221,9 @@ const Oppsummering = (props: OppsummeringProps) => {
             <dt>Registeropplysninger oppdatert:</dt>
           </Nav.Column>
           <Nav.Column xs={kolonneBredder[1]}>
-            <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
+            <dd>
+              <EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt />
+            </dd>
           </Nav.Column>
         </Nav.Row>
       </dl>

@@ -1,33 +1,31 @@
-import React from 'react';
-import { FieldArray, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
-import PT from 'prop-types';
-import classNames from 'classnames';
+import React from "react";
+import { FieldArray, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import PT from "prop-types";
+import classNames from "classnames";
 
-import * as MPT from '../../../proptypes';
-import * as Nav from '../../../utils/navFrontend';
-import * as KV from '../../../kodeverk';
-import * as Utils from '../../../utils';
+import * as MPT from "../../../proptypes";
+import * as Nav from "../../../utils/navFrontend";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
 
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import SoknadslandListe from './inngang/soknadslandListe';
+import SoknadslandListe from "./inngang/soknadslandListe";
 
-export const Varsler = ({
-  oppfyllerInngangsvilkar,
-  inngangsvilkaarBegrunnelser,
-  inngangsvilkaar,
-}) => {
+export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaarBegrunnelser, inngangsvilkaar }) => {
   const oppfyllerInngangsvilkarCl = classNames({
     liste__element: true,
-    'liste__element--oppfylt': oppfyllerInngangsvilkar,
-    'liste__element--ikkeoppfylt': !oppfyllerInngangsvilkar,
+    "liste__element--oppfylt": oppfyllerInngangsvilkar,
+    "liste__element--ikkeoppfylt": !oppfyllerInngangsvilkar,
   });
 
-  const oppfyltTekst = `Søknaden oppfyller${oppfyllerInngangsvilkar ? ' ' : ' ikke '}inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
+  const oppfyltTekst = `Søknaden oppfyller${
+    oppfyllerInngangsvilkar ? " " : " ikke "
+  }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   if (Utils._isEmpty(inngangsvilkaar)) {
     return (
@@ -40,14 +38,12 @@ export const Varsler = ({
   return (
     <ul className="betingelser__liste">
       <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
-      {
-        !oppfyllerInngangsvilkar &&
-        inngangsvilkaarBegrunnelser.map(begrunnelseKode => (
+      {!oppfyllerInngangsvilkar &&
+        inngangsvilkaarBegrunnelser.map((begrunnelseKode) => (
           <li key={begrunnelseKode} className={oppfyllerInngangsvilkarCl}>
             {KV.kodeTilTerm(begrunnelseKode, MKV.KTObjects.begrunnelser.inngangsvilkaar)}
           </li>
-        ))
-      }
+        ))}
     </ul>
   );
 };
@@ -71,15 +67,9 @@ export const VurderingInngang = ({
   oppdaterData,
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
-  inngangsvilkaar: {
-    begrunnelseKoder: inngangsvilkaarBegrunnelser,
-  },
-  tilstand: {
-    harAvklaring,
-  },
-  begrunnelser: {
-    opphold: soknadslandBegrunnelser,
-  },
+  inngangsvilkaar: { begrunnelseKoder: inngangsvilkaarBegrunnelser },
+  tilstand: { harAvklaring },
+  begrunnelser: { opphold: soknadslandBegrunnelser },
 }) => (
   <div className="vurderingInngang">
     <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
@@ -98,7 +88,14 @@ export const VurderingInngang = ({
       oppdaterData={oppdaterData}
     />
     <div className="fane__knapplinje">
-      <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg0" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+      <Nav.Knapp
+        disabled={!(redigerbart && harAvklaring)}
+        className="fane__navigasjonsknapp"
+        data-cy-nesteknapp="knapp_steg0"
+        onClick={bekreftOgFortsett}
+      >
+        Bekreft og fortsett
+      </Nav.Knapp>
     </div>
   </div>
 );
@@ -117,7 +114,7 @@ VurderingInngang.propTypes = {
   oppfyllerInngangsvilkar: PT.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   initialValues: {
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
     fjernedeLand: avklartefaktaSelectors.IkkeGyldigeSoknadslandFaktaerSelector(state),

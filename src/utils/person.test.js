@@ -1,20 +1,20 @@
 /* eslint-disable */
-import * as Person from './person';
-import * as testhelpers from './testhelpers';
+import * as Person from "./person";
+import * as testhelpers from "./testhelpers";
 
-describe('Tester person.js:', () => {
-  describe('erGyldigFnr', () => {
-    test('returnerer false ved feil fødselsnummer', () => {
-      const mockData1 = '22222222222';
-      const mockData2 = '31025043514';
-      const mockData3 = '01010533445';
+describe("Tester person.js:", () => {
+  describe("erGyldigFnr", () => {
+    test("returnerer false ved feil fødselsnummer", () => {
+      const mockData1 = "22222222222";
+      const mockData2 = "31025043514";
+      const mockData3 = "01010533445";
       const forventetFeil = false;
       expect(Person.erGyldigFnr(mockData1)).toEqual(forventetFeil);
       expect(Person.erGyldigFnr(mockData2)).toEqual(forventetFeil);
       expect(Person.erGyldigFnr(mockData3)).toEqual(forventetFeil);
     });
 
-    test('returnerer true ved riktig fødselsnummer', () => {
+    test("returnerer true ved riktig fødselsnummer", () => {
       const generator = new testhelpers.Generator();
       const mockData1 = generator.generateBirthNumber();
       const mockData2 = generator.generateBirthNumber();
@@ -29,52 +29,52 @@ describe('Tester person.js:', () => {
     });
   });
 
-  describe('erFnrLengde', () => {
-    test('returnerer false når fnr ikke er 11 siffer.', () => {
-      const mockData1 = '1111111111';
-      const mockData2 = '111111111111';
+  describe("erFnrLengde", () => {
+    test("returnerer false når fnr ikke er 11 siffer.", () => {
+      const mockData1 = "1111111111";
+      const mockData2 = "111111111111";
       const forventet = false;
 
       expect(Person.erFnrLengde(mockData1)).toBe(forventet);
       expect(Person.erFnrLengde(mockData2)).toBe(forventet);
     });
 
-    test('returnerer true når fnr er 11 siffer.', () => {
-      const mockData = '11111111111';
+    test("returnerer true når fnr er 11 siffer.", () => {
+      const mockData = "11111111111";
       const forventet = true;
-      expect(Person.erFnrLengde(mockData)).toEqual(forventet)
-    })
+      expect(Person.erFnrLengde(mockData)).toEqual(forventet);
+    });
   });
 
-  describe('erDnrLengde', () => {
-    test('returnerer false når fnr ikke er 11 siffer.', () => {
-      const mockData1 = '1111111111';
-      const mockData2 = '111111111111';
+  describe("erDnrLengde", () => {
+    test("returnerer false når fnr ikke er 11 siffer.", () => {
+      const mockData1 = "1111111111";
+      const mockData2 = "111111111111";
       const forventet = false;
 
       expect(Person.erDnrLengde(mockData1)).toBe(forventet);
       expect(Person.erDnrLengde(mockData2)).toBe(forventet);
     });
 
-    test('returnerer true når fnr er 11 siffer.', () => {
-      const mockData = '11111111111';
+    test("returnerer true når fnr er 11 siffer.", () => {
+      const mockData = "11111111111";
       const forventet = true;
-      expect(Person.erDnrLengde(mockData)).toEqual(forventet)
-    })
+      expect(Person.erDnrLengde(mockData)).toEqual(forventet);
+    });
   });
 
-  describe('erGyldigDnr', () => {
-    test('returnerer false ved feil dnr', () => {
-      const mockData1 = '22222222222';
-      const mockData2 = '31025043514';
-      const mockData3 = '01010533445';
+  describe("erGyldigDnr", () => {
+    test("returnerer false ved feil dnr", () => {
+      const mockData1 = "22222222222";
+      const mockData2 = "31025043514";
+      const mockData3 = "01010533445";
       const forventet = false;
       expect(Person.erGyldigDnr(mockData1)).toEqual(forventet);
       expect(Person.erGyldigDnr(mockData2)).toEqual(forventet);
       expect(Person.erGyldigDnr(mockData3)).toEqual(forventet);
     });
 
-    test('returnerer true ved riktig dnr', () => {
+    test("returnerer true ved riktig dnr", () => {
       const generator = new testhelpers.Generator();
       const mockData1 = generator.generateDNumber();
       const mockData2 = generator.generateDNumber();
@@ -87,5 +87,5 @@ describe('Tester person.js:', () => {
       expect(Person.erGyldigDnr(mockData3)).toEqual(forventet);
       expect(Person.erGyldigDnr(mockData4)).toEqual(forventet);
     });
-  })
+  });
 });

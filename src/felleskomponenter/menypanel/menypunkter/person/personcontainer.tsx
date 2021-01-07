@@ -1,11 +1,11 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps } from "react";
 
-import * as Nav from '../../../../utils/navFrontend';
-import * as KV from '../../../../kodeverk';
+import * as Nav from "../../../../utils/navFrontend";
+import * as KV from "../../../../kodeverk";
 
-import Person from './person';
+import Person from "./person";
 
-import './personcontainer.css';
+import "./personcontainer.css";
 
 type PersonContainerProps = ComponentProps<typeof Person>;
 

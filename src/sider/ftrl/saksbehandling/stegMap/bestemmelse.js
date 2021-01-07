@@ -1,6 +1,6 @@
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingBestemmelse from '../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingBestemmelse';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingBestemmelse from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingBestemmelse";
 
 class Bestemmelse extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -14,14 +14,14 @@ class Bestemmelse extends Steg {
       },
     ];
     this.id = STEG.BESTEMMELSE;
-    this.tittel = 'Bestemmelse';
+    this.tittel = "Bestemmelse";
     this.komponent = VurderingBestemmelse;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
       vilkar: _propsLight.vilkar,
       bestemmelseVilkar: _propsLight.bestemmelser,
     });
-    this.beregnRelevantUI = _propsLight => ({ harAvklaring });
+    this.beregnRelevantUI = (_propsLight) => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
@@ -32,12 +32,20 @@ class Bestemmelse extends Steg {
     this.status = FANE_STATUS.OK;
   }
   finnAvklaring = (bestemmelser, medlemskapsperioder, vilkar) => {
-    const valgteBestemmelseVilkar = bestemmelser && bestemmelser.find(bestemmelseVilkar => bestemmelseVilkar.bestemmelse === medlemskapsperioder.bestemmelse);
-    const erAlleVilkarUtfyltOgBegrunnelseValgt = valgteBestemmelseVilkar && valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter(vilkarOgBegrunnelse =>
-      vilkar.find(lagretVilkar => (lagretVilkar.oppfylt && lagretVilkar.vilkaar === vilkarOgBegrunnelse.vilkaar)
-        && (vilkarOgBegrunnelse.muligeBegrunnelser.length > 0 ? (lagretVilkar.begrunnelseKoder.length > 0) : true)))
-      .length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
+    const valgteBestemmelseVilkar =
+      bestemmelser &&
+      bestemmelser.find((bestemmelseVilkar) => bestemmelseVilkar.bestemmelse === medlemskapsperioder.bestemmelse);
+    const erAlleVilkarUtfyltOgBegrunnelseValgt =
+      valgteBestemmelseVilkar &&
+      valgteBestemmelseVilkar.vilkårOgBegrunnelser.filter((vilkarOgBegrunnelse) =>
+        vilkar.find(
+          (lagretVilkar) =>
+            lagretVilkar.oppfylt &&
+            lagretVilkar.vilkaar === vilkarOgBegrunnelse.vilkaar &&
+            (vilkarOgBegrunnelse.muligeBegrunnelser.length > 0 ? lagretVilkar.begrunnelseKoder.length > 0 : true)
+        )
+      ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
     return !!erAlleVilkarUtfyltOgBegrunnelseValgt;
-  }
+  };
 }
 export default Bestemmelse;

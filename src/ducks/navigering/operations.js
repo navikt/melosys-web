@@ -1,12 +1,12 @@
-import { push } from 'connected-react-router';
+import { push } from "connected-react-router";
 
-import { oppgaverOperations } from '../oppgaver';
+import { oppgaverOperations } from "../oppgaver";
 
-export const tilForsiden = () => async dispatch => {
+export const tilForsiden = () => async (dispatch) => {
   dispatch(oppgaverOperations.oversikt());
-  dispatch(push('/'));
+  dispatch(push("/"));
 };
 
-export const tilAnnenSide = link => dispatch => {
+export const tilAnnenSide = (link) => (dispatch) => {
   dispatch(push(link));
 };

@@ -1,3 +1,3 @@
-import Sletterad from './sletterad';
+import Sletterad from "./sletterad";
 
 export default Sletterad;

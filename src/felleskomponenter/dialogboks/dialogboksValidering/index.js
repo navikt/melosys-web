@@ -1,3 +1,3 @@
-import DialogboksValidering from './dialogboksValidering';
+import DialogboksValidering from "./dialogboksValidering";
 
 export default DialogboksValidering;

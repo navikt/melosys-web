@@ -1,1 +1,1 @@
-export { default as LinkGroupsFactory } from './linkgroupsFactory';
+export { default as LinkGroupsFactory } from "./linkgroupsFactory";

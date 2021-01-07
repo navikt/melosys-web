@@ -1,3 +1,3 @@
-import MedlemskapContainer from './medlemskapcontainer';
+import MedlemskapContainer from "./medlemskapcontainer";
 
 export default MedlemskapContainer;

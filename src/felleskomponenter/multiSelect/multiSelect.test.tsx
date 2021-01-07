@@ -1,22 +1,22 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import Select from 'react-select';
+import React from "react";
+import { shallow } from "enzyme";
+import Select from "react-select";
 
-import MultiSelect from './multiSelect';
+import MultiSelect from "./multiSelect";
 
 const props = {
-  label: 'Label',
+  label: "Label",
   values: [],
   onChange: () => {},
   options: [
-    { value: 'SE', label: 'Sverige' },
-    { value: 'DK', label: 'Danmark' },
-    { value: 'FI', label: 'Finland' },
+    { value: "SE", label: "Sverige" },
+    { value: "DK", label: "Danmark" },
+    { value: "FI", label: "Finland" },
   ],
 };
 
-describe('MultiSelect', () => {
-  it('Props blir satt', () => {
+describe("MultiSelect", () => {
+  it("Props blir satt", () => {
     const multiSelect = shallow(<MultiSelect {...props} />);
 
     const select = multiSelect.find(Select);
@@ -24,27 +24,27 @@ describe('MultiSelect', () => {
     expect(select.props().options).toMatchObject(props.options);
   });
 
-  it('Value blir satt', () => {
-    const multiSelect = shallow(<MultiSelect {...props} values={['DK']} />);
+  it("Value blir satt", () => {
+    const multiSelect = shallow(<MultiSelect {...props} values={["DK"]} />);
 
     const select = multiSelect.find(Select);
     expect(select).toBeDefined();
-    expect(select.props().value).toMatchObject([{ value: 'DK', label: 'Danmark' }]);
+    expect(select.props().value).toMatchObject([{ value: "DK", label: "Danmark" }]);
   });
 
-  it('Label vises', () => {
+  it("Label vises", () => {
     const multiSelect = shallow(<MultiSelect {...props} />);
 
-    const label = multiSelect.find('label');
+    const label = multiSelect.find("label");
     expect(label).toBeDefined();
     expect(label.render().html()).toEqual(props.label);
   });
 
-  it('Feilmelding vises', () => {
-    const feilmelding = 'Feil!';
+  it("Feilmelding vises", () => {
+    const feilmelding = "Feil!";
     const multiSelect = shallow(<MultiSelect {...props} feil={{ feilmelding }} />);
 
-    const feilContainer = multiSelect.find('.skjemaelement__feilmelding');
+    const feilContainer = multiSelect.find(".skjemaelement__feilmelding");
     expect(feilContainer).toBeDefined();
     expect(feilContainer.render().html()).toEqual(feilmelding);
   });

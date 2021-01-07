@@ -5,41 +5,40 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingsresultatSelector = createSelector(
-  state => (state.behandlingsresultat ? state.behandlingsresultat.data : []),
-  behandlingsresultat => behandlingsresultat
+  (state) => (state.behandlingsresultat ? state.behandlingsresultat.data : []),
+  (behandlingsresultat) => behandlingsresultat
 );
 
 export const VedtakstypeSelector = createSelector(
   BehandlingsresultatSelector,
-  behandlingsresultat => behandlingsresultat.vedtakstype
+  (behandlingsresultat) => behandlingsresultat.vedtakstype
 );
 
 export const BegrunnelseKoderSelector = createSelector(
   BehandlingsresultatSelector,
-  behandlingsresultat => behandlingsresultat.begrunnelseKoder
+  (behandlingsresultat) => behandlingsresultat.begrunnelseKoder
 );
 
 export const BegrunnelseFritekstSelector = createSelector(
   BehandlingsresultatSelector,
-  behandlingsresultat => behandlingsresultat.begrunnelseFritekst
+  (behandlingsresultat) => behandlingsresultat.begrunnelseFritekst
 );
 
 export const KontrollresultatBegrunnelseKoderSelector = createSelector(
   BehandlingsresultatSelector,
-  behandlingsresultat => behandlingsresultat.kontrollresultatBegrunnelseKoder
+  (behandlingsresultat) => behandlingsresultat.kontrollresultatBegrunnelseKoder
 );
 
 export const UtfallRegistreringUnntakSelector = createSelector(
   BehandlingsresultatSelector,
-  behandlingsresultat => behandlingsresultat.utfallRegistreringUnntak
+  (behandlingsresultat) => behandlingsresultat.utfallRegistreringUnntak
 );
 
 export const UtfallUtpekingSelector = createSelector(
   BehandlingsresultatSelector,
-  behandlingsresultat => behandlingsresultat.utfallUtpeking
+  (behandlingsresultat) => behandlingsresultat.utfallUtpeking
 );
-

@@ -1,16 +1,20 @@
-import React from 'react';
-import PT from 'prop-types';
-import classnames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import classnames from "classnames";
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from "../../../utils/navFrontend";
 
-import './stegFane.css';
+import "./stegFane.css";
 
 // Stegfanen er komponenten som vises for hvert steg
-const StegFane = props => {
+const StegFane = (props) => {
   const { faneData } = props;
   const componentProps = { ...faneData.data, ...faneData.handlers };
-  const stegFaneKlasse = classnames({ stegFane: true, [`steg${faneData.stegPosisjon}`]: true, 'stegFane--aktiv': faneData.aktivtSteg });
+  const stegFaneKlasse = classnames({
+    stegFane: true,
+    [`steg${faneData.stegPosisjon}`]: true,
+    "stegFane--aktiv": faneData.aktivtSteg,
+  });
   return (
     <Nav.Panel className={stegFaneKlasse}>
       <div>{React.createElement(faneData.komponent, componentProps)}</div>

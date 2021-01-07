@@ -1,93 +1,93 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import SorterbarListe from './sorterbarListe';
-import JournalforingOppgave from '../oppgaveliste/journalforingOppgave';
+import SorterbarListe from "./sorterbarListe";
+import JournalforingOppgave from "../oppgaveliste/journalforingOppgave";
 
-describe('SorterbarListe', () => {
+describe("SorterbarListe", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
       component: JournalforingOppgave,
-      defaultChecked: 'nyeste',
-      sortingLegend: 'Sorter journalføringsoppgaver etter frist:',
-      sortingPath: 'aktivTil',
+      defaultChecked: "nyeste",
+      sortingLegend: "Sorter journalføringsoppgaver etter frist:",
+      sortingPath: "aktivTil",
       elementer: [
         {
-          aktivTil: '2016-02-21',
-          ansvarligID: 'Z991111',
-          fnr: '28106600300',
-          journalpostID: 'DOK_3789',
-          oppgaveID: '174464932',
-          prioritet: 'HOY',
-          sammensattNavn: 'KAKE ARTIG',
+          aktivTil: "2016-02-21",
+          ansvarligID: "Z991111",
+          fnr: "28106600300",
+          journalpostID: "DOK_3789",
+          oppgaveID: "174464932",
+          prioritet: "HOY",
+          sammensattNavn: "KAKE ARTIG",
           versjon: 1,
         },
         {
-          aktivTil: '2016-02-20',
-          ansvarligID: 'Z992222',
-          fnr: '28106600300',
-          journalpostID: 'DOK_3789',
-          oppgaveID: '174464932',
-          prioritet: 'HOY',
-          sammensattNavn: 'KAKE ARTIG',
+          aktivTil: "2016-02-20",
+          ansvarligID: "Z992222",
+          fnr: "28106600300",
+          journalpostID: "DOK_3789",
+          oppgaveID: "174464932",
+          prioritet: "HOY",
+          sammensattNavn: "KAKE ARTIG",
           versjon: 1,
         },
         {
-          aktivTil: '2016-02-22',
-          ansvarligID: 'Z993333',
-          fnr: '28106600300',
-          journalpostID: 'DOK_3789',
-          oppgaveID: '174464932',
-          prioritet: 'HOY',
-          sammensattNavn: 'KAKE ARTIG',
+          aktivTil: "2016-02-22",
+          ansvarligID: "Z993333",
+          fnr: "28106600300",
+          journalpostID: "DOK_3789",
+          oppgaveID: "174464932",
+          prioritet: "HOY",
+          sammensattNavn: "KAKE ARTIG",
           versjon: 1,
         },
       ],
     };
   });
 
-  it('kan sortere slik at nyeste element kommer først', () => {
-    props.defaultChecked = 'eldste';
+  it("kan sortere slik at nyeste element kommer først", () => {
+    props.defaultChecked = "eldste";
     const sorterbarListe = shallow(<SorterbarListe {...props} />);
 
     const fieldset = sorterbarListe.find(Nav.Fieldset);
-    const event = { target: { value: 'descending' } };
-    fieldset.simulate('change', event);
+    const event = { target: { value: "descending" } };
+    fieldset.simulate("change", event);
 
     const oppgaveListe = sorterbarListe.find(JournalforingOppgave);
-    const aktivTilDatoer = oppgaveListe.map(n => n.props().sak.aktivTil);
+    const aktivTilDatoer = oppgaveListe.map((n) => n.props().sak.aktivTil);
 
-    expect(aktivTilDatoer[0]).toBe('2016-02-22');
-    expect(aktivTilDatoer[1]).toBe('2016-02-21');
-    expect(aktivTilDatoer[2]).toBe('2016-02-20');
+    expect(aktivTilDatoer[0]).toBe("2016-02-22");
+    expect(aktivTilDatoer[1]).toBe("2016-02-21");
+    expect(aktivTilDatoer[2]).toBe("2016-02-20");
   });
 
-  it('kan sortere slik at eldste element kommer først', () => {
+  it("kan sortere slik at eldste element kommer først", () => {
     const sorterbarListe = shallow(<SorterbarListe {...props} />);
 
     const fieldset = sorterbarListe.find(Nav.Fieldset);
-    const event = { target: { value: 'ascending' } };
-    fieldset.simulate('change', event);
+    const event = { target: { value: "ascending" } };
+    fieldset.simulate("change", event);
 
     const oppgaveListe = sorterbarListe.find(JournalforingOppgave);
-    const aktivTilDatoer = oppgaveListe.map(n => n.props().sak.aktivTil);
+    const aktivTilDatoer = oppgaveListe.map((n) => n.props().sak.aktivTil);
 
-    expect(aktivTilDatoer[0]).toBe('2016-02-20');
-    expect(aktivTilDatoer[1]).toBe('2016-02-21');
-    expect(aktivTilDatoer[2]).toBe('2016-02-22');
+    expect(aktivTilDatoer[0]).toBe("2016-02-20");
+    expect(aktivTilDatoer[1]).toBe("2016-02-21");
+    expect(aktivTilDatoer[2]).toBe("2016-02-22");
   });
 
-  it('viser ingenting hvis elementer er falsy', () => {
+  it("viser ingenting hvis elementer er falsy", () => {
     props.elementer = null;
     const sorterbarListe = shallow(<SorterbarListe {...props} />);
 
     expect(sorterbarListe.isEmptyRender()).toBe(true);
   });
 
-  it('viser ikke sortering hvis bare ett element', () => {
+  it("viser ikke sortering hvis bare ett element", () => {
     props.elementer = [{}];
     const sorterbarListe = shallow(<SorterbarListe {...props} />);
 

@@ -1,26 +1,18 @@
-import React from 'react';
-import { Person } from 'Domene';
+import React from "react";
+import { Person } from "Domene";
 
-import * as KV from '../../../../kodeverk';
-import * as Nav from '../../../../utils/navFrontend';
+import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../utils/navFrontend";
 
-import EnkeltDato from '../../../datoOmrade/enkeltDato';
+import EnkeltDato from "../../../datoOmrade/enkeltDato";
 
-import './personinfo.css';
+import "./personinfo.css";
 
 interface PersonInfoProps {
-  person: Person,
+  person: Person;
 }
 
-const PersonInfo = ({
-  person: {
-    fnr,
-    statsborgerskap,
-    foedselsdato,
-    sivilstand,
-    personStatus,
-  },
-}: PersonInfoProps) => (
+const PersonInfo = ({ person: { fnr, statsborgerskap, foedselsdato, sivilstand, personStatus } }: PersonInfoProps) => (
   <div className="personinfo">
     <div className="personinfo__element">
       <Nav.typo.EtikettLiten>Statsborgerskap</Nav.typo.EtikettLiten>

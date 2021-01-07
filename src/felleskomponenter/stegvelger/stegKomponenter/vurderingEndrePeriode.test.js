@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import { VurderingEndrePeriode } from './vurderingEndrePeriode';
-import { lagAvklartfakta } from '../../../regler/avklartefakta';
+import { VurderingEndrePeriode } from "./vurderingEndrePeriode";
+import { lagAvklartfakta } from "../../../regler/avklartefakta";
 
-describe('vurderingEndrePeriode', () => {
+describe("vurderingEndrePeriode", () => {
   let props = null;
 
   beforeEach(() => {
@@ -18,36 +18,36 @@ describe('vurderingEndrePeriode', () => {
       tilForsiden: jest.fn(),
       redigerbart: true,
       tilstand: {
-        aarsakEndringPeriodeAvklartfakta: lagAvklartfakta('a', 'b', 'c', [], 'fritekst'),
+        aarsakEndringPeriodeAvklartfakta: lagAvklartfakta("a", "b", "c", [], "fritekst"),
       },
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
-      soknadsland: ['SE'],
+      soknadsland: ["SE"],
     };
   });
 
-  it('viser en pdfLenkeListe', () => {
+  it("viser en pdfLenkeListe", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find('PdfLenkeListe')).toHaveLength(1);
+    expect(component.find("PdfLenkeListe")).toHaveLength(1);
   });
 
-  it('viser en nav hovedknapp', () => {
+  it("viser en nav hovedknapp", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find('Hovedknapp')).toHaveLength(1);
+    expect(component.find("Hovedknapp")).toHaveLength(1);
   });
 
-  describe('knappen', () => {
-    it('endrer periode når den trykkes', () => {
+  describe("knappen", () => {
+    it("endrer periode når den trykkes", () => {
       const component = shallow(<VurderingEndrePeriode {...props} />);
-      const knapp = component.find('Hovedknapp');
+      const knapp = component.find("Hovedknapp");
       component.instance().validerAlt = jest.fn(() => true);
-      knapp.simulate('click');
+      knapp.simulate("click");
       expect(props.endreDatoOgSendLovvalgsperioderHandler).toHaveBeenCalled();
     });
   });
 
-  it('viser to inputs for fradato og tildato', () => {
+  it("viser to inputs for fradato og tildato", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find('Input')).toHaveLength(2);
+    expect(component.find("Input")).toHaveLength(2);
   });
 });

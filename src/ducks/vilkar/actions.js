@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as Types from "./types";
 
 /**
  * Actions
@@ -9,10 +9,10 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function oppdaterState(alleVilkaar) {
-  return ({
+  return {
     type: Types.OPPDATER_VILKAR,
     data: { vilkar: alleVilkaar },
-  });
+  };
 }
 
 /** Tømmer avklartefakta-state når komponenten unmounter

@@ -8,9 +8,9 @@
  */
 
 // import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import { doThenDispatch } from '../../services/utils';
-import * as Types from './types';
+import * as Api from "../../services/api";
+import { doThenDispatch } from "../../services/utils";
+import * as Types from "./types";
 
 /* eslint-disable import/prefer-default-export */
 export function hent(orgnr) {

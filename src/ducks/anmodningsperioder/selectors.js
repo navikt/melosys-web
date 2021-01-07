@@ -1,34 +1,32 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 export const AnmodningsperioderSelector = createSelector(
-  state => (state.anmodningsperioder.data ? state.anmodningsperioder.data : []),
-  anmodningsperioder => anmodningsperioder
+  (state) => (state.anmodningsperioder.data ? state.anmodningsperioder.data : []),
+  (anmodningsperioder) => anmodningsperioder
 );
 
 export const AnmodningsperiodeSelector = createSelector(
   AnmodningsperioderSelector,
-  anmodningsperioder => anmodningsperioder[0] || {}
+  (anmodningsperioder) => anmodningsperioder[0] || {}
 );
 
 export const AnmodningsperiodeIDSelector = createSelector(
   AnmodningsperiodeSelector,
-  anmodningsperiode => anmodningsperiode.id
+  (anmodningsperiode) => anmodningsperiode.id
 );
 
 export const UnntakFraBestemmelseSelector = createSelector(
   AnmodningsperiodeSelector,
-  anmodningsperiode => anmodningsperiode.unntakFraBestemmelse
+  (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse
 );
 
 export const AlleAnmodningsperioderSendtUtlandSelector = createSelector(
   AnmodningsperioderSelector,
-  anmodningsperioder => (
-    anmodningsperioder.length > 0 &&
-    anmodningsperioder.every(anmodningsperiode => anmodningsperiode.sendtUtland)
-  )
+  (anmodningsperioder) =>
+    anmodningsperioder.length > 0 && anmodningsperioder.every((anmodningsperiode) => anmodningsperiode.sendtUtland)
 );
 
 export const AnmodningsperioderErSendtUtlandetSelector = createSelector(
   AnmodningsperioderSelector,
-  anmodningsperioder => anmodningsperioder.some(anmodningsperiode => anmodningsperiode.sendtUtland)
+  (anmodningsperioder) => anmodningsperioder.some((anmodningsperiode) => anmodningsperiode.sendtUtland)
 );

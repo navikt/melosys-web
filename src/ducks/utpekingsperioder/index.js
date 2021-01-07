@@ -1,9 +1,9 @@
-import * as utpekingsperioderActions from './actions';
-import * as utpekingsperioderOperations from './operations';
-import * as utpekingsperioderTypes from './types';
-import * as utpekingsperioderSelectors from './selectors';
+import * as utpekingsperioderActions from "./actions";
+import * as utpekingsperioderOperations from "./operations";
+import * as utpekingsperioderTypes from "./types";
+import * as utpekingsperioderSelectors from "./selectors";
 
-import utpekingsperioderReducers, { initialState } from './reducers';
+import utpekingsperioderReducers, { initialState } from "./reducers";
 
 export {
   initialState,

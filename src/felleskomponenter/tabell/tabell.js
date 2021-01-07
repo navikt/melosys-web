@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import PT from 'prop-types';
-import classnames from 'classnames';
+import React, { useState } from "react";
+import PT from "prop-types";
+import classnames from "classnames";
 
-import './tabell.css';
+import "./tabell.css";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 /** Lister en enkeltlinje i tabellen. Denne linjen må være en array som kan mappes direkte
  * siden innhold og typer er ukjent. Evt formattering eller komponenter må gjøres av
@@ -14,7 +14,9 @@ const uuid = require('uuid/v4');
  */
 const TabellLinje = ({ linjeData }) => (
   <tr className="border-bottom">
-    {linjeData.map(data => <td key={uuid()}>{data}</td>)}
+    {linjeData.map((data) => (
+      <td key={uuid()}>{data}</td>
+    ))}
   </tr>
 );
 
@@ -33,20 +35,18 @@ function Tabell(props) {
    *
    * @param nySide Siden som brukeren vil gå til (starter på 0).
    */
-  const tilSideHandler = nySide => {
+  const tilSideHandler = (nySide) => {
     setState(nySide);
   };
 
-  const {
-    tabellData, kolonneNavn, linjerPerSide, className,
-  } = props;
+  const { tabellData, kolonneNavn, linjerPerSide, className } = props;
   // Filter ut delen av datasettet som representerer aktive siden (paginering). Dersom
   // linjerPerSide <= 0, vis hele datasettet (dvs, tabellData.length)
   const timeLinjeChunk = tabellData.filter((linje, index) => {
     const startIndex = aktivSide * linjerPerSide;
-    const sluttIndex = linjerPerSide > 0 ? (startIndex + linjerPerSide) : tabellData.length;
+    const sluttIndex = linjerPerSide > 0 ? startIndex + linjerPerSide : tabellData.length;
     // Returnerer true dersom index er innenfor range i aktivSide.
-    return (index >= startIndex && index < sluttIndex);
+    return index >= startIndex && index < sluttIndex;
   });
 
   // Sjekk at linjerPerSide-prop er satt til 1 eller høyere
@@ -56,30 +56,38 @@ function Tabell(props) {
   // Bygg en array med antall sider som deretter fylles med med pagineringsknapper. Dersom totaltSider er 0 vil
   // array length være lik 0 som gjør at ingen knapper rendres dersom hele tabellen vises som én side uten paginering.
   const sideNav = new Array(totaltSider).fill(undefined).map((item, index) => {
-    const classname = classnames({ paginering__nav: true, 'paginering__nav--aktiv': index === aktivSide });
-    return (<button key={uuid()} className={classname} onClick={() => tilSideHandler(index)}>{index + 1}</button>);
+    const classname = classnames({ paginering__nav: true, "paginering__nav--aktiv": index === aktivSide });
+    return (
+      <button key={uuid()} className={classname} onClick={() => tilSideHandler(index)}>
+        {index + 1}
+      </button>
+    );
   });
 
-  const paginering = sideNav.length > 1
-    ?
-    <div className="paginering" aria-label="Naviger blant flere sider i dennne tabellen">
-      {sideNav.map(nav => nav)}
-    </div>
-    :
-    null;
-
+  const paginering =
+    sideNav.length > 1 ? (
+      <div className="paginering" aria-label="Naviger blant flere sider i dennne tabellen">
+        {sideNav.map((nav) => nav)}
+      </div>
+    ) : null;
 
   return (
     <div className={className}>
       <table className="tabellutlisting">
         <tbody>
           <tr>
-            {kolonneNavn.map(kolonne => <th key={uuid()} scope="col">{kolonne}</th>)}
+            {kolonneNavn.map((kolonne) => (
+              <th key={uuid()} scope="col">
+                {kolonne}
+              </th>
+            ))}
           </tr>
-          {timeLinjeChunk.map(linjeData => <TabellLinje key={uuid()} linjeData={linjeData} />)}
+          {timeLinjeChunk.map((linjeData) => (
+            <TabellLinje key={uuid()} linjeData={linjeData} />
+          ))}
         </tbody>
       </table>
-      { paginering }
+      {paginering}
     </div>
   );
 }
@@ -97,7 +105,7 @@ Tabell.defaultProps = {
   kolonneNavn: [],
   tabellData: [],
   linjerPerSide: 10,
-  className: '',
+  className: "",
 };
 
 export default Tabell;

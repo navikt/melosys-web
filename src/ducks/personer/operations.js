@@ -6,9 +6,9 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-import * as Api from '../../services/api';
-import { doThenDispatch } from '../../services/utils';
-import * as Types from '../personer/types';
+import * as Api from "../../services/api";
+import { doThenDispatch } from "../../services/utils";
+import * as Types from "../personer/types";
 
 /* eslint-disable import/prefer-default-export */
 export function hent(fnr) {

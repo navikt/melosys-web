@@ -1,3 +1,3 @@
-import * as redigerbartSelectors from './selectors';
+import * as redigerbartSelectors from "./selectors";
 
 export { redigerbartSelectors };

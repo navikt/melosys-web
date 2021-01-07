@@ -1,3 +1,3 @@
-import Sidemeny from './sidemeny';
+import Sidemeny from "./sidemeny";
 
 export default Sidemeny;

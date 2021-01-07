@@ -1,9 +1,9 @@
-import reducer from './reducers';
+import reducer from "./reducers";
 
-import * as actions from './actions';
-import * as Utils from '../../services/utils';
+import * as actions from "./actions";
+import * as Utils from "../../services/utils";
 
-describe('personer reducer', () => {
+describe("personer reducer", () => {
   let initialState = null;
 
   beforeEach(() => {
@@ -12,11 +12,9 @@ describe('personer reducer', () => {
     };
   });
 
-  it('returnerer ny state med gamle og nye personer, status OK ved ok action', () => {
+  it("returnerer ny state med gamle og nye personer, status OK ved ok action", () => {
     initialState = {
-      data: [
-        { fnr: 17117802280 },
-      ],
+      data: [{ fnr: 17117802280 }],
     };
     const data = { fnr: 19117220349 };
 
@@ -24,10 +22,10 @@ describe('personer reducer', () => {
     expect(reducedState).toEqual({ data: [{ fnr: 17117802280 }, { fnr: 19117220349 }], status: Utils.STATUS.OK });
   });
 
-  it('returnerer ny state ved ok action når initialState er satt til feilobjekt', () => {
+  it("returnerer ny state ved ok action når initialState er satt til feilobjekt", () => {
     initialState = {
       data: {
-        error: 'Not found',
+        error: "Not found",
         status: 404,
       },
     };
@@ -37,14 +35,14 @@ describe('personer reducer', () => {
     expect(reducedState).toEqual({ data: [{ fnr: 19117220349 }], status: Utils.STATUS.OK });
   });
 
-  it('returnerer ny state med status PENDING ved pending action', () => {
+  it("returnerer ny state med status PENDING ved pending action", () => {
     const reducedState = reducer(initialState, actions.PENDING());
     expect(reducedState).toEqual({ data: [], status: Utils.STATUS.PENDING });
   });
 
-  it('returnerer ny state med status ERROR ved feilet action', () => {
+  it("returnerer ny state med status ERROR ved feilet action", () => {
     const data = {
-      error: 'Not found',
+      error: "Not found",
       status: 404,
     };
 

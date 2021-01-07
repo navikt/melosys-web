@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from "../../../utils/navFrontend";
 
-import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
+import EnkeltAvklartfakta from "./felles/enkeltAvklartfakta";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import { VurderingForretningssted, Forretningssteder } from './vurderingForretningssted';
+import { VurderingForretningssted, Forretningssteder } from "./vurderingForretningssted";
 
-describe('VurderingForretningssted', () => {
+describe("VurderingForretningssted", () => {
   const props = {
     bekreftOgFortsett: jest.fn(),
     tilstand: {
@@ -20,8 +20,8 @@ describe('VurderingForretningssted', () => {
     },
     valgteVirksomheter: [
       {
-        virksomhetId: '1',
-        navn: 'NAV',
+        virksomhetId: "1",
+        navn: "NAV",
       },
     ],
     redigerbart: true,
@@ -29,12 +29,12 @@ describe('VurderingForretningssted', () => {
     slettData: jest.fn(),
   };
 
-  describe('Forretningssteder', () => {
+  describe("Forretningssteder", () => {
     const vurderingForretningssted = shallow(<VurderingForretningssted {...props} />);
     const forretningssteder = vurderingForretningssted.find(Forretningssteder);
     const forretningsstederProps = forretningssteder.props();
 
-    it('vises med korrekte props', () => {
+    it("vises med korrekte props", () => {
       expect(forretningssteder).toHaveLength(1);
       expect(forretningsstederProps.valgteVirksomheter).toBe(props.valgteVirksomheter);
       expect(forretningsstederProps.avklarteForretningsland).toEqual(props.tilstand.avklarteForretningsland);
@@ -44,36 +44,40 @@ describe('VurderingForretningssted', () => {
     });
   });
 
-  describe('dropdown for lovvalgsbestemmelse', () => {
+  describe("dropdown for lovvalgsbestemmelse", () => {
     const vurderingForretningssted = shallow(<VurderingForretningssted {...props} />);
-    const lovvalgsbestemmelseDropdown = vurderingForretningssted.findWhere(n =>
-      n.type() === Nav.Select &&
-      n.props().id === 'vurdering13_1');
+    const lovvalgsbestemmelseDropdown = vurderingForretningssted.findWhere(
+      (n) => n.type() === Nav.Select && n.props().id === "vurdering13_1"
+    );
     const lovvalgsbestemmelseProps = lovvalgsbestemmelseDropdown.props();
 
-    it('vises med korrekte props', () => {
+    it("vises med korrekte props", () => {
       expect(lovvalgsbestemmelseDropdown).toHaveLength(1);
       expect(lovvalgsbestemmelseProps.value).toBe(props.tilstand.lovvalgsbestemmelse);
       expect(lovvalgsbestemmelseProps.disabled).toBe(!props.redigerbart);
     });
 
-    it('håndterer change', () => {
-      const event = { target: { value: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4 } };
-      lovvalgsbestemmelseDropdown.simulate('change', event);
+    it("håndterer change", () => {
+      const event = {
+        target: { value: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4 },
+      };
+      lovvalgsbestemmelseDropdown.simulate("change", event);
 
       expect(props.oppdaterData).toHaveBeenCalledTimes(1);
-      expect(props.oppdaterData).toHaveBeenLastCalledWith(expect.objectContaining({
-        innhold: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
-      }));
+      expect(props.oppdaterData).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          innhold: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4,
+        })
+      );
     });
   });
 
-  describe('EnkeltAvklartfakta', () => {
+  describe("EnkeltAvklartfakta", () => {
     const vurderingForretningssted = shallow(<VurderingForretningssted {...props} />);
     const enkeltAvklartfakta = vurderingForretningssted.find(EnkeltAvklartfakta);
     const enkeltAvklartfaktaProps = enkeltAvklartfakta.props();
 
-    it('vises med korrekte props', () => {
+    it("vises med korrekte props", () => {
       expect(enkeltAvklartfakta).toHaveLength(1);
       expect(enkeltAvklartfaktaProps.redigerbart).toBe(props.redigerbart);
       expect(enkeltAvklartfaktaProps.avklartfakta).toBe(props.tilstand.omfattetINorge);

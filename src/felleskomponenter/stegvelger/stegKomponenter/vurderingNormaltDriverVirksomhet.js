@@ -1,25 +1,28 @@
-import React, { useEffect } from 'react';
-import PT from 'prop-types';
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import EnkeltVilkaar from './felles/enkeltVilkaar';
+import React, { useEffect } from "react";
+import PT from "prop-types";
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
+import EnkeltVilkaar from "./felles/enkeltVilkaar";
 
-import { arrayTilKonjunksjon } from '../../../utils/streng';
+import { arrayTilKonjunksjon } from "../../../utils/streng";
 
-const NormaltDriverVirksomhet = props => {
-  const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter,
-  } = props;
+const NormaltDriverVirksomhet = (props) => {
+  const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter } = props;
 
-  useEffect(() => (
-    function cleanup() {
-      slettData();
-    }
-  ), []);
+  useEffect(
+    () =>
+      function cleanup() {
+        slettData();
+      },
+    []
+  );
 
   const { harAvklaring, normaltDriverVirksomhet } = tilstand;
 
-  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
+  const arbeidsgivereTekst =
+    valgteVirksomheter.length > 0
+      ? `${arrayTilKonjunksjon(valgteVirksomheter.map((virksomhet) => virksomhet.navn))}`
+      : "";
 
   return (
     <div>
@@ -34,13 +37,20 @@ const NormaltDriverVirksomhet = props => {
         vilkaarKode="normaltDriverVirksomhet"
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!harAvklaring || !redigerbart} className="fane__navigasjonsknapp" data-cy-nesteknapp="knapp_steg5" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp
+          disabled={!harAvklaring || !redigerbart}
+          className="fane__navigasjonsknapp"
+          data-cy-nesteknapp="knapp_steg5"
+          onClick={bekreftOgFortsett}
+        >
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );
 };
 
-NormaltDriverVirksomhet.ID = 'NORMALT_DRIVER_VIRKSOMHET';
+NormaltDriverVirksomhet.ID = "NORMALT_DRIVER_VIRKSOMHET";
 
 NormaltDriverVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,

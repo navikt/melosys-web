@@ -1,8 +1,8 @@
 /* eslint import/prefer-default-export:off */
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import { Dokument, Vedlegg } from './dokument';
-import { Kodeverk } from './kodeverk';
+import { Dokument, Vedlegg } from "./dokument";
+import { Kodeverk } from "./kodeverk";
 
 const JournalforingPropType = PT.shape({
   avsenderID: PT.string,
@@ -32,7 +32,4 @@ const JournalforingSkjemaVerdierPropType = PT.shape({
     behandlingstyp: Kodeverk,
   }),
 });
-export {
-  JournalforingPropType as Journalforing,
-  JournalforingSkjemaVerdierPropType as JournalforingSkjemaVerdier,
-};
+export { JournalforingPropType as Journalforing, JournalforingSkjemaVerdierPropType as JournalforingSkjemaVerdier };

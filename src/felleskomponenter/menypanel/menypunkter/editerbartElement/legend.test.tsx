@@ -1,14 +1,14 @@
-import React, { ComponentProps } from 'react';
-import { mock, instance } from 'ts-mockito';
-import { shallow } from 'enzyme';
+import React, { ComponentProps } from "react";
+import { mock, instance } from "ts-mockito";
+import { shallow } from "enzyme";
 
-import * as Symboler from '../symboler';
+import * as Symboler from "../symboler";
 
-import { Status } from './types';
+import { Status } from "./types";
 
-import Legend from './legend';
+import Legend from "./legend";
 
-describe('Legend', () => {
+describe("Legend", () => {
   const mockedProps = mock<ComponentProps<typeof Legend>>();
   let props = instance(mockedProps);
 
@@ -16,7 +16,7 @@ describe('Legend', () => {
     props = instance(mockedProps);
   });
 
-  it('Hvis status er redigering utført, vis Pencil og Bin symbol', () => {
+  it("Hvis status er redigering utført, vis Pencil og Bin symbol", () => {
     props.redigerbart = true;
     props.status = Status.RedigeringUtfort;
     const legend = shallow(<Legend {...props} />);
@@ -25,7 +25,7 @@ describe('Legend', () => {
     expect(legend.find(Symboler.Slett)).toHaveLength(1);
   });
 
-  it('Viser alltid bin hvis prop visAlltidBin er true', () => {
+  it("Viser alltid bin hvis prop visAlltidBin er true", () => {
     props.redigerbart = true;
     props.status = Status.IngenData;
     props.visAlltidBin = true;

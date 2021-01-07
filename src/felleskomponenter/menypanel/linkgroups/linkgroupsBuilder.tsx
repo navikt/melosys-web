@@ -1,12 +1,12 @@
-import { Link, LinkGroup } from './types';
+import { Link, LinkGroup } from "./types";
 
 interface ILinkGroupsBuilder {
-  addFraRegister: (links: Link[]) => ILinkGroupsBuilder,
-  addFraRegisterOgSoknad: (links: Link[]) => ILinkGroupsBuilder,
-  addFraRegisterOgSED: (links: Link[]) => ILinkGroupsBuilder,
-  addFraSoknad: (links: Link[]) => ILinkGroupsBuilder,
-  addFraSED: (links: Link[]) => ILinkGroupsBuilder,
-  build: () => LinkGroup[],
+  addFraRegister: (links: Link[]) => ILinkGroupsBuilder;
+  addFraRegisterOgSoknad: (links: Link[]) => ILinkGroupsBuilder;
+  addFraRegisterOgSED: (links: Link[]) => ILinkGroupsBuilder;
+  addFraSoknad: (links: Link[]) => ILinkGroupsBuilder;
+  addFraSED: (links: Link[]) => ILinkGroupsBuilder;
+  build: () => LinkGroup[];
 }
 
 class LinkGroupsBuilder implements ILinkGroupsBuilder {
@@ -14,7 +14,7 @@ class LinkGroupsBuilder implements ILinkGroupsBuilder {
 
   public addFraRegisterOgSoknad(links: Link[]) {
     this.linkGroups.push({
-      label: 'FRA REGISTER OG SØKNAD',
+      label: "FRA REGISTER OG SØKNAD",
       links,
     });
     return this;
@@ -22,16 +22,15 @@ class LinkGroupsBuilder implements ILinkGroupsBuilder {
 
   public addFraRegisterOgSED(links: Link[]) {
     this.linkGroups.push({
-      label: 'FRA REGISTER OG SED',
+      label: "FRA REGISTER OG SED",
       links,
     });
     return this;
   }
 
-
   public addFraRegister(links: Link[]) {
     this.linkGroups.push({
-      label: 'FRA REGISTER',
+      label: "FRA REGISTER",
       links,
     });
     return this;
@@ -39,7 +38,7 @@ class LinkGroupsBuilder implements ILinkGroupsBuilder {
 
   public addFraSoknad(links: Link[]) {
     this.linkGroups.push({
-      label: 'FRA SØKNAD',
+      label: "FRA SØKNAD",
       links,
     });
     return this;
@@ -47,7 +46,7 @@ class LinkGroupsBuilder implements ILinkGroupsBuilder {
 
   public addFraSED(links: Link[]) {
     this.linkGroups.push({
-      label: 'FRA SED',
+      label: "FRA SED",
       links,
     });
     return this;

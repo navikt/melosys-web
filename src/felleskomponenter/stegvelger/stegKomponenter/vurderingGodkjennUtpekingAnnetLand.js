@@ -1,14 +1,14 @@
-import React, { Fragment, useState } from 'react';
-import PT from 'prop-types';
-import * as EKV from 'eessi-kodeverk';
+import React, { Fragment, useState } from "react";
+import PT from "prop-types";
+import * as EKV from "eessi-kodeverk";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Mui from '../../ui';
-import * as Hooks from '../../../hooks';
+import * as Nav from "../../../utils/navFrontend";
+import * as Mui from "../../ui";
+import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
-import './vurderingGodkjennUtpekingAnnetLand.css';
+import "./vurderingGodkjennUtpekingAnnetLand.css";
 
 const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,
@@ -39,7 +39,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
 
   const dokumenter = [
     {
-      navn: 'Forhåndsvis SED A012',
+      navn: "Forhåndsvis SED A012",
       type: EKV.Koder.sedtyper.A012,
       erSed: true,
     },
@@ -48,27 +48,25 @@ const VurderingGodkjennUtpekingAnnetLand = ({
   return (
     <Fragment>
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
-      {
-        redigerbart &&
+      {redigerbart && (
         <Nav.Row className="sendA012">
           <Nav.Column xs="12">
-            <Mui.Checkbox
-              label="Send A012"
-              onCheck={sendA012CheckHandler}
-            />
+            <Mui.Checkbox label="Send A012" onCheck={sendA012CheckHandler} />
           </Nav.Column>
         </Nav.Row>
-      }
-      {
-        redigerbart &&
-        <PdfLenkeListe
-          behandlingID={behandlingID}
-          dokumenter={dokumenter}
-        />
-      }
+      )}
+      {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
-          <Mui.Knapp type="hoved" spinner={godkjenningPending} autoDisableVedSpinner disabled={!redigerbart} onClick={hovedknappClickHandler}>Bekreft</Mui.Knapp>
+          <Mui.Knapp
+            type="hoved"
+            spinner={godkjenningPending}
+            autoDisableVedSpinner
+            disabled={!redigerbart}
+            onClick={hovedknappClickHandler}
+          >
+            Bekreft
+          </Mui.Knapp>
         </Nav.Column>
       </Nav.Row>
     </Fragment>

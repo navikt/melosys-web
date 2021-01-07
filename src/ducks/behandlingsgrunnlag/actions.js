@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as Types from "./types";
 
 /**
  * Actions
@@ -9,37 +9,37 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function oppdaterState(dokument) {
-  return ({
+  return {
     type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
     dokument,
-  });
+  };
 }
 
 export function oppdaterPeriode(periode) {
-  return ({
+  return {
     type: Types.OPPDATER_PERIODE,
     data: {
       periode,
     },
-  });
+  };
 }
 
 export function oppdaterSoeknadsland(soeknadsland) {
-  return ({
+  return {
     type: Types.OPPDATER_SOEKNADSLAND,
     data: {
       soeknadsland,
     },
-  });
+  };
 }
 
 export function oppdaterTrygdedekning(trygdedekning) {
-  return ({
+  return {
     type: Types.OPPDATER_TRYGDEDEKNING,
     data: {
       trygdedekning,
     },
-  });
+  };
 }
 /** Tømmer avklartefakta-state når komponenten unmounter
  *

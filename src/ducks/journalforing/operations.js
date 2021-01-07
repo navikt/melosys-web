@@ -7,13 +7,13 @@
  *
  */
 
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
-import * as Actions from '../journalforing/actions';
-import { modalerOperations } from '../modaler';
-import { navigeringOperations } from '../navigering';
-import * as DucksUtils from '../utils';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
+import * as Actions from "../journalforing/actions";
+import { modalerOperations } from "../modaler";
+import { navigeringOperations } from "../navigering";
+import * as DucksUtils from "../utils";
 
 // eslint-disable-next-line import/prefer-default-export
 export function hent(journalpostID) {
@@ -25,7 +25,7 @@ export function hent(journalpostID) {
 }
 
 export function resetJournalforing() {
-  return dispatch => (dispatch(Actions.resetJournalforing()));
+  return (dispatch) => dispatch(Actions.resetJournalforing());
 }
 
 export function opprett(body) {
@@ -37,7 +37,7 @@ export function opprett(body) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {
+      success: (dispatch) => {
         dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
       },
@@ -59,7 +59,7 @@ export function tilordne(body) {
       PENDING: Types.PENDING,
     },
     {
-      success: dispatch => {
+      success: (dispatch) => {
         dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
       },

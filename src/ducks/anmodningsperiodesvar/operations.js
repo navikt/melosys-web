@@ -7,10 +7,10 @@
  *
  */
 
-import * as Api from '../../services/api';
-import { doThenDispatch } from '../../services/utils';
-import * as Types from './types';
-import * as Actions from './actions';
+import * as Api from "../../services/api";
+import { doThenDispatch } from "../../services/utils";
+import * as Types from "./types";
+import * as Actions from "./actions";
 
 export function hent(anmodningsperiodeID) {
   return doThenDispatch(() => Api.Anmodningsperioder.svar.hent(anmodningsperiodeID), {
@@ -29,9 +29,9 @@ export function send(anmodningsperiodeID, anmodningsperiodesvar) {
 }
 
 export function oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar) {
-  return dispatch => dispatch(Actions.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar));
+  return (dispatch) => dispatch(Actions.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar));
 }
 
 export function resetAnmodningsperiodesvarState() {
-  return dispatch => dispatch(Actions.resetAnmodningsperiodesvarState());
+  return (dispatch) => dispatch(Actions.resetAnmodningsperiodesvarState());
 }

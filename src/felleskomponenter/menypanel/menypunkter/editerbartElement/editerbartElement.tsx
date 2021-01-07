@@ -1,31 +1,31 @@
-import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType, useEffect } from 'react';
-import classnames from 'classnames';
+import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType, useEffect } from "react";
+import classnames from "classnames";
 
-import * as Nav from '../../../../utils/navFrontend';
-import * as Mui from '../../../ui';
+import * as Nav from "../../../../utils/navFrontend";
+import * as Mui from "../../../ui";
 
-import Legend from './legend';
-import { Status } from './types';
+import Legend from "./legend";
+import { Status } from "./types";
 
-import './editerbartElement.css';
+import "./editerbartElement.css";
 
 interface EditerbartElementProps {
-  redigererRender: () => ReactNode,
-  ingenDataRender?: (apneRedigering: () => void) => ReactNode,
-  redigeringUtfortRender: () => ReactNode,
-  redigerbart: boolean,
-  onBinClick: MouseEventHandler,
-  tittel: string,
-  tittelIkon?: ElementType,
-  tittelUnderstrek?: boolean,
-  understrek?: boolean,
-  harData: boolean,
-  visLagreKnappBareHvisHarData?: boolean,
-  visLagreKnapp?: boolean,
-  className?: string,
-  hentNyStatusVedHarData?: boolean,
-  onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>,
-  visAlltidBin?: boolean,
+  redigererRender: () => ReactNode;
+  ingenDataRender?: (apneRedigering: () => void) => ReactNode;
+  redigeringUtfortRender: () => ReactNode;
+  redigerbart: boolean;
+  onBinClick: MouseEventHandler;
+  tittel: string;
+  tittelIkon?: ElementType;
+  tittelUnderstrek?: boolean;
+  understrek?: boolean;
+  harData: boolean;
+  visLagreKnappBareHvisHarData?: boolean;
+  visLagreKnapp?: boolean;
+  className?: string;
+  hentNyStatusVedHarData?: boolean;
+  onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
+  visAlltidBin?: boolean;
 }
 
 const EditerbartElement = ({
@@ -74,11 +74,12 @@ const EditerbartElement = ({
     return <></>;
   };
 
-  const skalRendreLagreKnapp = status === Status.Redigerer
-    && (visLagreKnappBareHvisHarData ? harData : true)
-    && (visLagreKnapp !== undefined ? visLagreKnapp : true);
+  const skalRendreLagreKnapp =
+    status === Status.Redigerer &&
+    (visLagreKnappBareHvisHarData ? harData : true) &&
+    (visLagreKnapp !== undefined ? visLagreKnapp : true);
 
-  const lagreClickHandler: MouseEventHandler<HTMLButtonElement> = async e => {
+  const lagreClickHandler: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.persist();
 
     if (onLagreClick) {
@@ -89,28 +90,27 @@ const EditerbartElement = ({
     setStatus(hentNesteStatus());
   };
 
-  const cls = classnames(className, 'editerbart__element', {
+  const cls = classnames(className, "editerbart__element", {
     understrek,
   });
 
-  const legend = <Legend
-    redigerbart={redigerbart}
-    tittelIkon={tittelIkon}
-    tittel={tittel}
-    tittelUnderstrek={tittelUnderstrek}
-    onBinClick={onBinClick}
-    status={status}
-    onPencilClick={() => setStatus(Status.Redigerer)}
-    visAlltidBin={visAlltidBin}
-  />;
+  const legend = (
+    <Legend
+      redigerbart={redigerbart}
+      tittelIkon={tittelIkon}
+      tittel={tittel}
+      tittelUnderstrek={tittelUnderstrek}
+      onBinClick={onBinClick}
+      status={status}
+      onPencilClick={() => setStatus(Status.Redigerer)}
+      visAlltidBin={visAlltidBin}
+    />
+  );
 
   return (
     <div className={cls}>
-      <Nav.Fieldset legend={legend}>
-        {hentAktivtInnhold()}
-      </Nav.Fieldset>
-      {
-        skalRendreLagreKnapp &&
+      <Nav.Fieldset legend={legend}>{hentAktivtInnhold()}</Nav.Fieldset>
+      {skalRendreLagreKnapp && (
         <Mui.Knapp
           onClick={lagreClickHandler}
           capitalCase
@@ -120,7 +120,7 @@ const EditerbartElement = ({
         >
           Lagre
         </Mui.Knapp>
-      }
+      )}
     </div>
   );
 };

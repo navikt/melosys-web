@@ -1,3 +1,3 @@
-import Menypanel from './menypanel';
+import Menypanel from "./menypanel";
 
 export default Menypanel;

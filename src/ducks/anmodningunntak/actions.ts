@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as Types from "./types";
 
 export function reset(): Types.Action {
   return {

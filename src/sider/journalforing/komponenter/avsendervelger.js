@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { getFormValues } from 'redux-form';
-import PT from 'prop-types';
-import MKV from '../../../melosyskodeverk';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { getFormValues } from "redux-form";
+import PT from "prop-types";
+import MKV from "../../../melosyskodeverk";
 
-import * as Skjema from '../../../felleskomponenter/skjema/';
-import * as KV from '../../../kodeverk';
-import { journalforingSelectors } from '../../../ducks/journalforing';
+import * as Skjema from "../../../felleskomponenter/skjema/";
+import * as KV from "../../../kodeverk";
+import { journalforingSelectors } from "../../../ducks/journalforing";
 
-import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from './avsendere';
-import './avsendervelger.css';
+import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from "./avsendere";
+import "./avsendervelger.css";
 
 const AvsenderVelger = ({
   className,
@@ -19,7 +19,7 @@ const AvsenderVelger = ({
   settFeltInnhold,
   hentOgVisRepresentant,
 }) => {
-  const avsenderTypeEndret = avsenderType => {
+  const avsenderTypeEndret = (avsenderType) => {
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
@@ -35,7 +35,7 @@ const AvsenderVelger = ({
         break;
       }
       default:
-        throw new Error('Ukjent avsenderType');
+        throw new Error("Ukjent avsenderType");
     }
   };
 
@@ -43,74 +43,58 @@ const AvsenderVelger = ({
     if (formValues.avsenderType) avsenderTypeEndret(formValues.avsenderType);
   }, [formValues.avsenderType]);
 
-  const fullmektigLandEndret = (landkode = '') => {
-    const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : '';
+  const fullmektigLandEndret = (landkode = "") => {
+    const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : "";
 
-    settFeltInnhold('avsenderID', landkode);
-    settFeltInnhold('avsenderNavn', avsenderNavn);
+    settFeltInnhold("avsenderID", landkode);
+    settFeltInnhold("avsenderNavn", avsenderNavn);
   };
 
   return (
     <div className={className}>
       <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Bruker"
-          value={MKV.Koder.avsendertyper.PERSON}
-        />
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Fullmektig"
-          value={KV.AvsenderTyper.FULLMEKTIG}
-        />
-        {
-          formValues.avsenderType === KV.AvsenderTyper.FULLMEKTIG &&
+        <Skjema.Radio feltNavn="avsenderType" label="Bruker" value={MKV.Koder.avsendertyper.PERSON} />
+        <Skjema.Radio feltNavn="avsenderType" label="Fullmektig" value={KV.AvsenderTyper.FULLMEKTIG} />
+        {formValues.avsenderType === KV.AvsenderTyper.FULLMEKTIG && (
           <AvsenderFullmektig
             avsenderID={formValues.avsenderID}
             settFeltInnhold={settFeltInnhold}
             hentOgVisRepresentant={hentOgVisRepresentant}
           />
-        }
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Arbeidsgiver"
-          value={KV.AvsenderTyper.ARBEIDSGIVER}
-        />
-        {
-          formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER &&
+        )}
+        <Skjema.Radio feltNavn="avsenderType" label="Arbeidsgiver" value={KV.AvsenderTyper.ARBEIDSGIVER} />
+        {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && (
           <AvsenderOrganisasjon
             avsenderID={formValues.avsenderID}
             avsenderType={formValues.avsenderType}
             settFeltInnhold={settFeltInnhold}
             hentOgVisRepresentant={hentOgVisRepresentant}
           />
-        }
+        )}
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver som er fullmektig"
           value={KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG}
         />
-        {
-          formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG &&
+        {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG && (
           <AvsenderOrganisasjon
             avsenderID={formValues.avsenderID}
             avsenderType={formValues.avsenderType}
             settFeltInnhold={settFeltInnhold}
             hentOgVisRepresentant={hentOgVisRepresentant}
           />
-        }
+        )}
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Utenlandsk trygdemyndighet"
           value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
         />
-        {
-          formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET &&
+        {formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && (
           <AvsenderUtenlanskTrygdemyndighet
             utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
             fullmektigLandEndret={fullmektigLandEndret}
           />
-        }
+        )}
         {/* TODO: Legges inn igjen i SPRINT-41 (etter endringer er avklart hos fag)
         <Skjema.Radio
           feltNavn="avsenderType"
@@ -149,7 +133,7 @@ AvsenderVelger.defaultProps = {
   visAvsenderSpinner: false,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),

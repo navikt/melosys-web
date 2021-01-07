@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../../../utils/navFrontend';
-import * as Etiketter from '../../etiketter';
-import * as KV from '../../../../kodeverk';
+import * as Nav from "../../../../utils/navFrontend";
+import * as Etiketter from "../../etiketter";
+import * as KV from "../../../../kodeverk";
 
-import ArbeidsgivereNorge from './arbeidsgivereNorge';
+import ArbeidsgivereNorge from "./arbeidsgivereNorge";
 
 const ArbeidsforholdOgInntekt = () => (
   <Nav.Container fluid className="arbeidsforholdOgInntekt">
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.typo.Innholdstittel style={{ display: 'inline', marginRight: '1em' }}>
-          { KV.Menypunkter.ArbeidsforholdOgInntekt.tittel }
+        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+          {KV.Menypunkter.ArbeidsforholdOgInntekt.tittel}
         </Nav.typo.Innholdstittel>
         <Etiketter.FraRegister />
       </Nav.Column>

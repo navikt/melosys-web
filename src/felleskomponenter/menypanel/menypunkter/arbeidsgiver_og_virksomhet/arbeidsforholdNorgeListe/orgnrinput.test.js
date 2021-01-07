@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import Orgnrinput from './orgnrinput';
+import Orgnrinput from "./orgnrinput";
 
-describe('Orgnrinput', () => {
+describe("Orgnrinput", () => {
   let props = null;
 
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe('Orgnrinput', () => {
     };
   });
 
-  it('vises uten å krasje', () => {
+  it("vises uten å krasje", () => {
     shallow(<Orgnrinput {...props} />);
   });
 });

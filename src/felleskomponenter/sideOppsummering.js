@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import MKV from '../melosyskodeverk';
+import React, { useEffect, useState } from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import MKV from "../melosyskodeverk";
 
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes';
-import * as KV from '../kodeverk';
-import * as Ikoner from '../resources/images';
+import * as Nav from "../utils/navFrontend";
+import * as MPT from "../proptypes";
+import * as KV from "../kodeverk";
+import * as Ikoner from "../resources/images";
 
-import Oppsummering from './oppsummering';
+import Oppsummering from "./oppsummering";
 
-import './sideOppsummering.css';
-import { modalerOperations } from '../ducks/modaler';
-import { behandlingstemaOperations } from '../ducks/behandlingstema';
-import { behandlingerSelectors } from '../ducks/behandlinger';
+import "./sideOppsummering.css";
+import { modalerOperations } from "../ducks/modaler";
+import { behandlingstemaOperations } from "../ducks/behandlingstema";
+import { behandlingerSelectors } from "../ducks/behandlinger";
 
 const SideOppsummering = ({
   arbeidsland,
@@ -37,16 +37,18 @@ const SideOppsummering = ({
   if (!oppsummering) return <div />;
 
   const [kanEndreBehandlingstema, setKanEndreBehandlingstema] = useState(false);
-  const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || '';
+  const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || "";
   const behandlingsstatus = renderBehandlingsstatus();
 
   useEffect(() => {
     if (behandlingID > 0) {
       hentMuligeBehandlingstema(behandlingID)
-        .then(response =>
-          setKanEndreBehandlingstema(response.data.muligeBehandlingstema && response.data.muligeBehandlingstema.length !== 0))
-        .catch(() =>
-          setKanEndreBehandlingstema(false));
+        .then((response) =>
+          setKanEndreBehandlingstema(
+            response.data.muligeBehandlingstema && response.data.muligeBehandlingstema.length !== 0
+          )
+        )
+        .catch(() => setKanEndreBehandlingstema(false));
     }
   }, [behandlingID]);
 
@@ -55,48 +57,48 @@ const SideOppsummering = ({
       <Nav.Panel className="saksbehandling__soknadSammendrag">
         <Nav.Row>
           <Nav.Column xs="12" md="12">
-            <div className="oppsummering__menylinje">
-              {
-                renderBehandlingsmeny()
-              }
-            </div>
+            <div className="oppsummering__menylinje">{renderBehandlingsmeny()}</div>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="12">
-            <Nav.typo.Undertittel className={kanEndreBehandlingstema ? 'behandlingstema_redigerbar' : ''} onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}>
-              {tittel} {kanEndreBehandlingstema ? <Ikoner.Blyant_Active className="blyant" /> : <Ikoner.Blyant_Disabled className="blyant" />}
+            <Nav.typo.Undertittel
+              className={kanEndreBehandlingstema ? "behandlingstema_redigerbar" : ""}
+              onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}
+            >
+              {tittel}{" "}
+              {kanEndreBehandlingstema ? (
+                <Ikoner.Blyant_Active className="blyant" />
+              ) : (
+                <Ikoner.Blyant_Disabled className="blyant" />
+              )}
             </Nav.typo.Undertittel>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            {oppsummering && <Oppsummering
-              arbeidsland={arbeidsland}
-              oppholdsland={oppholdsland}
-              lovvalgsland={lovvalgsland}
-              fagsak={fagsak}
-              oppsummering={oppsummering}
-              person={person}
-              lovvalgsperiodeFom={lovvalgsperiodeFom}
-              lovvalgsperiodeTom={lovvalgsperiodeTom}
-              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-              periodeLabel={periodeLabel}
-            />
-            }
+            {oppsummering && (
+              <Oppsummering
+                arbeidsland={arbeidsland}
+                oppholdsland={oppholdsland}
+                lovvalgsland={lovvalgsland}
+                fagsak={fagsak}
+                oppsummering={oppsummering}
+                person={person}
+                lovvalgsperiodeFom={lovvalgsperiodeFom}
+                lovvalgsperiodeTom={lovvalgsperiodeTom}
+                behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+                behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                periodeLabel={periodeLabel}
+              />
+            )}
           </Nav.Column>
         </Nav.Row>
-        {
-          behandlingsstatus &&
+        {behandlingsstatus && (
           <Nav.Row>
-            <Nav.Column xs="12">
-              {
-                behandlingsstatus
-              }
-            </Nav.Column>
+            <Nav.Column xs="12">{behandlingsstatus}</Nav.Column>
           </Nav.Row>
-        }
+        )}
       </Nav.Panel>
     </section>
   );
@@ -134,16 +136,17 @@ SideOppsummering.defaultProps = {
   lovvalgsperiodeTom: undefined,
   behandlingsgrunnlagPeriodeFom: undefined,
   behandlingsgrunnlagPeriodeTom: undefined,
-  periodeLabel: 'Søknadsperiode',
+  periodeLabel: "Søknadsperiode",
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema()),
-  hentMuligeBehandlingstema: behandlingID => dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
+  hentMuligeBehandlingstema: (behandlingID) =>
+    dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);

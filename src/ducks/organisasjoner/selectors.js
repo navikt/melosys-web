@@ -5,10 +5,10 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 /* eslint import/prefer-default-export:"off" */
 export const organisasjonerSelector = createSelector(
-  state => state.organisasjoner.data || [],
-  organisasjoner => organisasjoner || []
+  (state) => state.organisasjoner.data || [],
+  (organisasjoner) => organisasjoner || []
 );

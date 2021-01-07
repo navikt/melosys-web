@@ -1,11 +1,8 @@
-import * as videresendingOperations from './operations';
-import * as videresendingTypes from './types';
+import * as videresendingOperations from "./operations";
+import * as videresendingTypes from "./types";
 
-import videresendingReducers from './reducers';
+import videresendingReducers from "./reducers";
 
-export {
-  videresendingOperations,
-  videresendingTypes,
-};
+export { videresendingOperations, videresendingTypes };
 
 export default videresendingReducers;

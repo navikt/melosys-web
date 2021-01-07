@@ -1,4 +1,3 @@
-
 /**
  * Actions
  * -----------------------------------------------------------------------
@@ -6,7 +5,7 @@
  * uten support for asynkrone kall.
  */
 
-import * as Types from './types';
+import * as Types from "./types";
 
 /** Tømmer fagsak-state når komponenten unmounter
  *
@@ -15,4 +14,3 @@ import * as Types from './types';
 export function resetFagsakState() {
   return { type: Types.RESET };
 }
-
