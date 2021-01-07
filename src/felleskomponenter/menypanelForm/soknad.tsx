@@ -1,22 +1,22 @@
-import React, { FormEventHandler } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { reduxForm, InjectedFormProps } from 'redux-form';
-import { RootState } from 'AppTypes';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import React, { FormEventHandler } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { reduxForm, InjectedFormProps } from "redux-form";
+import { RootState } from "AppTypes";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../yup';
-import * as KV from '../../kodeverk';
-import * as Utils from '../../utils';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
+import * as KV from "../../kodeverk";
+import * as Utils from "../../utils";
 
-import Menypanel from '../menypanel';
+import Menypanel from "../menypanel";
 
-import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from '../../ducks/behandlingsgrunnlag';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { avklartefaktaSelectors } from '../../ducks/avklartefakta';
-import { vilkarSelectors } from '../../ducks/vilkar';
-import { formSelectors } from '../../ducks/form';
+import { behandlingsperioderSelectors } from "../../ducks/behandlingsperioder";
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { avklartefaktaSelectors } from "../../ducks/avklartefakta";
+import { vilkarSelectors } from "../../ducks/vilkar";
+import { formSelectors } from "../../ducks/form";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
@@ -29,29 +29,48 @@ const mapStateToProps = (state: RootState) => ({
     inntektNaturalFribolig: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBil,
     inntektNaturalFribil: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBolig,
     inntektNaturalIAnnet: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friAnnet,
-    inntektErInnrapporteringspliktig: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektErInnrapporteringspliktig,
-    inntektTrygdeavgiftBlirTrukket: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektTrygdeavgiftBlirTrukket,
-    arbeidsgiverBekrefterUtsendelse: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse,
-    arbeidstakerAnsattUnderUtsendelsen: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen,
-    erstatterArbeidstakerenUtsendte: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte,
-    arbeidstakerTidligereUtsendt24Mnd: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd,
-    arbeidsgiverBetalerArbeidsgiveravgift: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift,
-    trygdeavgiftTrukketGjennomSkatt: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt,
-    trygdeavgiftTrukketGjennomSkattDato: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
+    inntektErInnrapporteringspliktig: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state)
+      .inntektErInnrapporteringspliktig,
+    inntektTrygdeavgiftBlirTrukket: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state)
+      .inntektTrygdeavgiftBlirTrukket,
+    arbeidsgiverBekrefterUtsendelse: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
+      .arbeidsgiverBekrefterUtsendelse,
+    arbeidstakerAnsattUnderUtsendelsen: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
+      .arbeidstakerAnsattUnderUtsendelsen,
+    erstatterArbeidstakerenUtsendte: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
+      .erstatterArbeidstakerenUtsendte,
+    arbeidstakerTidligereUtsendt24Mnd: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
+      .arbeidstakerTidligereUtsendt24Mnd,
+    arbeidsgiverBetalerArbeidsgiveravgift: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
+      .arbeidsgiverBetalerArbeidsgiveravgift,
+    trygdeavgiftTrukketGjennomSkatt: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
+      .trygdeavgiftTrukketGjennomSkatt,
+    trygdeavgiftTrukketGjennomSkattDato: Utils.dato.formatterDatoTilNorsk(
+      behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato
+    ),
     oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
     oppgittAdresseHusnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummer,
     oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
     oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,
-    antallAdmAnsatte: Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte) || null,
-    antallAnsatte: Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte) || null,
-    andelOmsetningINorge: Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge) || null,
-    andelOppdragINorge: Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge) || null,
-    andelKontrakterINorge: Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
+    antallAdmAnsatte:
+      Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte) || null,
+    antallAnsatte:
+      Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte) || null,
+    andelOmsetningINorge:
+      Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge) || null,
+    andelOppdragINorge:
+      Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge) || null,
+    andelKontrakterINorge:
+      Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
     ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
-    oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom),
-    oppholdUtlandTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom),
+    oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
+      behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom
+    ),
+    oppholdUtlandTom: Utils.dato.formatterDatoTilNorsk(
+      behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom
+    ),
     oppholdsland: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).oppholdslandkoder,
     arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
     arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
@@ -67,7 +86,9 @@ const mapStateToProps = (state: RootState) => ({
     soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
     soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
     arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
-    selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
+    selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(
+      state
+    ),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       soknadsland: avklartefaktaSelectors.Soknadsland(state),
@@ -76,12 +97,12 @@ const mapStateToProps = (state: RootState) => ({
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
-      vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
-      vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
-      normaltDriverVirksomhet: (vilkarSelectors.normaltDriverVirksomhetSelector(state).oppfylt),
-      normaltDriverVirksomhetBegrunnelser: (vilkarSelectors.normaltDriverVirksomhetSelector(state).begrunnelseKoder),
-      forutgaendeMedlemskap: (vilkarSelectors.forutgaendeMedlemskap(state).oppfylt),
-      forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
+      vesentligVirksomhet: vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt,
+      vesentligVirksomhetBegrunnelser: vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder,
+      normaltDriverVirksomhet: vilkarSelectors.normaltDriverVirksomhetSelector(state).oppfylt,
+      normaltDriverVirksomhetBegrunnelser: vilkarSelectors.normaltDriverVirksomhetSelector(state).begrunnelseKoder,
+      forutgaendeMedlemskap: vilkarSelectors.forutgaendeMedlemskap(state).oppfylt,
+      forutgaendeMedlemskapBegrunnelser: vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder,
       art11_3A: vilkarSelectors.art11_3A(state).oppfylt,
       art11_4_1: vilkarSelectors.art11_4_1(state).oppfylt,
       art11_4_2: vilkarSelectors.art11_4_2(state).oppfylt,
@@ -104,14 +125,14 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SoknadProps = PropsFromRedux & {
-  startOgVisOppfriskModal: () => void,
+  startOgVisOppfriskModal: () => void;
 };
 
 const Soknad = ({
   lagreSoknad,
   startOgVisOppfriskModal,
 }: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
-  const submitHandler: FormEventHandler<HTMLFormElement> = event => {
+  const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
   };
 
@@ -122,24 +143,7 @@ const Soknad = ({
 
   return (
     <form name="soknad" id="soknad" onSubmit={submitHandler}>
-      <Menypanel
-        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-        menypunkter={[
-          'Person',
-          'Familieforhold',
-          'Medlemskap',
-          'EU/EØS-barnetrygd',
-          'Arbeidsforhold og inntekt',
-          'Arbeidsgiver/virksomhet',
-          'Fullmektig',
-          'Periode',
-          'Utenlandsoppdraget',
-          'Lønn og godtgjørelser',
-          'Arbeidssted(er)',
-          'Om virksomheten i Norge',
-          'Øvrig om arbeidstaker',
-        ]}
-      />
+      <Menypanel lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
     </form>
   );
 };
