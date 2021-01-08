@@ -15,10 +15,12 @@ class Familie extends Steg {
     this.id = STEG.FAMILIE;
     this.tittel = 'Familie';
     this.komponent = VurderingFamilie;
-    this.samleRelevanteData = _propsLight => ({});
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this.beregnRelevantUI = _propsLight => ({ harAvklaring: false });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
     };
     this.status = FANE_STATUS.OK;
   }
