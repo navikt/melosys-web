@@ -20,7 +20,7 @@ interface ILinksBuilder {
   addMedlemskap: () => ILinksBuilder;
   addEUEOSBarnetrygd: () => ILinksBuilder;
   addArbeidsforholdOgInntekt: () => ILinksBuilder;
-  addArbeidsgiverEllervirksomhet: () => ILinksBuilder;
+  addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
   addPeriode: () => ILinksBuilder;
   // addUtenlandsoppdraget: () => ILinksBuilder,
