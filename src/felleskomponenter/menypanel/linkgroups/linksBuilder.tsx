@@ -99,7 +99,7 @@ class LinksBuilder implements ILinksBuilder {
     return this;
   }
 
-  public addArbeidsgiverEllervirksomhet() {
+  public addArbeidsgiverEllerVirksomhet() {
     this.links.push({
       label: "Arbeidsgiver/virksomhet",
       active: false,
