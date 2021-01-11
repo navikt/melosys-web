@@ -17,7 +17,7 @@ describe("LinksBuilder", () => {
 
     const links = linksBuilder
       .addArbeidsforholdOgInntekt()
-      .addArbeidsgiverEllervirksomhet()
+      .addArbeidsgiverEllerVirksomhet()
       .addArbeidssteder()
       .addEUEOSBarnetrygd()
       .addFamilieForhold()

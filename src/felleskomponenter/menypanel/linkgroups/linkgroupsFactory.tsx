@@ -19,6 +19,7 @@ const {
   ØVRIGE_SED_MED,
   ØVRIGE_SED_UFM,
   TRYGDETID,
+  ARBEID_I_UTLANDET,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 export interface LinkGroupsFactoryConfig {
@@ -50,7 +51,7 @@ class LinkGroupsFactory {
           )
           .addFraSoknad(
             new LinksBuilder(contentProps)
-              .addArbeidsgiverEllervirksomhet()
+              .addArbeidsgiverEllerVirksomhet()
               .addFullmektig()
               .addPeriode()
               .addArbeidssteder()
@@ -91,12 +92,21 @@ class LinkGroupsFactory {
           )
           .addFraSED(
             new LinksBuilder(contentProps)
-              .addArbeidsgiverEllervirksomhet()
+              .addArbeidsgiverEllerVirksomhet()
               .addFullmektig()
               .addPeriode()
               .addArbeidssteder()
               .build()
           )
+          .build();
+      }
+      case ARBEID_I_UTLANDET: {
+        return new LinkgroupsBuilder()
+          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegister(
+            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
+          )
+          .addFraSoknad(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
           .build();
       }
       default:

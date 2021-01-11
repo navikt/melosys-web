@@ -20,7 +20,7 @@ interface ILinksBuilder {
   addMedlemskap: () => ILinksBuilder;
   addEUEOSBarnetrygd: () => ILinksBuilder;
   addArbeidsforholdOgInntekt: () => ILinksBuilder;
-  addArbeidsgiverEllervirksomhet: () => ILinksBuilder;
+  addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
   addPeriode: () => ILinksBuilder;
   // addUtenlandsoppdraget: () => ILinksBuilder,
@@ -99,7 +99,7 @@ class LinksBuilder implements ILinksBuilder {
     return this;
   }
 
-  public addArbeidsgiverEllervirksomhet() {
+  public addArbeidsgiverEllerVirksomhet() {
     this.links.push({
       label: "Arbeidsgiver/virksomhet",
       active: false,
