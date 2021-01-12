@@ -9,6 +9,8 @@ import * as MedfolgendeBarn from "./medfolgendeBarn";
 
 import Familiemedlemmer from "./familiemedlemmer";
 import EditerbartElementListe from "../editerbartElementListe";
+import { Status } from "../editerbartElement/types";
+import Legend from "../editerbartElement/legend";
 
 import "./familieforholdContainer.css";
 
@@ -18,6 +20,7 @@ interface FamilieforholdContainerProps {
   behandlingsgrunnlagEtikett: ReactNode;
   visBehandlingsgrunnlagData: boolean;
   setMenypanelFeilmelding: (feilmelding: string) => void;
+  visEktefelleSamboerMedPaReisen: boolean;
 }
 
 const FamilieforholdContainer = ({
@@ -26,6 +29,7 @@ const FamilieforholdContainer = ({
   behandlingsgrunnlagEtikett,
   visBehandlingsgrunnlagData,
   setMenypanelFeilmelding,
+  visEktefelleSamboerMedPaReisen,
 }: FamilieforholdContainerProps) => (
   <Nav.Container fluid className="familieforhold-container">
     <Nav.Row>
@@ -48,24 +52,73 @@ const FamilieforholdContainer = ({
             {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <EditerbartElementListe
+        {visEktefelleSamboerMedPaReisen ? (
+          <div className="familiemedpareisen">
+            <Legend
               redigerbart={redigerbart}
-              feltNavn="medfolgendeBarn"
-              redigererKomponent={MedfolgendeBarn.Redigerer}
-              redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
-              ingenDataKomponent={MedfolgendeBarn.IngenData}
-              leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til ny rad" : "Legg til barn")}
-              hentDefaultElement={() => ({ uuid: Utils._uuid() })}
-              tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
-              tittelIkon={Ikoner.ParentAndKid}
+              tittelIkon={Ikoner.Familie}
+              tittel={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}
               tittelUnderstrek
-              harData={(elementListe) => elementListe.length !== 0 && elementListe.every((v) => v)}
-              flereRedigeringsknapper={false}
+              onBinClick={() => {}}
+              status={Status.IngenData}
+              onPencilClick={() => {}}
+              visAlltidBin={false}
             />
-          </Nav.Column>
-        </Nav.Row>
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <EditerbartElementListe
+                  redigerbart={redigerbart}
+                  feltNavn="medfolgendeBarn"
+                  redigererKomponent={MedfolgendeBarn.Redigerer}
+                  redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+                  ingenDataKomponent={() => <></>}
+                  leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til nytt barn" : "Legg til barn")}
+                  hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+                  tittelTekst="Barn"
+                  tittelUnderstrek={false}
+                  harData={(elementListe) => elementListe.length !== 0 && elementListe.every((v) => v)}
+                  flereRedigeringsknapper={false}
+                />
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <EditerbartElementListe
+                  redigerbart={redigerbart}
+                  feltNavn="medfolgendeEktefelleSamboer"
+                  redigererKomponent={MedfolgendeBarn.Redigerer}
+                  redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+                  ingenDataKomponent={() => <></>}
+                  leggTilTekst="Legg til ektefelle/partner/samboer"
+                  hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+                  tittelTekst="Ektefelle/partner/samboer"
+                  tittelUnderstrek={false}
+                  harData={(elementListe) => elementListe.length !== 0 && elementListe.every((v) => v)}
+                  flereRedigeringsknapper={false}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </div>
+        ) : (
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <EditerbartElementListe
+                redigerbart={redigerbart}
+                feltNavn="medfolgendeBarn"
+                redigererKomponent={MedfolgendeBarn.Redigerer}
+                redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+                ingenDataKomponent={MedfolgendeBarn.IngenData}
+                leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til ny rad" : "Legg til barn")}
+                hentDefaultElement={() => ({ uuid: Utils._uuid() })}
+                tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
+                tittelIkon={Ikoner.ParentAndKid}
+                tittelUnderstrek
+                harData={(elementListe) => elementListe.length !== 0 && elementListe.every((v) => v)}
+                flereRedigeringsknapper={false}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        )}
       </>
     )}
   </Nav.Container>
