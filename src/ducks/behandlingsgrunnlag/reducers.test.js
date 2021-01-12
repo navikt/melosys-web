@@ -227,6 +227,13 @@ describe("behandlingsgrunnlag reducer", () => {
             relasjonsrolle: "BARN",
           },
         ],
+        medfolgendeEktefelleSamboer: [
+          {
+            fnr: "08029828362",
+            navn: "UTVIKLER OPTIMISTISK",
+            relasjonsrolle: "EKTEFELLE_SAMBOER",
+          },
+        ],
         overgangsregelbestemmelser: [
           {
             kode: "FO_1408_1971_ART14_2_A",
@@ -389,6 +396,11 @@ describe("behandlingsgrunnlag reducer", () => {
                 fnr: "31031779459",
                 navn: "BRÅKETE GYNGEHEST",
                 relasjonsrolle: "BARN",
+              },
+              {
+                fnr: "08029828362",
+                navn: "UTVIKLER OPTIMISTISK",
+                relasjonsrolle: "EKTEFELLE_SAMBOER",
               },
             ],
           },
