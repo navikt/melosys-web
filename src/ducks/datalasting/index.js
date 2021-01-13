@@ -1,4 +1,3 @@
-import * as datalastingOperations from './operations';
+import * as datalastingOperations from "./operations";
 
 export { datalastingOperations };
-

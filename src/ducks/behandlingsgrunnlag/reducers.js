@@ -1,13 +1,13 @@
-import { STATUS } from '../../services/utils';
+import { STATUS } from "../../services/utils";
 
-import * as Types from './types';
+import * as Types from "./types";
 
-import { strengTilInt } from '../../utils/streng';
-import { formatterDatoTilISO } from '../../utils/dato';
-import * as Utils from '../../utils';
-import * as KV from '../../kodeverk';
+import { strengTilInt } from "../../utils/streng";
+import { formatterDatoTilISO } from "../../utils/dato";
+import * as Utils from "../../utils";
+import * as KV from "../../kodeverk";
 
-const lagNullableAdresse = adresse => {
+const lagNullableAdresse = (adresse) => {
   if (Utils._isNil(adresse)) {
     return {
       gatenavn: null,
@@ -97,14 +97,14 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
 
       const foretakUtland = [
-        ...dokument.arbeidsforholdUtland.map(forhold => ({
+        ...dokument.arbeidsforholdUtland.map((forhold) => ({
           uuid: forhold.uuid,
           navn: forhold.navn || null,
           orgnr: forhold.orgnr || null,
           selvstendigNaeringsvirksomhet: false,
           adresse: lagNullableAdresse(forhold.adresse),
         })),
-        ...dokument.selvstendigNaeringsvirksomhetUtland.map(virksomhet => ({
+        ...dokument.selvstendigNaeringsvirksomhetUtland.map((virksomhet) => ({
           uuid: virksomhet.uuid,
           navn: virksomhet.navn || null,
           orgnr: virksomhet.orgnr || null,
@@ -113,17 +113,17 @@ export default function reducer(state = initialState, action) {
         })),
       ];
 
-      const lagMaritimtArbeidAvArbeidsstedOffshore = arbeidssted => ({
+      const lagMaritimtArbeidAvArbeidsstedOffshore = (arbeidssted) => ({
         enhetNavn: arbeidssted.enhetNavn || null,
         fartsomradeKode: arbeidssted.fartsomradeKode || null,
         flaggLandkode: arbeidssted.flaggLandkode || null,
-        installasjonsLandkode: arbeidssted.installasjonsLandkode || '',
+        installasjonsLandkode: arbeidssted.installasjonsLandkode || "",
         territorialfarvann: arbeidssted.territorialfarvann || null,
         foretakNavn: arbeidssted.foretakNavn || null,
         foretakOrgnr: arbeidssted.foretakOrgnr || null,
       });
 
-      const lagMaritimtArbeidAvArbeidsstedSkip = arbeidssted => ({
+      const lagMaritimtArbeidAvArbeidsstedSkip = (arbeidssted) => ({
         enhetNavn: arbeidssted.enhetNavn || null,
         fartsomradeKode: arbeidssted.fartsomradeKode || null,
         flaggLandkode: arbeidssted.flaggLandkode || null,
@@ -143,7 +143,9 @@ export default function reducer(state = initialState, action) {
         data: {
           arbeidsinntekt: {
             inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
-            inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden ? strengTilInt(dokument.inntektUtenlandskIPerioden) : null,
+            inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden
+              ? strengTilInt(dokument.inntektUtenlandskIPerioden)
+              : null,
             inntektNaeringIPerioden: null,
             inntektNaturalytelser: {
               friBil: dokument.inntektNaturalFribil,
@@ -153,7 +155,7 @@ export default function reducer(state = initialState, action) {
             inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
             inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
           },
-          arbeidUtland: dokument.arbeidUtland.map(arbeidUtland => ({
+          arbeidUtland: dokument.arbeidUtland.map((arbeidUtland) => ({
             adresse: {
               gatenavn: arbeidUtland.adresse.gatenavn || null,
               husnummer: arbeidUtland.adresse.husnummer || null,
@@ -164,7 +166,9 @@ export default function reducer(state = initialState, action) {
             },
             foretakNavn: arbeidUtland.foretakNavn || null,
             foretakOrgnr: arbeidUtland.foretakOrgnr || null,
-            arbeidUtlandHjemmekontor: Utils._isNil(arbeidUtland.arbeidUtlandHjemmekontor) ? null : arbeidUtland.arbeidUtlandHjemmekontor,
+            arbeidUtlandHjemmekontor: Utils._isNil(arbeidUtland.arbeidUtlandHjemmekontor)
+              ? null
+              : arbeidUtland.arbeidUtlandHjemmekontor,
           })),
           juridiskArbeidsgiverNorge: {
             antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
@@ -174,7 +178,7 @@ export default function reducer(state = initialState, action) {
             andelOppdragINorge: dokument.andelOppdragINorge ? strengTilInt(dokument.andelOppdragINorge) : null,
             andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
             andelRekruttertINorge: dokument.andelRekruttertINorge ? strengTilInt(dokument.andelRekruttertINorge) : null,
-            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.filter(arbeidsgiver => arbeidsgiver) || [],
+            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.filter((arbeidsgiver) => arbeidsgiver) || [],
           },
           arbeidsgiversBekreftelse: {
             arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
@@ -183,7 +187,9 @@ export default function reducer(state = initialState, action) {
             arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
             arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
             trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
-            trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato ? formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato) : null,
+            trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato
+              ? formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato)
+              : null,
           },
           oppholdUtland: {
             oppholdsPeriode: {
@@ -210,7 +216,7 @@ export default function reducer(state = initialState, action) {
             },
           },
           maritimtArbeid,
-          luftfartBaser: dokument.arbeidsstedFly.map(arbeidssted => ({
+          luftfartBaser: dokument.arbeidsstedFly.map((arbeidssted) => ({
             hjemmebaseNavn: arbeidssted.hjemmebaseNavn || null,
             hjemmebaseLand: arbeidssted.hjemmebaseLand || null,
             typeFlyvninger: arbeidssted.typeFlyvninger || null,
@@ -224,22 +230,32 @@ export default function reducer(state = initialState, action) {
           },
           selvstendigArbeid: {
             erSelvstendig: Utils._isNil(dokument.erSelvstendig) ? null : dokument.erSelvstendig,
-            selvstendigForetak: dokument.selvstendigForetak
-              .map(foretak => ({
-                orgnr: foretak.orgnr || null,
-                fortsetterEtterArbeidIUtlandet: Utils._isNil(foretak.fortsetterEtterArbeidIUtlandet) ? null : foretak.fortsetterEtterArbeidIUtlandet,
-              })),
+            selvstendigForetak: dokument.selvstendigForetak.map((foretak) => ({
+              orgnr: foretak.orgnr || null,
+              fortsetterEtterArbeidIUtlandet: Utils._isNil(foretak.fortsetterEtterArbeidIUtlandet)
+                ? null
+                : foretak.fortsetterEtterArbeidIUtlandet,
+            })),
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
-            medfolgendeFamilie: dokument.medfolgendeBarn.map(enkeltBarn => ({
-              uuid: enkeltBarn.uuid,
-              navn: enkeltBarn.navn,
-              fnr: enkeltBarn.fnr,
-              relasjonsrolle: KV.Koder.Relasjonsrolle.BARN,
-            })),
+            medfolgendeFamilie: [
+              ...dokument.medfolgendeBarn.map((enkeltBarn) => ({
+                uuid: enkeltBarn.uuid,
+                navn: enkeltBarn.navn,
+                fnr: enkeltBarn.fnr,
+                relasjonsrolle: KV.Koder.Relasjonsrolle.BARN,
+              })),
+              ...dokument.medfolgendeEktefelleSamboer.map((enkeltEktefelleSamboer) => ({
+                uuid: enkeltEktefelleSamboer.uuid,
+                navn: enkeltEktefelleSamboer.navn,
+                fnr: enkeltEktefelleSamboer.fnr,
+                relasjonsrolle: KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER,
+              })),
+            ],
           },
-          overgangsregelbestemmelser: dokument.overgangsregelbestemmelser || (state.data.data.overgangsregelbestemmelser || []),
+          overgangsregelbestemmelser:
+            dokument.overgangsregelbestemmelser || state.data.data.overgangsregelbestemmelser || [],
           ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
           trygdedekning: dokument.trygdedekning,
         },

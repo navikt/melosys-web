@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import PT from 'prop-types';
-import { Field } from 'redux-form';
+import React, { Component } from "react";
+import PT from "prop-types";
+import { Field } from "redux-form";
 
-import * as Utils from '../../../utils';
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import * as KV from '../../../kodeverk';
-import * as SkjemaUtils from '../utils';
+import * as Utils from "../../../utils";
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
+import * as KV from "../../../kodeverk";
+import * as SkjemaUtils from "../utils";
 
-import './landvelger.css';
+import "./landvelger.css";
 
 export class EnkeltLand extends Component {
   state = {
-    inputVerdi: '',
+    inputVerdi: "",
     error: null,
   };
 
@@ -28,7 +28,7 @@ export class EnkeltLand extends Component {
     }
   }
 
-  setInputVerdi = verdi => {
+  setInputVerdi = (verdi) => {
     this.setState({ inputVerdi: verdi });
   };
 
@@ -36,13 +36,13 @@ export class EnkeltLand extends Component {
     const { value } = this.props.input;
     const { landkoder } = this.props;
     const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
-    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : '';
+    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : "";
     return inputVerdi;
-  }
+  };
 
-  reduxOppdaterLand = landkode => {
+  reduxOppdaterLand = (landkode) => {
     if (!landkode) {
-      const e = new Error('landkode må inneholde verdi.');
+      const e = new Error("landkode må inneholde verdi.");
       Utils.logger.error(e);
       throw e;
     }
@@ -56,18 +56,18 @@ export class EnkeltLand extends Component {
 
   reduxFjernLand = () => {
     const { onChange } = this.props.input;
-    onChange('');
+    onChange("");
 
     if (this.props.onChange) {
       this.props.onChange();
     }
   };
 
-  fokusInnHandler = e => {
+  fokusInnHandler = (e) => {
     e.target.select();
   };
 
-  inputTastNedHandler = e => {
+  inputTastNedHandler = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
       this.fokusUtHandler();
@@ -79,17 +79,15 @@ export class EnkeltLand extends Component {
    * @param inputVerdi
    * @returns {*}
    */
-  finnFlereLand = inputVerdi => {
+  finnFlereLand = (inputVerdi) => {
     const { landkoder } = this.props;
     if (!inputVerdi) return [];
-    return landkoder.filter(land => (
-      Utils.land.landTekstFormat(land)
-        .toLowerCase()
-        .includes(inputVerdi.toLowerCase())
-    ));
+    return landkoder.filter((land) =>
+      Utils.land.landTekstFormat(land).toLowerCase().includes(inputVerdi.toLowerCase())
+    );
   };
 
-  finnEttLand = inputVerdi => {
+  finnEttLand = (inputVerdi) => {
     const landListe = this.finnFlereLand(inputVerdi);
     return landListe.length === 1 ? landListe[0] : false;
   };
@@ -109,11 +107,11 @@ export class EnkeltLand extends Component {
       this.reduxOppdaterLand(landkodeObjekt.kode);
       this.setState({ inputVerdi: Utils.land.landTekstFormat(landkodeObjekt), error: null });
     } else {
-      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
+      this.setState({ error: "Finner ikke landet du har skrevet inn." });
     }
   };
 
-  inputEndringHandler = e => {
+  inputEndringHandler = (e) => {
     const inputVerdi = e.target.value;
     this.setState({ inputVerdi });
   };
@@ -122,23 +120,22 @@ export class EnkeltLand extends Component {
     this.setState({ error: null });
   };
 
-  render () {
-    const {
-      fokusInnHandler, fokusUtHandler, inputTastNedHandler, inputEndringHandler,
-    } = this;
+  render() {
+    const { fokusInnHandler, fokusUtHandler, inputTastNedHandler, inputEndringHandler } = this;
 
-    const {
-      label, meta, dataListID, disabled, bredde, placeholder,
-    } = this.props;
+    const { label, meta, dataListID, disabled, bredde, placeholder } = this.props;
 
     const { inputVerdi } = this.state;
 
     const { touched, active } = meta;
 
-    const skjemaError = (touched && !active) ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
+    const skjemaError = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
-    const { error: internError = '' } = this.state;
-    const feilObjekt = skjemaError || internError ? { feilmelding: `${(skjemaError && skjemaError.feilmelding) || ''} ${internError || ''}` } : null;
+    const { error: internError = "" } = this.state;
+    const feilObjekt =
+      skjemaError || internError
+        ? { feilmelding: `${(skjemaError && skjemaError.feilmelding) || ""} ${internError || ""}` }
+        : null;
 
     return (
       <div>
@@ -175,15 +172,15 @@ EnkeltLand.propTypes = {
 };
 
 EnkeltLand.defaultProps = {
-  label: '',
-  feil: '',
+  label: "",
+  feil: "",
   disabled: false,
-  bredde: 'XL',
+  bredde: "XL",
   onChange: null,
   placeholder: undefined,
 };
 
-const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={EnkeltLand} props={props} />);
+const EnkeltLandWrapper = (props) => <Field name={props.feltNavn} component={EnkeltLand} props={props} />;
 
 EnkeltLandWrapper.propTypes = {
   feltNavn: PT.string.isRequired,

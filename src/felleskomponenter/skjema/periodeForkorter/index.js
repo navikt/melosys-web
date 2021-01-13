@@ -1,3 +1,3 @@
-import PeriodeForkorter from './periodeForkorter';
+import PeriodeForkorter from "./periodeForkorter";
 
 export default PeriodeForkorter;

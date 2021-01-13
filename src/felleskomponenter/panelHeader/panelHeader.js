@@ -1,22 +1,11 @@
-import React from 'react';
-import PT from 'prop-types';
-import * as Nav from '../../utils/navFrontend';
-import './panelHeader.css';
+import React from "react";
+import PT from "prop-types";
+import * as Nav from "../../utils/navFrontend";
+import "./panelHeader.css";
 
-
-const PanelHeader = ({
-  ikon: Ikon,
-  tittel,
-  tittelTilleggsinfo,
-  undertittel,
-}) => (
+const PanelHeader = ({ ikon: Ikon, tittel, tittelTilleggsinfo, undertittel }) => (
   <div className="panelheader">
-    {
-      Ikon &&
-      <Ikon
-        className="panelheader__ikon"
-      />
-    }
+    {Ikon && <Ikon className="panelheader__ikon" />}
     <div className="panelheader__tittel">
       <div className="panelheader__tittel__hoved">
         <Nav.typo.Undertittel>{tittel}</Nav.typo.Undertittel>&emsp;
@@ -36,8 +25,8 @@ PanelHeader.propTypes = {
 
 PanelHeader.defaultProps = {
   ikon: null,
-  tittelTilleggsinfo: '',
-  undertittel: '',
+  tittelTilleggsinfo: "",
+  undertittel: "",
 };
 
 export default PanelHeader;

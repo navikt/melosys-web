@@ -1,6 +1,6 @@
-import { ErrorResponse } from 'melosys-api';
+import { ErrorResponse } from "melosys-api";
 
-import { STATUS } from '../../services/utils';
+import { STATUS } from "../../services/utils";
 
 export const hentFeilkoder = (res: ErrorResponse | undefined, reduxStatus: string) => {
   if (res && res.feilkoder && reduxStatus === STATUS.ERROR) {
@@ -16,15 +16,19 @@ export const hentFeilmelding = (
 ) => {
   if (reduxStatus === STATUS.ERROR) {
     if (httpStatus && httpStatus < 500) {
-      return [{
-        tittel: 'Feil',
-        innhold: httpMessage,
-      }];
+      return [
+        {
+          tittel: "Feil",
+          innhold: httpMessage,
+        },
+      ];
     }
-    return [{
-      tittel: 'Teknisk feil',
-      innhold: 'Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.',
-    }];
+    return [
+      {
+        tittel: "Teknisk feil",
+        innhold: "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.",
+      },
+    ];
   }
   return [];
 };

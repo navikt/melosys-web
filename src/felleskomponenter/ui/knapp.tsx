@@ -1,27 +1,18 @@
-import React from 'react';
-import PT from 'prop-types';
-import { KnappBaseProps } from 'nav-frontend-knapper';
-import classnames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import { KnappBaseProps } from "nav-frontend-knapper";
+import classnames from "classnames";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import './knapp.css';
+import "./knapp.css";
 
 type KnappProps = KnappBaseProps & {
-  ikon?: React.ElementType,
-  capitalCase?: boolean,
+  ikon?: React.ElementType;
+  capitalCase?: boolean;
 };
 
-const Knapp = ({
-  ikon: Ikon,
-  children,
-  htmlType,
-  type,
-  disabled,
-  capitalCase,
-  className,
-  ...rest
-}: KnappProps) => {
+const Knapp = ({ ikon: Ikon, children, htmlType, type, disabled, capitalCase, className, ...rest }: KnappProps) => {
   const cls = classnames(className, {
     disabledKnapp: disabled,
     knapp: !disabled,
@@ -29,16 +20,8 @@ const Knapp = ({
   });
 
   return (
-    <Nav.Knapp
-      htmlType={htmlType}
-      type={type}
-      className={cls}
-      disabled={disabled}
-      {...rest}
-    >
-      {
-        Ikon && <Ikon className="ikon" />
-      }
+    <Nav.Knapp htmlType={htmlType} type={type} className={cls} disabled={disabled} {...rest}>
+      {Ikon && <Ikon className="ikon" />}
       {children}
     </Nav.Knapp>
   );
@@ -49,8 +32,8 @@ Knapp.propTypes = {
   capitalCase: PT.bool,
   className: PT.string,
   children: PT.node,
-  htmlType: PT.oneOf(['submit', 'button', 'reset']),
-  type: PT.oneOf(['standard', 'hoved', 'fare', 'flat']),
+  htmlType: PT.oneOf(["submit", "button", "reset"]),
+  type: PT.oneOf(["standard", "hoved", "fare", "flat"]),
   disabled: PT.bool,
 };
 
@@ -59,8 +42,8 @@ Knapp.defaultProps = {
   capitalCase: false,
   className: undefined,
   children: undefined,
-  htmlType: 'button',
-  type: 'standard',
+  htmlType: "button",
+  type: "standard",
   disabled: false,
 };
 

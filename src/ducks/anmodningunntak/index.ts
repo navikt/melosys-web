@@ -1,11 +1,8 @@
-import * as anmodningunntakOperations from './operations';
-import * as anmodningunntakTypes from './types';
+import * as anmodningunntakOperations from "./operations";
+import * as anmodningunntakTypes from "./types";
 
-import anmodningunntakReducers from './reducers';
+import anmodningunntakReducers from "./reducers";
 
-export {
-  anmodningunntakOperations,
-  anmodningunntakTypes,
-};
+export { anmodningunntakOperations, anmodningunntakTypes };
 
 export default anmodningunntakReducers;

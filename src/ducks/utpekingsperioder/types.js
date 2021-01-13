@@ -1,9 +1,9 @@
-export const OK = 'utpekingsperioder/OK';
-export const FEILET = 'utpekingsperioder/FEILET';
-export const PENDING = 'utpekingsperioder/PENDING';
+export const OK = "utpekingsperioder/OK";
+export const FEILET = "utpekingsperioder/FEILET";
+export const PENDING = "utpekingsperioder/PENDING";
 
-export const OPPDATER_UTPEKINGSPERIODER = 'utpekingsperioder/OPPDATER_UTPEKINGSPERIODER';
+export const OPPDATER_UTPEKINGSPERIODER = "utpekingsperioder/OPPDATER_UTPEKINGSPERIODER";
 
-export const RESET = 'utpekingsperioder/RESET';
+export const RESET = "utpekingsperioder/RESET";
 
-export const ENDRE_PERIODE = 'utpekingsperioder/ENDRE_PERIODE';
+export const ENDRE_PERIODE = "utpekingsperioder/ENDRE_PERIODE";

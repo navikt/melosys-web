@@ -1,34 +1,40 @@
 /* eslint react/no-array-index-key:off */
-import React, { Component } from 'react';
-import PT from 'prop-types';
-import Ikon from 'melosys-ikoner-assets';
+import React, { Component } from "react";
+import PT from "prop-types";
+import Ikon from "melosys-ikoner-assets";
 
-import * as KV from '../../kodeverk';
-import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes';
+import * as KV from "../../kodeverk";
+import * as Nav from "../../utils/navFrontend";
+import * as MPT from "../../proptypes";
 
-import './listevelgerFlervalg.css';
+import "./listevelgerFlervalg.css";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes
  * slik at brukeren kan redigere innholdet i feltet også ETTER at det er lagt til.
  */
-const ListevelgerValgtElement = ({
-  label, slettElement, oppdaterElement, tillatFritekst, disabled,
-}) => {
-  const element = tillatFritekst ?
-    <Nav.Input disabled={disabled} value={label} label="" className="listevelger__linje__input" onChange={oppdaterElement} onKeyDown={event => (event.key === 'Enter') && event.preventDefault()} />
-    :
-    <div className="listevelger__linje__input" >{label}</div>;
+const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatFritekst, disabled }) => {
+  const element = tillatFritekst ? (
+    <Nav.Input
+      disabled={disabled}
+      value={label}
+      label=""
+      className="listevelger__linje__input"
+      onChange={oppdaterElement}
+      onKeyDown={(event) => event.key === "Enter" && event.preventDefault()}
+    />
+  ) : (
+    <div className="listevelger__linje__input">{label}</div>
+  );
 
   return (
     <div className="listevelger__linje">
-      <div className="listevelger__innhold">
-        { element }
-      </div>
+      <div className="listevelger__innhold">{element}</div>
       <Nav.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
-        <div className="knapp__ikon"><Ikon kind="minus" size="24" /></div>
+        <div className="knapp__ikon">
+          <Ikon kind="minus" size="24" />
+        </div>
         <div className="knapp__tittel">Fjern</div>
       </Nav.Knapp>
     </div>
@@ -53,35 +59,37 @@ ListevelgerValgtElement.defaultProps = {
  * For hvert nye valg legges dette til som en FieldArray i Redux Form.
  */
 class ListevelgerFlervalg extends Component {
-  state = { valgteElementer: this.props.defaultElementer, inputVerdi: '', feilmelding: '' };
+  state = { valgteElementer: this.props.defaultElementer, inputVerdi: "", feilmelding: "" };
 
-  vedEndring = event => {
-    this.setState({ inputVerdi: event.target.value, feilmelding: '' });
+  vedEndring = (event) => {
+    this.setState({ inputVerdi: event.target.value, feilmelding: "" });
   };
 
-  vedTastNed = event => {
-    if (event.key === 'Enter') { this.leggValgTilListe(event); }
+  vedTastNed = (event) => {
+    if (event.key === "Enter") {
+      this.leggValgTilListe(event);
+    }
   };
 
-  kodeTilVerdi = kode => {
+  kodeTilVerdi = (kode) => {
     const { muligeValg = [] } = this.props;
-    const valgtKodeverkObjekt = muligeValg.find(item => KV.objektTilKode(item) === kode);
+    const valgtKodeverkObjekt = muligeValg.find((item) => KV.objektTilKode(item) === kode);
     return valgtKodeverkObjekt && KV.objektTilTerm(valgtKodeverkObjekt);
   };
 
-  verdiTilKode = verdi => {
+  verdiTilKode = (verdi) => {
     const { muligeValg = [] } = this.props;
-    const valgtKodeverkObjekt = muligeValg.find(item => KV.objektTilTerm(item) === verdi);
+    const valgtKodeverkObjekt = muligeValg.find((item) => KV.objektTilTerm(item) === verdi);
     return valgtKodeverkObjekt && KV.objektTilKode(valgtKodeverkObjekt);
   };
 
-  erAlleredeLagtTil = verdi => {
+  erAlleredeLagtTil = (verdi) => {
     const { tillatFritekst } = this.props;
     const { valgteElementer = [] } = this.state;
-    return !tillatFritekst && valgteElementer.some(valg => valg === verdi);
+    return !tillatFritekst && valgteElementer.some((valg) => valg === verdi);
   };
 
-  leggValgTilListe = e => {
+  leggValgTilListe = (e) => {
     e.preventDefault();
     const { inputVerdi, valgteElementer } = this.state;
     const { verdiTilKode, erAlleredeLagtTil } = this;
@@ -90,23 +98,27 @@ class ListevelgerFlervalg extends Component {
     const valg = tillatFritekst ? inputVerdi : verdiTilKode(inputVerdi);
 
     if (erAlleredeLagtTil(valg)) {
-      this.setState({ feilmelding: 'Dette valget finnes allerede i listen.' });
+      this.setState({ feilmelding: "Dette valget finnes allerede i listen." });
       return false;
     }
 
     if (valg) {
-      this.setState(prevState => ({ inputVerdi: '', valgteElementer: [...prevState.valgteElementer, valg], feilmelding: null }));
+      this.setState((prevState) => ({
+        inputVerdi: "",
+        valgteElementer: [...prevState.valgteElementer, valg],
+        feilmelding: null,
+      }));
       if (onChange) {
         onChange({ value: [...valgteElementer, valg] });
       }
     } else {
-      this.setState({ feilmelding: 'I dette feltet må du velge fra alternativene i nedtrekkslisten.' });
+      this.setState({ feilmelding: "I dette feltet må du velge fra alternativene i nedtrekkslisten." });
     }
 
     return true;
   };
 
-  slettValgFraListe = index => {
+  slettValgFraListe = (index) => {
     const { onChange } = this.props;
 
     const { valgteElementer } = this.state;
@@ -115,14 +127,14 @@ class ListevelgerFlervalg extends Component {
       onChange({ value: valgteElementer.filter((element, i) => i !== index) });
     }
 
-    this.setState(prevState => ({ valgteElementer: prevState.valgteElementer.filter((element, i) => i !== index) }));
+    this.setState((prevState) => ({ valgteElementer: prevState.valgteElementer.filter((element, i) => i !== index) }));
   };
 
   oppdaterEksisterendeValg = (verdi, index) => {
-    this.setState(prevState => ({
-      valgteElementer: prevState.valgteElementer.map((element, i) => (
+    this.setState((prevState) => ({
+      valgteElementer: prevState.valgteElementer.map((element, i) =>
         i !== index ? element : { ...element, ...verdi }
-      )),
+      ),
     }));
   };
 
@@ -131,10 +143,11 @@ class ListevelgerFlervalg extends Component {
       key={index}
       label={verdi}
       slettElement={() => this.slettValgFraListe(index)}
-      oppdaterElement={event => this.oppdaterEksisterendeValg(event.target.value, index)}
+      oppdaterElement={(event) => this.oppdaterEksisterendeValg(event.target.value, index)}
       tillatFritekst
       disabled={this.props.disabled}
-    />);
+    />
+  );
 
   byggValgtElement = (verdi, index) => (
     <ListevelgerValgtElement
@@ -142,13 +155,11 @@ class ListevelgerFlervalg extends Component {
       label={verdi}
       slettElement={() => this.slettValgFraListe(index)}
       disabled={this.props.disabled}
-    />);
+    />
+  );
 
-  byggValgtListe = eksisterendeValg => {
-    const {
-      byggValgtElement,
-      byggValgtRedigerbartElement,
-    } = this;
+  byggValgtListe = (eksisterendeValg) => {
+    const { byggValgtElement, byggValgtRedigerbartElement } = this;
 
     const { tillatFritekst } = this.props;
 
@@ -167,13 +178,7 @@ class ListevelgerFlervalg extends Component {
   };
 
   render() {
-    const {
-      placeholder,
-      label,
-      muligeValg,
-      disabled,
-      data_cy,
-    } = this.props;
+    const { placeholder, label, muligeValg, disabled, data_cy } = this.props;
 
     const { valgteElementer } = this.state;
 
@@ -205,12 +210,16 @@ class ListevelgerFlervalg extends Component {
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
-            <div className="knapp__ikon"><Ikon kind="tilsette" size="24" /></div>
+            <div className="knapp__ikon">
+              <Ikon kind="tilsette" size="24" />
+            </div>
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
         </div>
         <datalist id={datalistID}>
-          {muligeValg.map(valg => <option key={uuid()} value={KV.objektTilTerm(valg)} />)}
+          {muligeValg.map((valg) => (
+            <option key={uuid()} value={KV.objektTilTerm(valg)} />
+          ))}
         </datalist>
       </div>
     );
@@ -231,11 +240,11 @@ ListevelgerFlervalg.propTypes = {
 };
 
 ListevelgerFlervalg.defaultProps = {
-  className: '',
+  className: "",
   defaultElementer: [],
   feil: undefined,
   onChange: undefined,
-  placeholder: '',
+  placeholder: "",
   data_cy: undefined,
 };
 

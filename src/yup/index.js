@@ -1,7 +1,4 @@
-import { lagYupToReduxformErrorMapper } from './lagYupToReduxformErrorMapper';
-import * as Skjemaer from './skjemaer';
+import { lagYupToReduxformErrorMapper } from "./lagYupToReduxformErrorMapper";
+import * as Skjemaer from "./skjemaer";
 
-export {
-  lagYupToReduxformErrorMapper,
-  Skjemaer,
-};
+export { lagYupToReduxformErrorMapper, Skjemaer };

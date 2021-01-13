@@ -1,11 +1,11 @@
-import MKV from '../../../../melosyskodeverk';
+import MKV from "../../../../melosyskodeverk";
 
-import * as KV from '../../../../kodeverk';
+import * as KV from "../../../../kodeverk";
 
-import Steg from '../../../../felleskomponenter/stegvelger/stegMotor/steg';
-import { FANE_STATUS, STEG } from '../../../../felleskomponenter/stegvelger/stegMotor/typer';
-import VurderingArtikkel16Anmodning from '../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16Anmodning';
-import { hentVilkar, hentBegrunnelser } from '../../../../regler/vilkar';
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import VurderingArtikkel16Anmodning from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16Anmodning";
+import { hentVilkar, hentBegrunnelser } from "../../../../regler/vilkar";
 
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -17,13 +17,15 @@ class Artikkel16Anmodning extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_16_ANMODNING;
-    this.tittel = 'Artikkel 16.1';
+    this.tittel = "Artikkel 16.1";
     this.komponent = VurderingArtikkel16Anmodning;
-    this.samleRelevanteData = _propsLight => ({
+    this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => {
-      const muligeBegrunnelseValg = _propsLight.erIDirekteTilArtikkel16Flyt ? MKV.KTObjects.begrunnelser.art16_1_anmodning_uten_art12 : MKV.KTObjects.begrunnelser.art16_1_anmodning;
+    this.beregnRelevantUI = (_propsLight) => {
+      const muligeBegrunnelseValg = _propsLight.erIDirekteTilArtikkel16Flyt
+        ? MKV.KTObjects.begrunnelser.art16_1_anmodning_uten_art12
+        : MKV.KTObjects.begrunnelser.art16_1_anmodning;
 
       return {
         muligeBegrunnelseValg,
@@ -39,7 +41,7 @@ class Artikkel16Anmodning extends Steg {
       lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers.lagreVilkarHandler,
       lagreAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.lagreAnmodningsperioderHandler,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
@@ -57,14 +59,17 @@ class Artikkel16Anmodning extends Steg {
 
   static anmodningErSendtUtland({ anmodningsperioder }) {
     return (
-      anmodningsperioder.length > 0 &&
-      anmodningsperioder.every(anmodningsperiode => anmodningsperiode.sendtUtland)
+      anmodningsperioder.length > 0 && anmodningsperioder.every((anmodningsperiode) => anmodningsperiode.sendtUtland)
     );
   }
 
   static harAvklaring({ anmodningsperioder, vilkar }) {
-    const unntakFraBestemmelseErSatt = anmodningsperioder.some(anmodningsperiode => anmodningsperiode.unntakFraBestemmelse);
-    const minstEnBegrunnelseErValgt = hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar).length > 0;
+    const unntakFraBestemmelseErSatt = anmodningsperioder.some(
+      (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse
+    );
+    const minstEnBegrunnelseErValgt =
+      hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar).length >
+      0;
 
     return unntakFraBestemmelseErSatt && minstEnBegrunnelseErValgt;
   }

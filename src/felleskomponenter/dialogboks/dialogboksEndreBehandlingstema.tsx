@@ -1,22 +1,21 @@
-import React, { ChangeEventHandler, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import PT from 'prop-types';
-import { RootState } from 'AppTypes';
-import { ThunkDispatch } from 'redux-thunk';
-import { Action } from 'redux';
-import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
-import { behandlingstemaSelectors } from '../../ducks/behandlingstema';
-import { fagsakSelectors } from '../../ducks/fagsaker';
-import { navigeringOperations } from '../../ducks/navigering';
-import Knapperad from '../knapperad';
+import React, { ChangeEventHandler, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import PT from "prop-types";
+import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingstemaSelectors } from "../../ducks/behandlingstema";
+import { fagsakSelectors } from "../../ducks/fagsaker";
+import { navigeringOperations } from "../../ducks/navigering";
+import Knapperad from "../knapperad";
 
-import * as Mui from '../ui';
-import * as Api from '../../services/api';
-import * as Nav from '../../utils/navFrontend';
-import * as Routing from '../../routing';
+import * as Mui from "../ui";
+import * as Api from "../../services/api";
+import * as Nav from "../../utils/navFrontend";
+import * as Routing from "../../routing";
 
-import './dialogboksEndreBehandlingstema.css';
-
+import "./dialogboksEndreBehandlingstema.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -34,7 +33,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface Props { avbryt: () => void }
+interface Props {
+  avbryt: () => void;
+}
 
 function DialogboksEndreBehandlingstema({
   avbryt,
@@ -44,35 +45,38 @@ function DialogboksEndreBehandlingstema({
   saksnummer,
   tilAnnenSide,
   ...props
-} : Props & PropsFromRedux) {
-  const [behandlingstema, setBehandlingstema] = useState('');
-  const [generellFeil, setGenerellFeil] = useState('');
+}: Props & PropsFromRedux) {
+  const [behandlingstema, setBehandlingstema] = useState("");
+  const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingstemaEndret, setBehandlingstemaEndret] = useState(false);
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingstema);
 
-  const velgBehandlingstemaHandle: ChangeEventHandler<HTMLInputElement> = event => {
+  const velgBehandlingstemaHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
     setBehandlingstema(event.target.value);
   };
 
   const endreBehandlingstemaHandle = () => {
-    Api.Behandlinger.tema.endreBehandlingstema(behandlingID, behandlingstema).then(() => {
-      setBehandlingstemaEndret(true);
-      hentBehandling(behandlingID);
-      const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
-      if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
-    }).catch(() => {
-      setGenerellFeil('Behandlingstema ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon');
-    });
+    Api.Behandlinger.tema
+      .endreBehandlingstema(behandlingID, behandlingstema)
+      .then(() => {
+        setBehandlingstemaEndret(true);
+        hentBehandling(behandlingID);
+        const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
+        if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
+      })
+      .catch(() => {
+        setGenerellFeil(
+          "Behandlingstema ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon"
+        );
+      });
   };
 
   const renderBehandlingstemaEndret = () => (
     <div className="dialogboks">
       <div className="innhold">
-        <Nav.AlertStripe type="suksess">
-          Behandlingstemaet har blitt endret og oppdatert.
-        </Nav.AlertStripe>
+        <Nav.AlertStripe type="suksess">Behandlingstemaet har blitt endret og oppdatert.</Nav.AlertStripe>
       </div>
-      <div style={{ float: 'right' }}>
+      <div style={{ float: "right" }}>
         <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
       </div>
     </div>
@@ -80,8 +84,7 @@ function DialogboksEndreBehandlingstema({
 
   const renderEndreBehandlingstema = () => (
     <div className="dialogboks">
-      { !generellFeil
-        ?
+      {!generellFeil ? (
         <div>
           <Nav.typo.Systemtittel className="overskrift">Velg nytt behandlingstema</Nav.typo.Systemtittel>
           <div className="innhold">
@@ -90,7 +93,7 @@ function DialogboksEndreBehandlingstema({
               label=""
               disableForsteValg={!!behandlingstema}
               value={behandlingstema}
-              koder={muligeBehandlingstema.filter(tema => tema.kode !== props.behandlingstema)}
+              koder={muligeBehandlingstema.filter((tema) => tema.kode !== props.behandlingstema)}
             />
           </div>
           <div>
@@ -104,18 +107,16 @@ function DialogboksEndreBehandlingstema({
             />
           </div>
         </div>
-        :
+      ) : (
         <div>
           <div className="innhold">
-            <Nav.AlertStripe type="feil">
-              {generellFeil}
-            </Nav.AlertStripe>
+            <Nav.AlertStripe type="feil">{generellFeil}</Nav.AlertStripe>
           </div>
-          <div style={{ float: 'right' }}>
+          <div style={{ float: "right" }}>
             <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
           </div>
         </div>
-      }
+      )}
     </div>
   );
 
@@ -126,15 +127,12 @@ function DialogboksEndreBehandlingstema({
       contentLabel="Velg nytt behandlingstema"
       onRequestClose={avbryt}
       closeButton={false}
-      shouldCloseOnOverlayClick>
-      { behandlingstemaEndret
-        ? renderBehandlingstemaEndret()
-        : renderEndreBehandlingstema()
-      }
+      shouldCloseOnOverlayClick
+    >
+      {behandlingstemaEndret ? renderBehandlingstemaEndret() : renderEndreBehandlingstema()}
     </Nav.Modal>
   );
 }
-
 
 DialogboksEndreBehandlingstema.propTypes = {
   avbryt: PT.func.isRequired,

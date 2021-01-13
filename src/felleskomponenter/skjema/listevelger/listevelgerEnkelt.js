@@ -1,26 +1,18 @@
-import React from 'react';
-import PT from 'prop-types';
-import * as Nav from '../../../utils/navFrontend';
+import React from "react";
+import PT from "prop-types";
+import * as Nav from "../../../utils/navFrontend";
 
-import * as KV from '../../../kodeverk';
+import * as KV from "../../../kodeverk";
 
-import './listevelger.css';
+import "./listevelger.css";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 /** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
  * inn sin egen verdi.
  */
-const ListevelgerEnkelt = ({
-  input,
-  label,
-  meta,
-  muligeValg,
-  placeholder,
-  disabled,
-  ...rest
-}) => {
-  const feil = (meta.invalid && meta.touched) ? { feilmelding: meta.error.melding } : null;
+const ListevelgerEnkelt = ({ input, label, meta, muligeValg, placeholder, disabled, ...rest }) => {
+  const feil = meta.invalid && meta.touched ? { feilmelding: meta.error.melding } : null;
   const inputProps = {
     ...input,
     ...rest,
@@ -41,7 +33,9 @@ const ListevelgerEnkelt = ({
         disabled={disabled}
       />
       <datalist id={`dataliste-${inputProps.name}`}>
-        {muligeValg.map(valg => <option key={uuid()} value={KV.objektTilTerm(valg)} />)}
+        {muligeValg.map((valg) => (
+          <option key={uuid()} value={KV.objektTilTerm(valg)} />
+        ))}
       </datalist>
     </div>
   );
@@ -60,11 +54,15 @@ ListevelgerEnkelt.propTypes = {
 };
 
 ListevelgerEnkelt.defaultProps = {
-  children: <option disabled value="0">ingen valg tilgjengelig</option>,
+  children: (
+    <option disabled value="0">
+      ingen valg tilgjengelig
+    </option>
+  ),
   input: undefined,
   errorMessage: undefined,
   muligeValg: [],
-  placeholder: '',
+  placeholder: "",
   meta: undefined,
 };
 

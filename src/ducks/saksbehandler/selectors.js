@@ -5,14 +5,14 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 export const SaksbehandlerSelector = createSelector(
-  state => state.saksbehandler.data,
-  saksbehandler => saksbehandler
+  (state) => state.saksbehandler.data,
+  (saksbehandler) => saksbehandler
 );
 
 export const SaksbehandlerStatusSelector = createSelector(
-  state => state.saksbehandler.status,
-  saksbehandler => saksbehandler
+  (state) => state.saksbehandler.status,
+  (saksbehandler) => saksbehandler
 );

@@ -1,9 +1,5 @@
-import * as Actions from './actions';
+import * as Actions from "./actions";
 
-export const visMenypanel = () => async dispatch => (
-  dispatch(Actions.oppdaterVisMenypanel({ synlig: true }))
-);
+export const visMenypanel = () => async (dispatch) => dispatch(Actions.oppdaterVisMenypanel({ synlig: true }));
 
-export const skjulMenypanel = () => async dispatch => (
-  dispatch(Actions.oppdaterVisMenypanel({ synlig: false }))
-);
+export const skjulMenypanel = () => async (dispatch) => dispatch(Actions.oppdaterVisMenypanel({ synlig: false }));

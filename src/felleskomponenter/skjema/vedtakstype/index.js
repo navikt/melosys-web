@@ -1,3 +1,3 @@
-import Vedtakstype from './vedtakstype';
+import Vedtakstype from "./vedtakstype";
 
 export default Vedtakstype;

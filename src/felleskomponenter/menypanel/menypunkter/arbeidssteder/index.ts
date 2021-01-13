@@ -1,3 +1,3 @@
-import Arbeidssteder from './arbeidssteder';
+import Arbeidssteder from "./arbeidssteder";
 
 export default Arbeidssteder;

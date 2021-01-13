@@ -1,3 +1,3 @@
-import { hent, send } from './svar';
+import { hent, send } from "./svar";
 
 export { hent, send };

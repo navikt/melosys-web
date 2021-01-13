@@ -1,6 +1,6 @@
-import { RootState } from 'AppTypes';
+import { RootState } from "AppTypes";
 
-import { STATUS } from '../../services/utils';
+import { STATUS } from "../../services/utils";
 
 /**
  * Genererer default state for redux til testing, samt tillater å sette individuelle states.
@@ -13,12 +13,12 @@ function lagState({
   },
   router = {
     location: {
-      pathname: '',
-      state: '',
-      search: '',
-      hash: '',
+      pathname: "",
+      state: "",
+      search: "",
+      hash: "",
     },
-    action: 'PUSH',
+    action: "PUSH",
   },
   anmodningomunntak = { status: STATUS.OK, data: {} },
   anmodningsperioder = { status: STATUS.OK, data: [] },
@@ -51,7 +51,7 @@ function lagState({
   videresending = { status: STATUS.OK, data: {} },
   vilkar = { status: STATUS.OK, data: [] },
 }: Partial<RootState>): RootState {
-  return ({
+  return {
     form,
     router,
     anmodningomunntak,
@@ -84,7 +84,7 @@ function lagState({
     vedtak,
     videresending,
     vilkar,
-  });
+  };
 }
 
 export default lagState;

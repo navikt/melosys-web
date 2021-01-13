@@ -1,3 +1,3 @@
-import ArbeidsforholdNorgeListe from './arbeidsforholdNorgeListe';
+import ArbeidsforholdNorgeListe from "./arbeidsforholdNorgeListe";
 
 export default ArbeidsforholdNorgeListe;

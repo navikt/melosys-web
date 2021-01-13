@@ -1,6 +1,6 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import { Periode } from './periode';
+import { Periode } from "./periode";
 
 const TimerTimelonnetLinjePropType = PT.shape({
   timelonnetPeriode: Periode,
@@ -10,7 +10,4 @@ const TimerTimelonnetLinjePropType = PT.shape({
 
 const TimerTimelonnetPropType = PT.arrayOf(TimerTimelonnetLinjePropType);
 
-export {
-  TimerTimelonnetLinjePropType as TimerTimelonnetLinje,
-  TimerTimelonnetPropType as TimerTimelonnet,
-};
+export { TimerTimelonnetLinjePropType as TimerTimelonnetLinje, TimerTimelonnetPropType as TimerTimelonnet };

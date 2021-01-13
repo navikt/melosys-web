@@ -1,3 +1,3 @@
-import BehandlingsgrunnlagFeilmeldinger from './behandlingsgrunnlagFeilmeldinger';
+import BehandlingsgrunnlagFeilmeldinger from "./behandlingsgrunnlagFeilmeldinger";
 
 export default BehandlingsgrunnlagFeilmeldinger;

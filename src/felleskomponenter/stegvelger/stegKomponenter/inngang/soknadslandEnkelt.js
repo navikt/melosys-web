@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
-import PT from 'prop-types';
-import Ikon from 'melosys-ikoner-assets';
-import * as Nav from '../../../../utils/navFrontend';
-import * as MPT from '../../../../proptypes';
-import * as KV from '../../../../kodeverk';
+import React, { useState } from "react";
+import PT from "prop-types";
+import Ikon from "melosys-ikoner-assets";
+import * as Nav from "../../../../utils/navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
 
-import SoknadslandHandlingSlett from './soknadslandHandlingSlett';
+import SoknadslandHandlingSlett from "./soknadslandHandlingSlett";
 
 const EnkeltLand = ({ landkodeObjekt, settSlettIntensjon, redigerbart }) => (
   <div className="soknadsland__linje">
-    <div className="linje__land">{KV.objektTilTerm(landkodeObjekt)} ({KV.objektTilKode(landkodeObjekt)})</div>
-    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Ikon kind="minus" />Fjern</Nav.Knapp></div>
+    <div className="linje__land">
+      {KV.objektTilTerm(landkodeObjekt)} ({KV.objektTilKode(landkodeObjekt)})
+    </div>
+    <div className="linje__knapper">
+      <Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon}>
+        <Ikon kind="minus" />
+        Fjern
+      </Nav.Knapp>
+    </div>
   </div>
 );
 
@@ -24,12 +31,10 @@ function SoknadslandEnkelt(props) {
   const [erSlettingIntensjon, settSlettIntensjon] = useState(false);
 
   const avbryt = () => settSlettIntensjon(false);
-  const {
-    landkodeObjekt, bekreftFjern, soknadslandBegrunnelser, redigerbart,
-  } = props;
+  const { landkodeObjekt, bekreftFjern, soknadslandBegrunnelser, redigerbart } = props;
   return (
     <div>
-      {erSlettingIntensjon ?
+      {erSlettingIntensjon ? (
         <SoknadslandHandlingSlett
           soknadslandBegrunnelser={soknadslandBegrunnelser}
           landkodeObjekt={landkodeObjekt}
@@ -37,13 +42,13 @@ function SoknadslandEnkelt(props) {
           avbryt={avbryt}
           redigerbart={redigerbart}
         />
-        :
+      ) : (
         <EnkeltLand
           landkodeObjekt={landkodeObjekt}
           settSlettIntensjon={() => settSlettIntensjon(true)}
           redigerbart={redigerbart}
         />
-      }
+      )}
     </div>
   );
 }

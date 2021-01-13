@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, change } from 'redux-form';
-import { withRouter } from 'react-router-dom';
-import PT from 'prop-types';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { reduxForm, change } from "redux-form";
+import { withRouter } from "react-router-dom";
+import PT from "prop-types";
 
-import * as KV from '../../../kodeverk';
-import * as Nav from '../../../utils/navFrontend';
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../utils/navFrontend";
 
-import './sokskjema.css';
+import "./sokskjema.css";
 
 class SokSkjema extends Component {
   UNSAFE_componentWillMount() {
@@ -15,30 +15,26 @@ class SokSkjema extends Component {
     this.oppdaterLokalSokState(fnr);
   }
 
-  vedSokSubmit = form => {
-    const {
-      lagreSokString,
-      handleSubmit,
-      history,
-    } = this.props;
+  vedSokSubmit = (form) => {
+    const { lagreSokString, handleSubmit, history } = this.props;
     const { sokStreng } = this.state;
 
     lagreSokString(sokStreng);
     handleSubmit(form);
 
-    sessionStorage.setItem('sokefrase', sokStreng);
-    history.push('/sok');
+    sessionStorage.setItem("sokefrase", sokStreng);
+    history.push("/sok");
   };
 
-  vedEndretSokFelt = event => {
+  vedEndretSokFelt = (event) => {
     this.setState({ sokStreng: event.target.value });
   };
 
-  oppdaterLokalSokState = sokStreng => {
+  oppdaterLokalSokState = (sokStreng) => {
     this.setState({ sokStreng });
   };
 
-  render () {
+  render() {
     return (
       <Nav.Panel>
         <Nav.typo.Systemtittel>Søk etter sak</Nav.typo.Systemtittel>
@@ -66,13 +62,13 @@ SokSkjema.propTypes = {
   history: PT.object.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  lagreSokString: verdi => dispatch(change(KV.Form.SOK_ETTER_SAK, 'sokStreng', verdi)),
+const mapDispatchToProps = (dispatch) => ({
+  lagreSokString: (verdi) => dispatch(change(KV.Form.SOK_ETTER_SAK, "sokStreng", verdi)),
 });
 
 const sokSkjemaForm = reduxForm({
   form: KV.Form.SOK_ETTER_SAK,
-  initialValues: { sokFelt: '' },
+  initialValues: { sokFelt: "" },
   onSubmit: () => {},
 })(SokSkjema);
 

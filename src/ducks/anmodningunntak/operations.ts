@@ -1,18 +1,22 @@
-import { AppThunk, RootState } from 'AppTypes';
-import { AnmodningOmUnntakBestilling } from 'Domene';
-import { ThunkDispatch } from 'redux-thunk';
+import { AppThunk, RootState } from "AppTypes";
+import { AnmodningOmUnntakBestilling } from "Domene";
+import { ThunkDispatch } from "redux-thunk";
 
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
-import * as Actions from './actions';
-import { modalerOperations } from '../modaler';
-import { navigeringOperations } from '../navigering';
-import * as DucksUtils from '../utils';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
+import * as Actions from "./actions";
+import { modalerOperations } from "../modaler";
+import { navigeringOperations } from "../navigering";
+import * as DucksUtils from "../utils";
 
-export function bestill(behandlingID: number, bestilling: AnmodningOmUnntakBestilling): AppThunk<Promise<Types.Action>, Types.Action> {
+export function bestill(
+  behandlingID: number,
+  bestilling: AnmodningOmUnntakBestilling
+): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
-    () => Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestilling), {
+    () => Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestilling),
+    {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
@@ -32,5 +36,5 @@ export function bestill(behandlingID: number, bestilling: AnmodningOmUnntakBesti
 }
 
 export function reset(): AppThunk<Types.Action, Types.Action> {
-  return dispatch => dispatch(Actions.reset());
+  return (dispatch) => dispatch(Actions.reset());
 }

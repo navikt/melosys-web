@@ -1,37 +1,34 @@
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
-import PT from 'prop-types';
+import React, { Fragment } from "react";
+import { connect } from "react-redux";
+import PT from "prop-types";
 
-import * as MPT from '../../../../proptypes';
-import * as KV from '../../../../kodeverk';
-import * as Mui from '../../../ui';
-import * as Ikoner from '../../../../resources/images';
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../ui";
+import * as Ikoner from "../../../../resources/images";
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
-import Organisasjon from '../arbeidsgiver/organisasjon';
-import Arbeidsforholdene from '../arbeidsgiver/arbeidsforhold';
-import Inntekt from '../arbeidsgiver/inntekt';
+import Organisasjon from "../arbeidsgiver/organisasjon";
+import Arbeidsforholdene from "../arbeidsgiver/arbeidsforhold";
+import Inntekt from "../arbeidsgiver/inntekt";
 
-import './arbeidsgivereNorge.css';
+import "./arbeidsgivereNorge.css";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
-export const ArbeidsgivereEnkeltNorge = props => {
-  const {
-    kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel,
-  } = props;
+export const ArbeidsgivereEnkeltNorge = (props) => {
+  const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel } = props;
 
   const seksjoner = (
     <Fragment>
-      <Organisasjon
-        organisasjon={organisasjon}
-        className="organisasjonSeksjon"
-        visOrgnr
-        visAdresseTittel={false}
-      />
+      <Organisasjon organisasjon={organisasjon} className="organisasjonSeksjon" visOrgnr visAdresseTittel={false} />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
-      <Mui.Undertittel ikon={Ikoner.Inntekt} tekst={KV.Menypunkter.ArbeidsforholdOgInntekt.undertitler.inntekt} understrek />
+      <Mui.Undertittel
+        ikon={Ikoner.Inntekt}
+        tekst={KV.Menypunkter.ArbeidsforholdOgInntekt.undertitler.inntekt}
+        understrek
+      />
       {kilde && <Inntekt inntektListe={inntektListe} />}
     </Fragment>
   );
@@ -43,23 +40,19 @@ export const ArbeidsgivereEnkeltNorge = props => {
       lukkTekst="Skjul info"
       border
     >
-      { seksjoner }
+      {seksjoner}
     </Mui.LesMerPanel>
   );
 
   const seksjonerIkkeWrappetIPanel = (
     <Fragment>
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} />
-      { seksjoner }
+      {seksjoner}
     </Fragment>
   );
 
   return (
-    <div className="arbeidsgivereEnkeltNorge">
-      {
-        wrapIPanel ? seksjonerWrappetIPanel : seksjonerIkkeWrappetIPanel
-      }
-    </div>
+    <div className="arbeidsgivereEnkeltNorge">{wrapIPanel ? seksjonerWrappetIPanel : seksjonerIkkeWrappetIPanel}</div>
   );
 };
 
@@ -76,18 +69,16 @@ ArbeidsgivereEnkeltNorge.defaultProps = {
   wrapIPanel: false,
 };
 
-export const ArbeidsgivereNorge = props => {
-  const {
-    arbeidsgivereNorge,
-  } = props;
+export const ArbeidsgivereNorge = (props) => {
+  const { arbeidsgivereNorge } = props;
 
   const wrapIPanel = arbeidsgivereNorge.length > 1;
 
   return (
     <div className="arbeidsgivereNorge panelSeksjon">
-      {
-        arbeidsgivereNorge.map(arbeidsgiver => <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} wrapIPanel={wrapIPanel} />)
-      }
+      {arbeidsgivereNorge.map((arbeidsgiver) => (
+        <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} wrapIPanel={wrapIPanel} />
+      ))}
     </div>
   );
 };
@@ -96,7 +87,7 @@ ArbeidsgivereNorge.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
 });
 

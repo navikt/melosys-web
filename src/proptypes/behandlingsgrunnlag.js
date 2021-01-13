@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
-import { ArbeidUtland } from './arbeidUtland';
-import { Periode } from './periode';
+import PT from "prop-types";
+import { ArbeidUtland } from "./arbeidUtland";
+import { Periode } from "./periode";
 
 const JuridiskArbeidsgiverNorgePropType = PT.shape({
   andelKontrakterINorge: PT.number,
@@ -17,24 +17,28 @@ const BostedPropType = PT.shape({
   antallMaanederINorge: PT.number,
   intensjonOmRetur: PT.bool,
 });
-const ForetakUtlandPropType = PT.arrayOf(PT.shape({
-  adresse: PT.shape({
-    gatenavn: PT.string,
-    husnummer: PT.string,
-    postnummer: PT.string,
-    poststed: PT.string,
-    region: PT.string,
-  }),
-  navn: PT.string,
-  orgnr: PT.string,
-}));
-const MaritimtArbeidPropType = PT.arrayOf(PT.shape({
-  fartsomradeKode: PT.string,
-  flaggLandkode: PT.string,
-  installasjonsLandkode: PT.string,
-  navn: PT.string,
-  territorialfarvann: PT.string,
-}));
+const ForetakUtlandPropType = PT.arrayOf(
+  PT.shape({
+    adresse: PT.shape({
+      gatenavn: PT.string,
+      husnummer: PT.string,
+      postnummer: PT.string,
+      poststed: PT.string,
+      region: PT.string,
+    }),
+    navn: PT.string,
+    orgnr: PT.string,
+  })
+);
+const MaritimtArbeidPropType = PT.arrayOf(
+  PT.shape({
+    fartsomradeKode: PT.string,
+    flaggLandkode: PT.string,
+    installasjonsLandkode: PT.string,
+    navn: PT.string,
+    territorialfarvann: PT.string,
+  })
+);
 const OppholdUtlandPropType = PT.shape({
   ektefelleEllerBarnINorge: PT.bool,
   oppholdsPeriode: Periode,
@@ -44,17 +48,21 @@ const OppholdUtlandPropType = PT.shape({
 });
 const PersonOpplysningerPropType = PT.shape({
   medfolgendeFamilie: PT.arrayOf(PT.string),
-  utenlandskIdent: PT.arrayOf(PT.shape({
-    ident: PT.string,
-    landkode: PT.string,
-  })),
+  utenlandskIdent: PT.arrayOf(
+    PT.shape({
+      ident: PT.string,
+      landkode: PT.string,
+    })
+  ),
 });
 const SelvstendigArbeidPropType = PT.shape({
   erSelvstendig: PT.bool,
-  selvstendigForetak: PT.arrayOf(PT.shape({
-    fortsetterEtterArbeidIUtlandet: PT.bool,
-    orgnr: PT.string,
-  })),
+  selvstendigForetak: PT.arrayOf(
+    PT.shape({
+      fortsetterEtterArbeidIUtlandet: PT.bool,
+      orgnr: PT.string,
+    })
+  ),
 });
 const SoeknadslandPropType = PT.shape({
   landkoder: PT.arrayOf(PT.string),

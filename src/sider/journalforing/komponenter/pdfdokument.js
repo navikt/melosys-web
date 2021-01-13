@@ -1,17 +1,17 @@
 /* eslint react/no-multi-comp:off */
-import React, { Component } from 'react';
-import PT from 'prop-types';
-import { Document, Page, pdfjs } from 'react-pdf';
-import * as Utils from '../../../utils';
-import * as Api from '../../../services/api';
+import React, { Component } from "react";
+import PT from "prop-types";
+import { Document, Page, pdfjs } from "react-pdf";
+import * as Utils from "../../../utils";
+import * as Api from "../../../services/api";
 
-import './pdfdokument.css';
+import "./pdfdokument.css";
 
-const pdfjsWorker = import('pdfjs-dist/build/pdf.worker.entry');
+const pdfjsWorker = import("pdfjs-dist/build/pdf.worker.entry");
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 /** For å oppnå full bredde innenfor div-kontainer må
  * vi plassere PDF-komponenten(pdf-js) i en wrapper siden pdf-js ikke støtter prosentvis bredde (kun px).
@@ -31,14 +31,13 @@ class PDFViser extends Component {
 
     return (
       <div className="pdfviser">
-        <Document
-          file={pdfDokument}
-          onLoadSuccess={this.onLoadSuccess}
-        >
-          { pageArray.map((item, index) => (
+        <Document file={pdfDokument} onLoadSuccess={this.onLoadSuccess}>
+          {pageArray.map((item, index) => (
             <div key={uuid()} id={`section-${index + 1}`} className="pdfviser__side">
               <Page width={this.props.wrapperDivSize} pageNumber={index + 1} />
-              <div className="pdfviser__sideinfo">side {index + 1} av { pageArray.length}</div>
+              <div className="pdfviser__sideinfo">
+                side {index + 1} av {pageArray.length}
+              </div>
             </div>
           ))}
         </Document>
@@ -64,19 +63,21 @@ PDFViser.defaultProps = {
 class PDFDokument extends Component {
   state = { width: null };
 
-  componentDidMount () {
+  componentDidMount() {
     this.setDivSize();
-    window.addEventListener('resize', this.setDivSizeThrottled);
+    window.addEventListener("resize", this.setDivSizeThrottled);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const { journalpostID, dokumentID } = this.props;
     const { width } = this.state;
-    return ((journalpostID !== nextProps.journalpostID) || (dokumentID !== nextProps.dokumentID) || (width !== nextState.width));
+    return (
+      journalpostID !== nextProps.journalpostID || dokumentID !== nextProps.dokumentID || width !== nextState.width
+    );
   }
 
-  componentWillUnmount () {
-    window.removeEventListener('resize', this.setDivSizeThrottled);
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.setDivSizeThrottled);
   }
 
   setDivSize = () => {
@@ -90,10 +91,14 @@ class PDFDokument extends Component {
     const { journalpostID, dokumentID } = this.props;
     const pdfDokumentURI = Api.Dokumenter.pdf.uriPath(journalpostID, dokumentID);
     return (
-      <div
-        id="row"
-        className="pdfdokument">
-        <div id="pdfWrapper" className="dokument__pdfwrapper" ref={ref => { this.pdfWrapper = ref; }}>
+      <div id="row" className="pdfdokument">
+        <div
+          id="pdfWrapper"
+          className="dokument__pdfwrapper"
+          ref={(ref) => {
+            this.pdfWrapper = ref;
+          }}
+        >
           <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokumentURI} />
         </div>
       </div>

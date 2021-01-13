@@ -1,38 +1,31 @@
-import React, { useState } from 'react';
-import { getFormValues, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
-import PT from 'prop-types';
-import * as EKV from 'eessi-kodeverk';
+import React, { useState } from "react";
+import { getFormValues, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import PT from "prop-types";
+import * as EKV from "eessi-kodeverk";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import * as KV from '../../../kodeverk';
-import * as Hooks from '../../../hooks';
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
+import * as KV from "../../../kodeverk";
+import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from '../../pdfLenkeListe';
-import Mottakerinstitusjonvelger from '../../mottakerinstitusjonvelger';
+import PdfLenkeListe from "../../pdfLenkeListe";
+import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
-import './vurderingVideresend.css';
-import * as Skjema from '../../skjema';
+import "./vurderingVideresend.css";
+import * as Skjema from "../../skjema";
 
-export const VurderingVideresend = ({
-  redigerbart,
-  behandlingID,
-  bostedsland,
-  handleSubmit,
-  form,
-  formValues,
-}) => {
+export const VurderingVideresend = ({ redigerbart, behandlingID, bostedsland, handleSubmit, form, formValues }) => {
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis orienteringsbrev',
+      navn: "Forhåndsvis orienteringsbrev",
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
@@ -40,7 +33,7 @@ export const VurderingVideresend = ({
       },
     },
     {
-      navn: 'Forhåndsvis SED A008',
+      navn: "Forhåndsvis SED A008",
       type: EKV.Koder.sedtyper.A008,
       erSed: true,
     },
@@ -88,13 +81,7 @@ export const VurderingVideresend = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6">
-            {
-              redigerbart &&
-              <PdfLenkeListe
-                dokumenter={pdfDokumenter}
-                behandlingID={behandlingID}
-              />
-            }
+            {redigerbart && <PdfLenkeListe dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -121,8 +108,8 @@ VurderingVideresend.propTypes = {
 
 VurderingVideresend.defaultProps = {
   bostedsland: {
-    kode: '',
-    term: '',
+    kode: "",
+    term: "",
   },
   formValues: {},
 };
@@ -135,14 +122,14 @@ const VurderingVideresendForm = reduxForm({
   validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_videresend),
 })(VurderingVideresend);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   formValues: getFormValues(KV.Form.VURDERING_VIDERESEND)(state),
   initialValues: {
-    mottakerinstitusjon: '',
+    mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
-    orienteringsbrevFritekst: '',
+    orienteringsbrevFritekst: "",
   },
 });
 

@@ -1,27 +1,27 @@
-import React, { FocusEventHandler, MouseEventHandler, ChangeEventHandler, useState, useEffect } from 'react';
-import { Organisasjon } from 'Domene';
+import React, { FocusEventHandler, MouseEventHandler, ChangeEventHandler, useState, useEffect } from "react";
+import { Organisasjon } from "Domene";
 
-import * as Nav from '../../../../utils/navFrontend';
-import * as Mui from '../../../ui';
-import * as Utils from '../../../../utils';
-import * as Api from '../../../../services/api';
-import * as Types from './types';
+import * as Nav from "../../../../utils/navFrontend";
+import * as Mui from "../../../ui";
+import * as Utils from "../../../../utils";
+import * as Api from "../../../../services/api";
+import * as Types from "./types";
 
-import OrganisasjonsAdresse from '../../../adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 
-import './kontaktopplysninger.css';
+import "./kontaktopplysninger.css";
 
 export interface Feilmelding {
-  feilmelding: string,
+  feilmelding: string;
 }
 
 interface KontaktOpplysningerProps {
-  onChange: (kontaktopplysning: Types.KontaktOpplysning) => void,
-  kontaktopplysninger: Types.KontaktOpplysning,
-  redigerbart: boolean,
-  onKontaktnavnInputBlur: FocusEventHandler<HTMLInputElement>,
-  onKontaktorgnrInputBlur: FocusEventHandler<HTMLInputElement>,
-  onSlettKnappClick: MouseEventHandler<HTMLButtonElement>,
+  onChange: (kontaktopplysning: Types.KontaktOpplysning) => void;
+  kontaktopplysninger: Types.KontaktOpplysning;
+  redigerbart: boolean;
+  onKontaktnavnInputBlur: FocusEventHandler<HTMLInputElement>;
+  onKontaktorgnrInputBlur: FocusEventHandler<HTMLInputElement>;
+  onSlettKnappClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const KontaktOpplysninger = ({
@@ -51,14 +51,14 @@ export const KontaktOpplysninger = ({
     const org = await finnOrganisasjon(kontaktorgnr);
 
     if (org) setSokeResultat(org);
-    else setOrgnrFeilmelding({ feilmelding: 'Kunne ikke finne organisasjon' });
+    else setOrgnrFeilmelding({ feilmelding: "Kunne ikke finne organisasjon" });
 
     return org;
   };
 
   const validerOrgnr = (kontaktorgnr: string) => {
     if (!Utils.organisasjon.erOrgnrGyldig(kontaktorgnr)) {
-      setOrgnrFeilmelding({ feilmelding: 'Ugyldig orgnr' });
+      setOrgnrFeilmelding({ feilmelding: "Ugyldig orgnr" });
       return false;
     }
     return true;
@@ -67,8 +67,7 @@ export const KontaktOpplysninger = ({
   const validerOgFinnOrganisasjon = () => {
     const { kontaktorgnr } = kontaktopplysninger;
 
-    if (kontaktorgnr &&
-      validerOrgnr(kontaktorgnr)) {
+    if (kontaktorgnr && validerOrgnr(kontaktorgnr)) {
       finnOgVisOrganisasjon(kontaktorgnr);
     }
   };
@@ -80,17 +79,17 @@ export const KontaktOpplysninger = ({
     }
   }, [kontaktopplysninger.kontaktorgnr]);
 
-  const kontaktOrgnrChangeHandler: ChangeEventHandler<HTMLInputElement> = e => {
+  const kontaktOrgnrChangeHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
     onChange({ ...kontaktopplysninger, kontaktorgnr: e.target.value });
     setSokeResultat(null);
     setOrgnrFeilmelding(undefined);
   };
 
-  const kontaktNavnChangeHandler: ChangeEventHandler<HTMLInputElement> = e => {
+  const kontaktNavnChangeHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
     onChange({ ...kontaktopplysninger, kontaktnavn: e.target.value });
   };
 
-  const kontaktorgnrBlurHandler: FocusEventHandler<HTMLInputElement> = e => {
+  const kontaktorgnrBlurHandler: FocusEventHandler<HTMLInputElement> = (e) => {
     validerOgFinnOrganisasjon();
 
     onKontaktorgnrInputBlur(e);
@@ -104,7 +103,7 @@ export const KontaktOpplysninger = ({
             <Nav.Input
               disabled={!redigerbart}
               onChange={kontaktNavnChangeHandler}
-              value={kontaktopplysninger.kontaktnavn || ''}
+              value={kontaktopplysninger.kontaktnavn || ""}
               onBlur={onKontaktnavnInputBlur}
               label="Kontaktperson"
               placeholder="Skriv inn..."
@@ -118,23 +117,15 @@ export const KontaktOpplysninger = ({
               feil={orgnrFeilmelding}
               onChange={kontaktOrgnrChangeHandler}
               onBlur={kontaktorgnrBlurHandler}
-              value={kontaktopplysninger.kontaktorgnr || ''}
+              value={kontaktopplysninger.kontaktorgnr || ""}
               label="Organisasjonsnummer"
               placeholder="Skriv inn..."
             />
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-      {
-        sokeResultat && <OrganisasjonsAdresse visTittel={false} className="adresse" organisasjon={sokeResultat} />
-      }
-      <Mui.Knapp
-        className="slett__knapp"
-        capitalCase
-        disabled={!redigerbart}
-        mini
-        onClick={onSlettKnappClick}
-      >
+      {sokeResultat && <OrganisasjonsAdresse visTittel={false} className="adresse" organisasjon={sokeResultat} />}
+      <Mui.Knapp className="slett__knapp" capitalCase disabled={!redigerbart} mini onClick={onSlettKnappClick}>
         Slett kontaktopplysninger
       </Mui.Knapp>
     </div>

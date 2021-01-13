@@ -1,35 +1,32 @@
 /* eslint no-alert:off, consistent-return:off */
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { autofill, setSubmitFailed, change, getFormSyncErrors, touch, isValid, getFormValues } from 'redux-form';
-import PT from 'prop-types';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { autofill, setSubmitFailed, change, getFormSyncErrors, touch, isValid, getFormValues } from "redux-form";
+import PT from "prop-types";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as KV from '../../kodeverk';
-import * as Utils from '../../utils';
-import * as Nav from '../../utils/navFrontend';
-import * as Api from '../../services/api';
-import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
+import * as KV from "../../kodeverk";
+import * as Utils from "../../utils";
+import * as Nav from "../../utils/navFrontend";
+import * as Api from "../../services/api";
+import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from "../../constants";
 
-import Sticky from '../../felleskomponenter/sticky';
-import PDFDokument from './komponenter/pdfdokument';
-import JournalforingSED from './komponenter/journalforingsed';
-import JournalforingForm from './komponenter/journalforingform';
-import { queryParamLogger } from '../../utils/queryParamLogger';
+import Sticky from "../../felleskomponenter/sticky";
+import PDFDokument from "./komponenter/pdfdokument";
+import JournalforingSED from "./komponenter/journalforingsed";
+import JournalforingForm from "./komponenter/journalforingform";
+import { queryParamLogger } from "../../utils/queryParamLogger";
 
-import {
-  journalforingOperations,
-  journalforingSelectors,
-} from '../../ducks/journalforing';
-import { formSelectors } from '../../ducks/form';
-import { OrganisasjonOperations } from '../../ducks/organisasjoner';
-import { PersonOperations } from '../../ducks/personer';
-import * as MPT from '../../proptypes';
-import { sokOperations, sokSelectors } from '../../ducks/sok';
+import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
+import { formSelectors } from "../../ducks/form";
+import { OrganisasjonOperations } from "../../ducks/organisasjoner";
+import { PersonOperations } from "../../ducks/personer";
+import * as MPT from "../../proptypes";
+import { sokOperations, sokSelectors } from "../../ducks/sok";
 
-import './journalforing.css';
+import "./journalforing.css";
 
 class Journalforing extends Component {
   state = {
@@ -37,7 +34,7 @@ class Journalforing extends Component {
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
-    queryParamLogger(this.props.location, 'kilde', 'GOSYS');
+    queryParamLogger(this.props.location, "kilde", "GOSYS");
     await this.props.hentJournalOppgave(journalpostID);
   }
 
@@ -45,7 +42,7 @@ class Journalforing extends Component {
     this.props.resetJournalforingState();
   }
 
-  onChangeVedlegg = e => {
+  onChangeVedlegg = (e) => {
     const { value: valgtDokumentID } = e.target;
     this.setState({ valgtDokumentID });
   };
@@ -58,14 +55,14 @@ class Journalforing extends Component {
     this.props.tilForsiden();
   };
 
-  mapFysiskeVedleggsTitlerTilVedlegg = pdf => {
+  mapFysiskeVedleggsTitlerTilVedlegg = (pdf) => {
     const { vedleggsdokumenter } = this.props;
     if (!vedleggsdokumenter || vedleggsdokumenter.length === 0) return [];
     const pdfTitler = Object.values(pdf);
     if (pdfTitler.length === 0) return [];
     return pdfTitler.map((tittel, index) => {
       const { dokumentID, logiskeVedlegg } = vedleggsdokumenter[index];
-      return ({ dokumentID, tittel, logiskeVedlegg });
+      return { dokumentID, tittel, logiskeVedlegg };
     });
   };
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
@@ -74,9 +71,9 @@ class Journalforing extends Component {
    *
    * @returns {object} Objektet som skal sendes videre som payload.
    */
-  vaskDokumentInformasjon = intensjon => {
+  vaskDokumentInformasjon = (intensjon) => {
     /* eslint-disable no-console */
-    console.assert(intensjon, { message: 'intensjon må ha verdi' });
+    console.assert(intensjon, { message: "intensjon må ha verdi" });
     /* eslint-enable no-console */
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
@@ -84,9 +81,14 @@ class Journalforing extends Component {
       journalforing: { hoveddokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, arbeidsgiverID,
+      brukerID,
+      avsenderID,
+      arbeidsgiverID,
       opprettnysak_behandlingstema: behandlingstemaKode,
-      representantID, representantKontaktPerson, representantRepresenterer, avsenderNavn,
+      representantID,
+      representantKontaktPerson,
+      representantRepresenterer,
+      avsenderNavn,
       hoveddokument: { tittel, logiskeVedlegg },
       vedlegg: vedleggSkjema,
       skalTilordnes,
@@ -105,7 +107,7 @@ class Journalforing extends Component {
       hoveddokument: {
         dokumentID,
         tittel,
-        logiskeVedlegg: logiskeVedlegg.filter(lv => lv), // fjern tomme titler
+        logiskeVedlegg: logiskeVedlegg.filter((lv) => lv), // fjern tomme titler
       },
       journalpostID,
       oppgaveID,
@@ -144,10 +146,10 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: {
-        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, avsenderType,
-      },
-      tilordneSak, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, avsenderType },
+      tilordneSak,
+      settJournalforingHensikt,
+      settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
@@ -156,7 +158,9 @@ class Journalforing extends Component {
       saksnummer,
       behandlingstypeKode,
       ingenVurdering,
-      avsenderType: this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
+      avsenderType: this.organisasjonAliaser.includes(avsenderType)
+        ? MKV.Koder.avsendertyper.ORGANISASJON
+        : avsenderType,
       ...vasketJournalforing,
     };
 
@@ -168,7 +172,7 @@ class Journalforing extends Component {
     resetSkjemaFelterForOpprettFagsak();
 
     if (!Utils._isEmpty(this.props.errors)) {
-      settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
+      settFeilFelt("avsenderNavn", "vedleggsTitler", "saksnummer", "behandlingstype");
       return false;
     }
 
@@ -180,9 +184,7 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   opprettFagsak = async () => {
-    const {
-      journalforingSkjemaVerdier, opprettNySak, settJournalforingHensikt, settFeilFelt,
-    } = this.props;
+    const { journalforingSkjemaVerdier, opprettNySak, settJournalforingHensikt, settFeilFelt } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
@@ -204,12 +206,12 @@ class Journalforing extends Component {
 
     if (!Utils._isEmpty(this.props.errors)) {
       settFeilFelt(
-        'journalforingPeriodeFraOgMed',
-        'journalforingPeriodeTilOgMed',
-        'journalforingSoknadsland',
-        'journalforingLovvalgsbestemmelse',
-        'journalforingUnntakFraLovvalgsbestemmelse',
-        'journalforingUnntakFraLovvalgsland'
+        "journalforingPeriodeFraOgMed",
+        "journalforingPeriodeTilOgMed",
+        "journalforingSoknadsland",
+        "journalforingLovvalgsbestemmelse",
+        "journalforingUnntakFraLovvalgsbestemmelse",
+        "journalforingUnntakFraLovvalgsland"
       );
       return false;
     }
@@ -236,7 +238,9 @@ class Journalforing extends Component {
       ...vasketJournalforing,
       fagsak,
       anmodningOmUnntak,
-      avsenderType: this.organisasjonAliaser.includes(avsenderType) ? MKV.Koder.avsendertyper.ORGANISASJON : avsenderType,
+      avsenderType: this.organisasjonAliaser.includes(avsenderType)
+        ? MKV.Koder.avsendertyper.ORGANISASJON
+        : avsenderType,
     };
 
     opprettNySak(journalforingData);
@@ -246,16 +250,22 @@ class Journalforing extends Component {
    * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
    */
-  hentOgVisBruker = async brukerID => {
-    if (!Utils.person.erGyldigFnr(brukerID) && !Utils.person.erGyldigDnr(brukerID)) { return; }
+  hentOgVisBruker = async (brukerID) => {
+    if (!Utils.person.erGyldigFnr(brukerID) && !Utils.person.erGyldigDnr(brukerID)) {
+      return;
+    }
 
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
-    settFeltInnhold('brukerNavn', '');
+    settFeltInnhold("brukerNavn", "");
     const response = await sokFnrDnr(brukerID);
-    if (!response || !response.data) { return false; }
-    const { sammensattNavn = '' } = response.data;
-    if (!sammensattNavn) { return false; }
-    settFeltInnhold('brukerNavn', sammensattNavn);
+    if (!response || !response.data) {
+      return false;
+    }
+    const { sammensattNavn = "" } = response.data;
+    if (!sammensattNavn) {
+      return false;
+    }
+    settFeltInnhold("brukerNavn", sammensattNavn);
     await hentFagsakListe(brukerID);
     return { brukerID, sammensattNavn };
   };
@@ -264,40 +274,49 @@ class Journalforing extends Component {
    * Avsender kan være både person og organisasjon.
    * @param value {string} Verdien vi ønsker å sjekke på.
    */
-  hentOgVisAvsender = async value => {
+  hentOgVisAvsender = async (value) => {
     const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
 
-    if (!value) { return; }
+    if (!value) {
+      return;
+    }
 
     if (value.length === ANTALL_TALL_I_ORGNR) {
-      settFeltInnhold('avsenderNavn', '');
+      settFeltInnhold("avsenderNavn", "");
       const response = await sokOrgnr(value);
-      if (!response || !response.data) { return false; }
-      const { navn = '' } = response.data;
-      settFeltInnhold('avsenderNavn', navn);
+      if (!response || !response.data) {
+        return false;
+      }
+      const { navn = "" } = response.data;
+      settFeltInnhold("avsenderNavn", navn);
     }
 
     if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
-      settFeltInnhold('avsenderNavn', '');
+      settFeltInnhold("avsenderNavn", "");
       const response = await sokFnrDnr(value);
-      if (!response || !response.data) { return false; }
-      const { sammensattNavn = '' } = response.data;
-      settFeltInnhold('avsenderNavn', sammensattNavn);
+      if (!response || !response.data) {
+        return false;
+      }
+      const { sammensattNavn = "" } = response.data;
+      settFeltInnhold("avsenderNavn", sammensattNavn);
     }
   };
 
-
-  hentOgVisRepresentant = async value => {
+  hentOgVisRepresentant = async (value) => {
     const { sokOrgnr, settFeltInnhold } = this.props;
 
-    if (!value) { return; }
+    if (!value) {
+      return;
+    }
 
     if (value.length === ANTALL_TALL_I_ORGNR) {
-      settFeltInnhold('representantNavn', '');
+      settFeltInnhold("representantNavn", "");
       const response = await sokOrgnr(value);
-      if (!response.data) { return false; }
-      const { navn = '' } = response.data;
-      settFeltInnhold('representantNavn', navn);
+      if (!response.data) {
+        return false;
+      }
+      const { navn = "" } = response.data;
+      settFeltInnhold("representantNavn", navn);
     }
   };
 
@@ -307,18 +326,18 @@ class Journalforing extends Component {
 
   resetSkjemaFelterForOpprettFagsak = () => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold('journalforingPeriodeFraOgMed', '');
-    settFeltInnhold('journalforingPeriodeTilOgMed', '');
-    settFeltInnhold('representantID', '');
-    settFeltInnhold('journalforingSoknadsland', []);
-    settFeltInnhold('journalforingLovvalgsbestemmelse', '');
-    settFeltInnhold('journalforingUnntakFraLovvalgsbestemmelse', '');
-    settFeltInnhold('journalforingUnntakFraLovvalgsland', '');
+    settFeltInnhold("journalforingPeriodeFraOgMed", "");
+    settFeltInnhold("journalforingPeriodeTilOgMed", "");
+    settFeltInnhold("representantID", "");
+    settFeltInnhold("journalforingSoknadsland", []);
+    settFeltInnhold("journalforingLovvalgsbestemmelse", "");
+    settFeltInnhold("journalforingUnntakFraLovvalgsbestemmelse", "");
+    settFeltInnhold("journalforingUnntakFraLovvalgsland", "");
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold('behandlingstype', '');
+    settFeltInnhold("behandlingstype", "");
   };
 
   velgDokumentID = () => {
@@ -335,9 +354,7 @@ class Journalforing extends Component {
     const {
       tilForsiden,
       journalforSEDSkjemaIsValid,
-      journalforSEDSkjemaVerdier: {
-        brukerID,
-      },
+      journalforSEDSkjemaVerdier: { brukerID },
       journalforSEDSkjemaErrors,
       match,
     } = this.props;
@@ -362,14 +379,12 @@ class Journalforing extends Component {
   };
 
   submitJournalforing = () => {
-    const {
-      journalforingSkjemaVerdier, journalforSEDSkjemaVerdier,
-    } = this.props;
+    const { journalforingSkjemaVerdier, journalforSEDSkjemaVerdier } = this.props;
     if (journalforSEDSkjemaVerdier.brukerID) {
       this.journalforSed();
     } else {
       const { saksnummer } = journalforingSkjemaVerdier;
-      if (saksnummer === '-1') {
+      if (saksnummer === "-1") {
         this.opprettFagsak();
       } else {
         this.knyttTilEksisterendeSak();
@@ -387,37 +402,28 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: {
-        vedlegg = [],
-        hoveddokument = {},
-        behandlingsInformasjon,
-        avsenderID,
-        avsenderNavn = '',
-      },
+      journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn = "" },
       fagsakListe,
       settFeltInnhold,
     } = this.props;
 
-    const behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(({ kode }) =>
-      kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER ||
-      kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG ||
-      kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG ||
-      kode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV ||
-      kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
-      kode === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-      kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED ||
-      kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM ||
-      kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID);
+    const behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
+      ({ kode }) =>
+        kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER ||
+        kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG ||
+        kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG ||
+        kode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV ||
+        kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
+        kode === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+        kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED ||
+        kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM ||
+        kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID
+    );
 
-    const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
-    } = this;
+    const { knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant } = this;
     const { journalpostID } = this.props.match.params;
-    const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
-    const {
-      behandlingstema,
-      sakstype,
-    } = behandlingsInformasjon || {};
+    const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = "Hoveddokument" } = hoveddokument;
+    const { behandlingstema, sakstype } = behandlingsInformasjon || {};
 
     const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
     const visNormalJournalforing = behandlingsInformasjon === null;
@@ -435,8 +441,7 @@ class Journalforing extends Component {
               <Sticky>
                 <Nav.Panel className="journalforing__skjema">
                   <div className="journalforing__skjema__scroll">
-                    {
-                      visSedJournalforing &&
+                    {visSedJournalforing && (
                       <JournalforingSED
                         avsenderID={avsenderID}
                         avsenderNavn={avsenderNavn}
@@ -446,9 +451,8 @@ class Journalforing extends Component {
                         avbrytJournalforing={this.avbrytJournalforing}
                         kanSubmittes={this.kanSubmittes()}
                       />
-                    }
-                    {
-                      visNormalJournalforing &&
+                    )}
+                    {visNormalJournalforing && (
                       <JournalforingForm
                         journalpostID={journalpostID}
                         hoveddokumentID={hoveddokumentID}
@@ -466,26 +470,37 @@ class Journalforing extends Component {
                         kanSubmittes={this.kanSubmittes()}
                         settFeltInnhold={settFeltInnhold}
                       />
-                    }
+                    )}
                   </div>
                 </Nav.Panel>
               </Sticky>
             </Nav.Column>
             <Nav.Column xs="8">
-              {vedlegg.length > 0 &&
+              {vedlegg.length > 0 && (
                 <Nav.Panel>
                   <Nav.Select
                     className="journalforing__dokument_visning"
                     name="journalforing_pdf_dokumenter"
                     label="Dokumentvisning"
                     defaultValue={hoveddokumentID}
-                    onChange={this.onChangeVedlegg}>
-                    <option key={hoveddokumentID} value={hoveddokumentID}>{hoveddokumentTittel}</option>
-                    {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
+                    onChange={this.onChangeVedlegg}
+                  >
+                    <option key={hoveddokumentID} value={hoveddokumentID}>
+                      {hoveddokumentTittel}
+                    </option>
+                    {vedlegg.map((elem) => (
+                      <option key={elem.dokumentID} value={elem.dokumentID}>
+                        {elem.tittel}
+                      </option>
+                    ))}
                   </Nav.Select>
                 </Nav.Panel>
-              }
-              {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
+              )}
+              {this.velgDokumentID() && (
+                <Nav.Panel>
+                  <PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} />
+                </Nav.Panel>
+              )}
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
@@ -511,7 +526,9 @@ Journalforing.propTypes = {
   sokOrgnr: PT.func.isRequired,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
-  vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string, logiskeVedlegg: PT.arrayOf(PT.string) })).isRequired,
+  vedleggsdokumenter: PT.arrayOf(
+    PT.shape({ tittel: PT.string, dokumentID: PT.string, logiskeVedlegg: PT.arrayOf(PT.string) })
+  ).isRequired,
   tilForsiden: PT.func.isRequired,
   journalforSEDSkjemaIsValid: PT.bool.isRequired,
   journalforSEDSkjemaVerdier: PT.object,
@@ -526,7 +543,7 @@ Journalforing.defaultProps = {
   journalforSEDSkjemaVerdier: {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: sokSelectors.FagsakSokSelector(state),
@@ -537,16 +554,17 @@ const mapStateToProps = state => ({
   journalforSEDSkjemaErrors: getFormSyncErrors(KV.Form.JOURNALFORING_SED)(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
-  hentFagsakListe: fnr => dispatch(sokOperations.sok(fnr)),
+const mapDispatchToProps = (dispatch) => ({
+  hentJournalOppgave: (journalpostID) => dispatch(journalforingOperations.hent(journalpostID)),
+  hentFagsakListe: (fnr) => dispatch(sokOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.JOURNALFORING, feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn)),
-  settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
-  opprettNySak: data => dispatch(journalforingOperations.opprett(data)),
-  tilordneSak: data => dispatch(journalforingOperations.tilordne(data)),
-  sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
-  sokOrgnr: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
+  settFeilFelt: (...feltNavn) => setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn),
+  settJournalforingHensikt: (journalforingHensikt) =>
+    dispatch(change(KV.Form.JOURNALFORING, "journalforingHensikt", journalforingHensikt)),
+  opprettNySak: (data) => dispatch(journalforingOperations.opprett(data)),
+  tilordneSak: (data) => dispatch(journalforingOperations.tilordne(data)),
+  sokFnrDnr: (fnr) => dispatch(PersonOperations.hent(fnr)),
+  sokOrgnr: (orgnr) => dispatch(OrganisasjonOperations.hent(orgnr)),
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
 });

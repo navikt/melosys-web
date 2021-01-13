@@ -1,21 +1,18 @@
-import React from 'react';
-import PT from 'prop-types';
-import classNames from 'classnames';
+import React from "react";
+import PT from "prop-types";
+import classNames from "classnames";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import './elementskrift.css';
+import "./elementskrift.css";
 
-const Elementskrift = ({
-  ikon: Ikon,
-  tekst,
-  className,
-}) => {
-  const cl = classNames('elementskrift', className);
+const Elementskrift = ({ ikon: Ikon, tekst, className }) => {
+  const cl = classNames("elementskrift", className);
 
   return (
     <Nav.typo.Element className={cl}>
-      <Ikon className="ikon" />{tekst}
+      <Ikon className="ikon" />
+      {tekst}
     </Nav.typo.Element>
   );
 };

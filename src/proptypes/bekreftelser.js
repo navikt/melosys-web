@@ -1,5 +1,5 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
+import PT from "prop-types";
 
 const BekreftelserPropType = PT.shape({
   utsendt: PT.bool,

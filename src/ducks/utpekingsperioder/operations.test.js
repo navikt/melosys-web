@@ -1,16 +1,16 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
-import * as types from './types';
-import * as operations from './operations';
-import * as KV from '../../kodeverk';
+import * as types from "./types";
+import * as operations from "./operations";
+import * as KV from "../../kodeverk";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('utpekingsperioder operations', () => {
+describe("utpekingsperioder operations", () => {
   let initialState = null;
 
   beforeEach(() => {
@@ -22,8 +22,8 @@ describe('utpekingsperioder operations', () => {
         data: {
           data: {
             periode: {
-              tom: '',
-              fom: '',
+              tom: "",
+              fom: "",
             },
           },
         },
@@ -44,12 +44,9 @@ describe('utpekingsperioder operations', () => {
     };
   });
 
-  describe('lagre', () => {
-    it('lager PENDING og OK ved normal tilstand', async () => {
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.OK, data: {} },
-      ];
+  describe("lagre", () => {
+    it("lager PENDING og OK ved normal tilstand", async () => {
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
       const store = mockStore(initialState);
 
@@ -58,15 +55,12 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('lager FEILET ved feil i api-kall', async () => {
-      const error = new Error('feil ved kall til Api');
+    it("lager FEILET ved feil i api-kall", async () => {
+      const error = new Error("feil ved kall til Api");
       fetch.resetMocks();
       fetch.mockReject(error);
 
-      const expectedActions = [
-        { type: types.PENDING },
-        { type: types.FEILET, data: error.toString() },
-      ];
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
 
       const store = mockStore(initialState);
 
@@ -76,7 +70,7 @@ describe('utpekingsperioder operations', () => {
     });
   });
 
-  describe('OppdaterUtpekingsperioderState', () => {
+  describe("OppdaterUtpekingsperioderState", () => {
     each([
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2,
@@ -86,50 +80,53 @@ describe('utpekingsperioder operations', () => {
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
-    ]).it('bygger utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge og lovvalgsbestemmelse er %p', lovvalgsbestemmelse => {
+    ]).it(
+      "bygger utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er annet land enn Norge og lovvalgsbestemmelse er %p",
+      (lovvalgsbestemmelse) => {
+        const avklartfakta = {
+          avklartefaktaKode: null,
+          referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
+          fakta: ["CY"],
+          subjektID: null,
+          begrunnelseKoder: [],
+          begrunnelseFritekst: null,
+        };
+
+        initialState.avklartefakta.data = [avklartfakta];
+
+        const stegState = {
+          lovvalgsbestemmelse,
+          tilleggbestemmelse: MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
+        };
+
+        const expectedActions = [
+          {
+            type: types.OPPDATER_UTPEKINGSPERIODER,
+            utpekingsperioder: [
+              {
+                fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
+                tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
+                lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+                tilleggsbestemmelse: stegState.tilleggbestemmelse,
+                lovvalgsland: avklartfakta.fakta[0],
+              },
+            ],
+          },
+        ];
+
+        const store = mockStore(initialState);
+
+        store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
+
+        expect(store.getActions()).toEqual(expectedActions);
+      }
+    );
+
+    it("bygger tom utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er Norge", () => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
-        fakta: ['CY'],
-        subjektID: null,
-        begrunnelseKoder: [],
-        begrunnelseFritekst: null,
-      };
-
-      initialState.avklartefakta.data = [avklartfakta];
-
-      const stegState = {
-        lovvalgsbestemmelse,
-        tilleggbestemmelse: MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
-      };
-
-      const expectedActions = [
-        {
-          type: types.OPPDATER_UTPEKINGSPERIODER,
-          utpekingsperioder: [
-            {
-              fomDato: initialState.behandlingsgrunnlag.data.data.periode.fom,
-              tomDato: initialState.behandlingsgrunnlag.data.data.periode.tom,
-              lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-              tilleggsbestemmelse: stegState.tilleggbestemmelse,
-              lovvalgsland: avklartfakta.fakta[0],
-            },
-          ],
-        },
-      ];
-
-      const store = mockStore(initialState);
-
-      store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
-
-      expect(store.getActions()).toEqual(expectedActions);
-    });
-
-    it('bygger tom utpekingsperiode dersom avklartfakta OMFATTES_I_LAND er Norge', () => {
-      const avklartfakta = {
-        avklartefaktaKode: null,
-        referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
-        fakta: ['NO'],
+        fakta: ["NO"],
         subjektID: null,
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
@@ -156,7 +153,7 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('bygger utpekingsperiode dersom søker har offentlig tjeneste i annet land', () => {
+    it("bygger utpekingsperiode dersom søker har offentlig tjeneste i annet land", () => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
@@ -195,7 +192,7 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('bygger tom utpekingsperiode dersom søker har offentlig tjeneste i Norge', () => {
+    it("bygger tom utpekingsperiode dersom søker har offentlig tjeneste i Norge", () => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
@@ -225,7 +222,7 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('bygger utpekingsperiode dersom søker har lønnet arbeid i annet land', () => {
+    it("bygger utpekingsperiode dersom søker har lønnet arbeid i annet land", () => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
@@ -264,7 +261,7 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('bygger tom utpekingsperiode dersom søker har lønnet arbeid i Norge', () => {
+    it("bygger tom utpekingsperiode dersom søker har lønnet arbeid i Norge", () => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
@@ -294,7 +291,7 @@ describe('utpekingsperioder operations', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('bygger tom utpekingsperiode dersom stegstate.lovvalgsland ikke er satt', () => {
+    it("bygger tom utpekingsperiode dersom stegstate.lovvalgsland ikke er satt", () => {
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
@@ -326,8 +323,8 @@ describe('utpekingsperioder operations', () => {
     });
   });
 
-  describe('resetUtpekingsperioderState', () => {
-    it('lager RESET', () => {
+  describe("resetUtpekingsperioderState", () => {
+    it("lager RESET", () => {
       const expectedActions = [
         {
           type: types.RESET,
@@ -342,21 +339,21 @@ describe('utpekingsperioder operations', () => {
     });
   });
 
-  describe('endrePeriode', () => {
-    it('lager ENDRE_PERIODE', () => {
+  describe("endrePeriode", () => {
+    it("lager ENDRE_PERIODE", () => {
       const expectedActions = [
         {
           type: types.ENDRE_PERIODE,
           data: {
-            fomdato: '12.12.2000',
-            tomdato: '12.12.2001',
+            fomdato: "12.12.2000",
+            tomdato: "12.12.2001",
           },
         },
       ];
 
       const store = mockStore(initialState);
 
-      store.dispatch(operations.endrePeriode('12.12.2000', '12.12.2001'));
+      store.dispatch(operations.endrePeriode("12.12.2000", "12.12.2001"));
 
       expect(store.getActions()).toEqual(expectedActions);
     });

@@ -1,4 +1,4 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
 const BetingelsePropType = PT.shape({
   krav: PT.string,

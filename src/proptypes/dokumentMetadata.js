@@ -1,5 +1,5 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
+import PT from "prop-types";
 
 const DokumentMetadataPropType = PT.shape({
   navn: PT.string,
@@ -10,7 +10,4 @@ const DokumentMetadataPropType = PT.shape({
 
 const DokumenterPropType = PT.arrayOf(DokumentMetadataPropType);
 
-export {
-  DokumentMetadataPropType as DokumentMetadata,
-  DokumenterPropType as DokumentMetadataListe,
-};
+export { DokumentMetadataPropType as DokumentMetadata, DokumenterPropType as DokumentMetadataListe };

@@ -1,41 +1,37 @@
-import React from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
+import React from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
 
-import MKV from '../../melosyskodeverk';
-import useEventTargetValueState from '../../hooks/useEventTargetValueState';
+import MKV from "../../melosyskodeverk";
+import useEventTargetValueState from "../../hooks/useEventTargetValueState";
 
-import * as Nav from '../../utils/navFrontend';
-import * as Ikon from '../../resources/images';
+import * as Nav from "../../utils/navFrontend";
+import * as Ikon from "../../resources/images";
 
-import PdfLenkeListe from '../pdfLenkeListe';
-import Knapperad from '../knapperad';
+import PdfLenkeListe from "../pdfLenkeListe";
+import Knapperad from "../knapperad";
 
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { redigerbartSelectors } from '../../ducks/redigerbart';
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
-import './dialogboksAvslagSoknad.css';
+import "./dialogboksAvslagSoknad.css";
 
-export const DialogboksAvslagSoknad = props => {
-  const [brevFritekst, setBrevFritekst] = useEventTargetValueState('');
+export const DialogboksAvslagSoknad = (props) => {
+  const [brevFritekst, setBrevFritekst] = useEventTargetValueState("");
 
-  const {
-    ariaHideApp,
-    avbryt,
-    behandlingID,
-    redigerbart,
-    avslaaSoknadHandle,
-  } = props;
+  const { ariaHideApp, avbryt, behandlingID, redigerbart, avslaaSoknadHandle } = props;
 
-  const pdfDokumenter = [{
-    navn: 'Forhåndsvis vedtaksbrev',
-    type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
-    data: {
-      begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-      fritekst: brevFritekst,
-      mottaker: MKV.Koder.aktoersroller.BRUKER,
+  const pdfDokumenter = [
+    {
+      navn: "Forhåndsvis vedtaksbrev",
+      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
+      data: {
+        begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
+        fritekst: brevFritekst,
+        mottaker: MKV.Koder.aktoersroller.BRUKER,
+      },
     },
-  }];
+  ];
 
   const avslaaSoknad = () => {
     const data = {
@@ -55,22 +51,21 @@ export const DialogboksAvslagSoknad = props => {
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
-      ariaHideApp={ariaHideApp}>
+      ariaHideApp={ariaHideApp}
+    >
       <div className="avslagsoknadcontainer">
-        <Ikon.VedtakGodkjent
-          className="vedtakIkon"
-        />
+        <Ikon.VedtakGodkjent className="vedtakIkon" />
         <div>
-          <Nav.typo.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.typo.Systemtittel>
+          <Nav.typo.Systemtittel className="overskrift">
+            Avslå søknaden på grunn av manglende opplysninger
+          </Nav.typo.Systemtittel>
           <Nav.Textarea
             value={brevFritekst}
             onChange={setBrevFritekst}
             label="Fritekst til vedtaksbrev"
             maxLength={brevFritekstMaxLength}
           />
-          {
-            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
-          }
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
             <Knapperad
               avbryt={avbryt}
@@ -99,7 +94,7 @@ DialogboksAvslagSoknad.defaultProps = {
   ariaHideApp: true,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });

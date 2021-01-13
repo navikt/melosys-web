@@ -1,35 +1,32 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, change, reset, setSubmitFailed } from 'redux-form';
-import PT from 'prop-types';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { reduxForm, change, reset, setSubmitFailed } from "redux-form";
+import PT from "prop-types";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import * as KV from '../../kodeverk';
-import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../skjema';
-import { formSelectors } from '../../ducks/form';
+import * as KV from "../../kodeverk";
+import * as Nav from "../../utils/navFrontend";
+import * as Skjema from "../skjema";
+import { formSelectors } from "../../ducks/form";
 
-import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
-import PdfLenkeListe from '../pdfLenkeListe';
+import { brevbestillingValidering, erSkjemaGyldig } from "../skjema/validering/brevbestilling";
+import PdfLenkeListe from "../pdfLenkeListe";
 
-import './brevBestilling.css';
-import * as Utils from '../../utils';
-import * as Api from '../../services/api';
+import "./brevBestilling.css";
+import * as Utils from "../../utils";
+import * as Api from "../../services/api";
 
 const InfoPanel = () => (
-  <Nav.Lesmerpanel
-    intro="Se hva som skal stå i mangelbrevet:"
-    apneTekst="Klikk her for tips"
-    lukkTekst="Lukk"
-  >
+  <Nav.Lesmerpanel intro="Se hva som skal stå i mangelbrevet:" apneTekst="Klikk her for tips" lukkTekst="Lukk">
     <p>
-      En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett.
-      Din tekst starter etter teksten &laquo;Du må sende oss dette innen <i>dato</i>:&raquo;.
+      En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett. Din tekst
+      starter etter teksten &laquo;Du må sende oss dette innen <i>dato</i>:&raquo;.
     </p>
     <p>
       Brevet inneholder allerede en innledning, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst.
-      Trykk på &laquo;Forhåndsvis brev&raquo; for å se brevet når du er ferdig med å skrive.<br />
+      Trykk på &laquo;Forhåndsvis brev&raquo; for å se brevet når du er ferdig med å skrive.
+      <br />
       OBS! Det er ikke automatisk stavekontroll, så sjekk teksten du har skrevet.
     </p>
   </Nav.Lesmerpanel>
@@ -38,29 +35,32 @@ const InfoPanel = () => (
 class BrevBestilling extends Component {
   state = { erBrevSendt: false };
 
-  overstyrSubmit = event => {
+  overstyrSubmit = (event) => {
     event.preventDefault();
   };
 
   erMangelBrevMedFritekst = () => {
     const { brevbestillingSkjemaVerdier } = this.props;
     if (!brevbestillingSkjemaVerdier) return false;
-    return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER;
+    return (
+      brevbestillingSkjemaVerdier.dokumenttypeKode ===
+      MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER
+    );
   };
 
   erMeldingOmForventetSaksbehandlingstid = () => {
     const { brevbestillingSkjemaVerdier } = this.props;
     if (!brevbestillingSkjemaVerdier) return false;
-    return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID;
+    return (
+      brevbestillingSkjemaVerdier.dokumenttypeKode ===
+      MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID
+    );
   };
 
   sendBrev = async () => {
-    const {
-      behandlingID,
-      brevbestillingSkjemaVerdier,
-    } = this.props;
+    const { behandlingID, brevbestillingSkjemaVerdier } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
-    const dokumentFritekst = this.erMeldingOmForventetSaksbehandlingstid() || (fritekst === '') ? null : fritekst;
+    const dokumentFritekst = this.erMeldingOmForventetSaksbehandlingstid() || fritekst === "" ? null : fritekst;
 
     const dokument = Object.assign({
       fritekst: dokumentFritekst,
@@ -87,12 +87,10 @@ class BrevBestilling extends Component {
   };
 
   validerBrev = async () => {
-    const {
-      brevbestillingSkjemaVerdier, settFeilFelt,
-    } = this.props;
+    const { brevbestillingSkjemaVerdier, settFeilFelt } = this.props;
 
     if (!erSkjemaGyldig(brevbestillingSkjemaVerdier)) {
-      settFeilFelt('mottaker', 'dokumenttypeKode', 'fritekst');
+      settFeilFelt("mottaker", "dokumenttypeKode", "fritekst");
       return false;
     }
 
@@ -109,10 +107,11 @@ class BrevBestilling extends Component {
     this.forceUpdate();
   };
 
-  render () {
+  render() {
     const {
       behandlingID,
-      brevbestillingSkjemaVerdier, settFeltInnhold,
+      brevbestillingSkjemaVerdier,
+      settFeltInnhold,
       redigerbart,
       brevBestillingRedigerbartIArtikkel13,
     } = this.props;
@@ -123,22 +122,25 @@ class BrevBestilling extends Component {
       mottaker,
     });
 
-    const ForhandsvistePdfDokumenter = [
-      { navn: 'Forhåndsvis brev', type: dokumenttypeKode, data },
-    ];
+    const ForhandsvistePdfDokumenter = [{ navn: "Forhåndsvis brev", type: dokumenttypeKode, data }];
 
-    const muligeMottakere = MKV.KTObjects.aktoersroller.filter(rolle => (
-      rolle.kode === MKV.Koder.aktoersroller.BRUKER ||
-      rolle.kode === MKV.Koder.aktoersroller.ARBEIDSGIVER
-    ));
+    const muligeMottakere = MKV.KTObjects.aktoersroller.filter(
+      (rolle) => rolle.kode === MKV.Koder.aktoersroller.BRUKER || rolle.kode === MKV.Koder.aktoersroller.ARBEIDSGIVER
+    );
 
-    const placeholder = 'F.eks.: \u00ABOpplysninger om antall utsendte ansatte i perioden\u00BB, \u00ABOpplysninger om den ansatte erstatter en annen utsendt ansatt\u00BB.';
+    const placeholder =
+      "F.eks.: \u00ABOpplysninger om antall utsendte ansatte i perioden\u00BB, \u00ABOpplysninger om den ansatte erstatter en annen utsendt ansatt\u00BB.";
 
     const disabled = !redigerbart || !brevBestillingRedigerbartIArtikkel13;
-    const mottakerDisabled = (dokumenttypeKode && dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER) || !redigerbart;
-    if (dokumenttypeKode && dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID) {
+    const mottakerDisabled =
+      (dokumenttypeKode && dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER) ||
+      !redigerbart;
+    if (
+      dokumenttypeKode &&
+      dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID
+    ) {
       if (mottaker !== MKV.Koder.aktoersroller.BRUKER) {
-        settFeltInnhold('mottaker', MKV.Koder.aktoersroller.BRUKER);
+        settFeltInnhold("mottaker", MKV.Koder.aktoersroller.BRUKER);
       }
     }
     const aktiverteDokumenttypeKoder = [
@@ -152,22 +154,54 @@ class BrevBestilling extends Component {
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev">
               {/* TODO remove filter when all produserbaredokumenter dokumenttypeKoder are supported */}
               {MKV.KTObjects.brev.produserbaredokumenter
-                .filter(elem => aktiverteDokumenttypeKoder.includes(elem.kode))
-                .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+                .filter((elem) => aktiverteDokumenttypeKoder.includes(elem.kode))
+                .map((elem) => (
+                  <option key={elem.kode} value={elem.kode}>
+                    {elem.term}
+                  </option>
+                ))}
             </Skjema.Select>
             <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Brevet gjelder" disabled={!mottakerDisabled}>
-              {muligeMottakere.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+              {muligeMottakere.map((elem) => (
+                <option key={elem.kode} value={elem.kode}>
+                  {elem.term}
+                </option>
+              ))}
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
-            {this.erMangelBrevMedFritekst() &&
-            <Skjema.Textarea disabled={disabled} feltNavn="fritekst" label="Hva skal søker sende inn?" placeholder={placeholder} feil={undefined} />}
-            { behandlingID && !disabled &&
-              <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
-            }
-            <Nav.Hovedknapp htmlType="submit" disabled={disabled} onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>&nbsp;
-            <Nav.Knapp htmlType="reset" type="standard" disabled={disabled} onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
-            { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
-            { this.state.feilmelding && <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe> }
+            {this.erMangelBrevMedFritekst() && (
+              <Skjema.Textarea
+                disabled={disabled}
+                feltNavn="fritekst"
+                label="Hva skal søker sende inn?"
+                placeholder={placeholder}
+                feil={undefined}
+              />
+            )}
+            {behandlingID && !disabled && (
+              <PdfLenkeListe
+                behandlingID={behandlingID}
+                dokumenter={ForhandsvistePdfDokumenter}
+                vedKlikk={this.validerBrev}
+              />
+            )}
+            <Nav.Hovedknapp htmlType="submit" disabled={disabled} onClick={this.sendBrev}>
+              Send brev
+            </Nav.Hovedknapp>
+            &nbsp;
+            <Nav.Knapp htmlType="reset" type="standard" disabled={disabled} onClick={this.forkastBrev}>
+              Forkast Brev
+            </Nav.Knapp>
+            {this.state.erBrevSendt && (
+              <Nav.AlertStripe type="suksess" className="varsel">
+                Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.
+              </Nav.AlertStripe>
+            )}
+            {this.state.feilmelding && (
+              <Nav.AlertStripe type="advarsel" className="varsel">
+                {this.state.feilmelding}
+              </Nav.AlertStripe>
+            )}
           </Nav.Fieldset>
         </form>
       </div>
@@ -196,16 +230,16 @@ const form = {
   onSubmit: () => {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   initialValues: {
     dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
     mottaker: MKV.Koder.representerer.BRUKER,
-    fritekst: '',
+    fritekst: "",
   },
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.BREV_BESTILLING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.BREV_BESTILLING, ...feltNavn)),
   resetBrevBestillingForm: () => dispatch(reset(KV.Form.BREV_BESTILLING)),

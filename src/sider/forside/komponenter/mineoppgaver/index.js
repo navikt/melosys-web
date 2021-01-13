@@ -1,3 +1,3 @@
-import MineOppgaver from './mineoppgaver';
+import MineOppgaver from "./mineoppgaver";
 
 export default MineOppgaver;

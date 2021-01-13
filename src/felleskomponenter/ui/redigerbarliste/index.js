@@ -1,3 +1,3 @@
-import RedigerbarListe from './redigerbarliste';
+import RedigerbarListe from "./redigerbarliste";
 
 export default RedigerbarListe;

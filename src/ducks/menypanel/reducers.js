@@ -1,5 +1,5 @@
-import { STATUS } from './../../services/utils';
-import * as Types from './types';
+import { STATUS } from "./../../services/utils";
+import * as Types from "./types";
 
 const initalState = {
   status: STATUS.NOT_STARTED,

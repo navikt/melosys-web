@@ -1,7 +1,4 @@
-import Inngang from './inngang';
-import Virksomheter from './virksomheter';
+import Inngang from "./inngang";
+import Virksomheter from "./virksomheter";
 
-export {
-  Inngang,
-  Virksomheter,
-};
+export { Inngang, Virksomheter };

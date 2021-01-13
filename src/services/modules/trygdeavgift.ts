@@ -1,17 +1,17 @@
-import { Avgiftsberegning, Avgiftsgrunnlag, AvgiftsgrunnlagInfo } from 'Domene';
-import { getAsJson, putAsJson } from '../utils';
-import { API_BASE_URL, TRYGDEAVGIFT } from '../api-constants';
+import { Avgiftsberegning, Avgiftsgrunnlag, AvgiftsgrunnlagInfo } from "Domene";
+import { getAsJson, putAsJson } from "../utils";
+import { API_BASE_URL, TRYGDEAVGIFT } from "../api-constants";
 
 export type OppdaterAvgiftsgrunnlag = {
-  lønnsforhold: string | null,
-  trygdeavgiftsgrunnlagNorge: AvgiftsgrunnlagInfo | null,
-  trygdeavgiftsgrunnlagUtland: AvgiftsgrunnlagInfo | null,
-}
+  lønnsforhold: string | null;
+  trygdeavgiftsgrunnlagNorge: AvgiftsgrunnlagInfo | null;
+  trygdeavgiftsgrunnlagUtland: AvgiftsgrunnlagInfo | null;
+};
 
 export type OppdaterAvgiftsberegning = {
-  avgiftspliktigLønnNorge: number | null,
-  avgiftspliktigLønnUtland: number | null,
-}
+  avgiftspliktigLønnNorge: number | null;
+  avgiftspliktigLønnUtland: number | null;
+};
 
 export const hentBeregning = (behandlingID: number): Promise<Avgiftsberegning> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);

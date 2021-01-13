@@ -1,8 +1,8 @@
-import StegState from './StegState';
-import * as Utils from '../../../utils';
+import StegState from "./StegState";
+import * as Utils from "../../../utils";
 
 class Avklartfakta extends StegState {
-  lagKey = data => (data.referanse + (data.subjektID || ''));
+  lagKey = (data) => data.referanse + (data.subjektID || "");
 
   slettFelt = (stegID, data) => {
     const { stegStore } = this;
@@ -39,8 +39,12 @@ class Avklartfakta extends StegState {
         referanse,
         fakta,
         subjektID,
-        begrunnelseKoder: !Utils._isUndefined(nyData.begrunnelseKoder) ? nyData.begrunnelseKoder : eksisterendeSubjekt.begrunnelseKoder,
-        begrunnelseFritekst: !Utils._isUndefined(nyData.begrunnelseFritekst) ? nyData.begrunnelseFritekst : eksisterendeSubjekt.begrunnelseFritekst,
+        begrunnelseKoder: !Utils._isUndefined(nyData.begrunnelseKoder)
+          ? nyData.begrunnelseKoder
+          : eksisterendeSubjekt.begrunnelseKoder,
+        begrunnelseFritekst: !Utils._isUndefined(nyData.begrunnelseFritekst)
+          ? nyData.begrunnelseFritekst
+          : eksisterendeSubjekt.begrunnelseFritekst,
       };
 
       if (!Utils._isNil(nyData.fakta)) {
@@ -54,16 +58,16 @@ class Avklartfakta extends StegState {
     return eksisterendeAvklarteSubjekter;
   };
 
-  nyttFelt = () => (new Map());
+  nyttFelt = () => new Map();
 
   hent = () => {
     const avklartefakta = {};
     const { stegStore } = this;
-    stegStore.forEach(steg => {
-      Object.keys(steg).forEach(referanse => {
+    stegStore.forEach((steg) => {
+      Object.keys(steg).forEach((referanse) => {
         avklartefakta[referanse] = [];
         const avklarteSubjekter = steg[referanse];
-        avklarteSubjekter.forEach(value => {
+        avklarteSubjekter.forEach((value) => {
           avklartefakta[referanse].push(value);
         });
       });

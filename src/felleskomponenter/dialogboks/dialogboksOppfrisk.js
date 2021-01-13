@@ -1,17 +1,20 @@
-import React, { Suspense, useState } from 'react';
-import usePromise from 'react-promise-suspense';
-import PT from 'prop-types';
+import React, { Suspense, useState } from "react";
+import usePromise from "react-promise-suspense";
+import PT from "prop-types";
 
-import * as Nav from '../../utils/navFrontend';
-import ErrorBoundary from '../ErrorBoundary';
-import Knapperad from '../knapperad';
+import * as Nav from "../../utils/navFrontend";
+import ErrorBoundary from "../ErrorBoundary";
+import Knapperad from "../knapperad";
 
-import './dialogboksOppfrisk.css';
+import "./dialogboksOppfrisk.css";
 
 const OppfriskBekreft = ({ bekreft, avbryt }) => (
   <div>
     <Nav.typo.Systemtittel>Vil du oppdatere registeropplysninger?</Nav.typo.Systemtittel>
-    <Nav.typo.Normaltekst>Oppdatering av registeropplysning kan ta noe tid. Du kan velge om du vil gå tilbake til forsiden for å behandle en annen oppgave imens.</Nav.typo.Normaltekst>
+    <Nav.typo.Normaltekst>
+      Oppdatering av registeropplysning kan ta noe tid. Du kan velge om du vil gå tilbake til forsiden for å behandle en
+      annen oppgave imens.
+    </Nav.typo.Normaltekst>
     <div className="knapperadcontainer">
       <Knapperad
         bekreft={bekreft}
@@ -33,7 +36,9 @@ const OppfriskVenter = ({ tilForsiden }) => (
   <div>
     <Nav.NavFrontendSpinner className="spinner" />
     <Nav.typo.Systemtittel className="overskrift">Oppdaterer registeropplysninger</Nav.typo.Systemtittel>
-    <Nav.typo.Normaltekst className="tekst">Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc.</Nav.typo.Normaltekst>
+    <Nav.typo.Normaltekst className="tekst">
+      Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc.
+    </Nav.typo.Normaltekst>
     <div className="knapperadcontainer">
       <Nav.Knapp onClick={tilForsiden}>Til forsiden</Nav.Knapp>
     </div>
@@ -48,9 +53,13 @@ const Oppfrisk = ({ oppfrisk, lukk }) => {
   const CACHE_LIFESPAN_MS = 1000;
 
   // Blokkerer visning av denne komponenten frem til oppfrisk() svarer. Resultatet blir cachet.
-  usePromise(async () => {
-    await oppfrisk();
-  }, [], CACHE_LIFESPAN_MS);
+  usePromise(
+    async () => {
+      await oppfrisk();
+    },
+    [],
+    CACHE_LIFESPAN_MS
+  );
 
   return (
     <div>
@@ -71,7 +80,8 @@ const OppfriskFeilmelding = ({ feilmelding, lukk, resetErrorBoundary }) => (
   <div>
     <Nav.typo.Systemtittel>Feil ved oppdatering av registeropplysninger</Nav.typo.Systemtittel>
     <Nav.AlertStripe type="feil">
-      Kunne ikke oppdatere opplysninger. Feilmelding: {feilmelding}<br />
+      Kunne ikke oppdatere opplysninger. Feilmelding: {feilmelding}
+      <br />
       Prøv igjen, eller meld sak i porten.
     </Nav.AlertStripe>
     <div className="knapperadcontainer">
@@ -89,14 +99,16 @@ OppfriskFeilmelding.propTypes = {
 
 // Returnerer OppfriskVenter mens behandlingen oppfriskes og OppfriskFeilmelding dersom oppfrisk() returnerer != 2xx
 const OppfriskBehandling = ({ oppfrisk, lukk, tilForsiden }) => (
-  <ErrorBoundary fallbackRender={({ error, resetErrorBoundary }) =>
-    <OppfriskFeilmelding
-      feilmelding={error ? error.message : 'Ukjent feil'}
-      resetErrorBoundary={resetErrorBoundary}
-      tilForsiden={tilForsiden}
-      lukk={lukk}
-    />
-  }>
+  <ErrorBoundary
+    fallbackRender={({ error, resetErrorBoundary }) => (
+      <OppfriskFeilmelding
+        feilmelding={error ? error.message : "Ukjent feil"}
+        resetErrorBoundary={resetErrorBoundary}
+        tilForsiden={tilForsiden}
+        lukk={lukk}
+      />
+    )}
+  >
     <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
       <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
     </Suspense>
@@ -109,13 +121,12 @@ OppfriskBehandling.propTypes = {
   oppfrisk: PT.func.isRequired,
 };
 
-const BekreftEllerOppfrisk = ({
-  bekreftet, settBekreftet, oppfrisk, avbryt, lukk, tilForsiden,
-}) => (
-  bekreftet
-    ? <OppfriskBehandling oppfrisk={oppfrisk} lukk={lukk} tilForsiden={tilForsiden} />
-    : <OppfriskBekreft bekreft={settBekreftet} avbryt={avbryt} />
-);
+const BekreftEllerOppfrisk = ({ bekreftet, settBekreftet, oppfrisk, avbryt, lukk, tilForsiden }) =>
+  bekreftet ? (
+    <OppfriskBehandling oppfrisk={oppfrisk} lukk={lukk} tilForsiden={tilForsiden} />
+  ) : (
+    <OppfriskBekreft bekreft={settBekreftet} avbryt={avbryt} />
+  );
 
 BekreftEllerOppfrisk.propTypes = {
   bekreftet: PT.bool.isRequired,
@@ -130,7 +141,8 @@ const AnnenBehandlingOppfriskes = ({ avbryt }) => (
   <div>
     <Nav.typo.Systemtittel>Kan ikke oppdatere registeropplysninger</Nav.typo.Systemtittel>
     <Nav.AlertStripe type="advarsel">
-      Registeropplysningene i en annen behandling er i ferd med å bli oppdatert. Vent til den behandlingen er oppdatert før du starter å oppdatere denne.
+      Registeropplysningene i en annen behandling er i ferd med å bli oppdatert. Vent til den behandlingen er oppdatert
+      før du starter å oppdatere denne.
     </Nav.AlertStripe>
     <div className="knapperadcontainer">
       <Nav.Knapp onClick={avbryt}>Lukk</Nav.Knapp>
@@ -143,7 +155,13 @@ AnnenBehandlingOppfriskes.propTypes = {
 };
 
 const DialogboksOppfriskBehandling = ({
-  avbryt, lukk, tilForsiden, oppfrisk, behandlingOppfriskes, annenBehandlingOppfriskes, ariaHideApp,
+  avbryt,
+  lukk,
+  tilForsiden,
+  oppfrisk,
+  behandlingOppfriskes,
+  annenBehandlingOppfriskes,
+  ariaHideApp,
 }) => {
   const [bekreftet, setBekreftet] = useState(behandlingOppfriskes);
 
@@ -157,17 +175,18 @@ const DialogboksOppfriskBehandling = ({
       shouldCloseOnOverlayClick={false}
       ariaHideApp={ariaHideApp}
     >
-      {
-        annenBehandlingOppfriskes ?
-          <AnnenBehandlingOppfriskes avbryt={avbryt} /> :
-          <BekreftEllerOppfrisk
-            tilForsiden={tilForsiden}
-            settBekreftet={() => setBekreftet(true)}
-            oppfrisk={oppfrisk}
-            avbryt={avbryt}
-            lukk={lukk}
-            bekreftet={bekreftet} />
-      }
+      {annenBehandlingOppfriskes ? (
+        <AnnenBehandlingOppfriskes avbryt={avbryt} />
+      ) : (
+        <BekreftEllerOppfrisk
+          tilForsiden={tilForsiden}
+          settBekreftet={() => setBekreftet(true)}
+          oppfrisk={oppfrisk}
+          avbryt={avbryt}
+          lukk={lukk}
+          bekreftet={bekreftet}
+        />
+      )}
     </Nav.Modal>
   );
 };

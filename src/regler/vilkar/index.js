@@ -1,13 +1,14 @@
-import { tryParseBool } from '../../utils/streng';
+import { tryParseBool } from "../../utils/streng";
 
-export const vilkaarType = 'vilkaar';
+export const vilkaarType = "vilkaar";
 
-export const slettVilkar = felt => ({
+export const slettVilkar = (felt) => ({
   felt,
   type: vilkaarType,
 });
 
-export const hentVilkar = (spesifiktVilkar, alleVilkar) => alleVilkar.find(enkelt => enkelt.vilkaar === spesifiktVilkar) || {};
+export const hentVilkar = (spesifiktVilkar, alleVilkar) =>
+  alleVilkar.find((enkelt) => enkelt.vilkaar === spesifiktVilkar) || {};
 
 export const erVilkarOppfylt = (spesifiktVilkar, alleVilkar) => {
   const funnetVilkar = hentVilkar(spesifiktVilkar, alleVilkar);
@@ -47,17 +48,11 @@ export const lagVilkaar = (felt, verdi, begrunnelse, fritekst, fritekstEngelsk) 
   };
 };
 
-export const lagBegrunnelse = (felt, begrunnelse, fritekst, fritekstEngelsk) => (
-  lagVilkaar(felt, null, begrunnelse, fritekst, fritekstEngelsk)
-);
+export const lagBegrunnelse = (felt, begrunnelse, fritekst, fritekstEngelsk) =>
+  lagVilkaar(felt, null, begrunnelse, fritekst, fritekstEngelsk);
 
 export const konverterTilStegData = (felt, vilkaar) => {
-  const {
-    oppfylt,
-    begrunnelseKoder,
-    begrunnelseFritekst,
-    begrunnelseFritekstEngelsk,
-  } = vilkaar;
+  const { oppfylt, begrunnelseKoder, begrunnelseFritekst, begrunnelseFritekstEngelsk } = vilkaar;
 
   return {
     felt,

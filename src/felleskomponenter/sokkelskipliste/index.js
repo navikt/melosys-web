@@ -1,3 +1,3 @@
-import Sokkelskipliste from './sokkelskipliste';
+import Sokkelskipliste from "./sokkelskipliste";
 
 export default Sokkelskipliste;

@@ -1,14 +1,14 @@
-import React, { ComponentProps } from 'react';
-import { mock, instance } from 'ts-mockito';
-import { shallow } from 'enzyme';
+import React, { ComponentProps } from "react";
+import { mock, instance } from "ts-mockito";
+import { shallow } from "enzyme";
 
-import * as Nav from '../../../../utils/navFrontend';
+import * as Nav from "../../../../utils/navFrontend";
 
-import { Medlemskap, MedlemskapGruppe, MedlemskapEnkeltPeriode } from './medlemskap';
+import { Medlemskap, MedlemskapGruppe, MedlemskapEnkeltPeriode } from "./medlemskap";
 
-import ExpandableList from '../../../expandablelist';
+import ExpandableList from "../../../expandablelist";
 
-describe('Medlemskap', () => {
+describe("Medlemskap", () => {
   const mockedProps = mock<ComponentProps<typeof Medlemskap>>();
   const props = instance(mockedProps);
 
@@ -19,7 +19,7 @@ describe('Medlemskap', () => {
     };
   });
 
-  it('Viser to medlemskapsgrupper', () => {
+  it("Viser to medlemskapsgrupper", () => {
     const medlemskap = shallow(<Medlemskap {...props} />);
     const medlemskapsgrupper = medlemskap.find(MedlemskapGruppe);
 
@@ -29,16 +29,16 @@ describe('Medlemskap', () => {
   });
 });
 
-describe('MedlemskapGruppe', () => {
+describe("MedlemskapGruppe", () => {
   const mockedProps = mock<ComponentProps<typeof MedlemskapGruppe>>();
   const props = instance(mockedProps);
 
   beforeEach(() => {
     props.perioder = [];
-    props.overskrift = 'overskrift';
+    props.overskrift = "overskrift";
   });
 
-  it('viser overskrift', () => {
+  it("viser overskrift", () => {
     const medlemskapGruppe = shallow(<MedlemskapGruppe {...props} />);
     const overskrift = medlemskapGruppe.find(Nav.typo.Undertittel);
 
@@ -46,16 +46,13 @@ describe('MedlemskapGruppe', () => {
     expect(overskrift.children().text()).toBe(props.overskrift);
   });
 
-  it('viser en ExpandableList med gitte perioder', () => {
+  it("viser en ExpandableList med gitte perioder", () => {
     const mockedPeriode = mock<typeof mockedProps.perioder[0]>();
     const periode1 = instance(mockedPeriode);
     periode1.periodeID = 1;
     const periode2 = instance(mockedPeriode);
     periode2.periodeID = 2;
-    props.perioder = [
-      periode1,
-      periode2,
-    ];
+    props.perioder = [periode1, periode2];
     const medlemskapGruppe = shallow(<MedlemskapGruppe {...props} />);
     const expandableList = medlemskapGruppe.find(ExpandableList);
     const expandableListProps = expandableList.props();
@@ -64,22 +61,22 @@ describe('MedlemskapGruppe', () => {
     expect(expandableListProps.elements).toBe(props.perioder);
   });
 
-  it('viser infomelding dersom ingen perioder oppgitt', () => {
+  it("viser infomelding dersom ingen perioder oppgitt", () => {
     const medlemskapGruppe = shallow(<MedlemskapGruppe {...props} />);
-    const section = medlemskapGruppe.find('section');
+    const section = medlemskapGruppe.find("section");
 
-    expect(section.children().text()).toBe('(ingen data funnet)');
+    expect(section.children().text()).toBe("(ingen data funnet)");
   });
 });
 
-describe('MedlemskapEnkeltPeriode', () => {
+describe("MedlemskapEnkeltPeriode", () => {
   const mockedProps = mock<ComponentProps<typeof MedlemskapEnkeltPeriode>>();
   const props = instance(mockedProps);
   const mockedPeriode = mock<typeof mockedProps.enkeltPeriode>();
   const periode = instance(mockedPeriode);
   props.enkeltPeriode = periode;
 
-  it('vises uten å krasje', () => {
+  it("vises uten å krasje", () => {
     shallow(<MedlemskapEnkeltPeriode {...props} />);
   });
 });

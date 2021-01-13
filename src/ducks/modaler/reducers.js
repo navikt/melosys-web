@@ -1,14 +1,14 @@
-import { STATUS } from '../../services/utils';
-import * as Types from './types';
+import { STATUS } from "../../services/utils";
+import * as Types from "./types";
 
 const modaler = {
-  avslagSoknad: 'avslagSoknad',
-  avsluttSakSomBortfalt: 'avsluttSakSomBortfalt',
-  henlegg: 'henlegg',
-  oppfrisk: 'oppfrisk',
-  validering: 'validering',
-  revurderFagsak: 'revurderFagsak',
-  endreBehandlingstema: 'endreBehandlingstema',
+  avslagSoknad: "avslagSoknad",
+  avsluttSakSomBortfalt: "avsluttSakSomBortfalt",
+  henlegg: "henlegg",
+  oppfrisk: "oppfrisk",
+  validering: "validering",
+  revurderFagsak: "revurderFagsak",
+  endreBehandlingstema: "endreBehandlingstema",
 };
 
 const initialState = {

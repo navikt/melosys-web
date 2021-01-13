@@ -1,10 +1,10 @@
-import * as selectors from './selectors';
-import * as KV from '../../kodeverk';
+import * as selectors from "./selectors";
+import * as KV from "../../kodeverk";
 
-import MKV from '../../melosyskodeverk';
-import { BOOLSK_STRING } from '../../constants';
+import MKV from "../../melosyskodeverk";
+import { BOOLSK_STRING } from "../../constants";
 
-describe('Avklartefaktaselectors', () => {
+describe("Avklartefaktaselectors", () => {
   const lagState = ({
     avklartefakta,
     behandlingstype,
@@ -43,8 +43,8 @@ describe('Avklartefaktaselectors', () => {
     },
   });
 
-  describe('ArbeidslandKTSelector', () => {
-    it('returnerer ikke land som er SOKNADSLAND med fakta IKKE_ARBEIDSLAND', () => {
+  describe("ArbeidslandKTSelector", () => {
+    it("returnerer ikke land som er SOKNADSLAND med fakta IKKE_ARBEIDSLAND", () => {
       const avklartefakta = [
         {
           referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
@@ -84,7 +84,7 @@ describe('Avklartefaktaselectors', () => {
           {
             referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
             subjektID: MKV.Koder.landkoder.DE,
-            fakta: ['TRUE'],
+            fakta: ["TRUE"],
           },
           {
             referanse: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
@@ -109,7 +109,7 @@ describe('Avklartefaktaselectors', () => {
           {
             referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
             subjektID: MKV.Koder.landkoder.DE,
-            fakta: ['TRUE'],
+            fakta: ["TRUE"],
           },
         ],
         MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
@@ -120,7 +120,7 @@ describe('Avklartefaktaselectors', () => {
           luftfartBaser: [],
         },
       ],
-    ]).it('returnerer korrekt verdi', (forventetResultat, avklartefakta, behandlingstema, behandlingsgrunnlagData) => {
+    ]).it("returnerer korrekt verdi", (forventetResultat, avklartefakta, behandlingstema, behandlingsgrunnlagData) => {
       const state = lagState({
         avklartefakta,
         behandlingstema,
@@ -130,9 +130,9 @@ describe('Avklartefaktaselectors', () => {
     });
   });
 
-  describe('ArbeidslandMedYrkesAktivitetSelector', () => {
+  describe("ArbeidslandMedYrkesAktivitetSelector", () => {
     const behandlingstype = MKV.Koder.behandlinger.behandlingstyper.SOEKNAD;
-    const lagSoknadslandFakta = land => ({
+    const lagSoknadslandFakta = (land) => ({
       referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
       subjektID: land,
       fakta: [BOOLSK_STRING.SANN],
@@ -234,17 +234,20 @@ describe('Avklartefaktaselectors', () => {
           arbeidUtland: [],
         },
       ],
-    ]).it('returnerer korrekt verdi for arbeidsland som ikke er Norge', (forventetResultat, behandlingsgrunnlagData) => {
-      const arbeidsland = MKV.Koder.landkoder.DE;
-      const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
-      const state = lagState({
-        avklartefakta,
-        behandlingstype,
-        behandlingsgrunnlagData,
-      });
+    ]).it(
+      "returnerer korrekt verdi for arbeidsland som ikke er Norge",
+      (forventetResultat, behandlingsgrunnlagData) => {
+        const arbeidsland = MKV.Koder.landkoder.DE;
+        const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
+        const state = lagState({
+          avklartefakta,
+          behandlingstype,
+          behandlingsgrunnlagData,
+        });
 
-      expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(forventetResultat);
-    });
+        expect(selectors.ArbeidslandMedYrkesAktivitetSelector(state)).toEqual(forventetResultat);
+      }
+    );
 
     each([
       [
@@ -276,9 +279,7 @@ describe('Avklartefaktaselectors', () => {
         {
           selvstendigArbeid: {
             erSelvstendig: true,
-            selvstendigForetak: [
-              {},
-            ],
+            selvstendigForetak: [{}],
           },
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.NO],
@@ -302,7 +303,7 @@ describe('Avklartefaktaselectors', () => {
             landkoder: [MKV.Koder.landkoder.NO],
           },
           luftfartBaser: [],
-          periode: { fom: '2020-02-02', tom: '2020-06-02' },
+          periode: { fom: "2020-02-02", tom: "2020-06-02" },
         },
       ],
       [
@@ -316,58 +317,56 @@ describe('Avklartefaktaselectors', () => {
         {
           selvstendigArbeid: {
             erSelvstendig: true,
-            selvstendigForetak: [
-              {},
-            ],
+            selvstendigForetak: [{}],
           },
           soeknadsland: {
             landkoder: [MKV.Koder.landkoder.NO],
           },
           luftfartBaser: [],
-          periode: { fom: '2020-02-02', tom: '2020-06-02' },
+          periode: { fom: "2020-02-02", tom: "2020-06-02" },
         },
       ],
-    ]).it('returner korrekt verdi for arbeidsland lik Norge', (forventetResultat, behandlingsgrunnlagData) => {
+    ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, behandlingsgrunnlagData) => {
       const arbeidsland = MKV.Koder.landkoder.NO;
       const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
       const behandlingerSaksopplysninger = {
         arbeidsforhold: [
           {
-            arbeidsgiverID: '12345',
-            opplysningspliktigID: '12345',
+            arbeidsgiverID: "12345",
+            opplysningspliktigID: "12345",
           },
         ],
         organisasjoner: [
           {
-            orgnr: '12345',
-            navn: 'Organisasjon',
+            orgnr: "12345",
+            navn: "Organisasjon",
           },
         ],
         sed: {
-          fom: '2020-02-02',
-          tom: '2020-06-02',
+          fom: "2020-02-02",
+          tom: "2020-06-02",
         },
         inntekt: {
           arbeidsInntektMaanedListe: [
             {
-              aarMaaned: '2019-10',
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: '12345', beloep: 30000 }] },
+              aarMaaned: "2019-10",
+              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
             },
             {
-              aarMaaned: '2019-11',
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: '12345', beloep: 30000 }] },
+              aarMaaned: "2019-11",
+              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
             },
             {
-              aarMaaned: '2019-12',
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: '12345', beloep: 30000 }] },
+              aarMaaned: "2019-12",
+              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
             },
             {
-              aarMaaned: '2020-01',
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: '12345', beloep: 30000 }] },
+              aarMaaned: "2020-01",
+              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
             },
             {
-              aarMaaned: '2020-02',
-              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: '12345', beloep: 30000 }] },
+              aarMaaned: "2020-02",
+              arbeidsInntektInformasjon: { inntektListe: [{ opplysningspliktigID: "12345", beloep: 30000 }] },
             },
           ],
         },
@@ -384,13 +383,13 @@ describe('Avklartefaktaselectors', () => {
     });
   });
 
-  describe('AvklarteVirksomheterIkkeNaeringsdrivendeSelector', () => {
+  describe("AvklarteVirksomheterIkkeNaeringsdrivendeSelector", () => {
     const { resultFunc } = selectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector;
 
-    it('throw error hvis avklart virksomhet ikke tilhører foretak eller organisasjon', () => {
+    it("throw error hvis avklart virksomhet ikke tilhører foretak eller organisasjon", () => {
       const alleAvklarteVirksomhetFaktaer = [
         {
-          subjektID: '1',
+          subjektID: "1",
         },
       ];
       const fagsakOrganisasjoner = [];
@@ -399,20 +398,26 @@ describe('Avklartefaktaselectors', () => {
       const selvstendigArbeidForetak = [];
 
       expect(() => {
-        resultFunc(alleAvklarteVirksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland, selvstendigArbeidForetak);
+        resultFunc(
+          alleAvklarteVirksomhetFaktaer,
+          fagsakOrganisasjoner,
+          soknadOrganisasjoner,
+          foretakUtland,
+          selvstendigArbeidForetak
+        );
       }).toThrow();
     });
 
-    it('selvstendige foretakUtland returneres ikke', () => {
+    it("selvstendige foretakUtland returneres ikke", () => {
       const alleAvklarteVirksomhetFaktaer = [
         {
-          subjektID: '1',
+          subjektID: "1",
         },
       ];
       const alleOrganisasjoner = [];
       const foretakUtland = [
         {
-          uuid: '1',
+          uuid: "1",
           selvstendigNaeringsvirksomhet: true,
         },
       ];
@@ -420,69 +425,78 @@ describe('Avklartefaktaselectors', () => {
 
       const forventetResultat = [];
 
-      expect(resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
+      expect(
+        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)
+      ).toEqual(forventetResultat);
     });
 
-    it('ikke-selvstendige foretakUtland returneres', () => {
+    it("ikke-selvstendige foretakUtland returneres", () => {
       const alleAvklarteVirksomhetFaktaer = [
         {
-          subjektID: '1',
+          subjektID: "1",
         },
       ];
       const alleOrganisasjoner = [];
       const foretakUtland = [
         {
-          uuid: '1',
+          uuid: "1",
           selvstendigNaeringsvirksomhet: false,
           adresse: {},
         },
       ];
       const selvstendigArbeidForetak = [];
 
-      const resultat = resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak);
+      const resultat = resultFunc(
+        alleAvklarteVirksomhetFaktaer,
+        alleOrganisasjoner,
+        foretakUtland,
+        selvstendigArbeidForetak
+      );
 
-      expect(resultat[0].virksomhetId).toBe('1');
+      expect(resultat[0].virksomhetId).toBe("1");
     });
 
-    it('selvstendige arbeid foretak returneres ikke', () => {
+    it("selvstendige arbeid foretak returneres ikke", () => {
       const alleAvklarteVirksomhetFaktaer = [
         {
-          subjektID: '1',
+          subjektID: "1",
         },
       ];
       const alleOrganisasjoner = [
         {
-          orgnr: '1',
+          orgnr: "1",
         },
       ];
       const foretakUtland = [];
       const selvstendigArbeidForetak = [
         {
-          orgnr: '1',
+          orgnr: "1",
         },
       ];
 
       const forventetResultat = [];
 
-      expect(resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toEqual(forventetResultat);
+      expect(
+        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)
+      ).toEqual(forventetResultat);
     });
 
-    it('virksomheter som finnes blant organisasjoner returneres', () => {
+    it("virksomheter som finnes blant organisasjoner returneres", () => {
       const alleAvklarteVirksomhetFaktaer = [
         {
-          subjektID: '1',
+          subjektID: "1",
         },
         {
-          subjektID: '2',
+          subjektID: "2",
         },
       ];
       const alleOrganisasjoner = [
         {
-          orgnr: '2',
+          orgnr: "2",
           forretningsadresse: {},
         },
         {
-          orgnr: '1',
+          orgnr: "1",
           forretningsadresse: {},
         },
       ];
@@ -491,56 +505,50 @@ describe('Avklartefaktaselectors', () => {
 
       const forventetResultat = [
         {
-          virksomhetId: '1',
+          virksomhetId: "1",
         },
         {
-          virksomhetId: '2',
+          virksomhetId: "2",
         },
       ];
 
-      expect(resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)).toMatchObject(forventetResultat);
+      expect(
+        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)
+      ).toMatchObject(forventetResultat);
     });
   });
 
-  describe('LandSomKreverSEDKTSelector', () => {
+  describe("LandSomKreverSEDKTSelector", () => {
     const avklartefaktaArbeidslandMedMarginaltArbeid = [
       {
-        avklartefaktaKode: 'MARGINALT_ARBEID',
-        referanse: 'MARGINALT_ARBEID',
-        fakta: [
-          'TRUE',
-        ],
-        subjektID: 'DK',
+        avklartefaktaKode: "MARGINALT_ARBEID",
+        referanse: "MARGINALT_ARBEID",
+        fakta: ["TRUE"],
+        subjektID: "DK",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
       {
-        avklartefaktaKode: 'MARGINALT_ARBEID',
-        referanse: 'MARGINALT_ARBEID',
-        fakta: [
-          'TRUE',
-        ],
-        subjektID: 'NO',
+        avklartefaktaKode: "MARGINALT_ARBEID",
+        referanse: "MARGINALT_ARBEID",
+        fakta: ["TRUE"],
+        subjektID: "NO",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
       {
-        avklartefaktaKode: 'ARBEIDSLAND',
-        referanse: 'ARBEIDSLAND',
-        fakta: [
-          'DK',
-        ],
-        subjektID: 'DK',
+        avklartefaktaKode: "ARBEIDSLAND",
+        referanse: "ARBEIDSLAND",
+        fakta: ["DK"],
+        subjektID: "DK",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
       {
-        avklartefaktaKode: 'ARBEIDSLAND',
-        referanse: 'ARBEIDSLAND',
-        fakta: [
-          'NO',
-        ],
-        subjektID: 'NO',
+        avklartefaktaKode: "ARBEIDSLAND",
+        referanse: "ARBEIDSLAND",
+        fakta: ["NO"],
+        subjektID: "NO",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
@@ -549,187 +557,185 @@ describe('Avklartefaktaselectors', () => {
     const avklartefaktaArbeidslandUtenMarginaltArbeid = [
       {
         avklartefaktaKode: null,
-        referanse: 'SOKNADSLAND',
-        fakta: [
-          'TRUE',
-        ],
-        subjektID: 'DK',
+        referanse: "SOKNADSLAND",
+        fakta: ["TRUE"],
+        subjektID: "DK",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
       {
         avklartefaktaKode: null,
-        referanse: 'SOKNADSLAND',
-        fakta: [
-          'TRUE',
-        ],
-        subjektID: 'NO',
+        referanse: "SOKNADSLAND",
+        fakta: ["TRUE"],
+        subjektID: "NO",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
       {
-        avklartefaktaKode: 'ARBEIDSLAND',
-        referanse: 'ARBEIDSLAND',
-        fakta: [
-          'DK',
-        ],
-        subjektID: 'DK',
+        avklartefaktaKode: "ARBEIDSLAND",
+        referanse: "ARBEIDSLAND",
+        fakta: ["DK"],
+        subjektID: "DK",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
       {
-        avklartefaktaKode: 'ARBEIDSLAND',
-        referanse: 'ARBEIDSLAND',
-        fakta: [
-          'NO',
-        ],
-        subjektID: 'NO',
+        avklartefaktaKode: "ARBEIDSLAND",
+        referanse: "ARBEIDSLAND",
+        fakta: ["NO"],
+        subjektID: "NO",
         begrunnelseKoder: [],
         begrunnelseFritekst: null,
       },
     ];
 
     const soeknadsland = {
-      landkoder: [
-        'DK',
-        'NO',
-      ],
+      landkoder: ["DK", "NO"],
     };
 
     const foretakUtland = [
       {
         adresse: {
-          landkode: 'DK',
+          landkode: "DK",
         },
       },
     ];
 
-    const lagStateDefaults = ({
-      avklartefakta,
-      behandlingsgrunnlagData,
-      utpekingsperioder,
-    }) => lagState({
-      avklartefakta: avklartefakta || [],
-      behandlingsgrunnlagData: behandlingsgrunnlagData || [],
-      behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-      utpekingsperioder: utpekingsperioder || [],
-    });
+    const lagStateDefaults = ({ avklartefakta, behandlingsgrunnlagData, utpekingsperioder }) =>
+      lagState({
+        avklartefakta: avklartefakta || [],
+        behandlingsgrunnlagData: behandlingsgrunnlagData || [],
+        behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+        utpekingsperioder: utpekingsperioder || [],
+      });
 
-    it('skal returnere tom liste når ingen land er oppgitt', () => {
+    it("skal returnere tom liste når ingen land er oppgitt", () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({}));
       expect(resultat.length).toBe(0);
     });
 
-    it('skal returnere tom liste når alle arbeidsland har marginalt arbeid', () => {
-      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
-        behandlingsgrunnlagData: {
-          soeknadsland,
-        },
-      }));
+    it("skal returnere tom liste når alle arbeidsland har marginalt arbeid", () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(
+        lagStateDefaults({
+          avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
+          behandlingsgrunnlagData: {
+            soeknadsland,
+          },
+        })
+      );
       expect(resultat.length).toBe(0);
     });
 
-    it('skal returnere arbeidsland uten marginalt arbeid', () => {
-      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
-        behandlingsgrunnlagData: {
-          soeknadsland,
-        },
-      }));
-      expect(resultat.length).toBe(2);
-
-      const landkoder = resultat.map(({ kode }) => kode);
-      expect(landkoder).toEqual(expect.arrayContaining(['DK', 'NO']));
-    });
-
-    it('skal returnere arbeidsland med marginalt arbeid som er oppgitt i foretakUtland', () => {
-      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
-        behandlingsgrunnlagData: {
-          soeknadsland,
-          foretakUtland,
-        },
-      }));
-      expect(resultat.length).toBe(1);
-
-      const landkoder = resultat.map(({ kode }) => kode);
-      expect(landkoder).toEqual(expect.arrayContaining(['DK']));
-    });
-
-    it('skal returnere arbeidsland med marginalt arbeid som er oppgitt i arbeidUtland', () => {
-      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
-        behandlingsgrunnlagData: {
-          soeknadsland,
-          arbeidUtland: foretakUtland,
-        },
-      }));
-      expect(resultat.length).toBe(1);
-
-      const landkoder = resultat.map(({ kode }) => kode);
-      expect(landkoder).toEqual(expect.arrayContaining(['DK']));
-    });
-
-    it('skal returnere lovvalgsland oppgitt i utpekingsperiode', () => {
-      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        utpekingsperioder: [
-          {
-            lovvalgsland: 'DE',
+    it("skal returnere arbeidsland uten marginalt arbeid", () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(
+        lagStateDefaults({
+          avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
+          behandlingsgrunnlagData: {
+            soeknadsland,
           },
-        ],
-      }));
-      expect(resultat.length).toBe(1);
-
-      const landkoder = resultat.map(({ kode }) => kode);
-      expect(landkoder).toEqual(expect.arrayContaining(['DE']));
-    });
-
-    it('skal ikke returnere flere av samme land', () => {
-      const resultat = selectors.LandSomKreverSEDKTSelector(lagStateDefaults({
-        avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
-        behandlingsgrunnlagData: {
-          soeknadsland,
-          foretakUtland,
-          arbeidUtland: foretakUtland,
-        },
-      }));
+        })
+      );
       expect(resultat.length).toBe(2);
 
       const landkoder = resultat.map(({ kode }) => kode);
-      expect(landkoder).toEqual(expect.arrayContaining(['DK', 'NO']));
+      expect(landkoder).toEqual(expect.arrayContaining(["DK", "NO"]));
+    });
+
+    it("skal returnere arbeidsland med marginalt arbeid som er oppgitt i foretakUtland", () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(
+        lagStateDefaults({
+          avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
+          behandlingsgrunnlagData: {
+            soeknadsland,
+            foretakUtland,
+          },
+        })
+      );
+      expect(resultat.length).toBe(1);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(["DK"]));
+    });
+
+    it("skal returnere arbeidsland med marginalt arbeid som er oppgitt i arbeidUtland", () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(
+        lagStateDefaults({
+          avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
+          behandlingsgrunnlagData: {
+            soeknadsland,
+            arbeidUtland: foretakUtland,
+          },
+        })
+      );
+      expect(resultat.length).toBe(1);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(["DK"]));
+    });
+
+    it("skal returnere lovvalgsland oppgitt i utpekingsperiode", () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(
+        lagStateDefaults({
+          utpekingsperioder: [
+            {
+              lovvalgsland: "DE",
+            },
+          ],
+        })
+      );
+      expect(resultat.length).toBe(1);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(["DE"]));
+    });
+
+    it("skal ikke returnere flere av samme land", () => {
+      const resultat = selectors.LandSomKreverSEDKTSelector(
+        lagStateDefaults({
+          avklartefakta: avklartefaktaArbeidslandUtenMarginaltArbeid,
+          behandlingsgrunnlagData: {
+            soeknadsland,
+            foretakUtland,
+            arbeidUtland: foretakUtland,
+          },
+        })
+      );
+      expect(resultat.length).toBe(2);
+
+      const landkoder = resultat.map(({ kode }) => kode);
+      expect(landkoder).toEqual(expect.arrayContaining(["DK", "NO"]));
     });
   });
 
-  describe('AvklarteVirksomheterSelector', () => {
+  describe("AvklarteVirksomheterSelector", () => {
     const { resultFunc } = selectors.AvklarteVirksomheterSelector;
 
-    it('returnerer alle avklarte virksomheter', () => {
-      const resultat = resultFunc([{ virksomhetId: '1' }], [{ virksomhetId: '2' }]);
-      expect(resultat[0].virksomhetId).toBe('1');
-      expect(resultat[1].virksomhetId).toBe('2');
+    it("returnerer alle avklarte virksomheter", () => {
+      const resultat = resultFunc([{ virksomhetId: "1" }], [{ virksomhetId: "2" }]);
+      expect(resultat[0].virksomhetId).toBe("1");
+      expect(resultat[1].virksomhetId).toBe("2");
     });
   });
 
-  describe('AvklarteNorskeVirksomheterSelector', () => {
+  describe("AvklarteNorskeVirksomheterSelector", () => {
     const { resultFunc } = selectors.AvklarteNorskeVirksomheterSelector;
 
-    it('returnerer alle norske avklarte virksomheter', () => {
+    it("returnerer alle norske avklarte virksomheter", () => {
       const alleAvklarteVirksomhetFaktaer = [
         {
-          subjektID: '1',
+          subjektID: "1",
         },
         {
-          subjektID: '2',
+          subjektID: "2",
         },
       ];
       const alleOrganisasjoner = [
         {
-          orgnr: '2',
+          orgnr: "2",
           forretningsadresse: {},
         },
         {
-          orgnr: '1',
+          orgnr: "1",
           forretningsadresse: {},
         },
       ];
@@ -741,18 +747,18 @@ describe('Avklartefaktaselectors', () => {
     });
   });
 
-  describe('AvklarteUtenlandskeVirksomheterSelector', () => {
+  describe("AvklarteUtenlandskeVirksomheterSelector", () => {
     const { resultFunc } = selectors.AvklarteUtenlandskeVirksomheterSelector;
 
-    it('returnerer alle utenlandske avklarte virksomheter', () => {
+    it("returnerer alle utenlandske avklarte virksomheter", () => {
       const alleAvklarteVirksomhetFaktaer = [
         {
-          subjektID: '3',
+          subjektID: "3",
         },
       ];
       const foretakUtland = [
         {
-          uuid: '3',
+          uuid: "3",
           adresse: {},
         },
       ];

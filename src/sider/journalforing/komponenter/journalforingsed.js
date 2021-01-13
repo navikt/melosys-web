@@ -1,22 +1,22 @@
-import React from 'react';
-import PT from 'prop-types';
-import { reduxForm, getFormValues } from 'redux-form';
-import { connect } from 'react-redux';
+import React from "react";
+import PT from "prop-types";
+import { reduxForm, getFormValues } from "redux-form";
+import { connect } from "react-redux";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import * as KV from '../../../kodeverk';
-import * as Ikoner from '../../../resources/images';
-import * as Mui from '../../../felleskomponenter/ui';
+import * as Nav from "../../../utils/navFrontend";
+import * as MPT from "../../../proptypes";
+import * as KV from "../../../kodeverk";
+import * as Ikoner from "../../../resources/images";
+import * as Mui from "../../../felleskomponenter/ui";
 
-import Brukernavnskjema from '../../../felleskomponenter/brukernavnskjema';
-import Fotknapper from './fotknapper';
+import Brukernavnskjema from "../../../felleskomponenter/brukernavnskjema";
+import Fotknapper from "./fotknapper";
 
-import { journalforingSelectors } from '../../../ducks/journalforing';
+import { journalforingSelectors } from "../../../ducks/journalforing";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
-import './journalforingsed.css';
+import "./journalforingsed.css";
 
 const JournalforingSED = ({
   avsenderID,
@@ -40,12 +40,7 @@ const JournalforingSED = ({
         <Brukernavnskjema form={form} />
       </Nav.Column>
     </Nav.Row>
-    <Mui.Undertittel
-      tekst="Informasjon om avsender"
-      ikon={Ikoner.Globe}
-      className="undertittel"
-      understrek
-    />
+    <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" understrek />
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.typo.Element>Avsender ID</Nav.typo.Element>
@@ -54,12 +49,7 @@ const JournalforingSED = ({
         <Nav.typo.Normaltekst>{avsenderNavn}</Nav.typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
-    <Mui.Undertittel
-      tekst="Saksinformasjon"
-      ikon={Ikoner.ParagraphTwoColumns}
-      className="undertittel"
-      understrek
-    />
+    <Mui.Undertittel tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" understrek />
     <Nav.Row>
       <Nav.Column xs="5">
         <Nav.typo.Element>Sakstype</Nav.typo.Element>
@@ -94,7 +84,7 @@ const form = {
   validate: lagYupToReduxformErrorMapper(YupSkjemaer.journalforingSED),
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   onSubmit: (values, dispatch, props) => props.submitJournalforing(),
   formValues: getFormValues(KV.Form.JOURNALFORING_SED)(state),
   initialValues: {
@@ -102,6 +92,5 @@ const mapStateToProps = state => ({
     brukerID: journalforingSelectors.BrukerIDSelector(state),
   },
 });
-
 
 export default connect(mapStateToProps)(reduxForm(form)(JournalforingSED));

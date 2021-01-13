@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import StegerstatterBase from './stegerstatterBase';
+import StegerstatterBase from "./stegerstatterBase";
 
 const AvslaattSoknad = () => (
   <StegerstatterBase

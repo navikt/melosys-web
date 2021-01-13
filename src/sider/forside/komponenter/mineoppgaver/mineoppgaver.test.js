@@ -1,70 +1,70 @@
-import React from 'react';
+import React from "react";
 
-import BehandlingOppgave from '../../../../felleskomponenter/oppgaveliste/behandlingOppgave';
-import JournalforingOppgave from '../../../../felleskomponenter/oppgaveliste/journalforingOppgave';
-import SorterbarListe from '../../../../felleskomponenter/sorterbarListe/sorterbarListe';
-import { MineOppgaver } from './mineoppgaver';
+import BehandlingOppgave from "../../../../felleskomponenter/oppgaveliste/behandlingOppgave";
+import JournalforingOppgave from "../../../../felleskomponenter/oppgaveliste/journalforingOppgave";
+import SorterbarListe from "../../../../felleskomponenter/sorterbarListe/sorterbarListe";
+import { MineOppgaver } from "./mineoppgaver";
 
-describe('MineOppgaver', () => {
+describe("MineOppgaver", () => {
   let props = null;
 
   const journalforing = [
     {
-      aktivTil: '2016-02-21',
-      ansvarligID: 'Z991111',
-      fnr: '28106600300',
-      journalpostID: 'DOK_3789',
-      oppgaveID: '174464932',
-      prioritet: 'HOY',
-      sammensattNavn: 'KAKE ARTIG',
+      aktivTil: "2016-02-21",
+      ansvarligID: "Z991111",
+      fnr: "28106600300",
+      journalpostID: "DOK_3789",
+      oppgaveID: "174464932",
+      prioritet: "HOY",
+      sammensattNavn: "KAKE ARTIG",
       versjon: 1,
     },
     {
-      aktivTil: '2016-02-20',
-      ansvarligID: 'Z992222',
-      fnr: '28106600300',
-      journalpostID: 'DOK_3789',
-      oppgaveID: '174464932',
-      prioritet: 'HOY',
-      sammensattNavn: 'KAKE ARTIG',
+      aktivTil: "2016-02-20",
+      ansvarligID: "Z992222",
+      fnr: "28106600300",
+      journalpostID: "DOK_3789",
+      oppgaveID: "174464932",
+      prioritet: "HOY",
+      sammensattNavn: "KAKE ARTIG",
       versjon: 1,
     },
   ];
 
   const saksbehandling = [
     {
-      oppgaveID: '174562068',
-      sammensattNavn: 'GLITRENDE HATT',
-      fnr: '28106600300',
-      saksnummer: '4',
+      oppgaveID: "174562068",
+      sammensattNavn: "GLITRENDE HATT",
+      fnr: "28106600300",
+      saksnummer: "4",
       sakstype: {
-        kode: 'TRYGDEAVTALE',
-        term: 'Trygdeavtale',
+        kode: "TRYGDEAVTALE",
+        term: "Trygdeavtale",
       },
       behandling: {
         behandlingID: 4,
         behandlingstype: {
-          kode: 'SOEKNAD',
-          term: 'Søknad',
+          kode: "SOEKNAD",
+          term: "Søknad",
         },
         behandlingsstatus: {
-          kode: 'UBEH',
-          term: 'Under behandling',
+          kode: "UBEH",
+          term: "Under behandling",
         },
-        endretDato: '2018-08-10T15:00:00.622Z',
+        endretDato: "2018-08-10T15:00:00.622Z",
         erUnderOppdatering: false,
-        registrertDato: '2018-12-11T16:30:00.622Z',
-        svarFrist: '2019-12-11T16:30:00.622Z',
+        registrertDato: "2018-12-11T16:30:00.622Z",
+        svarFrist: "2019-12-11T16:30:00.622Z",
       },
-      aktivTil: '2018-01-28',
+      aktivTil: "2018-01-28",
       periode: {
-        fom: '2018-10-01',
-        tom: '2019-08-31',
+        fom: "2018-10-01",
+        tom: "2019-08-31",
       },
-      prioritet: 'HOY',
-      land: ['NO'],
+      prioritet: "HOY",
+      land: ["NO"],
       versjon: 1,
-      ansvarligID: 'Z991001',
+      ansvarligID: "Z991001",
     },
   ];
 
@@ -77,37 +77,37 @@ describe('MineOppgaver', () => {
     };
   });
 
-  it('viser en OppgaverMedSortering for journalføringsoppgaver', () => {
+  it("viser en OppgaverMedSortering for journalføringsoppgaver", () => {
     const mineOppgaver = shallow(<MineOppgaver {...props} />);
 
-    const journalforingOppgaver = mineOppgaver
-      .find(SorterbarListe)
-      .first();
+    const journalforingOppgaver = mineOppgaver.find(SorterbarListe).first();
 
     const journalforingOppgaverProps = journalforingOppgaver.props();
     expect(journalforingOppgaverProps.component).toBe(JournalforingOppgave);
     expect(journalforingOppgaverProps.elementer).toBe(props.minesaker.journalforing);
   });
 
-  it('viser en OppgaverMedSortering for behandlinger', () => {
+  it("viser en OppgaverMedSortering for behandlinger", () => {
     const mineOppgaver = shallow(<MineOppgaver {...props} />);
 
-    const journalforingOppgaver = mineOppgaver
-      .find(SorterbarListe)
-      .last();
+    const journalforingOppgaver = mineOppgaver.find(SorterbarListe).last();
 
     const journalforingOppgaverProps = journalforingOppgaver.props();
     expect(journalforingOppgaverProps.component).toBe(BehandlingOppgave);
     expect(journalforingOppgaverProps.elementer).toBe(props.minesaker.saksbehandling);
   });
 
-  it('viser en melding dersom det ikke er noen journalføringsoppgaver eller behandlinger', () => {
+  it("viser en melding dersom det ikke er noen journalføringsoppgaver eller behandlinger", () => {
     props.minesaker = {
       journalforing: [],
       saksbehandling: [],
     };
     const mineOppgaver = shallow(<MineOppgaver {...props} />);
 
-    expect(mineOppgaver.containsMatchingElement('Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.')).toBe(true);
+    expect(
+      mineOppgaver.containsMatchingElement(
+        "Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre."
+      )
+    ).toBe(true);
   });
 });

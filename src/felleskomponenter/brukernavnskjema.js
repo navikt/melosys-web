@@ -1,27 +1,20 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import PT from 'prop-types';
-import { getFormValues, change, clearFields } from 'redux-form';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, Fragment } from "react";
+import PT from "prop-types";
+import { getFormValues, change, clearFields } from "redux-form";
+import { connect } from "react-redux";
 
-import * as Skjema from './skjema';
-import * as Api from '../services/api';
-import * as Utils from '../utils';
-import * as Nav from '../utils/navFrontend';
+import * as Skjema from "./skjema";
+import * as Api from "../services/api";
+import * as Utils from "../utils";
+import * as Nav from "../utils/navFrontend";
 
-import './brukernavnskjema.css';
+import "./brukernavnskjema.css";
 
-export const Brukernavnskjema = ({
-  formValues,
-  settFormBruker,
-  className,
-  onChange,
-  onHentBruker,
-  resetFelter,
-}) => {
+export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChange, onHentBruker, resetFelter }) => {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
   const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
 
-  const hentBruker = async fnrdnr => {
+  const hentBruker = async (fnrdnr) => {
     setBrukerSpinner(true);
 
     if (fnrdnr) {
@@ -29,7 +22,7 @@ export const Brukernavnskjema = ({
         const brukerRespons = await Api.Personer.hentPerson(fnrdnr);
         settFormBruker(brukerRespons);
       } catch (e) {
-        settFormBruker('');
+        settFormBruker("");
         Utils.logger.error(e);
       }
     }
@@ -47,12 +40,12 @@ export const Brukernavnskjema = ({
       hentBrukerMedID();
       setBrukerHentetVedOppstart(true);
     } else if (!formValues.brukerID) {
-      resetFelter(['bruker']);
+      resetFelter(["bruker"]);
     }
   }, [formValues.brukerID]);
 
   const { bruker = {} } = formValues;
-  const { sammensattNavn = '' } = bruker;
+  const { sammensattNavn = "" } = bruker;
 
   return (
     <div className={className}>
@@ -63,16 +56,15 @@ export const Brukernavnskjema = ({
         feltNavn="brukerID"
         onChange={onChange}
       />
-      {
-        sammensattNavn &&
+      {sammensattNavn && (
         <Fragment>
           <Nav.typo.Element>Brukers fulle navn</Nav.typo.Element>
           <Nav.typo.Normaltekst>
-            { brukerSpinner && <Nav.NavFrontendSpinner /> }
-            { sammensattNavn }
+            {brukerSpinner && <Nav.NavFrontendSpinner />}
+            {sammensattNavn}
           </Nav.typo.Normaltekst>
         </Fragment>
-      }
+      )}
     </div>
   );
 };
@@ -99,8 +91,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  settFormBruker: brukerNavn => dispatch(change(ownProps.form, 'bruker', brukerNavn)),
-  resetFelter: felter => dispatch(clearFields(ownProps.form, true, true, felter)),
+  settFormBruker: (brukerNavn) => dispatch(change(ownProps.form, "bruker", brukerNavn)),
+  resetFelter: (felter) => dispatch(clearFields(ownProps.form, true, true, felter)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Brukernavnskjema);

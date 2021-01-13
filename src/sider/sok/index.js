@@ -1,3 +1,3 @@
-import Sok from './sok';
+import Sok from "./sok";
 
 export default Sok;

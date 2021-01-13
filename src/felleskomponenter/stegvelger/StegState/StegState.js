@@ -1,4 +1,4 @@
-import * as Utils from '../../../utils';
+import * as Utils from "../../../utils";
 
 class StegState {
   constructor() {
@@ -24,7 +24,7 @@ class StegState {
     stegStore.set(stegID, steg);
   };
 
-  slettSteg = stegID => {
+  slettSteg = (stegID) => {
     this.stegStore.delete(stegID);
   };
 

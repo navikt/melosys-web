@@ -1,32 +1,32 @@
-import React, { Fragment, useState } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, isValid, getFormValues } from 'redux-form';
-import PT from 'prop-types';
-import * as EKV from 'eessi-kodeverk';
+import React, { Fragment, useState } from "react";
+import { connect } from "react-redux";
+import { reduxForm, isValid, getFormValues } from "redux-form";
+import PT from "prop-types";
+import * as EKV from "eessi-kodeverk";
 
-import MKV from '../../../melosyskodeverk';
+import MKV from "../../../melosyskodeverk";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as Utils from '../../../utils';
-import * as Skjema from '../../skjema';
-import * as KV from '../../../kodeverk';
-import * as MPT from '../../../proptypes';
-import * as Mui from '../../ui';
-import * as Hooks from '../../../hooks';
+import * as Nav from "../../../utils/navFrontend";
+import * as Utils from "../../../utils";
+import * as Skjema from "../../skjema";
+import * as KV from "../../../kodeverk";
+import * as MPT from "../../../proptypes";
+import * as Mui from "../../ui";
+import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from '../../pdfLenkeListe';
+import PdfLenkeListe from "../../pdfLenkeListe";
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
-import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder';
-import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { behandlingsgrunnlagSelectors } from '../../../ducks/behandlingsgrunnlag';
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { formOperations } from '../../../ducks/form';
-import { MottakerinstitusjonvelgerFlervalg } from '../../mottakerinstitusjonvelger';
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from '../../../yup';
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { formOperations } from "../../../ducks/form";
+import { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
-import './vurderingArtikkel13_x_vedtak.css';
+import "./vurderingArtikkel13_x_vedtak.css";
 
 export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
@@ -50,7 +50,8 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  const forkortLovvalgsperiode = () => endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+  const forkortLovvalgsperiode = () =>
+    endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
 
   const vedKlikkForhandsvis = async () => {
     if (!formIsValid) {
@@ -70,7 +71,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev og A1',
+      navn: "Forhåndsvis vedtaksbrev og A1",
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
@@ -81,7 +82,7 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   if (skalViseSedAlternativer) {
     pdfDokumenter.push({
-      navn: 'Forhåndsvis SED A003',
+      navn: "Forhåndsvis SED A003",
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
       data: {
@@ -104,7 +105,9 @@ export const VurderingArtikkel13_x_vedtak = ({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
       fritekst: values.vedtaksbrevFritekst,
       fritekstSed: values.fritekstSed,
-      mottakerinstitusjoner: values.mottakerinstitusjoner.filter(inst => inst.kreverMottakerinstitusjon).map(inst => inst.id),
+      mottakerinstitusjoner: values.mottakerinstitusjoner
+        .filter((inst) => inst.kreverMottakerinstitusjon)
+        .map((inst) => inst.id),
       vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: values.vedtakstypebegrunnelse,
     });
@@ -118,8 +121,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   return (
     <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArtikkel13_x_vedtak">
       <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
-      {
-        redigerbart &&
+      {redigerbart && (
         <Fragment>
           <Nav.typo.Element className="undertittel">Søknadsperiode</Nav.typo.Element>
           <Nav.Row className="lovvalgsperiode">
@@ -128,7 +130,7 @@ export const VurderingArtikkel13_x_vedtak = ({
             </Nav.Column>
           </Nav.Row>
         </Fragment>
-      }
+      )}
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
         checkboxClassName="forkortLovvalgsperiode"
@@ -141,10 +143,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
       />
-      {
-        erNyVurdering &&
-        <Skjema.Vedtakstype redigerbart={redigerbart} />
-      }
+      {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
           <Skjema.Textarea
@@ -157,8 +156,7 @@ export const VurderingArtikkel13_x_vedtak = ({
           />
         </Nav.Column>
       </Nav.Row>
-      {
-        skalViseSedAlternativer &&
+      {skalViseSedAlternativer && (
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -170,7 +168,7 @@ export const VurderingArtikkel13_x_vedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-      }
+      )}
       <Nav.Row>
         <Nav.Column xs="8">
           <MottakerinstitusjonvelgerFlervalg
@@ -183,10 +181,14 @@ export const VurderingArtikkel13_x_vedtak = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
+          {redigerbart && (
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+          )}
         </Nav.Column>
       </Nav.Row>
-      <Mui.Knapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit" type="hoved">FATT VEDTAK</Mui.Knapp>
+      <Mui.Knapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit" type="hoved">
+        FATT VEDTAK
+      </Mui.Knapp>
     </form>
   );
 };
@@ -220,17 +222,14 @@ VurderingArtikkel13_x_vedtak.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
-  const erLovvalgsperiodeForkortet = () => Utils.dato.datoDiffPure(
-    behandlingsgrunnlagSelectors.PeriodeSelector(state).tom,
-    lovvalgsperiodeTom,
-    'days'
-  ) !== 0;
+  const erLovvalgsperiodeForkortet = () =>
+    Utils.dato.datoDiffPure(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom, lovvalgsperiodeTom, "days") !== 0;
 
   const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
 
-  return ({
+  return {
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     redigerbart: redigerbartSelectors.RedigerbartSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -241,7 +240,9 @@ const mapStateToProps = state => {
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     initialValues: {
       forkortLovvalgsperiode,
-      tomDato: forkortLovvalgsperiode ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)) : '',
+      tomDato: forkortLovvalgsperiode
+        ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state))
+        : "",
       fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
@@ -250,11 +251,12 @@ const mapStateToProps = state => {
       kreverMottakerinstitusjon: false,
       fritekstSed: null,
     },
-  });
+  };
 };
 
-const mapDispatchToProps = dispatch => ({
-  endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
+const mapDispatchToProps = (dispatch) => ({
+  endreLovvalgsPeriode: (fomdato, tomdato) =>
+    dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_X_VEDTAK)),
 });
 
@@ -264,12 +266,13 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
-    context: {
-      soknadsperiode: props.soknadsperiode,
-      behandlingstype: props.behandlingstype,
-    },
-  })(values),
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
+      context: {
+        soknadsperiode: props.soknadsperiode,
+        behandlingstype: props.behandlingstype,
+      },
+    })(values),
 })(VurderingArtikkel13_x_vedtak);
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_x_vedtak_form);

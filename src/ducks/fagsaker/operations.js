@@ -7,10 +7,10 @@
  *
  */
 
-import { doThenDispatch } from '../../services/utils';
-import * as Actions from './actions';
-import * as Api from '../../services/api';
-import * as Types from './types';
+import { doThenDispatch } from "../../services/utils";
+import * as Actions from "./actions";
+import * as Api from "../../services/api";
+import * as Types from "./types";
 
 /**
  * Henter registerinformasjon som allerede er importert backend i forbindelse

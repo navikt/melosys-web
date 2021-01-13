@@ -1,10 +1,10 @@
-import { doThenDispatch } from '../../services/utils';
-import * as Api from '../../services/api';
-import * as Types from './types';
-import * as Actions from './actions';
-import * as Selectors from './selectors';
+import { doThenDispatch } from "../../services/utils";
+import * as Api from "../../services/api";
+import * as Types from "./types";
+import * as Actions from "./actions";
+import * as Selectors from "./selectors";
 
-import { behandlingerSelectors } from '../behandlinger';
+import { behandlingerSelectors } from "../behandlinger";
 
 export function hentMedlemskapsperioder(behandlingID) {
   return doThenDispatch(() => Api.Medlemskapsperioder.getMedlemskapsperioder(behandlingID), {
@@ -15,15 +15,18 @@ export function hentMedlemskapsperioder(behandlingID) {
 }
 
 function opprettMedlemskapsperiode(behandlingID, bestemmelse) {
-  return doThenDispatch(() => Api.Medlemskapsperioder.opprettMedlemskapsperioderFraBestemmelse(behandlingID, bestemmelse), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Medlemskapsperioder.opprettMedlemskapsperioderFraBestemmelse(behandlingID, bestemmelse),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    }
+  );
 }
 
 export function oppdaterBestemmelse(bestemmelse) {
-  return dispatch => (dispatch(Actions.oppdaterBestemmelse(bestemmelse)));
+  return (dispatch) => dispatch(Actions.oppdaterBestemmelse(bestemmelse));
 }
 
 export function opprettMedlemskapsperiodeFraBestemmelse() {

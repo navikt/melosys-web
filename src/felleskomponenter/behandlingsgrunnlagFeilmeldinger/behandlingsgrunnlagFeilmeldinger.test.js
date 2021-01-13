@@ -1,39 +1,35 @@
-import React from 'react';
+import React from "react";
 
-import { BehandlingsgrunnlagFeilmeldinger } from './behandlingsgrunnlagFeilmeldinger';
+import { BehandlingsgrunnlagFeilmeldinger } from "./behandlingsgrunnlagFeilmeldinger";
 
-describe('BehandlingsgrunnlagFeilmeldinger', () => {
+describe("BehandlingsgrunnlagFeilmeldinger", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
       panelFeil: [
         {
-          panel: 'Soknadsperiode',
-          feil: [
-            'Åpen sluttdato',
-          ],
+          panel: "Soknadsperiode",
+          feil: ["Åpen sluttdato"],
         },
         {
-          panel: 'Personlig info',
-          feil: [
-            'Ugyldig fnr',
-          ],
+          panel: "Personlig info",
+          feil: ["Ugyldig fnr"],
         },
       ],
     };
   });
 
-  it('viser en liste over paneler som har feil', () => {
+  it("viser en liste over paneler som har feil", () => {
     const behandlingsgrunnlagFeilmeldinger = shallow(<BehandlingsgrunnlagFeilmeldinger {...props} />);
 
-    const lis = behandlingsgrunnlagFeilmeldinger.find('li');
+    const lis = behandlingsgrunnlagFeilmeldinger.find("li");
 
-    expect(lis.containsMatchingElement('Soknadsperiode'));
-    expect(lis.containsMatchingElement('Personlig info'));
+    expect(lis.containsMatchingElement("Soknadsperiode"));
+    expect(lis.containsMatchingElement("Personlig info"));
   });
 
-  it('viser ingenting hvis ingen panelfeil', () => {
+  it("viser ingenting hvis ingen panelfeil", () => {
     props.panelFeil = [];
     const behandlingsgrunnlagFeilmeldinger = shallow(<BehandlingsgrunnlagFeilmeldinger {...props} />);
 

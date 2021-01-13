@@ -1,6 +1,6 @@
-import PT from 'prop-types';
-import { Periode } from './periode';
-import { Kodeverk } from './kodeverk';
+import PT from "prop-types";
+import { Periode } from "./periode";
+import { Kodeverk } from "./kodeverk";
 
 const MedlemskapEnkeltPeriodePropType = PT.shape({
   periodeID: PT.number.isRequired,

@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import Behandlingsmeny from './behandlingsmeny';
-import * as Nav from '../../../../utils/navFrontend';
+import Behandlingsmeny from "./behandlingsmeny";
+import * as Nav from "../../../../utils/navFrontend";
 
-describe('behandlingsmeny', () => {
+describe("behandlingsmeny", () => {
   let props = null;
 
   beforeEach(() => {
@@ -23,16 +23,16 @@ describe('behandlingsmeny', () => {
     };
   });
 
-  it('viser en NavEkspanderbartPanelBase', () => {
+  it("viser en NavEkspanderbartPanelBase", () => {
     const behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
 
     expect(behandlingsmeny.find(Nav.EkspanderbartpanelBase)).toHaveLength(1);
   });
 
-  it('kaller handlere ved klikk på knapper', () => {
+  it("kaller handlere ved klikk på knapper", () => {
     const behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
 
-    behandlingsmeny.find('Knapp').forEach(knapp => knapp.simulate('click'));
+    behandlingsmeny.find("Knapp").forEach((knapp) => knapp.simulate("click"));
 
     expect(props.lagreOgLukkHandle).toHaveBeenCalledTimes(1);
     expect(props.tilbakeleggeHandle).toHaveBeenCalledTimes(1);

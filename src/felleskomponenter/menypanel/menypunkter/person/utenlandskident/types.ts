@@ -1,4 +1,4 @@
 export interface UtenlandskIdent {
-  ident: string,
-  landkode: string,
+  ident: string;
+  landkode: string;
 }

@@ -1,12 +1,12 @@
-import React from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
-import * as Nav from '../../../utils/navFrontend';
-import { oppgaverSelectors } from '../../../ducks/oppgaver';
+import React from "react";
+import PT from "prop-types";
+import { connect } from "react-redux";
+import * as Nav from "../../../utils/navFrontend";
+import { oppgaverSelectors } from "../../../ducks/oppgaver";
 
-import './statistikk.css';
+import "./statistikk.css";
 
-const Statistikk = props => {
+const Statistikk = (props) => {
   const { antallSaker, antallJournalforing, antallSoknader } = props;
   return (
     <Nav.Panel className="forside__sidepanel statistikk">
@@ -18,13 +18,19 @@ const Statistikk = props => {
       </div>
       <div>
         <dl className="statistikk__meta">
-          <dt className="statistikk__meta__term">Journalføring med <br />frist i dag</dt>
+          <dt className="statistikk__meta__term">
+            Journalføring med <br />
+            frist i dag
+          </dt>
           <dd className="statistikk__meta__detalj">{antallSoknader}</dd>
         </dl>
       </div>
       <div>
         <dl className="statistikk__meta">
-          <dt className="statistikk__meta__term">Søknader med <br />frist i dag</dt>
+          <dt className="statistikk__meta__term">
+            Søknader med <br />
+            frist i dag
+          </dt>
           <dd className="statistikk__meta__detalj">{antallJournalforing}</dd>
         </dl>
       </div>
@@ -44,7 +50,7 @@ Statistikk.defaultProps = {
   antallSoknader: 0,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   antallSaker: oppgaverSelectors.MineSakerAntallSelector(state),
 });
 

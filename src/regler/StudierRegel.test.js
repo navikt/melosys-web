@@ -1,10 +1,10 @@
-import StudierRegel from './StudierRegel';
+import StudierRegel from "./StudierRegel";
 
-describe('Tester regler for studier', () => {
-  describe('studererIUtlandet', () => {
+describe("Tester regler for studier", () => {
+  describe("studererIUtlandet", () => {
     test('returnerer true ved oppholdsland inneholder ikke "NO"', () => {
       const mockSkjema = {
-        oppholdsland: ['GB'],
+        oppholdsland: ["GB"],
       };
 
       const studieRegel = new StudierRegel(mockSkjema);
@@ -13,7 +13,7 @@ describe('Tester regler for studier', () => {
 
     test('returnerer false ved oppholdsland inneholder "NO"', () => {
       const mockSkjema = {
-        oppholdsland: ['NO'],
+        oppholdsland: ["NO"],
       };
 
       const studieRegel = new StudierRegel(mockSkjema);
@@ -21,7 +21,7 @@ describe('Tester regler for studier', () => {
       expect(studieRegel.studererIUtlandet().status).toBe(false);
     });
 
-    test('returnerer undefined ved oppholdsland === null', () => {
+    test("returnerer undefined ved oppholdsland === null", () => {
       const mockSkjema = {
         oppholdsland: null,
       };
@@ -32,10 +32,10 @@ describe('Tester regler for studier', () => {
     });
   });
 
-  describe('studierFinansieresFraNorge', () => {
+  describe("studierFinansieresFraNorge", () => {
     test('returnerer true ved studentFinansiering === "LAANEKASSEN"', () => {
       const mockSkjema = {
-        studentFinansiering: 'LAANEKASSEN',
+        studentFinansiering: "LAANEKASSEN",
       };
 
       const studieRegel = new StudierRegel(mockSkjema);
@@ -45,7 +45,7 @@ describe('Tester regler for studier', () => {
 
     test('returnerer false ved studentFinansiering !== "LAANEKASSEN"', () => {
       const mockSkjema = {
-        studentFinansiering: 'ALT_ANNET',
+        studentFinansiering: "ALT_ANNET",
       };
 
       const studieRegel = new StudierRegel(mockSkjema);
@@ -53,7 +53,7 @@ describe('Tester regler for studier', () => {
       expect(studieRegel.studierFinansieresFraNorge().status).toBe(false);
     });
 
-    test('returnerer undefined ved studentFinansiering === null', () => {
+    test("returnerer undefined ved studentFinansiering === null", () => {
       const mockSkjema = {
         studentFinansiering: null,
       };

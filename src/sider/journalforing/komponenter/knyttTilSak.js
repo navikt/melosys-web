@@ -1,25 +1,25 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { formValueSelector } from 'redux-form';
-import PT from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import { formValueSelector } from "redux-form";
+import PT from "prop-types";
 
-import MKV from '../../../melosyskodeverk';
-import { BOOLSK } from '../../../constants';
-import * as MPT from '../../../proptypes';
-import * as Ikoner from '../../../resources/images';
-import * as Skjema from '../../../felleskomponenter/skjema';
-import * as Mui from '../../../felleskomponenter/ui';
+import MKV from "../../../melosyskodeverk";
+import { BOOLSK } from "../../../constants";
+import * as MPT from "../../../proptypes";
+import * as Ikoner from "../../../resources/images";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 
-import './knyttTilSak.css';
+import "./knyttTilSak.css";
 
-export const KnyttTilSak = props => {
+export const KnyttTilSak = (props) => {
   const { sak, behandlingstyper, opprettBehandling } = props;
   const { behandlingOversikter } = sak;
   const sisteBehandling = behandlingOversikter[0];
-  const sakInneholderSEDBehandling = behandlingOversikter.some(behandling => (
-    behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SED
-  ));
-  const clsElementskrift = { 'border-bottom': 'none' };
+  const sakInneholderSEDBehandling = behandlingOversikter.some(
+    (behandling) => behandling.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.SED
+  );
+  const clsElementskrift = { "border-bottom": "none" };
 
   if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
@@ -31,22 +31,26 @@ export const KnyttTilSak = props => {
           style={clsElementskrift}
         />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
-          {
-            !sakInneholderSEDBehandling &&
+          {!sakInneholderSEDBehandling && (
             <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
-          }
+          )}
           <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />
         </Skjema.RadioGruppe>
-        {
-          opprettBehandling() &&
-          <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Velg behandlingstype" emptyFieldDisabled={false}>
-            {
-              behandlingstyper &&
-              behandlingstyper
-                .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
-            }
+        {opprettBehandling() && (
+          <Skjema.Select
+            feltNavn="behandlingstype"
+            bredde="fullbredde"
+            label="Velg behandlingstype"
+            emptyFieldDisabled={false}
+          >
+            {behandlingstyper &&
+              behandlingstyper.map((elem) => (
+                <option key={elem.kode} value={elem.kode}>
+                  {elem.term}
+                </option>
+              ))}
           </Skjema.Select>
-        }
+        )}
       </div>
     );
   }
@@ -61,10 +65,9 @@ KnyttTilSak.propTypes = {
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   opprettBehandling: PT.func.isRequired,
 };
-KnyttTilSak.defaultProps = {
-};
-const selector = formValueSelector('journalforing');
-const mapStateToProps = state => ({
-  opprettBehandling: () => selector(state, 'opprettBehandling'),
+KnyttTilSak.defaultProps = {};
+const selector = formValueSelector("journalforing");
+const mapStateToProps = (state) => ({
+  opprettBehandling: () => selector(state, "opprettBehandling"),
 });
 export default connect(mapStateToProps)(KnyttTilSak);

@@ -1,26 +1,26 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../../utils/navFrontend';
+import * as Nav from "../../../utils/navFrontend";
 
-import VedtakstypeBegrunnelseSkjema from './vedtakstypebegrunnelseskjema';
-import VedtakstypeSkjema from './vedtakstypeskjema';
-import Vedtakstype from './index';
+import VedtakstypeBegrunnelseSkjema from "./vedtakstypebegrunnelseskjema";
+import VedtakstypeSkjema from "./vedtakstypeskjema";
+import Vedtakstype from "./index";
 
-describe('Vedtakstype', () => {
+describe("Vedtakstype", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      className: 'artikkel',
+      className: "artikkel",
       redigerbart: true,
-      vedtakstypeFeltNavn: 'vedtakstypeFeltNavn',
-      vedtakstypebegrunnelseFeltNavn: 'vedtakstypebegrunnelseFeltNavn',
-      vedtakstypeLabel: 'vedtakstypeLabel',
-      vedtakstypebegrunnelseLabel: 'vedtakstypebegrunnelseLabel',
+      vedtakstypeFeltNavn: "vedtakstypeFeltNavn",
+      vedtakstypebegrunnelseFeltNavn: "vedtakstypebegrunnelseFeltNavn",
+      vedtakstypeLabel: "vedtakstypeLabel",
+      vedtakstypebegrunnelseLabel: "vedtakstypebegrunnelseLabel",
     };
   });
 
-  it('viser et Nav.Row med korrekte props', () => {
+  it("viser et Nav.Row med korrekte props", () => {
     const vedtakstype = shallow(<Vedtakstype {...props} />);
     const row = vedtakstype.find(Nav.Row);
 
@@ -28,7 +28,7 @@ describe('Vedtakstype', () => {
     expect(row.props().className).toBe(props.className);
   });
 
-  it('viser en VedtakstypebegrunnelseSkjema med korrekte props', () => {
+  it("viser en VedtakstypebegrunnelseSkjema med korrekte props", () => {
     const vedtakstype = shallow(<Vedtakstype {...props} />);
     const vedtakstypeBegrunnelseSkjema = vedtakstype.find(VedtakstypeBegrunnelseSkjema);
     const vedtakstypeBegrunnelseSkjemaProps = vedtakstypeBegrunnelseSkjema.props();
@@ -39,7 +39,7 @@ describe('Vedtakstype', () => {
     expect(vedtakstypeBegrunnelseSkjemaProps.label).toBe(props.vedtakstypebegrunnelseLabel);
   });
 
-  it('viser en VedtakstypeSkjema med korrekte props', () => {
+  it("viser en VedtakstypeSkjema med korrekte props", () => {
     const vedtakstype = shallow(<Vedtakstype {...props} />);
     const vedtakstypeSkjema = vedtakstype.find(VedtakstypeSkjema);
     const vedtakstypeSkjemaProps = vedtakstypeSkjema.props();

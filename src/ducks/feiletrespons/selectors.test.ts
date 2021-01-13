@@ -1,15 +1,15 @@
-import { mock, instance } from 'ts-mockito';
-import { RootState } from 'AppTypes';
+import { mock, instance } from "ts-mockito";
+import { RootState } from "AppTypes";
 
-import * as selectors from './selectors';
+import * as selectors from "./selectors";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import { STATUS } from '../../services/utils';
+import { STATUS } from "../../services/utils";
 
-describe('FeiletresponsSelectors', () => {
-  describe('FeilmeldingSelector', () => {
-    it('returnerer feilmelding fra response ved 400-feil', () => {
+describe("FeiletresponsSelectors", () => {
+  describe("FeilmeldingSelector", () => {
+    it("returnerer feilmelding fra response ved 400-feil", () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.feiletrespons = {
@@ -17,19 +17,19 @@ describe('FeiletresponsSelectors', () => {
         data: {
           data: {
             status: 400,
-            message: 'Funksjonell feil',
+            message: "Funksjonell feil",
             feilkoder: [],
-            error: 'Funksjonell feil',
+            error: "Funksjonell feil",
           },
         },
       };
 
       const [feilmelding] = selectors.FeilmeldingSelector(state);
-      expect(feilmelding.innhold).toEqual('Funksjonell feil');
-      expect(feilmelding.tittel).toEqual('Feil');
+      expect(feilmelding.innhold).toEqual("Funksjonell feil");
+      expect(feilmelding.tittel).toEqual("Feil");
     });
 
-    it('returnerer generisk feilmelding ved 500-feil', () => {
+    it("returnerer generisk feilmelding ved 500-feil", () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.feiletrespons = {
@@ -37,15 +37,15 @@ describe('FeiletresponsSelectors', () => {
         data: {
           data: {
             status: 500,
-            message: 'Melding som ikke blir brukt',
+            message: "Melding som ikke blir brukt",
             feilkoder: [],
-            error: 'Funksjonell feil',
+            error: "Funksjonell feil",
           },
         },
       };
 
       const [feilmelding] = selectors.FeilmeldingSelector(state);
-      expect(feilmelding.tittel).toEqual('Teknisk feil');
+      expect(feilmelding.tittel).toEqual("Teknisk feil");
     });
 
     it(`returnerer tom liste ved status ${STATUS.OK}`, () => {
@@ -56,9 +56,9 @@ describe('FeiletresponsSelectors', () => {
         data: {
           data: {
             status: 500,
-            message: 'Melding som ikke blir brukt',
+            message: "Melding som ikke blir brukt",
             feilkoder: [],
-            error: 'Funksjonell feil',
+            error: "Funksjonell feil",
           },
         },
       };
@@ -67,17 +67,17 @@ describe('FeiletresponsSelectors', () => {
       expect(feilmelding).toHaveLength(0);
     });
   });
-  describe('FeilkoderSelector', () => {
-    it('returnerer feilkoder ved status ERROR', () => {
+  describe("FeilkoderSelector", () => {
+    it("returnerer feilkoder ved status ERROR", () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.feiletrespons = {
         data: {
           data: {
             feilkoder: [],
-            error: 'Valideringsfeil',
+            error: "Valideringsfeil",
             status: 404,
-            message: 'Valideringsfeil',
+            message: "Valideringsfeil",
           },
         },
         status: STATUS.ERROR,
@@ -88,7 +88,7 @@ describe('FeiletresponsSelectors', () => {
       expect(selectors.FeilkoderSelector(state)).toBe(forventetResultat);
     });
 
-    it('returnerer tom array ved status OK', () => {
+    it("returnerer tom array ved status OK", () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.feiletrespons = {
@@ -104,9 +104,9 @@ describe('FeiletresponsSelectors', () => {
                 felter: [],
               },
             ],
-            error: 'Valideringsfeil',
+            error: "Valideringsfeil",
             status: 404,
-            message: 'Valideringsfeil',
+            message: "Valideringsfeil",
           },
         },
         status: STATUS.OK,
@@ -115,15 +115,15 @@ describe('FeiletresponsSelectors', () => {
       expect(selectors.FeilkoderSelector(state)).toEqual([]);
     });
 
-    it('returnerer tom array ved feilkoder undefined', () => {
+    it("returnerer tom array ved feilkoder undefined", () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.feiletrespons = {
         data: {
           data: {
-            error: 'Valideringsfeil',
+            error: "Valideringsfeil",
             status: 404,
-            message: 'Valideringsfeil',
+            message: "Valideringsfeil",
           },
         },
         status: STATUS.ERROR,
@@ -132,7 +132,7 @@ describe('FeiletresponsSelectors', () => {
       expect(selectors.FeilkoderSelector(state)).toEqual([]);
     });
 
-    it('returnerer tom array ved data undefined', () => {
+    it("returnerer tom array ved data undefined", () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
       state.feiletrespons = {

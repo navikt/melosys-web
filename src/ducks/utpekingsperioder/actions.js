@@ -1,10 +1,10 @@
-import * as Types from './types';
+import * as Types from "./types";
 
 export function oppdaterUtpekingsperioder(utpekingsperioder) {
-  return ({
+  return {
     type: Types.OPPDATER_UTPEKINGSPERIODER,
     utpekingsperioder,
-  });
+  };
 }
 
 export function resetUtpekingsperioderState() {
@@ -12,11 +12,11 @@ export function resetUtpekingsperioderState() {
 }
 
 export function endrePeriode(fomdato, tomdato) {
-  return ({
+  return {
     type: Types.ENDRE_PERIODE,
     data: {
       fomdato,
       tomdato,
     },
-  });
+  };
 }

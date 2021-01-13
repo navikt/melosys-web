@@ -1,23 +1,23 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import PT from 'prop-types';
+import React from "react";
+import { withRouter } from "react-router-dom";
+import PT from "prop-types";
 
-import withErrorHandling from '../../felleskomponenter/withErrorHandling';
-import * as Nav from '../../utils/navFrontend';
+import withErrorHandling from "../../felleskomponenter/withErrorHandling";
+import * as Nav from "../../utils/navFrontend";
 
-import Behandling from './komponenter/behandling';
-import MineOppgaver from './komponenter/mineoppgaver';
-import SokSkjema from './komponenter/sokskjema';
-import OpprettNySakKnapp from './komponenter/opprettnysakknapp';
+import Behandling from "./komponenter/behandling";
+import MineOppgaver from "./komponenter/mineoppgaver";
+import SokSkjema from "./komponenter/sokskjema";
+import OpprettNySakKnapp from "./komponenter/opprettnysakknapp";
 
-import './forside.css';
+import "./forside.css";
 
-const Forside = props => {
+const Forside = (props) => {
   const { children, tilOpprettNySak } = props;
 
   return (
     <div className="forside">
-      { children }
+      {children}
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="7">
@@ -46,8 +46,8 @@ Forside.defaultProps = {
 };
 
 const kontekster = [
-  { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
-  { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
+  { navn: "saksbehandler", melding: "Det har oppstått en feil: Kunne ikke hente saksbehandler." },
+  { navn: "fagsaker", melding: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
 ];
 
 export default withErrorHandling(kontekster, withRouter(Forside));

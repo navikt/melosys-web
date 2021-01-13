@@ -1,4 +1,4 @@
-import DomeneRegel from './DomeneRegel';
+import DomeneRegel from "./DomeneRegel";
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
  * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
@@ -22,15 +22,17 @@ class StonadRegel extends DomeneRegel {
     const { saksopplysninger } = this;
     const { eosBarnetrygd } = saksopplysninger.sakOgBehandling;
 
-    const manglerInfoTekst = 'Sjekk om søker har en EØS barnetrygd-sak!';
-    const positivTekst = 'Har sak på EU/EØS barnetrygd fra Nav.';
-    const negativTekst = 'Har IKKE sak på EU/EØS barnetrygd fra Nav.';
+    const manglerInfoTekst = "Sjekk om søker har en EØS barnetrygd-sak!";
+    const positivTekst = "Har sak på EU/EØS barnetrygd fra Nav.";
+    const negativTekst = "Har IKKE sak på EU/EØS barnetrygd fra Nav.";
 
-    const harMangelfulleOpplysninger = (eosBarnetrygd === null || eosBarnetrygd === undefined);
-    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
+    const harMangelfulleOpplysninger = eosBarnetrygd === null || eosBarnetrygd === undefined;
+    if (harMangelfulleOpplysninger) {
+      return this.manglerOpplysninger(manglerInfoTekst);
+    }
 
     return this.byggRegelSvar(eosBarnetrygd, positivTekst, negativTekst);
-  }
+  };
 }
 
 export default StonadRegel;

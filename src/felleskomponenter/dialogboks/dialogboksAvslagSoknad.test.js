@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from "../../utils/navFrontend";
 
-import { DialogboksAvslagSoknad } from './dialogboksAvslagSoknad';
-import Knapperad from '../knapperad';
+import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
+import Knapperad from "../knapperad";
 
-describe('DialogboksAvslagSoknad', () => {
+describe("DialogboksAvslagSoknad", () => {
   let props = null;
 
   beforeEach(() => {
@@ -18,12 +18,12 @@ describe('DialogboksAvslagSoknad', () => {
     };
   });
 
-  it('viser en Nav Modal', () => {
+  it("viser en Nav Modal", () => {
     const dialogboks = shallow(<DialogboksAvslagSoknad {...props} />);
     expect(dialogboks.exists(Nav.Modal)).toBe(true);
   });
 
-  it('sender korrekt handler for avbryting til en knapperad', () => {
+  it("sender korrekt handler for avbryting til en knapperad", () => {
     const dialogboks = shallow(<DialogboksAvslagSoknad {...props} />);
     const knapperad = dialogboks.find(Knapperad);
 
@@ -34,4 +34,3 @@ describe('DialogboksAvslagSoknad', () => {
     expect(avbryt).toBe(props.avbryt);
   });
 });
-

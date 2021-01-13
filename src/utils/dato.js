@@ -1,5 +1,5 @@
-import moment from 'moment';
-import momentTZ from 'moment-timezone';
+import moment from "moment";
+import momentTZ from "moment-timezone";
 
 /**
  * Saksbehandlere har forskjellig måte å taste inn datoer på. Denne funksjonen forsøker å
@@ -17,14 +17,14 @@ const MAX_AR_FREM_I_TID = 10;
  * @param dato
  * @returns {String | Boolean } Datoen
  */
-const vaskInputDato = dato => {
+const vaskInputDato = (dato) => {
   if (dato === null || dato === undefined) return false;
 
   // Godta type number, men gjør den om til string først.
   const stringDato = Number.isInteger(dato) ? String.toString(dato) : dato;
 
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
-  const newDate = stringDato.replace(/[-./]/g, '');
+  const newDate = stringDato.replace(/[-./]/g, "");
 
   // Hvis datoen er mindre enn 6 tegn - dvs at dag, måned eller år er tastet med
   // kun 1 siffer ("51217" istedet for "051217"), returner ''.
@@ -39,16 +39,16 @@ const vaskInputDato = dato => {
   // dreier seg om. Det er ikke sannsynlig at datoen gjelder for mer enn 10 år frem tid, så gjett da
   // på at det dreier se om århundre 19.
   if (dateArray[2] < 100) {
-    const dagensAr = (new Date()).getFullYear();
+    const dagensAr = new Date().getFullYear();
     const testAr = parseInt(`${dagensAr.toString().substr(0, 2)}${dateArray[2]}`, 10);
-    const gjettAarhundre = (testAr - dagensAr > MAX_AR_FREM_I_TID) ? '19' : '20';
+    const gjettAarhundre = testAr - dagensAr > MAX_AR_FREM_I_TID ? "19" : "20";
     const toTallsAar = dateArray[2] < 10 ? `0${dateArray[2]}` : dateArray[2];
     dateArray[2] = parseInt(`${gjettAarhundre}${toTallsAar}`, 10);
   }
 
-  const returnDate = moment(dateArray.join(), 'DDMMYYYY').format('DD.MM.YYYY');
+  const returnDate = moment(dateArray.join(), "DDMMYYYY").format("DD.MM.YYYY");
 
-  if (!moment(dateArray.join(), 'DDMMYYYY').isValid()) {
+  if (!moment(dateArray.join(), "DDMMYYYY").isValid()) {
     return false;
   }
 
@@ -65,7 +65,7 @@ const vaskInputDato = dato => {
  */
 const normaliserInputDato = (verdi, forrigeVerdi) => {
   const vasketDato = vaskInputDato(verdi) ? vaskInputDato(verdi) : verdi;
-  return ((verdi === forrigeVerdi) ? vasketDato : verdi);
+  return verdi === forrigeVerdi ? vasketDato : verdi;
 };
 
 /** Gjør en vurdering av innkomne datoformat og formatter til korrekt DD.MM.YYY, med eller uten tidspunkt.
@@ -74,10 +74,10 @@ const normaliserInputDato = (verdi, forrigeVerdi) => {
  *
  */
 function formatterDatoTilNorsk(dato, visTidspunkt) {
-  const inputFormat = ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm:ss', 'DD-MM-YYYY', 'DD-MM-YYYY HH:mm'];
-  const momentFormat = visTidspunkt ? 'DD.MM.YYYY HH:mm' : 'DD.MM.YYYY';
+  const inputFormat = ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ss", "DD-MM-YYYY", "DD-MM-YYYY HH:mm"];
+  const momentFormat = visTidspunkt ? "DD.MM.YYYY HH:mm" : "DD.MM.YYYY";
   const momentDato = moment.utc(dato, inputFormat);
-  return momentDato.isValid() ? momentTZ(momentDato).tz('Europe/Oslo').format(momentFormat) : '';
+  return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : "";
 }
 
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
@@ -85,8 +85,8 @@ function formatterDatoTilNorsk(dato, visTidspunkt) {
  *
  */
 function formatterDatoTilISO(dato, tid) {
-  const inputFormat = ['DD.MM.YYYY HH:mm', 'DD.MM.YYYY'];
-  const momentFormat = tid ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD';
+  const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
+  const momentFormat = tid ? "YYYY-MM-DDTHH:mm:ss" : "YYYY-MM-DD";
   return moment(dato, inputFormat).format(momentFormat);
 }
 
@@ -94,12 +94,12 @@ function formatterDatoTilISO(dato, tid) {
  * formatterer om datoen til "jan - 2017" for bedre lesbarhet.
  */
 function formatterKortDatoTilNorsk(kortDato) {
-  const dato = moment(kortDato, 'YYYY-MM');
-  return `${dato.format('MMM')} - ${dato.format('YYYY')}`;
+  const dato = moment(kortDato, "YYYY-MM");
+  return `${dato.format("MMM")} - ${dato.format("YYYY")}`;
 }
 
 function erGyldigPeriode(fom, tom) {
-  const inputFormat = ['DD.MM.YYYY'];
+  const inputFormat = ["DD.MM.YYYY"];
   return moment(fom, inputFormat).isSameOrBefore(moment(tom, inputFormat));
 }
 
@@ -107,37 +107,36 @@ function erIPeriode(fom, tom, dato) {
   return moment(dato).isBetween(fom, tom);
 }
 
-function datoDiff (fom, tom, enhet = 'months', presis = true) {
-  if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
-  const momentTom = moment(tom).add(1, 'day');
+function datoDiff(fom, tom, enhet = "months", presis = true) {
+  if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
+  const momentTom = moment(tom).add(1, "day");
   return moment(momentTom).diff(fom, enhet, presis);
 }
 
-function datoDiffPure (fom, tom, enhet = 'months', presis = true) {
-  if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
+function datoDiffPure(fom, tom, enhet = "months", presis = true) {
+  if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
   return moment(fom).diff(tom, enhet, presis);
 }
 
-function datoDiffMenneskelig (fom, tom) {
-  if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
+function datoDiffMenneskelig(fom, tom) {
+  if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
 
-  const forskjellManeder = Math.floor(datoDiff(fom, tom, 'months'));
+  const forskjellManeder = Math.floor(datoDiff(fom, tom, "months"));
 
-  const resterendeFOM = moment(fom).add(forskjellManeder, 'months');
+  const resterendeFOM = moment(fom).add(forskjellManeder, "months");
 
-  const forskjellDager = datoDiff(resterendeFOM, tom, 'days');
+  const forskjellDager = datoDiff(resterendeFOM, tom, "days");
 
-  const manedBenevnelse = forskjellManeder === 1 ? 'måned' : 'måneder';
-  const dagBenevnelse = forskjellDager === 1 ? 'dag' : 'dager';
+  const manedBenevnelse = forskjellManeder === 1 ? "måned" : "måneder";
+  const dagBenevnelse = forskjellDager === 1 ? "dag" : "dager";
 
-  return forskjellDager > 0 ?
-    (`${forskjellManeder} ${manedBenevnelse} og ${forskjellDager} ${dagBenevnelse}`)
-    :
-    (`${forskjellManeder} ${manedBenevnelse}`);
+  return forskjellDager > 0
+    ? `${forskjellManeder} ${manedBenevnelse} og ${forskjellDager} ${dagBenevnelse}`
+    : `${forskjellManeder} ${manedBenevnelse}`;
 }
 
-function beregnAlder (foedselsdato) {
-  return moment().diff(foedselsdato, 'years');
+function beregnAlder(foedselsdato) {
+  return moment().diff(foedselsdato, "years");
 }
 
 function erLike(datoEn, datoTo) {
@@ -145,7 +144,7 @@ function erLike(datoEn, datoTo) {
 }
 
 function plussEnDag(dato) {
-  return moment(dato, 'DD.MM.YYYY').add(1, 'days').format('DD.MM.YYYY');
+  return moment(dato, "DD.MM.YYYY").add(1, "days").format("DD.MM.YYYY");
 }
 
 export {

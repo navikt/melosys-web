@@ -1,9 +1,9 @@
-const erFnrLengde = verdi => {
+const erFnrLengde = (verdi) => {
   const regex = RegExp(/^\d{11,11}$/);
   return regex.test(verdi);
 };
 
-const erDnrLengde = verdi => {
+const erDnrLengde = (verdi) => {
   const regex = RegExp(/^\d{11,11}$/);
   return regex.test(verdi);
 };
@@ -13,7 +13,7 @@ const erDnrLengde = verdi => {
  * @param verdi
  * @returns {boolean}
  */
-const erGyldigFnr = verdi => {
+const erGyldigFnr = (verdi) => {
   if (!verdi) return false;
   const fodselsnr = verdi.toString();
   if (!fodselsnr || fodselsnr.length !== 11) return false;
@@ -21,11 +21,9 @@ const erGyldigFnr = verdi => {
   const vekt1 = [3, 7, 6, 1, 8, 9, 4, 5, 2];
   const vekt2 = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
 
-  const Q1 = vekt1
-    .reduce((samling, tall, indeks) => (samling + (parseInt(fodselsnr.charAt(indeks), 10) * tall)), 0);
+  const Q1 = vekt1.reduce((samling, tall, indeks) => samling + parseInt(fodselsnr.charAt(indeks), 10) * tall, 0);
 
-  const Q2 = vekt2
-    .reduce((samling, tall, indeks) => (samling + (parseInt(fodselsnr.charAt(indeks), 10) * tall)), 0);
+  const Q2 = vekt2.reduce((samling, tall, indeks) => samling + parseInt(fodselsnr.charAt(indeks), 10) * tall, 0);
 
   let k1 = 11 - (Q1 % 11);
   if (k1 === 11) k1 = 0;
@@ -33,8 +31,7 @@ const erGyldigFnr = verdi => {
   let k2 = 11 - (Q2 % 11);
   if (k2 === 11) k2 = 0;
 
-  return k1 === parseInt(fodselsnr.charAt(9), 10)
-    && k2 === parseInt(fodselsnr.charAt(10), 10);
+  return k1 === parseInt(fodselsnr.charAt(9), 10) && k2 === parseInt(fodselsnr.charAt(10), 10);
 };
 
 /** Validering av d-nummer kjører også mod 11 med samme vekter som fnr.
@@ -43,11 +40,6 @@ const erGyldigFnr = verdi => {
  * @param verdi Fødselsnummer
  * @returns {boolean|*}
  */
-const erGyldigDnr = verdi => erGyldigFnr(verdi);
+const erGyldigDnr = (verdi) => erGyldigFnr(verdi);
 
-export {
-  erFnrLengde,
-  erDnrLengde,
-  erGyldigFnr,
-  erGyldigDnr,
-};
+export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr };

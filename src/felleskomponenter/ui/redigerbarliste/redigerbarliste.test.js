@@ -1,23 +1,23 @@
-import React from 'react';
+import React from "react";
 
-import RedigerbarListe from './redigerbarliste';
-import Element from './element';
+import RedigerbarListe from "./redigerbarliste";
+import Element from "./element";
 
-describe('Redigerbarliste', () => {
+describe("Redigerbarliste", () => {
   let props = null;
 
   beforeEach(() => {
     props = {
       elementer: [
         {
-          kode: 'kode',
-          term: 'term',
+          kode: "kode",
+          term: "term",
           fjernbar: true,
           defaultFjernet: false,
         },
         {
-          kode: 'kode',
-          term: 'term',
+          kode: "kode",
+          term: "term",
           fjernbar: false,
           defaultFjernet: false,
         },
@@ -28,15 +28,15 @@ describe('Redigerbarliste', () => {
     };
   });
 
-  it('viser en liste med elementer', () => {
+  it("viser en liste med elementer", () => {
     const redigerbarliste = shallow(<RedigerbarListe {...props} />);
 
     const elementer = redigerbarliste.find(Element);
     expect(elementer).toHaveLength(2);
 
     expect(elementer.at(0).props()).toMatchObject({
-      kode: 'kode',
-      term: 'term',
+      kode: "kode",
+      term: "term",
       fjernbar: true,
       defaultFjernet: false,
       redigerbar: true,
@@ -44,8 +44,8 @@ describe('Redigerbarliste', () => {
       onAngreFjern: props.onAngreFjern,
     });
     expect(elementer.at(1).props()).toMatchObject({
-      kode: 'kode',
-      term: 'term',
+      kode: "kode",
+      term: "term",
       fjernbar: false,
       defaultFjernet: false,
       redigerbar: true,

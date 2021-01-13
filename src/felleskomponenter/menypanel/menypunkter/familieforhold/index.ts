@@ -1,3 +1,3 @@
-import Familieforhold from './familieforholdContainer';
+import Familieforhold from "./familieforholdContainer";
 
 export default Familieforhold;

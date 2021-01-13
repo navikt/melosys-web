@@ -1,3 +1,3 @@
-import KopierbarTekst from './kopierbarTekst';
+import KopierbarTekst from "./kopierbarTekst";
 
 export default KopierbarTekst;

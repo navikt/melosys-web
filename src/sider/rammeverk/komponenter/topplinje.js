@@ -1,34 +1,36 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import PT from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import PT from "prop-types";
 
-import { ReactComponent as NavLogo } from '../../../resources/images/nav.svg';
-import * as MPT from '../../../proptypes/';
-import * as Utils from '../../../utils/utils';
+import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
+import * as MPT from "../../../proptypes/";
+import * as Utils from "../../../utils/utils";
 
-import { saksbehandlerSelectors } from '../../../ducks/saksbehandler/';
-import { oppgaverOperations } from '../../../ducks/oppgaver/';
+import { saksbehandlerSelectors } from "../../../ducks/saksbehandler/";
+import { oppgaverOperations } from "../../../ducks/oppgaver/";
 
-import './topplinje.css';
+import "./topplinje.css";
 
-const Topplinje = props => {
-  const { saksbehandler: { navn } } = props;
+const Topplinje = (props) => {
+  const {
+    saksbehandler: { navn },
+  } = props;
 
-  const tilForsidenHandler = event => {
+  const tilForsidenHandler = (event) => {
     event.preventDefault();
     const { hentOppgaveOversikt, history } = props;
     const { push } = history;
     const { byggVersjon } = Utils.buildinfo();
-    if (byggVersjon === 'local') {
+    if (byggVersjon === "local") {
       hentOppgaveOversikt();
-      push('/');
+      push("/");
       return;
     }
     /* eslint no-alert: off */
-    if (window.confirm('Noen endringer vil kanskje ikke bli lagret. Vil du fortsette?')) {
+    if (window.confirm("Noen endringer vil kanskje ikke bli lagret. Vil du fortsette?")) {
       hentOppgaveOversikt();
-      push('/');
+      push("/");
     }
   };
 
@@ -36,13 +38,12 @@ const Topplinje = props => {
     <header className="topplinje">
       <div className="topplinje__brand">
         <button onClick={tilForsidenHandler} className="topplinje__brandKnapp">
-          <NavLogo
-            className="brand__logo"
-            alt="To personer på NAV kontor"
-          />
+          <NavLogo className="brand__logo" alt="To personer på NAV kontor" />
         </button>
         <div className="brand__skillelinje" />
-        <div className="brand__tittel"><span>Melosys</span></div>
+        <div className="brand__tittel">
+          <span>Melosys</span>
+        </div>
       </div>
       <div className="topplinje__saksbehandler">
         <div className="saksbehandler__navn">{navn}</div>
@@ -57,11 +58,11 @@ Topplinje.propTypes = {
   hentOppgaveOversikt: PT.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   saksbehandler: saksbehandlerSelectors.SaksbehandlerSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 

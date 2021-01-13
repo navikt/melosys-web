@@ -15,7 +15,9 @@ class StegMotor {
     do {
       const nesteStegPosisjon = stegSamling.length;
       gjeldendeSteg = this.beregnNesteSteg(gjeldendeSteg, nesteStegPosisjon);
-      if (gjeldendeSteg) { stegSamling.push(gjeldendeSteg.byggSteg()); }
+      if (gjeldendeSteg) {
+        stegSamling.push(gjeldendeSteg.byggSteg());
+      }
       iterations += 1;
     } while (gjeldendeSteg && iterations < 30);
 
@@ -32,7 +34,9 @@ class StegMotor {
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {
     const StegKlasse = this._stegMap.get(stegID);
-    if (!StegKlasse) { return false; }
+    if (!StegKlasse) {
+      return false;
+    }
     return new StegKlasse(this._propsLight, stegPosisjon);
   };
 }

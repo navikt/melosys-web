@@ -1,3 +1,3 @@
-import Stegvelger from './Stegvelger';
+import Stegvelger from "./Stegvelger";
 
 export default Stegvelger;

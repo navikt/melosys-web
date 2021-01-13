@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import PT from 'prop-types';
+import React, { useEffect, useState } from "react";
+import PT from "prop-types";
 
-import * as Nav from '../../../utils/navFrontend';
-import * as KV from '../../../kodeverk';
-import * as Utils from '../../../utils';
-import * as MPT from '../../../proptypes';
+import * as Nav from "../../../utils/navFrontend";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
+import * as MPT from "../../../proptypes";
 
-import MKV from '../../../melosyskodeverk';
-import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
+import MKV from "../../../melosyskodeverk";
+import EnkeltLandPure from "../../skjema/landvelger/enkeltLandPure";
 import {
   avklartefaktaType,
   lagAvklartfakta,
   konverterTilStegData,
   hentFaktaVerdi,
-} from '../../../regler/avklartefakta';
+} from "../../../regler/avklartefakta";
 
 const radioValg = {
-  NORGE: 'NORGE',
-  ANNET: 'ANNET',
+  NORGE: "NORGE",
+  ANNET: "ANNET",
 };
 
 const VurderingArtikkel13_2b = ({
   redigerbart,
-  tilstand: {
-    omfattesILandFakta,
-    harAvklaring,
-  },
+  tilstand: { omfattesILandFakta, harAvklaring },
   slettData,
   oppdaterData,
   bekreftOgFortsett,
@@ -48,7 +45,7 @@ const VurderingArtikkel13_2b = ({
 
   const [erNorgeValgt, setErNorgeValgt] = useState(erOmfattetINorge());
 
-  const radioEndringHandler = event => {
+  const radioEndringHandler = (event) => {
     if (event.target.value === radioValg.NORGE) {
       setErNorgeValgt(true);
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO, null));
@@ -58,7 +55,7 @@ const VurderingArtikkel13_2b = ({
     }
   };
 
-  const landEndretHandler = landKode => {
+  const landEndretHandler = (landKode) => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, landKode));
   };
 
@@ -84,8 +81,7 @@ const VurderingArtikkel13_2b = ({
           checked={erNorgeValgt === false}
           disabled={!redigerbart}
         />
-        {
-          erNorgeValgt === false &&
+        {erNorgeValgt === false && (
           <Nav.Row>
             <Nav.Column xs="8" md="6" lg="4">
               <EnkeltLandPure
@@ -98,10 +94,16 @@ const VurderingArtikkel13_2b = ({
               />
             </Nav.Column>
           </Nav.Row>
-        }
+        )}
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp
+          disabled={!(redigerbart && harAvklaring)}
+          className="fane__navigasjonsknapp"
+          onClick={bekreftOgFortsett}
+        >
+          Bekreft og fortsett
+        </Nav.Knapp>
       </div>
     </div>
   );

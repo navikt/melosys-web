@@ -1,3 +1,3 @@
-import KodeTermSelect from './kodeTermSelect';
+import KodeTermSelect from "./kodeTermSelect";
 
 export { KodeTermSelect };

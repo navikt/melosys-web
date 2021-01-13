@@ -1,19 +1,19 @@
-import React from 'react';
-import { DokumentOversikt, Mottaksretning } from 'Domene';
+import React from "react";
+import { DokumentOversikt, Mottaksretning } from "Domene";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import PdfLink from './pdfLink';
-import { formatterDatoTilNorsk } from '../../utils/dato';
-import * as Ikoner from '../../resources/images';
+import PdfLink from "./pdfLink";
+import { formatterDatoTilNorsk } from "../../utils/dato";
+import * as Ikoner from "../../resources/images";
 
-import './sideDialogDokumenter.css';
-import { hentDato } from '../../ducks/dokumenter/selectors';
+import "./sideDialogDokumenter.css";
+import { hentDato } from "../../ducks/dokumenter/selectors";
 
-const uuid = require('uuid/v4');
+const uuid = require("uuid/v4");
 
 interface MottaksretningIkonProps {
-  mottaksretning: Mottaksretning,
+  mottaksretning: Mottaksretning;
 }
 
 const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
@@ -30,20 +30,21 @@ const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
 };
 
 interface VedleggLinkProps {
-  journalpostID: string,
-  dokument: { dokumentID?: string, tittel: string },
+  journalpostID: string;
+  dokument: { dokumentID?: string; tittel: string };
 }
 
 const VedleggLink = ({ journalpostID, dokument: { dokumentID, tittel } }: VedleggLinkProps) => (
   <div>
-    <Ikoner.Binders />&nbsp;
-    { dokumentID && <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} /> }
-    { !dokumentID && <span>{tittel}</span> }
+    <Ikoner.Binders />
+    &nbsp;
+    {dokumentID && <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} />}
+    {!dokumentID && <span>{tittel}</span>}
   </div>
 );
 
 interface OversiktradProps {
-  dokumentOversikt: DokumentOversikt,
+  dokumentOversikt: DokumentOversikt;
 }
 
 const OversiktRad = ({
@@ -58,24 +59,18 @@ const OversiktRad = ({
   },
 }: OversiktradProps) => (
   <tr>
-    <td><MottaksretningIkon mottaksretning={mottaksretning} /></td>
+    <td>
+      <MottaksretningIkon mottaksretning={mottaksretning} />
+    </td>
     <td>
       <span>
         <PdfLink journalpostID={journalpostID} dokumentID={hoveddokument.dokumentID} tittel={hoveddokument.tittel} />
-        {
-          hoveddokument.logiskeVedlegg.map(logiskVedlegg =>
-            <VedleggLink
-              key={uuid()}
-              journalpostID={journalpostID}
-              dokument={{ tittel: logiskVedlegg }} />)
-        }
-        {
-          vedlegg.map(vedleggDokument =>
-            <VedleggLink
-              key={uuid()}
-              journalpostID={journalpostID}
-              dokument={vedleggDokument} />)
-        }
+        {hoveddokument.logiskeVedlegg.map((logiskVedlegg) => (
+          <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={{ tittel: logiskVedlegg }} />
+        ))}
+        {vedlegg.map((vedleggDokument) => (
+          <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />
+        ))}
       </span>
     </td>
     <td>{avsenderEllerMottaker}</td>
@@ -83,7 +78,7 @@ const OversiktRad = ({
   </tr>
 );
 interface SideDialogDokumenterProps {
-  dokumentOversikt: DokumentOversikt[],
+  dokumentOversikt: DokumentOversikt[];
 }
 
 const SideDialogDokumenter = ({ dokumentOversikt }: SideDialogDokumenterProps) => (
@@ -98,7 +93,9 @@ const SideDialogDokumenter = ({ dokumentOversikt }: SideDialogDokumenterProps) =
         </tr>
       </thead>
       <tbody>
-        { dokumentOversikt.map(oversikt => <OversiktRad key={uuid()} dokumentOversikt={oversikt} />) }
+        {dokumentOversikt.map((oversikt) => (
+          <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
+        ))}
       </tbody>
     </table>
   </div>

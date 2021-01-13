@@ -1,30 +1,32 @@
-import * as Validering from '../../felleskomponenter/skjema/validering';
-import * as Api from '../../services/api';
-import * as Utils from '../../utils';
-import * as Actions from './actions';
-import * as Types from './types';
-import * as Selectors from './selectors';
+import * as Validering from "../../felleskomponenter/skjema/validering";
+import * as Api from "../../services/api";
+import * as Utils from "../../utils";
+import * as Actions from "./actions";
+import * as Types from "./types";
+import * as Selectors from "./selectors";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
-import { doThenDispatch } from '../../services/utils';
-import { formSelectors } from '../form';
-import { behandlingerSelectors } from '../behandlinger';
-import { OrganisasjonOperations } from '../organisasjoner';
+import { doThenDispatch } from "../../services/utils";
+import { formSelectors } from "../form";
+import { behandlingerSelectors } from "../behandlinger";
+import { OrganisasjonOperations } from "../organisasjoner";
 
 export function hent(behandlingID) {
   return (dispatch, getState) => {
     const thunk = doThenDispatch(
-      () => Api.Behandlingsgrunnlag.hent(behandlingID), {
+      () => Api.Behandlingsgrunnlag.hent(behandlingID),
+      {
         OK: Types.OK,
         FEILET: Types.FEILET,
         PENDING: Types.PENDING,
       },
       {
-        success: () => [
-          ...Selectors.EkstraArbeidsgivereSelector(getState()),
-          ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(getState()),
-        ].forEach(orgnr => dispatch(OrganisasjonOperations.hent(orgnr))),
+        success: () =>
+          [
+            ...Selectors.EkstraArbeidsgivereSelector(getState()),
+            ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(getState()),
+          ].forEach((orgnr) => dispatch(OrganisasjonOperations.hent(orgnr))),
       }
     );
 
@@ -34,7 +36,8 @@ export function hent(behandlingID) {
 
 export function send(bid, behandlingsgrunnlag) {
   return doThenDispatch(
-    () => Api.Behandlingsgrunnlag.send(bid, behandlingsgrunnlag), {
+    () => Api.Behandlingsgrunnlag.send(bid, behandlingsgrunnlag),
+    {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
@@ -45,12 +48,13 @@ export function send(bid, behandlingsgrunnlag) {
   );
 }
 
-const hentOvergangsregelbestemmelser = values => (values ? values.overgangsregelbestemmelser : []);
+const hentOvergangsregelbestemmelser = (values) => (values ? values.overgangsregelbestemmelser : []);
 
-const temaForSedGrunnlag = behandlingstema => [
-  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
-  MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
-].includes(behandlingstema);
+const temaForSedGrunnlag = (behandlingstema) =>
+  [
+    MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+    MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+  ].includes(behandlingstema);
 
 export function oppdaterState() {
   return (dispatch, getState) => {
@@ -62,8 +66,9 @@ export function oppdaterState() {
 
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
     if (temaForSedGrunnlag(behandlingstema)) {
-      behandlingsgrunnlagData.overgangsregelbestemmelser =
-        hentOvergangsregelbestemmelser(formSelectors.VurderUtpekingFormSelector(getState()).values);
+      behandlingsgrunnlagData.overgangsregelbestemmelser = hentOvergangsregelbestemmelser(
+        formSelectors.VurderUtpekingFormSelector(getState()).values
+      );
     }
 
     if (Utils._isEmpty(behandlingsgrunnlagData)) return;
@@ -72,7 +77,7 @@ export function oppdaterState() {
   };
 }
 
-const lagBehandlingsgrunnlagFelter = behandlingsgrunnlag => ({
+const lagBehandlingsgrunnlagFelter = (behandlingsgrunnlag) => ({
   juridiskArbeidsgiverNorge: behandlingsgrunnlag.juridiskArbeidsgiverNorge,
   personOpplysninger: behandlingsgrunnlag.personOpplysninger,
   arbeidUtland: behandlingsgrunnlag.arbeidUtland,
@@ -86,20 +91,20 @@ const lagBehandlingsgrunnlagFelter = behandlingsgrunnlag => ({
   luftfartBaser: behandlingsgrunnlag.luftfartBaser,
 });
 
-const lagSoeknadFelter = behandlingsgrunnlag => ({
+const lagSoeknadFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   arbeidsinntekt: behandlingsgrunnlag.arbeidsinntekt,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
 });
 
-const lagFTRLFelter = behandlingsgrunnlag => ({
+const lagFTRLFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   arbeidsinntekt: behandlingsgrunnlag.arbeidsinntekt,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
   trygdedekning: behandlingsgrunnlag.trygdedekning,
 });
 
-const lagSedGrunnlagFelter = behandlingsgrunnlag => ({
+const lagSedGrunnlagFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
   ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon,
@@ -139,15 +144,15 @@ export function lagre() {
 }
 
 export function oppdaterPeriode(periode) {
-  return dispatch => dispatch(Actions.oppdaterPeriode(periode));
+  return (dispatch) => dispatch(Actions.oppdaterPeriode(periode));
 }
 
 export function oppdaterSoeknadsland(soeknadsland) {
-  return dispatch => dispatch(Actions.oppdaterSoeknadsland(soeknadsland));
+  return (dispatch) => dispatch(Actions.oppdaterSoeknadsland(soeknadsland));
 }
 
 export function oppdaterTrygdedekning(trygdedekning) {
-  return dispatch => dispatch(Actions.oppdaterTrygdedekning(trygdedekning));
+  return (dispatch) => dispatch(Actions.oppdaterTrygdedekning(trygdedekning));
 }
 
 export function resetState() {

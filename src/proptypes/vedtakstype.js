@@ -1,6 +1,6 @@
-import PT from 'prop-types';
+import PT from "prop-types";
 
-import MKV from '../melosyskodeverk';
+import MKV from "../melosyskodeverk";
 
 const VedtakstypePropType = PT.oneOf([
   MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK,

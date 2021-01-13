@@ -1,6 +1,6 @@
 /* eslint import/prefer-default-export:"off" */
-import PT from 'prop-types';
-import { Kodeverk } from './kodeverk';
+import PT from "prop-types";
+import { Kodeverk } from "./kodeverk";
 
 const GeneriskAdressePropType = PT.shape({
   gateadresse: PT.shape({

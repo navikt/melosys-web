@@ -1,11 +1,11 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
-import * as Utils from '../../utils';
-import * as KV from '../../kodeverk';
+import * as Utils from "../../utils";
+import * as KV from "../../kodeverk";
 
-import { OrganisasjonSelectors } from '../organisasjoner';
+import { OrganisasjonSelectors } from "../organisasjoner";
 
-import MKV from '../../melosyskodeverk';
+import MKV from "../../melosyskodeverk";
 
 /**
  * Selectors
@@ -15,217 +15,205 @@ import MKV from '../../melosyskodeverk';
  */
 
 export const BehandlingsgrunnlagSelector = createSelector(
-  state => state.behandlingsgrunnlag.data,
-  behandlingsgrunnlag => behandlingsgrunnlag
+  (state) => state.behandlingsgrunnlag.data,
+  (behandlingsgrunnlag) => behandlingsgrunnlag
 );
 
 export const BehandlingsgrunnlagtypeSelector = createSelector(
   BehandlingsgrunnlagSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.type
+  (behandlingsgrunnlag) => behandlingsgrunnlag.type
 );
 
 export const BehandlingsgrunnlagDataSelector = createSelector(
   BehandlingsgrunnlagSelector,
-  behandlingsgrunnlagState => behandlingsgrunnlagState.data || {}
+  (behandlingsgrunnlagState) => behandlingsgrunnlagState.data || {}
 );
 
 export const ArbeidUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.arbeidUtland || []
+  (behandlingsgrunnlag) => behandlingsgrunnlag.arbeidUtland || []
 );
 
 const ArbeidUtlandAdresseSelector = createSelector(
   ArbeidUtlandSelector,
-  arbeidUtland => arbeidUtland.map(arbeid => arbeid.adresse) || []
+  (arbeidUtland) => arbeidUtland.map((arbeid) => arbeid.adresse) || []
 );
 
 export const ArbeidUtlandLandkodeSelector = createSelector(
   ArbeidUtlandAdresseSelector,
-  arbeidUtlandAdresse => arbeidUtlandAdresse.map(adresse => adresse.landkode) || []
+  (arbeidUtlandAdresse) => arbeidUtlandAdresse.map((adresse) => adresse.landkode) || []
 );
 
 export const ArbeidsinntektSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.arbeidsinntekt || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.arbeidsinntekt || {}
 );
 
 export const ArbeidsinntektNaturalytelserSelector = createSelector(
   ArbeidsinntektSelector,
-  arbeidsinntekt => arbeidsinntekt.inntektNaturalytelser || {}
+  (arbeidsinntekt) => arbeidsinntekt.inntektNaturalytelser || {}
 );
 
 export const ForetakUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.foretakUtland || []
+  (behandlingsgrunnlag) => behandlingsgrunnlag.foretakUtland || []
 );
 
 const ForetakUtlandAdresseSelector = createSelector(
   ForetakUtlandSelector,
-  foretakUtland => foretakUtland.map(foretak => foretak.adresse) || []
+  (foretakUtland) => foretakUtland.map((foretak) => foretak.adresse) || []
 );
 
 export const ForetakUtlandLandkodeSelector = createSelector(
   ForetakUtlandAdresseSelector,
-  foretakUtlandAdresse => foretakUtlandAdresse.map(adresse => adresse.landkode) || []
+  (foretakUtlandAdresse) => foretakUtlandAdresse.map((adresse) => adresse.landkode) || []
 );
 
-export const ArbeidsforholdUtlandSelector = createSelector(
-  ForetakUtlandSelector,
-  foretakUtland => foretakUtland.filter(arbeidsforhold => !arbeidsforhold.selvstendigNaeringsvirksomhet)
+export const ArbeidsforholdUtlandSelector = createSelector(ForetakUtlandSelector, (foretakUtland) =>
+  foretakUtland.filter((arbeidsforhold) => !arbeidsforhold.selvstendigNaeringsvirksomhet)
 );
 
-export const SelvstendigNaeringsvirksomhetUtlandSelector = createSelector(
-  ForetakUtlandSelector,
-  foretakUtland => foretakUtland.filter(arbeidsforhold => arbeidsforhold.selvstendigNaeringsvirksomhet)
+export const SelvstendigNaeringsvirksomhetUtlandSelector = createSelector(ForetakUtlandSelector, (foretakUtland) =>
+  foretakUtland.filter((arbeidsforhold) => arbeidsforhold.selvstendigNaeringsvirksomhet)
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.juridiskArbeidsgiverNorge || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.juridiskArbeidsgiverNorge || {}
 );
 
 export const EkstraArbeidsgivereSelector = createSelector(
   JuridiskArbeidsgiverNorgeSelector,
-  juridiskArbeidsgiver => juridiskArbeidsgiver.ekstraArbeidsgivere || []
+  (juridiskArbeidsgiver) => juridiskArbeidsgiver.ekstraArbeidsgivere || []
 );
 
 export const ValiderteEkstraArbeidsgivereSelector = createSelector(
   EkstraArbeidsgivereSelector,
   OrganisasjonSelectors.organisasjonerSelector,
-  (ekstraArbeidsgivere, organisasjoner) => organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr))
+  (ekstraArbeidsgivere, organisasjoner) =>
+    organisasjoner.filter((organisasjon) => ekstraArbeidsgivere.includes(organisasjon.orgnr))
 );
 
 export const SelvstendigArbeidSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.selvstendigArbeid || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.selvstendigArbeid || {}
 );
 
 export const SelvstendigArbeidForetakSelector = createSelector(
   SelvstendigArbeidSelector,
-  selvstendigArbeid => selvstendigArbeid.selvstendigForetak || []
+  (selvstendigArbeid) => selvstendigArbeid.selvstendigForetak || []
 );
 
 export const SelvstendigArbeidForetakOrgnumreSelector = createSelector(
   SelvstendigArbeidForetakSelector,
-  selvstendigForetak => selvstendigForetak.map(foretak => foretak.orgnr)
+  (selvstendigForetak) => selvstendigForetak.map((foretak) => foretak.orgnr)
 );
 
 export const SelvstendigNaringsvirksomhetSelector = createSelector(
   SelvstendigArbeidForetakSelector,
   OrganisasjonSelectors.organisasjonerSelector,
-  (selvstendigForetak = [], organisasjoner) => organisasjoner.filter(organisasjon => selvstendigForetak.find(foretak => foretak.orgnr === organisasjon.orgnr))
+  (selvstendigForetak = [], organisasjoner) =>
+    organisasjoner.filter((organisasjon) => selvstendigForetak.find((foretak) => foretak.orgnr === organisasjon.orgnr))
 );
 
 export const OppholdUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.oppholdUtland || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.oppholdUtland || {}
 );
 
 export const OppholdsLandSelector = createSelector(
   OppholdUtlandSelector,
-  oppholdUtland => oppholdUtland.oppholdslandkoder || []
+  (oppholdUtland) => oppholdUtland.oppholdslandkoder || []
 );
 
-export const OppholdsLandKTSelector = createSelector(
-  OppholdsLandSelector,
-  oppholdsLand => MKV.KTObjects.landkoder.filter(landkodeObjekt => oppholdsLand.includes(landkodeObjekt.kode))
+export const OppholdsLandKTSelector = createSelector(OppholdsLandSelector, (oppholdsLand) =>
+  MKV.KTObjects.landkoder.filter((landkodeObjekt) => oppholdsLand.includes(landkodeObjekt.kode))
 );
 
-export const OppholdUtlandPeriodeSelector = createSelector(
-  OppholdUtlandSelector,
-  oppholdUtland => {
-    const { oppholdsPeriode } = oppholdUtland;
-    return oppholdsPeriode || {};
-  }
-);
+export const OppholdUtlandPeriodeSelector = createSelector(OppholdUtlandSelector, (oppholdUtland) => {
+  const { oppholdsPeriode } = oppholdUtland;
+  return oppholdsPeriode || {};
+});
 
 export const BostedSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.bosted || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.bosted || {}
 );
 
-export const BostedAdresseSelector = createSelector(
-  BostedSelector,
-  bosted => {
-    const { oppgittAdresse } = bosted;
-    return oppgittAdresse || {};
-  }
-);
+export const BostedAdresseSelector = createSelector(BostedSelector, (bosted) => {
+  const { oppgittAdresse } = bosted;
+  return oppgittAdresse || {};
+});
 
 export const ArbeidsgiversBekreftelseSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.arbeidsgiversBekreftelse || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.arbeidsgiversBekreftelse || {}
 );
 
 export const MaritimtArbeidSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.maritimtArbeid || []
+  (behandlingsgrunnlag) => behandlingsgrunnlag.maritimtArbeid || []
 );
 
-export const SkipArbeidSelector = createSelector(
-  MaritimtArbeidSelector,
-  maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => Utils._isNil(enkeltArbeid.installasjonsLandkode))
+export const SkipArbeidSelector = createSelector(MaritimtArbeidSelector, (maritimtArbeid) =>
+  maritimtArbeid.filter((enkeltArbeid) => Utils._isNil(enkeltArbeid.installasjonsLandkode))
 );
 
-export const OffshoreArbeidSelector = createSelector(
-  MaritimtArbeidSelector,
-  maritimtArbeid => maritimtArbeid.filter(enkeltArbeid => !Utils._isNil(enkeltArbeid.installasjonsLandkode))
+export const OffshoreArbeidSelector = createSelector(MaritimtArbeidSelector, (maritimtArbeid) =>
+  maritimtArbeid.filter((enkeltArbeid) => !Utils._isNil(enkeltArbeid.installasjonsLandkode))
 );
 
 export const LuftfartBaserSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.luftfartBaser || []
+  (behandlingsgrunnlag) => behandlingsgrunnlag.luftfartBaser || []
 );
 
-export const HjemmebaserSelector = createSelector(
-  LuftfartBaserSelector,
-  luftfartBaser => luftfartBaser
-    .map(base => base.hjemmebaseLand)
-    .filter(base => base)
+export const HjemmebaserSelector = createSelector(LuftfartBaserSelector, (luftfartBaser) =>
+  luftfartBaser.map((base) => base.hjemmebaseLand).filter((base) => base)
 );
 
-export const SoknadslandSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => (behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : [])
+export const SoknadslandSelector = createSelector(BehandlingsgrunnlagDataSelector, (behandlingsgrunnlag) =>
+  behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : []
 );
 
 export const TrygdedekningSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.trygdedekning || ''
+  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning || ""
 );
 
 export const PeriodeSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.periode || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.periode || {}
 );
 
-export const PeriodeFomSelector = createSelector(
-  PeriodeSelector,
-  soknadsperiode => soknadsperiode.fom
-);
+export const PeriodeFomSelector = createSelector(PeriodeSelector, (soknadsperiode) => soknadsperiode.fom);
 
-export const PeriodeTomSelector = createSelector(
-  PeriodeSelector,
-  soknadsperiode => soknadsperiode.tom
-);
+export const PeriodeTomSelector = createSelector(PeriodeSelector, (soknadsperiode) => soknadsperiode.tom);
 
 export const PersonOpplysningerSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlag => behandlingsgrunnlag.personOpplysninger || {}
+  (behandlingsgrunnlag) => behandlingsgrunnlag.personOpplysninger || {}
 );
 
 export const MedfolgendeFamilieSelector = createSelector(
   PersonOpplysningerSelector,
-  personopplysninger => personopplysninger.medfolgendeFamilie || []
+  (personopplysninger) => personopplysninger.medfolgendeFamilie || []
 );
 
-export const MedfolgendeBarnSelector = createSelector(
-  MedfolgendeFamilieSelector,
-  medfolgendeFamilie => medfolgendeFamilie
-    .filter(person => (
-      person.relasjonsrolle === KV.Koder.Relasjonsrolle.BARN
-    ))
-    .map(person => ({
+export const MedfolgendeBarnSelector = createSelector(MedfolgendeFamilieSelector, (medfolgendeFamilie) =>
+  medfolgendeFamilie
+    .filter((person) => person.relasjonsrolle === KV.Koder.Relasjonsrolle.BARN)
+    .map((person) => ({
+      uuid: person.uuid,
+      navn: person.navn,
+      fnr: person.fnr,
+    }))
+);
+
+export const MedfolgendeEktefelleSamboerSelector = createSelector(MedfolgendeFamilieSelector, (medfolgendeFamilie) =>
+  medfolgendeFamilie
+    .filter((person) => person.relasjonsrolle === KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER)
+    .map((person) => ({
       uuid: person.uuid,
       navn: person.navn,
       fnr: person.fnr,
@@ -234,15 +222,15 @@ export const MedfolgendeBarnSelector = createSelector(
 
 export const OvergangsregelbestemmelserSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlagData => behandlingsgrunnlagData.overgangsregelbestemmelser
+  (behandlingsgrunnlagData) => behandlingsgrunnlagData.overgangsregelbestemmelser
 );
 
 export const YtterligereInformasjonSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  behandlingsgrunnlagData => behandlingsgrunnlagData.ytterligereInformasjon
+  (behandlingsgrunnlagData) => behandlingsgrunnlagData.ytterligereInformasjon
 );
 
 export const MottaksdatoSelector = createSelector(
   BehandlingsgrunnlagSelector,
-  behandlingsgrunnlagData => behandlingsgrunnlagData.mottaksdato || ''
+  (behandlingsgrunnlagData) => behandlingsgrunnlagData.mottaksdato || ""
 );

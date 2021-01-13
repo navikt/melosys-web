@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import * as MPT from '../../../../proptypes';
-import * as Nav from '../../../../utils/navFrontend';
+import * as MPT from "../../../../proptypes";
+import * as Nav from "../../../../utils/navFrontend";
 
-import EnkeltDato from '../../../datoOmrade/enkeltDato';
-import Tabell from '../../../tabell/tabell';
+import EnkeltDato from "../../../datoOmrade/enkeltDato";
+import Tabell from "../../../tabell/tabell";
 
 const Permisjoner = ({ permisjoner }) => {
   if (!permisjoner) return null;
 
-  const permisjonerArrayed = permisjoner.map(linje => {
+  const permisjonerArrayed = permisjoner.map((linje) => {
     const { permisjonsprosent, permisjonOgPermittering, permisjonsPeriode } = linje;
 
     const fixedPermisjonsprosent = permisjonsprosent ? permisjonsprosent.toFixed(1) : 0;
@@ -26,7 +26,7 @@ const Permisjoner = ({ permisjoner }) => {
     <div className="permisjoner">
       <Nav.typo.Undertittel>Permisjoner</Nav.typo.Undertittel>
       <Tabell
-        kolonneNavn={['Startdato', 'Sluttdato', 'Type', 'Prosent']}
+        kolonneNavn={["Startdato", "Sluttdato", "Type", "Prosent"]}
         tabellData={permisjonerArrayed}
         linjerPerSide={5}
       />

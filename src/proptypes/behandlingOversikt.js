@@ -1,6 +1,6 @@
-import PT from 'prop-types';
-import { Kodeverk } from './kodeverk';
-import { Periode } from './periode';
+import PT from "prop-types";
+import { Kodeverk } from "./kodeverk";
+import { Periode } from "./periode";
 
 const BehandligOversiktPropType = PT.shape({
   behandlingID: PT.number,
@@ -11,7 +11,4 @@ const BehandligOversiktPropType = PT.shape({
   periode: Periode,
 });
 const BehandligOversikterPropType = PT.arrayOf(BehandligOversiktPropType);
-export {
-  BehandligOversiktPropType as BehandligOversikt,
-  BehandligOversikterPropType as BehandligOversikter,
-};
+export { BehandligOversiktPropType as BehandligOversikt, BehandligOversikterPropType as BehandligOversikter };

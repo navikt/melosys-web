@@ -1,30 +1,28 @@
 /* eslint react/no-multi-comp:off */
-import React, { useState } from 'react';
-import PT from 'prop-types';
-import Ikon from 'melosys-ikoner-assets';
-import * as Nav from '../../../../utils/navFrontend';
-import * as MPT from '../../../../proptypes';
+import React, { useState } from "react";
+import PT from "prop-types";
+import Ikon from "melosys-ikoner-assets";
+import * as Nav from "../../../../utils/navFrontend";
+import * as MPT from "../../../../proptypes";
 
-import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
+import EnkeltLandPure from "../../../skjema/landvelger/enkeltLandPure";
 
-import './soknadslandHandlingLeggTil.css';
+import "./soknadslandHandlingLeggTil.css";
 
 export function LeggTilWrapper(props) {
-  const [landkode, setLandkode] = useState('');
-  const [begrunnelseKode, setBegrunnelseKode] = useState('0');
+  const [landkode, setLandkode] = useState("");
+  const [begrunnelseKode, setBegrunnelseKode] = useState("0");
 
-  const oppdaterBegrunnelse = event => {
+  const oppdaterBegrunnelse = (event) => {
     const kode = event.target.value;
     setBegrunnelseKode(kode);
   };
 
-  const oppdaterLand = kode => (setLandkode(kode));
+  const oppdaterLand = (kode) => setLandkode(kode);
 
-  const {
-    bekreft, avbryt, alleLandkoder, soknadslandBegrunnelser, redigerbart,
-  } = props;
+  const { bekreft, avbryt, alleLandkoder, soknadslandBegrunnelser, redigerbart } = props;
 
-  const erInputGyldig = (landkode && begrunnelseKode && begrunnelseKode !== '0');
+  const erInputGyldig = landkode && begrunnelseKode && begrunnelseKode !== "0";
 
   const innhold = (
     <div className="leggtilland__linje">
@@ -41,14 +39,33 @@ export function LeggTilWrapper(props) {
         />
       </div>
       <div className="linje__begrunnelse">
-        <Nav.Select disabled={!redigerbart} bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
+        <Nav.Select
+          disabled={!redigerbart}
+          bredde="fullbredde"
+          value={begrunnelseKode}
+          onChange={oppdaterBegrunnelse}
+          label="Velg begrunnelse:"
+          className="linje__nedtrekksvelger"
+        >
           <option disabled value="0" />
-          {soknadslandBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
+          {soknadslandBegrunnelser.map((enkelt) => (
+            <option key={enkelt.kode} value={enkelt.kode}>
+              {enkelt.term}
+            </option>
+          ))}
         </Nav.Select>
       </div>
       <div className="linje__knapper">
-        <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
-        <Nav.Knapp onClick={() => bekreft(landkode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)} className="leggtil_bekreft">Legg til</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>
+          Avbryt
+        </Nav.Knapp>
+        <Nav.Knapp
+          onClick={() => bekreft(landkode, begrunnelseKode)}
+          disabled={!(redigerbart && erInputGyldig)}
+          className="leggtil_bekreft"
+        >
+          Legg til
+        </Nav.Knapp>
       </div>
     </div>
   );
@@ -86,7 +103,8 @@ function SoknadslandHandlingLeggTil(props) {
       <div>
         {!erLeggTilIntensjon && (
           <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
-            <Ikon kind="tilsette" /><div>Legg til land</div>
+            <Ikon kind="tilsette" />
+            <div>Legg til land</div>
           </Nav.Knapp>
         )}
 

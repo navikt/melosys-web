@@ -1,68 +1,69 @@
 export const ArbeidsforholdOgInntekt = {
-  tittel: 'Arbeidsforhold og inntekt',
+  tittel: "Arbeidsforhold og inntekt",
   undertitler: {
-    inntekt: 'Inntekt',
+    inntekt: "Inntekt",
   },
 };
 
 export const ArbeidsgiverOgVirksomhet = {
-  tittel: 'Arbeidsgiver/virksomhet',
+  tittel: "Arbeidsgiver/virksomhet",
   undertitler: {
-    arbeidsforholdINorge: 'Arbeidsgiver i Norge',
-    selvstendigNaeringsdrivendeINorge: 'Selvstendig virksomhet i Norge',
-    arbeidsforholdIUtlandet: 'Arbeidsgiver i utlandet',
-    selvstendigNaeringsdrivendeIUtlandet: 'Selvstendig virksomhet i utlandet',
+    arbeidsforholdINorge: "Arbeidsgiver i Norge",
+    selvstendigNaeringsdrivendeINorge: "Selvstendig virksomhet i Norge",
+    arbeidsforholdIUtlandet: "Arbeidsgiver i utlandet",
+    selvstendigNaeringsdrivendeIUtlandet: "Selvstendig virksomhet i utlandet",
   },
 };
 
 export const Arbeidssteder = {
-  tittel: 'Arbeidssted(er)',
+  tittel: "Arbeidssted(er)",
   undertitler: {
-    arbeidsstedLand: 'Arbeidssted på land',
-    arbeidsstedOffshore: 'Arbeidssted offshore',
-    arbeidsstedSkip: 'Arbeidssted på skip',
-    arbeidsstedFly: 'Arbeidssted på fly',
+    arbeidsstedLand: "Arbeidssted på land",
+    arbeidsstedOffshore: "Arbeidssted offshore",
+    arbeidsstedSkip: "Arbeidssted på skip",
+    arbeidsstedFly: "Arbeidssted på fly",
   },
 };
 
 export const Fullmektig = {
-  tittel: 'Fullmektig',
+  tittel: "Fullmektig",
   undertitler: {},
 };
 
 export const Medlemskap = {
-  tittel: 'Medlemskap',
+  tittel: "Medlemskap",
   undertitler: {},
 };
 
 export const Periode = {
-  tittel: 'Periode',
+  tittel: "Periode",
   undertitler: {},
 };
 
 export const Person = {
-  tittel: 'Personopplysninger',
+  tittel: "Personopplysninger",
   undertitler: {
-    annenAdresse: 'Annen adresse',
-    utenlandskID: 'Utenlandsk ID-nummer',
+    annenAdresse: "Annen adresse",
+    utenlandskID: "Utenlandsk ID-nummer",
   },
 };
 
 export const Barnetrygd = {
-  tittel: 'EU/EØS-barnetrygd',
+  tittel: "EU/EØS-barnetrygd",
   undertitler: {},
 };
 
 export const Utenlandsoppdraget = {
-  tittel: 'Utenlandskoppdraget',
+  tittel: "Utenlandskoppdraget",
   undertitler: {
-    tilleggsopplysninger: 'Tilleggsopplysninger',
+    tilleggsopplysninger: "Tilleggsopplysninger",
   },
 };
 
 export const Familieforhold = {
-  tittel: 'Familieforhold',
+  tittel: "Familieforhold",
   undertitler: {
-    barnMedPaReisen: 'Barn med på reisen',
+    barnMedPaReisen: "Barn med på reisen",
+    familieMedPaReisen: "Familie med på reisen",
   },
 };
