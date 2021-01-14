@@ -121,9 +121,13 @@ Innvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
-  vedtaksbrevFritekst: PT.string.isRequired,
+  vedtaksbrevFritekst: PT.string,
   renderFritekstFelt: PT.func.isRequired,
   visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
+};
+
+Innvilgelse.defaultProps = {
+  vedtaksbrevFritekst: undefined,
 };
 
 export const DelvisInnvilgelse = ({
@@ -186,10 +190,14 @@ DelvisInnvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
-  vedtaksbrevFritekst: PT.string.isRequired,
+  vedtaksbrevFritekst: PT.string,
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
   visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
+};
+
+DelvisInnvilgelse.defaultProps = {
+  vedtaksbrevFritekst: undefined,
 };
 
 export const Avslag = ({
@@ -242,10 +250,14 @@ export const Avslag = ({
 Avslag.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  vedtaksbrevFritekst: PT.string.isRequired,
+  vedtaksbrevFritekst: PT.string,
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
   visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
+};
+
+Avslag.defaultProps = {
+  vedtaksbrevFritekst: undefined,
 };
 
 export const VurderingArtikkel16Vedtak = ({
