@@ -554,7 +554,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
-  arbeidsland: PT.arrayOf(PT.string).isRequired,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
