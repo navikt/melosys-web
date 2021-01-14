@@ -24,7 +24,32 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../
 
 import "./vurderingArtikkel16MottaSvar.css";
 
-const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_16_MOTTA_SVAR);
+const Periode = ({ redigerbart }) => (
+  <Nav.Row>
+    <Nav.Column xs="6">
+      <Skjema.Input
+        bredde="fullbredde"
+        label="Startdato"
+        feltNavn="endretPeriode.fom"
+        disabled={!redigerbart}
+        datoFelt
+      />
+    </Nav.Column>
+    <Nav.Column xs="6">
+      <Skjema.Input
+        bredde="fullbredde"
+        label="Sluttdato"
+        feltNavn="endretPeriode.tom"
+        disabled={!redigerbart}
+        datoFelt
+      />
+    </Nav.Column>
+  </Nav.Row>
+);
+
+Periode.propTypes = {
+  redigerbart: PT.bool.isRequired,
+};
 
 export const VurderingArtikkel16MottaSvar = (props) => {
   const {
@@ -52,7 +77,9 @@ export const VurderingArtikkel16MottaSvar = (props) => {
     return cleanup;
   }, []);
 
-  const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
+  const visLovvalgsperiode =
+    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE ||
+    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
 
   const visFritekstFelt =
     anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
@@ -101,33 +128,17 @@ export const VurderingArtikkel16MottaSvar = (props) => {
                 label="Innvilgelse"
                 value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
               />
+              {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE && (
+                <Periode redigerbart={redigerbart} />
+              )}
               <Skjema.Radio
                 name="svarFraMyndighetene"
                 feltNavn="anmodningsperiodeSvarType"
                 label="Delvis innvilgelse"
                 value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
               />
-              {visLovvalgsperiode && (
-                <Nav.Row>
-                  <Nav.Column xs="6">
-                    <Skjema.Input
-                      bredde="fullbredde"
-                      label="Startdato"
-                      feltNavn="endretPeriode.fom"
-                      disabled={!redigerbart}
-                      datoFelt
-                    />
-                  </Nav.Column>
-                  <Nav.Column xs="6">
-                    <Skjema.Input
-                      bredde="fullbredde"
-                      label="Sluttdato"
-                      feltNavn="endretPeriode.tom"
-                      disabled={!redigerbart}
-                      datoFelt
-                    />
-                  </Nav.Column>
-                </Nav.Row>
+              {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
+                <Periode redigerbart={redigerbart} />
               )}
               <Skjema.Radio
                 name="svarFraMyndighetene"
@@ -193,6 +204,8 @@ VurderingArtikkel16MottaSvar.defaultProps = {
   anmodningsperiodeID: "",
 };
 
+const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_16_MOTTA_SVAR);
+
 const mapStateToProps = (state) => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
@@ -212,7 +225,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  hentAnmodningsperiodeSvar: async (anmodningsperiodeID) =>
+  hentAnmodningsperiodeSvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
   sendAnmodningsperiodeSvar: (anmodningsperiodeID, anmodningsperiodeSvar) =>
     dispatch(anmodningsperiodesvarOperations.send(anmodningsperiodeID, anmodningsperiodeSvar)),
