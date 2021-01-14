@@ -222,6 +222,7 @@ describe("behandlingsgrunnlag reducer", () => {
         utenlandskIdent: "12345",
         medfolgendeBarn: [
           {
+            uuid: "2c5ea4c0-4067-11e9-8bad-9b1deb4d3b7d",
             fnr: "31031779459",
             navn: "BRÅKETE GYNGEHEST",
             relasjonsrolle: "BARN",
@@ -229,6 +230,7 @@ describe("behandlingsgrunnlag reducer", () => {
         ],
         medfolgendeEktefelleSamboer: [
           {
+            uuid: "416c97d5-fd1d-4eff-952c-edc42aeb40a0",
             fnr: "08029828362",
             navn: "UTVIKLER OPTIMISTISK",
             relasjonsrolle: "EKTEFELLE_SAMBOER",
@@ -393,11 +395,13 @@ describe("behandlingsgrunnlag reducer", () => {
             utenlandskIdent: "12345",
             medfolgendeFamilie: [
               {
+                uuid: "2c5ea4c0-4067-11e9-8bad-9b1deb4d3b7d",
                 fnr: "31031779459",
                 navn: "BRÅKETE GYNGEHEST",
                 relasjonsrolle: "BARN",
               },
               {
+                uuid: "416c97d5-fd1d-4eff-952c-edc42aeb40a0",
                 fnr: "08029828362",
                 navn: "UTVIKLER OPTIMISTISK",
                 relasjonsrolle: "EKTEFELLE_SAMBOER",
