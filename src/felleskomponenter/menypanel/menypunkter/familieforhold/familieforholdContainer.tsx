@@ -3,14 +3,13 @@ import React, { ReactNode } from "react";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 import * as Etiketter from "../../etiketter";
 import * as MedfolgendeFamilie from "./medfolgendeFamilie";
 
 import Familiemedlemmer from "./familiemedlemmer";
 import EditerbartElementListe from "../editerbartElementListe";
-import { Status } from "../editerbartElement/types";
-import Legend from "../editerbartElement/legend";
 
 import "./familieforholdContainer.css";
 
@@ -54,15 +53,10 @@ const FamilieforholdContainer = ({
         </Nav.Row>
         {visEktefelleSamboerMedPaReisen ? (
           <div className="familiemedpareisen">
-            <Legend
-              redigerbart={redigerbart}
-              tittelIkon={Ikoner.Familie}
-              tittel={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}
-              tittelUnderstrek
-              onBinClick={() => {}}
-              status={Status.IngenData}
-              onPencilClick={() => {}}
-              visAlltidBin={false}
+            <Mui.Undertittel
+              tekst={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}
+              ikon={Ikoner.Familie}
+              understrek
             />
             <Nav.Row>
               <Nav.Column xs="12">
