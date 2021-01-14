@@ -52,20 +52,20 @@ const FamilieforholdContainer = ({
           </Nav.Column>
         </Nav.Row>
         {visEktefelleSamboerMedPaReisen ? (
-          <div className="familiemedpareisen">
+          <div>
             <Mui.Undertittel
               tekst={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}
               ikon={Ikoner.Familie}
               understrek
             />
             <Nav.Row>
-              <Nav.Column xs="12">
+              <Nav.Column xs="12" className="familiemedpareisen">
                 <EditerbartElementListe
                   redigerbart={redigerbart}
                   feltNavn="medfolgendeBarn"
                   redigererKomponent={MedfolgendeFamilie.Redigerer}
                   redigeringUtfortKomponent={MedfolgendeFamilie.RedigeringUtfort}
-                  ingenDataKomponent={() => <></>}
+                  ingenDataKomponent={() => <div className="ingen-data" />}
                   leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til nytt barn" : "Legg til barn")}
                   hentDefaultElement={() => ({ uuid: Utils._uuid() })}
                   tittelTekst="Barn"
@@ -76,13 +76,13 @@ const FamilieforholdContainer = ({
               </Nav.Column>
             </Nav.Row>
             <Nav.Row>
-              <Nav.Column xs="12">
+              <Nav.Column xs="12" className="familiemedpareisen">
                 <EditerbartElementListe
                   redigerbart={redigerbart}
                   feltNavn="medfolgendeEktefelleSamboer"
                   redigererKomponent={MedfolgendeFamilie.Redigerer}
                   redigeringUtfortKomponent={MedfolgendeFamilie.RedigeringUtfort}
-                  ingenDataKomponent={() => <></>}
+                  ingenDataKomponent={() => <div className="ingen-data" />}
                   leggTilTekst="Legg til ektefelle/partner/samboer"
                   hentDefaultElement={() => ({ uuid: Utils._uuid() })}
                   tittelTekst="Ektefelle/partner/samboer"
