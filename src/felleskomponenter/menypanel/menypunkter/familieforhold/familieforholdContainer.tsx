@@ -5,7 +5,7 @@ import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Ikoner from "../../../../resources/images";
 import * as Etiketter from "../../etiketter";
-import * as MedfolgendeBarn from "./medfolgendeBarn";
+import * as MedfolgendeFamilie from "./medfolgendeFamilie";
 
 import Familiemedlemmer from "./familiemedlemmer";
 import EditerbartElementListe from "../editerbartElementListe";
@@ -69,8 +69,8 @@ const FamilieforholdContainer = ({
                 <EditerbartElementListe
                   redigerbart={redigerbart}
                   feltNavn="medfolgendeBarn"
-                  redigererKomponent={MedfolgendeBarn.Redigerer}
-                  redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+                  redigererKomponent={MedfolgendeFamilie.Redigerer}
+                  redigeringUtfortKomponent={MedfolgendeFamilie.RedigeringUtfort}
                   ingenDataKomponent={() => <></>}
                   leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til nytt barn" : "Legg til barn")}
                   hentDefaultElement={() => ({ uuid: Utils._uuid() })}
@@ -86,8 +86,8 @@ const FamilieforholdContainer = ({
                 <EditerbartElementListe
                   redigerbart={redigerbart}
                   feltNavn="medfolgendeEktefelleSamboer"
-                  redigererKomponent={MedfolgendeBarn.Redigerer}
-                  redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
+                  redigererKomponent={MedfolgendeFamilie.Redigerer}
+                  redigeringUtfortKomponent={MedfolgendeFamilie.RedigeringUtfort}
                   ingenDataKomponent={() => <></>}
                   leggTilTekst="Legg til ektefelle/partner/samboer"
                   hentDefaultElement={() => ({ uuid: Utils._uuid() })}
@@ -105,9 +105,9 @@ const FamilieforholdContainer = ({
               <EditerbartElementListe
                 redigerbart={redigerbart}
                 feltNavn="medfolgendeBarn"
-                redigererKomponent={MedfolgendeBarn.Redigerer}
-                redigeringUtfortKomponent={MedfolgendeBarn.RedigeringUtfort}
-                ingenDataKomponent={MedfolgendeBarn.IngenData}
+                redigererKomponent={MedfolgendeFamilie.Redigerer}
+                redigeringUtfortKomponent={MedfolgendeFamilie.RedigeringUtfort}
+                ingenDataKomponent={MedfolgendeFamilie.IngenData}
                 leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til ny rad" : "Legg til barn")}
                 hentDefaultElement={() => ({ uuid: Utils._uuid() })}
                 tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
