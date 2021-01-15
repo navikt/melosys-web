@@ -370,7 +370,7 @@ export const VurderingArtikkel16Vedtak = ({
           />
         );
       default:
-        throw new Error("AnmodningsperiodeSvarType må være satt");
+        throw new Error(`AnmodningsperiodeSvarType ${svarType} er ugyldig`);
     }
   };
 
