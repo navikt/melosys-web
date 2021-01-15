@@ -89,8 +89,8 @@ export const VurderingArtikkel16MottaSvar = (props) => {
     const svar = {
       anmodningsperiodeSvarType,
       endretPeriode: {
-        fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
-        tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
+        fom: visLovvalgsperiode && endretPeriode.fom ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
+        tom: visLovvalgsperiode && endretPeriode.tom ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
       },
       begrunnelseFritekst: begrunnelseFritekst || null,
     };
