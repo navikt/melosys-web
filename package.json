@@ -102,7 +102,7 @@
     "reselect": "^4.0.0",
     "sanitize-html": "^1.20.1",
     "uuid": "^3.3.3",
-    "yup": "^0.27.0"
+    "yup": "^0.32.8"
   },
   "disabled-homepage": "http://eesi2.no/melosys",
   "homepage": "http://./melosys",
