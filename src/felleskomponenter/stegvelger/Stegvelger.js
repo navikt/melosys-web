@@ -436,6 +436,7 @@ class Stegvelger extends Component {
       medlemskapsperioder: props.medlemskapsperioder,
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
+      soknadsperiode: props.soknadsperiode,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -614,6 +615,7 @@ Stegvelger.propTypes = {
   sakstype: PT.string,
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
+  soknadsperiode: MPT.Soknadsperiode.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -690,6 +692,7 @@ const mapStateToProps = (state) => ({
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
+  soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
 });
 
 /* eslint no-alert:off */
