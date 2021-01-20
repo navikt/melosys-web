@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
-import { reduxForm, formValueSelector, getFormValues } from "redux-form";
+import { reduxForm, getFormValues } from "redux-form";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -54,7 +54,6 @@ Periode.propTypes = {
 
 export const FormKomponent = ({
   redigerbart,
-  anmodningsperiodeSvarType,
   formValues,
   oppdaterData,
   formIsValid,
@@ -62,12 +61,12 @@ export const FormKomponent = ({
   sendAnmodningsperiodeSvar,
 }) => {
   const visLovvalgsperiode =
-    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE ||
-    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
+    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE ||
+    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
 
   const visFritekstFelt =
-    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
-    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
+    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
+    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
 
   const lagreSvar = (data) => {
     const sendEndretPeriode =
@@ -144,7 +143,6 @@ export const FormKomponent = ({
 
 FormKomponent.propTypes = {
   redigerbart: PT.bool.isRequired,
-  anmodningsperiodeSvarType: PT.string,
   soknadsperiode: PT.object,
   oppdaterData: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
@@ -154,7 +152,6 @@ FormKomponent.propTypes = {
 };
 
 FormKomponent.defaultProps = {
-  anmodningsperiodeSvarType: null,
   soknadsperiode: {},
   formValues: {},
 };
@@ -168,7 +165,7 @@ const Artikkel16MottaSvarForm = reduxForm({
   validate: (values, props) =>
     lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_motta_svar, {
       context: {
-        anmodningsperiodeSvarType: props.anmodningsperiodeSvarType,
+        anmodningsperiodeSvarType: props.formValues && props.formValues.anmodningsperiodeSvarType,
         soknadsperiode: props.soknadsperiode,
       },
     })(values),
@@ -205,7 +202,6 @@ export const VurderingArtikkel16MottaSvar = (props) => {
     bekreftOgFortsett,
     slettData,
     tilstand,
-    anmodningsperiodeSvarType,
     formIsValid,
     oppdaterData,
     hentAnmodningsperiodeSvar,
@@ -247,7 +243,6 @@ export const VurderingArtikkel16MottaSvar = (props) => {
       {anmodningsperioderSvarHentet && (
         <ConnectedFormKomponent
           redigerbart={redigerbart}
-          anmodningsperiodeSvarType={anmodningsperiodeSvarType}
           soknadsperiode={soknadsperiode}
           oppdaterData={oppdaterData}
           anmodningsperiodeID={anmodningsperiodeID}
@@ -277,7 +272,6 @@ VurderingArtikkel16MottaSvar.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  anmodningsperiodeSvarType: PT.string,
   formIsValid: PT.bool,
   hentAnmodningsperiodeSvar: PT.func.isRequired,
   anmodningsperioderSvarStatus: PT.string.isRequired,
@@ -287,18 +281,14 @@ VurderingArtikkel16MottaSvar.propTypes = {
 VurderingArtikkel16MottaSvar.defaultProps = {
   lovvalgsperiodeFom: "",
   lovvalgsperiodeTom: "",
-  anmodningsperiodeSvarType: "",
   formIsValid: false,
   anmodningsperiodeID: "",
 };
-
-const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_16_MOTTA_SVAR);
 
 const mapStateToProps = (state) => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
-  anmodningsperiodeSvarType: artikkel16MottaSvarFormValueSelector(state, "anmodningsperiodeSvarType"),
   anmodningsperioderSvarStatus: anmodningsperiodesvarSelectors.ReduxStatusSelector(state),
   formIsValid: formSelectors.Artikkel16MottaSvarSyncErrorsSelector(state) === undefined,
 });
