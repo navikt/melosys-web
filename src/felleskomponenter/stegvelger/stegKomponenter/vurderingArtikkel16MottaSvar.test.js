@@ -13,7 +13,6 @@ describe("VurderingArtikkel16MottaSvar", () => {
     props = {
       bekreftOgFortsett: jest.fn(),
       gyldigeSoknadsland: [],
-      anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE,
       soknadsperiode: {
         periode: {
           fom: "fomdato",
@@ -26,7 +25,6 @@ describe("VurderingArtikkel16MottaSvar", () => {
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
       hentAnmodningsperiodeSvar: jest.fn(),
-      sendAnmodningsperiodeSvar: jest.fn(),
       tilstand: {},
       anmodningsperioderSvarStatus: Services.STATUS.OK,
     };
@@ -56,9 +54,14 @@ describe("FormKomponent", () => {
   it("viser en textarea ved delvis innvilgelse", () => {
     const props = {
       redigerbart: true,
-      anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE,
       soknadsperiode: {},
-      onBlur: jest.fn(),
+      oppdaterData: jest.fn(),
+      formIsValid: true,
+      anmodningsperiodeID: "1",
+      sendAnmodningsperiodeSvar: jest.fn(),
+      formValues: {
+        anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE,
+      },
     };
     const formKomponent = shallow(<FormKomponent {...props} />);
 
