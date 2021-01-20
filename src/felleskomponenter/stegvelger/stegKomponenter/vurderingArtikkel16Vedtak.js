@@ -16,7 +16,6 @@ import DatoOmrade from "../../datoOmrade/datoOmrade";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
 import { vilkarSelectors } from "../../../ducks/vilkar";
 
@@ -265,7 +264,6 @@ export const VurderingArtikkel16Vedtak = ({
   redigerbart,
   behandlingID,
   anmodningsperiodesvar,
-  anmodningsperiode,
   art_12_1_begrunnelser,
   art_12_2_begrunnelser,
   formIsValid,
@@ -342,7 +340,7 @@ export const VurderingArtikkel16Vedtak = ({
             behandlingID={behandlingID}
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-            gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
+            gjeldendePeriode={endretPeriode}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
           />
         );
@@ -392,7 +390,6 @@ export const VurderingArtikkel16Vedtak = ({
 };
 
 VurderingArtikkel16Vedtak.propTypes = {
-  anmodningsperiode: MPT.Periode.isRequired,
   anmodningsperiodesvar: PT.object,
   behandlingID: PT.number.isRequired,
   behandlingstype: PT.string.isRequired,
@@ -427,7 +424,6 @@ const VurderingArtikkel16VedtakForm = reduxForm({
 })(VurderingArtikkel16Vedtak);
 
 const mapStateToProps = (state) => ({
-  anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
