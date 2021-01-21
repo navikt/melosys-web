@@ -102,7 +102,7 @@ const FamilieforholdContainer = ({
                 redigererKomponent={MedfolgendeFamilie.Redigerer}
                 redigeringUtfortKomponent={MedfolgendeFamilie.RedigeringUtfort}
                 ingenDataKomponent={MedfolgendeFamilie.IngenData}
-                leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til ny rad" : "Legg til barn")}
+                leggTilTekst={(elementer) => (elementer.length > 0 ? "Legg til nytt barn" : "Legg til barn")}
                 hentDefaultElement={() => ({ uuid: Utils._uuid() })}
                 tittelTekst={KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen}
                 tittelIkon={Ikoner.ParentAndKid}
