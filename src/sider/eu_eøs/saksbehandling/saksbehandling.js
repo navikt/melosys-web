@@ -87,10 +87,12 @@ const behandlingsstatusMap = {
 class Saksbehandling extends Component {
   state = {
     behandlingID: -1,
+    saksopplysningerLastet: false,
   };
 
-  componentDidMount() {
-    this.lastInnSaksopplysninger();
+  async componentDidMount() {
+    await this.lastInnSaksopplysninger();
+    this.setSaksopplysningerLastet(true);
   }
 
   componentDidUpdate() {
@@ -105,6 +107,10 @@ class Saksbehandling extends Component {
     this.props.resetVilkarState();
     this.props.resetBehandlingsgrunnlagState();
     this.props.resetBehandlingsPerioderState();
+  }
+
+  setSaksopplysningerLastet(lastet) {
+    this.setState({ saksopplysningerLastet: lastet });
   }
 
   oppdaterBehandlingIDState = () => {
@@ -225,9 +231,10 @@ class Saksbehandling extends Component {
     const {
       params: { snr: saksnummer },
     } = match;
-    const { behandlingID } = this.state;
+    const { behandlingID, saksopplysningerLastet } = this.state;
 
     if (Utils._isNil(redigerbart)) return null;
+    if (!saksopplysningerLastet) return null;
 
     const visRevurderFagsak =
       anmodningsperioderErSendtUtlandet ||
