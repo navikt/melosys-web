@@ -18,13 +18,13 @@ import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunn
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
-import { MedfolgendeBarn } from "../../../../kodeverk/form";
+import { FamilieIkkeOmfattetAvNorskTrygd, FamilieOmfattetAvNorskTrygd } from "../../../../@types/avklartfakta";
+import { MedfolgendeFamilie } from "../../../../kodeverk/form";
 import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingFamilie.css";
-import { FamilieIkkeOmfattetAvNorskTrygd, FamilieOmfattetAvNorskTrygd } from "../../../../@types/avklartfakta";
 
-function initializeFamilieFormValues(barn: MedfolgendeBarn[], ektefelleSamboer: MedfolgendeBarn[]) {
+function initializeFamilieFormValues(barn: MedfolgendeFamilie[], ektefelleSamboer: MedfolgendeFamilie[]) {
   let initialValues = {
     barn: { fritekst: "" },
     ektefelle_samboer: { fritekst: "" },
@@ -117,7 +117,7 @@ const VurderingFamilie = ({
     const ektefelleSamboerOmfattetAvNorskTrygd: FamilieOmfattetAvNorskTrygd[] = [];
     const ektefelleSamboerIkkeOmfattetAvNorskTrygd: FamilieIkkeOmfattetAvNorskTrygd[] = [];
 
-    medfolgendeBarn.forEach((familiemedlem: MedfolgendeBarn) => {
+    medfolgendeBarn.forEach((familiemedlem: MedfolgendeFamilie) => {
       if (fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN) {
         barnOmfattetAvNorskTrygd.push({
           uuid: familiemedlem.uuid,
@@ -131,7 +131,7 @@ const VurderingFamilie = ({
         });
       }
     });
-    medfolgendeEktefelleSamboer.forEach((familiemedlem: MedfolgendeBarn) => {
+    medfolgendeEktefelleSamboer.forEach((familiemedlem: MedfolgendeFamilie) => {
       if (fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN) {
         ektefelleSamboerOmfattetAvNorskTrygd.push({
           uuid: familiemedlem.uuid,
@@ -211,7 +211,7 @@ const VurderingFamilie = ({
         <div>
           <Nav.Fieldset legend="Barn">
             <Nav.Row>
-              {medfolgendeBarn.map((barn: MedfolgendeBarn) => (
+              {medfolgendeBarn.map((barn: MedfolgendeFamilie) => (
                 <Nav.Column xs="6" key={barn.uuid}>
                   <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
                     barn.fnr
@@ -257,7 +257,7 @@ const VurderingFamilie = ({
               ))}
             </Nav.Row>
             {medfolgendeBarn.some(
-              (barn: MedfolgendeBarn) =>
+              (barn: MedfolgendeFamilie) =>
                 formValues.ektefelle_samboer && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div>
@@ -268,7 +268,7 @@ const VurderingFamilie = ({
           </Nav.Fieldset>
           <Nav.Fieldset legend="Ektefelle/parner/samboer">
             <Nav.Row>
-              {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeBarn) => (
+              {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
                 <Nav.Column xs="6" key={ektefelleSamboer.uuid}>
                   <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(ektefelleSamboer.navn)} (F.nr: ${
                     ektefelleSamboer.fnr
@@ -317,7 +317,7 @@ const VurderingFamilie = ({
               ))}
             </Nav.Row>
             {medfolgendeEktefelleSamboer.some(
-              (ektefelleSamboer: MedfolgendeBarn) =>
+              (ektefelleSamboer: MedfolgendeFamilie) =>
                 formValues.ektefelle_samboer &&
                 formValues.ektefelle_samboer[ektefelleSamboer.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (

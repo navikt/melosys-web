@@ -49,7 +49,7 @@ export interface ArbeidsstedSkip extends MaritimtArbeid {
   flaggLandkode?: string;
   territorialfarvann?: string;
 }
-export interface MedfolgendeBarn {
+export interface MedfolgendeFamilie {
   uuid: string;
   fnr?: number;
   navn?: string;

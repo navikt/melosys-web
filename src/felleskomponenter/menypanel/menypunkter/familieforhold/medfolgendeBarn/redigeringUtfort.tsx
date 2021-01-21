@@ -29,7 +29,7 @@ const Rad = ({ navn, idNummer }: RadProps) => (
   </Nav.Row>
 );
 
-const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeBarn>) => (
+const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeFamilie>) => (
   <div className="medfolgende-barn__redigeringutfort">
     <ExpandableList
       elements={verdier}
