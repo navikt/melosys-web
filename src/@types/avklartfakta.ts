@@ -12,3 +12,23 @@ export type Virksomheter = {
 };
 
 export default Avklartfakta;
+
+export type FamilieOmfattetAvNorskTrygd = {
+  uuid: string;
+  sammensattNavn?: string;
+};
+export type FamilieIkkeOmfattetAvNorskTrygd = {
+  uuid: string;
+  begrunnelse: string;
+  begrunnelseFritekst: string;
+};
+
+export type AvklartMedfolgendeFamilie = {
+  familieOmfattetAvNorskTrygd: FamilieOmfattetAvNorskTrygd[];
+  familieIkkeOmfattetAvNorskTrygd: FamilieIkkeOmfattetAvNorskTrygd[];
+};
+
+export type MedfolgendeFamilie = {
+  avklarteMedfolgendeBarn: AvklartMedfolgendeFamilie;
+  avklarteMedfolgendeEktefelleSamboer: AvklartMedfolgendeFamilie;
+};

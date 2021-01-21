@@ -1,68 +1,205 @@
-import React, { ChangeEventHandler, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { change, getFormValues, reduxForm } from "redux-form";
+import { OppsummertFaktaMedfolgendeFamilie } from "Domene";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as Skjema from "../../../skjema";
 import * as KV from "../../../../kodeverk";
-import MKV from "../../../../melosyskodeverk";
 
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
+import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { formSelectors } from "../../../../ducks/form";
+import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
 import { MedfolgendeBarn } from "../../../../kodeverk/form";
 import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingFamilie.css";
-import { reduxForm } from "redux-form";
+import { FamilieIkkeOmfattetAvNorskTrygd, FamilieOmfattetAvNorskTrygd } from "../../../../@types/avklartfakta";
 
-const mapStateToProps = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  medfolgendeFamilie: behandlingsgrunnlagSelectors.MedfolgendeFamilieSelector(state),
-  medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
-  medfolgendeEktefelleSamboer: behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state),
+function initializeFamilieFormValues(barn: MedfolgendeBarn[], ektefelleSamboer: MedfolgendeBarn[]) {
+  let initialValues = {
+    barn: { fritekst: "" },
+    ektefelle_samboer: { fritekst: "" },
+  };
+  barn.forEach((familiemedlem) => {
+    initialValues = {
+      barn: { ...initialValues.barn, [familiemedlem.uuid]: {} },
+      ektefelle_samboer: { ...initialValues.ektefelle_samboer },
+    };
+  });
+  ektefelleSamboer.forEach((familiemedlem) => {
+    initialValues = {
+      barn: { ...initialValues.barn },
+      ektefelle_samboer: { ...initialValues.ektefelle_samboer, [familiemedlem.uuid]: {} },
+    };
+  });
+  return initialValues;
+}
+
+const mapStateToProps = (state: RootState) => {
+  const medfolgendeBarn = behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state);
+  const medfolgendeEktefelleSamboer = behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state);
+  return {
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    medfolgendeFamilie: behandlingsgrunnlagSelectors.MedfolgendeFamilieSelector(state),
+    avklarteMedfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
+    medfolgendeBarn,
+    medfolgendeEktefelleSamboer,
+    medfolgende_barn_begrunnelser: folketrygdenkodeverkSelectors.Medfolgende_barn_begrunnelser_ftrlBegrunnelserSelector(
+      state
+    ),
+    medfolgende_ektefelle_samboer_begrunnelser: folketrygdenkodeverkSelectors.Medfolgende_ektefelle_samboer_begrunnelser_ftrlBegrunnelserSelector(
+      state
+    ),
+    formIsValid: formSelectors.VurderFamilieFormValid(state),
+    formValues: getFormValues(KV.Form.FAMILIE)(state),
+    initialValues: initializeFamilieFormValues(medfolgendeBarn, medfolgendeEktefelleSamboer),
+  };
+};
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  changeField: (field: string, data: any) => dispatch(change(KV.Form.FAMILIE, field, data)),
+  sendMedfolgendeFamilie: (behandlingID: number, data: OppsummertFaktaMedfolgendeFamilie) =>
+    dispatch(oppsummertfaktaOperations.sendMedfolgendeFamilie(behandlingID, data)),
 });
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({});
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface FormValueProp {
+  barn: {
+    [key: string]: any;
+  };
+  ektefelle_samboer: {
+    [key: string]: any;
+  };
+}
+
 interface Props {
   bekreft: () => void;
+  oppdater: () => void;
+  tilbake: () => void;
   redigerbart: boolean;
+  formValues: FormValueProp;
 }
+
 const VurderingFamilie = ({
   bekreft,
   medfolgendeFamilie,
   medfolgendeBarn,
   medfolgendeEktefelleSamboer,
   redigerbart,
+  tilbake,
+  avklarteMedfolgendeFamilie,
+  medfolgende_barn_begrunnelser,
+  medfolgende_ektefelle_samboer_begrunnelser,
+  formValues,
+  behandlingID,
+  oppdater,
+  changeField,
+  formIsValid,
+  sendMedfolgendeFamilie,
 }: Props & PropsFromRedux) => {
-  const [skalBarnInnvilgesMedlemskap, setSkalBarnInnvilgesMedlemskap] = useState(new Map());
-  const [skalEktefelleSamboerInnvilgesMedlemskap, setSkalEktefelleSamboerInnvilgesMedlemskap] = useState(new Map());
-  const [valgtBegrunnelse, setValgtBegrunnelse] = useState(new Map());
+  const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
-  const handleBarnInnvilgelseChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setSkalBarnInnvilgesMedlemskap(new Map(skalBarnInnvilgesMedlemskap.set(event.target.name, event.target.value)));
-  };
+  function tilMedfolgendeFamilie(fraFormValues: FormValueProp): OppsummertFaktaMedfolgendeFamilie {
+    const barnOmfattetAvNorskTrygd: FamilieOmfattetAvNorskTrygd[] = [];
+    const barnIkkeOmfattetAvNorskTrygd: FamilieIkkeOmfattetAvNorskTrygd[] = [];
+    const ektefelleSamboerOmfattetAvNorskTrygd: FamilieOmfattetAvNorskTrygd[] = [];
+    const ektefelleSamboerIkkeOmfattetAvNorskTrygd: FamilieIkkeOmfattetAvNorskTrygd[] = [];
 
-  const handleEktefelleInnvilgelseChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setSkalEktefelleSamboerInnvilgesMedlemskap(
-      new Map(skalEktefelleSamboerInnvilgesMedlemskap.set(event.target.name, event.target.value))
-    );
-  };
+    medfolgendeBarn.forEach((familiemedlem: MedfolgendeBarn) => {
+      if (fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN) {
+        barnOmfattetAvNorskTrygd.push({
+          uuid: familiemedlem.uuid,
+        });
+      }
+      if (fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.USANN) {
+        barnIkkeOmfattetAvNorskTrygd.push({
+          uuid: familiemedlem.uuid,
+          begrunnelse: fraFormValues.barn[familiemedlem.uuid].begrunnelse,
+          begrunnelseFritekst: fraFormValues.barn.fritekst,
+        });
+      }
+    });
+    medfolgendeEktefelleSamboer.forEach((familiemedlem: MedfolgendeBarn) => {
+      if (fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN) {
+        ektefelleSamboerOmfattetAvNorskTrygd.push({
+          uuid: familiemedlem.uuid,
+        });
+      }
+      if (fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.USANN) {
+        ektefelleSamboerIkkeOmfattetAvNorskTrygd.push({
+          uuid: familiemedlem.uuid,
+          begrunnelse: fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse,
+          begrunnelseFritekst: fraFormValues.ektefelle_samboer.fritekst,
+        });
+      }
+    });
+    return {
+      avklarteMedfolgendeBarn: {
+        familieOmfattetAvNorskTrygd: barnOmfattetAvNorskTrygd,
+        familieIkkeOmfattetAvNorskTrygd: barnIkkeOmfattetAvNorskTrygd,
+      },
+      avklarteMedfolgendeEktefelleSamboer: {
+        familieOmfattetAvNorskTrygd: ektefelleSamboerOmfattetAvNorskTrygd,
+        familieIkkeOmfattetAvNorskTrygd: ektefelleSamboerIkkeOmfattetAvNorskTrygd,
+      },
+    };
+  }
 
-  const handleBarnBegrunnelseChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    setValgtBegrunnelse(new Map(valgtBegrunnelse.set(event.target.name, event.target.value)));
-  };
+  function lagreMedfolgendeFamilie(data: any) {
+    if (data.formIsValid) {
+      sendMedfolgendeFamilie(behandlingID, tilMedfolgendeFamilie(data.formValues));
+    }
+  }
 
-  const handleEktefelleBegrunnelseChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    setValgtBegrunnelse(new Map(valgtBegrunnelse.set(event.target.name, event.target.value)));
-  };
+  const debouncedLagring = useCallback(Utils._debounce(lagreMedfolgendeFamilie, 1000), []);
+
+  useEffect(() => {
+    debouncedLagring({ formValues, formIsValid });
+  }, [formIsValid, formValues]);
+
+  useEffect(() => {
+    oppdater();
+  }, [formIsValid]);
+
+  useEffect(() => {
+    if (avklarteMedfolgendeFamilie) {
+      avklarteMedfolgendeFamilie.avklarteMedfolgendeBarn.familieOmfattetAvNorskTrygd.forEach((familiemedlem) =>
+        changeField(`barn.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.SANN)
+      );
+
+      avklarteMedfolgendeFamilie.avklarteMedfolgendeBarn.familieIkkeOmfattetAvNorskTrygd.forEach((familiemedlem) => {
+        changeField(`barn.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.USANN);
+        changeField(`barn.${familiemedlem.uuid}.begrunnelse`, familiemedlem.begrunnelse);
+        changeField("barn.fritekst", familiemedlem.begrunnelseFritekst);
+      });
+
+      avklarteMedfolgendeFamilie.avklarteMedfolgendeEktefelleSamboer.familieOmfattetAvNorskTrygd.forEach(
+        (familiemedlem) => changeField(`ektefelle_samboer.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.SANN)
+      );
+
+      avklarteMedfolgendeFamilie.avklarteMedfolgendeEktefelleSamboer.familieIkkeOmfattetAvNorskTrygd.forEach(
+        (familiemedlem) => {
+          changeField(`ektefelle_samboer.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.USANN);
+          changeField(`ektefelle_samboer.${familiemedlem.uuid}.begrunnelse`, familiemedlem.begrunnelse);
+          changeField("ektefelle_samboer.fritekst", familiemedlem.begrunnelseFritekst);
+        }
+      );
+    }
+  }, [avklarteMedfolgendeFamilie]);
+
+  if (!formValues) return null;
 
   return (
     <div className="vurderingFamilie">
@@ -81,45 +218,51 @@ const VurderingFamilie = ({
                   })`}</Nav.typo.Normaltekst>
                   <Nav.Row className="familiemedlem_radio">
                     <Nav.Column xs="2">
-                      <Nav.Radio
+                      <Skjema.Radio
                         label="Ja"
-                        name={barn.uuid}
-                        onChange={handleBarnInnvilgelseChange}
-                        checked={skalBarnInnvilgesMedlemskap.get(barn.uuid) === BOOLSK_STRING.SANN}
+                        feltNavn={`barn.${barn.uuid}.innvilget`}
+                        id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
                         value={BOOLSK_STRING.SANN}
-                        key={BOOLSK_STRING.SANN}
                         disabled={!redigerbart}
+                        className=""
                       />
                     </Nav.Column>
                     <Nav.Column xs="2">
-                      <Nav.Radio
+                      <Skjema.Radio
                         label="Nei"
-                        name={barn.uuid}
-                        onChange={handleBarnInnvilgelseChange}
-                        checked={skalBarnInnvilgesMedlemskap.get(barn.uuid) === BOOLSK_STRING.USANN}
+                        feltNavn={`barn.${barn.uuid}.innvilget`}
+                        id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
                         value={BOOLSK_STRING.USANN}
-                        key={BOOLSK_STRING.USANN}
                         disabled={!redigerbart}
+                        className=""
                       />
                     </Nav.Column>
                   </Nav.Row>
-                  {skalBarnInnvilgesMedlemskap.get(barn.uuid) === BOOLSK_STRING.USANN && (
-                    <Nav.Select label="Begrunnelse:" onChange={handleBarnBegrunnelseChange}>
-                      <option key="" value="" disabled={!redigerbart || valgtBegrunnelse.get(barn.uuid)}>
-                        Velg...
-                      </option>
-                      {MKV.KTObjects.MEDFØLGENDE_BARN_BEGRUNNELSER_FTRL}
-                    </Nav.Select>
+                  {formValues.barn && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN && (
+                    <Skjema.Select
+                      label="Begrunnelse:"
+                      feltNavn={`barn.${barn.uuid}.begrunnelse`}
+                      emptyFieldText="Velg..."
+                      emptyFieldDisabled={!redigerbart || !!formValues.barn[barn.uuid].begrunnelse}
+                      name={barn.uuid}
+                    >
+                      {medfolgende_barn_begrunnelser.map((begrunnelse: KTObject) => (
+                        <option key={begrunnelse.kode} value={begrunnelse.kode}>
+                          {begrunnelse.term}
+                        </option>
+                      ))}
+                    </Skjema.Select>
                   )}
                 </Nav.Column>
               ))}
             </Nav.Row>
             {medfolgendeBarn.some(
-              (barn: MedfolgendeBarn) => skalBarnInnvilgesMedlemskap.get(barn.uuid) === BOOLSK_STRING.USANN
+              (barn: MedfolgendeBarn) =>
+                formValues.ektefelle_samboer && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div>
                 <Nav.typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.typo.Element>
-                <Skjema.HTMLEditor feltNavn="fritekst_barn" className="fritekst" />
+                <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" />
               </div>
             )}
           </Nav.Fieldset>
@@ -132,49 +275,55 @@ const VurderingFamilie = ({
                   })`}</Nav.typo.Normaltekst>
                   <Nav.Row className="familiemedlem_radio">
                     <Nav.Column xs="2">
-                      <Nav.Radio
+                      <Skjema.Radio
                         label="Ja"
-                        name={ektefelleSamboer.uuid}
-                        onChange={handleEktefelleInnvilgelseChange}
-                        checked={
-                          skalEktefelleSamboerInnvilgesMedlemskap.get(ektefelleSamboer.uuid) === BOOLSK_STRING.SANN
-                        }
+                        feltNavn={`ektefelle_samboer.${ektefelleSamboer.uuid}.innvilget`}
+                        id={`${ektefelleSamboer.uuid}.${BOOLSK_STRING.SANN}`}
                         value={BOOLSK_STRING.SANN}
-                        key={BOOLSK_STRING.SANN}
                         disabled={!redigerbart}
+                        className=""
                       />
                     </Nav.Column>
                     <Nav.Column xs="2">
-                      <Nav.Radio
+                      <Skjema.Radio
                         label="Nei"
-                        name={ektefelleSamboer.uuid}
-                        onChange={handleEktefelleInnvilgelseChange}
-                        checked={
-                          skalEktefelleSamboerInnvilgesMedlemskap.get(ektefelleSamboer.uuid) === BOOLSK_STRING.USANN
-                        }
+                        feltNavn={`ektefelle_samboer.${ektefelleSamboer.uuid}.innvilget`}
+                        id={`${ektefelleSamboer.uuid}.${BOOLSK_STRING.USANN}`}
                         value={BOOLSK_STRING.USANN}
-                        key={BOOLSK_STRING.USANN}
                         disabled={!redigerbart}
+                        className=""
                       />
                     </Nav.Column>
                   </Nav.Row>
-                  {skalEktefelleSamboerInnvilgesMedlemskap.get(ektefelleSamboer.uuid) === BOOLSK_STRING.USANN && (
-                    <Nav.Select label="Begrunnelse:" onChange={handleEktefelleBegrunnelseChange}>
-                      <option key="" value="" disabled={!redigerbart || valgtBegrunnelse.get(ektefelleSamboer.uuid)}>
-                        Velg...
-                      </option>
-                    </Nav.Select>
-                  )}
+                  {formValues.ektefelle_samboer &&
+                    formValues.ektefelle_samboer[ektefelleSamboer.uuid].innvilget === BOOLSK_STRING.USANN && (
+                      <Skjema.Select
+                        label="Begrunnelse:"
+                        feltNavn={`ektefelle_samboer.${ektefelleSamboer.uuid}.begrunnelse`}
+                        emptyFieldText="Velg..."
+                        emptyFieldDisabled={
+                          !redigerbart || !!formValues.ektefelle_samboer[ektefelleSamboer.uuid].begrunnelse
+                        }
+                        name={ektefelleSamboer.uuid}
+                      >
+                        {medfolgende_ektefelle_samboer_begrunnelser.map((begrunnelse: KTObject) => (
+                          <option key={begrunnelse.kode} value={begrunnelse.kode}>
+                            {begrunnelse.term}
+                          </option>
+                        ))}
+                      </Skjema.Select>
+                    )}
                 </Nav.Column>
               ))}
             </Nav.Row>
             {medfolgendeEktefelleSamboer.some(
               (ektefelleSamboer: MedfolgendeBarn) =>
-                skalEktefelleSamboerInnvilgesMedlemskap.get(ektefelleSamboer.uuid) === BOOLSK_STRING.USANN
+                formValues.ektefelle_samboer &&
+                formValues.ektefelle_samboer[ektefelleSamboer.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div>
                 <Nav.typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.typo.Element>
-                <Skjema.HTMLEditor feltNavn="fritekst_barn" className="fritekst" />
+                <Skjema.HTMLEditor feltNavn="ektefelle_samboer.fritekst" className="fritekst" />
               </div>
             )}
           </Nav.Fieldset>
@@ -184,12 +333,20 @@ const VurderingFamilie = ({
           <Nav.AlertStripe className="alertstripe" type="suksess">
             Ingen medfølgende familiemedlemmer.
           </Nav.AlertStripe>
-          <span>* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".</span>
+          <span>{obsTekst}</span>
         </div>
       )}
 
       <div className="fane__knapplinje">
-        <Nav.Hovedknapp mini disabled={false} className="fane__navigasjonsknapp" onClick={bekreft}>
+        <Nav.Knapp mini className="fane__navigasjonsknapp" onClick={tilbake}>
+          Tilbake
+        </Nav.Knapp>
+        <Nav.Hovedknapp
+          mini
+          disabled={!redigerbart || !formIsValid}
+          className="fane__navigasjonsknapp"
+          onClick={bekreft}
+        >
           Fortsett
         </Nav.Hovedknapp>
       </div>
@@ -204,6 +361,13 @@ const VurderingFamilieForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_familie, {
+      context: {
+        medfolgendeBarn: props.medfolgendeBarn,
+        medfolgendeEktefelleSamboer: props.medfolgendeEktefelleSamboer,
+      },
+    })(values),
 })(VurderingFamilie);
 
 export default connector(VurderingFamilieForm);

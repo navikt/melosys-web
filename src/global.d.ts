@@ -28,6 +28,7 @@ declare module "Domene" {
   export type Person = import("./@types").Person;
   export type PersonHistorikk = import("./@types").PersonHistorikk;
   export type OppsummertFaktaVirksomheter = import("./@types").Virksomheter;
+  export type OppsummertFaktaMedfolgendeFamilie = import("./@types").MedfolgendeFamilie;
   export type Organisasjon = import("./@types").Organisasjon;
   export type Videresending = import("./@types").Videresending;
   export type DokumentOversikt = import("./@types").DokumentOversikt;
