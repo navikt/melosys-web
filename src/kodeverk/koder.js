@@ -158,4 +158,5 @@ export const Opplysningskilder = {
 
 export const Relasjonsrolle = {
   BARN: "BARN",
+  EKTEFELLE_SAMBOER: "EKTEFELLE_SAMBOER",
 };
