@@ -126,7 +126,9 @@ const VurderingFamilie = ({
       if (fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.USANN) {
         barnIkkeOmfattetAvNorskTrygd.push({
           uuid: familiemedlem.uuid,
-          begrunnelse: fraFormValues.barn[familiemedlem.uuid].begrunnelse,
+          begrunnelse: medfolgende_barn_begrunnelser.find(
+            (begrunnelse: KTObject) => begrunnelse.kode === fraFormValues.barn[familiemedlem.uuid].begrunnelse
+          ),
           begrunnelseFritekst: fraFormValues.barn.fritekst,
         });
       }
@@ -140,7 +142,10 @@ const VurderingFamilie = ({
       if (fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.USANN) {
         ektefelleSamboerIkkeOmfattetAvNorskTrygd.push({
           uuid: familiemedlem.uuid,
-          begrunnelse: fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse,
+          begrunnelse: medfolgende_ektefelle_samboer_begrunnelser.find(
+            (begrunnelse: KTObject) =>
+              begrunnelse.kode === fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse
+          ),
           begrunnelseFritekst: fraFormValues.ektefelle_samboer.fritekst,
         });
       }
@@ -181,7 +186,10 @@ const VurderingFamilie = ({
 
       avklarteMedfolgendeFamilie.avklarteMedfolgendeBarn.familieIkkeOmfattetAvNorskTrygd.forEach((familiemedlem) => {
         changeField(`barn.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.USANN);
-        changeField(`barn.${familiemedlem.uuid}.begrunnelse`, familiemedlem.begrunnelse);
+        changeField(
+          `barn.${familiemedlem.uuid}.begrunnelse`,
+          familiemedlem.begrunnelse ? familiemedlem.begrunnelse.kode : familiemedlem.begrunnelse
+        );
         changeField("barn.fritekst", familiemedlem.begrunnelseFritekst);
       });
 
@@ -192,7 +200,10 @@ const VurderingFamilie = ({
       avklarteMedfolgendeFamilie.avklarteMedfolgendeEktefelleSamboer.familieIkkeOmfattetAvNorskTrygd.forEach(
         (familiemedlem) => {
           changeField(`ektefelle_samboer.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.USANN);
-          changeField(`ektefelle_samboer.${familiemedlem.uuid}.begrunnelse`, familiemedlem.begrunnelse);
+          changeField(
+            `ektefelle_samboer.${familiemedlem.uuid}.begrunnelse`,
+            familiemedlem.begrunnelse ? familiemedlem.begrunnelse.kode : familiemedlem.begrunnelse
+          );
           changeField("ektefelle_samboer.fritekst", familiemedlem.begrunnelseFritekst);
         }
       );
