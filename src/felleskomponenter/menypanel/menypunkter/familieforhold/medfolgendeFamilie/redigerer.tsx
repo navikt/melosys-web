@@ -52,7 +52,7 @@ const Redigerer = ({
   }, []);
 
   return (
-    <Nav.Row className="medfolgende-barn__redigerer">
+    <Nav.Row className="medfolgende-familie__redigerer">
       <Nav.Column xs="5">
         <Skjema.Input
           label="F.nr./d-nr."

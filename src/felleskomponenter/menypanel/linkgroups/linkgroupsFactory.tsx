@@ -51,7 +51,7 @@ class LinkGroupsFactory {
           )
           .addFraSoknad(
             new LinksBuilder(contentProps)
-              .addArbeidsgiverEllervirksomhet()
+              .addArbeidsgiverEllerVirksomhet()
               .addFullmektig()
               .addPeriode()
               .addArbeidssteder()
@@ -92,7 +92,7 @@ class LinkGroupsFactory {
           )
           .addFraSED(
             new LinksBuilder(contentProps)
-              .addArbeidsgiverEllervirksomhet()
+              .addArbeidsgiverEllerVirksomhet()
               .addFullmektig()
               .addPeriode()
               .addArbeidssteder()
@@ -106,7 +106,7 @@ class LinkGroupsFactory {
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )
-          .addFraSoknad(new LinksBuilder(contentProps).addArbeidsgiverEllervirksomhet().addFullmektig().build())
+          .addFraSoknad(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
           .build();
       }
       default:

@@ -30,7 +30,7 @@ const Rad = ({ navn, idNummer }: RadProps) => (
 );
 
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeFamilie>) => (
-  <div className="medfolgende-barn__redigeringutfort">
+  <div className="medfolgende-familie__redigeringutfort">
     <ExpandableList
       elements={verdier}
       header={<Header />}
