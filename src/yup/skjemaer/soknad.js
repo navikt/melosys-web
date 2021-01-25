@@ -4,10 +4,10 @@ import * as KV from "../../kodeverk";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 
-const lagMelding = (panel, undertittel, felt) => ({
+const lagMelding = (panel, undertittel, melding) => ({
   panel,
   undertittel,
-  melding: felt,
+  melding,
 });
 
 const SLUTTDATO_ER_APEN = lagMelding(KV.Menypunkter.Periode.tittel, null, "Sluttdato er åpen");
