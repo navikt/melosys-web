@@ -4,10 +4,10 @@ import * as KV from "../../kodeverk";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 
-const lagMelding = (panel, undertittel, felt) => ({
+const lagMelding = (panel, undertittel, melding) => ({
   panel,
   undertittel,
-  melding: felt,
+  melding,
 });
 
 const SLUTTDATO_ER_APEN = lagMelding(KV.Menypunkter.Periode.tittel, null, "Sluttdato er åpen");
@@ -60,6 +60,14 @@ const soknad = object().when("$behandlingstema", {
               "Navn kreves"
             )
           ),
+        orgnr: string().max(
+          25,
+          lagMelding(
+            KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+            KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
+            "Registreringsnummer kan ikke være lenger enn 25 tegn"
+          )
+        ),
       })
     ),
     selvstendigNaeringsvirksomhetUtland: array().of(
@@ -73,6 +81,14 @@ const soknad = object().when("$behandlingstema", {
               "Navn kreves"
             )
           ),
+        orgnr: string().max(
+          25,
+          lagMelding(
+            KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+            KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
+            "Registreringsnummer kan ikke være lenger enn 25 tegn"
+          )
+        ),
       })
     ),
     arbeidsstedOffshore: array().of(
