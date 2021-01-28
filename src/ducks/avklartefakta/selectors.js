@@ -259,21 +259,23 @@ export const ArbeidslandSelector = createSelector(
   }
 );
 
-const erLonnetArbeidNorge = (arbeidsgivereNorge) => arbeidsgivereNorge.length > 0;
+const erLonnetArbeidNorge = (arbeidsgivereNorge, fysiskeArbeidssteder) =>
+  arbeidsgivereNorge.length > 0 ||
+  fysiskeArbeidssteder.some((arbeidssted) => arbeidssted.adresse.landkode === MKV.Koder.landkoder.NO);
 
-const erLonnetArbeidUtland = (land, fysiskeArbeidssteder, foretakUtland) =>
-  fysiskeArbeidssteder.some((arbeidssted) => arbeidssted.adresse.landkode === land) ||
+const erLonnetArbeidUtland = (utland, fysiskeArbeidssteder, foretakUtland) =>
+  fysiskeArbeidssteder.some((arbeidssted) => arbeidssted.adresse.landkode === utland) ||
   foretakUtland
     .filter((foretak) => !foretak.selvstendigNaeringsvirksomhet)
-    .some((foretak) => foretak.adresse.landkode === land);
+    .some((foretak) => foretak.adresse.landkode === utland);
 
 const erSelvstendigNaeringsvirksomhetNorge = (selvstendigArbeid) =>
   selvstendigArbeid.erSelvstendig && selvstendigArbeid.selvstendigForetak.length > 0;
 
-const erSelvstendigNaeringsvirksomhetUtland = (land, foretakUtland) =>
+const erSelvstendigNaeringsvirksomhetUtland = (utland, foretakUtland) =>
   foretakUtland
     .filter((foretak) => foretak.selvstendigNaeringsvirksomhet)
-    .some((foretak) => foretak.adresse.landkode === land);
+    .some((foretak) => foretak.adresse.landkode === utland);
 
 export const ArbeidslandKTSelector = createSelector(
   (state) => ArbeidslandSelector(state),
@@ -289,7 +291,7 @@ const byggLandMedYrkesAktivitet = ({
 }) => {
   const erNorge = land.kode === MKV.Koder.landkoder.NO;
   const erLonnetArbeid = erNorge
-    ? erLonnetArbeidNorge(arbeidsgivereNorge)
+    ? erLonnetArbeidNorge(arbeidsgivereNorge, fysiskeArbeidssteder)
     : erLonnetArbeidUtland(land.kode, fysiskeArbeidssteder, foretakUtland);
   const erSelvstendigNaeringsvirksomhet = erNorge
     ? erSelvstendigNaeringsvirksomhetNorge(selvstendigArbeid)

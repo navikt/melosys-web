@@ -334,6 +334,32 @@ describe("Avklartefaktaselectors", () => {
           periode: { fom: "2020-02-02", tom: "2020-06-02" },
         },
       ],
+      [
+        [
+          {
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            erLonnetArbeid: true,
+            erSelvstendigNaeringsvirksomhet: false,
+          },
+        ],
+        {
+          selvstendigArbeid: {
+            erSelvstendig: false,
+          },
+          soeknadsland: {
+            landkoder: [MKV.Koder.landkoder.NO],
+          },
+          arbeidPaaLand: {
+            fysiskeArbeidssteder: [
+              {
+                adresse: {
+                  landkode: MKV.Koder.landkoder.NO,
+                },
+              },
+            ],
+          },
+        },
+      ],
     ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, behandlingsgrunnlagData) => {
       const arbeidsland = MKV.Koder.landkoder.NO;
       const avklartefakta = [lagSoknadslandFakta(arbeidsland)];
