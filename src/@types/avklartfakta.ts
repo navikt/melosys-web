@@ -1,5 +1,3 @@
-import { KTObject } from "@navikt/melosys-kodeverk";
-
 type Avklartfakta = {
   avklartefaktaKode: string | null;
   begrunnelseFritekst: string | null;
@@ -15,22 +13,13 @@ export type Virksomheter = {
 
 export default Avklartfakta;
 
-export type FamilieOmfattetAvNorskTrygd = {
+export type MedfolgendeFamiliemedlem = {
   uuid: string;
-  sammensattNavn?: string;
-};
-export type FamilieIkkeOmfattetAvNorskTrygd = {
-  uuid: string;
-  begrunnelse: KTObject;
-  begrunnelseFritekst: string;
-};
-
-export type AvklartMedfolgendeFamilie = {
-  familieOmfattetAvNorskTrygd: FamilieOmfattetAvNorskTrygd[];
-  familieIkkeOmfattetAvNorskTrygd: FamilieIkkeOmfattetAvNorskTrygd[];
+  omfattet: boolean;
+  begrunnelseKode?: string;
+  begrunnelseFritekst?: string;
 };
 
 export type MedfolgendeFamilie = {
-  avklarteMedfolgendeBarn: AvklartMedfolgendeFamilie;
-  avklarteMedfolgendeEktefelleSamboer: AvklartMedfolgendeFamilie;
+  medfolgendeFamilie: MedfolgendeFamiliemedlem[];
 };
