@@ -16,6 +16,7 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
     <thead>
       <tr>
         <th>Navn på innretning</th>
+        <th>Type innretning</th>
         <th>Lands sokkel</th>
       </tr>
     </thead>
@@ -24,7 +25,8 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
         /* eslint-disable-next-line react/no-array-index-key */
         <tr key={index}>
           <td>{element.enhetNavn}</td>
-          <td>{KV.kodeTilTerm(element.installasjonsLandkode, MKV.KTObjects.landkoder)}</td>
+          <td>{KV.kodeTilTerm(element.innretningstype, MKV.KTObjects.innretningstyper)}</td>
+          <td>{KV.kodeTilTerm(element.innretningLandkode, MKV.KTObjects.landkoder)}</td>
         </tr>
       ))}
     </tbody>
