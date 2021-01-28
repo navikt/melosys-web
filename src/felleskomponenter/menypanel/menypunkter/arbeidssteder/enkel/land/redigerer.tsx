@@ -12,13 +12,13 @@ const Redigerer = ({
   redigerbart,
   overordnetFeltNavn,
   slett,
-}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedUtland>) => (
+}: EnRedigeringsknappListeRedigerer<KV.Form.FysiskArbeidssted>) => (
   <div>
     <Nav.Row>
       <Nav.Column xs="9">
         <Skjema.Input
           label="Navn på virksomhet"
-          feltNavn={`${overordnetFeltNavn}.foretakNavn`}
+          feltNavn={`${overordnetFeltNavn}.virksomhetNavn`}
           disabled={!redigerbart}
           bredde="fullbredde"
           datoFelt={false}
