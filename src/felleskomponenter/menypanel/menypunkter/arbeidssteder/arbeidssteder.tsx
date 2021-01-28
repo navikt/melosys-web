@@ -16,12 +16,13 @@ type FlattArbeidssted = KV.Form.ArbeidsstedFly | KV.Form.ArbeidsstedOffshore | K
 const flattArbeidsstedErIkkeTomt = (arbeidssted: FlattArbeidssted) =>
   Object.values(arbeidssted).some((v) => !Utils._isNil(v) && v !== "");
 
-const ArbeidsstedUtlandErIkkeTomt = (arbeidssted: KV.Form.ArbeidsstedUtland) =>
-  [arbeidssted.arbeidUtlandHjemmekontor, arbeidssted.foretakNavn, arbeidssted.foretakOrgnr].some(
-    (v) => !Utils._isNil(v) && v !== ""
-  ) || !Utils.adresse.erStrukturertAdresseObjektTomt(arbeidssted.adresse);
+const fysiskArbeidsstedErIkkeTomt = (fysiskArbeidssted: KV.Form.FysiskArbeidssted) =>
+  !(
+    (Utils._isNil(fysiskArbeidssted.virksomhetNavn) || fysiskArbeidssted.virksomhetNavn === "") &&
+    Utils.adresse.erStrukturertAdresseObjektTomt(fysiskArbeidssted.adresse)
+  );
 
-const arbeidUtlandDefaultElement = {
+const fysiskArbeidsstedDefaultElement: KV.Form.FysiskArbeidssted = {
   adresse: {
     gatenavn: "",
     husnummer: "",
@@ -30,9 +31,7 @@ const arbeidUtlandDefaultElement = {
     poststed: "",
     region: "",
   },
-  foretakNavn: "",
-  foretakOrgnr: "",
-  arbeidUtlandHjemmekontor: null,
+  virksomhetNavn: "",
 };
 
 interface ArbeidsstederProps {
@@ -56,16 +55,16 @@ const Arbeidssteder = ({
     </div>
     <EditerbartElementListe
       redigerbart={redigerbart}
-      feltNavn="arbeidUtland"
+      feltNavn="arbeidPaaLand.fysiskeArbeidssteder"
       redigererKomponent={Enkel.Land.Redigerer}
       redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
       leggTilTekst="Legg til nytt arbeidssted på land"
-      hentDefaultElement={() => arbeidUtlandDefaultElement}
+      hentDefaultElement={() => fysiskArbeidsstedDefaultElement}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}
       tittelIkon={Ikoner.Kontor}
       tittelUnderstrek
       elementUnderstrek
-      harData={(elementListe) => elementListe.length !== 0 && elementListe.every(ArbeidsstedUtlandErIkkeTomt)}
+      harData={(elementListe) => elementListe.length !== 0 && elementListe.every(fysiskArbeidsstedErIkkeTomt)}
       flereRedigeringsknapper={false}
     />
     <EditerbartElementListe

@@ -29,19 +29,24 @@ export const BehandlingsgrunnlagDataSelector = createSelector(
   (behandlingsgrunnlagState) => behandlingsgrunnlagState.data || {}
 );
 
-export const ArbeidUtlandSelector = createSelector(
+export const ArbeidPaaLandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.arbeidUtland || []
+  (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidPaaLand || {}
 );
 
-const ArbeidUtlandAdresseSelector = createSelector(
-  ArbeidUtlandSelector,
-  (arbeidUtland) => arbeidUtland.map((arbeid) => arbeid.adresse) || []
+export const FysiskeArbeidsstederSelector = createSelector(
+  ArbeidPaaLandSelector,
+  (arbeidPaaLand) => arbeidPaaLand.fysiskeArbeidssteder || []
 );
 
-export const ArbeidUtlandLandkodeSelector = createSelector(
-  ArbeidUtlandAdresseSelector,
-  (arbeidUtlandAdresse) => arbeidUtlandAdresse.map((adresse) => adresse.landkode) || []
+const FysiskeArbeidsstederAdresserSelector = createSelector(
+  FysiskeArbeidsstederSelector,
+  (fysiskeArbeidssteder) => fysiskeArbeidssteder.map((arbeid) => arbeid.adresse) || []
+);
+
+export const FysiskeArbeidsstederLandkoderSelector = createSelector(
+  FysiskeArbeidsstederAdresserSelector,
+  (fysiskeArbeidsstederAdresser) => fysiskeArbeidsstederAdresser.map((adresse) => adresse.landkode) || []
 );
 
 export const ArbeidsinntektSelector = createSelector(
@@ -156,11 +161,11 @@ export const MaritimtArbeidSelector = createSelector(
 );
 
 export const SkipArbeidSelector = createSelector(MaritimtArbeidSelector, (maritimtArbeid) =>
-  maritimtArbeid.filter((enkeltArbeid) => Utils._isNil(enkeltArbeid.installasjonsLandkode))
+  maritimtArbeid.filter((enkeltArbeid) => Utils._isNil(enkeltArbeid.innretningLandkode))
 );
 
 export const OffshoreArbeidSelector = createSelector(MaritimtArbeidSelector, (maritimtArbeid) =>
-  maritimtArbeid.filter((enkeltArbeid) => !Utils._isNil(enkeltArbeid.installasjonsLandkode))
+  maritimtArbeid.filter((enkeltArbeid) => !Utils._isNil(enkeltArbeid.innretningLandkode))
 );
 
 export const LuftfartBaserSelector = createSelector(

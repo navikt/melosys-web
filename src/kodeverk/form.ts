@@ -18,18 +18,15 @@ export interface ArbeidsforholdUtland {
   selvstendigNaeringsvirksomhet: boolean;
   adresse?: Partial<StrukturertAdresse>;
 }
-export interface ArbeidsstedUtland {
-  adresse: {
-    gatenavn?: string;
-    husnummer?: string;
-    landkode?: string;
-    postnummer?: string;
-    poststed?: string;
-    region?: string;
-  };
-  foretakNavn?: string;
-  foretakOrgnr?: string;
-  arbeidUtlandHjemmekontor?: boolean;
+
+export interface FysiskArbeidssted {
+  adresse: Partial<StrukturertAdresse>;
+  virksomhetNavn?: string | null;
+}
+export interface ArbeidsstedPaaLand {
+  fysiskeArbeidssteder?: FysiskArbeidssted[];
+  erHjemmekontor?: boolean | null;
+  erFastArbeidssted?: boolean | null;
 }
 export interface ArbeidsstedFly {
   hjemmebaseNavn?: string;
@@ -38,11 +35,10 @@ export interface ArbeidsstedFly {
 }
 interface MaritimtArbeid {
   enhetNavn?: string;
-  foretakNavn?: string;
-  foretakOrgnr?: string;
 }
 export interface ArbeidsstedOffshore extends MaritimtArbeid {
-  installasjonsLandkode?: string;
+  innretningLandkode?: string;
+  innretningstype?: string;
 }
 export interface ArbeidsstedSkip extends MaritimtArbeid {
   fartsomradeKode?: string;
