@@ -4,7 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
-import { OppsummertFaktaMedfolgendeFamilie } from "Domene";
+import { MedfolgendeFamiliemedlem, OppsummertFaktaMedfolgendeFamilie } from "Domene";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
@@ -18,7 +18,6 @@ import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunn
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
-import { FamilieIkkeOmfattetAvNorskTrygd, FamilieOmfattetAvNorskTrygd } from "../../../../@types/avklartfakta";
 import { MedfolgendeFamilie } from "../../../../kodeverk/form";
 import { BOOLSK_STRING } from "../../../../constants";
 
@@ -112,54 +111,25 @@ const VurderingFamilie = ({
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
   function tilMedfolgendeFamilie(fraFormValues: FormValueProp): OppsummertFaktaMedfolgendeFamilie {
-    const barnOmfattetAvNorskTrygd: FamilieOmfattetAvNorskTrygd[] = [];
-    const barnIkkeOmfattetAvNorskTrygd: FamilieIkkeOmfattetAvNorskTrygd[] = [];
-    const ektefelleSamboerOmfattetAvNorskTrygd: FamilieOmfattetAvNorskTrygd[] = [];
-    const ektefelleSamboerIkkeOmfattetAvNorskTrygd: FamilieIkkeOmfattetAvNorskTrygd[] = [];
+    const medfolgendeFamilieObjekter: MedfolgendeFamiliemedlem[] = [];
 
     medfolgendeBarn.forEach((familiemedlem: MedfolgendeFamilie) => {
-      if (fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN) {
-        barnOmfattetAvNorskTrygd.push({
-          uuid: familiemedlem.uuid,
-        });
-      }
-      if (fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.USANN) {
-        barnIkkeOmfattetAvNorskTrygd.push({
-          uuid: familiemedlem.uuid,
-          begrunnelse: medfolgende_barn_begrunnelser.find(
-            (begrunnelse: KTObject) => begrunnelse.kode === fraFormValues.barn[familiemedlem.uuid].begrunnelse
-          ),
-          begrunnelseFritekst: fraFormValues.barn.fritekst,
-        });
-      }
+      medfolgendeFamilieObjekter.push({
+        uuid: familiemedlem.uuid,
+        omfattet: fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN,
+        begrunnelseKode: fraFormValues.barn[familiemedlem.uuid].begrunnelse,
+        begrunnelseFritekst: fraFormValues.barn.fritekst,
+      });
     });
     medfolgendeEktefelleSamboer.forEach((familiemedlem: MedfolgendeFamilie) => {
-      if (fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN) {
-        ektefelleSamboerOmfattetAvNorskTrygd.push({
-          uuid: familiemedlem.uuid,
-        });
-      }
-      if (fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.USANN) {
-        ektefelleSamboerIkkeOmfattetAvNorskTrygd.push({
-          uuid: familiemedlem.uuid,
-          begrunnelse: medfolgende_ektefelle_samboer_begrunnelser.find(
-            (begrunnelse: KTObject) =>
-              begrunnelse.kode === fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse
-          ),
-          begrunnelseFritekst: fraFormValues.ektefelle_samboer.fritekst,
-        });
-      }
+      medfolgendeFamilieObjekter.push({
+        uuid: familiemedlem.uuid,
+        omfattet: fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN,
+        begrunnelseKode: fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse,
+        begrunnelseFritekst: fraFormValues.ektefelle_samboer.fritekst,
+      });
     });
-    return {
-      avklarteMedfolgendeBarn: {
-        familieOmfattetAvNorskTrygd: barnOmfattetAvNorskTrygd,
-        familieIkkeOmfattetAvNorskTrygd: barnIkkeOmfattetAvNorskTrygd,
-      },
-      avklarteMedfolgendeEktefelleSamboer: {
-        familieOmfattetAvNorskTrygd: ektefelleSamboerOmfattetAvNorskTrygd,
-        familieIkkeOmfattetAvNorskTrygd: ektefelleSamboerIkkeOmfattetAvNorskTrygd,
-      },
-    };
+    return { medfolgendeFamilie: medfolgendeFamilieObjekter };
   }
 
   function lagreMedfolgendeFamilie(data: any) {
@@ -180,33 +150,39 @@ const VurderingFamilie = ({
 
   useEffect(() => {
     if (avklarteMedfolgendeFamilie) {
-      avklarteMedfolgendeFamilie.avklarteMedfolgendeBarn.familieOmfattetAvNorskTrygd.forEach((familiemedlem) =>
-        changeField(`barn.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.SANN)
-      );
-
-      avklarteMedfolgendeFamilie.avklarteMedfolgendeBarn.familieIkkeOmfattetAvNorskTrygd.forEach((familiemedlem) => {
-        changeField(`barn.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.USANN);
-        changeField(
-          `barn.${familiemedlem.uuid}.begrunnelse`,
-          familiemedlem.begrunnelse ? familiemedlem.begrunnelse.kode : familiemedlem.begrunnelse
-        );
-        changeField("barn.fritekst", familiemedlem.begrunnelseFritekst);
-      });
-
-      avklarteMedfolgendeFamilie.avklarteMedfolgendeEktefelleSamboer.familieOmfattetAvNorskTrygd.forEach(
-        (familiemedlem) => changeField(`ektefelle_samboer.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.SANN)
-      );
-
-      avklarteMedfolgendeFamilie.avklarteMedfolgendeEktefelleSamboer.familieIkkeOmfattetAvNorskTrygd.forEach(
-        (familiemedlem) => {
-          changeField(`ektefelle_samboer.${familiemedlem.uuid}.innvilget`, BOOLSK_STRING.USANN);
+      avklarteMedfolgendeFamilie.forEach((familiemedlem) => {
+        if (
+          medfolgendeFamilie.some(
+            (person: MedfolgendeFamilie) =>
+              person.uuid === familiemedlem.uuid && person.relasjonsrolle === KV.Koder.Relasjonsrolle.BARN
+          )
+        ) {
           changeField(
-            `ektefelle_samboer.${familiemedlem.uuid}.begrunnelse`,
-            familiemedlem.begrunnelse ? familiemedlem.begrunnelse.kode : familiemedlem.begrunnelse
+            `barn.${familiemedlem.uuid}.innvilget`,
+            familiemedlem.omfattet ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN
           );
-          changeField("ektefelle_samboer.fritekst", familiemedlem.begrunnelseFritekst);
+          if (!familiemedlem.omfattet) {
+            changeField(`barn.${familiemedlem.uuid}.begrunnelse`, familiemedlem.begrunnelseKode);
+            changeField(`barn.fritekst`, familiemedlem.begrunnelseFritekst);
+          }
         }
-      );
+
+        if (
+          medfolgendeFamilie.some(
+            (person: MedfolgendeFamilie) =>
+              person.uuid === familiemedlem.uuid && person.relasjonsrolle === KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER
+          )
+        ) {
+          changeField(
+            `ektefelle_samboer.${familiemedlem.uuid}.innvilget`,
+            familiemedlem.omfattet ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN
+          );
+          if (!familiemedlem.omfattet) {
+            changeField(`ektefelle_samboer.${familiemedlem.uuid}.begrunnelse`, familiemedlem.begrunnelseKode);
+            changeField(`ektefelle_samboer.fritekst`, familiemedlem.begrunnelseFritekst);
+          }
+        }
+      });
     }
   }, [avklarteMedfolgendeFamilie]);
 
