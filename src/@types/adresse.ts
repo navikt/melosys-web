@@ -18,12 +18,12 @@ type UstrukturertAdresse = {
 };
 
 type StrukturertAdresse = {
-  gatenavn: string;
-  husnummer: string;
-  region: string;
-  postnummer: string;
-  poststed: string;
-  landkode: string;
+  gatenavn: string | null;
+  husnummer: string | null;
+  region: string | null;
+  postnummer: string | null;
+  poststed: string | null;
+  landkode: string | null;
 };
 
 type MidlertidigAdresse = {

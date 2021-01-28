@@ -261,8 +261,8 @@ export const ArbeidslandSelector = createSelector(
 
 const erLonnetArbeidNorge = (arbeidsgivereNorge) => arbeidsgivereNorge.length > 0;
 
-const erLonnetArbeidUtland = (land, arbeidUtland, foretakUtland) =>
-  arbeidUtland.some((arbeid) => arbeid.adresse.landkode === land) ||
+const erLonnetArbeidUtland = (land, fysiskeArbeidssteder, foretakUtland) =>
+  fysiskeArbeidssteder.some((arbeidssted) => arbeidssted.adresse.landkode === land) ||
   foretakUtland
     .filter((foretak) => !foretak.selvstendigNaeringsvirksomhet)
     .some((foretak) => foretak.adresse.landkode === land);
@@ -280,11 +280,17 @@ export const ArbeidslandKTSelector = createSelector(
   (arbeidsland) => MKV.KTObjects.landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
 );
 
-const byggLandMedYrkesAktivitet = ({ land, arbeidUtland, foretakUtland, selvstendigArbeid, arbeidsgivereNorge }) => {
+const byggLandMedYrkesAktivitet = ({
+  land,
+  fysiskeArbeidssteder,
+  foretakUtland,
+  selvstendigArbeid,
+  arbeidsgivereNorge,
+}) => {
   const erNorge = land.kode === MKV.Koder.landkoder.NO;
   const erLonnetArbeid = erNorge
     ? erLonnetArbeidNorge(arbeidsgivereNorge)
-    : erLonnetArbeidUtland(land.kode, arbeidUtland, foretakUtland);
+    : erLonnetArbeidUtland(land.kode, fysiskeArbeidssteder, foretakUtland);
   const erSelvstendigNaeringsvirksomhet = erNorge
     ? erSelvstendigNaeringsvirksomhetNorge(selvstendigArbeid)
     : erSelvstendigNaeringsvirksomhetUtland(land.kode, foretakUtland);
@@ -298,15 +304,15 @@ const byggLandMedYrkesAktivitet = ({ land, arbeidUtland, foretakUtland, selvsten
 
 export const ArbeidslandMedYrkesAktivitetSelector = createSelector(
   ArbeidslandKTSelector,
-  (state) => behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
+  (state) => behandlingsgrunnlagSelectors.FysiskeArbeidsstederSelector(state),
   (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
   (state) => behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state),
   (state) => behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
-  (arbeidsland, arbeidUtland, foretakUtland, selvstendigArbeid, arbeidsgivereNorge) =>
+  (arbeidsland, fysiskeArbeidssteder, foretakUtland, selvstendigArbeid, arbeidsgivereNorge) =>
     arbeidsland.map((land) =>
       byggLandMedYrkesAktivitet({
         land,
-        arbeidUtland,
+        fysiskeArbeidssteder,
         foretakUtland,
         selvstendigArbeid,
         arbeidsgivereNorge,
@@ -351,12 +357,12 @@ export const LandMedVesentligEllerRegistrertArbeidSelector = createSelector(
   (state) => IkkeMarginaleArbeidslandSelector(state) || [],
   (state) => ArbeidslandSelector(state) || [],
   (state) => behandlingsgrunnlagSelectors.ForetakUtlandLandkodeSelector(state) || [],
-  (state) => behandlingsgrunnlagSelectors.ArbeidUtlandLandkodeSelector(state) || [],
-  (ikkeMarginaleArbeidsland, arbeidsland, foretakUtland, arbeidUtland) => [
+  (state) => behandlingsgrunnlagSelectors.FysiskeArbeidsstederLandkoderSelector(state) || [],
+  (ikkeMarginaleArbeidsland, arbeidsland, foretakUtland, fysiskeArbeidssteder) => [
     ...new Set([
       ...ikkeMarginaleArbeidsland,
       ...overlappende(arbeidsland, foretakUtland),
-      ...overlappende(arbeidsland, arbeidUtland),
+      ...overlappende(arbeidsland, fysiskeArbeidssteder),
     ]),
   ]
 );
