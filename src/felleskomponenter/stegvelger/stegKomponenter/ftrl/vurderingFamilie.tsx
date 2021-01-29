@@ -111,25 +111,29 @@ const VurderingFamilie = ({
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
   function tilMedfolgendeFamilie(fraFormValues: FormValueProp): OppsummertFaktaMedfolgendeFamilie {
-    const medfolgendeFamilieObjekter: MedfolgendeFamiliemedlem[] = [];
+    const medfolgendeFamiliemedlem: MedfolgendeFamiliemedlem[] = [];
 
     medfolgendeBarn.forEach((familiemedlem: MedfolgendeFamilie) => {
-      medfolgendeFamilieObjekter.push({
+      medfolgendeFamiliemedlem.push({
         uuid: familiemedlem.uuid,
         omfattet: fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN,
-        begrunnelseKode: fraFormValues.barn[familiemedlem.uuid].begrunnelse,
+        begrunnelseKode: fraFormValues.barn[familiemedlem.uuid].begrunnelse
+          ? fraFormValues.barn[familiemedlem.uuid].begrunnelse
+          : null,
         begrunnelseFritekst: fraFormValues.barn.fritekst,
       });
     });
     medfolgendeEktefelleSamboer.forEach((familiemedlem: MedfolgendeFamilie) => {
-      medfolgendeFamilieObjekter.push({
+      medfolgendeFamiliemedlem.push({
         uuid: familiemedlem.uuid,
         omfattet: fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN,
-        begrunnelseKode: fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse,
+        begrunnelseKode: fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse
+          ? fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse
+          : null,
         begrunnelseFritekst: fraFormValues.ektefelle_samboer.fritekst,
       });
     });
-    return { medfolgendeFamilie: medfolgendeFamilieObjekter };
+    return { medfolgendeFamilie: medfolgendeFamiliemedlem };
   }
 
   function lagreMedfolgendeFamilie(data: any) {
