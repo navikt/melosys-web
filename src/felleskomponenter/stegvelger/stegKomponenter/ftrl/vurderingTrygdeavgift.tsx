@@ -590,7 +590,6 @@ const VurderingTrygdeavgift = ({
               feltNavn="avgiftsgrunnlag.lønnsforhold"
               value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               id={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
-              className=""
               disabled={!redigerbart}
               defaultChecked={
                 formValues &&
@@ -603,7 +602,6 @@ const VurderingTrygdeavgift = ({
               label="Utenlandsk virksomhet"
               value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               id={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
-              className=""
               disabled={!redigerbart}
               defaultChecked={
                 formValues &&
@@ -616,7 +614,6 @@ const VurderingTrygdeavgift = ({
               feltNavn="avgiftsgrunnlag.lønnsforhold"
               value={MKV.Koder.loenn_forhold.DELT_LØNN}
               id={MKV.Koder.loenn_forhold.DELT_LØNN}
-              className=""
               disabled={!redigerbart}
               defaultChecked={
                 formValues &&

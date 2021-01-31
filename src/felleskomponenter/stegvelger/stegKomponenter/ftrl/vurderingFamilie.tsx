@@ -215,7 +215,6 @@ const VurderingFamilie = ({
                         id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
                         value={BOOLSK_STRING.SANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                     <Nav.Column xs="2">
@@ -225,7 +224,6 @@ const VurderingFamilie = ({
                         id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
                         value={BOOLSK_STRING.USANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                   </Nav.Row>
@@ -272,7 +270,6 @@ const VurderingFamilie = ({
                         id={`${ektefelleSamboer.uuid}.${BOOLSK_STRING.SANN}`}
                         value={BOOLSK_STRING.SANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                     <Nav.Column xs="2">
@@ -282,7 +279,6 @@ const VurderingFamilie = ({
                         id={`${ektefelleSamboer.uuid}.${BOOLSK_STRING.USANN}`}
                         value={BOOLSK_STRING.USANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                   </Nav.Row>
