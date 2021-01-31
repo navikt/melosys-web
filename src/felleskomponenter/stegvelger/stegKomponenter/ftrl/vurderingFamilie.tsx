@@ -24,23 +24,16 @@ import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingFamilie.css";
 
 function initializeFamilieFormValues(barn: MedfolgendeFamilie[], ektefelleSamboer: MedfolgendeFamilie[]) {
-  let initialValues = {
-    barn: { fritekst: "" },
-    ektefelle_samboer: { fritekst: "" },
+  return {
+    barn: {
+      fritekst: "",
+      ...Object.fromEntries(barn.map((familiemedlem) => [familiemedlem.uuid, {}])),
+    },
+    ektefelle_samboer: {
+      fritekst: "",
+      ...Object.fromEntries(ektefelleSamboer.map((familiemedlem) => [familiemedlem.uuid, {}])),
+    },
   };
-  barn.forEach((familiemedlem) => {
-    initialValues = {
-      barn: { ...initialValues.barn, [familiemedlem.uuid]: {} },
-      ektefelle_samboer: { ...initialValues.ektefelle_samboer },
-    };
-  });
-  ektefelleSamboer.forEach((familiemedlem) => {
-    initialValues = {
-      barn: { ...initialValues.barn },
-      ektefelle_samboer: { ...initialValues.ektefelle_samboer, [familiemedlem.uuid]: {} },
-    };
-  });
-  return initialValues;
 }
 
 const mapStateToProps = (state: RootState) => {
