@@ -81,7 +81,14 @@ interface Props {
   oppdater: () => void;
   tilbake: () => void;
   redigerbart: boolean;
-  formValues: FormValueProp;
+  formValues: {
+    barn?: {
+      [key: string]: any;
+    };
+    ektefelle_samboer?: {
+      [key: string]: any;
+    };
+  };
 }
 
 const VurderingFamilie = ({
@@ -183,7 +190,7 @@ const VurderingFamilie = ({
     }
   }, [avklarteMedfolgendeFamilie]);
 
-  if (!formValues) return null;
+  if (!formValues || !formValues.barn || !formValues.ektefelle_samboer) return null;
 
   return (
     <div className="vurderingFamilie">
@@ -240,7 +247,7 @@ const VurderingFamilie = ({
             </Nav.Row>
             {medfolgendeBarn.some(
               (barn: MedfolgendeFamilie) =>
-                formValues.ektefelle_samboer && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
+                formValues.barn && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div>
                 <Nav.typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.typo.Element>
@@ -334,9 +341,7 @@ const VurderingFamilie = ({
   );
 };
 
-const VurderingFamilieForm = reduxForm({
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  onSubmit: (values: any, dispatch: any, props: any) => {},
+const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.FAMILIE,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

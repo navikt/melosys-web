@@ -58,8 +58,8 @@ const PeriodeTabellComponent = ({ perioder }: { perioder: string[][] | undefined
 
 interface TrygdeavgiftsgrunnlagProps {
   formValues: {
-    avgiftsberegning: Avgiftsberegning | undefined;
-    avgiftsgrunnlag: Avgiftsgrunnlag | undefined;
+    avgiftsberegning?: Avgiftsberegning | undefined;
+    avgiftsgrunnlag?: Avgiftsgrunnlag | undefined;
   };
   oppdatertAvgiftsberegning: OppdaterAvgiftsberegning;
   erTabellApen: Map<string, boolean>;
@@ -403,8 +403,8 @@ interface Props {
   tilbake: () => void;
   redigerbart: boolean;
   formValues: {
-    avgiftsgrunnlag: Avgiftsgrunnlag;
-    avgiftsberegning: Avgiftsberegning;
+    avgiftsgrunnlag?: Avgiftsgrunnlag;
+    avgiftsberegning?: Avgiftsberegning;
   };
   erStegGyldig: boolean;
 }
@@ -681,9 +681,7 @@ const VurderingTrygdeavgift = ({
   );
 };
 
-const VurderingTrygdeavgiftForm = reduxForm({
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  onSubmit: (values: any, dispatch: any, props: any) => {},
+const VurderingTrygdeavgiftForm = reduxForm<{}, Props & PropsFromRedux>({
   form: KV.Form.TRYGDEAVGIFT,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
