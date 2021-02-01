@@ -1,11 +1,11 @@
 import React, { Fragment } from "react";
 
-import * as KV from "../../../../../../kodeverk";
-import * as Nav from "../../../../../../utils/navFrontend";
+import * as KV from "../../../../../kodeverk";
+import * as Nav from "../../../../../utils/navFrontend";
 
-import { StrukturertAdresse } from "../../../../../adresser";
+import { StrukturertAdresse } from "../../../../adresser";
 
-import { EnRedigeringsknappListeRedigeringUtfort } from "../../../editerbartElementListe";
+import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
 import "./redigeringUtfort.css";
 
