@@ -63,7 +63,7 @@ const SokkelSkipEnkelt = (props) => {
     slettData,
   } = props;
 
-  const { enhetNavn, flaggLandkode, installasjonsLandkode, territorialfarvann } = maritimtArbeid;
+  const { enhetNavn, flaggLandkode, innretningLandkode, territorialfarvann } = maritimtArbeid;
 
   const { begrunnelseKoder } = sokkelEllerSkip;
   const installasjonsType = hentFaktaVerdi(sokkelEllerSkip);
@@ -151,7 +151,7 @@ const SokkelSkipEnkelt = (props) => {
           <ArbeidslandRadioButtons
             landliste={[
               { term: "Flaggland", kode: flaggLandkode },
-              { term: "Sokkelland", kode: installasjonsLandkode },
+              { term: "Sokkelland", kode: innretningLandkode },
               { term: "Territorialfarvannsland", kode: territorialfarvann },
             ]}
             onChange={arbeidslandEndret}
