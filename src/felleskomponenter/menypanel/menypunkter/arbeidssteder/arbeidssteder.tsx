@@ -5,7 +5,10 @@ import * as Utils from "../../../../utils";
 import * as Ikoner from "../../../../resources/images";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Etiketter from "../../etiketter";
-import * as Enkel from "./enkel";
+import * as Fly from "./fly";
+import * as Land from "./land";
+import * as Offshore from "./offshore";
+import * as Skip from "./skip";
 
 import EditerbartElementListe from "../editerbartElementListe";
 
@@ -56,8 +59,8 @@ const Arbeidssteder = ({
     <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidPaaLand.fysiskeArbeidssteder"
-      redigererKomponent={Enkel.Land.Redigerer}
-      redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
+      redigererKomponent={Land.Redigerer}
+      redigeringUtfortKomponent={Land.RedigeringUtfort}
       leggTilTekst="Legg til nytt arbeidssted på land"
       hentDefaultElement={() => fysiskArbeidsstedDefaultElement}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}
@@ -70,8 +73,8 @@ const Arbeidssteder = ({
     <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedOffshore"
-      redigererKomponent={Enkel.Offshore.Redigerer}
-      redigeringUtfortKomponent={Enkel.Offshore.RedigeringUtfort}
+      redigererKomponent={Offshore.Redigerer}
+      redigeringUtfortKomponent={Offshore.RedigeringUtfort}
       leggTilTekst="Legg til nytt arbeidssted offshore"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore}
@@ -84,8 +87,8 @@ const Arbeidssteder = ({
     <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedSkip"
-      redigererKomponent={Enkel.Skip.Redigerer}
-      redigeringUtfortKomponent={Enkel.Skip.RedigeringUtfort}
+      redigererKomponent={Skip.Redigerer}
+      redigeringUtfortKomponent={Skip.RedigeringUtfort}
       leggTilTekst="Legg til nytt arbeidssted på skip"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip}
@@ -98,8 +101,8 @@ const Arbeidssteder = ({
     <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidsstedFly"
-      redigererKomponent={Enkel.Fly.Redigerer}
-      redigeringUtfortKomponent={Enkel.Fly.RedigeringUtfort}
+      redigererKomponent={Fly.Redigerer}
+      redigeringUtfortKomponent={Fly.RedigeringUtfort}
       leggTilTekst="Legg til nytt arbeidssted på fly"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedFly}
