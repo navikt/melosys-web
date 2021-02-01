@@ -436,6 +436,7 @@ class Stegvelger extends Component {
       medlemskapsperioder: props.medlemskapsperioder,
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
+      vurder_familie_valid: props.vurder_familie_valid,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -614,6 +615,7 @@ Stegvelger.propTypes = {
   sakstype: PT.string,
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
+  vurder_familie_valid: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -664,6 +666,7 @@ const mapStateToProps = (state) => ({
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   vurder_periode_valid: formSelectors.VurderPerioderValid(state),
   vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
+  vurder_familie_valid: formSelectors.VurderFamilieFormValid(state),
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   valgteVirksomheterIkkeNaeringsDrivende: avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(

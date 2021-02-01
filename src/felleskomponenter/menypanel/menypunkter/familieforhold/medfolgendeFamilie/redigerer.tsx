@@ -17,7 +17,7 @@ const Redigerer = ({
   slett,
   settVerdi,
   verdier,
-}: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeBarn>) => {
+}: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeFamilie>) => {
   const [disableNavnInput, setDisableNavnInput] = useState(false);
   const [visNavnSpinner, setVisNavnSpinner] = useState(false);
 

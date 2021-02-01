@@ -1,5 +1,5 @@
 import { AppThunk } from "AppTypes";
-import { OppsummertFaktaVirksomheter } from "Domene";
+import { OppsummertFaktaMedfolgendeFamilie, OppsummertFaktaVirksomheter } from "Domene";
 import { doThenDispatch } from "../../services/utils";
 
 import * as Api from "../../services/api";
@@ -16,6 +16,14 @@ export function hentOppsummertFakta(behandlingID: number) {
 
 export function sendVirksomheter(behandlingID: number, virksomheter: OppsummertFaktaVirksomheter) {
   return doThenDispatch(() => Api.Avklartefakta.sendVirksomheter(behandlingID, virksomheter), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function sendMedfolgendeFamilie(behandlingID: number, medfolgendeFamilie: OppsummertFaktaMedfolgendeFamilie) {
+  return doThenDispatch(() => Api.Avklartefakta.sendMedfolgendeFamilie(behandlingID, medfolgendeFamilie), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

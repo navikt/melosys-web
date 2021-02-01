@@ -29,13 +29,13 @@ const Rad = ({ navn, idNummer }: RadProps) => (
   </Nav.Row>
 );
 
-const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeBarn>) => (
+const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.MedfolgendeFamilie>) => (
   <div className="medfolgende-familie__redigeringutfort">
     <ExpandableList
       elements={verdier}
       header={<Header />}
-      renderElement={(barn) => <Rad navn={barn.navn} idNummer={barn.fnr} />}
-      idFromElement={(barn) => barn.uuid}
+      renderElement={(familie) => <Rad navn={familie.navn} idNummer={familie.fnr} />}
+      idFromElement={(familie) => familie.uuid}
       amountOfItemsCollapsed={2}
       btnTextCollapsed="Vis flere"
       btnTextExpanded="Vis færre"
