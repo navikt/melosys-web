@@ -21,7 +21,7 @@ export interface RedigeringUtfort<T> {
   verdier: T[];
 }
 
-/**
+/*
  * Typene over burde egentlig kreves for komponent-props med ElementType<T>.
  * Fikk dessverre ikke til å bruke typescript med fieldarray i editbartElementListe, så derfor ligger de her.
  */
