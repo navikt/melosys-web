@@ -44,9 +44,10 @@ const MaritimtArbeidPropType = PT.arrayOf(
   PT.shape({
     fartsomradeKode: PT.string,
     flaggLandkode: PT.string,
-    installasjonsLandkode: PT.string,
+    innretningLandkode: PT.string,
     navn: PT.string,
     territorialfarvann: PT.string,
+    innretningstype: PT.string,
   })
 );
 const OppholdUtlandPropType = PT.shape({

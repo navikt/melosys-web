@@ -32,7 +32,7 @@ describe("VurderingVurderarbeidsland", () => {
           enhetNavn: "Dunfjæder",
           fartsomradeKode: "INNENRIKS",
           flaggLandkode: "GB",
-          installasjonsLandkode: "GB",
+          innretningLandkode: "GB",
           territorialfarvann: "GB",
           foretakNavn: "SWECO NORGE AS",
           foretakOrgnr: "967032271",
