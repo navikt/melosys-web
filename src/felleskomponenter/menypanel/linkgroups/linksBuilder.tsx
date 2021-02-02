@@ -66,6 +66,7 @@ class LinksBuilder implements ILinksBuilder {
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
           visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
           setMenypanelFeilmelding={this.contentProps.setMenypanelFeilmelding}
+          visEktefelleSamboerMedPaReisen={this.contentProps.visEktefelleSamboerMedPaReisen}
         />
       ),
     });

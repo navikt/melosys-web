@@ -1,15 +1,16 @@
-import { OppsummertFaktaVirksomheter } from "Domene";
+import { OppsummertFaktaVirksomheter, MedfolgendeFamiliemedlem } from "Domene";
 
 export const OK = "oppsummertfakta/OK";
 export const FEILET = "oppsummertfakta/FEILET";
 export const PENDING = "oppsummertfakta/PENDING";
 export const OPPDATER_OPPSUMMERTFAKTA = "oppsummertfakta/OPPDATER_OPPSUMMERTFAKTA";
-export const OPPDATER_VIRKSOMHETER = "oppsummertfakta/OPPDATERVIRKSOMHETER";
+export const OPPDATER_VIRKSOMHETER = "oppsummertfakta/OPPDATER_VIRKSOMHETER";
 
 export const RESET = "oppsummertfakta/RESET";
 
 export type Data = {
   virksomheter?: OppsummertFaktaVirksomheter;
+  medfolgendeFamilie?: MedfolgendeFamiliemedlem[];
 };
 
 export interface FeiletAction {

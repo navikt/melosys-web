@@ -10,3 +10,6 @@ export const hentOppsummering = (behandlingID) =>
 
 export const sendVirksomheter = (behandlingID, virksomheter) =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);
+
+export const sendMedfolgendeFamilie = (behandlingID, medfolgendeFamilie) =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/medfolgendeFamilie`, medfolgendeFamilie);

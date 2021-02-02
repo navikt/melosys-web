@@ -21,7 +21,7 @@ interface BaseProps {
   hentNavn?: (element: any) => string;
   tittelTekst: string;
   harData: (elementListe: any[], element: any) => boolean;
-  tittelIkon: ElementType;
+  tittelIkon?: ElementType;
   tittelUnderstrek?: boolean;
   elementUnderstrek?: boolean;
   flereRedigeringsknapper?: boolean;

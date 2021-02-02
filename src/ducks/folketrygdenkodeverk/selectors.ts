@@ -23,7 +23,17 @@ export const VilkaarSelector = createSelector(FolketrygdenkodeverkDataSelector, 
 );
 
 export const BegrunnelserSelector = createSelector(FolketrygdenkodeverkDataSelector, (folketrygdenkodeverk) =>
-  folketrygdenkodeverk.begrunnelser ? folketrygdenkodeverk.begrunnelser : []
+  folketrygdenkodeverk.begrunnelser ? folketrygdenkodeverk.begrunnelser : {}
+);
+
+export const Medfolgende_barn_begrunnelser_ftrlBegrunnelserSelector = createSelector(
+  BegrunnelserSelector,
+  (begrunnelser) => begrunnelser.Medfolgende_barn_begrunnelser_ftrl
+);
+
+export const Medfolgende_ektefelle_samboer_begrunnelser_ftrlBegrunnelserSelector = createSelector(
+  BegrunnelserSelector,
+  (begrunnelser) => begrunnelser.Medfolgende_ektefelle_samboer_begrunnelser_ftrl
 );
 
 export const InnvilgelsesResultatSelector = createSelector(FolketrygdenkodeverkDataSelector, (folketrygdenkodeverk) =>
