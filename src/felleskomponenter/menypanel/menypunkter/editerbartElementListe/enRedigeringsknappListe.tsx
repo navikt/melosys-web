@@ -21,6 +21,15 @@ export interface RedigeringUtfort<T> {
   verdier: T[];
 }
 
+export interface RedigererPreElementer {
+  redigerbart: boolean;
+  className?: string;
+}
+
+export interface RedigeringUtfortPreElementer {
+  className?: string;
+}
+
 /*
  * Typene over burde egentlig kreves for komponent-props med ElementType<T>.
  * Fikk dessverre ikke til å bruke typescript med fieldarray i editbartElementListe, så derfor ligger de her.
@@ -34,6 +43,8 @@ interface EnRedigeringsKnappListeProps<T> {
   settFeltVerdi: (felt: string, verdi: any) => void;
   tittelUnderstrek: boolean;
   elementUnderstrek?: boolean;
+  redigererPreElementerKomponent?: ElementType;
+  redigeringUtfortPreElementerKomponent?: ElementType;
   redigererKomponent: ElementType;
   redigeringUtfortKomponent: ElementType;
   ingenDataKomponent?: ElementType;
@@ -50,6 +61,8 @@ function EnRedigeringsKnappListe<T>({
   settFeltVerdi,
   tittelUnderstrek,
   elementUnderstrek = false,
+  redigererPreElementerKomponent,
+  redigeringUtfortPreElementerKomponent,
   redigererKomponent,
   redigeringUtfortKomponent,
   ingenDataKomponent,
@@ -60,6 +73,8 @@ function EnRedigeringsKnappListe<T>({
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
   const IngenDataKomponent = ingenDataKomponent;
+  const RedigererPreElementerKomponent = redigererPreElementerKomponent;
+  const RedigeringUtfortPreElementerKomponent = redigeringUtfortPreElementerKomponent;
 
   const elementer = fields.getAll();
 
@@ -97,6 +112,9 @@ function EnRedigeringsKnappListe<T>({
       visLagreKnappBareHvisHarData
       redigererRender={() => (
         <div>
+          {RedigererPreElementerKomponent && (
+            <RedigererPreElementerKomponent className="redigerer-pre-elementer-komponent" redigerbart={redigerbart} />
+          )}
           {elementer.map((element, index) => {
             const overordnetFeltNavn = `${fields.name}[${index}]`;
             const settVerdi = (feltNavn: string, verdi: any) =>
@@ -127,7 +145,14 @@ function EnRedigeringsKnappListe<T>({
           )}
         </div>
       )}
-      redigeringUtfortRender={() => <RedigeringUtfortKomponent verdier={elementer} />}
+      redigeringUtfortRender={() => (
+        <>
+          {RedigeringUtfortPreElementerKomponent && (
+            <RedigeringUtfortPreElementerKomponent className="redigering-utfort-pre-elementer-komponent" />
+          )}
+          <RedigeringUtfortKomponent verdier={elementer} />
+        </>
+      )}
       ingenDataRender={ingenDataRender}
     />
   );

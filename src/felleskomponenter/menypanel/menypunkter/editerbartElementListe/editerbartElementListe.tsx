@@ -13,6 +13,8 @@ import EnRedigeringsknappListe from "./enRedigeringsknappListe";
 interface BaseProps {
   leggTilTekst: string | ((elementer: any[]) => string);
   redigerbart: boolean;
+  redigererPreElementerKomponent?: ElementType;
+  redigeringUtfortPreElementerKomponent?: ElementType;
   redigererKomponent: ElementType;
   redigeringUtfortKomponent: ElementType;
   ingenDataKomponent?: ElementType;
@@ -43,6 +45,8 @@ export const InnerEditerbartElementListe = ({
   leggTilTekst,
   redigerbart,
   fields,
+  redigererPreElementerKomponent,
+  redigeringUtfortPreElementerKomponent,
   redigererKomponent,
   redigeringUtfortKomponent,
   ingenDataKomponent,
@@ -90,6 +94,8 @@ export const InnerEditerbartElementListe = ({
           settFeltVerdi={settFeltVerdi}
           tittelUnderstrek={tittelUnderstrek}
           elementUnderstrek={elementUnderstrek}
+          redigererPreElementerKomponent={redigererPreElementerKomponent}
+          redigeringUtfortPreElementerKomponent={redigeringUtfortPreElementerKomponent}
           redigererKomponent={redigererKomponent}
           redigeringUtfortKomponent={redigeringUtfortKomponent}
           ingenDataKomponent={ingenDataKomponent}
