@@ -16,8 +16,8 @@ export default Avklartfakta;
 export type MedfolgendeFamiliemedlem = {
   uuid: string;
   omfattet: boolean;
-  begrunnelseKode?: string;
-  begrunnelseFritekst?: string;
+  begrunnelseKode: string | null;
+  begrunnelseFritekst: string | null;
 };
 
 export type MedfolgendeFamilie = {

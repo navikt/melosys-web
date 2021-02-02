@@ -24,23 +24,16 @@ import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingFamilie.css";
 
 function initializeFamilieFormValues(barn: MedfolgendeFamilie[], ektefelleSamboer: MedfolgendeFamilie[]) {
-  let initialValues = {
-    barn: { fritekst: "" },
-    ektefelle_samboer: { fritekst: "" },
+  return {
+    barn: {
+      fritekst: "",
+      ...Object.fromEntries(barn.map((familiemedlem) => [familiemedlem.uuid, {}])),
+    },
+    ektefelle_samboer: {
+      fritekst: "",
+      ...Object.fromEntries(ektefelleSamboer.map((familiemedlem) => [familiemedlem.uuid, {}])),
+    },
   };
-  barn.forEach((familiemedlem) => {
-    initialValues = {
-      barn: { ...initialValues.barn, [familiemedlem.uuid]: {} },
-      ektefelle_samboer: { ...initialValues.ektefelle_samboer },
-    };
-  });
-  ektefelleSamboer.forEach((familiemedlem) => {
-    initialValues = {
-      barn: { ...initialValues.barn },
-      ektefelle_samboer: { ...initialValues.ektefelle_samboer, [familiemedlem.uuid]: {} },
-    };
-  });
-  return initialValues;
 }
 
 const mapStateToProps = (state: RootState) => {
@@ -88,7 +81,14 @@ interface Props {
   oppdater: () => void;
   tilbake: () => void;
   redigerbart: boolean;
-  formValues: FormValueProp;
+  formValues: {
+    barn?: {
+      [key: string]: any;
+    };
+    ektefelle_samboer?: {
+      [key: string]: any;
+    };
+  };
 }
 
 const VurderingFamilie = ({
@@ -111,25 +111,29 @@ const VurderingFamilie = ({
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
   function tilMedfolgendeFamilie(fraFormValues: FormValueProp): OppsummertFaktaMedfolgendeFamilie {
-    const medfolgendeFamilieObjekter: MedfolgendeFamiliemedlem[] = [];
+    const medfolgendeFamiliemedlem: MedfolgendeFamiliemedlem[] = [];
 
     medfolgendeBarn.forEach((familiemedlem: MedfolgendeFamilie) => {
-      medfolgendeFamilieObjekter.push({
+      medfolgendeFamiliemedlem.push({
         uuid: familiemedlem.uuid,
         omfattet: fraFormValues.barn[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN,
-        begrunnelseKode: fraFormValues.barn[familiemedlem.uuid].begrunnelse,
+        begrunnelseKode: fraFormValues.barn[familiemedlem.uuid].begrunnelse
+          ? fraFormValues.barn[familiemedlem.uuid].begrunnelse
+          : null,
         begrunnelseFritekst: fraFormValues.barn.fritekst,
       });
     });
     medfolgendeEktefelleSamboer.forEach((familiemedlem: MedfolgendeFamilie) => {
-      medfolgendeFamilieObjekter.push({
+      medfolgendeFamiliemedlem.push({
         uuid: familiemedlem.uuid,
         omfattet: fraFormValues.ektefelle_samboer[familiemedlem.uuid].innvilget === BOOLSK_STRING.SANN,
-        begrunnelseKode: fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse,
+        begrunnelseKode: fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse
+          ? fraFormValues.ektefelle_samboer[familiemedlem.uuid].begrunnelse
+          : null,
         begrunnelseFritekst: fraFormValues.ektefelle_samboer.fritekst,
       });
     });
-    return { medfolgendeFamilie: medfolgendeFamilieObjekter };
+    return { medfolgendeFamilie: medfolgendeFamiliemedlem };
   }
 
   function lagreMedfolgendeFamilie(data: any) {
@@ -186,7 +190,7 @@ const VurderingFamilie = ({
     }
   }, [avklarteMedfolgendeFamilie]);
 
-  if (!formValues) return null;
+  if (!formValues || !formValues.barn || !formValues.ektefelle_samboer) return null;
 
   return (
     <div className="vurderingFamilie">
@@ -211,7 +215,6 @@ const VurderingFamilie = ({
                         id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
                         value={BOOLSK_STRING.SANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                     <Nav.Column xs="2">
@@ -221,7 +224,6 @@ const VurderingFamilie = ({
                         id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
                         value={BOOLSK_STRING.USANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                   </Nav.Row>
@@ -245,7 +247,7 @@ const VurderingFamilie = ({
             </Nav.Row>
             {medfolgendeBarn.some(
               (barn: MedfolgendeFamilie) =>
-                formValues.ektefelle_samboer && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
+                formValues.barn && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div>
                 <Nav.typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.typo.Element>
@@ -268,7 +270,6 @@ const VurderingFamilie = ({
                         id={`${ektefelleSamboer.uuid}.${BOOLSK_STRING.SANN}`}
                         value={BOOLSK_STRING.SANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                     <Nav.Column xs="2">
@@ -278,7 +279,6 @@ const VurderingFamilie = ({
                         id={`${ektefelleSamboer.uuid}.${BOOLSK_STRING.USANN}`}
                         value={BOOLSK_STRING.USANN}
                         disabled={!redigerbart}
-                        className=""
                       />
                     </Nav.Column>
                   </Nav.Row>
@@ -341,9 +341,7 @@ const VurderingFamilie = ({
   );
 };
 
-const VurderingFamilieForm = reduxForm({
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  onSubmit: (values: any, dispatch: any, props: any) => {},
+const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.FAMILIE,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
