@@ -51,6 +51,7 @@ interface EnRedigeringsKnappListeProps<T> {
   tittelTekst: string;
   leggTil: () => void;
   leggTilTekst: string;
+  onBinClick?: (index: number) => void;
 }
 
 function EnRedigeringsKnappListe<T>({
@@ -69,6 +70,7 @@ function EnRedigeringsKnappListe<T>({
   tittelTekst,
   leggTil,
   leggTilTekst,
+  onBinClick,
 }: EnRedigeringsKnappListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
@@ -99,6 +101,11 @@ function EnRedigeringsKnappListe<T>({
       )
     : undefined;
 
+  const slettElementerOgPreElementer = () => {
+    if (onBinClick) onBinClick(-1);
+    fields.removeAll();
+  };
+
   return (
     <EditerbartElement
       className="en__redigeringsknapp__liste"
@@ -106,7 +113,7 @@ function EnRedigeringsKnappListe<T>({
       tittel={tittelTekst}
       tittelIkon={tittelIkon}
       tittelUnderstrek={tittelUnderstrek}
-      onBinClick={fields.removeAll}
+      onBinClick={slettElementerOgPreElementer}
       harData={harData()}
       hentNyStatusVedHarData={false}
       visLagreKnappBareHvisHarData
