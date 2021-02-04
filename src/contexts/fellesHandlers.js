@@ -16,6 +16,9 @@ import { saksopplysningerOperations } from "../ducks/saksopplysninger";
 import { behandlingerOperations } from "../ducks/behandlinger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
+import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";
+import { anmodningsperioderOperations } from "../ducks/anmodningsperioder";
+import { utpekingsperioderOperations } from "../ducks/utpekingsperioder";
 
 const FellesHandlersContext = React.createContext({});
 export default FellesHandlersContext;
@@ -46,6 +49,9 @@ const FellesHandlersProviderUnconnected = ({
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
   tilForsiden,
+  resetLovvalgsperioder,
+  resetAnmodningsperioder,
+  resetUtpekingsperioder,
 }) => {
   const [venterPaRevurderFagsak, setVenterPaRevurderFagsak] = useState(false);
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
@@ -126,6 +132,11 @@ const FellesHandlersProviderUnconnected = ({
 
   const avslaaSoknadHandle = async (data) => {
     try {
+      // Hvis perioden er blitt opprettet må den fjernes før avslag.
+      await resetLovvalgsperioder();
+      await resetAnmodningsperioder();
+      await resetUtpekingsperioder();
+
       await lagreAllData();
       avslaSoknad(behandlingID, data);
     } catch (e) {
@@ -196,6 +207,9 @@ FellesHandlersProviderUnconnected.propTypes = {
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
   tilForsiden: PT.func.isRequired,
+  resetLovvalgsperioder: PT.func.isRequired,
+  resetAnmodningsperioder: PT.func.isRequired,
+  resetUtpekingsperioder: PT.func.isRequired,
 };
 
 FellesHandlersProviderUnconnected.defaultProps = {
@@ -234,6 +248,9 @@ const mapDispatchToProps = (dispatch) => ({
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
   visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
+  resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
+  resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),
+  resetUtpekingsperioder: () => dispatch(utpekingsperioderOperations.resetUtpekingsperioderState()),
 });
 
 export const FellesHandlersProvider = withRouter(
