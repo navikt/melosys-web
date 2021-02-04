@@ -27,6 +27,7 @@ interface BaseProps {
   tittelUnderstrek?: boolean;
   elementUnderstrek?: boolean;
   flereRedigeringsknapper?: boolean;
+  onBinClick?: (index: number) => void;
 }
 
 type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
@@ -60,6 +61,7 @@ export const InnerEditerbartElementListe = ({
   elementUnderstrek,
   flereRedigeringsknapper = true,
   settFeltVerdi,
+  onBinClick,
 }: InnerEditerbartElementListeProps & PropsFromRedux) => {
   const editerbartElementListeCls = classNames(className);
 
@@ -84,6 +86,7 @@ export const InnerEditerbartElementListe = ({
           tittelTekst={tittelTekst}
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
+          onBinClick={onBinClick}
         />
       ) : (
         <EnRedigeringsknappListe
@@ -102,6 +105,7 @@ export const InnerEditerbartElementListe = ({
           tittelTekst={tittelTekst}
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
+          onBinClick={onBinClick}
         />
       )}
     </div>

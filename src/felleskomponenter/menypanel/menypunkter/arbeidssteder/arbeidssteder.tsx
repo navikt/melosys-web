@@ -1,4 +1,9 @@
 import React, { ReactNode } from "react";
+import { change, formValueSelector } from "redux-form";
+import { connect, ConnectedProps } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "AppTypes";
+import { Action } from "redux";
 
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
@@ -37,16 +42,40 @@ const fysiskArbeidsstedDefaultElement: KV.Form.FysiskArbeidssted = {
   virksomhetNavn: "",
 };
 
-interface ArbeidsstederProps {
+const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
+
+const mapStateToProps = (state: RootState) => {
+  const arbeidPaaLand = soknadFormValueSelector(state, "arbeidPaaLand") as KV.Form.ArbeidsstedPaaLand;
+
+  return {
+    erHjemmekontor: arbeidPaaLand.erHjemmekontor,
+    erFastArbeidssted: arbeidPaaLand.erFastArbeidssted,
+  };
+};
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  slettFastArbeidsstedOgHjemmekontorAvklaring: () => {
+    dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erFastArbeidssted", null));
+    dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erHjemmekontor", null));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type ArbeidsstederProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
-}
+};
 
 const Arbeidssteder = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
+  slettFastArbeidsstedOgHjemmekontorAvklaring,
+  erFastArbeidssted,
+  erHjemmekontor,
 }: ArbeidsstederProps) => (
   <div className="arbeidssteder">
     <div>
@@ -59,6 +88,8 @@ const Arbeidssteder = ({
     <EditerbartElementListe
       redigerbart={redigerbart}
       feltNavn="arbeidPaaLand.fysiskeArbeidssteder"
+      redigererPreElementerKomponent={Land.RedigererPreElementer}
+      redigeringUtfortPreElementerKomponent={Land.RedigeringUtfortPreElementer}
       redigererKomponent={Land.Redigerer}
       redigeringUtfortKomponent={Land.RedigeringUtfort}
       leggTilTekst="Legg til nytt arbeidssted på land"
@@ -67,8 +98,12 @@ const Arbeidssteder = ({
       tittelIkon={Ikoner.Kontor}
       tittelUnderstrek
       elementUnderstrek
-      harData={(elementListe) => elementListe.length !== 0 && elementListe.every(fysiskArbeidsstedErIkkeTomt)}
+      harData={(elementListe) =>
+        [erFastArbeidssted, erHjemmekontor].some((v) => !Utils._isNil(v)) ||
+        (elementListe.length !== 0 && elementListe.every(fysiskArbeidsstedErIkkeTomt))
+      }
       flereRedigeringsknapper={false}
+      onBinClick={slettFastArbeidsstedOgHjemmekontorAvklaring}
     />
     <EditerbartElementListe
       redigerbart={redigerbart}
@@ -115,4 +150,4 @@ const Arbeidssteder = ({
   </div>
 );
 
-export default Arbeidssteder;
+export default connector(Arbeidssteder);
