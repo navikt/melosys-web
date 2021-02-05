@@ -36,18 +36,14 @@ const Legend = ({
   const renderSymboler = () => {
     if (!redigerbart) return null;
 
-    if (status === Status.RedigeringUtfort) {
-      return (
-        <>
+    return (
+      <>
+        {status === Status.RedigeringUtfort && (
           <Symboler.Rediger style={{ marginRight: "10px" }} onClick={onPencilClick} />
-          <Symboler.Slett onClick={onBinClick} />
-        </>
-      );
-    } else if (visAlltidBin) {
-      return <Symboler.Slett onClick={onBinClick} />;
-    }
-
-    return null;
+        )}
+        {(status === Status.RedigeringUtfort || visAlltidBin) && <Symboler.Slett onClick={onBinClick} />}
+      </>
+    );
   };
 
   return (
