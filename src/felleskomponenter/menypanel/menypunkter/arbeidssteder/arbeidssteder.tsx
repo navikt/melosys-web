@@ -92,6 +92,7 @@ const Arbeidssteder = ({
       redigeringUtfortPreElementerKomponent={Land.RedigeringUtfortPreElementer}
       redigererKomponent={Land.Redigerer}
       redigeringUtfortKomponent={Land.RedigeringUtfort}
+      ingenDataKomponent={Land.IngenData}
       leggTilTekst="Legg til nytt arbeidssted på land"
       hentDefaultElement={() => fysiskArbeidsstedDefaultElement}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}

@@ -33,4 +33,13 @@ describe("Legend", () => {
 
     expect(legend.find(Symboler.Slett)).toHaveLength(1);
   });
+
+  it("Viser ingen symboler hvis ikke redigerbart", () => {
+    props.redigerbart = false;
+    props.status = Status.RedigeringUtfort;
+    const legend = shallow(<Legend {...props} />);
+
+    expect(legend.find(Symboler.Rediger)).toHaveLength(0);
+    expect(legend.find(Symboler.Slett)).toHaveLength(0);
+  });
 });
