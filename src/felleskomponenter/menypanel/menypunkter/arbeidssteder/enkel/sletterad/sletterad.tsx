@@ -12,7 +12,7 @@ interface SletteradProps {
 const Sletterad = ({ onClick }: SletteradProps) => (
   <div className="sletterad">
     <Mui.Knappelenke onClick={onClick} title="Slett" ikon={Ikoner.Bin} className="slett__knapp">
-      Slett seksjon
+      Slett arbeidssted
     </Mui.Knappelenke>
   </div>
 );

@@ -21,9 +21,6 @@ const ArbeidsstedUtlandErIkkeTomt = (arbeidssted: KV.Form.ArbeidsstedUtland) =>
     (v) => !Utils._isNil(v) && v !== ""
   ) || !Utils.adresse.erStrukturertAdresseObjektTomt(arbeidssted.adresse);
 
-const hentLeggTilTekst = (tekstVedTomListe: string) => (elementer: any[]) =>
-  elementer.length === 0 ? tekstVedTomListe : "Legg til ny seksjon";
-
 const arbeidUtlandDefaultElement = {
   adresse: {
     gatenavn: "",
@@ -62,7 +59,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidUtland"
       redigererKomponent={Enkel.Land.Redigerer}
       redigeringUtfortKomponent={Enkel.Land.RedigeringUtfort}
-      leggTilTekst={hentLeggTilTekst("Legg til arbeidssted på land")}
+      leggTilTekst="Legg til nytt arbeidssted på land"
       hentDefaultElement={() => arbeidUtlandDefaultElement}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}
       tittelIkon={Ikoner.Kontor}
@@ -76,7 +73,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidsstedOffshore"
       redigererKomponent={Enkel.Offshore.Redigerer}
       redigeringUtfortKomponent={Enkel.Offshore.RedigeringUtfort}
-      leggTilTekst={hentLeggTilTekst("Legg til arbeidssted offshore")}
+      leggTilTekst="Legg til nytt arbeidssted offshore"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore}
       tittelIkon={Ikoner.Helikopter}
@@ -90,7 +87,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidsstedSkip"
       redigererKomponent={Enkel.Skip.Redigerer}
       redigeringUtfortKomponent={Enkel.Skip.RedigeringUtfort}
-      leggTilTekst={hentLeggTilTekst("Legg til arbeidssted på skip")}
+      leggTilTekst="Legg til nytt arbeidssted på skip"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip}
       tittelIkon={Ikoner.Skip}
@@ -104,7 +101,7 @@ const Arbeidssteder = ({
       feltNavn="arbeidsstedFly"
       redigererKomponent={Enkel.Fly.Redigerer}
       redigeringUtfortKomponent={Enkel.Fly.RedigeringUtfort}
-      leggTilTekst={hentLeggTilTekst("Legg til arbeidssted på fly")}
+      leggTilTekst="Legg til nytt arbeidssted på fly"
       hentDefaultElement={() => ({})}
       tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedFly}
       tittelIkon={Ikoner.Fly}
