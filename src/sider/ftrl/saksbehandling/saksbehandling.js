@@ -14,6 +14,7 @@ import * as Hooks from "../../../hooks";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
+import Behandlingsmeny from "./behandlingsmeny";
 import Stegvelger from "../../../felleskomponenter/stegvelger";
 import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -32,6 +33,7 @@ import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodev
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
+import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { stegMap } from "./stegMap";
@@ -90,6 +92,8 @@ const behandlingsstatusMap = {
 };
 
 const Saksbehandling = ({
+  anmodningsperioderErSendtUtlandet,
+  apneTidligereBehandlinger,
   arbeidsland,
   behandlingOppfriskes,
   behandlingsgrunnlag,
@@ -97,6 +101,7 @@ const Saksbehandling = ({
   behandlingsgrunnlagPeriodeTom,
   behandlingsresultat,
   behandlingstema,
+  behandlingstype,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
   dokumenter,
@@ -113,6 +118,7 @@ const Saksbehandling = ({
   hentOppsummertFakta,
   lagreAllData,
   lagreAvklartefakta,
+  lagreOgLukk,
   lagreVilkar,
   location,
   match,
@@ -125,9 +131,14 @@ const Saksbehandling = ({
   resetFagsakState,
   skjulMenypanel,
   soknadForm,
+  tilbakeleggOppgave,
   startOgVisOppfriskModal,
   tilForsiden,
+  visAvsluttSakSomBortfaltDialogHandle,
+  visAvslagSoknadDialogHandle,
+  visHenleggDialogHandle,
   visOppfriskModal,
+  visRevurderFagsakDialogHandle,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
@@ -258,7 +269,21 @@ const Saksbehandling = ({
               arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-              renderBehandlingsmeny={() => {}}
+              renderBehandlingsmeny={() => (
+                <Behandlingsmeny
+                  redigerbart={redigerbart}
+                  behandlingstype={behandlingstype}
+                  aanmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
+                  lagreOgLukkHandle={lagreOgLukk}
+                  tilbakeleggeHandle={tilbakeleggOppgave}
+                  oppfriskSaksopplysningerHandle={visOppfriskModal}
+                  visHenleggDialogHandle={visHenleggDialogHandle}
+                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                  apneTidligereBehandlinger={apneTidligereBehandlinger}
+                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                />
+              )}
               renderBehandlingsstatus={() => (
                 <Behandlingsstatus
                   behandlingID={behandlingID}
@@ -285,6 +310,7 @@ const Saksbehandling = ({
 };
 
 Saksbehandling.propTypes = {
+  anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
@@ -292,6 +318,7 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   behandlingstema: PT.string.isRequired,
+  behandlingstype: PT.string.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   dokumenter: PT.array.isRequired,
@@ -306,6 +333,7 @@ Saksbehandling.propTypes = {
   redigerbart: PT.bool,
   soknadForm: PT.object.isRequired,
   // Funcs
+  apneTidligereBehandlinger: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
   hentBehandlingsgrunnlag: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
@@ -316,6 +344,7 @@ Saksbehandling.propTypes = {
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
+  lagreOgLukk: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
@@ -323,9 +352,13 @@ Saksbehandling.propTypes = {
   resetFagsakState: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   skjulMenypanel: PT.func.isRequired,
-  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
+  tilbakeleggOppgave: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
+  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
+  visAvslagSoknadDialogHandle: PT.func.isRequired,
+  visHenleggDialogHandle: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -336,6 +369,7 @@ Saksbehandling.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
+  anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
@@ -346,6 +380,7 @@ const mapStateToProps = (state) => ({
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
