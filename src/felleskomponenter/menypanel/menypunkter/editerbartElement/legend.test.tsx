@@ -4,8 +4,6 @@ import { shallow } from "enzyme";
 
 import * as Symboler from "../symboler";
 
-import { Status } from "./types";
-
 import Legend from "./legend";
 
 describe("Legend", () => {
@@ -16,28 +14,24 @@ describe("Legend", () => {
     props = instance(mockedProps);
   });
 
-  it("Hvis status er redigering utført, vis Pencil og Bin symbol", () => {
-    props.redigerbart = true;
-    props.status = Status.RedigeringUtfort;
+  it("Viser ingen symboler hvis ikke redigerbart", () => {
+    props.redigerbart = false;
     const legend = shallow(<Legend {...props} />);
+
+    expect(legend.find(Symboler.Rediger)).toHaveLength(0);
+    expect(legend.find(Symboler.Slett)).toHaveLength(0);
+  });
+
+  it("symboler-prop styrer visning av symboler", () => {
+    props.symbolsynlighet = { pencil: true, bin: true };
+    props.redigerbart = true;
+    let legend = shallow(<Legend {...props} />);
 
     expect(legend.find(Symboler.Rediger)).toHaveLength(1);
     expect(legend.find(Symboler.Slett)).toHaveLength(1);
-  });
 
-  it("Viser alltid bin hvis prop visAlltidBin er true", () => {
-    props.redigerbart = true;
-    props.status = Status.IngenData;
-    props.visAlltidBin = true;
-    const legend = shallow(<Legend {...props} />);
-
-    expect(legend.find(Symboler.Slett)).toHaveLength(1);
-  });
-
-  it("Viser ingen symboler hvis ikke redigerbart", () => {
-    props.redigerbart = false;
-    props.status = Status.RedigeringUtfort;
-    const legend = shallow(<Legend {...props} />);
+    props.symbolsynlighet = { pencil: false, bin: false };
+    legend = shallow(<Legend {...props} />);
 
     expect(legend.find(Symboler.Rediger)).toHaveLength(0);
     expect(legend.find(Symboler.Slett)).toHaveLength(0);
