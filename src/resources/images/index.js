@@ -12,6 +12,7 @@ import { ReactComponent as Building } from "./building.svg";
 import { ReactComponent as Calendar } from "./calendar.svg";
 import { ReactComponent as CheckList } from "./check-list.svg";
 import { ReactComponent as Eye } from "./eye.svg";
+import { ReactComponent as Familie } from "./familie.svg";
 import { ReactComponent as Forhandsvis } from "./forhandsvis.svg";
 import { ReactComponent as Ferdig } from "./ikon-steg-ferdig.svg";
 import { ReactComponent as Feil } from "./ikon-steg-feil.svg";
@@ -62,6 +63,7 @@ export {
   Calendar,
   CheckList,
   Eye,
+  Familie,
   Forhandsvis,
   Feil,
   Ferdig,

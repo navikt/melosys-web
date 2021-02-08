@@ -45,7 +45,7 @@ export interface ArbeidsstedSkip extends MaritimtArbeid {
   flaggLandkode?: string;
   territorialfarvann?: string;
 }
-export interface MedfolgendeBarn {
+export interface MedfolgendeFamilie {
   uuid: string;
   fnr?: number;
   navn?: string;
@@ -81,3 +81,4 @@ export const START = "start";
 export const PERIODER = "perioder";
 export const TRYGDEAVGIFT = "trygdeavgift";
 export const FTRL_VEDTAK = "ftrl_vedtak";
+export const FAMILIE = "familie";

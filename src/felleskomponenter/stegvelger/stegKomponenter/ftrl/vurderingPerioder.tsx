@@ -26,7 +26,7 @@ import { formSelectors } from "../../../../ducks/form";
 import "./vurderingPerioder.css";
 
 interface formValuesProp {
-  medlemskapsperioder: (Medlemskapsperiode & { ny: boolean; feil: string | undefined })[];
+  medlemskapsperioder?: (Medlemskapsperiode & { ny: boolean; feil: string | undefined })[];
 }
 
 interface PeriodeElementProps {
@@ -52,75 +52,78 @@ const PeriodeElement = ({
   handleTrygdedekningChange,
   handleResultatChange,
   handleSlett,
-}: PeriodeElementProps) => (
-  <Fragment>
-    <Nav.Fieldset legend="Periode" className="understrek">
-      <Nav.Row>
-        <Nav.Column xs="2">
-          <Skjema.Input
-            datoFelt
-            label="Fra og med:"
-            feltNavn={`medlemskapsperioder[${index}].fomDato`}
-            bredde="fullbredde"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => handleFomChange(event.target.value, index)}
-            disabled={!redigerbart}
-          />
-        </Nav.Column>
-        <Nav.Column xs="2">
-          <Skjema.Input
-            datoFelt
-            label="Til og med:"
-            feltNavn={`medlemskapsperioder[${index}].tomDato`}
-            bredde="fullbredde"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => handleTomChange(event.target.value, index)}
-            disabled={!redigerbart}
-          />
-        </Nav.Column>
-        <Nav.Column xs="4">
-          <Skjema.Select
-            label="Trygdedekning"
-            feltNavn={`medlemskapsperioder[${index}].trygdedekning`}
-            emptyFieldText="Velg"
-            emptyFieldDisabled={!!formValues.medlemskapsperioder[index].trygdedekning}
-            onChange={(event) => handleTrygdedekningChange(event.target.value, index)}
-          >
-            {trygdedekninger.map((item: KTObject) => (
-              <option key={item.kode} value={item.kode}>
-                {item.term}
-              </option>
-            ))}
-          </Skjema.Select>
-        </Nav.Column>
-        <Nav.Column xs="4">
-          <Skjema.Select
-            label="Resultat"
-            feltNavn={`medlemskapsperioder[${index}].innvilgelsesResultat`}
-            emptyFieldText="Velg"
-            emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
-            onChange={(event) => handleResultatChange(event.target.value, index)}
-          >
-            {innvilgelsesResultater.map((item: KTObject) => (
-              <option key={item.kode} value={item.kode}>
-                {item.term}
-              </option>
-            ))}
-          </Skjema.Select>
-        </Nav.Column>
-      </Nav.Row>
-      {formValues.medlemskapsperioder[index].feil && (
-        <Nav.AlertStripe type="feil" style={{ marginBottom: "1rem" }}>
-          {formValues.medlemskapsperioder[index].feil}
-        </Nav.AlertStripe>
-      )}
-      {redigerbart && formValues.medlemskapsperioder.length > 1 && (
-        <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
-          <Ikoner.Bin />
-          <span>Slett periode</span>
-        </Nav.Lenker>
-      )}
-    </Nav.Fieldset>
-  </Fragment>
-);
+}: PeriodeElementProps) => {
+  if (!formValues || !formValues.medlemskapsperioder) return null;
+  return (
+    <Fragment>
+      <Nav.Fieldset legend="Periode" className="understrek">
+        <Nav.Row>
+          <Nav.Column xs="2">
+            <Skjema.Input
+              datoFelt
+              label="Fra og med:"
+              feltNavn={`medlemskapsperioder[${index}].fomDato`}
+              bredde="fullbredde"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => handleFomChange(event.target.value, index)}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+          <Nav.Column xs="2">
+            <Skjema.Input
+              datoFelt
+              label="Til og med:"
+              feltNavn={`medlemskapsperioder[${index}].tomDato`}
+              bredde="fullbredde"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => handleTomChange(event.target.value, index)}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+          <Nav.Column xs="4">
+            <Skjema.Select
+              label="Trygdedekning"
+              feltNavn={`medlemskapsperioder[${index}].trygdedekning`}
+              emptyFieldText="Velg"
+              emptyFieldDisabled={!!formValues.medlemskapsperioder[index].trygdedekning}
+              onChange={(event) => handleTrygdedekningChange(event.target.value, index)}
+            >
+              {trygdedekninger.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Skjema.Select>
+          </Nav.Column>
+          <Nav.Column xs="4">
+            <Skjema.Select
+              label="Resultat"
+              feltNavn={`medlemskapsperioder[${index}].innvilgelsesResultat`}
+              emptyFieldText="Velg"
+              emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
+              onChange={(event) => handleResultatChange(event.target.value, index)}
+            >
+              {innvilgelsesResultater.map((item: KTObject) => (
+                <option key={item.kode} value={item.kode}>
+                  {item.term}
+                </option>
+              ))}
+            </Skjema.Select>
+          </Nav.Column>
+        </Nav.Row>
+        {formValues.medlemskapsperioder[index].feil && (
+          <Nav.AlertStripe type="feil" style={{ marginBottom: "1rem" }}>
+            {formValues.medlemskapsperioder[index].feil}
+          </Nav.AlertStripe>
+        )}
+        {redigerbart && formValues.medlemskapsperioder.length > 1 && (
+          <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
+            <Ikoner.Bin />
+            <span>Slett periode</span>
+          </Nav.Lenker>
+        )}
+      </Nav.Fieldset>
+    </Fragment>
+  );
+};
 
 function transformInitialMedlemskapsperioder(state: RootState) {
   const medlemskapsperioder = medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state);
@@ -199,6 +202,7 @@ const VurderingPerioder = ({
   useEffect(() => {
     const erAllePerioderAnnetEnnAvslatt =
       formValues &&
+      formValues.medlemskapsperioder &&
       formValues.medlemskapsperioder.some(
         (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat !== KV.Koder.AVSLAATT
       );
@@ -248,6 +252,8 @@ const VurderingPerioder = ({
     trygdedekning: string | null,
     resultat: string | null
   ) => {
+    if (!formValues || !formValues.medlemskapsperioder) return;
+
     const nyFomDato = fomDato
       ? Utils.dato.formatterDatoTilISO(fomDato)
       : Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[index].fomDato);
@@ -292,6 +298,8 @@ const VurderingPerioder = ({
   };
 
   const handleSlett = (index: number) => {
+    if (!formValues || !formValues.medlemskapsperioder) return;
+
     if (formValues.medlemskapsperioder[index].ny) {
       removeField(index);
       return;
@@ -308,6 +316,8 @@ const VurderingPerioder = ({
   };
 
   const handleLeggTil = () => {
+    if (!formValues || !formValues.medlemskapsperioder) return;
+
     const sistePeriodeTomDato =
       formValues.medlemskapsperioder.length > 0 &&
       formValues.medlemskapsperioder[formValues.medlemskapsperioder.length - 1].tomDato;
@@ -393,9 +403,7 @@ const VurderingPerioder = ({
   );
 };
 
-const VurderingPerioderForm = reduxForm({
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  onSubmit: (values: any, dispatch: any, props: any) => {},
+const VurderingPerioderForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.PERIODER,
   enableReinitialize: true,
   destroyOnUnmount: true,

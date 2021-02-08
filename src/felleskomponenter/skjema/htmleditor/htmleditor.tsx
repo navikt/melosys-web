@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, ContentState, convertToRaw, convertFromHTML } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import { Field, WrappedFieldProps } from "redux-form";
@@ -18,7 +18,9 @@ type InnerHtmlEditorComponentProps = {
 };
 
 function InnerHTMLEditorComponent({ input, ...rest }: InnerHtmlEditorComponentProps & WrappedFieldProps) {
-  const [currentEditorState, setCurrentEditorState] = useState(EditorState.createEmpty());
+  const [currentEditorState, setCurrentEditorState] = useState(
+    EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(input.value).contentBlocks))
+  );
 
   const onEditorStateChange = (editorState: EditorState) => {
     setCurrentEditorState(editorState);

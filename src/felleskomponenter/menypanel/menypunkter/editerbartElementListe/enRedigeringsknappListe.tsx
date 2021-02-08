@@ -37,7 +37,7 @@ export interface RedigeringUtfortPreElementer {
 
 interface EnRedigeringsKnappListeProps<T> {
   redigerbart: boolean;
-  tittelIkon: ElementType;
+  tittelIkon?: ElementType;
   harData: () => boolean;
   fields: FieldArrayFieldsProps<T>;
   settFeltVerdi: (felt: string, verdi: any) => void;

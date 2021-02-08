@@ -11,7 +11,7 @@ import "./flereRedigeringsknapperListe.css";
 
 interface FlereRedigeringsKnapperListeProps<T> {
   redigerbart: boolean;
-  tittelIkon: ElementType;
+  tittelIkon?: ElementType;
   hentNavn?: (element: T) => string;
   harData: (element: T) => boolean;
   fields: FieldArrayFieldsProps<T>;
