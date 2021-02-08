@@ -16,6 +16,7 @@ import * as Offshore from "./offshore";
 import * as Skip from "./skip";
 
 import EditerbartElementListe from "../editerbartElementListe";
+import { Status } from "../editerbartElement";
 
 import "./arbeidssteder.css";
 
@@ -105,6 +106,7 @@ const Arbeidssteder = ({
       }
       flereRedigeringsknapper={false}
       onBinClick={slettFastArbeidsstedOgHjemmekontorAvklaring}
+      symbolsynlighetMap={new Map([[Status.IngenData, { pencil: true, bin: false }]])}
     />
     <EditerbartElementListe
       redigerbart={redigerbart}
