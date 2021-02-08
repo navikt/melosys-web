@@ -41,6 +41,8 @@ const Forretningsstedet = (props) => {
     return cleanup;
   }, []);
 
+  if (!forretningsstedet) return null;
+
   const { navn, virksomhetId } = forretningsstedet;
   const landEndretHandler = (landKode) => {
     oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, virksomhetId, landKode));
