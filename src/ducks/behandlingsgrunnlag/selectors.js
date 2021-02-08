@@ -210,6 +210,16 @@ export const MedfolgendeBarnSelector = createSelector(MedfolgendeFamilieSelector
     }))
 );
 
+export const MedfolgendeEktefelleSamboerSelector = createSelector(MedfolgendeFamilieSelector, (medfolgendeFamilie) =>
+  medfolgendeFamilie
+    .filter((person) => person.relasjonsrolle === KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER)
+    .map((person) => ({
+      uuid: person.uuid,
+      navn: person.navn,
+      fnr: person.fnr,
+    }))
+);
+
 export const OvergangsregelbestemmelserSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlagData) => behandlingsgrunnlagData.overgangsregelbestemmelser

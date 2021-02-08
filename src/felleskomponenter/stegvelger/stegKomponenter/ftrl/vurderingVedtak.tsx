@@ -79,8 +79,8 @@ interface Props {
   redigerbart: boolean;
   alleLandkoder: KTObject[];
   formValues: {
-    fritekstInnledning: HTMLElement;
-    fritekstBegrunnelse: HTMLElement;
+    fritekstInnledning?: HTMLElement;
+    fritekstBegrunnelse?: HTMLElement;
   };
 }
 
@@ -309,9 +309,7 @@ const VurderingVedtak = ({
   );
 };
 
-const VurderingVedtakForm = reduxForm({
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  onSubmit: (values: any, dispatch: any, props: any) => {},
+const VurderingVedtakForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.FTRL_VEDTAK,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

@@ -12,3 +12,14 @@ export type Virksomheter = {
 };
 
 export default Avklartfakta;
+
+export type MedfolgendeFamiliemedlem = {
+  uuid: string;
+  omfattet: boolean;
+  begrunnelseKode: string | null;
+  begrunnelseFritekst: string | null;
+};
+
+export type MedfolgendeFamilie = {
+  medfolgendeFamilie: MedfolgendeFamiliemedlem[];
+};

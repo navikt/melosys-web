@@ -64,5 +64,6 @@ export const Familieforhold = {
   tittel: "Familieforhold",
   undertitler: {
     barnMedPaReisen: "Barn med på reisen",
+    familieMedPaReisen: "Familie med på reisen",
   },
 };

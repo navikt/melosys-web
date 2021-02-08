@@ -20,6 +20,8 @@ import { menypanelSelectors } from "../../ducks/menypanel";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
+const { ARBEID_I_UTLANDET } = MKV.Koder.behandlinger.behandlingstema;
+
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
@@ -54,6 +56,7 @@ export const Menypanel = ({
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
     ),
+    visEktefelleSamboerMedPaReisen: behandlingstema === ARBEID_I_UTLANDET,
     behandlingsgrunnlagEtikett:
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
     redigerbart,

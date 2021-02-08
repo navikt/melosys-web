@@ -5,7 +5,7 @@ import VurderingFamilie from "../../../../felleskomponenter/stegvelger/stegKompo
 class Familie extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = false;
+    const harAvklaring = propsLight.vurder_familie_valid;
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -15,10 +15,14 @@ class Familie extends Steg {
     this.id = STEG.FAMILIE;
     this.tittel = "Familie";
     this.komponent = VurderingFamilie;
-    this.samleRelevanteData = (_propsLight) => ({});
-    this.beregnRelevantUI = (_propsLight) => ({ harAvklaring: false });
+    this.samleRelevanteData = (_propsLight) => ({
+      redigerbart: _propsLight.redigerbart,
+    });
+    this.beregnRelevantUI = (_propsLight) => ({ harAvklaring });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;
   }

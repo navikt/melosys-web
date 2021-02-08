@@ -99,6 +99,16 @@ export const VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig = create
   }
 );
 
+export const VurderFamilieFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.FAMILIE, {}),
+  (familie) => familie
+);
+
+export const VurderFamilieFormValid = createSelector(
+  (state) => VurderFamilieFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
 export const VurderUtpekingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   (vurderUtpekingForm) => vurderUtpekingForm

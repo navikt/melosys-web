@@ -16,3 +16,4 @@ export { sed } from "./sed";
 export { soknad } from "./soknad";
 export { vurdering_perioder } from "./vurdering_perioder";
 export { vurdering_trygdeavgift } from "./vurdering_trygdeavgift";
+export { vurdering_familie } from "./vurdering_familie";

@@ -24,6 +24,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
+    medfolgendeEktefelleSamboer: behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state),
     inntektNorskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaturalFribolig: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBil,

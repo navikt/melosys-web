@@ -33,4 +33,5 @@ export interface ContentProps {
   visBehandlingsgrunnlagData: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
   setMenypanelFeilmelding: (feilmelding: string) => void;
+  visEktefelleSamboerMedPaReisen: boolean;
 }

@@ -192,9 +192,7 @@ const VurderingStart = ({
   );
 };
 
-const VurderingStartForm = reduxForm({
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  onSubmit: (values: any, dispatch: any, props: any) => {},
+const VurderingStartForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.START,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
