@@ -29,7 +29,7 @@ describe("Arbeidssteder", () => {
       expect(arbeidsstederPaaLand.props().ingenDataKomponent).toBeUndefined();
     });
 
-    it("rendres med spørsmål fra altinn-søknad dersom behanldingsgrunnlagtype tilsvarer altinn-søknad", () => {
+    it("rendres med spørsmål fra altinn-søknad dersom behandlingsgrunnlagtype tilsvarer altinn-søknad", () => {
       props.behandlingsgrunnlagtype = MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
       const arbeidssteder = shallow(<Arbeidssteder {...props} />);
       const arbeidsstederPaaLand = arbeidssteder.findWhere(
