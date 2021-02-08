@@ -88,7 +88,9 @@
     // Støtt typescript reference, hvor det trengs tre slash(///)
     "spaced-comment": ["error", "always", { "markers": ["/"] }],
     "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["error"]
+    "@typescript-eslint/no-shadow": ["error"],
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"]
   },
   "extends": [
     "react-app",
