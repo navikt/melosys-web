@@ -5,7 +5,7 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Mui from "../../../ui";
 
 import Legend from "./legend";
-import { Status } from "./types";
+import { Status, SymbolsynlighetMap } from "./types";
 
 import "./editerbartElement.css";
 
@@ -25,8 +25,20 @@ interface EditerbartElementProps {
   className?: string;
   hentNyStatusVedHarData?: boolean;
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
-  visAlltidBin?: boolean;
+  symbolsynlighetMap?: SymbolsynlighetMap;
 }
+
+const defaultSymbolsynlighetMap: SymbolsynlighetMap = new Map([
+  [Status.Redigerer, { bin: false, pencil: false }],
+  [Status.IngenData, { bin: false, pencil: false }],
+  [Status.RedigeringUtfort, { bin: true, pencil: true }],
+]);
+
+export const visAlltidBinSymbolsynlighetMap: SymbolsynlighetMap = new Map([
+  [Status.Redigerer, { bin: true, pencil: false }],
+  [Status.IngenData, { bin: true, pencil: false }],
+  [Status.RedigeringUtfort, { bin: true, pencil: true }],
+]);
 
 const EditerbartElement = ({
   redigererRender,
@@ -34,7 +46,6 @@ const EditerbartElement = ({
   redigeringUtfortRender,
   redigerbart,
   onBinClick,
-  visAlltidBin = false,
   tittel,
   tittelIkon,
   tittelUnderstrek,
@@ -45,6 +56,7 @@ const EditerbartElement = ({
   className,
   hentNyStatusVedHarData = false,
   onLagreClick,
+  symbolsynlighetMap = new Map(),
 }: EditerbartElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
@@ -94,6 +106,8 @@ const EditerbartElement = ({
     understrek,
   });
 
+  const symbolsynlighet = new Map([...defaultSymbolsynlighetMap, ...symbolsynlighetMap]).get(status);
+
   const legend = (
     <Legend
       redigerbart={redigerbart}
@@ -101,9 +115,8 @@ const EditerbartElement = ({
       tittel={tittel}
       tittelUnderstrek={tittelUnderstrek}
       onBinClick={onBinClick}
-      status={status}
       onPencilClick={() => setStatus(Status.Redigerer)}
-      visAlltidBin={visAlltidBin}
+      symbolsynlighet={symbolsynlighet || { pencil: true, bin: true }}
     />
   );
 

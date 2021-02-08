@@ -4,30 +4,28 @@ import classnames from "classnames";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Symboler from "../symboler";
 
-import { Status } from "./types";
+import { Symbolsynlighet } from "./types";
 
 import "./legend.css";
 
 interface LegendProps {
-  status: Status;
   tittelIkon?: ElementType;
   tittelUnderstrek?: boolean;
   tittel: string;
   redigerbart: boolean;
   onBinClick: MouseEventHandler;
   onPencilClick: MouseEventHandler;
-  visAlltidBin: boolean;
+  symbolsynlighet: Symbolsynlighet;
 }
 
 const Legend = ({
-  status,
   tittelIkon: TittelIkon,
   tittelUnderstrek,
   tittel,
   redigerbart,
   onBinClick,
   onPencilClick,
-  visAlltidBin,
+  symbolsynlighet,
 }: LegendProps) => {
   const legendCls = classnames("editerbart-element__legend", {
     "editerbart-element__legend--understrek": tittelUnderstrek,
@@ -36,12 +34,12 @@ const Legend = ({
   const renderSymboler = () => {
     if (!redigerbart) return null;
 
+    const { pencil, bin } = symbolsynlighet;
+
     return (
       <>
-        {status === Status.RedigeringUtfort && (
-          <Symboler.Rediger style={{ marginRight: "10px" }} onClick={onPencilClick} />
-        )}
-        {(status === Status.RedigeringUtfort || visAlltidBin) && <Symboler.Slett onClick={onBinClick} />}
+        {pencil && <Symboler.Rediger style={{ marginRight: "10px" }} onClick={onPencilClick} />}
+        {bin && <Symboler.Slett onClick={onBinClick} />}
       </>
     );
   };
