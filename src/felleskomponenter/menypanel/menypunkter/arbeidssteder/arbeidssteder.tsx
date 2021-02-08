@@ -75,7 +75,7 @@ type ArbeidsstederProps = PropsFromRedux & {
   behandlingsgrunnlagEtikett: ReactNode;
 };
 
-const Arbeidssteder = ({
+export const Arbeidssteder = ({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
