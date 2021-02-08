@@ -18,6 +18,10 @@ import * as Skip from "./skip";
 import EditerbartElementListe from "../editerbartElementListe";
 import { Status } from "../editerbartElement";
 
+import MKV from "../../../../melosyskodeverk";
+
+import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+
 import "./arbeidssteder.css";
 
 type FlattArbeidssted = KV.Form.ArbeidsstedFly | KV.Form.ArbeidsstedOffshore | KV.Form.ArbeidsstedSkip;
@@ -51,6 +55,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     erHjemmekontor: arbeidPaaLand.erHjemmekontor,
     erFastArbeidssted: arbeidPaaLand.erFastArbeidssted,
+    behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   };
 };
 
@@ -77,80 +82,86 @@ const Arbeidssteder = ({
   slettFastArbeidsstedOgHjemmekontorAvklaring,
   erFastArbeidssted,
   erHjemmekontor,
-}: ArbeidsstederProps) => (
-  <div className="arbeidssteder">
-    <div>
-      <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
-        {KV.Menypunkter.Arbeidssteder.tittel}
-      </Nav.typo.Innholdstittel>
-      <span>{behandlingsgrunnlagEtikett}</span>
-      {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+  behandlingsgrunnlagtype,
+}: ArbeidsstederProps) => {
+  const erSoknadFraAltinn =
+    behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+
+  return (
+    <div className="arbeidssteder">
+      <div>
+        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+          {KV.Menypunkter.Arbeidssteder.tittel}
+        </Nav.typo.Innholdstittel>
+        <span>{behandlingsgrunnlagEtikett}</span>
+        {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+      </div>
+      <EditerbartElementListe
+        redigerbart={redigerbart}
+        feltNavn="arbeidPaaLand.fysiskeArbeidssteder"
+        redigererPreElementerKomponent={erSoknadFraAltinn ? Land.RedigererPreElementer : undefined}
+        redigeringUtfortPreElementerKomponent={erSoknadFraAltinn ? Land.RedigeringUtfortPreElementer : undefined}
+        redigererKomponent={Land.Redigerer}
+        redigeringUtfortKomponent={Land.RedigeringUtfort}
+        ingenDataKomponent={erSoknadFraAltinn ? Land.IngenData : undefined}
+        leggTilTekst="Legg til nytt arbeidssted på land"
+        hentDefaultElement={() => fysiskArbeidsstedDefaultElement}
+        tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}
+        tittelIkon={Ikoner.Kontor}
+        tittelUnderstrek
+        elementUnderstrek
+        harData={(elementListe) =>
+          [erFastArbeidssted, erHjemmekontor].some((v) => !Utils._isNil(v)) ||
+          (elementListe.length !== 0 && elementListe.every(fysiskArbeidsstedErIkkeTomt))
+        }
+        flereRedigeringsknapper={false}
+        onBinClick={slettFastArbeidsstedOgHjemmekontorAvklaring}
+        symbolsynlighetMap={new Map([[Status.IngenData, { pencil: true, bin: false }]])}
+      />
+      <EditerbartElementListe
+        redigerbart={redigerbart}
+        feltNavn="arbeidsstedOffshore"
+        redigererKomponent={Offshore.Redigerer}
+        redigeringUtfortKomponent={Offshore.RedigeringUtfort}
+        leggTilTekst="Legg til nytt arbeidssted offshore"
+        hentDefaultElement={() => ({})}
+        tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore}
+        tittelIkon={Ikoner.Helikopter}
+        tittelUnderstrek
+        elementUnderstrek
+        harData={(elementListe) => elementListe.length !== 0 && elementListe.every(flattArbeidsstedErIkkeTomt)}
+        flereRedigeringsknapper={false}
+      />
+      <EditerbartElementListe
+        redigerbart={redigerbart}
+        feltNavn="arbeidsstedSkip"
+        redigererKomponent={Skip.Redigerer}
+        redigeringUtfortKomponent={Skip.RedigeringUtfort}
+        leggTilTekst="Legg til nytt arbeidssted på skip"
+        hentDefaultElement={() => ({})}
+        tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip}
+        tittelIkon={Ikoner.Skip}
+        tittelUnderstrek
+        elementUnderstrek
+        harData={(elementListe) => elementListe.length !== 0 && elementListe.every(flattArbeidsstedErIkkeTomt)}
+        flereRedigeringsknapper={false}
+      />
+      <EditerbartElementListe
+        redigerbart={redigerbart}
+        feltNavn="arbeidsstedFly"
+        redigererKomponent={Fly.Redigerer}
+        redigeringUtfortKomponent={Fly.RedigeringUtfort}
+        leggTilTekst="Legg til nytt arbeidssted på fly"
+        hentDefaultElement={() => ({})}
+        tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedFly}
+        tittelIkon={Ikoner.Fly}
+        tittelUnderstrek
+        elementUnderstrek
+        harData={(elementListe) => elementListe.length !== 0 && elementListe.every(flattArbeidsstedErIkkeTomt)}
+        flereRedigeringsknapper={false}
+      />
     </div>
-    <EditerbartElementListe
-      redigerbart={redigerbart}
-      feltNavn="arbeidPaaLand.fysiskeArbeidssteder"
-      redigererPreElementerKomponent={Land.RedigererPreElementer}
-      redigeringUtfortPreElementerKomponent={Land.RedigeringUtfortPreElementer}
-      redigererKomponent={Land.Redigerer}
-      redigeringUtfortKomponent={Land.RedigeringUtfort}
-      ingenDataKomponent={Land.IngenData}
-      leggTilTekst="Legg til nytt arbeidssted på land"
-      hentDefaultElement={() => fysiskArbeidsstedDefaultElement}
-      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}
-      tittelIkon={Ikoner.Kontor}
-      tittelUnderstrek
-      elementUnderstrek
-      harData={(elementListe) =>
-        [erFastArbeidssted, erHjemmekontor].some((v) => !Utils._isNil(v)) ||
-        (elementListe.length !== 0 && elementListe.every(fysiskArbeidsstedErIkkeTomt))
-      }
-      flereRedigeringsknapper={false}
-      onBinClick={slettFastArbeidsstedOgHjemmekontorAvklaring}
-      symbolsynlighetMap={new Map([[Status.IngenData, { pencil: true, bin: false }]])}
-    />
-    <EditerbartElementListe
-      redigerbart={redigerbart}
-      feltNavn="arbeidsstedOffshore"
-      redigererKomponent={Offshore.Redigerer}
-      redigeringUtfortKomponent={Offshore.RedigeringUtfort}
-      leggTilTekst="Legg til nytt arbeidssted offshore"
-      hentDefaultElement={() => ({})}
-      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore}
-      tittelIkon={Ikoner.Helikopter}
-      tittelUnderstrek
-      elementUnderstrek
-      harData={(elementListe) => elementListe.length !== 0 && elementListe.every(flattArbeidsstedErIkkeTomt)}
-      flereRedigeringsknapper={false}
-    />
-    <EditerbartElementListe
-      redigerbart={redigerbart}
-      feltNavn="arbeidsstedSkip"
-      redigererKomponent={Skip.Redigerer}
-      redigeringUtfortKomponent={Skip.RedigeringUtfort}
-      leggTilTekst="Legg til nytt arbeidssted på skip"
-      hentDefaultElement={() => ({})}
-      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip}
-      tittelIkon={Ikoner.Skip}
-      tittelUnderstrek
-      elementUnderstrek
-      harData={(elementListe) => elementListe.length !== 0 && elementListe.every(flattArbeidsstedErIkkeTomt)}
-      flereRedigeringsknapper={false}
-    />
-    <EditerbartElementListe
-      redigerbart={redigerbart}
-      feltNavn="arbeidsstedFly"
-      redigererKomponent={Fly.Redigerer}
-      redigeringUtfortKomponent={Fly.RedigeringUtfort}
-      leggTilTekst="Legg til nytt arbeidssted på fly"
-      hentDefaultElement={() => ({})}
-      tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedFly}
-      tittelIkon={Ikoner.Fly}
-      tittelUnderstrek
-      elementUnderstrek
-      harData={(elementListe) => elementListe.length !== 0 && elementListe.every(flattArbeidsstedErIkkeTomt)}
-      flereRedigeringsknapper={false}
-    />
-  </div>
-);
+  );
+};
 
 export default connector(Arbeidssteder);
