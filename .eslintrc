@@ -92,6 +92,15 @@
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"]
   },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "react/require-default-props": "off",
+        "react/prop-types": "off"
+      }
+    }
+  ],
   "extends": [
     "react-app",
     "airbnb",
