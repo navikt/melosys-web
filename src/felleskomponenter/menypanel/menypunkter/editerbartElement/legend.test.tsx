@@ -22,7 +22,7 @@ describe("Legend", () => {
     expect(legend.find(Symboler.Slett)).toHaveLength(0);
   });
 
-  it("symboler-prop styrer visning av symboler", () => {
+  it("symbolsynlighet-prop styrer visning av symboler", () => {
     props.symbolsynlighet = { pencil: true, bin: true };
     props.redigerbart = true;
     let legend = shallow(<Legend {...props} />);
