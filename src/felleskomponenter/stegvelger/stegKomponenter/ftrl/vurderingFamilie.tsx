@@ -195,7 +195,7 @@ const VurderingFamilie = ({
   return (
     <div className="vurderingFamilie">
       <Nav.typo.Undertittel className="undertittel">
-        Skal medfolgendeFamilie oppgitt i søknaden innvilges medlemskap?
+        Skal familiemedlemmer oppgitt i søknaden innvilges medlemskap?
       </Nav.typo.Undertittel>
 
       {medfolgendeFamilie && medfolgendeFamilie.length > 0 ? (
