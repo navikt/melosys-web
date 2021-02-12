@@ -9,7 +9,7 @@ import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
 import { kodeTilObjekt } from "../../kodeverk";
-import { VedleggVelger } from "./VedleggVelger";
+import VedleggVelger from "../vedleggvelger";
 import MultiSelect from "../multiSelect";
 
 import "./sideDialogOpprettNyBuc.css";

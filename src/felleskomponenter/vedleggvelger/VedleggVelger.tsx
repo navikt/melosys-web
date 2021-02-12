@@ -6,7 +6,7 @@ import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
 
-import PdfLink, { lagPdfUrl } from "./pdfLink";
+import PdfLink, { lagPdfUrl } from "../pdfLink";
 
 import "./VedleggVelger.css";
 
@@ -153,7 +153,7 @@ interface VedleggVelgerProps {
   setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void;
 }
 
-export const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -195,3 +195,5 @@ export const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: V
     </Nav.Row>
   );
 };
+
+export default VedleggVelger;
