@@ -73,7 +73,7 @@ const mapStateToProps = (state: RootState) => ({
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).tom
     ),
     oppholdsland: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).oppholdslandkoder,
-    arbeidUtland: behandlingsgrunnlagSelectors.ArbeidUtlandSelector(state),
+    arbeidPaaLand: behandlingsgrunnlagSelectors.ArbeidPaaLandSelector(state),
     arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
     arbeidsstedSkip: behandlingsgrunnlagSelectors.SkipArbeidSelector(state),
     arbeidsstedFly: behandlingsgrunnlagSelectors.LuftfartBaserSelector(state),

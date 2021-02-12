@@ -80,7 +80,7 @@ export function oppdaterState() {
 const lagBehandlingsgrunnlagFelter = (behandlingsgrunnlag) => ({
   juridiskArbeidsgiverNorge: behandlingsgrunnlag.juridiskArbeidsgiverNorge,
   personOpplysninger: behandlingsgrunnlag.personOpplysninger,
-  arbeidUtland: behandlingsgrunnlag.arbeidUtland,
+  arbeidPaaLand: behandlingsgrunnlag.arbeidPaaLand,
   foretakUtland: behandlingsgrunnlag.foretakUtland,
   oppholdUtland: behandlingsgrunnlag.oppholdUtland,
   bosted: behandlingsgrunnlag.bosted,

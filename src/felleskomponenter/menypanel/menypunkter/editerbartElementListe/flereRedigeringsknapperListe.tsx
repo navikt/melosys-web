@@ -5,7 +5,7 @@ import classNames from "classnames";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
-import EditerbartElement from "../editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighetMap } from "../editerbartElement";
 
 import "./flereRedigeringsknapperListe.css";
 
@@ -23,6 +23,7 @@ interface FlereRedigeringsKnapperListeProps<T> {
   tittelTekst: string;
   leggTil: () => void;
   leggTilTekst: string;
+  onBinClick?: (index: number) => void;
 }
 
 function FlereRedigeringsKnapperListe<T>({
@@ -39,6 +40,7 @@ function FlereRedigeringsKnapperListe<T>({
   tittelTekst,
   leggTil,
   leggTilTekst,
+  onBinClick,
 }: FlereRedigeringsKnapperListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
@@ -49,7 +51,10 @@ function FlereRedigeringsKnapperListe<T>({
   return (
     <div className="flere__redigeringsknapper__liste">
       {elementer.map((element, index) => {
-        const slett = () => fields.remove(index);
+        const slett = () => {
+          if (onBinClick) onBinClick(index);
+          fields.remove(index);
+        };
         const overordnetFeltNavn = `${fields.name}[${index}]`;
         const settVerdi = (feltNavn: string, verdi: any) => settFeltVerdi(`${overordnetFeltNavn}.${feltNavn}`, verdi);
         const navn = hentNavn ? hentNavn(element) : "";
@@ -67,7 +72,7 @@ function FlereRedigeringsKnapperListe<T>({
               tittelUnderstrek
               hentNyStatusVedHarData={false}
               onBinClick={slett}
-              visAlltidBin
+              symbolsynlighetMap={visAlltidBinSymbolsynlighetMap}
               redigererRender={() => (
                 <RedigererKomponent
                   redigerbart={redigerbart}

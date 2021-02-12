@@ -160,13 +160,15 @@ describe("Avklartefaktaselectors", () => {
             landkoder: [MKV.Koder.landkoder.DE],
           },
           luftfartBaser: [],
-          arbeidUtland: [
-            {
-              adresse: {
-                landkode: MKV.Koder.landkoder.DE,
+          arbeidPaaLand: {
+            fysiskeArbeidssteder: [
+              {
+                adresse: {
+                  landkode: MKV.Koder.landkoder.DE,
+                },
               },
-            },
-          ],
+            ],
+          },
         },
       ],
       [
@@ -190,7 +192,9 @@ describe("Avklartefaktaselectors", () => {
             landkoder: [MKV.Koder.landkoder.DE],
           },
           luftfartBaser: [],
-          arbeidUtland: [],
+          arbeidPaaLand: {
+            fysiskeArbeidssteder: [],
+          },
         },
       ],
       [
@@ -207,7 +211,9 @@ describe("Avklartefaktaselectors", () => {
             landkoder: [MKV.Koder.landkoder.DE],
           },
           luftfartBaser: [],
-          arbeidUtland: [],
+          arbeidPaaLand: {
+            fysiskeArbeidssteder: [],
+          },
         },
       ],
       [
@@ -231,7 +237,9 @@ describe("Avklartefaktaselectors", () => {
             landkoder: [MKV.Koder.landkoder.DE],
           },
           luftfartBaser: [],
-          arbeidUtland: [],
+          arbeidPaaLand: {
+            fysiskeArbeidssteder: [],
+          },
         },
       ],
     ]).it(
@@ -324,6 +332,32 @@ describe("Avklartefaktaselectors", () => {
           },
           luftfartBaser: [],
           periode: { fom: "2020-02-02", tom: "2020-06-02" },
+        },
+      ],
+      [
+        [
+          {
+            land: KV.kodeTilObjekt(MKV.Koder.landkoder.NO, MKV.KTObjects.landkoder),
+            erLonnetArbeid: true,
+            erSelvstendigNaeringsvirksomhet: false,
+          },
+        ],
+        {
+          selvstendigArbeid: {
+            erSelvstendig: false,
+          },
+          soeknadsland: {
+            landkoder: [MKV.Koder.landkoder.NO],
+          },
+          arbeidPaaLand: {
+            fysiskeArbeidssteder: [
+              {
+                adresse: {
+                  landkode: MKV.Koder.landkoder.NO,
+                },
+              },
+            ],
+          },
         },
       ],
     ]).it("returner korrekt verdi for arbeidsland lik Norge", (forventetResultat, behandlingsgrunnlagData) => {
@@ -657,13 +691,15 @@ describe("Avklartefaktaselectors", () => {
       expect(landkoder).toEqual(expect.arrayContaining(["DK"]));
     });
 
-    it("skal returnere arbeidsland med marginalt arbeid som er oppgitt i arbeidUtland", () => {
+    it("skal returnere arbeidsland med marginalt arbeid som er oppgitt i arbeidPaaLand.fysiskeArbeidssteder", () => {
       const resultat = selectors.LandSomKreverSEDKTSelector(
         lagStateDefaults({
           avklartefakta: avklartefaktaArbeidslandMedMarginaltArbeid,
           behandlingsgrunnlagData: {
             soeknadsland,
-            arbeidUtland: foretakUtland,
+            arbeidPaaLand: {
+              fysiskeArbeidssteder: foretakUtland,
+            },
           },
         })
       );
@@ -696,7 +732,9 @@ describe("Avklartefaktaselectors", () => {
           behandlingsgrunnlagData: {
             soeknadsland,
             foretakUtland,
-            arbeidUtland: foretakUtland,
+            arbeidPaaLand: {
+              fysiskeArbeidssteder: foretakUtland,
+            },
           },
         })
       );

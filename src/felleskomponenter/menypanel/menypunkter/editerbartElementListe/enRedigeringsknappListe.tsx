@@ -5,7 +5,7 @@ import classNames from "classnames";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
-import EditerbartElement from "../editerbartElement";
+import EditerbartElement, { SymbolsynlighetMap } from "../editerbartElement";
 
 import "./enRedigeringsknappListe.css";
 
@@ -21,7 +21,16 @@ export interface RedigeringUtfort<T> {
   verdier: T[];
 }
 
-/**
+export interface RedigererPreElementer {
+  redigerbart: boolean;
+  className?: string;
+}
+
+export interface RedigeringUtfortPreElementer {
+  className?: string;
+}
+
+/*
  * Typene over burde egentlig kreves for komponent-props med ElementType<T>.
  * Fikk dessverre ikke til å bruke typescript med fieldarray i editbartElementListe, så derfor ligger de her.
  */
@@ -34,12 +43,16 @@ interface EnRedigeringsKnappListeProps<T> {
   settFeltVerdi: (felt: string, verdi: any) => void;
   tittelUnderstrek: boolean;
   elementUnderstrek?: boolean;
+  redigererPreElementerKomponent?: ElementType;
+  redigeringUtfortPreElementerKomponent?: ElementType;
   redigererKomponent: ElementType;
   redigeringUtfortKomponent: ElementType;
   ingenDataKomponent?: ElementType;
   tittelTekst: string;
   leggTil: () => void;
   leggTilTekst: string;
+  onBinClick?: (index: number) => void;
+  symbolsynlighetMap?: SymbolsynlighetMap;
 }
 
 function EnRedigeringsKnappListe<T>({
@@ -50,16 +63,22 @@ function EnRedigeringsKnappListe<T>({
   settFeltVerdi,
   tittelUnderstrek,
   elementUnderstrek = false,
+  redigererPreElementerKomponent,
+  redigeringUtfortPreElementerKomponent,
   redigererKomponent,
   redigeringUtfortKomponent,
   ingenDataKomponent,
   tittelTekst,
   leggTil,
   leggTilTekst,
+  onBinClick,
+  symbolsynlighetMap,
 }: EnRedigeringsKnappListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
   const IngenDataKomponent = ingenDataKomponent;
+  const RedigererPreElementerKomponent = redigererPreElementerKomponent;
+  const RedigeringUtfortPreElementerKomponent = redigeringUtfortPreElementerKomponent;
 
   const elementer = fields.getAll();
 
@@ -84,6 +103,11 @@ function EnRedigeringsKnappListe<T>({
       )
     : undefined;
 
+  const binClickHandler = () => {
+    if (onBinClick) onBinClick(-1);
+    fields.removeAll();
+  };
+
   return (
     <EditerbartElement
       className="en__redigeringsknapp__liste"
@@ -91,12 +115,16 @@ function EnRedigeringsKnappListe<T>({
       tittel={tittelTekst}
       tittelIkon={tittelIkon}
       tittelUnderstrek={tittelUnderstrek}
-      onBinClick={fields.removeAll}
+      onBinClick={binClickHandler}
       harData={harData()}
+      symbolsynlighetMap={symbolsynlighetMap}
       hentNyStatusVedHarData={false}
       visLagreKnappBareHvisHarData
       redigererRender={() => (
         <div>
+          {RedigererPreElementerKomponent && (
+            <RedigererPreElementerKomponent className="redigerer-pre-elementer-komponent" redigerbart={redigerbart} />
+          )}
           {elementer.map((element, index) => {
             const overordnetFeltNavn = `${fields.name}[${index}]`;
             const settVerdi = (feltNavn: string, verdi: any) =>
@@ -127,7 +155,14 @@ function EnRedigeringsKnappListe<T>({
           )}
         </div>
       )}
-      redigeringUtfortRender={() => <RedigeringUtfortKomponent verdier={elementer} />}
+      redigeringUtfortRender={() => (
+        <>
+          {RedigeringUtfortPreElementerKomponent && (
+            <RedigeringUtfortPreElementerKomponent className="redigering-utfort-pre-elementer-komponent" />
+          )}
+          <RedigeringUtfortKomponent verdier={elementer} />
+        </>
+      )}
       ingenDataRender={ingenDataRender}
     />
   );

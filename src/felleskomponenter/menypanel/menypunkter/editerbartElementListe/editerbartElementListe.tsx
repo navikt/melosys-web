@@ -9,10 +9,13 @@ import { RootState } from "AppTypes";
 
 import FlereRedigeringsknapperListe from "./flereRedigeringsknapperListe";
 import EnRedigeringsknappListe from "./enRedigeringsknappListe";
+import { SymbolsynlighetMap } from "../editerbartElement";
 
 interface BaseProps {
   leggTilTekst: string | ((elementer: any[]) => string);
   redigerbart: boolean;
+  redigererPreElementerKomponent?: ElementType;
+  redigeringUtfortPreElementerKomponent?: ElementType;
   redigererKomponent: ElementType;
   redigeringUtfortKomponent: ElementType;
   ingenDataKomponent?: ElementType;
@@ -25,6 +28,8 @@ interface BaseProps {
   tittelUnderstrek?: boolean;
   elementUnderstrek?: boolean;
   flereRedigeringsknapper?: boolean;
+  onBinClick?: (index: number) => void;
+  symbolsynlighetMap?: SymbolsynlighetMap;
 }
 
 type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
@@ -43,6 +48,8 @@ export const InnerEditerbartElementListe = ({
   leggTilTekst,
   redigerbart,
   fields,
+  redigererPreElementerKomponent,
+  redigeringUtfortPreElementerKomponent,
   redigererKomponent,
   redigeringUtfortKomponent,
   ingenDataKomponent,
@@ -56,6 +63,8 @@ export const InnerEditerbartElementListe = ({
   elementUnderstrek,
   flereRedigeringsknapper = true,
   settFeltVerdi,
+  onBinClick,
+  symbolsynlighetMap,
 }: InnerEditerbartElementListeProps & PropsFromRedux) => {
   const editerbartElementListeCls = classNames(className);
 
@@ -80,6 +89,7 @@ export const InnerEditerbartElementListe = ({
           tittelTekst={tittelTekst}
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
+          onBinClick={onBinClick}
         />
       ) : (
         <EnRedigeringsknappListe
@@ -90,12 +100,16 @@ export const InnerEditerbartElementListe = ({
           settFeltVerdi={settFeltVerdi}
           tittelUnderstrek={tittelUnderstrek}
           elementUnderstrek={elementUnderstrek}
+          redigererPreElementerKomponent={redigererPreElementerKomponent}
+          redigeringUtfortPreElementerKomponent={redigeringUtfortPreElementerKomponent}
           redigererKomponent={redigererKomponent}
           redigeringUtfortKomponent={redigeringUtfortKomponent}
           ingenDataKomponent={ingenDataKomponent}
           tittelTekst={tittelTekst}
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
+          onBinClick={onBinClick}
+          symbolsynlighetMap={symbolsynlighetMap}
         />
       )}
     </div>
