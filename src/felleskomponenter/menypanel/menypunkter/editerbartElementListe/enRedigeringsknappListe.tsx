@@ -103,7 +103,7 @@ function EnRedigeringsKnappListe<T>({
       )
     : undefined;
 
-  const slettElementerOgPreElementer = () => {
+  const binClickHandler = () => {
     if (onBinClick) onBinClick(-1);
     fields.removeAll();
   };
@@ -115,7 +115,7 @@ function EnRedigeringsKnappListe<T>({
       tittel={tittelTekst}
       tittelIkon={tittelIkon}
       tittelUnderstrek={tittelUnderstrek}
-      onBinClick={slettElementerOgPreElementer}
+      onBinClick={binClickHandler}
       harData={harData()}
       symbolsynlighetMap={symbolsynlighetMap}
       hentNyStatusVedHarData={false}
