@@ -1,6 +1,9 @@
 import React, { ElementType, ComponentProps, MouseEventHandler } from "react";
+import classNames from "classnames";
 
 import * as Nav from "../../../utils/navFrontend";
+
+import "./knappelenke.css";
 
 type NavLenkerProps = ComponentProps<typeof Nav.Lenker>;
 type KnappelenkeProps = Omit<NavLenkerProps, "href"> & {
@@ -15,8 +18,10 @@ const Knappelenke = (props: KnappelenkeProps) => {
 
   const Ikon = props.ikon;
 
+  const cls = classNames("knappelenke", props.className);
+
   return (
-    <Nav.Lenker {...props} href="#" onClick={clickHandler}>
+    <Nav.Lenker {...props} className={cls} href="#" onClick={clickHandler}>
       {Ikon && <Ikon className="ikon" />}
       {props.children && <span>{props.children}</span>}
     </Nav.Lenker>
