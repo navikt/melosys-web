@@ -14,6 +14,7 @@ import * as Hooks from "../../../hooks";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 import VedleggVelger from "../../vedleggvelger";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -52,7 +53,7 @@ export const VurderingVideresend = ({
   const [videresendPending, setVideresendPending] = useState(false);
   const [valgteVedlegg, setValgteVedlegg] = useState([]);
   const isMounted = Hooks.useIsMounted();
-  const [videresendingVedleggToggle] = Hooks.useFeatureToggle("melosys.videresending_vedlegg");
+  const [videresendingVedleggToggle] = useFeatureToggle("melosys.videresending_vedlegg");
 
   const videresendSoknad = async (values, dispatch, props) => {
     setVideresendPending(true);
