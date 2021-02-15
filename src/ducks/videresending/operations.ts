@@ -1,5 +1,4 @@
 import { AppThunk, RootState } from "AppTypes";
-import { Videresending } from "Domene";
 import { ThunkDispatch } from "redux-thunk";
 
 import { doThenDispatch } from "../../services/utils";
@@ -10,7 +9,10 @@ import { modalerOperations } from "../modaler";
 import { navigeringOperations } from "../navigering";
 import * as DucksUtils from "../utils";
 
-export function send(saksnummer: string, videresending: Videresending): AppThunk<Promise<Types.Action>, Types.Action> {
+export function send(
+  saksnummer: string,
+  videresending: Api.Fagsaker.fagsak.VideresendReqDto
+): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
     () => Api.Fagsaker.fagsak.videresend(saksnummer, videresending),
     {

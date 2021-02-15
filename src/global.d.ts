@@ -31,7 +31,6 @@ declare module "Domene" {
   export type OppsummertFaktaMedfolgendeFamilie = import("./@types").MedfolgendeFamilie;
   export type MedfolgendeFamiliemedlem = import("./@types").MedfolgendeFamiliemedlem;
   export type Organisasjon = import("./@types").Organisasjon;
-  export type Videresending = import("./@types").Videresending;
   export type DokumentOversikt = import("./@types").DokumentOversikt;
   export type Dokument = import("./@types").Dokument;
   export type FysiskDokument = import("./@types").FysiskDokument;

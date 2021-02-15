@@ -13,16 +13,26 @@ import * as Hooks from "../../../hooks";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
+import VedleggVelger from "../../vedleggvelger";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
+import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
 import "./vurderingVideresend.css";
 import * as Skjema from "../../skjema";
 
-export const VurderingVideresend = ({ redigerbart, behandlingID, bostedsland, handleSubmit, form, formValues }) => {
+export const VurderingVideresend = ({
+  redigerbart,
+  behandlingID,
+  bostedsland,
+  dokumenter,
+  handleSubmit,
+  form,
+  formValues,
+}) => {
   const pdfDokumenter = [
     {
       navn: "Forhåndsvis orienteringsbrev",
@@ -40,12 +50,15 @@ export const VurderingVideresend = ({ redigerbart, behandlingID, bostedsland, ha
   ];
 
   const [videresendPending, setVideresendPending] = useState(false);
+  const [valgteVedlegg, setValgteVedlegg] = useState([]);
   const isMounted = Hooks.useIsMounted();
+  const [videresendingVedleggToggle] = Hooks.useFeatureToggle("melosys.videresending_vedlegg");
 
   const videresendSoknad = async (values, dispatch, props) => {
     setVideresendPending(true);
 
-    await props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst);
+    const vedlegg = valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID }));
+    await props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst, vedlegg);
 
     // Videresend-operation navigerer til forside, og komponenten kan derfor være unmountet.
     if (isMounted.current) {
@@ -84,6 +97,17 @@ export const VurderingVideresend = ({ redigerbart, behandlingID, bostedsland, ha
             {redigerbart && <PdfLenkeListe dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>
+        {videresendingVedleggToggle && (
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <VedleggVelger
+                valgteVedlegg={valgteVedlegg}
+                setValgteVedlegg={setValgteVedlegg}
+                dokumenter={dokumenter}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        )}
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
             <Nav.Hovedknapp spinner={videresendPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit">
@@ -104,6 +128,7 @@ VurderingVideresend.propTypes = {
   handleSubmit: PT.func.isRequired,
   form: PT.string.isRequired,
   formValues: PT.object,
+  dokumenter: PT.arrayOf(PT.object).isRequired,
 };
 
 VurderingVideresend.defaultProps = {
@@ -125,6 +150,7 @@ const VurderingVideresendForm = reduxForm({
 const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
+  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   formValues: getFormValues(KV.Form.VURDERING_VIDERESEND)(state),
   initialValues: {
     mottakerinstitusjon: "",

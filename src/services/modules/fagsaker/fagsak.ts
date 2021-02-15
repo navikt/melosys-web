@@ -30,9 +30,15 @@ export const henlegg = (saksnummer: string, body: HenleggReqDto) =>
 export const bortfall = (saksnummer: string) =>
   putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/avsluttsaksombortfalt`);
 
-interface VideresendReqDto {
+interface Vedlegg {
+  journalpostID: string;
+  dokumentID: string;
+}
+
+export interface VideresendReqDto {
   mottakerinstitusjon: string | null;
   fritekst: string | null;
+  vedlegg: Vedlegg[];
 }
 export const videresend = (saksnummer: string, body: VideresendReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-videresend`, body);
