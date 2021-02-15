@@ -5,7 +5,7 @@ describe("Behandlingsgrunnlag selectors", () => {
     it("returnerer arbeid på skip", () => {
       const { resultFunc } = selectors.SkipArbeidSelector;
 
-      const maritimtarbeid = [{ installasjonsLandkode: "DE" }, {}];
+      const maritimtarbeid = [{ innretningLandkode: "DE" }, {}];
 
       const result = resultFunc(maritimtarbeid);
 
@@ -18,12 +18,12 @@ describe("Behandlingsgrunnlag selectors", () => {
     it("returnerer arbeid offshore", () => {
       const { resultFunc } = selectors.OffshoreArbeidSelector;
 
-      const maritimtarbeid = [{ installasjonsLandkode: "DE" }, {}];
+      const maritimtarbeid = [{ innretningLandkode: "DE" }, {}];
 
       const result = resultFunc(maritimtarbeid);
 
       expect(result).toHaveLength(1);
-      expect(result[0]).toEqual({ installasjonsLandkode: "DE" });
+      expect(result[0]).toEqual({ innretningLandkode: "DE" });
     });
   });
 });

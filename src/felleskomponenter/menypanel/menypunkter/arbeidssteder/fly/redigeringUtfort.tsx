@@ -1,11 +1,11 @@
 import React from "react";
 import classNames from "classnames";
 
-import * as KV from "../../../../../../kodeverk";
+import * as KV from "../../../../../kodeverk";
 
-import MKV from "../../../../../../melosyskodeverk";
+import MKV from "../../../../../melosyskodeverk";
 
-import { EnRedigeringsknappListeRedigeringUtfort } from "../../../editerbartElementListe";
+import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
 import "./redigeringUtfort.css";
 
