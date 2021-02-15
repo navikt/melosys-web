@@ -1,15 +1,15 @@
 import React, { Fragment } from "react";
 
-import * as KV from "../../../../../../kodeverk";
-import * as Nav from "../../../../../../utils/navFrontend";
+import * as KV from "../../../../../kodeverk";
+import * as Nav from "../../../../../utils/navFrontend";
 
-import { StrukturertAdresse } from "../../../../../adresser";
+import { StrukturertAdresse } from "../../../../adresser";
 
-import { EnRedigeringsknappListeRedigeringUtfort } from "../../../editerbartElementListe";
+import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
 import "./redigeringUtfort.css";
 
-const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedUtland>) => (
+const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.FysiskArbeidssted>) => (
   <div className="arbeidssted__utland__redigeringutfort">
     {verdier.map((element, index) => (
       /* eslint-disable-next-line react/no-array-index-key */
@@ -17,7 +17,7 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.typo.Element>Navn på virksomhet</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{element.foretakNavn}</Nav.typo.Normaltekst>
+            <Nav.typo.Normaltekst>{element.virksomhetNavn}</Nav.typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <StrukturertAdresse adresse={element.adresse} />

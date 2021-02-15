@@ -63,7 +63,7 @@ const normaliserReduxBoolean = (valg) => {
   return valg;
 };
 
-function Radio({ id, feltNavn, className = "", ...rest }) {
+function Radio({ id = undefined, feltNavn, className = "", ...rest }) {
   return (
     <Field
       name={feltNavn}
