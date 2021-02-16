@@ -150,10 +150,10 @@ const VedleggListe = ({
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: FysiskDokument[];
-  setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void;
+  onChange: (valgteVedlegg: FysiskDokument[]) => void;
 }
 
-const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -167,11 +167,11 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: VedleggV
 
   const onLeggTilHandler = (markerteVedlegg: string[]) => {
     toggleRedigerer();
-    setValgteVedlegg(dokumenter.filter((v) => markerteVedlegg.includes(v.id)));
+    onChange(dokumenter.filter((v) => markerteVedlegg.includes(v.id)));
   };
 
   const onSlettVedleggHandler = (vedleggID: string) => {
-    setValgteVedlegg(valgteVedlegg.filter(({ id }) => id !== vedleggID));
+    onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
   };
 
   return (

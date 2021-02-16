@@ -101,11 +101,7 @@ export const VurderingVideresend = ({
         {videresendingVedleggToggle === "enabled" && (
           <Nav.Row>
             <Nav.Column xs="12">
-              <VedleggVelger
-                valgteVedlegg={valgteVedlegg}
-                setValgteVedlegg={setValgteVedlegg}
-                dokumenter={fysiskeDokument}
-              />
+              <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={fysiskeDokument} />
             </Nav.Column>
           </Nav.Row>
         )}

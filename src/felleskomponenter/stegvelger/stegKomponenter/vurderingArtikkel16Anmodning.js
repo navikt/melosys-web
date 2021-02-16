@@ -551,7 +551,7 @@ class VurderingArtikkel16Anmodning extends Component {
                   <Nav.Column xs="12">
                     <VedleggVelger
                       valgteVedlegg={valgteVedlegg}
-                      setValgteVedlegg={setValgteVedlegg}
+                      onChange={setValgteVedlegg}
                       dokumenter={fysiskeDokument}
                     />
                   </Nav.Column>
