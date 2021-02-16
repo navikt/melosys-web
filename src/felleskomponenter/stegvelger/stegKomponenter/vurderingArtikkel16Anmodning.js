@@ -155,7 +155,10 @@ class VurderingArtikkel16Anmodning extends Component {
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1
       )
     );
-    oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
+
+    if (unntakFraBestemmelse) {
+      oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
+    }
 
     this._isMounted = true;
   }
