@@ -5,7 +5,6 @@ export type {
   MedfolgendeFamilie,
   MedfolgendeFamiliemedlem,
 } from "./avklartfakta";
-export type { default as AnmodningOmUnntakBestilling } from "./anmodningomunntakbestilling";
 export type { default as Fagsak } from "./fagsak";
 export type { default as Oppsummering } from "./oppsummering";
 export type { Person, Familiemedlem } from "./person";

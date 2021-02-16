@@ -19,7 +19,6 @@ declare module "Domene" {
   export type StrukturertAdresse = import("./@types").StrukturertAdresse;
   export type Aktoer = import("./@types").Aktoer;
   export type Avklartfakta = import("./@types").Avklartfakta;
-  export type AnmodningOmUnntakBestilling = import("./@types").AnmodningOmUnntakBestilling;
   export type Fagsak = import("./@types").Fagsak;
   export type GeneriskAdresse = import("./@types").GeneriskAdresse;
   export type MedlPeriode = import("./@types").MedlPeriode;
