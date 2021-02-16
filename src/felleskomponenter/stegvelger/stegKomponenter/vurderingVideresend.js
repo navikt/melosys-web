@@ -29,7 +29,7 @@ export const VurderingVideresend = ({
   redigerbart,
   behandlingID,
   bostedsland,
-  dokumenter,
+  fysiskeDokument,
   handleSubmit,
   form,
   formValues,
@@ -98,13 +98,13 @@ export const VurderingVideresend = ({
             {redigerbart && <PdfLenkeListe dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>
-        {videresendingVedleggToggle && (
+        {videresendingVedleggToggle === "enabled" && (
           <Nav.Row>
             <Nav.Column xs="12">
               <VedleggVelger
                 valgteVedlegg={valgteVedlegg}
                 setValgteVedlegg={setValgteVedlegg}
-                dokumenter={dokumenter}
+                dokumenter={fysiskeDokument}
               />
             </Nav.Column>
           </Nav.Row>
@@ -129,7 +129,7 @@ VurderingVideresend.propTypes = {
   handleSubmit: PT.func.isRequired,
   form: PT.string.isRequired,
   formValues: PT.object,
-  dokumenter: PT.arrayOf(PT.object).isRequired,
+  fysiskeDokument: PT.arrayOf(PT.object).isRequired,
 };
 
 VurderingVideresend.defaultProps = {
@@ -151,7 +151,7 @@ const VurderingVideresendForm = reduxForm({
 const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
-  dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  fysiskeDokument: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   formValues: getFormValues(KV.Form.VURDERING_VIDERESEND)(state),
   initialValues: {
     mottakerinstitusjon: "",

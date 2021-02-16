@@ -25,7 +25,7 @@ import DatoOmrade from "../../datoOmrade/datoOmrade";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 import VedleggVelger from "../../vedleggvelger";
-import { WithFeatureToggle } from "../../../featuretoggle";
+import { FeatureToggle } from "../../../featuretoggle";
 
 import { konverterTilStegData, lagBegrunnelse } from "../../../regler/vilkar";
 import { konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
@@ -544,7 +544,7 @@ class VurderingArtikkel16Anmodning extends Component {
               )}
             </Nav.Column>
           </Nav.Row>
-          <WithFeatureToggle togglename="melosys.anmodning_vedlegg">
+          <FeatureToggle togglename="melosys.anmodning_vedlegg">
             {(status) =>
               status === "enabled" ? (
                 <Nav.Row>
@@ -558,7 +558,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 </Nav.Row>
               ) : null
             }
-          </WithFeatureToggle>
+          </FeatureToggle>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
               <Nav.Hovedknapp
