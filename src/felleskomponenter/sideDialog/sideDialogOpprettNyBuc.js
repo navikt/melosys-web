@@ -233,6 +233,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             feil={feil("mottakerinstitusjoner")}
             values={valgteMottakerinstitusjoner}
           />
+          <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
           <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
             Opprett ny BUC

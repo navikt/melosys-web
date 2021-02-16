@@ -176,7 +176,6 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerPro
 
   return (
     <Nav.Row className="vedleggvelger">
-      <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
       {skalViseVedleggListe && (
         <VedleggListe
           redigerer={redigerer}

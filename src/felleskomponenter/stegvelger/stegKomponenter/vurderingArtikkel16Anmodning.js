@@ -549,6 +549,7 @@ class VurderingArtikkel16Anmodning extends Component {
               status === "enabled" ? (
                 <Nav.Row>
                   <Nav.Column xs="12">
+                    <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
                     <VedleggVelger
                       valgteVedlegg={valgteVedlegg}
                       onChange={setValgteVedlegg}
