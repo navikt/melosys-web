@@ -51,7 +51,8 @@ export const VurderingVideresend = ({
   ];
 
   const [videresendPending, setVideresendPending] = useState(false);
-  const [valgteVedlegg, setValgteVedlegg] = useState([]);
+  const fysiskeSoknaddokument = fysiskeDokument.filter((dokument) => dokument.tittel.toLowerCase().includes("søknad"));
+  const [valgteVedlegg, setValgteVedlegg] = useState(fysiskeSoknaddokument);
   const isMounted = Hooks.useIsMounted();
   const [videresendingVedleggToggle] = useFeatureToggle("melosys.videresending_vedlegg");
 

@@ -19,7 +19,7 @@ interface EnkeltVedleggProps {
   redigerer: boolean;
 }
 
-const EnkeltVedlegg = ({
+export const EnkeltVedlegg = ({
   vedlegg,
   leggTilVedlegg,
   fjernVedlegg,
@@ -72,7 +72,7 @@ interface VedleggListeProps {
   onSlettVedlegg: (vedleggID: string) => void;
 }
 
-const VedleggListe = ({
+export const VedleggListe = ({
   valgteVedlegg,
   alleVedlegg,
   redigerer,
@@ -80,7 +80,7 @@ const VedleggListe = ({
   onLeggTil,
   onSlettVedlegg,
 }: VedleggListeProps) => {
-  const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>([]);
+  const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>(valgteVedlegg.map(({ id }) => id));
 
   const markerVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg, vedleggID]);
   const fjernVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg.filter((id) => id !== vedleggID)]);
