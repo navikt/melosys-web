@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import classNames from "classnames";
 import { FysiskDokument } from "Domene";
 
 import * as Nav from "../../utils/navFrontend";
@@ -151,9 +152,10 @@ interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: FysiskDokument[];
   onChange: (valgteVedlegg: FysiskDokument[]) => void;
+  className?: string;
 }
 
-const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -174,8 +176,10 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange }: VedleggVelgerPro
     onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
   };
 
+  const cls = classNames(className, "vedleggvelger");
+
   return (
-    <Nav.Row className="vedleggvelger">
+    <Nav.Row className={cls}>
       {skalViseVedleggListe && (
         <VedleggListe
           redigerer={redigerer}

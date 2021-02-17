@@ -103,7 +103,12 @@ export const VurderingVideresend = ({
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
-              <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={fysiskeDokument} />
+              <VedleggVelger
+                className="vedleggvelger"
+                valgteVedlegg={valgteVedlegg}
+                onChange={setValgteVedlegg}
+                dokumenter={fysiskeDokument}
+              />
             </Nav.Column>
           </Nav.Row>
         )}

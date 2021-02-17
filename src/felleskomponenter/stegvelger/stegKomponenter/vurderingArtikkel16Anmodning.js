@@ -551,6 +551,7 @@ class VurderingArtikkel16Anmodning extends Component {
                   <Nav.Column xs="12">
                     <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
                     <VedleggVelger
+                      className="vedleggvelger"
                       valgteVedlegg={valgteVedlegg}
                       onChange={setValgteVedlegg}
                       dokumenter={fysiskeDokument}
