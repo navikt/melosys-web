@@ -99,7 +99,7 @@ export const VurderingVideresend = ({
             {redigerbart && <PdfLenkeListe dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>
-        {videresendingVedleggToggle === "enabled" && (
+        {redigerbart && videresendingVedleggToggle === "enabled" && (
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>

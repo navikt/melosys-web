@@ -544,23 +544,25 @@ class VurderingArtikkel16Anmodning extends Component {
               )}
             </Nav.Column>
           </Nav.Row>
-          <FeatureToggle togglename="melosys.anmodning_vedlegg">
-            {(status) =>
-              status === "enabled" ? (
-                <Nav.Row>
-                  <Nav.Column xs="12">
-                    <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
-                    <VedleggVelger
-                      className="vedleggvelger"
-                      valgteVedlegg={valgteVedlegg}
-                      onChange={setValgteVedlegg}
-                      dokumenter={fysiskeDokument}
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-              ) : null
-            }
-          </FeatureToggle>
+          {redigerbart && (
+            <FeatureToggle togglename="melosys.anmodning_vedlegg">
+              {(status) =>
+                status === "enabled" ? (
+                  <Nav.Row>
+                    <Nav.Column xs="12">
+                      <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
+                      <VedleggVelger
+                        className="vedleggvelger"
+                        valgteVedlegg={valgteVedlegg}
+                        onChange={setValgteVedlegg}
+                        dokumenter={fysiskeDokument}
+                      />
+                    </Nav.Column>
+                  </Nav.Row>
+                ) : null
+              }
+            </FeatureToggle>
+          )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
               <Nav.Hovedknapp
