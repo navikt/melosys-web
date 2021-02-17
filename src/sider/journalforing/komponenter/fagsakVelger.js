@@ -41,7 +41,7 @@ const FagsakVelger = (props) => {
   return (
     <Fragment>
       <div className="eksisterendeSaker">
-        {<Skjema.CustomRadioPanelGruppe feltNavn="saksnummer" radios={radioValg} notify={notifier} />}
+        <Skjema.CustomRadioPanelGruppe feltNavn="saksnummer" radios={radioValg} notify={notifier} />
         {fagsakListe.length === 0 && "Ingen eksisterende saker funnet."}
       </div>
     </Fragment>

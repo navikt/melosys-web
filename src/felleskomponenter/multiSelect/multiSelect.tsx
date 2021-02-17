@@ -25,7 +25,7 @@ function MultiSelect<T extends { value: string; label: string }>(props: MultiSel
     return "#FFFFFF";
   };
 
-  const styles: Styles = {
+  const styles: Styles<T, true> = {
     control: (provided: CSSProperties) => ({
       ...provided,
       borderColor: getBorderColor(),
@@ -62,7 +62,7 @@ function MultiSelect<T extends { value: string; label: string }>(props: MultiSel
       <Select
         id={`select${label}`}
         styles={styles}
-        onChange={(selectedOptions: ValueType<T>) => onChange(selectedOptions as T[])}
+        onChange={(selectedOptions: ValueType<T, true>) => onChange(selectedOptions as T[])}
         options={options}
         placeholder="Velg..."
         isMulti

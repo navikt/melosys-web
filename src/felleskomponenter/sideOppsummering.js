@@ -68,9 +68,9 @@ const SideOppsummering = ({
             >
               {tittel}{" "}
               {kanEndreBehandlingstema ? (
-                <Ikoner.Blyant_Active className="blyant" />
+                <Ikoner.BlyantActive className="blyant" />
               ) : (
-                <Ikoner.Blyant_Disabled className="blyant" />
+                <Ikoner.BlyantDisabled className="blyant" />
               )}
             </Nav.typo.Undertittel>
           </Nav.Column>
