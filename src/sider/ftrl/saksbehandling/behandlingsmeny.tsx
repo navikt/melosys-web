@@ -66,11 +66,9 @@ const Behandlingsmeny = ({
           Avslå søknad pga. manglende opplysninger
         </Nav.Knapp>
       )}
-      {
-        <Nav.Knapp mini className="element" onClick={apneTidligereBehandlinger}>
-          Vis alle behandlinger
-        </Nav.Knapp>
-      }
+      <Nav.Knapp mini className="element" onClick={apneTidligereBehandlinger}>
+        Vis alle behandlinger
+      </Nav.Knapp>
       {(anmodningsperioderErSendtUtlandet ||
         (!redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE)) && (
         <Nav.Knapp mini className="element" onClick={visRevurderFagsakDialogHandle}>

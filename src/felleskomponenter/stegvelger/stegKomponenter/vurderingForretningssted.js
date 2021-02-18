@@ -25,7 +25,6 @@ import {
 
 const Forretningsstedet = (props) => {
   const { forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart } = props;
-  if (!forretningsstedet) return null;
 
   useEffect(() => {
     if (avklartForretningsland) {
@@ -40,6 +39,8 @@ const Forretningsstedet = (props) => {
     };
     return cleanup;
   }, []);
+
+  if (!forretningsstedet) return null;
 
   const { navn, virksomhetId } = forretningsstedet;
   const landEndretHandler = (landKode) => {
