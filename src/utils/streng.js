@@ -55,3 +55,12 @@ export function arrayTilKonjunksjon(liste) {
     return `${samling}${element}${!erVedSisteElement ? konjunksjon : ""}`;
   }, "");
 }
+export function compareObjektByFelt(a, b, felt) {
+  if (a[felt] < b[felt]) {
+    return -1;
+  }
+  if (a[felt] > b[felt]) {
+    return 1;
+  }
+  return 0;
+}

@@ -17,3 +17,4 @@ export { soknad } from "./soknad";
 export { vurdering_perioder } from "./vurdering_perioder";
 export { vurdering_trygdeavgift } from "./vurdering_trygdeavgift";
 export { vurdering_familie } from "./vurdering_familie";
+export { vurdering_representant } from "./vurdering_representant";

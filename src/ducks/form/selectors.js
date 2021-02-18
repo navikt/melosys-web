@@ -109,6 +109,16 @@ export const VurderFamilieFormValid = createSelector(
   (errors) => Utils._isEmpty(errors)
 );
 
+export const VurderRepresentantFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.REPRESENTANT, {}),
+  (familie) => familie
+);
+
+export const VurderRepresentantFormValid = createSelector(
+  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
 export const VurderUtpekingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   (vurderUtpekingForm) => vurderUtpekingForm
