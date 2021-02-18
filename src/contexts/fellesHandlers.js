@@ -33,6 +33,7 @@ const FellesHandlersProviderUnconnected = ({
   oppfriskSaksopplysninger,
   lagreBehandlingsgrunnlag,
   saksnummer,
+  sakstype,
   apneTidligereBehandlinger,
   avslaSoknad,
   skjulOppfriskDialogHandle,
@@ -61,7 +62,7 @@ const FellesHandlersProviderUnconnected = ({
     await lagreBehandlingsgrunnlag();
     await oppfriskSaksopplysninger(behandlingID);
     await fjernBehandlingOppfriskes();
-    await lastInnSaksopplysninger(saksnummer, behandlingID);
+    await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
   const startOgVisOppfriskModal = async () => {
@@ -69,7 +70,7 @@ const FellesHandlersProviderUnconnected = ({
     visOppfriskDialogHandle();
     await oppfriskSaksopplysninger(behandlingID);
     await fjernBehandlingOppfriskes();
-    await lastInnSaksopplysninger(saksnummer, behandlingID);
+    await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
   const behandlingOppfriskes = behandlingUnderOppfriskning === behandlingID;
@@ -86,7 +87,7 @@ const FellesHandlersProviderUnconnected = ({
   };
 
   const lagreOgLukk = async () => {
-    await lagreAllData();
+    await lagreAllData(sakstype);
     tilForsiden();
   };
 
@@ -100,7 +101,7 @@ const FellesHandlersProviderUnconnected = ({
       const { behandlingID: nyBehandlingID } = res;
 
       history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
-      lastInnSaksopplysninger(saksnummer, nyBehandlingID);
+      lastInnSaksopplysninger(sakstype, saksnummer, nyBehandlingID);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -121,7 +122,7 @@ const FellesHandlersProviderUnconnected = ({
 
   const henleggHandle = async (data) => {
     try {
-      await lagreAllData();
+      await lagreAllData(sakstype);
       await henleggSak(data);
       skjulHenleggDialogHandle();
       tilForsiden();
@@ -137,7 +138,7 @@ const FellesHandlersProviderUnconnected = ({
       await resetAnmodningsperioder();
       await resetUtpekingsperioder();
 
-      await lagreAllData();
+      await lagreAllData(sakstype);
       avslaSoknad(behandlingID, data);
     } catch (e) {
       Utils.logger.error(e);
@@ -191,6 +192,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   oppfriskSaksopplysninger: PT.func.isRequired,
   lagreBehandlingsgrunnlag: PT.func.isRequired,
   saksnummer: PT.string,
+  sakstype: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
   avslaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
@@ -218,21 +220,23 @@ FellesHandlersProviderUnconnected.defaultProps = {
 
 FellesHandlersProviderUnconnected.defaultProps = {
   saksnummer: undefined,
+  sakstype: undefined,
 };
 
 const mapStateToProps = (state) => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  lagreAllData: (sakstype) => dispatch(datalastingOperations.lagreAllData(sakstype)),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaSoknad(behandlingID, data)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
-    dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+  lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
+    dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
   oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
