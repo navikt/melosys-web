@@ -3,7 +3,7 @@ import { DokumentOversikt, Mottaksretning } from "Domene";
 
 import MKV from "../../melosyskodeverk";
 
-import PdfLink from "./pdfLink";
+import PdfLink from "../pdfLink";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 import * as Ikoner from "../../resources/images";
 
