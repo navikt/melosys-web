@@ -8,9 +8,9 @@ import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes/";
 import * as Utils from "../../../utils";
 import * as KV from "../../../kodeverk";
-import * as Hooks from "../../../hooks";
 import { formSelectors } from "../../../ducks/form";
 import MKV from "../../../melosyskodeverk";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
 
@@ -34,7 +34,7 @@ const OpprettFagsak = (props) => {
     );
   }, [valgtSakstype]);
 
-  const [folketrygdenToggle] = Hooks.useFeatureToggle("melosys.folketrygden.mvp");
+  const [folketrygdenToggle] = useFeatureToggle("melosys.folketrygden.mvp");
 
   if (folketrygdenToggle === "fetching") return null;
 

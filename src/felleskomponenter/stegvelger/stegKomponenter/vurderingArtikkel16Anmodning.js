@@ -17,12 +17,15 @@ import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder";
+import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 import DatoOmrade from "../../datoOmrade/datoOmrade";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
+import VedleggVelger from "../../vedleggvelger";
+import { FeatureToggle } from "../../../featuretoggle";
 
 import { konverterTilStegData, lagBegrunnelse } from "../../../regler/vilkar";
 import { konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
@@ -141,6 +144,7 @@ class VurderingArtikkel16Anmodning extends Component {
     begrunnelseFritekstBrevFeilmelding: undefined,
     begrunnelseFritekstSedFeilmelding: undefined,
     anmodningPending: false,
+    valgteVedlegg: [],
   };
 
   componentDidMount() {
@@ -169,9 +173,14 @@ class VurderingArtikkel16Anmodning extends Component {
     this._isMounted = false;
   }
 
+  setValgteVedlegg = (valgteVedlegg) => {
+    this.setState({ valgteVedlegg });
+  };
+
   lagBestillAnmodningsperioderBody = () => ({
     mottakerinstitusjon: this.props.formValues.mottakerinstitusjon || null,
     fritekstSed: this.props.formValues.fritekstSed,
+    vedlegg: this.state.valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
   });
 
   lagreBehandlingerOgBestillAnmodningsperioder = async () => {
@@ -305,6 +314,7 @@ class VurderingArtikkel16Anmodning extends Component {
       arbeidsland,
       formValues,
       form,
+      fysiskeDokument,
     } = this.props;
 
     const {
@@ -315,6 +325,7 @@ class VurderingArtikkel16Anmodning extends Component {
       begrunnelseFritekstBrevEndretHandler,
       begrunnelseFritekstSedEndretHandler,
       vedUnntakFraBestemmelseEndring,
+      setValgteVedlegg,
     } = this;
 
     const {
@@ -323,6 +334,7 @@ class VurderingArtikkel16Anmodning extends Component {
       begrunnelseFritekstSedFeilmelding,
       lovvalgFeilmelding,
       anmodningPending,
+      valgteVedlegg,
     } = this.state;
 
     const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
@@ -535,6 +547,25 @@ class VurderingArtikkel16Anmodning extends Component {
               )}
             </Nav.Column>
           </Nav.Row>
+          {redigerbart && (
+            <FeatureToggle togglename="melosys.anmodning_vedlegg">
+              {(status) =>
+                status === "enabled" ? (
+                  <Nav.Row>
+                    <Nav.Column xs="12">
+                      <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
+                      <VedleggVelger
+                        className="vedleggvelger"
+                        valgteVedlegg={valgteVedlegg}
+                        onChange={setValgteVedlegg}
+                        dokumenter={fysiskeDokument}
+                      />
+                    </Nav.Column>
+                  </Nav.Row>
+                ) : null
+              }
+            </FeatureToggle>
+          )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
               <Nav.Hovedknapp
@@ -576,6 +607,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   form: PT.string.isRequired,
+  fysiskeDokument: PT.arrayOf(PT.object).isRequired,
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
@@ -590,6 +622,7 @@ const mapStateToProps = (state) => ({
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
+  fysiskeDokument: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   initialValues: {

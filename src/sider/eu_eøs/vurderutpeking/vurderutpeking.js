@@ -312,7 +312,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
-    dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+    dispatch(datalastingOperations.lastInnSaksopplysninger(MKV.Koder.sakstyper.EU_EOS, saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
@@ -320,7 +320,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
   oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData(MKV.Koder.sakstyper.EU_EOS)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Vurderutpeking);

@@ -1,9 +1,15 @@
 import { postAsJson, putAsText } from "../../utils";
 import { API_BASE_URL, SAKSFLYT, ANMODNINGSPERIODER } from "../../api-constants";
 
-interface AnmodningOmUnntakBestillingReqDto {
+interface Vedlegg {
+  journalpostID: string;
+  dokumentID: string;
+}
+
+export interface AnmodningOmUnntakBestillingReqDto {
   mottakerinstitusjon: string | null;
   fritekstSed: string | null;
+  vedlegg: Vedlegg[];
 }
 export const bestill = (behandlingID: number, body: AnmodningOmUnntakBestillingReqDto) =>
   postAsJson(`${API_BASE_URL}${SAKSFLYT}/${ANMODNINGSPERIODER}/${behandlingID}/bestill`, body);
