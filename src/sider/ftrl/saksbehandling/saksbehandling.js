@@ -176,10 +176,8 @@ const Saksbehandling = ({
 
       const bestemmelserResponse = await API.Medlemskapsperioder.hentBestemmelserMedVilkår();
       bestemmelserResponse
-        .sort((a, b) => -1 * Utils.streng.compareObjektByFelt(a, b, "bestemmelse"))
-        .forEach((bestemmelse) =>
-          bestemmelse.vilkårOgBegrunnelser.sort((a, b) => Utils.streng.compareObjektByFelt(a, b, "vilkaar"))
-        );
+        .sort((a, b) => b.bestemmelse.localeCompare(a.bestemmelse))
+        .forEach((bestemmelse) => bestemmelse.vilkårOgBegrunnelser.sort((a, b) => a.vilkaar.localeCompare(b.vilkaar)));
       setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
