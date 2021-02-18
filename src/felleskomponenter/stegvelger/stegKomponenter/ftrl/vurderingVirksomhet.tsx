@@ -10,13 +10,12 @@ import * as Mui from "../../../../felleskomponenter/ui";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { oppsummertfaktaOperations } from "../../../../ducks/oppsummertfakta";
-
-import "./vurderingVirksomhet.css";
-import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
 
+import "./vurderingVirksomhet.css";
+
 const mapStateToProps = (state: RootState) => ({
-  virksomheterListe: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
+  virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
@@ -102,7 +101,7 @@ const VurderingVirksomhet = ({
       </Nav.typo.Undertittel>
 
       <Mui.Checkboxgruppe
-        muligeValg={virksomheterListe.map((virksomhet) => ({ kode: virksomhet.virksomhetId, term: virksomhet.navn }))}
+        muligeValg={virksomheterListe}
         onChange={(checkedVirksomheter) => setValgteVirksomheter(checkedVirksomheter)}
         disabled={!redigerbart}
         defaultValg={valgteVirksomheter}

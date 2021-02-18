@@ -284,6 +284,30 @@ export const ArbeidsforholdeneSelector = createSelector(
       return arbeid;
     })
 );
+
+export const AlleVirksomheterSelector = createSelector(
+  (state) => ArbeidsforholdeneSelector(state),
+  (state) => behandlingsgrunnlagSelectors.SelvstendigNaringsvirksomhetSelector(state),
+  (state) => behandlingsgrunnlagSelectors.ForetakUtlandSelector(state),
+  (state) => behandlingsgrunnlagSelectors.ValiderteEkstraArbeidsgivereSelector(state),
+  (arbeidsforholdene, selvstendigNaringsvirksomhet, foretakUtland, ekstraArbeidsgivere) => {
+    const virksomhetsListe = [];
+    arbeidsforholdene.forEach((arbeidsforhold) => {
+      virksomhetsListe.push({ kode: arbeidsforhold.arbeidsgiver.orgnr, term: arbeidsforhold.arbeidsgiver.navn });
+    });
+    selvstendigNaringsvirksomhet.forEach((selvstendigForetak) => {
+      virksomhetsListe.push({ kode: selvstendigForetak.orgnr, term: selvstendigForetak.navn });
+    });
+    foretakUtland.forEach((foretak) => {
+      virksomhetsListe.push({ kode: foretak.uuid, term: foretak.navn });
+    });
+    ekstraArbeidsgivere.forEach((ekstraArbeidsgiver) => {
+      virksomhetsListe.push({ kode: ekstraArbeidsgiver.orgnr, term: ekstraArbeidsgiver.navn });
+    });
+    return virksomhetsListe;
+  }
+);
+
 /** Finner alle organisasjonsnummer som er listet i arbeidsforhold.
  * Det er range i arbeidsforhold som avgjør hvilke organisasjoner som selectoren
  * regner som relevante å vise.
