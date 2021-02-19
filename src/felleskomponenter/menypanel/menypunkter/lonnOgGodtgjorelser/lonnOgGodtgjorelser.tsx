@@ -15,71 +15,83 @@ import EditerbartElement, { Status } from "../editerbartElement";
 
 import "./lonnOgGodtgjorelser.css";
 
-const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
-const lonnOgGodtgjorelseSelector = (state: RootState) => soknadFormValueSelector(state, "loennOgGodtgjoerelse");
+const BooleanFeltRedigerer = ({ tekst, feltNavn }: { tekst: string; feltNavn: string }) => {
+  const navn = Utils._uuid();
 
-const mapStateToProps = (state: RootState) => ({
-  // todo
-  lonnOgNaturalytelser: lonnOgGodtgjorelseSelector(state),
-  arbeidsgiveravgiftOgTrygdeavgift: lonnOgGodtgjorelseSelector(state),
-});
-
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type LonnOgGodtgjorelserProps = {
-  visArbeidsforholdRolleEtiketter: boolean;
-  redigerbart: boolean;
-  behandlingsgrunnlagEtikett: ReactNode;
-};
-
-const LonnOgGodtgjorelser = connector((props: /* todo */ PropsFromRedux & LonnOgGodtgjorelserProps) => (
-  <Nav.Container fluid className="lonnOgGodtgjorelser">
-    <Nav.Row className="tittel">
+  return (
+    <Nav.Row>
       <Nav.Column xs="12">
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
-          {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-        </Nav.typo.Innholdstittel>
-        <span>{props.behandlingsgrunnlagEtikett}</span>
-        {/* todo toggle og margin og listecomp?? */}
-        {props.visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
-        <LonnOgNaturalytelser redigerbart={props.redigerbart} {...props.lonnOgNaturalytelser} />
-        <ArbeidsgiveravgiftOgTrygdeavgift redigerbart={props.redigerbart} {...props.arbeidsgiveravgiftOgTrygdeavgift} />
+        <Nav.Fieldset legend={tekst} className="boolean-felt-redigerer">
+          <Skjema.Radio
+            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
+            label="Ja"
+            value
+            id={`${navn}.${BOOLSK_STRING.SANN}`}
+            disabled={false}
+            /*
+            todo redigerbart
+*/
+          />
+          <Skjema.Radio
+            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
+            label="Nei"
+            value={false}
+            id={`${navn}.${BOOLSK_STRING.USANN}`}
+            disabled={false}
+          />
+        </Nav.Fieldset>
       </Nav.Column>
     </Nav.Row>
-  </Nav.Container>
-));
-
-type LonnOgNaturalytelserProps = {
-  norskArbgUtbetalerLoenn: boolean;
-  erArbeidstakerAnsattHelePerioden: boolean;
-  utlArbgUtbetalerLoenn: boolean;
-  bruttoLoennPerMnd: number;
-  bruttoLoennUtlandPerMnd: number;
-  mottarNaturalytelser: boolean;
-  samletVerdiNaturalytelser: number;
-  utlArbTilhoererSammeKonsern: boolean;
+  );
 };
 
-const symbolsynlighetMap = new Map([
-  [Status.Redigerer, { bin: false, pencil: false }],
-  [Status.IngenData, { bin: false, pencil: false }],
-  [Status.RedigeringUtfort, { bin: false, pencil: true }],
-] as const);
-
-const LonnOgNaturalytelser = (props: LonnOgNaturalytelserProps & { redigerbart: boolean }) => (
-  <EditerbartElement
-    redigerbart={props.redigerbart}
-    harData
-    tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.lonnOgNaturalytelser}
-    hentNyStatusVedHarData={false}
-    onBinClick={() => {}}
-    visLagreKnapp
-    symbolsynlighetMap={symbolsynlighetMap}
-    redigererRender={() => <LonnOgNaturalytelserRedigerer />}
-    redigeringUtfortRender={() => <LonnOgNaturalytelserRedigeringUtfort {...props} />}
-  />
+const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: { tekst: string; verdi: boolean | null }) => (
+  <Nav.Row>
+    <Nav.Column xs="12" className="boolean-felt-redigerering-utfort">
+      <Nav.typo.Normaltekst>{tekst}</Nav.typo.Normaltekst>
+      <Nav.typo.Element>{verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}</Nav.typo.Element>
+    </Nav.Column>
+  </Nav.Row>
 );
+
+// todo ingen input -> null - ikke 0
+const InntektRedigerer = ({ tittel, feltNavn }: { tittel: string; feltNavn: string }) => (
+  <Nav.Column xs="4" className="inntekt-redigerer">
+    {/*
+    <Nav.typo.Normaltekst>kr</Nav.typo.Normaltekst>
+*/}
+    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} bredde="S" datoFelt={false} />
+  </Nav.Column>
+);
+
+const InntektRedigeringUtfort = ({ tittel, verdi }: { tittel: string; verdi: number | null }) => {
+  /*
+  const skalRendreInntekt: boolean = verdi !== null && !isNaN(verdi);
+  const formaterVerdi = () => Intl.NumberFormat("NO-nb", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  }).format(verdi)
+*/
+
+  return (
+    <Nav.Column xs="4" className="inntekt-redigering-utfort">
+      <Nav.typo.Normaltekst>{tittel}</Nav.typo.Normaltekst>
+      <Nav.typo.Undertittel className="inntekt-undertittel">
+        {verdi === null || Number.isNaN(verdi) ? ( // todo isNaN finnes
+          "-"
+        ) : (
+          <>
+            {Intl.NumberFormat("NO-nb", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            }).format(verdi)}
+            <Ikoner.Inntekt className="inntekt-ikon" />
+          </>
+        )}
+      </Nav.typo.Undertittel>
+    </Nav.Column>
+  );
+};
 
 const LonnOgNaturalytelserRedigerer = () => {
   return (
@@ -160,22 +172,34 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
   </>
 );
 
-type ArbeidsgiveravgiftOgTrygdeavgiftProps = {
-  erArbeidsgiveravgiftHelePerioden: boolean;
-  erTrukketTrygdeavgift: boolean;
+type LonnOgNaturalytelserProps = {
+  norskArbgUtbetalerLoenn: boolean;
+  erArbeidstakerAnsattHelePerioden: boolean;
+  utlArbgUtbetalerLoenn: boolean;
+  bruttoLoennPerMnd: number;
+  bruttoLoennUtlandPerMnd: number;
+  mottarNaturalytelser: boolean;
+  samletVerdiNaturalytelser: number;
+  utlArbTilhoererSammeKonsern: boolean;
 };
 
-const ArbeidsgiveravgiftOgTrygdeavgift = (props: ArbeidsgiveravgiftOgTrygdeavgiftProps & { redigerbart: boolean }) => (
+const symbolsynlighetMap = new Map([
+  [Status.Redigerer, { bin: false, pencil: false }],
+  [Status.IngenData, { bin: false, pencil: false }],
+  [Status.RedigeringUtfort, { bin: false, pencil: true }],
+] as const);
+
+const LonnOgNaturalytelser = (props: LonnOgNaturalytelserProps & { redigerbart: boolean }) => (
   <EditerbartElement
     redigerbart={props.redigerbart}
     harData
-    tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
+    tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.lonnOgNaturalytelser}
     hentNyStatusVedHarData={false}
     onBinClick={() => {}}
-    symbolsynlighetMap={symbolsynlighetMap}
     visLagreKnapp
-    redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer />}
-    redigeringUtfortRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort {...props} />}
+    symbolsynlighetMap={symbolsynlighetMap}
+    redigererRender={() => <LonnOgNaturalytelserRedigerer />}
+    redigeringUtfortRender={() => <LonnOgNaturalytelserRedigeringUtfort {...props} />}
   />
 );
 
@@ -212,82 +236,58 @@ const ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort = ({
   </Nav.Row>
 );
 
-const BooleanFeltRedigerer = ({ tekst, feltNavn }: { tekst: string; feltNavn: string }) => {
-  const navn = Utils._uuid();
+type ArbeidsgiveravgiftOgTrygdeavgiftProps = {
+  erArbeidsgiveravgiftHelePerioden: boolean;
+  erTrukketTrygdeavgift: boolean;
+};
 
-  return (
-    <Nav.Row>
+const ArbeidsgiveravgiftOgTrygdeavgift = (props: ArbeidsgiveravgiftOgTrygdeavgiftProps & { redigerbart: boolean }) => (
+  <EditerbartElement
+    redigerbart={props.redigerbart}
+    harData
+    tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
+    hentNyStatusVedHarData={false}
+    onBinClick={() => {}}
+    symbolsynlighetMap={symbolsynlighetMap}
+    visLagreKnapp
+    redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer />}
+    redigeringUtfortRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort {...props} />}
+  />
+);
+
+const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
+const lonnOgGodtgjorelseSelector = (state: RootState) => soknadFormValueSelector(state, "loennOgGodtgjoerelse");
+
+const mapStateToProps = (state: RootState) => ({
+  // todo
+  lonnOgNaturalytelser: lonnOgGodtgjorelseSelector(state),
+  arbeidsgiveravgiftOgTrygdeavgift: lonnOgGodtgjorelseSelector(state),
+});
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type LonnOgGodtgjorelserProps = {
+  visArbeidsforholdRolleEtiketter: boolean;
+  redigerbart: boolean;
+  behandlingsgrunnlagEtikett: ReactNode;
+};
+
+const LonnOgGodtgjorelser = connector((props: /* todo */ PropsFromRedux & LonnOgGodtgjorelserProps) => (
+  <Nav.Container fluid className="lonnOgGodtgjorelser">
+    <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.Fieldset legend={tekst} className="boolean-felt-redigerer">
-          <Skjema.Radio
-            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
-            label="Ja"
-            value
-            id={`${navn}.${BOOLSK_STRING.SANN}`}
-            disabled={false}
-            /*
-            todo redigerbart
-*/
-          />
-          <Skjema.Radio
-            feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
-            label="Nei"
-            value={false}
-            id={`${navn}.${BOOLSK_STRING.USANN}`}
-            disabled={false}
-          />
-        </Nav.Fieldset>
+        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+          {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
+        </Nav.typo.Innholdstittel>
+        <span>{props.behandlingsgrunnlagEtikett}</span>
+        {/* todo toggle og margin og listecomp?? */}
+        {props.visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+        <LonnOgNaturalytelser redigerbart={props.redigerbart} {...props.lonnOgNaturalytelser} />
+        <ArbeidsgiveravgiftOgTrygdeavgift redigerbart={props.redigerbart} {...props.arbeidsgiveravgiftOgTrygdeavgift} />
       </Nav.Column>
     </Nav.Row>
-  );
-};
-
-const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: { tekst: string; verdi: boolean | null }) => (
-  <Nav.Row>
-    <Nav.Column xs="12" className="boolean-felt-redigerering-utfort">
-      <Nav.typo.Normaltekst>{tekst}</Nav.typo.Normaltekst>
-      <Nav.typo.Element>{verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}</Nav.typo.Element>
-    </Nav.Column>
-  </Nav.Row>
-);
-
-// todo ingen input -> null - ikke 0
-const InntektRedigerer = ({ tittel, feltNavn }: { tittel: string; feltNavn: string }) => (
-  <Nav.Column xs="4" className="inntekt-redigerer">
-    {/*
-    <Nav.typo.Normaltekst>kr</Nav.typo.Normaltekst>
-*/}
-    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} bredde="S" datoFelt={false} />
-  </Nav.Column>
-);
-
-const InntektRedigeringUtfort = ({ tittel, verdi }: { tittel: string; verdi: number | null }) => {
-  /*
-  const skalRendreInntekt: boolean = verdi !== null && !isNaN(verdi);
-  const formaterVerdi = () => Intl.NumberFormat("NO-nb", {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-  }).format(verdi)
-*/
-
-  return (
-    <Nav.Column xs="4" className="inntekt-redigering-utfort">
-      <Nav.typo.Normaltekst>{tittel}</Nav.typo.Normaltekst>
-      <Nav.typo.Undertittel className="inntekt-undertittel">
-        {verdi === null || Number.isNaN(verdi) ? ( // todo isNaN finnes
-          "-"
-        ) : (
-          <>
-            {Intl.NumberFormat("NO-nb", {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(verdi)}
-            <Ikoner.Inntekt className="inntekt-ikon" />
-          </>
-        )}
-      </Nav.typo.Undertittel>
-    </Nav.Column>
-  );
-};
+  </Nav.Container>
+));
 
 export default LonnOgGodtgjorelser;
