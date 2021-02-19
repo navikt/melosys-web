@@ -66,6 +66,35 @@ const mapStateToProps = (state: RootState) => ({
     andelKontrakterINorge:
       Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
     ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
+    loennOgGodtgjoerelse: {
+      norskArbgUtbetalerLoenn: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).norskArbgUtbetalerLoenn,
+      erArbeidstakerAnsattHelePerioden: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state)
+        .erArbeidstakerAnsattHelePerioden,
+      utlArbgUtbetalerLoenn: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).utlArbgUtbetalerLoenn,
+      // todo rydd i parsing
+      bruttoLoennPerMnd: Number.isNaN(
+        parseFloat(behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennPerMnd)
+      )
+        ? null
+        : parseFloat(behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennPerMnd),
+      bruttoLoennUtlandPerMnd: Number.isNaN(
+        parseFloat(behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennUtlandPerMnd)
+      )
+        ? null
+        : parseFloat(behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennUtlandPerMnd),
+      mottarNaturalytelser: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).mottarNaturalytelser,
+      samletVerdiNaturalytelser: Number.isNaN(
+        parseFloat(behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser)
+      )
+        ? null
+        : parseFloat(behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser),
+      utlArbTilhoererSammeKonsern: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state)
+        .utlArbTilhoererSammeKonsern,
+      erArbeidsgiveravgiftHelePerioden: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state)
+        .erArbeidsgiveravgiftHelePerioden,
+      erTrukketTrygdeavgift: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).erTrukketTrygdeavgift,
+    },
+    // loennOgGodtgjoerelse: behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state),
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom
     ),

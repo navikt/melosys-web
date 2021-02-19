@@ -45,7 +45,13 @@ class LinkGroupsFactory {
       case ARBEID_ETT_LAND_ØVRIG:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
         return new LinkgroupsBuilder()
-          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegisterOgSoknad(
+            new LinksBuilder(contentProps)
+              .addLonnOgGodtgjorelser() // todo rekkefølge
+              .addPerson()
+              .addFamilieForhold()
+              .build()
+          )
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )

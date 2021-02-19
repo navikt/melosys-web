@@ -242,6 +242,26 @@ export default function reducer(state = initialState, action) {
                 : foretak.fortsetterEtterArbeidIUtlandet,
             })),
           },
+
+          loennOgGodtgjoerelse: {
+            norskArbgUtbetalerLoenn: dokument.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn,
+            erArbeidstakerAnsattHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidstakerAnsattHelePerioden,
+            utlArbgUtbetalerLoenn: dokument.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn,
+            // todo rydd i parsing
+            bruttoLoennPerMnd: Number.isNaN(parseFloat(dokument.loennOgGodtgjoerelse.bruttoLoennPerMnd))
+              ? null
+              : parseFloat(dokument.loennOgGodtgjoerelse.bruttoLoennPerMnd),
+            bruttoLoennUtlandPerMnd: Number.isNaN(parseFloat(dokument.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd))
+              ? null
+              : parseFloat(dokument.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd),
+            mottarNaturalytelser: dokument.loennOgGodtgjoerelse.mottarNaturalytelser,
+            samletVerdiNaturalytelser: Number.isNaN(parseFloat(dokument.loennOgGodtgjoerelse.samletVerdiNaturalytelser))
+              ? null
+              : parseFloat(dokument.loennOgGodtgjoerelse.samletVerdiNaturalytelser),
+            utlArbTilhoererSammeKonsern: dokument.loennOgGodtgjoerelse.utlArbTilhoererSammeKonsern,
+            erArbeidsgiveravgiftHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden,
+            erTrukketTrygdeavgift: dokument.loennOgGodtgjoerelse.erTrukketTrygdeavgift,
+          },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [
