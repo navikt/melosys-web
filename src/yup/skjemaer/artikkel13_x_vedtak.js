@@ -15,10 +15,12 @@ const artikkel13_x_vedtak = object().shape({
       .erGyldigDato({ melding: "Gyldig dato kreves" })
       .required({ melding: "Dato kreves" }),
   }),
-  vedtakstype: string().when("$behandlingstype", {
-    is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-    then: string().nullable().required(VELG_EN_VEDTAKSTYPE),
-  }),
+  vedtakstype: string()
+    .nullable()
+    .when("$behandlingstype", {
+      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: string().nullable().required(VELG_EN_VEDTAKSTYPE),
+    }),
   vedtakstypebegrunnelse: string().when("$behandlingstype", {
     is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
     then: string().required(OPPGI_BEGRUNNELSE),
