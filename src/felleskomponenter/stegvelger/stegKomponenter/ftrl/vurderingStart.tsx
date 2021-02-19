@@ -74,9 +74,14 @@ const VurderingStart = ({
   oppdaterTrygdedekning,
   trygdedekninger,
   lagreBehandlingsgrunnlag,
+  initialValues,
 }: Props & PropsFromRedux) => {
   const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
   const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
+  const [initialFomTom, setInitialFomTom] = useState<{ fom: string | undefined; tom: string | undefined }>({
+    fom: undefined,
+    tom: undefined,
+  });
 
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
@@ -84,6 +89,13 @@ const VurderingStart = ({
       {hjelpetekst}
     </Nav.Hjelpetekst>
   );
+
+  useEffect(() => {
+    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+      visMenypanel();
+      setInitialFomTom({ fom: initialValues.fom, tom: initialValues.tom });
+    }
+  }, []);
 
   const oppdaterLokalBehandlingsgrunnlag = async (erFelteneGyldig: boolean) => {
     const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
@@ -113,11 +125,15 @@ const VurderingStart = ({
   const fortsettHandle = () => {
     oppdaterLokalBehandlingsgrunnlag(erObligatoriskeFelterFyltInn);
     if (erObligatoriskeFelterFyltInn) {
-      const fortsett = () => {
+      if (formValues.fom !== initialFomTom.fom || formValues.tom !== initialFomTom.tom) {
+        setInitialFomTom({ fom: formValues.fom, tom: formValues.tom });
+        visOppfriskDialogOgFortsettHandle(() => {
+          bekreft();
+          visMenypanel();
+        });
+      } else {
         bekreft();
-        visMenypanel();
-      };
-      visOppfriskDialogOgFortsettHandle(fortsett);
+      }
     }
   };
 
