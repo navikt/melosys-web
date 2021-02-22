@@ -76,7 +76,7 @@ const VurderingRepresentant = ({
   useEffect(() => {
     Api.Representant.hentRepresentantListe()
       .then((liste: Api.Representant.Representant[]) => {
-        setRepresentantListe(liste.sort((a, b) => Utils.streng.compareObjektByFelt(a, b, "nummer")));
+        setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
       })
       .catch(Utils.logger.error);
     Api.Representant.hentValgtRepresentant(behandlingID)
