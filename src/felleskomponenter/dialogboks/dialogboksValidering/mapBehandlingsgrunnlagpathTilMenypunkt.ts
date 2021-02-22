@@ -5,18 +5,20 @@ import * as Utils from "../../../utils";
 
 const feltMap = {
   behandlingsgrunnlag: {
-    arbeidUtland: {
-      foretakNavn: "Navn",
-      foretakOrgnr: "Org.nr.",
-      arbeidUtlandHjemmekontor: "Arbeid utland hjemmekontor",
-      adresse: {
-        gatenavn: "Gateadresse",
-        husnummer: "Husnummer",
-        landkode: "Land",
-        postnummer: "Postnummer",
-        poststed: "Poststed",
-        region: "Region",
+    arbeidPaaLand: {
+      fysiskeArbeidssteder: {
+        virksomhetNavn: "Navn",
+        adresse: {
+          gatenavn: "Gateadresse",
+          husnummer: "Husnummer",
+          landkode: "Land",
+          postnummer: "Postnummer",
+          poststed: "Poststed",
+          region: "Region",
+        },
       },
+      erHjemmekontor: "Hjemmekontor",
+      erFastArbeidssted: "Fast arbeidssted",
     },
     foretakUtland: {
       navn: "Navn på virksomheten",
@@ -35,11 +37,16 @@ const feltMap = {
 
 const overordnetFeltMap = {
   behandlingsgrunnlag: {
-    arbeidUtland: KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand,
+    arbeidPaaLand: KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand,
     foretakUtland: KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
     maritimtArbeid: `${KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore}/${KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip}`,
     luftfartBaser: KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedFly,
   },
+};
+
+const hentIndexPosisjonFraOverordnetFeltPath = (overordnetFeltPath: string) => {
+  if (overordnetFeltPath === "behandlingsgrunnlag.arbeidPaaLand") return 3;
+  return 2;
 };
 
 const mapBehandlingsgrunnlagpathTilMenypunkt = (
@@ -56,7 +63,10 @@ const mapBehandlingsgrunnlagpathTilMenypunkt = (
   const feltPathUtenIndeks = objectPath.stringify(pathTokens.filter((value) => isNaN(Number(value))));
 
   const menypunkt = Utils._get(overordnetFeltMap, overordnetFeltPath);
-  const index = !isNaN(Number(pathTokens[2])) ? parseInt(pathTokens[2], 10) : null;
+
+  const indexPosisjon = hentIndexPosisjonFraOverordnetFeltPath(overordnetFeltPath);
+  const index = !isNaN(Number(pathTokens[indexPosisjon])) ? parseInt(pathTokens[indexPosisjon], 10) : null;
+
   const felt = Utils._get(feltMap, feltPathUtenIndeks);
 
   return {

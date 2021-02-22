@@ -43,19 +43,24 @@ describe("VurderingVurderarbeidsland", () => {
 });
 
 describe("LandLinje", () => {
-  const props = {
-    landKode: MKV.KTObjects.landkoder.find(({ kode }) => kode === MKV.Koder.landkoder.DE),
-    avklartMarginaltArbeidILand: { fakta: ["TRUE"] },
-    oppdaterData: jest.fn(),
-    redigerbart: true,
-    resetForm: jest.fn(),
-  };
-
   describe("ved klikk på checkbox", () => {
-    const landLinje = shallow(<LandLinje {...props} />);
-    const checkbox = landLinje.find(Mui.Checkbox);
-    const checkboxOnCheck = checkbox.props().onCheck;
-    checkboxOnCheck();
+    let props = null;
+
+    beforeEach(() => {
+      props = {
+        landKode: MKV.KTObjects.landkoder.find(({ kode }) => kode === MKV.Koder.landkoder.DE),
+        avklartMarginaltArbeidILand: { fakta: ["TRUE"] },
+        oppdaterData: jest.fn(),
+        redigerbart: true,
+        resetForm: jest.fn(),
+      };
+
+      const landLinje = shallow(<LandLinje {...props} />);
+      const checkbox = landLinje.find(Mui.Checkbox);
+      const checkboxOnCheck = checkbox.props().onCheck;
+
+      checkboxOnCheck();
+    });
 
     it("lagrer marginalt arbeid avklartfakta", () => {
       expect(props.oppdaterData).toHaveBeenCalledTimes(1);

@@ -113,24 +113,25 @@ export default function reducer(state = initialState, action) {
         })),
       ];
 
-      const lagMaritimtArbeidAvArbeidsstedOffshore = (arbeidssted) => ({
-        enhetNavn: arbeidssted.enhetNavn || null,
-        fartsomradeKode: arbeidssted.fartsomradeKode || null,
-        flaggLandkode: arbeidssted.flaggLandkode || null,
-        installasjonsLandkode: arbeidssted.installasjonsLandkode || "",
-        territorialfarvann: arbeidssted.territorialfarvann || null,
-        foretakNavn: arbeidssted.foretakNavn || null,
-        foretakOrgnr: arbeidssted.foretakOrgnr || null,
+      const lagMaritimtArbeidAvArbeidsstedOffshore = (arbeidsstedOffshore) => ({
+        enhetNavn: arbeidsstedOffshore.enhetNavn || null,
+        fartsomradeKode: null,
+        flaggLandkode: null,
+        /**
+         * innretningLandkode brukes for å skille mellom offshore og skip - skip vil alltid ha null for innretningLandkode, offshore vil alltid ha en string.
+         */
+        innretningLandkode: arbeidsstedOffshore.innretningLandkode || "",
+        territorialfarvann: null,
+        innretningstype: arbeidsstedOffshore.innretningstype || null,
       });
 
-      const lagMaritimtArbeidAvArbeidsstedSkip = (arbeidssted) => ({
-        enhetNavn: arbeidssted.enhetNavn || null,
-        fartsomradeKode: arbeidssted.fartsomradeKode || null,
-        flaggLandkode: arbeidssted.flaggLandkode || null,
-        installasjonsLandkode: arbeidssted.installasjonsLandkode || null,
-        territorialfarvann: arbeidssted.territorialfarvann || null,
-        foretakNavn: arbeidssted.foretakNavn || null,
-        foretakOrgnr: arbeidssted.foretakOrgnr || null,
+      const lagMaritimtArbeidAvArbeidsstedSkip = (arbeidsstedSkip) => ({
+        enhetNavn: arbeidsstedSkip.enhetNavn || null,
+        fartsomradeKode: arbeidsstedSkip.fartsomradeKode || null,
+        flaggLandkode: arbeidsstedSkip.flaggLandkode || null,
+        innretningLandkode: null,
+        territorialfarvann: arbeidsstedSkip.territorialfarvann || null,
+        innretningstype: null,
       });
 
       const maritimtArbeid = [
@@ -155,21 +156,25 @@ export default function reducer(state = initialState, action) {
             inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
             inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
           },
-          arbeidUtland: dokument.arbeidUtland.map((arbeidUtland) => ({
-            adresse: {
-              gatenavn: arbeidUtland.adresse.gatenavn || null,
-              husnummer: arbeidUtland.adresse.husnummer || null,
-              landkode: arbeidUtland.adresse.landkode || null,
-              postnummer: arbeidUtland.adresse.postnummer || null,
-              poststed: arbeidUtland.adresse.poststed || null,
-              region: arbeidUtland.adresse.region || null,
-            },
-            foretakNavn: arbeidUtland.foretakNavn || null,
-            foretakOrgnr: arbeidUtland.foretakOrgnr || null,
-            arbeidUtlandHjemmekontor: Utils._isNil(arbeidUtland.arbeidUtlandHjemmekontor)
+          arbeidPaaLand: {
+            fysiskeArbeidssteder: dokument.arbeidPaaLand.fysiskeArbeidssteder.map((arbeidPaaLand) => ({
+              adresse: {
+                gatenavn: arbeidPaaLand.adresse.gatenavn || null,
+                husnummer: arbeidPaaLand.adresse.husnummer || null,
+                landkode: arbeidPaaLand.adresse.landkode || null,
+                postnummer: arbeidPaaLand.adresse.postnummer || null,
+                poststed: arbeidPaaLand.adresse.poststed || null,
+                region: arbeidPaaLand.adresse.region || null,
+              },
+              virksomhetNavn: arbeidPaaLand.virksomhetNavn,
+            })),
+            erHjemmekontor: Utils._isNil(dokument.arbeidPaaLand.erHjemmekontor)
               ? null
-              : arbeidUtland.arbeidUtlandHjemmekontor,
-          })),
+              : dokument.arbeidPaaLand.erHjemmekontor,
+            erFastArbeidssted: Utils._isNil(dokument.arbeidPaaLand.erFastArbeidssted)
+              ? null
+              : dokument.arbeidPaaLand.erFastArbeidssted,
+          },
           juridiskArbeidsgiverNorge: {
             antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
             antallAdmAnsatte: dokument.antallAdmAnsatte ? strengTilInt(dokument.antallAdmAnsatte) : null,

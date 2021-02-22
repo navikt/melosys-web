@@ -10,7 +10,7 @@ describe("EditerbartElementListe", () => {
 
   beforeEach(() => {
     props = {
-      feltNavn: "arbeidUtland",
+      feltNavn: "arbeidPaaLand",
     };
   });
 

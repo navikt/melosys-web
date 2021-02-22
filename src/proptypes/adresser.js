@@ -36,6 +36,7 @@ const MidlertidigAdressePropType = PT.shape({
 
 export {
   GeneriskAdressePropType as GeneriskAdresse,
+  StrukturertAdressePropType as StrukturertAdresse,
   UstrukturertAdressePropType as UstrukturertAdresse,
   MidlertidigAdressePropType as MidlertidigAdresse,
 };

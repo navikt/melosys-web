@@ -9,7 +9,7 @@ import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
 import { kodeTilObjekt } from "../../kodeverk";
-import { VedleggVelger } from "./VedleggVelger";
+import VedleggVelger from "../vedleggvelger";
 import MultiSelect from "../multiSelect";
 
 import "./sideDialogOpprettNyBuc.css";
@@ -233,7 +233,8 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             feil={feil("mottakerinstitusjoner")}
             values={valgteMottakerinstitusjoner}
           />
-          <VedleggVelger valgteVedlegg={valgteVedlegg} setValgteVedlegg={setValgteVedlegg} dokumenter={dokumenter} />
+          <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
+          <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
             Opprett ny BUC
           </Nav.Hovedknapp>

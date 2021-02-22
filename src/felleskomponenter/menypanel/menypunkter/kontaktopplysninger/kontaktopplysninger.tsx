@@ -125,7 +125,7 @@ export const KontaktOpplysninger = ({
         </Nav.Row>
       </Nav.Fieldset>
       {sokeResultat && <OrganisasjonsAdresse visTittel={false} className="adresse" organisasjon={sokeResultat} />}
-      <Mui.Knapp className="slett__knapp" capitalCase disabled={!redigerbart} mini onClick={onSlettKnappClick}>
+      <Mui.Knapp className="slett__knapp" disabled={!redigerbart} mini onClick={onSlettKnappClick}>
         Slett kontaktopplysninger
       </Mui.Knapp>
     </div>

@@ -22,10 +22,6 @@ export const MottakerinstitusjonvelgerSchema = ({
   data_cy,
   ...rest
 }) => {
-  if (landkode === MKV.Koder.landkoder.NO) {
-    return null;
-  }
-
   const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, [landkode]);
   const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [
     landkode,
@@ -39,6 +35,10 @@ export const MottakerinstitusjonvelgerSchema = ({
       oppdaterKreverMottakerinstitusjon(undefined);
     };
   }, [mottakerinstitusjoner]);
+
+  if (landkode === MKV.Koder.landkoder.NO) {
+    return null;
+  }
 
   if (Utils._isEmpty(mottakerinstitusjoner) || !redigerbart) {
     return null;

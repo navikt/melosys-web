@@ -5,8 +5,8 @@ import { ReactComponent as Arbeidsgiver } from "./ikon-arbeidsgiver.svg";
 import { ReactComponent as Arbeidsforhold } from "./ikon-arbeidsforhold.svg";
 import { ReactComponent as Bin } from "./bin-small.svg";
 import { ReactComponent as Binders } from "./paperclip.svg";
-import { ReactComponent as Blyant_Active } from "./blyant-active.svg";
-import { ReactComponent as Blyant_Disabled } from "./blyant-disabled.svg";
+import { ReactComponent as BlyantActive } from "./blyant-active.svg";
+import { ReactComponent as BlyantDisabled } from "./blyant-disabled.svg";
 import { ReactComponent as BrevSendt } from "./emailsend.svg";
 import { ReactComponent as Building } from "./building.svg";
 import { ReactComponent as Calendar } from "./calendar.svg";
@@ -26,7 +26,7 @@ import { ReactComponent as InformationCircle } from "./infomationcircle.svg";
 import { ReactComponent as IkonSak } from "./ikon-sak.svg";
 import { ReactComponent as Inntekt } from "./ikon-inntekt.svg";
 import { ReactComponent as Kalkulator } from "./kalkulator.svg";
-import { ReactComponent as Kalkulator_Disabled } from "./kalkulator-disabled.svg";
+import { ReactComponent as KalkulatorDisabled } from "./kalkulator-disabled.svg";
 import { ReactComponent as Kvinne } from "./ikon-kvinne.svg";
 import { ReactComponent as Kontor } from "./kontor.svg";
 import { ReactComponent as Man } from "./man.svg";
@@ -56,8 +56,8 @@ export {
   Arbeidsforhold,
   Bin,
   Binders,
-  Blyant_Active,
-  Blyant_Disabled,
+  BlyantActive,
+  BlyantDisabled,
   BrevSendt as InnBrev,
   Building,
   Calendar,
@@ -77,7 +77,7 @@ export {
   InformationCircle,
   Inntekt,
   Kalkulator,
-  Kalkulator_Disabled,
+  KalkulatorDisabled,
   Kvinne,
   Kontor,
   Kopier,

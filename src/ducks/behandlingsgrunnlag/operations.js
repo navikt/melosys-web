@@ -13,24 +13,24 @@ import { behandlingerSelectors } from "../behandlinger";
 import { OrganisasjonOperations } from "../organisasjoner";
 
 export function hent(behandlingID) {
-  return (dispatch, getState) => {
-    const thunk = doThenDispatch(
-      () => Api.Behandlingsgrunnlag.hent(behandlingID),
-      {
-        OK: Types.OK,
-        FEILET: Types.FEILET,
-        PENDING: Types.PENDING,
-      },
-      {
-        success: () =>
-          [
-            ...Selectors.EkstraArbeidsgivereSelector(getState()),
-            ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(getState()),
-          ].forEach((orgnr) => dispatch(OrganisasjonOperations.hent(orgnr))),
-      }
-    );
+  return async (dispatch, getState) => {
+    const doThenDispatchResult = doThenDispatch(() => Api.Behandlingsgrunnlag.hent(behandlingID), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    });
+    const dispatchedBehandlingsgrunnlagAction = await doThenDispatchResult(dispatch, getState);
 
-    return thunk(dispatch, getState);
+    const ekstraOrganisasjoner = [
+      ...Selectors.EkstraArbeidsgivereSelector(getState()),
+      ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(getState()),
+    ];
+    const ekstraOrganisasjonerPromises = ekstraOrganisasjoner.map((orgnr) =>
+      dispatch(OrganisasjonOperations.hent(orgnr))
+    );
+    await Promise.all(ekstraOrganisasjonerPromises);
+
+    return dispatchedBehandlingsgrunnlagAction;
   };
 }
 
@@ -80,7 +80,7 @@ export function oppdaterState() {
 const lagBehandlingsgrunnlagFelter = (behandlingsgrunnlag) => ({
   juridiskArbeidsgiverNorge: behandlingsgrunnlag.juridiskArbeidsgiverNorge,
   personOpplysninger: behandlingsgrunnlag.personOpplysninger,
-  arbeidUtland: behandlingsgrunnlag.arbeidUtland,
+  arbeidPaaLand: behandlingsgrunnlag.arbeidPaaLand,
   foretakUtland: behandlingsgrunnlag.foretakUtland,
   oppholdUtland: behandlingsgrunnlag.oppholdUtland,
   bosted: behandlingsgrunnlag.bosted,

@@ -1,8 +1,18 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from "prop-types";
-import { ArbeidUtland } from "./arbeidUtland";
 import { Periode } from "./periode";
+import { StrukturertAdresse } from "./adresser";
 
+const ArbeidPaaLandPropType = PT.shape({
+  fysiskeArbeidssteder: PT.arrayOf(
+    PT.shape({
+      adresse: StrukturertAdresse,
+      virksomhetNavn: PT.string,
+    })
+  ),
+  erHjemmekontor: PT.bool,
+  erFastArbeidssted: PT.bool,
+});
 const JuridiskArbeidsgiverNorgePropType = PT.shape({
   andelKontrakterINorge: PT.number,
   andelRekruttertINorge: PT.number,
@@ -34,9 +44,10 @@ const MaritimtArbeidPropType = PT.arrayOf(
   PT.shape({
     fartsomradeKode: PT.string,
     flaggLandkode: PT.string,
-    installasjonsLandkode: PT.string,
+    innretningLandkode: PT.string,
     navn: PT.string,
     territorialfarvann: PT.string,
+    innretningstype: PT.string,
   })
 );
 const OppholdUtlandPropType = PT.shape({
@@ -70,7 +81,7 @@ const SoeknadslandPropType = PT.shape({
 
 const BehandlingsgrunnnlagDataPropType = PT.shape({
   juridiskArbeidsgiverNorge: JuridiskArbeidsgiverNorgePropType,
-  arbeidUtland: ArbeidUtland,
+  arbeidPaaLand: ArbeidPaaLandPropType,
   bosted: BostedPropType,
   foretakUtland: ForetakUtlandPropType,
   maritimtArbeid: MaritimtArbeidPropType,

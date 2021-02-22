@@ -90,9 +90,8 @@ const TrygdeavgiftsgrunnlagComponent = ({
 }: TrygdeavgiftsgrunnlagProps) => {
   const Hjelpetekst = () => (
     <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Under}>
-      {
-        'Du skal velge "ja" dersom søker tilhører en spesiell gruppe og det kan ha betydning for trygdeavgiften. Dette gjelder følgende grupper:'
-      }
+      Du skal velge &quot;ja&quot; dersom søker tilhører en spesiell gruppe og det kan ha betydning for trygdeavgiften.
+      Dette gjelder følgende grupper:
       <ul>
         <li>Ansatte i FN som betaler staff assessment</li>
         <li>Misjonærer som skal arbeide i utlandet i minst to år</li>
@@ -350,7 +349,7 @@ const TrygdeavgiftsgrunnlagComponent = ({
                   {redigerbart ? (
                     <Ikoner.Kalkulator className="beregn_ikon" />
                   ) : (
-                    <Ikoner.Kalkulator_Disabled className="beregn_ikon" />
+                    <Ikoner.KalkulatorDisabled className="beregn_ikon" />
                   )}
                   <span>Beregn foreløpig trygdeavgift</span>
                 </Nav.Knapp>

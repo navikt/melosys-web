@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import classNames from "classnames";
 import { FysiskDokument } from "Domene";
 
 import * as Nav from "../../utils/navFrontend";
@@ -6,7 +7,7 @@ import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
 
-import PdfLink, { lagPdfUrl } from "./pdfLink";
+import PdfLink, { lagPdfUrl } from "../pdfLink";
 
 import "./VedleggVelger.css";
 
@@ -19,7 +20,7 @@ interface EnkeltVedleggProps {
   redigerer: boolean;
 }
 
-const EnkeltVedlegg = ({
+export const EnkeltVedlegg = ({
   vedlegg,
   leggTilVedlegg,
   fjernVedlegg,
@@ -72,7 +73,7 @@ interface VedleggListeProps {
   onSlettVedlegg: (vedleggID: string) => void;
 }
 
-const VedleggListe = ({
+export const VedleggListe = ({
   valgteVedlegg,
   alleVedlegg,
   redigerer,
@@ -80,7 +81,7 @@ const VedleggListe = ({
   onLeggTil,
   onSlettVedlegg,
 }: VedleggListeProps) => {
-  const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>([]);
+  const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>(valgteVedlegg.map(({ id }) => id));
 
   const markerVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg, vedleggID]);
   const fjernVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg.filter((id) => id !== vedleggID)]);
@@ -150,10 +151,11 @@ const VedleggListe = ({
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: FysiskDokument[];
-  setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void;
+  onChange: (valgteVedlegg: FysiskDokument[]) => void;
+  className?: string;
 }
 
-export const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: VedleggVelgerProps) => {
+const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -167,16 +169,17 @@ export const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: V
 
   const onLeggTilHandler = (markerteVedlegg: string[]) => {
     toggleRedigerer();
-    setValgteVedlegg(dokumenter.filter((v) => markerteVedlegg.includes(v.id)));
+    onChange(dokumenter.filter((v) => markerteVedlegg.includes(v.id)));
   };
 
   const onSlettVedleggHandler = (vedleggID: string) => {
-    setValgteVedlegg(valgteVedlegg.filter(({ id }) => id !== vedleggID));
+    onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
   };
 
+  const cls = classNames(className, "vedleggvelger");
+
   return (
-    <Nav.Row className="vedleggvelger">
-      <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
+    <Nav.Row className={cls}>
       {skalViseVedleggListe && (
         <VedleggListe
           redigerer={redigerer}
@@ -195,3 +198,5 @@ export const VedleggVelger = ({ dokumenter, valgteVedlegg, setValgteVedlegg }: V
     </Nav.Row>
   );
 };
+
+export default VedleggVelger;

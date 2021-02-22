@@ -9,15 +9,15 @@ const { Arbeidssteder, ArbeidsgiverOgVirksomhet } = KV.Menypunkter;
 describe("mapBehandlingsgrunnlagpathTilMenypunkt", () => {
   each([
     [
-      "behandlingsgrunnlag.arbeidUtland[0].foretakNavn",
+      "behandlingsgrunnlag.arbeidPaaLand.fysiskeArbeidssteder[0].virksomhetNavn",
       { menypunkt: Arbeidssteder.undertitler.arbeidsstedLand, entryNr: 1, felt: "Navn" },
     ],
     [
-      "behandlingsgrunnlag.arbeidUtland[0].adresse.gatenavn",
+      "behandlingsgrunnlag.arbeidPaaLand.fysiskeArbeidssteder[0].adresse.gatenavn",
       { menypunkt: Arbeidssteder.undertitler.arbeidsstedLand, entryNr: 1, felt: "Gateadresse" },
     ],
     [
-      "behandlingsgrunnlag.arbeidUtland[1].adresse.landkode",
+      "behandlingsgrunnlag.arbeidPaaLand.fysiskeArbeidssteder[1].adresse.landkode",
       { menypunkt: Arbeidssteder.undertitler.arbeidsstedLand, entryNr: 2, felt: "Land" },
     ],
     [

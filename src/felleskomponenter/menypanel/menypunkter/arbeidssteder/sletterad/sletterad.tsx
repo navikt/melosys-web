@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from "react";
 
-import * as Ikoner from "../../../../../../resources/images";
-import * as Mui from "../../../../../ui";
+import * as Ikoner from "../../../../../resources/images";
+import * as Mui from "../../../../ui";
 
 import "./sletterad.css";
 
@@ -12,7 +12,7 @@ interface SletteradProps {
 const Sletterad = ({ onClick }: SletteradProps) => (
   <div className="sletterad">
     <Mui.Knappelenke onClick={onClick} title="Slett" ikon={Ikoner.Bin} className="slett__knapp">
-      Slett seksjon
+      Slett arbeidssted
     </Mui.Knappelenke>
   </div>
 );

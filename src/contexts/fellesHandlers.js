@@ -16,6 +16,9 @@ import { saksopplysningerOperations } from "../ducks/saksopplysninger";
 import { behandlingerOperations } from "../ducks/behandlinger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
+import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";
+import { anmodningsperioderOperations } from "../ducks/anmodningsperioder";
+import { utpekingsperioderOperations } from "../ducks/utpekingsperioder";
 
 const FellesHandlersContext = React.createContext({});
 export default FellesHandlersContext;
@@ -30,6 +33,7 @@ const FellesHandlersProviderUnconnected = ({
   oppfriskSaksopplysninger,
   lagreBehandlingsgrunnlag,
   saksnummer,
+  sakstype,
   apneTidligereBehandlinger,
   avslaSoknad,
   skjulOppfriskDialogHandle,
@@ -46,6 +50,9 @@ const FellesHandlersProviderUnconnected = ({
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
   tilForsiden,
+  resetLovvalgsperioder,
+  resetAnmodningsperioder,
+  resetUtpekingsperioder,
 }) => {
   const [venterPaRevurderFagsak, setVenterPaRevurderFagsak] = useState(false);
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
@@ -55,7 +62,7 @@ const FellesHandlersProviderUnconnected = ({
     await lagreBehandlingsgrunnlag();
     await oppfriskSaksopplysninger(behandlingID);
     await fjernBehandlingOppfriskes();
-    await lastInnSaksopplysninger(saksnummer, behandlingID);
+    await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
   const startOgVisOppfriskModal = async () => {
@@ -63,7 +70,7 @@ const FellesHandlersProviderUnconnected = ({
     visOppfriskDialogHandle();
     await oppfriskSaksopplysninger(behandlingID);
     await fjernBehandlingOppfriskes();
-    await lastInnSaksopplysninger(saksnummer, behandlingID);
+    await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
   const behandlingOppfriskes = behandlingUnderOppfriskning === behandlingID;
@@ -80,7 +87,7 @@ const FellesHandlersProviderUnconnected = ({
   };
 
   const lagreOgLukk = async () => {
-    await lagreAllData();
+    await lagreAllData(sakstype);
     tilForsiden();
   };
 
@@ -94,7 +101,7 @@ const FellesHandlersProviderUnconnected = ({
       const { behandlingID: nyBehandlingID } = res;
 
       history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
-      lastInnSaksopplysninger(saksnummer, nyBehandlingID);
+      lastInnSaksopplysninger(sakstype, saksnummer, nyBehandlingID);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -115,7 +122,7 @@ const FellesHandlersProviderUnconnected = ({
 
   const henleggHandle = async (data) => {
     try {
-      await lagreAllData();
+      await lagreAllData(sakstype);
       await henleggSak(data);
       skjulHenleggDialogHandle();
       tilForsiden();
@@ -126,7 +133,12 @@ const FellesHandlersProviderUnconnected = ({
 
   const avslaaSoknadHandle = async (data) => {
     try {
-      await lagreAllData();
+      // Hvis perioden er blitt opprettet må den fjernes før avslag.
+      await resetLovvalgsperioder();
+      await resetAnmodningsperioder();
+      await resetUtpekingsperioder();
+
+      await lagreAllData(sakstype);
       avslaSoknad(behandlingID, data);
     } catch (e) {
       Utils.logger.error(e);
@@ -180,6 +192,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   oppfriskSaksopplysninger: PT.func.isRequired,
   lagreBehandlingsgrunnlag: PT.func.isRequired,
   saksnummer: PT.string,
+  sakstype: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
   avslaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
@@ -196,6 +209,9 @@ FellesHandlersProviderUnconnected.propTypes = {
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
   tilForsiden: PT.func.isRequired,
+  resetLovvalgsperioder: PT.func.isRequired,
+  resetAnmodningsperioder: PT.func.isRequired,
+  resetUtpekingsperioder: PT.func.isRequired,
 };
 
 FellesHandlersProviderUnconnected.defaultProps = {
@@ -204,21 +220,23 @@ FellesHandlersProviderUnconnected.defaultProps = {
 
 FellesHandlersProviderUnconnected.defaultProps = {
   saksnummer: undefined,
+  sakstype: undefined,
 };
 
 const mapStateToProps = (state) => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  lagreAllData: (sakstype) => dispatch(datalastingOperations.lagreAllData(sakstype)),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   avslaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaSoknad(behandlingID, data)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
-    dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+  lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
+    dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
   oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
@@ -234,6 +252,9 @@ const mapDispatchToProps = (dispatch) => ({
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
   visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
+  resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
+  resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),
+  resetUtpekingsperioder: () => dispatch(utpekingsperioderOperations.resetUtpekingsperioderState()),
 });
 
 export const FellesHandlersProvider = withRouter(
