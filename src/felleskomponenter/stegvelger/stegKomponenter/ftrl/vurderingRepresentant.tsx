@@ -114,6 +114,8 @@ const VurderingRepresentant = ({
     }
   }, [formValues && formValues.organisasjonsnummer]);
 
+  const debouncedValidering = useCallback(Utils._debounce(setRepresentantnummerFeil, 1000), []);
+
   useEffect(() => {
     if (formValues && formValues.representantnummer) {
       if (/^\d+$/.test(formValues.representantnummer)) {
@@ -122,7 +124,7 @@ const VurderingRepresentant = ({
           .then(setRepresentantData)
           .catch(Utils.logger.error);
       } else {
-        setRepresentantnummerFeil({ feilmelding: "Ugyldig representantnummer" });
+        debouncedValidering({ feilmelding: "Ugyldig representantnummer" });
         setRepresentantData(undefined);
       }
     }
@@ -174,7 +176,7 @@ const VurderingRepresentant = ({
             <datalist id="dataliste-representanter">
               {representantListe.map((rep) => (
                 <option key={Utils._uuid()} value={rep.nummer}>
-                  {rep.navn}
+                  {rep.navn + " (" + rep.nummer + ")"}
                 </option>
               ))}
             </datalist>
