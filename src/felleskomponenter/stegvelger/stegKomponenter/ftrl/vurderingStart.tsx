@@ -6,6 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { SkjemaelementFeil } from "nav-frontend-skjema/lib/skjemaelement-feilmelding";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
@@ -15,9 +16,9 @@ import * as KV from "../../../../kodeverk";
 import { modalerOperations } from "../../../../ducks/modaler";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 
 import "./vurderingStart.css";
-import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
@@ -77,6 +78,8 @@ const VurderingStart = ({
 }: Props & PropsFromRedux) => {
   const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
   const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
+  const [fomFeil, setFomFeil] = useState<undefined | SkjemaelementFeil>(undefined);
+  const [tomFeil, setTomFeil] = useState<undefined | SkjemaelementFeil>(undefined);
 
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
@@ -98,6 +101,22 @@ const VurderingStart = ({
       lagreBehandlingsgrunnlag();
     }
   };
+
+  useEffect(() => {
+    setFomFeil(
+      !!Utils.dato.vaskInputDato(formValues.fom) || !formValues.fom
+        ? undefined
+        : { feilmelding: "Skriv inn en gyldig dato" }
+    );
+  }, [formValues && formValues.fom]);
+
+  useEffect(() => {
+    setTomFeil(
+      !!Utils.dato.vaskInputDato(formValues.tom) || !formValues.tom
+        ? undefined
+        : { feilmelding: "Skriv inn en gyldig dato" }
+    );
+  }, [formValues && formValues.tom]);
 
   useEffect(() => {
     const erTomNullEllerEtterFom = !formValues.tom || Utils.dato.erGyldigPeriode(formValues.fom, formValues.tom);
@@ -128,10 +147,24 @@ const VurderingStart = ({
       <Nav.Fieldset legend="Periode" onSubmit={fortsettHandle}>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Skjema.Input datoFelt label="Fra og med:" feltNavn="fom" bredde="fullbredde" disabled={!redigerbart} />
+            <Skjema.Input
+              datoFelt
+              label="Fra og med:"
+              feltNavn="fom"
+              bredde="fullbredde"
+              disabled={!redigerbart}
+              feil={fomFeil}
+            />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.Input datoFelt label="Til og med:" feltNavn="tom" bredde="fullbredde" disabled={!redigerbart} />
+            <Skjema.Input
+              datoFelt
+              label="Til og med:"
+              feltNavn="tom"
+              bredde="fullbredde"
+              disabled={!redigerbart}
+              feil={tomFeil}
+            />
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.Select
@@ -153,7 +186,7 @@ const VurderingStart = ({
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
-        {!erPeriodeGyldig && (
+        {!erPeriodeGyldig && !fomFeil && !tomFeil && (
           <AlertStripeFeil className="alert">
             Til og med dato kan ikke være tidligere enn fra og med dato.
           </AlertStripeFeil>
