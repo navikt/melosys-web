@@ -21,10 +21,12 @@ const artikkel13_x_vedtak = object().shape({
       is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
       then: string().nullable().required(VELG_EN_VEDTAKSTYPE),
     }),
-  vedtakstypebegrunnelse: string().when("$behandlingstype", {
-    is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-    then: string().required(OPPGI_BEGRUNNELSE),
-  }),
+  vedtakstypebegrunnelse: string()
+    .nullable()
+    .when("$behandlingstype", {
+      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: string().nullable().required(OPPGI_BEGRUNNELSE),
+    }),
   mottakerinstitusjoner: array().of(
     object().shape({
       kreverMottakerinstitusjon: bool(),
