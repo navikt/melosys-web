@@ -11,6 +11,7 @@ describe("LinksBuilder", () => {
       visBehandlingsgrunnlagData: true,
       lagreSoknadOgOppfriskSaksopplysninger: jest.fn(),
       setMenypanelFeilmelding: jest.fn(),
+      visEktefelleSamboerMedPaReisen: true,
     };
 
     const linksBuilder = new LinksBuilder(props);
@@ -23,7 +24,8 @@ describe("LinksBuilder", () => {
       .addFamilieForhold()
       .addFullmektig()
       .addMedlemskap()
-      .addPeriode()
+      .addPeriodeOgLand()
+      .addUtenlandsoppdraget()
       .addPerson()
       .build();
 
@@ -34,7 +36,8 @@ describe("LinksBuilder", () => {
     expect(links[4].label).toBe("Familieforhold");
     expect(links[5].label).toBe("Fullmektig");
     expect(links[6].label).toBe("Medlemskap");
-    expect(links[7].label).toBe("Periode");
-    expect(links[8].label).toBe("Person");
+    expect(links[7].label).toBe("Periode og land");
+    expect(links[8].label).toBe("Utenlandsoppdraget");
+    expect(links[9].label).toBe("Person");
   });
 });

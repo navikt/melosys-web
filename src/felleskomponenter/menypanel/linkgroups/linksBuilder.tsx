@@ -22,8 +22,8 @@ interface ILinksBuilder {
   addArbeidsforholdOgInntekt: () => ILinksBuilder;
   addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
-  addPeriode: () => ILinksBuilder;
-  // addUtenlandsoppdraget: () => ILinksBuilder,
+  addPeriodeOgLand: () => ILinksBuilder;
+  addUtenlandsoppdraget: () => ILinksBuilder;
   // addLonnOgGodtgjorelser: () => ILinksBuilder,
   addArbeidssteder: () => ILinksBuilder;
   // addOmVirksomhetenINorge: () => ILinksBuilder,
@@ -130,9 +130,25 @@ class LinksBuilder implements ILinksBuilder {
     return this;
   }
 
-  public addPeriode() {
+  public addPeriodeOgLand() {
     this.links.push({
-      label: "Periode",
+      label: "Periode og land",
+      active: false,
+      content: (
+        <Periode
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
+    });
+    return this;
+  }
+
+  public addUtenlandsoppdraget() {
+    this.links.push({
+      label: "Utenlandsoppdraget",
       active: false,
       content: (
         <Periode
