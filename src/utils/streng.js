@@ -42,6 +42,16 @@ export function storeForbokstaver() {
   );
 }
 
+export function storeForbokstaverForLand() {
+  const tekst = Array.prototype.filter.call(arguments, (s) => s).join(" ");
+  return (
+    tekst &&
+    tekst
+      .replace(/(\w|\u00C6|\u00D8|\u00C5)[^- ]*/g, (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase())
+      .replace(" Og ", " og ")
+  );
+}
+
 export function arrayTilKonjunksjon(liste) {
   if (!liste) {
     return "";

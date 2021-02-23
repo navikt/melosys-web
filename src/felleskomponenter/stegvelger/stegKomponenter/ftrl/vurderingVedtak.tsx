@@ -216,7 +216,7 @@ const VurderingVedtak = ({
           <Nav.typo.Element className="info">Arbeidsland</Nav.typo.Element>
           <Nav.typo.Normaltekst className="info">
             {alleLandkoder
-              ? Utils.streng.storeForbokstaver(KV.finnTermFraListe(alleLandkoder, soknadsland[0]))
+              ? Utils.streng.storeForbokstaverForLand(KV.finnTermFraListe(alleLandkoder, soknadsland[0]))
               : "Finner ikke arbeidsland"}
           </Nav.typo.Normaltekst>
         </Nav.Column>

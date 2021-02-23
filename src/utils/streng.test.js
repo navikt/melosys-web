@@ -7,6 +7,7 @@ import {
   strengTilInt,
   tekstEllerDash,
   storeForbokstaver,
+  storeForbokstaverForLand,
   arrayTilKonjunksjon,
 } from "./streng";
 
@@ -74,6 +75,13 @@ describe("streng.js", () => {
     test("Oppdaterer forste bokstav i hvert ord i setningen med stor bokstav", () => {
       const testString = "en to tre fire fem";
       expect(storeForbokstaver(testString)).toEqual("En To Tre Fire Fem");
+    });
+  });
+
+  describe("storeForbokstaverForLand for kompliserte landnavn", () => {
+    test("Oppdaterer setning til store og små bokstaver, basert på regler", () => {
+      const testString = "BORTE-VEKK OG LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk og Langtvekkistan");
     });
   });
 
