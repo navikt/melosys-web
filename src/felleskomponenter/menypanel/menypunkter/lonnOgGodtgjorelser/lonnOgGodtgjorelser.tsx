@@ -54,7 +54,7 @@ type BooleanFeltRedigeringUtfortProps = {
   verdi: boolean | null;
 };
 
-const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) => (
+export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) => (
   <Nav.Row>
     <Nav.Column xs="12" className="boolean-felt-redigerering-utfort">
       <Nav.typo.Normaltekst>{tekst}</Nav.typo.Normaltekst>
@@ -68,12 +68,8 @@ type InntektRedigererProps = {
   feltNavn: string;
 } & Redigerbart;
 
-// todo ingen input -> null - ikke 0
 const InntektRedigerer = ({ tittel, feltNavn, redigerbart }: InntektRedigererProps) => (
   <Nav.Column xs="4" className="inntekt-redigerer">
-    {/*
-    <Nav.typo.Normaltekst>kr</Nav.typo.Normaltekst>
-*/}
     <Skjema.Input
       feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
       label={tittel}
@@ -84,7 +80,7 @@ const InntektRedigerer = ({ tittel, feltNavn, redigerbart }: InntektRedigererPro
   </Nav.Column>
 );
 
-const FormatertInntekt = ({ inntekt }: { inntekt: number }) => (
+export const FormatertInntekt = ({ inntekt }: { inntekt: number }) => (
   <>
     {Intl.NumberFormat("NO-nb", {
       maximumFractionDigits: 2,
@@ -94,11 +90,15 @@ const FormatertInntekt = ({ inntekt }: { inntekt: number }) => (
   </>
 );
 
-const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | null }) => (
-  <Nav.typo.Undertittel className="inntekt-undertittel">
-    {verdi === null ? "-" : <FormatertInntekt inntekt={verdi} />}
-  </Nav.typo.Undertittel>
-);
+export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | null }) => {
+  const inntekt = Utils.streng.tryParseFloat(verdi);
+
+  return (
+    <Nav.typo.Undertittel className="inntekt-undertittel">
+      {inntekt !== null ? <FormatertInntekt inntekt={inntekt} /> : "-"}
+    </Nav.typo.Undertittel>
+  );
+};
 
 type InntektRedigeringUtfortProps = {
   tittel: string;
@@ -315,21 +315,28 @@ type LonnOgGodtgjorelserProps = {
   behandlingsgrunnlagEtikett: ReactNode;
 } & Redigerbart;
 
-const LonnOgGodtgjorelser = connector((props: PropsFromRedux & LonnOgGodtgjorelserProps) => (
-  <Nav.Container fluid className="lonnOgGodtgjorelser">
-    <Nav.Row className="tittel">
-      <Nav.Column xs="12">
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
-          {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-        </Nav.typo.Innholdstittel>
-        <span>{props.behandlingsgrunnlagEtikett}</span>
-        {/* todo toggle og margin og listecomp?? */}
-        {props.visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
-        <LonnOgNaturalytelser redigerbart={props.redigerbart} {...props.lonnOgNaturalytelser} />
-        <ArbeidsgiveravgiftOgTrygdeavgift redigerbart={props.redigerbart} {...props.arbeidsgiveravgiftOgTrygdeavgift} />
-      </Nav.Column>
-    </Nav.Row>
-  </Nav.Container>
-));
+const LonnOgGodtgjorelser = connector(
+  ({
+    redigerbart,
+    lonnOgNaturalytelser,
+    arbeidsgiveravgiftOgTrygdeavgift,
+    behandlingsgrunnlagEtikett,
+    visArbeidsforholdRolleEtiketter,
+  }: PropsFromRedux & LonnOgGodtgjorelserProps) => (
+    <Nav.Container fluid className="lonnOgGodtgjorelser">
+      <Nav.Row className="tittel">
+        <Nav.Column xs="12">
+          <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+            {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
+          </Nav.typo.Innholdstittel>
+          <span>{behandlingsgrunnlagEtikett}</span>
+          {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+          <LonnOgNaturalytelser redigerbart={redigerbart} {...lonnOgNaturalytelser} />
+          <ArbeidsgiveravgiftOgTrygdeavgift redigerbart={redigerbart} {...arbeidsgiveravgiftOgTrygdeavgift} />
+        </Nav.Column>
+      </Nav.Row>
+    </Nav.Container>
+  )
+);
 
 export default LonnOgGodtgjorelser;
