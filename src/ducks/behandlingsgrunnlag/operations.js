@@ -93,14 +93,13 @@ const lagBehandlingsgrunnlagFelter = (behandlingsgrunnlag) => ({
 
 const lagSoeknadFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
-  arbeidsinntekt: behandlingsgrunnlag.arbeidsinntekt,
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
 });
 
 const lagFTRLFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
-  arbeidsinntekt: behandlingsgrunnlag.arbeidsinntekt,
+  loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
   trygdedekning: behandlingsgrunnlag.trygdedekning,
 });

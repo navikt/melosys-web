@@ -142,20 +142,6 @@ export default function reducer(state = initialState, action) {
       const data = {
         ...state.data,
         data: {
-          arbeidsinntekt: {
-            inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
-            inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden
-              ? strengTilInt(dokument.inntektUtenlandskIPerioden)
-              : null,
-            inntektNaeringIPerioden: null,
-            inntektNaturalytelser: {
-              friBil: dokument.inntektNaturalFribil,
-              friBolig: dokument.inntektNaturalFribolig,
-              friAnnet: dokument.inntektNaturalIAnnet || null,
-            },
-            inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
-            inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
-          },
           arbeidPaaLand: {
             fysiskeArbeidssteder: dokument.arbeidPaaLand.fysiskeArbeidssteder.map((arbeidPaaLand) => ({
               adresse: {

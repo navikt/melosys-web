@@ -261,18 +261,6 @@ describe("behandlingsgrunnlag reducer", () => {
       status: STATUS.NOT_STARTED,
       data: {
         data: {
-          arbeidsinntekt: {
-            inntektNorskIPerioden: 1,
-            inntektUtenlandskIPerioden: 2,
-            inntektNaeringIPerioden: null,
-            inntektNaturalytelser: {
-              friBil: "4",
-              friBolig: "5",
-              friAnnet: "6",
-            },
-            inntektErInnrapporteringspliktig: true,
-            inntektTrygdeavgiftBlirTrukket: true,
-          },
           loennOgGodtgjoerelse: {
             norskArbgUtbetalerLoenn: false,
             erArbeidstakerAnsattHelePerioden: true,

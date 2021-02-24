@@ -49,16 +49,6 @@ export const FysiskeArbeidsstederLandkoderSelector = createSelector(
   (fysiskeArbeidsstederAdresser) => fysiskeArbeidsstederAdresser.map((adresse) => adresse.landkode) || []
 );
 
-export const ArbeidsinntektSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.arbeidsinntekt || {}
-);
-
-export const ArbeidsinntektNaturalytelserSelector = createSelector(
-  ArbeidsinntektSelector,
-  (arbeidsinntekt) => arbeidsinntekt.inntektNaturalytelser || {}
-);
-
 export const ForetakUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlag) => behandlingsgrunnlag.foretakUtland || []
