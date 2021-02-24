@@ -56,9 +56,11 @@ type BooleanFeltRedigeringUtfortProps = {
 
 export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) => (
   <Nav.Row>
-    <Nav.Column xs="12" className="boolean-felt-redigerering-utfort">
-      <Nav.typo.Normaltekst>{tekst}</Nav.typo.Normaltekst>
-      <Nav.typo.Element>{verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}</Nav.typo.Element>
+    <Nav.Column xs="12" className="boolean-felt-redigering-utfort">
+      <Nav.typo.Normaltekst className="typo-normal">{tekst}</Nav.typo.Normaltekst>
+      <Nav.typo.Element className="typo-element">
+        {verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}
+      </Nav.typo.Element>
     </Nav.Column>
   </Nav.Row>
 );
@@ -90,7 +92,7 @@ export const FormatertInntekt = ({ inntekt }: { inntekt: number }) => (
   </>
 );
 
-export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | null }) => {
+export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | string | null }) => {
   const inntekt = Utils.streng.tryParseFloat(verdi);
 
   return (
@@ -102,7 +104,7 @@ export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | 
 
 type InntektRedigeringUtfortProps = {
   tittel: string;
-  verdi: number | null;
+  verdi: number | string | null;
 };
 
 const InntektRedigeringUtfort = ({ tittel, verdi }: InntektRedigeringUtfortProps) => (
@@ -211,11 +213,7 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
   </>
 );
 
-const symbolsynlighetMap = new Map([
-  [Status.Redigerer, { bin: false, pencil: false }],
-  [Status.IngenData, { bin: false, pencil: false }],
-  [Status.RedigeringUtfort, { bin: false, pencil: true }],
-] as const);
+const symbolsynlighetMap = new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]]);
 
 type LonnOgNaturalytelserProps = LonnOgNaturalytelser & Redigerbart;
 
@@ -225,7 +223,6 @@ const LonnOgNaturalytelser = ({ redigerbart, ...lonnOgNaturalytelser }: LonnOgNa
     harData
     tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.lonnOgNaturalytelser}
     hentNyStatusVedHarData={false}
-    onBinClick={() => {}}
     visLagreKnapp
     symbolsynlighetMap={symbolsynlighetMap}
     redigererRender={() => <LonnOgNaturalytelserRedigerer redigerbart={redigerbart} />}
@@ -284,7 +281,6 @@ const ArbeidsgiveravgiftOgTrygdeavgift = ({
     harData
     tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
     hentNyStatusVedHarData={false}
-    onBinClick={() => {}}
     symbolsynlighetMap={symbolsynlighetMap}
     visLagreKnapp
     redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer redigerbart={redigerbart} />}

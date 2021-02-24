@@ -8,7 +8,7 @@ import {
 } from "./lonnOgGodtgjorelser";
 
 describe("LonnOgGodtgjorelser", () => {
-  describe("BooleanFeltRedigereringUtfort", () => {
+  describe("BooleanFeltRedigeringUtfort", () => {
     const mockedProps = mock<ComponentProps<typeof BooleanFeltRedigeringUtfort>>();
     let props = instance(mockedProps);
 
@@ -44,8 +44,7 @@ describe("LonnOgGodtgjorelser", () => {
     });
 
     it('viser "-" dersom verdi er tom streng', () => {
-      // @ts-ignore
-      props.verdi = ""; // verdi kan i praksis være en streng når den kommer fra redux
+      props.verdi = "";
       const booleanFeltRedigeringUtfort = shallow(<InntektRedigeringUtfortUndertittel {...props} />);
       expect(booleanFeltRedigeringUtfort.contains("-")).toBe(true);
     });
