@@ -15,12 +15,11 @@ import EditerbartElement, { Status } from "../editerbartElement";
 
 import "./lonnOgGodtgjorelser.css";
 
-type Redigerbart = { redigerbart: boolean };
-
 type BooleanFeltRedigererProps = {
   tekst: string;
   feltNavn: string;
-} & Redigerbart;
+  redigerbart: boolean;
+};
 
 const BooleanFeltRedigerer = ({ tekst, feltNavn, redigerbart }: BooleanFeltRedigererProps) => {
   const navn = Utils._uuid();
@@ -68,7 +67,8 @@ export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRediger
 type InntektRedigererProps = {
   tittel: string;
   feltNavn: string;
-} & Redigerbart;
+  redigerbart: boolean;
+};
 
 const InntektRedigerer = ({ tittel, feltNavn, redigerbart }: InntektRedigererProps) => (
   <Nav.Column xs="4" className="inntekt-redigerer">
@@ -125,7 +125,7 @@ type LonnOgNaturalytelser = {
   utlArbTilhoererSammeKonsern: boolean;
 };
 
-const LonnOgNaturalytelserRedigerer = ({ redigerbart }: Redigerbart) => {
+const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }) => {
   return (
     <>
       <Nav.Row>
@@ -215,7 +215,7 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
 
 const symbolsynlighetMap = new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]]);
 
-type LonnOgNaturalytelserProps = LonnOgNaturalytelser & Redigerbart;
+type LonnOgNaturalytelserProps = LonnOgNaturalytelser & { redigerbart: boolean };
 
 const LonnOgNaturalytelser = ({ redigerbart, ...lonnOgNaturalytelser }: LonnOgNaturalytelserProps) => (
   <EditerbartElement
@@ -235,7 +235,7 @@ type ArbeidsgiveravgiftOgTrygdeavgift = {
   erTrukketTrygdeavgift: boolean;
 };
 
-const ArbeidsgiveravgiftOgTrygdeavgiftRedigerer = ({ redigerbart }: Redigerbart) => (
+const ArbeidsgiveravgiftOgTrygdeavgiftRedigerer = ({ redigerbart }: { redigerbart: boolean }) => (
   <Nav.Row>
     <Nav.Column xs="12">
       <BooleanFeltRedigerer
@@ -270,7 +270,7 @@ const ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort = ({
   </Nav.Row>
 );
 
-type ArbeidsgiveravgiftOgTrygdeavgiftProps = ArbeidsgiveravgiftOgTrygdeavgift & Redigerbart;
+type ArbeidsgiveravgiftOgTrygdeavgiftProps = ArbeidsgiveravgiftOgTrygdeavgift & { redigerbart: boolean };
 
 const ArbeidsgiveravgiftOgTrygdeavgift = ({
   redigerbart,
@@ -309,7 +309,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type LonnOgGodtgjorelserProps = {
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
-} & Redigerbart;
+  redigerbart: boolean;
+};
 
 const LonnOgGodtgjorelser = connector(
   ({
