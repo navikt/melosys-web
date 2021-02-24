@@ -6,19 +6,19 @@ import * as KV from "../../../../kodeverk";
 
 import Soknadsperiode from "./soknadsperiode";
 
-interface PeriodeOgLandProps {
+interface PeriodeProps {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
   behandlingsgrunnlagEtikett: ReactNode;
 }
 
-const PeriodeOgLand = ({
+const Periode = ({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
   behandlingsgrunnlagEtikett,
-}: PeriodeOgLandProps) => (
+}: PeriodeProps) => (
   <div>
     <div style={{ marginBottom: "1em" }}>
       <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
@@ -38,4 +38,4 @@ const PeriodeOgLand = ({
   </div>
 );
 
-export default PeriodeOgLand;
+export default Periode;

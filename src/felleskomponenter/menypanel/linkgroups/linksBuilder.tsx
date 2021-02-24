@@ -9,6 +9,7 @@ import {
   Barnetrygd,
   Fullmektig,
   Medlemskap,
+  Utenlandsoppdraget,
   Periode,
   Person,
   Familieforhold,
@@ -151,7 +152,7 @@ class LinksBuilder implements ILinksBuilder {
       label: "Utenlandsoppdraget",
       active: false,
       content: (
-        <Periode
+        <Utenlandsoppdraget
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
