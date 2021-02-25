@@ -6,9 +6,9 @@ import { DokumentOversikt, FysiskDokument } from "Domene";
 import * as Nav from "../../utils/navFrontend";
 import * as Utils from "../../utils";
 
+import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogDokumenter from "./sideDialogDokumenter";
 import SideDialogBrevBestilling from "./brevBestilling";
-import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
 import SideDialogNotater from "./sideDialogNotater/sideDialogNotater";
 

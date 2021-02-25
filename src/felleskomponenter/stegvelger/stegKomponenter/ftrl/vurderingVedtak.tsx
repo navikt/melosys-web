@@ -268,8 +268,7 @@ const VurderingVedtak = ({
         )}
 
       <Nav.typo.Element className="fritekst_overskrift" tag="h3">
-        Fritekst til innleding{" "}
-        <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst>
+        Fritekst til innleding <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
       </Nav.typo.Element>
       <Skjema.HTMLEditor
         feltNavn="fritekstInnledning"
@@ -278,8 +277,7 @@ const VurderingVedtak = ({
       />
 
       <Nav.typo.Element className="fritekst_overskrift" tag="h3">
-        Fritekst til begrunnelse{" "}
-        <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}></Nav.Hjelpetekst>
+        Fritekst til begrunnelse <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
       </Nav.typo.Element>
       <Skjema.HTMLEditor
         feltNavn="fritekstBegrunnelse"

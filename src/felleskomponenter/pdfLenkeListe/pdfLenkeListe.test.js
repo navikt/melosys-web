@@ -55,6 +55,10 @@ describe("PdfLenkeListe", () => {
   });
 
   describe("forhåndsvisning av brev", () => {
+    beforeEach(() => {
+      props.vedKlikk = jest.fn(() => true);
+    });
+
     it("viser feilmelding ved 400-feil fra backend", async () => {
       const liste = shallow(<PdfLenkeListe {...props} />);
 
@@ -93,6 +97,10 @@ describe("PdfLenkeListe", () => {
   });
 
   describe("forhåndsvisning av sed", () => {
+    beforeEach(() => {
+      props.vedKlikk = jest.fn(() => true);
+    });
+
     it("viser feilmelding ved 400-feil fra backend", async () => {
       const liste = shallow(<PdfLenkeListe {...props} />);
 

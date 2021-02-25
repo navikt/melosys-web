@@ -1,5 +1,4 @@
 import { AppThunk, RootState } from "AppTypes";
-import { AnmodningOmUnntakBestilling } from "Domene";
 import { ThunkDispatch } from "redux-thunk";
 
 import { doThenDispatch } from "../../services/utils";
@@ -12,7 +11,7 @@ import * as DucksUtils from "../utils";
 
 export function bestill(
   behandlingID: number,
-  bestilling: AnmodningOmUnntakBestilling
+  bestilling: Api.Saksflyt.Anmodningsperioder.AnmodningOmUnntakBestillingReqDto
 ): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
     () => Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestilling),

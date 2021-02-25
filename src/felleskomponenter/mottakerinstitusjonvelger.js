@@ -22,10 +22,6 @@ export const MottakerinstitusjonvelgerSchema = ({
   data_cy,
   ...rest
 }) => {
-  if (landkode === MKV.Koder.landkoder.NO) {
-    return null;
-  }
-
   const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, [landkode]);
   const [mottakerinstitusjoner] = useAsyncCallbackState(hentMottakerinstitusjoner, [], Utils.logger.error, [
     landkode,
@@ -74,19 +70,20 @@ MottakerinstitusjonvelgerSchema.defaultProps = {
   label: "Velg utenlandsk institusjon som skal motta SED",
 };
 
-const Mottakerinstitusjonvelger = ({ redigerbart, landkode, bucType, oppdaterKreverMottakerinstitusjon, data_cy }) => (
-  <Field
-    name={MOTTAKERINSTITUSJON}
-    component={MottakerinstitusjonvelgerSchema}
-    props={{
-      redigerbart,
-      landkode,
-      bucType,
-      oppdaterKreverMottakerinstitusjon,
-      data_cy,
-    }}
-  />
-);
+const Mottakerinstitusjonvelger = ({ redigerbart, landkode, bucType, oppdaterKreverMottakerinstitusjon, data_cy }) =>
+  landkode !== MKV.Koder.landkoder.NO ? (
+    <Field
+      name={MOTTAKERINSTITUSJON}
+      component={MottakerinstitusjonvelgerSchema}
+      props={{
+        redigerbart,
+        landkode,
+        bucType,
+        oppdaterKreverMottakerinstitusjon,
+        data_cy,
+      }}
+    />
+  ) : null;
 
 Mottakerinstitusjonvelger.propTypes = {
   form: PT.string.isRequired,
@@ -128,24 +125,27 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
   bucType,
   data_cy,
 }) =>
-  fields.map((mottakerinstitusjon) => (
-    <Field
-      key={`${mottakerinstitusjon}.id`}
-      name={`${mottakerinstitusjon}.id`}
-      component={MottakerinstitusjonvelgerSchema}
-      props={{
-        redigerbart,
-        bucType,
-        landkode: hentFelt(`${mottakerinstitusjon}.kode`),
-        label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
-        oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(
-          form,
-          `${mottakerinstitusjon}.kreverMottakerinstitusjon`
-        ),
-        data_cy,
-      }}
-    />
-  ));
+  fields
+    .map((mottakerinstitusjon) => mottakerinstitusjon)
+    .filter((mottakerinstitusjon) => hentFelt(`${mottakerinstitusjon}.kode`) !== MKV.Koder.landkoder.NO)
+    .map((mottakerinstitusjon) => (
+      <Field
+        key={`${mottakerinstitusjon}.id`}
+        name={`${mottakerinstitusjon}.id`}
+        component={MottakerinstitusjonvelgerSchema}
+        props={{
+          redigerbart,
+          bucType,
+          landkode: hentFelt(`${mottakerinstitusjon}.kode`),
+          label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
+          oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(
+            form,
+            `${mottakerinstitusjon}.kreverMottakerinstitusjon`
+          ),
+          data_cy,
+        }}
+      />
+    ));
 
 MottakerinstitusjonvelgerFlervalgInner.propTypes = {
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,

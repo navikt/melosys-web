@@ -460,7 +460,7 @@ const mapDispatchToProps = (dispatch) => ({
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData(MKV.Koder.sakstyper.EU_EOS)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 

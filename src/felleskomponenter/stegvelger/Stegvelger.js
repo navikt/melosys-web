@@ -294,11 +294,11 @@ class Stegvelger extends Component {
     return Promise.resolve();
   };
 
-  videresendSoknad = async (mottakerinstitusjon, fritekst) => {
+  videresendSoknad = async (mottakerinstitusjon, fritekst, vedlegg) => {
     const { saksnummer, videresend, lagreAllData } = this.props;
 
     if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
-      const body = { mottakerinstitusjon, fritekst };
+      const body = { mottakerinstitusjon, fritekst, vedlegg };
 
       await lagreAllData();
       return videresend(saksnummer, body);

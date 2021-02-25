@@ -9,7 +9,6 @@ import * as Utils from "../../../utils";
 import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
 import * as API from "../../../services/api";
-import * as Hooks from "../../../hooks";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
@@ -18,6 +17,7 @@ import Behandlingsmeny from "./behandlingsmeny";
 import Stegvelger from "../../../felleskomponenter/stegvelger";
 import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -143,7 +143,7 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
-  const [folketrygdenToggle] = Hooks.useFeatureToggle("melosys.folketrygden.mvp");
+  const [folketrygdenToggle] = useFeatureToggle("melosys.folketrygden.mvp");
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -175,6 +175,9 @@ const Saksbehandling = ({
       }
 
       const bestemmelserResponse = await API.Medlemskapsperioder.hentBestemmelserMedVilkår();
+      bestemmelserResponse
+        .sort((a, b) => b.bestemmelse.localeCompare(a.bestemmelse))
+        .forEach((bestemmelse) => bestemmelse.vilkårOgBegrunnelser.sort((a, b) => a.vilkaar.localeCompare(b.vilkaar)));
       setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
@@ -273,7 +276,7 @@ const Saksbehandling = ({
                 <Behandlingsmeny
                   redigerbart={redigerbart}
                   behandlingstype={behandlingstype}
-                  aanmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
+                  anmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
@@ -403,7 +406,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
   hentMedlemskapsperioder: (bid) => dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(bid)),
   hentOppsummertFakta: (bid) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(bid)),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData(MKV.Koder.sakstyper.FTRL)),
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),

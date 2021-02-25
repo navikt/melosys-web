@@ -19,6 +19,7 @@ describe("Vurderingvideresend", () => {
       bostedsland: { kode: "SE", term: "Sverige" },
       handleSubmit: jest.fn(),
       form: "form",
+      fysiskeDokument: [],
     };
   });
 
