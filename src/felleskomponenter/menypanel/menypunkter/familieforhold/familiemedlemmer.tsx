@@ -131,14 +131,14 @@ const Familiemedlemmer = ({
     }
   };
 
-  const barn =
-    familiemedlemmer.filter(
-      (familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
-    ) || [];
-  const ektefellePartnerSamboer =
-    familiemedlemmer.filter(
-      (familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode !== KV.Koder.Relasjonsrolle.BARN
-    ) || [];
+  const barn = familiemedlemmer.filter(
+    (familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
+  );
+  const ektefellePartnerSamboer = familiemedlemmer.filter((familiemedlem: Familiemedlem) =>
+    [KV.Koder.Relasjonsrolle.EKTE, KV.Koder.Relasjonsrolle.REPA, KV.Koder.Relasjonsrolle.SAMB].includes(
+      familiemedlem.relasjonstype.kode
+    )
+  );
 
   return (
     <div className="familiemedlemmer">

@@ -51,11 +51,9 @@ const Behandlingsmeny = ({
           Avslå søknad pga. manglende opplysninger
         </Nav.Knapp>
       )}
-      {
-        <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>
-          Vis alle behandlinger
-        </Nav.Knapp>
-      }
+      <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>
+        Vis alle behandlinger
+      </Nav.Knapp>
     </div>
   </Nav.EkspanderbartpanelBase>
 );

@@ -143,7 +143,7 @@ const SokkelSkipEnkelt = (props) => {
               ))}
             </Nav.Select>
           </Nav.Column>
-          <Nav.Column xs="1"></Nav.Column>
+          <Nav.Column xs="1" />
         </Fragment>
       )}
       <Nav.Column xs="4">

@@ -175,6 +175,9 @@ const Saksbehandling = ({
       }
 
       const bestemmelserResponse = await API.Medlemskapsperioder.hentBestemmelserMedVilkår();
+      bestemmelserResponse
+        .sort((a, b) => b.bestemmelse.localeCompare(a.bestemmelse))
+        .forEach((bestemmelse) => bestemmelse.vilkårOgBegrunnelser.sort((a, b) => a.vilkaar.localeCompare(b.vilkaar)));
       setBestemmelser(bestemmelserResponse);
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
@@ -273,7 +276,7 @@ const Saksbehandling = ({
                 <Behandlingsmeny
                   redigerbart={redigerbart}
                   behandlingstype={behandlingstype}
-                  aanmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
+                  anmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
