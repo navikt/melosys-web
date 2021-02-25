@@ -71,7 +71,7 @@ const VurderingRepresentant = ({
   const [representantData, setRepresentantData] = useState<RepresentantData>();
   const [organisasjon, setOrganisasjon] = useState<Organisasjon | undefined>();
   const hjelpetekstNummer =
-    "Sjekk representantlisten og skriv inn riktig representantnummer. Om det ikke finnes et representantnummer, må du opprette dette i Avgiftssystemet. Opplysningene vil bli overført til Avgiftssystemet når du fatter vedtak.";
+    "Representantnummeret du legger til her vil bli overført til Avgiftssystemet (ME7-bildet) når du fatter vedtak.\nSkal du opprette en ny representant, må du gjøre det i Avgiftssystemet.\nListen du finner her oppdateres hvert døgn. Hvis du har opprettet eller endret en representant i Avgiftssystemet i dag, vil du derfor ikke finne oppdateringen her. Dette har ikke betydning for overføringen til Avgiftssystemet, så lenge nummeret er riktig.";
   const hjelpetekstAdresse =
     "Kopi av vedtak sendes til adressen som hentes opp når du legger inn organisasjonsnummer. Kontroller at org.nr. og adresse er korrekt og stemmer overens med det som ligger i Avgiftssystemet.";
 
@@ -156,7 +156,9 @@ const VurderingRepresentant = ({
             <div className="representantnummer">
               Representantnummer til Avgiftssystemet
               <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekstNummer} type={Nav.PopoverOrientering.Hoyre}>
-                {hjelpetekstNummer}
+                {hjelpetekstNummer.split("\n").map((paragraf) => (
+                  <p>{paragraf}</p>
+                ))}
               </Nav.Hjelpetekst>
             </div>
           }
