@@ -137,10 +137,6 @@ const VurderingStart = ({
     } else {
       bekreft();
     }
-    visOppfriskDialogOgFortsettHandle(() => {
-      bekreft();
-      visMenypanel();
-    });
   };
 
   return (
