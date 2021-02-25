@@ -119,6 +119,16 @@ export const VurderRepresentantFormValid = createSelector(
   (errors) => Utils._isEmpty(errors)
 );
 
+export const VurderRepresentantRepresentantnummerValid = createSelector(
+  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
+  (errors) => !("representantnummer" in errors)
+);
+
+export const VurderRepresentantOrganisasjonsnummerValid = createSelector(
+  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
+  (errors) => !("organisasjonsnummer" in errors)
+);
+
 export const VurderUtpekingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
   (vurderUtpekingForm) => vurderUtpekingForm

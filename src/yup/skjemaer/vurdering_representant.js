@@ -1,26 +1,31 @@
 import { object, string, bool } from "yup";
 import * as Utils from "../../utils";
 
-const NOE_SKJEDDE = { melding: "Noe skjedde" };
+const REPRESENTANT_FELT_MANGLER = { melding: "Fyll ut representantnummer" };
+const ORGNUMMER_FELT_MANGLER = { melding: "Fyll ut organisasjonsnummer" };
 
-function manglerObligatoriskeFelt(representantnummer, selvbetalende, organisasjonsnummer) {
-  if (!representantnummer) return true;
-  if (!/^\d+$/.test(representantnummer)) return true;
-  if (!selvbetalende) {
-    return !Utils.organisasjon.erOrgnrGyldig(organisasjonsnummer);
-  }
-  return false;
-}
+const gyldigRepresentantnummerTest = {
+  name: "Gyldig representantnummer",
+  message: "Ugyldig representantnummer",
+  test: (repnr) => /^\d+$/.test(repnr),
+};
+
+const gyldigOrganisasjonsnummerTest = {
+  name: "Gyldig organisasjonsnummer",
+  message: "Ugyldig organisasjonsnummer",
+  test: (orgnr) => Utils.organisasjon.erOrgnrGyldig(orgnr),
+};
 
 const vurdering_representant = object().shape({
-  representantnummer: string(),
-  selvbetalende: bool(),
-  organisasjonsnummer: string().nullable(),
+  representantnummer: string().test(gyldigRepresentantnummerTest).required(REPRESENTANT_FELT_MANGLER),
+  selvbetalende: bool().required(),
+  organisasjonsnummer: string()
+    .test(gyldigOrganisasjonsnummerTest)
+    .when("selvbetalende", {
+      is: (selvbetalende) => !selvbetalende,
+      then: string().required(ORGNUMMER_FELT_MANGLER),
+    }),
   kontaktperson: string().nullable(),
-  alleObligatoriskeFeltFyltUt: string().when(["representantnummer", "selvbetalende", "organisasjonsnummer"], {
-    is: manglerObligatoriskeFelt,
-    then: string().required(NOE_SKJEDDE),
-  }),
 });
 
 export { vurdering_representant };

@@ -28,6 +28,8 @@ const mapStateToProps = (state: RootState) => ({
     selvbetalende: true,
   },
   formIsValid: formSelectors.VurderRepresentantFormValid(state),
+  representantnummerValid: formSelectors.VurderRepresentantRepresentantnummerValid(state),
+  organisasjonsnummerValid: formSelectors.VurderRepresentantOrganisasjonsnummerValid(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -62,12 +64,12 @@ const VurderingRepresentant = ({
   formIsValid,
   behandlingID,
   changeField,
+  representantnummerValid,
+  organisasjonsnummerValid,
 }: Props & PropsFromRedux) => {
   const [representantListe, setRepresentantListe] = useState<{ navn: string; nummer: string }[]>([]);
   const [representantData, setRepresentantData] = useState<RepresentantData>();
   const [organisasjon, setOrganisasjon] = useState<Organisasjon | undefined>();
-  const [representantnummerFeil, setRepresentantnummerFeil] = useState<{ feilmelding: string }>();
-  const [organisasjonsnummerFeil, setOrganisasjonsnummerFeil] = useState<{ feilmelding: string }>();
   const hjelpetekstNummer =
     "Sjekk representantlisten og skriv inn riktig representantnummer. Om det ikke finnes et representantnummer, må du opprette dette i Avgiftssystemet. Opplysningene vil bli overført til Avgiftssystemet når du fatter vedtak.";
   const hjelpetekstAdresse =
@@ -89,47 +91,42 @@ const VurderingRepresentant = ({
       .catch(Utils.logger.error);
   }, []);
 
-  async function hentOrganisasjonHvisValid(orgnr: string, valid: boolean) {
-    if (valid) {
-      const response = await hentOrganisasjon(orgnr);
+  async function hentOrganisasjonHvisValid(data: { orgnr: string; valid: boolean }) {
+    if (data.valid) {
+      const response = await hentOrganisasjon(data.orgnr);
       if (response.data.response) {
-        setOrganisasjonsnummerFeil({
-          feilmelding:
-            response.data.response.status === 404
-              ? "Kunne ikke finne organisasjon"
-              : "Feil ved henting av organisasjon",
-        });
-        return;
+        Utils.logger.error(
+          response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon"
+        );
+      } else {
+        setOrganisasjon(response.data);
       }
-      setOrganisasjon(response.data);
     }
   }
+  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 500), []);
 
   useEffect(() => {
+    setOrganisasjon(undefined);
     if (formValues && formValues.organisasjonsnummer) {
-      setOrganisasjon(undefined);
-      const valid = Utils.organisasjon.erOrgnrGyldig(formValues.organisasjonsnummer);
-      setOrganisasjonsnummerFeil(valid ? undefined : { feilmelding: "Ugyldig organisasjonsnummer" });
-      hentOrganisasjonHvisValid(formValues.organisasjonsnummer, valid);
+      debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: organisasjonsnummerValid });
     }
-  }, [formValues && formValues.organisasjonsnummer]);
+  }, [formValues && formValues.organisasjonsnummer, organisasjonsnummerValid]);
 
-  const debouncedValidering = useCallback(Utils._debounce(setRepresentantnummerFeil, 1000), []);
+  function hentRepresentant(data: { representantnummer: string; valid: boolean }) {
+    if (data.valid) {
+      Api.Representant.hentRepresentant(data.representantnummer).then(setRepresentantData).catch(Utils.logger.error);
+    } else {
+      setRepresentantData(undefined);
+    }
+  }
+  const debouncedHentRepresentant = useCallback(Utils._debounce(hentRepresentant, 500), []);
 
   useEffect(() => {
-    if (formValues && formValues.representantnummer) {
-      if (/^\d+$/.test(formValues.representantnummer)) {
-        setRepresentantnummerFeil(undefined);
-        Api.Representant.hentRepresentant(formValues.representantnummer)
-          .then(setRepresentantData)
-          .catch(Utils.logger.error);
-      } else {
-        debouncedValidering({ feilmelding: "Ugyldig representantnummer" });
-        setRepresentantData(undefined);
-      }
-    }
     setRepresentantData(undefined);
-  }, [formValues && formValues.representantnummer]);
+    if (formValues && formValues.representantnummer) {
+      debouncedHentRepresentant({ representantnummer: formValues.representantnummer, valid: representantnummerValid });
+    }
+  }, [formValues && formValues.representantnummer, representantnummerValid]);
 
   function lagreRepresentantValg(data: { formValues: any; formIsValid: boolean }) {
     if (data.formIsValid && data.formValues) {
@@ -171,9 +168,8 @@ const VurderingRepresentant = ({
               label="Velg eller skriv inn representantnummer"
               list="dataliste-representanter"
               placeholder="Velg eller skriv inn"
-              feil={representantnummerFeil}
               disabled={!redigerbart}
-              autocomplete="off"
+              autoComplete="off"
             />
             <datalist id="dataliste-representanter">
               {representantListe.map((rep) => (
@@ -211,13 +207,12 @@ const VurderingRepresentant = ({
               </Nav.Hjelpetekst>
             </Fragment>
           </Nav.typo.Undertittel>
-          <Nav.Column xs="3">
+          <Nav.Column xs="4">
             <Skjema.Input
               feltNavn="organisasjonsnummer"
               label={<Nav.typo.Element>Organisasjonsnummer</Nav.typo.Element>}
               placeholder="Skriv inn"
               disabled={!redigerbart}
-              feil={organisasjonsnummerFeil}
             />
             {organisasjon && <OrganisasjonsAdresse organisasjon={organisasjon} visNavn boldNavn visTittel={false} />}
           </Nav.Column>
