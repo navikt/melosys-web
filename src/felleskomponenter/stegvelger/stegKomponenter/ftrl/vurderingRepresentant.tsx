@@ -128,6 +128,7 @@ const VurderingRepresentant = ({
         setRepresentantData(undefined);
       }
     }
+    setRepresentantData(undefined);
   }, [formValues && formValues.representantnummer]);
 
   function lagreRepresentantValg(data: { formValues: any; formIsValid: boolean }) {
@@ -172,6 +173,7 @@ const VurderingRepresentant = ({
               placeholder="Velg eller skriv inn"
               feil={representantnummerFeil}
               disabled={!redigerbart}
+              autocomplete="off"
             />
             <datalist id="dataliste-representanter">
               {representantListe.map((rep) => (

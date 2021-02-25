@@ -137,7 +137,7 @@ const VurderingFamilie = ({
   }
 
   function lagreMedfolgendeFamilie(data: any) {
-    if (data.formIsValid) {
+    if (data.formIsValid && data.formValues) {
       sendMedfolgendeFamilie(behandlingID, tilMedfolgendeFamilie(data.formValues));
     }
   }
