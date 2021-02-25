@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect } from "react";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
@@ -16,6 +16,7 @@ import { modalerOperations } from "../../../../ducks/modaler";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
+import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
 
 import "./vurderingStart.css";
@@ -33,6 +34,8 @@ const mapStateToProps = (state: RootState) => {
       land: initialSoeknadsland && initialSoeknadsland.toString(),
       trygdedekning: initialTrygdedekning,
     },
+    formIsValid: formSelectors.VurderStartFormValid(state),
+    erPeriodeGyldig: formSelectors.VurderStartPeriodeValid(state),
   };
 };
 
@@ -53,13 +56,20 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface FormValuesProp {
+  fom?: string;
+  tom?: string;
+  land?: string;
+  trygdedekning?: string;
+}
+
 interface Props {
   bekreft: () => void;
   oppdater: () => void;
   redigerbart: boolean;
   oppdaterData: (avklartefakta: any) => void;
   alleLandkoder: KTObject[];
-  formValues: { fom?: string; tom?: string; land?: string; trygdedekning?: string };
+  formValues: FormValuesProp;
 }
 
 const VurderingStart = ({
@@ -75,10 +85,9 @@ const VurderingStart = ({
   oppdaterTrygdedekning,
   trygdedekninger,
   lagreBehandlingsgrunnlag,
+  formIsValid,
+  erPeriodeGyldig,
 }: Props & PropsFromRedux) => {
-  const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
-  const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
-
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
     <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
@@ -86,40 +95,31 @@ const VurderingStart = ({
     </Nav.Hjelpetekst>
   );
 
-  const oppdaterLokalBehandlingsgrunnlag = async (erFelteneGyldig: boolean) => {
-    const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
-    const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
+  const oppdaterLokalBehandlingsgrunnlag = async (data: { formValues: FormValuesProp; formIsValid: boolean }) => {
+    const fom = Utils.dato.formatterDatoTilISO(data.formValues.fom);
+    const tom = Utils.dato.formatterDatoTilISO(data.formValues.tom);
     await Promise.all([
       oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
-      oppdaterSoeknadsland(formValues.land ? [formValues.land] : []),
-      oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : ""),
+      oppdaterSoeknadsland(data.formValues.land ? [data.formValues.land] : []),
+      oppdaterTrygdedekning(data.formValues.trygdedekning ? data.formValues.trygdedekning : ""),
     ]);
     oppdater();
-    if (erFelteneGyldig) {
+    if (data.formIsValid) {
       lagreBehandlingsgrunnlag();
     }
   };
 
+  const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalBehandlingsgrunnlag, 500), []);
+
   useEffect(() => {
-    const erTomNullEllerEtterFom = !formValues.tom || Utils.dato.erGyldigPeriode(formValues.fom, formValues.tom);
-    setErPeriodeGyldig(erTomNullEllerEtterFom);
-
-    const erFelteneGyldig =
-      !!formValues.land && !!formValues.trygdedekning && !!formValues.fom && erTomNullEllerEtterFom;
-    setErObligatoriskeFelterFyltInn(erFelteneGyldig);
-
-    oppdaterLokalBehandlingsgrunnlag(erFelteneGyldig);
-  }, [formValues]);
+    debouncedOppdatering({ formValues, formIsValid });
+  }, [formIsValid, formValues]);
 
   const fortsettHandle = () => {
-    oppdaterLokalBehandlingsgrunnlag(erObligatoriskeFelterFyltInn);
-    if (erObligatoriskeFelterFyltInn) {
-      const fortsett = () => {
-        bekreft();
-        visMenypanel();
-      };
-      visOppfriskDialogOgFortsettHandle(fortsett);
-    }
+    visOppfriskDialogOgFortsettHandle(() => {
+      bekreft();
+      visMenypanel();
+    });
   };
 
   return (
@@ -180,12 +180,7 @@ const VurderingStart = ({
       </Nav.Fieldset>
 
       <div className="fane__knapplinje">
-        <Nav.Hovedknapp
-          mini
-          disabled={!erObligatoriskeFelterFyltInn}
-          className="fane__navigasjonsknapp"
-          onClick={fortsettHandle}
-        >
+        <Nav.Hovedknapp mini disabled={!formIsValid} className="fane__navigasjonsknapp" onClick={fortsettHandle}>
           Fortsett
         </Nav.Hovedknapp>
       </div>
