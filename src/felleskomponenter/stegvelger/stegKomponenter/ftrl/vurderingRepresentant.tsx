@@ -176,12 +176,26 @@ const VurderingRepresentant = ({
             <datalist id="dataliste-representanter">
               {representantListe.map((rep) => (
                 <option key={Utils._uuid()} value={rep.nummer}>
-                  {rep.navn + " (" + rep.nummer + ")"}
+                  {`${rep.navn} (${rep.nummer})`}
                 </option>
               ))}
             </datalist>
             <Skjema.Checkbox feltNavn="selvbetalende" label="Søker er selvbetalende" />
           </Nav.Column>
+          {representantData && (
+            <Nav.Column xs="6">
+              <div className="representantData">
+                <p className="dataelement">{`${representantData.navn} (${representantData.nummer})`}</p>
+                {representantData.adresselinjer.length > 0 &&
+                  representantData.adresselinjer.map((linje) => <p className="dataelement">{linje}</p>)}
+                <p className="dataelement">{representantData.postnummer}</p>
+                <p className="dataelement">
+                  <b>Org.nr.: </b>
+                  {representantData.orgnr}
+                </p>
+              </div>
+            </Nav.Column>
+          )}
         </Nav.Fieldset>
       </Nav.Row>
 

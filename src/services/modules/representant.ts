@@ -12,10 +12,7 @@ export interface RepresentantData {
   navn: string;
   adresselinjer: string[];
   postnummer: string | null;
-  telefon: string | null;
   orgnr: string | null;
-  endretAv: string | null;
-  endretDato: string | null;
 }
 
 export interface ValgtRepresentant {
