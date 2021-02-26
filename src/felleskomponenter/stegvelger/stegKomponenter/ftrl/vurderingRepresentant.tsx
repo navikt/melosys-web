@@ -103,7 +103,7 @@ const VurderingRepresentant = ({
       }
     }
   }
-  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 500), []);
+  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 1000), []);
 
   useEffect(() => {
     setOrganisasjon(undefined);
@@ -114,12 +114,14 @@ const VurderingRepresentant = ({
 
   function hentRepresentant(data: { representantnummer: string; valid: boolean }) {
     if (data.valid) {
-      Api.Representant.hentRepresentant(data.representantnummer).then(setRepresentantData).catch(Utils.logger.error);
+      Api.Representant.hentRepresentant(data.representantnummer)
+        .then(setRepresentantData)
+        .catch(() => {});
     } else {
       setRepresentantData(undefined);
     }
   }
-  const debouncedHentRepresentant = useCallback(Utils._debounce(hentRepresentant, 500), []);
+  const debouncedHentRepresentant = useCallback(Utils._debounce(hentRepresentant, 1000), []);
 
   useEffect(() => {
     setRepresentantData(undefined);
