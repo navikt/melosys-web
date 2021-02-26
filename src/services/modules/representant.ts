@@ -2,12 +2,12 @@ import { API_BASE_URL, REPRESENTANT } from "../api-constants";
 
 import { cachedGetAsJson, getAsJson, postAsJson } from "../utils";
 
-export interface Representant {
+export interface RepresentantListeResDto {
   nummer: string;
   navn: string;
 }
 
-export interface RepresentantData {
+export interface RepresentantDataResDto {
   nummer: string;
   navn: string;
   adresselinjer: string[];
@@ -15,18 +15,22 @@ export interface RepresentantData {
   orgnr: string | null;
 }
 
-export interface ValgtRepresentant {
+export interface ValgtRepresentantResDto {
   representantnummer: string;
   selvbetalende: boolean;
   organisasjonsnummer: string | null | undefined;
   kontaktperson: string | null | undefined;
 }
 
-export const hentRepresentantListe = (): Promise<Representant[]> =>
+export interface ValgtRepresentantReqDto extends ValgtRepresentantResDto {}
+
+export const hentRepresentantListe = (): Promise<RepresentantListeResDto[]> =>
   cachedGetAsJson(`${API_BASE_URL}${REPRESENTANT}/liste`);
-export const hentRepresentant = (representantID: string): Promise<RepresentantData> =>
+export const hentRepresentant = (representantID: string): Promise<RepresentantDataResDto> =>
   cachedGetAsJson(`${API_BASE_URL}${REPRESENTANT}/${representantID}`);
-export const hentValgtRepresentant = (behandlingID: string): Promise<ValgtRepresentant> =>
+export const hentValgtRepresentant = (behandlingID: string): Promise<ValgtRepresentantResDto> =>
   getAsJson(`${API_BASE_URL}${REPRESENTANT}/valgt/${behandlingID}`);
-export const sendValgtRepresentant = (behandlingID: string, data: ValgtRepresentant): Promise<ValgtRepresentant> =>
-  postAsJson(`${API_BASE_URL}${REPRESENTANT}/valgt/${behandlingID}`, data);
+export const sendValgtRepresentant = (
+  behandlingID: string,
+  data: ValgtRepresentantReqDto
+): Promise<ValgtRepresentantResDto> => postAsJson(`${API_BASE_URL}${REPRESENTANT}/valgt/${behandlingID}`, data);

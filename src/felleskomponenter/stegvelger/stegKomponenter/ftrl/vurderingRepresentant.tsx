@@ -17,7 +17,7 @@ import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
 import { OrganisasjonsAdresse } from "../../../adresser";
-import { RepresentantData } from "../../../../services/modules/representant";
+import { RepresentantDataResDto } from "../../../../services/modules/representant";
 
 import "./vurderingRepresentant.css";
 
@@ -68,7 +68,7 @@ const VurderingRepresentant = ({
   organisasjonsnummerValid,
 }: Props & PropsFromRedux) => {
   const [representantListe, setRepresentantListe] = useState<{ navn: string; nummer: string }[]>([]);
-  const [representantData, setRepresentantData] = useState<RepresentantData>();
+  const [representantData, setRepresentantData] = useState<RepresentantDataResDto>();
   const [organisasjon, setOrganisasjon] = useState<Organisasjon | undefined>();
   const hjelpetekstNummer =
     "Representantnummeret du legger til her vil bli overført til Avgiftssystemet (ME7-bildet) når du fatter vedtak.\nSkal du opprette en ny representant, må du gjøre det i Avgiftssystemet.\nListen du finner her oppdateres hvert døgn. Hvis du har opprettet eller endret en representant i Avgiftssystemet i dag, vil du derfor ikke finne oppdateringen her. Dette har ikke betydning for overføringen til Avgiftssystemet, så lenge nummeret er riktig.";
@@ -77,7 +77,7 @@ const VurderingRepresentant = ({
 
   useEffect(() => {
     Api.Representant.hentRepresentantListe()
-      .then((liste: Api.Representant.Representant[]) => {
+      .then((liste: Api.Representant.RepresentantListeResDto[]) => {
         setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
       })
       .catch(Utils.logger.error);
