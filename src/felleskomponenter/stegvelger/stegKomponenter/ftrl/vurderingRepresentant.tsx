@@ -158,7 +158,7 @@ const VurderingRepresentant = ({
               Representantnummer til Avgiftssystemet
               <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekstNummer} type={Nav.PopoverOrientering.Hoyre}>
                 {hjelpetekstNummer.split("\n").map((paragraf) => (
-                  <p>{paragraf}</p>
+                  <p key={Utils._uuid()}>{paragraf}</p>
                 ))}
               </Nav.Hjelpetekst>
             </div>
@@ -188,7 +188,11 @@ const VurderingRepresentant = ({
               <div className="representantData">
                 <p className="dataelement">{`${representantData.navn} (${representantData.nummer})`}</p>
                 {representantData.adresselinjer.length > 0 &&
-                  representantData.adresselinjer.map((linje) => <p className="dataelement">{linje}</p>)}
+                  representantData.adresselinjer.map((linje) => (
+                    <p className="dataelement" key={Utils._uuid()}>
+                      {linje}
+                    </p>
+                  ))}
                 <p className="dataelement">{representantData.postnummer}</p>
                 <p className="dataelement">
                   <b>Org.nr.: </b>
