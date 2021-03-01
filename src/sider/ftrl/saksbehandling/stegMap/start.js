@@ -18,11 +18,15 @@ class Start extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.generiskStegRedigerbart,
+      annenBehandlingOppfriskes: _propsLight.annenBehandlingOppfriskes,
     });
     this.beregnRelevantUI = () => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
+      tilForsiden: propsLight.tilgjengeligeHandlers.tilForsiden,
+      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger:
+        propsLight.tilgjengeligeHandlers.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     };
     this.status = FANE_STATUS.OK;
   }
