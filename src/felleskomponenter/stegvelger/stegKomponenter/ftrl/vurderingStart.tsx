@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
@@ -12,12 +12,11 @@ import * as Skjema from "../../../skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 
-import { modalerOperations } from "../../../../ducks/modaler";
-import { menypanelOperations } from "../../../../ducks/menypanel";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import DialogboksOppfriskSak from "../../../dialogboks/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
 
@@ -40,9 +39,6 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  visOppfriskDialogOgFortsettHandle: (fortsett: () => void) =>
-    dispatch(modalerOperations.visOppfriskOgFortsett(fortsett)),
-  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (soeknadsland: string[]) =>
@@ -70,6 +66,9 @@ interface Props {
   oppdaterData: (avklartefakta: any) => void;
   alleLandkoder: KTObject[];
   formValues: FormValuesProp;
+  tilForsiden: () => void;
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
+  annenBehandlingOppfriskes: boolean;
 }
 
 const VurderingStart = ({
@@ -77,8 +76,6 @@ const VurderingStart = ({
   redigerbart,
   formValues = {},
   alleLandkoder,
-  visOppfriskDialogOgFortsettHandle,
-  visMenypanel,
   oppdater,
   oppdaterPeriode,
   oppdaterSoeknadsland,
@@ -87,7 +84,11 @@ const VurderingStart = ({
   lagreBehandlingsgrunnlag,
   formIsValid,
   erPeriodeGyldig,
+  tilForsiden,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+  annenBehandlingOppfriskes,
 }: Props & PropsFromRedux) => {
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
     <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
@@ -116,17 +117,14 @@ const VurderingStart = ({
   }, [formIsValid, formValues]);
 
   const fortsettHandle = () => {
-    visOppfriskDialogOgFortsettHandle(() => {
-      bekreft();
-      visMenypanel();
-    });
+    setVisOppfrisk(true);
   };
 
   return (
     <div className="vurderingStart">
       <Nav.typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.typo.Undertittel>
 
-      <Nav.Fieldset legend="Periode" onSubmit={fortsettHandle}>
+      <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
             <Skjema.Input datoFelt label="Fra og med:" feltNavn="fom" bredde="fullbredde" disabled={!redigerbart} />
@@ -184,6 +182,23 @@ const VurderingStart = ({
           Fortsett
         </Nav.Hovedknapp>
       </div>
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            bekreft();
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            tilForsiden();
+          }}
+          behandlingOppfriskes
+          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+        />
+      )}
     </div>
   );
 };

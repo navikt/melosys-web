@@ -380,6 +380,7 @@ class Stegvelger extends Component {
       bekreft: this.bekreft,
       tilbake: this.tilbake,
       oppdater: this.oppdater,
+      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     };
 
     const { props } = this;
@@ -438,6 +439,7 @@ class Stegvelger extends Component {
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
       vurder_familie_valid: props.vurder_familie_valid,
+      annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -538,6 +540,7 @@ class Stegvelger extends Component {
 
 Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
+  annenBehandlingOppfriskes: PT.bool,
   behandlingID: PT.number.isRequired,
   bestemmelser: PT.array,
   arbeidsgivereIPerioden: PT.array,
@@ -618,9 +621,11 @@ Stegvelger.propTypes = {
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
   vurder_familie_valid: PT.bool.isRequired,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
 };
 
 Stegvelger.defaultProps = {
+  annenBehandlingOppfriskes: undefined,
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   bostedsland: null,
@@ -646,6 +651,7 @@ Stegvelger.defaultProps = {
   lagreLovvalgsperioderHandler: () => {},
   lagreAnmodningsperioderHandler: () => {},
   oppdaterOgLagreBehandlingerHandler: () => {},
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
 };
 
 const mapStateToProps = (state) => ({
