@@ -232,36 +232,17 @@ export const MottaksdatoSelector = createSelector(
 
 export const LonnOgGodtgjorelseSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlagData) => behandlingsgrunnlagData.loennOgGodtgjoerelse || {}
-);
-
-export const LonnOgNaturalytelserSelector = createSelector(
-  LonnOgGodtgjorelseSelector,
-  ({
-    norskArbgUtbetalerLoenn,
-    erArbeidstakerAnsattHelePerioden,
-    utlArbgUtbetalerLoenn,
-    bruttoLoennPerMnd,
-    bruttoLoennUtlandPerMnd,
-    mottarNaturalytelser,
-    samletVerdiNaturalytelser,
-    utlArbTilhoererSammeKonsern,
-  }) => ({
-    norskArbgUtbetalerLoenn,
-    erArbeidstakerAnsattHelePerioden,
-    utlArbgUtbetalerLoenn,
-    bruttoLoennPerMnd: parseFloat(bruttoLoennPerMnd),
-    bruttoLoennUtlandPerMnd: parseFloat(bruttoLoennUtlandPerMnd),
-    mottarNaturalytelser,
-    samletVerdiNaturalytelser: parseFloat(samletVerdiNaturalytelser),
-    utlArbTilhoererSammeKonsern,
-  })
-);
-
-export const ArbeidsgiveravgiftOgTrygdeavgiftSelector = createSelector(
-  LonnOgGodtgjorelseSelector,
-  ({ erArbeidsgiveravgiftHelePerioden, erTrukketTrygdeavgift }) => ({
-    erArbeidsgiveravgiftHelePerioden,
-    erTrukketTrygdeavgift,
-  })
+  (behandlingsgrunnlagData) =>
+    behandlingsgrunnlagData.loennOgGodtgjoerelse || {
+      norskArbgUtbetalerLoenn: null,
+      erArbeidstakerAnsattHelePerioden: null,
+      utlArbgUtbetalerLoenn: null,
+      bruttoLoennPerMnd: null,
+      bruttoLoennUtlandPerMnd: null,
+      mottarNaturalytelser: null,
+      samletVerdiNaturalytelser: null,
+      utlArbTilhoererSammeKonsern: null,
+      erArbeidsgiveravgiftHelePerioden: null,
+      erTrukketTrygdeavgift: null,
+    }
 );

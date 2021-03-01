@@ -115,14 +115,14 @@ const InntektRedigeringUtfort = ({ tittel, verdi }: InntektRedigeringUtfortProps
 );
 
 type LonnOgNaturalytelser = {
-  norskArbgUtbetalerLoenn: boolean;
-  erArbeidstakerAnsattHelePerioden: boolean;
-  utlArbgUtbetalerLoenn: boolean;
-  bruttoLoennPerMnd: number;
-  bruttoLoennUtlandPerMnd: number;
-  mottarNaturalytelser: boolean;
-  samletVerdiNaturalytelser: number;
-  utlArbTilhoererSammeKonsern: boolean;
+  norskArbgUtbetalerLoenn: boolean | null;
+  erArbeidstakerAnsattHelePerioden: boolean | null;
+  utlArbgUtbetalerLoenn: boolean | null;
+  bruttoLoennPerMnd: number | null;
+  bruttoLoennUtlandPerMnd: number | null;
+  mottarNaturalytelser: boolean | null;
+  samletVerdiNaturalytelser: number | null;
+  utlArbTilhoererSammeKonsern: boolean | null;
 };
 
 const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }) => {
@@ -231,8 +231,8 @@ const LonnOgNaturalytelser = ({ redigerbart, ...lonnOgNaturalytelser }: LonnOgNa
 );
 
 type ArbeidsgiveravgiftOgTrygdeavgift = {
-  erArbeidsgiveravgiftHelePerioden: boolean;
-  erTrukketTrygdeavgift: boolean;
+  erArbeidsgiveravgiftHelePerioden: boolean | null;
+  erTrukketTrygdeavgift: boolean | null;
 };
 
 const ArbeidsgiveravgiftOgTrygdeavgiftRedigerer = ({ redigerbart }: { redigerbart: boolean }) => (
