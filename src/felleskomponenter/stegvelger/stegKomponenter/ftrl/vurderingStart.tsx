@@ -14,6 +14,7 @@ import * as KV from "../../../../kodeverk";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
+import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
 import DialogboksOppfriskSak from "../../../dialogboks/dialogboksOppfrisk";
@@ -39,6 +40,7 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (soeknadsland: string[]) =>
@@ -87,6 +89,7 @@ const VurderingStart = ({
   tilForsiden,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   annenBehandlingOppfriskes,
+  visMenypanel,
 }: Props & PropsFromRedux) => {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
@@ -189,6 +192,7 @@ const VurderingStart = ({
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
             setVisOppfrisk(false);
+            visMenypanel();
             bekreft();
           }}
           tilForsiden={() => {
