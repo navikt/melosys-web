@@ -9,6 +9,8 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
+import MKV from "../../melosyskodeverk";
+
 import Menypanel from "../menypanel";
 
 import { behandlingsperioderSelectors } from "../../ducks/behandlingsperioder";
@@ -85,7 +87,9 @@ const mapStateToProps = (state: RootState) => ({
     EOSBarnetrygdFraNAV: behandlingsgrunnlagSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
     soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
-    soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+    soknadsland: behandlingsgrunnlagSelectors
+      .SoknadslandSelector(state)
+      .map((land: string) => ({ value: land, label: KV.kodeTilTerm(land, MKV.KTObjects.landkoder) })),
     arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
     selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(
       state

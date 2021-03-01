@@ -1,6 +1,11 @@
 import React, { CSSProperties } from "react";
 import Select, { Styles, ValueType } from "react-select";
 
+export interface OptionBase {
+  value: string;
+  label: string;
+}
+
 interface MultiSelectProps<T> {
   label: string;
   values: string[];
@@ -10,7 +15,7 @@ interface MultiSelectProps<T> {
   redigerbart?: boolean;
 }
 
-function MultiSelect<T extends { value: string; label: string }>(props: MultiSelectProps<T>) {
+function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   const { label, values, onChange, options, feil, redigerbart = true } = props;
 
   const getBorderColor = (hover = false) => {
