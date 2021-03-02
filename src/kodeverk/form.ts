@@ -56,7 +56,6 @@ export type SoknadFormData = any;
 
 export const SOK_ETTER_SAK = "sokEtterSak";
 export const ARTIKKEL_16_ANMODNING = "artikkel_16_anmodning";
-export const INNGANG = "inngang";
 export const ARTIKKEL_12_VEDTAK = "artikkel_12_vedtak";
 export const AVSLAG_ARTIKKEL_12_OG_16 = "avslag_artikkel_12_og_16";
 export const ARTIKKEL_16_MOTTA_SVAR = "artikkel_16_motta_svar";

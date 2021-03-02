@@ -60,7 +60,6 @@ export function oppdaterState() {
   return (dispatch, getState) => {
     const behandlingsgrunnlagData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
-      ...formSelectors.InngangFormSelector(getState()).values,
       ...formSelectors.VurderStartFormSelector(getState()).values,
     };
 
