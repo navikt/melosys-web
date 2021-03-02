@@ -228,7 +228,6 @@ export default function reducer(state = initialState, action) {
                 : foretak.fortsetterEtterArbeidIUtlandet,
             })),
           },
-
           loennOgGodtgjoerelse: {
             norskArbgUtbetalerLoenn: dokument.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn,
             erArbeidstakerAnsattHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidstakerAnsattHelePerioden,

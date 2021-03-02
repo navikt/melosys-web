@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
 import { connect, ConnectedProps } from "react-redux";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 import { formValueSelector } from "redux-form";
 import { RootState } from "AppTypes";
 
@@ -10,6 +12,7 @@ import * as Utils from "../../../../utils";
 import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
 
+import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
 import { BOOLSK_STRING } from "../../../../constants";
 import EditerbartElement, { Status } from "../editerbartElement";
 
@@ -215,15 +218,16 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
 
 const symbolsynlighetMap = new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]]);
 
-type LonnOgNaturalytelserProps = LonnOgNaturalytelser & { redigerbart: boolean };
+type LonnOgNaturalytelserProps = LonnOgNaturalytelser & { lagreHandler: () => boolean; redigerbart: boolean };
 
-const LonnOgNaturalytelser = ({ redigerbart, ...lonnOgNaturalytelser }: LonnOgNaturalytelserProps) => (
+const LonnOgNaturalytelser = ({ redigerbart, lagreHandler, ...lonnOgNaturalytelser }: LonnOgNaturalytelserProps) => (
   <EditerbartElement
     redigerbart={redigerbart}
     harData
     tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.lonnOgNaturalytelser}
     hentNyStatusVedHarData={false}
     visLagreKnapp
+    onLagreClick={lagreHandler}
     symbolsynlighetMap={symbolsynlighetMap}
     redigererRender={() => <LonnOgNaturalytelserRedigerer redigerbart={redigerbart} />}
     redigeringUtfortRender={() => <LonnOgNaturalytelserRedigeringUtfort {...lonnOgNaturalytelser} />}
@@ -270,10 +274,14 @@ const ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort = ({
   </Nav.Row>
 );
 
-type ArbeidsgiveravgiftOgTrygdeavgiftProps = ArbeidsgiveravgiftOgTrygdeavgift & { redigerbart: boolean };
+type ArbeidsgiveravgiftOgTrygdeavgiftProps = ArbeidsgiveravgiftOgTrygdeavgift & {
+  lagreHandler: () => boolean;
+  redigerbart: boolean;
+};
 
 const ArbeidsgiveravgiftOgTrygdeavgift = ({
   redigerbart,
+  lagreHandler,
   ...arbeidsgiveravgiftOgTrygdeavgift
 }: ArbeidsgiveravgiftOgTrygdeavgiftProps) => (
   <EditerbartElement
@@ -283,6 +291,7 @@ const ArbeidsgiveravgiftOgTrygdeavgift = ({
     hentNyStatusVedHarData={false}
     symbolsynlighetMap={symbolsynlighetMap}
     visLagreKnapp
+    onLagreClick={lagreHandler}
     redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer redigerbart={redigerbart} />}
     redigeringUtfortRender={() => (
       <ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort {...arbeidsgiveravgiftOgTrygdeavgift} />
@@ -303,7 +312,11 @@ const mapStateToProps = (state: RootState) => ({
   arbeidsgiveravgiftOgTrygdeavgift: arbeidsgiveravgiftOgTrygdeavgiftSelector(state),
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type LonnOgGodtgjorelserProps = {
@@ -315,25 +328,37 @@ type LonnOgGodtgjorelserProps = {
 const LonnOgGodtgjorelser = connector(
   ({
     redigerbart,
+    oppdaterBehandlingsgrunnlag,
     lonnOgNaturalytelser,
     arbeidsgiveravgiftOgTrygdeavgift,
     behandlingsgrunnlagEtikett,
     visArbeidsforholdRolleEtiketter,
-  }: PropsFromRedux & LonnOgGodtgjorelserProps) => (
-    <Nav.Container fluid className="lonnOgGodtgjorelser">
-      <Nav.Row className="tittel">
-        <Nav.Column xs="12">
-          <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
-            {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-          </Nav.typo.Innholdstittel>
-          <span>{behandlingsgrunnlagEtikett}</span>
-          {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
-          <LonnOgNaturalytelser redigerbart={redigerbart} {...lonnOgNaturalytelser} />
-          <ArbeidsgiveravgiftOgTrygdeavgift redigerbart={redigerbart} {...arbeidsgiveravgiftOgTrygdeavgift} />
-        </Nav.Column>
-      </Nav.Row>
-    </Nav.Container>
-  )
+  }: PropsFromRedux & LonnOgGodtgjorelserProps) => {
+    const lagreHandler = () => {
+      oppdaterBehandlingsgrunnlag();
+      return true;
+    };
+
+    return (
+      <Nav.Container fluid className="lonnOgGodtgjorelser">
+        <Nav.Row className="tittel">
+          <Nav.Column xs="12">
+            <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+              {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
+            </Nav.typo.Innholdstittel>
+            <span>{behandlingsgrunnlagEtikett}</span>
+            {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+            <LonnOgNaturalytelser redigerbart={redigerbart} lagreHandler={lagreHandler} {...lonnOgNaturalytelser} />
+            <ArbeidsgiveravgiftOgTrygdeavgift
+              redigerbart={redigerbart}
+              lagreHandler={lagreHandler}
+              {...arbeidsgiveravgiftOgTrygdeavgift}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      </Nav.Container>
+    );
+  }
 );
 
 export default LonnOgGodtgjorelser;
