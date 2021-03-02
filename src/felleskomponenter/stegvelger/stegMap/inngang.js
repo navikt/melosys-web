@@ -14,7 +14,6 @@ class Inngang extends Steg {
     this.tittel = "Inngang";
     this.komponent = VurderingInngang;
     this.samleRelevanteData = (_propsLight) => ({
-      begrunnelser: _propsLight.begrunnelser,
       alleLandkoder: _propsLight.landkoder,
       avklartefakta: _propsLight.avklartefakta,
       redigerbart: _propsLight.generiskStegRedigerbart,
