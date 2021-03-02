@@ -24,6 +24,7 @@ import { formOperations } from "../../../ducks/form";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { BOOLSK_STRING } from "../../../constants";
 import {
   lagAvklartfakta,
   slettAvklartfakta,
@@ -47,9 +48,7 @@ const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, inform
   }, []);
 
   const oppdaterInformertMyndighetFakta = (land) => {
-    oppdaterData(
-      lagAvklartfakta(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, land, KV.Koder.SoknadslandFaktaTyper.SANN)
-    );
+    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, land, BOOLSK_STRING.SANN));
   };
 
   return (
