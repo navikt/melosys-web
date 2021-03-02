@@ -17,7 +17,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type InnerMultiSelectComponentBaseProps = Omit<ComponentProps<typeof MultiSelect>, "feil" | "onChange" | "values"> & {
   feltNavn: string;
-  onChange?: (selectedOptions: OptionBase[]) => void;
+  onChange?: (selectedOptions: string[]) => void;
 };
 
 type InnerMultiSelectComponentProps = WrappedFieldArrayProps<OptionBase> &
@@ -39,9 +39,10 @@ function InnerMultiSelectComponent({
   return (
     <MultiSelect
       label={label}
-      onChange={(value) => {
-        if (onChange) onChange(value);
-        endreFelt(meta.form, feltNavn, value);
+      onChange={(selectedOptions) => {
+        const selectedValues = selectedOptions.map(({ value }) => value);
+        if (onChange) onChange(selectedValues);
+        endreFelt(meta.form, feltNavn, selectedValues);
       }}
       options={options}
       feil={feil}
