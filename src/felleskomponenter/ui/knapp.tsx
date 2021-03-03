@@ -24,7 +24,7 @@ const Knapp = ({
   className,
   ...rest
 }: KnappProps) => {
-  const cls = classnames(className, {
+  const cls = classnames("mui-knapp", className, {
     disabledKnapp: disabled,
     knapp: !disabled,
     capitalCase,
