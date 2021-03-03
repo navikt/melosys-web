@@ -66,7 +66,7 @@ const VurderingRepresentant = ({
   representantnummerValid,
   organisasjonsnummerValid,
 }: Props & PropsFromRedux) => {
-  const [representantListe, setRepresentantListe] = useState<Api.Representant.RepresentantListeResDto[]>([]);
+  const [representantListe, setRepresentantListe] = useState<Api.Representant.RepresentantListeResDto>([]);
   const [representantData, setRepresentantData] = useState<Api.Representant.RepresentantDataResDto>();
   const [organisasjon, setOrganisasjon] = useState<Organisasjon | undefined>();
   const hjelpetekstNummer =
@@ -76,7 +76,7 @@ const VurderingRepresentant = ({
 
   useEffect(() => {
     Api.Representant.hentRepresentantListe()
-      .then((liste: Api.Representant.RepresentantListeResDto[]) => {
+      .then((liste: Api.Representant.RepresentantListeResDto) => {
         setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
       })
       .catch(Utils.logger.error);
