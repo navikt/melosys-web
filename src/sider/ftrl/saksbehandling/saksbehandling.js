@@ -209,7 +209,6 @@ const Saksbehandling = ({
       .catch(Utils.logger.error);
 
     return () => {
-      console.log("boom");
       resetFagsakState();
       resetVilkarState();
       resetOppsummertFaktaState();
