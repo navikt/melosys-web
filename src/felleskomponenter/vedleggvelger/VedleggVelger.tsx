@@ -202,7 +202,7 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
       )}
       {!redigerer && (
         <Mui.Knapp className="legg-til-vedlegg-knapp" onClick={() => toggleRedigerer()} ikon={Ikoner.AddOne}>
-          Legg til vedlegg
+          {valgteVedlegg.length === 0 ? "Legg til vedlegg" : "Legg til andre vedlegg"}
         </Mui.Knapp>
       )}
     </Nav.Row>
