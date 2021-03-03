@@ -86,11 +86,16 @@ const VurderingStart = ({
   lagreBehandlingsgrunnlag,
   formIsValid,
   erPeriodeGyldig,
+  initialValues,
   tilForsiden,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   annenBehandlingOppfriskes,
   visMenypanel,
 }: Props & PropsFromRedux) => {
+  const [initialFomTom, setInitialFomTom] = useState<{ fom: string | undefined; tom: string | undefined }>({
+    fom: undefined,
+    tom: undefined,
+  });
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
@@ -98,6 +103,13 @@ const VurderingStart = ({
       {hjelpetekst}
     </Nav.Hjelpetekst>
   );
+
+  useEffect(() => {
+    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+      visMenypanel();
+      setInitialFomTom({ fom: initialValues.fom, tom: initialValues.tom });
+    }
+  }, []);
 
   const oppdaterLokalBehandlingsgrunnlag = async (data: { formValues: FormValuesProp; formIsValid: boolean }) => {
     const fom = Utils.dato.formatterDatoTilISO(data.formValues.fom);
@@ -120,7 +132,12 @@ const VurderingStart = ({
   }, [formIsValid, formValues]);
 
   const fortsettHandle = () => {
-    setVisOppfrisk(true);
+    if (formValues.fom !== initialFomTom.fom || formValues.tom !== initialFomTom.tom) {
+      setInitialFomTom({ fom: formValues.fom, tom: formValues.tom });
+      setVisOppfrisk(true);
+    } else {
+      bekreft();
+    }
   };
 
   return (
