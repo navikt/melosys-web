@@ -143,13 +143,14 @@ export const VedleggListe = ({
       {redigerer && (
         <>
           <Mui.Knapp
+            noTextTransform
             className="legg-til-markerte-vedlegg-knapp"
             onClick={leggTilMarkerteVedleggHandler}
             ikon={Ikoner.AddOne}
           >
             Legg til markerte vedlegg
           </Mui.Knapp>
-          <Mui.Knapp className="avbryt-knapp" onClick={avbrytHandler}>
+          <Mui.Knapp noTextTransform className="avbryt-knapp" onClick={avbrytHandler}>
             Avbryt
           </Mui.Knapp>
         </>
@@ -201,7 +202,12 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
         />
       )}
       {!redigerer && (
-        <Mui.Knapp className="legg-til-vedlegg-knapp" onClick={() => toggleRedigerer()} ikon={Ikoner.AddOne}>
+        <Mui.Knapp
+          noTextTransform
+          className="legg-til-vedlegg-knapp"
+          onClick={() => toggleRedigerer()}
+          ikon={Ikoner.AddOne}
+        >
           {valgteVedlegg.length === 0 ? "Legg til vedlegg" : "Legg til andre vedlegg"}
         </Mui.Knapp>
       )}
