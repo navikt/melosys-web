@@ -131,6 +131,9 @@ const Saksbehandling = ({
   resetBehandlingerState,
   resetBehandlingsgrunnlagState,
   resetFagsakState,
+  resetVilkarState,
+  resetOppsummertFaktaState,
+  resetMedlemskapsperiodeState,
   skjulMenypanel,
   soknadForm,
   tilbakeleggOppgave,
@@ -206,7 +209,11 @@ const Saksbehandling = ({
       .catch(Utils.logger.error);
 
     return () => {
+      console.log("boom");
       resetFagsakState();
+      resetVilkarState();
+      resetOppsummertFaktaState();
+      resetMedlemskapsperiodeState();
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
       skjulMenypanel();
@@ -359,6 +366,9 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsgrunnlagState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
+  resetVilkarState: PT.func.isRequired,
+  resetOppsummertFaktaState: PT.func.isRequired,
+  resetMedlemskapsperiodeState: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   skjulMenypanel: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
@@ -416,6 +426,9 @@ const mapDispatchToProps = (dispatch) => ({
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  resetVilkarState: () => dispatch(vilkarOperations.resetState()),
+  resetOppsummertFaktaState: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
+  resetMedlemskapsperiodeState: () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
