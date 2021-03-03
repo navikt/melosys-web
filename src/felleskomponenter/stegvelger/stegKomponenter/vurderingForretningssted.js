@@ -40,8 +40,6 @@ const Forretningsstedet = (props) => {
     return cleanup;
   }, []);
 
-  if (!forretningsstedet) return null;
-
   const { navn, virksomhetId } = forretningsstedet;
   const landEndretHandler = (landKode) => {
     oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, virksomhetId, landKode));
@@ -84,23 +82,25 @@ export const Forretningssteder = (props) => {
 
   return (
     <div>
-      {valgteVirksomheter.map((valgtVirksomhet) => {
-        const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
-        const avklartForretningsland = avklarteForretningsland.find(
-          (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId
-        );
+      {valgteVirksomheter
+        .filter((valgtVirksomhet) => valgtVirksomhet !== null)
+        .map((valgtVirksomhet) => {
+          const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
+          const avklartForretningsland = avklarteForretningsland.find(
+            (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId
+          );
 
-        return (
-          <Forretningsstedet
-            key={key}
-            forretningsstedet={valgtVirksomhet}
-            avklartForretningsland={avklartForretningsland}
-            oppdaterData={props.oppdaterData}
-            slettData={props.slettData}
-            redigerbart={redigerbart}
-          />
-        );
-      })}
+          return (
+            <Forretningsstedet
+              key={key}
+              forretningsstedet={valgtVirksomhet}
+              avklartForretningsland={avklartForretningsland}
+              oppdaterData={props.oppdaterData}
+              slettData={props.slettData}
+              redigerbart={redigerbart}
+            />
+          );
+        })}
       {ingenValgteVirksomheterVarsel}
     </div>
   );

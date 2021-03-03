@@ -380,6 +380,7 @@ class Stegvelger extends Component {
       bekreft: this.bekreft,
       tilbake: this.tilbake,
       oppdater: this.oppdater,
+      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     };
 
     const { props } = this;
@@ -434,9 +435,11 @@ class Stegvelger extends Component {
       lagredeVirksomheter: props.lagredeVirksomheter,
       bestemmelser: props.bestemmelser,
       medlemskapsperioder: props.medlemskapsperioder,
+      vurder_start_valid: props.vurder_start_valid,
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
       vurder_familie_valid: props.vurder_familie_valid,
+      annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -537,6 +540,7 @@ class Stegvelger extends Component {
 
 Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
+  annenBehandlingOppfriskes: PT.bool,
   behandlingID: PT.number.isRequired,
   bestemmelser: PT.array,
   arbeidsgivereIPerioden: PT.array,
@@ -613,12 +617,15 @@ Stegvelger.propTypes = {
   lagredeVirksomheter: PT.array.isRequired,
   medlemskapsperioder: PT.object.isRequired,
   sakstype: PT.string,
+  vurder_start_valid: PT.bool.isRequired,
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
   vurder_familie_valid: PT.bool.isRequired,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
 };
 
 Stegvelger.defaultProps = {
+  annenBehandlingOppfriskes: undefined,
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   bostedsland: null,
@@ -644,6 +651,7 @@ Stegvelger.defaultProps = {
   lagreLovvalgsperioderHandler: () => {},
   lagreAnmodningsperioderHandler: () => {},
   oppdaterOgLagreBehandlingerHandler: () => {},
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
 };
 
 const mapStateToProps = (state) => ({
@@ -664,6 +672,7 @@ const mapStateToProps = (state) => ({
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
+  vurder_start_valid: formSelectors.VurderStartFormValid(state),
   vurder_periode_valid: formSelectors.VurderPerioderValid(state),
   vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
   vurder_familie_valid: formSelectors.VurderFamilieFormValid(state),
