@@ -13,6 +13,8 @@ import { anmodningsperioderOperations } from "../anmodningsperioder";
 import { anmodningsperiodesvarOperations } from "../anmodningsperiodesvar";
 import { utpekingsperioderOperations } from "../utpekingsperioder";
 import { dokumenterOperations } from "../dokumenter";
+import { oppsummertfaktaOperations } from "../oppsummertfakta";
+import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
   try {
@@ -21,6 +23,8 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
       dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
       dispatch(behandlingsresultatOperations.hent(behandlingID));
+      dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
+      dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       dispatch(vilkarOperations.hent(behandlingID));
       dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
     } else {

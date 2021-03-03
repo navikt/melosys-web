@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 
 import * as Nav from "../../utils/navFrontend";
@@ -9,6 +9,10 @@ const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled })
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
     muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode))
   );
+
+  useEffect(() => {
+    setValgteCheckboxer(muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode)));
+  }, [defaultValg]);
 
   const onChangeHandler = ({ value }) => {
     const verdi = value;

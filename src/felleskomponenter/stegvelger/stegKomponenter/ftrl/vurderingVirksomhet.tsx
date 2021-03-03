@@ -18,15 +18,19 @@ import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrun
 import "./vurderingVirksomhet.css";
 import { formSelectors } from "../../../../ducks/form";
 
-const mapStateToProps = (state: RootState) => ({
-  virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  formValues: getFormValues(KV.Form.VIRKSOMHET)(state),
-  initialValues: {
-    valgteVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
-  },
-  formIsValid: formSelectors.VurderVirksomhetFormValid(state),
-});
+const mapStateToProps = (state: RootState) => {
+  const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
+  return {
+    virksomheterListe: behandlingerSelectors.AlleVirksomheterSelector(state),
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    lagredeValgtevirksomheter,
+    formValues: getFormValues(KV.Form.VIRKSOMHET)(state),
+    initialValues: {
+      valgteVirksomheter: lagredeValgtevirksomheter,
+    },
+    formIsValid: formSelectors.VurderVirksomhetFormValid(state),
+  };
+};
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
@@ -61,6 +65,7 @@ const VurderingVirksomhet = ({
   sendVirksomheter,
   tilbake,
   virksomheterListe,
+  lagredeValgtevirksomheter,
 }: Props & PropsFromRedux) => {
   const [erBehandlingsgrunnlagLastetInn, setErBehandlingsgrunnlagLastetInn] = useState(false);
   const hjelpetekst =
@@ -78,6 +83,10 @@ const VurderingVirksomhet = ({
       hentOppsummertFakta(behandlingID);
     };
   }, []);
+
+  useEffect(() => {
+    changeValgteVirksomheter(lagredeValgtevirksomheter);
+  }, [lagredeValgtevirksomheter]);
 
   const handleFortsett = () => {
     if (formValues && formValues.valgteVirksomheter) {
@@ -103,7 +112,7 @@ const VurderingVirksomhet = ({
         muligeValg={virksomheterListe}
         onChange={(checkedVirksomheter) => changeValgteVirksomheter(checkedVirksomheter)}
         disabled={!redigerbart}
-        defaultValg={formValues.valgteVirksomheter}
+        defaultValg={lagredeValgtevirksomheter}
       />
 
       <div className="fane__knapplinje">
