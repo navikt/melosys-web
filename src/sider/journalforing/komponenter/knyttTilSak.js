@@ -56,7 +56,7 @@ export const KnyttTilSak = (props) => {
   }
   return (
     <div className="behandlingspanel">
-      <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
+      <Skjema.Checkbox className="knyttTilSak" feltNavn="ingenVurdering" label="Journalfør uten videre behandling" />
     </div>
   );
 };
