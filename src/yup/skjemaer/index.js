@@ -14,6 +14,8 @@ export { vurder_utpeking } from "./vurder_utpeking";
 export { avslaa_utpeking } from "./avslaa_utpeking";
 export { sed } from "./sed";
 export { soknad } from "./soknad";
+export { vurdering_start } from "./vurdering_start";
+export { vurdering_virksomhet } from "./vurdering_virksomhet";
 export { vurdering_perioder } from "./vurdering_perioder";
 export { vurdering_trygdeavgift } from "./vurdering_trygdeavgift";
 export { vurdering_familie } from "./vurdering_familie";

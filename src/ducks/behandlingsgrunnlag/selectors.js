@@ -49,16 +49,6 @@ export const FysiskeArbeidsstederLandkoderSelector = createSelector(
   (fysiskeArbeidsstederAdresser) => fysiskeArbeidsstederAdresser.map((adresse) => adresse.landkode) || []
 );
 
-export const ArbeidsinntektSelector = createSelector(
-  BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.arbeidsinntekt || {}
-);
-
-export const ArbeidsinntektNaturalytelserSelector = createSelector(
-  ArbeidsinntektSelector,
-  (arbeidsinntekt) => arbeidsinntekt.inntektNaturalytelser || {}
-);
-
 export const ForetakUtlandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlag) => behandlingsgrunnlag.foretakUtland || []
@@ -238,4 +228,21 @@ export const YtterligereInformasjonSelector = createSelector(
 export const MottaksdatoSelector = createSelector(
   BehandlingsgrunnlagSelector,
   (behandlingsgrunnlagData) => behandlingsgrunnlagData.mottaksdato || ""
+);
+
+export const LonnOgGodtgjorelseSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlagData) =>
+    behandlingsgrunnlagData.loennOgGodtgjoerelse || {
+      norskArbgUtbetalerLoenn: null,
+      erArbeidstakerAnsattHelePerioden: null,
+      utlArbgUtbetalerLoenn: null,
+      bruttoLoennPerMnd: null,
+      bruttoLoennUtlandPerMnd: null,
+      mottarNaturalytelser: null,
+      samletVerdiNaturalytelser: null,
+      utlArbTilhoererSammeKonsern: null,
+      erArbeidsgiveravgiftHelePerioden: null,
+      erTrukketTrygdeavgift: null,
+    }
 );

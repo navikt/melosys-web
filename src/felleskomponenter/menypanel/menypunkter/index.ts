@@ -7,3 +7,4 @@ export { default as Medlemskap } from "./medlemskap";
 export { default as Periode } from "./periode";
 export { default as Person } from "./person";
 export { default as Familieforhold } from "./familieforhold";
+export { default as LonnOgGodtgjorelser } from "./lonnOgGodtgjorelser";

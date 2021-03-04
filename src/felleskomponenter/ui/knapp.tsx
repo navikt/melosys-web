@@ -10,13 +10,25 @@ import "./knapp.css";
 type KnappProps = KnappBaseProps & {
   ikon?: React.ElementType;
   capitalCase?: boolean;
+  noTextTransform?: boolean;
 };
 
-const Knapp = ({ ikon: Ikon, children, htmlType, type, disabled, capitalCase, className, ...rest }: KnappProps) => {
-  const cls = classnames(className, {
+const Knapp = ({
+  ikon: Ikon,
+  children,
+  htmlType,
+  type,
+  disabled,
+  capitalCase,
+  noTextTransform,
+  className,
+  ...rest
+}: KnappProps) => {
+  const cls = classnames("mui-knapp", className, {
     disabledKnapp: disabled,
     knapp: !disabled,
     capitalCase,
+    noTextTransform,
   });
 
   return (
@@ -30,6 +42,7 @@ const Knapp = ({ ikon: Ikon, children, htmlType, type, disabled, capitalCase, cl
 Knapp.propTypes = {
   ikon: PT.elementType,
   capitalCase: PT.bool,
+  noTextTransform: PT.bool,
   className: PT.string,
   children: PT.node,
   htmlType: PT.oneOf(["submit", "button", "reset"]),
@@ -40,6 +53,7 @@ Knapp.propTypes = {
 Knapp.defaultProps = {
   ikon: undefined,
   capitalCase: false,
+  noTextTransform: false,
   className: undefined,
   children: undefined,
   htmlType: "button",

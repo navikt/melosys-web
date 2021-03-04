@@ -29,6 +29,11 @@ export function strengTilInt(value) {
   return toInteger(value);
 }
 
+export function tryParseFloat(value) {
+  const parsedValue = Number.parseFloat(value);
+  return Number.isNaN(parsedValue) ? null : parsedValue;
+}
+
 export function tekstEllerDash(data) {
   return data || "-";
 }
