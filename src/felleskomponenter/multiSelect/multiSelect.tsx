@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import Select, { Styles, ValueType } from "react-select";
+import Select, { Styles } from "react-select";
 
 export interface OptionBase {
   value: string;
@@ -9,7 +9,7 @@ export interface OptionBase {
 interface MultiSelectProps<T> {
   label: string;
   values: string[];
-  onChange(selectedOptions: T[]): void;
+  onChange(selectedOptions: readonly T[]): void;
   options: T[];
   feil?: { feilmelding: string };
   redigerbart?: boolean;
@@ -67,7 +67,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
       <Select
         id={`select${label}`}
         styles={styles}
-        onChange={(selectedOptions: ValueType<T, true>) => onChange(selectedOptions as T[])}
+        onChange={(selectedOptions) => onChange(selectedOptions || [])}
         options={options}
         placeholder="Velg..."
         isMulti
