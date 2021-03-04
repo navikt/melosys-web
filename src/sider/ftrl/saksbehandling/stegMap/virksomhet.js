@@ -5,7 +5,7 @@ import VurderingVirksomhet from "../../../../felleskomponenter/stegvelger/stegKo
 class Virksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = propsLight.lagredeVirksomheter.length > 0;
+    const harAvklaring = propsLight.vurder_virksomhet_valid;
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -16,14 +16,12 @@ class Virksomhet extends Steg {
     this.tittel = "Virksomhet";
     this.komponent = VurderingVirksomhet;
     this.samleRelevanteData = (_propsLight) => ({
-      lagredeVirksomheter: _propsLight.lagredeVirksomheter,
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
     };
     this.status = FANE_STATUS.OK;
   }

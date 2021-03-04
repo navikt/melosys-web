@@ -51,6 +51,16 @@ export const VurderStartFormValid = createSelector(
   (errors) => Utils._isEmpty(errors)
 );
 
+export const VurderVirksomhetFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.VIRKSOMHET, {}),
+  (start) => start
+);
+
+export const VurderVirksomhetFormValid = createSelector(
+  (state) => VurderVirksomhetFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
 export const VurderStartPeriodeValid = createSelector(
   (state) => VurderStartFormSelector(state).syncErrors || {},
   (errors) => !("erPeriodeGyldig" in errors)

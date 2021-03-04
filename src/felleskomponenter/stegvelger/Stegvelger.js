@@ -84,7 +84,8 @@ class Stegvelger extends Component {
 
     if (
       this.props.oppsummering.behandlingsstatus !== prevProps.oppsummering.behandlingsstatus ||
-      this.props.artikkel12_vedtak_skjema !== prevProps.artikkel12_vedtak_skjema
+      this.props.artikkel12_vedtak_skjema !== prevProps.artikkel12_vedtak_skjema ||
+      this.props.vurder_virksomhet_valid !== prevProps.vurder_virksomhet_valid
     ) {
       this.oppdaterAktuelleSteg(aktivtStegNummer);
     }
@@ -436,6 +437,7 @@ class Stegvelger extends Component {
       bestemmelser: props.bestemmelser,
       medlemskapsperioder: props.medlemskapsperioder,
       vurder_start_valid: props.vurder_start_valid,
+      vurder_virksomhet_valid: props.vurder_virksomhet_valid,
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
       vurder_familie_valid: props.vurder_familie_valid,
@@ -618,6 +620,7 @@ Stegvelger.propTypes = {
   medlemskapsperioder: PT.object.isRequired,
   sakstype: PT.string,
   vurder_start_valid: PT.bool.isRequired,
+  vurder_virksomhet_valid: PT.bool.isRequired,
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
   vurder_familie_valid: PT.bool.isRequired,
@@ -673,6 +676,7 @@ const mapStateToProps = (state) => ({
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   vurder_start_valid: formSelectors.VurderStartFormValid(state),
+  vurder_virksomhet_valid: formSelectors.VurderVirksomhetFormValid(state),
   vurder_periode_valid: formSelectors.VurderPerioderValid(state),
   vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
   vurder_familie_valid: formSelectors.VurderFamilieFormValid(state),
