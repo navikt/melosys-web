@@ -33,6 +33,8 @@ export default function reducer(state = initialState, action: Types.Action): Sta
           bestemmelse: action.data,
         },
       };
+    case Types.RESET:
+      return { ...initialState };
     default:
       return state;
   }

@@ -13,6 +13,7 @@ import {
   Periode,
   Person,
   Familieforhold,
+  LonnOgGodtgjorelser,
 } from "../menypunkter";
 
 interface ILinksBuilder {
@@ -25,7 +26,7 @@ interface ILinksBuilder {
   addFullmektig: () => ILinksBuilder;
   addPeriodeOgLand: () => ILinksBuilder;
   addUtenlandsoppdraget: () => ILinksBuilder;
-  // addLonnOgGodtgjorelser: () => ILinksBuilder,
+  addLonnOgGodtgjorelser: () => ILinksBuilder;
   addArbeidssteder: () => ILinksBuilder;
   // addOmVirksomhetenINorge: () => ILinksBuilder,
   // addOvrigOmArbeidstaker: () => ILinksBuilder,
@@ -169,6 +170,21 @@ class LinksBuilder implements ILinksBuilder {
       active: false,
       content: (
         <Arbeidssteder
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
+    });
+    return this;
+  }
+
+  public addLonnOgGodtgjorelser() {
+    this.links.push({
+      label: "Lønn og godtgjørelser",
+      active: false,
+      content: (
+        <LonnOgGodtgjorelser
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}

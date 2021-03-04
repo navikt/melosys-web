@@ -98,11 +98,12 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[1].links[2].label).toBe("Arbeidsforhold og inntekt");
 
     expect(sidemenyLinkGroups[2].label).toBe("FRA SØKNAD");
-    expect(sidemenyLinkGroups[2].links).toHaveLength(4);
+    expect(sidemenyLinkGroups[2].links).toHaveLength(5);
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
-    expect(sidemenyLinkGroups[2].links[1].label).toBe("Fullmektig");
-    expect(sidemenyLinkGroups[2].links[2].label).toBe("Utenlandsoppdraget");
-    expect(sidemenyLinkGroups[2].links[3].label).toBe("Arbeidssted(er)");
+    expect(sidemenyLinkGroups[2].links[1].label).toBe("Lønn og godtgjørelser");
+    expect(sidemenyLinkGroups[2].links[2].label).toBe("Fullmektig");
+    expect(sidemenyLinkGroups[2].links[3].label).toBe("Utenlandsoppdraget");
+    expect(sidemenyLinkGroups[2].links[4].label).toBe("Arbeidssted(er)");
   });
 
   each([BESLUTNING_LOVVALG_ANNET_LAND, ANMODNING_OM_UNNTAK_HOVEDREGEL, ØVRIGE_SED_MED, ØVRIGE_SED_UFM, TRYGDETID]).it(

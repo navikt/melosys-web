@@ -93,6 +93,7 @@ const behandlingsstatusMap = {
 
 const Saksbehandling = ({
   anmodningsperioderErSendtUtlandet,
+  annenBehandlingOppfriskes,
   apneTidligereBehandlinger,
   arbeidsland,
   behandlingOppfriskes,
@@ -118,6 +119,7 @@ const Saksbehandling = ({
   hentOppsummertFakta,
   lagreAllData,
   lagreAvklartefakta,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   lagreOgLukk,
   lagreVilkar,
   location,
@@ -129,6 +131,9 @@ const Saksbehandling = ({
   resetBehandlingerState,
   resetBehandlingsgrunnlagState,
   resetFagsakState,
+  resetVilkarState,
+  resetOppsummertFaktaState,
+  resetMedlemskapsperiodeState,
   skjulMenypanel,
   soknadForm,
   tilbakeleggOppgave,
@@ -205,6 +210,9 @@ const Saksbehandling = ({
 
     return () => {
       resetFagsakState();
+      resetVilkarState();
+      resetOppsummertFaktaState();
+      resetMedlemskapsperiodeState();
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
       skjulMenypanel();
@@ -246,9 +254,11 @@ const Saksbehandling = ({
             {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
             {visStegVelger && (
               <Stegvelger
+                annenBehandlingOppfriskes={annenBehandlingOppfriskes}
                 behandlingID={behandlingID}
                 lagreAvklartefaktaHandler={lagreAvklartefakta}
                 lagreAllData={lagreAllData}
+                lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
                 lagreVilkarHandler={lagreVilkar}
                 oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
                 begrunnelser={MKV.KTObjects.begrunnelser}
@@ -314,6 +324,7 @@ const Saksbehandling = ({
 
 Saksbehandling.propTypes = {
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
+  annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
@@ -347,12 +358,16 @@ Saksbehandling.propTypes = {
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
   resetBehandlingsgrunnlagState: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
+  resetVilkarState: PT.func.isRequired,
+  resetOppsummertFaktaState: PT.func.isRequired,
+  resetMedlemskapsperiodeState: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   skjulMenypanel: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
@@ -410,6 +425,9 @@ const mapDispatchToProps = (dispatch) => ({
   lagreAvklartefakta: () => dispatch(avklartefaktaOperations.lagre()),
   lagreVilkar: () => dispatch(vilkarOperations.lagre()),
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  resetVilkarState: () => dispatch(vilkarOperations.resetState()),
+  resetOppsummertFaktaState: () => dispatch(oppsummertfaktaOperations.resetOppsummertFakta()),
+  resetMedlemskapsperiodeState: () => dispatch(medlemskapsperioderOperations.resetMedlemskapsperioder()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),

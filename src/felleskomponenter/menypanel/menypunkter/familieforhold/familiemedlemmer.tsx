@@ -85,7 +85,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
           elements={familiemedlemmer}
           renderElement={(familiemedlem) => <FamiliemedlemmerEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
           idFromElement={(familiemedlem) => familiemedlem.fnr}
-          amountOfItemsCollapsed={2}
+          amountOfItemsCollapsed={familiemedlemmer.length}
           btnTextCollapsed="Vis flere"
           btnTextExpanded="Vis færre"
           chevron

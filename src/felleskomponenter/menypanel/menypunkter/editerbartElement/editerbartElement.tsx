@@ -14,7 +14,7 @@ interface EditerbartElementProps {
   ingenDataRender?: (apneRedigering: () => void) => ReactNode;
   redigeringUtfortRender: () => ReactNode;
   redigerbart: boolean;
-  onBinClick: MouseEventHandler;
+  onBinClick?: MouseEventHandler;
   tittel: string;
   tittelIkon?: ElementType;
   tittelUnderstrek?: boolean;
@@ -45,7 +45,7 @@ const EditerbartElement = ({
   ingenDataRender,
   redigeringUtfortRender,
   redigerbart,
-  onBinClick,
+  onBinClick = () => {},
   tittel,
   tittelIkon,
   tittelUnderstrek,

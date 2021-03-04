@@ -47,7 +47,9 @@ class LinkGroupsFactory {
       case IKKE_YRKESAKTIV:
       case ARBEID_ETT_LAND_ØVRIG:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
-        const fraSoknad = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig();
+        const fraSoknad = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
+        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addLonnOgGodtgjorelser();
+        fraSoknad.addFullmektig();
         if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addUtenlandsoppdraget();
         else fraSoknad.addPeriodeOgLand();
         fraSoknad.addArbeidssteder();

@@ -120,6 +120,18 @@ describe("behandlingsgrunnlag reducer", () => {
           erHjemmekontor: false,
           erFastArbeidssted: null,
         },
+        loennOgGodtgjoerelse: {
+          norskArbgUtbetalerLoenn: false,
+          erArbeidstakerAnsattHelePerioden: true,
+          utlArbgUtbetalerLoenn: true,
+          bruttoLoennPerMnd: "7000.12",
+          bruttoLoennUtlandPerMnd: "14000",
+          mottarNaturalytelser: true,
+          samletVerdiNaturalytelser: "",
+          erArbeidsgiveravgiftHelePerioden: true,
+          erTrukketTrygdeavgift: false,
+          utlArbTilhoererSammeKonsern: null,
+        },
         antallAnsatte: "12345",
         antallAdmAnsatte: "12345",
         andelOmsetningINorge: "12345",
@@ -249,17 +261,17 @@ describe("behandlingsgrunnlag reducer", () => {
       status: STATUS.NOT_STARTED,
       data: {
         data: {
-          arbeidsinntekt: {
-            inntektNorskIPerioden: 1,
-            inntektUtenlandskIPerioden: 2,
-            inntektNaeringIPerioden: null,
-            inntektNaturalytelser: {
-              friBil: "4",
-              friBolig: "5",
-              friAnnet: "6",
-            },
-            inntektErInnrapporteringspliktig: true,
-            inntektTrygdeavgiftBlirTrukket: true,
+          loennOgGodtgjoerelse: {
+            norskArbgUtbetalerLoenn: false,
+            erArbeidstakerAnsattHelePerioden: true,
+            utlArbgUtbetalerLoenn: true,
+            bruttoLoennPerMnd: 7000.12,
+            bruttoLoennUtlandPerMnd: 14000,
+            mottarNaturalytelser: true,
+            samletVerdiNaturalytelser: null,
+            erArbeidsgiveravgiftHelePerioden: true,
+            erTrukketTrygdeavgift: false,
+            utlArbTilhoererSammeKonsern: null,
           },
           arbeidPaaLand: {
             fysiskeArbeidssteder: [
