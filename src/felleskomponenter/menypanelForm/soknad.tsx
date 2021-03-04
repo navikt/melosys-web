@@ -9,8 +9,6 @@ import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
-import MKV from "../../melosyskodeverk";
-
 import Menypanel from "../menypanel";
 
 import { behandlingsperioderSelectors } from "../../ducks/behandlingsperioder";
