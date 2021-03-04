@@ -42,6 +42,7 @@ const Soknadslandvelger = ({ redigerbart, oppdaterBehandlingsgrunnlagState }: So
               setStatus(Status.RedigeringUtfort);
               oppdaterBehandlingsgrunnlagState();
             }}
+            className="lagreknapp"
           >
             Lagre
           </Mui.Knapp>
