@@ -1,5 +1,7 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, ReactNode } from "react";
 import Select, { Styles } from "react-select";
+
+import * as Utils from "../../utils";
 
 export interface OptionBase {
   value: string;
@@ -7,7 +9,7 @@ export interface OptionBase {
 }
 
 interface MultiSelectProps<T> {
-  label: string;
+  label: ReactNode;
   values: string[];
   onChange(selectedOptions: readonly T[]): void;
   options: T[];
@@ -59,13 +61,15 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
     }),
   };
 
+  const selectId = `select${Utils._uuid()}`;
+
   return (
     <div style={{ margin: "1rem 0", cursor: redigerbart ? "default" : "not-allowed" }}>
-      <label htmlFor={`select${label}`} style={{ display: "block", paddingBottom: "0.5rem" }}>
+      <label htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
         {label}
       </label>
       <Select
-        id={`select${label}`}
+        id={selectId}
         styles={styles}
         onChange={(selectedOptions) => onChange(selectedOptions || [])}
         options={options}
