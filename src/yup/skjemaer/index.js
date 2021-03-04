@@ -19,3 +19,4 @@ export { vurdering_virksomhet } from "./vurdering_virksomhet";
 export { vurdering_perioder } from "./vurdering_perioder";
 export { vurdering_trygdeavgift } from "./vurdering_trygdeavgift";
 export { vurdering_familie } from "./vurdering_familie";
+export { vurdering_representant } from "./vurdering_representant";

@@ -5,7 +5,7 @@ import VurderingRepresentant from "../../../../felleskomponenter/stegvelger/steg
 class Reprensentant extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = false;
+    const harAvklaring = propsLight.vurder_representant_valid;
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -15,10 +15,14 @@ class Reprensentant extends Steg {
     this.id = STEG.REPRESENTANT;
     this.tittel = "Representant";
     this.komponent = VurderingRepresentant;
-    this.samleRelevanteData = (_propsLight) => ({});
-    this.beregnRelevantUI = (_propsLight) => ({ harAvklaring: false });
+    this.samleRelevanteData = (_propsLight) => ({
+      redigerbart: _propsLight.redigerbart,
+    });
+    this.beregnRelevantUI = (_propsLight) => ({ harAvklaring });
     this.handlers = {
-      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreft: propsLight.tilgjengeligeHandlers.bekreft,
+      oppdater: propsLight.tilgjengeligeHandlers.oppdater,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;
   }
