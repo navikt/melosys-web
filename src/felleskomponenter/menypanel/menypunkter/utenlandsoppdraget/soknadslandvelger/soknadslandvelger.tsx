@@ -29,7 +29,7 @@ type SoknadslandvelgerProps = PropsFromRedux & {
   redigerbart: boolean;
 };
 
-const Soknadslandvelger = ({ redigerbart /* , oppdaterBehandlingsgrunnlagState*/ }: SoknadslandvelgerProps) => {
+const Soknadslandvelger = ({ redigerbart, oppdaterBehandlingsgrunnlagState }: SoknadslandvelgerProps) => {
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
 
   return (
@@ -40,8 +40,7 @@ const Soknadslandvelger = ({ redigerbart /* , oppdaterBehandlingsgrunnlagState*/
           <Mui.Knapp
             onClick={() => {
               setStatus(Status.RedigeringUtfort);
-              // TODO: Finne ut om denne skal med
-              // oppdaterBehandlingsgrunnlagState();
+              oppdaterBehandlingsgrunnlagState();
             }}
           >
             Lagre
