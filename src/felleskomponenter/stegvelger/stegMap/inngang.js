@@ -1,7 +1,6 @@
 import Steg from "../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
 import VurderingInngang from "../../../felleskomponenter/stegvelger/stegKomponenter/vurderingInngang";
-import * as KV from "../../../kodeverk";
 
 class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -21,7 +20,7 @@ class Inngang extends Steg {
       inngangsvilkaar,
     });
     this.beregnRelevantUI = (_propsLight) => {
-      const harAvklaring = this.harAvklaring(propsLight.soknadslandFaktaer, inngangsvilkaar);
+      const harAvklaring = this.harAvklaring(inngangsvilkaar);
 
       return {
         harAvklaring,
@@ -35,22 +34,13 @@ class Inngang extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  harAvklaring = (avklartefakta, inngangsvilkaar) => {
-    const faktaAvklart = avklartefakta.some(
-      (enkeltFakta) =>
-        enkeltFakta.referanse === KV.Koder.SOKNADSLAND && this.faktaErSannEllerIkkeArbeidsland(enkeltFakta.fakta)
-    );
-
+  harAvklaring = (inngangsvilkaar) => {
     const oppfyllerInngangsvilkaar = this.oppfyllerInngangsvilkaar(inngangsvilkaar);
 
-    return faktaAvklart && oppfyllerInngangsvilkaar;
+    return oppfyllerInngangsvilkaar;
   };
 
   oppfyllerInngangsvilkaar = (inngangsvilkaar) => inngangsvilkaar.oppfylt;
-
-  faktaErSannEllerIkkeArbeidsland = (fakta) =>
-    fakta.includes(KV.Koder.SoknadslandFaktaTyper.SANN) ||
-    fakta.includes(KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND);
 }
 
 export default Inngang;
