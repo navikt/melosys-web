@@ -5,6 +5,7 @@ import * as Etiketter from "../../etiketter";
 import * as KV from "../../../../kodeverk";
 
 import Soknadsperiode from "./soknadsperiode";
+import Soknadslandvelger from "./soknadslandvelger";
 
 interface UtenlandsoppdragetProps {
   visArbeidsforholdRolleEtiketter: boolean;
@@ -33,6 +34,9 @@ const Utenlandsoppdraget = ({
           redigerbart={redigerbart}
           lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
         />
+      </Nav.Column>
+      <Nav.Column xs="6">
+        <Soknadslandvelger redigerbart={redigerbart} />
       </Nav.Column>
     </Nav.Row>
   </div>
