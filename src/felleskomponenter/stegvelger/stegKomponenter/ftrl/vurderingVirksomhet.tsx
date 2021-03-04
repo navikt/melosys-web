@@ -44,13 +44,15 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface FormValuesProps {
+  valgteVirksomheter?: string[];
+}
+
 interface Props {
   bekreft: () => void;
   redigerbart: boolean;
   tilbake: () => void;
-  formValues: {
-    valgteVirksomheter?: string[];
-  };
+  formValues: FormValuesProps;
 }
 
 const VurderingVirksomhet = ({
@@ -127,12 +129,12 @@ const VurderingVirksomhet = ({
   );
 };
 
-const VurderingVirksomhetForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingVirksomhetForm = reduxForm<FormValuesProps, PropsFromRedux & Props>({
   form: KV.Form.VIRKSOMHET,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values) => lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_virksomhet)(values),
+  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_virksomhet),
 })(VurderingVirksomhet);
 
 export default connector(VurderingVirksomhetForm);
