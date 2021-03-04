@@ -7,7 +7,7 @@ import { connect, ConnectedProps } from "react-redux";
 
 import * as SkjemaUtils from "../utils";
 
-import MultiSelect, { OptionBase } from "../../multiSelect";
+import MultiSelect from "../../multiSelect";
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   endreFelt: (form: string, field: string, value: any) => dispatch(change(form, field, value)),
@@ -20,7 +20,7 @@ type InnerMultiSelectComponentBaseProps = Omit<ComponentProps<typeof MultiSelect
   onChange?: (selectedOptions: string[]) => void;
 };
 
-type InnerMultiSelectComponentProps = WrappedFieldArrayProps<OptionBase> &
+type InnerMultiSelectComponentProps = WrappedFieldArrayProps<string> &
   PropsFromRedux &
   InnerMultiSelectComponentBaseProps;
 
@@ -46,7 +46,7 @@ function InnerMultiSelectComponent({
       }}
       options={options}
       feil={feil}
-      values={fields.getAll().map(({ value }) => value)}
+      values={fields.getAll()}
       redigerbart={redigerbart}
     />
   );
