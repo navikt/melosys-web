@@ -24,7 +24,8 @@ import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
 import { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
 
 import "./vurderingArtikkel13_x_vedtak.css";
 
@@ -267,7 +268,7 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
+    lagYupToReduxformErrorMapper(VurderingArtikkel13_x_vedtakSchema, {
       context: {
         soknadsperiode: props.soknadsperiode,
         behandlingstype: props.behandlingstype,

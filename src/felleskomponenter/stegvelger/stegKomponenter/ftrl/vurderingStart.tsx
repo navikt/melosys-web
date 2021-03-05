@@ -16,7 +16,8 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingStartSchema from "./vurderingStartSchema";
 import DialogboksOppfriskSak from "../../../dialogboks/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
@@ -229,7 +230,7 @@ const VurderingStartForm = reduxForm<{}, PropsFromRedux & Props>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_start),
+  validate: lagYupToReduxformErrorMapper(vurderingStartSchema),
 })(VurderingStart);
 
 export default connector(VurderingStartForm);

@@ -6,4 +6,4 @@ const vurdering_virksomhet = object().shape({
   valgteVirksomheter: array().min(1).required(VIRKSOMHET_KREVES),
 });
 
-export { vurdering_virksomhet };
+export default vurdering_virksomhet;

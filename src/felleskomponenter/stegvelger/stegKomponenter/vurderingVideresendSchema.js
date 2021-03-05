@@ -9,3 +9,5 @@ export const vurdering_videresend = object().shape({
     then: string().required(VELG_MOTTAKERINSTITUSJON),
   }),
 });
+
+export default vurdering_videresend;

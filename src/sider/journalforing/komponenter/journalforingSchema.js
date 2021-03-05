@@ -1,8 +1,8 @@
 import { object, string, lazy, array } from "yup";
 
-import MKV from "../../melosyskodeverk";
-import * as Konstanter from "../../constants";
-import * as KV from "../../kodeverk";
+import MKV from "../../../melosyskodeverk";
+import * as Konstanter from "../../../constants";
+import * as KV from "../../../kodeverk";
 
 const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn fnr eller dnr." };
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
@@ -146,4 +146,4 @@ const journalforing = object().shape({
   opprettnysak_behandlingstema: string(),
 });
 
-export { journalforing };
+export default journalforing;

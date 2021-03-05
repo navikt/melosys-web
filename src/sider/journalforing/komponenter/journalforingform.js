@@ -17,7 +17,8 @@ import Informasjon from "../komponenter/informasjon";
 import FagsakVelger from "./fagsakVelger";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
 import Fotknapper from "./fotknapper";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import JournalforingSchema from "./journalforingSchema";
 
 const JournalforingForm = (props) => {
   const {
@@ -165,7 +166,7 @@ const form = {
       },
     };
 
-    return lagYupToReduxformErrorMapper(YupSkjemaer.journalforing, options)(values);
+    return lagYupToReduxformErrorMapper(JournalforingSchema, options)(values);
   },
 };
 

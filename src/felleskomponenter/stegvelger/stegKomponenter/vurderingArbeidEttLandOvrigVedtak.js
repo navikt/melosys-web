@@ -23,7 +23,8 @@ import { formOperations } from "../../../ducks/form";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArbeidEttLandOvrigVedtakSchema from "./vurderingArbeidEttLandOvrigVedtakSchema";
 import {
   lagAvklartfakta,
   slettAvklartfakta,
@@ -457,7 +458,7 @@ const VurderingArbeidEttLandOvrigVedtakForm = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.arbeid_ett_land_ovrig_vedtak, {
+    lagYupToReduxformErrorMapper(VurderingArbeidEttLandOvrigVedtakSchema, {
       context: {
         soknadsperiode: props.soknadsperiode,
         behandlingstype: props.behandlingstype,
