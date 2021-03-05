@@ -2,7 +2,7 @@ import { STATUS } from "../../services/utils";
 
 import * as Types from "./types";
 
-import { strengTilInt } from "../../utils/streng";
+import { strengTilInt, tryParseFloat } from "../../utils/streng";
 import { formatterDatoTilISO } from "../../utils/dato";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
@@ -142,20 +142,6 @@ export default function reducer(state = initialState, action) {
       const data = {
         ...state.data,
         data: {
-          arbeidsinntekt: {
-            inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
-            inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden
-              ? strengTilInt(dokument.inntektUtenlandskIPerioden)
-              : null,
-            inntektNaeringIPerioden: null,
-            inntektNaturalytelser: {
-              friBil: dokument.inntektNaturalFribil,
-              friBolig: dokument.inntektNaturalFribolig,
-              friAnnet: dokument.inntektNaturalIAnnet || null,
-            },
-            inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
-            inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
-          },
           arbeidPaaLand: {
             fysiskeArbeidssteder: dokument.arbeidPaaLand.fysiskeArbeidssteder.map((arbeidPaaLand) => ({
               adresse: {
@@ -241,6 +227,18 @@ export default function reducer(state = initialState, action) {
                 ? null
                 : foretak.fortsetterEtterArbeidIUtlandet,
             })),
+          },
+          loennOgGodtgjoerelse: {
+            norskArbgUtbetalerLoenn: dokument.loennOgGodtgjoerelse.norskArbgUtbetalerLoenn,
+            erArbeidstakerAnsattHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidstakerAnsattHelePerioden,
+            utlArbgUtbetalerLoenn: dokument.loennOgGodtgjoerelse.utlArbgUtbetalerLoenn,
+            bruttoLoennPerMnd: tryParseFloat(dokument.loennOgGodtgjoerelse.bruttoLoennPerMnd),
+            bruttoLoennUtlandPerMnd: tryParseFloat(dokument.loennOgGodtgjoerelse.bruttoLoennUtlandPerMnd),
+            mottarNaturalytelser: dokument.loennOgGodtgjoerelse.mottarNaturalytelser,
+            samletVerdiNaturalytelser: tryParseFloat(dokument.loennOgGodtgjoerelse.samletVerdiNaturalytelser),
+            utlArbTilhoererSammeKonsern: dokument.loennOgGodtgjoerelse.utlArbTilhoererSammeKonsern,
+            erArbeidsgiveravgiftHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden,
+            erTrukketTrygdeavgift: dokument.loennOgGodtgjoerelse.erTrukketTrygdeavgift,
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,

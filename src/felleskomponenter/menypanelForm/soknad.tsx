@@ -25,15 +25,6 @@ const mapStateToProps = (state: RootState) => ({
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
     medfolgendeEktefelleSamboer: behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state),
-    inntektNorskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
-    inntektUtenlandskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
-    inntektNaturalFribolig: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBil,
-    inntektNaturalFribil: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBolig,
-    inntektNaturalIAnnet: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friAnnet,
-    inntektErInnrapporteringspliktig: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state)
-      .inntektErInnrapporteringspliktig,
-    inntektTrygdeavgiftBlirTrukket: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state)
-      .inntektTrygdeavgiftBlirTrukket,
     arbeidsgiverBekrefterUtsendelse: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
       .arbeidsgiverBekrefterUtsendelse,
     arbeidstakerAnsattUnderUtsendelsen: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
@@ -66,6 +57,18 @@ const mapStateToProps = (state: RootState) => ({
     andelKontrakterINorge:
       Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
     ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
+    loennOgGodtgjoerelse: {
+      ...behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state),
+      bruttoLoennPerMnd: Utils.streng.tryParseFloat(
+        behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennPerMnd
+      ),
+      bruttoLoennUtlandPerMnd: Utils.streng.tryParseFloat(
+        behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennUtlandPerMnd
+      ),
+      samletVerdiNaturalytelser: Utils.streng.tryParseFloat(
+        behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
+      ),
+    },
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom
     ),

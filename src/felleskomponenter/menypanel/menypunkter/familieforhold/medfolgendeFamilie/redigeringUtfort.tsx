@@ -36,7 +36,7 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
       header={<Header />}
       renderElement={(familie) => <Rad navn={familie.navn} idNummer={familie.fnr} />}
       idFromElement={(familie) => familie.uuid}
-      amountOfItemsCollapsed={2}
+      amountOfItemsCollapsed={verdier.length}
       btnTextCollapsed="Vis flere"
       btnTextExpanded="Vis færre"
       chevron

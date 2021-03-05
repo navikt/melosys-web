@@ -52,6 +52,7 @@ class LinkGroupsFactory {
           .addFraSoknad(
             new LinksBuilder(contentProps)
               .addArbeidsgiverEllerVirksomhet()
+              .addLonnOgGodtgjorelser()
               .addFullmektig()
               .addPeriode()
               .addArbeidssteder()

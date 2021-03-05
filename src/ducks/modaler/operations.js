@@ -16,10 +16,7 @@ export const skjulAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAv
 
 export const visOppfrisk = () => (dispatch) => dispatch(Actions.oppdaterOppfrisk({ synlig: true }));
 
-export const visOppfriskOgFortsett = (fortsett) => (dispatch) =>
-  dispatch(Actions.oppdaterOppfrisk({ synlig: true, fortsett }));
-
-export const skjulOppfrisk = () => (dispatch) => dispatch(Actions.oppdaterOppfrisk({ synlig: false, fortsett: null }));
+export const skjulOppfrisk = () => (dispatch) => dispatch(Actions.oppdaterOppfrisk({ synlig: false }));
 
 export const leggTilBehandlingOppfriskes = (behandlingID) => (dispatch) =>
   dispatch(Actions.oppdaterOppfrisk({ behandlingUnderOppfriskning: behandlingID }));

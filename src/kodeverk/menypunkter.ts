@@ -67,3 +67,11 @@ export const Familieforhold = {
     familieMedPaReisen: "Familie med på reisen",
   },
 };
+
+export const LonnOgGodtgjorelser = {
+  tittel: "Lønn og godtgjørelser i søknadsperioden",
+  undertitler: {
+    lonnOgNaturalytelser: "Lønn og naturalytelser",
+    arbeidsgiveravgiftOgTrygdeavgift: "Arbeidsgiveravgift og trygdeavgift",
+  },
+};

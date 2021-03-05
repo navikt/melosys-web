@@ -137,7 +137,7 @@ const VurderingFamilie = ({
   }
 
   function lagreMedfolgendeFamilie(data: any) {
-    if (data.formIsValid) {
+    if (data.formIsValid && data.formValues) {
       sendMedfolgendeFamilie(behandlingID, tilMedfolgendeFamilie(data.formValues));
     }
   }
@@ -255,7 +255,7 @@ const VurderingFamilie = ({
               </div>
             )}
           </Nav.Fieldset>
-          <Nav.Fieldset legend="Ektefelle/parner/samboer">
+          <Nav.Fieldset legend="Ektefelle/partner/samboer">
             <Nav.Row>
               {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
                 <Nav.Column xs="6" key={ektefelleSamboer.uuid}>

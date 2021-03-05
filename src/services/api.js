@@ -11,6 +11,7 @@ import * as Kodeverk from "./modules/kodeverk";
 import * as Lovvalgsperioder from "./modules/lovvalgsperioder";
 import * as Medlemskapsperioder from "./modules/medlemskapsperioder";
 import * as Personer from "./modules/personer";
+import * as Representant from "./modules/representant";
 import * as Organisasjoner from "./modules/organisasjoner";
 import * as Saksopplysninger from "./modules/saksopplysninger";
 import * as Oppgaver from "./modules/oppgaver";
@@ -39,6 +40,7 @@ export {
   Organisasjoner,
   Personer,
   Registrering,
+  Representant,
   Saksbehandler,
   Saksopplysninger,
   Saksflyt,

@@ -5,7 +5,7 @@ import VurderingStart from "../../../../felleskomponenter/stegvelger/stegKompone
 class Start extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    const harAvklaring = this.finnAvklaring(propsLight.behandlingsgrunnlag);
+    const harAvklaring = propsLight.vurder_start_valid;
     this.kriterier = [
       {
         exec: () => harAvklaring,
@@ -18,23 +18,17 @@ class Start extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.generiskStegRedigerbart,
+      annenBehandlingOppfriskes: _propsLight.annenBehandlingOppfriskes,
     });
     this.beregnRelevantUI = () => ({ harAvklaring });
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
+      tilForsiden: propsLight.tilgjengeligeHandlers.tilForsiden,
+      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger:
+        propsLight.tilgjengeligeHandlers.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     };
     this.status = FANE_STATUS.OK;
   }
-  finnAvklaring = (behandlingsgrunnlag) => {
-    const søknadsperiodeValid = behandlingsgrunnlag.periode ? !!behandlingsgrunnlag.periode.fom : false;
-    const søknadslandValid =
-      behandlingsgrunnlag.soeknadsland && behandlingsgrunnlag.soeknadsland.landkoder
-        ? behandlingsgrunnlag.soeknadsland.landkoder.length > 0
-        : false;
-    const trygdedekningValid = !!behandlingsgrunnlag.trygdedekning;
-
-    return søknadslandValid && søknadsperiodeValid && trygdedekningValid;
-  };
 }
 export default Start;

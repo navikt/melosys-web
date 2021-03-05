@@ -50,7 +50,7 @@ InnerCheckboxComponent.defaultProps = {
   className: undefined,
 };
 
-function Checkbox({ feltNavn, className, ...rest }) {
+function Checkbox({ feltNavn, className = "", ...rest }) {
   return (
     <Field
       name={feltNavn}

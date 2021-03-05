@@ -46,6 +46,26 @@ export const VurderStartFormSelector = createSelector(
   (start) => start
 );
 
+export const VurderStartFormValid = createSelector(
+  (state) => VurderStartFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const VurderVirksomhetFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.VIRKSOMHET, {}),
+  (start) => start
+);
+
+export const VurderVirksomhetFormValid = createSelector(
+  (state) => VurderVirksomhetFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const VurderStartPeriodeValid = createSelector(
+  (state) => VurderStartFormSelector(state).syncErrors || {},
+  (errors) => !("erPeriodeGyldig" in errors)
+);
+
 export const VurderPerioderFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.PERIODER, {}),
   (perioder) => perioder
@@ -107,6 +127,26 @@ export const VurderFamilieFormSelector = createSelector(
 export const VurderFamilieFormValid = createSelector(
   (state) => VurderFamilieFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
+);
+
+export const VurderRepresentantFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.REPRESENTANT, {}),
+  (familie) => familie
+);
+
+export const VurderRepresentantFormValid = createSelector(
+  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const VurderRepresentantRepresentantnummerValid = createSelector(
+  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
+  (errors) => !("representantnummer" in errors)
+);
+
+export const VurderRepresentantOrganisasjonsnummerValid = createSelector(
+  (state) => VurderRepresentantFormSelector(state).syncErrors || {},
+  (errors) => !("organisasjonsnummer" in errors)
 );
 
 export const VurderUtpekingFormSelector = createSelector(
