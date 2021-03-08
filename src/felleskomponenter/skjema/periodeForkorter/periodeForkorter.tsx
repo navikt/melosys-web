@@ -1,8 +1,21 @@
-import React, { Fragment } from "react";
-import PT from "prop-types";
+import React, { Fragment, ReactNode, MouseEventHandler } from "react";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as Skjema from "../index";
+
+interface PeriodeForkorterProps {
+  className?: string;
+  checkboxClassName?: string;
+  redigerbart: boolean;
+  checkboxFeltnavn: string;
+  forkortPeriode: boolean;
+  checkboxLabel?: string;
+  onUncheck?: () => void;
+  fomLabel?: ReactNode;
+  fomFeltNavn: string;
+  tomLabel?: ReactNode;
+  tomFeltNavn: string;
+}
 
 const PeriodeForkorter = ({
   className,
@@ -10,15 +23,15 @@ const PeriodeForkorter = ({
   redigerbart,
   checkboxFeltnavn,
   forkortPeriode,
-  checkboxLabel,
+  checkboxLabel = "",
   onUncheck,
-  fomLabel,
+  fomLabel = "",
   fomFeltNavn,
-  tomLabel,
+  tomLabel = "",
   tomFeltNavn,
-}) => {
-  const onCheckboxClick = (e) => {
-    if (!e.target.checked) {
+}: PeriodeForkorterProps) => {
+  const onCheckboxClick: MouseEventHandler<HTMLInputElement> = (e) => {
+    if (!e.currentTarget.checked) {
       if (onUncheck) onUncheck();
     }
   };
@@ -55,30 +68,6 @@ const PeriodeForkorter = ({
       )}
     </div>
   );
-};
-
-PeriodeForkorter.propTypes = {
-  className: PT.string,
-  checkboxClassName: PT.string,
-  redigerbart: PT.bool.isRequired,
-  checkboxFeltnavn: PT.string.isRequired,
-  forkortPeriode: PT.bool,
-  checkboxLabel: PT.string,
-  onUncheck: PT.func,
-  fomLabel: PT.string,
-  fomFeltNavn: PT.string.isRequired,
-  tomLabel: PT.string,
-  tomFeltNavn: PT.string.isRequired,
-};
-
-PeriodeForkorter.defaultProps = {
-  className: undefined,
-  checkboxClassName: undefined,
-  checkboxLabel: "",
-  onUncheck: undefined,
-  fomLabel: "",
-  tomLabel: "",
-  forkortPeriode: false,
 };
 
 export default PeriodeForkorter;
