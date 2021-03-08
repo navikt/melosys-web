@@ -12,6 +12,7 @@ import MKV from "../../melosyskodeverk";
 import { datoDiff } from "../../utils/dato";
 import * as KV from "../../kodeverk";
 import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors";
+import * as Utils from "../../utils";
 import { anmodningsperioderSelectors } from "../anmodningsperioder";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
 
@@ -304,7 +305,7 @@ export const AlleVirksomheterSelector = createSelector(
     ekstraArbeidsgivere.forEach((ekstraArbeidsgiver) => {
       virksomhetsListe.push({ kode: ekstraArbeidsgiver.orgnr, term: ekstraArbeidsgiver.navn });
     });
-    return virksomhetsListe;
+    return Utils._uniqBy(virksomhetsListe, ({ kode }) => kode);
   }
 );
 
