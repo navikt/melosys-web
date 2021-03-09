@@ -56,7 +56,7 @@ fra [GitHub developer settings](https://github.com/settings/tokens), og sette de
 
 (Det er også mulig å sette innholdet av tokenet rett i `~/.npmrc`.)
 
-I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å logge inn manuelt:
+I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kjøre `npm login`:
 
 ```
 npm login --scope=@OWNER --registry=https://npm.pkg.github.com
