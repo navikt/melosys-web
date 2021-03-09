@@ -15,7 +15,8 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formOperations } from "../../../ducks/form";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingAvslaaUtpekingSchema from "./vurderingAvslaaUtpekingSchema";
 
 export const VurderingAvslaaUtpeking = ({
   redigerbart,
@@ -166,7 +167,7 @@ const VurderingAvslaaUtpekingForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.avslaa_utpeking),
+  validate: lagYupToReduxformErrorMapper(VurderingAvslaaUtpekingSchema),
 })(VurderingAvslaaUtpeking);
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingAvslaaUtpekingForm);

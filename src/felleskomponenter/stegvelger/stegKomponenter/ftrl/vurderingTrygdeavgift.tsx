@@ -18,7 +18,8 @@ import * as Skjema from "../../../skjema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import { OppdaterAvgiftsberegning } from "../../../../services/modules/trygdeavgift";
 import { BOOLSK, BOOLSK_STRING } from "../../../../constants";
 import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../kodeverk/koder";
@@ -685,7 +686,7 @@ const VurderingTrygdeavgiftForm = reduxForm<{}, Props & PropsFromRedux>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_trygdeavgift),
+  validate: lagYupToReduxformErrorMapper(vurderingTrygdeavgiftSchema),
 })(VurderingTrygdeavgift);
 
 export default connector(VurderingTrygdeavgiftForm);

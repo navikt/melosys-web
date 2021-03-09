@@ -17,7 +17,8 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingFamilieSchema from "./vurderingFamilieSchema";
 import { MedfolgendeFamilie } from "../../../../kodeverk/form";
 import { BOOLSK_STRING } from "../../../../constants";
 
@@ -347,7 +348,7 @@ const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_familie, {
+    lagYupToReduxformErrorMapper(vurderingFamilieSchema, {
       context: {
         medfolgendeBarn: props.medfolgendeBarn,
         medfolgendeEktefelleSamboer: props.medfolgendeEktefelleSamboer,

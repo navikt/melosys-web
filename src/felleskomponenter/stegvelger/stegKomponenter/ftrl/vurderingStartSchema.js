@@ -1,5 +1,5 @@
 import { object, string } from "yup";
-import * as Utils from "../../utils";
+import * as Utils from "../../../../utils";
 
 const FOM_FELT_KREVES = { melding: "Du må fylle inn dato" };
 const ARBEIDSLAND_FELT_KREVES = { melding: "Du må velge arbeidsland" };
@@ -29,4 +29,4 @@ const vurdering_start = object().shape({
   }),
 });
 
-export { vurdering_start };
+export default vurdering_start;

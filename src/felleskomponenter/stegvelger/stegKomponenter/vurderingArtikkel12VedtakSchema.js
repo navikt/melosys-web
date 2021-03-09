@@ -26,4 +26,4 @@ const artikkel12_vedtak = object().shape({
   }),
 });
 
-export { artikkel12_vedtak };
+export default artikkel12_vedtak;

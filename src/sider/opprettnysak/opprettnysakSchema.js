@@ -48,4 +48,4 @@ const opprettnysak = object().shape({
   bruker: mixed(),
 });
 
-export { opprettnysak };
+export default opprettnysak;

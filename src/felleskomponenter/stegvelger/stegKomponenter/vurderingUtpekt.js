@@ -24,7 +24,8 @@ import {
   lagLovvalgsperiode,
   slettLovvalgsperiode,
 } from "../../../regler/lovvalgsperiode";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.css";
 
@@ -259,7 +260,7 @@ const VurderingUtpektForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurder_utpeking),
+  validate: lagYupToReduxformErrorMapper(vurderingUtpektSchema),
 })(VurderingUtpekt);
 
 export default connect(mapStateToProps)(VurderingUtpektForm);

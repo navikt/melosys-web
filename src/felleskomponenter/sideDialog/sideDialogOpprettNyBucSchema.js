@@ -6,4 +6,4 @@ const sed = Yup.object().shape({
   mottakerinstitusjoner: Yup.array().of(Yup.string()).required({ feilmelding: "Mottakerinstitusjon kreves" }),
 });
 
-export { sed };
+export default sed;

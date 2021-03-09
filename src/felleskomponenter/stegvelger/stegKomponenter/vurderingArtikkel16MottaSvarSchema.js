@@ -1,6 +1,6 @@
 import { object, string } from "yup";
 
-import MKV from "../../melosyskodeverk";
+import MKV from "../../../melosyskodeverk";
 
 const artikkel16_motta_svar = object().shape({
   endretPeriode: object().when("$anmodningsperiodeSvarType", {
@@ -12,4 +12,4 @@ const artikkel16_motta_svar = object().shape({
   }),
 });
 
-export { artikkel16_motta_svar };
+export default artikkel16_motta_svar;

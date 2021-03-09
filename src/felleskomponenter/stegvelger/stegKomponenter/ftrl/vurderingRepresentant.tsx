@@ -15,7 +15,8 @@ import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
 import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingRepresentantSchema from "./vurderingRepresentantSchema";
 import { OrganisasjonsAdresse } from "../../../adresser";
 
 import "./vurderingRepresentant.css";
@@ -261,7 +262,7 @@ const VurderingRepresentantForm = reduxForm<{}, Props & PropsFromRedux>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_representant),
+  validate: lagYupToReduxformErrorMapper(vurderingRepresentantSchema),
 })(VurderingRepresentant);
 
 export default connector(VurderingRepresentantForm);

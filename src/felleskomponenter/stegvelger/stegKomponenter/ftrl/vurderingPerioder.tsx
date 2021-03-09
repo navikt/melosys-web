@@ -20,7 +20,8 @@ import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunn
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import { formSelectors } from "../../../../ducks/form";
 
 import "./vurderingPerioder.css";
@@ -409,7 +410,7 @@ const VurderingPerioderForm = reduxForm<{}, PropsFromRedux & Props>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_perioder),
+  validate: lagYupToReduxformErrorMapper(vurderingPerioderSchema),
 })(VurderingPerioder);
 
 export default connector(VurderingPerioderForm);

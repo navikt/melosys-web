@@ -1,11 +1,11 @@
 import { object, string } from "yup";
 
-import MKV from "../../melosyskodeverk";
+import MKV from "../../../melosyskodeverk";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
 
-const artikkel16_vedtak = object().shape({
+const avslag_artikkel_12_og_16 = object().shape({
   vedtakstype: string()
     .nullable()
     .when("$behandlingstype", {
@@ -20,4 +20,4 @@ const artikkel16_vedtak = object().shape({
     }),
 });
 
-export { artikkel16_vedtak };
+export default avslag_artikkel_12_og_16;
