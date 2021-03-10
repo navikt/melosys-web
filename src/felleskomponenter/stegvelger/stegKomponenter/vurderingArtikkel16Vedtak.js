@@ -9,6 +9,7 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../skjema";
 import * as Hooks from "../../../hooks";
+import * as Utils from "../../../utils";
 
 import Begrunnelser from "../../begrunnelser";
 import PdfLenkeListe from "../../pdfLenkeListe";
@@ -18,6 +19,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
 import { vilkarSelectors } from "../../../ducks/vilkar";
+import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 
 import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
 
@@ -72,6 +74,9 @@ export const Innvilgelse = ({
   renderFritekstFelt,
   vedtaksbrevFritekst,
   visOrienteringsbrevArbeidsgiver,
+  onPeriodeForkorterUncheck,
+  formValues,
+  vedKlikkForhandsvis,
 }) => {
   const pdfDokumenter = [
     {
@@ -105,11 +110,29 @@ export const Innvilgelse = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
+        <Nav.Column xs="7">
+          <Skjema.PeriodeForkorter
+            redigerbart={redigerbart}
+            checkboxClassName="forkortLovvalgsperiode"
+            checkboxLabel="Lovvalget innvilges for en kortere periode"
+            checkboxFeltnavn="forkortLovvalgsperiode"
+            onUncheck={onPeriodeForkorterUncheck}
+            forkortPeriode={formValues.forkortLovvalgsperiode}
+            fomLabel="Startdato"
+            fomFeltNavn="fomDato"
+            tomLabel="Sluttdato"
+            tomFeltNavn="tomDato"
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
         <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+          {redigerbart && (
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+          )}
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -123,6 +146,9 @@ Innvilgelse.propTypes = {
   vedtaksbrevFritekst: PT.string,
   renderFritekstFelt: PT.func.isRequired,
   visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
+  onPeriodeForkorterUncheck: PT.func.isRequired,
+  formValues: PT.object.isRequired,
+  vedKlikkForhandsvis: PT.func.isRequired,
 };
 
 Innvilgelse.defaultProps = {
@@ -137,6 +163,9 @@ export const DelvisInnvilgelse = ({
   renderFritekstFelt,
   renderBegrunnelser,
   visOrienteringsbrevArbeidsgiver,
+  onPeriodeForkorterUncheck,
+  formValues,
+  vedKlikkForhandsvis,
 }) => {
   const pdfDokumenter = [
     {
@@ -171,6 +200,22 @@ export const DelvisInnvilgelse = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
+        <Nav.Column xs="7">
+          <Skjema.PeriodeForkorter
+            redigerbart={redigerbart}
+            checkboxClassName="forkortLovvalgsperiode"
+            checkboxLabel="Lovvalget innvilges for en kortere periode"
+            checkboxFeltnavn="forkortLovvalgsperiode"
+            onUncheck={onPeriodeForkorterUncheck}
+            forkortPeriode={formValues.forkortLovvalgsperiode}
+            fomLabel="Startdato"
+            fomFeltNavn="fomDato"
+            tomLabel="Sluttdato"
+            tomFeltNavn="tomDato"
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
         <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -178,7 +223,9 @@ export const DelvisInnvilgelse = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+          {redigerbart && (
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
+          )}
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -193,6 +240,9 @@ DelvisInnvilgelse.propTypes = {
   renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
   visOrienteringsbrevArbeidsgiver: PT.bool.isRequired,
+  onPeriodeForkorterUncheck: PT.func.isRequired,
+  formValues: PT.object.isRequired,
+  vedKlikkForhandsvis: PT.func.isRequired,
 };
 
 DelvisInnvilgelse.defaultProps = {
@@ -272,6 +322,10 @@ export const VurderingArtikkel16Vedtak = ({
   behandlingstype,
   touch,
   harValgtNorskArbeidsgiver,
+  byggLovvalgsperioder,
+  endreLovvalgsPeriode,
+  lovvalgsperiode,
+  lagreLovvalgsperioder,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
@@ -282,6 +336,21 @@ export const VurderingArtikkel16Vedtak = ({
     touch("vedtakstype");
     touch("vedtakstypebegrunnelse");
     return formIsValid;
+  };
+
+  const forkortLovvalgsperiode = () =>
+    endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+
+  const vedKlikkForhandsvis = async () => {
+    if (!validerForm()) return false;
+
+    if (formValues.forkortLovvalgsperiode) {
+      await forkortLovvalgsperiode();
+    }
+
+    await lagreLovvalgsperioder();
+
+    return true;
   };
 
   const vedKlikk = async () => {
@@ -342,6 +411,9 @@ export const VurderingArtikkel16Vedtak = ({
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
             gjeldendePeriode={endretPeriode}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
+            onPeriodeForkorterUncheck={byggLovvalgsperioder}
+            formValues={formValues}
+            vedKlikkForhandsvis={vedKlikkForhandsvis}
           />
         );
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
@@ -354,6 +426,9 @@ export const VurderingArtikkel16Vedtak = ({
             gjeldendePeriode={endretPeriode}
             renderBegrunnelser={renderBegrunnelser}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
+            onPeriodeForkorterUncheck={byggLovvalgsperioder}
+            formValues={formValues}
+            vedKlikkForhandsvis={vedKlikkForhandsvis}
           />
         );
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
@@ -402,11 +477,16 @@ VurderingArtikkel16Vedtak.propTypes = {
   touch: PT.func.isRequired,
   formValues: PT.object,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
+  byggLovvalgsperioder: PT.func.isRequired,
+  endreLovvalgsPeriode: PT.func.isRequired,
+  lovvalgsperiode: PT.object,
+  lagreLovvalgsperioder: PT.func.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
+  lovvalgsperiode: {},
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
@@ -423,21 +503,41 @@ const VurderingArtikkel16VedtakForm = reduxForm({
     })(values),
 })(VurderingArtikkel16Vedtak);
 
-const mapStateToProps = (state) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-  anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
-  vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
-  art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
-  art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
-  initialValues: {
-    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-    vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-  },
+const mapStateToProps = (state) => {
+  const anmodningsperiodesvarTom = anmodningsperiodesvarSelectors.EndretPeriodeTomSelector(state);
+  const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
+  const erLovvalgsperiodeForkortet = () =>
+    Utils.dato.datoDiffPure(anmodningsperiodesvarTom, lovvalgsperiodeTom, "days") !== 0;
+
+  const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
+
+  return {
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+    behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+    lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
+    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+    vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
+    art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
+    art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
+    formIsValid: isValid(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
+    formValues: getFormValues(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
+    initialValues: {
+      forkortLovvalgsperiode,
+      tomDato: forkortLovvalgsperiode
+        ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state))
+        : "",
+      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
+      vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+      vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+      vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  endreLovvalgsPeriode: (fomdato, tomdato) =>
+    dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
 });
 
-export default connect(mapStateToProps)(VurderingArtikkel16VedtakForm);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16VedtakForm);

@@ -17,6 +17,7 @@ import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
 import { AnmodningsperioderErSendtUtlandetSelector } from "../anmodningsperioder/selectors";
+import { anmodningsperiodesvarSelectors } from "../anmodningsperiodesvar";
 import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
 import { vilkarSelectors } from "../vilkar";
 import { avklartefaktaSelectors } from "../avklartefakta";
@@ -144,6 +145,30 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
   ];
 };
 
+const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
+  const fomDato = anmodningsperiodesvarSelectors.EndretPeriodeFomSelector(reduxState);
+  const tomDato = anmodningsperiodesvarSelectors.EndretPeriodeTomSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const soknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(reduxState);
+  const unntakFraLovvalgsland = soknadsland.join("");
+
+  return [
+    {
+      fomDato,
+      tomDato,
+      lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
+      medlemskapsperiodeID: medlemskapsperiodeID || null,
+      tilleggBestemmelse: stegState.tilleggbestemmelse || null,
+      unntakFraBestemmelse: stegState.unntakfrabestemmelse || null,
+      unntakFraLovvalgsland,
+      innvilgelsesResultat: KV.Koder.INNVILGET,
+      lovvalgsland: MKV.Koder.landkoder.NO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
+    },
+  ];
+};
+
 const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
   const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
@@ -188,6 +213,12 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => 
       return byggLovvalgsPeriodeArtikkel11_3A(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2:
       return byggLovvalgsPeriodeArtikkel11_4_2(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1: {
+      if (flytSelectors.ErArt16SvarstegSynlig(reduxState)) {
+        return byggLovvalgsPeriodeArtikkel16_1(stegState, reduxState);
+      }
+      return [];
+    }
     default: {
       return [];
     }
