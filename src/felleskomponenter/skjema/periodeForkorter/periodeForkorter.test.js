@@ -20,6 +20,7 @@ describe("PeriodeForkorter", () => {
       fomFeltNavn: "fom",
       tomLabel: "Til og med",
       tomFeltNavn: "tom",
+      fomRedigerbar: true,
     };
   });
 
@@ -77,5 +78,14 @@ describe("PeriodeForkorter", () => {
     const unCheckedEvent = { target: { checked: false } };
     checkbox.simulate("click", unCheckedEvent);
     expect(props.onUncheck).toHaveBeenCalledTimes(1);
+  });
+
+  it("fomRedigerbar kan disable fom", () => {
+    props.fomRedigerbar = false;
+    const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
+
+    const fomInput = periodeForkorter.find(Skjema.Input).findWhere((n) => n.props().label === props.fomLabel);
+
+    expect(fomInput.props().disabled).toBe(true);
   });
 });

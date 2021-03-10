@@ -114,6 +114,7 @@ export const Innvilgelse = ({
         <Nav.Column xs="7">
           <Skjema.PeriodeForkorter
             redigerbart={redigerbart}
+            fomRedigerbar
             checkboxClassName="forkortLovvalgsperiode"
             checkboxLabel="Lovvalget innvilges for en kortere periode"
             checkboxFeltnavn="forkortLovvalgsperiode"
@@ -204,6 +205,7 @@ export const DelvisInnvilgelse = ({
         <Nav.Column xs="7">
           <Skjema.PeriodeForkorter
             redigerbart={redigerbart}
+            fomRedigerbar
             checkboxClassName="forkortLovvalgsperiode"
             checkboxLabel="Lovvalget innvilges for en kortere periode"
             checkboxFeltnavn="forkortLovvalgsperiode"

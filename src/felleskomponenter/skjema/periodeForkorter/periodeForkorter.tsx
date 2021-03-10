@@ -7,6 +7,7 @@ interface PeriodeForkorterProps {
   className?: string;
   checkboxClassName?: string;
   redigerbart: boolean;
+  fomRedigerbar: boolean;
   checkboxFeltnavn: string;
   forkortPeriode: boolean;
   checkboxLabel?: string;
@@ -21,6 +22,7 @@ const PeriodeForkorter = ({
   className,
   checkboxClassName,
   redigerbart,
+  fomRedigerbar,
   checkboxFeltnavn,
   forkortPeriode,
   checkboxLabel = "",
@@ -52,7 +54,12 @@ const PeriodeForkorter = ({
         <Fragment>
           <Nav.Row>
             <Nav.Column xs="3">
-              <Skjema.Input bredde="fullbredde" label={fomLabel} disabled feltNavn={fomFeltNavn} />
+              <Skjema.Input
+                bredde="fullbredde"
+                label={fomLabel}
+                disabled={!redigerbart || !fomRedigerbar}
+                feltNavn={fomFeltNavn}
+              />
             </Nav.Column>
             <Nav.Column xs="3">
               <Skjema.Input
