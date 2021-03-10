@@ -16,7 +16,6 @@ import * as Types from "./types";
 import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
-import { AnmodningsperioderErSendtUtlandetSelector } from "../anmodningsperioder/selectors";
 import { anmodningsperiodesvarSelectors } from "../anmodningsperiodesvar";
 import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
 import { vilkarSelectors } from "../vilkar";
@@ -309,9 +308,6 @@ export function lagre() {
   return (dispatch, getState) => {
     const lovvalgsperioder = Selectors.LovvalgsperioderSelector(getState());
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
-    const anmodningsperioderErSendtUtlandet = AnmodningsperioderErSendtUtlandetSelector(getState());
-
-    if (anmodningsperioderErSendtUtlandet) return null;
 
     return dispatch(send(bid, lovvalgsperioder));
   };

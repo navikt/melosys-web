@@ -358,6 +358,10 @@ export const VurderingArtikkel16Vedtak = ({
   const vedKlikk = async () => {
     if (!validerForm()) return;
 
+    if (formValues.forkortLovvalgsperiode) {
+      await forkortLovvalgsperiode();
+    }
+
     setVedtakPending(true);
 
     await lagreOgFatteVedtak({
