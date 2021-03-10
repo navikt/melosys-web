@@ -18,4 +18,4 @@ const journalforingSED = object().shape({
   bruker: mixed(),
 });
 
-export { journalforingSED };
+export default journalforingSED;

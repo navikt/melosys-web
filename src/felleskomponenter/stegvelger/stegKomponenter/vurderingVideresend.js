@@ -20,7 +20,8 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import vurderingVideresendSchema from "./vurderingVideresendSchema";
 
 import "./vurderingVideresend.css";
 import * as Skjema from "../../skjema";
@@ -148,7 +149,7 @@ const VurderingVideresendForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_videresend),
+  validate: lagYupToReduxformErrorMapper(vurderingVideresendSchema),
 })(VurderingVideresend);
 
 const mapStateToProps = (state) => ({

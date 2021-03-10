@@ -22,4 +22,4 @@ const vurdering_representant = object().shape({
   kontaktperson: string().nullable(),
 });
 
-export { vurdering_representant };
+export default vurdering_representant;

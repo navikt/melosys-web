@@ -8,4 +8,4 @@ const vurder_utpeking = object().shape({
   tom: string().erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO).required(TAST_INN_DATO),
 });
 
-export { vurder_utpeking };
+export default vurder_utpeking;

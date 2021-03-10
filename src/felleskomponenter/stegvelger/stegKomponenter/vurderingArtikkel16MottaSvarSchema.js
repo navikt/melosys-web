@@ -1,8 +1,8 @@
 import { object, string } from "yup";
 
-import * as Utils from "../../utils";
+import * as Utils from "../../../utils";
 
-import MKV from "../../melosyskodeverk";
+import MKV from "../../../melosyskodeverk";
 
 const { INNVILGELSE, DELVIS_INNVILGELSE } = MKV.Koder.anmodningsperiodesvartyper;
 
@@ -42,4 +42,4 @@ const artikkel16_motta_svar = object().shape({
   }),
 });
 
-export { artikkel16_motta_svar };
+export default artikkel16_motta_svar;

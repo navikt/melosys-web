@@ -26,7 +26,8 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../regler/lovvalgsland";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSchema";
 
 import "./vurderingArtikkel13UtpekLand.css";
 
@@ -318,7 +319,7 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
       },
     };
 
-    return lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_utpek, settings)(values);
+    return lagYupToReduxformErrorMapper(VurderingArtikkel13UtpekLandSchema, settings)(values);
   },
 })(VurderingArtikkel13UtpekLand);
 

@@ -29,4 +29,4 @@ const artikkel13_utpek = object().shape({
   }),
 });
 
-export { artikkel13_utpek };
+export default artikkel13_utpek;

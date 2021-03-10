@@ -21,7 +21,8 @@ import { formSelectors } from "../../../ducks/form";
 import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
 
 import { lagAnmodningsperiodesvar } from "../../../regler/anmodningsperiodesvar";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import vurderingArtikkel16MottaSvarSchema from "./vurderingArtikkel16MottaSvarSchema";
 
 import "./vurderingArtikkel16MottaSvar.css";
 
@@ -163,7 +164,7 @@ const Artikkel16MottaSvarForm = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_motta_svar, {
+    lagYupToReduxformErrorMapper(vurderingArtikkel16MottaSvarSchema, {
       context: {
         anmodningsperiodeSvarType: props.formValues && props.formValues.anmodningsperiodeSvarType,
         soknadsperiode: props.soknadsperiode,

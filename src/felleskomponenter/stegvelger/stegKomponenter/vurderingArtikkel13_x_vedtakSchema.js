@@ -1,18 +1,12 @@
 import { object, string, bool, array } from "yup";
 
-import MKV from "../../melosyskodeverk";
+import MKV from "../../../melosyskodeverk";
 
-const VELG_EN_BESTEMMELSE = "Velg en bestemmelse.";
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
-const MOTTAKERINSTITUSJON_KREVES = { melding: "Mottakerinstitusjon kreves" };
-const VELG_OM_UTENLANDSK_TRYGDEMYNDIGHET_SKAL_INFORMERES = {
-  melding: "Velg om utenlandsk trygdemyndighet skal informeres",
-};
-const VELG_LAND = { melding: "Velg land" };
+const MOTTAKERINSTITUSJON_KREVES = { melding: "Mottaker institusjon kreves" };
 
-const arbeid_ett_land_ovrig_vedtak = object().shape({
-  lovvalgsbestemmelse: string().nullable().required(VELG_EN_BESTEMMELSE),
+const artikkel13_x_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
@@ -42,16 +36,6 @@ const arbeid_ett_land_ovrig_vedtak = object().shape({
       }),
     })
   ),
-  kreverMottakerinstitusjon: bool().required(),
-  mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {
-    is: true,
-    then: string().required(MOTTAKERINSTITUSJON_KREVES),
-  }),
-  informerUtenlandskTrygdemyndighet: bool().nullable().required(VELG_OM_UTENLANDSK_TRYGDEMYNDIGHET_SKAL_INFORMERES),
-  mottakerLand: string().when("informerUtenlandskTrygdemyndighet", {
-    is: true,
-    then: string().required(VELG_LAND),
-  }),
 });
 
-export { arbeid_ett_land_ovrig_vedtak };
+export default artikkel13_x_vedtak;

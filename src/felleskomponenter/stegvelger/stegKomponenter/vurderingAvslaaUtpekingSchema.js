@@ -12,4 +12,4 @@ const avslaa_utpeking = object().shape({
   fritekst: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
 });
 
-export { avslaa_utpeking };
+export default avslaa_utpeking;

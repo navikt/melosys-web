@@ -1,5 +1,5 @@
 import { object, string, array } from "yup";
-import * as KV from "../../kodeverk";
+import * as KV from "../../../../kodeverk";
 
 const NOE_SKJEDDE = { melding: "Noe skjedde" };
 
@@ -52,4 +52,4 @@ const vurdering_perioder = object().shape({
   }),
 });
 
-export { vurdering_perioder };
+export default vurdering_perioder;

@@ -192,4 +192,4 @@ const soknad = object().when("$behandlingstema", {
   }),
 });
 
-export { soknad };
+export default soknad;

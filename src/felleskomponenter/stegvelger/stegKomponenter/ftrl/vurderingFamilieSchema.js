@@ -1,5 +1,5 @@
 import { object, string } from "yup";
-import { BOOLSK_STRING } from "../../constants";
+import { BOOLSK_STRING } from "../../../../constants";
 
 const NOE_SKJEDDE = { melding: "Noe skjedde" };
 
@@ -42,4 +42,4 @@ const vurdering_familie = object().shape({
   ),
 });
 
-export { vurdering_familie };
+export default vurdering_familie;

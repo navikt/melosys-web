@@ -806,4 +806,74 @@ describe("Avklartefaktaselectors", () => {
       expect(resultat[0].virksomhetId).toBe(alleAvklarteVirksomhetFaktaer[0].subjektID);
     });
   });
+
+  describe("VirksomheterIPeriodenSelector", () => {
+    const state = {
+      behandlinger: {
+        data: {
+          saksopplysninger: {
+            arbeidsforhold: [
+              {
+                opplysningspliktigID: "991492704",
+              },
+            ],
+            organisasjoner: [
+              {
+                orgnr: "991492704",
+                forretningsadresse: {
+                  land: "NORGE",
+                },
+              },
+              {
+                orgnr: "810072512",
+                forretningsadresse: {
+                  land: "NORGE",
+                },
+              },
+            ],
+          },
+        },
+      },
+      behandlingsgrunnlag: {
+        data: {
+          data: {
+            juridiskArbeidsgiverNorge: {
+              ekstraArbeidsgivere: ["810072512"],
+            },
+            selvstendigArbeid: {
+              selvstendigForetak: [
+                {
+                  orgnr: "910253158",
+                },
+              ],
+            },
+          },
+        },
+      },
+      organisasjoner: {
+        data: [
+          {
+            orgnr: "910253158",
+            forretningsadresse: {
+              land: "NORGE",
+            },
+          },
+          {
+            orgnr: "810072512",
+            forretningsadresse: {
+              land: "NORGE",
+            },
+          },
+        ],
+      },
+    };
+
+    it("returnerer ikke flere av samme virksomhet", () => {
+      const virksomheter = selectors.VirksomheterIPeriodenSelector(state);
+      const duplisertVirksomhetId = "810072512";
+
+      expect(virksomheter.length).toEqual(3);
+      expect(virksomheter.filter(({ virksomhetId }) => virksomhetId === duplisertVirksomhetId).length).toEqual(1);
+    });
+  });
 });
