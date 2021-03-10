@@ -325,13 +325,12 @@ export const VurderingArtikkel16Vedtak = ({
   harValgtNorskArbeidsgiver,
   byggLovvalgsperioder,
   endreLovvalgsPeriode,
-  lovvalgsperiode,
   lagreLovvalgsperioder,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
 
-  const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
+  const { anmodningsperiodeSvarType, endretPeriode = {} } = anmodningsperiodesvar;
 
   const validerForm = () => {
     touch("vedtakstype");
@@ -341,7 +340,7 @@ export const VurderingArtikkel16Vedtak = ({
   };
 
   const forkortLovvalgsperiode = () =>
-    endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+    endreLovvalgsPeriode(endretPeriode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
 
   const vedKlikkForhandsvis = async () => {
     if (!validerForm()) return false;
@@ -485,14 +484,12 @@ VurderingArtikkel16Vedtak.propTypes = {
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
   byggLovvalgsperioder: PT.func.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
-  lovvalgsperiode: PT.object,
   lagreLovvalgsperioder: PT.func.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
-  lovvalgsperiode: {},
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
@@ -505,7 +502,10 @@ const VurderingArtikkel16VedtakForm = reduxForm({
     lagYupToReduxformErrorMapper(VurderingArtikkel16VedtakSchema, {
       context: {
         behandlingstype: props.behandlingstype,
-        soknadsperiode: { fom: props.lovvalgsperiode.fomDato, tom: props.lovvalgsperiode.tomDato },
+        soknadsperiode: {
+          fom: props.anmodningsperiodesvar.endretPeriode?.fom,
+          tom: props.anmodningsperiodesvar.endretPeriode?.tom,
+        },
       },
     })(values),
 })(VurderingArtikkel16Vedtak);
@@ -523,7 +523,6 @@ const mapStateToProps = (state) => {
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
-    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
     art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
     art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
