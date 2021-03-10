@@ -53,7 +53,7 @@ describe("PeriodeForkorter", () => {
     expect(input).toHaveLength(2);
     expect(inputFomProps.label).toBe(props.fomLabel);
     expect(inputFomProps.feltNavn).toBe(props.fomFeltNavn);
-    expect(inputFomProps.disabled).toBe(true);
+    expect(inputFomProps.disabled).toBe(!props.redigerbart);
     expect(inputTomProps.label).toBe(props.tomLabel);
     expect(inputTomProps.feltNavn).toBe(props.tomFeltNavn);
     expect(inputTomProps.disabled).toBe(!props.redigerbart);
@@ -71,11 +71,11 @@ describe("PeriodeForkorter", () => {
     const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
     const checkbox = periodeForkorter.find(Skjema.Checkbox);
 
-    const checkedEvent = { target: { checked: true } };
+    const checkedEvent = { currentTarget: { checked: true } };
     checkbox.simulate("click", checkedEvent);
     expect(props.onUncheck).toHaveBeenCalledTimes(0);
 
-    const unCheckedEvent = { target: { checked: false } };
+    const unCheckedEvent = { currentTarget: { checked: false } };
     checkbox.simulate("click", unCheckedEvent);
     expect(props.onUncheck).toHaveBeenCalledTimes(1);
   });
