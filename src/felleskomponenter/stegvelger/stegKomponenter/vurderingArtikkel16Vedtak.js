@@ -336,6 +336,7 @@ export const VurderingArtikkel16Vedtak = ({
   const validerForm = () => {
     touch("vedtakstype");
     touch("vedtakstypebegrunnelse");
+    touch("tomDato");
     return formIsValid;
   };
 
@@ -500,6 +501,7 @@ const VurderingArtikkel16VedtakForm = reduxForm({
     lagYupToReduxformErrorMapper(VurderingArtikkel16VedtakSchema, {
       context: {
         behandlingstype: props.behandlingstype,
+        soknadsperiode: { fom: props.lovvalgsperiode.fomDato, tom: props.lovvalgsperiode.tomDato },
       },
     })(values),
 })(VurderingArtikkel16Vedtak);

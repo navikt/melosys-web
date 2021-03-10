@@ -1,4 +1,4 @@
-import { object, string } from "yup";
+import { object, string, bool } from "yup";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -18,6 +18,14 @@ const artikkel16_vedtak = object().shape({
       is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
       then: string().nullable().required(OPPGI_BEGRUNNELSE),
     }),
+  forkortLovvalgsperiode: bool().required(),
+  tomDato: string().when("forkortLovvalgsperiode", {
+    is: true,
+    then: string()
+      .endretPeriodeErGyldig({ melding: "Ugyldig periode" })
+      .erGyldigDato({ melding: "Gyldig dato kreves" })
+      .required({ melding: "Dato kreves" }),
+  }),
 });
 
 export default artikkel16_vedtak;
