@@ -337,12 +337,16 @@ export const VurderingArtikkel16Vedtak = ({
   const validerForm = () => {
     touch("vedtakstype");
     touch("vedtakstypebegrunnelse");
+    touch("fomDato");
     touch("tomDato");
     return formIsValid;
   };
 
   const forkortLovvalgsperiode = () =>
-    endreLovvalgsPeriode(endretPeriode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+    endreLovvalgsPeriode(
+      Utils.dato.formatterDatoTilISO(formValues.fomDato),
+      Utils.dato.formatterDatoTilISO(formValues.tomDato)
+    );
 
   const vedKlikkForhandsvis = async () => {
     if (!validerForm()) return false;
@@ -515,10 +519,13 @@ const VurderingArtikkel16VedtakForm = reduxForm({
 const mapStateToProps = (state) => {
   const anmodningsperiodesvarTom = anmodningsperiodesvarSelectors.EndretPeriodeTomSelector(state);
   const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
+  const anmodningsperiodesvarFom = anmodningsperiodesvarSelectors.EndretPeriodeFomSelector(state);
+  const lovvalgsperiodeFom = lovvalgsperioderSelectors.FomDatoSelector(state);
   const erLovvalgsperiodeForkortet = () =>
-    Utils.dato.datoDiffPure(anmodningsperiodesvarTom, lovvalgsperiodeTom, "days") !== 0;
+    Utils.dato.datoDiffPure(anmodningsperiodesvarTom, lovvalgsperiodeTom, "days") !== 0 ||
+    Utils.dato.datoDiffPure(anmodningsperiodesvarFom, lovvalgsperiodeFom, "days") !== 0;
 
-  const forkortLovvalgsperiode = lovvalgsperiodeTom === null ? false : erLovvalgsperiodeForkortet();
+  const forkortLovvalgsperiode = erLovvalgsperiodeForkortet();
 
   return {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -535,7 +542,9 @@ const mapStateToProps = (state) => {
       tomDato: forkortLovvalgsperiode
         ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state))
         : "",
-      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
+      fomDato: forkortLovvalgsperiode
+        ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state))
+        : "",
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
       vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
