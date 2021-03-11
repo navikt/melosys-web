@@ -4,13 +4,13 @@ import * as Utils from "../../../utils";
 
 import MKV from "../../../melosyskodeverk";
 
-const { INNVILGELSE, DELVIS_INNVILGELSE } = MKV.Koder.anmodningsperiodesvartyper;
+const { DELVIS_INNVILGELSE } = MKV.Koder.anmodningsperiodesvartyper;
 
 const UGYLDIG_PERIODE = { melding: "Endret periode er utenfor opprinnelig periode" };
 
 const artikkel16_motta_svar = object().shape({
   endretPeriode: object().when("$anmodningsperiodeSvarType", {
-    is: (svarType) => svarType === INNVILGELSE || svarType === DELVIS_INNVILGELSE,
+    is: DELVIS_INNVILGELSE,
     then: object().shape({
       fom: string()
         .test("Er innenfor soknadsperiode", UGYLDIG_PERIODE, (value, { options }) => {

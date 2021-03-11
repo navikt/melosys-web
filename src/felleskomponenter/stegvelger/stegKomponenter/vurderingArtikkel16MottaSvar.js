@@ -62,7 +62,6 @@ export const FormKomponent = ({
   sendAnmodningsperiodeSvar,
 }) => {
   const visLovvalgsperiode =
-    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE ||
     formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
 
   const visFritekstFelt =
@@ -71,7 +70,6 @@ export const FormKomponent = ({
 
   const lagreSvar = (data) => {
     const sendEndretPeriode =
-      data.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE ||
       data.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
 
     const svar = {
