@@ -26,7 +26,6 @@ import DatoOmrade from "../../datoOmrade/datoOmrade";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 import VedleggVelger from "../../vedleggvelger";
-import { FeatureToggle } from "../../../featuretoggle";
 
 import { konverterTilStegData, lagBegrunnelse } from "../../../regler/vilkar";
 import { konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
@@ -549,23 +548,17 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Column>
           </Nav.Row>
           {redigerbart && (
-            <FeatureToggle togglename="melosys.anmodning_vedlegg">
-              {(status) =>
-                status === "enabled" ? (
-                  <Nav.Row>
-                    <Nav.Column xs="12">
-                      <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
-                      <VedleggVelger
-                        className="vedleggvelger"
-                        valgteVedlegg={valgteVedlegg}
-                        onChange={setValgteVedlegg}
-                        dokumenter={fysiskeDokument}
-                      />
-                    </Nav.Column>
-                  </Nav.Row>
-                ) : null
-              }
-            </FeatureToggle>
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
+                <VedleggVelger
+                  className="vedleggvelger"
+                  valgteVedlegg={valgteVedlegg}
+                  onChange={setValgteVedlegg}
+                  dokumenter={fysiskeDokument}
+                />
+              </Nav.Column>
+            </Nav.Row>
           )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
