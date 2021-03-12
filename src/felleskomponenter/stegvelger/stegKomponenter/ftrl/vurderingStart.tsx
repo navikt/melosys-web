@@ -18,7 +18,7 @@ import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingStartSchema from "./vurderingStartSchema";
-import DialogboksOppfriskSak from "../../../dialogboks/dialogboksOppfrisk";
+import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
 

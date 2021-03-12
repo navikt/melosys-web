@@ -1,9 +1,9 @@
 import React from "react";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../../utils/navFrontend";
 
 import { DialogboksRevurderFagsak } from "./dialogboksRevurderFagsak";
-import Knapperad from "../knapperad";
+import Knapperad from "../../knapperad";
 
 describe("DialogboksRevurderFagsak", () => {
   let props = null;

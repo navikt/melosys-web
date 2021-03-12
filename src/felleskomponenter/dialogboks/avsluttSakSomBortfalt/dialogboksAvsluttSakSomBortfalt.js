@@ -2,11 +2,11 @@ import React from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../../utils/navFrontend";
 
-import Knapperad from "../knapperad";
+import Knapperad from "../../knapperad";
 
-import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksAvsluttSakSomBortfalt.css";
 

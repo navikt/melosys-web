@@ -2,17 +2,17 @@ import React from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
-import MKV from "../../melosyskodeverk";
-import useEventTargetValueState from "../../hooks/useEventTargetValueState";
+import MKV from "../../../melosyskodeverk";
+import useEventTargetValueState from "../../../hooks/useEventTargetValueState";
 
-import * as Nav from "../../utils/navFrontend";
-import * as Ikon from "../../resources/images";
+import * as Nav from "../../../utils/navFrontend";
+import * as Ikon from "../../../resources/images";
 
-import PdfLenkeListe from "../pdfLenkeListe";
-import Knapperad from "../knapperad";
+import PdfLenkeListe from "../../pdfLenkeListe";
+import Knapperad from "../../knapperad";
 
-import { behandlingerSelectors } from "../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksAvslagSoknad.css";
 

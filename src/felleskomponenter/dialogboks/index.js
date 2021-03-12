@@ -1,5 +1,5 @@
-import * as OppfriskSak from "./dialogboksOppfrisk";
-import * as HenleggSak from "./dialogboksHenlegg";
+import * as OppfriskSak from "./oppfrisk/dialogboksOppfrisk";
+import * as HenleggSak from "./henlegg/dialogboksHenlegg";
 
 export default {
   OppfriskSak,

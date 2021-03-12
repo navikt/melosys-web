@@ -19,6 +19,7 @@ interface OppsummeringProps {
   lovvalgsland?: KTObject;
   fagsak: Fagsak;
   oppsummering: OppsummeringType;
+  behandlingsstatus: object;
   person: Person;
   behandlingsgrunnlagPeriodeFom?: string;
   behandlingsgrunnlagPeriodeTom?: string;
@@ -35,6 +36,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     lovvalgsland,
     fagsak,
     oppsummering,
+    behandlingsstatus,
     person,
     behandlingsgrunnlagPeriodeFom,
     behandlingsgrunnlagPeriodeTom,
@@ -47,7 +49,7 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const { saksnummer, sakstype, saksstatus, registrertDato } = fagsak;
 
-  const { behandlingstype, behandlingsstatus, endretDato, endretAvNavn, sisteOpplysningerHentetDato } = oppsummering;
+  const { behandlingstype, endretDato, endretAvNavn, sisteOpplysningerHentetDato } = oppsummering;
 
   const { fnr, sammensattNavn } = person;
 
@@ -179,7 +181,7 @@ const Oppsummering = (props: OppsummeringProps) => {
             <dt>Behandlingsstatus:</dt>
           </Nav.Column>
           <Nav.Column xs={kolonneBredder[1]}>
-            <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
+            <dd>{behandlingsstatus}</dd>
           </Nav.Column>
         </Nav.Row>
       </dl>
@@ -237,6 +239,7 @@ Oppsummering.propTypes = {
   lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
+  behandlingsstatus: PT.element.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,

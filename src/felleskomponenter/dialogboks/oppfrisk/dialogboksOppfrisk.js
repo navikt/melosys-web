@@ -2,9 +2,9 @@ import React, { Suspense, useState } from "react";
 import usePromise from "react-promise-suspense";
 import PT from "prop-types";
 
-import * as Nav from "../../utils/navFrontend";
-import ErrorBoundary from "../ErrorBoundary";
-import Knapperad from "../knapperad";
+import * as Nav from "../../../utils/navFrontend";
+import ErrorBoundary from "../../ErrorBoundary";
+import Knapperad from "../../knapperad";
 
 import "./dialogboksOppfrisk.css";
 
