@@ -68,6 +68,23 @@ describe("SideDialog", () => {
         expect(childProps.brevBestillingRedigerbartIArtikkel13).toBe(props.brevBestillingRedigerbartIArtikkel13);
       });
 
+      it("SideDialogSendBrev", () => {
+        type BrevbestillingMockProps = {
+          behandlingID: number;
+          redigerbart: boolean;
+          brevBestillingRedigerbartIArtikkel13: boolean;
+        };
+
+        props.navn = "brevbestilling";
+        const faner = shallow(<FaneViser {...props} />);
+
+        const sideDialogBrevBestilling = faner.find(SideDialogBrevBestillilng);
+        const childProps = sideDialogBrevBestilling.props() as BrevbestillingMockProps;
+
+        expect(sideDialogBrevBestilling).toHaveLength(1);
+        expect(childProps.redigerbart).toBe(props.brevBestillingRedigerbart);
+      });
+
       it("SideDialogSedBestilling", () => {
         props.navn = "sedbestilling";
         const faner = shallow(<FaneViser {...props} />);

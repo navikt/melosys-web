@@ -2,6 +2,7 @@ import * as Anmodningsperioder from "./modules/anmodningsperioder/";
 import * as Avklartefakta from "./modules/avklartefakta";
 import * as Behandlinger from "./modules/behandlinger";
 import * as Behandlingsgrunnlag from "./modules/behandlingsgrunnlag";
+import * as Brev from "./modules/brev";
 import * as Dokumenter from "./modules/dokumenter/";
 import * as Eessi from "./modules/eessi/";
 import * as Fagsaker from "./modules/fagsaker/";
@@ -28,6 +29,7 @@ export {
   Avklartefakta,
   Behandlinger,
   Behandlingsgrunnlag,
+  Brev,
   Dokumenter,
   Eessi,
   Fagsaker,

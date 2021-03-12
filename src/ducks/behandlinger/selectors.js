@@ -56,6 +56,14 @@ export const PersonSelector = createSelector(
   (state) => SaksopplysningerSelector(state).person || {},
   (person) => person
 );
+export const SammensattNavnSelector = createSelector(
+  (state) => PersonSelector(state).sammensattNavn || "",
+  (sammensattNavn) => sammensattNavn
+);
+export const FnrSelector = createSelector(
+  (state) => PersonSelector(state).fnr || "",
+  (fnr) => fnr
+);
 export const PersonhistorikkSelector = createSelector(
   (state) => SaksopplysningerSelector(state).personhistorikk || {},
   (personhistorikk) => personhistorikk
