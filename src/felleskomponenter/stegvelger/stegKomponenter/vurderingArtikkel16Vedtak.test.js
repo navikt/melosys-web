@@ -29,6 +29,10 @@ describe("VurderingArtikkel16Vedtak", () => {
         vedtaksbrevFritekst: "Test",
       },
       harValgtNorskArbeidsgiver: true,
+      byggLovvalgsperioder: jest.fn(),
+      hentLovvalgsperioder: jest.fn(),
+      lagreLovvalgsperioder: jest.fn(),
+      endreLovvalgsperiode: jest.fn(),
     };
   });
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from "react";
+import React, { Fragment, useCallback, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { reduxForm, isValid, getFormValues } from "redux-form";
 import PT from "prop-types";
@@ -326,13 +326,22 @@ export const VurderingArtikkel16Vedtak = ({
   touch,
   harValgtNorskArbeidsgiver,
   byggLovvalgsperioder,
-  endreLovvalgsPeriode,
+  endreLovvalgsperiode,
   lagreLovvalgsperioder,
+  hentLovvalgsperioder,
+  lovvalgsperiode,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
 
-  const { anmodningsperiodeSvarType, endretPeriode = {} } = anmodningsperiodesvar;
+  useEffect(() => {
+    /**
+     * Backend tar ansvar for å opprette en lovvalgsperiode ved POST av anmodningsperiodeSvar, med periode enten fra anmodningsperiode(ved innvilgelse eller avslag), eller fra anmodningsperiodeSvar(ved delvis innvilgelse). Henter denne ned her.
+     */
+    hentLovvalgsperioder(behandlingID);
+  }, [anmodningsperiodesvar]);
+
+  const { anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
   const validerForm = () => {
     touch("vedtakstype");
@@ -343,7 +352,7 @@ export const VurderingArtikkel16Vedtak = ({
   };
 
   const forkortLovvalgsperiode = () =>
-    endreLovvalgsPeriode(
+    endreLovvalgsperiode(
       Utils.dato.formatterDatoTilISO(formValues.fomDato),
       Utils.dato.formatterDatoTilISO(formValues.tomDato)
     );
@@ -420,7 +429,7 @@ export const VurderingArtikkel16Vedtak = ({
             behandlingID={behandlingID}
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-            gjeldendePeriode={endretPeriode}
+            gjeldendePeriode={{ fom: lovvalgsperiode.fomDato, tom: lovvalgsperiode.tomDato }}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             onPeriodeForkorterUncheck={byggLovvalgsperioder}
             formValues={formValues}
@@ -434,7 +443,7 @@ export const VurderingArtikkel16Vedtak = ({
             behandlingID={behandlingID}
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-            gjeldendePeriode={endretPeriode}
+            gjeldendePeriode={{ fom: lovvalgsperiode.fomDato, tom: lovvalgsperiode.tomDato }}
             renderBegrunnelser={renderBegrunnelser}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             onPeriodeForkorterUncheck={byggLovvalgsperioder}
@@ -489,13 +498,16 @@ VurderingArtikkel16Vedtak.propTypes = {
   formValues: PT.object,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
   byggLovvalgsperioder: PT.func.isRequired,
-  endreLovvalgsPeriode: PT.func.isRequired,
+  endreLovvalgsperiode: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
+  lovvalgsperiode: MPT.Lovvalgsperiode,
+  hentLovvalgsperioder: PT.func.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
+  lovvalgsperiode: {},
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
@@ -509,8 +521,8 @@ const VurderingArtikkel16VedtakForm = reduxForm({
       context: {
         behandlingstype: props.behandlingstype,
         soknadsperiode: {
-          fom: props.anmodningsperiodesvar.endretPeriode?.fom,
-          tom: props.anmodningsperiodesvar.endretPeriode?.tom,
+          fom: props.lovvalgsperiode.fomDato,
+          tom: props.lovvalgsperiode.tomDato,
         },
       },
     })(values),
@@ -533,6 +545,7 @@ const mapStateToProps = (state) => {
     lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
     anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
     vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
+    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
     art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
@@ -553,8 +566,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  endreLovvalgsPeriode: (fomdato, tomdato) =>
+  endreLovvalgsperiode: (fomdato, tomdato) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
+  hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16VedtakForm);
