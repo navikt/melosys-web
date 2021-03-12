@@ -4,7 +4,6 @@ import { Avklartfakta } from "Domene";
 import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 
-import { anmodningsperioderSelectors } from "../anmodningsperioder";
 import { avklartefaktaSelectors } from "../avklartefakta";
 import { vilkarSelectors } from "../vilkar";
 import { behandlingerSelectors } from "../behandlinger";
