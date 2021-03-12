@@ -66,13 +66,3 @@ export const HarValgtNorskArbeidsgiverSelector = createSelector(
   (state) => avklartefaktaSelectors.AvklarteNorskeVirksomheterSelector(state),
   (avklarteNorskeVirksomheter) => avklarteNorskeVirksomheter.length > 0
 );
-
-export const ErArt16SvarstegSynlig = createSelector(
-  (state) => behandlingerSelectors.BehandlingsstatusKodeSelector(state),
-  (state) => anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(state),
-  (behandlingsstatusKode, erAnmodningsperioderSendtUtland) =>
-    [
-      MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-    ].includes(behandlingsstatusKode) && erAnmodningsperioderSendtUtland
-);
