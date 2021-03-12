@@ -60,6 +60,7 @@ const Saksopplysninger = ({
   lovvalgsperiode,
   tilForsiden,
   startOgVisOppfriskModal,
+  saksnummer,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
     MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
@@ -73,8 +74,8 @@ const Saksopplysninger = ({
   const [registreringPending, setRegistreringPending] = useState(false);
 
   useEffect(() => {
-    lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
-  }, [anmodningsperiodeID]);
+    lastInnSaksopplysninger(saksnummer, behandlingID);
+  }, [saksnummer, behandlingID]);
 
   const setEndretPeriode = () => {
     if (sed.lovvalgsperiode) {
@@ -424,6 +425,7 @@ Saksopplysninger.propTypes = {
   lovvalgsperiode: MPT.Lovvalgsperiode.isRequired,
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  saksnummer: PT.string.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -442,8 +444,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
-  lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) =>
-    datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
+    dispatch(datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(saksnummer, behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

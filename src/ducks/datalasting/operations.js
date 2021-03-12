@@ -9,7 +9,7 @@ import { behandlingsgrunnlagOperations } from "../behandlingsgrunnlag";
 import { lovvalgsperioderOperations } from "../lovvalgsperioder";
 import { vilkarOperations } from "../vilkar";
 import { behandlingsperioderOperations } from "../behandlingsperioder";
-import { anmodningsperioderOperations } from "../anmodningsperioder";
+import { anmodningsperioderOperations, anmodningsperioderSelectors } from "../anmodningsperioder";
 import { anmodningsperiodesvarOperations } from "../anmodningsperiodesvar";
 import { utpekingsperioderOperations } from "../utpekingsperioder";
 import { dokumenterOperations } from "../dokumenter";
@@ -60,15 +60,14 @@ export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) =
   }
 };
 
-export const lastInnSaksopplysningerBehandleMottattAOU = (behandlingID, anmodningsperiodeID) => (dispatch) => {
-  try {
-    dispatch(behandlingerOperations.hentBehandling(behandlingID));
-    dispatch(behandlingsresultatOperations.hent(behandlingID));
-    dispatch(anmodningsperioderOperations.hent(behandlingID));
+export const lastInnSaksopplysningerBehandleMottattAOU = (saksnummer, behandlingID) => (dispatch, getState) => {
+  dispatch(behandlingerOperations.hentBehandling(behandlingID));
+  dispatch(behandlingsresultatOperations.hent(behandlingID));
+  dispatch(anmodningsperioderOperations.hent(behandlingID)).then(() => {
+    const anmodningsperiodeID = anmodningsperioderSelectors.AnmodningsperiodeIDSelector(getState());
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID));
-  } catch (e) {
-    Utils.logger.error(e);
-  }
+  });
+  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
 };
 
 export const resetSaksopplysninger = () => (dispatch) => {
