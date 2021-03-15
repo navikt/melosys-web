@@ -162,6 +162,7 @@ const VurderingStart = ({
                 </Fragment>
               }
               feltNavn="land"
+              placeholder="Velg..."
               landkoder={alleLandkoder.map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))}
             />
           </Nav.Column>
