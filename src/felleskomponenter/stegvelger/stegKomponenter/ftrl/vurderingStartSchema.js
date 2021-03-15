@@ -1,7 +1,7 @@
 import { object, string } from "yup";
 import * as Utils from "../../../../utils";
 
-const FOM_FELT_KREVES = { melding: "Du må fylle inn dato" };
+const FOM_FELT_KREVES = { melding: "Må fylles ut" };
 const ARBEIDSLAND_FELT_KREVES = { melding: "Du må velge arbeidsland" };
 const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
