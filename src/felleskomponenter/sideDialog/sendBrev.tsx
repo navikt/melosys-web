@@ -38,6 +38,7 @@ const mapStateToProps = (state: RootState) => ({
   fnr: behandlingerSelectors.FnrSelector(state),
   orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
   virksomheter: behandlingerSelectors.AlleVirksomheterSelector(state),
+  registerInfoHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -75,6 +76,7 @@ const SendBrev = ({
   redigerbart,
   saksnummer,
   virksomheter,
+  registerInfoHentet,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.Brev.TilgjengeligeMalerResDto[]>();
   const [fullmektige, setFullmektige] = useState<Api.Fagsaker.aktoer.HentResDto>();
@@ -123,7 +125,7 @@ const SendBrev = ({
     Utils._debounce(
       (data: { orgnr: string; valid: boolean }) =>
         hentOrganisasjonIfValid(data.orgnr, data.valid).then((org) => setAdresse({ organisasjonsAdresse: org })),
-      1000
+      500
     ),
     []
   );
@@ -163,11 +165,15 @@ const SendBrev = ({
     setAdresse(undefined);
     setMottakerFeil(undefined);
     if (!formValues || !formValues.mottaker) return;
-    if (JSON.parse(formValues.mottaker).rolle === "BRUKER") {
+    const mottaker = JSON.parse(formValues.mottaker);
+    if (mottaker.rolle === "BRUKER") {
       hentAdresseForBruker();
     }
-    if (JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" && JSON.parse(formValues.mottaker).frittValg) {
+    if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.frittValg) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
+    }
+    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.frittValg && !registerInfoHentet) {
+      setMottakerFeil("Finner ingen arbeidsgivere. Hent registeropplysninger");
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
 
@@ -247,11 +253,10 @@ const SendBrev = ({
         </Skjema.Select>
       )}
 
-      {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-
       {!!formValues.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER" && (
         <Nav.Row>
           <Nav.Column xs="6">
+            {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
             {adresse?.navn && <Nav.typo.Element>{adresse.navn}</Nav.typo.Element>}
             {adresse?.kontaktperson && <Nav.typo.Normaltekst>{adresse.kontaktperson}</Nav.typo.Normaltekst>}
             {adresse?.brukerAdresse && (
@@ -270,46 +275,50 @@ const SendBrev = ({
         JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
         !JSON.parse(formValues.mottaker).frittValg && (
           <Nav.Row>
-            <Nav.Column xs="12">
-              <Nav.typo.Normaltekst style={{ marginBottom: "0.5rem" }}>
-                Velg:
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={arbeidsgiverHjelptekst}
-                  type={Nav.PopoverOrientering.Venstre}
-                >
-                  {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
-                    <p key={Utils._uuid()}>{paragraf}</p>
-                  ))}
-                </Nav.Hjelpetekst>
-              </Nav.typo.Normaltekst>
-              {virksomheter.map((virksomhet: KTObject) => (
-                <Fragment>
-                  <Skjema.Radio
-                    className="arbeidsgiver_radio"
-                    feltNavn="arbeidsgiver"
-                    label={`${virksomhet.term} (org.nr. ${virksomhet.kode})`}
-                    id={`arbeidsgiver.${virksomhet.kode}`}
-                    key={`arbeidsgiver.${virksomhet.kode}`}
-                    value={virksomhet.kode}
-                    disabled={!redigerbart}
-                  />
-                  {formValues.arbeidsgiver === virksomhet.kode && (
-                    <div className="arbeidsgiveradresse">
-                      {adresse?.navn && <Nav.typo.Element>{adresse.navn}</Nav.typo.Element>}
-                      {adresse?.kontaktperson && <Nav.typo.Normaltekst>{adresse.kontaktperson}</Nav.typo.Normaltekst>}
-                      {adresse?.organisasjonsAdresse && (
-                        <OrganisasjonsAdresse
-                          organisasjon={adresse.organisasjonsAdresse}
-                          visNavn={false}
-                          visTittel={false}
-                        />
-                      )}
-                    </div>
-                  )}
-                </Fragment>
-              ))}
-            </Nav.Column>
+            {mottakerFeil ? (
+              <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
+            ) : (
+              <Nav.Column xs="12">
+                <Nav.typo.Normaltekst style={{ marginBottom: "0.5rem" }}>
+                  Velg:
+                  <Nav.Hjelpetekst
+                    className="hjelpetekst"
+                    tittel={arbeidsgiverHjelptekst}
+                    type={Nav.PopoverOrientering.Venstre}
+                  >
+                    {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
+                      <p key={Utils._uuid()}>{paragraf}</p>
+                    ))}
+                  </Nav.Hjelpetekst>
+                </Nav.typo.Normaltekst>
+                {virksomheter.map((virksomhet: KTObject) => (
+                  <Fragment>
+                    <Skjema.Radio
+                      className="arbeidsgiver_radio"
+                      feltNavn="arbeidsgiver"
+                      label={`${virksomhet.term} (org.nr. ${virksomhet.kode})`}
+                      id={`arbeidsgiver.${virksomhet.kode}`}
+                      key={`arbeidsgiver.${virksomhet.kode}`}
+                      value={virksomhet.kode}
+                      disabled={!redigerbart}
+                    />
+                    {formValues.arbeidsgiver === virksomhet.kode && (
+                      <div className="arbeidsgiveradresse">
+                        {adresse?.navn && <Nav.typo.Element>{adresse.navn}</Nav.typo.Element>}
+                        {adresse?.kontaktperson && <Nav.typo.Normaltekst>{adresse.kontaktperson}</Nav.typo.Normaltekst>}
+                        {adresse?.organisasjonsAdresse && (
+                          <OrganisasjonsAdresse
+                            organisasjon={adresse.organisasjonsAdresse}
+                            visNavn={false}
+                            visTittel={false}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Fragment>
+                ))}
+              </Nav.Column>
+            )}
           </Nav.Row>
         )}
 
@@ -336,6 +345,7 @@ const SendBrev = ({
                 disabled={!redigerbart}
               />
             </Nav.Column>
+            {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
           </Nav.Row>
         )}
 
