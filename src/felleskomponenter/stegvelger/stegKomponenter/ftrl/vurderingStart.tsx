@@ -154,7 +154,7 @@ const VurderingStart = ({
             <Skjema.Input datoFelt label="Til og med:" feltNavn="tom" bredde="fullbredde" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
-            <Skjema.Select
+            <Skjema.LandVelger
               label={
                 <Fragment>
                   <b>Arbeidsland</b>
@@ -162,15 +162,8 @@ const VurderingStart = ({
                 </Fragment>
               }
               feltNavn="land"
-              emptyFieldText="Velg"
-              emptyFieldDisabled={!!formValues.land}
-            >
-              {alleLandkoder.map((item) => (
-                <option key={item.kode} value={item.kode}>
-                  {Utils.land.landTekstFormatStoreForbokstaver(item)}
-                </option>
-              ))}
-            </Skjema.Select>
+              landkoder={alleLandkoder.map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))}
+            />
           </Nav.Column>
         </Nav.Row>
         {!erPeriodeGyldig && (
