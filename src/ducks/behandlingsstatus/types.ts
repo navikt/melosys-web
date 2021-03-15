@@ -4,7 +4,7 @@ export const OK = "behandlingsstatus/OK";
 export const FEILET = "behandlingsstatus/FEILET";
 export const PENDING = "behandlingsstatus/PENDING";
 
-export const HENT_MULIGE_BEHANDLINGSSTATUSER = "behandlingstatus/HENT_MULIGE_BEHANDLINGSSTATUSER";
+export const HENT_MULIGE_BEHANDLINGSSTATUSER = "behandlingsstatus/HENT_MULIGE_BEHANDLINGSSTATUSER";
 
 export interface Data {
   muligeBehandlingsstatuser?: KTObject[];

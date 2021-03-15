@@ -93,7 +93,7 @@ function DialogboksEndreBehandlingsstatus({
               label=""
               disableForsteValg={!!behandlingsstatus}
               value={behandlingsstatus}
-              koder={muligeBehandlingsstatuser.filter((status) => status.kode !== props.behandlingsstatus)}
+              koder={muligeBehandlingsstatuser}
             />
           </div>
           <div>
