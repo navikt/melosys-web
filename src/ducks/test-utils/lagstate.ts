@@ -1,7 +1,6 @@
 import { RootState } from "AppTypes";
 
 import { STATUS } from "../../services/utils";
-import behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 
 /**
  * Genererer default state for redux til testing, samt tillater å sette individuelle states.

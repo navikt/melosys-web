@@ -23,7 +23,6 @@ export default function reducer(state = initialState, action: Types.Action) {
     case Types.HENT_MULIGE_BEHANDLINGSSTATUSER: {
       const muligeBehandlingsstatuser = action.data;
       if (!muligeBehandlingsstatuser) return { ...state };
-      console.log(muligeBehandlingsstatuser);
       return { ...state, data: { muligeBehandlingsstatuser } };
     }
     default:
