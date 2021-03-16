@@ -28,6 +28,7 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 
 const mapStateToProps = (state: RootState) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formIsValid: formSelectors.SendBrevValidSelector(state),
   formValues: getFormValues(KV.Form.SEND_BREV)(state),
   initialValues: {
@@ -66,6 +67,7 @@ interface Props {
 }
 
 const SendBrev = ({
+  behandlingID,
   brukersNavn,
   changeField,
   fnr,
@@ -95,7 +97,7 @@ const SendBrev = ({
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
   useEffect(() => {
-    Api.Brev.hentTilgjengeligeMaler().then(setTilgjengeligeMaler).catch(Utils.logger.error);
+    Api.Brev.hentTilgjengeligeMaler(behandlingID).then(setTilgjengeligeMaler).catch(Utils.logger.error);
     Api.Fagsaker.aktoer
       .hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT)
       .then(setFullmektige)

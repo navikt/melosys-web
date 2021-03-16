@@ -27,5 +27,5 @@ export type TilgjengeligeMalerResDto = {
   }[];
   mottakereHjelpetekst: string | null;
 };
-export const hentTilgjengeligeMaler = (): Promise<TilgjengeligeMalerResDto[]> =>
-  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler`);
+export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto[]> =>
+  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
