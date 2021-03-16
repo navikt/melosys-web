@@ -16,6 +16,7 @@ import * as Types from "./types";
 import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
+import { anmodningsperioderSelectors } from "../anmodningsperioder";
 import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
 import { vilkarSelectors } from "../vilkar";
 import { avklartefaktaSelectors } from "../avklartefakta";
@@ -143,6 +144,21 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
   ];
 };
 
+const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
+  const erAnmodningsperiodeSendtUtland = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(
+    reduxState
+  );
+  const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
+    MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+  ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
+
+  if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
+    return Selectors.LovvalgsperioderSelector(reduxState);
+  }
+  return [];
+};
+
 const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
   const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
@@ -187,6 +203,9 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => 
       return byggLovvalgsPeriodeArtikkel11_3A(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2:
       return byggLovvalgsPeriodeArtikkel11_4_2(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1: {
+      return byggLovvalgsPeriodeArtikkel16_1(stegState, reduxState);
+    }
     default: {
       return [];
     }
