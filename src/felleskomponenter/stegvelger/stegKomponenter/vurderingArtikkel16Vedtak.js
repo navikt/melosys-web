@@ -521,10 +521,7 @@ const VurderingArtikkel16VedtakForm = reduxForm({
     lagYupToReduxformErrorMapper(VurderingArtikkel16VedtakSchema, {
       context: {
         behandlingstype: props.behandlingstype,
-        soknadsperiode: {
-          fom: props.lovvalgsperiode.fomDato,
-          tom: props.lovvalgsperiode.tomDato,
-        },
+        lovvalgsperiode: props.lovvalgsperiode,
       },
     })(values),
 })(VurderingArtikkel16Vedtak);

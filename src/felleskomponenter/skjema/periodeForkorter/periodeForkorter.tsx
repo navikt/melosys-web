@@ -59,6 +59,7 @@ const PeriodeForkorter = ({
                 label={fomLabel}
                 disabled={!redigerbart || !fomRedigerbar}
                 feltNavn={fomFeltNavn}
+                datoFelt
               />
             </Nav.Column>
             <Nav.Column xs="3">
