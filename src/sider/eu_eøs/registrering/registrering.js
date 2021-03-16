@@ -3,8 +3,6 @@ import React from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
-import MKV from "../../../melosyskodeverk";
-
 import * as Utils from "../../../utils";
 import * as Routing from "../../../routing";
 import * as Nav from "../../../utils/navFrontend";
@@ -12,7 +10,6 @@ import * as MPT from "../../../proptypes";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
-import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Behandlingsmeny from "./komponenter/behandlingsmeny";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -24,53 +21,6 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
-
-const behandlingsstatusMap = {
-  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-  ],
-};
 
 const Registrering = (props) => {
   const {
@@ -177,14 +127,6 @@ const Registrering = (props) => {
                   tilbakeleggeHandle={tilbakeleggHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
-                />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
-                  oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
                 />
               )}
             />

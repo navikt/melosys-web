@@ -13,7 +13,9 @@ import Oppsummering from "./oppsummering";
 import "./sideOppsummering.css";
 import { modalerOperations } from "../ducks/modaler";
 import { behandlingstemaOperations } from "../ducks/behandlingstema";
+import { behandlingsstatusOperations } from "../ducks/behandlingsstatus";
 import { behandlingerSelectors } from "../ducks/behandlinger";
+import { FeatureToggle } from "../featuretoggle";
 
 const SideOppsummering = ({
   arbeidsland,
@@ -26,19 +28,20 @@ const SideOppsummering = ({
   lovvalgsperiodeTom,
   lovvalgsland,
   renderBehandlingsmeny,
-  renderBehandlingsstatus,
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
   periodeLabel,
   visEndreBehandlingstemaDialogHandle,
+  visEndreBehandlingsstatusDialogHandle,
   hentMuligeBehandlingstema,
+  hentMuligeBehandlingsstatuser,
   behandlingID,
 }) => {
   if (!oppsummering) return <div />;
 
   const [kanEndreBehandlingstema, setKanEndreBehandlingstema] = useState(false);
+  const [kanEndrebehandlingsstatus, setKanEndrebehandlingsstatus] = useState(false);
   const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || "";
-  const behandlingsstatus = renderBehandlingsstatus();
 
   useEffect(() => {
     if (behandlingID > 0) {
@@ -49,8 +52,38 @@ const SideOppsummering = ({
           )
         )
         .catch(() => setKanEndreBehandlingstema(false));
+
+      hentMuligeBehandlingsstatuser(behandlingID)
+        .then((response) =>
+          setKanEndrebehandlingsstatus(
+            response.data.muligeBehandlingsstatuser && response.data.muligeBehandlingsstatuser.length !== 0
+          )
+        )
+        .catch(() => setKanEndrebehandlingsstatus(false));
     }
   }, [behandlingID]);
+
+  const behandlingsstatusLinje = (
+    <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
+      {(status) =>
+        status === "enabled" ? (
+          <Nav.typo.Normaltekst
+            className={kanEndrebehandlingsstatus ? "behandlingsstatus_redigerbar" : ""}
+            onClick={kanEndrebehandlingsstatus ? visEndreBehandlingsstatusDialogHandle : null}
+          >
+            {KV.objektTilTerm(oppsummering.behandlingsstatus)}{" "}
+            {kanEndrebehandlingsstatus ? (
+              <Ikoner.BlyantActive className="blyant" />
+            ) : (
+              <Ikoner.BlyantDisabled className="blyant" />
+            )}
+          </Nav.typo.Normaltekst>
+        ) : (
+          <div>{KV.objektTilTerm(oppsummering.behandlingsstatus)}</div>
+        )
+      }
+    </FeatureToggle>
+  );
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -84,6 +117,7 @@ const SideOppsummering = ({
                 lovvalgsland={lovvalgsland}
                 fagsak={fagsak}
                 oppsummering={oppsummering}
+                behandlingsstatus={behandlingsstatusLinje}
                 person={person}
                 lovvalgsperiodeFom={lovvalgsperiodeFom}
                 lovvalgsperiodeTom={lovvalgsperiodeTom}
@@ -94,11 +128,6 @@ const SideOppsummering = ({
             )}
           </Nav.Column>
         </Nav.Row>
-        {behandlingsstatus && (
-          <Nav.Row>
-            <Nav.Column xs="12">{behandlingsstatus}</Nav.Column>
-          </Nav.Row>
-        )}
       </Nav.Panel>
     </section>
   );
@@ -114,14 +143,15 @@ SideOppsummering.propTypes = {
   lovvalgsperiodeTom: PT.string,
   lovvalgsland: MPT.Kodeverk,
   renderBehandlingsmeny: PT.func.isRequired,
-  renderBehandlingsstatus: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,
   periodeLabel: PT.string,
   visEndreBehandlingstemaDialogHandle: PT.func.isRequired,
+  visEndreBehandlingsstatusDialogHandle: PT.func.isRequired,
   hentMuligeBehandlingstema: PT.func.isRequired,
+  hentMuligeBehandlingsstatuser: PT.func.isRequired,
   behandlingID: PT.number.isRequired,
 };
 
@@ -145,8 +175,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema()),
+  visEndreBehandlingsstatusDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingsstatus()),
   hentMuligeBehandlingstema: (behandlingID) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
+  hentMuligeBehandlingsstatuser: (behandlingID) =>
+    dispatch(behandlingsstatusOperations.hentMuligeBehandlingsstatuser(behandlingID)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);

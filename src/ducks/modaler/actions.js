@@ -34,3 +34,8 @@ export const oppdaterEndreBehandlingstema = (data) => ({
   type: Types.OPPDATER_ENDRE_BEHANDLINGSTEMA,
   data,
 });
+
+export const oppdaterEndreBehandlingsstatus = (data) => ({
+  type: Types.OPPDATER_ENDRE_BEHANDLINGSSTATUS,
+  data,
+});

@@ -8,13 +8,14 @@ import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { feiletresponsSelectors } from "../ducks/feiletrespons";
 
-import DialogboksOppfriskSak from "../felleskomponenter/dialogboks/dialogboksOppfrisk";
-import DialogboksHenlegg from "../felleskomponenter/dialogboks/dialogboksHenlegg";
-import DialogboksAvsluttSakSomBortfalt from "../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt";
-import DialogboksAvslagSoknad from "../felleskomponenter/dialogboks/dialogboksAvslagSoknad";
-import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/dialogboksRevurderFagsak";
-import DialogboksValidering from "../felleskomponenter/dialogboks/dialogboksValidering";
-import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/dialogboksEndreBehandlingstema";
+import DialogboksOppfriskSak from "../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
+import DialogboksHenlegg from "../felleskomponenter/dialogboks/henlegg/dialogboksHenlegg";
+import DialogboksAvsluttSakSomBortfalt from "../felleskomponenter/dialogboks/avsluttSakSomBortfalt/dialogboksAvsluttSakSomBortfalt";
+import DialogboksAvslagSoknad from "../felleskomponenter/dialogboks/avslagSoknad/dialogboksAvslagSoknad";
+import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/revurderFagsak/dialogboksRevurderFagsak";
+import DialogboksValidering from "../felleskomponenter/dialogboks/validering";
+import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/endreBehandlingstema/dialogboksEndreBehandlingstema";
+import DialogboksEndreBehandlingsstatus from "../felleskomponenter/dialogboks/endreBehandlingsstatus/dialogboksEndreBehandlingsstatus";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -40,7 +41,9 @@ const Modals = ({
   visValideringModal,
   skjulValideringModalDialogHandle,
   visEndreBehandlingstemaDialog,
+  visEndreBehandlingsstatusDialog,
   skjulEndreBehandlingstemaModalDialogHandle,
+  skjulEndreBehandlingsstatusModalDialogHandle,
   valideringerFeilkoder,
   valideringerFeilmeldinger,
   behandlingOppfriskes,
@@ -84,6 +87,9 @@ const Modals = ({
     {visEndreBehandlingstemaDialog && (
       <DialogboksEndreBehandlingstema avbryt={skjulEndreBehandlingstemaModalDialogHandle} />
     )}
+    {visEndreBehandlingsstatusDialog && (
+      <DialogboksEndreBehandlingsstatus avbryt={skjulEndreBehandlingsstatusModalDialogHandle} />
+    )}
   </Fragment>
 );
 
@@ -110,6 +116,8 @@ Modals.propTypes = {
   skjulValideringModalDialogHandle: PT.func.isRequired,
   visEndreBehandlingstemaDialog: PT.bool.isRequired,
   skjulEndreBehandlingstemaModalDialogHandle: PT.func.isRequired,
+  visEndreBehandlingsstatusDialog: PT.bool.isRequired,
+  skjulEndreBehandlingsstatusModalDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
   valideringerFeilkoder: PT.arrayOf(
@@ -141,6 +149,7 @@ const mapStateToProps = (state) => ({
   valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
   valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
   visEndreBehandlingstemaDialog: modalerSelectors.ErEndreBehandlingstemaSynligSelector(state),
+  visEndreBehandlingsstatusDialog: modalerSelectors.ErEndreBehandlingsstatusSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -153,6 +162,7 @@ const mapDispatchToProps = (dispatch) => ({
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
   skjulEndreBehandlingstemaModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingstema()),
+  skjulEndreBehandlingsstatusModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingsstatus()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
