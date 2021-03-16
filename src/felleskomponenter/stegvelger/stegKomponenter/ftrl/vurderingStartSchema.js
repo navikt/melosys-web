@@ -13,22 +13,21 @@ const gyldigDatoTest = {
   test: erDatoGyldig,
 };
 
-const erPeriodeGyldig = (fom, tom) => {
+function erPeriodeGyldig(tom) {
+  const fom = this.options.parent.fom;
   if (!erDatoGyldig(fom) || !erDatoGyldig(tom)) return true;
   return !fom || !tom || Utils.dato.erGyldigPeriode(fom, tom);
+}
+
+const gyldigPeriodeTest = {
+  name: "Gyldig periode",
+  message: "Tidligere enn f.o.m.-dato",
+  test: erPeriodeGyldig,
 };
 
 const vurdering_start = object().shape({
   fom: string().test(gyldigDatoTest).required(FOM_FELT_KREVES),
-  tom: string()
-    .test(gyldigDatoTest)
-    .when("fom", (fom, schema) => {
-      return schema.test({
-        test: (tom) => erPeriodeGyldig(fom, tom),
-        message: "Tidligere enn f.o.m.-dato",
-      });
-    })
-    .nullable(),
+  tom: string().test(gyldigDatoTest).test(gyldigPeriodeTest).nullable(),
   land: string().required(ARBEIDSLAND_FELT_KREVES),
   trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),
 });
