@@ -37,7 +37,7 @@ interface Props {
   avbryt: () => void;
 }
 
-function DialogboksEndreBehandlingsstatus({
+export function DialogboksEndreBehandlingsstatus({
   avbryt,
   behandlingID,
   hentBehandling,

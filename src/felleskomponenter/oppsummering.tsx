@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -19,7 +19,7 @@ interface OppsummeringProps {
   lovvalgsland?: KTObject;
   fagsak: Fagsak;
   oppsummering: OppsummeringType;
-  behandlingsstatus: object;
+  behandlingsstatus: ReactNode;
   person: Person;
   behandlingsgrunnlagPeriodeFom?: string;
   behandlingsgrunnlagPeriodeTom?: string;
@@ -239,7 +239,7 @@ Oppsummering.propTypes = {
   lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
-  behandlingsstatus: PT.element.isRequired,
+  behandlingsstatus: PT.node.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,

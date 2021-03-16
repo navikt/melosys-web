@@ -10,7 +10,6 @@ import * as KV from "../../../kodeverk";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
-import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger from "../../../felleskomponenter/stegvelger";
 import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -34,43 +33,6 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./vurderutpeking.css";
 
-const behandlingsstatusMap = {
-  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
-};
 
 const hentForsteSteg = (behandlingstema) => {
   switch (behandlingstema) {
@@ -210,14 +172,6 @@ const Vurderutpeking = ({
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                   visRevurderFagsak
-                />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
-                  oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
                 />
               )}
             />

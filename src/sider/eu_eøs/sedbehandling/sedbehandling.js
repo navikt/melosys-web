@@ -6,11 +6,9 @@ import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../utils/navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
-import * as Api from "../../../services/api";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
-import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Behandlingsmeny from "./komponenter/behandlingsmeny";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
@@ -22,102 +20,6 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./sedbehandling.css";
 
-const behandlingsstatusMap = {
-  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-};
 
 const SedBehandling = ({
   brevBestillingRedigerbart,
@@ -172,12 +74,6 @@ const SedBehandling = ({
     }
   }, [behandlingstema]);
 
-  const oppdaterStatus = (_, behandlingsstatus) => {
-    if (behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
-      return Api.Fagsaker.fagsak.avslutt(saksnummer);
-    }
-    return Api.Behandlinger.status.oppdaterStatus(behandlingID, behandlingsstatus);
-  };
 
   return (
     <div className="sedbehandling">
@@ -208,15 +104,6 @@ const SedBehandling = ({
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
-                />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
-                  oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
-                  oppdaterStatus={oppdaterStatus}
                 />
               )}
             />
