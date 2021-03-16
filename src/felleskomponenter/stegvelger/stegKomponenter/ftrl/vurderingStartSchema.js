@@ -14,7 +14,7 @@ const gyldigDatoTest = {
 };
 
 function erPeriodeGyldig(tom) {
-  const fom = this.options.parent.fom;
+  const { fom } = this.options.parent;
   if (!erDatoGyldig(fom) || !erDatoGyldig(tom)) return true;
   return !fom || !tom || Utils.dato.erGyldigPeriode(fom, tom);
 }
