@@ -12,6 +12,7 @@ import * as MPT from "../../../proptypes";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Behandlingsmeny from "./komponenter/behandlingsmeny";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
@@ -30,6 +31,58 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 
 import "./saksbehandling.css";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
+
+const behandlingsstatusMap = {
+  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT]: [
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
+    },
+    {
+      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
+};
 
 class Saksbehandling extends Component {
   state = {
@@ -241,6 +294,14 @@ class Saksbehandling extends Component {
                     visAvsluttSakSomBortfalt={
                       behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
                     }
+                  />
+                )}
+                renderBehandlingsstatus={() => (
+                  <Behandlingsstatus
+                    behandlingID={behandlingID}
+                    redigerbart={redigerbart}
+                    oppsummering={oppsummering}
+                    behandlingsstatusMap={behandlingsstatusMap}
                   />
                 )}
               />

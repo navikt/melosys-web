@@ -28,6 +28,7 @@ const SideOppsummering = ({
   lovvalgsperiodeTom,
   lovvalgsland,
   renderBehandlingsmeny,
+  renderBehandlingsstatus,
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
   periodeLabel,
@@ -42,6 +43,7 @@ const SideOppsummering = ({
   const [kanEndreBehandlingstema, setKanEndreBehandlingstema] = useState(false);
   const [kanEndrebehandlingsstatus, setKanEndrebehandlingsstatus] = useState(false);
   const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || "";
+  const behandlingsstatus = renderBehandlingsstatus();
 
   useEffect(() => {
     if (behandlingID > 0) {
@@ -128,6 +130,17 @@ const SideOppsummering = ({
             )}
           </Nav.Column>
         </Nav.Row>
+        {behandlingsstatus && (
+          <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
+            {(status) =>
+              status === "enabled" ? null : (
+                <Nav.Row>
+                  <Nav.Column xs="12">{behandlingsstatus}</Nav.Column>
+                </Nav.Row>
+              )
+            }
+          </FeatureToggle>
+        )}
       </Nav.Panel>
     </section>
   );
@@ -143,6 +156,7 @@ SideOppsummering.propTypes = {
   lovvalgsperiodeTom: PT.string,
   lovvalgsland: MPT.Kodeverk,
   renderBehandlingsmeny: PT.func.isRequired,
+  renderBehandlingsstatus: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
   behandlingsgrunnlagPeriodeFom: PT.string,
