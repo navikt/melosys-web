@@ -68,7 +68,7 @@ export const FormKomponent = ({
     formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
     formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
 
-  const lagreSvar = (data) => {
+  const lagreSvar = async (data) => {
     const sendEndretPeriode =
       data.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
 
@@ -83,10 +83,9 @@ export const FormKomponent = ({
       begrunnelseFritekst: data.begrunnelseFritekst || null,
     };
 
-    oppdaterData(lagAnmodningsperiodesvar(svar));
-
     if (data.anmodningsperiodeSvarType && data.formIsValid) {
-      sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
+      await sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
+      oppdaterData(lagAnmodningsperiodesvar(svar));
     }
   };
   const debouncedLagreSvar = useCallback(Utils._debounce(lagreSvar, 1000), [oppdaterData, lagAnmodningsperiodesvar]);
