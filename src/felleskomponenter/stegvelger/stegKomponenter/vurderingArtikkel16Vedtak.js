@@ -18,6 +18,7 @@ import DatoOmrade from "../../datoOmrade/datoOmrade";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
+import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { vilkarSelectors } from "../../../ducks/vilkar";
 import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 
@@ -529,13 +530,28 @@ const VurderingArtikkel16VedtakForm = reduxForm({
 })(VurderingArtikkel16Vedtak);
 
 const mapStateToProps = (state) => {
+  const anmodningsperiodesvartype = anmodningsperiodesvarSelectors.AnmodningsperiodeSvarTypeSelector(state);
   const anmodningsperiodesvarTom = anmodningsperiodesvarSelectors.EndretPeriodeTomSelector(state);
   const lovvalgsperiodeTom = lovvalgsperioderSelectors.TomDatoSelector(state);
   const anmodningsperiodesvarFom = anmodningsperiodesvarSelectors.EndretPeriodeFomSelector(state);
   const lovvalgsperiodeFom = lovvalgsperioderSelectors.FomDatoSelector(state);
-  const erLovvalgsperiodeForkortet = () =>
-    Utils.dato.datoDiffPure(anmodningsperiodesvarTom, lovvalgsperiodeTom, "days") !== 0 ||
-    Utils.dato.datoDiffPure(anmodningsperiodesvarFom, lovvalgsperiodeFom, "days") !== 0;
+  const anmodningsperiodeTom = anmodningsperioderSelectors.TomDatoSelector(state);
+  const anmodningsperiodeFom = anmodningsperioderSelectors.FomDatoSelector(state);
+
+  const erLovvalgsperiodeForkortet = () => {
+    if (anmodningsperiodesvartype === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
+      return (
+        Utils.dato.datoDiffPure(anmodningsperiodeTom, lovvalgsperiodeTom, "days") !== 0 ||
+        Utils.dato.datoDiffPure(anmodningsperiodeFom, lovvalgsperiodeFom, "days") !== 0
+      );
+    } else if (anmodningsperiodesvartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+      return (
+        Utils.dato.datoDiffPure(anmodningsperiodesvarTom, lovvalgsperiodeTom, "days") !== 0 ||
+        Utils.dato.datoDiffPure(anmodningsperiodesvarFom, lovvalgsperiodeFom, "days") !== 0
+      );
+    }
+    return false;
+  };
 
   const forkortLovvalgsperiode = erLovvalgsperiodeForkortet();
 
