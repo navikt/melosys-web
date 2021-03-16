@@ -22,7 +22,6 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
 
-
 const Registrering = (props) => {
   const {
     match: {

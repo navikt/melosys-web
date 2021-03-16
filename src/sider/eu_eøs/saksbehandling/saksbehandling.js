@@ -31,7 +31,6 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 import "./saksbehandling.css";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
 
-
 class Saksbehandling extends Component {
   state = {
     behandlingID: -1,

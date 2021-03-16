@@ -20,7 +20,6 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./sedbehandling.css";
 
-
 const SedBehandling = ({
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
@@ -73,7 +72,6 @@ const SedBehandling = ({
       hentBehandlingsgrunnlag(behandlingID);
     }
   }, [behandlingstema]);
-
 
   return (
     <div className="sedbehandling">

@@ -33,7 +33,6 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./vurderutpeking.css";
 
-
 const hentForsteSteg = (behandlingstema) => {
   switch (behandlingstema) {
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
