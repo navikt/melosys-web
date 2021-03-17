@@ -350,8 +350,9 @@ export const VurderingArtikkel16Vedtak = ({
   harValgtNorskArbeidsgiver,
   byggLovvalgsperioder,
   endreLovvalgsperiode,
-  lagreLovvalgsperioder,
   hentLovvalgsperioder,
+  sendLovvalgsperioder,
+  lovvalgsperioder,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
@@ -386,7 +387,7 @@ export const VurderingArtikkel16Vedtak = ({
       await forkortLovvalgsperiode();
     }
 
-    await lagreLovvalgsperioder();
+    await sendLovvalgsperioder(behandlingID, lovvalgsperioder);
 
     return true;
   };
@@ -531,12 +532,15 @@ VurderingArtikkel16Vedtak.propTypes = {
   lagreLovvalgsperioder: PT.func.isRequired,
   anmodningsperiode: PT.object,
   hentLovvalgsperioder: PT.func.isRequired,
+  sendLovvalgsperioder: PT.func.isRequired,
+  lovvalgsperioder: PT.arrayOf(MPT.Lovvalgsperiode),
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
   anmodningsperiode: {},
+  lovvalgsperioder: [],
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
@@ -584,6 +588,7 @@ const mapStateToProps = (state) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
     anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
     anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
     vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
@@ -610,6 +615,7 @@ const mapDispatchToProps = (dispatch) => ({
   endreLovvalgsperiode: (fomdato, tomdato) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16VedtakForm);
