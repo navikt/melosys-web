@@ -33,8 +33,6 @@ describe("VurderingArtikkel16Vedtak", () => {
       hentLovvalgsperioder: jest.fn(),
       lagreLovvalgsperioder: jest.fn(),
       endreLovvalgsperiode: jest.fn(),
-      sendLovvalgsperioder: jest.fn(),
-      lovvalgsperioder: [],
     };
   });
 

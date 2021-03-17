@@ -351,8 +351,7 @@ export const VurderingArtikkel16Vedtak = ({
   byggLovvalgsperioder,
   endreLovvalgsperiode,
   hentLovvalgsperioder,
-  sendLovvalgsperioder,
-  lovvalgsperioder,
+  lagreLovvalgsperioder,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
@@ -387,7 +386,7 @@ export const VurderingArtikkel16Vedtak = ({
       await forkortLovvalgsperiode();
     }
 
-    await sendLovvalgsperioder(behandlingID, lovvalgsperioder);
+    await lagreLovvalgsperioder();
 
     return true;
   };
@@ -532,15 +531,12 @@ VurderingArtikkel16Vedtak.propTypes = {
   lagreLovvalgsperioder: PT.func.isRequired,
   anmodningsperiode: PT.object,
   hentLovvalgsperioder: PT.func.isRequired,
-  sendLovvalgsperioder: PT.func.isRequired,
-  lovvalgsperioder: PT.arrayOf(MPT.Lovvalgsperiode),
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
   anmodningsperiode: {},
-  lovvalgsperioder: [],
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
@@ -615,7 +611,7 @@ const mapDispatchToProps = (dispatch) => ({
   endreLovvalgsperiode: (fomdato, tomdato) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
+  lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16VedtakForm);
