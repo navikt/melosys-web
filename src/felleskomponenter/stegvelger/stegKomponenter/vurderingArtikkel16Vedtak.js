@@ -348,7 +348,6 @@ export const VurderingArtikkel16Vedtak = ({
   behandlingstype,
   touch,
   harValgtNorskArbeidsgiver,
-  byggLovvalgsperioder,
   endreLovvalgsperiode,
   hentLovvalgsperioder,
   lagreLovvalgsperioder,
@@ -442,6 +441,7 @@ export const VurderingArtikkel16Vedtak = ({
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const visOrienteringsbrevArbeidsgiver = harValgtNorskArbeidsgiver && !erNyVurdering;
   const gjeldendePeriode = hentLovvalgsperiode(anmodningsperiodesvar, anmodningsperiode);
+  const gjenopprettUforkortetPeriode = () => endreLovvalgsperiode(gjeldendePeriode.fomDato, gjeldendePeriode.tomDato);
 
   const finnVedtakInnhold = (svarType) => {
     switch (svarType) {
@@ -457,7 +457,7 @@ export const VurderingArtikkel16Vedtak = ({
               tom: gjeldendePeriode.tomDato,
             }}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
-            onPeriodeForkorterUncheck={byggLovvalgsperioder}
+            onPeriodeForkorterUncheck={gjenopprettUforkortetPeriode}
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
           />
@@ -475,7 +475,7 @@ export const VurderingArtikkel16Vedtak = ({
             }}
             renderBegrunnelser={renderBegrunnelser}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
-            onPeriodeForkorterUncheck={byggLovvalgsperioder}
+            onPeriodeForkorterUncheck={gjenopprettUforkortetPeriode}
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
           />
@@ -526,7 +526,6 @@ VurderingArtikkel16Vedtak.propTypes = {
   touch: PT.func.isRequired,
   formValues: PT.object,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
-  byggLovvalgsperioder: PT.func.isRequired,
   endreLovvalgsperiode: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
   anmodningsperiode: PT.object,
