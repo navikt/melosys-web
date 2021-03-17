@@ -17,18 +17,6 @@ const {
   SENERE_ENN_TOM,
 } = KV.Feilmeldinger;
 
-// const erPeriodeGyldig = (value, { options }) => {
-//   const { lovvalgsperiode } = options.context;
-
-//   return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, Utils.dato.formatterDatoTilISO(value), "[]");
-// };
-
-// const gyldigPeriodeTest = {
-//   name: "Gyldig periode",
-//   message: UGYLDIG_PERIODE,
-//   test: erPeriodeGyldig,
-// };
-
 const erEtterOpprinneligFomTest = {
   name: "erEtterOpprinneligFom",
   message: TIDLIGERE_ENN_OPPRINNELIG_FOM,

@@ -313,10 +313,32 @@ Avslag.defaultProps = {
   vedtaksbrevFritekst: undefined,
 };
 
+const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
+  const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
+
+  if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
+    return {
+      fomDato: anmodningsperiode.fomDato,
+      tomDato: anmodningsperiode.tomDato,
+    };
+  } else if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+    return {
+      fomDato: endretPeriode.fom,
+      tomDato: endretPeriode.tom,
+    };
+  }
+
+  return {
+    fomDato: null,
+    tomDato: null,
+  };
+};
+
 export const VurderingArtikkel16Vedtak = ({
   lagreOgFatteVedtak,
   redigerbart,
   behandlingID,
+  anmodningsperiode,
   anmodningsperiodesvar,
   art_12_1_begrunnelser,
   art_12_2_begrunnelser,
@@ -330,7 +352,6 @@ export const VurderingArtikkel16Vedtak = ({
   endreLovvalgsperiode,
   lagreLovvalgsperioder,
   hentLovvalgsperioder,
-  lovvalgsperiode,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
@@ -420,6 +441,7 @@ export const VurderingArtikkel16Vedtak = ({
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const visOrienteringsbrevArbeidsgiver = harValgtNorskArbeidsgiver && !erNyVurdering;
+  const gjeldendePeriode = hentLovvalgsperiode(anmodningsperiodesvar, anmodningsperiode);
 
   const finnVedtakInnhold = (svarType) => {
     switch (svarType) {
@@ -430,7 +452,10 @@ export const VurderingArtikkel16Vedtak = ({
             behandlingID={behandlingID}
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-            gjeldendePeriode={{ fom: lovvalgsperiode.fomDato, tom: lovvalgsperiode.tomDato }}
+            gjeldendePeriode={{
+              fom: gjeldendePeriode.fomDato,
+              tom: gjeldendePeriode.tomDato,
+            }}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             onPeriodeForkorterUncheck={byggLovvalgsperioder}
             formValues={formValues}
@@ -444,7 +469,10 @@ export const VurderingArtikkel16Vedtak = ({
             behandlingID={behandlingID}
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-            gjeldendePeriode={{ fom: lovvalgsperiode.fomDato, tom: lovvalgsperiode.tomDato }}
+            gjeldendePeriode={{
+              fom: gjeldendePeriode.fomDato,
+              tom: gjeldendePeriode.tomDato,
+            }}
             renderBegrunnelser={renderBegrunnelser}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             onPeriodeForkorterUncheck={byggLovvalgsperioder}
@@ -501,14 +529,14 @@ VurderingArtikkel16Vedtak.propTypes = {
   byggLovvalgsperioder: PT.func.isRequired,
   endreLovvalgsperiode: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
-  lovvalgsperiode: MPT.Lovvalgsperiode,
+  anmodningsperiode: PT.object,
   hentLovvalgsperioder: PT.func.isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
-  lovvalgsperiode: {},
+  anmodningsperiode: {},
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
@@ -521,7 +549,7 @@ const VurderingArtikkel16VedtakForm = reduxForm({
     lagYupToReduxformErrorMapper(VurderingArtikkel16VedtakSchema, {
       context: {
         behandlingstype: props.behandlingstype,
-        lovvalgsperiode: props.lovvalgsperiode,
+        lovvalgsperiode: hentLovvalgsperiode(props.anmodningsperiodesvar, props.anmodningsperiode),
       },
     })(values),
 })(VurderingArtikkel16Vedtak);
@@ -556,9 +584,9 @@ const mapStateToProps = (state) => {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
     lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
     anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
     vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
-    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
     art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
