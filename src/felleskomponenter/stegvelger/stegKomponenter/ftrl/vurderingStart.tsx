@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
@@ -36,7 +35,6 @@ const mapStateToProps = (state: RootState) => {
       trygdedekning: initialTrygdedekning,
     },
     formIsValid: formSelectors.VurderStartFormValid(state),
-    erPeriodeGyldig: formSelectors.VurderStartPeriodeValid(state),
   };
 };
 
@@ -86,7 +84,6 @@ const VurderingStart = ({
   trygdedekninger,
   lagreBehandlingsgrunnlag,
   formIsValid,
-  erPeriodeGyldig,
   initialValues,
   tilForsiden,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
@@ -167,11 +164,6 @@ const VurderingStart = ({
             />
           </Nav.Column>
         </Nav.Row>
-        {!erPeriodeGyldig && (
-          <AlertStripeFeil className="alert">
-            Til og med dato kan ikke være tidligere enn fra og med dato.
-          </AlertStripeFeil>
-        )}
       </Nav.Fieldset>
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
