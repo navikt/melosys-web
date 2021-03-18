@@ -4,16 +4,16 @@ import PT from "prop-types";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { behandlingstemaSelectors } from "../../ducks/behandlingstema";
-import { fagsakSelectors } from "../../ducks/fagsaker";
-import { navigeringOperations } from "../../ducks/navigering";
-import Knapperad from "../knapperad";
+import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingstemaSelectors } from "../../../ducks/behandlingstema";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { navigeringOperations } from "../../../ducks/navigering";
+import Knapperad from "../../knapperad";
 
-import * as Mui from "../ui";
-import * as Api from "../../services/api";
-import * as Nav from "../../utils/navFrontend";
-import * as Routing from "../../routing";
+import * as Mui from "../../ui";
+import * as Api from "../../../services/api";
+import * as Nav from "../../../utils/navFrontend";
+import * as Routing from "../../../routing";
 
 import "./dialogboksEndreBehandlingstema.css";
 
