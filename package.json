@@ -110,7 +110,6 @@
     "patch:init": "node ./scripts/patchinit.js",
     "patch:env": "node ./scripts/patchenv.js",
     "patch:javalocal": "node ./scripts/patchjavalocal.js",
-    "patch:kubefwd": "node ./scripts/patchkubefwd.js",
     "analyze": "source-map-explorer build/static/js/main.*",
     "start:js": "react-scripts start",
     "build:js": "react-scripts build",

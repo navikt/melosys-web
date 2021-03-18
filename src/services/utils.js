@@ -90,7 +90,6 @@ const setCachedItem = (cacheKey, content) => {
   sessionStorage.setItem(cacheKey, content);
   sessionStorage.setItem(getCacheTS(cacheKey), Date.now());
 };
-const OIDC_TEST_TOKEN = process.env.REACT_APP_OIDC_TEST_TOKEN;
 
 const cachedFetch = async (url, cacheDurationSec) => {
   // Use the URL as the cache key to sessionStorage
@@ -132,9 +131,6 @@ const cachedFetch = async (url, cacheDurationSec) => {
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
   };
-  if (OIDC_TEST_TOKEN) {
-    headers.Authorization = `Bearer ${OIDC_TEST_TOKEN}`;
-  }
 
   const fetchConfig = {
     // body: below, for POST, PUT
@@ -236,9 +232,6 @@ const methodToJson = (method, url, data, extendResponse = false, accept = "appli
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
   };
-  if (OIDC_TEST_TOKEN) {
-    headers.Authorization = `Bearer ${OIDC_TEST_TOKEN}`;
-  }
 
   const fetchConfig = {
     // body: below, for POST, PUT
@@ -270,9 +263,6 @@ const methodToText = (method, url, data) => {
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
   };
-  if (OIDC_TEST_TOKEN) {
-    headers.Authorization = `Bearer ${OIDC_TEST_TOKEN}`;
-  }
 
   const fetchConfig = {
     // body: below, for POST, PUT
