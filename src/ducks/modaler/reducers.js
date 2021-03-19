@@ -9,6 +9,7 @@ const modaler = {
   validering: "validering",
   revurderFagsak: "revurderFagsak",
   endreBehandlingstema: "endreBehandlingstema",
+  endreBehandlingsstatus: "endreBehandlingsstatus",
 };
 
 const initialState = {
@@ -33,6 +34,9 @@ const initialState = {
       synlig: false,
     },
     [modaler.endreBehandlingstema]: {
+      synlig: false,
+    },
+    [modaler.endreBehandlingsstatus]: {
       synlig: false,
     },
   },
@@ -73,6 +77,9 @@ export default function reducer(state = initialState, action) {
     }
     case Types.OPPDATER_ENDRE_BEHANDLINGSTEMA: {
       return lagNyState(state, action, modaler.endreBehandlingstema);
+    }
+    case Types.OPPDATER_ENDRE_BEHANDLINGSSTATUS: {
+      return lagNyState(state, action, modaler.endreBehandlingsstatus);
     }
     default:
       return state;

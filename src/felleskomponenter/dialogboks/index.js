@@ -1,7 +1,19 @@
-import * as OppfriskSak from "./dialogboksOppfrisk";
-import * as HenleggSak from "./dialogboksHenlegg";
+import * as AvslagSoknad from "./avslagSoknad/dialogboksAvslagSoknad";
+import * as AvsluttSakSomBortfalt from "./avsluttSakSomBortfalt/dialogboksAvsluttSakSomBortfalt";
+import * as EndreBehandlingsstatus from "./endreBehandlingsstatus/dialogboksEndreBehandlingsstatus";
+import * as EndreBehandlingstema from "./endreBehandlingstema/dialogboksEndreBehandlingstema";
+import * as HenleggSak from "./henlegg/dialogboksHenlegg";
+import * as OppfriskSak from "./oppfrisk/dialogboksOppfrisk";
+import * as RevurderFagsak from "./revurderFagsak/dialogboksRevurderFagsak";
+import * as Validering from "./validering/dialogboksValidering";
 
 export default {
-  OppfriskSak,
+  AvslagSoknad,
+  AvsluttSakSomBortfalt,
+  EndreBehandlingsstatus,
+  EndreBehandlingstema,
   HenleggSak,
+  OppfriskSak,
+  RevurderFagsak,
+  Validering,
 };

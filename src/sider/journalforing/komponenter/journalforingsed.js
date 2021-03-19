@@ -14,7 +14,8 @@ import Fotknapper from "./fotknapper";
 
 import { journalforingSelectors } from "../../../ducks/journalforing";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import journalforingsedSchema from "./journalforingsedSchema";
 
 import "./journalforingsed.css";
 
@@ -81,7 +82,7 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.journalforingSED),
+  validate: lagYupToReduxformErrorMapper(journalforingsedSchema),
 };
 
 const mapStateToProps = (state) => ({

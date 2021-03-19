@@ -5,7 +5,8 @@ import { RootState } from "AppTypes";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
+import { lagYupToReduxformErrorMapper } from "../../yup";
+import soknadSchema from "./soknadSchema";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
@@ -165,7 +166,7 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
       },
     };
 
-    return lagYupToReduxformErrorMapper(YupSkjemaer.soknad, settings)(values);
+    return lagYupToReduxformErrorMapper(soknadSchema, settings)(values);
   },
 })(Soknad);
 

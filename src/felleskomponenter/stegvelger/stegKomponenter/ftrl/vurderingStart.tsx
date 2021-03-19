@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
@@ -16,8 +15,9 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
-import DialogboksOppfriskSak from "../../../dialogboks/dialogboksOppfrisk";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingStartSchema from "./vurderingStartSchema";
+import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
 
@@ -35,7 +35,6 @@ const mapStateToProps = (state: RootState) => {
       trygdedekning: initialTrygdedekning,
     },
     formIsValid: formSelectors.VurderStartFormValid(state),
-    erPeriodeGyldig: formSelectors.VurderStartPeriodeValid(state),
   };
 };
 
@@ -85,7 +84,6 @@ const VurderingStart = ({
   trygdedekninger,
   lagreBehandlingsgrunnlag,
   formIsValid,
-  erPeriodeGyldig,
   initialValues,
   tilForsiden,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
@@ -153,7 +151,7 @@ const VurderingStart = ({
             <Skjema.Input datoFelt label="Til og med:" feltNavn="tom" bredde="fullbredde" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
-            <Skjema.Select
+            <Skjema.LandVelger
               label={
                 <Fragment>
                   <b>Arbeidsland</b>
@@ -161,22 +159,11 @@ const VurderingStart = ({
                 </Fragment>
               }
               feltNavn="land"
-              emptyFieldText="Velg"
-              emptyFieldDisabled={!!formValues.land}
-            >
-              {alleLandkoder.map((item) => (
-                <option key={item.kode} value={item.kode}>
-                  {Utils.land.landTekstFormatStoreForbokstaver(item)}
-                </option>
-              ))}
-            </Skjema.Select>
+              placeholder="Velg..."
+              landkoder={alleLandkoder.map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))}
+            />
           </Nav.Column>
         </Nav.Row>
-        {!erPeriodeGyldig && (
-          <AlertStripeFeil className="alert">
-            Til og med dato kan ikke være tidligere enn fra og med dato.
-          </AlertStripeFeil>
-        )}
       </Nav.Fieldset>
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
@@ -229,7 +216,7 @@ const VurderingStartForm = reduxForm<{}, PropsFromRedux & Props>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_start),
+  validate: lagYupToReduxformErrorMapper(vurderingStartSchema),
 })(VurderingStart);
 
 export default connector(VurderingStartForm);

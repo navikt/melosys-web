@@ -14,13 +14,13 @@ import * as Hooks from "../../../hooks";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 import VedleggVelger from "../../vedleggvelger";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import vurderingVideresendSchema from "./vurderingVideresendSchema";
 
 import "./vurderingVideresend.css";
 import * as Skjema from "../../skjema";
@@ -54,7 +54,6 @@ export const VurderingVideresend = ({
   const fysiskeSoknaddokument = fysiskeDokument.filter((dokument) => dokument.tittel.toLowerCase().includes("søknad"));
   const [valgteVedlegg, setValgteVedlegg] = useState(fysiskeSoknaddokument);
   const isMounted = Hooks.useIsMounted();
-  const [videresendingVedleggToggle] = useFeatureToggle("melosys.videresending_vedlegg");
 
   const videresendSoknad = async (values, dispatch, props) => {
     setVideresendPending(true);
@@ -99,7 +98,7 @@ export const VurderingVideresend = ({
             {redigerbart && <PdfLenkeListe dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && videresendingVedleggToggle === "enabled" && (
+        {redigerbart && (
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
@@ -148,7 +147,7 @@ const VurderingVideresendForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_videresend),
+  validate: lagYupToReduxformErrorMapper(vurderingVideresendSchema),
 })(VurderingVideresend);
 
 const mapStateToProps = (state) => ({

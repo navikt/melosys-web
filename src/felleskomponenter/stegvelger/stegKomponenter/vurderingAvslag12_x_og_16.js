@@ -16,7 +16,8 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Begrunnelser from "../../begrunnelser";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
@@ -164,7 +165,7 @@ const VurderingAvslagArtikkel12Og16Form = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.avslag_artikkel_12_og_16, {
+    lagYupToReduxformErrorMapper(VurderingAvslagArtikkel12Og16Schema, {
       context: {
         behandlingstype: props.behandlingstype,
       },

@@ -7,7 +7,8 @@ import MKV from "../../melosyskodeverk";
 import * as Nav from "../../utils/navFrontend";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
+import { lagYupToReduxformErrorMapper } from "../../yup";
+import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
 import { kodeTilObjekt } from "../../kodeverk";
 import VedleggVelger from "../vedleggvelger";
 import MultiSelect from "../multiSelect";
@@ -87,14 +88,14 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   };
 
   const erValidert = () =>
-    YupSkjemaer.sed.isValidSync({
+    sideDialogOpprettNyBucSchema.isValidSync({
       buc: valgtBuc,
       land: valgteLand,
       mottakerinstitusjoner: valgteMottakerinstitusjoner,
     });
 
   const valider = ({ buc = valgtBuc, land = valgteLand, mottakerinstitusjoner = valgteMottakerinstitusjoner }) =>
-    setFeilmeldinger(lagYupToReduxformErrorMapper(YupSkjemaer.sed)({ buc, land, mottakerinstitusjoner }));
+    setFeilmeldinger(lagYupToReduxformErrorMapper(sideDialogOpprettNyBucSchema)({ buc, land, mottakerinstitusjoner }));
 
   const sendSed = async () => {
     if (erValidert()) {

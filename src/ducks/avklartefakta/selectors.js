@@ -137,12 +137,15 @@ export const VirksomheterIPeriodenSelector = createSelector(
 
     const foretakUtlandMedNavn = foretakUtland.filter((foretak) => foretak.navn);
 
-    return [
-      ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
-      ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
-      ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
-      ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
-    ];
+    return Utils._uniqBy(
+      [
+        ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
+        ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
+        ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
+        ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
+      ],
+      ({ virksomhetId }) => virksomhetId
+    );
   }
 );
 

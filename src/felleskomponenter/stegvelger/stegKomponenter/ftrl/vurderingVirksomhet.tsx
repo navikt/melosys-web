@@ -10,7 +10,8 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as KV from "../../../../kodeverk";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
@@ -134,7 +135,7 @@ const VurderingVirksomhetForm = reduxForm<FormValuesProps, PropsFromRedux & Prop
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_virksomhet),
+  validate: lagYupToReduxformErrorMapper(vurderingVirksomhetSchema),
 })(VurderingVirksomhet);
 
 export default connector(VurderingVirksomhetForm);

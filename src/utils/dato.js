@@ -26,9 +26,9 @@ const vaskInputDato = (dato) => {
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
   const newDate = stringDato.replace(/[-./]/g, "");
 
-  // Hvis datoen er mindre enn 6 tegn - dvs at dag, måned eller år er tastet med
-  // kun 1 siffer ("51217" istedet for "051217"), returner ''.
-  if (newDate.length < 6 || newDate.length > 8) {
+  // Hvis datoen er noe annet enn 6 eller 8 tegn, returner ''.
+  // Formatene vi støtter er 2 siffer for dag og måned, og 2 eller 4 siffer for år.
+  if (!(newDate.length === 6 || newDate.length === 8)) {
     return false;
   }
 

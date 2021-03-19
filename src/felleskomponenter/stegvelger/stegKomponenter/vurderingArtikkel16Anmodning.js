@@ -20,12 +20,12 @@ import { behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 import DatoOmrade from "../../datoOmrade/datoOmrade";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 import VedleggVelger from "../../vedleggvelger";
-import { FeatureToggle } from "../../../featuretoggle";
 
 import { konverterTilStegData, lagBegrunnelse } from "../../../regler/vilkar";
 import { konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
@@ -548,23 +548,17 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Column>
           </Nav.Row>
           {redigerbart && (
-            <FeatureToggle togglename="melosys.anmodning_vedlegg">
-              {(status) =>
-                status === "enabled" ? (
-                  <Nav.Row>
-                    <Nav.Column xs="12">
-                      <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
-                      <VedleggVelger
-                        className="vedleggvelger"
-                        valgteVedlegg={valgteVedlegg}
-                        onChange={setValgteVedlegg}
-                        dokumenter={fysiskeDokument}
-                      />
-                    </Nav.Column>
-                  </Nav.Row>
-                ) : null
-              }
-            </FeatureToggle>
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
+                <VedleggVelger
+                  className="vedleggvelger"
+                  valgteVedlegg={valgteVedlegg}
+                  onChange={setValgteVedlegg}
+                  dokumenter={fysiskeDokument}
+                />
+              </Nav.Column>
+            </Nav.Row>
           )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
@@ -639,7 +633,7 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_anmodning)(values),
+  validate: (values) => lagYupToReduxformErrorMapper(VurderingArtikkel16AnmodningSchema)(values),
 })(VurderingArtikkel16Anmodning);
 
 export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);

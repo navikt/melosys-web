@@ -153,6 +153,7 @@ const Registrering = (props) => {
             <Saksopplysninger
               redigerbart={redigerbart}
               behandlingID={behandlingID}
+              saksnummer={saksnummer}
               sed={sed}
               vurderingBegrunnelser={vurderingBegrunnelser}
               tilForsiden={tilForsiden}

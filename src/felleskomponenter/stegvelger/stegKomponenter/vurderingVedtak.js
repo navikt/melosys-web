@@ -23,7 +23,8 @@ import PdfLenkeListe from "../../pdfLenkeListe";
 import DatoOmrade from "../../datoOmrade/datoOmrade";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 
 import "./vurderingVedtak.css";
 
@@ -243,7 +244,7 @@ const VurderingVedtakForm = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.artikkel12_vedtak, {
+    lagYupToReduxformErrorMapper(VurderingArtikkel12VedtakSchema, {
       context: {
         behandlingstype: props.behandlingstype,
       },
