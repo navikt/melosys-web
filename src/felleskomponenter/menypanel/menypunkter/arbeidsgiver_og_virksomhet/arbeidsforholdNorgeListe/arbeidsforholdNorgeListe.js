@@ -149,7 +149,7 @@ export const EnkeltArbeidsforholdNorge = ({
       tittelIkon={tittelIkon}
       tittelUnderstrek
       onBinClick={slett}
-      hentNyStatusVedHarData={false}
+      hentNyStatusVedHarDataEndring={false}
       visLagreKnappBareHvisHarData
       symbolsynlighetMap={visAlltidBinSymbolsynlighetMap}
       redigererRender={() => (
