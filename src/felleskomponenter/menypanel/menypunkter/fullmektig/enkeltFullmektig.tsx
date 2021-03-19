@@ -72,7 +72,7 @@ const EnkeltFullmektig = ({
       tittel={tittel}
       tittelUnderstrek
       understrek
-      hentNyStatusVedHarData={false}
+      hentNyStatusVedHarDataEndring={false}
       onBinClick={slettHandler}
       visLagreKnapp={Boolean(fullmektig.orgnr)}
       symbolsynlighetMap={visAlltidBinSymbolsynlighetMap}

@@ -118,7 +118,7 @@ function EnRedigeringsKnappListe<T>({
       onBinClick={binClickHandler}
       harData={harData()}
       symbolsynlighetMap={symbolsynlighetMap}
-      hentNyStatusVedHarData={false}
+      hentNyStatusVedHarDataEndring={false}
       visLagreKnappBareHvisHarData
       redigererRender={() => (
         <div>
