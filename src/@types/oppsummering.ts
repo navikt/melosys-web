@@ -10,6 +10,7 @@ type Oppsummering = {
   sisteOpplysningerHentetDato: string;
   behandlingstype: string;
   behandlingsstatus: string;
+  svarFrist: string;
 };
 
 export default Oppsummering;

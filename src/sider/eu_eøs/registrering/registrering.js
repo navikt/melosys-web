@@ -11,7 +11,7 @@ import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Behandlingsmeny from "./komponenter/behandlingsmeny";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";

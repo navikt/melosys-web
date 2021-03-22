@@ -9,7 +9,7 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Behandlingsmeny from "./komponenter/behandlingsmeny";
 
