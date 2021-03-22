@@ -132,6 +132,17 @@ describe("behandlingsgrunnlag reducer", () => {
           erTrukketTrygdeavgift: false,
           utlArbTilhoererSammeKonsern: null,
         },
+        utenlandsoppdraget: {
+          erUtsendelseForOppdragIUtlandet: true,
+          erAnsattForOppdragIUtlandet: false,
+          erFortsattAnsattEtterOppdraget: null,
+          erDrattPaaEgetInitiativ: true,
+          erErstatningTidligereUtsendte: null,
+          samletUtsendingperiode: {
+            fom: "2019-02-01",
+            tom: "2020-02-01",
+          },
+        },
         antallAnsatte: "12345",
         antallAdmAnsatte: "12345",
         andelOmsetningINorge: "12345",
@@ -272,6 +283,17 @@ describe("behandlingsgrunnlag reducer", () => {
             erArbeidsgiveravgiftHelePerioden: true,
             erTrukketTrygdeavgift: false,
             utlArbTilhoererSammeKonsern: null,
+          },
+          utenlandsoppdraget: {
+            erUtsendelseForOppdragIUtlandet: true,
+            erAnsattForOppdragIUtlandet: false,
+            erFortsattAnsattEtterOppdraget: null,
+            erDrattPaaEgetInitiativ: true,
+            erErstatningTidligereUtsendte: null,
+            samletUtsendingperiode: {
+              fom: "2019-02-01",
+              tom: "2020-02-01",
+            },
           },
           arbeidPaaLand: {
             fysiskeArbeidssteder: [

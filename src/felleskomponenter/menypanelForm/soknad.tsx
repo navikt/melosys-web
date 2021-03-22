@@ -70,6 +70,18 @@ const mapStateToProps = (state: RootState) => ({
         behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
       ),
     },
+    utenlandsoppdraget: {
+      erUtsendelseForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erUtsendelseForOppdragIUtlandet,
+      erAnsattForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erAnsattForOppdragIUtlandet,
+      erFortsattAnsattEtterOppdraget: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erFortsattAnsattEtterOppdraget,
+      erDrattPaaEgetInitiativ: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erDrattPaaEgetInitiativ,
+      erErstatningTidligereUtsendte: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erErstatningTidligereUtsendte,
+      samletUtsendingsperiode: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode,
+    },
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom
     ),

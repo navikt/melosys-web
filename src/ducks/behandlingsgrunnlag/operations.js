@@ -94,6 +94,7 @@ const lagSoeknadFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
+  utenlandsoppdraget: behandlingsgrunnlag.utenlandsoppdraget,
 });
 
 const lagFTRLFelter = (behandlingsgrunnlag) => ({

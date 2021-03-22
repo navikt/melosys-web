@@ -240,6 +240,14 @@ export default function reducer(state = initialState, action) {
             erArbeidsgiveravgiftHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden,
             erTrukketTrygdeavgift: dokument.loennOgGodtgjoerelse.erTrukketTrygdeavgift,
           },
+          utenlandsoppdraget: {
+            erUtsendelseForOppdragIUtlandet: dokument.utenlandsoppdraget.erUtsendelseForOppdragIUtlandet,
+            erAnsattForOppdragIUtlandet: dokument.utenlandsoppdraget.erAnsattForOppdragIUtlandet,
+            erFortsattAnsattEtterOppdraget: dokument.utenlandsoppdraget.erFortsattAnsattEtterOppdraget,
+            erDrattPaaEgetInitiativ: dokument.utenlandsoppdraget.erDrattPaaEgetInitiativ,
+            erErstatningTidligereUtsendte: dokument.utenlandsoppdraget.erErstatningTidligereUtsendte,
+            samletUtsendingsperiode: dokument.utenlandsoppdraget.samletUtsendingsperiode,
+          },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [
