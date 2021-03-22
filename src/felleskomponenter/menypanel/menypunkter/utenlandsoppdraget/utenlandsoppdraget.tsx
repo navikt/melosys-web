@@ -7,6 +7,8 @@ import * as KV from "../../../../kodeverk";
 import Soknadsperiode from "./soknadsperiode";
 import Soknadslandvelger from "./soknadslandvelger";
 
+import "./utenlandsoppdraget.css";
+
 interface UtenlandsoppdragetProps {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
@@ -20,7 +22,7 @@ const Utenlandsoppdraget = ({
   lagreSoknadOgOppfriskSaksopplysninger,
   behandlingsgrunnlagEtikett,
 }: UtenlandsoppdragetProps) => (
-  <div>
+  <div className="utenlandsoppdraget">
     <div style={{ marginBottom: "1em" }}>
       <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Utenlandsoppdraget.tittel}
