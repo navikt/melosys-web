@@ -24,7 +24,7 @@ describe("KnyttTilSak", () => {
   });
 
   it(`vis knapp for å opprette ny behandling dersom ingen behandlinger har behandlingstype ${MKV.Koder.behandlinger.behandlingstyper.SED}`, () => {
-    props.sak.behandlingOversikter[0].behandlingstypeLinje = { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD };
+    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD };
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
@@ -35,7 +35,7 @@ describe("KnyttTilSak", () => {
   });
 
   it(`Ikke vis knapp for å opprette ny behandling dersom minst 1 behandling har behandlingstype ${MKV.Koder.behandlinger.behandlingstyper.SED}`, () => {
-    props.sak.behandlingOversikter[0].behandlingstypeLinje = { kode: MKV.Koder.behandlinger.behandlingstyper.SED };
+    props.sak.behandlingOversikter[0].behandlingstype = { kode: MKV.Koder.behandlinger.behandlingstyper.SED };
 
     const knyttTilSak = shallow(<KnyttTilSak {...props} />);
 
