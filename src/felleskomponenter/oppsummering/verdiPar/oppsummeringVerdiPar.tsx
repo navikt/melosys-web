@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import PT from "prop-types";
 
 import classNames from "classnames";
@@ -8,7 +8,7 @@ interface OppsummeringVerdiParProps {
   className: string;
   nokkel: string;
   verdi: string;
-  ekstrafelt: string;
+  ekstrafelt: ReactNode;
 }
 
 const OppsummeringVerdiPar = (props: OppsummeringVerdiParProps) => {
@@ -18,7 +18,7 @@ const OppsummeringVerdiPar = (props: OppsummeringVerdiParProps) => {
     <span className={classNames("oppsummering_verdi_par", className)}>
       <span className="nokkel">{nokkel ? `${nokkel}: ` : ""}</span>
       <span>{verdi}</span>
-      {ekstrafelt && <span className="ekstrafelt">{`  ${ekstrafelt}`}</span>}
+      {ekstrafelt}
     </span>
   );
 };
@@ -32,7 +32,7 @@ OppsummeringVerdiPar.propTypes = {
   className: PT.string,
   nokkel: PT.string.isRequired,
   verdi: PT.string.isRequired,
-  ekstrafelt: PT.string,
+  ekstrafelt: PT.node,
 };
 
 export default OppsummeringVerdiPar;

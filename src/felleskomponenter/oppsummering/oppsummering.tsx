@@ -26,8 +26,6 @@ interface OppsummeringProps {
   behandlingstemaLinje: ReactNode;
   behandlingstypeLinje: ReactNode;
   person: Person;
-  behandlingsgrunnlagPeriodeFom?: string;
-  behandlingsgrunnlagPeriodeTom?: string;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
   periodeLabel: string;
@@ -45,8 +43,6 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsstatusLinje,
     behandlingstemaLinje,
     behandlingstypeLinje,
-    behandlingsgrunnlagPeriodeFom,
-    behandlingsgrunnlagPeriodeTom,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
     className,
@@ -120,7 +116,7 @@ const Oppsummering = (props: OppsummeringProps) => {
             <OppsummeringVerdiPar
               nokkel="Sist oppdatert"
               verdi={formatterDatoTilNorsk(endretDato)}
-              ekstrafelt={endretAvNavn}
+              ekstrafelt={<span className="kursiv">{`  ${endretAvNavn}`}</span>}
             />
           </Nav.Column>
         </Nav.Row>
@@ -134,7 +130,7 @@ const Oppsummering = (props: OppsummeringProps) => {
                 <Nav.Column xs="12">
                   <OppsummeringVerdiPar
                     nokkel="Periode fra SED"
-                    verdi={periodeFraTil(behandlingsgrunnlagPeriodeFom, behandlingsgrunnlagPeriodeTom)}
+                    verdi={periodeFraTil(lovvalgsperiodeFom, lovvalgsperiodeTom)}
                   />
                 </Nav.Column>
               </Nav.Row>
@@ -181,8 +177,6 @@ Oppsummering.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,
-  lovvalgsperiodeFom: PT.string,
-  lovvalgsperiodeTom: PT.string,
   periodeLabel: PT.string.isRequired,
   className: PT.string,
 };
@@ -192,8 +186,6 @@ Oppsummering.defaultProps = {
   lovvalgsland: {},
   behandlingsgrunnlagPeriodeFom: undefined,
   behandlingsgrunnlagPeriodeTom: undefined,
-  lovvalgsperiodeFom: undefined,
-  lovvalgsperiodeTom: undefined,
   className: undefined,
 };
 

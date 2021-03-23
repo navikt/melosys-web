@@ -91,7 +91,7 @@ const SideOppsummering = ({
   );
 
   return (
-    <FeatureToggle togglename="melosts.oversikt.NYTT_DESIGN">
+    <FeatureToggle togglename="melosys.oversikt.NYTT_DESIGN">
       {(statusNyttDesign) =>
         statusNyttDesign === "enabled" ? (
           <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -114,7 +114,7 @@ const SideOppsummering = ({
                         <OppsummeringVerdiParRedigerbar
                           nokkel="Frist"
                           verdi={formatterDatoTilNorsk(new Date())} // Henting av verdier løses i MELOSYS-4493
-                          kanEndre={false}
+                          redigerbart={false}
                           onClick={() => console.log("Endre frist")} // Oppdatering løses i MELOSYS-4113
                         />
                       }
@@ -122,14 +122,14 @@ const SideOppsummering = ({
                         <OppsummeringVerdiParRedigerbar
                           nokkel="Status"
                           verdi={KV.objektTilTerm(oppsummering.behandlingsstatus)}
-                          kanEndre={kanEndrebehandlingsstatus}
+                          redigerbart={kanEndrebehandlingsstatus}
                           onClick={visEndreBehandlingsstatusDialogHandle}
                         />
                       }
                       behandlingstemaLinje={
                         <OppsummeringVerdiParRedigerbar
                           verdi={tittel}
-                          kanEndre={kanEndreBehandlingstema}
+                          redigerbart={kanEndreBehandlingstema}
                           onClick={visEndreBehandlingstemaDialogHandle}
                         />
                       }
@@ -137,13 +137,11 @@ const SideOppsummering = ({
                         // TODO: Placeholderverdier inntil MELOSYS-4387
                         <OppsummeringVerdiParRedigerbar
                           verdi={KV.objektTilTerm(oppsummering.behandlingstype)}
-                          kanEndre={false}
+                          redigerbart={false}
                           onClick={() => console.log("Endre type")}
                         />
                       }
                       person={person}
-                      lovvalgsperiodeFom={lovvalgsperiodeFom}
-                      lovvalgsperiodeTom={lovvalgsperiodeTom}
                       behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                       behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                       periodeLabel={periodeLabel}

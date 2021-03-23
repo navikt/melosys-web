@@ -8,37 +8,37 @@ import * as Ikoner from "../../../resources/images";
 interface OppsummeringVerdiParRedigerbarProps {
   nokkel: string;
   verdi: string;
-  kanEndre: Boolean;
+  redigerbart: boolean;
   onClick: Function;
 }
 
 const OppsummeringVerdiParRedigerbar = (props: OppsummeringVerdiParRedigerbarProps) => {
-  const { nokkel, verdi, kanEndre, onClick } = props;
-  const handleClick = () => (kanEndre ? onClick() : null);
+  const { nokkel, verdi, redigerbart, onClick } = props;
+  const handleClick = () => (redigerbart ? onClick() : null);
 
   return (
     <span
       role="button"
-      className={kanEndre ? "oppsummering_verdi_par redigerbar" : "oppsummering_verdi_par ikke_redigerbar"}
+      className={redigerbart ? "oppsummering_verdi_par redigerbar" : "oppsummering_verdi_par ikke_redigerbar"}
       onClick={handleClick}
       onKeyDown={handleClick}
       tabIndex={0}
     >
       <OppsummeringVerdiPar nokkel={nokkel} verdi={verdi} />
-      {kanEndre ? <Ikoner.BlyantActive className="blyant" /> : <Ikoner.BlyantDisabled className="blyant" />}
+      {redigerbart ? <Ikoner.BlyantActive className="blyant" /> : <Ikoner.BlyantDisabled className="blyant" />}
     </span>
   );
 };
 
 OppsummeringVerdiParRedigerbar.defaultProps = {
   nokkel: "",
-  kanEndre: true,
+  redigerbart: true,
 };
 
 OppsummeringVerdiParRedigerbar.propTypes = {
   nokkel: PT.string,
   verdi: PT.string.isRequired,
-  kanEndre: PT.bool,
+  redigerbart: PT.bool,
   onClick: PT.func.isRequired,
 };
 
