@@ -17,7 +17,7 @@ const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => {
   const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(svar));
 
   return (
-    <Nav.Row className="row">
+    <Nav.Row>
       <Nav.Column xs="8">
         <Nav.typo.Normaltekst>{sporsmal}</Nav.typo.Normaltekst>
       </Nav.Column>
