@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
-import MKV from "../../melosyskodeverk";
+import MKV from "../../../melosyskodeverk";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../../utils/navFrontend";
 
-import PdfLenkeListe from "../pdfLenkeListe";
-import * as Mui from "../ui";
-import Knapperad from "../knapperad";
+import PdfLenkeListe from "../../pdfLenkeListe";
+import * as Mui from "../../ui";
+import Knapperad from "../../knapperad";
 
-import { behandlingerSelectors } from "../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksHenlegg.css";
 

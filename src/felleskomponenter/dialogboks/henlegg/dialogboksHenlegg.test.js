@@ -1,11 +1,11 @@
 import React from "react";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../../utils/navFrontend";
 
 import { DialogboksHenleggSak } from "./dialogboksHenlegg";
-import Knapperad from "../knapperad";
-import { KodeTermSelect } from "../ui/kodeTermSelect";
-import PdfLenkeListe from "../pdfLenkeListe";
+import Knapperad from "../../knapperad";
+import { KodeTermSelect } from "../../ui/kodeTermSelect";
+import PdfLenkeListe from "../../pdfLenkeListe";
 
 describe("Dialogbokshenlegg", () => {
   let props = null;

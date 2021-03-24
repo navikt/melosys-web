@@ -61,11 +61,6 @@ export const VurderVirksomhetFormValid = createSelector(
   (errors) => Utils._isEmpty(errors)
 );
 
-export const VurderStartPeriodeValid = createSelector(
-  (state) => VurderStartFormSelector(state).syncErrors || {},
-  (errors) => !("erPeriodeGyldig" in errors)
-);
-
 export const VurderPerioderFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.PERIODER, {}),
   (perioder) => perioder

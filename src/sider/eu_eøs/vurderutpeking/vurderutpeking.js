@@ -209,7 +209,9 @@ const Vurderutpeking = ({
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                  visRevurderFagsak
+                  visRevurderFagsak={
+                    behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
+                  }
                 />
               )}
               renderBehandlingsstatus={() => (

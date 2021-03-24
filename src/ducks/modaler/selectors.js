@@ -48,3 +48,12 @@ export const ErEndreBehandlingstemaSynligSelector = createSelector(
   EndreBehandlingstemaSelector,
   (endreBehandlingstema) => endreBehandlingstema.synlig
 );
+
+export const EndreBehandlingsstatusSelector = createSelector(
+  ModalerSelector,
+  (modaler) => modaler.endreBehandlingsstatus
+);
+export const ErEndreBehandlingsstatusSynligSelector = createSelector(
+  EndreBehandlingsstatusSelector,
+  (endreBehandlingsstatus) => endreBehandlingsstatus.synlig
+);

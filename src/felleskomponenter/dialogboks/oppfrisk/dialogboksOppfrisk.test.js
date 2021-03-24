@@ -1,5 +1,5 @@
 import React from "react";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../../utils/navFrontend";
 import DialogboksOppfriskBehandling from "./dialogboksOppfrisk";
 
 describe("DialogboksOppfrisk", () => {

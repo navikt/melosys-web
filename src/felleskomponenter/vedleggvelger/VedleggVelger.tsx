@@ -148,7 +148,7 @@ export const VedleggListe = ({
             onClick={leggTilMarkerteVedleggHandler}
             ikon={Ikoner.AddOne}
           >
-            Legg til markerte vedlegg
+            Lagre markerte vedlegg
           </Mui.Knapp>
           <Mui.Knapp noTextTransform className="avbryt-knapp" onClick={avbrytHandler}>
             Avbryt

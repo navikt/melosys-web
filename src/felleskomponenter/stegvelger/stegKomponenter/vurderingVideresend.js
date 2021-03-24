@@ -14,7 +14,6 @@ import * as Hooks from "../../../hooks";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 import VedleggVelger from "../../vedleggvelger";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -55,7 +54,6 @@ export const VurderingVideresend = ({
   const fysiskeSoknaddokument = fysiskeDokument.filter((dokument) => dokument.tittel.toLowerCase().includes("søknad"));
   const [valgteVedlegg, setValgteVedlegg] = useState(fysiskeSoknaddokument);
   const isMounted = Hooks.useIsMounted();
-  const [videresendingVedleggToggle] = useFeatureToggle("melosys.videresending_vedlegg");
 
   const videresendSoknad = async (values, dispatch, props) => {
     setVideresendPending(true);
@@ -100,7 +98,7 @@ export const VurderingVideresend = ({
             {redigerbart && <PdfLenkeListe dokumenter={pdfDokumenter} behandlingID={behandlingID} />}
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && videresendingVedleggToggle === "enabled" && (
+        {redigerbart && (
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
