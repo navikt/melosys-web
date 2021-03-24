@@ -38,10 +38,6 @@ export const BehandlingstemaKodeSelector = createSelector(OppsummeringSelector, 
 export const BehandlingsstatusKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
   oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : ""
 );
-export const SisteOpplysningerHentetDatoSelector = createSelector(
-  OppsummeringSelector,
-  (oppsummering) => oppsummering.sisteOpplysningerHentetDato || ""
-);
 
 export const ErArtikkel16AnmodningSendtSelector = createSelector(
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
@@ -59,14 +55,6 @@ export const SakOgBehandlingSelector = createSelector(
 export const PersonSelector = createSelector(
   (state) => SaksopplysningerSelector(state).person || {},
   (person) => person
-);
-export const SammensattNavnSelector = createSelector(
-  (state) => PersonSelector(state).sammensattNavn || "",
-  (sammensattNavn) => sammensattNavn
-);
-export const FnrSelector = createSelector(
-  (state) => PersonSelector(state).fnr || "",
-  (fnr) => fnr
 );
 export const PersonhistorikkSelector = createSelector(
   (state) => SaksopplysningerSelector(state).personhistorikk || {},

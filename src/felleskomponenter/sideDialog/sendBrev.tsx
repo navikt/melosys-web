@@ -5,22 +5,17 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
 import { Organisasjon } from "Domene";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { AlertStripeFeil } from "nav-frontend-alertstriper";
 
 import * as Api from "../../services/api";
 import * as KV from "../../kodeverk";
-import MKV from "../../melosyskodeverk";
 import * as Nav from "../../utils/navFrontend";
 import * as Skjema from "../skjema";
 import * as Utils from "../../utils";
 
-import { fagsakSelectors } from "../../ducks/fagsaker";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import { OrganisasjonsAdresse, UstrukturertAdresse } from "../adresser";
-import finnKontaktopplysninger from "../menypanel/menypunkter/kontaktopplysninger/finnKontaktopplysninger";
+import { OrganisasjonsAdresse } from "../adresser";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
-import { UstrukturertAdresse as Ustrukturert } from "../../@types";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import { formSelectors } from "../../ducks/form";
 
@@ -34,12 +29,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  brukersNavn: behandlingerSelectors.SammensattNavnSelector(state),
-  fnr: behandlingerSelectors.FnrSelector(state),
   orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
-  virksomheter: behandlingerSelectors.AlleVirksomheterSelector(state),
-  registerInfoHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -54,7 +44,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface Props {
   redigerbart: boolean;
   formValues: {
-    valgtMal?: Api.Brev.TilgjengeligeMalerResDto;
+    valgtMal?: Api.DokumenterV2.TilgjengeligeMalerResDto;
     type?: string;
     mottaker?: string;
     organisasjonsnummer?: string;
@@ -68,100 +58,47 @@ interface Props {
 
 const SendBrev = ({
   behandlingID,
-  brukersNavn,
   changeField,
-  fnr,
   formValues,
   formIsValid,
   hentOrganisasjon,
   orgnrValid,
   redigerbart,
-  saksnummer,
-  virksomheter,
-  registerInfoHentet,
 }: Props & PropsFromRedux) => {
-  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.Brev.TilgjengeligeMalerResDto[]>();
-  const [fullmektige, setFullmektige] = useState<Api.Fagsaker.aktoer.HentResDto>();
+  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto[]>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
-  const [adresse, setAdresse] = useState<
-    | {
-        orgnr?: string;
-        navn?: string;
-        kontaktperson?: string;
-        brukerAdresse?: Ustrukturert;
-        organisasjonsAdresse?: Organisasjon;
-      }
-    | undefined
-  >();
+  const [adresse, setAdresse] = useState<{
+    mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
+    organisasjonsAdresse?: Organisasjon;
+  }>();
   const arbeidsgiverHjelptekst =
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
   useEffect(() => {
-    Api.Brev.hentTilgjengeligeMaler(behandlingID).then(setTilgjengeligeMaler).catch(Utils.logger.error);
-    Api.Fagsaker.aktoer
-      .hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT)
-      .then(setFullmektige)
-      .catch(Utils.logger.error);
+    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then(setTilgjengeligeMaler).catch(Utils.logger.error);
   }, []);
 
   useEffect(() => {
     const valgtMal = tilgjengeligeMaler?.find((mal) => mal.type.kode === formValues.type);
     changeField("valgtMal", valgtMal);
+    changeField("mottaker", undefined);
     if (valgtMal?.muligeMottakere.length === 1) {
       changeField("mottaker", JSON.stringify(valgtMal?.muligeMottakere[0]));
     }
   }, [formValues?.type]);
 
-  const hentOrganisasjonIfValid = async (orgnr: string, valid: boolean) => {
-    if (!valid) return undefined;
-    const response = await hentOrganisasjon(orgnr);
+  const hentOrganisasjonIfValid = async (data: { orgnr: string; valid: boolean }) => {
+    if (!data.valid) return;
+    const response = await hentOrganisasjon(data.orgnr);
     if (response.data.response) {
       setMottakerFeil(
         response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon"
       );
-      return undefined;
-    }
-    return response.data;
-  };
-  const debouncedHentOrganisasjon = useCallback(
-    Utils._debounce(
-      (data: { orgnr: string; valid: boolean }) =>
-        hentOrganisasjonIfValid(data.orgnr, data.valid).then((org) => setAdresse({ organisasjonsAdresse: org })),
-      500
-    ),
-    []
-  );
-
-  const hentAdresseForBruker = async () => {
-    const fullmektig =
-      fullmektige &&
-      fullmektige.find((aktoer) =>
-        [MKV.Koder.representerer.BEGGE, MKV.Koder.representerer.BRUKER].includes(aktoer.representererKode)
-      );
-    if (fullmektig) {
-      const kontaktinfo = await finnKontaktopplysninger(saksnummer, fullmektig.orgnr || "");
-      const orgnr = kontaktinfo.kontaktorgnr || fullmektig.orgnr || "";
-      const organisasjon = await hentOrganisasjonIfValid(orgnr, !Utils._isEmpty(orgnr));
-      setAdresse({
-        orgnr: fullmektig.orgnr || "",
-        navn: Utils.streng.storeForbokstaver(organisasjon.navn),
-        kontaktperson: kontaktinfo.kontaktnavn
-          ? `Att. ${Utils.streng.storeForbokstaver(kontaktinfo.kontaktnavn)}`
-          : undefined,
-        organisasjonsAdresse: organisasjon,
-      });
     } else {
-      Api.Personer.hentGjeldendeAdresse(fnr)
-        .then((response) => {
-          if (response?.adresselinjer?.length > 0) {
-            setAdresse({ navn: Utils.streng.storeForbokstaver(brukersNavn), brukerAdresse: response });
-          } else {
-            setMottakerFeil("Bruker har ingen registrert adresse.");
-          }
-        })
-        .catch(Utils.logger.error);
+      setAdresse({ organisasjonsAdresse: response.data });
     }
   };
+  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonIfValid, 500), []);
 
   useEffect(() => {
     setAdresse(undefined);
@@ -169,44 +106,51 @@ const SendBrev = ({
     if (!formValues || !formValues.mottaker) return;
     const mottaker = JSON.parse(formValues.mottaker);
     if (mottaker.rolle === "BRUKER") {
-      hentAdresseForBruker();
+      if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
+      else setAdresse({ mottakerAdresse: mottaker?.adresser[0] });
     }
     if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.frittValg) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.frittValg && !registerInfoHentet) {
-      setMottakerFeil("Finner ingen arbeidsgivere. Hent registeropplysninger");
+    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.frittValg) {
+      if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
 
-  const hentAdresseForArbeidsgiver = async () => {
-    const fullmektig =
-      fullmektige &&
-      fullmektige.find((aktoer) =>
-        [MKV.Koder.representerer.BEGGE, MKV.Koder.representerer.ARBEIDSGIVER].includes(aktoer.representererKode)
-      );
-    const kontaktinfo = await finnKontaktopplysninger(
-      saksnummer,
-      (fullmektig ? fullmektig.orgnr : formValues?.arbeidsgiver) || ""
-    );
-    const orgnr = kontaktinfo.kontaktorgnr || (fullmektig ? fullmektig.orgnr : formValues.arbeidsgiver) || "";
-    const organisasjon = await hentOrganisasjonIfValid(orgnr, !Utils._isEmpty(orgnr));
-    setAdresse({
-      orgnr: (fullmektig ? fullmektig.orgnr : formValues?.arbeidsgiver) || "",
-      navn: Utils.streng.storeForbokstaver(organisasjon.navn),
-      kontaktperson: kontaktinfo.kontaktnavn
-        ? `Att. ${Utils.streng.storeForbokstaver(kontaktinfo.kontaktnavn)}`
-        : undefined,
-      organisasjonsAdresse: organisasjon,
-    });
-  };
-
   useEffect(() => {
     setAdresse(undefined);
-    if (formValues?.arbeidsgiver) {
-      hentAdresseForArbeidsgiver();
+    if (formValues?.arbeidsgiver && formValues?.mottaker) {
+      setAdresse({
+        mottakerAdresse: JSON.parse(formValues.mottaker).adresser.find(
+          (mottakerAdresse: Api.DokumenterV2.MottakerAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver
+        ),
+      });
     }
   }, [formValues?.arbeidsgiver]);
+
+  const MottakerAdresseComponent = ({
+    mottakerNavn,
+    adresselinjer,
+    postnr,
+    poststed,
+    land,
+    className,
+  }: Api.DokumenterV2.MottakerAdresse & { className: string }) => {
+    return (
+      <div className={className}>
+        <div>
+          <b>{mottakerNavn}</b>
+        </div>
+        {adresselinjer.map((linje) => (
+          <div>{linje}</div>
+        ))}
+        <div>
+          {postnr} {poststed}
+        </div>
+        <div>{land}</div>
+      </div>
+    );
+  };
 
   if (!tilgjengeligeMaler || !formValues) return null;
 
@@ -257,17 +201,10 @@ const SendBrev = ({
 
       {!!formValues.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER" && (
         <Nav.Row>
-          <Nav.Column xs="6">
+          <Nav.Column xs="12">
             {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-            {adresse?.navn && <Nav.typo.Element>{adresse.navn}</Nav.typo.Element>}
-            {adresse?.kontaktperson && <Nav.typo.Normaltekst>{adresse.kontaktperson}</Nav.typo.Normaltekst>}
-            {adresse?.brukerAdresse && (
-              <Fragment>
-                <UstrukturertAdresse adresse={adresse.brukerAdresse} className="brukeradresse" />
-              </Fragment>
-            )}
-            {adresse?.organisasjonsAdresse && (
-              <OrganisasjonsAdresse organisasjon={adresse.organisasjonsAdresse} visNavn={false} visTittel={false} />
+            {adresse?.mottakerAdresse && (
+              <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="brukeradresse" />
             )}
           </Nav.Column>
         </Nav.Row>
@@ -293,29 +230,19 @@ const SendBrev = ({
                     ))}
                   </Nav.Hjelpetekst>
                 </Nav.typo.Normaltekst>
-                {virksomheter.map((virksomhet: KTObject) => (
+                {JSON.parse(formValues.mottaker)?.adresser?.map((virksomhet: Api.DokumenterV2.MottakerAdresse) => (
                   <Fragment>
                     <Skjema.Radio
                       className="arbeidsgiver_radio"
                       feltNavn="arbeidsgiver"
-                      label={`${virksomhet.term} (org.nr. ${virksomhet.kode})`}
-                      id={`arbeidsgiver.${virksomhet.kode}`}
-                      key={`arbeidsgiver.${virksomhet.kode}`}
-                      value={virksomhet.kode}
+                      label={`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
+                      id={`arbeidsgiver.${virksomhet.orgnr}`}
+                      key={`arbeidsgiver.${virksomhet.orgnr}`}
+                      value={virksomhet.orgnr}
                       disabled={!redigerbart}
                     />
-                    {formValues.arbeidsgiver === virksomhet.kode && (
-                      <div className="arbeidsgiveradresse">
-                        {adresse?.navn && <Nav.typo.Element>{adresse.navn}</Nav.typo.Element>}
-                        {adresse?.kontaktperson && <Nav.typo.Normaltekst>{adresse.kontaktperson}</Nav.typo.Normaltekst>}
-                        {adresse?.organisasjonsAdresse && (
-                          <OrganisasjonsAdresse
-                            organisasjon={adresse.organisasjonsAdresse}
-                            visNavn={false}
-                            visTittel={false}
-                          />
-                        )}
-                      </div>
+                    {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
+                      <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
                     )}
                   </Fragment>
                 ))}
