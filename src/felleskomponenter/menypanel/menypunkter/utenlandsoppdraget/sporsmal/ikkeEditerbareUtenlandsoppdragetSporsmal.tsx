@@ -3,9 +3,10 @@ import { formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
-import * as Nav from "../../../../utils/navFrontend";
-import * as KV from "../../../../kodeverk";
-import * as Utils from "../../../../utils";
+import * as Nav from "../../../../../utils/navFrontend";
+import * as KV from "../../../../../kodeverk";
+import * as Utils from "../../../../../utils";
+import * as Sporsmal from "./sporsmal";
 
 interface SporsmalOgSvarProps {
   sporsmal: string;
@@ -53,26 +54,11 @@ const IkkeEditerbareUtenlandsoppdragetSporsmal = ({
   erErstatningTidligereUtsendte,
 }: PropsFromRedux) => (
   <div>
-    <SporsmalOgSvar
-      sporsmal="Erstatter arbeidstakeren en eller flere utsendte personer?"
-      feltVerdi={erErstatningTidligereUtsendte}
-    />
-    <SporsmalOgSvar
-      sporsmal="Sendes arbeidstakeren ut for å utføre et oppdrag/arbeid som må gjøres i utlandet?"
-      feltVerdi={erUtsendelseForOppdragIUtlandet}
-    />
-    <SporsmalOgSvar
-      sporsmal="Er det arbeidstakeren selv som har tatt intiativ til å reise til utlandet?"
-      feltVerdi={erDrattPaaEgetInitiativ}
-    />
-    <SporsmalOgSvar
-      sporsmal="Vil arbeidstaker fortsatt være ansatt hos arbeidsgiver i hele utsendingsperioden?"
-      feltVerdi={erFortsattAnsattEtterOppdraget}
-    />
-    <SporsmalOgSvar
-      sporsmal="Er arbeidstakeren ansatt med tanke på dette utelandsoppdraget?"
-      feltVerdi={erAnsattForOppdragIUtlandet}
-    />
+    <SporsmalOgSvar sporsmal={Sporsmal.erErstatningTidligereUtsendte} feltVerdi={erErstatningTidligereUtsendte} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet} feltVerdi={erUtsendelseForOppdragIUtlandet} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erDrattPaaEgetInitiativ} feltVerdi={erDrattPaaEgetInitiativ} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget} feltVerdi={erFortsattAnsattEtterOppdraget} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erAnsattForOppdragIUtlandet} feltVerdi={erAnsattForOppdragIUtlandet} />
   </div>
 );
 

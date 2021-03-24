@@ -11,8 +11,7 @@ import * as KV from "../../../../kodeverk";
 import Soknadsperiode from "./soknadsperiode";
 import Soknadslandvelger from "./soknadslandvelger";
 import EditerbartElement, { Status } from "../editerbartElement";
-import IkkeEditerbareUtenlandoppdragetSporsmal from "./ikkeEditerbareUtenlandoppdragetSporsmal";
-import EditerbareUtenlandoppdragetSporsmal from "./editerbareUtenlandsoppdragetSporsmal";
+import { EditerbareUtenlandsoppdragetSporsmal, IkkeEditerbareUtenlandsoppdragetSporsmal } from "./sporsmal";
 
 import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
 
@@ -74,8 +73,8 @@ const Utenlandsoppdraget = ({
             visLagreKnapp
             onLagreClick={lagreHandler}
             symbolsynlighetMap={new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]])}
-            redigererRender={() => <EditerbareUtenlandoppdragetSporsmal redigerbart={redigerbart} />}
-            redigeringUtfortRender={() => <IkkeEditerbareUtenlandoppdragetSporsmal />}
+            redigererRender={() => <EditerbareUtenlandsoppdragetSporsmal redigerbart={redigerbart} />}
+            redigeringUtfortRender={() => <IkkeEditerbareUtenlandsoppdragetSporsmal />}
           />
         </Nav.Column>
       </Nav.Row>

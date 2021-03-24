@@ -1,9 +1,10 @@
 import React from "react";
 
-import * as Nav from "../../../../utils/navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Nav from "../../../../../utils/navFrontend";
+import * as Skjema from "../../../../skjema";
+import * as Sporsmal from "./sporsmal";
 
-import "./editerbareUtenlandsoppdragSporsmal.css";
+import "./editerbareUtenlandsoppdragetSporsmal.css";
 
 interface SporsmalOgSvarProps {
   redigerbart: boolean;
@@ -37,27 +38,27 @@ const EditerbareUtenlandsoppdragetSporsmal = ({ redigerbart }: EditerbareUtenlan
   return (
     <div className="editerbare-utenlandsoppdrag-sporsmal">
       <SporsmalOgSvar
-        sporsmal="Erstatter arbeidstakeren en eller flere utsendte personer?"
+        sporsmal={Sporsmal.erErstatningTidligereUtsendte}
         feltNavn="utenlandsoppdraget.erErstatningTidligereUtsendte"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
-        sporsmal="Sendes arbeidstakeren ut for å utføre et oppdrag/arbeid som må gjøres i utlandet?"
+        sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet}
         feltNavn="utenlandsoppdraget.erUtsendelseForOppdragIUtlandet"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
-        sporsmal="Er det arbeidstakeren selv som har tatt intiativ til å reise til utlandet?"
+        sporsmal={Sporsmal.erDrattPaaEgetInitiativ}
         feltNavn="utenlandsoppdraget.erDrattPaaEgetInitiativ"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
-        sporsmal="Vil arbeidstaker fortsatt være ansatt hos arbeidsgiver i hele utsendingsperioden?"
+        sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget}
         feltNavn="utenlandsoppdraget.erFortsattAnsattEtterOppdraget"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
-        sporsmal="Er arbeidstakeren ansatt med tanke på dette utelandsoppdraget?"
+        sporsmal={Sporsmal.erAnsattForOppdragIUtlandet}
         feltNavn="utenlandsoppdraget.erAnsattForOppdragIUtlandet"
         redigerbart={redigerbart}
       />
