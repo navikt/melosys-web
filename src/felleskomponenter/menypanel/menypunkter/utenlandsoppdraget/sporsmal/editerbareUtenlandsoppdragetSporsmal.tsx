@@ -9,10 +9,10 @@ import "./editerbareUtenlandsoppdragetSporsmal.css";
 interface SporsmalOgSvarProps {
   redigerbart: boolean;
   sporsmal: string;
-  feltNavn: string;
+  svarfeltNavn: string;
 }
 
-const SporsmalOgSvar = ({ sporsmal, feltNavn, redigerbart }: SporsmalOgSvarProps) => {
+const SporsmalOgSvar = ({ sporsmal, svarfeltNavn, redigerbart }: SporsmalOgSvarProps) => {
   return (
     <Nav.Row className="sporsmal-og-svar">
       <fieldset>
@@ -22,8 +22,8 @@ const SporsmalOgSvar = ({ sporsmal, feltNavn, redigerbart }: SporsmalOgSvarProps
           </legend>
         </Nav.Column>
         <Nav.Column xs="4" className="col">
-          <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn={feltNavn} value />
-          <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn={feltNavn} value={false} />
+          <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn={svarfeltNavn} value />
+          <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn={svarfeltNavn} value={false} />
         </Nav.Column>
       </fieldset>
     </Nav.Row>
@@ -39,27 +39,27 @@ const EditerbareUtenlandsoppdragetSporsmal = ({ redigerbart }: EditerbareUtenlan
     <div className="editerbare-utenlandsoppdrag-sporsmal">
       <SporsmalOgSvar
         sporsmal={Sporsmal.erErstatningTidligereUtsendte}
-        feltNavn="utenlandsoppdraget.erErstatningTidligereUtsendte"
+        svarfeltNavn="utenlandsoppdraget.erErstatningTidligereUtsendte"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet}
-        feltNavn="utenlandsoppdraget.erUtsendelseForOppdragIUtlandet"
+        svarfeltNavn="utenlandsoppdraget.erUtsendelseForOppdragIUtlandet"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erDrattPaaEgetInitiativ}
-        feltNavn="utenlandsoppdraget.erDrattPaaEgetInitiativ"
+        svarfeltNavn="utenlandsoppdraget.erDrattPaaEgetInitiativ"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget}
-        feltNavn="utenlandsoppdraget.erFortsattAnsattEtterOppdraget"
+        svarfeltNavn="utenlandsoppdraget.erFortsattAnsattEtterOppdraget"
         redigerbart={redigerbart}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erAnsattForOppdragIUtlandet}
-        feltNavn="utenlandsoppdraget.erAnsattForOppdragIUtlandet"
+        svarfeltNavn="utenlandsoppdraget.erAnsattForOppdragIUtlandet"
         redigerbart={redigerbart}
       />
     </div>

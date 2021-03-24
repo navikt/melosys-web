@@ -10,11 +10,11 @@ import * as Sporsmal from "./sporsmal";
 
 interface SporsmalOgSvarProps {
   sporsmal: string;
-  feltVerdi?: boolean | null;
+  svar?: boolean | null;
 }
 
-const SporsmalOgSvar = ({ sporsmal, feltVerdi }: SporsmalOgSvarProps) => {
-  const feltString = Utils._isNil(feltVerdi) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(feltVerdi));
+const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => {
+  const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(svar));
 
   return (
     <Nav.Row className="row">
@@ -22,7 +22,7 @@ const SporsmalOgSvar = ({ sporsmal, feltVerdi }: SporsmalOgSvarProps) => {
         <Nav.typo.Normaltekst>{sporsmal}</Nav.typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="4">
-        <Nav.typo.Element>{feltString}</Nav.typo.Element>
+        <Nav.typo.Element>{svarString}</Nav.typo.Element>
       </Nav.Column>
     </Nav.Row>
   );
@@ -54,11 +54,11 @@ const IkkeEditerbareUtenlandsoppdragetSporsmal = ({
   erErstatningTidligereUtsendte,
 }: PropsFromRedux) => (
   <div>
-    <SporsmalOgSvar sporsmal={Sporsmal.erErstatningTidligereUtsendte} feltVerdi={erErstatningTidligereUtsendte} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet} feltVerdi={erUtsendelseForOppdragIUtlandet} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erDrattPaaEgetInitiativ} feltVerdi={erDrattPaaEgetInitiativ} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget} feltVerdi={erFortsattAnsattEtterOppdraget} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erAnsattForOppdragIUtlandet} feltVerdi={erAnsattForOppdragIUtlandet} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erErstatningTidligereUtsendte} svar={erErstatningTidligereUtsendte} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet} svar={erUtsendelseForOppdragIUtlandet} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erDrattPaaEgetInitiativ} svar={erDrattPaaEgetInitiativ} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget} svar={erFortsattAnsattEtterOppdraget} />
+    <SporsmalOgSvar sporsmal={Sporsmal.erAnsattForOppdragIUtlandet} svar={erAnsattForOppdragIUtlandet} />
   </div>
 );
 
