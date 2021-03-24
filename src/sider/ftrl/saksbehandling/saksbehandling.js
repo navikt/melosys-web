@@ -100,6 +100,7 @@ const Saksbehandling = ({
   behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
+  behandlingsgrunnlagMottaksdato,
   behandlingsresultat,
   behandlingstema,
   behandlingstype,
@@ -282,6 +283,7 @@ const Saksbehandling = ({
               arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+              behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
               renderBehandlingsmeny={() => (
                 <Behandlingsmeny
                   redigerbart={redigerbart}
@@ -330,6 +332,7 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
+  behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   behandlingstema: PT.string.isRequired,
   behandlingstype: PT.string.isRequired,
@@ -395,6 +398,9 @@ const mapStateToProps = (state) => ({
   ),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
+  ),
+  behandlingsgrunnlagMottaksdato: Utils.dato.formatterDatoTilNorsk(
+    behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),

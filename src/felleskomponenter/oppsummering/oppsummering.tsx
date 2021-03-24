@@ -2,8 +2,9 @@ import React, { ReactNode } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { Fagsak, Oppsummering as OppsummeringType, Person } from "Domene";
+import { Fagsak, Oppsummering as OppsummeringType } from "Domene";
 
+import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../utils/navFrontend";
@@ -16,7 +17,6 @@ import { arrayTilKonjunksjon, storeForbokstaver } from "../../utils/streng";
 
 interface OppsummeringProps {
   arbeidsland: KTObject[];
-  oppholdsland?: KTObject[];
   lovvalgsland: KTObject;
   fagsak: Fagsak;
   oppsummering: OppsummeringType;
@@ -25,10 +25,9 @@ interface OppsummeringProps {
   behandlingsstatusLinje: ReactNode;
   behandlingstemaLinje: ReactNode;
   behandlingstypeLinje: ReactNode;
-  person: Person;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
-  periodeLabel: string;
+  mottattDato?: string;
   className?: string;
 }
 
@@ -45,22 +44,24 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingstypeLinje,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
+    mottattDato,
     className,
   } = props;
-  if (!oppsummering) return <div />;
+  if (!oppsummering || !fagsak?.sakstype) return <div />;
 
   const { saksnummer, sakstype, registrertDato } = fagsak;
 
-  const { endretDato, endretAvNavn, svarFrist } = oppsummering;
+  const { endretDato, endretAvNavn, svarFrist, behandlingstype } = oppsummering;
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
       ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaver(enkeltLand.term)))
       : "Ukjent";
 
-  const periodeFraTil = (fra = "", til = "") => `${formatterDatoTilNorsk(fra)} - ${formatterDatoTilNorsk(til)}`;
+  const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
 
-  const erSed = () => oppsummering.behandlingstype === "SED";
+  const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
+  const erFtrl = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.FTRL;
 
   return (
     <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
@@ -96,11 +97,7 @@ const Oppsummering = (props: OppsummeringProps) => {
         <Nav.Row>
           <Nav.Column xs="12">
             {behandlingsstatusLinje}
-            <OppsummeringVerdiPar
-              className="svarfrist"
-              nokkel="Svarfrist"
-              verdi={svarFrist ? formatterDatoTilNorsk(svarFrist) : "-"}
-            />
+            <OppsummeringVerdiPar className="svarfrist" nokkel="Svarfrist" verdi={svarFrist || "-"} />
           </Nav.Column>
         </Nav.Row>
       </dl>
@@ -108,7 +105,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       <dl>
         <Nav.Row>
           <Nav.Column xs="12">
-            <OppsummeringVerdiPar nokkel="Behandling opprettet" verdi={formatterDatoTilNorsk(registrertDato)} />
+            <OppsummeringVerdiPar nokkel="Behandling opprettet" verdi={registrertDato} />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -123,15 +120,12 @@ const Oppsummering = (props: OppsummeringProps) => {
       </dl>
 
       <dl>
-        {erSed() ? (
+        {erSed ? (
           !erSedForesporsel(behandlingstema) && (
             <div>
               <Nav.Row>
                 <Nav.Column xs="12">
-                  <OppsummeringVerdiPar
-                    nokkel="Periode fra SED"
-                    verdi={periodeFraTil(lovvalgsperiodeFom, lovvalgsperiodeTom)}
-                  />
+                  <OppsummeringVerdiPar nokkel="Periode fra SED" verdi={lovvalgsperiode} />
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row>
@@ -145,10 +139,7 @@ const Oppsummering = (props: OppsummeringProps) => {
           <div>
             <Nav.Row>
               <Nav.Column xs="12">
-                <OppsummeringVerdiPar
-                  nokkel="Søknadsperiode"
-                  verdi={periodeFraTil(lovvalgsperiodeFom, lovvalgsperiodeTom)}
-                />
+                <OppsummeringVerdiPar nokkel="Søknadsperiode" verdi={lovvalgsperiode} />
               </Nav.Column>
             </Nav.Row>
             <Nav.Row>
@@ -159,13 +150,18 @@ const Oppsummering = (props: OppsummeringProps) => {
           </div>
         )}
       </dl>
+
+      {erFtrl && (
+        <dl>
+          <OppsummeringVerdiPar nokkel="Søknad mottatt" verdi={mottattDato || "-"} />
+        </dl>
+      )}
     </div>
   );
 };
 
 Oppsummering.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  oppholdsland: PT.arrayOf(MPT.Kodeverk),
   lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -174,18 +170,17 @@ Oppsummering.propTypes = {
   behandlingsstatusLinje: PT.node.isRequired,
   behandlingstemaLinje: PT.node.isRequired,
   behandlingstypeLinje: PT.node.isRequired,
-  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,
-  periodeLabel: PT.string.isRequired,
+  mottattDato: PT.string,
   className: PT.string,
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],
-  oppholdsland: [],
   lovvalgsland: {},
   behandlingsgrunnlagPeriodeFom: undefined,
   behandlingsgrunnlagPeriodeTom: undefined,
+  mottattDato: undefined,
   className: undefined,
 };
 

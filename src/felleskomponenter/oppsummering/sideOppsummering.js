@@ -34,6 +34,7 @@ const SideOppsummering = ({
   renderBehandlingsstatus,
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
+  behandlingsgrunnlagMottaksdato,
   periodeLabel,
   visEndreBehandlingstemaDialogHandle,
   visEndreBehandlingsstatusDialogHandle,
@@ -104,11 +105,13 @@ const SideOppsummering = ({
                   {oppsummering && (
                     <Oppsummering
                       arbeidsland={arbeidsland}
-                      oppholdsland={oppholdsland}
                       lovvalgsland={lovvalgsland}
                       fagsak={fagsak}
                       oppsummering={oppsummering}
                       behandlingstema={behandlingstema}
+                      behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+                      behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                      mottattDato={behandlingsgrunnlagMottaksdato}
                       behandlingsfristLinje={
                         // TODO: Placeholderverdier
                         <OppsummeringVerdiParRedigerbar
@@ -141,10 +144,6 @@ const SideOppsummering = ({
                           onClick={() => console.log("Endre type")}
                         />
                       }
-                      person={person}
-                      behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                      behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                      periodeLabel={periodeLabel}
                     />
                   )}
                 </Nav.Column>
@@ -239,6 +238,7 @@ SideOppsummering.propTypes = {
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,
+  behandlingsgrunnlagMottaksdato: PT.string,
   periodeLabel: PT.string,
   visEndreBehandlingstemaDialogHandle: PT.func.isRequired,
   visEndreBehandlingsstatusDialogHandle: PT.func.isRequired,
@@ -258,6 +258,7 @@ SideOppsummering.defaultProps = {
   lovvalgsperiodeTom: undefined,
   behandlingsgrunnlagPeriodeFom: undefined,
   behandlingsgrunnlagPeriodeTom: undefined,
+  behandlingsgrunnlagMottaksdato: undefined,
   periodeLabel: "Søknadsperiode",
 };
 
