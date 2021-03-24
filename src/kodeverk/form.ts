@@ -52,6 +52,15 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
+export interface Utenlandsoppdraget {
+  erUtsendelseForOppdragIUtlandet?: boolean | null;
+  erAnsattForOppdragIUtlandet?: boolean | null;
+  erFortsattAnsattEtterOppdraget?: boolean | null;
+  erDrattPaaEgetInitiativ?: boolean | null;
+  erErstatningTidligereUtsendte?: boolean | null;
+  samletUtsendingsperiode?: boolean | null;
+}
+
 export type SoknadFormData = any;
 
 export const SOK_ETTER_SAK = "sokEtterSak";
