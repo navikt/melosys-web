@@ -80,7 +80,14 @@ const mapStateToProps = (state: RootState) => ({
       erDrattPaaEgetInitiativ: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erDrattPaaEgetInitiativ,
       erErstatningTidligereUtsendte: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
         .erErstatningTidligereUtsendte,
-      samletUtsendingsperiode: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode,
+      samletUtsendingsperiode: {
+        fom: Utils.dato.formatterDatoTilNorsk(
+          behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.fom
+        ),
+        tom: Utils.dato.formatterDatoTilNorsk(
+          behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.tom
+        ),
+      },
     },
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom

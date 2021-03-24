@@ -1,4 +1,5 @@
-import React from "react";
+import React, { ReactNode } from "react";
+import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Nav from "../../../../../utils/navFrontend";
 import * as Skjema from "../../../../skjema";
@@ -6,61 +7,91 @@ import * as Sporsmal from "./sporsmal";
 
 import "./editerbareUtenlandsoppdragetSporsmal.css";
 
-interface SporsmalOgSvarProps {
-  redigerbart: boolean;
-  sporsmal: string;
-  svarfeltNavn: string;
+interface RadioknappSvarProps {
+  feltNavn: string;
 }
 
-const SporsmalOgSvar = ({ sporsmal, svarfeltNavn, redigerbart }: SporsmalOgSvarProps) => {
+const RadioknappSvar = ({ feltNavn }: RadioknappSvarProps) => (
+  <>
+    <Skjema.Radio label="Ja" feltNavn={feltNavn} value />
+    <Skjema.Radio label="Nei" feltNavn={feltNavn} value={false} />
+  </>
+);
+
+interface PeriodeSvarProps {
+  fomFeltNavn: string;
+  tomFeltNavn: string;
+}
+
+const PeriodeSvar = ({ fomFeltNavn, tomFeltNavn }: PeriodeSvarProps) => (
+  <>
+    <Skjema.Input datoFelt feltNavn={fomFeltNavn} label="Fra og med:" />
+    <Skjema.Input datoFelt feltNavn={tomFeltNavn} label="Til og med:" />
+  </>
+);
+
+interface SporsmalOgSvarProps {
+  sporsmal: string;
+  svar: ReactNode;
+  sporsmalKolonneBredde?: ColumnWidth;
+  svarKolonneBredde?: ColumnWidth;
+}
+
+const SporsmalOgSvar = ({
+  sporsmal,
+  svar,
+  sporsmalKolonneBredde = "8",
+  svarKolonneBredde = "4",
+}: SporsmalOgSvarProps) => {
   return (
     <Nav.Row className="sporsmal-og-svar">
       <fieldset>
-        <Nav.Column xs="8">
+        <Nav.Column xs={sporsmalKolonneBredde}>
           <legend>
             <Nav.typo.Normaltekst>{sporsmal}</Nav.typo.Normaltekst>
           </legend>
         </Nav.Column>
-        <Nav.Column xs="4" className="col">
-          <Skjema.Radio disabled={!redigerbart} label="Ja" feltNavn={svarfeltNavn} value />
-          <Skjema.Radio disabled={!redigerbart} label="Nei" feltNavn={svarfeltNavn} value={false} />
+        <Nav.Column xs={svarKolonneBredde} className="col">
+          {svar}
         </Nav.Column>
       </fieldset>
     </Nav.Row>
   );
 };
 
-interface EditerbareUtenlandsoppdragetSporsmalProps {
-  redigerbart: boolean;
-}
-
-const EditerbareUtenlandsoppdragetSporsmal = ({ redigerbart }: EditerbareUtenlandsoppdragetSporsmalProps) => {
+const EditerbareUtenlandsoppdragetSporsmal = () => {
   return (
     <div className="editerbare-utenlandsoppdrag-sporsmal">
       <SporsmalOgSvar
         sporsmal={Sporsmal.erErstatningTidligereUtsendte}
-        svarfeltNavn="utenlandsoppdraget.erErstatningTidligereUtsendte"
-        redigerbart={redigerbart}
+        svar={<RadioknappSvar feltNavn="utenlandsoppdraget.erErstatningTidligereUtsendte" />}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet}
-        svarfeltNavn="utenlandsoppdraget.erUtsendelseForOppdragIUtlandet"
-        redigerbart={redigerbart}
+        svar={<RadioknappSvar feltNavn="utenlandsoppdraget.erUtsendelseForOppdragIUtlandet" />}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erDrattPaaEgetInitiativ}
-        svarfeltNavn="utenlandsoppdraget.erDrattPaaEgetInitiativ"
-        redigerbart={redigerbart}
+        svar={<RadioknappSvar feltNavn="utenlandsoppdraget.erDrattPaaEgetInitiativ" />}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget}
-        svarfeltNavn="utenlandsoppdraget.erFortsattAnsattEtterOppdraget"
-        redigerbart={redigerbart}
+        svar={<RadioknappSvar feltNavn="utenlandsoppdraget.erFortsattAnsattEtterOppdraget" />}
       />
       <SporsmalOgSvar
         sporsmal={Sporsmal.erAnsattForOppdragIUtlandet}
-        svarfeltNavn="utenlandsoppdraget.erAnsattForOppdragIUtlandet"
-        redigerbart={redigerbart}
+        svar={<RadioknappSvar feltNavn="utenlandsoppdraget.erAnsattForOppdragIUtlandet" />}
+      />
+      <SporsmalOgSvar
+        sporsmal={Sporsmal.samletUtsendingsperiode}
+        svar={
+          <PeriodeSvar
+            fomFeltNavn="utenlandsoppdraget.samletUtsendingsperiode.fom"
+            tomFeltNavn="utenlandsoppdraget.samletUtsendingsperiode.tom"
+          />
+        }
+        sporsmalKolonneBredde="6"
+        svarKolonneBredde="6"
       />
     </div>
   );

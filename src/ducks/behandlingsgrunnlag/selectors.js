@@ -256,5 +256,6 @@ export const UtenlandsoppdragetSelector = createSelector(
       erFortsattAnsattEtterOppdraget: null,
       erDrattPaaEgetInitiativ: null,
       erErstatningTidligereUtsendte: null,
+      samletUtsendingsperiode: { fom: null, tom: null },
     }
 );

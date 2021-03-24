@@ -138,7 +138,7 @@ describe("behandlingsgrunnlag reducer", () => {
           erFortsattAnsattEtterOppdraget: null,
           erDrattPaaEgetInitiativ: true,
           erErstatningTidligereUtsendte: null,
-          samletUtsendingperiode: {
+          samletUtsendingsperiode: {
             fom: "2019-02-01",
             tom: "2020-02-01",
           },
@@ -290,7 +290,7 @@ describe("behandlingsgrunnlag reducer", () => {
             erFortsattAnsattEtterOppdraget: null,
             erDrattPaaEgetInitiativ: true,
             erErstatningTidligereUtsendte: null,
-            samletUtsendingperiode: {
+            samletUtsendingsperiode: {
               fom: "2019-02-01",
               tom: "2020-02-01",
             },

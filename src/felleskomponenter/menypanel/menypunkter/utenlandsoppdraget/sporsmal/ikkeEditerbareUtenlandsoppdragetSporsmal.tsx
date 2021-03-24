@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
@@ -8,25 +8,40 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import * as Sporsmal from "./sporsmal";
 
-interface SporsmalOgSvarProps {
-  sporsmal: string;
-  svar?: boolean | null;
+interface RadioknappSvarProps {
+  svar: boolean | null | undefined;
 }
 
-const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => {
+const RadioknappSvar = ({ svar }: RadioknappSvarProps) => {
   const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(svar));
 
-  return (
-    <Nav.Row>
-      <Nav.Column xs="8">
-        <Nav.typo.Normaltekst>{sporsmal}</Nav.typo.Normaltekst>
-      </Nav.Column>
-      <Nav.Column xs="4">
-        <Nav.typo.Element>{svarString}</Nav.typo.Element>
-      </Nav.Column>
-    </Nav.Row>
-  );
+  return <Nav.typo.Element>{svarString}</Nav.typo.Element>;
 };
+
+interface PeriodeSvarProps {
+  fom: string | undefined;
+  tom: string | undefined;
+}
+
+const PeriodeSvar = ({ fom, tom }: PeriodeSvarProps) => (
+  <Nav.typo.Element>
+    {fom} - {tom}
+  </Nav.typo.Element>
+);
+
+interface SporsmalOgSvarProps {
+  sporsmal: string;
+  svar: ReactNode;
+}
+
+const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => (
+  <Nav.Row>
+    <Nav.Column xs="8">
+      <Nav.typo.Normaltekst>{sporsmal}</Nav.typo.Normaltekst>
+    </Nav.Column>
+    <Nav.Column xs="4">{svar}</Nav.Column>
+  </Nav.Row>
+);
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
@@ -52,13 +67,33 @@ const IkkeEditerbareUtenlandsoppdragetSporsmal = ({
   erFortsattAnsattEtterOppdraget,
   erDrattPaaEgetInitiativ,
   erErstatningTidligereUtsendte,
+  samletUtsendingsperiode,
 }: PropsFromRedux) => (
   <div>
-    <SporsmalOgSvar sporsmal={Sporsmal.erErstatningTidligereUtsendte} svar={erErstatningTidligereUtsendte} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet} svar={erUtsendelseForOppdragIUtlandet} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erDrattPaaEgetInitiativ} svar={erDrattPaaEgetInitiativ} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget} svar={erFortsattAnsattEtterOppdraget} />
-    <SporsmalOgSvar sporsmal={Sporsmal.erAnsattForOppdragIUtlandet} svar={erAnsattForOppdragIUtlandet} />
+    <SporsmalOgSvar
+      sporsmal={Sporsmal.erErstatningTidligereUtsendte}
+      svar={<RadioknappSvar svar={erErstatningTidligereUtsendte} />}
+    />
+    <SporsmalOgSvar
+      sporsmal={Sporsmal.erUtsendelseForOppdragIUtlandet}
+      svar={<RadioknappSvar svar={erUtsendelseForOppdragIUtlandet} />}
+    />
+    <SporsmalOgSvar
+      sporsmal={Sporsmal.erDrattPaaEgetInitiativ}
+      svar={<RadioknappSvar svar={erDrattPaaEgetInitiativ} />}
+    />
+    <SporsmalOgSvar
+      sporsmal={Sporsmal.erFortsattAnsattEtterOppdraget}
+      svar={<RadioknappSvar svar={erFortsattAnsattEtterOppdraget} />}
+    />
+    <SporsmalOgSvar
+      sporsmal={Sporsmal.erAnsattForOppdragIUtlandet}
+      svar={<RadioknappSvar svar={erAnsattForOppdragIUtlandet} />}
+    />
+    <SporsmalOgSvar
+      sporsmal={Sporsmal.samletUtsendingsperiode}
+      svar={<PeriodeSvar fom={samletUtsendingsperiode.fom} tom={samletUtsendingsperiode.tom} />}
+    />
   </div>
 );
 

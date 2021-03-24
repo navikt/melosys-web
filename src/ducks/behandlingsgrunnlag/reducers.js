@@ -246,7 +246,14 @@ export default function reducer(state = initialState, action) {
             erFortsattAnsattEtterOppdraget: dokument.utenlandsoppdraget.erFortsattAnsattEtterOppdraget,
             erDrattPaaEgetInitiativ: dokument.utenlandsoppdraget.erDrattPaaEgetInitiativ,
             erErstatningTidligereUtsendte: dokument.utenlandsoppdraget.erErstatningTidligereUtsendte,
-            samletUtsendingsperiode: dokument.utenlandsoppdraget.samletUtsendingsperiode,
+            samletUtsendingsperiode: {
+              fom: dokument.utenlandsoppdraget.samletUtsendingsperiode.fom
+                ? formatterDatoTilISO(dokument.utenlandsoppdraget.samletUtsendingsperiode.fom)
+                : null,
+              tom: dokument.utenlandsoppdraget.samletUtsendingsperiode.tom
+                ? formatterDatoTilISO(dokument.utenlandsoppdraget.samletUtsendingsperiode.tom)
+                : null,
+            },
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,

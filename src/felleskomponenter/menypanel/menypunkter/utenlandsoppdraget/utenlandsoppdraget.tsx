@@ -73,7 +73,7 @@ const Utenlandsoppdraget = ({
             visLagreKnapp
             onLagreClick={lagreHandler}
             symbolsynlighetMap={new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]])}
-            redigererRender={() => <EditerbareUtenlandsoppdragetSporsmal redigerbart={redigerbart} />}
+            redigererRender={() => <EditerbareUtenlandsoppdragetSporsmal />}
             redigeringUtfortRender={() => <IkkeEditerbareUtenlandsoppdragetSporsmal />}
           />
         </Nav.Column>
