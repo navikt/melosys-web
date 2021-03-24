@@ -8,6 +8,8 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import * as Sporsmal from "./sporsmal";
 
+import "./ikkeEditerbareUtenlandsoppdragetSporsmal.css";
+
 interface RadioknappSvarProps {
   svar: boolean | null | undefined;
 }
@@ -69,7 +71,7 @@ const IkkeEditerbareUtenlandsoppdragetSporsmal = ({
   erErstatningTidligereUtsendte,
   samletUtsendingsperiode,
 }: PropsFromRedux) => (
-  <div>
+  <div className="ikke-editerbare-utenlandsoppdrag-sporsmal">
     <SporsmalOgSvar
       sporsmal={Sporsmal.erErstatningTidligereUtsendte}
       svar={<RadioknappSvar svar={erErstatningTidligereUtsendte} />}
