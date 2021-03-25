@@ -139,8 +139,8 @@ describe("behandlingsgrunnlag reducer", () => {
           erDrattPaaEgetInitiativ: true,
           erErstatningTidligereUtsendte: null,
           samletUtsendingsperiode: {
-            fom: "2019-02-01",
-            tom: "2020-02-01",
+            fom: "01.02.2019",
+            tom: "01.02.2020",
           },
         },
         antallAnsatte: "12345",
