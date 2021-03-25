@@ -8,7 +8,9 @@ import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as Nav from "../../utils/navFrontend";
 import * as Skjema from "../skjema";
+
 import { formSelectors } from "../../ducks/form";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
 
 import { brevbestillingValidering, erSkjemaGyldig } from "../skjema/validering/brevbestilling";
 import PdfLenkeListe from "../pdfLenkeListe";
@@ -114,6 +116,7 @@ class BrevBestilling extends Component {
       settFeltInnhold,
       redigerbart,
       brevBestillingRedigerbartIArtikkel13,
+      behandlingstype,
     } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
 
@@ -143,10 +146,16 @@ class BrevBestilling extends Component {
         settFeltInnhold("mottaker", MKV.Koder.aktoersroller.BRUKER);
       }
     }
-    const aktiverteDokumenttypeKoder = [
-      MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,
-      MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
-    ];
+
+    /* MELDING_MANGLENDE_OPPLYSNINGER og MELDING_FORVENTET_SAKSBEHANDLINGSTID er ikke tilpasset behandlingstype SED */
+    const aktiverteDokumenttypeKoder =
+      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED
+        ? []
+        : [
+            MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,
+            MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
+          ];
+
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
@@ -217,6 +226,7 @@ BrevBestilling.propTypes = {
   redigerbart: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  behandlingstype: PT.string.isRequired,
 };
 BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},
@@ -230,14 +240,22 @@ const form = {
   onSubmit: () => {},
 };
 
-const mapStateToProps = (state) => ({
-  brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
-  initialValues: {
-    dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
-    mottaker: MKV.Koder.representerer.BRUKER,
-    fritekst: "",
-  },
-});
+const mapStateToProps = (state) => {
+  const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
+
+  return {
+    behandlingstype,
+    brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
+    initialValues: {
+      dokumenttypeKode:
+        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED
+          ? ""
+          : MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
+      mottaker: MKV.Koder.representerer.BRUKER,
+      fritekst: "",
+    },
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.BREV_BESTILLING, feltNavn, verdi)),

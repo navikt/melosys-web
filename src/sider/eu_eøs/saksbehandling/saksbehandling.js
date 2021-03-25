@@ -11,7 +11,7 @@ import * as MPT from "../../../proptypes";
 
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Behandlingsmeny from "./komponenter/behandlingsmeny";
 
