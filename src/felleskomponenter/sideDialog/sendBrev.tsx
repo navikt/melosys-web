@@ -3,7 +3,7 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { change, getFormValues, reduxForm } from "redux-form";
+import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { Organisasjon } from "Domene";
 import { AlertStripeFeil } from "nav-frontend-alertstriper";
 
@@ -35,6 +35,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   changeField: (field: string, data: any) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   hentOrganisasjon: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
+  resetForm: () => reset(KV.Form.SEND_BREV),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -44,11 +45,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface Props {
   redigerbart: boolean;
   formValues: {
-    valgtMal?: Api.DokumenterV2.TilgjengeligeMalerResDto;
+    valgtMal?: Api.DokumenterV2.TilgjengeligeMaler;
     type?: string;
     mottaker?: string;
     organisasjonsnummer?: string;
-    personInfo?: string;
+    kontaktperson?: string;
     arbeidsgiver?: string;
     felt?: {
       [key: string]: any;
@@ -64,8 +65,9 @@ const SendBrev = ({
   hentOrganisasjon,
   orgnrValid,
   redigerbart,
+  resetForm,
 }: Props & PropsFromRedux) => {
-  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto[]>();
+  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
@@ -127,6 +129,30 @@ const SendBrev = ({
       });
     }
   }, [formValues?.arbeidsgiver]);
+
+  const sendBrev = () => {
+    const mottaker = formValues.mottaker && JSON.parse(formValues.mottaker);
+    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = {
+      produserbardokument: formValues.type || "",
+      mottaker: mottaker.rolle,
+      manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
+      kopiMottakere: [],
+    };
+    if (mottaker.rolle === "ARBEIDSGIVER") {
+      requestBody = {
+        ...requestBody,
+        orgNr: mottaker.frittValg ? formValues.organisasjonsnummer : formValues.arbeidsgiver,
+        kontaktperson: mottaker.frittValg ? formValues.kontaktperson : null,
+      };
+    }
+    if (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" && formValues.felt.INNLEDNING_FRITEKST?.fritekst) {
+      requestBody = {
+        ...requestBody,
+        innledningFritekst: formValues.felt.INNLEDNING_FRITEKST.fritekst,
+      };
+    }
+    Api.DokumenterV2.opprettBrev(behandlingID, requestBody).catch(Utils.logger.error);
+  };
 
   const MottakerAdresseComponent = ({
     mottakerNavn,
@@ -337,13 +363,13 @@ const SendBrev = ({
       <div>
         <Nav.Hovedknapp
           mini
-          disabled={!redigerbart || !formIsValid}
+          disabled={!redigerbart || !formIsValid || !!mottakerFeil}
           className="brevknapp"
-          onClick={() => console.log("Send brev")}
+          onClick={sendBrev}
         >
           Send brev
         </Nav.Hovedknapp>
-        <Nav.Knapp mini disabled={false} className="brevknapp" onClick={() => console.log("Forkast brev")}>
+        <Nav.Knapp mini disabled={false} className="brevknapp" onClick={resetForm}>
           Forkast brev
         </Nav.Knapp>
       </div>
