@@ -4,12 +4,12 @@ import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { Fagsak, Oppsummering as OppsummeringType, Person } from "Domene";
 
-import * as Utils from "../utils";
-import * as KV from "../kodeverk";
-import * as MPT from "../proptypes";
-import * as Nav from "../utils/navFrontend";
+import * as Utils from "../../utils";
+import * as KV from "../../kodeverk";
+import * as MPT from "../../proptypes";
+import * as Nav from "../../utils/navFrontend";
 
-import EnkeltDato from "./datoOmrade/enkeltDato";
+import EnkeltDato from "../datoOmrade/enkeltDato";
 
 import "./oppsummering.css";
 
@@ -20,6 +20,7 @@ interface OppsummeringProps {
   fagsak: Fagsak;
   oppsummering: OppsummeringType;
   behandlingsstatus: ReactNode;
+  behandlingstema: ReactNode;
   person: Person;
   behandlingsgrunnlagPeriodeFom?: string;
   behandlingsgrunnlagPeriodeTom?: string;
@@ -29,7 +30,7 @@ interface OppsummeringProps {
   className?: string;
 }
 
-const Oppsummering = (props: OppsummeringProps) => {
+const OppsummeringGammel = (props: OppsummeringProps) => {
   const {
     arbeidsland,
     oppholdsland,
@@ -233,7 +234,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   );
 };
 
-Oppsummering.propTypes = {
+OppsummeringGammel.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
   lovvalgsland: MPT.Kodeverk,
@@ -248,7 +249,7 @@ Oppsummering.propTypes = {
   periodeLabel: PT.string.isRequired,
   className: PT.string,
 };
-Oppsummering.defaultProps = {
+OppsummeringGammel.defaultProps = {
   arbeidsland: [],
   oppholdsland: [],
   lovvalgsland: {},
@@ -259,4 +260,4 @@ Oppsummering.defaultProps = {
   className: undefined,
 };
 
-export default Oppsummering;
+export default OppsummeringGammel;

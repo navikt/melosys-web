@@ -9,7 +9,7 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger from "../../../felleskomponenter/stegvelger";
 import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
