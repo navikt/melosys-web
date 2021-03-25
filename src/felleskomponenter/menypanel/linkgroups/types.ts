@@ -8,7 +8,7 @@ export type Menypunkt =
   | "Arbeidsforhold og inntekt"
   | "Arbeidsgiver/virksomhet"
   | "Fullmektig"
-  | "Periode og land"
+  | "Periode"
   | "Utenlandsoppdraget"
   | "Lønn og godtgjørelser"
   | "Arbeidssted(er)"

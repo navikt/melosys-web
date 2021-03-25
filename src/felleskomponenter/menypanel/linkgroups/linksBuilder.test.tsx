@@ -36,7 +36,7 @@ describe("LinksBuilder", () => {
     expect(links[4].label).toBe("Familieforhold");
     expect(links[5].label).toBe("Fullmektig");
     expect(links[6].label).toBe("Medlemskap");
-    expect(links[7].label).toBe("Periode og land");
+    expect(links[7].label).toBe("Periode");
     expect(links[8].label).toBe("Utenlandsoppdraget");
     expect(links[9].label).toBe("Person");
   });
