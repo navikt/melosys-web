@@ -32,7 +32,7 @@ export type TilgjengeligeMaler = {
     type: string;
     rolle: string;
     frittValg: boolean;
-    adresser: MottakerAdresse[];
+    adresser: MottakerAdresse[] | null;
     feilmelding: string | null;
   }[];
   mottakereHjelpetekst: string | null;
