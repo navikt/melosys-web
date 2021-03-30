@@ -13,6 +13,7 @@ import {
   Person,
   Familieforhold,
   LonnOgGodtgjorelser,
+  VirksomhetenINorge,
 } from "../menypunkter";
 
 interface ILinksBuilder {
@@ -27,7 +28,7 @@ interface ILinksBuilder {
   // addUtenlandsoppdraget: () => ILinksBuilder,
   addLonnOgGodtgjorelser: () => ILinksBuilder;
   addArbeidssteder: () => ILinksBuilder;
-  // addOmVirksomhetenINorge: () => ILinksBuilder,
+  addOmVirksomhetenINorge: () => ILinksBuilder;
   // addOvrigOmArbeidstaker: () => ILinksBuilder,
   build: () => Link[];
 }
@@ -171,6 +172,21 @@ class LinksBuilder implements ILinksBuilder {
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
+    });
+    return this;
+  }
+
+  public addOmVirksomhetenINorge() {
+    this.links.push({
+      label: "Om virksomheten i Norge",
+      active: false,
+      content: (
+        <VirksomhetenINorge
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
         />
       ),
     });
