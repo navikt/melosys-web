@@ -47,7 +47,6 @@ const mapStateToProps = (state: RootState) => ({
     oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,
-    ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
     juridiskArbeidsgiverNorge: {
       antallUtsendte:
         Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallUtsendte) || null,
@@ -63,6 +62,7 @@ const mapStateToProps = (state: RootState) => ({
         Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
       andelRekruttertINorge:
         Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelRekruttertINorge) || null,
+      ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
       erOffentligVirksomhet: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state)
         .erOffentligVirksomhet,
     },

@@ -183,7 +183,8 @@ export default function reducer(state = initialState, action) {
             andelRekruttertINorge: dokument.juridiskArbeidsgiverNorge.andelRekruttertINorge
               ? strengTilInt(dokument.juridiskArbeidsgiverNorge.andelRekruttertINorge)
               : null,
-            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.filter((arbeidsgiver) => arbeidsgiver) || [],
+            ekstraArbeidsgivere:
+              dokument.juridiskArbeidsgiverNorge.ekstraArbeidsgivere.filter((arbeidsgiver) => arbeidsgiver) || [],
             erOffentligVirksomhet: Utils._isNil(dokument.juridiskArbeidsgiverNorge.erOffentligVirksomhet)
               ? null
               : dokument.juridiskArbeidsgiverNorge.erOffentligVirksomhet,

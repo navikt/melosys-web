@@ -39,7 +39,7 @@ const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.For
 const mapStateToProps = (state: RootState) => ({
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  ekstraArbeidsgivere: soknadFormValueSelector(state, "ekstraArbeidsgivere"),
+  ekstraArbeidsgivere: soknadFormValueSelector(state, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere"),
   selvstendigForetak: soknadFormValueSelector(state, "selvstendigForetak"),
   arbeidsforholdUtland: soknadFormValueSelector(state, "arbeidsforholdUtland"),
   selvstendigNaeringsvirksomhetUtland: soknadFormValueSelector(state, "selvstendigNaeringsvirksomhetUtland"),
@@ -100,7 +100,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdINorge}
         tittelIkon={Ikoner.Building}
-        feltNavn="ekstraArbeidsgivere"
+        feltNavn="juridiskArbeidsgiverNorge.ekstraArbeidsgivere"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
         transformerOrgTilElement={(org: Organisasjon) => org.orgnr}
