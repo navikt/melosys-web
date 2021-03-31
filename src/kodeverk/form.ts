@@ -52,6 +52,17 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
+export interface JuridiskArbeidsgiverNorge {
+  antallUtsendte?: string;
+  antallAdmAnsatte?: string;
+  antallAnsatte?: string;
+  andelOmsetningINorge?: string;
+  andelOppdragINorge?: string;
+  andelKontrakterINorge?: string;
+  andelRekruttertINorge?: string;
+  erOffentligVirksomhet?: boolean | null;
+}
+
 export type SoknadFormData = any;
 
 export const SOK_ETTER_SAK = "sokEtterSak";

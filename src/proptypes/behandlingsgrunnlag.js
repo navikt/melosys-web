@@ -22,6 +22,7 @@ const JuridiskArbeidsgiverNorgePropType = PT.shape({
   antallAnsatte: PT.number,
   antallUtsendte: PT.number,
   ekstraArbeidsgivere: PT.arrayOf(PT.string),
+  erOffentligVirksomhet: PT.bool,
 });
 const BostedPropType = PT.shape({
   antallMaanederINorge: PT.number,
