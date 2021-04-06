@@ -2,6 +2,7 @@ import { createSelector } from "reselect";
 
 import MKV from "../../melosyskodeverk";
 
+import { anmodningsperioderSelectors } from "../anmodningsperioder";
 import { behandlingerSelectors } from "../behandlinger";
 import { flytSelectors } from "../flyt";
 import { formSelectors } from "../form";
@@ -16,12 +17,12 @@ export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
 );
 export const GeneriskStegRedigerbartSelector = createSelector(
   RedigerbartSelector,
-  behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
+  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
 export const PanelerRedigerbartSelector = createSelector(
   RedigerbartSelector,
-  behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
+  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   behandlingerSelectors.ErEndretPeriodeSelector,
   behandlingerSelectors.ErAnmodningOmUnntakHovedRegelSelector,
   behandlingerSelectors.ErRegistreringUnntakNorskTrygdUtstasjoneringSelector,
@@ -43,7 +44,7 @@ export const PanelerRedigerbartSelector = createSelector(
 );
 export const BrevBestillingRedigerbartSelector = createSelector(
   RedigerbartSelector,
-  behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
+  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
 export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(

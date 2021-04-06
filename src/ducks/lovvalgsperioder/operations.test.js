@@ -79,21 +79,6 @@ describe("Lovvalgsperioder operations", () => {
 
       expect(store.getActions()).toEqual(expectedActions);
     });
-
-    it("lager ingen actions dersom anmodning er sendt til utlandet", async () => {
-      initialState.anmodningsperioder.data = initialState.anmodningsperioder.data.map((anmodningsperiode) => ({
-        ...anmodningsperiode,
-        sendtUtland: true,
-      }));
-
-      const expectedActions = [];
-
-      const store = mockStore(initialState);
-
-      await store.dispatch(operations.lagre());
-
-      expect(store.getActions()).toEqual(expectedActions);
-    });
   });
 
   describe("oppdaterLovvalgsperioderState", () => {

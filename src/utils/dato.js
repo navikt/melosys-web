@@ -103,8 +103,8 @@ function erGyldigPeriode(fom, tom) {
   return moment(fom, inputFormat).isSameOrBefore(moment(tom, inputFormat));
 }
 
-function erIPeriode(fom, tom, dato) {
-  return moment(dato).isBetween(fom, tom);
+function erIPeriode(fom, tom, dato, inclusivity) {
+  return moment(dato).isBetween(fom, tom, undefined, inclusivity);
 }
 
 function datoDiff(fom, tom, enhet = "months", presis = true) {
