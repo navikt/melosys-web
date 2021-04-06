@@ -25,6 +25,7 @@ describe("LinksBuilder", () => {
       .addMedlemskap()
       .addPeriode()
       .addPerson()
+      .addOvrigOmArbeidstaker()
       .build();
 
     expect(links[0].label).toBe("Arbeidsforhold og inntekt");
@@ -36,5 +37,6 @@ describe("LinksBuilder", () => {
     expect(links[6].label).toBe("Medlemskap");
     expect(links[7].label).toBe("Periode");
     expect(links[8].label).toBe("Person");
+    expect(links[9].label).toBe("Øvrig om arbeidstaker");
   });
 });

@@ -13,6 +13,7 @@ import {
   Person,
   Familieforhold,
   LonnOgGodtgjorelser,
+  OvrigOmArbeidstaker,
 } from "../menypunkter";
 
 interface ILinksBuilder {
@@ -28,7 +29,7 @@ interface ILinksBuilder {
   addLonnOgGodtgjorelser: () => ILinksBuilder;
   addArbeidssteder: () => ILinksBuilder;
   // addOmVirksomhetenINorge: () => ILinksBuilder,
-  // addOvrigOmArbeidstaker: () => ILinksBuilder,
+  addOvrigOmArbeidstaker: () => ILinksBuilder;
   build: () => Link[];
 }
 
@@ -173,6 +174,15 @@ class LinksBuilder implements ILinksBuilder {
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
         />
       ),
+    });
+    return this;
+  }
+
+  public addOvrigOmArbeidstaker() {
+    this.links.push({
+      label: "Øvrig om arbeidstaker",
+      active: false,
+      content: <OvrigOmArbeidstaker />,
     });
     return this;
   }
