@@ -91,7 +91,9 @@ export const FormKomponent = ({
   const debouncedLagreSvar = useCallback(Utils._debounce(lagreSvar, 1000), [oppdaterData, lagAnmodningsperiodesvar]);
 
   useEffect(() => {
-    debouncedLagreSvar({ ...formValues, formIsValid });
+    if (redigerbart) {
+      debouncedLagreSvar({ ...formValues, formIsValid });
+    }
   }, [formValues, formIsValid]);
 
   return (
