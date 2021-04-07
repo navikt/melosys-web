@@ -134,6 +134,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       )}
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
+        fomRedigerbar={false}
         checkboxClassName="forkortLovvalgsperiode"
         checkboxLabel="Lovvalget innvilges for en kortere periode"
         checkboxFeltnavn="forkortLovvalgsperiode"

@@ -439,6 +439,7 @@ class Stegvelger extends Component {
       vurder_virksomhet_valid: props.vurder_virksomhet_valid,
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
+      soknadsperiode: props.soknadsperiode,
       vurder_familie_valid: props.vurder_familie_valid,
       vurder_representant_valid: props.vurder_representant_valid,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
@@ -622,6 +623,7 @@ Stegvelger.propTypes = {
   vurder_virksomhet_valid: PT.bool.isRequired,
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
+  soknadsperiode: MPT.Soknadsperiode.isRequired,
   vurder_familie_valid: PT.bool.isRequired,
   vurder_representant_valid: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
@@ -706,6 +708,7 @@ const mapStateToProps = (state) => ({
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
+  soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
 });
 
 /* eslint no-alert:off */

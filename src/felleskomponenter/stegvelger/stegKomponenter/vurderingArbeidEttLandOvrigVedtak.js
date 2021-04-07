@@ -269,6 +269,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
       <Skjema.PeriodeForkorter
         className="periodeForkorter"
         redigerbart={redigerbart}
+        fomRedigerbar={false}
         checkboxClassName="forkortLovvalgsperiode"
         checkboxLabel="Lovvalget innvilges for en kortere periode"
         checkboxFeltnavn="forkortLovvalgsperiode"

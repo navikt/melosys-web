@@ -167,6 +167,7 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.Row>
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
+        fomRedigerbar={false}
         checkboxClassName="forkortUtpekingsperiode"
         checkboxLabel="Utpekingen gjelder for en kortere periode"
         checkboxFeltnavn="forkortUtpekingsperiode"
