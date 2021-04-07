@@ -39,3 +39,8 @@ export const oppdaterEndreBehandlingsstatus = (data) => ({
   type: Types.OPPDATER_ENDRE_BEHANDLINGSSTATUS,
   data,
 });
+
+export const oppdaterEndreBehandlingsfrist = (data) => ({
+  type: Types.OPPDATER_ENDRE_BEHANDLINGSFRIST,
+  data,
+});
