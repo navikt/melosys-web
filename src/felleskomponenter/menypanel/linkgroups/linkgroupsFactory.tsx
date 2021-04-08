@@ -51,7 +51,7 @@ class LinkGroupsFactory {
         if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addLonnOgGodtgjorelser();
         fraSoknad.addFullmektig();
         if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addUtenlandsoppdraget();
-        else fraSoknad.addPeriodeOgLand();
+        else fraSoknad.addPeriode();
         fraSoknad.addArbeidssteder();
 
         return new LinkgroupsBuilder()
@@ -97,7 +97,7 @@ class LinkGroupsFactory {
             new LinksBuilder(contentProps)
               .addArbeidsgiverEllerVirksomhet()
               .addFullmektig()
-              .addPeriodeOgLand()
+              .addPeriode()
               .addArbeidssteder()
               .build()
           )

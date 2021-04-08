@@ -24,7 +24,7 @@ interface ILinksBuilder {
   addArbeidsforholdOgInntekt: () => ILinksBuilder;
   addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
-  addPeriodeOgLand: () => ILinksBuilder;
+  addPeriode: () => ILinksBuilder;
   addUtenlandsoppdraget: () => ILinksBuilder;
   addLonnOgGodtgjorelser: () => ILinksBuilder;
   addArbeidssteder: () => ILinksBuilder;
@@ -132,7 +132,7 @@ class LinksBuilder implements ILinksBuilder {
     return this;
   }
 
-  public addPeriodeOgLand() {
+  public addPeriode() {
     this.links.push({
       label: "Periode",
       active: false,
