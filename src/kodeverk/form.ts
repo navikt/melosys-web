@@ -58,7 +58,7 @@ export interface Utenlandsoppdraget {
   erFortsattAnsattEtterOppdraget?: boolean | null;
   erDrattPaaEgetInitiativ?: boolean | null;
   erErstatningTidligereUtsendte?: boolean | null;
-  samletUtsendingsperiode: { fom?: string; tom?: string };
+  samletUtsendingsperiode: { fom?: string | null; tom?: string | null };
 }
 
 export type SoknadFormData = any;

@@ -21,8 +21,8 @@ const RadioknappSvar = ({ svar }: RadioknappSvarProps) => {
 };
 
 interface PeriodeSvarProps {
-  fom: string | undefined;
-  tom: string | undefined;
+  fom: string | undefined | null;
+  tom: string | undefined | null;
 }
 
 const PeriodeSvar = ({ fom, tom }: PeriodeSvarProps) => (
