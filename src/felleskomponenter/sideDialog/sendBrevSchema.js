@@ -23,12 +23,14 @@ const send_brev = object().shape({
   valgtMal: object().required(VALGT_MAL_MANGLER),
   mottaker: string().required(MOTTAKER_MANGLER),
   organisasjonsnummer: string().when("mottaker", {
-    is: (mottaker) => mottaker && JSON.parse(mottaker).rolle === "ARBEIDSGIVER" && JSON.parse(mottaker).frittValg,
+    is: (mottaker) =>
+      mottaker && JSON.parse(mottaker).rolle === "ARBEIDSGIVER" && JSON.parse(mottaker).orgnrSettesAvSaksbehandler,
     then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER),
   }),
   kontaktperson: string().nullable(),
   arbeidsgiver: string().when("mottaker", {
-    is: (mottaker) => mottaker && JSON.parse(mottaker).rolle === "ARBEIDSGIVER" && !JSON.parse(mottaker).frittValg,
+    is: (mottaker) =>
+      mottaker && JSON.parse(mottaker).rolle === "ARBEIDSGIVER" && !JSON.parse(mottaker).orgnrSettesAvSaksbehandler,
     then: string().required(ARBEIDSGIVER_MANGLER),
   }),
   felt: object(),

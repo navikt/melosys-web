@@ -9,6 +9,7 @@ import { AlertStripeFeil } from "nav-frontend-alertstriper";
 
 import * as Api from "../../services/api";
 import * as KV from "../../kodeverk";
+import * as Ikoner from "../../resources/images";
 import * as Nav from "../../utils/navFrontend";
 import * as Skjema from "../skjema";
 import * as Utils from "../../utils";
@@ -18,9 +19,48 @@ import { OrganisasjonsAdresse } from "../adresser";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import { formSelectors } from "../../ducks/form";
+import PdfLenkeListe from "../pdfLenkeListe";
 
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
+
+interface TabellComponentProps {
+  rader: {
+    verdi: string | JSX.Element;
+    style?: string;
+  }[][];
+  kolonner: {
+    verdi: string;
+    bredde: string;
+    style?: string;
+  }[];
+}
+
+const TabellComponent = ({ rader, kolonner }: TabellComponentProps) => {
+  if (!rader || !kolonner) return null;
+  return (
+    <table className="periode_tabell">
+      <tbody>
+        <tr>
+          {kolonner.map((kolonne) => (
+            <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>
+              {kolonne.verdi}
+            </th>
+          ))}
+        </tr>
+        {rader.map((rad) => (
+          <tr className="border_bottom" key={Utils._uuid()}>
+            {rad.map((radElement) => (
+              <td key={Utils._uuid()} className={`${radElement.style}`}>
+                {radElement.verdi}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -73,6 +113,7 @@ const SendBrev = ({
     mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
     organisasjonsAdresse?: Organisasjon;
   }>();
+  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const arbeidsgiverHjelptekst =
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
@@ -89,6 +130,12 @@ const SendBrev = ({
     }
   }, [formValues?.type]);
 
+  const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
+    Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null })
+      .then(setMuligeMottakere)
+      .catch(Utils.logger.error);
+  };
+
   const hentOrganisasjonIfValid = async (data: { orgnr: string; valid: boolean }) => {
     if (!data.valid) return;
     const response = await hentOrganisasjon(data.orgnr);
@@ -98,6 +145,7 @@ const SendBrev = ({
       );
     } else {
       setAdresse({ organisasjonsAdresse: response.data });
+      if (formValues?.type) hentMuligeMottakere(formValues.type, data.orgnr);
     }
   };
   const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonIfValid, 500), []);
@@ -105,28 +153,35 @@ const SendBrev = ({
   useEffect(() => {
     setAdresse(undefined);
     setMottakerFeil(undefined);
-    if (!formValues || !formValues.mottaker) return;
+    setMuligeMottakere(undefined);
+    if (!formValues || !formValues.mottaker || !formValues.type) return;
     const mottaker = JSON.parse(formValues.mottaker);
     if (mottaker.rolle === "BRUKER") {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
-      else setAdresse({ mottakerAdresse: mottaker?.adresser[0] });
+      else {
+        setAdresse({ mottakerAdresse: mottaker?.adresser[0] });
+        hentMuligeMottakere(formValues.type, undefined);
+      }
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.frittValg) {
+    if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.orgnrSettesAvSaksbehandler) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.frittValg) {
+    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.orgnrSettesAvSaksbehandler) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
 
   useEffect(() => {
     setAdresse(undefined);
-    if (formValues?.arbeidsgiver && formValues?.mottaker) {
+    setMuligeMottakere(undefined);
+    if (formValues?.arbeidsgiver && formValues?.mottaker && formValues?.type) {
       setAdresse({
         mottakerAdresse: JSON.parse(formValues.mottaker).adresser.find(
-          (mottakerAdresse: Api.DokumenterV2.MottakerAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver
+          (mottakerAdresse: Api.DokumenterV2.MottakerAdresse) =>
+            mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
         ),
       });
+      hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
     }
   }, [formValues?.arbeidsgiver]);
 
@@ -135,27 +190,92 @@ const SendBrev = ({
     let requestBody: Api.DokumenterV2.OpprettBrevReqDto = {
       produserbardokument: formValues.type || "",
       mottaker: mottaker.rolle,
+      innledningFritekst:
+        (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" && formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
+        null,
       manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
-      kopiMottakere: [],
+      kopiMottakere:
+        muligeMottakere?.kopiMottakere.map((kopiMottaker) => ({
+          rolle: kopiMottaker.rolle,
+          aktørId: kopiMottaker.aktørId,
+          orgnr: kopiMottaker.orgnr,
+        })) || [],
     };
     if (mottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {
         ...requestBody,
-        orgNr: mottaker.frittValg ? formValues.organisasjonsnummer : formValues.arbeidsgiver,
-        kontaktperson: mottaker.frittValg ? formValues.kontaktperson : null,
-      };
-    }
-    if (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" && formValues.felt.INNLEDNING_FRITEKST?.fritekst) {
-      requestBody = {
-        ...requestBody,
-        innledningFritekst: formValues.felt.INNLEDNING_FRITEKST.fritekst,
+        orgNr: mottaker.orgnrSettesAvSaksbehandler ? formValues.organisasjonsnummer : formValues.arbeidsgiver,
+        kontaktperson: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
       };
     }
     Api.DokumenterV2.opprettBrev(behandlingID, requestBody).catch(Utils.logger.error);
   };
 
+  const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
+    if (!muligeMottakere) return;
+    setMuligeMottakere({
+      ...muligeMottakere,
+      kopiMottakere: muligeMottakere.kopiMottakere.filter((mottaker) => mottaker !== kopiMottaker),
+    });
+  };
+
+  const lagDokumenterData = (mottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
+    return [
+      {
+        sendesTilDokumenterV2: true,
+        navn: ikon ? <Ikoner.Forhandsvis /> : mottaker.dokumentNavn,
+        data: {
+          produserbardokument: formValues.type,
+          mottaker: mottaker.rolle,
+          innledningFritekst:
+            (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" &&
+              formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
+            null,
+          manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
+          kopiMottakere: [],
+        },
+      },
+    ];
+  };
+
+  const mapRad = (mottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
+    return [
+      {
+        verdi: (
+          <PdfLenkeListe
+            behandlingID={behandlingID}
+            dokumenter={lagDokumenterData(mottaker)}
+            vedKlikk={() => formIsValid}
+            className="forhåndsvisning"
+          />
+        ),
+      },
+      { verdi: mottaker.mottakerNavn },
+      {
+        verdi: (
+          <PdfLenkeListe
+            behandlingID={behandlingID}
+            dokumenter={lagDokumenterData(mottaker, true)}
+            vedKlikk={() => formIsValid}
+            className="forhåndsvisning"
+          />
+        ),
+        style: "midtstilt",
+      },
+      { verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(mottaker)} /> : <></>, style: "slettKnapp" },
+    ];
+  };
+
+  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+    return [
+      mapRad(mottakere.hovedMottaker, false),
+      ...mottakere.kopiMottakere.map((mottaker) => mapRad(mottaker, true)),
+      ...mottakere.fasteMottakere.map((mottaker) => mapRad(mottaker, false)),
+    ];
+  };
+
   const MottakerAdresseComponent = ({
-    mottakerNavn,
+    tittel,
     adresselinjer,
     postnr,
     poststed,
@@ -165,10 +285,10 @@ const SendBrev = ({
     return (
       <div className={className}>
         <div>
-          <b>{mottakerNavn}</b>
+          <b>{tittel.mottakerNavn}</b>
         </div>
         {adresselinjer.map((linje) => (
-          <div>{linje}</div>
+          <div key={Utils._uuid()}>{linje}</div>
         ))}
         <div>
           {postnr} {poststed}
@@ -200,7 +320,7 @@ const SendBrev = ({
         <Skjema.Select
           feltNavn="mottaker"
           label={
-            <Nav.typo.Element>
+            <Nav.typo.Element tag="div">
               Mottaker
               {formValues.valgtMal.mottakereHjelpetekst && (
                 <Nav.Hjelpetekst
@@ -238,13 +358,13 @@ const SendBrev = ({
 
       {!!formValues.mottaker &&
         JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
-        !JSON.parse(formValues.mottaker).frittValg && (
+        !JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler && (
           <Nav.Row>
             {mottakerFeil ? (
               <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
             ) : (
               <Nav.Column xs="12">
-                <Nav.typo.Normaltekst style={{ marginBottom: "0.5rem" }}>
+                <Nav.typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
                   Velg:
                   <Nav.Hjelpetekst
                     className="hjelpetekst"
@@ -257,17 +377,17 @@ const SendBrev = ({
                   </Nav.Hjelpetekst>
                 </Nav.typo.Normaltekst>
                 {JSON.parse(formValues.mottaker)?.adresser?.map((virksomhet: Api.DokumenterV2.MottakerAdresse) => (
-                  <Fragment>
+                  <Fragment key={Utils._uuid()}>
                     <Skjema.Radio
                       className="arbeidsgiver_radio"
                       feltNavn="arbeidsgiver"
-                      label={`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
-                      id={`arbeidsgiver.${virksomhet.orgnr}`}
-                      key={`arbeidsgiver.${virksomhet.orgnr}`}
-                      value={virksomhet.orgnr}
+                      label={`${virksomhet.tittel.mottakerNavn} (org.nr. ${virksomhet.tittel.orgnr})`}
+                      id={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
+                      key={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
+                      value={virksomhet.tittel.orgnr}
                       disabled={!redigerbart}
                     />
-                    {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
+                    {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
                       <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
                     )}
                   </Fragment>
@@ -279,7 +399,7 @@ const SendBrev = ({
 
       {!!formValues.mottaker &&
         JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
-        JSON.parse(formValues.mottaker).frittValg && (
+        JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler && (
           <Nav.Row>
             <Nav.Column xs="6">
               <Skjema.Input
@@ -359,6 +479,18 @@ const SendBrev = ({
           }
           return <></>;
         })}
+
+      {muligeMottakere && (
+        <TabellComponent
+          rader={mapMottakerRader(muligeMottakere)}
+          kolonner={[
+            { verdi: "Dokumenter", bredde: "44%" },
+            { verdi: "Mottaker", bredde: "40%" },
+            { verdi: "Forhåndsvis", bredde: "8%", style: "normal_font_weight midtstilt" },
+            { verdi: "Slett", bredde: "8%", style: "normal_font_weight midtstilt" },
+          ]}
+        />
+      )}
 
       <div>
         <Nav.Hovedknapp

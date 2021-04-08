@@ -1,10 +1,12 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { getAsJson, postAsJson } from "../utils";
+import { getAsJson, postAsJson, postAsJsonReceiveAsPDF } from "../utils";
 import { API_BASE_URL, DOKUMENTER } from "../api-constants";
 
 export type MottakerAdresse = {
-  mottakerNavn: string;
-  orgnr: string | null;
+  tittel: {
+    mottakerNavn: string;
+    orgnr: string | null;
+  };
   adresselinjer: string[];
   postnr: string;
   poststed: string;
@@ -31,7 +33,7 @@ export type TilgjengeligeMaler = {
   muligeMottakere: {
     type: string;
     rolle: string;
-    frittValg: boolean;
+    orgnrSettesAvSaksbehandler: boolean;
     adresser: MottakerAdresse[] | null;
     feilmelding: string | null;
   }[];
@@ -48,16 +50,41 @@ export type OpprettBrevReqDto = {
   kontaktperson?: string | null;
   kopiMottakere: {
     rolle: string;
-    orgnr?: string;
-    aktørId: string;
+    orgnr: string | null;
+    aktørId: string | null;
   }[];
+};
+
+export type MuligMottaker = {
+  mottakerNavn: string;
+  dokumentNavn: string;
+  rolle: string;
+  orgnr: string | null;
+  aktørId: string | null;
+};
+
+export type HentMuligeMottakereResDto = {
+  hovedMottaker: MuligMottaker;
+  kopiMottakere: MuligMottaker[];
+  fasteMottakere: MuligMottaker[];
+};
+
+export type HentMuligeMottakereReqDto = {
+  produserbartdokument: string;
+  orgnr: string | null;
 };
 
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
 
+export const hentMuligeMottakere = (
+  behandlingID: number,
+  data: HentMuligeMottakereReqDto
+): Promise<HentMuligeMottakereResDto> =>
+  postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/muligeMottakere/${behandlingID}`, data);
+
 export const opprettBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/opprett/${behandlingID}`, data);
 
 export const opprettUtkastBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
-  postAsJson(`${API_BASE_URL}${DOKUMENTER}/pdf/brev/utkast/${behandlingID}`, data);
+  postAsJsonReceiveAsPDF(`${API_BASE_URL}${DOKUMENTER}/v2/pdf/brev/utkast/${behandlingID}`, data, true);

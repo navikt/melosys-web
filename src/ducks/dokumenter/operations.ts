@@ -37,6 +37,15 @@ export async function forhandsvisBrev(behandlingID: number, dokumenttypeKode: st
   return false;
 }
 
+export async function forhandsvisBrevV2(behandlingID: number, data: Api.DokumenterV2.OpprettBrevReqDto) {
+  const response = await Api.DokumenterV2.opprettUtkastBrev(behandlingID, data);
+
+  if (response.ok) {
+    return getObjectURL(response);
+  }
+  return false;
+}
+
 export async function forhandsvisSed(behandlingID: number, sedType: string, data: SedPdfData) {
   const vilSendeAnmodningOmMerInformasjon =
     data.vilSendeAnmodningOmMerInformasjon || (data.vilSendeAnmodningOmMerInformasjon === false ? false : null);
