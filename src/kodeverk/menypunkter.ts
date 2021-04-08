@@ -54,7 +54,7 @@ export const Barnetrygd = {
 };
 
 export const Utenlandsoppdraget = {
-  tittel: "Utenlandskoppdraget",
+  tittel: "Utenlandsoppdraget",
   undertitler: {
     tilleggsopplysninger: "Tilleggsopplysninger",
   },
