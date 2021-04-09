@@ -480,9 +480,9 @@ const SendBrev = ({
           return <></>;
         })}
 
-      {muligeMottakere && (
+      {formValues?.mottaker && (
         <TabellComponent
-          rader={mapMottakerRader(muligeMottakere)}
+          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
             { verdi: "Dokumenter", bredde: "44%" },
             { verdi: "Mottaker", bredde: "40%" },

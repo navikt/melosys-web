@@ -81,7 +81,7 @@ export const hentMuligeMottakere = (
   behandlingID: number,
   data: HentMuligeMottakereReqDto
 ): Promise<HentMuligeMottakereResDto> =>
-  postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/muligeMottakere/${behandlingID}`, data);
+  postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere/${behandlingID}`, data);
 
 export const opprettBrev = (behandlingID: number, data: OpprettBrevReqDto) =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/opprett/${behandlingID}`, data);
