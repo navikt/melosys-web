@@ -24,7 +24,7 @@ describe("LinksBuilder", () => {
       .addFamilieForhold()
       .addFullmektig()
       .addMedlemskap()
-      .addPeriodeOgLand()
+      .addPeriode()
       .addUtenlandsoppdraget()
       .addPerson()
       .build();
