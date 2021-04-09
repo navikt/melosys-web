@@ -1,8 +1,11 @@
 import { object, array, string, lazy, mixed } from "yup";
 
+import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
+
+const { TIDLIGERE_ENN_FOM, SENERE_ENN_TOM, SKRIV_INN_GYLDIG_DATO } = KV.Feilmeldinger;
 
 const lagMelding = (panel, undertittel, melding) => ({
   panel,
@@ -31,6 +34,36 @@ const utenlandskIdent = object().shape({
       )
     ),
 });
+
+const erFoerTomTest = {
+  name: "erFoerTom",
+  message: lagMelding(
+    KV.Menypunkter.Utenlandsoppdraget.tittel,
+    KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+    SENERE_ENN_TOM.melding
+  ),
+  test: (value, { options }) =>
+    Utils.dato.datoDiffPure(
+      Utils.dato.formatterDatoTilISO(value),
+      Utils.dato.formatterDatoTilISO(options.parent.tom),
+      "days"
+    ) <= 0,
+};
+
+const erEtterFomTest = {
+  name: "erEtterFom",
+  message: lagMelding(
+    KV.Menypunkter.Utenlandsoppdraget.tittel,
+    KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+    TIDLIGERE_ENN_FOM.melding
+  ),
+  test: (value, { options }) =>
+    Utils.dato.datoDiffPure(
+      Utils.dato.formatterDatoTilISO(value),
+      Utils.dato.formatterDatoTilISO(options.parent.fom),
+      "days"
+    ) >= 0,
+};
 
 const medfolgendeBarn = object().shape({
   fnr: lazy((value) =>
@@ -189,6 +222,32 @@ const soknad = object().when("$behandlingstema", {
     }),
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
+    utenlandsoppdraget: object().shape({
+      samletUtsendingsperiode: object().shape({
+        fom: string()
+          .nullable()
+          .test(erFoerTomTest)
+          .erGyldigDato(
+            lagMelding(
+              KV.Menypunkter.Utenlandsoppdraget.tittel,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+              SKRIV_INN_GYLDIG_DATO.melding
+            ),
+            true
+          ),
+        tom: string()
+          .nullable()
+          .test(erEtterFomTest)
+          .erGyldigDato(
+            lagMelding(
+              KV.Menypunkter.Utenlandsoppdraget.tittel,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+              SKRIV_INN_GYLDIG_DATO.melding
+            ),
+            true
+          ),
+      }),
+    }),
   }),
 });
 

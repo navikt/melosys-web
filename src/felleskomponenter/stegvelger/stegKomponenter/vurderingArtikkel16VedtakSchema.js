@@ -7,7 +7,6 @@ import MKV from "../../../melosyskodeverk";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
-const SKRIV_INN_GYLDIG_DATO = { melding: "Skriv inn en gyldig dato" };
 const MAA_FYLLES_UT = { melding: "Må fylles ut" };
 
 const {
@@ -15,6 +14,7 @@ const {
   SENERE_ENN_OPPRINNELIG_TOM,
   TIDLIGERE_ENN_FOM,
   SENERE_ENN_TOM,
+  SKRIV_INN_GYLDIG_DATO,
 } = KV.Feilmeldinger;
 
 const erEtterOpprinneligFomTest = {

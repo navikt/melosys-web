@@ -30,8 +30,10 @@ addMethod(object, "uniqueProperty", function (propertyName, message) {
   });
 });
 
-addMethod(string, "erGyldigDato", function (message) {
+addMethod(string, "erGyldigDato", function (message, nullable = false) {
   return this.test("er gyldig dato", message, function (value) {
+    if (nullable && !value) return true;
+
     return Boolean(Utils.dato.vaskInputDato(value));
   });
 });
