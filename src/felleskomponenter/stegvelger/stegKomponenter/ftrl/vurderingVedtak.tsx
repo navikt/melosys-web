@@ -17,46 +17,9 @@ import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperio
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { formSelectors } from "../../../../ducks/form";
+import MottakerTabell from "../../../tabell/mottakerTabell";
 
 import "./vurderingVedtak.css";
-
-interface TabellComponentProps {
-  rader: {
-    verdi: string | JSX.Element;
-    style?: string;
-  }[][];
-  kolonner: {
-    verdi: string;
-    bredde: string;
-    style?: string;
-  }[];
-}
-
-const TabellComponent = ({ rader, kolonner }: TabellComponentProps) => {
-  if (!rader || !kolonner) return null;
-  return (
-    <table className="periode_tabell">
-      <tbody>
-        <tr>
-          {kolonner.map((kolonne) => (
-            <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>
-              {kolonne.verdi}
-            </th>
-          ))}
-        </tr>
-        {rader.map((rad) => (
-          <tr className="border_bottom" key={Utils._uuid()}>
-            {rad.map((radElement) => (
-              <td key={Utils._uuid()} className={`${radElement.style}`}>
-                {radElement.verdi}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -202,7 +165,7 @@ const VurderingVedtak = ({
     <div className="vurderingVedtak">
       <Nav.typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.typo.Undertittel>
 
-      <TabellComponent
+      <MottakerTabell
         rader={mapPeriodeRader(medlemskapsperioder)}
         kolonner={[
           { verdi: "Periode", bredde: "42%" },
@@ -285,7 +248,7 @@ const VurderingVedtak = ({
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
       />
 
-      <TabellComponent
+      <MottakerTabell
         rader={mapVedtakRader()}
         kolonner={[
           { verdi: "Dokumenter", bredde: "60%" },

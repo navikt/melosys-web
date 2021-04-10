@@ -20,47 +20,10 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import { formSelectors } from "../../ducks/form";
 import PdfLenkeListe from "../pdfLenkeListe";
+import MottakerTabell from "../tabell/mottakerTabell";
 
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
-
-interface TabellComponentProps {
-  rader: {
-    verdi: string | JSX.Element;
-    style?: string;
-  }[][];
-  kolonner: {
-    verdi: string;
-    bredde: string;
-    style?: string;
-  }[];
-}
-
-const TabellComponent = ({ rader, kolonner }: TabellComponentProps) => {
-  if (!rader || !kolonner) return null;
-  return (
-    <table className="periode_tabell">
-      <tbody>
-        <tr>
-          {kolonner.map((kolonne) => (
-            <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>
-              {kolonne.verdi}
-            </th>
-          ))}
-        </tr>
-        {rader.map((rad) => (
-          <tr className="border_bottom" key={Utils._uuid()}>
-            {rad.map((radElement) => (
-              <td key={Utils._uuid()} className={`${radElement.style}`}>
-                {radElement.verdi}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -298,14 +261,14 @@ const SendBrev = ({
     );
   };
 
-  const mottakerErValgt = !!formValues.mottaker;
-  const mottakerErBruker = !!formValues.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER";
+  const mottakerErValgt = formValues?.mottaker;
+  const mottakerErBruker = formValues?.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER";
   const mottakerErArbeidsgiver =
-    !!formValues.mottaker &&
+    formValues?.mottaker &&
     JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
     !JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
-    !!formValues.mottaker &&
+    formValues?.mottaker &&
     JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
     JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler;
 
@@ -488,7 +451,7 @@ const SendBrev = ({
         })}
 
       {mottakerErValgt && (
-        <TabellComponent
+        <MottakerTabell
           rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
             { verdi: "Dokumenter", bredde: "44%" },
