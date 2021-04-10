@@ -298,6 +298,17 @@ const SendBrev = ({
     );
   };
 
+  const mottakerErValgt = !!formValues.mottaker;
+  const mottakerErBruker = !!formValues.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER";
+  const mottakerErArbeidsgiver =
+    !!formValues.mottaker &&
+    JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
+    !JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler;
+  const mottakerOrgNrSettesAvSaksbehandler =
+    !!formValues.mottaker &&
+    JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
+    JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler;
+
   if (!tilgjengeligeMaler || !formValues) return null;
 
   return (
@@ -345,7 +356,7 @@ const SendBrev = ({
         </Skjema.Select>
       )}
 
-      {!!formValues.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER" && (
+      {mottakerErBruker && (
         <Nav.Row>
           <Nav.Column xs="12">
             {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
@@ -356,27 +367,26 @@ const SendBrev = ({
         </Nav.Row>
       )}
 
-      {!!formValues.mottaker &&
-        JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
-        !JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler && (
-          <Nav.Row>
-            {mottakerFeil ? (
-              <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
-            ) : (
-              <Nav.Column xs="12">
-                <Nav.typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
-                  Velg:
-                  <Nav.Hjelpetekst
-                    className="hjelpetekst"
-                    tittel={arbeidsgiverHjelptekst}
-                    type={Nav.PopoverOrientering.Venstre}
-                  >
-                    {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
-                      <p key={Utils._uuid()}>{paragraf}</p>
-                    ))}
-                  </Nav.Hjelpetekst>
-                </Nav.typo.Normaltekst>
-                {JSON.parse(formValues.mottaker)?.adresser?.map((virksomhet: Api.DokumenterV2.MottakerAdresse) => (
+      {mottakerErArbeidsgiver && (
+        <Nav.Row>
+          {mottakerFeil ? (
+            <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
+          ) : (
+            <Nav.Column xs="12">
+              <Nav.typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
+                Velg:
+                <Nav.Hjelpetekst
+                  className="hjelpetekst"
+                  tittel={arbeidsgiverHjelptekst}
+                  type={Nav.PopoverOrientering.Venstre}
+                >
+                  {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
+                    <p key={Utils._uuid()}>{paragraf}</p>
+                  ))}
+                </Nav.Hjelpetekst>
+              </Nav.typo.Normaltekst>
+              {formValues?.mottaker &&
+                JSON.parse(formValues.mottaker)?.adresser?.map((virksomhet: Api.DokumenterV2.MottakerAdresse) => (
                   <Fragment key={Utils._uuid()}>
                     <Skjema.Radio
                       className="arbeidsgiver_radio"
@@ -392,41 +402,38 @@ const SendBrev = ({
                     )}
                   </Fragment>
                 ))}
-              </Nav.Column>
+            </Nav.Column>
+          )}
+        </Nav.Row>
+      )}
+
+      {mottakerOrgNrSettesAvSaksbehandler && (
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Skjema.Input
+              feltNavn="organisasjonsnummer"
+              label="Organisasjonsnummer"
+              placeholder="Skriv inn"
+              disabled={!redigerbart}
+            />
+            {adresse?.organisasjonsAdresse && (
+              <OrganisasjonsAdresse organisasjon={adresse.organisasjonsAdresse} visNavn boldNavn visTittel={false} />
             )}
-          </Nav.Row>
-        )}
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <Skjema.Input
+              feltNavn="kontaktperson"
+              label="Kontaktperson"
+              placeholder="Skriv inn"
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+          {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
+        </Nav.Row>
+      )}
 
-      {!!formValues.mottaker &&
-        JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
-        JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler && (
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Skjema.Input
-                feltNavn="organisasjonsnummer"
-                label="Organisasjonsnummer"
-                placeholder="Skriv inn"
-                disabled={!redigerbart}
-              />
-              {adresse?.organisasjonsAdresse && (
-                <OrganisasjonsAdresse organisasjon={adresse.organisasjonsAdresse} visNavn boldNavn visTittel={false} />
-              )}
-            </Nav.Column>
-            <Nav.Column xs="6">
-              <Skjema.Input
-                feltNavn="kontaktperson"
-                label="Kontaktperson"
-                placeholder="Skriv inn"
-                disabled={!redigerbart}
-              />
-            </Nav.Column>
-            {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-          </Nav.Row>
-        )}
-
-      {!!formValues.mottaker &&
-        formValues?.valgtMal?.felter?.length &&
-        formValues.valgtMal.felter.length > 0 &&
+      {mottakerErValgt &&
+        formValues?.valgtMal?.felter &&
         formValues.valgtMal.felter.map((felt) => {
           if (felt.valg?.length && felt.valg.length > 0) {
             return (
@@ -480,9 +487,9 @@ const SendBrev = ({
           return <></>;
         })}
 
-      {formValues?.mottaker && (
+      {mottakerErValgt && (
         <TabellComponent
-          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
+          rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
             { verdi: "Dokumenter", bredde: "44%" },
             { verdi: "Mottaker", bredde: "40%" },
