@@ -166,7 +166,7 @@ const VurderingStart = ({
             <FeatureToggle togglename="melosys.input.DATOFELT">
               {(status) =>
                 status === "enabled" ? (
-                  <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
+                  <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={redigerbart} />
                 ) : (
                   <Skjema.Input
                     datoFelt
