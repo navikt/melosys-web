@@ -38,7 +38,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   changeField: (field: string, data: any) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   hentOrganisasjon: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
-  resetForm: () => reset(KV.Form.SEND_BREV),
+  resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
