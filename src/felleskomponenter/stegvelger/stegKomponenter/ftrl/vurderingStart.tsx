@@ -6,6 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
+import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
 import * as Utils from "../../../../utils";
@@ -21,12 +22,31 @@ import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfri
 
 import "./vurderingStart.css";
 
+const getTrygdedekningerIndex = (kode: string): number => {
+  switch (kode) {
+    case MKV.Koder.trygdedekninger.HELSEDEL:
+      return 5;
+    case MKV.Koder.trygdedekninger.HELSEDEL_MED_SYKE_OG_FORELDREPENGER:
+      return 4;
+    case MKV.Koder.trygdedekninger.PENSJONSDEL:
+      return 3;
+    case MKV.Koder.trygdedekninger.HELSE_OG_PENSJONSDEL:
+      return 2;
+    case MKV.Koder.trygdedekninger.HELSE_OG_PENSJONSDEL_MED_SYKE_OG_FORELDREPENGER:
+      return 1;
+    default:
+      return 0;
+  }
+};
+
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
   const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(state);
   const initialTrygdedekning = behandlingsgrunnlagSelectors.TrygdedekningSelector(state);
   return {
-    trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
+    trygdedekninger: [...folketrygdenkodeverkSelectors.TrygdedekningerSelector(state)].sort(
+      (a, b) => getTrygdedekningerIndex(b.kode) - getTrygdedekningerIndex(a.kode)
+    ),
     formValues: getFormValues(KV.Form.START)(state),
     initialValues: {
       fom: initialSoknadsperiode && Utils.dato.formatterDatoTilNorsk(initialSoknadsperiode.fom),
