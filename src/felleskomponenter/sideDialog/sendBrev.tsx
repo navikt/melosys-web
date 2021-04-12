@@ -261,6 +261,7 @@ const SendBrev = ({
     );
   };
 
+  const maltypeErValgt = formValues?.type;
   const mottakerErValgt = formValues?.mottaker;
   const mottakerErBruker = formValues?.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER";
   const mottakerErArbeidsgiver =
@@ -290,7 +291,7 @@ const SendBrev = ({
         ))}
       </Skjema.Select>
 
-      {!!formValues.type && !!formValues.valgtMal && (
+      {maltypeErValgt && !!formValues.valgtMal && (
         <Skjema.Select
           feltNavn="mottaker"
           label={
