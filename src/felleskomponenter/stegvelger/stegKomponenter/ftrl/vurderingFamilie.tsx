@@ -201,10 +201,10 @@ const VurderingFamilie = ({
 
       {medfolgendeFamilie && medfolgendeFamilie.length > 0 ? (
         <div>
-          <Nav.Fieldset legend="Barn">
-            <Nav.Row>
-              {medfolgendeBarn.map((barn: MedfolgendeFamilie) => (
-                <Nav.Column xs="6" key={barn.uuid}>
+          <Nav.Fieldset legend="Barn" className="barn">
+            {medfolgendeBarn.map((barn: MedfolgendeFamilie) => (
+              <Nav.Row key={Utils._uuid()} className="barnet">
+                <Nav.Column xs="8" key={barn.uuid}>
                   <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
                     barn.fnr
                   })`}</Nav.typo.Normaltekst>
@@ -244,22 +244,22 @@ const VurderingFamilie = ({
                     </Skjema.Select>
                   )}
                 </Nav.Column>
-              ))}
-            </Nav.Row>
+              </Nav.Row>
+            ))}
             {medfolgendeBarn.some(
               (barn: MedfolgendeFamilie) =>
                 formValues.barn && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
-              <div>
+              <div style={{ marginBottom: "2rem" }}>
                 <Nav.typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.typo.Element>
                 <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" />
               </div>
             )}
           </Nav.Fieldset>
           <Nav.Fieldset legend="Ektefelle/partner/samboer">
-            <Nav.Row>
-              {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
-                <Nav.Column xs="6" key={ektefelleSamboer.uuid}>
+            {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
+              <Nav.Row key={Utils._uuid()} className="ektefelleSamboeren">
+                <Nav.Column xs="8" key={ektefelleSamboer.uuid}>
                   <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(ektefelleSamboer.navn)} (F.nr: ${
                     ektefelleSamboer.fnr
                   })`}</Nav.typo.Normaltekst>
@@ -302,8 +302,8 @@ const VurderingFamilie = ({
                       </Skjema.Select>
                     )}
                 </Nav.Column>
-              ))}
-            </Nav.Row>
+              </Nav.Row>
+            ))}
             {medfolgendeEktefelleSamboer.some(
               (ektefelleSamboer: MedfolgendeFamilie) =>
                 formValues.ektefelle_samboer &&
