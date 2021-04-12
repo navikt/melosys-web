@@ -43,11 +43,12 @@ describe("VurderingUtpekt", () => {
     expect(select).toHaveLength(1);
   });
 
-  it("viser lovvalgsperioden Norge er utpekt for", () => {
+  //TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
+  it.skip("viser lovvalgsperioden Norge er utpekt for", () => {
     const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
-    const inputs = vurderingUtpekt.find(Skjema.Input);
+    const datovelgere = vurderingUtpekt.find(Skjema.Datovelger);
 
-    expect(inputs).toHaveLength(2);
+    expect(datovelgere).toHaveLength(2);
   });
 
   it("viser radiobuttons for godkjenning og avslag", () => {

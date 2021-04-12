@@ -10,19 +10,19 @@ registerLocale("nb", nb);
 interface DatofeltProps {
   onChange: (nyDato: Date) => void;
   value?: Date;
-  feil?: string;
   label?: ReactNode;
-  bredde?: string;
   disabled?: boolean;
+  feil?: string;
+  bredde?: string;
 }
 
 const Datovelger = ({
   onChange,
   value,
   label,
+  disabled = false,
   feil = undefined,
   bredde = "fullbredde",
-  disabled = false,
 }: DatofeltProps) => {
   return (
     <div className="datofelt">
