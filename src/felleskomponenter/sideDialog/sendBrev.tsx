@@ -5,7 +5,7 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { Organisasjon } from "Domene";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
+import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 
 import * as Api from "../../services/api";
 import * as KV from "../../kodeverk";
@@ -77,6 +77,7 @@ const SendBrev = ({
     organisasjonsAdresse?: Organisasjon;
   }>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [brevSendt, setBrevSendt] = useState(false);
   const arbeidsgiverHjelptekst =
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
@@ -178,7 +179,9 @@ const SendBrev = ({
         kontaktperson: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
       };
     }
-    Api.DokumenterV2.opprettBrev(behandlingID, requestBody).catch(Utils.logger.error);
+    Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
+      .then(() => setBrevSendt(true))
+      .catch(Utils.logger.error);
   };
 
   const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
@@ -460,6 +463,7 @@ const SendBrev = ({
 
       {mottakerErValgt && (
         <MottakerTabell
+          className="tabell"
           rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
             { verdi: "Dokumenter", bredde: "44%" },
@@ -483,6 +487,12 @@ const SendBrev = ({
           Forkast brev
         </Nav.Knapp>
       </div>
+
+      {brevSendt && (
+        <AlertStripeSuksess className="brev_sendt">
+          Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.
+        </AlertStripeSuksess>
+      )}
     </div>
   );
 };

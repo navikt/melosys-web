@@ -1,4 +1,5 @@
 import React from "react";
+import classnames from "classnames";
 import * as Utils from "../../utils";
 import "./mottakerTabell.css";
 
@@ -12,12 +13,14 @@ interface MottakerTabellProps {
     bredde: string;
     style?: string;
   }[];
+  className?: string;
 }
 
-const MottakerTabell = ({ rader, kolonner }: MottakerTabellProps) => {
+const MottakerTabell = ({ rader, kolonner, className = "" }: MottakerTabellProps) => {
   if (!rader || !kolonner) return null;
+  const cls = classnames("mottakerTabell", className);
   return (
-    <table className="mottakerTabell">
+    <table className={cls}>
       <tbody>
         <tr>
           {kolonner.map((kolonne) => (
