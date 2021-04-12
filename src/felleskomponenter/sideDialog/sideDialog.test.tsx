@@ -4,9 +4,9 @@ import { shallow } from "enzyme";
 import { FaneViser, FaneViserProps } from "./sideDialog";
 
 import SideDialogDokumenter from "./sideDialogDokumenter";
-import SideDialogBrevBestillilng from "./brevBestilling";
 import SideDialogSedBestilling from "./sideDialogOpprettNyBuc";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
+import { FeatureToggle } from "../../featuretoggle";
 
 describe("SideDialog", () => {
   describe("FaneViser", () => {
@@ -49,40 +49,15 @@ describe("SideDialog", () => {
         expect(sideDialogDokumenter.props().dokumentOversikt.length).toEqual(1);
       });
 
-      it("SideDialogBrevBestillilng", () => {
-        type BrevbestillingMockProps = {
-          behandlingID: number;
-          redigerbart: boolean;
-          brevBestillingRedigerbartIArtikkel13: boolean;
-        };
-
-        props.navn = "brevbestilling";
-        const faner = shallow(<FaneViser {...props} />);
-
-        const sideDialogBrevBestilling = faner.find(SideDialogBrevBestillilng);
-        const childProps = sideDialogBrevBestilling.props() as BrevbestillingMockProps;
-
-        expect(sideDialogBrevBestilling).toHaveLength(1);
-        expect(childProps.behandlingID).toBe(props.behandlingID);
-        expect(childProps.redigerbart).toBe(props.brevBestillingRedigerbart);
-        expect(childProps.brevBestillingRedigerbartIArtikkel13).toBe(props.brevBestillingRedigerbartIArtikkel13);
-      });
-
       it("SideDialogSendBrev", () => {
-        type BrevbestillingMockProps = {
-          behandlingID: number;
-          redigerbart: boolean;
-          brevBestillingRedigerbartIArtikkel13: boolean;
-        };
-
         props.navn = "brevbestilling";
         const faner = shallow(<FaneViser {...props} />);
 
-        const sideDialogBrevBestilling = faner.find(SideDialogBrevBestillilng);
-        const childProps = sideDialogBrevBestilling.props() as BrevbestillingMockProps;
+        const featureToggle = faner.find(FeatureToggle);
+        const childProps = featureToggle.props();
 
-        expect(sideDialogBrevBestilling).toHaveLength(1);
-        expect(childProps.redigerbart).toBe(props.brevBestillingRedigerbart);
+        expect(featureToggle).toHaveLength(1);
+        expect(childProps.togglename).toBe("melosys.nytt_send_brev");
       });
 
       it("SideDialogSedBestilling", () => {

@@ -44,7 +44,6 @@ export const FaneViser = ({
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case "brevbestilling":
       return (
-        // TODO: Mekke featuretoggle
         <FeatureToggle togglename="melosys.nytt_send_brev">
           {(status) => {
             if (status === "enabled") {
