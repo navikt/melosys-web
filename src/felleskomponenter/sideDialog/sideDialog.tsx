@@ -6,10 +6,10 @@ import { DokumentOversikt, FysiskDokument } from "Domene";
 import * as Nav from "../../utils/navFrontend";
 import * as Utils from "../../utils";
 
+import SideDialogSendBrev from "./sendBrev";
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogDokumenter from "./sideDialogDokumenter";
 import SideDialogBrevBestilling from "./brevBestilling";
-import SideDialogSendBrev from "./sendBrev";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
 import SideDialogNotater from "./sideDialogNotater/sideDialogNotater";
 import { FeatureToggle } from "../../featuretoggle";
