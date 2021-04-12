@@ -13,7 +13,6 @@ import { datoDiff } from "../../utils/dato";
 import * as KV from "../../kodeverk";
 import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors";
 import * as Utils from "../../utils";
-import { anmodningsperioderSelectors } from "../anmodningsperioder";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
 
 /* eslint import/prefer-default-export:"off" */
@@ -37,11 +36,6 @@ export const BehandlingstemaKodeSelector = createSelector(OppsummeringSelector, 
 );
 export const BehandlingsstatusKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
   oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : ""
-);
-
-export const ErArtikkel16AnmodningSendtSelector = createSelector(
-  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
-  (anmodningsperioderSendtUtland) => anmodningsperioderSendtUtland
 );
 
 export const SaksopplysningerSelector = createSelector(
