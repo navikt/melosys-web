@@ -203,8 +203,8 @@ const VurderingFamilie = ({
         <div>
           <Nav.Fieldset legend="Barn" className="barn">
             {medfolgendeBarn.map((barn: MedfolgendeFamilie) => (
-              <Nav.Row key={Utils._uuid()} className="barnet">
-                <Nav.Column xs="8" key={barn.uuid}>
+              <Nav.Row key={barn.uuid} className="barnet">
+                <Nav.Column xs="8">
                   <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
                     barn.fnr
                   })`}</Nav.typo.Normaltekst>
@@ -258,8 +258,8 @@ const VurderingFamilie = ({
           </Nav.Fieldset>
           <Nav.Fieldset legend="Ektefelle/partner/samboer">
             {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
-              <Nav.Row key={Utils._uuid()} className="ektefelleSamboeren">
-                <Nav.Column xs="8" key={ektefelleSamboer.uuid}>
+              <Nav.Row key={ektefelleSamboer.uuid} className="ektefelleSamboeren">
+                <Nav.Column xs="8">
                   <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(ektefelleSamboer.navn)} (F.nr: ${
                     ektefelleSamboer.fnr
                   })`}</Nav.typo.Normaltekst>
