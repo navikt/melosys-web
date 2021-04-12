@@ -1,8 +1,8 @@
 import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 
-import Datovelger from "./datovelger";
 import DatePicker from "react-datepicker";
+import Datovelger from "./datovelger";
 
 describe("Datovelger", () => {
   let dato = new Date();

@@ -44,7 +44,7 @@ describe("PeriodeForkorter", () => {
     expect(checkboxProps.disabled).toBe(!props.redigerbart);
   });
 
-  //TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
+  // TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
   it.skip("viser felter for å forkorte periode dersom forkortPeriode prop er true", () => {
     const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
     const datovelgere = periodeForkorter.find(Skjema.Datovelger);
@@ -81,7 +81,7 @@ describe("PeriodeForkorter", () => {
     expect(props.onUncheck).toHaveBeenCalledTimes(1);
   });
 
-  //TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
+  // TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
   it.skip("fomRedigerbar kan disable fom", () => {
     props.fomRedigerbar = false;
     const periodeForkorter = shallow(<PeriodeForkorter {...props} />);
