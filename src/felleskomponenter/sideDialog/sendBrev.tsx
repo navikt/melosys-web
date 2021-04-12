@@ -99,8 +99,8 @@ const SendBrev = ({
       .catch(Utils.logger.error);
   };
 
-  const hentOrganisasjonIfValid = async (data: { orgnr: string; valid: boolean }) => {
-    if (!data.valid) return;
+  const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
+    if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
     if (response.data.response) {
       setMottakerFeil(
