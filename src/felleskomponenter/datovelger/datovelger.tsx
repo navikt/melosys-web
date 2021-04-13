@@ -7,7 +7,7 @@ import "./datovelger.css";
 
 registerLocale("nb", nb);
 
-interface DatofeltProps {
+interface DatovelgerProps {
   onChange: (nyDato: Date) => void;
   value?: Date;
   label?: ReactNode;
@@ -23,14 +23,14 @@ const Datovelger = ({
   disabled = false,
   feil = undefined,
   bredde = "fullbredde",
-}: DatofeltProps) => {
+}: DatovelgerProps) => {
   return (
-    <div className="datofelt">
-      {label && <label className="datofelt__label">{label}</label>}
+    <div className="datovelger">
+      {label && <label className="datovelger__label">{label}</label>}
       <DatePicker
-        className={classNames("datofelt__input", `input--${bredde?.toLowerCase()}`, {
-          datofelt__input_disabled: disabled,
-          datofelt__input_feil: feil,
+        className={classNames("datovelger__input", `input--${bredde?.toLowerCase()}`, {
+          datovelger__input_disabled: disabled,
+          datovelger__input_feil: feil,
         })}
         onChange={onChange}
         selected={value}
@@ -40,7 +40,7 @@ const Datovelger = ({
         disabled={disabled}
       />
       {feil && (
-        <div role="alert" aria-live="assertive" className="datofelt__feilmelding">
+        <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
           {feil}
         </div>
       )}

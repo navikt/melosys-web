@@ -1,5 +1,6 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { Field, WrappedFieldProps } from "redux-form";
+import * as SkjemaUtils from "../utils";
 
 import Datovelger from "../../datovelger/datovelger";
 
@@ -7,22 +8,24 @@ import "../skjema.css";
 
 interface InnerDatovelgerProps extends WrappedFieldProps {
   label: ReactNode;
-  bredde: string;
-  disabled: boolean;
+  disabled?: boolean;
+  bredde?: string;
 }
 
 function InnerDatovelgerComponent({ input, label, bredde, disabled, ...rest }: InnerDatovelgerProps) {
-  const [dato, setDato] = useState<Date>();
-
   const {
     meta: { error, touched, active },
   } = rest;
 
-  const feil = error && touched && !active ? rest.meta.error.melding : undefined;
+  const feil = error && touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(rest.meta)?.feilmelding : undefined;
 
-  const onDatoChange = (nyDato: Date) => {
-    setDato(nyDato);
-    input.onChange(nyDato?.toLocaleDateString());
+  const onDatoChange = (nyDato: Date) => input.onChange(nyDato?.toLocaleDateString());
+
+  const inputValueAsDate = () => {
+    if (!input.value) return undefined;
+    const now = new Date();
+    const date = input.value.split(/[./]+/);
+    return new Date(date[2] || now.getFullYear(), date[1] - 1 || now.getMonth(), date[0] || now.getDate());
   };
 
   const inputProps = {
@@ -31,17 +34,21 @@ function InnerDatovelgerComponent({ input, label, bredde, disabled, ...rest }: I
   };
 
   return (
-    <div className="skjemaelement__datofelt" {...inputProps}>
-      <Datovelger label={label} onChange={onDatoChange} value={dato} feil={feil} bredde={bredde} disabled={disabled} />
+    <div className="skjemaelement__datovelger" {...inputProps}>
+      <Datovelger
+        label={label}
+        onChange={onDatoChange}
+        value={inputValueAsDate()}
+        feil={feil}
+        bredde={bredde}
+        disabled={disabled}
+      />
     </div>
   );
 }
 
-interface DatovelgerProps {
-  label: ReactNode;
+interface DatovelgerProps extends InnerDatovelgerProps {
   feltNavn: string;
-  disabled?: boolean;
-  bredde?: string;
 }
 
 function DatovelgerSkjema({ feltNavn, label, disabled = false, bredde = "fullbredde", ...rest }: DatovelgerProps) {
