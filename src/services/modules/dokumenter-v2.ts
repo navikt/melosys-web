@@ -31,6 +31,7 @@ export type TilgjengeligeMaler = {
       }[]
     | null;
   muligeMottakere: {
+    uuid: string;
     type: string;
     rolle: string;
     orgnrSettesAvSaksbehandler: boolean;

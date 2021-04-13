@@ -82,7 +82,16 @@ const SendBrev = ({
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
   useEffect(() => {
-    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then(setTilgjengeligeMaler).catch(Utils.logger.error);
+    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID)
+      .then((response) => {
+        response.forEach((mal) =>
+          mal.muligeMottakere.forEach((muligMottaker) => {
+            muligMottaker.uuid = Utils._uuid();
+          })
+        );
+        setTilgjengeligeMaler(response);
+      })
+      .catch(Utils.logger.error);
   }, []);
 
   useEffect(() => {
@@ -90,7 +99,7 @@ const SendBrev = ({
     changeField("valgtMal", valgtMal);
     changeField("mottaker", undefined);
     if (valgtMal?.muligeMottakere.length === 1) {
-      changeField("mottaker", JSON.stringify(valgtMal?.muligeMottakere[0]));
+      changeField("mottaker", valgtMal?.muligeMottakere[0].uuid);
     }
   }, [formValues?.type]);
 
@@ -98,6 +107,11 @@ const SendBrev = ({
     Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null })
       .then(setMuligeMottakere)
       .catch(Utils.logger.error);
+  };
+
+  const finnMottakerFraValgtMal = (uuid?: string) => {
+    if (!formValues?.valgtMal) return undefined;
+    return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
   const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
@@ -118,12 +132,13 @@ const SendBrev = ({
     setAdresse(undefined);
     setMottakerFeil(undefined);
     setMuligeMottakere(undefined);
-    if (!formValues || !formValues.mottaker || !formValues.type) return;
-    const mottaker = JSON.parse(formValues.mottaker);
+    if (!formValues || !formValues.type) return;
+    const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
+    if (!mottaker) return;
     if (mottaker.rolle === "BRUKER") {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
       else {
-        setAdresse({ mottakerAdresse: mottaker?.adresser[0] });
+        setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
@@ -138,19 +153,24 @@ const SendBrev = ({
   useEffect(() => {
     setAdresse(undefined);
     setMuligeMottakere(undefined);
-    if (formValues?.arbeidsgiver && formValues?.mottaker && formValues?.type) {
+    if (formValues?.arbeidsgiver && formValues?.type) {
+      const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
       setAdresse({
-        mottakerAdresse: JSON.parse(formValues.mottaker).adresser.find(
-          (mottakerAdresse: Api.DokumenterV2.MottakerAdresse) =>
-            mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
-        ),
+        mottakerAdresse:
+          mottaker && mottaker?.adresser
+            ? mottaker.adresser.find(
+                (mottakerAdresse: Api.DokumenterV2.MottakerAdresse) =>
+                  mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
+              )
+            : undefined,
       });
       hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
     }
   }, [formValues?.arbeidsgiver]);
 
   const sendBrev = () => {
-    const mottaker = formValues.mottaker && JSON.parse(formValues.mottaker);
+    const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
+    if (!mottaker) return;
     let requestBody: Api.DokumenterV2.OpprettBrevReqDto = {
       produserbardokument: formValues.type || "",
       mottaker: mottaker.rolle,
@@ -175,6 +195,11 @@ const SendBrev = ({
     Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
       .then(() => setBrevSendt(true))
       .catch(Utils.logger.error);
+  };
+
+  const forkastBrev = () => {
+    resetForm();
+    setBrevSendt(false);
   };
 
   const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
@@ -266,15 +291,13 @@ const SendBrev = ({
 
   const maltypeErValgt = formValues?.type;
   const mottakerErValgt = formValues?.mottaker;
-  const mottakerErBruker = formValues?.mottaker && JSON.parse(formValues.mottaker).rolle === "BRUKER";
+  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "BRUKER";
   const mottakerErArbeidsgiver =
-    formValues?.mottaker &&
-    JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
-    !JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler;
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
-    formValues?.mottaker &&
-    JSON.parse(formValues.mottaker).rolle === "ARBEIDSGIVER" &&
-    JSON.parse(formValues.mottaker).orgnrSettesAvSaksbehandler;
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
 
   if (!tilgjengeligeMaler || !formValues) return null;
 
@@ -316,7 +339,7 @@ const SendBrev = ({
           emptyFieldDisabled={!!formValues.mottaker}
         >
           {formValues.valgtMal?.muligeMottakere.map((mottaker) => (
-            <option key={JSON.stringify(mottaker)} value={JSON.stringify(mottaker)}>
+            <option key={mottaker.uuid} value={mottaker.uuid}>
               {mottaker.type}
             </option>
           ))}
@@ -352,8 +375,8 @@ const SendBrev = ({
                   ))}
                 </Nav.Hjelpetekst>
               </Nav.typo.Normaltekst>
-              {formValues?.mottaker &&
-                JSON.parse(formValues.mottaker)?.adresser?.map((virksomhet: Api.DokumenterV2.MottakerAdresse) => (
+              {finnMottakerFraValgtMal(formValues.mottaker)?.adresser?.map(
+                (virksomhet: Api.DokumenterV2.MottakerAdresse) => (
                   <Fragment key={Utils._uuid()}>
                     <Skjema.Radio
                       className="arbeidsgiver_radio"
@@ -368,7 +391,8 @@ const SendBrev = ({
                       <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
                     )}
                   </Fragment>
-                ))}
+                )
+              )}
             </Nav.Column>
           )}
         </Nav.Row>
@@ -476,7 +500,7 @@ const SendBrev = ({
         >
           Send brev
         </Nav.Hovedknapp>
-        <Nav.Knapp mini disabled={false} className="brevknapp" onClick={resetForm}>
+        <Nav.Knapp mini className="brevknapp" onClick={forkastBrev}>
           Forkast brev
         </Nav.Knapp>
       </div>

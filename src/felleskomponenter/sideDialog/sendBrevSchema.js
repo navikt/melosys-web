@@ -18,19 +18,23 @@ const manglerNoenFeltValgt = (felt, valgtMal) => {
   return false;
 };
 
+const stemmerMottakerMedParameterne = (valgtMal, mottakerUuid, rolle, orgNrSettesAvSaksbehandler) => {
+  if (!valgtMal || !mottakerUuid) return false;
+  const mottaker = valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === mottakerUuid);
+  return mottaker && mottaker.rolle === rolle && mottaker.orgnrSettesAvSaksbehandler === orgNrSettesAvSaksbehandler;
+};
+
 const send_brev = object().shape({
   type: string().required(TYPE_MANGLER),
   valgtMal: object().required(VALGT_MAL_MANGLER),
   mottaker: string().required(MOTTAKER_MANGLER),
-  organisasjonsnummer: string().when("mottaker", {
-    is: (mottaker) =>
-      mottaker && JSON.parse(mottaker).rolle === "ARBEIDSGIVER" && JSON.parse(mottaker).orgnrSettesAvSaksbehandler,
+  organisasjonsnummer: string().when(["valgtMal", "mottaker"], {
+    is: (valgtMal, mottaker) => stemmerMottakerMedParameterne(valgtMal, mottaker, "ARBEIDSGIVER", true),
     then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER),
   }),
   kontaktperson: string().nullable(),
-  arbeidsgiver: string().when("mottaker", {
-    is: (mottaker) =>
-      mottaker && JSON.parse(mottaker).rolle === "ARBEIDSGIVER" && !JSON.parse(mottaker).orgnrSettesAvSaksbehandler,
+  arbeidsgiver: string().when(["valgtMal", "mottaker"], {
+    is: (valgtMal, mottaker) => stemmerMottakerMedParameterne(valgtMal, mottaker, "ARBEIDSGIVER", false),
     then: string().required(ARBEIDSGIVER_MANGLER),
   }),
   felt: object(),
