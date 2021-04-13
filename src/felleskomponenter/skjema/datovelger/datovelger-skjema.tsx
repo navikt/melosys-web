@@ -6,13 +6,19 @@ import Datovelger from "../../datovelger/datovelger";
 
 import "../skjema.css";
 
-interface InnerDatovelgerProps extends WrappedFieldProps {
+interface InnerDatovelgerProps {
   label: ReactNode;
   disabled?: boolean;
   bredde?: string;
 }
 
-function InnerDatovelgerComponent({ input, label, bredde, disabled, ...rest }: InnerDatovelgerProps) {
+function InnerDatovelgerComponent({
+  input,
+  label,
+  bredde,
+  disabled,
+  ...rest
+}: InnerDatovelgerProps & WrappedFieldProps) {
   const {
     meta: { error, touched, active },
   } = rest;
