@@ -16,7 +16,7 @@ describe("useFeatureToggle", () => {
       await rh.waitForNextUpdate();
     });
 
-    const [toggleStatus] = rh.result.current;
+    const toggleStatus = rh.result.current;
     expect(toggleStatus).toBe(Status.enabled);
   });
 
@@ -33,7 +33,7 @@ describe("useFeatureToggle", () => {
       await rh.waitForNextUpdate();
     });
 
-    const [toggleStatus] = rh.result.current;
+    const toggleStatus = rh.result.current;
     expect(toggleStatus).toBe(Status.disabled);
   });
 
@@ -46,14 +46,14 @@ describe("useFeatureToggle", () => {
 
     const rh = renderHook(() => useFeatureToggle("testFeature"));
 
-    let [toggleStatus] = rh.result.current;
+    let toggleStatus = rh.result.current;
     expect(toggleStatus).toBe(Status.fetching);
 
     await act(async () => {
       await rh.waitForNextUpdate();
     });
 
-    [toggleStatus] = rh.result.current;
+    toggleStatus = rh.result.current;
     expect(toggleStatus).not.toBe(Status.fetching);
   });
 });

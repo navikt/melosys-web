@@ -9,7 +9,7 @@ export enum Status {
   disabled = "disabled",
 }
 
-const useFeatureToggle = (toggleName: string, deps: unknown[] = []): [Status] => {
+const useFeatureToggle = (toggleName: string, deps: unknown[] = []): Status => {
   const [toggles] = useAsyncCallbackState(() => Api.Featuretoggle.hent([toggleName]), {}, Utils.logger.error, [
     toggleName,
     ...deps,
@@ -17,17 +17,12 @@ const useFeatureToggle = (toggleName: string, deps: unknown[] = []): [Status] =>
 
   const toggleFetched = toggles[toggleName] !== undefined;
 
-  let toggleStatus: Status | null = null;
-
   if (!toggleFetched) {
-    toggleStatus = Status.fetching;
+    return Status.fetching;
   } else if (toggles[toggleName]) {
-    toggleStatus = Status.enabled;
-  } else {
-    toggleStatus = Status.disabled;
+    return Status.enabled;
   }
-
-  return [toggleStatus];
+  return Status.disabled;
 };
 
 export default useFeatureToggle;

@@ -34,7 +34,7 @@ const OpprettFagsak = (props) => {
     );
   }, [valgtSakstype]);
 
-  const [folketrygdenToggle] = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   if (folketrygdenToggle === "fetching") return null;
 
