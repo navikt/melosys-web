@@ -165,11 +165,11 @@ const SedBehandling = ({
     };
   }, []);
 
-  const ikkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
+  const behandlingstemaErIkkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
 
   useEffect(() => {
-    if (ikkeYrkesaktiv) {
+    if (behandlingstemaErIkkeYrkesaktiv) {
       hentBehandlingsgrunnlag(behandlingID);
     }
   }, [behandlingstema]);
@@ -193,9 +193,13 @@ const SedBehandling = ({
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              oppholdsland={ikkeYrkesaktiv ? oppholdsland : []}
-              behandlingsgrunnlagPeriodeFom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined}
-              behandlingsgrunnlagPeriodeTom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined}
+              oppholdsland={behandlingstemaErIkkeYrkesaktiv ? oppholdsland : []}
+              behandlingsgrunnlagPeriodeFom={
+                behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined
+              }
+              behandlingsgrunnlagPeriodeTom={
+                behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined
+              }
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               renderBehandlingsmeny={() => (
