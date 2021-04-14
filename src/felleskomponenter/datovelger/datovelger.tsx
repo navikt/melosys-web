@@ -14,6 +14,7 @@ interface DatovelgerProps {
   disabled?: boolean;
   feil?: string;
   bredde?: string;
+  onBlur?: () => void;
 }
 
 const Datovelger = ({
@@ -23,6 +24,7 @@ const Datovelger = ({
   disabled = false,
   feil = undefined,
   bredde = "fullbredde",
+  onBlur,
 }: DatovelgerProps) => {
   return (
     <div className="datovelger">
@@ -33,6 +35,7 @@ const Datovelger = ({
           datovelger__input_feil: feil,
         })}
         onChange={onChange}
+        onBlur={onBlur}
         selected={value}
         locale="nb"
         dateFormat="dd.MM.yyyy"
