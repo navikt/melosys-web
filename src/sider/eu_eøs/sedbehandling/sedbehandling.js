@@ -166,6 +166,8 @@ const SedBehandling = ({
   }, []);
 
   const ikkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
+  const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
+
   useEffect(() => {
     if (ikkeYrkesaktiv) {
       hentBehandlingsgrunnlag(behandlingID);
@@ -204,7 +206,8 @@ const SedBehandling = ({
                   visHenleggDialogHandle={visHenleggDialogHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                  visHenleggSak
+                  visHenleggSak={!behandlingstemaErTrygdetid}
+                  visAvslagManglendeOpplysninger={!behandlingstemaErTrygdetid}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
