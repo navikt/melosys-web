@@ -11,13 +11,17 @@ interface InnerDatovelgerProps {
   label: ReactNode;
   disabled?: boolean;
   bredde?: string;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 function InnerDatovelgerComponent({
   input,
   label,
-  bredde,
   disabled,
+  bredde,
+  minDate,
+  maxDate,
   ...rest
 }: InnerDatovelgerProps & WrappedFieldProps) {
   const {
@@ -42,6 +46,8 @@ function InnerDatovelgerComponent({
         feil={feil}
         bredde={bredde}
         disabled={disabled}
+        minDate={minDate}
+        maxDate={maxDate}
       />
     </div>
   );
@@ -51,13 +57,21 @@ interface DatovelgerProps extends InnerDatovelgerProps {
   feltNavn: string;
 }
 
-function DatovelgerSkjema({ feltNavn, label, disabled = false, bredde = "fullbredde", ...rest }: DatovelgerProps) {
+function DatovelgerSkjema({
+  feltNavn,
+  label,
+  disabled = false,
+  bredde = "fullbredde",
+  minDate,
+  maxDate,
+  ...rest
+}: DatovelgerProps) {
   return (
     <Field
       name={feltNavn}
       disabled={disabled}
       component={InnerDatovelgerComponent}
-      props={{ label, bredde, disabled, ...rest }}
+      props={{ label, bredde, disabled, minDate, maxDate, ...rest }}
     />
   );
 }

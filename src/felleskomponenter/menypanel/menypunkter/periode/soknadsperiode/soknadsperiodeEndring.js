@@ -40,6 +40,7 @@ const SoknadsperiodeEndring = (props) => {
                   onChange={vedFomEndring}
                   onBlur={vedFomFokusUt}
                   bredde="S"
+                  maxDate={Utils.norskStringTilDate(soknadsperiodeNyTom)}
                 />
               ) : (
                 <Nav.Input
@@ -63,6 +64,7 @@ const SoknadsperiodeEndring = (props) => {
                   onChange={vedTomEndring}
                   onBlur={vedTomFokusUt}
                   bredde="S"
+                  minDate={Utils.norskStringTilDate(soknadsperiodeNyFom)}
                 />
               ) : (
                 <Nav.Input

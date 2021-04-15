@@ -14,6 +14,8 @@ interface DatovelgerProps {
   disabled?: boolean;
   feil?: string;
   bredde?: string;
+  minDate?: Date;
+  maxDate?: Date;
   onBlur?: () => void;
 }
 
@@ -24,6 +26,8 @@ const Datovelger = ({
   disabled = false,
   feil = undefined,
   bredde = "fullbredde",
+  minDate,
+  maxDate,
   onBlur,
 }: DatovelgerProps) => {
   return (
@@ -41,6 +45,8 @@ const Datovelger = ({
         dateFormat="dd.MM.yyyy"
         placeholderText={disabled || feil ? "" : "Velg en dato"}
         disabled={disabled}
+        minDate={minDate}
+        maxDate={maxDate}
       />
       {feil && (
         <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
