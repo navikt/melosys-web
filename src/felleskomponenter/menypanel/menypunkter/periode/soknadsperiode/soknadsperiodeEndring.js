@@ -8,8 +8,8 @@ import Knapperad from "../../../../knapperad";
 
 import "./soknadsperiode.css";
 import { FeatureToggle } from "../../../../../featuretoggle";
-import Datovelger from "../../../../datovelger/datovelger";
-import { norskStringTilDate } from "../../../../../utils/dato";
+import Datovelger from "../../../../datovelger";
+import * as Utils from "../../../../../utils/dato";
 
 const SoknadsperiodeEndring = (props) => {
   const {
@@ -36,7 +36,7 @@ const SoknadsperiodeEndring = (props) => {
               status === "enabled" ? (
                 <Datovelger
                   label="Fra og med:"
-                  value={norskStringTilDate(soknadsperiodeNyFom)}
+                  value={Utils.norskStringTilDate(soknadsperiodeNyFom)}
                   onChange={vedFomEndring}
                   onBlur={vedFomFokusUt}
                   bredde="S"
@@ -59,7 +59,7 @@ const SoknadsperiodeEndring = (props) => {
               status === "enabled" ? (
                 <Datovelger
                   label="Til og med:"
-                  value={norskStringTilDate(soknadsperiodeNyTom)}
+                  value={Utils.norskStringTilDate(soknadsperiodeNyTom)}
                   onChange={vedTomEndring}
                   onBlur={vedTomFokusUt}
                   bredde="S"

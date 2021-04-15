@@ -2,10 +2,10 @@ import React, { ReactNode } from "react";
 import { Field, WrappedFieldProps } from "redux-form";
 import * as SkjemaUtils from "../utils";
 
-import Datovelger from "../../datovelger/datovelger";
+import Datovelger from "../../datovelger";
 
 import "../skjema.css";
-import { norskStringTilDate } from "../../../utils/dato";
+import * as Utils from "../../../utils/dato";
 
 interface InnerDatovelgerProps {
   label: ReactNode;
@@ -38,7 +38,7 @@ function InnerDatovelgerComponent({
       <Datovelger
         label={label}
         onChange={onDatoChange}
-        value={norskStringTilDate(input.value)}
+        value={Utils.norskStringTilDate(input.value)}
         feil={feil}
         bredde={bredde}
         disabled={disabled}
