@@ -58,16 +58,43 @@ InnerInputComponent.defaultProps = {
   onChange: undefined,
 };
 
-function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, normalize = undefined, ...rest }) {
-  // TODO: Fjern datoFelt og tilhørende felter etter melosys.input.DATOFELT blir skrudd på
-  const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
+export const normalizeInt = (value, previousValue) => {
+  if (value === "") return null;
+
+  const isInt = value.match(/^\d+$/g) !== null;
+  return isInt ? value : previousValue;
+};
+export const normalizeDecimal = (value, previousValue) => {
+  if (value === "") return null;
+
+  const valuePreferDot = value.replace(",", ".");
+  const isIntOrDecimal = valuePreferDot.match(/^\d+([.]\d*)?$/g) !== null;
+
+  return isIntOrDecimal ? valuePreferDot : previousValue;
+};
+
+function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, feltType = undefined, ...rest }) {
+  const hentNormalizer = () => {
+    // TODO: Fjern datoFelt og tilhørende felter etter melosys.input.DATOFELT blir skrudd på
+    if (datoFelt) return normaliserInputDato;
+
+    switch (feltType) {
+      case "desimal":
+        return normalizeDecimal;
+      case "heltall":
+        return normalizeInt;
+      default:
+        return undefined;
+    }
+  };
+
   const placeholderTekst = datoFelt ? "ddmmåå" : null;
 
   return (
     <Field
       bredde={bredde}
       name={feltNavn}
-      normalize={normalize || normaliserDatoFunksjon}
+      normalize={hentNormalizer()}
       component={InnerInputComponent}
       placeholder={placeholderTekst}
       props={{ ...rest }}
@@ -78,14 +105,17 @@ function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, normalize = 
 Input.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
+  /**
+   * @deprecated Blir fjernet når melosys.input.DATOFELT fjernes. For normalisering, bruk feltType i stedet.
+   */
   datoFelt: PT.bool,
-  normalize: PT.func,
+  feltType: PT.oneOf(["desimal", "heltall"]),
 };
 
 Input.defaultProps = {
   bredde: "fullbredde",
   datoFelt: false,
-  normalize: undefined,
+  feltType: undefined,
 };
 
 export { InnerInputComponent };

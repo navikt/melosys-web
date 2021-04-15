@@ -4,21 +4,6 @@ import * as Skjema from "../../../skjema";
 
 import "./redigerbarSamletVirksomhetINorge.css";
 
-const normalizeInt = (value: string, previousValue: string) => {
-  if (value === "") return null;
-
-  const isInt = value.match(/^\d+$/g) !== null;
-  return isInt ? value : previousValue;
-};
-const normalizeDecimal = (value: string, previousValue: string) => {
-  if (value === "") return null;
-
-  const valuePreferDot = value.replaceAll(",", ".");
-  const isIntOrDecimal = valuePreferDot.match(/^\d+([.]\d*)?$/g) !== null;
-
-  return isIntOrDecimal ? valuePreferDot : previousValue;
-};
-
 const RedigerbarSamletVirksomhetINorge = () => {
   return (
     <div className="redigerbar-samlet-virksomhet-i-norge">
@@ -27,21 +12,21 @@ const RedigerbarSamletVirksomhetINorge = () => {
         feltNavn="juridiskArbeidsgiverNorge.antallAnsatte"
         bredde="XS"
         className="input"
-        normalize={normalizeInt}
+        feltType="heltall"
       />
       <Skjema.Input
         label="Antall administrativt ansatte"
         feltNavn="juridiskArbeidsgiverNorge.antallAdmAnsatte"
         bredde="XS"
         className="input"
-        normalize={normalizeInt}
+        feltType="heltall"
       />
       <Skjema.Input
         label="Antall utsendte arbeidstakere"
         feltNavn="juridiskArbeidsgiverNorge.antallUtsendte"
         bredde="XS"
         className="input"
-        normalize={normalizeInt}
+        feltType="heltall"
       />
       <div className="input-container">
         <Skjema.Input
@@ -49,7 +34,7 @@ const RedigerbarSamletVirksomhetINorge = () => {
           feltNavn="juridiskArbeidsgiverNorge.andelRekruttertINorge"
           bredde="XS"
           className="input"
-          normalize={normalizeDecimal}
+          feltType="desimal"
         />
         <span className="percent">&#37;</span>
       </div>
@@ -59,7 +44,7 @@ const RedigerbarSamletVirksomhetINorge = () => {
           feltNavn="juridiskArbeidsgiverNorge.andelOmsetningINorge"
           bredde="XS"
           className="input"
-          normalize={normalizeDecimal}
+          feltType="desimal"
         />
         <span className="percent">&#37;</span>
       </div>
@@ -69,7 +54,7 @@ const RedigerbarSamletVirksomhetINorge = () => {
           feltNavn="juridiskArbeidsgiverNorge.andelKontrakterINorge"
           bredde="XS"
           className="input"
-          normalize={normalizeDecimal}
+          feltType="desimal"
         />
         <span className="percent">&#37;</span>
       </div>
@@ -79,7 +64,7 @@ const RedigerbarSamletVirksomhetINorge = () => {
           feltNavn="juridiskArbeidsgiverNorge.andelOppdragINorge"
           bredde="XS"
           className="input"
-          normalize={normalizeDecimal}
+          feltType="desimal"
         />
         <span className="percent">&#37;</span>
       </div>
