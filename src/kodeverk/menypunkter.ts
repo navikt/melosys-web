@@ -78,5 +78,7 @@ export const LonnOgGodtgjorelser = {
 
 export const OmVirksomhetenINorge = {
   tittel: "Om virksomheten i Norge",
-  undertitler: {},
+  undertitler: {
+    samletVirksomhetINorge: "Samlet virksomhet i Norge",
+  },
 };

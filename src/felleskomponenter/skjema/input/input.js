@@ -58,7 +58,7 @@ InnerInputComponent.defaultProps = {
   onChange: undefined,
 };
 
-function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, ...rest }) {
+function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, normalize = undefined, ...rest }) {
   const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
   const placeholderTekst = datoFelt ? "ddmmåå" : null;
 
@@ -66,7 +66,7 @@ function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, ...rest }) {
     <Field
       bredde={bredde}
       name={feltNavn}
-      normalize={normaliserDatoFunksjon}
+      normalize={normalize || normaliserDatoFunksjon}
       component={InnerInputComponent}
       placeholder={placeholderTekst}
       props={{ ...rest }}
@@ -78,11 +78,13 @@ Input.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
   datoFelt: PT.bool,
+  normalize: PT.func,
 };
 
 Input.defaultProps = {
   bredde: "fullbredde",
   datoFelt: false,
+  normalize: undefined,
 };
 
 export { InnerInputComponent };

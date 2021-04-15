@@ -121,7 +121,7 @@ const VirksomhetenINorge = ({
                 <EditerbartElement
                   redigerbart={redigerbart}
                   harData
-                  tittel="Samlet virksomhet i Norge"
+                  tittel={KV.Menypunkter.OmVirksomhetenINorge.undertitler.samletVirksomhetINorge}
                   hentNyStatusVedHarDataEndring={false}
                   visLagreKnapp
                   onLagreClick={lagreHandler}

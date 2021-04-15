@@ -1,4 +1,4 @@
-import { object, array, string, lazy, mixed } from "yup";
+import { object, array, string, lazy, mixed, number } from "yup";
 
 import * as KV from "../../kodeverk";
 
@@ -11,6 +11,13 @@ const lagMelding = (panel, undertittel, melding) => ({
 });
 
 const SLUTTDATO_ER_APEN = lagMelding(KV.Menypunkter.Periode.tittel, null, "Sluttdato er åpen");
+const lagAndelMellomNullOgHundreMelding = (feltbeskrivelse) =>
+  lagMelding(
+    KV.Menypunkter.OmVirksomhetenINorge.tittel,
+    KV.Menypunkter.OmVirksomhetenINorge.undertitler.samletVirksomhetINorge,
+    `Oppgi en andel ${feltbeskrivelse} som er mellom 0 og 100%`
+  );
+const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null : value);
 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
@@ -189,6 +196,31 @@ const soknad = object().when("$behandlingstema", {
     }),
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
+    juridiskArbeidsgiverNorge: object().shape({
+      antallAnsatte: number().transform(tomStringTilNull).nullable(),
+      antallAdmAnsatte: number().transform(tomStringTilNull).nullable(),
+      antallUtsendte: number().transform(tomStringTilNull).nullable(),
+      andelRekruttertINorge: number()
+        .min(0, lagAndelMellomNullOgHundreMelding("ansatte rekruttert i Norge"))
+        .max(100, lagAndelMellomNullOgHundreMelding("ansatte rekruttert i Norge"))
+        .transform(tomStringTilNull)
+        .nullable(),
+      andelOmsetningINorge: number()
+        .min(0, lagAndelMellomNullOgHundreMelding("omsetning opptjent i Norge"))
+        .max(100, lagAndelMellomNullOgHundreMelding("omsetning opptjent i Norge"))
+        .transform(tomStringTilNull)
+        .nullable(),
+      andelKontrakterINorge: number()
+        .min(0, lagAndelMellomNullOgHundreMelding("oppdragskontrakter inngått i Norge"))
+        .max(100, lagAndelMellomNullOgHundreMelding("oppdragskontrakter inngått i Norge"))
+        .transform(tomStringTilNull)
+        .nullable(),
+      andelOppdragINorge: number()
+        .min(0, lagAndelMellomNullOgHundreMelding("oppdrag utført i Norge"))
+        .max(100, lagAndelMellomNullOgHundreMelding("oppdrag utført i Norge"))
+        .transform(tomStringTilNull)
+        .nullable(),
+    }),
   }),
 });
 
