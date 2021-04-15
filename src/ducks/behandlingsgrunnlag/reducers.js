@@ -172,16 +172,16 @@ export default function reducer(state = initialState, action) {
               ? strengTilInt(dokument.juridiskArbeidsgiverNorge.antallUtsendte)
               : null,
             andelOmsetningINorge: dokument.juridiskArbeidsgiverNorge.andelOmsetningINorge
-              ? strengTilInt(dokument.juridiskArbeidsgiverNorge.andelOmsetningINorge)
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelOmsetningINorge)
               : null,
             andelOppdragINorge: dokument.juridiskArbeidsgiverNorge.andelOppdragINorge
-              ? strengTilInt(dokument.juridiskArbeidsgiverNorge.andelOppdragINorge)
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelOppdragINorge)
               : null,
             andelKontrakterINorge: dokument.juridiskArbeidsgiverNorge.andelKontrakterINorge
-              ? strengTilInt(dokument.juridiskArbeidsgiverNorge.andelKontrakterINorge)
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelKontrakterINorge)
               : null,
             andelRekruttertINorge: dokument.juridiskArbeidsgiverNorge.andelRekruttertINorge
-              ? strengTilInt(dokument.juridiskArbeidsgiverNorge.andelRekruttertINorge)
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelRekruttertINorge)
               : null,
             ekstraArbeidsgivere:
               dokument.juridiskArbeidsgiverNorge.ekstraArbeidsgivere.filter((arbeidsgiver) => arbeidsgiver) || [],
