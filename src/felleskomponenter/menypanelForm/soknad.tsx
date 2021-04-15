@@ -49,19 +49,30 @@ const mapStateToProps = (state: RootState) => ({
     oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,
     juridiskArbeidsgiverNorge: {
       antallUtsendte:
-        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallUtsendte) || null,
+        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallUtsendte).toString() ||
+        null,
       antallAdmAnsatte:
-        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte) || null,
+        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte).toString() ||
+        null,
       antallAnsatte:
-        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte) || null,
+        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte).toString() ||
+        null,
       andelOmsetningINorge:
-        Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge) || null,
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge
+        ).toString() || null,
       andelOppdragINorge:
-        Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge) || null,
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge
+        ).toString() || null,
       andelKontrakterINorge:
-        Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge
+        ).toString() || null,
       andelRekruttertINorge:
-        Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelRekruttertINorge) || null,
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelRekruttertINorge
+        ).toString() || null,
       ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
       erOffentligVirksomhet: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state)
         .erOffentligVirksomhet,
