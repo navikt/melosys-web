@@ -2,6 +2,7 @@ import React, { Fragment, ReactNode, MouseEventHandler } from "react";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as Skjema from "../index";
+import { FeatureToggle } from "../../../featuretoggle";
 
 interface PeriodeForkorterProps {
   className?: string;
@@ -54,22 +55,42 @@ const PeriodeForkorter = ({
         <Fragment>
           <Nav.Row>
             <Nav.Column xs="3">
-              <Skjema.Input
-                bredde="fullbredde"
-                label={fomLabel}
-                disabled={!redigerbart || !fomRedigerbar}
-                feltNavn={fomFeltNavn}
-                datoFelt
-              />
+              <FeatureToggle togglename="melosys.input.DATOFELT">
+                {(status) =>
+                  status === "enabled" ? (
+                    <Skjema.Datovelger
+                      label={fomLabel}
+                      feltNavn={fomFeltNavn}
+                      disabled={!redigerbart || !fomRedigerbar}
+                    />
+                  ) : (
+                    <Skjema.Input
+                      bredde="fullbredde"
+                      label={fomLabel}
+                      disabled={!redigerbart || !fomRedigerbar}
+                      feltNavn={fomFeltNavn}
+                      datoFelt
+                    />
+                  )
+                }
+              </FeatureToggle>
             </Nav.Column>
             <Nav.Column xs="3">
-              <Skjema.Input
-                bredde="fullbredde"
-                label={tomLabel}
-                disabled={!redigerbart}
-                feltNavn={tomFeltNavn}
-                datoFelt
-              />
+              <FeatureToggle togglename="melosys.input.DATOFELT">
+                {(status) =>
+                  status === "enabled" ? (
+                    <Skjema.Datovelger label={tomLabel} feltNavn={tomFeltNavn} disabled={!redigerbart} />
+                  ) : (
+                    <Skjema.Input
+                      bredde="fullbredde"
+                      label={tomLabel}
+                      disabled={!redigerbart}
+                      feltNavn={tomFeltNavn}
+                      datoFelt
+                    />
+                  )
+                }
+              </FeatureToggle>
             </Nav.Column>
           </Nav.Row>
         </Fragment>
