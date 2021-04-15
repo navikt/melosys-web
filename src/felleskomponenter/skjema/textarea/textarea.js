@@ -28,11 +28,16 @@ function getTellerTekst(antallTegn, maxLength, visTellerFra) {
   return null;
 }
 
-function InnerTextAreaComponent({ label, placeholder, maxLength, visTellerFra, input, meta, ...rest }) {
+function InnerTextAreaComponent({ label, placeholder, maxLength, visTellerFra, input, meta, onChange, ...rest }) {
   const { touched, active } = meta;
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
-  const inputProps = { ...input, ...rest, feil };
+  const innerOnChange = (e) => {
+    if (onChange) onChange(e);
+    input.onChange(e);
+  };
+
+  const inputProps = { ...input, ...rest, feil, onChange: innerOnChange };
 
   return (
     <Nav.Textarea
@@ -53,6 +58,7 @@ InnerTextAreaComponent.propTypes = {
   visTellerFra: PT.number,
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   input: PT.object, // eslint-disable-line react/forbid-prop-types
+  onChange: PT.func,
 };
 
 InnerTextAreaComponent.defaultProps = {
@@ -62,6 +68,7 @@ InnerTextAreaComponent.defaultProps = {
   visTellerFra: undefined,
   label: undefined,
   placeholder: undefined,
+  onChange: undefined,
 };
 
 function Textarea({ feltNavn, ...rest }) {

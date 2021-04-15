@@ -41,7 +41,7 @@ const vaskInputDato = (dato) => {
   if (dateArray[2] < 100) {
     const dagensAr = new Date().getFullYear();
     const testAr = parseInt(`${dagensAr.toString().substr(0, 2)}${dateArray[2]}`, 10);
-    const gjettAarhundre = testAr - dagensAr > MAX_AR_FREM_I_TID ? "19" : "20";
+    const gjettAarhundre = (testAr - dagensAr > MAX_AR_FREM_I_TID ? dagensAr - 100 : dagensAr).toString().substr(0, 2);
     const toTallsAar = dateArray[2] < 10 ? `0${dateArray[2]}` : dateArray[2];
     dateArray[2] = parseInt(`${gjettAarhundre}${toTallsAar}`, 10);
   }
@@ -103,8 +103,8 @@ function erGyldigPeriode(fom, tom) {
   return moment(fom, inputFormat).isSameOrBefore(moment(tom, inputFormat));
 }
 
-function erIPeriode(fom, tom, dato) {
-  return moment(dato).isBetween(fom, tom);
+function erIPeriode(fom, tom, dato, inclusivity) {
+  return moment(dato).isBetween(fom, tom, undefined, inclusivity);
 }
 
 function datoDiff(fom, tom, enhet = "months", presis = true) {
@@ -147,6 +147,15 @@ function plussEnDag(dato) {
   return moment(dato, "DD.MM.YYYY").add(1, "days").format("DD.MM.YYYY");
 }
 
+// Oversetter en string på norsk datoformat til et date-objekt
+function norskStringTilDate(datostring) {
+  const vasketDato = vaskInputDato(datostring);
+  if (!vasketDato) return undefined;
+  const date = vasketDato.split(".");
+  const now = new Date();
+  return new Date(date[2] || now.getFullYear(), date[1] ? date[1] - 1 : now.getMonth(), date[0] || now.getDate());
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -161,5 +170,6 @@ export {
   erIPeriode,
   erLike,
   plussEnDag,
+  norskStringTilDate,
   MAX_AR_FREM_I_TID,
 };
