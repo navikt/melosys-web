@@ -68,7 +68,11 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
 
   const filtrerteBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
     .filter(({ kode }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
-    .filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND);
+    .filter(
+      ({ kode }) =>
+        kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
+        kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
+    );
 
   const settJournalpostID = (oppgaveID) => {
     const { journalpostID } = oppgaver.find((oppgave) => oppgave.oppgaveID === oppgaveID);
