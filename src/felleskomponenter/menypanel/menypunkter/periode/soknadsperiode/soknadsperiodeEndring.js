@@ -22,8 +22,8 @@ const SoknadsperiodeEndring = (props) => {
     erDatoerGyldig,
   } = props;
 
-  const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyFom", nyDato?.toLocaleDateString());
-  const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyTom", nyDato?.toLocaleDateString());
+  const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyFom", Utils.dateTilNorskString(nyDato));
+  const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyTom", Utils.dateTilNorskString(nyDato));
   const vedFomFokusUt = () => vedFeltFokusUt("soknadsperiodeNyFom");
   const vedTomFokusUt = () => vedFeltFokusUt("soknadsperiodeNyTom");
 
