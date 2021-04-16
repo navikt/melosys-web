@@ -365,7 +365,7 @@ export const SoknadErrorsSelector = createSelector(
     Validerer derfor formValues her og merger med syncErrors. */
     const soknadformErrors = lagYupToReduxformErrorMapper(soknadSchema, settings)(soknadformValues);
 
-    return { ...soknadformErrors, ...soknadformSyncErrors };
+    return Utils._merge(soknadformErrors, soknadformSyncErrors);
   }
 );
 
