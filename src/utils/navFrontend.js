@@ -28,14 +28,12 @@ import Chevron from "nav-frontend-chevron";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
 import { PopoverOrientering } from "nav-frontend-popover";
 import { Xknapp } from "nav-frontend-ikonknapper";
-import { Datepicker } from "nav-datovelger";
 
 export {
   AlertStripeAdvarsel,
   AlertStripe,
   AlertStripeInfo,
   Container,
-  Datepicker,
   Row,
   Column,
   Checkbox,

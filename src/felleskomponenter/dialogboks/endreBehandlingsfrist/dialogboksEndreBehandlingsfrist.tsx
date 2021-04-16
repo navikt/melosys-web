@@ -16,6 +16,7 @@ import * as Nav from "../../../utils/navFrontend";
 import * as Routing from "../../../routing";
 
 import "./dialogboksEndreBehandlingsfrist.css";
+import Datovelger from "../../datovelger";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -46,7 +47,7 @@ function DialogboksEndreBehandlingsfrist({
   tilAnnenSide,
   ...props
 }: Props & PropsFromRedux) {
-  const [dato, setDato] = useState("");
+  const [dato, setDato] = useState<Date>();
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingsfristEndret, setBehandlingsfristEndret] = useState(false);
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingsstatus);
@@ -57,7 +58,7 @@ function DialogboksEndreBehandlingsfrist({
       .then(() => {
         setBehandlingsfristEndret(true);
         hentBehandling(behandlingID);
-        const nyLink = Routing.lagUrl(saksnummer, behandlingID, dato);
+        const nyLink = Routing.lagUrl(saksnummer, behandlingID, dato?.toLocaleDateString() || "mangler-dato");
         if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
       })
       .catch(() => {
@@ -84,7 +85,7 @@ function DialogboksEndreBehandlingsfrist({
         <div>
           <Nav.typo.Systemtittel className="overskrift">Velg ny behandlingsfrist</Nav.typo.Systemtittel>
           <div className="innhold">
-            <Nav.Datepicker value={dato} onChange={setDato} />
+            <Datovelger onChange={setDato} value={dato} />
           </div>
           <div>
             <Knapperad
