@@ -7,6 +7,9 @@ import * as Nav from "../../../../../utils/navFrontend";
 import Knapperad from "../../../../knapperad";
 
 import "./soknadsperiode.css";
+import { FeatureToggle } from "../../../../../featuretoggle";
+import Datovelger from "../../../../datovelger";
+import * as Utils from "../../../../../utils/dato";
 
 const SoknadsperiodeEndring = (props) => {
   const {
@@ -19,26 +22,61 @@ const SoknadsperiodeEndring = (props) => {
     erDatoerGyldig,
   } = props;
 
+  const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyFom", Utils.dateTilNorskString(nyDato));
+  const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyTom", Utils.dateTilNorskString(nyDato));
+  const vedFomFokusUt = () => vedFeltFokusUt("soknadsperiodeNyFom");
+  const vedTomFokusUt = () => vedFeltFokusUt("soknadsperiodeNyTom");
+
   return (
     <Nav.Fieldset legend="">
       <Nav.Row>
         <Nav.Column xs="6">
-          <Nav.Input
-            bredde="S"
-            label="Fra og med:"
-            value={soknadsperiodeNyFom}
-            onChange={(event) => vedFeltEndring("soknadsperiodeNyFom", event.target.value)}
-            onBlur={() => vedFeltFokusUt("soknadsperiodeNyFom")}
-          />
+          <FeatureToggle togglename="melosys.input.DATOFELT">
+            {(status) =>
+              status === "enabled" ? (
+                <Datovelger
+                  label="Fra og med:"
+                  value={Utils.norskStringTilDate(soknadsperiodeNyFom)}
+                  onChange={vedFomEndring}
+                  onBlur={vedFomFokusUt}
+                  bredde="S"
+                  maxDate={Utils.norskStringTilDate(soknadsperiodeNyTom)}
+                />
+              ) : (
+                <Nav.Input
+                  bredde="S"
+                  label="Fra og med:"
+                  value={soknadsperiodeNyFom}
+                  onChange={(event) => vedFeltEndring("soknadsperiodeNyFom", event.target.value)}
+                  onBlur={() => vedFeltFokusUt("soknadsperiodeNyFom")}
+                />
+              )
+            }
+          </FeatureToggle>
         </Nav.Column>
         <Nav.Column xs="6">
-          <Nav.Input
-            bredde="S"
-            label="Til og med:"
-            value={soknadsperiodeNyTom}
-            onChange={(event) => vedFeltEndring("soknadsperiodeNyTom", event.target.value)}
-            onBlur={() => vedFeltFokusUt("soknadsperiodeNyTom")}
-          />
+          <FeatureToggle togglename="melosys.input.DATOFELT">
+            {(status) =>
+              status === "enabled" ? (
+                <Datovelger
+                  label="Til og med:"
+                  value={Utils.norskStringTilDate(soknadsperiodeNyTom)}
+                  onChange={vedTomEndring}
+                  onBlur={vedTomFokusUt}
+                  bredde="S"
+                  minDate={Utils.norskStringTilDate(soknadsperiodeNyFom)}
+                />
+              ) : (
+                <Nav.Input
+                  bredde="S"
+                  label="Til og med:"
+                  value={soknadsperiodeNyTom}
+                  onChange={(event) => vedFeltEndring("soknadsperiodeNyTom", event.target.value)}
+                  onBlur={() => vedFeltFokusUt("soknadsperiodeNyTom")}
+                />
+              )
+            }
+          </FeatureToggle>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

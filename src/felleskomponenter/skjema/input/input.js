@@ -59,6 +59,7 @@ InnerInputComponent.defaultProps = {
 };
 
 function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, ...rest }) {
+  // TODO: Fjern datoFelt og tilhørende felter etter melosys.input.DATOFELT blir skrudd på
   const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
   const placeholderTekst = datoFelt ? "ddmmåå" : null;
 

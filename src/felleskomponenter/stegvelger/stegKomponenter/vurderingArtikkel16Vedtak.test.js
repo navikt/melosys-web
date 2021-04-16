@@ -17,7 +17,6 @@ describe("VurderingArtikkel16Vedtak", () => {
       behandlingID: 1,
       lagreOgFatteVedtak: jest.fn(),
       redigerbart: true,
-      anmodningsperiode: { fom: "01.01.2018", tom: "01.01.2019" },
       vilkarBegrunnelser: [],
       art_12_1_begrunnelser: [],
       art_12_2_begrunnelser: [],
@@ -30,6 +29,9 @@ describe("VurderingArtikkel16Vedtak", () => {
         vedtaksbrevFritekst: "Test",
       },
       harValgtNorskArbeidsgiver: true,
+      hentLovvalgsperioder: jest.fn(),
+      lagreLovvalgsperioder: jest.fn(),
+      endreLovvalgsperiode: jest.fn(),
     };
   });
 

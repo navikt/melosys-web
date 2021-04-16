@@ -19,6 +19,7 @@ import { OrganisasjonSelectors } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
+import { FeatureToggle } from "../../../featuretoggle";
 
 const dokumenttitler = [
   { term: "Arbeidsforhold" },
@@ -198,7 +199,15 @@ class Informasjon extends Component {
           hentOgVisRepresentant={hentOgVisRepresentant}
         />
         <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
-        <Skjema.Input datoFelt label="Mottatt dato" type="dato" bredde="S" feltNavn="mottattDato" />
+        <FeatureToggle togglename="melosys.input.DATOFELT">
+          {(status) =>
+            status === "enabled" ? (
+              <Skjema.Datovelger label="Mottatt dato" feltNavn="mottattDato" bredde="S" />
+            ) : (
+              <Skjema.Input datoFelt label="Mottatt dato" type="dato" bredde="S" feltNavn="mottattDato" />
+            )
+          }
+        </FeatureToggle>
 
         <Nav.Fieldset legend="Hoveddokument:">
           <LenkeListeVelger
