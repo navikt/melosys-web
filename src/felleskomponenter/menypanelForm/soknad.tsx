@@ -6,7 +6,7 @@ import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
-import soknadSchema from "./soknadSchema";
+import soknadSchema from "../../ducks/form/soknadSchema";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 

@@ -10,7 +10,7 @@ import * as Utils from "../../../utils";
 import * as KV from "../../../kodeverk";
 import { formSelectors } from "../../../ducks/form";
 import MKV from "../../../melosyskodeverk";
-import { useFeatureToggle } from "../../../featuretoggle";
+import { FeatureToggle, useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
 
@@ -34,7 +34,7 @@ const OpprettFagsak = (props) => {
     );
   }, [valgtSakstype]);
 
-  const [folketrygdenToggle] = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   if (folketrygdenToggle === "fetching") return null;
 
@@ -147,10 +147,26 @@ const OpprettFagsak = (props) => {
               <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
                 <Nav.Row className="">
                   <Nav.Column xs="6">
-                    <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                    <FeatureToggle togglename="melosys.input.DATOFELT">
+                      {(status) =>
+                        status === "enabled" ? (
+                          <Skjema.Datovelger label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                        ) : (
+                          <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                        )
+                      }
+                    </FeatureToggle>
                   </Nav.Column>
                   <Nav.Column xs="6">
-                    <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                    <FeatureToggle togglename="melosys.input.DATOFELT">
+                      {(status) =>
+                        status === "enabled" ? (
+                          <Skjema.Datovelger label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                        ) : (
+                          <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                        )
+                      }
+                    </FeatureToggle>
                   </Nav.Column>
                 </Nav.Row>
               </Nav.Fieldset>

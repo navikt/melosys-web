@@ -10,6 +10,10 @@ import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
 import MKV from "../../melosyskodeverk";
+import soknadSchema from "./soknadSchema";
+import { lagYupToReduxformErrorMapper } from "../../yup";
+
+import { behandlingerSelectors } from "../behandlinger";
 
 const getFormState = (state, formName, defaultValue = {}) =>
   state.form[formName] ? state.form[formName] : defaultValue;
@@ -243,32 +247,6 @@ export const Artikkel16MottaSvarSyncErrorsSelector = createSelector(
   (errors) => errors
 );
 
-export const SoknadErrorsSelector = createSelector(
-  (state) => SoknadenFormSelector(state).syncErrors || {},
-  (errors) => errors
-);
-
-const finnPanelFeil = (errors) => {
-  const panelerOgFeil = Utils.finnVerdierMedKey(errors, "panel", true);
-  const unikePanelerMedFeilNavn = Utils._uniqBy(panelerOgFeil, "panel").map(({ panel }) => panel);
-
-  const panelFeil = unikePanelerMedFeilNavn.map((panelNavn) => ({
-    panel: panelNavn,
-    feil: panelerOgFeil
-      .map(({ panel, undertittel, melding }) => {
-        if (panelNavn === panel) {
-          return undertittel ? `${undertittel} - ${melding}` : melding;
-        }
-        return null;
-      })
-      .filter((v) => v !== null),
-  }));
-
-  return panelFeil;
-};
-
-export const PanelFeilSelector = createSelector(SoknadErrorsSelector, (soknadErrors) => finnPanelFeil(soknadErrors));
-
 export const SoknadOppgittAdresseHusnummerSelector = createSelector(
   (state) => SoknadenFormSelector(state).values || {},
   (soknad) => soknad.oppgittAdresseHusnummer
@@ -365,3 +343,44 @@ export const RegistreringPanelerOppgittAdresseHarVerdierSelector = createSelecto
   RegistreringPanelerOppgittAdresseLandSelector,
   (...felter) => !felter.every((felt) => Utils._isNil(felt) || felt === "")
 );
+
+export const SoknadErrorsSelector = createSelector(
+  (state) => SoknadenFormSelector(state).syncErrors || {},
+  (state) => SoknadenFormSelector(state).values || {},
+  (state) => ({
+    skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
+    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  }),
+  (soknadformSyncErrors, soknadformValues, context) => {
+    const settings = {
+      context,
+    };
+    /* syncErrors forsvinner fra redux-form state når et felt ikke blir rendret lenger(dette skjer når man er ferdig
+    med å editere et EditerbartElement). Dette forårsaket at valideringer av menypunkter ikke dukket opp.
+    Validerer derfor formValues her og merger med syncErrors. */
+    const soknadformErrors = lagYupToReduxformErrorMapper(soknadSchema, settings)(soknadformValues);
+
+    return Utils._merge(soknadformErrors, soknadformSyncErrors);
+  }
+);
+
+const finnPanelFeil = (errors) => {
+  const panelerOgFeil = Utils.finnVerdierMedKey(errors, "panel", true);
+  const unikePanelerMedFeilNavn = Utils._uniqBy(panelerOgFeil, "panel").map(({ panel }) => panel);
+
+  const panelFeil = unikePanelerMedFeilNavn.map((panelNavn) => ({
+    panel: panelNavn,
+    feil: panelerOgFeil
+      .map(({ panel, undertittel, melding }) => {
+        if (panelNavn === panel) {
+          return undertittel ? `${undertittel} - ${melding}` : melding;
+        }
+        return null;
+      })
+      .filter((v) => v !== null),
+  }));
+
+  return panelFeil;
+};
+
+export const PanelFeilSelector = createSelector(SoknadErrorsSelector, (soknadErrors) => finnPanelFeil(soknadErrors));

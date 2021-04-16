@@ -75,7 +75,7 @@ const FullmektigRedigeringUtfort = ({
             </Nav.Row>
             <Nav.Row className="brevinfo">
               <Nav.Column xs="12">
-                <Nav.typo.EtikettLiten>*Brev til arbeidsgiver sendes til denne adressen</Nav.typo.EtikettLiten>
+                <Nav.typo.EtikettLiten>*Brev sendes til denne adressen</Nav.typo.EtikettLiten>
               </Nav.Column>
             </Nav.Row>
           </>
