@@ -5,7 +5,7 @@ import classNames from "classnames";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
-import EditerbartElement, { SymbolsynlighetMap } from "../editerbartElement";
+import EditerbartElement, { SymbolsynlighetConfig } from "../editerbartElement";
 
 import "./enRedigeringsknappListe.css";
 
@@ -52,7 +52,7 @@ interface EnRedigeringsKnappListeProps<T> {
   leggTil: () => void;
   leggTilTekst: string;
   onBinClick?: (index: number) => void;
-  symbolsynlighetMap?: SymbolsynlighetMap;
+  symbolsynlighet?: SymbolsynlighetConfig;
 }
 
 function EnRedigeringsKnappListe<T>({
@@ -72,7 +72,7 @@ function EnRedigeringsKnappListe<T>({
   leggTil,
   leggTilTekst,
   onBinClick,
-  symbolsynlighetMap,
+  symbolsynlighet,
 }: EnRedigeringsKnappListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
@@ -117,7 +117,7 @@ function EnRedigeringsKnappListe<T>({
       tittelUnderstrek={tittelUnderstrek}
       onBinClick={binClickHandler}
       harData={harData()}
-      symbolsynlighetMap={symbolsynlighetMap}
+      symbolsynlighet={symbolsynlighet}
       hentNyStatusVedHarDataEndring={false}
       visLagreKnappBareHvisHarData
       redigererRender={() => (

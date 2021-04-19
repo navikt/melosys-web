@@ -216,7 +216,7 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
   </>
 );
 
-const symbolsynlighetMap = new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]]);
+const symbolsynlighet = { [Status.RedigeringUtfort]: { bin: false, pencil: true } };
 
 type LonnOgNaturalytelserProps = LonnOgNaturalytelser & { lagreHandler: () => boolean; redigerbart: boolean };
 
@@ -228,7 +228,7 @@ const LonnOgNaturalytelser = ({ redigerbart, lagreHandler, ...lonnOgNaturalytels
     hentNyStatusVedHarDataEndring={false}
     visLagreKnapp
     onLagreClick={lagreHandler}
-    symbolsynlighetMap={symbolsynlighetMap}
+    symbolsynlighet={symbolsynlighet}
     redigererRender={() => <LonnOgNaturalytelserRedigerer redigerbart={redigerbart} />}
     redigeringUtfortRender={() => <LonnOgNaturalytelserRedigeringUtfort {...lonnOgNaturalytelser} />}
   />
@@ -289,7 +289,7 @@ const ArbeidsgiveravgiftOgTrygdeavgift = ({
     harData
     tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
     hentNyStatusVedHarDataEndring={false}
-    symbolsynlighetMap={symbolsynlighetMap}
+    symbolsynlighet={symbolsynlighet}
     visLagreKnapp
     onLagreClick={lagreHandler}
     redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer redigerbart={redigerbart} />}
