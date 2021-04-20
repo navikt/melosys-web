@@ -146,6 +146,82 @@ const TrygdeavgiftsgrunnlagComponent = ({
     );
   };
 
+  const betalerArbeidsgiverAvgiftDisabled = () => {
+    if (erVirksomhetNorsk) {
+      const særligAvgiftsgruppe = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe;
+      const erSkattepliktig = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.erSkattepliktig;
+
+      return (
+        (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA && erSkattepliktig === true) ||
+        særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.MISJONÆR
+      );
+    }
+    return true;
+  };
+
+  const betalerIkkeArbeidsgiverAvgiftDisabled = () => {
+    if (erVirksomhetNorsk) {
+      return [null, MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA].includes(
+        formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe
+      );
+    }
+    const særligAvgiftsgruppe = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe;
+    const erSkattepliktig = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.erSkattepliktig;
+
+    return (
+      (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA && erSkattepliktig === true) ||
+      (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.FN && erSkattepliktig === true)
+    );
+  };
+
+  const erSkattepliktigDisabled = () => {
+    if (erVirksomhetNorsk) {
+      const særligAvgiftsgruppe = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe;
+      const betalerArbeidsgiverAvgift =
+        formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.betalerArbeidsgiverAvgift;
+
+      return (
+        (særligAvgiftsgruppe === null && betalerArbeidsgiverAvgift === false) ||
+        særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA ||
+        (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.MISJONÆR && betalerArbeidsgiverAvgift === true)
+      );
+    }
+    const særligAvgiftsgruppe = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe;
+    const betalerArbeidsgiverAvgift =
+      formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.betalerArbeidsgiverAvgift;
+
+    return (
+      (særligAvgiftsgruppe === null && betalerArbeidsgiverAvgift === true) ||
+      særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA ||
+      særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.FN
+    );
+  };
+
+  const erIkkeSkattepliktigDisabled = () => {
+    if (erVirksomhetNorsk) {
+      const betalerArbeidsgiverAvgift =
+        formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.betalerArbeidsgiverAvgift;
+      const særligAvgiftsgruppe = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe;
+
+      return (
+        (særligAvgiftsgruppe === null && betalerArbeidsgiverAvgift === false) ||
+        (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA &&
+          betalerArbeidsgiverAvgift === false) ||
+        (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.MISJONÆR && betalerArbeidsgiverAvgift === true)
+      );
+    }
+    const betalerArbeidsgiverAvgift =
+      formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.betalerArbeidsgiverAvgift;
+    const særligAvgiftsgruppe = formValues.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe;
+
+    return (
+      (særligAvgiftsgruppe === null && betalerArbeidsgiverAvgift === true) ||
+      (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA &&
+        betalerArbeidsgiverAvgift === true) ||
+      (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.FN && betalerArbeidsgiverAvgift === true)
+    );
+  };
+
   if (!formValues.avgiftsgrunnlag) return null;
 
   const virksomhetType = erVirksomhetNorsk
@@ -164,6 +240,14 @@ const TrygdeavgiftsgrunnlagComponent = ({
       MKV.Koder.vurderingsutfall_trygdeavgift_norsk_inntekt.NORSK_INNTEKT_TRYGDEAVGIFT_NAV
     : formValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt ===
       MKV.Koder.vurderingsutfall_trygdeavgift_utenlandsk_inntekt.UTENLANDSK_INNTEKT_TRYGDEAVGIFT_NAV;
+  const trygdeavgiftsgrunnlag = erVirksomhetNorsk
+    ? formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge
+    : formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland;
+  const visBetalerArbeidsgiverAvgift =
+    trygdeavgiftsgrunnlag?.særligAvgiftsgruppe !== undefined &&
+    trygdeavgiftsgrunnlag?.særligAvgiftsgruppe !== BOOLSK_STRING.SANN;
+  const visErSøkerSkattepliktig =
+    visBetalerArbeidsgiverAvgift && trygdeavgiftsgrunnlag?.betalerArbeidsgiverAvgift !== undefined;
 
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
@@ -229,47 +313,51 @@ const TrygdeavgiftsgrunnlagComponent = ({
           </Nav.Fieldset>
         </Nav.Column>
 
-        <Nav.Column xs="4">
-          <Nav.Fieldset legend="Betaler virksomheten arbeideravgift?">
-            <Skjema.Radio
-              className="column"
-              label="Ja"
-              feltNavn={`${feltNavnBase}.betalerArbeidsgiverAvgift`}
-              value={BOOLSK.SANN}
-              disabled={!redigerbart}
-              id={`${feltNavnBase}.betalerArbeidsgiverAvgift`}
-            />
-            <Skjema.Radio
-              className="column"
-              label="Nei"
-              feltNavn={`${feltNavnBase}.betalerArbeidsgiverAvgift`}
-              value={BOOLSK.USANN}
-              disabled={!redigerbart}
-              id={`${feltNavnBase}.betalerIkkeArbeidsgiverAvgift`}
-            />
-          </Nav.Fieldset>
-        </Nav.Column>
+        {visBetalerArbeidsgiverAvgift && (
+          <Nav.Column xs="4">
+            <Nav.Fieldset legend="Betaler virksomheten arbeideravgift?">
+              <Skjema.Radio
+                className="column"
+                label="Ja"
+                feltNavn={`${feltNavnBase}.betalerArbeidsgiverAvgift`}
+                value={BOOLSK.SANN}
+                disabled={!redigerbart || betalerArbeidsgiverAvgiftDisabled()}
+                id={`${feltNavnBase}.betalerArbeidsgiverAvgift`}
+              />
+              <Skjema.Radio
+                className="column"
+                label="Nei"
+                feltNavn={`${feltNavnBase}.betalerArbeidsgiverAvgift`}
+                value={BOOLSK.USANN}
+                disabled={!redigerbart || betalerIkkeArbeidsgiverAvgiftDisabled()}
+                id={`${feltNavnBase}.betalerIkkeArbeidsgiverAvgift`}
+              />
+            </Nav.Fieldset>
+          </Nav.Column>
+        )}
 
-        <Nav.Column xs="4">
-          <Nav.Fieldset legend="Er søker skattepliktig?">
-            <Skjema.Radio
-              className="column"
-              label="Ja"
-              feltNavn={`${feltNavnBase}.erSkattepliktig`}
-              value={BOOLSK.SANN}
-              disabled={!redigerbart}
-              id={`${feltNavnBase}.erSkattepliktig`}
-            />
-            <Skjema.Radio
-              className="column"
-              label="Nei"
-              feltNavn={`${feltNavnBase}.erSkattepliktig`}
-              value={BOOLSK.USANN}
-              disabled={!redigerbart}
-              id={`${feltNavnBase}.erIkkeSkattepliktig`}
-            />
-          </Nav.Fieldset>
-        </Nav.Column>
+        {visErSøkerSkattepliktig && (
+          <Nav.Column xs="4">
+            <Nav.Fieldset legend="Er søker skattepliktig?">
+              <Skjema.Radio
+                className="column"
+                label="Ja"
+                feltNavn={`${feltNavnBase}.erSkattepliktig`}
+                value={BOOLSK.SANN}
+                disabled={!redigerbart || erSkattepliktigDisabled()}
+                id={`${feltNavnBase}.erSkattepliktig`}
+              />
+              <Skjema.Radio
+                className="column"
+                label="Nei"
+                feltNavn={`${feltNavnBase}.erSkattepliktig`}
+                value={BOOLSK.USANN}
+                disabled={!redigerbart || erIkkeSkattepliktigDisabled()}
+                id={`${feltNavnBase}.erIkkeSkattepliktig`}
+              />
+            </Nav.Fieldset>
+          </Nav.Column>
+        )}
       </Nav.Row>
 
       {ingenTrygdeavgiftBetalesTilNAV && <VurderingsutfallIngenTrygdeavgift />}
@@ -490,13 +578,23 @@ const VurderingTrygdeavgift = ({
       erSærligAvgiftsgruppe
     );
     setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
-    changeField(
-      erNorskVirksomhet
-        ? "avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe"
-        : "avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe",
-      erSærligAvgiftsgruppe ? "TRUE" : null
-    );
+    const fieldBase = erNorskVirksomhet
+      ? "avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge"
+      : "avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland";
+    changeField(`${fieldBase}.særligAvgiftsgruppe`, erSærligAvgiftsgruppe ? "TRUE" : null);
+    changeField(`${fieldBase}.betalerArbeidsgiverAvgift`, erNorskVirksomhet ? BOOLSK.SANN : BOOLSK.USANN);
+    changeField(`${fieldBase}.erSkattepliktig`, undefined);
   }
+
+  useEffect(() => {
+    const særligAvgiftsgruppe = formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe;
+    if (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.MISJONÆR) {
+      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", BOOLSK.USANN);
+    }
+    if (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA) {
+      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", BOOLSK.SANN);
+    }
+  }, [formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe]);
 
   function handleAvgiftspliktigLønnInputChange(event: ChangeEvent<HTMLInputElement>, erNorskVirksomhet: boolean) {
     setOppdatertAvgiftsberegning(
