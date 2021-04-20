@@ -231,7 +231,7 @@ const SendBrev = ({
           kopiMottakere: [],
           orgNr: muligMottaker.orgnr,
           kontaktpersonNavn:
-            muligMottaker.rolle == "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
+            muligMottaker.rolle === "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
               ? formValues.kontaktperson
               : null,
         },
@@ -270,13 +270,13 @@ const SendBrev = ({
     ];
   };
 
-  const mapMottakerRader = (muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+  const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     const valgtMottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!valgtMottaker) return [];
     return [
-      mapRad(muligeMottakere.hovedMottaker, false, valgtMottaker),
-      ...muligeMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker, true, valgtMottaker)),
-      ...muligeMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker, false, valgtMottaker)),
+      mapRad(muligeBrevMottakere.hovedMottaker, false, valgtMottaker),
+      ...muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker, true, valgtMottaker)),
+      ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker, false, valgtMottaker)),
     ];
   };
 
