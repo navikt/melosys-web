@@ -10,7 +10,7 @@ import * as Mui from "../../../../ui";
 import * as Nav from "../../../../../utils/navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 
-import EditerbartElement, { visAlltidBinSymbolsynlighetMap } from "../../editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
 import UtfyltAdresse from "./utfyltadresse";
 import Felter from "./felter";
 
@@ -62,7 +62,7 @@ const AnnenAdresse = ({
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
         hentNyStatusVedHarDataEndring={false}
-        symbolsynlighetMap={oppgittAdresseHarVerdier ? visAlltidBinSymbolsynlighetMap : undefined}
+        symbolsynlighet={oppgittAdresseHarVerdier ? visAlltidBinSymbolsynlighet : undefined}
         redigererRender={() => <Felter redigerbart={redigerbart} />}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
         ingenDataRender={(apneRedigering) => (

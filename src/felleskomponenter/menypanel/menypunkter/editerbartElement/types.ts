@@ -9,4 +9,4 @@ export interface Symbolsynlighet {
   bin: boolean;
 }
 
-export type SymbolsynlighetMap = Map<Status, Symbolsynlighet>;
+export type SymbolsynlighetConfig = Partial<Record<Status, Symbolsynlighet>>;
