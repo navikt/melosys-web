@@ -74,9 +74,9 @@ function DialogboksEndreBehandlingsfrist({
       <div className="innhold">
         <Nav.AlertStripe type="suksess">Behandlingsfristen har blitt endret og oppdatert.</Nav.AlertStripe>
       </div>
-      <div style={{ float: "right" }}>
-        <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
-      </div>
+      <Mui.Knapp className="avbryt-knapp" onClick={avbryt}>
+        LUKK
+      </Mui.Knapp>
     </div>
   );
 
