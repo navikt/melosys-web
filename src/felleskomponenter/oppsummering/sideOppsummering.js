@@ -109,8 +109,8 @@ const SideOppsummering = ({
                       fagsak={fagsak}
                       oppsummering={oppsummering}
                       behandlingstema={behandlingstema}
-                      behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                      behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                      lovvalgsperiodeFom={lovvalgsperiodeFom}
+                      lovvalgsperiodeTom={lovvalgsperiodeTom}
                       mottattDato={behandlingsgrunnlagMottaksdato}
                       behandlingsfristLinje={
                         // TODO: Placeholderverdier

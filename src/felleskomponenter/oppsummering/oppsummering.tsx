@@ -97,7 +97,11 @@ const Oppsummering = (props: OppsummeringProps) => {
         <Nav.Row>
           <Nav.Column xs="12">
             {behandlingsstatusLinje}
-            <OppsummeringVerdiPar className="svarfrist" nokkel="Svarfrist" verdi={svarFrist || "-"} />
+            <OppsummeringVerdiPar
+              className="svarfrist"
+              nokkel="Svarfrist"
+              verdi={formatterDatoTilNorsk(svarFrist) || "-"}
+            />
           </Nav.Column>
         </Nav.Row>
       </dl>
@@ -105,7 +109,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       <dl>
         <Nav.Row>
           <Nav.Column xs="12">
-            <OppsummeringVerdiPar nokkel="Behandling opprettet" verdi={registrertDato} />
+            <OppsummeringVerdiPar nokkel="Behandling opprettet" verdi={formatterDatoTilNorsk(registrertDato)} />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -170,16 +174,16 @@ Oppsummering.propTypes = {
   behandlingsstatusLinje: PT.node.isRequired,
   behandlingstemaLinje: PT.node.isRequired,
   behandlingstypeLinje: PT.node.isRequired,
-  behandlingsgrunnlagPeriodeFom: PT.string,
-  behandlingsgrunnlagPeriodeTom: PT.string,
+  lovvalgsperiodeFom: PT.string,
+  lovvalgsperiodeTom: PT.string,
   mottattDato: PT.string,
   className: PT.string,
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],
   lovvalgsland: {},
-  behandlingsgrunnlagPeriodeFom: undefined,
-  behandlingsgrunnlagPeriodeTom: undefined,
+  lovvalgsperiodeFom: undefined,
+  lovvalgsperiodeTom: undefined,
   mottattDato: undefined,
   className: undefined,
 };
