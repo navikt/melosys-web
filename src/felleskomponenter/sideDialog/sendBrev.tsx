@@ -78,6 +78,7 @@ const SendBrev = ({
   }>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);
+  const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const arbeidsgiverHjelptekst =
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
@@ -114,7 +115,7 @@ const SendBrev = ({
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
-  const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
+  const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean; type: string }) => {
     if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
     if (response.data.response) {
@@ -123,7 +124,7 @@ const SendBrev = ({
       );
     } else {
       setAdresse({ organisasjonsAdresse: response.data });
-      if (formValues?.type) hentMuligeMottakere(formValues.type, data.orgnr);
+      hentMuligeMottakere(data.type, data.orgnr);
     }
   };
   const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonIfValid, 500), []);
@@ -143,7 +144,7 @@ const SendBrev = ({
       }
     }
     if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.orgnrSettesAvSaksbehandler) {
-      debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
+      debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
     }
     if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.orgnrSettesAvSaksbehandler) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
@@ -189,17 +190,21 @@ const SendBrev = ({
       requestBody = {
         ...requestBody,
         orgNr: mottaker.orgnrSettesAvSaksbehandler ? formValues.organisasjonsnummer : formValues.arbeidsgiver,
-        kontaktperson: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
+        kontaktpersonNavn: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
       };
     }
     Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
       .then(() => setBrevSendt(true))
-      .catch(Utils.logger.error);
+      .catch((error) => {
+        setBrevSendtFeil(true);
+        Utils.logger.error(error);
+      });
   };
 
   const forkastBrev = () => {
     resetForm();
     setBrevSendt(false);
+    setBrevSendtFeil(false);
   };
 
   const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
@@ -210,58 +215,68 @@ const SendBrev = ({
     });
   };
 
-  const lagDokumenterData = (mottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, valgtMottaker: any, ikon?: boolean) => {
     return [
       {
         sendesTilDokumenterV2: true,
-        navn: ikon ? <Ikoner.Forhandsvis /> : mottaker.dokumentNavn,
+        navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
         data: {
           produserbardokument: formValues.type,
-          mottaker: mottaker.rolle,
+          mottaker: muligMottaker.rolle,
           innledningFritekst:
             (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" &&
               formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
             null,
           manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
           kopiMottakere: [],
+          orgNr: muligMottaker.orgnr,
+          kontaktpersonNavn:
+            muligMottaker.rolle == "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
+              ? formValues.kontaktperson
+              : null,
         },
       },
     ];
   };
 
-  const mapRad = (mottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
+  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean, valgtMottaker: any) => {
     return [
       {
         verdi: (
           <PdfLenkeListe
             behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(mottaker)}
+            dokumenter={lagDokumenterData(muligMottaker, valgtMottaker)}
             vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
         ),
       },
-      { verdi: mottaker.mottakerNavn },
+      { verdi: muligMottaker.mottakerNavn },
       {
         verdi: (
           <PdfLenkeListe
             behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(mottaker, true)}
+            dokumenter={lagDokumenterData(muligMottaker, valgtMottaker, true)}
             vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
         ),
         style: "midtstilt",
       },
-      { verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(mottaker)} /> : <></>, style: "slettKnapp" },
+      {
+        verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(muligMottaker)} /> : <></>,
+        style: "slettKnapp",
+      },
     ];
   };
 
-  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+  const mapMottakerRader = (muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+    const valgtMottaker = finnMottakerFraValgtMal(formValues.mottaker);
+    if (!valgtMottaker) return [];
     return [
-      mapRad(mottakere.hovedMottaker, false),
-      ...mottakere.kopiMottakere.map((mottaker) => mapRad(mottaker, true)),
-      ...mottakere.fasteMottakere.map((mottaker) => mapRad(mottaker, false)),
+      mapRad(muligeMottakere.hovedMottaker, false, valgtMottaker),
+      ...muligeMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker, true, valgtMottaker)),
+      ...muligeMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker, false, valgtMottaker)),
     ];
   };
 
@@ -509,6 +524,9 @@ const SendBrev = ({
         <AlertStripeSuksess className="brev_sendt">
           Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.
         </AlertStripeSuksess>
+      )}
+      {brevSendtFeil && (
+        <AlertStripeFeil className="brev_sendt">Brevet er ikke sendt. Det skjedde en feil.</AlertStripeFeil>
       )}
     </div>
   );

@@ -48,7 +48,7 @@ export type OpprettBrevReqDto = {
   orgNr?: string;
   innledningFritekst?: string;
   manglerFritekst?: string;
-  kontaktperson?: string | null;
+  kontaktpersonNavn?: string | null;
   kopiMottakere: {
     rolle: string;
     orgnr: string | null;
