@@ -57,3 +57,12 @@ export const ErEndreBehandlingsstatusSynligSelector = createSelector(
   EndreBehandlingsstatusSelector,
   (endreBehandlingsstatus) => endreBehandlingsstatus.synlig
 );
+
+export const EndreBehandlingsfristSelector = createSelector(
+  ModalerSelector,
+  (modaler) => modaler.endreBehandlingsfrist
+);
+export const ErEndreBehandlingsfristSynligSelector = createSelector(
+  EndreBehandlingsfristSelector,
+  (endreBehandlingsfrist) => endreBehandlingsfrist.synlig
+);

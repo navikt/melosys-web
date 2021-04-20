@@ -35,3 +35,8 @@ export const visEndreBehandlingsstatus = () => (dispatch) =>
   dispatch(Actions.oppdaterEndreBehandlingsstatus({ synlig: true }));
 export const skjulEndreBehandlingsstatus = () => (dispatch) =>
   dispatch(Actions.oppdaterEndreBehandlingsstatus({ synlig: false }));
+
+export const visEndreBehandlingsfrist = () => (dispatch) =>
+  dispatch(Actions.oppdaterEndreBehandlingsfrist({ synlig: true }));
+export const skjulEndreBehandlingsfrist = () => (dispatch) =>
+  dispatch(Actions.oppdaterEndreBehandlingsfrist({ synlig: false }));
