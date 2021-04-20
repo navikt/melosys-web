@@ -53,6 +53,7 @@ function DialogboksEndreBehandlingsfrist({
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingsstatus);
 
   const endreBehandlingsfristHandle = () => {
+    if (!dato) return;
     Api.Behandlinger.behandlingsfrist
       .oppdaterBehandlingsfrist(behandlingID, dato)
       .then(() => {

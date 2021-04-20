@@ -36,9 +36,9 @@ const SideOppsummering = ({
   behandlingsgrunnlagPeriodeTom,
   behandlingsgrunnlagMottaksdato,
   periodeLabel,
-  visEndreBehandlingstemaDialogHandle,
-  visEndreBehandlingsstatusDialogHandle,
-  visEndreBehandlingsfristDialogHandle,
+  visEndreBehandlingstemaDialogHandle, // TODO: heller rendre direkte her
+  visEndreBehandlingsstatusDialogHandle, // TODO: heller rendre direkte her
+  visEndreBehandlingsfristDialogHandle, // TODO: heller rendre direkte her
   hentMuligeBehandlingstema,
   hentMuligeBehandlingsstatuser,
   behandlingID,
