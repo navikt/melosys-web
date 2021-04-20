@@ -20,7 +20,7 @@ import Fotknapper from "./fotknapper";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import JournalforingSchema from "./journalforingSchema";
 
-const JournalforingForm = (props) => {
+export const JournalforingForm = (props) => {
   const {
     journalpostID,
     hoveddokumentID,
@@ -38,7 +38,9 @@ const JournalforingForm = (props) => {
     handleSubmit,
   } = props;
   const visForvaltningsMelding =
-    formValues.saksnummer === "-1" && MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema);
+    formValues.saksnummer === "-1" &&
+    (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
+      formValues.opprettnysak_behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET);
 
   return (
     <form onSubmit={handleSubmit}>
