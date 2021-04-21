@@ -16,6 +16,7 @@ import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/revurderFa
 import DialogboksValidering from "../felleskomponenter/dialogboks/validering";
 import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/endreBehandlingstema/dialogboksEndreBehandlingstema";
 import DialogboksEndreBehandlingsstatus from "../felleskomponenter/dialogboks/endreBehandlingsstatus/dialogboksEndreBehandlingsstatus";
+import DialogboksEndreBehandlingsfrist from "../felleskomponenter/dialogboks/endreBehandlingsfrist/dialogboksEndreBehandlingsfrist";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -41,9 +42,11 @@ const Modals = ({
   visValideringModal,
   skjulValideringModalDialogHandle,
   visEndreBehandlingstemaDialog,
-  visEndreBehandlingsstatusDialog,
   skjulEndreBehandlingstemaModalDialogHandle,
+  visEndreBehandlingsstatusDialog,
   skjulEndreBehandlingsstatusModalDialogHandle,
+  visEndreBehandlingsfristDialog,
+  skjulEndreBehandlingsfristModalDialogHandle,
   valideringerFeilkoder,
   valideringerFeilmeldinger,
   behandlingOppfriskes,
@@ -90,6 +93,9 @@ const Modals = ({
     {visEndreBehandlingsstatusDialog && (
       <DialogboksEndreBehandlingsstatus avbryt={skjulEndreBehandlingsstatusModalDialogHandle} />
     )}
+    {visEndreBehandlingsfristDialog && (
+      <DialogboksEndreBehandlingsfrist avbryt={skjulEndreBehandlingsfristModalDialogHandle} />
+    )}
   </Fragment>
 );
 
@@ -118,6 +124,8 @@ Modals.propTypes = {
   skjulEndreBehandlingstemaModalDialogHandle: PT.func.isRequired,
   visEndreBehandlingsstatusDialog: PT.bool.isRequired,
   skjulEndreBehandlingsstatusModalDialogHandle: PT.func.isRequired,
+  visEndreBehandlingsfristDialog: PT.bool.isRequired,
+  skjulEndreBehandlingsfristModalDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
   valideringerFeilkoder: PT.arrayOf(
@@ -150,6 +158,7 @@ const mapStateToProps = (state) => ({
   valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
   visEndreBehandlingstemaDialog: modalerSelectors.ErEndreBehandlingstemaSynligSelector(state),
   visEndreBehandlingsstatusDialog: modalerSelectors.ErEndreBehandlingsstatusSynligSelector(state),
+  visEndreBehandlingsfristDialog: modalerSelectors.ErEndreBehandlingsfristSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -163,6 +172,7 @@ const mapDispatchToProps = (dispatch) => ({
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
   skjulEndreBehandlingstemaModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingstema()),
   skjulEndreBehandlingsstatusModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingsstatus()),
+  skjulEndreBehandlingsfristModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingsfrist()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);

@@ -25,6 +25,7 @@ import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import { formSelectors } from "../../../../ducks/form";
 
 import "./vurderingPerioder.css";
+import { FeatureToggle } from "../../../../featuretoggle";
 
 interface formValuesProp {
   medlemskapsperioder?: (Medlemskapsperiode & { ny: boolean; feil: string | undefined })[];
@@ -60,24 +61,48 @@ const PeriodeElement = ({
       <Nav.Fieldset legend="Periode" className="understrek">
         <Nav.Row>
           <Nav.Column xs="2">
-            <Skjema.Input
-              datoFelt
-              label="Fra og med:"
-              feltNavn={`medlemskapsperioder[${index}].fomDato`}
-              bredde="fullbredde"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => handleFomChange(event.target.value, index)}
-              disabled={!redigerbart}
-            />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Skjema.Datovelger
+                    label="Fra og med:"
+                    feltNavn={`medlemskapsperioder[${index}].fomDato`}
+                    disabled={!redigerbart}
+                  />
+                ) : (
+                  <Skjema.Input
+                    datoFelt
+                    label="Fra og med:"
+                    feltNavn={`medlemskapsperioder[${index}].fomDato`}
+                    bredde="fullbredde"
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => handleFomChange(event.target.value, index)}
+                    disabled={!redigerbart}
+                  />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
           <Nav.Column xs="2">
-            <Skjema.Input
-              datoFelt
-              label="Til og med:"
-              feltNavn={`medlemskapsperioder[${index}].tomDato`}
-              bredde="fullbredde"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => handleTomChange(event.target.value, index)}
-              disabled={!redigerbart}
-            />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Skjema.Datovelger
+                    label="Til og med:"
+                    feltNavn={`medlemskapsperioder[${index}].tomDato`}
+                    disabled={!redigerbart}
+                  />
+                ) : (
+                  <Skjema.Input
+                    datoFelt
+                    label="Til og med:"
+                    feltNavn={`medlemskapsperioder[${index}].tomDato`}
+                    bredde="fullbredde"
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => handleTomChange(event.target.value, index)}
+                    disabled={!redigerbart}
+                  />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
           <Nav.Column xs="4">
             <Skjema.Select

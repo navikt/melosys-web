@@ -116,7 +116,7 @@ export const Arbeidssteder = ({
         }
         flereRedigeringsknapper={false}
         onBinClick={slettFastArbeidsstedOgHjemmekontorAvklaring}
-        symbolsynlighetMap={new Map([[Status.IngenData, { pencil: true, bin: false }]])}
+        symbolsynlighet={{ [Status.IngenData]: { pencil: true, bin: false } }}
       />
       <EditerbartElementListe
         redigerbart={redigerbart}

@@ -149,7 +149,7 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
-  const [folketrygdenToggle] = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");

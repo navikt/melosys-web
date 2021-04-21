@@ -36,8 +36,9 @@ const SideOppsummering = ({
   behandlingsgrunnlagPeriodeTom,
   behandlingsgrunnlagMottaksdato,
   periodeLabel,
-  visEndreBehandlingstemaDialogHandle,
-  visEndreBehandlingsstatusDialogHandle,
+  visEndreBehandlingstemaDialogHandle, // TODO: heller rendre direkte her
+  visEndreBehandlingsstatusDialogHandle, // TODO: heller rendre direkte her
+  visEndreBehandlingsfristDialogHandle, // TODO: heller rendre direkte her
   hentMuligeBehandlingstema,
   hentMuligeBehandlingsstatuser,
   behandlingID,
@@ -109,16 +110,14 @@ const SideOppsummering = ({
                       fagsak={fagsak}
                       oppsummering={oppsummering}
                       behandlingstema={behandlingstema}
-                      behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                      behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                      lovvalgsperiodeFom={lovvalgsperiodeFom}
+                      lovvalgsperiodeTom={lovvalgsperiodeTom}
                       mottattDato={behandlingsgrunnlagMottaksdato}
                       behandlingsfristLinje={
-                        // TODO: Placeholderverdier
                         <OppsummeringVerdiParRedigerbar
                           nokkel="Frist"
-                          verdi={formatterDatoTilNorsk(new Date())} // Henting av verdier løses i MELOSYS-4493
-                          redigerbart={false}
-                          onClick={() => console.log("Endre frist")} // Oppdatering løses i MELOSYS-4113
+                          verdi={formatterDatoTilNorsk(oppsummering.behandlingsfrist)}
+                          onClick={visEndreBehandlingsfristDialogHandle}
                         />
                       }
                       behandlingsstatusLinje={
@@ -242,6 +241,7 @@ SideOppsummering.propTypes = {
   periodeLabel: PT.string,
   visEndreBehandlingstemaDialogHandle: PT.func.isRequired,
   visEndreBehandlingsstatusDialogHandle: PT.func.isRequired,
+  visEndreBehandlingsfristDialogHandle: PT.func.isRequired,
   hentMuligeBehandlingstema: PT.func.isRequired,
   hentMuligeBehandlingsstatuser: PT.func.isRequired,
   behandlingID: PT.number.isRequired,
@@ -269,6 +269,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema()),
   visEndreBehandlingsstatusDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingsstatus()),
+  visEndreBehandlingsfristDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingsfrist()),
   hentMuligeBehandlingstema: (behandlingID) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
   hentMuligeBehandlingsstatuser: (behandlingID) =>

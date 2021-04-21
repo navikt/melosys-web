@@ -16,6 +16,7 @@ import {
   memoize,
   uniqBy,
   has,
+  merge,
 } from "lodash";
 
 import throttle from "lodash.throttle";
@@ -80,4 +81,5 @@ export {
   memoize as _memoize,
   uniqBy as _uniqBy,
   has as _has,
+  merge as _merge,
 };

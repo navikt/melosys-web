@@ -10,6 +10,7 @@ const modaler = {
   revurderFagsak: "revurderFagsak",
   endreBehandlingstema: "endreBehandlingstema",
   endreBehandlingsstatus: "endreBehandlingsstatus",
+  endreBehandlingsfrist: "endreBehandlingsfrist",
 };
 
 const initialState = {
@@ -37,6 +38,9 @@ const initialState = {
       synlig: false,
     },
     [modaler.endreBehandlingsstatus]: {
+      synlig: false,
+    },
+    [modaler.endreBehandlingsfrist]: {
       synlig: false,
     },
   },
@@ -80,6 +84,9 @@ export default function reducer(state = initialState, action) {
     }
     case Types.OPPDATER_ENDRE_BEHANDLINGSSTATUS: {
       return lagNyState(state, action, modaler.endreBehandlingsstatus);
+    }
+    case Types.OPPDATER_ENDRE_BEHANDLINGSFRIST: {
+      return lagNyState(state, action, modaler.endreBehandlingsfrist);
     }
     default:
       return state;

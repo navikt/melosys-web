@@ -10,6 +10,7 @@ type Oppsummering = {
   sisteOpplysningerHentetDato: string;
   behandlingstype: string;
   behandlingsstatus: string;
+  behandlingsfrist: string | null;
   svarFrist: string | null;
 };
 

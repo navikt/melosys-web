@@ -12,6 +12,7 @@ import LandVelger from "./landvelger";
 import PeriodeForkorter from "./periodeForkorter";
 import Vedtakstype from "./vedtakstype";
 import HTMLEditor from "./htmleditor";
+import Datovelger from "./datovelger";
 
 export {
   Checkbox,
@@ -29,4 +30,5 @@ export {
   PeriodeForkorter,
   Vedtakstype,
   HTMLEditor,
+  Datovelger,
 };
