@@ -207,6 +207,21 @@ export const ForretningsValideringSelector = createSelector(
   (skjemaValidering) => skjemaValidering.regler
 );
 
+export const SendBrevFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.SEND_BREV, {}),
+  (sendbrev) => sendbrev
+);
+
+export const SendBrevValidSelector = createSelector(
+  (state) => SendBrevFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const SendBrevOrgnummerValidSelector = createSelector(
+  (state) => SendBrevFormSelector(state).syncErrors || {},
+  (errors) => !errors?.organisasjonsnummer
+);
+
 export const BrevBestillingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.BREV_BESTILLING, {}),
   (brevbestilling) => brevbestilling

@@ -68,6 +68,7 @@ class BrevBestilling extends Component {
       fritekst: dokumentFritekst,
       mottaker,
       begrunnelseKode: null,
+      produserbardokument: dokumenttypeKode,
     });
 
     this.setState({ feilmelding: undefined });

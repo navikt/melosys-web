@@ -3,6 +3,7 @@ import * as Avklartefakta from "./modules/avklartefakta";
 import * as Behandlinger from "./modules/behandlinger";
 import * as Behandlingsgrunnlag from "./modules/behandlingsgrunnlag";
 import * as Dokumenter from "./modules/dokumenter/";
+import * as DokumenterV2 from "./modules/dokumenter-v2";
 import * as Eessi from "./modules/eessi/";
 import * as Fagsaker from "./modules/fagsaker/";
 import * as Featuretoggle from "./modules/featuretoggle";
@@ -29,6 +30,7 @@ export {
   Behandlinger,
   Behandlingsgrunnlag,
   Dokumenter,
+  DokumenterV2,
   Eessi,
   Fagsaker,
   Featuretoggle,

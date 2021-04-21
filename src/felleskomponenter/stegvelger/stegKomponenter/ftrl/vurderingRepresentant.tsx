@@ -103,7 +103,7 @@ const VurderingRepresentant = ({
       }
     }
   }
-  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 1000), []);
+  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 500), []);
 
   useEffect(() => {
     setOrganisasjon(undefined);
