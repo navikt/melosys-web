@@ -246,3 +246,8 @@ export const LonnOgGodtgjorelseSelector = createSelector(
       erTrukketTrygdeavgift: null,
     }
 );
+
+export const OvrigOmArbeidstakerSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlagData) => behandlingsgrunnlagData.oevrigOmArbeidstaker || {}
+);

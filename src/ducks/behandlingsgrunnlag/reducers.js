@@ -240,6 +240,29 @@ export default function reducer(state = initialState, action) {
             erArbeidsgiveravgiftHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden,
             erTrukketTrygdeavgift: dokument.loennOgGodtgjoerelse.erTrukketTrygdeavgift,
           },
+          oevrigOmArbeidstaker: {
+            harLoennetArbeidMinstEnMndFoerUtsending: Utils._isNil(
+              dokument.oevrigOmArbeidstaker.harLoennetArbeidMinstEnMndFoerUtsending
+            )
+              ? null
+              : dokument.oevrigOmArbeidstaker.harLoennetArbeidMinstEnMndFoerUtsending,
+            beskrivelseArbeidSisteMnd: dokument.oevrigOmArbeidstaker.beskrivelseArbeidSisteMnd,
+            harAndreArbeidsgivereIUtsendingsperioden: Utils._isNil(
+              dokument.oevrigOmArbeidstaker.harAndreArbeidsgivereIUtsendingsperioden
+            )
+              ? null
+              : dokument.oevrigOmArbeidstaker.harAndreArbeidsgivereIUtsendingsperioden,
+            beskrivelseAnnetArbeid: dokument.oevrigOmArbeidstaker.beskrivelseAnnetArbeid,
+            erSkattepliktig: Utils._isNil(dokument.oevrigOmArbeidstaker.erSkattepliktig)
+              ? null
+              : dokument.oevrigOmArbeidstaker.erSkattepliktig,
+            mottarYtelserNorge: Utils._isNil(dokument.oevrigOmArbeidstaker.mottarYtelserNorge)
+              ? null
+              : dokument.oevrigOmArbeidstaker.mottarYtelserNorge,
+            mottarYtelserUtlandet: Utils._isNil(dokument.oevrigOmArbeidstaker.mottarYtelserUtlandet)
+              ? null
+              : dokument.oevrigOmArbeidstaker.mottarYtelserUtlandet,
+          },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [
