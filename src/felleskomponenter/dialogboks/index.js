@@ -8,8 +8,6 @@ import * as Validering from "./validering/dialogboksValidering";
 export default {
   AvslagSoknad,
   AvsluttSakSomBortfalt,
-  EndreBehandlingsstatus,
-  EndreBehandlingstema,
   HenleggSak,
   OppfriskSak,
   RevurderFagsak,
