@@ -7,6 +7,7 @@ import * as Nav from "../../utils/navFrontend";
 import * as MPT from "../../proptypes";
 import * as KV from "../../kodeverk";
 import * as Ikoner from "../../resources/images";
+import * as Modaler from "./modaler";
 
 import Oppsummering from "./oppsummering";
 
@@ -18,9 +19,6 @@ import { FeatureToggle } from "../../featuretoggle";
 import OppsummeringGammel from "./oppsummeringGammel";
 import OppsummeringVerdiParRedigerbar from "./verdiPar/oppsummeringVerdiParRedigerbar";
 import { formatterDatoTilNorsk } from "../../utils/dato";
-import DialogboksEndreBehandlingsfrist from "../dialogboks/endreBehandlingsfrist/dialogboksEndreBehandlingsfrist";
-import DialogboksEndreBehandlingsstatus from "../dialogboks/endreBehandlingsstatus/dialogboksEndreBehandlingsstatus";
-import DialogboksEndreBehandlingstema from "../dialogboks/endreBehandlingstema/dialogboksEndreBehandlingstema";
 
 const SideOppsummering = ({
   arbeidsland,
@@ -164,16 +162,16 @@ const SideOppsummering = ({
             </Nav.Panel>
 
             {visEndreBehandlingsfrist && (
-              <DialogboksEndreBehandlingsfrist
-                avbryt={() => setVisEndreBehandlingsfrist(false)}
+              <Modaler.EndreBehandlingsfrist
                 behandlingID={behandlingID}
+                avbryt={() => setVisEndreBehandlingsfrist(false)}
               />
             )}
             {visEndreBehandlingsstatus && (
-              <DialogboksEndreBehandlingsstatus avbryt={() => setVisEndreBehandlingsstatus(false)} />
+              <Modaler.EndreBehandlingsstatus avbryt={() => setVisEndreBehandlingsstatus(false)} />
             )}
             {visEndreBehandlingstema && (
-              <DialogboksEndreBehandlingstema avbryt={() => setVisEndreBehandlingstema(false)} />
+              <Modaler.EndreBehandlingstema avbryt={() => setVisEndreBehandlingstema(false)} />
             )}
           </section>
         ) : (
