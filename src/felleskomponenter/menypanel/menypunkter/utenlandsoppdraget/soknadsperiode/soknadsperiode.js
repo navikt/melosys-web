@@ -92,7 +92,10 @@ export class Soknadsperiode extends Component {
     this.props.oppdaterPeriode(periode);
     // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
     // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
-    setTimeout(() => this.props.lagreSoknadOgOppfriskSaksopplysninger(), 0);
+    setTimeout(() => {
+      this.props.lagreSoknadOgOppfriskSaksopplysninger();
+      this.skjulEndrePeriode();
+    }, 0);
   };
 
   avbryt = (event) => {
