@@ -21,7 +21,7 @@ const Element = ({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defa
   };
 
   return (
-    <Nav.Row className="element">
+    <Nav.Row className="redigerbarliste__element">
       <Nav.Column xs="6">{term}</Nav.Column>
       {fjernbar && (
         <Nav.Column xs="6">
