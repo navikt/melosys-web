@@ -28,8 +28,8 @@ const RedigeringUtfort = ({ soknadsland, className }: RedigeringUtfortProps) => 
 
   return (
     <div className={cls}>
-      <Nav.typo.EtikettLiten className="etikett-liten">Land</Nav.typo.EtikettLiten>
-      <Nav.typo.Element>
+      <Nav.typo.Normaltekst className="etikett-liten">Land</Nav.typo.Normaltekst>
+      <Nav.typo.Element className="element">
         {Utils.streng.arrayTilKonjunksjon(
           soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder))
         ) || "Ingen land valgt"}

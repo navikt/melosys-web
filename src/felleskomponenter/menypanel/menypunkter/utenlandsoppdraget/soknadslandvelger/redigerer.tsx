@@ -8,7 +8,7 @@ import MKV from "../../../../../melosyskodeverk";
 
 const Redigerer = () => (
   <Skjema.MultiSelect
-    label={<Nav.typo.EtikettLiten>Land</Nav.typo.EtikettLiten>}
+    label={<Nav.typo.Normaltekst>Land</Nav.typo.Normaltekst>}
     feltNavn="soknadsland"
     redigerbart
     options={MKV.KTObjects.landkoder.map(({ kode, term }: KTObject) => ({ value: kode, label: term }))}
