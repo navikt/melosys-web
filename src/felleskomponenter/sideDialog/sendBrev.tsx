@@ -216,6 +216,9 @@ const SendBrev = ({
   };
 
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, valgtMottaker: any, ikon?: boolean) => {
+    const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
+      ? formValues.organisasjonsnummer
+      : formValues.arbeidsgiver;
     return [
       {
         sendesTilDokumenterV2: true,
@@ -229,7 +232,7 @@ const SendBrev = ({
             null,
           manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
           kopiMottakere: [],
-          orgNr: muligMottaker.orgnr,
+          orgNr: muligMottaker.rolle !== "BRUKER" ? muligMottaker.orgnr || orgnrFraFormValues : null,
           kontaktpersonNavn:
             muligMottaker.rolle === "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
               ? formValues.kontaktperson
