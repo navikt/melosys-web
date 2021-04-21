@@ -42,27 +42,3 @@ export const ErRevurderFagsakSynligSelector = createSelector(
   RevurderFagsakSelector,
   (revurderFagsak) => revurderFagsak.synlig
 );
-
-export const EndreBehandlingstemaSelector = createSelector(ModalerSelector, (modaler) => modaler.endreBehandlingstema);
-export const ErEndreBehandlingstemaSynligSelector = createSelector(
-  EndreBehandlingstemaSelector,
-  (endreBehandlingstema) => endreBehandlingstema.synlig
-);
-
-export const EndreBehandlingsstatusSelector = createSelector(
-  ModalerSelector,
-  (modaler) => modaler.endreBehandlingsstatus
-);
-export const ErEndreBehandlingsstatusSynligSelector = createSelector(
-  EndreBehandlingsstatusSelector,
-  (endreBehandlingsstatus) => endreBehandlingsstatus.synlig
-);
-
-export const EndreBehandlingsfristSelector = createSelector(
-  ModalerSelector,
-  (modaler) => modaler.endreBehandlingsfrist
-);
-export const ErEndreBehandlingsfristSynligSelector = createSelector(
-  EndreBehandlingsfristSelector,
-  (endreBehandlingsfrist) => endreBehandlingsfrist.synlig
-);

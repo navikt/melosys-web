@@ -1,22 +1,21 @@
-import React, { useState } from "react";
+import React, { ChangeEventHandler, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import PT from "prop-types";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsstatusSelectors } from "../../../ducks/behandlingsstatus";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { navigeringOperations } from "../../../ducks/navigering";
-import Knapperad from "../../knapperad";
+import { behandlingerOperations, behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsstatusSelectors } from "../../../../ducks/behandlingsstatus";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { navigeringOperations } from "../../../../ducks/navigering";
+import Knapperad from "../../../knapperad";
 
-import * as Mui from "../../ui";
-import * as Api from "../../../services/api";
-import * as Nav from "../../../utils/navFrontend";
-import * as Routing from "../../../routing";
+import * as Mui from "../../../ui";
+import * as Api from "../../../../services/api";
+import * as Nav from "../../../../utils/navFrontend";
+import * as Routing from "../../../../routing";
 
-import "./dialogboksEndreBehandlingsfrist.css";
-import Datovelger from "../../datovelger";
+import "./dialogboksEndreBehandlingsstatus.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -38,7 +37,7 @@ interface Props {
   avbryt: () => void;
 }
 
-function DialogboksEndreBehandlingsfrist({
+function DialogboksEndreBehandlingsstatus({
   avbryt,
   behandlingID,
   hentBehandling,
@@ -47,55 +46,64 @@ function DialogboksEndreBehandlingsfrist({
   tilAnnenSide,
   ...props
 }: Props & PropsFromRedux) {
-  const [dato, setDato] = useState<Date>();
+  const [behandlingsstatus, setBehandlingsstatus] = useState("");
   const [generellFeil, setGenerellFeil] = useState("");
-  const [behandlingsfristEndret, setBehandlingsfristEndret] = useState(false);
+  const [behandlingsstatusEndret, setBehandlingsstatusEndret] = useState(false);
   const link = Routing.lagUrl(saksnummer, behandlingID, props.behandlingsstatus);
 
-  const endreBehandlingsfristHandle = () => {
-    if (!dato) return;
-    Api.Behandlinger.behandlingsfrist
-      .oppdaterBehandlingsfrist(behandlingID, dato)
+  const velgBehandlingsstatuserHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setBehandlingsstatus(event.target.value);
+  };
+
+  const endreBehandlingsstatuserHandle = () => {
+    Api.Behandlinger.status
+      .oppdaterStatus(behandlingID, behandlingsstatus)
       .then(() => {
-        setBehandlingsfristEndret(true);
+        setBehandlingsstatusEndret(true);
         hentBehandling(behandlingID);
-        const nyLink = Routing.lagUrl(saksnummer, behandlingID, dato?.toLocaleDateString() || "mangler-dato");
+        const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingsstatus);
         if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
       })
       .catch(() => {
         setGenerellFeil(
-          "Behandlingsfrist ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon"
+          "Behandlingsstatus ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon"
         );
       });
   };
 
-  const renderBehandlingsfristEndret = () => (
+  const renderBehandlingsstatuserEndret = () => (
     <div className="dialogboks">
       <div className="innhold">
-        <Nav.AlertStripe type="suksess">Behandlingsfristen har blitt endret og oppdatert.</Nav.AlertStripe>
+        <Nav.AlertStripe type="suksess">Behandlingsstatusen har blitt endret og oppdatert.</Nav.AlertStripe>
       </div>
-      <Mui.Knapp className="avbryt-knapp" onClick={avbryt}>
-        LUKK
-      </Mui.Knapp>
+      <div style={{ float: "right" }}>
+        <Mui.Knapp onClick={avbryt}>LUKK</Mui.Knapp>
+      </div>
     </div>
   );
 
-  const renderEndreBehandlingsfrist = () => (
+  const renderEndreBehandlingsstatuser = () => (
     <div className="dialogboks">
       {!generellFeil ? (
         <div>
-          <Nav.typo.Systemtittel className="overskrift">Velg ny behandlingsfrist</Nav.typo.Systemtittel>
+          <Nav.typo.Systemtittel className="overskrift">Velg ny behandlingsstatus</Nav.typo.Systemtittel>
           <div className="innhold">
-            <Datovelger onChange={setDato} value={dato} />
+            <Mui.KodeTermSelect
+              onChange={velgBehandlingsstatuserHandle}
+              label=""
+              disableForsteValg={!!behandlingsstatus}
+              value={behandlingsstatus}
+              koder={muligeBehandlingsstatuser}
+            />
           </div>
           <div>
             <Knapperad
               avbryt={avbryt}
               avbrytTekst="AVBRYT"
-              bekreft={endreBehandlingsfristHandle}
-              bekreftTekst="ENDRE BEHANDLINGSFRIST"
+              bekreft={endreBehandlingsstatuserHandle}
+              bekreftTekst="ENDRE BEHANDLINGSSTATUS"
               redigerbart
-              bekreftRedigerbart={!!dato}
+              bekreftRedigerbart={!!behandlingsstatus}
             />
           </div>
         </div>
@@ -114,19 +122,19 @@ function DialogboksEndreBehandlingsfrist({
 
   return (
     <Nav.Modal
-      className="dialogboksEndreBehandlingsfrist"
+      className="dialogboksEndreBehandlingsstatus"
       isOpen
-      contentLabel="Velg ny behandlingsfrist"
+      contentLabel="Velg ny behandlingsstatus"
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
     >
-      {behandlingsfristEndret ? renderBehandlingsfristEndret() : renderEndreBehandlingsfrist()}
+      {behandlingsstatusEndret ? renderBehandlingsstatuserEndret() : renderEndreBehandlingsstatuser()}
     </Nav.Modal>
   );
 }
 
-DialogboksEndreBehandlingsfrist.propTypes = {
+DialogboksEndreBehandlingsstatus.propTypes = {
   avbryt: PT.func.isRequired,
   behandlingID: PT.number.isRequired,
   behandlingsstatus: PT.string.isRequired,
@@ -136,4 +144,4 @@ DialogboksEndreBehandlingsfrist.propTypes = {
   tilAnnenSide: PT.func.isRequired,
 };
 
-export default connector(DialogboksEndreBehandlingsfrist);
+export default connector(DialogboksEndreBehandlingsstatus);

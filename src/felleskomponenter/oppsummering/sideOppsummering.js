@@ -7,11 +7,11 @@ import * as Nav from "../../utils/navFrontend";
 import * as MPT from "../../proptypes";
 import * as KV from "../../kodeverk";
 import * as Ikoner from "../../resources/images";
+import * as Modaler from "./modaler";
 
 import Oppsummering from "./oppsummering";
 
 import "./sideOppsummering.css";
-import { modalerOperations } from "../../ducks/modaler";
 import { behandlingstemaOperations } from "../../ducks/behandlingstema";
 import { behandlingsstatusOperations } from "../../ducks/behandlingsstatus";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
@@ -36,17 +36,18 @@ const SideOppsummering = ({
   behandlingsgrunnlagPeriodeTom,
   behandlingsgrunnlagMottaksdato,
   periodeLabel,
-  visEndreBehandlingstemaDialogHandle, // TODO: heller rendre direkte her
-  visEndreBehandlingsstatusDialogHandle, // TODO: heller rendre direkte her
-  visEndreBehandlingsfristDialogHandle, // TODO: heller rendre direkte her
   hentMuligeBehandlingstema,
   hentMuligeBehandlingsstatuser,
   behandlingID,
 }) => {
   if (!oppsummering) return <div />;
 
+  const [visEndreBehandlingstema, setVisEndreBehandlingstema] = useState(false);
+  const [visEndreBehandlingsstatus, setVisEndreBehandlingsstatus] = useState(false);
+  const [visEndreBehandlingsfrist, setVisEndreBehandlingsfrist] = useState(false);
   const [kanEndreBehandlingstema, setKanEndreBehandlingstema] = useState(false);
-  const [kanEndrebehandlingsstatus, setKanEndrebehandlingsstatus] = useState(false);
+  const [kanEndreBehandlingsstatus, setKanEndreBehandlingsstatus] = useState(false);
+
   const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || "";
   const behandlingsstatus = renderBehandlingsstatus();
 
@@ -62,11 +63,11 @@ const SideOppsummering = ({
 
       hentMuligeBehandlingsstatuser(behandlingID)
         .then((response) =>
-          setKanEndrebehandlingsstatus(
+          setKanEndreBehandlingsstatus(
             response.data.muligeBehandlingsstatuser && response.data.muligeBehandlingsstatuser.length !== 0
           )
         )
-        .catch(() => setKanEndrebehandlingsstatus(false));
+        .catch(() => setKanEndreBehandlingsstatus(false));
     }
   }, [behandlingID]);
 
@@ -75,11 +76,11 @@ const SideOppsummering = ({
       {(statusBehandlingsstatus) =>
         statusBehandlingsstatus === "enabled" ? (
           <Nav.typo.Normaltekst
-            className={kanEndrebehandlingsstatus ? "behandlingsstatus_redigerbar" : ""}
-            onClick={kanEndrebehandlingsstatus ? visEndreBehandlingsstatusDialogHandle : null}
+            className={kanEndreBehandlingsstatus ? "behandlingsstatus_redigerbar" : ""}
+            onClick={kanEndreBehandlingsstatus ? () => setVisEndreBehandlingsstatus(true) : null}
           >
             Status: {KV.objektTilTerm(oppsummering.behandlingsstatus)}{" "}
-            {kanEndrebehandlingsstatus ? (
+            {kanEndreBehandlingsstatus ? (
               <Ikoner.BlyantActive className="blyant" />
             ) : (
               <Ikoner.BlyantDisabled className="blyant" />
@@ -117,22 +118,22 @@ const SideOppsummering = ({
                         <OppsummeringVerdiParRedigerbar
                           nokkel="Frist"
                           verdi={formatterDatoTilNorsk(oppsummering.behandlingsfrist)}
-                          onClick={visEndreBehandlingsfristDialogHandle}
+                          onClick={() => setVisEndreBehandlingsfrist(true)}
                         />
                       }
                       behandlingsstatusLinje={
                         <OppsummeringVerdiParRedigerbar
                           nokkel="Status"
                           verdi={KV.objektTilTerm(oppsummering.behandlingsstatus)}
-                          redigerbart={kanEndrebehandlingsstatus}
-                          onClick={visEndreBehandlingsstatusDialogHandle}
+                          redigerbart={kanEndreBehandlingsstatus}
+                          onClick={() => setVisEndreBehandlingsstatus(true)}
                         />
                       }
                       behandlingstemaLinje={
                         <OppsummeringVerdiParRedigerbar
                           verdi={tittel}
                           redigerbart={kanEndreBehandlingstema}
-                          onClick={visEndreBehandlingstemaDialogHandle}
+                          onClick={() => setVisEndreBehandlingstema(true)}
                         />
                       }
                       behandlingstypeLinje={
@@ -159,6 +160,19 @@ const SideOppsummering = ({
                 </FeatureToggle>
               )}
             </Nav.Panel>
+
+            {visEndreBehandlingsfrist && (
+              <Modaler.EndreBehandlingsfrist
+                behandlingID={behandlingID}
+                avbryt={() => setVisEndreBehandlingsfrist(false)}
+              />
+            )}
+            {visEndreBehandlingsstatus && (
+              <Modaler.EndreBehandlingsstatus avbryt={() => setVisEndreBehandlingsstatus(false)} />
+            )}
+            {visEndreBehandlingstema && (
+              <Modaler.EndreBehandlingstema avbryt={() => setVisEndreBehandlingstema(false)} />
+            )}
           </section>
         ) : (
           <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -172,7 +186,7 @@ const SideOppsummering = ({
                 <Nav.Column xs="12" md="12">
                   <Nav.typo.Undertittel
                     className={kanEndreBehandlingstema ? "behandlingstema_redigerbar" : ""}
-                    onClick={kanEndreBehandlingstema ? visEndreBehandlingstemaDialogHandle : null}
+                    onClick={kanEndreBehandlingstema ? () => setVisEndreBehandlingstema(true) : null}
                   >
                     {tittel}{" "}
                     {kanEndreBehandlingstema ? (
@@ -239,9 +253,6 @@ SideOppsummering.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string,
   behandlingsgrunnlagMottaksdato: PT.string,
   periodeLabel: PT.string,
-  visEndreBehandlingstemaDialogHandle: PT.func.isRequired,
-  visEndreBehandlingsstatusDialogHandle: PT.func.isRequired,
-  visEndreBehandlingsfristDialogHandle: PT.func.isRequired,
   hentMuligeBehandlingstema: PT.func.isRequired,
   hentMuligeBehandlingsstatuser: PT.func.isRequired,
   behandlingID: PT.number.isRequired,
@@ -267,9 +278,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  visEndreBehandlingstemaDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingstema()),
-  visEndreBehandlingsstatusDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingsstatus()),
-  visEndreBehandlingsfristDialogHandle: () => dispatch(modalerOperations.visEndreBehandlingsfrist()),
   hentMuligeBehandlingstema: (behandlingID) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
   hentMuligeBehandlingsstatuser: (behandlingID) =>
