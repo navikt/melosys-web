@@ -1,5 +1,9 @@
-import * as EndreBehandlingsfrist from "./endreBehandlingsfrist/dialogboksEndreBehandlingsfrist";
-import * as EndreBehandlingsstatus from "./endreBehandlingsstatus/dialogboksEndreBehandlingsstatus";
-import * as EndreBehandlingstema from "./endreBehandlingstema/dialogboksEndreBehandlingstema";
+import DialogboksBehandlingsstatus from "./endreBehandlingsstatus/dialogboksEndreBehandlingsstatus";
+import DialogboksEndreBehandlingstema from "./endreBehandlingstema/dialogboksEndreBehandlingstema";
+import DialogboksEndreBehandlingsfrist from "./endreBehandlingsfrist/dialogboksEndreBehandlingsfrist";
 
-export { EndreBehandlingsfrist, EndreBehandlingsstatus, EndreBehandlingstema };
+export {
+  DialogboksBehandlingsstatus as EndreBehandlingsstatus,
+  DialogboksEndreBehandlingstema as EndreBehandlingstema,
+  DialogboksEndreBehandlingsfrist as EndreBehandlingsfrist,
+};
