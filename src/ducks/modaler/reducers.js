@@ -8,9 +8,6 @@ const modaler = {
   oppfrisk: "oppfrisk",
   validering: "validering",
   revurderFagsak: "revurderFagsak",
-  endreBehandlingstema: "endreBehandlingstema",
-  endreBehandlingsstatus: "endreBehandlingsstatus",
-  endreBehandlingsfrist: "endreBehandlingsfrist",
 };
 
 const initialState = {
@@ -32,15 +29,6 @@ const initialState = {
       synlig: false,
     },
     [modaler.revurderFagsak]: {
-      synlig: false,
-    },
-    [modaler.endreBehandlingstema]: {
-      synlig: false,
-    },
-    [modaler.endreBehandlingsstatus]: {
-      synlig: false,
-    },
-    [modaler.endreBehandlingsfrist]: {
       synlig: false,
     },
   },
@@ -78,15 +66,6 @@ export default function reducer(state = initialState, action) {
     }
     case Types.OPPDATER_REVURDER_FAGSAK: {
       return lagNyState(state, action, modaler.revurderFagsak);
-    }
-    case Types.OPPDATER_ENDRE_BEHANDLINGSTEMA: {
-      return lagNyState(state, action, modaler.endreBehandlingstema);
-    }
-    case Types.OPPDATER_ENDRE_BEHANDLINGSSTATUS: {
-      return lagNyState(state, action, modaler.endreBehandlingsstatus);
-    }
-    case Types.OPPDATER_ENDRE_BEHANDLINGSFRIST: {
-      return lagNyState(state, action, modaler.endreBehandlingsfrist);
     }
     default:
       return state;
