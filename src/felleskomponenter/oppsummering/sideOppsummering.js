@@ -94,145 +94,141 @@ const SideOppsummering = ({
   );
 
   return (
-    <FeatureToggle togglename="melosys.oversikt.NYTT_DESIGN">
-      {(statusNyttDesign) =>
-        statusNyttDesign === "enabled" ? (
-          <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
-            <Nav.Panel className="saksbehandling__soknadSammendrag">
-              <Nav.Row>
-                <Nav.Column>{oppsummering.type}</Nav.Column>
-              </Nav.Row>
-              <Nav.Row>
-                <Nav.Column xs="12">
-                  {oppsummering && (
-                    <Oppsummering
-                      arbeidsland={arbeidsland}
-                      lovvalgsland={lovvalgsland}
-                      fagsak={fagsak}
-                      oppsummering={oppsummering}
-                      behandlingstema={behandlingstema}
-                      lovvalgsperiodeFom={lovvalgsperiodeFom}
-                      lovvalgsperiodeTom={lovvalgsperiodeTom}
-                      mottattDato={behandlingsgrunnlagMottaksdato}
-                      behandlingsfristLinje={
-                        <OppsummeringVerdiParRedigerbar
-                          nokkel="Frist"
-                          verdi={formatterDatoTilNorsk(oppsummering.behandlingsfrist)}
-                          onClick={() => setVisEndreBehandlingsfrist(true)}
-                        />
-                      }
-                      behandlingsstatusLinje={
-                        <OppsummeringVerdiParRedigerbar
-                          nokkel="Status"
-                          verdi={KV.objektTilTerm(oppsummering.behandlingsstatus)}
-                          redigerbart={kanEndreBehandlingsstatus}
-                          onClick={() => setVisEndreBehandlingsstatus(true)}
-                        />
-                      }
-                      behandlingstemaLinje={
-                        <OppsummeringVerdiParRedigerbar
-                          verdi={tittel}
-                          redigerbart={kanEndreBehandlingstema}
-                          onClick={() => setVisEndreBehandlingstema(true)}
-                        />
-                      }
-                      behandlingstypeLinje={
-                        // TODO: Placeholderverdier inntil MELOSYS-4387
-                        <OppsummeringVerdiParRedigerbar
-                          verdi={KV.objektTilTerm(oppsummering.behandlingstype)}
-                          redigerbart={false}
-                          onClick={() => console.log("Endre type")}
-                        />
-                      }
-                    />
-                  )}
-                </Nav.Column>
-              </Nav.Row>
-              {behandlingsstatus && (
-                <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
-                  {(statusBehandlingsstatus) =>
-                    statusBehandlingsstatus === "enabled" ? null : (
-                      <Nav.Row>
-                        <Nav.Column xs="12">{behandlingsstatus}</Nav.Column>
-                      </Nav.Row>
-                    )
-                  }
-                </FeatureToggle>
-              )}
-            </Nav.Panel>
-
-            {visEndreBehandlingsfrist && (
-              <Modaler.EndreBehandlingsfrist
-                behandlingID={behandlingID}
-                avbryt={() => setVisEndreBehandlingsfrist(false)}
-              />
-            )}
-            {visEndreBehandlingsstatus && (
-              <Modaler.EndreBehandlingsstatus avbryt={() => setVisEndreBehandlingsstatus(false)} />
-            )}
-            {visEndreBehandlingstema && (
-              <Modaler.EndreBehandlingstema avbryt={() => setVisEndreBehandlingstema(false)} />
-            )}
-          </section>
-        ) : (
-          <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
-            <Nav.Panel className="saksbehandling__soknadSammendrag">
-              <Nav.Row>
-                <Nav.Column xs="12" md="12">
-                  <div className="oppsummering__menylinje">{renderBehandlingsmeny()}</div>
-                </Nav.Column>
-              </Nav.Row>
-              <Nav.Row>
-                <Nav.Column xs="12" md="12">
-                  <Nav.typo.Undertittel
-                    className={kanEndreBehandlingstema ? "behandlingstema_redigerbar" : ""}
-                    onClick={kanEndreBehandlingstema ? () => setVisEndreBehandlingstema(true) : null}
-                  >
-                    {tittel}{" "}
-                    {kanEndreBehandlingstema ? (
-                      <Ikoner.BlyantActive className="blyant" />
-                    ) : (
-                      <Ikoner.BlyantDisabled className="blyant" />
+    <>
+      <FeatureToggle togglename="melosys.oversikt.NYTT_DESIGN">
+        {(statusNyttDesign) =>
+          statusNyttDesign === "enabled" ? (
+            <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
+              <Nav.Panel className="saksbehandling__soknadSammendrag">
+                <Nav.Row>
+                  <Nav.Column>{oppsummering.type}</Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="12">
+                    {oppsummering && (
+                      <Oppsummering
+                        arbeidsland={arbeidsland}
+                        lovvalgsland={lovvalgsland}
+                        fagsak={fagsak}
+                        oppsummering={oppsummering}
+                        behandlingstema={behandlingstema}
+                        lovvalgsperiodeFom={lovvalgsperiodeFom}
+                        lovvalgsperiodeTom={lovvalgsperiodeTom}
+                        mottattDato={behandlingsgrunnlagMottaksdato}
+                        behandlingsfristLinje={
+                          <OppsummeringVerdiParRedigerbar
+                            nokkel="Frist"
+                            verdi={formatterDatoTilNorsk(oppsummering.behandlingsfrist)}
+                            onClick={() => setVisEndreBehandlingsfrist(true)}
+                          />
+                        }
+                        behandlingsstatusLinje={
+                          <OppsummeringVerdiParRedigerbar
+                            nokkel="Status"
+                            verdi={KV.objektTilTerm(oppsummering.behandlingsstatus)}
+                            redigerbart={kanEndreBehandlingsstatus}
+                            onClick={() => setVisEndreBehandlingsstatus(true)}
+                          />
+                        }
+                        behandlingstemaLinje={
+                          <OppsummeringVerdiParRedigerbar
+                            verdi={tittel}
+                            redigerbart={kanEndreBehandlingstema}
+                            onClick={() => setVisEndreBehandlingstema(true)}
+                          />
+                        }
+                        behandlingstypeLinje={
+                          // TODO: Placeholderverdier inntil MELOSYS-4387
+                          <OppsummeringVerdiParRedigerbar
+                            verdi={KV.objektTilTerm(oppsummering.behandlingstype)}
+                            redigerbart={false}
+                            onClick={() => console.log("Endre type")}
+                          />
+                        }
+                      />
                     )}
-                  </Nav.typo.Undertittel>
-                </Nav.Column>
-              </Nav.Row>
-              <Nav.Row>
-                <Nav.Column xs="12">
-                  {oppsummering && (
-                    <OppsummeringGammel
-                      arbeidsland={arbeidsland}
-                      oppholdsland={oppholdsland}
-                      lovvalgsland={lovvalgsland}
-                      fagsak={fagsak}
-                      oppsummering={oppsummering}
-                      behandlingsstatus={renderBehandlingsstatusLinje}
-                      person={person}
-                      lovvalgsperiodeFom={lovvalgsperiodeFom}
-                      lovvalgsperiodeTom={lovvalgsperiodeTom}
-                      behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-                      behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                      periodeLabel={periodeLabel}
-                    />
-                  )}
-                </Nav.Column>
-              </Nav.Row>
-              {behandlingsstatus && (
-                <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
-                  {(statusBehandlingsstatus) =>
-                    statusBehandlingsstatus === "enabled" ? null : (
-                      <Nav.Row>
-                        <Nav.Column xs="12">{behandlingsstatus}</Nav.Column>
-                      </Nav.Row>
-                    )
-                  }
-                </FeatureToggle>
-              )}
-            </Nav.Panel>
-          </section>
-        )
-      }
-    </FeatureToggle>
+                  </Nav.Column>
+                </Nav.Row>
+                {behandlingsstatus && (
+                  <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
+                    {(statusBehandlingsstatus) =>
+                      statusBehandlingsstatus === "enabled" ? null : (
+                        <Nav.Row>
+                          <Nav.Column xs="12">{behandlingsstatus}</Nav.Column>
+                        </Nav.Row>
+                      )
+                    }
+                  </FeatureToggle>
+                )}
+              </Nav.Panel>
+            </section>
+          ) : (
+            <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
+              <Nav.Panel className="saksbehandling__soknadSammendrag">
+                <Nav.Row>
+                  <Nav.Column xs="12" md="12">
+                    <div className="oppsummering__menylinje">{renderBehandlingsmeny()}</div>
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="12" md="12">
+                    <Nav.typo.Undertittel
+                      className={kanEndreBehandlingstema ? "behandlingstema_redigerbar" : ""}
+                      onClick={kanEndreBehandlingstema ? () => setVisEndreBehandlingstema(true) : null}
+                    >
+                      {tittel}{" "}
+                      {kanEndreBehandlingstema ? (
+                        <Ikoner.BlyantActive className="blyant" />
+                      ) : (
+                        <Ikoner.BlyantDisabled className="blyant" />
+                      )}
+                    </Nav.typo.Undertittel>
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="12">
+                    {oppsummering && (
+                      <OppsummeringGammel
+                        arbeidsland={arbeidsland}
+                        oppholdsland={oppholdsland}
+                        lovvalgsland={lovvalgsland}
+                        fagsak={fagsak}
+                        oppsummering={oppsummering}
+                        behandlingsstatus={renderBehandlingsstatusLinje}
+                        person={person}
+                        lovvalgsperiodeFom={lovvalgsperiodeFom}
+                        lovvalgsperiodeTom={lovvalgsperiodeTom}
+                        behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+                        behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                        periodeLabel={periodeLabel}
+                      />
+                    )}
+                  </Nav.Column>
+                </Nav.Row>
+                {behandlingsstatus && (
+                  <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
+                    {(statusBehandlingsstatus) =>
+                      statusBehandlingsstatus === "enabled" ? null : (
+                        <Nav.Row>
+                          <Nav.Column xs="12">{behandlingsstatus}</Nav.Column>
+                        </Nav.Row>
+                      )
+                    }
+                  </FeatureToggle>
+                )}
+              </Nav.Panel>
+            </section>
+          )
+        }
+      </FeatureToggle>
+      {visEndreBehandlingsfrist && (
+        <Modaler.EndreBehandlingsfrist behandlingID={behandlingID} avbryt={() => setVisEndreBehandlingsfrist(false)} />
+      )}
+      {visEndreBehandlingsstatus && (
+        <Modaler.EndreBehandlingsstatus avbryt={() => setVisEndreBehandlingsstatus(false)} />
+      )}
+      {visEndreBehandlingstema && <Modaler.EndreBehandlingstema avbryt={() => setVisEndreBehandlingstema(false)} />}
+    </>
   );
 };
 
