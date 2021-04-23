@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
+import classNames from "classnames";
+
 import MKV from "../../melosyskodeverk";
 
 import * as Nav from "../../utils/navFrontend";
@@ -76,10 +78,10 @@ const SideOppsummering = ({
       {(statusBehandlingsstatus) =>
         statusBehandlingsstatus === "enabled" ? (
           <Nav.typo.Normaltekst
-            className={kanEndreBehandlingsstatus ? "behandlingsstatus_redigerbar" : ""}
+            className={classNames({ behandlingsstatus__redigerbar: kanEndreBehandlingsstatus })}
             onClick={kanEndreBehandlingsstatus ? () => setVisEndreBehandlingsstatus(true) : null}
           >
-            Status: {KV.objektTilTerm(oppsummering.behandlingsstatus)}{" "}
+            {KV.objektTilTerm(oppsummering.behandlingsstatus)}{" "}
             {kanEndreBehandlingsstatus ? (
               <Ikoner.BlyantActive className="blyant" />
             ) : (
@@ -87,7 +89,7 @@ const SideOppsummering = ({
             )}
           </Nav.typo.Normaltekst>
         ) : (
-          <div>Status: {KV.objektTilTerm(oppsummering.behandlingsstatus)}</div>
+          <div>{KV.objektTilTerm(oppsummering.behandlingsstatus)}</div>
         )
       }
     </FeatureToggle>
@@ -173,7 +175,7 @@ const SideOppsummering = ({
                 <Nav.Row>
                   <Nav.Column xs="12" md="12">
                     <Nav.typo.Undertittel
-                      className={kanEndreBehandlingstema ? "behandlingstema_redigerbar" : ""}
+                      className={classNames({ behandlingstema__redigerbar: kanEndreBehandlingstema })}
                       onClick={kanEndreBehandlingstema ? () => setVisEndreBehandlingstema(true) : null}
                     >
                       {tittel}{" "}
