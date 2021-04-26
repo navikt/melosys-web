@@ -22,7 +22,6 @@ declare module "Domene" {
   export type Fagsak = import("./@types").Fagsak;
   export type GeneriskAdresse = import("./@types").GeneriskAdresse;
   export type MedlPeriode = import("./@types").MedlPeriode;
-  export type Oppsummering = import("./@types").Oppsummering;
   export type Periode = import("./@types").Periode;
   export type Person = import("./@types").Person;
   export type PersonHistorikk = import("./@types").PersonHistorikk;

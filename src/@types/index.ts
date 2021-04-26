@@ -6,7 +6,6 @@ export type {
   MedfolgendeFamiliemedlem,
 } from "./avklartfakta";
 export type { default as Fagsak } from "./fagsak";
-export type { default as Oppsummering } from "./oppsummering";
 export type { Person, Familiemedlem } from "./person";
 export type { DokumentOversikt, Mottaksretning, FysiskDokument, Dokument, BrevPdfData, SedPdfData } from "./dokument";
 export type { Periode, Lovvalgsperiode, Medlemskapsperiode, OppdaterMedlemskapsperiode } from "./periode";
