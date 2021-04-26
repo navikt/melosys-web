@@ -240,28 +240,28 @@ export default function reducer(state = initialState, action) {
             erArbeidsgiveravgiftHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden,
             erTrukketTrygdeavgift: dokument.loennOgGodtgjoerelse.erTrukketTrygdeavgift,
           },
-          oevrigOmArbeidstaker: {
+          arbeidssituasjonOgOevrig: {
             harLoennetArbeidMinstEnMndFoerUtsending: Utils._isNil(
-              dokument.oevrigOmArbeidstaker.harLoennetArbeidMinstEnMndFoerUtsending
+              dokument.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending
             )
               ? null
-              : dokument.oevrigOmArbeidstaker.harLoennetArbeidMinstEnMndFoerUtsending,
-            beskrivelseArbeidSisteMnd: dokument.oevrigOmArbeidstaker.beskrivelseArbeidSisteMnd,
+              : dokument.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending,
+            beskrivelseArbeidSisteMnd: dokument.arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd,
             harAndreArbeidsgivereIUtsendingsperioden: Utils._isNil(
-              dokument.oevrigOmArbeidstaker.harAndreArbeidsgivereIUtsendingsperioden
+              dokument.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden
             )
               ? null
-              : dokument.oevrigOmArbeidstaker.harAndreArbeidsgivereIUtsendingsperioden,
-            beskrivelseAnnetArbeid: dokument.oevrigOmArbeidstaker.beskrivelseAnnetArbeid,
-            erSkattepliktig: Utils._isNil(dokument.oevrigOmArbeidstaker.erSkattepliktig)
+              : dokument.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden,
+            beskrivelseAnnetArbeid: dokument.arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid,
+            erSkattepliktig: Utils._isNil(dokument.arbeidssituasjonOgOevrig.erSkattepliktig)
               ? null
-              : dokument.oevrigOmArbeidstaker.erSkattepliktig,
-            mottarYtelserNorge: Utils._isNil(dokument.oevrigOmArbeidstaker.mottarYtelserNorge)
+              : dokument.arbeidssituasjonOgOevrig.erSkattepliktig,
+            mottarYtelserNorge: Utils._isNil(dokument.arbeidssituasjonOgOevrig.mottarYtelserNorge)
               ? null
-              : dokument.oevrigOmArbeidstaker.mottarYtelserNorge,
-            mottarYtelserUtlandet: Utils._isNil(dokument.oevrigOmArbeidstaker.mottarYtelserUtlandet)
+              : dokument.arbeidssituasjonOgOevrig.mottarYtelserNorge,
+            mottarYtelserUtlandet: Utils._isNil(dokument.arbeidssituasjonOgOevrig.mottarYtelserUtlandet)
               ? null
-              : dokument.oevrigOmArbeidstaker.mottarYtelserUtlandet,
+              : dokument.arbeidssituasjonOgOevrig.mottarYtelserUtlandet,
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,

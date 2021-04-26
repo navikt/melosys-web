@@ -14,48 +14,51 @@ import "./redigerer.css";
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
 const mapStateToProps = (state: RootState) => {
-  const oevrigOmArbeidstaker = soknadFormValueSelector(state, "oevrigOmArbeidstaker") as KV.Form.OevrigOmArbeidstaker;
+  const arbeidssituasjonOgOevrig = soknadFormValueSelector(
+    state,
+    "arbeidssituasjonOgOevrig"
+  ) as KV.Form.ArbeidssituasjonOgOevrig;
 
   return {
-    oevrigOmArbeidstaker,
+    arbeidssituasjonOgOevrig,
   };
 };
 
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const Redigerer = ({ oevrigOmArbeidstaker }: PropsFromRedux) => {
+const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
   return (
     <div className="ovrig-om-arbeidstaker__redigerer">
       <LabelOgEditerbartSvar
         label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
-        svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.harLoennetArbeidMinstEnMndFoerUtsending" />}
+        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending" />}
       />
       <Beskrivelse
         className="beskrivelse"
         label={Sporsmal.beskrivelseArbeidSisteMnd}
-        tekst={oevrigOmArbeidstaker.beskrivelseArbeidSisteMnd}
+        tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
       />
       <LabelOgEditerbartSvar
         label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
-        svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.harAndreArbeidsgivereIUtsendingsperioden" />}
+        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden" />}
       />
       <Beskrivelse
         className="beskrivelse"
         label={Sporsmal.beskrivelseAnnetArbeid}
-        tekst={oevrigOmArbeidstaker.beskrivelseAnnetArbeid}
+        tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
       />
       <LabelOgEditerbartSvar
         label={Sporsmal.erSkattepliktig}
-        svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.erSkattepliktig" />}
+        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.erSkattepliktig" />}
       />
       <LabelOgEditerbartSvar
         label={Sporsmal.mottarYtelserNorge}
-        svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.mottarYtelserNorge" />}
+        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserNorge" />}
       />
       <LabelOgEditerbartSvar
         label={Sporsmal.mottarYtelserUtlandet}
-        svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.mottarYtelserUtlandet" />}
+        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserUtlandet" />}
       />
     </div>
   );

@@ -55,7 +55,7 @@ describe("Behandlingsgrunnlag operations", () => {
             luftfartBaser: [],
             arbeidsgiversBekreftelse: {},
             overgangsregelbestemmelser: [],
-            oevrigOmArbeidstaker: {},
+            arbeidssituasjonOgOevrig: {},
           },
         },
       },
@@ -97,7 +97,7 @@ describe("Behandlingsgrunnlag operations", () => {
               periode: {},
               luftfartBaser: [],
               arbeidsgiversBekreftelse: {},
-              oevrigOmArbeidstaker: {},
+              arbeidssituasjonOgOevrig: {},
             },
           }),
         })

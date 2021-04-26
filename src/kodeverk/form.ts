@@ -52,7 +52,7 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
-export interface OevrigOmArbeidstaker {
+export interface ArbeidssituasjonOgOevrig {
   harLoennetArbeidMinstEnMndFoerUtsending?: boolean | null;
   beskrivelseArbeidSisteMnd?: string | null;
   harAndreArbeidsgivereIUtsendingsperioden?: boolean | null;

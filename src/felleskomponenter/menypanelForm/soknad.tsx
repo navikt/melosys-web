@@ -70,17 +70,18 @@ const mapStateToProps = (state: RootState) => ({
         behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
       ),
     },
-    oevrigOmArbeidstaker: {
-      harLoennetArbeidMinstEnMndFoerUtsending: behandlingsgrunnlagSelectors.OvrigOmArbeidstakerSelector(state)
+    arbeidssituasjonOgOevrig: {
+      harLoennetArbeidMinstEnMndFoerUtsending: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
         .harLoennetArbeidMinstEnMndFoerUtsending,
-      beskrivelseArbeidSisteMnd: behandlingsgrunnlagSelectors.OvrigOmArbeidstakerSelector(state)
+      beskrivelseArbeidSisteMnd: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
         .beskrivelseArbeidSisteMnd,
-      harAndreArbeidsgivereIUtsendingsperioden: behandlingsgrunnlagSelectors.OvrigOmArbeidstakerSelector(state)
+      harAndreArbeidsgivereIUtsendingsperioden: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
         .harAndreArbeidsgivereIUtsendingsperioden,
-      beskrivelseAnnetArbeid: behandlingsgrunnlagSelectors.OvrigOmArbeidstakerSelector(state).beskrivelseAnnetArbeid,
-      erSkattepliktig: behandlingsgrunnlagSelectors.OvrigOmArbeidstakerSelector(state).erSkattepliktig,
-      mottarYtelserNorge: behandlingsgrunnlagSelectors.OvrigOmArbeidstakerSelector(state).mottarYtelserNorge,
-      mottarYtelserUtlandet: behandlingsgrunnlagSelectors.OvrigOmArbeidstakerSelector(state).mottarYtelserUtlandet,
+      beskrivelseAnnetArbeid: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .beskrivelseAnnetArbeid,
+      erSkattepliktig: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).erSkattepliktig,
+      mottarYtelserNorge: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserNorge,
+      mottarYtelserUtlandet: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserUtlandet,
     },
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom
