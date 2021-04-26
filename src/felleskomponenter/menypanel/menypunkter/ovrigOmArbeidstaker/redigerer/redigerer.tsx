@@ -9,6 +9,8 @@ import Sporsmal from "../sporsmal";
 import LabelOgEditerbartSvar, { RadioknappSvar } from "./labelOgEditerbartSvar";
 import Beskrivelse from "../beskrivelse";
 
+import "./redigerer.css";
+
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
 const mapStateToProps = (state: RootState) => {
@@ -24,17 +26,25 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const Redigerer = ({ oevrigOmArbeidstaker }: PropsFromRedux) => {
   return (
-    <div>
+    <div className="ovrig-om-arbeidstaker__redigerer">
       <LabelOgEditerbartSvar
         label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
         svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.harLoennetArbeidMinstEnMndFoerUtsending" />}
       />
-      <Beskrivelse label={Sporsmal.beskrivelseArbeidSisteMnd} tekst={oevrigOmArbeidstaker.beskrivelseArbeidSisteMnd} />
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseArbeidSisteMnd}
+        tekst={oevrigOmArbeidstaker.beskrivelseArbeidSisteMnd}
+      />
       <LabelOgEditerbartSvar
         label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
         svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.harAndreArbeidsgivereIUtsendingsperioden" />}
       />
-      <Beskrivelse label={Sporsmal.beskrivelseAnnetArbeid} tekst={oevrigOmArbeidstaker.beskrivelseAnnetArbeid} />
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseAnnetArbeid}
+        tekst={oevrigOmArbeidstaker.beskrivelseAnnetArbeid}
+      />
       <LabelOgEditerbartSvar
         label={Sporsmal.erSkattepliktig}
         svar={<RadioknappSvar feltNavn="oevrigOmArbeidstaker.erSkattepliktig" />}

@@ -31,12 +31,20 @@ const RedigeringUtfort = ({ oevrigOmArbeidstaker }: PropsFromRedux) => {
         label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
         svar={<JaNeiSvar svar={oevrigOmArbeidstaker.harLoennetArbeidMinstEnMndFoerUtsending} />}
       />
-      <Beskrivelse label={Sporsmal.beskrivelseArbeidSisteMnd} tekst={oevrigOmArbeidstaker.beskrivelseArbeidSisteMnd} />
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseArbeidSisteMnd}
+        tekst={oevrigOmArbeidstaker.beskrivelseArbeidSisteMnd}
+      />
       <LabelOgSvar
         label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
         svar={<JaNeiSvar svar={oevrigOmArbeidstaker.harAndreArbeidsgivereIUtsendingsperioden} />}
       />
-      <Beskrivelse label={Sporsmal.beskrivelseAnnetArbeid} tekst={oevrigOmArbeidstaker.beskrivelseAnnetArbeid} />
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseAnnetArbeid}
+        tekst={oevrigOmArbeidstaker.beskrivelseAnnetArbeid}
+      />
       <LabelOgSvar label={Sporsmal.erSkattepliktig} svar={<JaNeiSvar svar={oevrigOmArbeidstaker.erSkattepliktig} />} />
       <LabelOgSvar
         label={Sporsmal.mottarYtelserNorge}
