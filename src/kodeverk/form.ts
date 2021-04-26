@@ -52,6 +52,16 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
+export interface OevrigOmArbeidstaker {
+  harLoennetArbeidMinstEnMndFoerUtsending?: boolean | null;
+  beskrivelseArbeidSisteMnd?: string | null;
+  harAndreArbeidsgivereIUtsendingsperioden?: boolean | null;
+  beskrivelseAnnetArbeid?: string | null;
+  erSkattepliktig?: boolean | null;
+  mottarYtelserNorge?: boolean | null;
+  mottarYtelserUtlandet?: boolean | null;
+}
+
 export type SoknadFormData = any;
 
 export const SOK_ETTER_SAK = "sokEtterSak";

@@ -182,7 +182,13 @@ class LinksBuilder implements ILinksBuilder {
     this.links.push({
       label: "Øvrig om arbeidstaker",
       active: false,
-      content: <OvrigOmArbeidstaker />,
+      content: (
+        <OvrigOmArbeidstaker
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
     });
     return this;
   }

@@ -75,3 +75,8 @@ export const LonnOgGodtgjorelser = {
     arbeidsgiveravgiftOgTrygdeavgift: "Arbeidsgiveravgift og trygdeavgift",
   },
 };
+
+export const OvrigOmArbeidstaker = {
+  tittel: "Øvrig om arbeidstaker",
+  undertitler: {},
+};
