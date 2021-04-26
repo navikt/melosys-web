@@ -9,7 +9,6 @@ export type { default as Fagsak } from "./fagsak";
 export type { Person, Familiemedlem } from "./person";
 export type { DokumentOversikt, Mottaksretning, FysiskDokument, Dokument, BrevPdfData, SedPdfData } from "./dokument";
 export type { Periode, Lovvalgsperiode, Medlemskapsperiode, OppdaterMedlemskapsperiode } from "./periode";
-export type { default as PersonHistorikk } from "./personhistorikk";
 export type { default as Organisasjon } from "./organisasjon";
 export type { MedlPeriode } from "./medlemskap";
 export type { default as Aktoer } from "./aktoer";

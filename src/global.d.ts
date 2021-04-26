@@ -24,7 +24,6 @@ declare module "Domene" {
   export type MedlPeriode = import("./@types").MedlPeriode;
   export type Periode = import("./@types").Periode;
   export type Person = import("./@types").Person;
-  export type PersonHistorikk = import("./@types").PersonHistorikk;
   export type OppsummertFaktaVirksomheter = import("./@types").Virksomheter;
   export type OppsummertFaktaMedfolgendeFamilie = import("./@types").MedfolgendeFamilie;
   export type MedfolgendeFamiliemedlem = import("./@types").MedfolgendeFamiliemedlem;

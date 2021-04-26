@@ -14,7 +14,7 @@ export interface RegisterAdresse {
 
 export interface UstrukturertAdresse {
   landkode: string;
-  adresselinjer?: string[];
+  adresselinjer: string[];
 }
 
 type StrukturertAdresse = {

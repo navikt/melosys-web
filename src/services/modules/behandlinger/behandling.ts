@@ -121,7 +121,7 @@ interface Person {
   familiemedlemmer: Familiemedlemm[];
 }
 
-interface Personhistorikk {
+export interface Personhistorikk {
   bostedsadressePerioder: {
     bostedsadresse: RegisterAdresse;
     periode: Periode;
