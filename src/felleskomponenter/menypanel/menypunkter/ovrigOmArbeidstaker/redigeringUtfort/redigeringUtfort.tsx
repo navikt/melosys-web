@@ -27,27 +27,31 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const RedigeringUtfort = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
+export const RedigeringUtfort = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
   return (
     <div className="ovrig-om-arbeidstaker__redigering-utfort">
       <LabelOgSvar
         label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
         svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending} />}
       />
-      <Beskrivelse
-        className="beskrivelse"
-        label={Sporsmal.beskrivelseArbeidSisteMnd}
-        tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
-      />
+      {arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending === false && (
+        <Beskrivelse
+          className="beskrivelse"
+          label={Sporsmal.beskrivelseArbeidSisteMnd}
+          tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
+        />
+      )}
       <LabelOgSvar
         label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
         svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden} />}
       />
-      <Beskrivelse
-        className="beskrivelse"
-        label={Sporsmal.beskrivelseAnnetArbeid}
-        tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
-      />
+      {arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden === true && (
+        <Beskrivelse
+          className="beskrivelse"
+          label={Sporsmal.beskrivelseAnnetArbeid}
+          tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
+        />
+      )}
       <LabelOgSvar
         label={Sporsmal.erSkattepliktig}
         svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.erSkattepliktig} />}

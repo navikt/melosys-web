@@ -27,27 +27,31 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
+export const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
   return (
     <div className="ovrig-om-arbeidstaker__redigerer">
       <LabelOgEditerbartSvar
         label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
         svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending" />}
       />
-      <Beskrivelse
-        className="beskrivelse"
-        label={Sporsmal.beskrivelseArbeidSisteMnd}
-        tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
-      />
+      {arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending === false && (
+        <Beskrivelse
+          className="beskrivelse"
+          label={Sporsmal.beskrivelseArbeidSisteMnd}
+          tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
+        />
+      )}
       <LabelOgEditerbartSvar
         label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
         svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden" />}
       />
-      <Beskrivelse
-        className="beskrivelse"
-        label={Sporsmal.beskrivelseAnnetArbeid}
-        tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
-      />
+      {arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden === true && (
+        <Beskrivelse
+          className="beskrivelse"
+          label={Sporsmal.beskrivelseAnnetArbeid}
+          tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
+        />
+      )}
       <LabelOgEditerbartSvar
         label={Sporsmal.erSkattepliktig}
         svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.erSkattepliktig" />}
