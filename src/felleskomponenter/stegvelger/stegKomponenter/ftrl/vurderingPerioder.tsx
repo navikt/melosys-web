@@ -21,11 +21,11 @@ import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import { formSelectors } from "../../../../ducks/form";
-
-import "./vurderingPerioder.css";
 import { FeatureToggle } from "../../../../featuretoggle";
+
+import vurderingPerioderSchema from "./vurderingPerioderSchema";
+import "./vurderingPerioder.css";
 
 interface formValuesProp {
   medlemskapsperioder?: MedlemskapsperiodeProp[];
@@ -40,6 +40,7 @@ interface PeriodeElementProps {
   innvilgelsesResultater: KTObject[];
   formValues: formValuesProp;
   handleSlett: (index: number) => void;
+  erPeriodeFørSøknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
 }
 const PeriodeElement = ({
   index,
@@ -48,7 +49,16 @@ const PeriodeElement = ({
   innvilgelsesResultater,
   formValues,
   handleSlett,
+  erPeriodeFørSøknadMottatDato,
 }: PeriodeElementProps) => {
+  const filterInnvilgelsesResultater = (item: KTObject) => {
+    return formValues.medlemskapsperioder &&
+      erPeriodeFørSøknadMottatDato(formValues.medlemskapsperioder[index]) &&
+      formValues.medlemskapsperioder[index].trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL
+      ? true
+      : item.kode !== KV.Koder.DELVIS_INNVILGET;
+  };
+
   if (!formValues || !formValues.medlemskapsperioder) return null;
   return (
     <Fragment>
@@ -111,7 +121,7 @@ const PeriodeElement = ({
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
             >
-              {innvilgelsesResultater.map((item: KTObject) => (
+              {innvilgelsesResultater.filter(filterInnvilgelsesResultater).map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
                   {item.term}
                 </option>
@@ -169,6 +179,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(change(KV.Form.PERIODER, `medlemskapsperioder[${index}]`, data)),
   changeFieldFeil: (index: number, feil: string | undefined) =>
     dispatch(change(KV.Form.PERIODER, `medlemskapsperioder[${index}].feil`, feil)),
+  changeOneField: (index: number, field: string, data: any) =>
+    dispatch(change(KV.Form.PERIODER, `medlemskapsperioder[${index}].${field}`, data)),
   pushField: (data: { id: string; ny: boolean; fomDato: string | null }) =>
     dispatch(arrayPush(KV.Form.PERIODER, "medlemskapsperioder", data)),
   hentMedlemskapsperioder: (behandlingID: number) =>
@@ -203,11 +215,30 @@ const VurderingPerioder = ({
   valgtTrygdedekning,
   mottaksdato,
   formIsValid,
+  redigerbart,
+  changeOneField,
   søknadsperiode,
   ...props
 }: VurderingPerioderProps) => {
   const hjelpetekst =
-    "Perioder er foreslått på bakgrunn av periode og dekning det er søkt for, og tidspunkt søknaden ble mottatt. Du har mulighet til å gjøre endringer.";
+    "Melosys har foreslått medlemskapsperioder på bakgrunn av periode og dekning det er søkt for, og tidspunktet søknaden ble mottatt. Du har mulighet til å gjøre endringer. Hvis du har mottatt opplysninger om at søknadsperiode eller trygdedekning det er søkt om er endret, må du endre dette i det inngangssteget «start».";
+
+  const erPeriodeFørSøknadMottatDato = (medlemskapsperiode: MedlemskapsperiodeProp) => {
+    return (
+      Utils.dato.erGyldigPeriode(medlemskapsperiode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
+      Utils.dato.erGyldigPeriode(medlemskapsperiode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato))
+    );
+  };
+
+  const erKombinasjonGyldig = (medlemskapsperiode: MedlemskapsperiodeProp) => {
+    if (erPeriodeFørSøknadMottatDato(medlemskapsperiode)) {
+      return (
+        medlemskapsperiode.innvilgelsesResultat !== KV.Koder.DELVIS_INNVILGET ||
+        medlemskapsperiode.trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL
+      );
+    }
+    return medlemskapsperiode.innvilgelsesResultat !== KV.Koder.DELVIS_INNVILGET;
+  };
 
   const oppdaterMedlemskapsperiode = (
     oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode,
@@ -267,13 +298,15 @@ const VurderingPerioder = ({
   const debouncedLagreMedlemskapsperioder = useCallback(Utils._debounce(lagreMedlemskapsperioder, 1000), []);
 
   useEffect(() => {
-    oppdater();
-    if (formIsValid && formValues?.medlemskapsperioder?.length && formValues.medlemskapsperioder.length > 1) {
-      changeField(1, {
-        ...formValues.medlemskapsperioder[1],
-        fomDato: Utils.dato.plussEnDag(formValues.medlemskapsperioder[0].tomDato),
-      });
+    if (formValues?.medlemskapsperioder?.length && formValues.medlemskapsperioder.length > 1) {
+      changeOneField(1, "fomDato", Utils.dato.plussEnDag(formValues.medlemskapsperioder[0].tomDato));
     }
+    formValues?.medlemskapsperioder?.forEach((medlemskapsperiode, index) => {
+      if (!erKombinasjonGyldig(medlemskapsperiode)) {
+        changeOneField(index, "innvilgelsesResultat", "");
+      }
+    });
+    oppdater();
     debouncedLagreMedlemskapsperioder({ medlemskapsperioder: formValues?.medlemskapsperioder, valid: formIsValid });
   }, [formValues?.medlemskapsperioder, formIsValid]);
 
@@ -321,12 +354,19 @@ const VurderingPerioder = ({
     formValues.medlemskapsperioder.length < 2 &&
     !formValues.medlemskapsperioder.some((periode) => Utils._isEmpty(periode.tomDato));
 
-  const erAllePerioderAvslått = !formValues?.medlemskapsperioder?.some(
-    (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat !== KV.Koder.AVSLAATT
-  );
-
   const ingenMedlemskapsperioder =
     formValues?.medlemskapsperioder?.length === undefined || formValues.medlemskapsperioder.length === 0;
+
+  const visIkkeStøttet =
+    !ingenMedlemskapsperioder &&
+    (formValues?.medlemskapsperioder?.every(
+      (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT
+    ) ||
+      formValues?.medlemskapsperioder?.find(
+        (medlemskapsperiode) =>
+          !erPeriodeFørSøknadMottatDato(medlemskapsperiode) &&
+          medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT
+      ));
 
   return (
     <div className="vurderingPerioder">
@@ -358,6 +398,8 @@ const VurderingPerioder = ({
             index={index}
             formValues={formValues}
             handleSlett={handleSlett}
+            redigerbart={redigerbart}
+            erPeriodeFørSøknadMottatDato={erPeriodeFørSøknadMottatDato}
             {...props}
           />
         ))}
@@ -370,7 +412,7 @@ const VurderingPerioder = ({
         </div>
       )}
 
-      {erAllePerioderAvslått && !ingenMedlemskapsperioder && (
+      {visIkkeStøttet && (
         <Nav.AlertStripe type="feil">
           Søknaden kan foreløpig ikke behandles i Melosys. Avslutt saken som bortfalt.
         </Nav.AlertStripe>
@@ -381,12 +423,12 @@ const VurderingPerioder = ({
       )}
 
       <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!props.redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={!props.redigerbart || !formIsValid}
+          disabled={!redigerbart || !formIsValid}
           className="fane__navigasjonsknapp"
           onClick={handleBekreft}
         >
