@@ -1,15 +1,15 @@
 import React from "react";
-import { Person } from "Domene";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
+import * as Api from "../../../../services/api";
 
 import EnkeltDato from "../../../datoOmrade/enkeltDato";
 
 import "./personinfo.css";
 
 interface PersonInfoProps {
-  person: Person;
+  person: Api.Types.Person;
 }
 
 const PersonInfo = ({ person: { fnr, statsborgerskap, foedselsdato, sivilstand, personStatus } }: PersonInfoProps) => (

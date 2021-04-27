@@ -1,6 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import { RegisterAdresse, UstrukturertAdresse, MidlertidigAdresse, Periode } from "../types";
+import { RegisterAdresse, Periode, Person, Personhistorikk } from "../types";
 
 import { getAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER } from "../../api-constants";
@@ -95,45 +95,6 @@ interface Medlemsperiode {
   trygdedekning: KTObject;
   kildedokumenttype: KTObject;
   kilde: KTObject;
-}
-
-interface Familiemedlemm {
-  fnr: string;
-  sammensattNavn: string;
-  relasjonstype: KTObject;
-  alder: number | null;
-  borMedBruker: boolean;
-  sivilstand: KTObject | null;
-  sivilstandGyldighetsperiodeFom: string | null;
-  fnrAnnenForelder: string | null;
-}
-
-interface Person {
-  erEgenAnsatt: boolean;
-  personStatus: KTObject;
-  sammensattNavn: string;
-  kjoenn: KTObject;
-  fnr: string;
-  foedselsdato: string;
-  sivilstand: KTObject;
-  statsborgerskap: KTObject;
-  statsborgerskapDato: string;
-  familiemedlemmer: Familiemedlemm[];
-}
-
-export interface Personhistorikk {
-  bostedsadressePerioder: {
-    bostedsadresse: RegisterAdresse;
-    periode: Periode;
-  }[];
-  postadressePerioder: {
-    postadresse: UstrukturertAdresse;
-    periode: Periode;
-  }[];
-  midlertidigAdressePerioder: {
-    midlertidigAdresse: MidlertidigAdresse;
-    periode: Periode;
-  }[];
 }
 
 interface Sed {

@@ -23,7 +23,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import "./person.css";
 
 interface AdresseRadProps {
-  periode: Api.Periode;
+  periode: Api.Types.Periode;
   adresseNode: ReactNode;
 }
 
@@ -83,7 +83,7 @@ export const Person = ({
     bostedsadressePerioder,
     postadressePerioder,
     midlertidigAdressePerioder,
-  } = personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
+  } = personhistorikk as Api.Types.Personhistorikk;
 
   if (Object.keys(person).length === 0) {
     return null;
