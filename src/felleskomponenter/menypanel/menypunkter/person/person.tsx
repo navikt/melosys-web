@@ -83,7 +83,7 @@ export const Person = ({
     bostedsadressePerioder,
     postadressePerioder,
     midlertidigAdressePerioder,
-  } = personhistorikk as Api.Types.Personhistorikk;
+  } = personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
 
   if (Object.keys(person).length === 0) {
     return null;
