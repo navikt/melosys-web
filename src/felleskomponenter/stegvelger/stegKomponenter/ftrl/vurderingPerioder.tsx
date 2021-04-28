@@ -448,6 +448,7 @@ const VurderingPerioderForm = reduxForm<{}, PropsFromRedux & Props>({
     lagYupToReduxformErrorMapper(vurderingPerioderSchema, {
       context: {
         soknadsperiode: props.soknadsperiode,
+        mottaksdato: props.mottaksdato,
         formValues: props.formValues,
       },
     })(values),

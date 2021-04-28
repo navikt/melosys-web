@@ -6,12 +6,23 @@ const FOM_FELT_KREVES = { melding: "Må fylles ut" };
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
 const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
-const allePerioderErAvslaatt = (medlemskapsperioder) => {
-  if (!medlemskapsperioder) return false;
-  const erAllePerioderAnnetEnnAvslatt = medlemskapsperioder.some(
-    (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat !== KV.Koder.AVSLAATT
+const erPeriodeTidligereEnnMottattDato = (medlemskapsperiode, mottaksdato) => {
+  return (
+    Utils.dato.erGyldigPeriode(medlemskapsperiode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
+    Utils.dato.erGyldigPeriode(medlemskapsperiode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato))
   );
-  return !erAllePerioderAnnetEnnAvslatt;
+};
+
+const ugyldigeInnvilgelsesResultater = (medlemskapsperioder, mottaksdato) => {
+  if (!medlemskapsperioder) return false;
+  return (
+    medlemskapsperioder.every((medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT) ||
+    medlemskapsperioder.find(
+      (medlemskapsperiode) =>
+        !erPeriodeTidligereEnnMottattDato(medlemskapsperiode, mottaksdato) &&
+        medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT
+    )
+  );
 };
 
 const erFeilAktivPaaPerioder = (medlemskapsperioder) =>
@@ -66,8 +77,8 @@ const vurdering_perioder = object().shape({
     )
     .min(1)
     .max(2),
-  alleMedlemskapsperioderAvslaatt: string().when("medlemskapsperioder", {
-    is: allePerioderErAvslaatt,
+  ikkeStottetIMelosys: string().when(["medlemskapsperioder", "$mottaksdato"], {
+    is: ugyldigeInnvilgelsesResultater,
     then: string().required(),
   }),
   feilAktivPaaPerioder: string().when("medlemskapsperioder", {
