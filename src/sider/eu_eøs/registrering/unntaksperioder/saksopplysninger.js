@@ -103,7 +103,10 @@ const Saksopplysninger = ({
   };
 
   const initialiserSkjema = () => {
-    if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.GODKJENT && erGyldigLovvalgsperiode()) {
+    if (
+      behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.GODKJENT &&
+      erGyldigLovvalgsperiode()
+    ) {
       godkjentUnntaksperiode();
     } else if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT) {
       ikkeGodkjentUnntaksperiode(behandlingsresultat);

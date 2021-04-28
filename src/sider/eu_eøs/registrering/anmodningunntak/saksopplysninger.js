@@ -94,14 +94,14 @@ const Saksopplysninger = ({
   };
 
   const initialiserSkjema = () => {
-      if (!erGyldigLovvalgsperiode()) {
-        setAnmodningsperiodeSvarType(MKV.Koder.anmodningsperiodesvartyper.AVSLAG);
-      } else if (anmodningsperiodeSvar?.anmodningsperiodeSvarType) {
-          setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
-        }
-      if (anmodningsperiodeSvar?.begrunnelseFritekst) {
-        setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
-      }
+    if (!erGyldigLovvalgsperiode()) {
+      setAnmodningsperiodeSvarType(MKV.Koder.anmodningsperiodesvartyper.AVSLAG);
+    } else if (anmodningsperiodeSvar?.anmodningsperiodeSvarType) {
+      setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
+    }
+    if (anmodningsperiodeSvar?.begrunnelseFritekst) {
+      setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
+    }
   };
 
   useEffect(() => {
