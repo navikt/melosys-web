@@ -1,9 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import { RegisterAdresse, MidlertidigAdresse, UstrukturertAdresse, Periode, Person } from "../types";
-
-import { getAsJson } from "../../utils";
-import { API_BASE_URL, BEHANDLINGER } from "../../api-constants";
+import { RegisterAdresse, MidlertidigAdresse, UstrukturertAdresse, Periode, Person } from "../../types";
 
 export interface Oppsummering {
   saksnummer: string;
@@ -168,7 +165,7 @@ interface Inntekt {
   frilansInntektMaanedListe: FrilansInntektMaaned[];
 }
 
-interface BehandlingResDto {
+export interface BehandlingResDto {
   behandlingID: number;
   redigerbart: boolean;
   saksopplysninger: {
@@ -187,6 +184,3 @@ interface BehandlingResDto {
   };
   oppsummering: Oppsummering;
 }
-
-export const hentBehandling = (behandlingID: number): Promise<BehandlingResDto> =>
-  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}`);
