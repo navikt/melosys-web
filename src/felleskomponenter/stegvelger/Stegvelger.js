@@ -681,7 +681,7 @@ const mapStateToProps = (state) => ({
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   vurder_start_valid: formSelectors.VurderStartFormValid(state),
   vurder_virksomhet_valid: formSelectors.VurderVirksomhetFormValid(state),
-  vurder_periode_valid: formSelectors.VurderPerioderValid(state),
+  vurder_periode_valid: formSelectors.VurderPerioderFormValid(state),
   vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
   vurder_familie_valid: formSelectors.VurderFamilieFormValid(state),
   vurder_representant_valid: formSelectors.VurderRepresentantFormValid(state),

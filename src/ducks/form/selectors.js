@@ -70,7 +70,7 @@ export const VurderPerioderFormSelector = createSelector(
   (perioder) => perioder
 );
 
-export const VurderPerioderValid = createSelector(
+export const VurderPerioderFormValid = createSelector(
   (state) => VurderPerioderFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
