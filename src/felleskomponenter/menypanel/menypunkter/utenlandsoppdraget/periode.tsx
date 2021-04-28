@@ -1,11 +1,13 @@
 import React, { ReactNode } from "react";
 
 import * as Nav from "../../../../utils/navFrontend";
-import * as Etiketter from "../../etiketter";
 import * as KV from "../../../../kodeverk";
 
 import Soknadsperiode from "./soknadsperiode";
 import Soknadslandvelger from "./soknadslandvelger";
+import Tittellinje from "./tittellinje";
+
+import "./periode.css";
 
 interface PeriodeProps {
   visArbeidsforholdRolleEtiketter: boolean;
@@ -20,14 +22,12 @@ const Periode = ({
   lagreSoknadOgOppfriskSaksopplysninger,
   behandlingsgrunnlagEtikett,
 }: PeriodeProps) => (
-  <div>
-    <div style={{ marginBottom: "1em" }}>
-      <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
-        {KV.Menypunkter.Periode.tittel}
-      </Nav.typo.Innholdstittel>
-      <span>{behandlingsgrunnlagEtikett}</span>
-      {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
-    </div>
+  <div className="utenlandsoppdraget-periode">
+    <Tittellinje
+      tittel={KV.Menypunkter.Periode.tittel}
+      behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
+      visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+    />
     <Nav.Row>
       <Nav.Column xs="6">
         <Soknadsperiode

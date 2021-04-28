@@ -5,13 +5,13 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 
 import * as Nav from "../../../../utils/navFrontend";
-import * as Etiketter from "../../etiketter";
 import * as KV from "../../../../kodeverk";
 
 import Soknadsperiode from "./soknadsperiode";
 import Soknadslandvelger from "./soknadslandvelger";
 import EditerbartElement, { Status } from "../editerbartElement";
 import { EditerbareUtenlandsoppdragetSporsmal, IkkeEditerbareUtenlandsoppdragetSporsmal } from "./sporsmal";
+import Tittellinje from "./tittellinje";
 
 import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
 
@@ -45,13 +45,11 @@ const Utenlandsoppdraget = ({
 
   return (
     <div className="utenlandsoppdraget">
-      <div style={{ marginBottom: "1em" }}>
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
-          {KV.Menypunkter.Utenlandsoppdraget.tittel}
-        </Nav.typo.Innholdstittel>
-        <span>{behandlingsgrunnlagEtikett}</span>
-        {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
-      </div>
+      <Tittellinje
+        tittel={KV.Menypunkter.Utenlandsoppdraget.tittel}
+        behandlingsgrunnlagEtikett={behandlingsgrunnlagEtikett}
+        visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+      />
       <Nav.Row>
         <Nav.Column xs="6">
           <Soknadsperiode
