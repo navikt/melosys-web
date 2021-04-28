@@ -174,12 +174,8 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   removeField: (index: number) => dispatch(arrayRemove(KV.Form.PERIODER, "medlemskapsperioder", index)),
-  changeField: (index: number, data: MedlemskapsperiodeProp) =>
-    dispatch(change(KV.Form.PERIODER, `medlemskapsperioder[${index}]`, data)),
-  changeFieldFeil: (index: number, feil: string | undefined) =>
-    dispatch(change(KV.Form.PERIODER, `medlemskapsperioder[${index}].feil`, feil)),
-  changeOneField: (index: number, field: string, data: any) =>
-    dispatch(change(KV.Form.PERIODER, `medlemskapsperioder[${index}].${field}`, data)),
+  changeField: (field: string, data: MedlemskapsperiodeProp | string | undefined) =>
+    dispatch(change(KV.Form.PERIODER, field, data)),
   pushField: (data: { id: string; ny: boolean; fomDato: string | null }) =>
     dispatch(arrayPush(KV.Form.PERIODER, "medlemskapsperioder", data)),
   hentMedlemskapsperioder: (behandlingID: number) =>
@@ -203,7 +199,6 @@ const VurderingPerioder = ({
   formValues,
   removeField,
   changeField,
-  changeFieldFeil,
   pushField,
   bekreft,
   tilbake,
@@ -214,7 +209,6 @@ const VurderingPerioder = ({
   mottaksdato,
   formIsValid,
   redigerbart,
-  changeOneField,
   soknadsperiode,
   ...props
 }: VurderingPerioderProps) => {
@@ -245,18 +239,21 @@ const VurderingPerioder = ({
   ) => {
     Api.Medlemskapsperioder.putMedlemskapsperioder(behandlingID, medlemskapsperiodeID, oppdatertMedlemskapsperiode)
       .then(() => {
-        changeFieldFeil(index, undefined);
+        changeField(`medlemskapsperioder[${index}].feil`, undefined);
       })
       .catch((error) => {
         Utils.logger.error(error);
-        changeFieldFeil(index, error.body && error.body.message ? error.body.message : error);
+        changeField(
+          `medlemskapsperioder[${index}].feil`,
+          error.body && error.body.message ? error.body.message : error
+        );
       });
   };
 
   const opprettMedlemskapsperiode = (oppdatertMedlemskapsperiode: OppdaterMedlemskapsperiode, index: number) => {
     Api.Medlemskapsperioder.postMedlemskapsperioder(behandlingID, oppdatertMedlemskapsperiode)
       .then((response) => {
-        changeField(index, {
+        changeField(`medlemskapsperioder[${index}]`, {
           ...response,
           ny: false,
           tomDato: Utils.dato.formatterDatoTilNorsk(response.tomDato),
@@ -266,7 +263,10 @@ const VurderingPerioder = ({
       })
       .catch((error) => {
         Utils.logger.error(error);
-        changeFieldFeil(index, error.body && error.body.message ? error.body.message : error);
+        changeField(
+          `medlemskapsperioder[${index}].feil`,
+          error.body && error.body.message ? error.body.message : error
+        );
       });
   };
 
@@ -297,11 +297,11 @@ const VurderingPerioder = ({
 
   useEffect(() => {
     if (formValues?.medlemskapsperioder?.length && formValues.medlemskapsperioder.length > 1) {
-      changeOneField(1, "fomDato", Utils.dato.plussEnDag(formValues.medlemskapsperioder[0].tomDato));
+      changeField(`medlemskapsperioder[1].fomDato`, Utils.dato.plussEnDag(formValues.medlemskapsperioder[0].tomDato));
     }
     formValues?.medlemskapsperioder?.forEach((medlemskapsperiode, index) => {
       if (!erKombinasjonGyldig(medlemskapsperiode)) {
-        changeOneField(index, "innvilgelsesResultat", "");
+        changeField(`medlemskapsperioder[${index}].innvilgelsesResultat`, "");
       }
     });
     oppdater();
@@ -322,7 +322,10 @@ const VurderingPerioder = ({
       })
       .catch((error) => {
         Utils.logger.error(error);
-        changeFieldFeil(index, error.body && error.body.message ? error.body.message : error);
+        changeField(
+          `medlemskapsperioder[${index}].feil`,
+          error.body && error.body.message ? error.body.message : error
+        );
       });
   };
 
