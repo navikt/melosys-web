@@ -73,6 +73,8 @@ const Saksopplysninger = ({
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
   const [registreringPending, setRegistreringPending] = useState(false);
 
+  const erGyldigLovvalgsperiode = () => Utils.dato.erGyldigPeriode(sed.lovvalgsperiode);
+
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
   }, [saksnummer, behandlingID]);
@@ -92,13 +94,13 @@ const Saksopplysninger = ({
   };
 
   const initialiserSkjema = () => {
-    if (anmodningsperiodeSvar) {
-      if (anmodningsperiodeSvar.anmodningsperiodeSvarType) {
-        setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
-      }
-      if (anmodningsperiodeSvar.begrunnelseFritekst) {
-        setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
-      }
+    if (!erGyldigLovvalgsperiode()) {
+      setAnmodningsperiodeSvarType(MKV.Koder.anmodningsperiodesvartyper.AVSLAG);
+    } else if (anmodningsperiodeSvar?.anmodningsperiodeSvarType) {
+      setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
+    }
+    if (anmodningsperiodeSvar?.begrunnelseFritekst) {
+      setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
     }
   };
 
@@ -305,6 +307,7 @@ const Saksopplysninger = ({
                       checked={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE === anmodningsperiodeSvarType}
                       onChange={endreAnmodningsperiodeSvarType}
                       label="Godkjenn unntaksperiode"
+                      disabled={!erGyldigLovvalgsperiode()}
                     />
                     <Nav.Radio
                       name={unikRadioButtonGruppeID}
@@ -312,6 +315,7 @@ const Saksopplysninger = ({
                       checked={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE === anmodningsperiodeSvarType}
                       onChange={endreAnmodningsperiodeSvarType}
                       label="Godkjenn, men endre periode"
+                      disabled={!erGyldigLovvalgsperiode()}
                     />
                     {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                       <Fragment>
