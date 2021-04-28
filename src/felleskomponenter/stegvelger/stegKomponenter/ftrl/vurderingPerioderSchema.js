@@ -6,7 +6,7 @@ const FOM_FELT_KREVES = { melding: "Må fylles ut" };
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
 const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
-const allePerioderErAvslått = (medlemskapsperioder) => {
+const allePerioderErAvslaatt = (medlemskapsperioder) => {
   if (!medlemskapsperioder) return false;
   const erAllePerioderAnnetEnnAvslatt = medlemskapsperioder.some(
     (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat !== KV.Koder.AVSLAATT
@@ -14,7 +14,7 @@ const allePerioderErAvslått = (medlemskapsperioder) => {
   return !erAllePerioderAnnetEnnAvslatt;
 };
 
-const erFeilAktivPåPerioder = (medlemskapsperioder) =>
+const erFeilAktivPaaPerioder = (medlemskapsperioder) =>
   medlemskapsperioder && medlemskapsperioder.some((medlemskapsperiode) => !!medlemskapsperiode.feil);
 
 const erDatoGyldig = (dato) => (Utils._isEmpty(dato) ? true : Utils.dato.vaskInputDato(dato));
@@ -30,23 +30,23 @@ const gyldigFomDatoTest = {
   message: "Dato er utenfor søknadsperioden",
   test: (dato, schema) =>
     erDatoGyldig(dato) &&
-    Utils.dato.erGyldigPeriode(Utils.dato.formatterDatoTilNorsk(schema.options.context.søknadsperiode.fom), dato),
+    Utils.dato.erGyldigPeriode(Utils.dato.formatterDatoTilNorsk(schema.options.context.soknadsperiode.fom), dato),
 };
 
 const gyldigTomDatoTest = {
   name: "Gyldig tomDato",
   message: "Dato er utenfor søknadsperioden",
   test: (tomDato, schema) => {
-    const tomDatoFraSøknadsperiode = schema.options.context.søknadsperiode.tom;
+    const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
     const medlemskapsperioder = schema.options.context.formValues?.medlemskapsperioder;
     const erSisteMedlemskapsperiode =
       medlemskapsperioder[medlemskapsperioder.length - 1].id.toString() === schema.parent.id;
 
     return Utils._isEmpty(tomDato)
-      ? erSisteMedlemskapsperiode && Utils._isEmpty(tomDatoFraSøknadsperiode)
+      ? erSisteMedlemskapsperiode && Utils._isEmpty(tomDatoFraSoknadsperiode)
       : erDatoGyldig(tomDato) &&
-          (Utils._isEmpty(tomDatoFraSøknadsperiode) ||
-            Utils.dato.erGyldigPeriode(tomDato, Utils.dato.formatterDatoTilNorsk(tomDatoFraSøknadsperiode)));
+          (Utils._isEmpty(tomDatoFraSoknadsperiode) ||
+            Utils.dato.erGyldigPeriode(tomDato, Utils.dato.formatterDatoTilNorsk(tomDatoFraSoknadsperiode)));
   },
 };
 
@@ -66,12 +66,12 @@ const vurdering_perioder = object().shape({
     )
     .min(1)
     .max(2),
-  alleMedlemskapsperioderAvslått: string().when("medlemskapsperioder", {
-    is: allePerioderErAvslått,
+  alleMedlemskapsperioderAvslaatt: string().when("medlemskapsperioder", {
+    is: allePerioderErAvslaatt,
     then: string().required(),
   }),
-  feilAktivPåPerioder: string().when("medlemskapsperioder", {
-    is: erFeilAktivPåPerioder,
+  feilAktivPaaPerioder: string().when("medlemskapsperioder", {
+    is: erFeilAktivPaaPerioder,
     then: string().required(),
   }),
 });
