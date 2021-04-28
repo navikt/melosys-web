@@ -2,12 +2,13 @@ import React, { ReactNode } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { Fagsak, Oppsummering as OppsummeringType } from "Domene";
+import { Fagsak } from "Domene";
 
 import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../utils/navFrontend";
+import * as Api from "../../services/api";
 
 import "./oppsummering.css";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
@@ -19,7 +20,7 @@ interface OppsummeringProps {
   arbeidsland: KTObject[];
   lovvalgsland: KTObject;
   fagsak: Fagsak;
-  oppsummering: OppsummeringType;
+  oppsummering: Api.Behandlinger.behandling.Oppsummering;
   behandlingstema: string;
   behandlingsfristLinje: ReactNode;
   behandlingsstatusLinje: ReactNode;

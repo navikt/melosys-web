@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-import { PersonHistorikk, Periode } from "Domene";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as Etiketter from "../../etiketter";
+import * as Api from "../../../../services/api";
 
 import PersonInfo from "./personinfo";
 
@@ -23,7 +23,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import "./person.css";
 
 interface AdresseRadProps {
-  periode: Periode;
+  periode: Api.Types.Periode;
   adresseNode: ReactNode;
 }
 
@@ -83,7 +83,7 @@ export const Person = ({
     bostedsadressePerioder,
     postadressePerioder,
     midlertidigAdressePerioder,
-  } = personhistorikk as PersonHistorikk;
+  } = personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
 
   if (Object.keys(person).length === 0) {
     return null;

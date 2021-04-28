@@ -4,7 +4,7 @@ import PT from "prop-types";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 interface EnkeltDatoProps {
-  dato?: string;
+  dato?: string | null;
   visTidspunkt?: boolean;
 }
 
