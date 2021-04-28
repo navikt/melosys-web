@@ -51,13 +51,10 @@ const PeriodeElement = ({
   handleSlett,
   erPeriodeFoerSoknadMottatDato,
 }: PeriodeElementProps) => {
-  const filterInnvilgelsesResultater = (item: KTObject) => {
-    return formValues.medlemskapsperioder &&
-      erPeriodeFoerSoknadMottatDato(formValues.medlemskapsperioder[index]) &&
-      formValues.medlemskapsperioder[index].trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL
-      ? true
-      : item.kode !== KV.Koder.DELVIS_INNVILGET;
-  };
+  const skalDelvisInnvilgetVises =
+    formValues?.medlemskapsperioder &&
+    erPeriodeFoerSoknadMottatDato(formValues.medlemskapsperioder[index]) &&
+    formValues.medlemskapsperioder[index].trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL;
 
   if (!formValues || !formValues.medlemskapsperioder) return null;
   return (
@@ -121,11 +118,13 @@ const PeriodeElement = ({
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
             >
-              {innvilgelsesResultater.filter(filterInnvilgelsesResultater).map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
+              {innvilgelsesResultater
+                .filter((item: KTObject) => (skalDelvisInnvilgetVises ? true : item.kode !== KV.Koder.DELVIS_INNVILGET))
+                .map((item: KTObject) => (
+                  <option key={item.kode} value={item.kode}>
+                    {item.term}
+                  </option>
+                ))}
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
