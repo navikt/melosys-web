@@ -134,7 +134,7 @@ class LinksBuilder implements ILinksBuilder {
 
   public addPeriode() {
     this.links.push({
-      label: "Periode",
+      label: "Periode og land",
       active: false,
       content: (
         <Periode
