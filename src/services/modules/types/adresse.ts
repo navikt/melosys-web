@@ -17,17 +17,17 @@ export interface UstrukturertAdresse {
   adresselinjer: string[];
 }
 
-type StrukturertAdresse = {
+interface StrukturertAdresse {
   gatenavn: string | null;
   husnummer: string | null;
   region: string | null;
   postnummer: string | null;
   poststed: string | null;
   landkode: string | null;
-};
+}
 
-export type MidlertidigAdresse = {
+export interface MidlertidigAdresse {
   adressetype: string;
   strukturertAdresse: StrukturertAdresse;
   ustrukturertAdresse: UstrukturertAdresse;
-};
+}
