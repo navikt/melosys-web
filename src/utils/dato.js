@@ -99,8 +99,8 @@ function formatterKortDatoTilNorsk(kortDato) {
 }
 
 function erGyldigPeriode(fom, tom) {
-  const inputFormat = ["DD.MM.YYYY"];
-  return moment(fom, inputFormat).isSameOrBefore(moment(tom, inputFormat));
+  const inputFormats = ["DD.MM.YYYY", "YYYY-MM-DD"];
+  return moment(fom, inputFormats).isSameOrBefore(moment(tom, inputFormats));
 }
 
 function erIPeriode(fom, tom, dato, inclusivity) {
