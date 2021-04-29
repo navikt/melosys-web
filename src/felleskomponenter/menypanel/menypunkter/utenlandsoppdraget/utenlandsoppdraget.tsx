@@ -14,14 +14,21 @@ import { EditerbareUtenlandsoppdragetSporsmal, IkkeEditerbareUtenlandsoppdragetS
 import Tittellinje from "./tittellinje";
 
 import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+
+import MKV from "../../../../melosyskodeverk";
 
 import "./utenlandsoppdraget.css";
+
+const mapStateToProps = (state: RootState) => ({
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+});
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
 });
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type UtenlandsoppdragetProps = PropsFromRedux & {
@@ -31,12 +38,13 @@ type UtenlandsoppdragetProps = PropsFromRedux & {
   behandlingsgrunnlagEtikett: ReactNode;
 };
 
-const Utenlandsoppdraget = ({
+export const Utenlandsoppdraget = ({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
   behandlingsgrunnlagEtikett,
   oppdaterBehandlingsgrunnlag,
+  behandlingstema,
 }: UtenlandsoppdragetProps) => {
   const lagreHandler = () => {
     oppdaterBehandlingsgrunnlag();
@@ -57,9 +65,11 @@ const Utenlandsoppdraget = ({
             lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
           />
         </Nav.Column>
-        <Nav.Column xs="6">
-          <Soknadslandvelger redigerbart={redigerbart} />
-        </Nav.Column>
+        {behandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET && (
+          <Nav.Column xs="6">
+            <Soknadslandvelger redigerbart={redigerbart} />
+          </Nav.Column>
+        )}
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
