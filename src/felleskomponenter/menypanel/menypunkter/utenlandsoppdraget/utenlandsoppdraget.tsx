@@ -13,15 +13,16 @@ import EditerbartElement, { Status } from "../editerbartElement";
 import { EditerbareUtenlandsoppdragetSporsmal, IkkeEditerbareUtenlandsoppdragetSporsmal } from "./sporsmal";
 import Tittellinje from "./tittellinje";
 
-import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
 
 import MKV from "../../../../melosyskodeverk";
 
 import "./utenlandsoppdraget.css";
 
+const { SØKNAD_FOLKETRYGDEN } = MKV.Koder.behandlingsgrunnlagtyper;
+
 const mapStateToProps = (state: RootState) => ({
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -44,7 +45,7 @@ export const Utenlandsoppdraget = ({
   lagreSoknadOgOppfriskSaksopplysninger,
   behandlingsgrunnlagEtikett,
   oppdaterBehandlingsgrunnlag,
-  behandlingstema,
+  behandlingsgrunnlagtype,
 }: UtenlandsoppdragetProps) => {
   const lagreHandler = () => {
     oppdaterBehandlingsgrunnlag();
@@ -65,7 +66,7 @@ export const Utenlandsoppdraget = ({
             lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
           />
         </Nav.Column>
-        {behandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET && (
+        {behandlingsgrunnlagtype !== SØKNAD_FOLKETRYGDEN && (
           <Nav.Column xs="6">
             <Soknadslandvelger redigerbart={redigerbart} />
           </Nav.Column>

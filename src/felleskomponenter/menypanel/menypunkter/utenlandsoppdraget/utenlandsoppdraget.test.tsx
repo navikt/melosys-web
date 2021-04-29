@@ -7,7 +7,7 @@ import Soknadslandvelger from "./soknadslandvelger";
 
 import MKV from "../../../../melosyskodeverk";
 
-const { ARBEID_I_UTLANDET } = MKV.Koder.behandlinger.behandlingstema;
+const { SØKNAD_FOLKETRYGDEN } = MKV.Koder.behandlingsgrunnlagtyper;
 
 describe("Utenlandsoppdraget", () => {
   let mockedProps = mock<ComponentProps<typeof Utenlandsoppdraget>>();
@@ -18,8 +18,8 @@ describe("Utenlandsoppdraget", () => {
     props = instance(mockedProps);
   });
 
-  it("viser ikke soknadslandvelger dersom behandlingstema tilhører FTRL", () => {
-    props.behandlingstema = ARBEID_I_UTLANDET;
+  it("viser ikke soknadslandvelger dersom behandlingsgrunnlagtype er SØKNAD_FOLKETRYGDEN", () => {
+    props.behandlingsgrunnlagtype = SØKNAD_FOLKETRYGDEN;
 
     const utenlandsoppdraget = shallow(<Utenlandsoppdraget {...props} />);
 
@@ -28,7 +28,7 @@ describe("Utenlandsoppdraget", () => {
     expect(soknadslandvelger).toHaveLength(0);
   });
 
-  it("viser soknadslandvelger dersom behandlingstema ikke tilhører FTRL", () => {
+  it("viser soknadslandvelger dersom behandlingsgrunnlagtype ikke er SØKNAD_FOLKETRYGDEN", () => {
     const utenlandsoppdraget = shallow(<Utenlandsoppdraget {...props} />);
 
     const soknadslandvelger = utenlandsoppdraget.find(Soknadslandvelger);
