@@ -61,7 +61,7 @@ const Orgnrinput = ({
   return (
     <div>
       <Nav.Input
-        label={<Nav.typo.Element>Organisasjonsnummer</Nav.typo.Element>}
+        label={<Nav.Typo.Element>Organisasjonsnummer</Nav.Typo.Element>}
         onChange={onChange}
         value={orgnr}
         disabled={!redigerbart}

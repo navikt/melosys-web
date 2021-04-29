@@ -214,7 +214,7 @@ export const VurderingVurderarbeidsland = ({
     <Fragment>
       {maritimtArbeid.length > 0 && (
         <Fragment>
-          <Nav.typo.Element className="undertittel">Vurdering sokkel/skip</Nav.typo.Element>
+          <Nav.Typo.Element className="undertittel">Vurdering sokkel/skip</Nav.Typo.Element>
           <SokkelSkipListe
             className="borderBottom"
             sokkelEllerSkipListe={sokkelEllerSkipListe}
@@ -234,7 +234,7 @@ export const VurderingVurderarbeidsland = ({
       {hjemmebaser.length > 0 && (
         <Nav.Row className="borderBottom">
           <Nav.Column xs="6">
-            <Nav.typo.Element className="undertittel">Hjemmebaser</Nav.typo.Element>
+            <Nav.Typo.Element className="undertittel">Hjemmebaser</Nav.Typo.Element>
             <Mui.RedigerbarListe
               elementer={hjemmebaser.map((base) => ({
                 kode: base,
@@ -247,7 +247,7 @@ export const VurderingVurderarbeidsland = ({
       )}
       <Nav.Row>
         <Nav.Column xs="6">
-          <Nav.typo.Element className="undertittel">Land fra inngangsvilkår:</Nav.typo.Element>
+          <Nav.Typo.Element className="undertittel">Land fra inngangsvilkår:</Nav.Typo.Element>
           <Mui.RedigerbarListe
             elementer={soknadsland.map((kode) => ({
               kode,
@@ -265,7 +265,7 @@ export const VurderingVurderarbeidsland = ({
 
   return (
     <div className="vurderingVurderArbeidsland">
-      <Nav.typo.Undertittel className="overskrift">Vurder arbeidsland</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="overskrift">Vurder arbeidsland</Nav.Typo.Undertittel>
       {innhold}
       <div className="fane__knapplinje">
         <Nav.Knapp

@@ -69,7 +69,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       <dl>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Nav.typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.typo.Undertittel>
+            <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
           </Nav.Column>
           <Nav.Column xs="6" className="hoyrestill">
             {behandlingsfristLinje}

@@ -371,24 +371,24 @@ const VurderingPerioder = ({
 
   return (
     <div className="vurderingPerioder">
-      <Nav.typo.Undertittel className="undertittel">
+      <Nav.Typo.Undertittel className="undertittel">
         Kontroller foreslåtte medlemskapsperioder
         <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
           {hjelpetekst}
         </Nav.Hjelpetekst>
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
 
       <div>
-        <Nav.typo.Element className="info_element">Søknad mottatt: </Nav.typo.Element>
-        <Nav.typo.Normaltekst className="info_element">
+        <Nav.Typo.Element className="info_element">Søknad mottatt: </Nav.Typo.Element>
+        <Nav.Typo.Normaltekst className="info_element">
           {Utils.dato.formatterDatoTilNorsk(mottaksdato)}
-        </Nav.typo.Normaltekst>
+        </Nav.Typo.Normaltekst>
       </div>
       <div style={{ marginBottom: "1rem" }}>
-        <Nav.typo.Element className="info_element">Trygdedekning fra søknad: </Nav.typo.Element>
-        <Nav.typo.Normaltekst className="info_element">
+        <Nav.Typo.Element className="info_element">Trygdedekning fra søknad: </Nav.Typo.Element>
+        <Nav.Typo.Normaltekst className="info_element">
           {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, valgtTrygdedekning)}
-        </Nav.typo.Normaltekst>
+        </Nav.Typo.Normaltekst>
       </div>
 
       {formValues &&

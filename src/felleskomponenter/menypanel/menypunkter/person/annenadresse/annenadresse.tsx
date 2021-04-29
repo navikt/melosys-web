@@ -67,10 +67,10 @@ const AnnenAdresse = ({
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
         ingenDataRender={(apneRedigering) => (
           <>
-            <Nav.typo.Normaltekst style={{ marginBottom: "1em" }}>
+            <Nav.Typo.Normaltekst style={{ marginBottom: "1em" }}>
               Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes adresse
               fra register.
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
             {redigerbart && (
               <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
                 Legg til adresse

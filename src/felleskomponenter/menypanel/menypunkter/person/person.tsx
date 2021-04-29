@@ -46,13 +46,13 @@ interface AdresseHeaderProps {
 export const AdresseHeader = ({ adresseTittel }: AdresseHeaderProps) => (
   <Nav.Row>
     <Nav.Column xs="5">
-      <Nav.typo.Element>{adresseTittel}</Nav.typo.Element>
+      <Nav.Typo.Element>{adresseTittel}</Nav.Typo.Element>
     </Nav.Column>
     <Nav.Column xs="3">
-      <Nav.typo.Element>Fra og med</Nav.typo.Element>
+      <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
     </Nav.Column>
     <Nav.Column xs="3">
-      <Nav.typo.Element>Til og med</Nav.typo.Element>
+      <Nav.Typo.Element>Til og med</Nav.Typo.Element>
     </Nav.Column>
   </Nav.Row>
 );

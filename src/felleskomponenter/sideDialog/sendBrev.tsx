@@ -323,7 +323,7 @@ const SendBrev = ({
     <div className="send_brev">
       <Skjema.Select
         feltNavn="type"
-        label={<Nav.typo.Element>Type brev</Nav.typo.Element>}
+        label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
         disabled={!redigerbart}
         emptyFieldText="Velg..."
         emptyFieldDisabled={!!formValues.type}
@@ -339,7 +339,7 @@ const SendBrev = ({
         <Skjema.Select
           feltNavn="mottaker"
           label={
-            <Nav.typo.Element tag="div">
+            <Nav.Typo.Element tag="div">
               Mottaker
               {formValues.valgtMal.mottakereHjelpetekst && (
                 <Nav.Hjelpetekst
@@ -350,7 +350,7 @@ const SendBrev = ({
                   {formValues.valgtMal.mottakereHjelpetekst}
                 </Nav.Hjelpetekst>
               )}
-            </Nav.typo.Element>
+            </Nav.Typo.Element>
           }
           disabled={!redigerbart || formValues.valgtMal?.muligeMottakere.length === 1}
           emptyFieldText="Velg..."
@@ -381,7 +381,7 @@ const SendBrev = ({
             <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
           ) : (
             <Nav.Column xs="12">
-              <Nav.typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
+              <Nav.Typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
                 Velg:
                 <Nav.Hjelpetekst
                   className="hjelpetekst"
@@ -392,7 +392,7 @@ const SendBrev = ({
                     <p key={Utils._uuid()}>{paragraf}</p>
                   ))}
                 </Nav.Hjelpetekst>
-              </Nav.typo.Normaltekst>
+              </Nav.Typo.Normaltekst>
               {finnMottakerFraValgtMal(formValues.mottaker)?.adresser?.map(
                 (virksomhet: Api.DokumenterV2.MottakerAdresse) => (
                   <Fragment key={Utils._uuid()}>
@@ -447,7 +447,7 @@ const SendBrev = ({
           if (felt.valg?.length && felt.valg.length > 0) {
             return (
               <Fragment key="radioknapper">
-                <Nav.typo.Element className="fritekst_label">
+                <Nav.Typo.Element className="fritekst_label">
                   {felt.beskrivelse}
                   {felt.hjelpetekst && (
                     <Nav.Hjelpetekst
@@ -458,7 +458,7 @@ const SendBrev = ({
                       {felt.hjelpetekst}
                     </Nav.Hjelpetekst>
                   )}
-                </Nav.typo.Element>
+                </Nav.Typo.Element>
                 {felt.valg.map((valg) => (
                   <Skjema.Radio
                     feltNavn={`felt.${felt.kode}.valg`}
@@ -477,7 +477,7 @@ const SendBrev = ({
           } else if (felt.feltType === "FRITEKST") {
             return (
               <Fragment key="fritekst">
-                <Nav.typo.Element className="fritekst_label">
+                <Nav.Typo.Element className="fritekst_label">
                   {felt.beskrivelse}
                   {felt.hjelpetekst && (
                     <Nav.Hjelpetekst
@@ -488,7 +488,7 @@ const SendBrev = ({
                       {felt.hjelpetekst}
                     </Nav.Hjelpetekst>
                   )}
-                </Nav.typo.Element>
+                </Nav.Typo.Element>
                 <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.fritekst`} />
               </Fragment>
             );

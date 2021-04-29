@@ -15,26 +15,26 @@ interface PersonInfoProps {
 const PersonInfo = ({ person: { fnr, statsborgerskap, foedselsdato, sivilstand, personStatus } }: PersonInfoProps) => (
   <div className="personinfo">
     <div className="personinfo__element">
-      <Nav.typo.EtikettLiten>Statsborgerskap</Nav.typo.EtikettLiten>
-      <Nav.typo.Element>{KV.objektTilTerm(statsborgerskap)}</Nav.typo.Element>
+      <Nav.Typo.EtikettLiten>Statsborgerskap</Nav.Typo.EtikettLiten>
+      <Nav.Typo.Element>{KV.objektTilTerm(statsborgerskap)}</Nav.Typo.Element>
     </div>
     <div className="personinfo__element">
-      <Nav.typo.EtikettLiten>Fødselsnummer</Nav.typo.EtikettLiten>
-      <Nav.typo.Element>{fnr}</Nav.typo.Element>
+      <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
+      <Nav.Typo.Element>{fnr}</Nav.Typo.Element>
     </div>
     <div className="personinfo__element">
-      <Nav.typo.EtikettLiten>Fødselsdato</Nav.typo.EtikettLiten>
-      <Nav.typo.Element>
+      <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>
+      <Nav.Typo.Element>
         <EnkeltDato dato={foedselsdato} />
-      </Nav.typo.Element>
+      </Nav.Typo.Element>
     </div>
     <div className="personinfo__element">
-      <Nav.typo.EtikettLiten>Personstatus</Nav.typo.EtikettLiten>
-      <Nav.typo.Element>{KV.objektTilTerm(personStatus)}</Nav.typo.Element>
+      <Nav.Typo.EtikettLiten>Personstatus</Nav.Typo.EtikettLiten>
+      <Nav.Typo.Element>{KV.objektTilTerm(personStatus)}</Nav.Typo.Element>
     </div>
     <div className="personinfo__element">
-      <Nav.typo.EtikettLiten>Sivilstand</Nav.typo.EtikettLiten>
-      <Nav.typo.Element>{KV.objektTilTerm(sivilstand)}</Nav.typo.Element>
+      <Nav.Typo.EtikettLiten>Sivilstand</Nav.Typo.EtikettLiten>
+      <Nav.Typo.Element>{KV.objektTilTerm(sivilstand)}</Nav.Typo.Element>
     </div>
   </div>
 );

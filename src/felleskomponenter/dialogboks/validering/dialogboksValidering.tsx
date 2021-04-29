@@ -75,7 +75,7 @@ const hentFeilmelding = (valideringKode: string) => {
 
 export const ModalBody = ({ tittel, innhold }: Feilmelding) => (
   <div className="validering">
-    <Nav.typo.Element className="valideringKode">{tittel}</Nav.typo.Element>
+    <Nav.Typo.Element className="valideringKode">{tittel}</Nav.Typo.Element>
     <Nav.Tekstomrade>{innhold}</Nav.Tekstomrade>
   </div>
 );

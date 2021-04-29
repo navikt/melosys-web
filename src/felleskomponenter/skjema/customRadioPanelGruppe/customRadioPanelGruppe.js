@@ -11,7 +11,7 @@ import "./customRadioPanelGruppe.css";
 
 export const CustomRadioPanelElement = ({ tittel, data }) => (
   <div className="customRadioPanelElement">
-    <Nav.typo.Undertittel>{tittel}</Nav.typo.Undertittel>
+    <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
     <dl>
       {data.map(({ term, description }) => {
         if (!description) return null;

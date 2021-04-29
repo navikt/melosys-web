@@ -86,7 +86,7 @@ function DialogboksEndreBehandlingsstatus({
     <div className="dialogboks">
       {!generellFeil ? (
         <div>
-          <Nav.typo.Systemtittel className="overskrift">Velg ny behandlingsstatus</Nav.typo.Systemtittel>
+          <Nav.Typo.Systemtittel className="overskrift">Velg ny behandlingsstatus</Nav.Typo.Systemtittel>
           <div className="innhold">
             <Mui.KodeTermSelect
               onChange={velgBehandlingsstatuserHandle}

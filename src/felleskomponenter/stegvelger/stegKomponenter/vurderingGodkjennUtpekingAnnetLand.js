@@ -47,7 +47,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
       {redigerbart && (
         <Nav.Row className="sendA012">
           <Nav.Column xs="12">

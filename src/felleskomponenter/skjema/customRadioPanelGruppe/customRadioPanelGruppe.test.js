@@ -50,7 +50,7 @@ describe("CustomRadioPanelElement", () => {
   it("viser tittel", () => {
     const customRadioPanelElement = shallow(<CustomRadioPanelElement {...props} />);
 
-    expect(customRadioPanelElement.find(Nav.typo.Undertittel)).toHaveLength(1);
-    expect(customRadioPanelElement.find(Nav.typo.Undertittel).children().text()).toBe(props.tittel);
+    expect(customRadioPanelElement.find(Nav.Typo.Undertittel)).toHaveLength(1);
+    expect(customRadioPanelElement.find(Nav.Typo.Undertittel).children().text()).toBe(props.tittel);
   });
 });

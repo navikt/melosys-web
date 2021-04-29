@@ -84,7 +84,7 @@ function DialogboksEndreBehandlingsfrist({
     <div className="dialogboks">
       {!generellFeil ? (
         <div>
-          <Nav.typo.Systemtittel className="overskrift">Velg ny behandlingsfrist</Nav.typo.Systemtittel>
+          <Nav.Typo.Systemtittel className="overskrift">Velg ny behandlingsfrist</Nav.Typo.Systemtittel>
           <div className="innhold">
             <Datovelger onChange={setDato} value={dato} />
           </div>

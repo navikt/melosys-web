@@ -48,7 +48,7 @@ const Legend = ({
     <div className={legendCls}>
       <span style={{ marginRight: "10px" }}>
         {TittelIkon && <TittelIkon style={{ marginRight: "5px" }} />}
-        <Nav.typo.Undertittel style={{ display: "inline" }}>{tittel}</Nav.typo.Undertittel>
+        <Nav.Typo.Undertittel style={{ display: "inline" }}>{tittel}</Nav.Typo.Undertittel>
       </span>
       {renderSymboler()}
     </div>

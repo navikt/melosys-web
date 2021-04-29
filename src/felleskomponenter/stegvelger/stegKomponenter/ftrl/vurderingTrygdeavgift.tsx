@@ -188,9 +188,9 @@ const TrygdeavgiftsgrunnlagComponent = ({
   return (
     <div className="vurderingTrygdeavgift__overstrek vurderingTrygdeavgift">
       <Nav.Row>
-        <Nav.typo.Undertittel className="sub_undertittel">
+        <Nav.Typo.Undertittel className="sub_undertittel">
           {erVirksomhetNorsk ? "Fra Norge" : "Fra utlandet"}
-        </Nav.typo.Undertittel>
+        </Nav.Typo.Undertittel>
 
         <Nav.Column xs="4">
           <Nav.Fieldset
@@ -252,9 +252,9 @@ const TrygdeavgiftsgrunnlagComponent = ({
         {visBetalerArbeidsgiverAvgift && (
           <Nav.Column xs="4">
             <Nav.Fieldset legend="Betaler virksomheten arbeideravgift?">
-              <Nav.typo.Normaltekst className="ja_nei">
+              <Nav.Typo.Normaltekst className="ja_nei">
                 {trygdeavgiftsgrunnlag?.betalerArbeidsgiverAvgift ? "Ja" : "Nei"}
-              </Nav.typo.Normaltekst>
+              </Nav.Typo.Normaltekst>
             </Nav.Fieldset>
           </Nav.Column>
         )}
@@ -263,9 +263,9 @@ const TrygdeavgiftsgrunnlagComponent = ({
           <Nav.Column xs="4">
             <Nav.Fieldset legend="Er søker skattepliktig?">
               {erSkattepliktigFastsatt() ? (
-                <Nav.typo.Normaltekst className="ja_nei">
+                <Nav.Typo.Normaltekst className="ja_nei">
                   {trygdeavgiftsgrunnlag?.erSkattepliktig ? "Ja" : "Nei"}
-                </Nav.typo.Normaltekst>
+                </Nav.Typo.Normaltekst>
               ) : (
                 <Fragment>
                   <Skjema.Radio
@@ -573,7 +573,7 @@ const VurderingTrygdeavgift = ({
 
   return (
     <div className="vurderingTrygdeavgift">
-      <Nav.typo.Undertittel className="undertittel">Trygdeavgift</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Trygdeavgift</Nav.Typo.Undertittel>
 
       <Nav.Row>
         <Nav.Column xs="12">

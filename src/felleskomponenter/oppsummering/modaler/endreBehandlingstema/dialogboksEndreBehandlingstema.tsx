@@ -86,7 +86,7 @@ function DialogboksEndreBehandlingstema({
     <div className="dialogboks">
       {!generellFeil ? (
         <div>
-          <Nav.typo.Systemtittel className="overskrift">Velg nytt behandlingstema</Nav.typo.Systemtittel>
+          <Nav.Typo.Systemtittel className="overskrift">Velg nytt behandlingstema</Nav.Typo.Systemtittel>
           <div className="innhold">
             <Mui.KodeTermSelect
               onChange={velgBehandlingstemaHandle}

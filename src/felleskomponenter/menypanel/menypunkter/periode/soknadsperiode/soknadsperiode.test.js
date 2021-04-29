@@ -21,7 +21,7 @@ describe("Soknadsperiode", () => {
 
   it("viser nåværende søknadsperiode", () => {
     const soknadsperiode = shallow(<Soknadsperiode {...props} />);
-    const element = soknadsperiode.find(Nav.typo.Element);
+    const element = soknadsperiode.find(Nav.Typo.Element);
 
     expect(element.children().first()).not.toBeNull();
   });

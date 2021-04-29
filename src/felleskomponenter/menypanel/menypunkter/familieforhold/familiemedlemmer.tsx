@@ -69,7 +69,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
 
   return (
     <div>
-      <Nav.typo.Undertittel className="familiemedlemmer__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="familiemedlemmer__gruppeoverskrift">{overskrift}</Nav.Typo.Undertittel>
       {familiemedlemmer.length === 0 && ingenFamiliemedlemmerTekst}
       {familiemedlemmer.length !== 0 && (
         <Nav.Row className="header">

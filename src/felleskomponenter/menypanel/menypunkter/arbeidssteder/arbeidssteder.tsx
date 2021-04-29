@@ -90,9 +90,9 @@ export const Arbeidssteder = ({
   return (
     <div className="arbeidssteder">
       <div>
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.Arbeidssteder.tittel}
-        </Nav.typo.Innholdstittel>
+        </Nav.Typo.Innholdstittel>
         <span>{behandlingsgrunnlagEtikett}</span>
         {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>

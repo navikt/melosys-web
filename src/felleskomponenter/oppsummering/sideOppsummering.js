@@ -77,7 +77,7 @@ const SideOppsummering = ({
     <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
       {(statusBehandlingsstatus) =>
         statusBehandlingsstatus === "enabled" ? (
-          <Nav.typo.Normaltekst
+          <Nav.Typo.Normaltekst
             className={classNames({ behandlingsstatus__redigerbar: kanEndreBehandlingsstatus })}
             onClick={kanEndreBehandlingsstatus ? () => setVisEndreBehandlingsstatus(true) : null}
           >
@@ -87,7 +87,7 @@ const SideOppsummering = ({
             ) : (
               <Ikoner.BlyantDisabled className="blyant" />
             )}
-          </Nav.typo.Normaltekst>
+          </Nav.Typo.Normaltekst>
         ) : (
           <div>{KV.objektTilTerm(oppsummering.behandlingsstatus)}</div>
         )
@@ -174,7 +174,7 @@ const SideOppsummering = ({
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="12" md="12">
-                    <Nav.typo.Undertittel
+                    <Nav.Typo.Undertittel
                       className={classNames({ behandlingstema__redigerbar: kanEndreBehandlingstema })}
                       onClick={kanEndreBehandlingstema ? () => setVisEndreBehandlingstema(true) : null}
                     >
@@ -184,7 +184,7 @@ const SideOppsummering = ({
                       ) : (
                         <Ikoner.BlyantDisabled className="blyant" />
                       )}
-                    </Nav.typo.Undertittel>
+                    </Nav.Typo.Undertittel>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>

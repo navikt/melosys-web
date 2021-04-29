@@ -13,12 +13,12 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
 
   return (
     <div className={cls}>
-      <Nav.typo.Element>Opplysninger om arbeidssted</Nav.typo.Element>
+      <Nav.Typo.Element>Opplysninger om arbeidssted</Nav.Typo.Element>
       <Nav.Row className="fast-arbeidssted">
         <fieldset>
           <Nav.Column xs="8">
             <legend>
-              <Nav.typo.Normaltekst>Vil arbeidstakeren ha et fast arbeidssted i utlandet?</Nav.typo.Normaltekst>
+              <Nav.Typo.Normaltekst>Vil arbeidstakeren ha et fast arbeidssted i utlandet?</Nav.Typo.Normaltekst>
             </legend>
           </Nav.Column>
           <Nav.Column xs="4" className="col">
@@ -36,9 +36,9 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
         <fieldset>
           <Nav.Column xs="8">
             <legend>
-              <Nav.typo.Normaltekst>
+              <Nav.Typo.Normaltekst>
                 Vil arbeidstakeren kun eller hovedsaklig arbeide på hjemmekontor?
-              </Nav.typo.Normaltekst>
+              </Nav.Typo.Normaltekst>
             </legend>
           </Nav.Column>
           <Nav.Column xs="4" className="col">

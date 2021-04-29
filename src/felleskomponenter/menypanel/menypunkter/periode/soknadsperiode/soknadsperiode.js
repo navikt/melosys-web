@@ -114,12 +114,12 @@ export class Soknadsperiode extends Component {
 
     return (
       <div className="soknadsperiode">
-        <Nav.typo.EtikettLiten className="soknadsperiode__etikett">Periode</Nav.typo.EtikettLiten>
+        <Nav.Typo.EtikettLiten className="soknadsperiode__etikett">Periode</Nav.Typo.EtikettLiten>
         {!erEndrePeriodeSynlig && (
           <div className="periode__container">
-            <Nav.typo.Element className="periode">
+            <Nav.Typo.Element className="periode">
               {soknadsperiodeFom} - {soknadsperiodeTom}
-            </Nav.typo.Element>
+            </Nav.Typo.Element>
             {redigerbart && <Symboler.Rediger onClick={visEndrePeriode} />}
           </div>
         )}

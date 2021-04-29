@@ -72,7 +72,7 @@ export const VurderingInngang = ({
   begrunnelser: { opphold: soknadslandBegrunnelser },
 }) => (
   <div className="vurderingInngang">
-    <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
+    <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
     <Varsler
       oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
       inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser}

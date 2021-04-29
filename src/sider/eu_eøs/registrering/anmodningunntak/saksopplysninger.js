@@ -272,15 +272,15 @@ const Saksopplysninger = ({
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.typo.Systemtittel>Vurder anmodning om unntak</Nav.typo.Systemtittel>
+            <Nav.Typo.Systemtittel>Vurder anmodning om unntak</Nav.Typo.Systemtittel>
             <br />
             <div className="vurderUnntaksperiode">
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.typo.Element>Land:</Nav.typo.Element>
-                  <Nav.typo.Normaltekst>
+                  <Nav.Typo.Element>Land:</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>
                     {KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})
-                  </Nav.typo.Normaltekst>
+                  </Nav.Typo.Normaltekst>
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
@@ -292,7 +292,7 @@ const Saksopplysninger = ({
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
                     <Fragment>
-                      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+                      <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                     </Fragment>
                   </Nav.Column>
