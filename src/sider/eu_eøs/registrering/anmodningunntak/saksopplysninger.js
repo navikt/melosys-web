@@ -66,6 +66,7 @@ const Saksopplysninger = ({
     MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
   );
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
+  const [ytterligereInfoFritekst, setYtterligereInfoFritekst] = useState("");
   const [endretPeriodeFom, setEndretPeriodeFom] = useState("");
   const [endretPeriodeTom, setEndretPeriodeTom] = useState("");
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
@@ -139,14 +140,19 @@ const Saksopplysninger = ({
     event.preventDefault();
   };
 
-  const textAreaOnChange = (event) => {
+  const begrunnelseTextAreaOnChange = (event) => {
     setBegrunnelseFritekst(event.target.value);
+  };
+
+  const ytterligereInfoTextAreaOnChange = (event) => {
+    setYtterligereInfoFritekst(event.target.value);
   };
 
   const makeResponse = (endretPeriode = null, fritekst = null) => ({
     anmodningsperiodeSvarType,
     endretPeriode,
     begrunnelseFritekst: fritekst,
+    ytterligereInfoFritekst,
   });
 
   const lagRequestAnmodningUnntakSvar = () => {
@@ -317,6 +323,13 @@ const Saksopplysninger = ({
                       label="Godkjenn, men endre periode"
                       disabled={!erGyldigLovvalgsperiode()}
                     />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
+                      checked={MKV.Koder.anmodningsperiodesvartyper.AVSLAG === anmodningsperiodeSvarType}
+                      onChange={endreAnmodningsperiodeSvarType}
+                      label="Ikke godkjenn"
+                    />
                     {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                       <Fragment>
                         <Nav.Row>
@@ -348,7 +361,7 @@ const Saksopplysninger = ({
                             <Nav.Textarea
                               disabled={!redigerbart}
                               label="Skriv begrunnelse til SED"
-                              onChange={textAreaOnChange}
+                              onChange={begrunnelseTextAreaOnChange}
                               value={begrunnelseFritekst}
                               maxLength={255}
                               feil={feilmeldinger.fritekst}
@@ -358,13 +371,6 @@ const Saksopplysninger = ({
                         </Nav.Row>
                       </Fragment>
                     )}
-                    <Nav.Radio
-                      name={unikRadioButtonGruppeID}
-                      value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
-                      checked={MKV.Koder.anmodningsperiodesvartyper.AVSLAG === anmodningsperiodeSvarType}
-                      onChange={endreAnmodningsperiodeSvarType}
-                      label="Ikke godkjenn"
-                    />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
@@ -374,7 +380,7 @@ const Saksopplysninger = ({
                     <Nav.Textarea
                       disabled={!redigerbart}
                       label="Skriv begrunnelse til SED"
-                      onChange={textAreaOnChange}
+                      onChange={begrunnelseTextAreaOnChange}
                       value={begrunnelseFritekst}
                       maxLength={255}
                       feil={feilmeldinger.fritekst}
@@ -383,6 +389,18 @@ const Saksopplysninger = ({
                   </Nav.Column>
                 </Nav.Row>
               )}
+              <Nav.Row>
+                <Nav.Column xs="6">
+                  <Nav.Textarea
+                    disabled={!redigerbart}
+                    label="Ytterligere informasjon til SED (valgfri)"
+                    onChange={ytterligereInfoTextAreaOnChange}
+                    value={ytterligereInfoFritekst}
+                    maxLength={500}
+                    bredde="fullbredde"
+                  />
+                </Nav.Column>
+              </Nav.Row>
               <Nav.Row>
                 <LinkForhandsvisningSed
                   redigerbart={redigerbart}
