@@ -7,17 +7,13 @@ import { RootState } from "AppTypes";
 import * as Mui from "../../../../ui";
 import * as Symboler from "../../symboler";
 
+import { Status } from "../../editerbartElement";
 import RedigererKomponent from "./redigerer";
 import RedigeringUtfortKomponent from "./redigeringUtfort";
 
 import { behandlingsgrunnlagOperations } from "../../../../../ducks/behandlingsgrunnlag";
 
 import "./soknadslandvelger.css";
-
-export enum Status {
-  Redigerer,
-  RedigeringUtfort,
-}
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
