@@ -144,7 +144,7 @@ const SideOppsummering = ({
                           <OppsummeringVerdiParRedigerbar
                             verdi={KV.objektTilTerm(oppsummering.behandlingstype)}
                             redigerbart={false}
-                            onClick={() => console.log("Endre type")}
+                            onClick={() => {}}
                           />
                         }
                       />
