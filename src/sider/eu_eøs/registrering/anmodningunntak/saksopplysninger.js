@@ -153,7 +153,6 @@ const Saksopplysninger = ({
     anmodningsperiodeSvarType,
     endretPeriode,
     begrunnelseFritekst: fritekst,
-    ytterligereInfoFritekst,
   });
 
   const lagRequestAnmodningUnntakSvar = () => {
@@ -162,7 +161,7 @@ const Saksopplysninger = ({
 
     switch (anmodningsperiodeSvarType) {
       case INNVILGELSE:
-        return makeResponse(tomPeriode, null);
+        return makeResponse(tomPeriode, ytterligereInfoFritekst);
       case DELVIS_INNVILGELSE:
         return makeResponse(
           {
@@ -270,6 +269,78 @@ const Saksopplysninger = ({
     return null;
   }
 
+  const renderBegrunnelseFritekstRow = () => {
+    return (
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Nav.Textarea
+            disabled={!redigerbart}
+            label="Skriv begrunnelse til SED"
+            onChange={begrunnelseTextAreaOnChange}
+            value={begrunnelseFritekst}
+            maxLength={255}
+            feil={feilmeldinger.fritekst}
+            bredde="fullbredde"
+          />
+        </Nav.Column>
+      </Nav.Row>
+    );
+  };
+
+  const renderInputfelter = (utfall) => {
+    switch (utfall) {
+      case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
+        return (
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Nav.Textarea
+                disabled={!redigerbart}
+                label="Ytterligere informasjon til SED (valgfri)"
+                onChange={ytterligereInfoTextAreaOnChange}
+                value={ytterligereInfoFritekst}
+                maxLength={500}
+                bredde="fullbredde"
+              />
+            </Nav.Column>
+          </Nav.Row>
+        );
+      case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
+        return (
+          <Fragment>
+            <Nav.Row>
+              <Nav.Column xs="3">
+                <Nav.Input
+                  bredde="fullbredde"
+                  label="Startdato"
+                  value={endretPeriodeFom}
+                  onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
+                  onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
+                  feil={feilmeldinger.fom}
+                  disabled={!redigerbart}
+                />
+              </Nav.Column>
+              <Nav.Column xs="3">
+                <Nav.Input
+                  bredde="fullbredde"
+                  label="Sluttdato"
+                  value={endretPeriodeTom}
+                  onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
+                  onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
+                  feil={feilmeldinger.tom}
+                  disabled={!redigerbart}
+                />
+              </Nav.Column>
+            </Nav.Row>
+            {renderBegrunnelseFritekstRow()}
+          </Fragment>
+        );
+      case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
+        return renderBegrunnelseFritekstRow();
+      default:
+        return null;
+    }
+  };
+
   const endreAnmodningsperiodeSvarType = (e) => setAnmodningsperiodeSvarType(e.target.value);
 
   const unikRadioButtonGruppeID = uuid();
@@ -331,77 +402,12 @@ const Saksopplysninger = ({
                       onChange={endreAnmodningsperiodeSvarType}
                       label="Ikke godkjenn"
                     />
-                    {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
-                      <Fragment>
-                        <Nav.Row>
-                          <Nav.Column xs="3">
-                            <Nav.Input
-                              bredde="fullbredde"
-                              label="Startdato"
-                              value={endretPeriodeFom}
-                              onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
-                              onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
-                              feil={feilmeldinger.fom}
-                              disabled={!redigerbart}
-                            />
-                          </Nav.Column>
-                          <Nav.Column xs="3">
-                            <Nav.Input
-                              bredde="fullbredde"
-                              label="Sluttdato"
-                              value={endretPeriodeTom}
-                              onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
-                              onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
-                              feil={feilmeldinger.tom}
-                              disabled={!redigerbart}
-                            />
-                          </Nav.Column>
-                        </Nav.Row>
-                        <Nav.Row>
-                          <Nav.Column xs="6">
-                            <Nav.Textarea
-                              disabled={!redigerbart}
-                              label="Skriv begrunnelse til SED"
-                              onChange={begrunnelseTextAreaOnChange}
-                              value={begrunnelseFritekst}
-                              maxLength={255}
-                              feil={feilmeldinger.fritekst}
-                              bredde="fullbredde"
-                            />
-                          </Nav.Column>
-                        </Nav.Row>
-                      </Fragment>
-                    )}
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
-              {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
-                <Nav.Row>
-                  <Nav.Column xs="6">
-                    <Nav.Textarea
-                      disabled={!redigerbart}
-                      label="Skriv begrunnelse til SED"
-                      onChange={begrunnelseTextAreaOnChange}
-                      value={begrunnelseFritekst}
-                      maxLength={255}
-                      feil={feilmeldinger.fritekst}
-                      bredde="fullbredde"
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-              )}
-              <Nav.Row>
-                <Nav.Column xs="6">
-                  <Nav.Textarea
-                    disabled={!redigerbart}
-                    label="Ytterligere informasjon til SED (valgfri)"
-                    onChange={ytterligereInfoTextAreaOnChange}
-                    value={ytterligereInfoFritekst}
-                    maxLength={500}
-                    bredde="fullbredde"
-                  />
-                </Nav.Column>
-              </Nav.Row>
+
+              {renderInputfelter(anmodningsperiodeSvarType)}
+
               <Nav.Row>
                 <LinkForhandsvisningSed
                   redigerbart={redigerbart}
