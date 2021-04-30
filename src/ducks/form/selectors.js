@@ -384,6 +384,16 @@ export const SoknadErrorsSelector = createSelector(
   }
 );
 
+export const SoknadsperiodeTomErrorsSelector = createSelector(
+  (state) => SoknadenFormSelector(state).syncErrors || {},
+  (errors) => errors?.soknadsperiodeTom?.melding
+);
+
+export const SoknadsperiodeFomErrorsSelector = createSelector(
+  (state) => SoknadenFormSelector(state).syncErrors || {},
+  (errors) => errors?.soknadsperiodeFom?.melding
+);
+
 const finnPanelFeil = (errors) => {
   const panelerOgFeil = Utils.finnVerdierMedKey(errors, "panel", true);
   const unikePanelerMedFeilNavn = Utils._uniqBy(panelerOgFeil, "panel").map(({ panel }) => panel);
