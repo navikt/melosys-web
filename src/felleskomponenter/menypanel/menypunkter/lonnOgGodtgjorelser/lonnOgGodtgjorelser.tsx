@@ -59,10 +59,10 @@ type BooleanFeltRedigeringUtfortProps = {
 export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) => (
   <Nav.Row>
     <Nav.Column xs="12" className="boolean-felt-redigering-utfort">
-      <Nav.typo.Normaltekst className="typo-normal">{tekst}</Nav.typo.Normaltekst>
-      <Nav.typo.Element className="typo-element">
+      <Nav.Typo.Normaltekst className="typo-normal">{tekst}</Nav.Typo.Normaltekst>
+      <Nav.Typo.Element className="typo-element">
         {verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}
-      </Nav.typo.Element>
+      </Nav.Typo.Element>
     </Nav.Column>
   </Nav.Row>
 );
@@ -99,9 +99,9 @@ export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | 
   const inntekt = Utils.streng.tryParseFloat(verdi);
 
   return (
-    <Nav.typo.Undertittel className="inntekt-undertittel">
+    <Nav.Typo.Undertittel className="inntekt-undertittel">
       {inntekt !== null ? <FormatertInntekt inntekt={inntekt} /> : "-"}
-    </Nav.typo.Undertittel>
+    </Nav.Typo.Undertittel>
   );
 };
 
@@ -112,7 +112,7 @@ type InntektRedigeringUtfortProps = {
 
 const InntektRedigeringUtfort = ({ tittel, verdi }: InntektRedigeringUtfortProps) => (
   <Nav.Column xs="4" className="inntekt-redigering-utfort">
-    <Nav.typo.Normaltekst>{tittel}</Nav.typo.Normaltekst>
+    <Nav.Typo.Normaltekst>{tittel}</Nav.Typo.Normaltekst>
     <InntektRedigeringUtfortUndertittel verdi={verdi} />
   </Nav.Column>
 );
@@ -216,7 +216,7 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
   </>
 );
 
-const symbolsynlighetMap = new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]]);
+const symbolsynlighet = { [Status.RedigeringUtfort]: { bin: false, pencil: true } };
 
 type LonnOgNaturalytelserProps = LonnOgNaturalytelser & { lagreHandler: () => boolean; redigerbart: boolean };
 
@@ -228,7 +228,7 @@ const LonnOgNaturalytelser = ({ redigerbart, lagreHandler, ...lonnOgNaturalytels
     hentNyStatusVedHarDataEndring={false}
     visLagreKnapp
     onLagreClick={lagreHandler}
-    symbolsynlighetMap={symbolsynlighetMap}
+    symbolsynlighet={symbolsynlighet}
     redigererRender={() => <LonnOgNaturalytelserRedigerer redigerbart={redigerbart} />}
     redigeringUtfortRender={() => <LonnOgNaturalytelserRedigeringUtfort {...lonnOgNaturalytelser} />}
   />
@@ -289,7 +289,7 @@ const ArbeidsgiveravgiftOgTrygdeavgift = ({
     harData
     tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
     hentNyStatusVedHarDataEndring={false}
-    symbolsynlighetMap={symbolsynlighetMap}
+    symbolsynlighet={symbolsynlighet}
     visLagreKnapp
     onLagreClick={lagreHandler}
     redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer redigerbart={redigerbart} />}
@@ -343,9 +343,9 @@ const LonnOgGodtgjorelser = connector(
       <Nav.Container fluid className="lonnOgGodtgjorelser">
         <Nav.Row className="tittel">
           <Nav.Column xs="12">
-            <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+            <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
               {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-            </Nav.typo.Innholdstittel>
+            </Nav.Typo.Innholdstittel>
             <span>{behandlingsgrunnlagEtikett}</span>
             {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
             <LonnOgNaturalytelser redigerbart={redigerbart} lagreHandler={lagreHandler} {...lonnOgNaturalytelser} />

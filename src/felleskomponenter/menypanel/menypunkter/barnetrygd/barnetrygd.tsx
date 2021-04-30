@@ -25,20 +25,20 @@ export const Barnetrygd = ({ sakOgBehandling: { eosBarnetrygd } }: PropsFromRedu
     <Nav.Container fluid className="barnetrygd">
       <Nav.Row className="tittel">
         <Nav.Column xs="12">
-          <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+          <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
             {KV.Menypunkter.Barnetrygd.tittel}
-          </Nav.typo.Innholdstittel>
+          </Nav.Typo.Innholdstittel>
           <Etiketter.FraRegister />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.typo.Normaltekst style={{ display: "inline" }}>
+          <Nav.Typo.Normaltekst style={{ display: "inline" }}>
             Mottar søkeren EU/EØS-barnetrygd fra NAV?
-          </Nav.typo.Normaltekst>
-          <Nav.typo.Element style={{ display: "inline", marginLeft: "1em" }}>
+          </Nav.Typo.Normaltekst>
+          <Nav.Typo.Element style={{ display: "inline", marginLeft: "1em" }}>
             {capitalizedEosBarneTrygd}
-          </Nav.typo.Element>
+          </Nav.Typo.Element>
         </Nav.Column>
       </Nav.Row>
     </Nav.Container>

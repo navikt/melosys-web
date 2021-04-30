@@ -81,7 +81,9 @@ export const Utenlandsoppdraget = ({
             hentNyStatusVedHarDataEndring={false}
             visLagreKnapp
             onLagreClick={lagreHandler}
-            symbolsynlighetMap={new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]])}
+            symbolsynlighet={{
+              [Status.RedigeringUtfort]: { bin: false, pencil: true },
+            }}
             redigererRender={() => <EditerbareUtenlandsoppdragetSporsmal />}
             redigeringUtfortRender={() => <IkkeEditerbareUtenlandsoppdragetSporsmal />}
           />

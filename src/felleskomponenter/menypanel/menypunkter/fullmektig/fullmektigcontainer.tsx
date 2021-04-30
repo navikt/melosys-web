@@ -17,9 +17,9 @@ interface FullmektigProps {
 const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlingsgrunnlagEtikett }: FullmektigProps) => (
   <div className="fullmektig__container">
     <div className="tittel">
-      <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+      <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Fullmektig.tittel}
-      </Nav.typo.Innholdstittel>
+      </Nav.Typo.Innholdstittel>
       <span>{behandlingsgrunnlagEtikett}</span>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
     </div>

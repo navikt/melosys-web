@@ -103,7 +103,7 @@ const VurderingRepresentant = ({
       }
     }
   }
-  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 1000), []);
+  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 500), []);
 
   useEffect(() => {
     setOrganisasjon(undefined);
@@ -150,7 +150,7 @@ const VurderingRepresentant = ({
 
   return (
     <div className="vurderingRepresentant">
-      <Nav.typo.Undertittel className="undertittel">Representant i Norge</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Representant i Norge</Nav.Typo.Undertittel>
 
       <Nav.Row>
         <Nav.Fieldset
@@ -207,18 +207,18 @@ const VurderingRepresentant = ({
 
       {formValues && !formValues.selvbetalende && (
         <Nav.Row>
-          <Nav.typo.Undertittel className="representantadresse">
+          <Nav.Typo.Undertittel className="representantadresse">
             <Fragment>
               Representantens adresse
               <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekstAdresse} type={Nav.PopoverOrientering.Hoyre}>
                 {hjelpetekstAdresse}
               </Nav.Hjelpetekst>
             </Fragment>
-          </Nav.typo.Undertittel>
+          </Nav.Typo.Undertittel>
           <Nav.Column xs="4">
             <Skjema.Input
               feltNavn="organisasjonsnummer"
-              label={<Nav.typo.Element>Organisasjonsnummer</Nav.typo.Element>}
+              label={<Nav.Typo.Element>Organisasjonsnummer</Nav.Typo.Element>}
               placeholder="Skriv inn"
               disabled={!redigerbart}
             />
@@ -228,9 +228,9 @@ const VurderingRepresentant = ({
             <Skjema.Input
               feltNavn="kontaktperson"
               label={
-                <Nav.typo.Element>
+                <Nav.Typo.Element>
                   Kontaktperson <span className="valgfritt">(valgfritt)</span>
-                </Nav.typo.Element>
+                </Nav.Typo.Element>
               }
               placeholder="Skriv inn"
               disabled={!redigerbart}

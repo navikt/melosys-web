@@ -48,7 +48,7 @@ const SporsmalOgSvar = ({
       <fieldset>
         <Nav.Column xs={sporsmalKolonneBredde}>
           <legend>
-            <Nav.typo.Normaltekst>{sporsmal}</Nav.typo.Normaltekst>
+            <Nav.Typo.Normaltekst>{sporsmal}</Nav.Typo.Normaltekst>
           </legend>
         </Nav.Column>
         <Nav.Column xs={svarKolonneBredde} className="col">

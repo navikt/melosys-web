@@ -15,7 +15,7 @@ import {
   Input,
   Textarea,
 } from "nav-frontend-skjema";
-import * as typo from "nav-frontend-typografi";
+import * as Typo from "nav-frontend-typografi";
 import { Knapp, Hovedknapp, Flatknapp } from "nav-frontend-knapper";
 import Lesmerpanel from "nav-frontend-lesmerpanel";
 import Icons from "nav-frontend-ikoner-assets";
@@ -49,7 +49,7 @@ export {
   Panel,
   EtikettBase,
   Hjelpetekst,
-  typo,
+  Typo,
   Knapp,
   Hovedknapp,
   Flatknapp,

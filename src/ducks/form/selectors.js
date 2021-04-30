@@ -70,7 +70,7 @@ export const VurderPerioderFormSelector = createSelector(
   (perioder) => perioder
 );
 
-export const VurderPerioderValid = createSelector(
+export const VurderPerioderFormValid = createSelector(
   (state) => VurderPerioderFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
@@ -200,6 +200,21 @@ export const JournalforingFormSelector = createSelector(
 export const ForretningsValideringSelector = createSelector(
   (state) => (state.form.forretningsValidering ? state.form.forretningsValidering : {}),
   (skjemaValidering) => skjemaValidering.regler
+);
+
+export const SendBrevFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.SEND_BREV, {}),
+  (sendbrev) => sendbrev
+);
+
+export const SendBrevValidSelector = createSelector(
+  (state) => SendBrevFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const SendBrevOrgnummerValidSelector = createSelector(
+  (state) => SendBrevFormSelector(state).syncErrors || {},
+  (errors) => !errors?.organisasjonsnummer
 );
 
 export const BrevBestillingFormSelector = createSelector(

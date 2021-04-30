@@ -19,7 +19,7 @@ describe("undertittel", () => {
   it("viser en nav undertittel", () => {
     const undertittel = shallow(<Undertittel {...props} />);
 
-    expect(undertittel.find(Nav.typo.Undertittel)).toHaveLength(1);
+    expect(undertittel.find(Nav.Typo.Undertittel)).toHaveLength(1);
   });
 
   it("viser et ikon", () => {

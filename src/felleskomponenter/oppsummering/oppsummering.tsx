@@ -2,12 +2,13 @@ import React, { ReactNode } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { Fagsak, Oppsummering as OppsummeringType } from "Domene";
+import { Fagsak } from "Domene";
 
 import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../utils/navFrontend";
+import * as Api from "../../services/api";
 
 import "./oppsummering.css";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
@@ -19,7 +20,7 @@ interface OppsummeringProps {
   arbeidsland: KTObject[];
   lovvalgsland: KTObject;
   fagsak: Fagsak;
-  oppsummering: OppsummeringType;
+  oppsummering: Api.Behandlinger.behandling.Oppsummering;
   behandlingstema: string;
   behandlingsfristLinje: ReactNode;
   behandlingsstatusLinje: ReactNode;
@@ -68,7 +69,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       <dl>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Nav.typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.typo.Undertittel>
+            <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
           </Nav.Column>
           <Nav.Column xs="6" className="hoyrestill">
             {behandlingsfristLinje}
@@ -97,7 +98,11 @@ const Oppsummering = (props: OppsummeringProps) => {
         <Nav.Row>
           <Nav.Column xs="12">
             {behandlingsstatusLinje}
-            <OppsummeringVerdiPar className="svarfrist" nokkel="Svarfrist" verdi={svarFrist || "-"} />
+            <OppsummeringVerdiPar
+              className="svarfrist"
+              nokkel="Svarfrist"
+              verdi={formatterDatoTilNorsk(svarFrist) || "-"}
+            />
           </Nav.Column>
         </Nav.Row>
       </dl>
@@ -105,7 +110,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       <dl>
         <Nav.Row>
           <Nav.Column xs="12">
-            <OppsummeringVerdiPar nokkel="Behandling opprettet" verdi={registrertDato} />
+            <OppsummeringVerdiPar nokkel="Behandling opprettet" verdi={formatterDatoTilNorsk(registrertDato)} />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -170,16 +175,16 @@ Oppsummering.propTypes = {
   behandlingsstatusLinje: PT.node.isRequired,
   behandlingstemaLinje: PT.node.isRequired,
   behandlingstypeLinje: PT.node.isRequired,
-  behandlingsgrunnlagPeriodeFom: PT.string,
-  behandlingsgrunnlagPeriodeTom: PT.string,
+  lovvalgsperiodeFom: PT.string,
+  lovvalgsperiodeTom: PT.string,
   mottattDato: PT.string,
   className: PT.string,
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],
   lovvalgsland: {},
-  behandlingsgrunnlagPeriodeFom: undefined,
-  behandlingsgrunnlagPeriodeTom: undefined,
+  lovvalgsperiodeFom: undefined,
+  lovvalgsperiodeTom: undefined,
   mottattDato: undefined,
   className: undefined,
 };

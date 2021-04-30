@@ -394,18 +394,18 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const begrunnelseFritekstBrevLabel = (
       <Fragment>
-        <Nav.typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.typo.Element>
-        <Nav.typo.Normaltekst>
+        <Nav.Typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.Typo.Element>
+        <Nav.Typo.Normaltekst>
           Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
           om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
-        </Nav.typo.Normaltekst>
+        </Nav.Typo.Normaltekst>
       </Fragment>
     );
 
     /* eslint-disable max-len */
     return (
       <div>
-        <Nav.typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.typo.Undertittel>
+        <Nav.Typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Typo.Undertittel>
         <div className="artikkel16">
           {erIDirekteTilArtikkel16Flyt && (
             <Nav.Row className="vilAnmode">
@@ -422,12 +422,12 @@ class VurderingArtikkel16Anmodning extends Component {
           )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.typo.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.typo.Element>
-              <Nav.typo.Normaltekst>{landSomTekstListe}</Nav.typo.Normaltekst>
+              <Nav.Typo.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst>{landSomTekstListe}</Nav.Typo.Normaltekst>
             </Nav.Column>
             <Nav.Column xs="6">
-              <Nav.typo.Element type="element">Antall måneder:</Nav.typo.Element>
-              <Nav.typo.Normaltekst>{antallManeder}</Nav.typo.Normaltekst>
+              <Nav.Typo.Element type="element">Antall måneder:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst>{antallManeder}</Nav.Typo.Normaltekst>
               <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
             </Nav.Column>
           </Nav.Row>
@@ -438,7 +438,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 onChange={vedUnntakFraBestemmelseEndring}
                 value={unntakFraBestemmelse || ""}
                 disabled={!redigerbart}
-                label={<Nav.typo.Element>Artikkelen det søkes unntak fra:</Nav.typo.Element>}
+                label={<Nav.Typo.Element>Artikkelen det søkes unntak fra:</Nav.Typo.Element>}
                 data-cy="unntakArtikkel"
               >
                 <option key={uuid()} value="">
@@ -459,7 +459,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 onChange={begrunnelserEndringHandler}
                 value={begrunnelseKode}
                 disabled={!redigerbart}
-                label={<Nav.typo.Element>Legg til begrunnelse:</Nav.typo.Element>}
+                label={<Nav.Typo.Element>Legg til begrunnelse:</Nav.Typo.Element>}
                 data-cy="begrunnelse"
               >
                 <option key={uuid()} value="">
@@ -492,7 +492,7 @@ class VurderingArtikkel16Anmodning extends Component {
                   {redigerbart && (
                     <Nav.Textarea
                       id="art16_1_anmodning"
-                      label={<Nav.typo.Element>Begrunnelse til SED A001</Nav.typo.Element>}
+                      label={<Nav.Typo.Element>Begrunnelse til SED A001</Nav.Typo.Element>}
                       placeholder="Skriv begrunnelsen her."
                       onBlur={begrunnelseFritekstFokusFlyttetHandler}
                       onChange={begrunnelseFritekstSedEndretHandler}
@@ -521,7 +521,7 @@ class VurderingArtikkel16Anmodning extends Component {
             <Nav.Row className="fritekstSed">
               <Nav.Column xs="7">
                 <Skjema.Textarea
-                  label={<Nav.typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.typo.Element>}
+                  label={<Nav.Typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.Typo.Element>}
                   feltNavn="fritekstSed"
                   disabled={!redigerbart}
                   visTellerFra={500}
@@ -550,7 +550,7 @@ class VurderingArtikkel16Anmodning extends Component {
           {redigerbart && (
             <Nav.Row>
               <Nav.Column xs="12">
-                <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
+                <Nav.Typo.Undertittel>Vedlegg til SED</Nav.Typo.Undertittel>
                 <VedleggVelger
                   className="vedleggvelger"
                   valgteVedlegg={valgteVedlegg}

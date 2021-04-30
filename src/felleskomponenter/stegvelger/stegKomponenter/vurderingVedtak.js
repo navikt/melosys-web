@@ -121,7 +121,7 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
-      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>Omfattet av norsk trygdelovgivning etter {lovvalgSomTerm}</Nav.Typo.Undertittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
           <Nav.Column xs="6">
@@ -131,8 +131,8 @@ const VurderingVedtak = ({
         {visAntallManederUtland && (
           <Nav.Row className="vedtak__oppsummering">
             <Nav.Column xs="6">
-              <Nav.typo.Element type="element">Antall måneder i utlandet</Nav.typo.Element>
-              <Nav.typo.Normaltekst>{antallManederMenneskelig}</Nav.typo.Normaltekst>
+              <Nav.Typo.Element type="element">Antall måneder i utlandet</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst>{antallManederMenneskelig}</Nav.Typo.Normaltekst>
             </Nav.Column>
           </Nav.Row>
         )}

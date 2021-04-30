@@ -72,7 +72,7 @@ class Inntekt extends Component {
 
     const uuTabell = this.state.visInntektTabell ? (
       <div>
-        <Nav.typo.Undertittel>Inntekt</Nav.typo.Undertittel>
+        <Nav.Typo.Undertittel>Inntekt</Nav.Typo.Undertittel>
         <Tabell kolonneNavn={["Periode", "Samlet inntekt"]} tabellData={inntektArrayed} linjerPerSide={6} />
       </div>
     ) : null;

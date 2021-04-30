@@ -4,16 +4,16 @@ import PT from "prop-types";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsstatusSelectors } from "../../../ducks/behandlingsstatus";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { navigeringOperations } from "../../../ducks/navigering";
-import Knapperad from "../../knapperad";
+import { behandlingerOperations, behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsstatusSelectors } from "../../../../ducks/behandlingsstatus";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { navigeringOperations } from "../../../../ducks/navigering";
+import Knapperad from "../../../knapperad";
 
-import * as Mui from "../../ui";
-import * as Api from "../../../services/api";
-import * as Nav from "../../../utils/navFrontend";
-import * as Routing from "../../../routing";
+import * as Mui from "../../../ui";
+import * as Api from "../../../../services/api";
+import * as Nav from "../../../../utils/navFrontend";
+import * as Routing from "../../../../routing";
 
 import "./dialogboksEndreBehandlingsstatus.css";
 
@@ -86,7 +86,7 @@ function DialogboksEndreBehandlingsstatus({
     <div className="dialogboks">
       {!generellFeil ? (
         <div>
-          <Nav.typo.Systemtittel className="overskrift">Velg ny behandlingsstatus</Nav.typo.Systemtittel>
+          <Nav.Typo.Systemtittel className="overskrift">Velg ny behandlingsstatus</Nav.Typo.Systemtittel>
           <div className="innhold">
             <Mui.KodeTermSelect
               onChange={velgBehandlingsstatuserHandle}

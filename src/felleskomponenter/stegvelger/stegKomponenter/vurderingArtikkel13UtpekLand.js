@@ -145,10 +145,10 @@ export const VurderingArtikkel13UtpekLand = ({
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
-      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
-      <Nav.typo.Undertittel>
-        <Nav.typo.Element className="undertittel">{lovvalgslandTittel}</Nav.typo.Element>
-      </Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Undertittel>
+        <Nav.Typo.Element className="undertittel">{lovvalgslandTittel}</Nav.Typo.Element>
+      </Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
           {visLandvelger && (
@@ -157,9 +157,9 @@ export const VurderingArtikkel13UtpekLand = ({
           {!visLandvelger && <div>{lovvalgsland && KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder)}</div>}
         </Nav.Column>
       </Nav.Row>
-      <Nav.typo.Undertittel>
-        <Nav.typo.Element className="undertittel">Lovvalgsperiode</Nav.typo.Element>
-      </Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>
+        <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
+      </Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
           {fom} - {tom}

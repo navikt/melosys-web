@@ -16,7 +16,7 @@ import "./opprettSak.css";
 
 export const OpprettSakTittel = () => (
   <div className="enkeltSak__meta">
-    <Nav.typo.Element>Opprett ny sak</Nav.typo.Element>
+    <Nav.Typo.Element>Opprett ny sak</Nav.Typo.Element>
   </div>
 );
 const OpprettFagsak = (props) => {

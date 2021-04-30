@@ -236,7 +236,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             values={valgteMottakerinstitusjoner}
             className="multiselect"
           />
-          <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
+          <Nav.Typo.Undertittel>Vedlegg</Nav.Typo.Undertittel>
           <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
             Opprett ny BUC

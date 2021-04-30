@@ -35,7 +35,7 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
   it("viser overskrift", () => {
     const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
 
-    const overskrift = komponent.find(Nav.typo.Undertittel);
+    const overskrift = komponent.find(Nav.Typo.Undertittel);
 
     expect(overskrift.children().text()).toBe(props.overskrift);
   });

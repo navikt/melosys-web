@@ -56,9 +56,9 @@ export const DialogboksAvslagSoknad = (props) => {
       <div className="avslagsoknadcontainer">
         <Ikon.VedtakGodkjent className="vedtakIkon" />
         <div>
-          <Nav.typo.Systemtittel className="overskrift">
+          <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
-          </Nav.typo.Systemtittel>
+          </Nav.Typo.Systemtittel>
           <Nav.Textarea
             value={brevFritekst}
             onChange={setBrevFritekst}

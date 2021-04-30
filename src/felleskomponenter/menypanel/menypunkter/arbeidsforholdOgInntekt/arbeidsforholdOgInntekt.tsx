@@ -10,9 +10,9 @@ const ArbeidsforholdOgInntekt = () => (
   <Nav.Container fluid className="arbeidsforholdOgInntekt">
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsforholdOgInntekt.tittel}
-        </Nav.typo.Innholdstittel>
+        </Nav.Typo.Innholdstittel>
         <Etiketter.FraRegister />
       </Nav.Column>
     </Nav.Row>
