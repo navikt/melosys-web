@@ -72,7 +72,10 @@ const Saksopplysninger = ({
     lastInnSaksopplysninger(saksnummer, behandlingID);
   }, []);
 
-  const erGyldigLovvalgsperiode = () => Utils.dato.erGyldigPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato);
+  const erGyldigLovvalgsperiode = () =>
+    !Utils._isEmpty(lovvalgsperiode)
+      ? Utils.dato.erGyldigPeriode(lovvalgsperiode?.fomDato, lovvalgsperiode?.tomDato)
+      : Utils.dato.erGyldigPeriode(sedLovvalgsperiode?.fom, sedLovvalgsperiode?.tom);
 
   const settEndretPeriodeOpplysninger = async (avklartFakta) => {
     setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
@@ -297,7 +300,6 @@ const Saksopplysninger = ({
   };
 
   const endreUnntaksperiodeVurdering = (e) => setUnntaksperiodeVurdering(e.target.value);
-
   const unikRadioButtonGruppeID = uuid();
   return (
     <div>

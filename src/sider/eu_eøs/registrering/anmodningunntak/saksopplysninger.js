@@ -74,7 +74,8 @@ const Saksopplysninger = ({
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
   const [registreringPending, setRegistreringPending] = useState(false);
 
-  const erGyldigLovvalgsperiode = () => Utils.dato.erGyldigPeriode(sed.lovvalgsperiode);
+  const erGyldigLovvalgsperiode = () =>
+    Utils.dato.erGyldigPeriode(sed?.lovvalgsperiode?.fom, sed?.lovvalgsperiode?.tom);
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
