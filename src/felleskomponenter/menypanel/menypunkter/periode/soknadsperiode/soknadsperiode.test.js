@@ -39,7 +39,7 @@ describe("Soknadsperiode", () => {
 
     expect(soknadsperiodeEndring).toHaveLength(1);
 
-    expect(soknadsperiodeEndringProps.soknadsperiodeNyFom).toBe(props.soknadsperiodeFom);
-    expect(soknadsperiodeEndringProps.soknadsperiodeNyTom).toBe(props.soknadsperiodeTom);
+    expect(soknadsperiodeEndringProps.soknadsperiodeFom).toBe(props.soknadsperiodeFom);
+    expect(soknadsperiodeEndringProps.soknadsperiodeTom).toBe(props.soknadsperiodeTom);
   });
 });
