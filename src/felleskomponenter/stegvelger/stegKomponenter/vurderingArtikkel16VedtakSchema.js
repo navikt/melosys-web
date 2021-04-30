@@ -7,8 +7,7 @@ import MKV from "../../../melosyskodeverk";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
-const SKRIV_INN_GYLDIG_DATO = { melding: "Skriv inn en gyldig dato" };
-const MAA_FYLLES_UT = { melding: "Må fylles ut" };
+const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const {
   TIDLIGERE_ENN_OPPRINNELIG_FOM,
@@ -75,7 +74,7 @@ const artikkel16_vedtak = object().shape({
       .test(erEtterOpprinneligFomTest)
       .test(erFoerOpprinneligTomTest)
       .test(erFoerTomTest)
-      .erGyldigDato(SKRIV_INN_GYLDIG_DATO)
+      .erGyldigDato()
       .required(MAA_FYLLES_UT),
   }),
   tomDato: string().when("forkortLovvalgsperiode", {
@@ -84,7 +83,7 @@ const artikkel16_vedtak = object().shape({
       .test(erEtterOpprinneligFomTest)
       .test(erFoerOpprinneligTomTest)
       .test(erEtterFomTest)
-      .erGyldigDato(SKRIV_INN_GYLDIG_DATO)
+      .erGyldigDato()
       .required(MAA_FYLLES_UT),
   }),
 });

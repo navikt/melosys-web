@@ -3,6 +3,9 @@ import { addMethod, object, string } from "yup";
 import * as Utils from "./utils";
 
 import MKV from "./melosyskodeverk";
+import * as KV from "./kodeverk";
+
+const { TIDLIGERE_ENN_FOM, GYLDIG_DATO, UGYLDIG_PERIODE } = KV.Feilmeldinger;
 
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
@@ -30,13 +33,14 @@ addMethod(object, "uniqueProperty", function (propertyName, message) {
   });
 });
 
-addMethod(string, "erGyldigDato", function (message) {
+addMethod(string, "erGyldigDato", function (message = GYLDIG_DATO) {
   return this.test("er gyldig dato", message, function (value) {
+    if (Utils._isEmpty(value)) return true;
     return Boolean(Utils.dato.vaskInputDato(value));
   });
 });
 
-addMethod(string, "endretPeriodeErGyldig", function (message) {
+addMethod(string, "endretPeriodeErGyldig", function (message = UGYLDIG_PERIODE) {
   return this.test("periode er gyldig", message, function (value) {
     const { soknadsperiode } = this.options.context;
 
@@ -49,10 +53,11 @@ addMethod(string, "endretPeriodeErGyldig", function (message) {
   });
 });
 
-addMethod(string, "erEtterDatofelt", function (felt, message) {
+addMethod(string, "erEtterDatofelt", function (felt = "fomDato", message = TIDLIGERE_ENN_FOM) {
   return this.test("erEtterFraDato", message, function (value) {
     const { [felt]: fomDato } = this.parent;
     const tomDato = value;
+    if (!Utils.dato.vaskInputDato(tomDato)) return true;
 
     return Utils.dato.erGyldigPeriode(fomDato, tomDato);
   });
