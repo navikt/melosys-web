@@ -9,7 +9,6 @@ import * as Hooks from "../../../hooks";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 import "./vurderingGodkjennUtpekingAnnetLand.css";
-import { Textarea } from "../../../utils/navFrontend";
 
 const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,
@@ -59,7 +58,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Textarea
+            <Nav.Textarea
               label="Ytterligere informasjon til SED (valgfri)"
               value={fritekst}
               onChange={(e) => setFritekst(e.target.value)}
