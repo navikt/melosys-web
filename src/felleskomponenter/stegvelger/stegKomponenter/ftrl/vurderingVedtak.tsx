@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
@@ -6,6 +6,7 @@ import { Medlemskapsperiode } from "Domene";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../melosyskodeverk";
+import * as Api from "../../../../services/api";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
@@ -16,12 +17,16 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { formSelectors } from "../../../../ducks/form";
+import { BOOLSK } from "../../../../constants";
 import MottakerTabell from "../../../tabell/mottakerTabell";
+import PdfLenkeListe from "../../../pdfLenkeListe";
 
 import "./vurderingVedtak.css";
 
 const mapStateToProps = (state: RootState) => ({
+  medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
@@ -48,17 +53,30 @@ interface Props {
 }
 
 const VurderingVedtak = ({
+  behandlingID,
   tilbake,
   redigerbart,
   medlemskapsperioder,
   innvilgelsesResultater,
+  formValues,
+  medfolgendeFamilie,
   soknadsland,
   alleLandkoder,
   trygdeavgiftFormValues,
   tilForsiden,
 }: Props & PropsFromRedux) => {
-  const midlertidigStatiskPdfLinke =
-    "https://melosys-dokgen.dev.adeo.no/api/v1/mal/innvilgelse_ftrl/forhaandsvis-pdf/kap2_2_foerste_ledd_a_helsedel_syke_foreldrepenger";
+  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const INNVILGELSE_FOLKETRYGDLOVEN_2_8 = "INNVILGELSE_FOLKETRYGDLOVEN_2_8";
+
+  useEffect(() => {
+    Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+      orgnr: null,
+    })
+      .then(setMuligeMottakere)
+      .catch(Utils.logger.error);
+  }, []);
+
   function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
     return perioder
       ? perioder.map((medlemskapsperiode) => [
@@ -73,80 +91,69 @@ const VurderingVedtak = ({
       : [];
   }
 
-  function mapVedtakRader() {
+  const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
+    if (!muligeMottakere) return;
+    setMuligeMottakere({
+      ...muligeMottakere,
+      kopiMottakere: muligeMottakere.kopiMottakere.filter((mottaker) => mottaker !== kopiMottaker),
+    });
+  };
+
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
     return [
-      [
-        { verdi: <Nav.Typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.Typo.Normaltekst> },
-        { verdi: "Deloitte" },
-        {
-          verdi: (
-            <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}>
-              <Ikoner.Forhandsvis />
-            </a>
-          ),
-          style: "midtstilt",
+      {
+        sendesTilDokumenterV2: true,
+        navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
+        data: {
+          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+          mottaker: muligMottaker.rolle,
+          kopiMottakere: [],
+          innledningFritekst: formValues?.fritekstInnledning,
+          begrunnelseFritekst: formValues?.fritekstBegrunnelse,
+          orgNr: muligMottaker?.orgnr,
         },
-        { verdi: <></> },
-      ],
-      [
-        {
-          verdi: (
-            <Nav.Typo.Normaltekst className="lenke">
-              Kopi av vedtak om frivillig medlemskap til Skatteetaten
-            </Nav.Typo.Normaltekst>
-          ),
-        },
-        { verdi: "Skatteetaten" },
-        {
-          verdi: (
-            <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}>
-              <Ikoner.Forhandsvis />
-            </a>
-          ),
-          style: "midtstilt",
-        },
-        { verdi: <Ikoner.Bin />, style: "midtstilt" },
-      ],
-      [
-        {
-          verdi: (
-            <Nav.Typo.Normaltekst className="lenke">
-              Kopi av vedtak om frivillig medlemskap til bruker
-            </Nav.Typo.Normaltekst>
-          ),
-        },
-        { verdi: "Dag Fossum" },
-        {
-          verdi: (
-            <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}>
-              <Ikoner.Forhandsvis />
-            </a>
-          ),
-          style: "midtstilt",
-        },
-        { verdi: <Ikoner.Bin />, style: "midtstilt" },
-      ],
-      [
-        {
-          verdi: (
-            <Nav.Typo.Normaltekst className="lenke">
-              Kopi av vedtak om frivillig medlemskap til bruker
-            </Nav.Typo.Normaltekst>
-          ),
-        },
-        { verdi: "Dag Fossum" },
-        {
-          verdi: (
-            <a target="_blank" rel="noopener noreferrer" href={midlertidigStatiskPdfLinke}>
-              <Ikoner.Forhandsvis />
-            </a>
-          ),
-          style: "midtstilt",
-        },
-        { verdi: <Ikoner.Bin />, style: "midtstilt" },
-      ],
+      },
     ];
-  }
+  };
+
+  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
+    return [
+      {
+        verdi: (
+          <PdfLenkeListe
+            behandlingID={behandlingID}
+            dokumenter={lagDokumenterData(muligMottaker)}
+            vedKlikk={() => true}
+            className="forhåndsvisning"
+          />
+        ),
+      },
+      { verdi: muligMottaker.mottakerNavn },
+      {
+        verdi: (
+          <PdfLenkeListe
+            behandlingID={behandlingID}
+            dokumenter={lagDokumenterData(muligMottaker, true)}
+            vedKlikk={() => true}
+            className="forhåndsvisning"
+          />
+        ),
+        style: "midtstilt",
+      },
+      {
+        verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(muligMottaker)} /> : <></>,
+        style: "slettKnapp",
+      },
+    ];
+  };
+
+  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+    return [
+      mapRad(mottakere.hovedMottaker, false),
+      ...mottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker, true)),
+      ...mottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker, false)),
+    ];
+  };
 
   function getTrygdeavgiftString(sentence: string, boldWord: string) {
     if (!sentence) return null;
@@ -160,6 +167,14 @@ const VurderingVedtak = ({
       </>
     );
   }
+
+  const trygdeavgiftTilNorge = [MKV.Koder.loenn_forhold.LØNN_FRA_NORGE, MKV.Koder.loenn_forhold.DELT_LØNN].includes(
+    trygdeavgiftFormValues?.avgiftsgrunnlag?.lønnsforhold
+  );
+  const trygdeavgiftTilUtlandet = [
+    MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET,
+    MKV.Koder.loenn_forhold.DELT_LØNN,
+  ].includes(trygdeavgiftFormValues?.avgiftsgrunnlag?.lønnsforhold);
 
   return (
     <div className="vurderingVedtak">
@@ -189,46 +204,40 @@ const VurderingVedtak = ({
         </Nav.Column>
         <Nav.Column xs="3">
           <Nav.Typo.Element className="info">Familiemedlemmer</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">Nei</Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst className="info">
+            {medfolgendeFamilie?.every((familie) => familie.omfattet === BOOLSK.SANN) ? "Ja" : "Nei"}
+          </Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
 
-      {trygdeavgiftFormValues &&
-        trygdeavgiftFormValues.avgiftsgrunnlag &&
-        [MKV.Koder.loenn_forhold.LØNN_FRA_NORGE, MKV.Koder.loenn_forhold.DELT_LØNN].includes(
-          trygdeavgiftFormValues.avgiftsgrunnlag.lønnsforhold
-        ) && (
-          <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
-            <Ikoner.Inntekt className="trygdeavgift_ikon" />
-            <Nav.Typo.Normaltekst>
-              {getTrygdeavgiftString(
-                KV.finnTermFraListe(
-                  MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt,
-                  trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt
-                ),
-                "norsk inntekt"
-              )}
-            </Nav.Typo.Normaltekst>
-          </div>
-        )}
-      {trygdeavgiftFormValues &&
-        trygdeavgiftFormValues.avgiftsgrunnlag &&
-        [MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET, MKV.Koder.loenn_forhold.DELT_LØNN].includes(
-          trygdeavgiftFormValues.avgiftsgrunnlag.lønnsforhold
-        ) && (
-          <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
-            <Ikoner.Inntekt className="trygdeavgift_ikon" />
-            <Nav.Typo.Normaltekst>
-              {getTrygdeavgiftString(
-                KV.finnTermFraListe(
-                  MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt,
-                  trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt
-                ),
-                "utenlandsk inntekt"
-              )}
-            </Nav.Typo.Normaltekst>
-          </div>
-        )}
+      {trygdeavgiftTilNorge && (
+        <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
+          <Ikoner.Inntekt className="trygdeavgift_ikon" />
+          <Nav.Typo.Normaltekst>
+            {getTrygdeavgiftString(
+              KV.finnTermFraListe(
+                MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt,
+                trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt
+              ),
+              "norsk inntekt"
+            )}
+          </Nav.Typo.Normaltekst>
+        </div>
+      )}
+      {trygdeavgiftTilUtlandet && (
+        <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
+          <Ikoner.Inntekt className="trygdeavgift_ikon" />
+          <Nav.Typo.Normaltekst>
+            {getTrygdeavgiftString(
+              KV.finnTermFraListe(
+                MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt,
+                trygdeavgiftFormValues.avgiftsgrunnlag.vurderingTrygdeavgiftUtenlandskInntekt
+              ),
+              "utenlandsk inntekt"
+            )}
+          </Nav.Typo.Normaltekst>
+        </div>
+      )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til innleding <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
@@ -249,7 +258,7 @@ const VurderingVedtak = ({
       />
 
       <MottakerTabell
-        rader={mapVedtakRader()}
+        rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
         kolonner={[
           { verdi: "Dokumenter", bredde: "60%" },
           { verdi: "Mottaker", bredde: "20%" },
