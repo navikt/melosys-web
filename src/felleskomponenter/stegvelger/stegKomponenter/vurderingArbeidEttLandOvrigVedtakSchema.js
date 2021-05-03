@@ -16,9 +16,13 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const arbeid_ett_land_ovrig_vedtak = object().shape({
   lovvalgsbestemmelse: string().nullable().required(VELG_EN_BESTEMMELSE),
   forkortLovvalgsperiode: bool().required(),
+  fomDato: string().when("forkortLovvalgsperiode", {
+    is: true,
+    then: string().erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
+  }),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string().erInnenforSoknadsperioden().erEtterDatofelt().erGyldigDato().required(MAA_FYLLES_UT),
+    then: string().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
   }),
   vedtakstype: string()
     .nullable()

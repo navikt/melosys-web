@@ -10,9 +10,13 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const artikkel13_x_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
+  fomDato: string().when("forkortLovvalgsperiode", {
+    is: true,
+    then: string().erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
+  }),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string().erInnenforSoknadsperioden().erEtterDatofelt().erGyldigDato().required(MAA_FYLLES_UT),
+    then: string().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
   }),
   vedtakstype: string()
     .nullable()
