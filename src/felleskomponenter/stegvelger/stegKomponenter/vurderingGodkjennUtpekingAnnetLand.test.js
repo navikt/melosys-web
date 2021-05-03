@@ -25,11 +25,17 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
     const checkboxOnCheck = checkbox.props().onCheck;
     checkboxOnCheck({ checked: true });
 
+    const fritekstfelt = komponent.find(Nav.Textarea);
+    fritekstfelt.simulate("change", { target: { value: "Fritekst her" } });
+
     const hovedknapp = komponent.find(Mui.Knapp);
     hovedknapp.simulate("click");
 
     expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenCalledTimes(1);
-    expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenLastCalledWith({ varsleUtland: true });
+    expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenLastCalledWith({
+      varsleUtland: true,
+      fritekst: "Fritekst her",
+    });
   });
 
   it("viser overskrift", () => {
