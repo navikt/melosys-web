@@ -5,7 +5,7 @@ import * as Utils from "./utils";
 import MKV from "./melosyskodeverk";
 import * as KV from "./kodeverk";
 
-const { TIDLIGERE_ENN_FOM, GYLDIG_DATO, UGYLDIG_PERIODE } = KV.Feilmeldinger;
+const { TIDLIGERE_ENN_FOM, GYLDIG_DATO, UTENFOR_SOKNADSPERIODEN } = KV.Feilmeldinger;
 
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
@@ -40,21 +40,22 @@ addMethod(string, "erGyldigDato", function (message = GYLDIG_DATO) {
   });
 });
 
-addMethod(string, "endretPeriodeErGyldig", function (message = UGYLDIG_PERIODE) {
-  return this.test("periode er gyldig", message, function (value) {
+addMethod(string, "erInnenforSoknadsperioden", function (message = UTENFOR_SOKNADSPERIODEN) {
+  return this.test("dato er innenfor soknadsperioden", message, function (value) {
     const { soknadsperiode } = this.options.context;
 
-    /** Hvis åpen periode, ikke valider perioden */
-    if (!soknadsperiode.tom) return true;
+    if (Utils._isEmpty(value) || !Utils.dato.vaskInputDato(value)) return true;
 
-    if (value === "") return false;
+    if (Utils._isEmpty(soknadsperiode.tom)) {
+      return Utils.dato.erGyldigPeriode(Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom), value);
+    }
 
     return Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, Utils.dato.formatterDatoTilISO(value));
   });
 });
 
 addMethod(string, "erEtterDatofelt", function (felt = "fomDato", message = TIDLIGERE_ENN_FOM) {
-  return this.test("erEtterFraDato", message, function (value) {
+  return this.test("er etter dato", message, function (value) {
     const { [felt]: fomDato } = this.parent;
     const tomDato = value;
     if (!Utils.dato.vaskInputDato(tomDato)) return true;

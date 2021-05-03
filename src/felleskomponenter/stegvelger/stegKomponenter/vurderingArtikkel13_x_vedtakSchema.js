@@ -12,7 +12,7 @@ const artikkel13_x_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string().endretPeriodeErGyldig().erEtterDatofelt().erGyldigDato().required(MAA_FYLLES_UT),
+    then: string().erInnenforSoknadsperioden().erEtterDatofelt().erGyldigDato().required(MAA_FYLLES_UT),
   }),
   vedtakstype: string()
     .nullable()

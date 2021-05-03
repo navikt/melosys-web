@@ -30,17 +30,9 @@ const erFeilAktivPaaPerioder = (medlemskapsperioder) =>
 
 const erDatoGyldig = (dato) => (Utils._isEmpty(dato) ? true : Utils.dato.vaskInputDato(dato));
 
-const gyldigFomDatoTest = {
-  name: "Gyldig fomDato",
-  message: "Dato er utenfor søknadsperioden",
-  test: (dato, schema) =>
-    erDatoGyldig(dato) &&
-    Utils.dato.erGyldigPeriode(Utils.dato.formatterDatoTilNorsk(schema.options.context.soknadsperiode.fom), dato),
-};
-
 const gyldigTomDatoTest = {
   name: "Gyldig tomDato",
-  message: "Dato er utenfor søknadsperioden",
+  message: "Utenfor søknadsperioden",
   test: (tomDato, schema) => {
     const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
     const medlemskapsperioder = schema.options.context.formValues?.medlemskapsperioder;
@@ -61,7 +53,7 @@ const vurdering_perioder = object().shape({
       object().shape({
         id: string().required(),
         arbeidsland: string(),
-        fomDato: string().erGyldigDato().test(gyldigFomDatoTest).required(MAA_FYLLES_UT),
+        fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
         tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(gyldigTomDatoTest).nullable(),
         bestemmelse: string(),
         innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),

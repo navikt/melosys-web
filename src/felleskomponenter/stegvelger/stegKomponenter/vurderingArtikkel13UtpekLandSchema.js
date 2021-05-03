@@ -10,7 +10,7 @@ const artikkel13_utpek = object().shape({
   forkortUtpekingsperiode: bool().required(),
   tomDato: string().when("forkortUtpekingsperiode", {
     is: true,
-    then: string().endretPeriodeErGyldig().erEtterDatofelt().erGyldigDato().required(MAA_FYLLES_UT),
+    then: string().erInnenforSoknadsperioden().erEtterDatofelt().erGyldigDato().required(MAA_FYLLES_UT),
   }),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjoner: array().of(
