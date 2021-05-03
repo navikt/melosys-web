@@ -72,7 +72,7 @@ const Behandlingsmeny = ({
       {(anmodningsperioderErSendtUtlandet ||
         (!redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE)) && (
         <Nav.Knapp mini className="element" onClick={visRevurderFagsakDialogHandle}>
-          Vurder vedtak på nytt
+          Vurder saken på nytt
         </Nav.Knapp>
       )}
     </div>

@@ -17,7 +17,7 @@ export const DialogboksRevurderFagsak = ({ bekreft, avbryt, ariaHideApp, spinner
     shouldCloseOnOverlayClick
     ariaHideApp={ariaHideApp}
   >
-    <Nav.Typo.Systemtittel className="overskrift">Vurder vedtak på nytt</Nav.Typo.Systemtittel>
+    <Nav.Typo.Systemtittel className="overskrift">Vurder saken på nytt</Nav.Typo.Systemtittel>
     <Knapperad
       bekreft={bekreft}
       bekreftTekst="BEKREFT"
