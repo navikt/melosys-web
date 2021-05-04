@@ -8,7 +8,6 @@ const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.beh
 interface Props {
   redigerbart: boolean;
   behandlingsstatus: string;
-  anmodningsperioderErSendtUtlandet: boolean;
   lagreOgLukkHandle: () => void;
   tilbakeleggeHandle: () => void;
   oppfriskSaksopplysningerHandle: () => void;
@@ -21,7 +20,6 @@ interface Props {
 const Behandlingsmeny = ({
   redigerbart,
   behandlingsstatus,
-  anmodningsperioderErSendtUtlandet,
   lagreOgLukkHandle,
   tilbakeleggeHandle,
   oppfriskSaksopplysningerHandle,
@@ -48,7 +46,7 @@ const Behandlingsmeny = ({
         <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={tilbakeleggeHandle}>
           Legg tilbake i kø
         </Nav.Knapp>
-        {!anmodningsperioderErSendtUtlandet && (
+        {redigerbart && (
           <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={oppfriskSaksopplysningerHandle}>
             Oppdater registeropplysninger
           </Nav.Knapp>
@@ -71,7 +69,7 @@ const Behandlingsmeny = ({
         <Nav.Knapp mini className="element" onClick={apneTidligereBehandlinger}>
           Vis alle behandlinger
         </Nav.Knapp>
-        {(anmodningsperioderErSendtUtlandet || behandlingErAvsluttet) && (
+        {behandlingErAvsluttet && (
           <Nav.Knapp mini className="element" onClick={visRevurderFagsakDialogHandle}>
             Vurder saken på nytt
           </Nav.Knapp>
