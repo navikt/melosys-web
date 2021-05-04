@@ -43,9 +43,11 @@ const Behandlingsmeny = ({
             Lagre og lukk
           </Nav.Knapp>
         )}
-        <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={tilbakeleggeHandle}>
-          Legg tilbake i kø
-        </Nav.Knapp>
+        {redigerbart && (
+          <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={tilbakeleggeHandle}>
+            Legg tilbake i kø
+          </Nav.Knapp>
+        )}
         {redigerbart && (
           <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={oppfriskSaksopplysningerHandle}>
             Oppdater registeropplysninger
