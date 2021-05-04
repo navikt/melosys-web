@@ -11,7 +11,7 @@ export const DialogboksRevurderFagsak = ({ bekreft, avbryt, ariaHideApp, spinner
   <Nav.Modal
     className="dialogboksRevurderFagsak"
     isOpen
-    contentLabel="Revurder vedtak"
+    contentLabel="Revurder fagsak"
     onRequestClose={avbryt}
     closeButton={false}
     shouldCloseOnOverlayClick
