@@ -70,7 +70,6 @@ function FlereRedigeringsKnapperListe<T>({
               tittel={`${tittelTekst}${navn ? `: ${navn}` : ""}`}
               tittelIkon={tittelIkon}
               tittelUnderstrek
-              hentNyStatusVedHarDataEndring={false}
               onBinClick={slett}
               symbolsynlighet={visAlltidBinSymbolsynlighet}
               redigererRender={() => (

@@ -225,7 +225,6 @@ const LonnOgNaturalytelser = ({ redigerbart, lagreHandler, ...lonnOgNaturalytels
     redigerbart={redigerbart}
     harData
     tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.lonnOgNaturalytelser}
-    hentNyStatusVedHarDataEndring={false}
     visLagreKnapp
     onLagreClick={lagreHandler}
     symbolsynlighet={symbolsynlighet}
@@ -288,7 +287,6 @@ const ArbeidsgiveravgiftOgTrygdeavgift = ({
     redigerbart={redigerbart}
     harData
     tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
-    hentNyStatusVedHarDataEndring={false}
     symbolsynlighet={symbolsynlighet}
     visLagreKnapp
     onLagreClick={lagreHandler}
