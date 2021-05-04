@@ -103,6 +103,7 @@ const Saksbehandling = ({
   behandlingsgrunnlagMottaksdato,
   behandlingsresultat,
   behandlingstema,
+  behandlingsstatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
   dokumenter,
@@ -295,6 +296,7 @@ const Saksbehandling = ({
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                  behandlingsstatus={behandlingsstatus}
                 />
               )}
               renderBehandlingsstatus={() => (
@@ -333,6 +335,7 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   behandlingstema: PT.string.isRequired,
+  behandlingsstatus: PT.string.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   dokumenter: PT.array.isRequired,
@@ -401,6 +404,7 @@ const mapStateToProps = (state) => ({
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
