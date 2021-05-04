@@ -7,7 +7,6 @@ const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.beh
 
 interface Props {
   redigerbart: boolean;
-  behandlingstype: string;
   behandlingsstatus: string;
   anmodningsperioderErSendtUtlandet: boolean;
   lagreOgLukkHandle: () => void;
@@ -21,7 +20,6 @@ interface Props {
 }
 const Behandlingsmeny = ({
   redigerbart,
-  behandlingstype,
   behandlingsstatus,
   anmodningsperioderErSendtUtlandet,
   lagreOgLukkHandle,
@@ -50,23 +48,22 @@ const Behandlingsmeny = ({
         <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={tilbakeleggeHandle}>
           Legg tilbake i kø
         </Nav.Knapp>
-        {behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE &&
-          !anmodningsperioderErSendtUtlandet && (
-            <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={oppfriskSaksopplysningerHandle}>
-              Oppdater registeropplysninger
-            </Nav.Knapp>
-          )}
-        {redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE && (
+        {!anmodningsperioderErSendtUtlandet && (
+          <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={oppfriskSaksopplysningerHandle}>
+            Oppdater registeropplysninger
+          </Nav.Knapp>
+        )}
+        {redigerbart && (
           <Nav.Knapp mini className="element" onClick={visHenleggDialogHandle}>
             Henlegg sak
           </Nav.Knapp>
         )}
-        {redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE && (
+        {redigerbart && (
           <Nav.Knapp mini className="element" onClick={visAvsluttSakSomBortfaltDialogHandle}>
             Avslutt sak som bortfalt
           </Nav.Knapp>
         )}
-        {redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING && (
+        {redigerbart && (
           <Nav.Knapp mini className="element" onClick={visAvslagSoknadDialogHandle}>
             Avslå søknad pga. manglende opplysninger
           </Nav.Knapp>
@@ -74,8 +71,7 @@ const Behandlingsmeny = ({
         <Nav.Knapp mini className="element" onClick={apneTidligereBehandlinger}>
           Vis alle behandlinger
         </Nav.Knapp>
-        {(anmodningsperioderErSendtUtlandet ||
-          (behandlingErAvsluttet && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE)) && (
+        {(anmodningsperioderErSendtUtlandet || behandlingErAvsluttet) && (
           <Nav.Knapp mini className="element" onClick={visRevurderFagsakDialogHandle}>
             Vurder saken på nytt
           </Nav.Knapp>
