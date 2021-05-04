@@ -27,6 +27,9 @@ import PdfLenkeListe from "../../../pdfLenkeListe";
 
 import "./vurderingVedtak.css";
 
+// https://confluence.adeo.no/display/TEESSI/Avtaleland
+const avtaleland = ["AU", "BA", "CA", "CL", "IN", "IL", "ME", "RS", "GB", "TR", "US"];
+
 const mapStateToProps = (state: RootState) => ({
   medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -221,7 +224,9 @@ const VurderingVedtak = ({
         </Nav.Column>
         <Nav.Column xs="4">
           <Nav.Typo.Element className="info">Arbeid utføres i avtaleland</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">Ja</Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst className="info">
+            {avtaleland.includes(soknadsland?.toString()) ? "Ja" : "Nei"}
+          </Nav.Typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="3">
           <Nav.Typo.Element className="info">Familiemedlemmer</Nav.Typo.Element>
