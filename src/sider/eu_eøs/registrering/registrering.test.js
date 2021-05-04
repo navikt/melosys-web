@@ -10,6 +10,8 @@ const {
   REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
 } = MKV.Koder.behandlinger.behandlingstema;
 
+const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING, UNDER_BEHANDLING } = MKV.Koder.behandlinger.behandlingsstatus;
+
 describe("Registrering", () => {
   let props = null;
 
@@ -35,6 +37,7 @@ describe("Registrering", () => {
       },
       location: {},
       behandlingstema: "",
+      behandlingsstatus: "",
       lovvalgsperiodeFom: "",
       lovvalgsperiodeTom: "PT.string",
       tilForsiden: jest.fn(),
@@ -48,9 +51,8 @@ describe("Registrering", () => {
     };
   });
 
-  it("Revurder fagsak vises ikke dersom behandling er redigerbar", () => {
-    props.redigerbart = true;
-
+  it(`Revurder fagsak vises ikke dersom behandlingsstatus er ${UNDER_BEHANDLING}`, () => {
+    props.behandlingsstatus = UNDER_BEHANDLING;
     const registrering = shallow(<Registrering {...props} />);
 
     const sideOppsummering = registrering.find(SideOppsummering);
@@ -58,8 +60,8 @@ describe("Registrering", () => {
     expect(behandlingsmeny.props.visRevurderFagsak).toBe(false);
   });
 
-  it(`Revurder fagsak vises dersom behandling ikke er redigerbar og behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING}`, () => {
-    props.redigerbart = false;
+  it(`Revurder fagsak vises dersom behandlingsstatus er ${AVSLUTTET} og behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING}`, () => {
+    props.behandlingsstatus = AVSLUTTET;
     props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
 
     const registrering = shallow(<Registrering {...props} />);
@@ -69,8 +71,30 @@ describe("Registrering", () => {
     expect(behandlingsmeny.props.visRevurderFagsak).toBe(true);
   });
 
-  it(`Revurder fagsak vises dersom behandling ikke er redigerbar og behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE}`, () => {
-    props.redigerbart = false;
+  it(`Revurder fagsak vises dersom behandlingsstatus er ${MIDLERTIDIG_LOVVALGSBESLUTNING} og behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING}`, () => {
+    props.behandlingsstatus = MIDLERTIDIG_LOVVALGSBESLUTNING;
+    props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
+
+    const registrering = shallow(<Registrering {...props} />);
+
+    const sideOppsummering = registrering.find(SideOppsummering);
+    const behandlingsmeny = sideOppsummering.props().renderBehandlingsmeny();
+    expect(behandlingsmeny.props.visRevurderFagsak).toBe(true);
+  });
+
+  it(`Revurder fagsak vises dersom behandlingsstatus er ${AVSLUTTET} og behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE}`, () => {
+    props.behandlingsstatus = AVSLUTTET;
+    props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE;
+
+    const registrering = shallow(<Registrering {...props} />);
+
+    const sideOppsummering = registrering.find(SideOppsummering);
+    const behandlingsmeny = sideOppsummering.props().renderBehandlingsmeny();
+    expect(behandlingsmeny.props.visRevurderFagsak).toBe(true);
+  });
+
+  it(`Revurder fagsak vises dersom behandlingsstatus er ${MIDLERTIDIG_LOVVALGSBESLUTNING} og behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE}`, () => {
+    props.behandlingsstatus = MIDLERTIDIG_LOVVALGSBESLUTNING;
     props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE;
 
     const registrering = shallow(<Registrering {...props} />);
