@@ -10,6 +10,7 @@ import * as Api from "../../../../services/api";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
+import * as Hooks from "../../../../hooks";
 import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../skjema";
 
@@ -17,6 +18,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { formSelectors } from "../../../../ducks/form";
 import { BOOLSK } from "../../../../constants";
@@ -32,6 +34,7 @@ const mapStateToProps = (state: RootState) => ({
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
+  vedtaktype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
 });
 
@@ -43,12 +46,12 @@ interface Props {
   bekreft: () => void;
   oppdater: () => void;
   tilbake: () => void;
-  tilForsiden: () => void;
+  lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) => void;
   redigerbart: boolean;
   alleLandkoder: KTObject[];
   formValues: {
-    fritekstInnledning?: HTMLElement;
-    fritekstBegrunnelse?: HTMLElement;
+    fritekstInnledning?: string;
+    fritekstBegrunnelse?: string;
   };
 }
 
@@ -63,9 +66,12 @@ const VurderingVedtak = ({
   soknadsland,
   alleLandkoder,
   trygdeavgiftFormValues,
-  tilForsiden,
+  lagreOgFatteVedtak,
+  vedtaktype,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
   const INNVILGELSE_FOLKETRYGDLOVEN_2_8 = "INNVILGELSE_FOLKETRYGDLOVEN_2_8";
 
   useEffect(() => {
@@ -176,6 +182,21 @@ const VurderingVedtak = ({
     MKV.Koder.loenn_forhold.DELT_LØNN,
   ].includes(trygdeavgiftFormValues?.avgiftsgrunnlag?.lønnsforhold);
 
+  const fattVedtak = async () => {
+    setVedtakPending(true);
+
+    await lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekstInnledning: formValues?.fritekstInnledning || null,
+      fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
+      vedtakstype: vedtaktype,
+    });
+
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
+  };
+
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.Typo.Undertittel>
@@ -271,7 +292,14 @@ const VurderingVedtak = ({
         <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
-        <Nav.Hovedknapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilForsiden}>
+        <Nav.Hovedknapp
+          mini
+          disabled={!redigerbart}
+          className="fane__navigasjonsknapp"
+          onClick={fattVedtak}
+          spinner={vedtakPending}
+          autoDisableVedSpinner
+        >
           Fatt vedtak
         </Nav.Hovedknapp>
       </div>
