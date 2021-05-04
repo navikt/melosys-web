@@ -25,6 +25,11 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
 
+const {
+  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+} = MKV.Koder.behandlinger.behandlingstema;
+
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
     {
@@ -72,7 +77,7 @@ const behandlingsstatusMap = {
   ],
 };
 
-const Registrering = (props) => {
+export const Registrering = (props) => {
   const {
     match: {
       params: { snr },
@@ -100,6 +105,7 @@ const Registrering = (props) => {
     dokumentOversikt,
     dokumenter,
     startOgVisOppfriskModal,
+    visRevurderFagsakDialogHandle,
   } = props;
 
   const saksnummer = snr;
@@ -145,6 +151,11 @@ const Registrering = (props) => {
 
   if (Utils._isNil(redigerbart)) return null;
 
+  const visRevurderFagsak =
+    !redigerbart &&
+    (behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING ||
+      behandlingstema === REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE);
+
   return (
     <div className="registrering">
       <Nav.Container fluid>
@@ -177,6 +188,8 @@ const Registrering = (props) => {
                   tilbakeleggeHandle={tilbakeleggHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
+                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                  visRevurderFagsak={visRevurderFagsak}
                 />
               )}
               renderBehandlingsstatus={() => (
@@ -231,6 +244,7 @@ Registrering.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
 };
 Registrering.defaultProps = {
   redigerbart: null,
