@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import PT from "prop-types";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -7,12 +8,13 @@ import * as Skjema from "../../../../skjema";
 import * as API from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 
-const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className }) => {
+import { fagsakSelectors } from "../../../../../ducks/fagsaker";
+
+const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className, sakstype }) => {
   const [alternativLandsliste, setAlternativLandsliste] = useState();
-  const erFTRL = window.location.pathname.split("/")[2] === MKV.Koder.sakstyper.FTRL;
 
   useEffect(() => {
-    if (erFTRL) {
+    if (sakstype === MKV.Koder.sakstyper.FTRL) {
       API.Kodeverk.hentLandkoderIso2()
         .then((response) => {
           setAlternativLandsliste(
@@ -27,7 +29,7 @@ const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className
         })
         .catch(Utils.logger.error);
     }
-  }, []);
+  }, [sakstype]);
 
   return (
     <div className={className}>
@@ -80,10 +82,15 @@ EnkeltArbeidsforholdUtland.propTypes = {
   redigerbart: PT.bool.isRequired,
   overordnetFeltNavn: PT.string.isRequired,
   className: PT.string,
+  sakstype: PT.string.isRequired,
 };
 
 EnkeltArbeidsforholdUtland.defaultProps = {
   className: undefined,
 };
 
-export default EnkeltArbeidsforholdUtland;
+const mapStateToProps = (state) => ({
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
+});
+
+export default connect(mapStateToProps)(EnkeltArbeidsforholdUtland);
