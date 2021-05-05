@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../utils/navFrontend";
 import * as Etiketter from "./etiketter";
@@ -14,9 +15,9 @@ import { LinkGroupsFactory } from "./linkgroups";
 import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { menypanelSelectors } from "../../ducks/menypanel";
 
 import "./menypanel.css";
-import { menypanelSelectors } from "../../ducks/menypanel";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
@@ -35,9 +36,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MenypanelProps = PropsFromRedux & {
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
+  alternativLandsliste?: KTObject[];
 };
 
 export const Menypanel = ({
+  alternativLandsliste,
   behandlingsgrunnlagtype,
   behandlingstema,
   behandlingstype,
@@ -62,6 +65,7 @@ export const Menypanel = ({
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
     setMenypanelFeilmelding,
+    alternativLandsliste,
   };
 
   const linkGroupsFactory = new LinkGroupsFactory({

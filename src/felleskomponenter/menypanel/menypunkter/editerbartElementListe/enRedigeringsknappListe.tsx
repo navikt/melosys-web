@@ -1,6 +1,7 @@
 import React, { ElementType } from "react";
 import { FieldArrayFieldsProps } from "redux-form";
 import classNames from "classnames";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
@@ -15,6 +16,7 @@ export interface Redigerer<T> {
   verdier: T;
   settVerdi: (felt: string, verdi: any) => void;
   slett: () => void;
+  alternativLandsliste?: KTObject[];
 }
 
 export interface RedigeringUtfort<T> {
@@ -53,9 +55,11 @@ interface EnRedigeringsKnappListeProps<T> {
   leggTilTekst: string;
   onBinClick?: (index: number) => void;
   symbolsynlighet?: SymbolsynlighetConfig;
+  alternativLandsliste?: KTObject[];
 }
 
 function EnRedigeringsKnappListe<T>({
+  alternativLandsliste,
   redigerbart,
   tittelIkon,
   harData,
@@ -141,6 +145,7 @@ function EnRedigeringsKnappListe<T>({
                   verdier={element}
                   settVerdi={settVerdi}
                   slett={slett}
+                  alternativLandsliste={alternativLandsliste}
                 />
               </div>
             );

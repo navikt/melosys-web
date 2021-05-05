@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RootState } from "AppTypes";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import FlereRedigeringsknapperListe from "./flereRedigeringsknapperListe";
 import EnRedigeringsknappListe from "./enRedigeringsknappListe";
@@ -30,6 +31,7 @@ interface BaseProps {
   flereRedigeringsknapper?: boolean;
   onBinClick?: (index: number) => void;
   symbolsynlighet?: SymbolsynlighetConfig;
+  alternativLandsliste?: KTObject[];
 }
 
 type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
@@ -65,6 +67,7 @@ export const InnerEditerbartElementListe = ({
   settFeltVerdi,
   onBinClick,
   symbolsynlighet,
+  alternativLandsliste,
 }: InnerEditerbartElementListeProps & PropsFromRedux) => {
   const editerbartElementListeCls = classNames(className);
 
@@ -90,6 +93,7 @@ export const InnerEditerbartElementListe = ({
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
           onBinClick={onBinClick}
+          alternativLandsliste={alternativLandsliste}
         />
       ) : (
         <EnRedigeringsknappListe
@@ -110,6 +114,7 @@ export const InnerEditerbartElementListe = ({
           leggTil={leggTil}
           onBinClick={onBinClick}
           symbolsynlighet={symbolsynlighet}
+          alternativLandsliste={alternativLandsliste}
         />
       )}
     </div>

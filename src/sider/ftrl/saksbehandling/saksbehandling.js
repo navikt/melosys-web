@@ -271,7 +271,7 @@ const Saksbehandling = ({
                 sakstype={MKV.Koder.sakstyper.FTRL}
               />
             )}
-            <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+            <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} alternativLandsliste={landkoder} />
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering

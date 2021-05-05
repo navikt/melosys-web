@@ -1,10 +1,11 @@
 import React from "react";
 import PT from "prop-types";
 
+import * as MPT from "../../../../../proptypes";
 import * as Nav from "../../../../../utils/navFrontend";
 import * as Skjema from "../../../../skjema";
 
-const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className }) => (
+const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className, alternativLandsliste }) => (
   <div className={className}>
     <Nav.Row>
       <Nav.Column xs="6">
@@ -43,6 +44,7 @@ const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className
           feltNavn={`${overordnetFeltNavn}.adresse.landkode`}
           disabled={!redigerbart}
           bredde="fullbredde"
+          landkoder={alternativLandsliste}
         />
       </Nav.Column>
     </Nav.Row>
@@ -53,10 +55,12 @@ EnkeltArbeidsforholdUtland.propTypes = {
   redigerbart: PT.bool.isRequired,
   overordnetFeltNavn: PT.string.isRequired,
   className: PT.string,
+  alternativLandsliste: PT.arrayOf(MPT.Kodeverk),
 };
 
 EnkeltArbeidsforholdUtland.defaultProps = {
   className: undefined,
+  alternativLandsliste: undefined,
 };
 
 export default EnkeltArbeidsforholdUtland;

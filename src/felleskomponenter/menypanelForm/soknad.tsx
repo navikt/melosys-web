@@ -4,6 +4,7 @@ import { reduxForm, InjectedFormProps } from "redux-form";
 import { RootState } from "AppTypes";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import soknadSchema from "../../ducks/form/soknadSchema";
@@ -131,11 +132,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SoknadProps = PropsFromRedux & {
   startOgVisOppfriskModal: () => void;
+  alternativLandsliste?: KTObject[];
 };
 
 const Soknad = ({
   lagreSoknad,
   startOgVisOppfriskModal,
+  alternativLandsliste,
 }: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
@@ -148,7 +151,10 @@ const Soknad = ({
 
   return (
     <form name="soknad" id="soknad" onSubmit={submitHandler}>
-      <Menypanel lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      <Menypanel
+        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        alternativLandsliste={alternativLandsliste}
+      />
     </form>
   );
 };

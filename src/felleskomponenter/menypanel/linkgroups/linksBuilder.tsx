@@ -107,6 +107,7 @@ class LinksBuilder implements ILinksBuilder {
       active: false,
       content: (
         <ArbeidsgiverOgVirksomhet
+          alternativLandsliste={this.contentProps.alternativLandsliste}
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}

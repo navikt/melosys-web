@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 export type Menypunkt =
   | "Person"
@@ -27,6 +28,7 @@ export interface LinkGroup {
 }
 
 export interface ContentProps {
+  alternativLandsliste?: KTObject[];
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
   behandlingsgrunnlagEtikett: ReactNode;

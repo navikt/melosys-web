@@ -5,6 +5,7 @@ import { Organisasjon } from "Domene";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { formValueSelector } from "redux-form";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Mui from "../../../ui";
@@ -52,12 +53,14 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type ArbeidsgiverOgVirksomhetProps = PropsFromRedux & {
+  alternativLandsliste?: KTObject[];
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
 };
 
 export const ArbeidsgiverOgVirksomhet = ({
+  alternativLandsliste,
   redigerbart,
   organisasjoner,
   hentOrganisasjon,
@@ -158,6 +161,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Building}
+        alternativLandsliste={alternativLandsliste}
       />
       {selvstendigNaeringsvirksomhetUtland.length === 0 && (
         <Mui.Undertittel
@@ -179,6 +183,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
         harData={arbeidsforholdUtlandHarData}
         tittelIkon={Ikoner.Man}
+        alternativLandsliste={alternativLandsliste}
       />
     </Nav.Container>
   );
