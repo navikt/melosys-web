@@ -51,7 +51,7 @@ const gyldigTomDatoTest = {
     const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
     const medlemskapsperioder = schema.options.context.formValues?.medlemskapsperioder;
     const erSisteMedlemskapsperiode =
-      medlemskapsperioder[medlemskapsperioder.length - 1].id.toString() === schema.parent.id;
+      medlemskapsperioder[medlemskapsperioder.length - 1]?.id.toString() === schema.parent.id;
 
     return Utils._isEmpty(tomDato)
       ? erSisteMedlemskapsperiode && Utils._isEmpty(tomDatoFraSoknadsperiode)

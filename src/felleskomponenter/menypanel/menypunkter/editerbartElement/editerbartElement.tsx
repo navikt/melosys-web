@@ -23,7 +23,6 @@ interface EditerbartElementProps {
   visLagreKnappBareHvisHarData?: boolean;
   visLagreKnapp?: boolean;
   className?: string;
-  hentNyStatusVedHarDataEndring?: boolean;
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
   symbolsynlighet?: SymbolsynlighetConfig;
 }
@@ -54,7 +53,6 @@ const EditerbartElement = ({
   visLagreKnappBareHvisHarData = false,
   visLagreKnapp,
   className,
-  hentNyStatusVedHarDataEndring = false,
   onLagreClick,
   symbolsynlighet = {},
 }: EditerbartElementProps) => {
@@ -71,7 +69,7 @@ const EditerbartElement = ({
   const [status, setStatus] = useState(hentNesteStatus());
 
   useEffect(() => {
-    if (!harData || hentNyStatusVedHarDataEndring) {
+    if (!harData) {
       setStatus(hentNesteStatus());
     }
   }, [harData]);
