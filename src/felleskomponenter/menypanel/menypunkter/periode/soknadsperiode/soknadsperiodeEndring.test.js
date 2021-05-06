@@ -7,12 +7,12 @@ import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 describe("SoknadsperiodeEndring", () => {
   const lagProps = () => ({
     avbryt: jest.fn(),
-    oppdaterPeriode: jest.fn(),
-    soknadsperiodeNyFom: "11.12.2030",
-    soknadsperiodeNyTom: "11.12.2035",
+    lagre: jest.fn(),
+    soknadsperiodeFom: "11.12.2030",
+    soknadsperiodeTom: "11.12.2035",
+    soknadsperiodeFomErrors: undefined,
+    soknadsperiodeTomErrors: undefined,
     vedFeltEndring: jest.fn(),
-    vedFeltFokusUt: jest.fn(),
-    erDatoerGyldig: true,
   });
 
   // TODO: Fjern kommentar etter featuretoggle melosys.input.DATOFELT er fjernet. (Skip funket ikke for some reason)
@@ -26,23 +26,15 @@ describe("SoknadsperiodeEndring", () => {
 
     it("vises", () => {
       expect(fomInput).toHaveLength(1);
-      expect(fomInputProps.value).toBe(props.soknadsperiodeNyFom);
+      expect(fomInputProps.value).toStrictEqual(Utils.dato.norskStringTilDate(props.soknadsperiodeFom));
     });
 
     it("kaller vedFeltEndring ved change", () => {
-      const event = { target: { value: "Verdi" } };
-      fomInput.simulate("change", event);
+      const nyDato = "01.01.2011"
+      fomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
       expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
-      expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeNyFom", "Verdi");
-    });
-
-    it("kaller vedFeltFokusUt ved blur", () => {
-      const event = { target: { value: "Verdi" } };
-      fomInput.simulate("blur", event);
-
-      expect(props.vedFeltFokusUt).toHaveBeenCalledTimes(1);
-      expect(props.vedFeltFokusUt).toHaveBeenLastCalledWith("soknadsperiodeNyFom");
+      expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeFom", nyDato);
     });
   });
 
@@ -56,23 +48,15 @@ describe("SoknadsperiodeEndring", () => {
 
     it("vises", () => {
       expect(tomInput).toHaveLength(1);
-      expect(tomInputProps.value).toBe(props.soknadsperiodeNyTom);
+      expect(tomInputProps.value).toStrictEqual(Utils.dato.norskStringTilDate(props.soknadsperiodeTom));
     });
 
     it("kaller vedFeltEndring ved change", () => {
-      const event = { target: { value: "Verdi" } };
-      tomInput.simulate("change", event);
+      const nyDato = "02.02.2012"
+      tomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
       expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
-      expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeNyTom", "Verdi");
-    });
-
-    it("kaller vedFeltFokusUt ved blur", () => {
-      const event = { target: { value: "Verdi" } };
-      tomInput.simulate("blur", event);
-
-      expect(props.vedFeltFokusUt).toHaveBeenCalledTimes(1);
-      expect(props.vedFeltFokusUt).toHaveBeenLastCalledWith("soknadsperiodeNyTom");
+      expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeTom", nyDato);
     });
   }); */
 
@@ -86,13 +70,43 @@ describe("SoknadsperiodeEndring", () => {
       expect(knappeRad).toHaveLength(1);
     });
 
-    it("får props for å oppdatere periode", () => {
-      expect(knapperadProps.bekreft).toBe(props.oppdaterPeriode);
-      expect(knapperadProps.bekreftRedigerbart).toBe(props.erDatoerGyldig);
+    it("får props for å lagre periode", () => {
+      expect(knapperadProps.bekreft).toBe(props.lagre);
     });
 
     it("får props for å avbryte endring av periode", () => {
       expect(knapperadProps.avbryt).toBe(props.avbryt);
+    });
+  });
+
+  describe("Lagreknapp", () => {
+    it("kan trykkes på", () => {
+      const props = lagProps();
+      const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
+      const knappeRad = soknadsperiodeEndring.find(Knapperad);
+      const knapperadProps = knappeRad.props();
+
+      expect(knapperadProps.bekreftRedigerbart).toBe(true);
+    });
+
+    it("kan ikke trykkes på når fom har errors", () => {
+      const props = lagProps();
+      props.soknadsperiodeFomErrors = "Feil skjedde";
+      const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
+      const knappeRad = soknadsperiodeEndring.find(Knapperad);
+      const knapperadProps = knappeRad.props();
+
+      expect(knapperadProps.bekreftRedigerbart).toBe(false);
+    });
+
+    it("kan ikke trykkes på når tom har errors", () => {
+      const props = lagProps();
+      props.soknadsperiodeTomErrors = "Feil skjedde";
+      const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
+      const knappeRad = soknadsperiodeEndring.find(Knapperad);
+      const knapperadProps = knappeRad.props();
+
+      expect(knapperadProps.bekreftRedigerbart).toBe(false);
     });
   });
 });

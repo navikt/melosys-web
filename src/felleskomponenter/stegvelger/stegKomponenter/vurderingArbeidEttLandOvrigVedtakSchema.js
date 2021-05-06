@@ -1,6 +1,7 @@
 import { object, string, bool, array } from "yup";
 
 import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
 
 const VELG_EN_BESTEMMELSE = "Velg en bestemmelse.";
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
@@ -10,16 +11,18 @@ const VELG_OM_UTENLANDSK_TRYGDEMYNDIGHET_SKAL_INFORMERES = {
   melding: "Velg om utenlandsk trygdemyndighet skal informeres",
 };
 const VELG_LAND = { melding: "Velg land" };
+const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const arbeid_ett_land_ovrig_vedtak = object().shape({
   lovvalgsbestemmelse: string().nullable().required(VELG_EN_BESTEMMELSE),
   forkortLovvalgsperiode: bool().required(),
+  fomDato: string().when("forkortLovvalgsperiode", {
+    is: true,
+    then: string().erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
+  }),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string()
-      .endretPeriodeErGyldig({ melding: "Ugyldig periode" })
-      .erGyldigDato({ melding: "Gyldig dato kreves" })
-      .required({ melding: "Dato kreves" }),
+    then: string().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
   }),
   vedtakstype: string()
     .nullable()
