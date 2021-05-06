@@ -13,12 +13,10 @@ const gyldigRepresentantnummerTest = {
 const vurdering_representant = object().shape({
   representantnummer: string().test(gyldigRepresentantnummerTest).required(REPRESENTANT_FELT_MANGLER),
   selvbetalende: bool().required(),
-  organisasjonsnummer: string()
-    .erOrgnr(ORGNUMMER_UGYLDIG)
-    .when("selvbetalende", {
-      is: (selvbetalende) => !selvbetalende,
-      then: string().required(ORGNUMMER_FELT_MANGLER),
-    }),
+  organisasjonsnummer: string().when("selvbetalende", {
+    is: false,
+    then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER),
+  }),
   kontaktperson: string().nullable(),
 });
 
