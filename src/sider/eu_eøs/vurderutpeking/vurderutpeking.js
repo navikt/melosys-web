@@ -161,8 +161,7 @@ const Vurderutpeking = ({
     : undefined;
 
   const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
-  const visRevurderFagsak =
-    behandlingErAvsluttet && behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
+  const visRevurderFagsak = behandlingErAvsluttet;
 
   return (
     <div className="vurderutpeking">
