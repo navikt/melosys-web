@@ -10,7 +10,7 @@ import * as Utils from "../../../../../utils";
 
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 
-const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className, sakstype }) => {
+export const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, className, sakstype }) => {
   const [alternativLandsliste, setAlternativLandsliste] = useState();
 
   useEffect(() => {
