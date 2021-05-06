@@ -44,6 +44,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
       navn: "Forhåndsvis SED A012",
       type: EKV.Koder.sedtyper.A012,
       erSed: true,
+      data: { fritekst },
     },
   ];
 

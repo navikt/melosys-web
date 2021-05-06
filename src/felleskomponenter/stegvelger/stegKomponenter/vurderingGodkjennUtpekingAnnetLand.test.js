@@ -26,7 +26,7 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
     checkboxOnCheck({ checked: true });
 
     const fritekstfelt = komponent.find(Nav.Textarea);
-    fritekstfelt.simulate("change", { target: { value: "Fritekst her" } });
+    fritekstfelt.props().onChange({ target: { value: "Fritekst her" } });
 
     const hovedknapp = komponent.find(Mui.Knapp);
     hovedknapp.simulate("click");
