@@ -45,7 +45,7 @@ addMethod(string, "endretPeriodeErGyldig", function (message) {
 
     if (value === "") return false;
 
-    return Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, Utils.dato.formatterDatoTilISO(value));
+    return Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, Utils.dato.formatterDatoTilISO(value), true);
   });
 });
 
