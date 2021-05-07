@@ -50,7 +50,7 @@ addMethod(string, "erInnenforSoknadsperioden", function (message = UTENFOR_SOKNA
       return Utils.dato.erGyldigPeriode(Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom), value);
     }
 
-    return Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, Utils.dato.formatterDatoTilISO(value));
+    return Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, Utils.dato.formatterDatoTilISO(value), "[]");
   });
 });
 
