@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent, Fragment } from "react";
+import React, { useEffect, useState, ChangeEvent, Fragment, useCallback } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -401,6 +401,21 @@ const VurderingTrygdeavgift = ({
     avgiftspliktigLønnUtland: null,
   });
 
+  const hentBeregning = (gjorKallet: boolean) => {
+    if (gjorKallet) {
+      Api.Trygdeavgift.hentBeregning(behandlingID)
+        .then((response) => {
+          setOppdatertAvgiftsberegning({
+            avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge,
+            avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland,
+          });
+          changeField("avgiftsberegning", response);
+        })
+        .catch(Utils.logger.error);
+    }
+  };
+  const debouncedHentBeregning = useCallback(Utils._debounce(hentBeregning, 1000), []);
+
   useEffect(() => {
     Api.Trygdeavgift.hentGrunnlag(behandlingID)
       .then((response) => {
@@ -420,16 +435,8 @@ const VurderingTrygdeavgift = ({
         changeField("avgiftsgrunnlag", response);
       })
       .catch(Utils.logger.error);
-
-    Api.Trygdeavgift.hentBeregning(behandlingID)
-      .then((response) => {
-        setOppdatertAvgiftsberegning({
-          avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge,
-          avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland,
-        });
-        changeField("avgiftsberegning", response);
-      })
-      .catch(Utils.logger.error);
+    debouncedHentBeregning(true);
+    return () => debouncedHentBeregning(false);
   }, []);
 
   useEffect(() => {
