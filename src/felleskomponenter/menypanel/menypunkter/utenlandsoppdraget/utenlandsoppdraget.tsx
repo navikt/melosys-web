@@ -78,7 +78,6 @@ export const Utenlandsoppdraget = ({
             redigerbart={redigerbart}
             harData
             tittel="Tilleggsopplysninger"
-            hentNyStatusVedHarDataEndring={false}
             visLagreKnapp
             onLagreClick={lagreHandler}
             symbolsynlighet={{

@@ -5,15 +5,13 @@ import * as KV from "../../kodeverk";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 
-const { TIDLIGERE_ENN_FOM, SENERE_ENN_TOM, SKRIV_INN_GYLDIG_DATO } = KV.Feilmeldinger;
+const { TIDLIGERE_ENN_FOM, SENERE_ENN_TOM, SKRIV_INN_GYLDIG_DATO, MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const lagMelding = (panel, undertittel, melding) => ({
   panel,
   undertittel,
   melding,
 });
-
-const SLUTTDATO_ER_APEN = lagMelding(KV.Menypunkter.Periode.tittel, null, "Sluttdato er åpen");
 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
@@ -216,10 +214,15 @@ const soknad = object().when("$behandlingstema", {
             lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Land kreves")
           ),
       }),
-    soknadsperiodeTom: string().when("$behandlingstema", {
-      is: MKVUtils.erUtsendt,
-      then: string().required(SLUTTDATO_ER_APEN),
-    }),
+    soknadsperiodeFom: string().erGyldigDato().required(MAA_FYLLES_UT),
+    soknadsperiodeTom: string()
+      .erGyldigDato()
+      .erEtterDatofelt("soknadsperiodeFom")
+      .when("$behandlingstema", {
+        is: MKVUtils.erUtsendt,
+        then: string().required(MAA_FYLLES_UT),
+      })
+      .nullable(),
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
     utenlandsoppdraget: object().shape({
@@ -232,8 +235,7 @@ const soknad = object().when("$behandlingstema", {
               KV.Menypunkter.Utenlandsoppdraget.tittel,
               KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
               SKRIV_INN_GYLDIG_DATO.melding
-            ),
-            true
+            )
           ),
         tom: string()
           .nullable()
@@ -243,8 +245,7 @@ const soknad = object().when("$behandlingstema", {
               KV.Menypunkter.Utenlandsoppdraget.tittel,
               KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
               SKRIV_INN_GYLDIG_DATO.melding
-            ),
-            true
+            )
           ),
       }),
     }),

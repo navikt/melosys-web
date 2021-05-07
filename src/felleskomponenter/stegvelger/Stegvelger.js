@@ -277,6 +277,7 @@ class Stegvelger extends Component {
     const { behandlingID, tilForsiden } = this.props;
     const body = {
       varsleUtland: data.varsleUtland || false,
+      fritekst: data.fritekst || null,
     };
 
     try {

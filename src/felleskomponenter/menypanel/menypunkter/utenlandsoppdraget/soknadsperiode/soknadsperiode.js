@@ -8,6 +8,7 @@ import * as Nav from "../../../../../utils/navFrontend";
 import * as Symboler from "../../symboler";
 
 import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../../../ducks/behandlingsgrunnlag";
+import { formSelectors } from "../../../../../ducks/form";
 
 import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 
@@ -16,80 +17,48 @@ import "./soknadsperiode.css";
 export class Soknadsperiode extends Component {
   state = {
     erEndrePeriodeSynlig: false,
-    erPeriodeOppdatertOgGyldig: false,
-    soknadsperiodeNyFom: "",
-    soknadsperiodeNyTom: "",
+    soknadsperiodeFom: this.props.soknadsperiodeFom,
+    soknadsperiodeTom: this.props.soknadsperiodeTom,
+    soknadsperiodeGammelFom: this.props.soknadsperiodeFom,
+    soknadsperiodeGammelTom: this.props.soknadsperiodeTom,
   };
 
-  componentDidUpdate(prevProps) {
-    const { soknadsperiodeFom, soknadsperiodeTom } = this.props;
-    if (prevProps.soknadsperiodeFom === soknadsperiodeFom && prevProps.soknadsperiodeTom === soknadsperiodeTom) {
-      return;
-    }
-
-    this.kopierPeriodeTilLokalState(soknadsperiodeFom, soknadsperiodeTom);
+  componentDidUpdate() {
+    this.oppdaterPeriode(this.state.soknadsperiodeFom, this.state.soknadsperiodeTom);
   }
 
-  kopierPeriodeTilLokalState = (soknadsperiodeNyFom, soknadsperiodeNyTom) => {
-    this.setState((state) => ({
-      ...state,
-      soknadsperiodeNyFom,
-      soknadsperiodeNyTom,
-    }));
-  };
+  componentWillUnmount() {
+    this.oppdaterPeriode(this.state.soknadsperiodeGammelFom, this.state.soknadsperiodeGammelTom);
+  }
 
-  visEndrePeriode = () => {
-    const { soknadsperiodeFom, soknadsperiodeTom } = this.props;
-
-    this.kopierPeriodeTilLokalState(soknadsperiodeFom, soknadsperiodeTom);
-    this.setState({ erEndrePeriodeSynlig: true });
-  };
+  visEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: true });
 
   skjulEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: false });
 
-  oppdaterFelt = (feltNavn, verdi) => {
-    this.setState({ [feltNavn]: verdi });
+  oppdaterFelt = (feltNavn, verdi) => this.setState({ [feltNavn]: verdi });
 
-    const erPeriodeOppdatertOgGyldig =
-      this.validerDato("soknadsperiodeNyFom") && this.validerDato("soknadsperiodeNyTom");
-    this.setState({ erPeriodeOppdatertOgGyldig });
+  oppdaterPeriode = (fom, tom) => {
+    this.props.oppdaterPeriode({
+      fom: fom ? Utils.dato.formatterDatoTilISO(fom) : "",
+      tom: tom ? Utils.dato.formatterDatoTilISO(tom) : "",
+    });
   };
 
-  validerDato = (feltNavn) => {
-    const verdi = this.state[feltNavn];
-    const vasketVerdi = Utils.dato.vaskInputDato(verdi);
-    return vasketVerdi !== false;
+  resetLokalPeriode = () => {
+    const { soknadsperiodeGammelFom, soknadsperiodeGammelTom } = this.state;
+    this.setState({
+      soknadsperiodeFom: soknadsperiodeGammelFom,
+      soknadsperiodeTom: soknadsperiodeGammelTom,
+    });
   };
 
-  validerFelter = () => {
-    const erPeriodeOppdatertOgGyldig =
-      this.vaskOgValiderDato("soknadsperiodeNyFom") &&
-      this.vaskOgValiderDato("soknadsperiodeNyTom") &&
-      Utils.dato.erGyldigPeriode(this.state.soknadsperiodeNyFom, this.state.soknadsperiodeNyTom);
-
-    this.setState({ erPeriodeOppdatertOgGyldig });
-  };
-
-  vaskOgValiderDato = (feltNavn) => {
-    const gyldigDato = this.validerDato(feltNavn);
-    if (gyldigDato) {
-      const verdi = this.state[feltNavn];
-      const vasketVerdi = Utils.dato.vaskInputDato(verdi);
-      this.setState({ [feltNavn]: vasketVerdi });
-    } else {
-      this.setState({ [feltNavn]: "Ugyldig" });
-    }
-    return gyldigDato;
-  };
-
-  oppdaterPeriode = (event) => {
-    event.preventDefault();
-    const { soknadsperiodeNyFom, soknadsperiodeNyTom } = this.state;
-    const periode = {
-      fom: Utils.dato.formatterDatoTilISO(soknadsperiodeNyFom),
-      tom: Utils.dato.formatterDatoTilISO(soknadsperiodeNyTom),
-    };
-    this.props.oppdaterPeriode(periode);
+  lagre = () => {
+    const { soknadsperiodeFom, soknadsperiodeTom } = this.state;
+    this.setState({
+      soknadsperiodeGammelFom: soknadsperiodeFom,
+      soknadsperiodeGammelTom: soknadsperiodeTom,
+    });
+    this.oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
     // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
     // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
     setTimeout(() => {
@@ -98,22 +67,22 @@ export class Soknadsperiode extends Component {
     }, 0);
   };
 
-  avbryt = (event) => {
-    event.preventDefault();
-    const { soknadsperiodeFom, soknadsperiodeTom } = this.props;
-    this.setState((state) => ({
-      ...state,
-      soknadsperiodeNyFom: soknadsperiodeFom,
-      soknadsperiodeNyTom: soknadsperiodeTom,
-    }));
+  avbryt = () => {
+    this.resetLokalPeriode();
     this.skjulEndrePeriode();
   };
 
   render() {
-    const { redigerbart, soknadsperiodeFom, soknadsperiodeTom } = this.props;
-    const { visEndrePeriode, skjulEndrePeriode, validerFelter, oppdaterPeriode, oppdaterFelt, avbryt } = this;
+    const {
+      redigerbart,
+      soknadsperiodeFom,
+      soknadsperiodeTom,
+      soknadsperiodeFomErrors,
+      soknadsperiodeTomErrors,
+    } = this.props;
+    const { visEndrePeriode, skjulEndrePeriode, lagre, oppdaterFelt, avbryt } = this;
 
-    const { erEndrePeriodeSynlig, soknadsperiodeNyFom, soknadsperiodeNyTom } = this.state;
+    const { erEndrePeriodeSynlig } = this.state;
 
     return (
       <div className="soknadsperiode">
@@ -128,13 +97,13 @@ export class Soknadsperiode extends Component {
         )}
         {erEndrePeriodeSynlig && (
           <SoknadsperiodeEndring
-            soknadsperiodeNyFom={soknadsperiodeNyFom}
-            soknadsperiodeNyTom={soknadsperiodeNyTom}
+            soknadsperiodeFom={soknadsperiodeFom}
+            soknadsperiodeTom={soknadsperiodeTom}
+            soknadsperiodeFomErrors={soknadsperiodeFomErrors}
+            soknadsperiodeTomErrors={soknadsperiodeTomErrors}
             skjulEndrePeriode={skjulEndrePeriode}
-            oppdaterPeriode={oppdaterPeriode}
+            lagre={lagre}
             vedFeltEndring={oppdaterFelt}
-            vedFeltFokusUt={validerFelter}
-            erDatoerGyldig={this.state.erPeriodeOppdatertOgGyldig}
             avbryt={avbryt}
           />
         )}
@@ -149,11 +118,20 @@ Soknadsperiode.propTypes = {
   lagreSoknadOgOppfriskSaksopplysninger: PT.func.isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
+  soknadsperiodeFomErrors: PT.string,
+  soknadsperiodeTomErrors: PT.string,
+};
+
+Soknadsperiode.defaultProps = {
+  soknadsperiodeFomErrors: undefined,
+  soknadsperiodeTomErrors: undefined,
 };
 
 const mapStateToProps = (state) => ({
   soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
   soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
+  soknadsperiodeFomErrors: formSelectors.SoknadsperiodeFomErrorsSelector(state),
+  soknadsperiodeTomErrors: formSelectors.SoknadsperiodeTomErrorsSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

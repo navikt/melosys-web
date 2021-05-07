@@ -31,7 +31,6 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
       tittel={KV.Menypunkter.Person.undertitler.utenlandskID}
       onBinClick={() => fields.removeAll()}
       harData={felter.length !== 0}
-      hentNyStatusVedHarDataEndring={false}
       redigererRender={() => (
         <div>
           {felter.map((felt, indeks) => (

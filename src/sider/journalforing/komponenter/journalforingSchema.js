@@ -17,14 +17,12 @@ const VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN = {
 const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT = {
   melding: "Velg hvilken sak du ønsker å knytte journalføringen mot.",
 };
-const SKRIV_INN_EN_GYLDIG_DATO = { melding: "Skriv inn en gyldig dato" };
-const TAST_INN_DATO = { melding: "Tast inn dato" };
 const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
 const VELG_ETT_LAND = { melding: "Velg ett land." };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const VELG_EN_BESTEMMELSE = "Velg en bestemmelse.";
-const DATO_MA_VAERE_ETTER_FOM = { melding: "Dato må være lik eller senere enn fra." };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
+const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
@@ -94,17 +92,14 @@ const journalforing = object().shape({
   }),
   journalforingPeriodeFraOgMed: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
     is: kreverPeriodeOgLand,
-    then: string().erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO).required(TAST_INN_DATO),
+    then: string().erGyldigDato().required(MAA_FYLLES_UT),
   }),
   journalforingPeriodeTilOgMed: lazy((value) =>
     !value
       ? string().ensure()
       : string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
           is: kreverPeriodeOgLand,
-          then: string()
-            .erEtterDatofelt("journalforingPeriodeFraOgMed", DATO_MA_VAERE_ETTER_FOM)
-            .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO)
-            .required(TAST_INN_DATO),
+          then: string().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
         })
   ),
   journalforingSoknadsland: array()
@@ -138,7 +133,7 @@ const journalforing = object().shape({
     is: false,
     then: string().ensure().required(VELG_EN_AVSENDER),
   }),
-  mottattDato: string().erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO).required(TAST_INN_DATO),
+  mottattDato: string().erGyldigDato().required(MAA_FYLLES_UT),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),

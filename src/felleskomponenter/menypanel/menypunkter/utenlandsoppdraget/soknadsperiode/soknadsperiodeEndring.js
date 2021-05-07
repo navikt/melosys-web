@@ -13,19 +13,17 @@ import * as Utils from "../../../../../utils/dato";
 
 const SoknadsperiodeEndring = (props) => {
   const {
-    soknadsperiodeNyFom,
-    soknadsperiodeNyTom,
+    soknadsperiodeFom,
+    soknadsperiodeTom,
+    soknadsperiodeFomErrors,
+    soknadsperiodeTomErrors,
     vedFeltEndring,
     avbryt,
-    oppdaterPeriode,
-    vedFeltFokusUt,
-    erDatoerGyldig,
+    lagre,
   } = props;
 
-  const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyFom", Utils.dateTilNorskString(nyDato));
-  const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeNyTom", Utils.dateTilNorskString(nyDato));
-  const vedFomFokusUt = () => vedFeltFokusUt("soknadsperiodeNyFom");
-  const vedTomFokusUt = () => vedFeltFokusUt("soknadsperiodeNyTom");
+  const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeFom", Utils.dateTilNorskString(nyDato));
+  const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.dateTilNorskString(nyDato));
 
   return (
     <Nav.Fieldset legend="">
@@ -36,19 +34,19 @@ const SoknadsperiodeEndring = (props) => {
               status === "enabled" ? (
                 <Datovelger
                   label="Fra og med:"
-                  value={Utils.norskStringTilDate(soknadsperiodeNyFom)}
+                  value={Utils.norskStringTilDate(soknadsperiodeFom)}
                   onChange={vedFomEndring}
-                  onBlur={vedFomFokusUt}
                   bredde="S"
-                  maxDate={Utils.norskStringTilDate(soknadsperiodeNyTom)}
+                  maxDate={Utils.norskStringTilDate(soknadsperiodeTom)}
+                  feil={soknadsperiodeFomErrors}
                 />
               ) : (
                 <Nav.Input
                   bredde="S"
                   label="Fra og med:"
-                  value={soknadsperiodeNyFom}
-                  onChange={(event) => vedFeltEndring("soknadsperiodeNyFom", event.target.value)}
-                  onBlur={() => vedFeltFokusUt("soknadsperiodeNyFom")}
+                  value={soknadsperiodeFom}
+                  onChange={(event) => vedFeltEndring("soknadsperiodeFom", event.target.value)}
+                  feil={soknadsperiodeFomErrors && { feilmelding: soknadsperiodeFomErrors }}
                 />
               )
             }
@@ -60,19 +58,19 @@ const SoknadsperiodeEndring = (props) => {
               status === "enabled" ? (
                 <Datovelger
                   label="Til og med:"
-                  value={Utils.norskStringTilDate(soknadsperiodeNyTom)}
+                  value={Utils.norskStringTilDate(soknadsperiodeTom)}
                   onChange={vedTomEndring}
-                  onBlur={vedTomFokusUt}
                   bredde="S"
-                  minDate={Utils.norskStringTilDate(soknadsperiodeNyFom)}
+                  minDate={Utils.norskStringTilDate(soknadsperiodeFom)}
+                  feil={soknadsperiodeTomErrors}
                 />
               ) : (
                 <Nav.Input
                   bredde="S"
                   label="Til og med:"
-                  value={soknadsperiodeNyTom}
-                  onChange={(event) => vedFeltEndring("soknadsperiodeNyTom", event.target.value)}
-                  onBlur={() => vedFeltFokusUt("soknadsperiodeNyTom")}
+                  value={soknadsperiodeTom}
+                  onChange={(event) => vedFeltEndring("soknadsperiodeTom", event.target.value)}
+                  feil={soknadsperiodeTomErrors && { feilmelding: soknadsperiodeTomErrors }}
                 />
               )
             }
@@ -85,10 +83,10 @@ const SoknadsperiodeEndring = (props) => {
             capitalCase
             avbryt={avbryt}
             avbrytTekst="Avbryt"
-            bekreft={oppdaterPeriode}
+            bekreft={lagre}
             bekreftTekst="Lagre"
             redigerbart
-            bekreftRedigerbart={erDatoerGyldig}
+            bekreftRedigerbart={!soknadsperiodeTomErrors && !soknadsperiodeFomErrors}
           />
         </Nav.Column>
       </Nav.Row>
@@ -98,12 +96,17 @@ const SoknadsperiodeEndring = (props) => {
 
 SoknadsperiodeEndring.propTypes = {
   avbryt: PT.func.isRequired,
-  oppdaterPeriode: PT.func.isRequired,
-  soknadsperiodeNyFom: PT.string.isRequired,
-  soknadsperiodeNyTom: PT.string.isRequired,
+  lagre: PT.func.isRequired,
+  soknadsperiodeFom: PT.string.isRequired,
+  soknadsperiodeTom: PT.string.isRequired,
+  soknadsperiodeFomErrors: PT.string,
+  soknadsperiodeTomErrors: PT.string,
   vedFeltEndring: PT.func.isRequired,
-  vedFeltFokusUt: PT.func.isRequired,
-  erDatoerGyldig: PT.bool.isRequired,
+};
+
+SoknadsperiodeEndring.defaultProps = {
+  soknadsperiodeFomErrors: undefined,
+  soknadsperiodeTomErrors: undefined,
 };
 
 export default SoknadsperiodeEndring;
