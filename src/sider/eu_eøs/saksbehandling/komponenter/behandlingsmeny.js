@@ -60,7 +60,7 @@ const Behandlingsmeny = ({
       </Nav.Knapp>
       {visRevurderFagsak && (
         <Nav.Knapp mini className="innhold__element" onClick={visRevurderFagsakDialogHandle}>
-          Vurder vedtak på nytt
+          Vurder saken på nytt
         </Nav.Knapp>
       )}
     </div>

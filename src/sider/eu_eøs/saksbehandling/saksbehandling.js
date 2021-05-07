@@ -32,6 +32,8 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 import "./saksbehandling.css";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
 
+const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
+
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
     {
@@ -227,6 +229,7 @@ class Saksbehandling extends Component {
       startOgVisOppfriskModal,
       dokumentOversikt,
       dokumenter,
+      behandlingsstatus,
     } = this.props;
     const {
       params: { snr: saksnummer },
@@ -236,9 +239,10 @@ class Saksbehandling extends Component {
     if (Utils._isNil(redigerbart)) return null;
     if (!saksopplysningerLastet) return null;
 
+    const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
     const visRevurderFagsak =
       anmodningsperioderErSendtUtlandet ||
-      (!redigerbart && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
+      (behandlingErAvsluttet && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
 
     const visOppfriskSaksopplysninger =
       behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE && !anmodningsperioderErSendtUtlandet;
@@ -387,6 +391,7 @@ Saksbehandling.propTypes = {
   hentDokumentOversikt: PT.func.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
+  behandlingsstatus: PT.string.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -436,6 +441,7 @@ const mapStateToProps = (state) => ({
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
+  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -25,6 +25,8 @@ describe("FormSelectors", () => {
                   orgnr: "12341234123412341234123412341234",
                 },
               ],
+              soknadsperiodeFom: "01.01.2010",
+              soknadsperiodeTom: "10.01.2020",
             },
             syncErrors: {
               oppgittAdresseGatenavn: {

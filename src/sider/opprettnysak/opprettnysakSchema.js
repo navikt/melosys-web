@@ -1,6 +1,7 @@
 import { object, string, mixed, array, lazy } from "yup";
 
 import * as Utils from "../../utils";
+import * as KV from "../../kodeverk";
 
 import { Utils as MKVUtils } from "../../melosyskodeverk";
 
@@ -8,18 +9,17 @@ const SKRIV_INN_FNR_ELLER_DNR = { melding: "Skriv inn f.nr eller d.nr" };
 const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig f.nr eller d.nr" };
 const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette f.nr eller d.nr." };
-const TAST_INN_DATO = { melding: "Tast inn dato" };
-const SKRIV_INN_EN_GYLDIG_DATO = { melding: "Skriv inn en gyldig dato" };
 const VELG_SAKSTYPE = { melding: "Velg sakstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
 const VELG_LAND = { melding: "Velg land" };
 const VELG_EN_OPPGAVE = { melding: "Velg en oppgave" };
 const MANGLER_JOURNALPOST = { melding: "Den valgte oppgaven har ingen journalpost" };
+const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const soknadsinfo = object().shape({
-  fom: string().erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO).required(TAST_INN_DATO),
+  fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: lazy((value) =>
-    !value ? string().ensure() : string().erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO).required(TAST_INN_DATO)
+    !value ? string().ensure() : string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT)
   ),
   land: array().of(string()).required({ _error: VELG_LAND }).min(1, { _error: VELG_LAND }),
 });

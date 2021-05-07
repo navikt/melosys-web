@@ -118,7 +118,7 @@ const VurderingRepresentant = ({
     if (formValues && formValues.organisasjonsnummer) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: organisasjonsnummerValid });
     }
-  }, [formValues && formValues.organisasjonsnummer, organisasjonsnummerValid]);
+  }, [formValues?.organisasjonsnummer, organisasjonsnummerValid]);
 
   function hentRepresentant(data: { representantnummer: string; valid: boolean }) {
     if (data.valid) {
@@ -133,10 +133,10 @@ const VurderingRepresentant = ({
 
   useEffect(() => {
     setRepresentantData(undefined);
-    if (formValues && formValues.representantnummer) {
+    if (formValues?.representantnummer) {
       debouncedHentRepresentant({ representantnummer: formValues.representantnummer, valid: representantnummerValid });
     }
-  }, [formValues && formValues.representantnummer, representantnummerValid]);
+  }, [formValues?.representantnummer, representantnummerValid]);
 
   function lagreRepresentantValg(data: { formValues: any; formIsValid: boolean }) {
     if (data.formIsValid && data.formValues) {

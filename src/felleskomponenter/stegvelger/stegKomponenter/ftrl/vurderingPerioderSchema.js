@@ -2,7 +2,7 @@ import { object, string, array } from "yup";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 
-const FOM_FELT_KREVES = { melding: "Må fylles ut" };
+const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
 const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
@@ -30,28 +30,14 @@ const erFeilAktivPaaPerioder = (medlemskapsperioder) =>
 
 const erDatoGyldig = (dato) => (Utils._isEmpty(dato) ? true : Utils.dato.vaskInputDato(dato));
 
-const gyldigDatoTest = {
-  name: "Gyldig dato",
-  message: "Skriv inn en gyldig dato",
-  test: (dato) => erDatoGyldig(dato),
-};
-
-const gyldigFomDatoTest = {
-  name: "Gyldig fomDato",
-  message: "Dato er utenfor søknadsperioden",
-  test: (dato, schema) =>
-    erDatoGyldig(dato) &&
-    Utils.dato.erGyldigPeriode(Utils.dato.formatterDatoTilNorsk(schema.options.context.soknadsperiode.fom), dato),
-};
-
 const gyldigTomDatoTest = {
   name: "Gyldig tomDato",
-  message: "Dato er utenfor søknadsperioden",
+  message: "Utenfor søknadsperioden",
   test: (tomDato, schema) => {
     const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
     const medlemskapsperioder = schema.options.context.formValues?.medlemskapsperioder;
     const erSisteMedlemskapsperiode =
-      medlemskapsperioder[medlemskapsperioder.length - 1].id.toString() === schema.parent.id;
+      medlemskapsperioder[medlemskapsperioder.length - 1]?.id.toString() === schema.parent.id;
 
     return Utils._isEmpty(tomDato)
       ? erSisteMedlemskapsperiode && Utils._isEmpty(tomDatoFraSoknadsperiode)
@@ -67,8 +53,8 @@ const vurdering_perioder = object().shape({
       object().shape({
         id: string().required(),
         arbeidsland: string(),
-        fomDato: string().test(gyldigDatoTest).test(gyldigFomDatoTest).required(FOM_FELT_KREVES),
-        tomDato: string().test(gyldigDatoTest).test(gyldigTomDatoTest).nullable(),
+        fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
+        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(gyldigTomDatoTest).nullable(),
         bestemmelse: string(),
         innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
         trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),

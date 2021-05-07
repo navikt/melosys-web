@@ -4,13 +4,13 @@ import * as KV from "../../kodeverk";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 
+const { MAA_FYLLES_UT } = KV.Feilmeldinger;
+
 const lagMelding = (panel, undertittel, melding) => ({
   panel,
   undertittel,
   melding,
 });
-
-const SLUTTDATO_ER_APEN = lagMelding(KV.Menypunkter.Periode.tittel, null, "Sluttdato er åpen");
 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
@@ -183,10 +183,15 @@ const soknad = object().when("$behandlingstema", {
             lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Land kreves")
           ),
       }),
-    soknadsperiodeTom: string().when("$behandlingstema", {
-      is: MKVUtils.erUtsendt,
-      then: string().required(SLUTTDATO_ER_APEN),
-    }),
+    soknadsperiodeFom: string().erGyldigDato().required(MAA_FYLLES_UT),
+    soknadsperiodeTom: string()
+      .erGyldigDato()
+      .erEtterDatofelt("soknadsperiodeFom")
+      .when("$behandlingstema", {
+        is: MKVUtils.erUtsendt,
+        then: string().required(MAA_FYLLES_UT),
+      })
+      .nullable(),
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
   }),
