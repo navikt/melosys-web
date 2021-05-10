@@ -20,7 +20,6 @@ const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT = {
 const VELG_MINST_ETT_LAND = { melding: "Velg minst ett land." };
 const VELG_ETT_LAND = { melding: "Velg ett land." };
 const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
-const VELG_EN_BESTEMMELSE = "Velg en bestemmelse.";
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
@@ -32,11 +31,6 @@ const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
   ].includes(behandlingstema);
-
-const anmodningOmUnntak = (journalforingHensikt, behandlingstema) =>
-  kreverPeriodeOgLand(journalforingHensikt, behandlingstema) &&
-  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
-  behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
 const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   const organisasjonAliasTyper = [
@@ -109,18 +103,6 @@ const journalforing = object().shape({
       is: kreverPeriodeOgLand,
       then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
-  journalforingUnntakFraLovvalgsland: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-    is: anmodningOmUnntak,
-    then: string().required({ _error: VELG_ETT_LAND }),
-  }),
-  journalforingLovvalgsbestemmelse: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-    is: anmodningOmUnntak,
-    then: string().required(VELG_EN_BESTEMMELSE),
-  }),
-  journalforingUnntakFraLovvalgsbestemmelse: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-    is: anmodningOmUnntak,
-    then: string().required(VELG_EN_BESTEMMELSE),
-  }),
   utenlandskTrygdemyndighetLandkode: string().when("avsenderType", {
     is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
     then: string().required(VELG_ETT_LAND),

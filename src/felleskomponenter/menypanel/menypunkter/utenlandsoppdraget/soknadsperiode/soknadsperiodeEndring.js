@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import PT from "prop-types";
 
@@ -22,8 +22,30 @@ const SoknadsperiodeEndring = (props) => {
     lagre,
   } = props;
 
+  const [fomHarFokus, setFomHarFokus] = useState(false);
+  const [tomHarFokus, setTomHarFokus] = useState(false);
+
   const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeFom", Utils.dateTilNorskString(nyDato));
   const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.dateTilNorskString(nyDato));
+
+  const vedFomFokus = () => {
+    setFomHarFokus(true);
+  };
+  const vedTomFokus = () => {
+    setTomHarFokus(true);
+  };
+
+  const vedFomBlur = (nyDato) => {
+    setFomHarFokus(false);
+    vedFeltEndring("soknadsperiodeFom", Utils.vaskInputDato(nyDato) || nyDato);
+  };
+  const vedTomBlur = (nyDato) => {
+    setTomHarFokus(false);
+    vedFeltEndring("soknadsperiodeTom", Utils.vaskInputDato(nyDato) || nyDato);
+  };
+
+  const fomFeil = !fomHarFokus && soknadsperiodeFomErrors ? { feilmelding: soknadsperiodeFomErrors } : undefined;
+  const tomFeil = !tomHarFokus && soknadsperiodeTomErrors ? { feilmelding: soknadsperiodeTomErrors } : undefined;
 
   return (
     <Nav.Fieldset legend="">
@@ -46,7 +68,9 @@ const SoknadsperiodeEndring = (props) => {
                   label="Fra og med:"
                   value={soknadsperiodeFom}
                   onChange={(event) => vedFeltEndring("soknadsperiodeFom", event.target.value)}
-                  feil={soknadsperiodeFomErrors && { feilmelding: soknadsperiodeFomErrors }}
+                  onBlur={(event) => event.target.value && vedFomBlur(event.target.value)}
+                  onFocus={vedFomFokus}
+                  feil={fomFeil}
                 />
               )
             }
@@ -70,7 +94,9 @@ const SoknadsperiodeEndring = (props) => {
                   label="Til og med:"
                   value={soknadsperiodeTom}
                   onChange={(event) => vedFeltEndring("soknadsperiodeTom", event.target.value)}
-                  feil={soknadsperiodeTomErrors && { feilmelding: soknadsperiodeTomErrors }}
+                  onBlur={(event) => event.target.value && vedTomBlur(event.target.value)}
+                  onFocus={vedTomFokus}
+                  feil={tomFeil}
                 />
               )
             }
