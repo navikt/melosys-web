@@ -6,10 +6,11 @@ import * as Nav from "../../../../../utils/navFrontend";
 
 import Knapperad from "../../../../knapperad";
 
-import "./soknadsperiode.css";
 import { FeatureToggle } from "../../../../../featuretoggle";
 import Datovelger from "../../../../datovelger";
 import * as Utils from "../../../../../utils/dato";
+
+import "./soknadsperiodeEndring.css";
 
 const SoknadsperiodeEndring = (props) => {
   const {
@@ -29,9 +30,9 @@ const SoknadsperiodeEndring = (props) => {
   const vedTomBlur = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.vaskInputDato(nyDato) || nyDato);
 
   return (
-    <Nav.Fieldset legend="">
+    <Nav.Fieldset legend="" className="soknadsperiode-endring">
       <Nav.Row>
-        <Nav.Column xs="6">
+        <Nav.Column xs="12" className="soknadsperiode-endring__datofelt-container">
           <FeatureToggle togglename="melosys.input.DATOFELT">
             {(status) =>
               status === "enabled" ? (
@@ -55,8 +56,6 @@ const SoknadsperiodeEndring = (props) => {
               )
             }
           </FeatureToggle>
-        </Nav.Column>
-        <Nav.Column xs="6">
           <FeatureToggle togglename="melosys.input.DATOFELT">
             {(status) =>
               status === "enabled" ? (
