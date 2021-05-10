@@ -1,14 +1,14 @@
 (function () {
-  var context = window.frontendlogger.context ? window.frontendlogger.context : "";
-  var apiUrl = context + "/api/logger/";
-  var appname = window.frontendlogger.appname;
+  const context = window.frontendlogger.context ? window.frontendlogger.context : "";
+  const apiUrl = `${context}/api/logger/`;
+  const { appname } = window.frontendlogger;
 
   function post(path, data) {
     data.url = window.location.href;
     data.userAgent = window.navigator.userAgent;
     data.appname = appname;
 
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open("POST", apiUrl + path, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
@@ -22,26 +22,26 @@
   }
 
   function reportEvent(name, fields, tags) {
-    var data = {
-      name: name,
-      fields: fields,
-      tags: tags,
+    const data = {
+      name,
+      fields,
+      tags,
     };
 
     post("event", data);
   }
 
-  var oldOnError = window.onerror;
+  const oldOnError = window.onerror;
   window.onerror = function (message, url, line, column, error) {
-    var json = {
-      message: message,
+    const json = {
+      message,
       jsFileUrl: url,
       lineNumber: line,
-      column: column,
+      column,
       messageIndexed: message,
     };
     if (error) {
-      json["stacktrace"] = error.stack ? error.stack : error;
+      json.stacktrace = error.stack ? error.stack : error;
     }
     post("error", json);
     if (oldOnError) {
