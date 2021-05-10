@@ -1,6 +1,7 @@
 import { object, string, bool } from "yup";
 
 import * as MKV from "@navikt/melosys-kodeverk";
+import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../kodeverk/feilmeldinger";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
@@ -24,6 +25,7 @@ const artikkel12_vedtak = object().shape({
     is: true,
     then: string().required(MOTTAKERINSTITUSJON_KREVES),
   }),
+  fritekstSed: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
 });
 
 export default artikkel12_vedtak;

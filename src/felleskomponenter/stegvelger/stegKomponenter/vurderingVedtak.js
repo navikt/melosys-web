@@ -94,6 +94,7 @@ const VurderingVedtak = ({
     touch("vedtakstype");
     touch("vedtakstypebegrunnelse");
     touch("mottakerinstitusjon");
+    touch("fritekstSed");
     return formIsValid;
   };
 
