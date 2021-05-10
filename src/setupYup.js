@@ -5,7 +5,7 @@ import * as Utils from "./utils";
 import MKV from "./melosyskodeverk";
 import * as KV from "./kodeverk";
 
-const { TIDLIGERE_ENN_FOM, GYLDIG_DATO, UTENFOR_SOKNADSPERIODEN } = KV.Feilmeldinger;
+const { TIDLIGERE_ENN_FOM, SKRIV_INN_GYLDIG_DATO, UTENFOR_SOKNADSPERIODEN } = KV.Feilmeldinger;
 
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
@@ -33,7 +33,7 @@ addMethod(object, "uniqueProperty", function (propertyName, message) {
   });
 });
 
-addMethod(string, "erGyldigDato", function (message = GYLDIG_DATO) {
+addMethod(string, "erGyldigDato", function (message = SKRIV_INN_GYLDIG_DATO) {
   return this.test("er gyldig dato", message, function (value) {
     if (Utils._isEmpty(value)) return true;
     return Boolean(Utils.dato.vaskInputDato(value));

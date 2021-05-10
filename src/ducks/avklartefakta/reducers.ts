@@ -68,9 +68,9 @@ export default function reducer(state = initialState, action: Types.Action): Sta
       } = MKV.Koder.avklartefaktatyper;
 
       const {
-        SOKNADSLAND,
         YRKESAKTIVITET,
         avklartefaktaKoder: {
+          SOKNADSLAND,
           AKTIVITET_I_NORGE,
           ARBEID_UTFORES_I_OPPGITT_LAND,
           ARBEIDSGIVERS_FORRETNINGSSTED,

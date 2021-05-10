@@ -61,7 +61,10 @@ export class Soknadsperiode extends Component {
     this.oppdaterPeriode(soknadsperiodeFom, soknadsperiodeTom);
     // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
     // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
-    setTimeout(() => this.props.lagreSoknadOgOppfriskSaksopplysninger(), 0);
+    setTimeout(() => {
+      this.props.lagreSoknadOgOppfriskSaksopplysninger();
+      this.skjulEndrePeriode();
+    }, 0);
   };
 
   avbryt = () => {
@@ -77,7 +80,7 @@ export class Soknadsperiode extends Component {
 
     return (
       <div className="soknadsperiode">
-        <Nav.Typo.EtikettLiten className="soknadsperiode__etikett">Periode</Nav.Typo.EtikettLiten>
+        <Nav.Typo.Normaltekst className="soknadsperiode__etikett">Periode</Nav.Typo.Normaltekst>
         {!erEndrePeriodeSynlig && (
           <div className="periode__container">
             <Nav.Typo.Element className="periode">

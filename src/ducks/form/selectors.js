@@ -192,11 +192,6 @@ export const RegistreringPanelerFormSelector = createSelector(
   (soknaden) => soknaden
 );
 
-export const InngangFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.INNGANG, {}),
-  (inngang) => inngang
-);
-
 export const JournalforingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.JOURNALFORING, {}),
   (journalforing) => journalforing

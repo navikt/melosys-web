@@ -246,3 +246,16 @@ export const LonnOgGodtgjorelseSelector = createSelector(
       erTrukketTrygdeavgift: null,
     }
 );
+
+export const UtenlandsoppdragetSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlagData) =>
+    behandlingsgrunnlagData.utenlandsoppdraget || {
+      erUtsendelseForOppdragIUtlandet: null,
+      erAnsattForOppdragIUtlandet: null,
+      erFortsattAnsattEtterOppdraget: null,
+      erDrattPaaEgetInitiativ: null,
+      erErstatningTidligereUtsendte: null,
+      samletUtsendingsperiode: { fom: null, tom: null },
+    }
+);
