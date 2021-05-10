@@ -25,6 +25,9 @@ const SoknadsperiodeEndring = (props) => {
   const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeFom", Utils.dateTilNorskString(nyDato));
   const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.dateTilNorskString(nyDato));
 
+  const vedFomBlur = (nyDato) => vedFeltEndring("soknadsperiodeFom", Utils.vaskInputDato(nyDato) || nyDato);
+  const vedTomBlur = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.vaskInputDato(nyDato) || nyDato);
+
   return (
     <Nav.Fieldset legend="">
       <Nav.Row>
@@ -46,6 +49,7 @@ const SoknadsperiodeEndring = (props) => {
                   label="Fra og med:"
                   value={soknadsperiodeFom}
                   onChange={(event) => vedFeltEndring("soknadsperiodeFom", event.target.value)}
+                  onBlur={(event) => event.target.value && vedFomBlur(event.target.value)}
                   feil={soknadsperiodeFomErrors && { feilmelding: soknadsperiodeFomErrors }}
                 />
               )
@@ -70,6 +74,7 @@ const SoknadsperiodeEndring = (props) => {
                   label="Til og med:"
                   value={soknadsperiodeTom}
                   onChange={(event) => vedFeltEndring("soknadsperiodeTom", event.target.value)}
+                  onBlur={(event) => event.target.value && vedTomBlur(event.target.value)}
                   feil={soknadsperiodeTomErrors && { feilmelding: soknadsperiodeTomErrors }}
                 />
               )
