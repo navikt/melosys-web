@@ -70,16 +70,10 @@ export class Soknadsperiode extends Component {
   };
 
   render() {
-    const {
-      redigerbart,
-      soknadsperiodeFom,
-      soknadsperiodeTom,
-      soknadsperiodeFomErrors,
-      soknadsperiodeTomErrors,
-    } = this.props;
+    const { redigerbart, soknadsperiodeFomErrors, soknadsperiodeTomErrors } = this.props;
     const { visEndrePeriode, skjulEndrePeriode, lagre, oppdaterFelt, avbryt } = this;
 
-    const { erEndrePeriodeSynlig } = this.state;
+    const { erEndrePeriodeSynlig, soknadsperiodeFom, soknadsperiodeTom } = this.state;
 
     return (
       <div className="soknadsperiode">
