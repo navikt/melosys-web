@@ -17,13 +17,13 @@ interface LabelOgSvarProps {
 const LabelOgSvar = ({ label, svar, percent }: LabelOgSvarProps) => (
   <Nav.Row>
     <Nav.Column xs="10">
-      <Nav.typo.Normaltekst>{label}</Nav.typo.Normaltekst>
+      <Nav.Typo.Normaltekst>{label}</Nav.Typo.Normaltekst>
     </Nav.Column>
     <Nav.Column xs="2">
-      <Nav.typo.Element>
+      <Nav.Typo.Element>
         {svar || "-"}
         {percent && svar && String.fromCharCode(37)}
-      </Nav.typo.Element>
+      </Nav.Typo.Element>
     </Nav.Column>
   </Nav.Row>
 );

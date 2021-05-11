@@ -41,7 +41,7 @@ const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => {
       <fieldset>
         <Nav.Column xs="7">
           <legend>
-            <Nav.typo.Normaltekst>{sporsmal}</Nav.typo.Normaltekst>
+            <Nav.Typo.Normaltekst>{sporsmal}</Nav.Typo.Normaltekst>
           </legend>
         </Nav.Column>
         <Nav.Column xs="5" className="col">
@@ -94,7 +94,7 @@ const VirksomhetenINorge = ({
     <Nav.Container fluid className="virksomheten-i-norge">
       <Nav.Row className="tittel">
         <Nav.Column xs="12" className="col">
-          <Nav.typo.Innholdstittel>{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.typo.Innholdstittel>
+          <Nav.Typo.Innholdstittel>{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.Typo.Innholdstittel>
           {behandlingsgrunnlagEtikett}
           {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel />}
         </Nav.Column>
@@ -109,10 +109,10 @@ const VirksomhetenINorge = ({
           />
 
           {erOffentligVirksomhet && (
-            <Nav.typo.Normaltekst className="er-offentlig-virksomhet-hjelpetekst">
+            <Nav.Typo.Normaltekst className="er-offentlig-virksomhet-hjelpetekst">
               Arbeidsgiveren opplyser å være en offentlig virksomhet, derfor har vi ikke bedt om opplysninger for å
               vurdere vesentlig virksomhet i Norge.
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
           )}
 
           {erOffentligVirksomhet === false && (
