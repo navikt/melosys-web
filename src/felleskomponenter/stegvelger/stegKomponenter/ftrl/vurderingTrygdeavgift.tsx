@@ -402,15 +402,13 @@ const VurderingTrygdeavgift = ({
   });
 
   const hentBeregning = () => {
-    Api.Trygdeavgift.hentBeregning(behandlingID)
-      .then((response) => {
-        setOppdatertAvgiftsberegning({
-          avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge,
-          avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland,
-        });
-        changeField("avgiftsberegning", response);
-      })
-      .catch(Utils.logger.error);
+    Api.Trygdeavgift.hentBeregning(behandlingID).then((response) => {
+      setOppdatertAvgiftsberegning({
+        avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge,
+        avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland,
+      });
+      changeField("avgiftsberegning", response);
+    });
   };
   const debouncedHentBeregning = useCallback(Utils._debounce(hentBeregning, 1000), []);
 

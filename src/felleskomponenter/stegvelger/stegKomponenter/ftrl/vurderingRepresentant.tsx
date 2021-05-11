@@ -76,14 +76,12 @@ const VurderingRepresentant = ({
     "Kopi av vedtak sendes til adressen som hentes opp når du legger inn organisasjonsnummer. Kontroller at org.nr. og adresse er korrekt og stemmer overens med det som ligger i Avgiftssystemet.";
 
   const hentValgtRepresentant = () => {
-    Api.Representant.hentValgtRepresentant(behandlingID)
-      .then((response) => {
-        if (response.representantnummer) changeField("representantnummer", response.representantnummer);
-        if (response.selvbetalende) changeField("selvbetalende", response.selvbetalende);
-        if (response.organisasjonsnummer) changeField("organisasjonsnummer", response.organisasjonsnummer);
-        if (response.kontaktperson) changeField("kontaktperson", response.kontaktperson);
-      })
-      .catch(Utils.logger.error);
+    Api.Representant.hentValgtRepresentant(behandlingID).then((response) => {
+      if (response.representantnummer) changeField("representantnummer", response.representantnummer);
+      if (response.selvbetalende) changeField("selvbetalende", response.selvbetalende);
+      if (response.organisasjonsnummer) changeField("organisasjonsnummer", response.organisasjonsnummer);
+      if (response.kontaktperson) changeField("kontaktperson", response.kontaktperson);
+    });
   };
   const debouncedHentValgtRepresentant = useCallback(Utils._debounce(hentValgtRepresentant, 1000), []);
 
