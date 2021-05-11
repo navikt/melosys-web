@@ -401,18 +401,16 @@ const VurderingTrygdeavgift = ({
     avgiftspliktigLønnUtland: null,
   });
 
-  const hentBeregning = (gjorKallet: boolean) => {
-    if (gjorKallet) {
-      Api.Trygdeavgift.hentBeregning(behandlingID)
-        .then((response) => {
-          setOppdatertAvgiftsberegning({
-            avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge,
-            avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland,
-          });
-          changeField("avgiftsberegning", response);
-        })
-        .catch(Utils.logger.error);
-    }
+  const hentBeregning = () => {
+    Api.Trygdeavgift.hentBeregning(behandlingID)
+      .then((response) => {
+        setOppdatertAvgiftsberegning({
+          avgiftspliktigLønnNorge: response.avgiftspliktigLønnNorge,
+          avgiftspliktigLønnUtland: response.avgiftspliktigLønnUtland,
+        });
+        changeField("avgiftsberegning", response);
+      })
+      .catch(Utils.logger.error);
   };
   const debouncedHentBeregning = useCallback(Utils._debounce(hentBeregning, 1000), []);
 
@@ -435,8 +433,8 @@ const VurderingTrygdeavgift = ({
         changeField("avgiftsgrunnlag", response);
       })
       .catch(Utils.logger.error);
-    debouncedHentBeregning(true);
-    return () => debouncedHentBeregning(false);
+    debouncedHentBeregning();
+    return () => debouncedHentBeregning.cancel();
   }, []);
 
   useEffect(() => {
