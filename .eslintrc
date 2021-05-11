@@ -23,6 +23,7 @@
     ],
     "no-return-assign": ["error", "except-parens"],
     "wrap-iife": "off",
+    "no-param-reassign": ["error", { "props": false }],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       2,

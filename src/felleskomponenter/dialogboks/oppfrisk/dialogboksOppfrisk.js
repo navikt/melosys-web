@@ -10,11 +10,11 @@ import "./dialogboksOppfrisk.css";
 
 const OppfriskBekreft = ({ bekreft, avbryt }) => (
   <div>
-    <Nav.typo.Systemtittel>Vil du oppdatere registeropplysninger?</Nav.typo.Systemtittel>
-    <Nav.typo.Normaltekst>
+    <Nav.Typo.Systemtittel>Vil du oppdatere registeropplysninger?</Nav.Typo.Systemtittel>
+    <Nav.Typo.Normaltekst>
       Oppdatering av registeropplysning kan ta noe tid. Du kan velge om du vil gå tilbake til forsiden for å behandle en
       annen oppgave imens.
-    </Nav.typo.Normaltekst>
+    </Nav.Typo.Normaltekst>
     <div className="knapperadcontainer">
       <Knapperad
         bekreft={bekreft}
@@ -35,10 +35,10 @@ OppfriskBekreft.propTypes = {
 const OppfriskVenter = ({ tilForsiden }) => (
   <div>
     <Nav.NavFrontendSpinner className="spinner" />
-    <Nav.typo.Systemtittel className="overskrift">Oppdaterer registeropplysninger</Nav.typo.Systemtittel>
-    <Nav.typo.Normaltekst className="tekst">
+    <Nav.Typo.Systemtittel className="overskrift">Oppdaterer registeropplysninger</Nav.Typo.Systemtittel>
+    <Nav.Typo.Normaltekst className="tekst">
       Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc.
-    </Nav.typo.Normaltekst>
+    </Nav.Typo.Normaltekst>
     <div className="knapperadcontainer">
       <Nav.Knapp onClick={tilForsiden}>Til forsiden</Nav.Knapp>
     </div>
@@ -78,7 +78,7 @@ Oppfrisk.propTypes = {
 
 const OppfriskFeilmelding = ({ feilmelding, lukk, resetErrorBoundary }) => (
   <div>
-    <Nav.typo.Systemtittel>Feil ved oppdatering av registeropplysninger</Nav.typo.Systemtittel>
+    <Nav.Typo.Systemtittel>Feil ved oppdatering av registeropplysninger</Nav.Typo.Systemtittel>
     <Nav.AlertStripe type="feil">
       Kunne ikke oppdatere opplysninger. Feilmelding: {feilmelding}
       <br />
@@ -139,7 +139,7 @@ BekreftEllerOppfrisk.propTypes = {
 
 const AnnenBehandlingOppfriskes = ({ avbryt }) => (
   <div>
-    <Nav.typo.Systemtittel>Kan ikke oppdatere registeropplysninger</Nav.typo.Systemtittel>
+    <Nav.Typo.Systemtittel>Kan ikke oppdatere registeropplysninger</Nav.Typo.Systemtittel>
     <Nav.AlertStripe type="advarsel">
       Registeropplysningene i en annen behandling er i ferd med å bli oppdatert. Vent til den behandlingen er oppdatert
       før du starter å oppdatere denne.

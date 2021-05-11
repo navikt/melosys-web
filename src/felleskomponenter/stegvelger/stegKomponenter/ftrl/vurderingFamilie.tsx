@@ -195,9 +195,9 @@ const VurderingFamilie = ({
 
   return (
     <div className="vurderingFamilie">
-      <Nav.typo.Undertittel className="undertittel">
+      <Nav.Typo.Undertittel className="undertittel">
         Skal familiemedlemmer oppgitt i søknaden innvilges medlemskap?
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
 
       {medfolgendeFamilie && medfolgendeFamilie.length > 0 ? (
         <div>
@@ -205,9 +205,9 @@ const VurderingFamilie = ({
             {medfolgendeBarn.map((barn: MedfolgendeFamilie) => (
               <Nav.Row key={barn.uuid} className="barnet">
                 <Nav.Column xs="8">
-                  <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
+                  <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
                     barn.fnr
-                  })`}</Nav.typo.Normaltekst>
+                  })`}</Nav.Typo.Normaltekst>
                   <Nav.Row className="familiemedlem_radio">
                     <Nav.Column xs="2">
                       <Skjema.Radio
@@ -251,7 +251,7 @@ const VurderingFamilie = ({
                 formValues.barn && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div style={{ marginBottom: "2rem" }}>
-                <Nav.typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.typo.Element>
+                <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
                 <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" />
               </div>
             )}
@@ -260,9 +260,9 @@ const VurderingFamilie = ({
             {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
               <Nav.Row key={ektefelleSamboer.uuid} className="ektefelleSamboeren">
                 <Nav.Column xs="8">
-                  <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(ektefelleSamboer.navn)} (F.nr: ${
+                  <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(ektefelleSamboer.navn)} (F.nr: ${
                     ektefelleSamboer.fnr
-                  })`}</Nav.typo.Normaltekst>
+                  })`}</Nav.Typo.Normaltekst>
                   <Nav.Row className="familiemedlem_radio">
                     <Nav.Column xs="2">
                       <Skjema.Radio
@@ -310,7 +310,7 @@ const VurderingFamilie = ({
                 formValues.ektefelle_samboer[ektefelleSamboer.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div>
-                <Nav.typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.typo.Element>
+                <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
                 <Skjema.HTMLEditor feltNavn="ektefelle_samboer.fritekst" className="fritekst" />
               </div>
             )}

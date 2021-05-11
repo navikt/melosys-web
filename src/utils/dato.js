@@ -99,8 +99,8 @@ function formatterKortDatoTilNorsk(kortDato) {
 }
 
 function erGyldigPeriode(fom, tom) {
-  const inputFormat = ["DD.MM.YYYY"];
-  return moment(fom, inputFormat).isSameOrBefore(moment(tom, inputFormat));
+  const inputFormats = ["DD.MM.YYYY", "YYYY-MM-DD"];
+  return moment(fom, inputFormats).isSameOrBefore(moment(tom, inputFormats));
 }
 
 function erIPeriode(fom, tom, dato, inclusivity) {
@@ -156,6 +156,14 @@ function norskStringTilDate(datostring) {
   return new Date(date[2] || now.getFullYear(), date[1] ? date[1] - 1 : now.getMonth(), date[0] || now.getDate());
 }
 
+// Oversetter et date-objekt til en string på norsk datoformat
+function dateTilNorskString(dato) {
+  if (!dato || !(dato instanceof Date)) return undefined;
+  const dag = `0${dato.getDate()}`.slice(-2);
+  const maned = `0${dato.getMonth() + 1}`.slice(-2);
+  return `${dag}.${maned}.${dato.getFullYear()}`;
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -171,5 +179,6 @@ export {
   erLike,
   plussEnDag,
   norskStringTilDate,
+  dateTilNorskString,
   MAX_AR_FREM_I_TID,
 };

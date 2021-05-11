@@ -1,6 +1,6 @@
-import EditerbartElement, { visAlltidBinSymbolsynlighetMap } from "./editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "./editerbartElement";
 
 export { Status } from "./types";
-export type { SymbolsynlighetMap } from "./types";
-export { visAlltidBinSymbolsynlighetMap };
+export type { SymbolsynlighetConfig } from "./types";
+export { visAlltidBinSymbolsynlighet };
 export default EditerbartElement;

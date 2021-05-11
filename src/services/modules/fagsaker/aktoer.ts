@@ -12,7 +12,7 @@ export interface HentAktoer {
   representererKode: string | null;
 }
 
-type HentResDto = HentAktoer[];
+export type HentResDto = HentAktoer[];
 
 export const hent = (saksnr: string, rolleKode: string, representererKode?: string): Promise<HentResDto> => {
   const URI_PATH = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;

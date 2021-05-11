@@ -7,6 +7,7 @@ export type BrevbestillingReqDto = {
   mottaker: string | null;
   fritekst: string | null;
   begrunnelseKode: string | null;
+  produserbardokument: string;
 };
 export const opprett = (behandlingID: number, produserbartDokument: string, dokument: BrevbestillingReqDto) =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/opprett/${behandlingID}/${produserbartDokument}`, dokument);

@@ -70,7 +70,7 @@ export const VurderPerioderFormSelector = createSelector(
   (perioder) => perioder
 );
 
-export const VurderPerioderValid = createSelector(
+export const VurderPerioderFormValid = createSelector(
   (state) => VurderPerioderFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
@@ -192,11 +192,6 @@ export const RegistreringPanelerFormSelector = createSelector(
   (soknaden) => soknaden
 );
 
-export const InngangFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.INNGANG, {}),
-  (inngang) => inngang
-);
-
 export const JournalforingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.JOURNALFORING, {}),
   (journalforing) => journalforing
@@ -205,6 +200,21 @@ export const JournalforingFormSelector = createSelector(
 export const ForretningsValideringSelector = createSelector(
   (state) => (state.form.forretningsValidering ? state.form.forretningsValidering : {}),
   (skjemaValidering) => skjemaValidering.regler
+);
+
+export const SendBrevFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.SEND_BREV, {}),
+  (sendbrev) => sendbrev
+);
+
+export const SendBrevValidSelector = createSelector(
+  (state) => SendBrevFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const SendBrevOrgnummerValidSelector = createSelector(
+  (state) => SendBrevFormSelector(state).syncErrors || {},
+  (errors) => !errors?.organisasjonsnummer
 );
 
 export const BrevBestillingFormSelector = createSelector(
@@ -367,6 +377,16 @@ export const SoknadErrorsSelector = createSelector(
 
     return Utils._merge(soknadformErrors, soknadformSyncErrors);
   }
+);
+
+export const SoknadsperiodeTomErrorsSelector = createSelector(
+  (state) => SoknadenFormSelector(state).syncErrors || {},
+  (errors) => errors?.soknadsperiodeTom?.melding
+);
+
+export const SoknadsperiodeFomErrorsSelector = createSelector(
+  (state) => SoknadenFormSelector(state).syncErrors || {},
+  (errors) => errors?.soknadsperiodeFom?.melding
 );
 
 const finnPanelFeil = (errors) => {

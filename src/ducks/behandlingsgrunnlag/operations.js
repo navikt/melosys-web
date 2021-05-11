@@ -60,7 +60,6 @@ export function oppdaterState() {
   return (dispatch, getState) => {
     const behandlingsgrunnlagData = {
       ...formSelectors.SoknadenFormSelector(getState()).values,
-      ...formSelectors.InngangFormSelector(getState()).values,
       ...formSelectors.VurderStartFormSelector(getState()).values,
     };
 
@@ -95,6 +94,7 @@ const lagSoeknadFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
+  utenlandsoppdraget: behandlingsgrunnlag.utenlandsoppdraget,
 });
 
 const lagFTRLFelter = (behandlingsgrunnlag) => ({

@@ -125,7 +125,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                     </Skjema.Select>
                     {soknadErValgt && (
                       <Fragment>
-                        <Nav.typo.Normaltekst>Søknadsperiode</Nav.typo.Normaltekst>
+                        <Nav.Typo.Normaltekst>Søknadsperiode</Nav.Typo.Normaltekst>
                         <FormSection name="soknadsinfo">
                           <Nav.Row>
                             <Nav.Column xs="5">

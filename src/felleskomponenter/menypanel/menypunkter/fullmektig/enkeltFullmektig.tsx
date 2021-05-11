@@ -7,7 +7,7 @@ import * as Api from "../../../../services/api";
 
 import FullmektigRedigerer from "./fullmektigRedigerer";
 import FullmektigRedigeringUtfort from "./fullmektigRedigeringUtfort";
-import EditerbartElement, { visAlltidBinSymbolsynlighetMap } from "../editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../editerbartElement";
 import { useKontaktOpplysninger } from "../kontaktopplysninger";
 
 interface EnkeltFullmektigProps {
@@ -72,10 +72,9 @@ const EnkeltFullmektig = ({
       tittel={tittel}
       tittelUnderstrek
       understrek
-      hentNyStatusVedHarDataEndring={false}
       onBinClick={slettHandler}
       visLagreKnapp={Boolean(fullmektig.orgnr)}
-      symbolsynlighetMap={visAlltidBinSymbolsynlighetMap}
+      symbolsynlighet={visAlltidBinSymbolsynlighet}
       redigererRender={() => (
         <FullmektigRedigerer
           databaseID={fullmektig.databaseID}

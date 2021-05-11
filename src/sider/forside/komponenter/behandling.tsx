@@ -61,7 +61,7 @@ export const Behandling = ({
 
   return (
     <Nav.Panel className="forside__sidepanel sidepanel__behandling">
-      <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
+      <Nav.Typo.Systemtittel>Behandle sak</Nav.Typo.Systemtittel>
       <p>Velg behandlingstema for å få tildelt en sak.</p>
       <form className="behandling__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>

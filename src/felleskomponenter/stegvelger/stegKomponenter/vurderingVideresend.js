@@ -70,15 +70,13 @@ export const VurderingVideresend = ({
   return (
     <div className="videresendSoknad">
       <form onSubmit={handleSubmit(videresendSoknad)}>
-        <Nav.typo.Undertittel>Videresending av søknad</Nav.typo.Undertittel>
+        <Nav.Typo.Undertittel>Videresending av søknad</Nav.Typo.Undertittel>
         <Nav.Row>
           <Nav.Column xs="8">
             <Skjema.Textarea
               feltNavn="orienteringsbrevFritekst"
               label="Fritekst til orienteringsbrev"
               placeholder="Skriv inn tekst til orienteringsbrevet..."
-              maxLength={500}
-              visTellerFra={500}
               disabled={!redigerbart}
             />
           </Nav.Column>
@@ -101,7 +99,7 @@ export const VurderingVideresend = ({
         {redigerbart && (
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
+              <Nav.Typo.Undertittel>Vedlegg til SED</Nav.Typo.Undertittel>
               <VedleggVelger
                 className="vedleggvelger"
                 valgteVedlegg={valgteVedlegg}

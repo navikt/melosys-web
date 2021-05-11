@@ -40,7 +40,7 @@ describe("MedlemskapGruppe", () => {
 
   it("viser overskrift", () => {
     const medlemskapGruppe = shallow(<MedlemskapGruppe {...props} />);
-    const overskrift = medlemskapGruppe.find(Nav.typo.Undertittel);
+    const overskrift = medlemskapGruppe.find(Nav.Typo.Undertittel);
 
     expect(overskrift).toHaveLength(1);
     expect(overskrift.children().text()).toBe(props.overskrift);

@@ -18,7 +18,7 @@ const RegisterkontrollTreff = ({ vurderingBegrunnelser }) =>
   vurderingBegrunnelser.map((begrunnelseKode) => (
     <div key={Utils._uuid()} className="registerkontroll-listeelement">
       <Nav.Ikoner kind="advarsel-sirkel-fyll" size="24" />
-      <Nav.typo.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.typo.Normaltekst>
+      <Nav.Typo.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.Typo.Normaltekst>
     </div>
   ));
 

@@ -1,6 +1,4 @@
 import React from "react";
-import { FieldArray, reduxForm } from "redux-form";
-import { connect } from "react-redux";
 import PT from "prop-types";
 import classNames from "classnames";
 
@@ -9,12 +7,7 @@ import * as Nav from "../../../utils/navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
-
 import MKV from "../../../melosyskodeverk";
-
-import SoknadslandListe from "./inngang/soknadslandListe";
 
 export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaarBegrunnelser, inngangsvilkaar }) => {
   const oppfyllerInngangsvilkarCl = classNames({
@@ -61,31 +54,18 @@ Varsler.defaultProps = {
 
 export const VurderingInngang = ({
   bekreftOgFortsett,
-  alleLandkoder,
-  avklartefakta,
   redigerbart,
-  oppdaterData,
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
   inngangsvilkaar: { begrunnelseKoder: inngangsvilkaarBegrunnelser },
   tilstand: { harAvklaring },
-  begrunnelser: { opphold: soknadslandBegrunnelser },
 }) => (
   <div className="vurderingInngang">
-    <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
+    <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
     <Varsler
       oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
       inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser}
       inngangsvilkaar={inngangsvilkaar}
-    />
-    <FieldArray
-      name="avklartefakta.soknadsland"
-      component={SoknadslandListe}
-      avklartefakta={avklartefakta}
-      soknadslandBegrunnelser={soknadslandBegrunnelser}
-      alleLandkoder={alleLandkoder}
-      redigerbart={redigerbart && oppfyllerInngangsvilkar}
-      oppdaterData={oppdaterData}
     />
     <div className="fane__knapplinje">
       <Nav.Knapp
@@ -102,31 +82,12 @@ export const VurderingInngang = ({
 
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  avklartefakta: MPT.AvklartefaktaListe.isRequired,
-  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  begrunnelser: PT.object.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool.isRequired,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
-  oppdaterData: PT.func.isRequired,
   inngangsvilkaar: MPT.Vilkaar.isRequired,
   oppfyllerInngangsvilkar: PT.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  initialValues: {
-    soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
-    fjernedeLand: avklartefaktaSelectors.IkkeGyldigeSoknadslandFaktaerSelector(state),
-  },
-});
-
-const VurderingInngangForm = reduxForm({
-  form: KV.Form.INNGANG,
-  enableReinitialize: true,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-})(VurderingInngang);
-
-export default connect(mapStateToProps)(VurderingInngangForm);
+export default VurderingInngang;

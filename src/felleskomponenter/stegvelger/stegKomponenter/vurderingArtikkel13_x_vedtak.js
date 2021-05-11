@@ -121,10 +121,10 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   return (
     <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArtikkel13_x_vedtak">
-      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
       {redigerbart && (
         <Fragment>
-          <Nav.typo.Element className="undertittel">Søknadsperiode</Nav.typo.Element>
+          <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}
@@ -152,8 +152,6 @@ export const VurderingArtikkel13_x_vedtak = ({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            maxLength={500}
-            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>

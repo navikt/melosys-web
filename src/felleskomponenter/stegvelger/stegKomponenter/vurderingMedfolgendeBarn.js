@@ -48,11 +48,11 @@ const MedfolgendeBarn = ({
         <div className="personalia">
           {navn && (
             <>
-              <Nav.typo.Element>{navn}</Nav.typo.Element>
+              <Nav.Typo.Element>{navn}</Nav.Typo.Element>
               &nbsp;
             </>
           )}
-          {idNummer && <Nav.typo.Normaltekst>(F.nr/d-nr.: {idNummer})</Nav.typo.Normaltekst>}
+          {idNummer && <Nav.Typo.Normaltekst>(F.nr/d-nr.: {idNummer})</Nav.Typo.Normaltekst>}
         </div>
         <Nav.Fieldset legend="" className="radios">
           <Nav.Radio
@@ -167,9 +167,9 @@ const VurderingMedfolgendeBarn = ({
 
   return (
     <Nav.Container fluid className="vurdering-medfolgende-barn">
-      <Nav.typo.Undertittel className="undertittel">
+      <Nav.Typo.Undertittel className="undertittel">
         Skal barn oppgitt i søknaden være omfattet av norsk lovgivning?
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
       {medfolgendeBarn.map((barn) => {
         const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find((af) => af.subjektID === barn.uuid);
         const omfattet = () => {

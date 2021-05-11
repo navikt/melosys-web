@@ -93,10 +93,10 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
     <div className="marginaltArbeid">
       <div className="landliste_innhold">
         <div className="land__enkeltlinje">
-          <Nav.typo.UndertekstBold>Land</Nav.typo.UndertekstBold>
-          <Nav.typo.UndertekstBold className="marginaltArbeidCheckbox">
+          <Nav.Typo.UndertekstBold>Land</Nav.Typo.UndertekstBold>
+          <Nav.Typo.UndertekstBold className="marginaltArbeidCheckbox">
             Marginalt arbeid? {"(<5%)"}
-          </Nav.typo.UndertekstBold>
+          </Nav.Typo.UndertekstBold>
         </div>
         {arbeidsland.map(({ land }) => {
           const avklartMarginaltArbeidILand = marginaltArbeid.find(
@@ -312,7 +312,7 @@ export const VurderingArbeidsmonster = ({
 
   return (
     <div className="vurderingArbeidsmonster">
-      <Nav.typo.Undertittel>Vurder aktiviteten i de ulike landene</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>Vurder aktiviteten i de ulike landene</Nav.Typo.Undertittel>
       <div className="arbeidsmonster">
         <MarginaltArbeid
           redigerbart={redigerbart}

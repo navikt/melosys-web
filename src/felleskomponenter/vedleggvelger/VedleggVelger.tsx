@@ -114,13 +114,13 @@ export const VedleggListe = ({
           <tr>
             <th />
             <th>
-              <Nav.typo.Element>Dokument</Nav.typo.Element>
+              <Nav.Typo.Element>Dokument</Nav.Typo.Element>
             </th>
             <th>
-              <Nav.typo.Element>Avsender/Mottaker</Nav.typo.Element>
+              <Nav.Typo.Element>Avsender/Mottaker</Nav.Typo.Element>
             </th>
             <th>
-              <Nav.typo.Element>Dato</Nav.typo.Element>
+              <Nav.Typo.Element>Dato</Nav.Typo.Element>
             </th>
             <th />
             <th />

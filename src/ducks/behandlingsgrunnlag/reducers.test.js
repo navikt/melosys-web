@@ -143,6 +143,17 @@ describe("behandlingsgrunnlag reducer", () => {
           ekstraArbeidsgivere: [],
           erOffentligVirksomhet: true,
         },
+        utenlandsoppdraget: {
+          erUtsendelseForOppdragIUtlandet: true,
+          erAnsattForOppdragIUtlandet: false,
+          erFortsattAnsattEtterOppdraget: null,
+          erDrattPaaEgetInitiativ: true,
+          erErstatningTidligereUtsendte: null,
+          samletUtsendingsperiode: {
+            fom: "01.02.2019",
+            tom: "01.02.2020",
+          },
+        },
         arbeidsgiverBekrefterUtsendelse: true,
         arbeidstakerAnsattUnderUtsendelsen: true,
         erstatterArbeidstakerenUtsendte: true,
@@ -275,6 +286,17 @@ describe("behandlingsgrunnlag reducer", () => {
             erArbeidsgiveravgiftHelePerioden: true,
             erTrukketTrygdeavgift: false,
             utlArbTilhoererSammeKonsern: null,
+          },
+          utenlandsoppdraget: {
+            erUtsendelseForOppdragIUtlandet: true,
+            erAnsattForOppdragIUtlandet: false,
+            erFortsattAnsattEtterOppdraget: null,
+            erDrattPaaEgetInitiativ: true,
+            erErstatningTidligereUtsendte: null,
+            samletUtsendingsperiode: {
+              fom: "2019-02-01",
+              tom: "2020-02-01",
+            },
           },
           arbeidPaaLand: {
             fysiskeArbeidssteder: [

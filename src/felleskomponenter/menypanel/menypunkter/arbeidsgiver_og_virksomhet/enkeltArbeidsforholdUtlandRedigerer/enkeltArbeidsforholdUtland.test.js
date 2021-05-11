@@ -3,7 +3,7 @@ import React from "react";
 import * as Nav from "../../../../../utils/navFrontend";
 import * as Skjema from "../../../../skjema";
 
-import EnkeltArbeidsforholdUtland from "./enkeltArbeidsforholdUtland";
+import { EnkeltArbeidsforholdUtland } from "./enkeltArbeidsforholdUtland";
 
 describe("EnkeltArbeidsforholdUtland", () => {
   let props = null;
@@ -13,6 +13,7 @@ describe("EnkeltArbeidsforholdUtland", () => {
       redigerbart: true,
       overordnetFeltNavn: "feltnavn",
       className: "cssklasse",
+      sakstype: "EU_EOS",
     };
   });
 

@@ -141,7 +141,7 @@ const VurderingStart = ({
 
   return (
     <div className="vurderingStart">
-      <Nav.typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
 
       <Nav.Fieldset legend="Periode">
         <Nav.Row>

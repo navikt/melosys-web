@@ -103,9 +103,9 @@ export const Innvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>
         Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
@@ -193,10 +193,10 @@ export const DelvisInnvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>
         Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av
         søknadsperioden
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
@@ -284,7 +284,7 @@ export const Avslag = ({
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>Avslag</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>Avslag</Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
       </Nav.Row>
@@ -430,8 +430,6 @@ export const VurderingArtikkel16Vedtak = ({
         feltNavn="vedtaksbrevFritekst"
         label="Fritekst til vedtaksbrev"
         placeholder="Skriv inn tekst til vedtaksbrevet..."
-        maxLength={500}
-        visTellerFra={500}
         disabled={!redigerbart}
       />
     ),

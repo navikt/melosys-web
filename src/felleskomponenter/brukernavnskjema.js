@@ -58,11 +58,11 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
       />
       {sammensattNavn && (
         <Fragment>
-          <Nav.typo.Element>Brukers fulle navn</Nav.typo.Element>
-          <Nav.typo.Normaltekst>
+          <Nav.Typo.Element>Brukers fulle navn</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst>
             {brukerSpinner && <Nav.NavFrontendSpinner />}
             {sammensattNavn}
-          </Nav.typo.Normaltekst>
+          </Nav.Typo.Normaltekst>
         </Fragment>
       )}
     </div>

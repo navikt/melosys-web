@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, FocusEventHandler } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { nb } from "date-fns/locale";
 import classNames from "classnames";
@@ -16,7 +16,7 @@ interface DatovelgerProps {
   bredde?: string;
   minDate?: Date;
   maxDate?: Date;
-  onBlur?: () => void;
+  onBlur?: FocusEventHandler;
 }
 
 const Datovelger = ({

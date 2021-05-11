@@ -93,7 +93,7 @@ const VurderingAvslag12_x_og_16 = ({
 
   return (
     <div>
-      <Nav.typo.Undertittel>Avslag</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>Avslag</Nav.Typo.Undertittel>
       {valgte_art_12_1_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"
@@ -122,8 +122,6 @@ const VurderingAvslag12_x_og_16 = ({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            maxLength={500}
-            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>

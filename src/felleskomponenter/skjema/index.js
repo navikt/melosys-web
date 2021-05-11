@@ -3,6 +3,7 @@ import Input from "./input/input";
 import Radio from "./input/radio";
 import RadioGruppe from "./input/radio-gruppe";
 import Select from "./input/select";
+import MultiSelect from "./input/multiselect";
 import Textarea from "./textarea/textarea";
 import { Fieldset } from "../../utils/navFrontend";
 import * as Validering from "./validering";
@@ -12,7 +13,7 @@ import LandVelger from "./landvelger";
 import PeriodeForkorter from "./periodeForkorter";
 import Vedtakstype from "./vedtakstype";
 import HTMLEditor from "./htmleditor";
-import DatovelgerSkjema from "./datovelger/datovelger-skjema";
+import Datovelger from "./datovelger";
 
 export {
   Checkbox,
@@ -20,6 +21,7 @@ export {
   Radio,
   RadioGruppe,
   Select,
+  MultiSelect,
   Textarea,
   Validering,
   Fieldset,
@@ -30,5 +32,5 @@ export {
   PeriodeForkorter,
   Vedtakstype,
   HTMLEditor,
-  DatovelgerSkjema as Datovelger,
+  Datovelger,
 };

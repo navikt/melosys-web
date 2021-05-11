@@ -9,7 +9,7 @@ import { RootState } from "AppTypes";
 
 import FlereRedigeringsknapperListe from "./flereRedigeringsknapperListe";
 import EnRedigeringsknappListe from "./enRedigeringsknappListe";
-import { SymbolsynlighetMap } from "../editerbartElement";
+import { SymbolsynlighetConfig } from "../editerbartElement";
 
 interface BaseProps {
   leggTilTekst: string | ((elementer: any[]) => string);
@@ -29,7 +29,7 @@ interface BaseProps {
   elementUnderstrek?: boolean;
   flereRedigeringsknapper?: boolean;
   onBinClick?: (index: number) => void;
-  symbolsynlighetMap?: SymbolsynlighetMap;
+  symbolsynlighet?: SymbolsynlighetConfig;
 }
 
 type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
@@ -64,7 +64,7 @@ export const InnerEditerbartElementListe = ({
   flereRedigeringsknapper = true,
   settFeltVerdi,
   onBinClick,
-  symbolsynlighetMap,
+  symbolsynlighet,
 }: InnerEditerbartElementListeProps & PropsFromRedux) => {
   const editerbartElementListeCls = classNames(className);
 
@@ -109,7 +109,7 @@ export const InnerEditerbartElementListe = ({
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
           onBinClick={onBinClick}
-          symbolsynlighetMap={symbolsynlighetMap}
+          symbolsynlighet={symbolsynlighet}
         />
       )}
     </div>

@@ -18,6 +18,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
 }) => {
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
+  const [fritekst, setFritekst] = useState("");
   const isMounted = Hooks.useIsMounted();
 
   const sendA012CheckHandler = ({ checked }) => {
@@ -29,6 +30,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
 
     await lagreOgGodkjennUnntaksperioder({
       varsleUtland,
+      fritekst,
     });
 
     // godkjenn-operation navigerer til forside, og komponenten kan derfor være unmountet.
@@ -42,20 +44,33 @@ const VurderingGodkjennUtpekingAnnetLand = ({
       navn: "Forhåndsvis SED A012",
       type: EKV.Koder.sedtyper.A012,
       erSed: true,
+      data: { fritekst },
     },
   ];
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
       {redigerbart && (
-        <Nav.Row className="sendA012">
-          <Nav.Column xs="12">
-            <Mui.Checkbox label="Send A012" onCheck={sendA012CheckHandler} />
-          </Nav.Column>
-        </Nav.Row>
+        <>
+          <Nav.Row className="sendA012">
+            <Nav.Column xs="12">
+              <Mui.Checkbox label="Send A012" onCheck={sendA012CheckHandler} />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Textarea
+              label="Ytterligere informasjon til SED (valgfri)"
+              value={fritekst}
+              onChange={(e) => setFritekst(e.target.value)}
+              maxLength={500}
+            />
+          </Nav.Row>
+          <Nav.Row>
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
+          </Nav.Row>
+        </>
       )}
-      {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
           <Mui.Knapp

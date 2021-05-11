@@ -81,9 +81,9 @@ export const ArbeidsgiverOgVirksomhet = ({
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}
-        </Nav.typo.Innholdstittel>
+        </Nav.Typo.Innholdstittel>
         <span>{behandlingsgrunnlagEtikett}</span>
         {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>

@@ -191,9 +191,6 @@ class Journalforing extends Component {
       journalforingSoknadsland,
       journalforingPeriodeFraOgMed,
       journalforingPeriodeTilOgMed,
-      journalforingLovvalgsbestemmelse,
-      journalforingUnntakFraLovvalgsbestemmelse,
-      journalforingUnntakFraLovvalgsland,
       avsenderType,
     } = journalforingSkjemaVerdier;
 
@@ -205,14 +202,7 @@ class Journalforing extends Component {
     resetSkjemaFelterForEksisterendeSaker();
 
     if (!Utils._isEmpty(this.props.errors)) {
-      settFeilFelt(
-        "journalforingPeriodeFraOgMed",
-        "journalforingPeriodeTilOgMed",
-        "journalforingSoknadsland",
-        "journalforingLovvalgsbestemmelse",
-        "journalforingUnntakFraLovvalgsbestemmelse",
-        "journalforingUnntakFraLovvalgsland"
-      );
+      settFeilFelt("journalforingPeriodeFraOgMed", "journalforingPeriodeTilOgMed", "journalforingSoknadsland");
       return false;
     }
 
@@ -227,17 +217,10 @@ class Journalforing extends Component {
       land: journalforingSoknadsland || [],
     };
 
-    const anmodningOmUnntak = {
-      lovvalgsbestemmelse: journalforingLovvalgsbestemmelse || null,
-      unntakFraLovvalgsbestemmelse: journalforingUnntakFraLovvalgsbestemmelse || null,
-      unntakFraLovvalgsland: journalforingUnntakFraLovvalgsland || null,
-    };
-
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
     const journalforingData = {
       ...vasketJournalforing,
       fagsak,
-      anmodningOmUnntak,
       avsenderType: this.organisasjonAliaser.includes(avsenderType)
         ? MKV.Koder.avsendertyper.ORGANISASJON
         : avsenderType,
@@ -330,9 +313,6 @@ class Journalforing extends Component {
     settFeltInnhold("journalforingPeriodeTilOgMed", "");
     settFeltInnhold("representantID", "");
     settFeltInnhold("journalforingSoknadsland", []);
-    settFeltInnhold("journalforingLovvalgsbestemmelse", "");
-    settFeltInnhold("journalforingUnntakFraLovvalgsbestemmelse", "");
-    settFeltInnhold("journalforingUnntakFraLovvalgsland", "");
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {
@@ -433,7 +413,7 @@ class Journalforing extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="4">
-              <Nav.typo.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.typo.Sidetittel>
+              <Nav.Typo.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.Typo.Sidetittel>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>

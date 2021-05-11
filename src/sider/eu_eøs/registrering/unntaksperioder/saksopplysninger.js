@@ -43,7 +43,7 @@ const Saksopplysninger = ({
   tilForsiden,
   startOgVisOppfriskModal,
 }) => {
-  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
+  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState("");
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = React.useState([]);
   const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = React.useState({
@@ -71,6 +71,11 @@ const Saksopplysninger = ({
   React.useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
   }, []);
+
+  const erGyldigLovvalgsperiode = () =>
+    !Utils._isEmpty(lovvalgsperiode)
+      ? Utils.dato.erGyldigPeriode(lovvalgsperiode?.fomDato, lovvalgsperiode?.tomDato)
+      : Utils.dato.erGyldigPeriode(sedLovvalgsperiode?.fom, sedLovvalgsperiode?.tom);
 
   const settEndretPeriodeOpplysninger = async (avklartFakta) => {
     setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
@@ -101,7 +106,10 @@ const Saksopplysninger = ({
   };
 
   const initialiserSkjema = () => {
-    if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.GODKJENT) {
+    if (
+      behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.GODKJENT &&
+      erGyldigLovvalgsperiode()
+    ) {
       godkjentUnntaksperiode();
     } else if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT) {
       ikkeGodkjentUnntaksperiode(behandlingsresultat);
@@ -292,21 +300,20 @@ const Saksopplysninger = ({
   };
 
   const endreUnntaksperiodeVurdering = (e) => setUnntaksperiodeVurdering(e.target.value);
-
   const unikRadioButtonGruppeID = uuid();
   return (
     <div>
       <form name="registrering" id="registrering" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.typo.Systemtittel>Registrering av unntaksperioder</Nav.typo.Systemtittel>
+            <Nav.Typo.Systemtittel>Registrering av unntaksperioder</Nav.Typo.Systemtittel>
             <br />
             <div className="vurderingEndrePeriode">
               {vurderingBegrunnelser.length > 0 && (
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
                     <Fragment>
-                      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+                      <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                     </Fragment>
                   </Nav.Column>
@@ -320,6 +327,7 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.GODKJENT}
                       checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
+                      disabled={!erGyldigLovvalgsperiode()}
                       label="Godkjenn unntaksperiode"
                     />
                     <Nav.Radio
@@ -327,6 +335,7 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
                       checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
+                      disabled={!erGyldigLovvalgsperiode()}
                       label="Godkjenn, men endre periode"
                     />
                     {kanEndrePeriode() && (

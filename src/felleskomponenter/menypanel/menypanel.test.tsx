@@ -75,7 +75,7 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[2].links).toHaveLength(4);
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
     expect(sidemenyLinkGroups[2].links[1].label).toBe("Fullmektig");
-    expect(sidemenyLinkGroups[2].links[2].label).toBe("Periode");
+    expect(sidemenyLinkGroups[2].links[2].label).toBe("Periode og land");
     expect(sidemenyLinkGroups[2].links[3].label).toBe("Arbeidssted(er)");
   });
 
@@ -102,7 +102,7 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
     expect(sidemenyLinkGroups[2].links[1].label).toBe("Lønn og godtgjørelser");
     expect(sidemenyLinkGroups[2].links[2].label).toBe("Fullmektig");
-    expect(sidemenyLinkGroups[2].links[3].label).toBe("Periode");
+    expect(sidemenyLinkGroups[2].links[3].label).toBe("Utenlandsoppdraget");
     expect(sidemenyLinkGroups[2].links[4].label).toBe("Arbeidssted(er)");
     expect(sidemenyLinkGroups[2].links[5].label).toBe("Om virksomheten i Norge");
   });
@@ -163,7 +163,7 @@ describe("MenyPanel", () => {
     expect(sidemenyLinkGroups[2].links).toHaveLength(4);
     expect(sidemenyLinkGroups[2].links[0].label).toBe("Arbeidsgiver/virksomhet");
     expect(sidemenyLinkGroups[2].links[1].label).toBe("Fullmektig");
-    expect(sidemenyLinkGroups[2].links[2].label).toBe("Periode");
+    expect(sidemenyLinkGroups[2].links[2].label).toBe("Periode og land");
     expect(sidemenyLinkGroups[2].links[3].label).toBe("Arbeidssted(er)");
   });
 

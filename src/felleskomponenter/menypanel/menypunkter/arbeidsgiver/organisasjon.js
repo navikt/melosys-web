@@ -29,8 +29,8 @@ const Organisasjon = ({ organisasjon, className, visNavn, visOrgnr, visAdresseTi
           </Nav.Column>
           {visOrgnr && (
             <Nav.Column xs="6">
-              <Nav.typo.Element style={{ marginTop: "0.5em" }}>Org.nr. juridisk enhet</Nav.typo.Element>
-              <Nav.typo.Normaltekst>{orgnr}</Nav.typo.Normaltekst>
+              <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Org.nr. juridisk enhet</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst>{orgnr}</Nav.Typo.Normaltekst>
             </Nav.Column>
           )}
         </Nav.Row>

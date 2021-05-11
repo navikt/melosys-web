@@ -75,20 +75,24 @@ const VurderingRepresentant = ({
   const hjelpetekstAdresse =
     "Kopi av vedtak sendes til adressen som hentes opp når du legger inn organisasjonsnummer. Kontroller at org.nr. og adresse er korrekt og stemmer overens med det som ligger i Avgiftssystemet.";
 
+  const hentValgtRepresentant = () => {
+    Api.Representant.hentValgtRepresentant(behandlingID).then((response) => {
+      if (response.representantnummer) changeField("representantnummer", response.representantnummer);
+      if (response.selvbetalende) changeField("selvbetalende", response.selvbetalende);
+      if (response.organisasjonsnummer) changeField("organisasjonsnummer", response.organisasjonsnummer);
+      if (response.kontaktperson) changeField("kontaktperson", response.kontaktperson);
+    });
+  };
+  const debouncedHentValgtRepresentant = useCallback(Utils._debounce(hentValgtRepresentant, 1000), []);
+
   useEffect(() => {
     Api.Representant.hentRepresentantListe()
       .then((liste: Api.Representant.RepresentantListeResDto) => {
         setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
       })
       .catch(Utils.logger.error);
-    Api.Representant.hentValgtRepresentant(behandlingID)
-      .then((response) => {
-        if (response.representantnummer) changeField("representantnummer", response.representantnummer);
-        if (response.selvbetalende) changeField("selvbetalende", response.selvbetalende);
-        if (response.organisasjonsnummer) changeField("organisasjonsnummer", response.organisasjonsnummer);
-        if (response.kontaktperson) changeField("kontaktperson", response.kontaktperson);
-      })
-      .catch(Utils.logger.error);
+    debouncedHentValgtRepresentant();
+    return () => debouncedHentValgtRepresentant.cancel();
   }, []);
 
   async function hentOrganisasjonHvisValid(data: { orgnr: string; valid: boolean }) {
@@ -103,14 +107,14 @@ const VurderingRepresentant = ({
       }
     }
   }
-  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 1000), []);
+  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 500), []);
 
   useEffect(() => {
     setOrganisasjon(undefined);
     if (formValues && formValues.organisasjonsnummer) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: organisasjonsnummerValid });
     }
-  }, [formValues && formValues.organisasjonsnummer, organisasjonsnummerValid]);
+  }, [formValues?.organisasjonsnummer, organisasjonsnummerValid]);
 
   function hentRepresentant(data: { representantnummer: string; valid: boolean }) {
     if (data.valid) {
@@ -125,10 +129,10 @@ const VurderingRepresentant = ({
 
   useEffect(() => {
     setRepresentantData(undefined);
-    if (formValues && formValues.representantnummer) {
+    if (formValues?.representantnummer) {
       debouncedHentRepresentant({ representantnummer: formValues.representantnummer, valid: representantnummerValid });
     }
-  }, [formValues && formValues.representantnummer, representantnummerValid]);
+  }, [formValues?.representantnummer, representantnummerValid]);
 
   function lagreRepresentantValg(data: { formValues: any; formIsValid: boolean }) {
     if (data.formIsValid && data.formValues) {
@@ -150,7 +154,7 @@ const VurderingRepresentant = ({
 
   return (
     <div className="vurderingRepresentant">
-      <Nav.typo.Undertittel className="undertittel">Representant i Norge</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Representant i Norge</Nav.Typo.Undertittel>
 
       <Nav.Row>
         <Nav.Fieldset
@@ -207,18 +211,18 @@ const VurderingRepresentant = ({
 
       {formValues && !formValues.selvbetalende && (
         <Nav.Row>
-          <Nav.typo.Undertittel className="representantadresse">
+          <Nav.Typo.Undertittel className="representantadresse">
             <Fragment>
               Representantens adresse
               <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekstAdresse} type={Nav.PopoverOrientering.Hoyre}>
                 {hjelpetekstAdresse}
               </Nav.Hjelpetekst>
             </Fragment>
-          </Nav.typo.Undertittel>
+          </Nav.Typo.Undertittel>
           <Nav.Column xs="4">
             <Skjema.Input
               feltNavn="organisasjonsnummer"
-              label={<Nav.typo.Element>Organisasjonsnummer</Nav.typo.Element>}
+              label={<Nav.Typo.Element>Organisasjonsnummer</Nav.Typo.Element>}
               placeholder="Skriv inn"
               disabled={!redigerbart}
             />
@@ -228,9 +232,9 @@ const VurderingRepresentant = ({
             <Skjema.Input
               feltNavn="kontaktperson"
               label={
-                <Nav.typo.Element>
+                <Nav.Typo.Element>
                   Kontaktperson <span className="valgfritt">(valgfritt)</span>
-                </Nav.typo.Element>
+                </Nav.Typo.Element>
               }
               placeholder="Skriv inn"
               disabled={!redigerbart}

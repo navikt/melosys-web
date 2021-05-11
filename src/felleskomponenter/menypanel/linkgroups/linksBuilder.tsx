@@ -9,6 +9,7 @@ import {
   Barnetrygd,
   Fullmektig,
   Medlemskap,
+  Utenlandsoppdraget,
   Periode,
   Person,
   Familieforhold,
@@ -25,7 +26,7 @@ interface ILinksBuilder {
   addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
   addPeriode: () => ILinksBuilder;
-  // addUtenlandsoppdraget: () => ILinksBuilder,
+  addUtenlandsoppdraget: () => ILinksBuilder;
   addLonnOgGodtgjorelser: () => ILinksBuilder;
   addArbeidssteder: () => ILinksBuilder;
   addOmVirksomhetenINorge: () => ILinksBuilder;
@@ -134,10 +135,26 @@ class LinksBuilder implements ILinksBuilder {
 
   public addPeriode() {
     this.links.push({
-      label: "Periode",
+      label: "Periode og land",
       active: false,
       content: (
         <Periode
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
+    });
+    return this;
+  }
+
+  public addUtenlandsoppdraget() {
+    this.links.push({
+      label: "Utenlandsoppdraget",
+      active: false,
+      content: (
+        <Utenlandsoppdraget
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
