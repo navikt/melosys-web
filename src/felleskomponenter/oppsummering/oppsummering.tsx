@@ -14,7 +14,7 @@ import "./oppsummering.css";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 import { erSedForesporsel } from "../../melosyskodeverk/utils";
-import { arrayTilKonjunksjon, storeForbokstaver } from "../../utils/streng";
+import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../utils/streng";
 
 interface OppsummeringProps {
   arbeidsland: KTObject[];
@@ -56,7 +56,7 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
-      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaver(enkeltLand.term)))
+      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term)))
       : "Ukjent";
 
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
@@ -135,7 +135,10 @@ const Oppsummering = (props: OppsummeringProps) => {
               </Nav.Row>
               <Nav.Row>
                 <Nav.Column xs="12">
-                  <OppsummeringVerdiPar nokkel="Lovvalgsland fra SED" verdi={storeForbokstaver(lovvalgsland.term)} />
+                  <OppsummeringVerdiPar
+                    nokkel="Lovvalgsland fra SED"
+                    verdi={storeForbokstaverForLand(lovvalgsland.term)}
+                  />
                 </Nav.Column>
               </Nav.Row>
             </div>

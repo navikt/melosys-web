@@ -200,11 +200,16 @@ const Saksbehandling = ({
     API.Kodeverk.hentLandkoderIso2()
       .then((response) => {
         setLandkoder(
-          response.sort((a, b) => {
-            if (a.term > b.term) return 1;
-            if (b.term > a.term) return -1;
-            return 0;
-          })
+          response
+            .sort((a, b) => {
+              if (a.term > b.term) return 1;
+              if (b.term > a.term) return -1;
+              return 0;
+            })
+            .map((item) => ({
+              ...item,
+              term: Utils.streng.storeForbokstaverForLand(item.term),
+            }))
         );
       })
       .catch(Utils.logger.error);
