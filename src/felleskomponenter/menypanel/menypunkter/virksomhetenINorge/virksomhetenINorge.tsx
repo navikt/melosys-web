@@ -122,10 +122,9 @@ const VirksomhetenINorge = ({
                   redigerbart={redigerbart}
                   harData
                   tittel={KV.Menypunkter.OmVirksomhetenINorge.undertitler.samletVirksomhetINorge}
-                  hentNyStatusVedHarDataEndring={false}
                   visLagreKnapp
                   onLagreClick={lagreHandler}
-                  symbolsynlighetMap={new Map([[Status.RedigeringUtfort, { bin: false, pencil: true }]])}
+                  symbolsynlighet={{ [Status.RedigeringUtfort]: { bin: false, pencil: true } }}
                   redigererRender={() => <RedigerbarSamletVirksomhetINorge />}
                   redigeringUtfortRender={() => <IkkeRedigerbarSamletVirksomhetINorge />}
                 />
