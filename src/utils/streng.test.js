@@ -78,10 +78,30 @@ describe("streng.js", () => {
     });
   });
 
-  describe("storeForbokstaverForLand for kompliserte landnavn", () => {
-    test("Oppdaterer setning til store og små bokstaver, basert på regler", () => {
+  describe("storeForbokstaverForLand for landnavn", () => {
+    test("Gjør første bokstav i hvert ord om til stor bokstav", () => {
+      const testString = "LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Langtvekkistan");
+    });
+
+    test("Gjør første bokstav etter bindestrek om til stor bokstav", () => {
+      const testString = "BORTE-VEKK";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk");
+    });
+
+    test('"og" blir ikke gjort om til stor bokstav', () => {
       const testString = "BORTE-VEKK OG LANGTVEKKISTAN";
       expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk og Langtvekkistan");
+    });
+
+    test('"of" blir ikke gjort om til stor bokstav', () => {
+      const testString = "BORTE-VEKK OF LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk of Langtvekkistan");
+    });
+
+    test('"i" blir ikke gjort om til stor bokstav', () => {
+      const testString = "BORTE-VEKK I LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk i Langtvekkistan");
     });
   });
 
