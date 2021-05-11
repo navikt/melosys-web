@@ -53,6 +53,16 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
+export interface JuridiskArbeidsgiverNorge {
+  antallUtsendte?: string;
+  antallAdmAnsatte?: string;
+  antallAnsatte?: string;
+  andelOmsetningINorge?: string;
+  andelOppdragINorge?: string;
+  andelKontrakterINorge?: string;
+  andelRekruttertINorge?: string;
+  erOffentligVirksomhet?: boolean | null;
+}
 export interface Utenlandsoppdraget {
   erUtsendelseForOppdragIUtlandet?: boolean | null;
   erAnsattForOppdragIUtlandet?: boolean | null;

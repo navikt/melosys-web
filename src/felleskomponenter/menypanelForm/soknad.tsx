@@ -47,17 +47,36 @@ const mapStateToProps = (state: RootState) => ({
     oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,
-    antallAdmAnsatte:
-      Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte) || null,
-    antallAnsatte:
-      Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte) || null,
-    andelOmsetningINorge:
-      Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge) || null,
-    andelOppdragINorge:
-      Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge) || null,
-    andelKontrakterINorge:
-      Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
-    ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
+    juridiskArbeidsgiverNorge: {
+      antallUtsendte:
+        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallUtsendte).toString() ||
+        null,
+      antallAdmAnsatte:
+        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte).toString() ||
+        null,
+      antallAnsatte:
+        Math.trunc(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte).toString() ||
+        null,
+      andelOmsetningINorge:
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge
+        ).toString() || null,
+      andelOppdragINorge:
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge
+        ).toString() || null,
+      andelKontrakterINorge:
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge
+        ).toString() || null,
+      andelRekruttertINorge:
+        Math.round(
+          behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelRekruttertINorge
+        ).toString() || null,
+      ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
+      erOffentligVirksomhet: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state)
+        .erOffentligVirksomhet,
+    },
     loennOgGodtgjoerelse: {
       ...behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state),
       bruttoLoennPerMnd: Utils.streng.tryParseFloat(

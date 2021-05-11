@@ -162,14 +162,32 @@ export default function reducer(state = initialState, action) {
               : dokument.arbeidPaaLand.erFastArbeidssted,
           },
           juridiskArbeidsgiverNorge: {
-            antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
-            antallAdmAnsatte: dokument.antallAdmAnsatte ? strengTilInt(dokument.antallAdmAnsatte) : null,
-            antallUtsendte: dokument.antallUtsendte ? strengTilInt(dokument.antallUtsendte) : null,
-            andelOmsetningINorge: dokument.andelOmsetningINorge ? strengTilInt(dokument.andelOmsetningINorge) : null,
-            andelOppdragINorge: dokument.andelOppdragINorge ? strengTilInt(dokument.andelOppdragINorge) : null,
-            andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
-            andelRekruttertINorge: dokument.andelRekruttertINorge ? strengTilInt(dokument.andelRekruttertINorge) : null,
-            ekstraArbeidsgivere: dokument.ekstraArbeidsgivere.filter((arbeidsgiver) => arbeidsgiver) || [],
+            antallAnsatte: dokument.juridiskArbeidsgiverNorge.antallAnsatte
+              ? strengTilInt(dokument.juridiskArbeidsgiverNorge.antallAnsatte)
+              : null,
+            antallAdmAnsatte: dokument.juridiskArbeidsgiverNorge.antallAdmAnsatte
+              ? strengTilInt(dokument.juridiskArbeidsgiverNorge.antallAdmAnsatte)
+              : null,
+            antallUtsendte: dokument.juridiskArbeidsgiverNorge.antallUtsendte
+              ? strengTilInt(dokument.juridiskArbeidsgiverNorge.antallUtsendte)
+              : null,
+            andelOmsetningINorge: dokument.juridiskArbeidsgiverNorge.andelOmsetningINorge
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelOmsetningINorge)
+              : null,
+            andelOppdragINorge: dokument.juridiskArbeidsgiverNorge.andelOppdragINorge
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelOppdragINorge)
+              : null,
+            andelKontrakterINorge: dokument.juridiskArbeidsgiverNorge.andelKontrakterINorge
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelKontrakterINorge)
+              : null,
+            andelRekruttertINorge: dokument.juridiskArbeidsgiverNorge.andelRekruttertINorge
+              ? tryParseFloat(dokument.juridiskArbeidsgiverNorge.andelRekruttertINorge)
+              : null,
+            ekstraArbeidsgivere:
+              dokument.juridiskArbeidsgiverNorge.ekstraArbeidsgivere.filter((arbeidsgiver) => arbeidsgiver) || [],
+            erOffentligVirksomhet: Utils._isNil(dokument.juridiskArbeidsgiverNorge.erOffentligVirksomhet)
+              ? null
+              : dokument.juridiskArbeidsgiverNorge.erOffentligVirksomhet,
           },
           arbeidsgiversBekreftelse: {
             arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,

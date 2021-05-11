@@ -75,3 +75,10 @@ export const LonnOgGodtgjorelser = {
     arbeidsgiveravgiftOgTrygdeavgift: "Arbeidsgiveravgift og trygdeavgift",
   },
 };
+
+export const OmVirksomhetenINorge = {
+  tittel: "Om virksomheten i Norge",
+  undertitler: {
+    samletVirksomhetINorge: "Samlet virksomhet i Norge",
+  },
+};

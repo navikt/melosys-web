@@ -8,3 +8,4 @@ export { default as Utenlandsoppdraget, Periode } from "./utenlandsoppdraget";
 export { default as Person } from "./person";
 export { default as Familieforhold } from "./familieforhold";
 export { default as LonnOgGodtgjorelser } from "./lonnOgGodtgjorelser";
+export { default as VirksomhetenINorge } from "./virksomhetenINorge";
