@@ -37,18 +37,24 @@ const Legend = ({
     const { pencil, bin } = symbolsynlighet;
 
     return (
-      <>
-        {pencil && <Symboler.Rediger style={{ marginRight: "10px" }} onClick={onPencilClick} />}
+      <span className="editerbart-element__legend__symboler">
+        {pencil && <Symboler.Rediger onClick={onPencilClick} />}
         {bin && <Symboler.Slett onClick={onBinClick} />}
-      </>
+      </span>
     );
   };
 
   return (
     <div className={legendCls}>
-      <span style={{ marginRight: "10px" }}>
-        {TittelIkon && <TittelIkon style={{ marginRight: "5px" }} />}
-        <Nav.typo.Undertittel style={{ display: "inline" }}>{tittel}</Nav.typo.Undertittel>
+      <span className="editerbart-element__legend__tittel-container">
+        {TittelIkon && (
+          <span className="editerbart-element__legend__tittel-container__tittelikon">
+            <TittelIkon />
+          </span>
+        )}
+        <Nav.Typo.Undertittel className="editerbart-element__legend__tittel-container__tittel">
+          {tittel}
+        </Nav.Typo.Undertittel>
       </span>
       {renderSymboler()}
     </div>

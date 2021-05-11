@@ -24,7 +24,8 @@ import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
 import { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
 
 import "./vurderingArtikkel13_x_vedtak.css";
 
@@ -120,10 +121,10 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   return (
     <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArtikkel13_x_vedtak">
-      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
       {redigerbart && (
         <Fragment>
-          <Nav.typo.Element className="undertittel">Søknadsperiode</Nav.typo.Element>
+          <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}
@@ -133,6 +134,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       )}
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
+        fomRedigerbar={false}
         checkboxClassName="forkortLovvalgsperiode"
         checkboxLabel="Lovvalget innvilges for en kortere periode"
         checkboxFeltnavn="forkortLovvalgsperiode"
@@ -150,8 +152,6 @@ export const VurderingArtikkel13_x_vedtak = ({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            maxLength={500}
-            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>
@@ -267,7 +267,7 @@ const VurderingArtikkel13_x_vedtak_form = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_x_vedtak, {
+    lagYupToReduxformErrorMapper(VurderingArtikkel13_x_vedtakSchema, {
       context: {
         soknadsperiode: props.soknadsperiode,
         behandlingstype: props.behandlingstype,

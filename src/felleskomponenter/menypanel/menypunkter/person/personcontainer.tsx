@@ -18,7 +18,7 @@ const PersonContainer = ({
   <Nav.Container fluid className="barnetrygd">
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.typo.Innholdstittel>{KV.Menypunkter.Person.tittel}</Nav.typo.Innholdstittel>
+        <Nav.Typo.Innholdstittel>{KV.Menypunkter.Person.tittel}</Nav.Typo.Innholdstittel>
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>

@@ -42,10 +42,6 @@ export const SoknadslandFaktaerSelector = createSelector(AvklartefaktaSelector, 
   avklartefakta.filter((enkelt) => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
 );
 
-export const IkkeGyldigeSoknadslandFaktaerSelector = createSelector(SoknadslandFaktaerSelector, (soknadslandFaktaer) =>
-  soknadslandFaktaer.filter((fakta) => hentFaktaVerdi(fakta) === KV.Koder.SoknadslandFaktaTyper.USANN)
-);
-
 export const IkkeArbeidslandSoknadslandFaktaerSelector = createSelector(
   SoknadslandFaktaerSelector,
   (soknadslandFaktaer) =>
@@ -141,12 +137,15 @@ export const VirksomheterIPeriodenSelector = createSelector(
 
     const foretakUtlandMedNavn = foretakUtland.filter((foretak) => foretak.navn);
 
-    return [
-      ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
-      ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
-      ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
-      ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
-    ];
+    return Utils._uniqBy(
+      [
+        ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
+        ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
+        ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
+        ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
+      ],
+      ({ virksomhetId }) => virksomhetId
+    );
   }
 );
 

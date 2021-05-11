@@ -26,7 +26,8 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../regler/lovvalgsland";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSchema";
 
 import "./vurderingArtikkel13UtpekLand.css";
 
@@ -144,10 +145,10 @@ export const VurderingArtikkel13UtpekLand = ({
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
-      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
-      <Nav.typo.Undertittel>
-        <Nav.typo.Element className="undertittel">{lovvalgslandTittel}</Nav.typo.Element>
-      </Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
+      <Nav.Typo.Undertittel>
+        <Nav.Typo.Element className="undertittel">{lovvalgslandTittel}</Nav.Typo.Element>
+      </Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
           {visLandvelger && (
@@ -156,9 +157,9 @@ export const VurderingArtikkel13UtpekLand = ({
           {!visLandvelger && <div>{lovvalgsland && KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder)}</div>}
         </Nav.Column>
       </Nav.Row>
-      <Nav.typo.Undertittel>
-        <Nav.typo.Element className="undertittel">Lovvalgsperiode</Nav.typo.Element>
-      </Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>
+        <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
+      </Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
           {fom} - {tom}
@@ -166,6 +167,7 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.Row>
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
+        fomRedigerbar={false}
         checkboxClassName="forkortUtpekingsperiode"
         checkboxLabel="Utpekingen gjelder for en kortere periode"
         checkboxFeltnavn="forkortUtpekingsperiode"
@@ -182,8 +184,6 @@ export const VurderingArtikkel13UtpekLand = ({
             feltNavn="fritekstOrienteringsbrev"
             label="Fritekst til orienteringsbrev"
             placeholder="Skriv inn tekst til orienteringsbrevet..."
-            maxLength={500}
-            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>
@@ -318,7 +318,7 @@ const VurderingArtikkel13UtpekLand_form = reduxForm({
       },
     };
 
-    return lagYupToReduxformErrorMapper(YupSkjemaer.artikkel13_utpek, settings)(values);
+    return lagYupToReduxformErrorMapper(VurderingArtikkel13UtpekLandSchema, settings)(values);
   },
 })(VurderingArtikkel13UtpekLand);
 

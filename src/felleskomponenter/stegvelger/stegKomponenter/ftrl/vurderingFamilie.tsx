@@ -17,7 +17,8 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingFamilieSchema from "./vurderingFamilieSchema";
 import { MedfolgendeFamilie } from "../../../../kodeverk/form";
 import { BOOLSK_STRING } from "../../../../constants";
 
@@ -137,7 +138,7 @@ const VurderingFamilie = ({
   }
 
   function lagreMedfolgendeFamilie(data: any) {
-    if (data.formIsValid) {
+    if (data.formIsValid && data.formValues) {
       sendMedfolgendeFamilie(behandlingID, tilMedfolgendeFamilie(data.formValues));
     }
   }
@@ -194,19 +195,19 @@ const VurderingFamilie = ({
 
   return (
     <div className="vurderingFamilie">
-      <Nav.typo.Undertittel className="undertittel">
+      <Nav.Typo.Undertittel className="undertittel">
         Skal familiemedlemmer oppgitt i søknaden innvilges medlemskap?
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
 
       {medfolgendeFamilie && medfolgendeFamilie.length > 0 ? (
         <div>
-          <Nav.Fieldset legend="Barn">
-            <Nav.Row>
-              {medfolgendeBarn.map((barn: MedfolgendeFamilie) => (
-                <Nav.Column xs="6" key={barn.uuid}>
-                  <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
+          <Nav.Fieldset legend="Barn" className="barn">
+            {medfolgendeBarn.map((barn: MedfolgendeFamilie) => (
+              <Nav.Row key={barn.uuid} className="barnet">
+                <Nav.Column xs="8">
+                  <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
                     barn.fnr
-                  })`}</Nav.typo.Normaltekst>
+                  })`}</Nav.Typo.Normaltekst>
                   <Nav.Row className="familiemedlem_radio">
                     <Nav.Column xs="2">
                       <Skjema.Radio
@@ -243,25 +244,25 @@ const VurderingFamilie = ({
                     </Skjema.Select>
                   )}
                 </Nav.Column>
-              ))}
-            </Nav.Row>
+              </Nav.Row>
+            ))}
             {medfolgendeBarn.some(
               (barn: MedfolgendeFamilie) =>
                 formValues.barn && formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
-              <div>
-                <Nav.typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.typo.Element>
+              <div style={{ marginBottom: "2rem" }}>
+                <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
                 <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" />
               </div>
             )}
           </Nav.Fieldset>
-          <Nav.Fieldset legend="Ektefelle/parner/samboer">
-            <Nav.Row>
-              {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
-                <Nav.Column xs="6" key={ektefelleSamboer.uuid}>
-                  <Nav.typo.Normaltekst>{`${Utils.streng.storeForbokstaver(ektefelleSamboer.navn)} (F.nr: ${
+          <Nav.Fieldset legend="Ektefelle/partner/samboer">
+            {medfolgendeEktefelleSamboer.map((ektefelleSamboer: MedfolgendeFamilie) => (
+              <Nav.Row key={ektefelleSamboer.uuid} className="ektefelleSamboeren">
+                <Nav.Column xs="8">
+                  <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(ektefelleSamboer.navn)} (F.nr: ${
                     ektefelleSamboer.fnr
-                  })`}</Nav.typo.Normaltekst>
+                  })`}</Nav.Typo.Normaltekst>
                   <Nav.Row className="familiemedlem_radio">
                     <Nav.Column xs="2">
                       <Skjema.Radio
@@ -301,15 +302,15 @@ const VurderingFamilie = ({
                       </Skjema.Select>
                     )}
                 </Nav.Column>
-              ))}
-            </Nav.Row>
+              </Nav.Row>
+            ))}
             {medfolgendeEktefelleSamboer.some(
               (ektefelleSamboer: MedfolgendeFamilie) =>
                 formValues.ektefelle_samboer &&
                 formValues.ektefelle_samboer[ektefelleSamboer.uuid].innvilget === BOOLSK_STRING.USANN
             ) && (
               <div>
-                <Nav.typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.typo.Element>
+                <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
                 <Skjema.HTMLEditor feltNavn="ektefelle_samboer.fritekst" className="fritekst" />
               </div>
             )}
@@ -347,7 +348,7 @@ const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.vurdering_familie, {
+    lagYupToReduxformErrorMapper(vurderingFamilieSchema, {
       context: {
         medfolgendeBarn: props.medfolgendeBarn,
         medfolgendeEktefelleSamboer: props.medfolgendeEktefelleSamboer,

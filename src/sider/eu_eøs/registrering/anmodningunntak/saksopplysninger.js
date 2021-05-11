@@ -28,15 +28,15 @@ import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
 const uuid = require("uuid/v4");
 
-const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk }) => {
+const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
   let pdfDokument = [];
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
-    pdfDokument = [{ navn: "Forhåndsvis SED A011", type: EKV.Koder.sedtyper.A011, erSed: true }];
+    pdfDokument = [{ navn: "Forhåndsvis SED A011", type: EKV.Koder.sedtyper.A011, erSed: true, data: { fritekst } }];
   } else if (
     anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
     anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG
   ) {
-    pdfDokument = [{ navn: "Forhåndsvis SED A002", type: EKV.Koder.sedtyper.A002, erSed: true }];
+    pdfDokument = [{ navn: "Forhåndsvis SED A002", type: EKV.Koder.sedtyper.A002, erSed: true, data: { fritekst } }];
   }
 
   return redigerbart && <PdfLenkeListe vedKlikk={vedKlikk} behandlingID={behandlingID} dokumenter={pdfDokument} />;
@@ -47,6 +47,7 @@ LinkForhandsvisningSed.propTypes = {
   behandlingID: PT.number.isRequired,
   anmodningsperiodeSvarType: PT.string.isRequired,
   vedKlikk: PT.func.isRequired,
+  fritekst: PT.string.isRequired,
 };
 
 const Saksopplysninger = ({
@@ -60,11 +61,13 @@ const Saksopplysninger = ({
   lovvalgsperiode,
   tilForsiden,
   startOgVisOppfriskModal,
+  saksnummer,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
     MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
   );
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
+  const [ytterligereInfoFritekst, setYtterligereInfoFritekst] = useState("");
   const [endretPeriodeFom, setEndretPeriodeFom] = useState("");
   const [endretPeriodeTom, setEndretPeriodeTom] = useState("");
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
@@ -72,9 +75,12 @@ const Saksopplysninger = ({
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
   const [registreringPending, setRegistreringPending] = useState(false);
 
+  const erGyldigLovvalgsperiode = () =>
+    Utils.dato.erGyldigPeriode(sed?.lovvalgsperiode?.fom, sed?.lovvalgsperiode?.tom);
+
   useEffect(() => {
-    lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
-  }, [anmodningsperiodeID]);
+    lastInnSaksopplysninger(saksnummer, behandlingID);
+  }, [saksnummer, behandlingID]);
 
   const setEndretPeriode = () => {
     if (sed.lovvalgsperiode) {
@@ -91,13 +97,13 @@ const Saksopplysninger = ({
   };
 
   const initialiserSkjema = () => {
-    if (anmodningsperiodeSvar) {
-      if (anmodningsperiodeSvar.anmodningsperiodeSvarType) {
-        setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
-      }
-      if (anmodningsperiodeSvar.begrunnelseFritekst) {
-        setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
-      }
+    if (!erGyldigLovvalgsperiode()) {
+      setAnmodningsperiodeSvarType(MKV.Koder.anmodningsperiodesvartyper.AVSLAG);
+    } else if (anmodningsperiodeSvar?.anmodningsperiodeSvarType) {
+      setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
+    }
+    if (anmodningsperiodeSvar?.begrunnelseFritekst) {
+      setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
     }
   };
 
@@ -136,8 +142,12 @@ const Saksopplysninger = ({
     event.preventDefault();
   };
 
-  const textAreaOnChange = (event) => {
+  const begrunnelseTextAreaOnChange = (event) => {
     setBegrunnelseFritekst(event.target.value);
+  };
+
+  const ytterligereInfoTextAreaOnChange = (event) => {
+    setYtterligereInfoFritekst(event.target.value);
   };
 
   const makeResponse = (endretPeriode = null, fritekst = null) => ({
@@ -152,7 +162,7 @@ const Saksopplysninger = ({
 
     switch (anmodningsperiodeSvarType) {
       case INNVILGELSE:
-        return makeResponse(tomPeriode, null);
+        return makeResponse(tomPeriode, ytterligereInfoFritekst);
       case DELVIS_INNVILGELSE:
         return makeResponse(
           {
@@ -260,7 +270,81 @@ const Saksopplysninger = ({
     return null;
   }
 
+  const renderBegrunnelseFritekstRow = () => (
+    <Nav.Row>
+      <Nav.Column xs="6">
+        <Nav.Textarea
+          disabled={!redigerbart}
+          label="Skriv begrunnelse til SED"
+          onChange={begrunnelseTextAreaOnChange}
+          value={begrunnelseFritekst}
+          maxLength={255}
+          feil={feilmeldinger.fritekst}
+          bredde="fullbredde"
+        />
+      </Nav.Column>
+    </Nav.Row>
+  );
+
+  const renderInputfelter = (utfall) => {
+    switch (utfall) {
+      case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
+        return (
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Nav.Textarea
+                disabled={!redigerbart}
+                label="Ytterligere informasjon til SED (valgfri)"
+                onChange={ytterligereInfoTextAreaOnChange}
+                value={ytterligereInfoFritekst}
+                maxLength={500}
+                bredde="fullbredde"
+              />
+            </Nav.Column>
+          </Nav.Row>
+        );
+      case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
+        return (
+          <Fragment>
+            <Nav.Row>
+              <Nav.Column xs="3">
+                <Nav.Input
+                  bredde="fullbredde"
+                  label="Startdato"
+                  value={endretPeriodeFom}
+                  onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
+                  onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
+                  feil={feilmeldinger.fom}
+                  disabled={!redigerbart}
+                />
+              </Nav.Column>
+              <Nav.Column xs="3">
+                <Nav.Input
+                  bredde="fullbredde"
+                  label="Sluttdato"
+                  value={endretPeriodeTom}
+                  onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
+                  onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
+                  feil={feilmeldinger.tom}
+                  disabled={!redigerbart}
+                />
+              </Nav.Column>
+            </Nav.Row>
+            {renderBegrunnelseFritekstRow()}
+          </Fragment>
+        );
+      case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
+        return renderBegrunnelseFritekstRow();
+      default:
+        return null;
+    }
+  };
+
   const endreAnmodningsperiodeSvarType = (e) => setAnmodningsperiodeSvarType(e.target.value);
+
+  const erGodkjent = () => MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE === anmodningsperiodeSvarType;
+  const erDelvisGodkjent = () => MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE === anmodningsperiodeSvarType;
+  const erIkkeGodkjent = () => MKV.Koder.anmodningsperiodesvartyper.AVSLAG === anmodningsperiodeSvarType;
 
   const unikRadioButtonGruppeID = uuid();
 
@@ -269,15 +353,15 @@ const Saksopplysninger = ({
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.typo.Systemtittel>Vurder anmodning om unntak</Nav.typo.Systemtittel>
+            <Nav.Typo.Systemtittel>Vurder anmodning om unntak</Nav.Typo.Systemtittel>
             <br />
             <div className="vurderUnntaksperiode">
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.typo.Element>Land:</Nav.typo.Element>
-                  <Nav.typo.Normaltekst>
+                  <Nav.Typo.Element>Land:</Nav.Typo.Element>
+                  <Nav.Typo.Normaltekst>
                     {KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})
-                  </Nav.typo.Normaltekst>
+                  </Nav.Typo.Normaltekst>
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row className="seksjon">
@@ -289,7 +373,7 @@ const Saksopplysninger = ({
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
                     <Fragment>
-                      <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+                      <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                     </Fragment>
                   </Nav.Column>
@@ -301,89 +385,39 @@ const Saksopplysninger = ({
                     <Nav.Radio
                       name={unikRadioButtonGruppeID}
                       value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
-                      checked={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE === anmodningsperiodeSvarType}
+                      checked={erGodkjent()}
                       onChange={endreAnmodningsperiodeSvarType}
                       label="Godkjenn unntaksperiode"
+                      disabled={!erGyldigLovvalgsperiode()}
                     />
                     <Nav.Radio
                       name={unikRadioButtonGruppeID}
                       value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
-                      checked={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE === anmodningsperiodeSvarType}
+                      checked={erDelvisGodkjent()}
                       onChange={endreAnmodningsperiodeSvarType}
                       label="Godkjenn, men endre periode"
+                      disabled={!erGyldigLovvalgsperiode()}
                     />
-                    {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
-                      <Fragment>
-                        <Nav.Row>
-                          <Nav.Column xs="3">
-                            <Nav.Input
-                              bredde="fullbredde"
-                              label="Startdato"
-                              value={endretPeriodeFom}
-                              onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
-                              onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
-                              feil={feilmeldinger.fom}
-                              disabled={!redigerbart}
-                            />
-                          </Nav.Column>
-                          <Nav.Column xs="3">
-                            <Nav.Input
-                              bredde="fullbredde"
-                              label="Sluttdato"
-                              value={endretPeriodeTom}
-                              onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
-                              onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
-                              feil={feilmeldinger.tom}
-                              disabled={!redigerbart}
-                            />
-                          </Nav.Column>
-                        </Nav.Row>
-                        <Nav.Row>
-                          <Nav.Column xs="6">
-                            <Nav.Textarea
-                              disabled={!redigerbart}
-                              label="Skriv begrunnelse til SED"
-                              onChange={textAreaOnChange}
-                              value={begrunnelseFritekst}
-                              maxLength={255}
-                              feil={feilmeldinger.fritekst}
-                              bredde="fullbredde"
-                            />
-                          </Nav.Column>
-                        </Nav.Row>
-                      </Fragment>
-                    )}
                     <Nav.Radio
                       name={unikRadioButtonGruppeID}
                       value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
-                      checked={MKV.Koder.anmodningsperiodesvartyper.AVSLAG === anmodningsperiodeSvarType}
+                      checked={erIkkeGodkjent()}
                       onChange={endreAnmodningsperiodeSvarType}
                       label="Ikke godkjenn"
                     />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
-              {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
-                <Nav.Row>
-                  <Nav.Column xs="6">
-                    <Nav.Textarea
-                      disabled={!redigerbart}
-                      label="Skriv begrunnelse til SED"
-                      onChange={textAreaOnChange}
-                      value={begrunnelseFritekst}
-                      maxLength={255}
-                      feil={feilmeldinger.fritekst}
-                      bredde="fullbredde"
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-              )}
+
+              {renderInputfelter(anmodningsperiodeSvarType)}
+
               <Nav.Row>
                 <LinkForhandsvisningSed
                   redigerbart={redigerbart}
                   behandlingID={behandlingID}
                   anmodningsperiodeSvarType={anmodningsperiodeSvarType}
                   vedKlikk={oppdaterAnmodningsperiodeSvar}
+                  fritekst={erGodkjent() ? ytterligereInfoFritekst : begrunnelseFritekst}
                 />
               </Nav.Row>
               {durationWarningMessage && visPeriodeVarselStripe()}
@@ -424,6 +458,7 @@ Saksopplysninger.propTypes = {
   lovvalgsperiode: MPT.Lovvalgsperiode.isRequired,
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  saksnummer: PT.string.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -442,8 +477,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
-  lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) =>
-    datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
+    dispatch(datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(saksnummer, behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

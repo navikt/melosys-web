@@ -15,7 +15,7 @@ const UtfyltUtenlandskIdent = ({ utenlandskeIdenter }: UtfyltUtenlandskIdentProp
   <>
     <Nav.Row>
       <Nav.Column xs="6">
-        <Nav.typo.Normaltekst>ID-nummer</Nav.typo.Normaltekst>
+        <Nav.Typo.Normaltekst>ID-nummer</Nav.Typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
@@ -23,11 +23,11 @@ const UtfyltUtenlandskIdent = ({ utenlandskeIdenter }: UtfyltUtenlandskIdentProp
         /* eslint-disable-next-line react/no-array-index-key */
         <div key={indeks}>
           <Nav.Column xs="6">
-            <Nav.typo.Element>{ident}</Nav.typo.Element>
+            <Nav.Typo.Element>{ident}</Nav.Typo.Element>
           </Nav.Column>
           <Nav.Column xs="6">
             {landkode && (
-              <Nav.typo.Normaltekst>{KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
+              <Nav.Typo.Normaltekst>{KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}</Nav.Typo.Normaltekst>
             )}
           </Nav.Column>
         </div>

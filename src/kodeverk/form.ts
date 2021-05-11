@@ -5,6 +5,7 @@ export interface BehandlingsFormData {
   behandlingstema: string;
 }
 export const BREV_BESTILLING = "brevbestilling";
+export const SEND_BREV = "send_brev";
 export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
 export const JOURNALFORING_SED = "journalforing_sed";
@@ -52,11 +53,19 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
+export interface Utenlandsoppdraget {
+  erUtsendelseForOppdragIUtlandet?: boolean | null;
+  erAnsattForOppdragIUtlandet?: boolean | null;
+  erFortsattAnsattEtterOppdraget?: boolean | null;
+  erDrattPaaEgetInitiativ?: boolean | null;
+  erErstatningTidligereUtsendte?: boolean | null;
+  samletUtsendingsperiode: { fom?: string | null; tom?: string | null };
+}
+
 export type SoknadFormData = any;
 
 export const SOK_ETTER_SAK = "sokEtterSak";
 export const ARTIKKEL_16_ANMODNING = "artikkel_16_anmodning";
-export const INNGANG = "inngang";
 export const ARTIKKEL_12_VEDTAK = "artikkel_12_vedtak";
 export const AVSLAG_ARTIKKEL_12_OG_16 = "avslag_artikkel_12_og_16";
 export const ARTIKKEL_16_MOTTA_SVAR = "artikkel_16_motta_svar";
@@ -78,7 +87,9 @@ export interface RegistreringPanelerFormData {
 }
 export const ARBEID_ETT_LAND_OVRIG_VEDTAK = "arbeid_ett_land_ovrig_vedtak";
 export const START = "start";
+export const VIRKSOMHET = "virksomhet";
 export const PERIODER = "perioder";
 export const TRYGDEAVGIFT = "trygdeavgift";
 export const FTRL_VEDTAK = "ftrl_vedtak";
 export const FAMILIE = "familie";
+export const REPRESENTANT = "representant";

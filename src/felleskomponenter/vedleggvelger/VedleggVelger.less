@@ -1,3 +1,7 @@
+@coreModulePath: "../../../node_modules/";
+@frontendModuler: "@{coreModulePath}nav-frontend-";
+@import "@{frontendModuler}core/less/core";
+
 .vedleggvelger {
   margin: 0;
 
@@ -23,6 +27,12 @@
       vertical-align: middle;
     }
 
+    tbody {
+      .enkeltvedlegg--border-bottom {
+        border-bottom: 1px solid @navGra60;
+      }
+    }
+
     tr {
       .skjemaelement {
         display: table-cell;
@@ -43,6 +53,21 @@
           }
         }
       }
+    }
+  }
+
+  .legg-til-vedlegg-knapp {
+    margin-top: 1em;
+  }
+
+  .vedleggliste {
+    .legg-til-markerte-vedlegg-knapp,
+    .avbryt-knapp {
+      margin-top: 1em;
+    }
+
+    .legg-til-markerte-vedlegg-knapp {
+      margin-right: 0.5em;
     }
   }
 }

@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-import { PersonHistorikk, Periode } from "Domene";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as Etiketter from "../../etiketter";
+import * as Api from "../../../../services/api";
 
 import PersonInfo from "./personinfo";
 
@@ -23,7 +23,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import "./person.css";
 
 interface AdresseRadProps {
-  periode: Periode;
+  periode: Api.Types.Periode;
   adresseNode: ReactNode;
 }
 
@@ -46,13 +46,13 @@ interface AdresseHeaderProps {
 export const AdresseHeader = ({ adresseTittel }: AdresseHeaderProps) => (
   <Nav.Row>
     <Nav.Column xs="5">
-      <Nav.typo.Element>{adresseTittel}</Nav.typo.Element>
+      <Nav.Typo.Element>{adresseTittel}</Nav.Typo.Element>
     </Nav.Column>
     <Nav.Column xs="3">
-      <Nav.typo.Element>Fra og med</Nav.typo.Element>
+      <Nav.Typo.Element>Fra og med</Nav.Typo.Element>
     </Nav.Column>
     <Nav.Column xs="3">
-      <Nav.typo.Element>Til og med</Nav.typo.Element>
+      <Nav.Typo.Element>Til og med</Nav.Typo.Element>
     </Nav.Column>
   </Nav.Row>
 );
@@ -83,7 +83,7 @@ export const Person = ({
     bostedsadressePerioder,
     postadressePerioder,
     midlertidigAdressePerioder,
-  } = personhistorikk as PersonHistorikk;
+  } = personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
 
   if (Object.keys(person).length === 0) {
     return null;
@@ -103,62 +103,68 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row className="registrerteAdresser">
         <Nav.Column xs="12">
-          <ExpandableList
-            header={<AdresseHeader adresseTittel="Bostedsadresse" />}
-            elements={bostedsadressePerioder}
-            idFromElement={() => Utils._uuid()}
-            renderElement={(element) => (
-              <AdresseRad
-                adresseNode={<GeneriskAdresse adresse={element.bostedsadresse} />}
-                periode={element.periode}
-              />
-            )}
-            amountOfItemsCollapsed={1}
-            btnTextCollapsed="Åpne historikk"
-            btnTextExpanded="Lukk historikk"
-            chevron
-            dividers
-          />
-          <ExpandableList
-            header={<AdresseHeader adresseTittel="Postadresse" />}
-            elements={postadressePerioder}
-            idFromElement={() => Utils._uuid()}
-            renderElement={(element) => (
-              <AdresseRad
-                adresseNode={<UstrukturertAdresse adresse={element.postadresse} />}
-                periode={element.periode}
-              />
-            )}
-            amountOfItemsCollapsed={1}
-            btnTextCollapsed="Åpne historikk"
-            btnTextExpanded="Lukk historikk"
-            chevron
-            dividers
-          />
-          <ExpandableList
-            header={<AdresseHeader adresseTittel="Midlertidig adresse" />}
-            elements={midlertidigAdressePerioder}
-            idFromElement={() => Utils._uuid()}
-            renderElement={(element) => {
-              const {
-                midlertidigAdresse: { adressetype, strukturertAdresse, ustrukturertAdresse },
-                periode,
-              } = element;
-              let adresseNode = null;
+          {bostedsadressePerioder.length > 0 && (
+            <ExpandableList
+              header={<AdresseHeader adresseTittel="Bostedsadresse" />}
+              elements={bostedsadressePerioder}
+              idFromElement={() => Utils._uuid()}
+              renderElement={(element) => (
+                <AdresseRad
+                  adresseNode={<GeneriskAdresse adresse={element.bostedsadresse} />}
+                  periode={element.periode}
+                />
+              )}
+              amountOfItemsCollapsed={1}
+              btnTextCollapsed="Åpne historikk"
+              btnTextExpanded="Lukk historikk"
+              chevron
+              dividers
+            />
+          )}
+          {postadressePerioder.length > 0 && (
+            <ExpandableList
+              header={<AdresseHeader adresseTittel="Postadresse" />}
+              elements={postadressePerioder}
+              idFromElement={() => Utils._uuid()}
+              renderElement={(element) => (
+                <AdresseRad
+                  adresseNode={<UstrukturertAdresse adresse={element.postadresse} />}
+                  periode={element.periode}
+                />
+              )}
+              amountOfItemsCollapsed={1}
+              btnTextCollapsed="Åpne historikk"
+              btnTextExpanded="Lukk historikk"
+              chevron
+              dividers
+            />
+          )}
+          {midlertidigAdressePerioder.length > 0 && (
+            <ExpandableList
+              header={<AdresseHeader adresseTittel="Midlertidig adresse" />}
+              elements={midlertidigAdressePerioder}
+              idFromElement={() => Utils._uuid()}
+              renderElement={(element) => {
+                const {
+                  midlertidigAdresse: { adressetype, strukturertAdresse, ustrukturertAdresse },
+                  periode,
+                } = element;
+                let adresseNode = null;
 
-              if (adressetype === KV.Koder.AdresseType.STRUKTURERT)
-                adresseNode = <StrukturertAdresse adresse={strukturertAdresse} />;
-              else if (adressetype === KV.Koder.AdresseType.USTRUKTURERT)
-                adresseNode = <UstrukturertAdresse adresse={ustrukturertAdresse} />;
+                if (adressetype === KV.Koder.AdresseType.STRUKTURERT)
+                  adresseNode = <StrukturertAdresse adresse={strukturertAdresse} />;
+                else if (adressetype === KV.Koder.AdresseType.USTRUKTURERT)
+                  adresseNode = <UstrukturertAdresse adresse={ustrukturertAdresse} />;
 
-              return <AdresseRad adresseNode={adresseNode} periode={periode} />;
-            }}
-            amountOfItemsCollapsed={1}
-            btnTextCollapsed="Åpne historikk"
-            btnTextExpanded="Lukk historikk"
-            chevron
-            dividers
-          />
+                return <AdresseRad adresseNode={adresseNode} periode={periode} />;
+              }}
+              amountOfItemsCollapsed={1}
+              btnTextCollapsed="Åpne historikk"
+              btnTextExpanded="Lukk historikk"
+              chevron
+              dividers
+            />
+          )}
         </Nav.Column>
       </Nav.Row>
       {visBehandlingsgrunnlagData && (

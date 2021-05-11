@@ -16,9 +16,11 @@ import Knapperad from "../../felleskomponenter/knapperad";
 import EnkeltDato from "../../felleskomponenter/datoOmrade/enkeltDato";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
+import { lagYupToReduxformErrorMapper } from "../../yup";
+import opprettNySakSchema from "./opprettnysakSchema";
 
 import "./opprettnysak.css";
+import { FeatureToggle } from "../../featuretoggle";
 
 const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, error }) => {
   const [oppgaver, setOppgaver] = useState([]);
@@ -67,7 +69,11 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
 
   const filtrerteBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
     .filter(({ kode }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
-    .filter(({ kode }) => kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND);
+    .filter(
+      ({ kode }) =>
+        kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
+        kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
+    );
 
   const settJournalpostID = (oppgaveID) => {
     const { journalpostID } = oppgaver.find((oppgave) => oppgave.oppgaveID === oppgaveID);
@@ -119,14 +125,30 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                     </Skjema.Select>
                     {soknadErValgt && (
                       <Fragment>
-                        <Nav.typo.Normaltekst>Søknadsperiode</Nav.typo.Normaltekst>
+                        <Nav.Typo.Normaltekst>Søknadsperiode</Nav.Typo.Normaltekst>
                         <FormSection name="soknadsinfo">
                           <Nav.Row>
                             <Nav.Column xs="5">
-                              <Skjema.Input datoFelt feltNavn="fom" label="Fra" />
+                              <FeatureToggle togglename="melosys.input.DATOFELT">
+                                {(status) =>
+                                  status === "enabled" ? (
+                                    <Skjema.Datovelger label="Fra" feltNavn="fom" />
+                                  ) : (
+                                    <Skjema.Input datoFelt feltNavn="fom" label="Fra" />
+                                  )
+                                }
+                              </FeatureToggle>
                             </Nav.Column>
                             <Nav.Column xs="5">
-                              <Skjema.Input datoFelt feltNavn="tom" label="Til" />
+                              <FeatureToggle togglename="melosys.input.DATOFELT">
+                                {(status) =>
+                                  status === "enabled" ? (
+                                    <Skjema.Datovelger label="Til" feltNavn="tom" />
+                                  ) : (
+                                    <Skjema.Input datoFelt feltNavn="tom" label="Til" />
+                                  )
+                                }
+                              </FeatureToggle>
                             </Nav.Column>
                           </Nav.Row>
                           <Skjema.LandVelger
@@ -245,7 +267,7 @@ const OpprettNySakForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.opprettnysak),
+  validate: lagYupToReduxformErrorMapper(opprettNySakSchema),
 })(OpprettNySak);
 
 export default connect(mapStateToProps)(OpprettNySakForm);

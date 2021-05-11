@@ -1,16 +1,24 @@
-import React, { CSSProperties } from "react";
-import Select, { Styles, ValueType } from "react-select";
+import React, { CSSProperties, ReactNode } from "react";
+import Select, { Styles } from "react-select";
+
+import * as Utils from "../../utils";
+
+export interface OptionBase {
+  value: string;
+  label: string;
+}
 
 interface MultiSelectProps<T> {
-  label: string;
+  label: ReactNode;
   values: string[];
-  onChange(selectedOptions: T[]): void;
+  onChange(selectedOptions: readonly T[]): void;
   options: T[];
   feil?: { feilmelding: string };
   redigerbart?: boolean;
+  className?: string;
 }
 
-function MultiSelect<T extends { value: string; label: string }>(props: MultiSelectProps<T>) {
+function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   const { label, values, onChange, options, feil, redigerbart = true } = props;
 
   const getBorderColor = (hover = false) => {
@@ -54,15 +62,17 @@ function MultiSelect<T extends { value: string; label: string }>(props: MultiSel
     }),
   };
 
+  const selectId = `select${Utils._uuid()}`;
+
   return (
-    <div style={{ margin: "1rem 0", cursor: redigerbart ? "default" : "not-allowed" }}>
-      <label htmlFor={`select${label}`} style={{ display: "block", paddingBottom: "0.5rem" }}>
+    <div className={props.className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
+      <label htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
         {label}
       </label>
       <Select
-        id={`select${label}`}
+        id={selectId}
         styles={styles}
-        onChange={(selectedOptions: ValueType<T, true>) => onChange(selectedOptions as T[])}
+        onChange={(selectedOptions) => onChange(selectedOptions || [])}
         options={options}
         placeholder="Velg..."
         isMulti

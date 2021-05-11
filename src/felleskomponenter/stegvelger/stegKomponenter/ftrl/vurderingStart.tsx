@@ -1,10 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
@@ -12,12 +11,16 @@ import * as Skjema from "../../../skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 
-import { modalerOperations } from "../../../../ducks/modaler";
-import { menypanelOperations } from "../../../../ducks/menypanel";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
+import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
+import { menypanelOperations } from "../../../../ducks/menypanel";
+import { formSelectors } from "../../../../ducks/form";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingStartSchema from "./vurderingStartSchema";
+import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
-import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
+import { FeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
@@ -32,12 +35,11 @@ const mapStateToProps = (state: RootState) => {
       land: initialSoeknadsland && initialSoeknadsland.toString(),
       trygdedekning: initialTrygdedekning,
     },
+    formIsValid: formSelectors.VurderStartFormValid(state),
   };
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  visOppfriskDialogOgFortsettHandle: (fortsett: () => void) =>
-    dispatch(modalerOperations.visOppfriskOgFortsett(fortsett)),
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
@@ -52,13 +54,23 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface FormValuesProp {
+  fom?: string;
+  tom?: string;
+  land?: string;
+  trygdedekning?: string;
+}
+
 interface Props {
   bekreft: () => void;
   oppdater: () => void;
   redigerbart: boolean;
   oppdaterData: (avklartefakta: any) => void;
   alleLandkoder: KTObject[];
-  formValues: { fom?: string; tom?: string; land?: string; trygdedekning?: string };
+  formValues: FormValuesProp;
+  tilForsiden: () => void;
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
+  annenBehandlingOppfriskes: boolean;
 }
 
 const VurderingStart = ({
@@ -66,18 +78,24 @@ const VurderingStart = ({
   redigerbart,
   formValues = {},
   alleLandkoder,
-  visOppfriskDialogOgFortsettHandle,
-  visMenypanel,
   oppdater,
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppdaterTrygdedekning,
   trygdedekninger,
   lagreBehandlingsgrunnlag,
+  formIsValid,
+  initialValues,
+  tilForsiden,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+  annenBehandlingOppfriskes,
+  visMenypanel,
 }: Props & PropsFromRedux) => {
-  const [erPeriodeGyldig, setErPeriodeGyldig] = useState(true);
-  const [erObligatoriskeFelterFyltInn, setErObligatoriskeFelterFyltInn] = useState(false);
-
+  const [initialFomTom, setInitialFomTom] = useState<{ fom: string | undefined; tom: string | undefined }>({
+    fom: undefined,
+    tom: undefined,
+  });
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
     <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
@@ -85,56 +103,84 @@ const VurderingStart = ({
     </Nav.Hjelpetekst>
   );
 
-  const oppdaterLokalBehandlingsgrunnlag = async (erFelteneGyldig: boolean) => {
-    const fom = Utils.dato.formatterDatoTilISO(formValues.fom);
-    const tom = Utils.dato.formatterDatoTilISO(formValues.tom);
+  useEffect(() => {
+    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+      visMenypanel();
+      setInitialFomTom({ fom: initialValues.fom, tom: initialValues.tom });
+    }
+  }, []);
+
+  const oppdaterLokalBehandlingsgrunnlag = async (data: { formValues: FormValuesProp; formIsValid: boolean }) => {
+    const fom = Utils.dato.formatterDatoTilISO(data.formValues.fom);
+    const tom = Utils.dato.formatterDatoTilISO(data.formValues.tom);
     await Promise.all([
       oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
-      oppdaterSoeknadsland(formValues.land ? [formValues.land] : []),
-      oppdaterTrygdedekning(formValues.trygdedekning ? formValues.trygdedekning : ""),
+      oppdaterSoeknadsland(data.formValues.land ? [data.formValues.land] : []),
+      oppdaterTrygdedekning(data.formValues.trygdedekning ? data.formValues.trygdedekning : ""),
     ]);
     oppdater();
-    if (erFelteneGyldig) {
+    if (data.formIsValid) {
       lagreBehandlingsgrunnlag();
     }
   };
 
+  const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalBehandlingsgrunnlag, 500), []);
+
   useEffect(() => {
-    const erTomNullEllerEtterFom = !formValues.tom || Utils.dato.erGyldigPeriode(formValues.fom, formValues.tom);
-    setErPeriodeGyldig(erTomNullEllerEtterFom);
-
-    const erFelteneGyldig =
-      !!formValues.land && !!formValues.trygdedekning && !!formValues.fom && erTomNullEllerEtterFom;
-    setErObligatoriskeFelterFyltInn(erFelteneGyldig);
-
-    oppdaterLokalBehandlingsgrunnlag(erFelteneGyldig);
-  }, [formValues]);
+    debouncedOppdatering({ formValues, formIsValid });
+  }, [formIsValid, formValues]);
 
   const fortsettHandle = () => {
-    oppdaterLokalBehandlingsgrunnlag(erObligatoriskeFelterFyltInn);
-    if (erObligatoriskeFelterFyltInn) {
-      const fortsett = () => {
-        bekreft();
-        visMenypanel();
-      };
-      visOppfriskDialogOgFortsettHandle(fortsett);
+    if (formValues.fom !== initialFomTom.fom || formValues.tom !== initialFomTom.tom) {
+      setInitialFomTom({ fom: formValues.fom, tom: formValues.tom });
+      setVisOppfrisk(true);
+    } else {
+      bekreft();
     }
   };
 
   return (
     <div className="vurderingStart">
-      <Nav.typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
 
-      <Nav.Fieldset legend="Periode" onSubmit={fortsettHandle}>
+      <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Skjema.Input datoFelt label="Fra og med:" feltNavn="fom" bredde="fullbredde" disabled={!redigerbart} />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
+                ) : (
+                  <Skjema.Input
+                    datoFelt
+                    label="Fra og med:"
+                    feltNavn="fom"
+                    bredde="fullbredde"
+                    disabled={!redigerbart}
+                  />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.Input datoFelt label="Til og med:" feltNavn="tom" bredde="fullbredde" disabled={!redigerbart} />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
+                ) : (
+                  <Skjema.Input
+                    datoFelt
+                    label="Til og med:"
+                    feltNavn="tom"
+                    bredde="fullbredde"
+                    disabled={!redigerbart}
+                  />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
           <Nav.Column xs="5">
-            <Skjema.Select
+            <Skjema.LandVelger
               label={
                 <Fragment>
                   <b>Arbeidsland</b>
@@ -142,22 +188,11 @@ const VurderingStart = ({
                 </Fragment>
               }
               feltNavn="land"
-              emptyFieldText="Velg"
-              emptyFieldDisabled={!!formValues.land}
-            >
-              {alleLandkoder.map((item) => (
-                <option key={item.kode} value={item.kode}>
-                  {Utils.land.landTekstFormatStoreForbokstaver(item)}
-                </option>
-              ))}
-            </Skjema.Select>
+              placeholder="Velg..."
+              landkoder={alleLandkoder.map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))}
+            />
           </Nav.Column>
         </Nav.Row>
-        {!erPeriodeGyldig && (
-          <AlertStripeFeil className="alert">
-            Til og med dato kan ikke være tidligere enn fra og med dato.
-          </AlertStripeFeil>
-        )}
       </Nav.Fieldset>
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
@@ -179,15 +214,28 @@ const VurderingStart = ({
       </Nav.Fieldset>
 
       <div className="fane__knapplinje">
-        <Nav.Hovedknapp
-          mini
-          disabled={!erObligatoriskeFelterFyltInn}
-          className="fane__navigasjonsknapp"
-          onClick={fortsettHandle}
-        >
+        <Nav.Hovedknapp mini disabled={!formIsValid} className="fane__navigasjonsknapp" onClick={fortsettHandle}>
           Fortsett
         </Nav.Hovedknapp>
       </div>
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            visMenypanel();
+            bekreft();
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            tilForsiden();
+          }}
+          behandlingOppfriskes
+          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+        />
+      )}
     </div>
   );
 };
@@ -197,6 +245,7 @@ const VurderingStartForm = reduxForm<{}, PropsFromRedux & Props>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  validate: lagYupToReduxformErrorMapper(vurderingStartSchema),
 })(VurderingStart);
 
 export default connector(VurderingStartForm);

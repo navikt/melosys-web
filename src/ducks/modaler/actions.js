@@ -29,8 +29,3 @@ export const oppdaterRevurderFagsak = (data) => ({
   type: Types.OPPDATER_REVURDER_FAGSAK,
   data,
 });
-
-export const oppdaterEndreBehandlingstema = (data) => ({
-  type: Types.OPPDATER_ENDRE_BEHANDLINGSTEMA,
-  data,
-});

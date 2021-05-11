@@ -5,7 +5,8 @@ import { RootState } from "AppTypes";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
+import { lagYupToReduxformErrorMapper } from "../../yup";
+import soknadSchema from "../../ducks/form/soknadSchema";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
@@ -25,15 +26,6 @@ const mapStateToProps = (state: RootState) => ({
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
     medfolgendeEktefelleSamboer: behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state),
-    inntektNorskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
-    inntektUtenlandskIPerioden: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
-    inntektNaturalFribolig: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBil,
-    inntektNaturalFribil: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friBolig,
-    inntektNaturalIAnnet: behandlingsgrunnlagSelectors.ArbeidsinntektNaturalytelserSelector(state).friAnnet,
-    inntektErInnrapporteringspliktig: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state)
-      .inntektErInnrapporteringspliktig,
-    inntektTrygdeavgiftBlirTrukket: behandlingsgrunnlagSelectors.ArbeidsinntektSelector(state)
-      .inntektTrygdeavgiftBlirTrukket,
     arbeidsgiverBekrefterUtsendelse: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
       .arbeidsgiverBekrefterUtsendelse,
     arbeidstakerAnsattUnderUtsendelsen: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
@@ -66,6 +58,37 @@ const mapStateToProps = (state: RootState) => ({
     andelKontrakterINorge:
       Math.round(behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
     ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
+    loennOgGodtgjoerelse: {
+      ...behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state),
+      bruttoLoennPerMnd: Utils.streng.tryParseFloat(
+        behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennPerMnd
+      ),
+      bruttoLoennUtlandPerMnd: Utils.streng.tryParseFloat(
+        behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennUtlandPerMnd
+      ),
+      samletVerdiNaturalytelser: Utils.streng.tryParseFloat(
+        behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
+      ),
+    },
+    utenlandsoppdraget: {
+      erUtsendelseForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erUtsendelseForOppdragIUtlandet,
+      erAnsattForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erAnsattForOppdragIUtlandet,
+      erFortsattAnsattEtterOppdraget: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erFortsattAnsattEtterOppdraget,
+      erDrattPaaEgetInitiativ: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erDrattPaaEgetInitiativ,
+      erErstatningTidligereUtsendte: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erErstatningTidligereUtsendte,
+      samletUtsendingsperiode: {
+        fom: Utils.dato.formatterDatoTilNorsk(
+          behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.fom
+        ),
+        tom: Utils.dato.formatterDatoTilNorsk(
+          behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.tom
+        ),
+      },
+    },
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom
     ),
@@ -92,7 +115,6 @@ const mapStateToProps = (state: RootState) => ({
     ),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
-      soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
@@ -163,7 +185,7 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
       },
     };
 
-    return lagYupToReduxformErrorMapper(YupSkjemaer.soknad, settings)(values);
+    return lagYupToReduxformErrorMapper(soknadSchema, settings)(values);
   },
 })(Soknad);
 

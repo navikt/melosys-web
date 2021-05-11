@@ -120,6 +120,29 @@ describe("behandlingsgrunnlag reducer", () => {
           erHjemmekontor: false,
           erFastArbeidssted: null,
         },
+        loennOgGodtgjoerelse: {
+          norskArbgUtbetalerLoenn: false,
+          erArbeidstakerAnsattHelePerioden: true,
+          utlArbgUtbetalerLoenn: true,
+          bruttoLoennPerMnd: "7000.12",
+          bruttoLoennUtlandPerMnd: "14000",
+          mottarNaturalytelser: true,
+          samletVerdiNaturalytelser: "",
+          erArbeidsgiveravgiftHelePerioden: true,
+          erTrukketTrygdeavgift: false,
+          utlArbTilhoererSammeKonsern: null,
+        },
+        utenlandsoppdraget: {
+          erUtsendelseForOppdragIUtlandet: true,
+          erAnsattForOppdragIUtlandet: false,
+          erFortsattAnsattEtterOppdraget: null,
+          erDrattPaaEgetInitiativ: true,
+          erErstatningTidligereUtsendte: null,
+          samletUtsendingsperiode: {
+            fom: "01.02.2019",
+            tom: "01.02.2020",
+          },
+        },
         antallAnsatte: "12345",
         antallAdmAnsatte: "12345",
         andelOmsetningINorge: "12345",
@@ -249,17 +272,28 @@ describe("behandlingsgrunnlag reducer", () => {
       status: STATUS.NOT_STARTED,
       data: {
         data: {
-          arbeidsinntekt: {
-            inntektNorskIPerioden: 1,
-            inntektUtenlandskIPerioden: 2,
-            inntektNaeringIPerioden: null,
-            inntektNaturalytelser: {
-              friBil: "4",
-              friBolig: "5",
-              friAnnet: "6",
+          loennOgGodtgjoerelse: {
+            norskArbgUtbetalerLoenn: false,
+            erArbeidstakerAnsattHelePerioden: true,
+            utlArbgUtbetalerLoenn: true,
+            bruttoLoennPerMnd: 7000.12,
+            bruttoLoennUtlandPerMnd: 14000,
+            mottarNaturalytelser: true,
+            samletVerdiNaturalytelser: null,
+            erArbeidsgiveravgiftHelePerioden: true,
+            erTrukketTrygdeavgift: false,
+            utlArbTilhoererSammeKonsern: null,
+          },
+          utenlandsoppdraget: {
+            erUtsendelseForOppdragIUtlandet: true,
+            erAnsattForOppdragIUtlandet: false,
+            erFortsattAnsattEtterOppdraget: null,
+            erDrattPaaEgetInitiativ: true,
+            erErstatningTidligereUtsendte: null,
+            samletUtsendingsperiode: {
+              fom: "2019-02-01",
+              tom: "2020-02-01",
             },
-            inntektErInnrapporteringspliktig: true,
-            inntektTrygdeavgiftBlirTrukket: true,
           },
           arbeidPaaLand: {
             fysiskeArbeidssteder: [

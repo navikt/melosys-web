@@ -48,10 +48,10 @@ function InnerHTMLEditorComponent({ input, ...rest }: InnerHtmlEditorComponentPr
 
 interface HtmleditorProps extends InnerHtmlEditorComponentProps {
   feltNavn: string;
-  className: string;
+  className?: string;
 }
 
-function HTMLEditor({ feltNavn, className, ...rest }: HtmleditorProps) {
+function HTMLEditor({ feltNavn, className = "", ...rest }: HtmleditorProps) {
   return <Field name={feltNavn} className={className} component={InnerHTMLEditorComponent} props={rest} />;
 }
 

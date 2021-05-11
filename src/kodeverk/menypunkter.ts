@@ -36,7 +36,7 @@ export const Medlemskap = {
 };
 
 export const Periode = {
-  tittel: "Periode",
+  tittel: "Periode og land",
   undertitler: {},
 };
 
@@ -54,7 +54,7 @@ export const Barnetrygd = {
 };
 
 export const Utenlandsoppdraget = {
-  tittel: "Utenlandskoppdraget",
+  tittel: "Utenlandsoppdraget",
   undertitler: {
     tilleggsopplysninger: "Tilleggsopplysninger",
   },
@@ -65,5 +65,13 @@ export const Familieforhold = {
   undertitler: {
     barnMedPaReisen: "Barn med på reisen",
     familieMedPaReisen: "Familie med på reisen",
+  },
+};
+
+export const LonnOgGodtgjorelser = {
+  tittel: "Lønn og godtgjørelser i søknadsperioden",
+  undertitler: {
+    lonnOgNaturalytelser: "Lønn og naturalytelser",
+    arbeidsgiveravgiftOgTrygdeavgift: "Arbeidsgiveravgift og trygdeavgift",
   },
 };

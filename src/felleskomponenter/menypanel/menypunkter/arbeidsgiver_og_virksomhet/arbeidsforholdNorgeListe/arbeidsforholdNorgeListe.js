@@ -9,7 +9,7 @@ import * as Nav from "../../../../../utils/navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 import * as MPT from "../../../../../proptypes";
 
-import EditerbartElement, { visAlltidBinSymbolsynlighetMap } from "../../editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
 import Orgnrinput from "./orgnrinput";
 import Organisasjon from "../../arbeidsgiver/organisasjon";
 import Kontaktopplysninger, { useKontaktOpplysninger } from "../../kontaktopplysninger";
@@ -149,9 +149,8 @@ export const EnkeltArbeidsforholdNorge = ({
       tittelIkon={tittelIkon}
       tittelUnderstrek
       onBinClick={slett}
-      hentNyStatusVedHarData={false}
       visLagreKnappBareHvisHarData
-      symbolsynlighetMap={visAlltidBinSymbolsynlighetMap}
+      symbolsynlighet={visAlltidBinSymbolsynlighet}
       redigererRender={() => (
         <EnkeltArbeidsforholdNorgeRedigerer
           erstatt={erstatt}

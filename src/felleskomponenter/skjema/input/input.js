@@ -42,7 +42,7 @@ function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
 }
 
 InnerInputComponent.propTypes = {
-  label: PT.string.isRequired,
+  label: PT.node.isRequired,
   bredde: PT.string,
   meta: PT.object,
   input: PT.object,
@@ -58,7 +58,8 @@ InnerInputComponent.defaultProps = {
   onChange: undefined,
 };
 
-function Input({ feltNavn, bredde, datoFelt, ...rest }) {
+function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, ...rest }) {
+  // TODO: Fjern datoFelt og tilhørende felter etter melosys.input.DATOFELT blir skrudd på
   const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
   const placeholderTekst = datoFelt ? "ddmmåå" : null;
 

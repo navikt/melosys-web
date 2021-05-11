@@ -16,8 +16,8 @@ const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
       <Fragment key={index}>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.typo.Element>Navn på virksomhet</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{element.virksomhetNavn}</Nav.typo.Normaltekst>
+            <Nav.Typo.Element>Navn på virksomhet</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{element.virksomhetNavn}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <StrukturertAdresse adresse={element.adresse} />

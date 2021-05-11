@@ -14,7 +14,8 @@ import Fotknapper from "./fotknapper";
 
 import { journalforingSelectors } from "../../../ducks/journalforing";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import journalforingsedSchema from "./journalforingsedSchema";
 
 import "./journalforingsed.css";
 
@@ -43,21 +44,21 @@ const JournalforingSED = ({
     <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" understrek />
     <Nav.Row>
       <Nav.Column xs="6">
-        <Nav.typo.Element>Avsender ID</Nav.typo.Element>
-        <Nav.typo.Normaltekst>{avsenderID}</Nav.typo.Normaltekst>
-        <Nav.typo.Element>Avsenders navn</Nav.typo.Element>
-        <Nav.typo.Normaltekst>{avsenderNavn}</Nav.typo.Normaltekst>
+        <Nav.Typo.Element>Avsender ID</Nav.Typo.Element>
+        <Nav.Typo.Normaltekst>{avsenderID}</Nav.Typo.Normaltekst>
+        <Nav.Typo.Element>Avsenders navn</Nav.Typo.Element>
+        <Nav.Typo.Normaltekst>{avsenderNavn}</Nav.Typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
     <Mui.Undertittel tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" understrek />
     <Nav.Row>
       <Nav.Column xs="5">
-        <Nav.typo.Element>Sakstype</Nav.typo.Element>
-        <Nav.typo.Normaltekst>{sakstype.term}</Nav.typo.Normaltekst>
+        <Nav.Typo.Element>Sakstype</Nav.Typo.Element>
+        <Nav.Typo.Normaltekst>{sakstype.term}</Nav.Typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="7">
-        <Nav.typo.Element>Behandlingstema</Nav.typo.Element>
-        <Nav.typo.Normaltekst>{behandlingstema.term}</Nav.typo.Normaltekst>
+        <Nav.Typo.Element>Behandlingstema</Nav.Typo.Element>
+        <Nav.Typo.Normaltekst>{behandlingstema.term}</Nav.Typo.Normaltekst>
       </Nav.Column>
     </Nav.Row>
     <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
@@ -81,7 +82,7 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.journalforingSED),
+  validate: lagYupToReduxformErrorMapper(journalforingsedSchema),
 };
 
 const mapStateToProps = (state) => ({

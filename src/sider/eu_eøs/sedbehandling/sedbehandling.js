@@ -9,7 +9,7 @@ import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Behandlingsmeny from "./komponenter/behandlingsmeny";
 
@@ -165,9 +165,11 @@ const SedBehandling = ({
     };
   }, []);
 
-  const ikkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
+  const behandlingstemaErIkkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
+  const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
+
   useEffect(() => {
-    if (ikkeYrkesaktiv) {
+    if (behandlingstemaErIkkeYrkesaktiv) {
       hentBehandlingsgrunnlag(behandlingID);
     }
   }, [behandlingstema]);
@@ -191,9 +193,13 @@ const SedBehandling = ({
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              oppholdsland={ikkeYrkesaktiv ? oppholdsland : []}
-              behandlingsgrunnlagPeriodeFom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined}
-              behandlingsgrunnlagPeriodeTom={ikkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined}
+              oppholdsland={behandlingstemaErIkkeYrkesaktiv ? oppholdsland : []}
+              behandlingsgrunnlagPeriodeFom={
+                behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined
+              }
+              behandlingsgrunnlagPeriodeTom={
+                behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined
+              }
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               renderBehandlingsmeny={() => (
@@ -204,7 +210,8 @@ const SedBehandling = ({
                   visHenleggDialogHandle={visHenleggDialogHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                  visHenleggSak
+                  visHenleggSak={!behandlingstemaErTrygdetid}
+                  visAvslagManglendeOpplysninger={!behandlingstemaErTrygdetid}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskModal}

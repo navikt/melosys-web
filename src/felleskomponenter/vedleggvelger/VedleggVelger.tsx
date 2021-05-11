@@ -38,8 +38,12 @@ export const EnkeltVedlegg = ({
 
   const apnePdf = () => window.open(lagPdfUrl(vedlegg.journalpostID, vedlegg.dokumentID), "_blank");
 
+  const cls = classNames({
+    "enkeltvedlegg--border-bottom": !redigerer,
+  });
+
   return (
-    <tr>
+    <tr className={cls}>
       {redigerer ? (
         <td>
           <Nav.Checkbox onChange={checkboxChangeHandler} checked={vedleggErMarkert} label="&nbsp;" />
@@ -104,19 +108,19 @@ export const VedleggListe = ({
   const hentGjeldendeVedlegg = () => (redigerer ? alleVedlegg : valgteVedlegg);
 
   return (
-    <Nav.Row>
+    <Nav.Row className="vedleggliste">
       <table className="vedleggvelger-tabell">
         <thead>
           <tr>
             <th />
             <th>
-              <Nav.typo.Element>Dokument</Nav.typo.Element>
+              <Nav.Typo.Element>Dokument</Nav.Typo.Element>
             </th>
             <th>
-              <Nav.typo.Element>Avsender/Mottaker</Nav.typo.Element>
+              <Nav.Typo.Element>Avsender/Mottaker</Nav.Typo.Element>
             </th>
             <th>
-              <Nav.typo.Element>Dato</Nav.typo.Element>
+              <Nav.Typo.Element>Dato</Nav.Typo.Element>
             </th>
             <th />
             <th />
@@ -138,10 +142,17 @@ export const VedleggListe = ({
       </table>
       {redigerer && (
         <>
-          <Mui.Knapp onClick={leggTilMarkerteVedleggHandler} ikon={Ikoner.AddOne}>
-            Legg til markerte vedlegg
+          <Mui.Knapp
+            noTextTransform
+            className="legg-til-markerte-vedlegg-knapp"
+            onClick={leggTilMarkerteVedleggHandler}
+            ikon={Ikoner.AddOne}
+          >
+            Lagre markerte vedlegg
           </Mui.Knapp>
-          <Mui.Knapp onClick={avbrytHandler}>Avbryt</Mui.Knapp>
+          <Mui.Knapp noTextTransform className="avbryt-knapp" onClick={avbrytHandler}>
+            Avbryt
+          </Mui.Knapp>
         </>
       )}
     </Nav.Row>
@@ -191,8 +202,13 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
         />
       )}
       {!redigerer && (
-        <Mui.Knapp onClick={() => toggleRedigerer()} ikon={Ikoner.AddOne}>
-          Legg til vedlegg
+        <Mui.Knapp
+          noTextTransform
+          className="legg-til-vedlegg-knapp"
+          onClick={() => toggleRedigerer()}
+          ikon={Ikoner.AddOne}
+        >
+          {valgteVedlegg.length === 0 ? "Legg til vedlegg" : "Legg til andre vedlegg"}
         </Mui.Knapp>
       )}
     </Nav.Row>

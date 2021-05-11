@@ -23,7 +23,9 @@ import { formOperations } from "../../../ducks/form";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { BOOLSK_STRING } from "../../../constants";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArbeidEttLandOvrigVedtakSchema from "./vurderingArbeidEttLandOvrigVedtakSchema";
 import {
   lagAvklartfakta,
   slettAvklartfakta,
@@ -47,9 +49,7 @@ const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, inform
   }, []);
 
   const oppdaterInformertMyndighetFakta = (land) => {
-    oppdaterData(
-      lagAvklartfakta(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, land, KV.Koder.SoknadslandFaktaTyper.SANN)
-    );
+    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, land, BOOLSK_STRING.SANN));
   };
 
   return (
@@ -244,7 +244,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
 
   return (
     <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArbeidEttLandOvrigVedtak">
-      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>{overskrift}</Nav.Typo.Undertittel>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
           <Skjema.Select label="Velg en lovvalgsbestemmelse" feltNavn="lovvalgsbestemmelse" disabled={!redigerbart}>
@@ -258,7 +258,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
       </Nav.Row>
       {redigerbart && (
         <Fragment>
-          <Nav.typo.Element className="undertittel">Søknadsperiode</Nav.typo.Element>
+          <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}
@@ -269,6 +269,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
       <Skjema.PeriodeForkorter
         className="periodeForkorter"
         redigerbart={redigerbart}
+        fomRedigerbar={false}
         checkboxClassName="forkortLovvalgsperiode"
         checkboxLabel="Lovvalget innvilges for en kortere periode"
         checkboxFeltnavn="forkortLovvalgsperiode"
@@ -286,8 +287,6 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            maxLength={500}
-            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>
@@ -457,7 +456,7 @@ const VurderingArbeidEttLandOvrigVedtakForm = reduxForm({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.arbeid_ett_land_ovrig_vedtak, {
+    lagYupToReduxformErrorMapper(VurderingArbeidEttLandOvrigVedtakSchema, {
       context: {
         soknadsperiode: props.soknadsperiode,
         behandlingstype: props.behandlingstype,

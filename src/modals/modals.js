@@ -8,20 +8,18 @@ import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { feiletresponsSelectors } from "../ducks/feiletrespons";
 
-import DialogboksOppfriskSak from "../felleskomponenter/dialogboks/dialogboksOppfrisk";
-import DialogboksHenlegg from "../felleskomponenter/dialogboks/dialogboksHenlegg";
-import DialogboksAvsluttSakSomBortfalt from "../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt";
-import DialogboksAvslagSoknad from "../felleskomponenter/dialogboks/dialogboksAvslagSoknad";
-import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/dialogboksRevurderFagsak";
-import DialogboksValidering from "../felleskomponenter/dialogboks/dialogboksValidering";
-import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/dialogboksEndreBehandlingstema";
+import DialogboksOppfriskSak from "../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
+import DialogboksHenlegg from "../felleskomponenter/dialogboks/henlegg/dialogboksHenlegg";
+import DialogboksAvsluttSakSomBortfalt from "../felleskomponenter/dialogboks/avsluttSakSomBortfalt/dialogboksAvsluttSakSomBortfalt";
+import DialogboksAvslagSoknad from "../felleskomponenter/dialogboks/avslagSoknad/dialogboksAvslagSoknad";
+import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/revurderFagsak/dialogboksRevurderFagsak";
+import DialogboksValidering from "../felleskomponenter/dialogboks/validering";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
 const Modals = ({
   skjulOppfriskModalOgNavigerTilForside,
   visOppfriskDialog,
-  visOppfriskDialogOgFortsett,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   skjulOppfriskModal,
   lukkOppfriskModal,
@@ -40,75 +38,52 @@ const Modals = ({
   venterPaRevurderFagsak,
   visValideringModal,
   skjulValideringModalDialogHandle,
-  visEndreBehandlingstemaDialog,
-  skjulEndreBehandlingstemaModalDialogHandle,
   valideringerFeilkoder,
   valideringerFeilmeldinger,
   behandlingOppfriskes,
   annenBehandlingOppfriskes,
-}) => {
-  const lukkOppfriskModalOgFortsett = () => {
-    visOppfriskDialogOgFortsett();
-    lukkOppfriskModal();
-  };
-
-  return (
-    <Fragment>
-      {visOppfriskDialog && !visOppfriskDialogOgFortsett && (
-        <DialogboksOppfriskSak
-          oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
-          avbryt={skjulOppfriskModal}
-          lukk={lukkOppfriskModal}
-          tilForsiden={skjulOppfriskModalOgNavigerTilForside}
-          behandlingOppfriskes={behandlingOppfriskes}
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-        />
-      )}
-      {visOppfriskDialog && visOppfriskDialogOgFortsett && (
-        <DialogboksOppfriskSak
-          oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
-          avbryt={skjulOppfriskModal}
-          lukk={lukkOppfriskModalOgFortsett}
-          tilForsiden={skjulOppfriskModalOgNavigerTilForside}
-          behandlingOppfriskes
-          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-        />
-      )}
-      {visHenleggDialog && <DialogboksHenlegg avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
-      {visAvslagSoknadDialog && (
-        <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
-      )}
-      {visAvsluttSakSomBortfaltDialog && (
-        <DialogboksAvsluttSakSomBortfalt
-          avbryt={skjulAvsluttSakSomBortfaltDialogHandle}
-          avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-        />
-      )}
-      {visRevurderFagsak && (
-        <DialogboksRevurderFagsak
-          avbryt={skjulRevurderFagsakDialogHandle}
-          bekreft={revurderFagsak}
-          spinner={venterPaRevurderFagsak}
-        />
-      )}
-      {visValideringModal && (
-        <DialogboksValidering
-          avbryt={skjulValideringModalDialogHandle}
-          valideringer={valideringerFeilkoder}
-          feilmeldinger={valideringerFeilmeldinger}
-        />
-      )}
-      {visEndreBehandlingstemaDialog && (
-        <DialogboksEndreBehandlingstema avbryt={skjulEndreBehandlingstemaModalDialogHandle} />
-      )}
-    </Fragment>
-  );
-};
+}) => (
+  <Fragment>
+    {visOppfriskDialog && (
+      <DialogboksOppfriskSak
+        oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+        avbryt={skjulOppfriskModal}
+        lukk={lukkOppfriskModal}
+        tilForsiden={skjulOppfriskModalOgNavigerTilForside}
+        behandlingOppfriskes={behandlingOppfriskes}
+        annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+      />
+    )}
+    {visHenleggDialog && <DialogboksHenlegg avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
+    {visAvslagSoknadDialog && (
+      <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
+    )}
+    {visAvsluttSakSomBortfaltDialog && (
+      <DialogboksAvsluttSakSomBortfalt
+        avbryt={skjulAvsluttSakSomBortfaltDialogHandle}
+        avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+      />
+    )}
+    {visRevurderFagsak && (
+      <DialogboksRevurderFagsak
+        avbryt={skjulRevurderFagsakDialogHandle}
+        bekreft={revurderFagsak}
+        spinner={venterPaRevurderFagsak}
+      />
+    )}
+    {visValideringModal && (
+      <DialogboksValidering
+        avbryt={skjulValideringModalDialogHandle}
+        valideringer={valideringerFeilkoder}
+        feilmeldinger={valideringerFeilmeldinger}
+      />
+    )}
+  </Fragment>
+);
 
 Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
   visOppfriskDialog: PT.bool.isRequired,
-  visOppfriskDialogOgFortsett: PT.func,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   skjulOppfriskModal: PT.func.isRequired,
   lukkOppfriskModal: PT.func.isRequired,
@@ -127,8 +102,6 @@ Modals.propTypes = {
   venterPaRevurderFagsak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
-  visEndreBehandlingstemaDialog: PT.bool.isRequired,
-  skjulEndreBehandlingstemaModalDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
   valideringerFeilkoder: PT.arrayOf(
@@ -148,12 +121,10 @@ Modals.propTypes = {
 Modals.defaultProps = {
   valideringerFeilkoder: [],
   valideringerFeilmeldinger: [],
-  visOppfriskDialogOgFortsett: undefined,
 };
 
 const mapStateToProps = (state) => ({
   visOppfriskDialog: modalerSelectors.ErOppfriskSynligSelector(state),
-  visOppfriskDialogOgFortsett: modalerSelectors.ErOppfriskSynligOgFortsettSattSelector(state),
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
@@ -161,7 +132,6 @@ const mapStateToProps = (state) => ({
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
   valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
   valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
-  visEndreBehandlingstemaDialog: modalerSelectors.ErEndreBehandlingstemaSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -173,7 +143,6 @@ const mapDispatchToProps = (dispatch) => ({
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
-  skjulEndreBehandlingstemaModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingstema()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);

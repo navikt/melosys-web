@@ -31,14 +31,14 @@ export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPerio
         <Nav.Column xs="6">
           <Nav.Row>
             <Nav.Column xs="6">
-              <Nav.typo.Normaltekst>Lovvalgsland:</Nav.typo.Normaltekst>
-              <Nav.typo.Normaltekst>Status:</Nav.typo.Normaltekst>
-              <Nav.typo.Normaltekst>Grunnlagshjemmel:</Nav.typo.Normaltekst>
+              <Nav.Typo.Normaltekst>Lovvalgsland:</Nav.Typo.Normaltekst>
+              <Nav.Typo.Normaltekst>Status:</Nav.Typo.Normaltekst>
+              <Nav.Typo.Normaltekst>Grunnlagshjemmel:</Nav.Typo.Normaltekst>
             </Nav.Column>
             <Nav.Column xs="6">
-              <Nav.typo.Element>{KV.objektTilTerm(land)}</Nav.typo.Element>
-              <Nav.typo.Element>{KV.objektTilTerm(status)}</Nav.typo.Element>
-              <Nav.typo.Element>{KV.objektTilTerm(grunnlagstype)}</Nav.typo.Element>
+              <Nav.Typo.Element>{KV.objektTilTerm(land)}</Nav.Typo.Element>
+              <Nav.Typo.Element>{KV.objektTilTerm(status)}</Nav.Typo.Element>
+              <Nav.Typo.Element>{KV.objektTilTerm(grunnlagstype)}</Nav.Typo.Element>
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>
@@ -57,7 +57,7 @@ export function MedlemskapGruppe(props: MedlemskapGruppeProps) {
 
   return (
     <div>
-      <Nav.typo.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="3">Fra og med</Nav.Column>
         <Nav.Column xs="3">Til og med</Nav.Column>

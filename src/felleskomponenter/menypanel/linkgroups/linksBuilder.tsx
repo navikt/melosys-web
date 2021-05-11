@@ -9,9 +9,11 @@ import {
   Barnetrygd,
   Fullmektig,
   Medlemskap,
+  Utenlandsoppdraget,
   Periode,
   Person,
   Familieforhold,
+  LonnOgGodtgjorelser,
 } from "../menypunkter";
 
 interface ILinksBuilder {
@@ -23,8 +25,8 @@ interface ILinksBuilder {
   addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
   addPeriode: () => ILinksBuilder;
-  // addUtenlandsoppdraget: () => ILinksBuilder,
-  // addLonnOgGodtgjorelser: () => ILinksBuilder,
+  addUtenlandsoppdraget: () => ILinksBuilder;
+  addLonnOgGodtgjorelser: () => ILinksBuilder;
   addArbeidssteder: () => ILinksBuilder;
   // addOmVirksomhetenINorge: () => ILinksBuilder,
   // addOvrigOmArbeidstaker: () => ILinksBuilder,
@@ -132,10 +134,26 @@ class LinksBuilder implements ILinksBuilder {
 
   public addPeriode() {
     this.links.push({
-      label: "Periode",
+      label: "Periode og land",
       active: false,
       content: (
         <Periode
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
+    });
+    return this;
+  }
+
+  public addUtenlandsoppdraget() {
+    this.links.push({
+      label: "Utenlandsoppdraget",
+      active: false,
+      content: (
+        <Utenlandsoppdraget
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           lagreSoknadOgOppfriskSaksopplysninger={this.contentProps.lagreSoknadOgOppfriskSaksopplysninger}
@@ -152,6 +170,21 @@ class LinksBuilder implements ILinksBuilder {
       active: false,
       content: (
         <Arbeidssteder
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
+    });
+    return this;
+  }
+
+  public addLonnOgGodtgjorelser() {
+    this.links.push({
+      label: "Lønn og godtgjørelser",
+      active: false,
+      content: (
+        <LonnOgGodtgjorelser
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}

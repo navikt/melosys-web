@@ -8,7 +8,7 @@ import "./begrunnelser.css";
 
 const Begrunnelser = ({ label, valgteBegrunnelser, muligeBegrunnelser, fritekst }) => (
   <div className="begrunnelser">
-    <Nav.typo.Element className="begrunnelseTittel">{label}</Nav.typo.Element>
+    <Nav.Typo.Element className="begrunnelseTittel">{label}</Nav.Typo.Element>
     {valgteBegrunnelser.map((begrunnelse) => (
       <div className="begrunnelse" key={begrunnelse}>
         {KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}

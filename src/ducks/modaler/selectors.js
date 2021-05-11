@@ -26,9 +26,6 @@ export const ErHenleggSynligSelector = createSelector(HenleggSelector, (henlegg)
 export const OppfriskSelector = createSelector(ModalerSelector, (modaler) => modaler.oppfrisk);
 
 export const ErOppfriskSynligSelector = createSelector(OppfriskSelector, (oppfrisk) => oppfrisk.synlig);
-export const ErOppfriskSynligOgFortsettSattSelector = createSelector(OppfriskSelector, (oppfrisk) =>
-  oppfrisk.fortsett ? oppfrisk.fortsett : null
-);
 
 export const BehandlingUnderOppfriskningSelector = createSelector(
   OppfriskSelector,
@@ -44,10 +41,4 @@ export const RevurderFagsakSelector = createSelector(ModalerSelector, (modaler) 
 export const ErRevurderFagsakSynligSelector = createSelector(
   RevurderFagsakSelector,
   (revurderFagsak) => revurderFagsak.synlig
-);
-
-export const EndreBehandlingstemaSelector = createSelector(ModalerSelector, (modaler) => modaler.endreBehandlingstema);
-export const ErEndreBehandlingstemaSynligSelector = createSelector(
-  EndreBehandlingstemaSelector,
-  (endreBehandlingstema) => endreBehandlingstema.synlig
 );

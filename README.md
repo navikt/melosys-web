@@ -56,17 +56,8 @@ fra [GitHub developer settings](https://github.com/settings/tokens), og sette de
 
 (Det er også mulig å sette innholdet av tokenet rett i `~/.npmrc`.)
 
-### Utvikling mot backend i dev-fss
+I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kjøre `npm login`:
 
-Installer [kubefwd](https://github.com/txn2/kubefwd) eller [Kube Forwarder](https://github.com/pixel-point/kube-forwarder). Start applikasjonen med forwarding mot
-ønsket miljø, f.eks. `kubefwd` mot `t8`:
-
-```shell script
-sudo -E kubefwd svc -n t8 -l app=melosys
 ```
-
-Legg inn OIDC-token fra [IDA](https://ida.adeo.no) i `scripts/patchkubefwd.js`, og start frontend med forwarding mot backend i miljø:
-
-```shell script
-npm run start:kubefwd
+npm login --scope=@OWNER --registry=https://npm.pkg.github.com
 ```

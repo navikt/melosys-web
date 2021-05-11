@@ -216,17 +216,17 @@ export class VurderingEndrePeriode extends React.Component {
 
     return (
       <div className="vurderingEndrePeriode">
-        <Nav.typo.Undertittel>Endre lovvalgsperiode</Nav.typo.Undertittel>
-        <Nav.typo.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.typo.Element>
+        <Nav.Typo.Undertittel>Endre lovvalgsperiode</Nav.Typo.Undertittel>
+        <Nav.Typo.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Nav.typo.Normaltekst>Fra {formattertOpprinneligFom}</Nav.typo.Normaltekst>
+            <Nav.Typo.Normaltekst>Fra {formattertOpprinneligFom}</Nav.Typo.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="3">
-            <Nav.typo.Normaltekst>Til {formattertOpprinneligTom}</Nav.typo.Normaltekst>
+            <Nav.Typo.Normaltekst>Til {formattertOpprinneligTom}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
-        <Nav.typo.Element className="mindreTittel">Ny lovvalgsperiode</Nav.typo.Element>
+        <Nav.Typo.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">
             <Nav.Input bredde="fullbredde" label="Startdato" value={formattertOpprinneligFom} disabled />

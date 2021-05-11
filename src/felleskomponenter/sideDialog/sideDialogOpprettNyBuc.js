@@ -7,7 +7,8 @@ import MKV from "../../melosyskodeverk";
 import * as Nav from "../../utils/navFrontend";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../yup";
+import { lagYupToReduxformErrorMapper } from "../../yup";
+import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
 import { kodeTilObjekt } from "../../kodeverk";
 import VedleggVelger from "../vedleggvelger";
 import MultiSelect from "../multiSelect";
@@ -87,14 +88,14 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
   };
 
   const erValidert = () =>
-    YupSkjemaer.sed.isValidSync({
+    sideDialogOpprettNyBucSchema.isValidSync({
       buc: valgtBuc,
       land: valgteLand,
       mottakerinstitusjoner: valgteMottakerinstitusjoner,
     });
 
   const valider = ({ buc = valgtBuc, land = valgteLand, mottakerinstitusjoner = valgteMottakerinstitusjoner }) =>
-    setFeilmeldinger(lagYupToReduxformErrorMapper(YupSkjemaer.sed)({ buc, land, mottakerinstitusjoner }));
+    setFeilmeldinger(lagYupToReduxformErrorMapper(sideDialogOpprettNyBucSchema)({ buc, land, mottakerinstitusjoner }));
 
   const sendSed = async () => {
     if (erValidert()) {
@@ -222,6 +223,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
             feil={feil("land")}
             values={valgteLand}
+            className="multiselect"
           />
           <MultiSelect
             label="Mottakerinstitusjoner"
@@ -232,8 +234,9 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             }))}
             feil={feil("mottakerinstitusjoner")}
             values={valgteMottakerinstitusjoner}
+            className="multiselect"
           />
-          <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
+          <Nav.Typo.Undertittel>Vedlegg</Nav.Typo.Undertittel>
           <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
             Opprett ny BUC

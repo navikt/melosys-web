@@ -13,6 +13,7 @@ const Behandlingsmeny = ({
   apneTidligereBehandlinger,
   visAvsluttSakSomBortfaltDialogHandle,
   visHenleggSak,
+  visAvslagManglendeOpplysninger,
   visAvslagSoknadDialogHandle,
   oppfriskSaksopplysningerHandle,
   visOppfriskSaksopplysninger,
@@ -46,7 +47,7 @@ const Behandlingsmeny = ({
           Avslutt sak som bortfalt
         </Nav.Knapp>
       )}
-      {redigerbart && (
+      {redigerbart && visAvslagManglendeOpplysninger && (
         <Nav.Knapp mini className="innhold__element" onClick={visAvslagSoknadDialogHandle}>
           Avslå søknad pga. manglende opplysninger
         </Nav.Knapp>
@@ -67,6 +68,7 @@ Behandlingsmeny.propTypes = {
   apneTidligereBehandlinger: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   visHenleggSak: PT.bool.isRequired,
+  visAvslagManglendeOpplysninger: PT.bool.isRequired,
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   visOppfriskSaksopplysninger: PT.bool,
 };

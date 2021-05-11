@@ -1,0 +1,15 @@
+import { object, string, bool } from "yup";
+import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../kodeverk/feilmeldinger";
+
+const OPPGI_EN_BEGRUNNELSE = { melding: "Oppgi en begrunnelse" };
+const VELG_OM_ANMODNING_OM_MER_INFORMASJON_VIL_BLI_SENDT = {
+  melding: "Velg om anmodning om mer informasjon vil bli sendt",
+};
+
+const avslaa_utpeking = object().shape({
+  begrunnelseUtenlandskMyndighet: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN).required(OPPGI_EN_BEGRUNNELSE),
+  vilSendeAnmodningOmMerInformasjon: bool().required(VELG_OM_ANMODNING_OM_MER_INFORMASJON_VIL_BLI_SENDT),
+  fritekst: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+});
+
+export default avslaa_utpeking;

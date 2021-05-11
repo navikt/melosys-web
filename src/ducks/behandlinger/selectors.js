@@ -12,7 +12,7 @@ import MKV from "../../melosyskodeverk";
 import { datoDiff } from "../../utils/dato";
 import * as KV from "../../kodeverk";
 import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors";
-import { anmodningsperioderSelectors } from "../anmodningsperioder";
+import * as Utils from "../../utils";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
 
 /* eslint import/prefer-default-export:"off" */
@@ -36,11 +36,6 @@ export const BehandlingstemaKodeSelector = createSelector(OppsummeringSelector, 
 );
 export const BehandlingsstatusKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
   oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : ""
-);
-
-export const ErArtikkel16AnmodningSendtSelector = createSelector(
-  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
-  (anmodningsperioderSendtUtland) => anmodningsperioderSendtUtland
 );
 
 export const SaksopplysningerSelector = createSelector(
@@ -304,7 +299,7 @@ export const AlleVirksomheterSelector = createSelector(
     ekstraArbeidsgivere.forEach((ekstraArbeidsgiver) => {
       virksomhetsListe.push({ kode: ekstraArbeidsgiver.orgnr, term: ekstraArbeidsgiver.navn });
     });
-    return virksomhetsListe;
+    return Utils._uniqBy(virksomhetsListe, ({ kode }) => kode);
   }
 );
 

@@ -36,3 +36,7 @@ export function opprettMedlemskapsperiodeFraBestemmelse() {
     dispatch(opprettMedlemskapsperiode(bid, bestemmelse));
   };
 }
+
+export function resetMedlemskapsperioder() {
+  return Actions.resetMedlemskapsperioder();
+}

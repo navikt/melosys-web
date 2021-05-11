@@ -51,11 +51,11 @@ const FullmektigRedigeringUtfort = ({
       "Ingen kontaktopplysninger oppgitt"
     ) : (
       <>
-        <Nav.typo.Element className="kontaktopplysninger__label">Kontaktopplysninger</Nav.typo.Element>
+        <Nav.Typo.Element className="kontaktopplysninger__label">Kontaktopplysninger</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Nav.typo.Normaltekst>Kontaktperson:</Nav.typo.Normaltekst>
-            <Nav.typo.Element>{kontaktopplysninger.kontaktnavn || "Ikke oppgitt"}</Nav.typo.Element>
+            <Nav.Typo.Normaltekst>Kontaktperson:</Nav.Typo.Normaltekst>
+            <Nav.Typo.Element>{kontaktopplysninger.kontaktnavn || "Ikke oppgitt"}</Nav.Typo.Element>
           </Nav.Column>
         </Nav.Row>
         {!Utils._isEmpty(kontaktopplysningerOrg) ? (
@@ -67,23 +67,23 @@ const FullmektigRedigeringUtfort = ({
                     <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false} />
                   </Nav.Column>
                   <Nav.Column xs="5">
-                    <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
-                    <Nav.typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.typo.Element>
+                    <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
+                    <Nav.Typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.Typo.Element>
                   </Nav.Column>
                 </>
               )}
             </Nav.Row>
             <Nav.Row className="brevinfo">
               <Nav.Column xs="12">
-                <Nav.typo.EtikettLiten>*Brev til arbeidsgiver sendes til denne adressen</Nav.typo.EtikettLiten>
+                <Nav.Typo.EtikettLiten>*Brev sendes til denne adressen</Nav.Typo.EtikettLiten>
               </Nav.Column>
             </Nav.Row>
           </>
         ) : (
           <Nav.Row>
             <Nav.Column xs="3">
-              <Nav.typo.Normaltekst>Organisasjonsnummer</Nav.typo.Normaltekst>
-              <Nav.typo.Element>{kontaktopplysningerOrg.orgnr || "Ikke oppgitt"}</Nav.typo.Element>
+              <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
+              <Nav.Typo.Element>{kontaktopplysningerOrg.orgnr || "Ikke oppgitt"}</Nav.Typo.Element>
             </Nav.Column>
           </Nav.Row>
         )}
@@ -97,17 +97,17 @@ const FullmektigRedigeringUtfort = ({
           {org && <OrganisasjonsAdresse organisasjon={org} visNavn={false} visTittel={false} />}
         </Nav.Column>
         <Nav.Column xs="4">
-          <Nav.typo.Normaltekst style={{ marginTop: "0.5em" }}>Organisasjonsnummer:</Nav.typo.Normaltekst>
-          <Nav.typo.Element>{org.orgnr}</Nav.typo.Element>
+          <Nav.Typo.Normaltekst style={{ marginTop: "0.5em" }}>Organisasjonsnummer:</Nav.Typo.Normaltekst>
+          <Nav.Typo.Element>{org.orgnr}</Nav.Typo.Element>
         </Nav.Column>
         <Nav.Column xs="5">
-          <Nav.typo.Element style={{ marginTop: "0.5em" }}>Hvem er dette fullmektig for?</Nav.typo.Element>
+          <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Hvem er dette fullmektig for?</Nav.Typo.Element>
           {representererKode && (
             <span>
               <Ikoner.GreenCheckmark className="checkmark" />
-              <Nav.typo.Normaltekst className="representerer__tekst">
+              <Nav.Typo.Normaltekst className="representerer__tekst">
                 {hentRepresentererTekst(representererKode)}
-              </Nav.typo.Normaltekst>
+              </Nav.Typo.Normaltekst>
             </span>
           )}
         </Nav.Column>

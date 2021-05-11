@@ -22,8 +22,11 @@ const {
   ARBEID_I_UTLANDET,
 } = MKV.Koder.behandlinger.behandlingstema;
 
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
+
 export interface LinkGroupsFactoryConfig {
   behandlingstema: string;
+  behandlingsgrunnlagtype: string;
   contentProps: ContentProps;
 }
 
@@ -35,7 +38,7 @@ class LinkGroupsFactory {
   }
 
   createLinkGroups(): LinkGroup[] {
-    const { behandlingstema, contentProps } = this.config;
+    const { behandlingstema, contentProps, behandlingsgrunnlagtype } = this.config;
 
     switch (behandlingstema) {
       case UTSENDT_ARBEIDSTAKER:
@@ -44,19 +47,19 @@ class LinkGroupsFactory {
       case IKKE_YRKESAKTIV:
       case ARBEID_ETT_LAND_ØVRIG:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
+        const fraSoknad = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
+        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addLonnOgGodtgjorelser();
+        fraSoknad.addFullmektig();
+        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addUtenlandsoppdraget();
+        else fraSoknad.addPeriode();
+        fraSoknad.addArbeidssteder();
+
         return new LinkgroupsBuilder()
           .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
             new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
           )
-          .addFraSoknad(
-            new LinksBuilder(contentProps)
-              .addArbeidsgiverEllerVirksomhet()
-              .addFullmektig()
-              .addPeriode()
-              .addArbeidssteder()
-              .build()
-          )
+          .addFraSoknad(fraSoknad.build())
           .build();
       }
       case REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:

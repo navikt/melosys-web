@@ -2,6 +2,7 @@ import React from "react";
 import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
+import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 import EnkeltLand from "./enkeltLand";
 import MultiLand from "./multiLand";
@@ -21,13 +22,13 @@ const LandVelger = (props) => {
   return (
     <div>
       {multiLand ? (
-        <MultiLand {...props} landkoder={MKV.KTObjects.landkoder} dataListID={dataListID} />
+        <MultiLand {...props} landkoder={props.landkoder} dataListID={dataListID} />
       ) : (
-        <EnkeltLand {...props} landkoder={MKV.KTObjects.landkoder} dataListID={dataListID} />
+        <EnkeltLand {...props} landkoder={props.landkoder} dataListID={dataListID} />
       )}
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
-          {MKV.KTObjects.landkoder.map((item) => (
+          {props.landkoder.map((item) => (
             <option key={item.kode} value={Utils.land.landTekstFormat(item)} />
           ))}
         </datalist>
@@ -40,9 +41,10 @@ LandVelger.propTypes = {
   disabled: PT.bool,
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
-  label: PT.string,
+  label: PT.node,
   bredde: PT.string,
   placeholder: PT.string,
+  landkoder: PT.arrayOf(MPT.Kodeverk),
 };
 
 LandVelger.defaultProps = {
@@ -51,6 +53,7 @@ LandVelger.defaultProps = {
   label: undefined,
   bredde: "XL",
   placeholder: undefined,
+  landkoder: MKV.KTObjects.landkoder,
 };
 
 export default LandVelger;

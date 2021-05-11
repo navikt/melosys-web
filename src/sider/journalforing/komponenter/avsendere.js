@@ -113,10 +113,10 @@ export const AvsenderUtenlanskTrygdemyndighet = ({ utenlandskTrygdemyndighetLand
     <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
     {utenlandskTrygdemyndighetLandkode && (
       <Fragment>
-        <Nav.typo.Element>Avsender</Nav.typo.Element>
-        <Nav.typo.Normaltekst>
+        <Nav.Typo.Element>Avsender</Nav.Typo.Element>
+        <Nav.Typo.Normaltekst>
           Trygdemyndighet i {KV.kodeTilTerm(utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}
-        </Nav.typo.Normaltekst>
+        </Nav.Typo.Normaltekst>
       </Fragment>
     )}
   </div>

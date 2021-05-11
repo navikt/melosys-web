@@ -5,15 +5,22 @@ import * as Utils from "../../../../utils";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 import VurderingArtikkel16MottaSvar from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16MottaSvar";
+import vurderingArtikkel16MottaSvarSchema from "../../../../felleskomponenter/stegvelger/stegKomponenter//vurderingArtikkel16MottaSvarSchema";
 import { hentFakta } from "../../../../regler/avklartefakta";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 class Artikkel16MottaSvar extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const harAvklaring = Artikkel16MottaSvar.finnAvklaring(
+      propsLight.anmodningsperiodesvarForm,
+      propsLight.soknadsperiode
+    );
+
     this.kriterier = [
       {
-        exec: () => Artikkel16MottaSvar.finnAvklaring(propsLight.anmodningsperiodesvarForm),
+        exec: () => harAvklaring,
         nesteSteg: STEG.ARTIKKEL_16_VEDTAK,
       },
     ];
@@ -28,7 +35,7 @@ class Artikkel16MottaSvar extends Steg {
         MKV.Koder.avklartefaktatyper.SVAR_ANMODNING_UNNTAK,
         _propsLight.avklartefakta
       ),
-      harAvklaring: Artikkel16MottaSvar.finnAvklaring(_propsLight.anmodningsperiodesvarForm),
+      harAvklaring,
     });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -38,14 +45,15 @@ class Artikkel16MottaSvar extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static finnAvklaring = (anmodningsperiodesvar) => {
+  static finnAvklaring = (anmodningsperiodesvar, soknadsperiode) => {
     const { endretPeriode, anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
     if (!anmodningsperiodeSvarType) return false;
 
-    const ugyldigeFelter = lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_motta_svar, {
+    const ugyldigeFelter = lagYupToReduxformErrorMapper(vurderingArtikkel16MottaSvarSchema, {
       context: {
         anmodningsperiodeSvarType,
+        soknadsperiode,
       },
     })({ endretPeriode });
     if (!Utils._isEmpty(ugyldigeFelter)) return false;

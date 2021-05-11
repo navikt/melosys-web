@@ -9,7 +9,7 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/sideOppsummering";
+import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger from "../../../felleskomponenter/stegvelger";
 import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
@@ -33,6 +33,8 @@ import MKV from "../../../melosyskodeverk";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./vurderutpeking.css";
+
+const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -123,6 +125,7 @@ const Vurderutpeking = ({
   dokumentOversikt,
   dokumenter,
   vurderUtpekingFormValues,
+  behandlingsstatus,
 }) => {
   const {
     params: { snr: saksnummer },
@@ -156,6 +159,9 @@ const Vurderutpeking = ({
   const lovvalgslandKTOBject = visLovvalgsland
     ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder)
     : undefined;
+
+  const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
+  const visRevurderFagsak = behandlingErAvsluttet;
 
   return (
     <div className="vurderutpeking">
@@ -209,7 +215,7 @@ const Vurderutpeking = ({
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                  visRevurderFagsak
+                  visRevurderFagsak={visRevurderFagsak}
                 />
               )}
               renderBehandlingsstatus={() => (
@@ -242,6 +248,7 @@ Vurderutpeking.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
+  behandlingsstatus: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
@@ -287,6 +294,7 @@ Vurderutpeking.defaultProps = {
 
 const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),

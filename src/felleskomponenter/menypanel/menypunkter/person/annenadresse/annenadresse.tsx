@@ -10,7 +10,7 @@ import * as Mui from "../../../../ui";
 import * as Nav from "../../../../../utils/navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 
-import EditerbartElement, { visAlltidBinSymbolsynlighetMap } from "../../editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
 import UtfyltAdresse from "./utfyltadresse";
 import Felter from "./felter";
 
@@ -61,16 +61,15 @@ const AnnenAdresse = ({
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
-        hentNyStatusVedHarData={false}
-        symbolsynlighetMap={oppgittAdresseHarVerdier ? visAlltidBinSymbolsynlighetMap : undefined}
+        symbolsynlighet={oppgittAdresseHarVerdier ? visAlltidBinSymbolsynlighet : undefined}
         redigererRender={() => <Felter redigerbart={redigerbart} />}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
         ingenDataRender={(apneRedigering) => (
           <>
-            <Nav.typo.Normaltekst style={{ marginBottom: "1em" }}>
+            <Nav.Typo.Normaltekst style={{ marginBottom: "1em" }}>
               Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes adresse
               fra register.
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
             {redigerbart && (
               <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
                 Legg til adresse

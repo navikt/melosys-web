@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { Familiemedlem } from "Domene";
 import { RootState } from "AppTypes";
 
 import * as Api from "../../../../services/api";
@@ -20,7 +19,7 @@ import KopierbarTekst from "../kopierbarTekst";
 import "./familiemedlemmer.css";
 
 interface FamiliemedlemmerEnkeltProps {
-  familiemedlem: Familiemedlem;
+  familiemedlem: Api.Types.Familiemedlem;
   erBarn: boolean;
 }
 
@@ -35,7 +34,8 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
     fnrAnnenForelder,
   } = familiemedlem;
 
-  const renderBarnEtikett = () => (alder < 18 ? <Etiketter.Under18Aar className="ikon__under18Aar" /> : null);
+  const renderBarnEtikett = () =>
+    alder !== null && alder < 18 ? <Etiketter.Under18Aar className="ikon__under18Aar" /> : null;
 
   return (
     <div aria-label="Enkelt familiemedlem" className="familiemedlemmer__enkelt">
@@ -57,7 +57,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
 }
 
 interface FamiliemedlemmerGruppeProps {
-  familiemedlemmer: Familiemedlem[];
+  familiemedlemmer: Api.Types.Familiemedlem[];
   ingenFamiliemedlemmerTekst: string;
   overskrift: string;
   kolonneHeadinger: string[];
@@ -69,7 +69,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
 
   return (
     <div>
-      <Nav.typo.Undertittel className="familiemedlemmer__gruppeoverskrift">{overskrift}</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="familiemedlemmer__gruppeoverskrift">{overskrift}</Nav.Typo.Undertittel>
       {familiemedlemmer.length === 0 && ingenFamiliemedlemmerTekst}
       {familiemedlemmer.length !== 0 && (
         <Nav.Row className="header">
@@ -85,7 +85,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
           elements={familiemedlemmer}
           renderElement={(familiemedlem) => <FamiliemedlemmerEnkelt familiemedlem={familiemedlem} erBarn={erBarn} />}
           idFromElement={(familiemedlem) => familiemedlem.fnr}
-          amountOfItemsCollapsed={2}
+          amountOfItemsCollapsed={familiemedlemmer.length}
           btnTextCollapsed="Vis flere"
           btnTextExpanded="Vis færre"
           chevron
@@ -132,9 +132,9 @@ const Familiemedlemmer = ({
   };
 
   const barn = familiemedlemmer.filter(
-    (familiemedlem: Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
+    (familiemedlem: Api.Types.Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
   );
-  const ektefellePartnerSamboer = familiemedlemmer.filter((familiemedlem: Familiemedlem) =>
+  const ektefellePartnerSamboer = familiemedlemmer.filter((familiemedlem: Api.Types.Familiemedlem) =>
     [KV.Koder.Relasjonsrolle.EKTE, KV.Koder.Relasjonsrolle.REPA, KV.Koder.Relasjonsrolle.SAMB].includes(
       familiemedlem.relasjonstype.kode
     )

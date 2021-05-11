@@ -162,7 +162,7 @@ EnkeltLand.propTypes = {
   dataListID: PT.string.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   meta: PT.object.isRequired,
-  label: PT.string,
+  label: PT.node,
   feil: PT.string,
   input: PT.object.isRequired,
   disabled: PT.bool,

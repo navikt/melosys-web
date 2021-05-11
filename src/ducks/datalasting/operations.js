@@ -1,4 +1,3 @@
-import * as Utils from "../../utils";
 import MKV from "../../melosyskodeverk";
 
 import { avklartefaktaOperations } from "../avklartefakta";
@@ -9,62 +8,52 @@ import { behandlingsgrunnlagOperations } from "../behandlingsgrunnlag";
 import { lovvalgsperioderOperations } from "../lovvalgsperioder";
 import { vilkarOperations } from "../vilkar";
 import { behandlingsperioderOperations } from "../behandlingsperioder";
-import { anmodningsperioderOperations } from "../anmodningsperioder";
+import { anmodningsperioderOperations, anmodningsperioderSelectors } from "../anmodningsperioder";
 import { anmodningsperiodesvarOperations } from "../anmodningsperiodesvar";
 import { utpekingsperioderOperations } from "../utpekingsperioder";
 import { dokumenterOperations } from "../dokumenter";
+import { oppsummertfaktaOperations } from "../oppsummertfakta";
+import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
-  try {
-    if (sakstype === MKV.Koder.sakstyper.FTRL) {
-      dispatch(fagsakOperations.hent(saksnummer));
-      dispatch(behandlingerOperations.hentBehandling(behandlingID));
-      dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
-      dispatch(behandlingsresultatOperations.hent(behandlingID));
-      dispatch(vilkarOperations.hent(behandlingID));
-      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
-    } else {
-      dispatch(anmodningsperioderOperations.hent(behandlingID));
-      dispatch(fagsakOperations.hent(saksnummer));
-      dispatch(behandlingerOperations.hentBehandling(behandlingID));
-      dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
-      dispatch(behandlingsresultatOperations.hent(behandlingID));
-      dispatch(avklartefaktaOperations.hent(behandlingID));
-      dispatch(vilkarOperations.hent(behandlingID));
-      dispatch(lovvalgsperioderOperations.hent(behandlingID));
-      dispatch(utpekingsperioderOperations.hent(behandlingID));
-      dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
-      dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
-    }
-  } catch (e) {
-    Utils.logger.error(e);
+  dispatch(fagsakOperations.hent(saksnummer));
+  dispatch(vilkarOperations.hent(behandlingID));
+  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
+  dispatch(behandlingerOperations.hentBehandling(behandlingID));
+  dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
+  dispatch(behandlingsresultatOperations.hent(behandlingID));
+
+  if (sakstype === MKV.Koder.sakstyper.FTRL) {
+    dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
+    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+  } else {
+    dispatch(anmodningsperioderOperations.hent(behandlingID));
+    dispatch(avklartefaktaOperations.hent(behandlingID));
+    dispatch(lovvalgsperioderOperations.hent(behandlingID));
+    dispatch(utpekingsperioderOperations.hent(behandlingID));
+    dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
   }
 };
 
 export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) => (dispatch) => {
-  try {
-    dispatch(fagsakOperations.hent(saksnummer));
-    dispatch(behandlingerOperations.hentBehandling(behandlingID));
-    dispatch(behandlingsresultatOperations.hent(behandlingID));
-    dispatch(avklartefaktaOperations.hent(behandlingID));
-    dispatch(vilkarOperations.hent(behandlingID));
-    dispatch(lovvalgsperioderOperations.hent(behandlingID));
-    dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
-    dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
-  } catch (e) {
-    Utils.logger.error(e);
-  }
+  dispatch(fagsakOperations.hent(saksnummer));
+  dispatch(behandlingerOperations.hentBehandling(behandlingID));
+  dispatch(behandlingsresultatOperations.hent(behandlingID));
+  dispatch(avklartefaktaOperations.hent(behandlingID));
+  dispatch(vilkarOperations.hent(behandlingID));
+  dispatch(lovvalgsperioderOperations.hent(behandlingID));
+  dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
+  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
 };
 
-export const lastInnSaksopplysningerBehandleMottattAOU = (behandlingID, anmodningsperiodeID) => (dispatch) => {
-  try {
-    dispatch(behandlingerOperations.hentBehandling(behandlingID));
-    dispatch(behandlingsresultatOperations.hent(behandlingID));
-    dispatch(anmodningsperioderOperations.hent(behandlingID));
+export const lastInnSaksopplysningerBehandleMottattAOU = (saksnummer, behandlingID) => (dispatch, getState) => {
+  dispatch(behandlingerOperations.hentBehandling(behandlingID));
+  dispatch(behandlingsresultatOperations.hent(behandlingID));
+  dispatch(anmodningsperioderOperations.hent(behandlingID)).then(() => {
+    const anmodningsperiodeID = anmodningsperioderSelectors.AnmodningsperiodeIDSelector(getState());
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID));
-  } catch (e) {
-    Utils.logger.error(e);
-  }
+  });
+  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
 };
 
 export const resetSaksopplysninger = () => (dispatch) => {

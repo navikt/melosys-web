@@ -6,7 +6,7 @@ interface FeatureToggleProps {
 }
 
 const FeatureToggle = ({ children, togglename }: FeatureToggleProps) => {
-  const [toggle] = useFeatureToggle(togglename);
+  const toggle = useFeatureToggle(togglename);
 
   return children(toggle);
 };

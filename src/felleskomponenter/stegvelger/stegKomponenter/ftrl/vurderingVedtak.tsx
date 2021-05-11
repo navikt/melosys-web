@@ -17,46 +17,9 @@ import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperio
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { formSelectors } from "../../../../ducks/form";
+import MottakerTabell from "../../../tabell/mottakerTabell";
 
 import "./vurderingVedtak.css";
-
-interface TabellComponentProps {
-  rader: {
-    verdi: string | JSX.Element;
-    style?: string;
-  }[][];
-  kolonner: {
-    verdi: string;
-    bredde: string;
-    style?: string;
-  }[];
-}
-
-const TabellComponent = ({ rader, kolonner }: TabellComponentProps) => {
-  if (!rader || !kolonner) return null;
-  return (
-    <table className="periode_tabell">
-      <tbody>
-        <tr>
-          {kolonner.map((kolonne) => (
-            <th key={Utils._uuid()} className={`${kolonne.style}`} style={{ width: kolonne.bredde }}>
-              {kolonne.verdi}
-            </th>
-          ))}
-        </tr>
-        {rader.map((rad) => (
-          <tr className="border_bottom" key={Utils._uuid()}>
-            {rad.map((radElement) => (
-              <td key={Utils._uuid()} className={`${radElement.style}`}>
-                {radElement.verdi}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -113,7 +76,7 @@ const VurderingVedtak = ({
   function mapVedtakRader() {
     return [
       [
-        { verdi: <Nav.typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.typo.Normaltekst> },
+        { verdi: <Nav.Typo.Normaltekst className="lenke">Vedtak om frivillig medlemskap</Nav.Typo.Normaltekst> },
         { verdi: "Deloitte" },
         {
           verdi: (
@@ -128,9 +91,9 @@ const VurderingVedtak = ({
       [
         {
           verdi: (
-            <Nav.typo.Normaltekst className="lenke">
+            <Nav.Typo.Normaltekst className="lenke">
               Kopi av vedtak om frivillig medlemskap til Skatteetaten
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
           ),
         },
         { verdi: "Skatteetaten" },
@@ -147,9 +110,9 @@ const VurderingVedtak = ({
       [
         {
           verdi: (
-            <Nav.typo.Normaltekst className="lenke">
+            <Nav.Typo.Normaltekst className="lenke">
               Kopi av vedtak om frivillig medlemskap til bruker
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
           ),
         },
         { verdi: "Dag Fossum" },
@@ -166,9 +129,9 @@ const VurderingVedtak = ({
       [
         {
           verdi: (
-            <Nav.typo.Normaltekst className="lenke">
+            <Nav.Typo.Normaltekst className="lenke">
               Kopi av vedtak om frivillig medlemskap til bruker
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
           ),
         },
         { verdi: "Dag Fossum" },
@@ -200,9 +163,9 @@ const VurderingVedtak = ({
 
   return (
     <div className="vurderingVedtak">
-      <Nav.typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.Typo.Undertittel>
 
-      <TabellComponent
+      <MottakerTabell
         rader={mapPeriodeRader(medlemskapsperioder)}
         kolonner={[
           { verdi: "Periode", bredde: "42%" },
@@ -213,20 +176,20 @@ const VurderingVedtak = ({
 
       <Nav.Row className="margin_bottom">
         <Nav.Column xs="5">
-          <Nav.typo.Element className="info">Arbeidsland</Nav.typo.Element>
-          <Nav.typo.Normaltekst className="info">
+          <Nav.Typo.Element className="info">Arbeidsland</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className="info">
             {alleLandkoder
               ? Utils.streng.storeForbokstaverForLand(KV.finnTermFraListe(alleLandkoder, soknadsland[0]))
               : "Finner ikke arbeidsland"}
-          </Nav.typo.Normaltekst>
+          </Nav.Typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="4">
-          <Nav.typo.Element className="info">Arbeid utføres i avtaleland</Nav.typo.Element>
-          <Nav.typo.Normaltekst className="info">Ja</Nav.typo.Normaltekst>
+          <Nav.Typo.Element className="info">Arbeid utføres i avtaleland</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className="info">Ja</Nav.Typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="3">
-          <Nav.typo.Element className="info">Familiemedlemmer</Nav.typo.Element>
-          <Nav.typo.Normaltekst className="info">Nei</Nav.typo.Normaltekst>
+          <Nav.Typo.Element className="info">Familiemedlemmer</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className="info">Nei</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
 
@@ -237,7 +200,7 @@ const VurderingVedtak = ({
         ) && (
           <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
             <Ikoner.Inntekt className="trygdeavgift_ikon" />
-            <Nav.typo.Normaltekst>
+            <Nav.Typo.Normaltekst>
               {getTrygdeavgiftString(
                 KV.finnTermFraListe(
                   MKV.KTObjects.vurderingsutfall_trygdeavgift_norsk_inntekt,
@@ -245,7 +208,7 @@ const VurderingVedtak = ({
                 ),
                 "norsk inntekt"
               )}
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
           </div>
         )}
       {trygdeavgiftFormValues &&
@@ -255,7 +218,7 @@ const VurderingVedtak = ({
         ) && (
           <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
             <Ikoner.Inntekt className="trygdeavgift_ikon" />
-            <Nav.typo.Normaltekst>
+            <Nav.Typo.Normaltekst>
               {getTrygdeavgiftString(
                 KV.finnTermFraListe(
                   MKV.KTObjects.vurderingsutfall_trygdeavgift_utenlandsk_inntekt,
@@ -263,29 +226,29 @@ const VurderingVedtak = ({
                 ),
                 "utenlandsk inntekt"
               )}
-            </Nav.typo.Normaltekst>
+            </Nav.Typo.Normaltekst>
           </div>
         )}
 
-      <Nav.typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til innleding <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
-      </Nav.typo.Element>
+      </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="fritekstInnledning"
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
       />
 
-      <Nav.typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
-      </Nav.typo.Element>
+      </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="fritekstBegrunnelse"
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
       />
 
-      <TabellComponent
+      <MottakerTabell
         rader={mapVedtakRader()}
         kolonner={[
           { verdi: "Dokumenter", bredde: "60%" },

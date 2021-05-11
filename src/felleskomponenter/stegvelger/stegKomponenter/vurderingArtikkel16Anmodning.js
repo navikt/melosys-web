@@ -20,12 +20,12 @@ import { behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 import DatoOmrade from "../../datoOmrade/datoOmrade";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
 import VedleggVelger from "../../vedleggvelger";
-import { FeatureToggle } from "../../../featuretoggle";
 
 import { konverterTilStegData, lagBegrunnelse } from "../../../regler/vilkar";
 import { konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
@@ -394,18 +394,18 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const begrunnelseFritekstBrevLabel = (
       <Fragment>
-        <Nav.typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.typo.Element>
-        <Nav.typo.Normaltekst>
+        <Nav.Typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.Typo.Element>
+        <Nav.Typo.Normaltekst>
           Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
           om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
-        </Nav.typo.Normaltekst>
+        </Nav.Typo.Normaltekst>
       </Fragment>
     );
 
     /* eslint-disable max-len */
     return (
       <div>
-        <Nav.typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.typo.Undertittel>
+        <Nav.Typo.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Typo.Undertittel>
         <div className="artikkel16">
           {erIDirekteTilArtikkel16Flyt && (
             <Nav.Row className="vilAnmode">
@@ -422,12 +422,12 @@ class VurderingArtikkel16Anmodning extends Component {
           )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.typo.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.typo.Element>
-              <Nav.typo.Normaltekst>{landSomTekstListe}</Nav.typo.Normaltekst>
+              <Nav.Typo.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst>{landSomTekstListe}</Nav.Typo.Normaltekst>
             </Nav.Column>
             <Nav.Column xs="6">
-              <Nav.typo.Element type="element">Antall måneder:</Nav.typo.Element>
-              <Nav.typo.Normaltekst>{antallManeder}</Nav.typo.Normaltekst>
+              <Nav.Typo.Element type="element">Antall måneder:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst>{antallManeder}</Nav.Typo.Normaltekst>
               <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
             </Nav.Column>
           </Nav.Row>
@@ -438,7 +438,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 onChange={vedUnntakFraBestemmelseEndring}
                 value={unntakFraBestemmelse || ""}
                 disabled={!redigerbart}
-                label={<Nav.typo.Element>Artikkelen det søkes unntak fra:</Nav.typo.Element>}
+                label={<Nav.Typo.Element>Artikkelen det søkes unntak fra:</Nav.Typo.Element>}
                 data-cy="unntakArtikkel"
               >
                 <option key={uuid()} value="">
@@ -459,7 +459,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 onChange={begrunnelserEndringHandler}
                 value={begrunnelseKode}
                 disabled={!redigerbart}
-                label={<Nav.typo.Element>Legg til begrunnelse:</Nav.typo.Element>}
+                label={<Nav.Typo.Element>Legg til begrunnelse:</Nav.Typo.Element>}
                 data-cy="begrunnelse"
               >
                 <option key={uuid()} value="">
@@ -492,7 +492,7 @@ class VurderingArtikkel16Anmodning extends Component {
                   {redigerbart && (
                     <Nav.Textarea
                       id="art16_1_anmodning"
-                      label={<Nav.typo.Element>Begrunnelse til SED A001</Nav.typo.Element>}
+                      label={<Nav.Typo.Element>Begrunnelse til SED A001</Nav.Typo.Element>}
                       placeholder="Skriv begrunnelsen her."
                       onBlur={begrunnelseFritekstFokusFlyttetHandler}
                       onChange={begrunnelseFritekstSedEndretHandler}
@@ -521,7 +521,7 @@ class VurderingArtikkel16Anmodning extends Component {
             <Nav.Row className="fritekstSed">
               <Nav.Column xs="7">
                 <Skjema.Textarea
-                  label={<Nav.typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.typo.Element>}
+                  label={<Nav.Typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.Typo.Element>}
                   feltNavn="fritekstSed"
                   disabled={!redigerbart}
                   visTellerFra={500}
@@ -548,23 +548,17 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Column>
           </Nav.Row>
           {redigerbart && (
-            <FeatureToggle togglename="melosys.anmodning_vedlegg">
-              {(status) =>
-                status === "enabled" ? (
-                  <Nav.Row>
-                    <Nav.Column xs="12">
-                      <Nav.typo.Undertittel>Vedlegg til SED</Nav.typo.Undertittel>
-                      <VedleggVelger
-                        className="vedleggvelger"
-                        valgteVedlegg={valgteVedlegg}
-                        onChange={setValgteVedlegg}
-                        dokumenter={fysiskeDokument}
-                      />
-                    </Nav.Column>
-                  </Nav.Row>
-                ) : null
-              }
-            </FeatureToggle>
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <Nav.Typo.Undertittel>Vedlegg til SED</Nav.Typo.Undertittel>
+                <VedleggVelger
+                  className="vedleggvelger"
+                  valgteVedlegg={valgteVedlegg}
+                  onChange={setValgteVedlegg}
+                  dokumenter={fysiskeDokument}
+                />
+              </Nav.Column>
+            </Nav.Row>
           )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
@@ -588,7 +582,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
-  arbeidsland: PT.arrayOf(PT.string).isRequired,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
@@ -639,7 +633,7 @@ const VurderingArtikkel16AnmodningForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values) => lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_anmodning)(values),
+  validate: (values) => lagYupToReduxformErrorMapper(VurderingArtikkel16AnmodningSchema)(values),
 })(VurderingArtikkel16Anmodning);
 
 export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);

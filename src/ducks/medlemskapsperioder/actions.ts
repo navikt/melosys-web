@@ -6,3 +6,7 @@ export function oppdaterBestemmelse(bestemmelse: string): Types.OppdaterBestemme
     data: bestemmelse,
   };
 }
+
+export function resetMedlemskapsperioder(): Types.ResetAction {
+  return { type: Types.RESET };
+}

@@ -5,7 +5,7 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Mui from "../../../ui";
 
 import Legend from "./legend";
-import { Status, SymbolsynlighetMap } from "./types";
+import { Status, SymbolsynlighetConfig } from "./types";
 
 import "./editerbartElement.css";
 
@@ -14,7 +14,7 @@ interface EditerbartElementProps {
   ingenDataRender?: (apneRedigering: () => void) => ReactNode;
   redigeringUtfortRender: () => ReactNode;
   redigerbart: boolean;
-  onBinClick: MouseEventHandler;
+  onBinClick?: MouseEventHandler;
   tittel: string;
   tittelIkon?: ElementType;
   tittelUnderstrek?: boolean;
@@ -23,29 +23,28 @@ interface EditerbartElementProps {
   visLagreKnappBareHvisHarData?: boolean;
   visLagreKnapp?: boolean;
   className?: string;
-  hentNyStatusVedHarData?: boolean;
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
-  symbolsynlighetMap?: SymbolsynlighetMap;
+  symbolsynlighet?: SymbolsynlighetConfig;
 }
 
-const defaultSymbolsynlighetMap: SymbolsynlighetMap = new Map([
-  [Status.Redigerer, { bin: false, pencil: false }],
-  [Status.IngenData, { bin: false, pencil: false }],
-  [Status.RedigeringUtfort, { bin: true, pencil: true }],
-]);
+const defaultSymbolsynlighet: SymbolsynlighetConfig = {
+  [Status.Redigerer]: { bin: false, pencil: false },
+  [Status.IngenData]: { bin: false, pencil: false },
+  [Status.RedigeringUtfort]: { bin: true, pencil: true },
+};
 
-export const visAlltidBinSymbolsynlighetMap: SymbolsynlighetMap = new Map([
-  [Status.Redigerer, { bin: true, pencil: false }],
-  [Status.IngenData, { bin: true, pencil: false }],
-  [Status.RedigeringUtfort, { bin: true, pencil: true }],
-]);
+export const visAlltidBinSymbolsynlighet: SymbolsynlighetConfig = {
+  [Status.Redigerer]: { bin: true, pencil: false },
+  [Status.IngenData]: { bin: true, pencil: false },
+  [Status.RedigeringUtfort]: { bin: true, pencil: true },
+};
 
 const EditerbartElement = ({
   redigererRender,
   ingenDataRender,
   redigeringUtfortRender,
   redigerbart,
-  onBinClick,
+  onBinClick = () => {},
   tittel,
   tittelIkon,
   tittelUnderstrek,
@@ -54,9 +53,8 @@ const EditerbartElement = ({
   visLagreKnappBareHvisHarData = false,
   visLagreKnapp,
   className,
-  hentNyStatusVedHarData = false,
   onLagreClick,
-  symbolsynlighetMap = new Map(),
+  symbolsynlighet = {},
 }: EditerbartElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
@@ -71,7 +69,7 @@ const EditerbartElement = ({
   const [status, setStatus] = useState(hentNesteStatus());
 
   useEffect(() => {
-    if (!harData || hentNyStatusVedHarData) {
+    if (!harData) {
       setStatus(hentNesteStatus());
     }
   }, [harData]);
@@ -106,8 +104,6 @@ const EditerbartElement = ({
     understrek,
   });
 
-  const symbolsynlighet = new Map([...defaultSymbolsynlighetMap, ...symbolsynlighetMap]).get(status);
-
   const legend = (
     <Legend
       redigerbart={redigerbart}
@@ -116,7 +112,7 @@ const EditerbartElement = ({
       tittelUnderstrek={tittelUnderstrek}
       onBinClick={onBinClick}
       onPencilClick={() => setStatus(Status.Redigerer)}
-      symbolsynlighet={symbolsynlighet || { pencil: true, bin: true }}
+      symbolsynlighet={{ ...defaultSymbolsynlighet, ...symbolsynlighet }[status] || { pencil: true, bin: true }}
     />
   );
 

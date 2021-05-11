@@ -15,7 +15,8 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formOperations } from "../../../ducks/form";
 
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import VurderingAvslaaUtpekingSchema from "./vurderingAvslaaUtpekingSchema";
 
 export const VurderingAvslaaUtpeking = ({
   redigerbart,
@@ -74,7 +75,7 @@ export const VurderingAvslaaUtpeking = ({
 
   return (
     <form onSubmit={handleSubmit(avsluttOgSendSed)}>
-      <Nav.typo.Undertittel className="stegTittel">Avvis utpeking — informasjon til SED</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="stegTittel">Avvis utpeking — informasjon til SED</Nav.Typo.Undertittel>
       {redigerbart && (
         <Fragment>
           <Skjema.Textarea
@@ -166,7 +167,7 @@ const VurderingAvslaaUtpekingForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.avslaa_utpeking),
+  validate: lagYupToReduxformErrorMapper(VurderingAvslaaUtpekingSchema),
 })(VurderingAvslaaUtpeking);
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingAvslaaUtpekingForm);

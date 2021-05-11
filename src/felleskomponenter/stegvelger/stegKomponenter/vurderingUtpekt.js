@@ -24,9 +24,11 @@ import {
   lagLovvalgsperiode,
   slettLovvalgsperiode,
 } from "../../../regler/lovvalgsperiode";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.css";
+import { FeatureToggle } from "../../../featuretoggle";
 
 const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleLovvalg.filter(
   ({ kode }) =>
@@ -98,12 +100,12 @@ export const VurderingUtpekt = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Nav.typo.Undertittel className="stegTittel">Vurder lovvalgsbeslutningen (A003)</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="stegTittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Undertittel>
       <Nav.Row className="rad">
         <Nav.Column xs="5">
           {vurderingBegrunnelser.length > 0 && (
             <Fragment>
-              <Nav.typo.Element>Treff ved automatisk kontroll</Nav.typo.Element>
+              <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
               <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
             </Fragment>
           )}
@@ -112,14 +114,14 @@ export const VurderingUtpekt = ({
       {visLovvalgsland && (
         <Nav.Row className="rad">
           <Nav.Column xs="5">
-            <Nav.typo.Element>Lovvalgsland</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{lovvalgslandTerm}</Nav.typo.Normaltekst>
+            <Nav.Typo.Element>Lovvalgsland</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{lovvalgslandTerm}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
       )}
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          <Nav.typo.Element>Grunnlag</Nav.typo.Element>
+          <Nav.Typo.Element>Grunnlag</Nav.Typo.Element>
           <Skjema.Select feltNavn="lovvalgsbestemmelse" label="" disabled={!redigerbart}>
             <option disabled key="VELG" value="">
               Velg
@@ -135,7 +137,7 @@ export const VurderingUtpekt = ({
       {(redigerbart || formValues.overgangsregelbestemmelser) && (
         <Nav.Row className="rad">
           <Nav.Column xs="5">
-            <Nav.typo.Element>Overgangsregler gjelder:</Nav.typo.Element>
+            <Nav.Typo.Element>Overgangsregler gjelder:</Nav.Typo.Element>
             <Skjema.ListeVelger
               feltNavn="overgangsregelbestemmelser"
               label="Legg til ny overgangsregelbestemmelse:"
@@ -149,13 +151,29 @@ export const VurderingUtpekt = ({
       )}
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          <Nav.typo.Element>Lovvalgsperiode</Nav.typo.Element>
+          <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
           <Nav.Row>
             <Nav.Column xs="6">
-              <Skjema.Input datoFelt label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
+              <FeatureToggle togglename="melosys.input.DATOFELT">
+                {(status) =>
+                  status === "enabled" ? (
+                    <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
+                  ) : (
+                    <Skjema.Input datoFelt label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
+                  )
+                }
+              </FeatureToggle>
             </Nav.Column>
             <Nav.Column xs="6">
-              <Skjema.Input datoFelt label="Til og med" feltNavn="tom" disabled={!redigerbart} />
+              <FeatureToggle togglename="melosys.input.DATOFELT">
+                {(status) =>
+                  status === "enabled" ? (
+                    <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
+                  ) : (
+                    <Skjema.Input datoFelt label="Til og med" feltNavn="tom" disabled={!redigerbart} />
+                  )
+                }
+              </FeatureToggle>
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>
@@ -163,8 +181,8 @@ export const VurderingUtpekt = ({
       <Nav.Row className="rad">
         {ytterligereInformasjon && (
           <Nav.Column xs="12">
-            <Nav.typo.Element>Ytterligere informasjon fra SED</Nav.typo.Element>
-            <Nav.typo.Normaltekst>{ytterligereInformasjon}</Nav.typo.Normaltekst>
+            <Nav.Typo.Element>Ytterligere informasjon fra SED</Nav.Typo.Element>
+            <Nav.Typo.Normaltekst>{ytterligereInformasjon}</Nav.Typo.Normaltekst>
           </Nav.Column>
         )}
       </Nav.Row>
@@ -259,7 +277,7 @@ const VurderingUtpektForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(YupSkjemaer.vurder_utpeking),
+  validate: lagYupToReduxformErrorMapper(vurderingUtpektSchema),
 })(VurderingUtpekt);
 
 export default connect(mapStateToProps)(VurderingUtpektForm);

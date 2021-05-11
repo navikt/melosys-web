@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
-import { reduxForm, formValueSelector } from "redux-form";
+import { reduxForm, getFormValues } from "redux-form";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -10,6 +10,7 @@ import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
+import * as Services from "../../../services";
 
 import { DatoOmradeMedVarighet } from "../../datoOmrade/datoOmrade";
 
@@ -20,11 +21,194 @@ import { formSelectors } from "../../../ducks/form";
 import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
 
 import { lagAnmodningsperiodesvar } from "../../../regler/anmodningsperiodesvar";
-import { lagYupToReduxformErrorMapper, Skjemaer as YupSkjemaer } from "../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import vurderingArtikkel16MottaSvarSchema from "./vurderingArtikkel16MottaSvarSchema";
 
 import "./vurderingArtikkel16MottaSvar.css";
+import { FeatureToggle } from "../../../featuretoggle";
 
-const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_16_MOTTA_SVAR);
+const Periode = ({ redigerbart }) => (
+  <Nav.Row>
+    <Nav.Column xs="6">
+      <FeatureToggle togglename="melosys.input.DATOFELT">
+        {(status) =>
+          status === "enabled" ? (
+            <Skjema.Datovelger label="Startdato" feltNavn="endretPeriode.fom" disabled={!redigerbart} />
+          ) : (
+            <Skjema.Input
+              bredde="fullbredde"
+              label="Startdato"
+              feltNavn="endretPeriode.fom"
+              disabled={!redigerbart}
+              datoFelt
+            />
+          )
+        }
+      </FeatureToggle>
+    </Nav.Column>
+    <Nav.Column xs="6">
+      <FeatureToggle togglename="melosys.input.DATOFELT">
+        {(status) =>
+          status === "enabled" ? (
+            <Skjema.Datovelger label="Sluttdato" feltNavn="endretPeriode.tom" disabled={!redigerbart} />
+          ) : (
+            <Skjema.Input
+              bredde="fullbredde"
+              label="Sluttdato"
+              feltNavn="endretPeriode.tom"
+              disabled={!redigerbart}
+              datoFelt
+            />
+          )
+        }
+      </FeatureToggle>
+    </Nav.Column>
+  </Nav.Row>
+);
+
+Periode.propTypes = {
+  redigerbart: PT.bool.isRequired,
+};
+
+export const FormKomponent = ({
+  redigerbart,
+  formValues,
+  oppdaterData,
+  formIsValid,
+  anmodningsperiodeID,
+  sendAnmodningsperiodeSvar,
+}) => {
+  const visLovvalgsperiode =
+    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
+
+  const visFritekstFelt =
+    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
+    formValues.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
+
+  const lagreSvar = async (data) => {
+    const sendEndretPeriode =
+      data.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
+
+    const svar = {
+      anmodningsperiodeSvarType: data.anmodningsperiodeSvarType,
+      endretPeriode: {
+        fom:
+          sendEndretPeriode && data.endretPeriode.fom ? Utils.dato.formatterDatoTilISO(data.endretPeriode.fom) : null,
+        tom:
+          sendEndretPeriode && data.endretPeriode.tom ? Utils.dato.formatterDatoTilISO(data.endretPeriode.tom) : null,
+      },
+      begrunnelseFritekst: data.begrunnelseFritekst || null,
+    };
+
+    if (data.anmodningsperiodeSvarType && data.formIsValid) {
+      await sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
+      oppdaterData(lagAnmodningsperiodesvar(svar));
+    }
+  };
+  const debouncedLagreSvar = useCallback(Utils._debounce(lagreSvar, 1000), [oppdaterData, lagAnmodningsperiodesvar]);
+
+  useEffect(() => {
+    if (redigerbart) {
+      debouncedLagreSvar({ ...formValues, formIsValid });
+    }
+  }, [formValues, formIsValid]);
+
+  return (
+    <form name="anmodningSvar" id="anmodningSvar" onSubmit={(e) => e.preventDefault()}>
+      <Nav.Row className="svarFraMyndighetRow">
+        <Nav.Column xs="6">
+          <Nav.Fieldset disabled={!redigerbart} legend="Svar fra myndighetene">
+            <Skjema.Radio
+              name="svarFraMyndighetene"
+              feltNavn="anmodningsperiodeSvarType"
+              label="Innvilgelse"
+              value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
+            />
+            <Skjema.Radio
+              name="svarFraMyndighetene"
+              feltNavn="anmodningsperiodeSvarType"
+              label="Delvis innvilgelse"
+              value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
+            />
+            <Skjema.Radio
+              name="svarFraMyndighetene"
+              feltNavn="anmodningsperiodeSvarType"
+              label="Avslag"
+              value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
+            />
+          </Nav.Fieldset>
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="6">{visLovvalgsperiode && <Periode redigerbart={redigerbart} />}</Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          {visFritekstFelt && (
+            <Skjema.Textarea
+              feltNavn="begrunnelseFritekst"
+              disabled={!redigerbart}
+              label="Begrunnelse"
+              tellerTekst={() => {}}
+            />
+          )}
+        </Nav.Column>
+      </Nav.Row>
+    </form>
+  );
+};
+
+FormKomponent.propTypes = {
+  redigerbart: PT.bool.isRequired,
+  soknadsperiode: PT.object,
+  oppdaterData: PT.func.isRequired,
+  formIsValid: PT.bool.isRequired,
+  anmodningsperiodeID: PT.string.isRequired,
+  sendAnmodningsperiodeSvar: PT.func.isRequired,
+  formValues: PT.object,
+};
+
+FormKomponent.defaultProps = {
+  soknadsperiode: {},
+  formValues: {},
+};
+
+const Artikkel16MottaSvarForm = reduxForm({
+  form: KV.Form.ARTIKKEL_16_MOTTA_SVAR,
+  enableReinitialize: false,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(vurderingArtikkel16MottaSvarSchema, {
+      context: {
+        anmodningsperiodeSvarType: props.formValues && props.formValues.anmodningsperiodeSvarType,
+        soknadsperiode: props.soknadsperiode,
+      },
+    })(values),
+})(FormKomponent);
+
+const FormKomponentMapStateToProps = (state) => ({
+  formValues: getFormValues(KV.Form.ARTIKKEL_16_MOTTA_SVAR)(state),
+  initialValues: {
+    anmodningsperiodeSvarType: anmodningsperiodesvarSelectors.AnmodningsperiodeSvarTypeSelector(state),
+    endretPeriode: {
+      fom: Utils.dato.formatterDatoTilNorsk(anmodningsperiodesvarSelectors.EndretPeriodeFomSelector(state)),
+      tom: Utils.dato.formatterDatoTilNorsk(anmodningsperiodesvarSelectors.EndretPeriodeTomSelector(state)),
+    },
+    begrunnelseFritekst: anmodningsperiodesvarSelectors.BegrunnelseFritekstSelector(state),
+  },
+});
+
+const FormKomponentMapDispatchToProps = (dispatch) => ({
+  sendAnmodningsperiodeSvar: (anmodningsperiodeID, anmodningsperiodeSvar) =>
+    dispatch(anmodningsperiodesvarOperations.send(anmodningsperiodeID, anmodningsperiodeSvar)),
+});
+
+const ConnectedFormKomponent = connect(
+  FormKomponentMapStateToProps,
+  FormKomponentMapDispatchToProps
+)(Artikkel16MottaSvarForm);
 
 export const VurderingArtikkel16MottaSvar = (props) => {
   const {
@@ -35,14 +219,13 @@ export const VurderingArtikkel16MottaSvar = (props) => {
     bekreftOgFortsett,
     slettData,
     tilstand,
-    endretPeriode,
-    anmodningsperiodeSvarType,
-    begrunnelseFritekst,
     formIsValid,
     oppdaterData,
     hentAnmodningsperiodeSvar,
-    sendAnmodningsperiodeSvar,
+    anmodningsperioderSvarStatus,
   } = props;
+
+  const [anmodningsperioderSvarHentet, setAnmodningsperioderSvarHentet] = useState(false);
 
   useEffect(() => {
     hentAnmodningsperiodeSvar(anmodningsperiodeID).then((svar) => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
@@ -52,38 +235,21 @@ export const VurderingArtikkel16MottaSvar = (props) => {
     return cleanup;
   }, []);
 
-  const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
-
-  const visFritekstFelt =
-    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ||
-    anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
-
-  const lagreSvar = () => {
-    const svar = {
-      anmodningsperiodeSvarType,
-      endretPeriode: {
-        fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
-        tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
-      },
-      begrunnelseFritekst: begrunnelseFritekst || null,
-    };
-
-    oppdaterData(lagAnmodningsperiodesvar(svar));
-
-    if (anmodningsperiodeSvarType && formIsValid) {
-      sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
+  useEffect(() => {
+    if (anmodningsperioderSvarStatus === Services.STATUS.OK) {
+      setAnmodningsperioderSvarHentet(true);
     }
-  };
+  }, [anmodningsperioderSvarStatus]);
 
   return (
     <Fragment>
-      <Nav.typo.Undertittel>Svar på anmodning om unntak, etter artikkel 16, nr. 1</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>Svar på anmodning om unntak, etter artikkel 16, nr. 1</Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.typo.Element>Land:</Nav.typo.Element>
-          <Nav.typo.Normaltekst>
+          <Nav.Typo.Element>Land:</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst>
             {gyldigeSoknadsland.map((enkeltLandObjekt) => enkeltLandObjekt.term).join(", ")}
-          </Nav.typo.Normaltekst>
+          </Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="soknadsperiodeRow">
@@ -91,66 +257,15 @@ export const VurderingArtikkel16MottaSvar = (props) => {
           <DatoOmradeMedVarighet periode={soknadsperiode} label="Søknadsperiode" />
         </Nav.Column>
       </Nav.Row>
-      <form name="anmodningSvar" id="anmodningSvar" onBlur={lagreSvar} onSubmit={(e) => e.preventDefault()}>
-        <Nav.Row className="svarFraMyndighetRow">
-          <Nav.Column xs="6">
-            <Nav.Fieldset disabled={!redigerbart} legend="Svar fra myndighetene">
-              <Skjema.Radio
-                name="svarFraMyndighetene"
-                feltNavn="anmodningsperiodeSvarType"
-                label="Innvilgelse"
-                value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
-              />
-              <Skjema.Radio
-                name="svarFraMyndighetene"
-                feltNavn="anmodningsperiodeSvarType"
-                label="Delvis innvilgelse"
-                value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
-              />
-              {visLovvalgsperiode && (
-                <Nav.Row>
-                  <Nav.Column xs="6">
-                    <Skjema.Input
-                      bredde="fullbredde"
-                      label="Startdato"
-                      feltNavn="endretPeriode.fom"
-                      disabled={!redigerbart}
-                      datoFelt
-                    />
-                  </Nav.Column>
-                  <Nav.Column xs="6">
-                    <Skjema.Input
-                      bredde="fullbredde"
-                      label="Sluttdato"
-                      feltNavn="endretPeriode.tom"
-                      disabled={!redigerbart}
-                      datoFelt
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-              )}
-              <Skjema.Radio
-                name="svarFraMyndighetene"
-                feltNavn="anmodningsperiodeSvarType"
-                label="Avslag"
-                value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
-              />
-            </Nav.Fieldset>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            {visFritekstFelt && (
-              <Skjema.Textarea
-                feltNavn="begrunnelseFritekst"
-                disabled={!redigerbart}
-                label="Begrunnelse"
-                tellerTekst={() => {}}
-              />
-            )}
-          </Nav.Column>
-        </Nav.Row>
-      </form>
+      {anmodningsperioderSvarHentet && (
+        <ConnectedFormKomponent
+          redigerbart={redigerbart}
+          soknadsperiode={soknadsperiode}
+          oppdaterData={oppdaterData}
+          anmodningsperiodeID={anmodningsperiodeID}
+          formIsValid={formIsValid}
+        />
+      )}
       <div className="fane__knapplinje">
         <Nav.Knapp
           disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring}
@@ -174,21 +289,15 @@ VurderingArtikkel16MottaSvar.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  endretPeriode: MPT.Periode,
-  anmodningsperiodeSvarType: PT.string,
-  begrunnelseFritekst: PT.string,
   formIsValid: PT.bool,
   hentAnmodningsperiodeSvar: PT.func.isRequired,
-  sendAnmodningsperiodeSvar: PT.func.isRequired,
+  anmodningsperioderSvarStatus: PT.string.isRequired,
   tilstand: PT.object.isRequired,
 };
 
 VurderingArtikkel16MottaSvar.defaultProps = {
   lovvalgsperiodeFom: "",
   lovvalgsperiodeTom: "",
-  begrunnelseFritekst: "",
-  endretPeriode: { fom: "", tom: "" },
-  anmodningsperiodeSvarType: "",
   formIsValid: false,
   anmodningsperiodeID: "",
 };
@@ -197,39 +306,13 @@ const mapStateToProps = (state) => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
-  endretPeriode: artikkel16MottaSvarFormValueSelector(state, "endretPeriode"),
-  anmodningsperiodeSvarType: artikkel16MottaSvarFormValueSelector(state, "anmodningsperiodeSvarType"),
-  begrunnelseFritekst: artikkel16MottaSvarFormValueSelector(state, "begrunnelseFritekst"),
-  initialValues: {
-    anmodningsperiodeSvarType: anmodningsperiodesvarSelectors.AnmodningsperiodeSvarTypeSelector(state),
-    endretPeriode: {
-      fom: Utils.dato.formatterDatoTilNorsk(anmodningsperiodesvarSelectors.EndretPeriodeFomSelector(state)),
-      tom: Utils.dato.formatterDatoTilNorsk(anmodningsperiodesvarSelectors.EndretPeriodeTomSelector(state)),
-    },
-    begrunnelseFritekst: anmodningsperiodesvarSelectors.BegrunnelseFritekstSelector(state),
-  },
+  anmodningsperioderSvarStatus: anmodningsperiodesvarSelectors.ReduxStatusSelector(state),
   formIsValid: formSelectors.Artikkel16MottaSvarSyncErrorsSelector(state) === undefined,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  hentAnmodningsperiodeSvar: async (anmodningsperiodeID) =>
+  hentAnmodningsperiodeSvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
-  sendAnmodningsperiodeSvar: (anmodningsperiodeID, anmodningsperiodeSvar) =>
-    dispatch(anmodningsperiodesvarOperations.send(anmodningsperiodeID, anmodningsperiodeSvar)),
 });
 
-const Artikkel16MottaSvarForm = reduxForm({
-  form: KV.Form.ARTIKKEL_16_MOTTA_SVAR,
-  enableReinitialize: true,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: (values, props) =>
-    lagYupToReduxformErrorMapper(YupSkjemaer.artikkel16_motta_svar, {
-      context: {
-        anmodningsperiodeSvarType: props.anmodningsperiodeSvarType,
-      },
-    })(values),
-})(VurderingArtikkel16MottaSvar);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Artikkel16MottaSvarForm);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16MottaSvar);
