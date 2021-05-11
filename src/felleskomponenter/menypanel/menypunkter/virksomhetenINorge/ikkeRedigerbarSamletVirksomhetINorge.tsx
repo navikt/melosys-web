@@ -65,7 +65,7 @@ const IkkeRedigerbarSamletVirksomhetINorge = ({ juridiskArbeidsgiverNorge }: Pro
         svar={juridiskArbeidsgiverNorge.andelKontrakterINorge}
         percent
       />
-      <LabelOgSvar label="Andel oppdrag utført i Norge" svar={juridiskArbeidsgiverNorge.antallAdmAnsatte} percent />
+      <LabelOgSvar label="Andel oppdrag utført i Norge" svar={juridiskArbeidsgiverNorge.andelOppdragINorge} percent />
     </div>
   );
 };
