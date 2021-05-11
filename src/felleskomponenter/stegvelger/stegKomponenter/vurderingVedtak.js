@@ -94,6 +94,7 @@ const VurderingVedtak = ({
     touch("vedtakstype");
     touch("vedtakstypebegrunnelse");
     touch("mottakerinstitusjon");
+    touch("fritekstSed");
     return formIsValid;
   };
 
@@ -143,8 +144,6 @@ const VurderingVedtak = ({
               feltNavn="vedtaksbrevFritekst"
               label="Fritekst til vedtaksbrev"
               placeholder="Skriv inn tekst til vedtaksbrevet..."
-              maxLength={500}
-              visTellerFra={500}
               disabled={!redigerbart}
             />
           </Nav.Column>

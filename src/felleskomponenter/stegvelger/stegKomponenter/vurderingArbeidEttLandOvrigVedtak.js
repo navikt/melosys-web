@@ -287,8 +287,6 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            maxLength={500}
-            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>

@@ -184,8 +184,6 @@ export const VurderingArtikkel13UtpekLand = ({
             feltNavn="fritekstOrienteringsbrev"
             label="Fritekst til orienteringsbrev"
             placeholder="Skriv inn tekst til orienteringsbrevet..."
-            maxLength={500}
-            visTellerFra={500}
             disabled={!redigerbart}
           />
         </Nav.Column>
