@@ -1,12 +1,10 @@
 import React from "react";
-import { FieldArray } from "redux-form";
 
 import * as Nav from "../../../utils/navFrontend";
 
 import MKV from "../../../melosyskodeverk";
 
 import { VurderingInngang, Varsler } from "./vurderingInngang";
-import SoknadslandListe from "./inngang/soknadslandListe";
 
 describe("Varsler", () => {
   let props = null;
@@ -96,19 +94,6 @@ describe("VurderingInngang", () => {
     expect(varslerProps.oppfyllerInngangsvilkar).toBe(props.oppfyllerInngangsvilkar);
     expect(varslerProps.inngangsvilkaarBegrunnelser).toBe(props.inngangsvilkaar.begrunnelseKoder);
     expect(varslerProps.inngangsvilkaar).toBe(props.inngangsvilkaar);
-  });
-
-  it("viser en fieldarray for søknadsland", () => {
-    const vurderingInngang = shallow(<VurderingInngang {...props} />);
-    const fieldArray = vurderingInngang.find(FieldArray);
-    const fieldarrayProps = fieldArray.props();
-
-    expect(fieldarrayProps.component).toBe(SoknadslandListe);
-    expect(fieldarrayProps.avklartefakta).toBe(props.avklartefakta);
-    expect(fieldarrayProps.soknadslandBegrunnelser).toBe(props.begrunnelser.opphold);
-    expect(fieldarrayProps.alleLandkoder).toBe(props.alleLandkoder);
-    expect(fieldarrayProps.redigerbart).toBe(props.redigerbart);
-    expect(fieldarrayProps.oppdaterData).toBe(props.oppdaterData);
   });
 
   it("viser knapp for å gå videre i stegvelger", () => {

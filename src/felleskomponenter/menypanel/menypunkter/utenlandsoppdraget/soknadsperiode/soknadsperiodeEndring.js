@@ -6,10 +6,11 @@ import * as Nav from "../../../../../utils/navFrontend";
 
 import Knapperad from "../../../../knapperad";
 
-import "./soknadsperiode.css";
 import { FeatureToggle } from "../../../../../featuretoggle";
 import Datovelger from "../../../../datovelger";
 import * as Utils from "../../../../../utils/dato";
+
+import "./soknadsperiodeEndring.css";
 
 const SoknadsperiodeEndring = (props) => {
   const {
@@ -25,10 +26,13 @@ const SoknadsperiodeEndring = (props) => {
   const vedFomEndring = (nyDato) => vedFeltEndring("soknadsperiodeFom", Utils.dateTilNorskString(nyDato));
   const vedTomEndring = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.dateTilNorskString(nyDato));
 
+  const vedFomBlur = (nyDato) => vedFeltEndring("soknadsperiodeFom", Utils.vaskInputDato(nyDato) || nyDato);
+  const vedTomBlur = (nyDato) => vedFeltEndring("soknadsperiodeTom", Utils.vaskInputDato(nyDato) || nyDato);
+
   return (
-    <Nav.Fieldset legend="">
+    <Nav.Fieldset legend="" className="soknadsperiode-endring">
       <Nav.Row>
-        <Nav.Column xs="6">
+        <Nav.Column xs="12" className="soknadsperiode-endring__datofelt-container">
           <FeatureToggle togglename="melosys.input.DATOFELT">
             {(status) =>
               status === "enabled" ? (
@@ -46,13 +50,12 @@ const SoknadsperiodeEndring = (props) => {
                   label="Fra og med:"
                   value={soknadsperiodeFom}
                   onChange={(event) => vedFeltEndring("soknadsperiodeFom", event.target.value)}
+                  onBlur={(event) => event.target.value && vedFomBlur(event.target.value)}
                   feil={soknadsperiodeFomErrors && { feilmelding: soknadsperiodeFomErrors }}
                 />
               )
             }
           </FeatureToggle>
-        </Nav.Column>
-        <Nav.Column xs="6">
           <FeatureToggle togglename="melosys.input.DATOFELT">
             {(status) =>
               status === "enabled" ? (
@@ -70,6 +73,7 @@ const SoknadsperiodeEndring = (props) => {
                   label="Til og med:"
                   value={soknadsperiodeTom}
                   onChange={(event) => vedFeltEndring("soknadsperiodeTom", event.target.value)}
+                  onBlur={(event) => event.target.value && vedTomBlur(event.target.value)}
                   feil={soknadsperiodeTomErrors && { feilmelding: soknadsperiodeTomErrors }}
                 />
               )

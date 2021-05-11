@@ -70,6 +70,25 @@ const mapStateToProps = (state: RootState) => ({
         behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
       ),
     },
+    utenlandsoppdraget: {
+      erUtsendelseForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erUtsendelseForOppdragIUtlandet,
+      erAnsattForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erAnsattForOppdragIUtlandet,
+      erFortsattAnsattEtterOppdraget: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erFortsattAnsattEtterOppdraget,
+      erDrattPaaEgetInitiativ: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erDrattPaaEgetInitiativ,
+      erErstatningTidligereUtsendte: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
+        .erErstatningTidligereUtsendte,
+      samletUtsendingsperiode: {
+        fom: Utils.dato.formatterDatoTilNorsk(
+          behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.fom
+        ),
+        tom: Utils.dato.formatterDatoTilNorsk(
+          behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.tom
+        ),
+      },
+    },
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.OppholdUtlandPeriodeSelector(state).fom
     ),
@@ -96,7 +115,6 @@ const mapStateToProps = (state: RootState) => ({
     ),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
-      soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),

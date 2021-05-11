@@ -98,7 +98,6 @@ export const VurderingVurderarbeidsland = ({
   begrunnelser,
   hjemmebaser,
   soknadsland,
-  fjernedeSoknadsland,
   arbeidsland,
   fjernedeArbeidsland,
 }) => {
@@ -118,46 +117,6 @@ export const VurderingVurderarbeidsland = ({
       slettData();
     };
   }, []);
-
-  const genererSoknadslandFakta = () => {
-    /**
-     * Dette blir litt hacky. StegStore tillater bare overskriving av alle SOKNADSLAND-fakta fra inngangssteg,
-     * så SOKNADSLAND-fakta må i utgangspunktet bygges på nytt her.
-     */
-    soknadsland.forEach((land) => {
-      const fakta = soknadslandFaktaListe.find((enkeltFakta) => enkeltFakta.subjektID === land);
-      const faktaVerdi = hentFaktaVerdi(fakta);
-
-      if (!fakta) {
-        // Soknadsland er lagt til på normal måte
-        oppdaterData(
-          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, [])
-        );
-      } else if (faktaVerdi === KV.Koder.SoknadslandFaktaTyper.USANN) {
-        // Soknadsland er lagt til ved angring av fjerning
-        oppdaterData(
-          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, [])
-        );
-      } else {
-        // Soknadsland er ikke endret på
-        oppdaterData(
-          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, faktaVerdi, fakta.begrunnelseKoder)
-        );
-      }
-    });
-    fjernedeSoknadsland.forEach(({ land, begrunnelse }) => {
-      if (land)
-        oppdaterData(
-          lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.USANN, [
-            begrunnelse,
-          ])
-        );
-    });
-  };
-
-  useEffect(() => {
-    if (mounted) genererSoknadslandFakta();
-  }, [soknadsland]);
 
   const genererArbeidslandFakta = () => {
     slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
@@ -185,9 +144,7 @@ export const VurderingVurderarbeidsland = ({
   };
 
   const angreFjernSoknadsland = (land) => {
-    oppdaterData(
-      lagAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land, KV.Koder.SoknadslandFaktaTyper.SANN, null)
-    );
+    slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKNADSLAND, land));
   };
 
   const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(
@@ -301,12 +258,6 @@ VurderingVurderarbeidsland.propTypes = {
   maritimtArbeid: PT.array,
   hjemmebaser: PT.arrayOf(PT.string),
   soknadsland: PT.arrayOf(PT.string).isRequired,
-  fjernedeSoknadsland: PT.arrayOf(
-    PT.shape({
-      land: PT.string,
-      begrunnelse: PT.string,
-    })
-  ).isRequired,
   arbeidsland: PT.arrayOf(PT.string).isRequired,
   fjernedeArbeidsland: PT.arrayOf(PT.string),
 };
@@ -317,13 +268,12 @@ VurderingVurderarbeidsland.defaultProps = {
   fjernedeArbeidsland: [],
 };
 
-const inngangFormValuesSelector = formValueSelector(KV.Form.INNGANG);
+const soknadFormValuesSelector = formValueSelector(KV.Form.SOKNAD);
 
 const mapStateToProps = (state) => ({
   maritimtArbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
-  soknadsland: inngangFormValuesSelector(state, "soknadsland"),
-  fjernedeSoknadsland: inngangFormValuesSelector(state, "fjernedeLand"),
+  soknadsland: soknadFormValuesSelector(state, "soknadsland"),
   arbeidsland: avklartefaktaSelectors.ArbeidslandSelector(state),
   fjernedeArbeidsland: avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector(state),
 });
