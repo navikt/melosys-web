@@ -1,11 +1,11 @@
 import { string, object } from "yup";
+import * as KV from "../../../kodeverk";
 
-const TAST_INN_DATO = { melding: "Tast inn dato" };
-const SKRIV_INN_EN_GYLDIG_DATO = { melding: "Skriv inn en gyldig dato" };
+const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const vurder_utpeking = object().shape({
-  fom: string().erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO).required(TAST_INN_DATO),
-  tom: string().erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO).required(TAST_INN_DATO),
+  fom: string().erGyldigDato().required(MAA_FYLLES_UT),
+  tom: string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT),
 });
 
 export default vurder_utpeking;

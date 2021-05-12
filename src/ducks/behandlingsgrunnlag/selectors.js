@@ -251,3 +251,16 @@ export const ArbeidssituasjonOgOevrigSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidssituasjonOgOevrig || {}
 );
+
+export const UtenlandsoppdragetSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlagData) =>
+    behandlingsgrunnlagData.utenlandsoppdraget || {
+      erUtsendelseForOppdragIUtlandet: null,
+      erAnsattForOppdragIUtlandet: null,
+      erFortsattAnsattEtterOppdraget: null,
+      erDrattPaaEgetInitiativ: null,
+      erErstatningTidligereUtsendte: null,
+      samletUtsendingsperiode: { fom: null, tom: null },
+    }
+);

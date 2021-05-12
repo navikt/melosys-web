@@ -27,9 +27,19 @@ export async function forhandsvisBrev(behandlingID: number, dokumenttypeKode: st
     fritekst: data.fritekst ? data.fritekst : null,
     begrunnelseKode: data.begrunnelseKode ? data.begrunnelseKode : null,
     ytterligereInformasjon: data.ytterligereInformasjon ? data.ytterligereInformasjon : null,
+    produserbardokument: dokumenttypeKode,
   };
 
   const response = await Api.Dokumenter.pdf.forhandsvisBrev(behandlingID, dokumenttypeKode, utfyltdata);
+
+  if (response.ok) {
+    return getObjectURL(response);
+  }
+  return false;
+}
+
+export async function forhandsvisBrevV2(behandlingID: number, data: Api.DokumenterV2.OpprettBrevReqDto) {
+  const response = await Api.DokumenterV2.opprettUtkastBrev(behandlingID, data);
 
   if (response.ok) {
     return getObjectURL(response);

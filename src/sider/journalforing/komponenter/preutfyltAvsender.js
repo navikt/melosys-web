@@ -7,10 +7,10 @@ import "./avsendervelger.css";
 
 const PreutfyltAvsender = ({ className, avsenderID, avsenderNavn }) => (
   <div className={className}>
-    <Nav.typo.Element className="linje">Avsender ID</Nav.typo.Element>
-    <Nav.typo.Normaltekst className="linje">{avsenderID}</Nav.typo.Normaltekst>
-    <Nav.typo.Element className="linje">Avsenders navn</Nav.typo.Element>
-    <Nav.typo.Normaltekst className="linje">{avsenderNavn}</Nav.typo.Normaltekst>
+    <Nav.Typo.Element className="linje">Avsender ID</Nav.Typo.Element>
+    <Nav.Typo.Normaltekst className="linje">{avsenderID}</Nav.Typo.Normaltekst>
+    <Nav.Typo.Element className="linje">Avsenders navn</Nav.Typo.Element>
+    <Nav.Typo.Normaltekst className="linje">{avsenderNavn}</Nav.Typo.Normaltekst>
   </div>
 );
 

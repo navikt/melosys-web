@@ -20,7 +20,7 @@ import Fotknapper from "./fotknapper";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import JournalforingSchema from "./journalforingSchema";
 
-const JournalforingForm = (props) => {
+export const JournalforingForm = (props) => {
   const {
     journalpostID,
     hoveddokumentID,
@@ -38,7 +38,9 @@ const JournalforingForm = (props) => {
     handleSubmit,
   } = props;
   const visForvaltningsMelding =
-    formValues.saksnummer === "-1" && MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema);
+    formValues.saksnummer === "-1" &&
+    (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
+      formValues.opprettnysak_behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -139,8 +141,6 @@ const mapStateToProps = (state) => {
       ingenVurdering: false,
       ikkeSendForvaltingsmelding: false,
       skalTilordnes: false,
-      journalforingUnntakFraLovvalgsland: MKV.Koder.landkoder.NO,
-      journalforingLovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
       submittable: false,
     },
   };

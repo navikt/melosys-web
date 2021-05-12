@@ -104,12 +104,12 @@ const VurderingVirksomhet = ({
 
   return (
     <div className="vurderingVirksomhet">
-      <Nav.typo.Undertittel className="undertittel">
+      <Nav.Typo.Undertittel className="undertittel">
         Velg virksomhet
         <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
           {hjelpetekst}
         </Nav.Hjelpetekst>
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
 
       <Mui.Checkboxgruppe
         muligeValg={virksomheterListe}

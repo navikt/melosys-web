@@ -35,4 +35,19 @@ describe("Landvelger", () => {
     const landVelger = shallow(<Landvelger {...props} />);
     expect(landVelger.find("datalist")).toHaveLength(1);
   });
+
+  describe("Dersom landkoder prop", () => {
+    it("er satt til tom liste", () => {
+      props.landkoder = [];
+      const landVelger = shallow(<Landvelger {...props} />);
+
+      expect(landVelger.find("datalist").children()).toHaveLength(0);
+    });
+
+    it("ikke er satt", () => {
+      const landVelger = shallow(<Landvelger {...props} />);
+
+      expect(landVelger.find("datalist").children()).not.toHaveLength(0);
+    });
+  });
 });

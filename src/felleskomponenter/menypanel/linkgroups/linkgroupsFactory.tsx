@@ -50,9 +50,13 @@ class LinkGroupsFactory {
         const fraSoknad = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
         if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addLonnOgGodtgjorelser();
         fraSoknad.addFullmektig();
-        fraSoknad.addPeriode();
+        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addUtenlandsoppdraget();
+        else fraSoknad.addPeriode();
         fraSoknad.addArbeidssteder();
-        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraSoknad.addOvrigOmArbeidstaker();
+        if (behandlingsgrunnlagtype === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) {
+          fraSoknad.addOmVirksomhetenINorge();
+          fraSoknad.addOvrigOmArbeidstaker();
+        }
 
         return new LinkgroupsBuilder()
           .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())

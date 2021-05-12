@@ -5,6 +5,8 @@ import * as formSelectors from "./selectors";
 
 import formReducers from "./reducers";
 
-export { formActions, formOperations, formTypes, formSelectors };
+import SoknadSchema from "./soknadSchema";
+
+export { formActions, formOperations, formTypes, formSelectors, SoknadSchema };
 
 export default formReducers;

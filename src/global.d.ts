@@ -22,10 +22,7 @@ declare module "Domene" {
   export type Fagsak = import("./@types").Fagsak;
   export type GeneriskAdresse = import("./@types").GeneriskAdresse;
   export type MedlPeriode = import("./@types").MedlPeriode;
-  export type Oppsummering = import("./@types").Oppsummering;
   export type Periode = import("./@types").Periode;
-  export type Person = import("./@types").Person;
-  export type PersonHistorikk = import("./@types").PersonHistorikk;
   export type OppsummertFaktaVirksomheter = import("./@types").Virksomheter;
   export type OppsummertFaktaMedfolgendeFamilie = import("./@types").MedfolgendeFamilie;
   export type MedfolgendeFamiliemedlem = import("./@types").MedfolgendeFamiliemedlem;
@@ -38,7 +35,6 @@ declare module "Domene" {
   export type SedPdfData = import("./@types").SedPdfData;
   export type Medlemskapsperiode = import("./@types").Medlemskapsperiode;
   export type OppdaterMedlemskapsperiode = import("./@types").OppdaterMedlemskapsperiode;
-  export type Familiemedlem = import("./@types").Familiemedlem;
   export type Avgiftsgrunnlag = import("./@types").Avgiftsgrunnlag;
   export type Avgiftsberegning = import("./@types").Avgiftsberegning;
   export type Avgiftsperiode = import("./@types").Avgiftsperiode;
@@ -71,4 +67,8 @@ declare module "objectpath" {
 
   declare const objectpath: Objectpath;
   export default objectpath;
+}
+
+declare module "nav-frontend-grid" {
+  export type ColumnWidth = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
 }

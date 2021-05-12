@@ -5,6 +5,11 @@ export const AnmodningsperiodesvarSelector = createSelector(
   (anmodningsperiodesvar) => anmodningsperiodesvar
 );
 
+export const ReduxStatusSelector = createSelector(
+  (state) => state.anmodningsperiodesvar.status,
+  (status) => status
+);
+
 export const EndretPeriodeSelector = createSelector(
   (state) => AnmodningsperiodesvarSelector(state) || {},
   (anmodningsperiodesvar) => anmodningsperiodesvar.endretPeriode

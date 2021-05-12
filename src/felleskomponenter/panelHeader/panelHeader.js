@@ -8,8 +8,8 @@ const PanelHeader = ({ ikon: Ikon, tittel, tittelTilleggsinfo, undertittel }) =>
     {Ikon && <Ikon className="panelheader__ikon" />}
     <div className="panelheader__tittel">
       <div className="panelheader__tittel__hoved">
-        <Nav.typo.Undertittel>{tittel}</Nav.typo.Undertittel>&emsp;
-        <Nav.typo.Ingress>{tittelTilleggsinfo}</Nav.typo.Ingress>
+        <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>&emsp;
+        <Nav.Typo.Ingress>{tittelTilleggsinfo}</Nav.Typo.Ingress>
       </div>
       <span className="panelheader__tittel__under">{undertittel}</span>
     </div>

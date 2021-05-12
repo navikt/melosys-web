@@ -57,9 +57,9 @@ const Behandlingsmeny = ({
       <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>
         Vis alle behandlinger
       </Nav.Knapp>
-      {!redigerbart && visRevurderFagsak && (
+      {visRevurderFagsak && (
         <Nav.Knapp mini className="innhold__element" onClick={visRevurderFagsakDialogHandle}>
-          Vurder vedtak på nytt
+          Vurder saken på nytt
         </Nav.Knapp>
       )}
     </div>

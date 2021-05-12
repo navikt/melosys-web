@@ -223,6 +223,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
             feil={feil("land")}
             values={valgteLand}
+            className="multiselect"
           />
           <MultiSelect
             label="Mottakerinstitusjoner"
@@ -233,8 +234,9 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
             }))}
             feil={feil("mottakerinstitusjoner")}
             values={valgteMottakerinstitusjoner}
+            className="multiselect"
           />
-          <Nav.typo.Undertittel>Vedlegg</Nav.typo.Undertittel>
+          <Nav.Typo.Undertittel>Vedlegg</Nav.Typo.Undertittel>
           <VedleggVelger valgteVedlegg={valgteVedlegg} onChange={setValgteVedlegg} dokumenter={dokumenter} />
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>
             Opprett ny BUC

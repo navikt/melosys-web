@@ -5,8 +5,8 @@ class SaksbehandlingInngang extends Inngang {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const { avklartefakta, inngangsvilkaar } = propsLight;
-    const harAvklaring = this.harAvklaring(avklartefakta, inngangsvilkaar);
+    const { inngangsvilkaar } = propsLight;
+    const harAvklaring = this.harAvklaring(inngangsvilkaar);
 
     this.kriterier = [
       {

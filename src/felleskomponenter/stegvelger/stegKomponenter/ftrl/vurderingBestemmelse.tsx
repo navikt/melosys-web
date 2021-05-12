@@ -242,9 +242,9 @@ const VurderingBestemmelse = ({
 
   return (
     <div className="vurderingBestemmelse">
-      <Nav.typo.Undertittel className="undertittel">
+      <Nav.Typo.Undertittel className="undertittel">
         Hvilken bestemmelse skal søknaden vurderes etter?
-      </Nav.typo.Undertittel>
+      </Nav.Typo.Undertittel>
 
       <Nav.Fieldset className="select" legend="Velg bestemmelse">
         <Nav.Row>

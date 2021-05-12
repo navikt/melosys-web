@@ -65,7 +65,7 @@ class MultiVilkaar extends Component {
 
     return (
       <div>
-        <Nav.typo.Undertittel>{`Fyller søker kriteriene for artikkel ${vilkaarNavn12}?`}</Nav.typo.Undertittel>
+        <Nav.Typo.Undertittel>{`Fyller søker kriteriene for artikkel ${vilkaarNavn12}?`}</Nav.Typo.Undertittel>
         <div>
           <Nav.Row>
             <Nav.Column xs="12">

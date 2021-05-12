@@ -103,7 +103,7 @@ const Saksbehandling = ({
   behandlingsgrunnlagMottaksdato,
   behandlingsresultat,
   behandlingstema,
-  behandlingstype,
+  behandlingsstatus,
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
   dokumenter,
@@ -149,7 +149,7 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
-  const [folketrygdenToggle] = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -287,7 +287,6 @@ const Saksbehandling = ({
               renderBehandlingsmeny={() => (
                 <Behandlingsmeny
                   redigerbart={redigerbart}
-                  behandlingstype={behandlingstype}
                   anmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}
@@ -297,6 +296,7 @@ const Saksbehandling = ({
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                  behandlingsstatus={behandlingsstatus}
                 />
               )}
               renderBehandlingsstatus={() => (
@@ -335,7 +335,7 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   behandlingstema: PT.string.isRequired,
-  behandlingstype: PT.string.isRequired,
+  behandlingsstatus: PT.string.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   dokumenter: PT.array.isRequired,
@@ -404,7 +404,7 @@ const mapStateToProps = (state) => ({
   ),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),

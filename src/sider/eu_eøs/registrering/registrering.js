@@ -25,6 +25,13 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
 
+const {
+  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+} = MKV.Koder.behandlinger.behandlingstema;
+
+const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
+
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
     {
@@ -72,7 +79,7 @@ const behandlingsstatusMap = {
   ],
 };
 
-const Registrering = (props) => {
+export const Registrering = (props) => {
   const {
     match: {
       params: { snr },
@@ -89,6 +96,7 @@ const Registrering = (props) => {
     redigerbart,
     Saksopplysninger,
     behandlingstema,
+    behandlingsstatus,
     fagsak,
     oppsummering,
     person,
@@ -100,6 +108,7 @@ const Registrering = (props) => {
     dokumentOversikt,
     dokumenter,
     startOgVisOppfriskModal,
+    visRevurderFagsakDialogHandle,
   } = props;
 
   const saksnummer = snr;
@@ -145,6 +154,11 @@ const Registrering = (props) => {
 
   if (Utils._isNil(redigerbart)) return null;
 
+  const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
+  const visRevurderFagsak =
+    behandlingErAvsluttet &&
+    [REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING, REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE].includes(behandlingstema);
+
   return (
     <div className="registrering">
       <Nav.Container fluid>
@@ -177,6 +191,8 @@ const Registrering = (props) => {
                   tilbakeleggeHandle={tilbakeleggHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
+                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                  visRevurderFagsak={visRevurderFagsak}
                 />
               )}
               renderBehandlingsstatus={() => (
@@ -231,6 +247,8 @@ Registrering.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
+  behandlingsstatus: PT.string.isRequired,
 };
 Registrering.defaultProps = {
   redigerbart: null,
@@ -252,6 +270,7 @@ const mapStateToProps = (state) => ({
   person: behandlingerSelectors.PersonSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),

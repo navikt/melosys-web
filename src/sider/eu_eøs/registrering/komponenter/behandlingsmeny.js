@@ -10,6 +10,8 @@ const Behandlingsmeny = (props) => {
     apneTidligereBehandlinger,
     tilbakeleggeHandle,
     oppfriskSaksopplysningerHandle,
+    visRevurderFagsak,
+    visRevurderFagsakDialogHandle,
   } = props;
 
   return (
@@ -33,6 +35,11 @@ const Behandlingsmeny = (props) => {
         <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>
           Vis alle behandlinger
         </Nav.Knapp>
+        {visRevurderFagsak && (
+          <Nav.Knapp mini className="innhold__element" onClick={visRevurderFagsakDialogHandle}>
+            Vurder saken på nytt
+          </Nav.Knapp>
+        )}
       </div>
     </Nav.EkspanderbartpanelBase>
   );
@@ -44,6 +51,8 @@ Behandlingsmeny.propTypes = {
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
+  visRevurderFagsak: PT.bool.isRequired,
 };
 
 export default Behandlingsmeny;

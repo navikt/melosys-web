@@ -277,6 +277,7 @@ class Stegvelger extends Component {
     const { behandlingID, tilForsiden } = this.props;
     const body = {
       varsleUtland: data.varsleUtland || false,
+      fritekst: data.fritekst || null,
     };
 
     try {
@@ -419,7 +420,6 @@ class Stegvelger extends Component {
       redigerbart: props.redigerbart,
       generiskStegRedigerbart: props.generiskStegRedigerbart,
       erIDirekteTilArtikkel16Flyt: props.erIDirekteTilArtikkel16Flyt,
-      soknadslandFaktaer: props.soknadslandFaktaer,
       vurderUtpekingFom: props.vurderUtpekingFom,
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
@@ -440,6 +440,7 @@ class Stegvelger extends Component {
       vurder_virksomhet_valid: props.vurder_virksomhet_valid,
       vurder_periode_valid: props.vurder_periode_valid,
       vurder_trygdeavgift_valid: props.vurder_trygdeavgift_valid,
+      soknadsperiode: props.soknadsperiode,
       vurder_familie_valid: props.vurder_familie_valid,
       vurder_representant_valid: props.vurder_representant_valid,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
@@ -601,7 +602,6 @@ Stegvelger.propTypes = {
   utpekingsperioder: MPT.Utpekingsperioder.isRequired,
   omfattesIAnnetLand: PT.bool.isRequired,
   stegMap: PT.objectOf(PT.arrayOf(PT.oneOfType([PT.string, PT.object]))).isRequired,
-  soknadslandFaktaer: PT.arrayOf(MPT.Avklartefakta).isRequired,
   vurderUtpekingFom: PT.string,
   vurderUtpekingTom: PT.string,
   vurderUtpekingValid: PT.bool.isRequired,
@@ -624,6 +624,7 @@ Stegvelger.propTypes = {
   vurder_virksomhet_valid: PT.bool.isRequired,
   vurder_periode_valid: PT.bool.isRequired,
   vurder_trygdeavgift_valid: PT.bool.isRequired,
+  soknadsperiode: MPT.Soknadsperiode.isRequired,
   vurder_familie_valid: PT.bool.isRequired,
   vurder_representant_valid: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
@@ -679,7 +680,7 @@ const mapStateToProps = (state) => ({
   vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
   vurder_start_valid: formSelectors.VurderStartFormValid(state),
   vurder_virksomhet_valid: formSelectors.VurderVirksomhetFormValid(state),
-  vurder_periode_valid: formSelectors.VurderPerioderValid(state),
+  vurder_periode_valid: formSelectors.VurderPerioderFormValid(state),
   vurder_trygdeavgift_valid: formSelectors.VurderTrygdeavgiftFormValid(state),
   vurder_familie_valid: formSelectors.VurderFamilieFormValid(state),
   vurder_representant_valid: formSelectors.VurderRepresentantFormValid(state),
@@ -695,7 +696,6 @@ const mapStateToProps = (state) => ({
   erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
   utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
   omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
-  soknadslandFaktaer: avklartefaktaSelectors.Soknadsland(state),
   vurderUtpekingFom: formSelectors.VurderUtpekingFomSelector(state),
   vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
   vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
@@ -709,6 +709,7 @@ const mapStateToProps = (state) => ({
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
+  soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
 });
 
 /* eslint no-alert:off */

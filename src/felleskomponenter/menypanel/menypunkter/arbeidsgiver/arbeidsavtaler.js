@@ -70,9 +70,9 @@ class Arbeidsavtaler extends Component {
 
     const historiskeArbeidsAvtalerElement = visHistoriskeArbeidsavtaler ? (
       <div>
-        <Nav.typo.Undertittel className="arbeidsavtaler__historisk__overskrift">
+        <Nav.Typo.Undertittel className="arbeidsavtaler__historisk__overskrift">
           Tidligere arbeidsavtaler
-        </Nav.typo.Undertittel>
+        </Nav.Typo.Undertittel>
         <Tabell
           tabellData={tabellTilpassetArbeidsavtaler}
           kolonneNavn={[

@@ -6,17 +6,15 @@ import PT from "prop-types";
 import * as Skjema from "../../../felleskomponenter/skjema/";
 import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes/";
-import * as Utils from "../../../utils";
-import * as KV from "../../../kodeverk";
 import { formSelectors } from "../../../ducks/form";
 import MKV from "../../../melosyskodeverk";
-import { useFeatureToggle } from "../../../featuretoggle";
+import { FeatureToggle, useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
 
 export const OpprettSakTittel = () => (
   <div className="enkeltSak__meta">
-    <Nav.typo.Element>Opprett ny sak</Nav.typo.Element>
+    <Nav.Typo.Element>Opprett ny sak</Nav.Typo.Element>
   </div>
 );
 const OpprettFagsak = (props) => {
@@ -34,7 +32,7 @@ const OpprettFagsak = (props) => {
     );
   }, [valgtSakstype]);
 
-  const [folketrygdenToggle] = useFeatureToggle("melosys.folketrygden.mvp");
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   if (folketrygdenToggle === "fetching") return null;
 
@@ -54,17 +52,6 @@ const OpprettFagsak = (props) => {
       );
     }
   }
-
-  const art16 = [
-    KV.kodeTilObjekt(
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
-      MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
-    ),
-    KV.kodeTilObjekt(
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_2,
-      MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
-    ),
-  ];
 
   const skalViseSoknadsperiodeOgLand = (behandlingstema) =>
     ![
@@ -98,59 +85,31 @@ const OpprettFagsak = (props) => {
       </Skjema.Select>
       {skalViseSoknadsperiodeOgLand(valgtBehandlingstema) && (
         <Fragment>
-          {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL && (
-            <Fragment>
-              <Nav.Fieldset legend="Unntak fra lovvalgsland:">
-                <Nav.Row className="">
-                  <Nav.Column xs="12">
-                    <Skjema.LandVelger
-                      label="Velg ett land:"
-                      feltNavn="journalforingUnntakFraLovvalgsland"
-                      multiLand={false}
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-              </Nav.Fieldset>
-              <Nav.Fieldset legend="Lovvalgsbestemmelse">
-                <Nav.Row className="">
-                  <Nav.Column xs="12">
-                    <Skjema.Select label="Artikkelen det gjelder:" feltNavn="journalforingLovvalgsbestemmelse">
-                      {art16.map((kodeObjekt) => (
-                        <option key={Utils._uuid()} value={kodeObjekt.kode}>
-                          {kodeObjekt.term}
-                        </option>
-                      ))}
-                    </Skjema.Select>
-                  </Nav.Column>
-                </Nav.Row>
-              </Nav.Fieldset>
-              <Nav.Fieldset legend="Unntak fra lovvalgsbestemmelse">
-                <Nav.Row className="">
-                  <Nav.Column xs="12">
-                    <Skjema.Select
-                      label="Artikkelen det søkes unntak fra:"
-                      feltNavn="journalforingUnntakFraLovvalgsbestemmelse"
-                    >
-                      {MKV.Kodekombinasjoner.unntaksbestemmelser.map((kodeObjekt) => (
-                        <option key={Utils._uuid()} value={kodeObjekt.kode}>
-                          {kodeObjekt.term}
-                        </option>
-                      ))}
-                    </Skjema.Select>
-                  </Nav.Column>
-                </Nav.Row>
-              </Nav.Fieldset>
-            </Fragment>
-          )}
           {valgtBehandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET && (
             <Fragment>
               <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
                 <Nav.Row className="">
                   <Nav.Column xs="6">
-                    <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                    <FeatureToggle togglename="melosys.input.DATOFELT">
+                      {(status) =>
+                        status === "enabled" ? (
+                          <Skjema.Datovelger label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                        ) : (
+                          <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+                        )
+                      }
+                    </FeatureToggle>
                   </Nav.Column>
                   <Nav.Column xs="6">
-                    <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                    <FeatureToggle togglename="melosys.input.DATOFELT">
+                      {(status) =>
+                        status === "enabled" ? (
+                          <Skjema.Datovelger label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                        ) : (
+                          <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+                        )
+                      }
+                    </FeatureToggle>
                   </Nav.Column>
                 </Nav.Row>
               </Nav.Fieldset>

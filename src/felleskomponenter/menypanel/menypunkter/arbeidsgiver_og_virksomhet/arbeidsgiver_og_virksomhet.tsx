@@ -39,7 +39,7 @@ const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.For
 const mapStateToProps = (state: RootState) => ({
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  ekstraArbeidsgivere: soknadFormValueSelector(state, "ekstraArbeidsgivere"),
+  ekstraArbeidsgivere: soknadFormValueSelector(state, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere"),
   selvstendigForetak: soknadFormValueSelector(state, "selvstendigForetak"),
   arbeidsforholdUtland: soknadFormValueSelector(state, "arbeidsforholdUtland"),
   selvstendigNaeringsvirksomhetUtland: soknadFormValueSelector(state, "selvstendigNaeringsvirksomhetUtland"),
@@ -81,9 +81,9 @@ export const ArbeidsgiverOgVirksomhet = ({
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}
-        </Nav.typo.Innholdstittel>
+        </Nav.Typo.Innholdstittel>
         <span>{behandlingsgrunnlagEtikett}</span>
         {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>
@@ -100,7 +100,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         leggTilTekst="Legg til arbeidsgiver og kontaktopplysninger"
         tittelTekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdINorge}
         tittelIkon={Ikoner.Building}
-        feltNavn="ekstraArbeidsgivere"
+        feltNavn="juridiskArbeidsgiverNorge.ekstraArbeidsgivere"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
         transformerOrgTilElement={(org: Organisasjon) => org.orgnr}

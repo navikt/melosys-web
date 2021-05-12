@@ -5,7 +5,7 @@ import classNames from "classnames";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
-import EditerbartElement, { visAlltidBinSymbolsynlighetMap } from "../editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../editerbartElement";
 
 import "./flereRedigeringsknapperListe.css";
 
@@ -70,9 +70,8 @@ function FlereRedigeringsKnapperListe<T>({
               tittel={`${tittelTekst}${navn ? `: ${navn}` : ""}`}
               tittelIkon={tittelIkon}
               tittelUnderstrek
-              hentNyStatusVedHarDataEndring={false}
               onBinClick={slett}
-              symbolsynlighetMap={visAlltidBinSymbolsynlighetMap}
+              symbolsynlighet={visAlltidBinSymbolsynlighet}
               redigererRender={() => (
                 <RedigererKomponent
                   redigerbart={redigerbart}

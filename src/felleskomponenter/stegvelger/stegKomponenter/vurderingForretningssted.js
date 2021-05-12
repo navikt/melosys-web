@@ -181,7 +181,7 @@ export const VurderingForretningssted = (props) => {
 
   return (
     <div>
-      <Nav.typo.Undertittel>Vurdering av artikkel 13 nr. 1 bokstav b</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>Vurdering av artikkel 13 nr. 1 bokstav b</Nav.Typo.Undertittel>
       <Nav.Fieldset legend="Velg hvor virksomhetene har forretningssted" className="forretningssteder">
         <Forretningssteder {...tilstand} {...props} />
       </Nav.Fieldset>

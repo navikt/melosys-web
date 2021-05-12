@@ -10,10 +10,10 @@ const Elementskrift = ({ ikon: Ikon, tekst, className }) => {
   const cl = classNames("elementskrift", className);
 
   return (
-    <Nav.typo.Element className={cl}>
+    <Nav.Typo.Element className={cl}>
       <Ikon className="ikon" />
       {tekst}
-    </Nav.typo.Element>
+    </Nav.Typo.Element>
   );
 };
 

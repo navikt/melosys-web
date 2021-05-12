@@ -87,9 +87,9 @@ describe("EditerbartElement", () => {
       expect((legend as any).props.symbolsynlighet).toEqual(forventetSymbolsynlighet);
     });
 
-    it("får symbolsynlighet satt ved symbolsynlighetMap-prop", () => {
+    it("får symbolsynlighet satt ved symbolsynlighet-prop", () => {
       const forventetSymbolsynlighet = { pencil: false, bin: false };
-      props.symbolsynlighetMap = new Map([[Status.RedigeringUtfort, forventetSymbolsynlighet]]);
+      props.symbolsynlighet = { [Status.RedigeringUtfort]: forventetSymbolsynlighet };
       props.harData = true;
       props.redigeringUtfortRender = jest.fn(() => <span>Redigering utført</span>);
       const editerbartElement = shallow(<EditerbartElement {...props} />);

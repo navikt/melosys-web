@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PT from "prop-types";
+import classNames from "classnames";
 import * as MPT from "../../proptypes";
 import { dokumenterOperations } from "../../ducks/dokumenter";
 import * as Nav from "../../utils/navFrontend";
@@ -36,6 +37,8 @@ class PdfLenkeListe extends Component {
 
       if (dokument.erSed) {
         fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type, data);
+      } else if (dokument.sendesTilDokumenterV2) {
+        fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, data);
       } else {
         fileURL = await dokumenterOperations.forhandsvisBrev(behandlingID, dokument.type, data);
       }
@@ -62,8 +65,10 @@ class PdfLenkeListe extends Component {
   }
 
   render() {
+    const cl = classNames("pdfLenkeListe", this.props.className);
+
     return (
-      <div className="pdfLenkeListe">
+      <div className={cl}>
         {this.props.dokumenter.map((dokument) => this.lagDokumentLenke(dokument))}
         {this.state.feilmelding && (
           <Nav.AlertStripe type="advarsel" className="varsel">
@@ -79,10 +84,12 @@ PdfLenkeListe.propTypes = {
   behandlingID: PT.number.isRequired,
   dokumenter: MPT.DokumentMetadataListe.isRequired,
   vedKlikk: PT.func,
+  className: PT.string,
 };
 
 PdfLenkeListe.defaultProps = {
   vedKlikk: null,
+  className: "",
 };
 
 export default PdfLenkeListe;

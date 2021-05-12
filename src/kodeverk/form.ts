@@ -5,6 +5,7 @@ export interface BehandlingsFormData {
   behandlingstema: string;
 }
 export const BREV_BESTILLING = "brevbestilling";
+export const SEND_BREV = "send_brev";
 export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
 export const JOURNALFORING_SED = "journalforing_sed";
@@ -61,12 +62,29 @@ export interface ArbeidssituasjonOgOevrig {
   mottarYtelserNorge?: boolean | null;
   mottarYtelserUtlandet?: boolean | null;
 }
+export interface JuridiskArbeidsgiverNorge {
+  antallUtsendte?: string;
+  antallAdmAnsatte?: string;
+  antallAnsatte?: string;
+  andelOmsetningINorge?: string;
+  andelOppdragINorge?: string;
+  andelKontrakterINorge?: string;
+  andelRekruttertINorge?: string;
+  erOffentligVirksomhet?: boolean | null;
+}
+export interface Utenlandsoppdraget {
+  erUtsendelseForOppdragIUtlandet?: boolean | null;
+  erAnsattForOppdragIUtlandet?: boolean | null;
+  erFortsattAnsattEtterOppdraget?: boolean | null;
+  erDrattPaaEgetInitiativ?: boolean | null;
+  erErstatningTidligereUtsendte?: boolean | null;
+  samletUtsendingsperiode: { fom?: string | null; tom?: string | null };
+}
 
 export type SoknadFormData = any;
 
 export const SOK_ETTER_SAK = "sokEtterSak";
 export const ARTIKKEL_16_ANMODNING = "artikkel_16_anmodning";
-export const INNGANG = "inngang";
 export const ARTIKKEL_12_VEDTAK = "artikkel_12_vedtak";
 export const AVSLAG_ARTIKKEL_12_OG_16 = "avslag_artikkel_12_og_16";
 export const ARTIKKEL_16_MOTTA_SVAR = "artikkel_16_motta_svar";

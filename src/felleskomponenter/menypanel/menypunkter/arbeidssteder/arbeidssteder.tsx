@@ -90,9 +90,9 @@ export const Arbeidssteder = ({
   return (
     <div className="arbeidssteder">
       <div>
-        <Nav.typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.Arbeidssteder.tittel}
-        </Nav.typo.Innholdstittel>
+        </Nav.Typo.Innholdstittel>
         <span>{behandlingsgrunnlagEtikett}</span>
         {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>
@@ -116,7 +116,7 @@ export const Arbeidssteder = ({
         }
         flereRedigeringsknapper={false}
         onBinClick={slettFastArbeidsstedOgHjemmekontorAvklaring}
-        symbolsynlighetMap={new Map([[Status.IngenData, { pencil: true, bin: false }]])}
+        symbolsynlighet={{ [Status.IngenData]: { pencil: true, bin: false } }}
       />
       <EditerbartElementListe
         redigerbart={redigerbart}

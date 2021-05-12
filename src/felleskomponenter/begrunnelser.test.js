@@ -22,7 +22,7 @@ describe("Begrunnelser", () => {
   it("viser label", () => {
     const begrunnelser = shallow(<Begrunnelser {...props} />);
 
-    expect(begrunnelser.find(Nav.typo.Element).children().text()).toBe(props.label);
+    expect(begrunnelser.find(Nav.Typo.Element).children().text()).toBe(props.label);
   });
 
   it("viser fritekst", () => {

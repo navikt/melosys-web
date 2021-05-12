@@ -19,7 +19,7 @@ const labelCls = linkgroupCls.element("label");
 
 const LinkGroup = ({ label, links, onClick }: LinkGroupProps) => (
   <div className={linkgroupCls.block}>
-    <Nav.typo.Normaltekst className={labelCls}>{label}</Nav.typo.Normaltekst>
+    <Nav.Typo.Normaltekst className={labelCls}>{label}</Nav.Typo.Normaltekst>
     {links.map(({ label: linkLabel, active, iconSrc, iconAltText }, index) => (
       <MenyLink
         key={linkLabel.split(" ").join("")}

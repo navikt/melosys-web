@@ -14,8 +14,6 @@ import DialogboksAvsluttSakSomBortfalt from "../felleskomponenter/dialogboks/avs
 import DialogboksAvslagSoknad from "../felleskomponenter/dialogboks/avslagSoknad/dialogboksAvslagSoknad";
 import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/revurderFagsak/dialogboksRevurderFagsak";
 import DialogboksValidering from "../felleskomponenter/dialogboks/validering";
-import DialogboksEndreBehandlingstema from "../felleskomponenter/dialogboks/endreBehandlingstema/dialogboksEndreBehandlingstema";
-import DialogboksEndreBehandlingsstatus from "../felleskomponenter/dialogboks/endreBehandlingsstatus/dialogboksEndreBehandlingsstatus";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -40,10 +38,6 @@ const Modals = ({
   venterPaRevurderFagsak,
   visValideringModal,
   skjulValideringModalDialogHandle,
-  visEndreBehandlingstemaDialog,
-  visEndreBehandlingsstatusDialog,
-  skjulEndreBehandlingstemaModalDialogHandle,
-  skjulEndreBehandlingsstatusModalDialogHandle,
   valideringerFeilkoder,
   valideringerFeilmeldinger,
   behandlingOppfriskes,
@@ -84,12 +78,6 @@ const Modals = ({
         feilmeldinger={valideringerFeilmeldinger}
       />
     )}
-    {visEndreBehandlingstemaDialog && (
-      <DialogboksEndreBehandlingstema avbryt={skjulEndreBehandlingstemaModalDialogHandle} />
-    )}
-    {visEndreBehandlingsstatusDialog && (
-      <DialogboksEndreBehandlingsstatus avbryt={skjulEndreBehandlingsstatusModalDialogHandle} />
-    )}
   </Fragment>
 );
 
@@ -114,10 +102,6 @@ Modals.propTypes = {
   venterPaRevurderFagsak: PT.bool.isRequired,
   visValideringModal: PT.bool.isRequired,
   skjulValideringModalDialogHandle: PT.func.isRequired,
-  visEndreBehandlingstemaDialog: PT.bool.isRequired,
-  skjulEndreBehandlingstemaModalDialogHandle: PT.func.isRequired,
-  visEndreBehandlingsstatusDialog: PT.bool.isRequired,
-  skjulEndreBehandlingsstatusModalDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
   valideringerFeilkoder: PT.arrayOf(
@@ -148,8 +132,6 @@ const mapStateToProps = (state) => ({
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
   valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
   valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
-  visEndreBehandlingstemaDialog: modalerSelectors.ErEndreBehandlingstemaSynligSelector(state),
-  visEndreBehandlingsstatusDialog: modalerSelectors.ErEndreBehandlingsstatusSynligSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -161,8 +143,6 @@ const mapDispatchToProps = (dispatch) => ({
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
-  skjulEndreBehandlingstemaModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingstema()),
-  skjulEndreBehandlingsstatusModalDialogHandle: () => dispatch(modalerOperations.skjulEndreBehandlingsstatus()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);

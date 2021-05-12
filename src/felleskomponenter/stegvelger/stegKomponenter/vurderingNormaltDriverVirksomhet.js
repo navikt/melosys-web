@@ -26,7 +26,7 @@ const NormaltDriverVirksomhet = (props) => {
 
   return (
     <div>
-      <Nav.typo.Undertittel>Driver {arbeidsgivereTekst} vanligvis virksomhet i Norge?</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel>Driver {arbeidsgivereTekst} vanligvis virksomhet i Norge?</Nav.Typo.Undertittel>
       <EnkeltVilkaar
         oppdaterData={oppdaterData}
         labelOppfylt="Ja"

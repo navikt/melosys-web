@@ -20,6 +20,7 @@ import vurderingStartSchema from "./vurderingStartSchema";
 import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
+import { FeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
@@ -140,15 +141,43 @@ const VurderingStart = ({
 
   return (
     <div className="vurderingStart">
-      <Nav.typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.typo.Undertittel>
+      <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
 
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <Skjema.Input datoFelt label="Fra og med:" feltNavn="fom" bredde="fullbredde" disabled={!redigerbart} />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
+                ) : (
+                  <Skjema.Input
+                    datoFelt
+                    label="Fra og med:"
+                    feltNavn="fom"
+                    bredde="fullbredde"
+                    disabled={!redigerbart}
+                  />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
           <Nav.Column xs="3">
-            <Skjema.Input datoFelt label="Til og med:" feltNavn="tom" bredde="fullbredde" disabled={!redigerbart} />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
+                ) : (
+                  <Skjema.Input
+                    datoFelt
+                    label="Til og med:"
+                    feltNavn="tom"
+                    bredde="fullbredde"
+                    disabled={!redigerbart}
+                  />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.LandVelger

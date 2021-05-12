@@ -21,7 +21,7 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
 
   return (
     <div className="sendForvaltningsmelding">
-      <Nav.typo.Element>Skal melding om saksbehandlingtid sendes automatisk?</Nav.typo.Element>
+      <Nav.Typo.Element>Skal melding om saksbehandlingtid sendes automatisk?</Nav.Typo.Element>
 
       <Skjema.RadioGruppe feltNavn="ikkeSendForvaltingsmelding" label="">
         <Skjema.Radio
@@ -36,9 +36,9 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
         />
         {avsenderErFullmelktig && (
           <Fragment>
-            <Nav.typo.Element>
+            <Nav.Typo.Element>
               Oppgi kontaktperson hos fullmektig som skal motta meldingen hvis dette er oppgitt
-            </Nav.typo.Element>
+            </Nav.Typo.Element>
             <Skjema.Input feltNavn="representantKontaktPerson" label="" placeholder="Skriv inn..." />
           </Fragment>
         )}

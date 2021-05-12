@@ -1,8 +1,8 @@
 import React from "react";
 
-import Input, { InnerInputComponent } from "./input";
+import * as Utils from "../../../utils";
 
-import { normaliserInputDato } from "../../../utils/dato";
+import Input, { InnerInputComponent, normalizeDecimal, normalizeInt } from "./input";
 
 describe("Input", () => {
   let props = null;
@@ -34,20 +34,70 @@ describe("Input", () => {
     expect(input.props().name).toBe(props.feltNavn);
   });
 
+  describe("feltType prop", () => {
+    each([
+      ["heltall", normalizeInt],
+      ["desimal", normalizeDecimal],
+    ]).it("setter korrekt normaliseringsfunksjon for feltType %p", (feltType, forventetNormaliseringsfunksjon) => {
+      props.feltType = feltType;
+      const input = shallow(<Input {...props} />);
+
+      expect(input.props().normalize).toBe(forventetNormaliseringsfunksjon);
+    });
+  });
+
   describe("datofelt prop", () => {
     it("setter normalize og placeholder props korrekt", () => {
       props.datoFelt = true;
       let input = shallow(<Input {...props} />);
 
-      expect(input.props().normalize).toBe(normaliserInputDato);
+      expect(input.props().normalize).toBe(Utils.dato.normaliserInputDato);
       expect(input.props().placeholder).toBe("ddmmåå");
 
       props.datoFelt = false;
       input = shallow(<Input {...props} />);
 
-      expect(input.props().normalize).toBe(null);
-      expect(input.props().placeholder).toBe(null);
+      expect(input.props().normalize).toBeUndefined();
+      expect(input.props().placeholder).toBeNull();
     });
+  });
+});
+
+describe("normalizeDecimal", () => {
+  it("returnerer null for tom string", () => {
+    expect(normalizeDecimal("", "5")).toBe(null);
+  });
+
+  it("erstatter komma med punktum", () => {
+    expect(normalizeDecimal("5,", "5")).toBe("5.");
+  });
+
+  it("returnerer value hvis value er desimal", () => {
+    expect(normalizeDecimal("5.", "5")).toBe("5.");
+  });
+
+  it("returnerer value hvis value er heltall", () => {
+    expect(normalizeDecimal("5", null)).toBe("5");
+  });
+
+  it("returnerer previousvalue hvis value ikke er heltall eller desimal", () => {
+    expect(normalizeDecimal("5..", null)).toBe(null);
+    expect(normalizeDecimal(".", null)).toBe(null);
+    expect(normalizeDecimal(".5", null)).toBe(null);
+  });
+});
+
+describe("normalizeInt", () => {
+  it("returnerer null for tom string", () => {
+    expect(normalizeInt("", "5")).toBe(null);
+  });
+
+  it("returnerer previousValue hvis value er desimal", () => {
+    expect(normalizeInt("5.", "5")).toBe("5");
+  });
+
+  it("returnerer value hvis value er heltall", () => {
+    expect(normalizeInt("5", null)).toBe("5");
   });
 });
 

@@ -36,21 +36,21 @@ const IkkeEditerbareArbeidPaaLandSporsmal = ({ erFastArbeidssted, erHjemmekontor
 
   return (
     <div className={cls}>
-      <Nav.typo.Element>Opplysninger om arbeidssted</Nav.typo.Element>
+      <Nav.Typo.Element>Opplysninger om arbeidssted</Nav.Typo.Element>
       <Nav.Row className="row">
         <Nav.Column xs="8">
-          <Nav.typo.Normaltekst>Vil arbeidstakeren ha et fast arbeidssted i utlandet?</Nav.typo.Normaltekst>
+          <Nav.Typo.Normaltekst>Vil arbeidstakeren ha et fast arbeidssted i utlandet?</Nav.Typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="4">
-          <Nav.typo.Element>{erFastArbeidsstedString}</Nav.typo.Element>
+          <Nav.Typo.Element>{erFastArbeidsstedString}</Nav.Typo.Element>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="row">
         <Nav.Column xs="8">
-          <Nav.typo.Normaltekst>Vil arbeidstakeren kun eller hovedsaklig arbeide på hjemmekontor?</Nav.typo.Normaltekst>
+          <Nav.Typo.Normaltekst>Vil arbeidstakeren kun eller hovedsaklig arbeide på hjemmekontor?</Nav.Typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="4">
-          <Nav.typo.Element>{erHjemmekontorString}</Nav.typo.Element>
+          <Nav.Typo.Element>{erHjemmekontorString}</Nav.Typo.Element>
         </Nav.Column>
       </Nav.Row>
     </div>
