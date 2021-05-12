@@ -178,9 +178,7 @@ const VurderingVedtak = ({
         <Nav.Column xs="5">
           <Nav.Typo.Element className="info">Arbeidsland</Nav.Typo.Element>
           <Nav.Typo.Normaltekst className="info">
-            {alleLandkoder
-              ? Utils.streng.storeForbokstaverForLand(KV.finnTermFraListe(alleLandkoder, soknadsland[0]))
-              : "Finner ikke arbeidsland"}
+            {alleLandkoder ? KV.finnTermFraListe(alleLandkoder, soknadsland[0]) : "Finner ikke arbeidsland"}
           </Nav.Typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="4">
