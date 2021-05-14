@@ -162,7 +162,7 @@ const Saksopplysninger = ({
 
     switch (anmodningsperiodeSvarType) {
       case INNVILGELSE:
-        return makeResponse(tomPeriode, ytterligereInfoFritekst);
+        return makeResponse(tomPeriode);
       case DELVIS_INNVILGELSE:
         return makeResponse(
           {
@@ -177,6 +177,8 @@ const Saksopplysninger = ({
         return null;
     }
   };
+
+  const lagRequestAnmodningsperioderSvar = () => ({ behandlingID, ytterligereInfo: ytterligereInfoFritekst });
 
   const sjekkDatoVarsel = (fom, tom) => {
     if (anmodningsperiodeSvarType !== MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
@@ -229,7 +231,7 @@ const Saksopplysninger = ({
 
     try {
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
-      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
+      await Api.Saksflyt.Anmodningsperioder.svar(lagRequestAnmodningsperioderSvar());
     } catch (e) {
       Utils.logger.error(e);
       return false;
