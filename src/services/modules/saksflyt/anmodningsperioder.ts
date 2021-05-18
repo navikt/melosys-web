@@ -2,6 +2,7 @@ import { postAsJson } from "../../utils";
 import { API_BASE_URL, SAKSFLYT, ANMODNINGSPERIODER } from "../../api-constants";
 
 interface Vedlegg {
+  journalpostID: string;
   dokumentID: string;
 }
 
@@ -12,7 +13,6 @@ export interface AnmodningOmUnntakBestillingReqDto {
 }
 
 export interface AnmodningOmUnntakSvarReqDto {
-  behandlingID: number;
   ytterligereInfo: string | null;
 }
 
