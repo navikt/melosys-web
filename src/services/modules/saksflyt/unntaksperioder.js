@@ -2,7 +2,7 @@ import { postAsJson, putAsText } from "../../utils";
 import { API_BASE_URL, SAKSFLYT, UNNTAKSPERIODER } from "../../api-constants";
 
 // eslint-disable-next-line import/prefer-default-export
-export const godkjenn = (behandlingID, data = {}) =>
+export const godkjenn = (behandlingID, data = { varsleUtland: false, fritekst: null }) =>
   postAsJson(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/godkjenn`, data);
 export const innhentinfo = (behandlingID) =>
   putAsText(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/innhentinfo`);
