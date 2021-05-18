@@ -48,7 +48,7 @@ const OvrigOmArbeidstaker = ({
     <Nav.Container fluid className="ovrig-om-arbeidstaker">
       <Nav.Row>
         <Nav.Column xs="10" className="tittel">
-          <Nav.typo.Innholdstittel>{KV.Menypunkter.OvrigOmArbeidstaker.tittel}</Nav.typo.Innholdstittel>
+          <Nav.Typo.Innholdstittel>{KV.Menypunkter.OvrigOmArbeidstaker.tittel}</Nav.Typo.Innholdstittel>
           {behandlingsgrunnlagEtikett}
           {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel />}
         </Nav.Column>

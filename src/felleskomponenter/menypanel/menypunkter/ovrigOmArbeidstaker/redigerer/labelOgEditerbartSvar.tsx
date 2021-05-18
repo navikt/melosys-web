@@ -26,7 +26,7 @@ const LabelOgEditerbartSvar = ({ label, svar }: LabelOgEditerbartSvarProps) => (
     <fieldset>
       <Nav.Column xs="8">
         <legend>
-          <Nav.typo.Normaltekst>{label}</Nav.typo.Normaltekst>
+          <Nav.Typo.Normaltekst>{label}</Nav.Typo.Normaltekst>
         </legend>
       </Nav.Column>
       <Nav.Column xs="4" className="col">
