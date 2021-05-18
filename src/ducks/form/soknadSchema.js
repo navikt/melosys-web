@@ -24,6 +24,9 @@ const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
+const erElektroniskSoknad = (behandlingsgrunnlagtype) =>
+  behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+
 const utenlandskIdent = object().shape({
   ident: string()
     .nullable()
@@ -87,202 +90,293 @@ const medfolgendeBarn = object().shape({
 
 const soknad = object().when("$behandlingstema", {
   is: erIkkeBeslutningLovvalgAnnetLand,
-  then: object().shape({
-    arbeidsforholdUtland: array().of(
-      object().shape({
-        navn: string()
-          .nullable()
-          .required(
-            lagMelding(
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
-              "Navn kreves"
-            )
-          ),
-        orgnr: string()
-          .nullable()
-          .max(
-            25,
-            lagMelding(
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
-              "Registreringsnummer kan ikke være lenger enn 25 tegn"
-            )
-          ),
-      })
-    ),
-    selvstendigNaeringsvirksomhetUtland: array().of(
-      object().shape({
-        navn: string()
-          .nullable()
-          .required(
-            lagMelding(
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
-              "Navn kreves"
-            )
-          ),
-        orgnr: string()
-          .nullable()
-          .max(
-            25,
-            lagMelding(
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
-              KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
-              "Registreringsnummer kan ikke være lenger enn 25 tegn"
-            )
-          ),
-      })
-    ),
-    arbeidsstedOffshore: array().of(
-      object()
-        .shape({
-          enhetNavn: string()
+  then: object()
+    .shape({
+      arbeidsforholdUtland: array().of(
+        object().shape({
+          navn: string()
             .nullable()
             .required(
               lagMelding(
-                KV.Menypunkter.Arbeidssteder.tittel,
-                KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
                 "Navn kreves"
               )
             ),
+          orgnr: string()
+            .nullable()
+            .max(
+              25,
+              lagMelding(
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
+                "Registreringsnummer kan ikke være lenger enn 25 tegn"
+              )
+            ),
         })
-        .uniqueProperty(
-          "enhetNavn",
-          lagMelding(
-            KV.Menypunkter.Arbeidssteder.tittel,
-            KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
-            "Navn på enhet må være unikt"
-          )
-        )
-    ),
-    arbeidsstedSkip: array().of(
-      object()
-        .shape({
-          enhetNavn: string()
+      ),
+      selvstendigNaeringsvirksomhetUtland: array().of(
+        object().shape({
+          navn: string()
             .nullable()
             .required(
               lagMelding(
-                KV.Menypunkter.Arbeidssteder.tittel,
-                KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
                 "Navn kreves"
               )
             ),
+          orgnr: string()
+            .nullable()
+            .max(
+              25,
+              lagMelding(
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
+                KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
+                "Registreringsnummer kan ikke være lenger enn 25 tegn"
+              )
+            ),
         })
-        .uniqueProperty(
-          "enhetNavn",
-          lagMelding(
-            KV.Menypunkter.Arbeidssteder.tittel,
-            KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
-            "Navn på enhet må være unikt"
+      ),
+      arbeidsstedOffshore: array().of(
+        object()
+          .shape({
+            enhetNavn: string()
+              .nullable()
+              .required(
+                lagMelding(
+                  KV.Menypunkter.Arbeidssteder.tittel,
+                  KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
+                  "Navn kreves"
+                )
+              ),
+          })
+          .uniqueProperty(
+            "enhetNavn",
+            lagMelding(
+              KV.Menypunkter.Arbeidssteder.tittel,
+              KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
+              "Navn på enhet må være unikt"
+            )
           )
-        )
-    ),
-    oppgittAdresseGatenavn: string()
-      .nullable()
-      .when("$skalOppgittAdresseValideres", {
-        is: true,
-        then: string()
-          .nullable()
-          .required(
-            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Gatenavn kreves")
-          ),
-      }),
-    oppgittAdressePostnummer: string()
-      .nullable()
-      .when("$skalOppgittAdresseValideres", {
-        is: true,
-        then: string()
-          .nullable()
-          .required(
+      ),
+      arbeidsstedSkip: array().of(
+        object()
+          .shape({
+            enhetNavn: string()
+              .nullable()
+              .required(
+                lagMelding(
+                  KV.Menypunkter.Arbeidssteder.tittel,
+                  KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
+                  "Navn kreves"
+                )
+              ),
+          })
+          .uniqueProperty(
+            "enhetNavn",
             lagMelding(
-              KV.Menypunkter.Person.tittel,
-              KV.Menypunkter.Person.undertitler.annenAdresse,
-              "Postnummer kreves"
+              KV.Menypunkter.Arbeidssteder.tittel,
+              KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
+              "Navn på enhet må være unikt"
             )
-          ),
+          )
+      ),
+      oppgittAdresseGatenavn: string()
+        .nullable()
+        .when("$skalOppgittAdresseValideres", {
+          is: true,
+          then: string()
+            .nullable()
+            .required(
+              lagMelding(
+                KV.Menypunkter.Person.tittel,
+                KV.Menypunkter.Person.undertitler.annenAdresse,
+                "Gatenavn kreves"
+              )
+            ),
+        }),
+      oppgittAdressePostnummer: string()
+        .nullable()
+        .when("$skalOppgittAdresseValideres", {
+          is: true,
+          then: string()
+            .nullable()
+            .required(
+              lagMelding(
+                KV.Menypunkter.Person.tittel,
+                KV.Menypunkter.Person.undertitler.annenAdresse,
+                "Postnummer kreves"
+              )
+            ),
+        }),
+      oppgittAdressePoststed: string()
+        .nullable()
+        .when("$skalOppgittAdresseValideres", {
+          is: true,
+          then: string()
+            .nullable()
+            .required(
+              lagMelding(
+                KV.Menypunkter.Person.tittel,
+                KV.Menypunkter.Person.undertitler.annenAdresse,
+                "Poststed kreves"
+              )
+            ),
+        }),
+      oppgittAdresseLand: string()
+        .nullable()
+        .when("$skalOppgittAdresseValideres", {
+          is: true,
+          then: string()
+            .nullable()
+            .required(
+              lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Land kreves")
+            ),
+        }),
+      utenlandskIdent: array().of(utenlandskIdent),
+      medfolgendeBarn: array().of(medfolgendeBarn),
+      juridiskArbeidsgiverNorge: object().shape({
+        antallAnsatte: number().transform(tomStringTilNull).nullable(),
+        antallAdmAnsatte: number().transform(tomStringTilNull).nullable(),
+        antallUtsendte: number().transform(tomStringTilNull).nullable(),
+        andelRekruttertINorge: number()
+          .min(0, lagAndelMellomNullOgHundreMelding("ansatte rekruttert i Norge"))
+          .max(100, lagAndelMellomNullOgHundreMelding("ansatte rekruttert i Norge"))
+          .transform(tomStringTilNull)
+          .nullable(),
+        andelOmsetningINorge: number()
+          .min(0, lagAndelMellomNullOgHundreMelding("omsetning opptjent i Norge"))
+          .max(100, lagAndelMellomNullOgHundreMelding("omsetning opptjent i Norge"))
+          .transform(tomStringTilNull)
+          .nullable(),
+        andelKontrakterINorge: number()
+          .min(0, lagAndelMellomNullOgHundreMelding("oppdragskontrakter inngått i Norge"))
+          .max(100, lagAndelMellomNullOgHundreMelding("oppdragskontrakter inngått i Norge"))
+          .transform(tomStringTilNull)
+          .nullable(),
+        andelOppdragINorge: number()
+          .min(0, lagAndelMellomNullOgHundreMelding("oppdrag utført i Norge"))
+          .max(100, lagAndelMellomNullOgHundreMelding("oppdrag utført i Norge"))
+          .transform(tomStringTilNull)
+          .nullable(),
       }),
-    oppgittAdressePoststed: string()
-      .nullable()
-      .when("$skalOppgittAdresseValideres", {
-        is: true,
-        then: string()
-          .nullable()
-          .required(
-            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Poststed kreves")
-          ),
+      utenlandsoppdraget: object().shape({
+        samletUtsendingsperiode: object().shape({
+          fom: string()
+            .nullable()
+            .test(erFoerTomTest)
+            .erGyldigDato(
+              lagMelding(
+                KV.Menypunkter.Utenlandsoppdraget.tittel,
+                KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+                SKRIV_INN_GYLDIG_DATO.melding
+              )
+            ),
+          tom: string()
+            .nullable()
+            .test(erEtterFomTest)
+            .erGyldigDato(
+              lagMelding(
+                KV.Menypunkter.Utenlandsoppdraget.tittel,
+                KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+                SKRIV_INN_GYLDIG_DATO.melding
+              )
+            ),
+        }),
       }),
-    oppgittAdresseLand: string()
-      .nullable()
-      .when("$skalOppgittAdresseValideres", {
-        is: true,
-        then: string()
-          .nullable()
-          .required(
-            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Land kreves")
-          ),
-      }),
-    soknadsperiodeFom: string().erGyldigDato().required(MAA_FYLLES_UT),
-    soknadsperiodeTom: string()
-      .erGyldigDato()
-      .erEtterDatofelt("soknadsperiodeFom")
-      .when("$behandlingstema", {
-        is: MKVUtils.erUtsendt,
-        then: string().required(MAA_FYLLES_UT),
-      })
-      .nullable(),
-    utenlandskIdent: array().of(utenlandskIdent),
-    medfolgendeBarn: array().of(medfolgendeBarn),
-    juridiskArbeidsgiverNorge: object().shape({
-      antallAnsatte: number().transform(tomStringTilNull).nullable(),
-      antallAdmAnsatte: number().transform(tomStringTilNull).nullable(),
-      antallUtsendte: number().transform(tomStringTilNull).nullable(),
-      andelRekruttertINorge: number()
-        .min(0, lagAndelMellomNullOgHundreMelding("ansatte rekruttert i Norge"))
-        .max(100, lagAndelMellomNullOgHundreMelding("ansatte rekruttert i Norge"))
-        .transform(tomStringTilNull)
-        .nullable(),
-      andelOmsetningINorge: number()
-        .min(0, lagAndelMellomNullOgHundreMelding("omsetning opptjent i Norge"))
-        .max(100, lagAndelMellomNullOgHundreMelding("omsetning opptjent i Norge"))
-        .transform(tomStringTilNull)
-        .nullable(),
-      andelKontrakterINorge: number()
-        .min(0, lagAndelMellomNullOgHundreMelding("oppdragskontrakter inngått i Norge"))
-        .max(100, lagAndelMellomNullOgHundreMelding("oppdragskontrakter inngått i Norge"))
-        .transform(tomStringTilNull)
-        .nullable(),
-      andelOppdragINorge: number()
-        .min(0, lagAndelMellomNullOgHundreMelding("oppdrag utført i Norge"))
-        .max(100, lagAndelMellomNullOgHundreMelding("oppdrag utført i Norge"))
-        .transform(tomStringTilNull)
-        .nullable(),
-    }),
-    utenlandsoppdraget: object().shape({
-      samletUtsendingsperiode: object().shape({
-        fom: string()
-          .nullable()
-          .test(erFoerTomTest)
+    })
+    .when("$behandlingsgrunnlagtype", {
+      is: erElektroniskSoknad,
+      then: object().shape({
+        soknadsperiodeFom: string()
           .erGyldigDato(
             lagMelding(
               KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
               SKRIV_INN_GYLDIG_DATO.melding
             )
+          )
+          .required(
+            lagMelding(
+              KV.Menypunkter.Utenlandsoppdraget.tittel,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
+              `Fra og med ${MAA_FYLLES_UT.melding}`
+            )
           ),
-        tom: string()
-          .nullable()
-          .test(erEtterFomTest)
+        soknadsperiodeTom: string()
           .erGyldigDato(
             lagMelding(
               KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
               SKRIV_INN_GYLDIG_DATO.melding
             )
+          )
+          .erEtterDatofelt(
+            "soknadsperiodeFom",
+            lagMelding(
+              KV.Menypunkter.Utenlandsoppdraget.tittel,
+              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
+              `Til og med ${TIDLIGERE_ENN_FOM.melding}`
+            )
+          )
+          .when("$behandlingstema", {
+            is: MKVUtils.erUtsendt,
+            then: string().required(
+              lagMelding(
+                KV.Menypunkter.Utenlandsoppdraget.tittel,
+                KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
+                `Til og med ${MAA_FYLLES_UT.melding}`
+              )
+            ),
+          })
+          .nullable(),
+      }),
+      otherwise: object().shape({
+        soknadsperiodeFom: string()
+          .erGyldigDato(
+            lagMelding(
+              KV.Menypunkter.Periode.tittel,
+              KV.Menypunkter.Periode.undertitler.periode,
+              SKRIV_INN_GYLDIG_DATO.melding
+            )
+          )
+          .required(
+            lagMelding(
+              KV.Menypunkter.Periode.tittel,
+              KV.Menypunkter.Periode.undertitler.periode,
+              `Fra og med ${MAA_FYLLES_UT.melding}`
+            )
           ),
+        soknadsperiodeTom: string()
+          .erGyldigDato(
+            lagMelding(
+              KV.Menypunkter.Periode.tittel,
+              KV.Menypunkter.Periode.undertitler.periode,
+              SKRIV_INN_GYLDIG_DATO.melding
+            )
+          )
+          .erEtterDatofelt(
+            "soknadsperiodeFom",
+            lagMelding(
+              KV.Menypunkter.Periode.tittel,
+              KV.Menypunkter.Periode.undertitler.periode,
+              `Til og med ${TIDLIGERE_ENN_FOM.melding}`
+            )
+          )
+          .when("$behandlingstema", {
+            is: MKVUtils.erUtsendt,
+            then: string().required(
+              lagMelding(
+                KV.Menypunkter.Periode.tittel,
+                KV.Menypunkter.Periode.undertitler.periode,
+                `Til og med ${MAA_FYLLES_UT.melding}`
+              )
+            ),
+          })
+          .nullable(),
       }),
     }),
-  }),
 });
 
 export default soknad;

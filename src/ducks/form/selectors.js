@@ -14,6 +14,7 @@ import soknadSchema from "./soknadSchema";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 
 import { behandlingerSelectors } from "../behandlinger";
+import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
 
 const getFormState = (state, formName, defaultValue = {}) =>
   state.form[formName] ? state.form[formName] : defaultValue;
@@ -365,6 +366,7 @@ export const SoknadErrorsSelector = createSelector(
   (state) => ({
     skalOppgittAdresseValideres: SoknadOppgittAdresseHarVerdierSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+    behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   }),
   (soknadformSyncErrors, soknadformValues, context) => {
     const settings = {

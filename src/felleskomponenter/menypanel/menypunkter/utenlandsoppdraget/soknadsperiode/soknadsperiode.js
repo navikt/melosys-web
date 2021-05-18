@@ -73,14 +73,14 @@ export class Soknadsperiode extends Component {
   };
 
   render() {
-    const { redigerbart, soknadsperiodeFomErrors, soknadsperiodeTomErrors } = this.props;
+    const { redigerbart, soknadsperiodeFomErrors, soknadsperiodeTomErrors, tittel } = this.props;
     const { visEndrePeriode, skjulEndrePeriode, lagre, oppdaterFelt, avbryt } = this;
 
     const { erEndrePeriodeSynlig, soknadsperiodeFom, soknadsperiodeTom } = this.state;
 
     return (
       <div className="soknadsperiode">
-        <Nav.Typo.Normaltekst className="soknadsperiode__etikett">Periode</Nav.Typo.Normaltekst>
+        <Nav.Typo.Normaltekst className="soknadsperiode__etikett">{tittel}</Nav.Typo.Normaltekst>
         {!erEndrePeriodeSynlig && (
           <div className="periode__container">
             <Nav.Typo.Element className="periode">
@@ -114,6 +114,7 @@ Soknadsperiode.propTypes = {
   soknadsperiodeTom: PT.string.isRequired,
   soknadsperiodeFomErrors: PT.string,
   soknadsperiodeTomErrors: PT.string,
+  tittel: PT.string.isRequired,
 };
 
 Soknadsperiode.defaultProps = {

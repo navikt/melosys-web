@@ -22,6 +22,7 @@ import { formSelectors } from "../../ducks/form";
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
@@ -201,6 +202,7 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
       context: {
         skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
         behandlingstema: props.behandlingstema,
+        behandlingsgrunnlagtype: props.behandlingsgrunnlagtype,
       },
     };
 

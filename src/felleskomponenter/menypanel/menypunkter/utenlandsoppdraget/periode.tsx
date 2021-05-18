@@ -33,6 +33,7 @@ const Periode = ({
         <Soknadsperiode
           redigerbart={redigerbart}
           lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+          tittel={KV.Menypunkter.Periode.undertitler.periode}
         />
       </Nav.Column>
       <Nav.Column xs="6">
