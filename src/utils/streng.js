@@ -39,24 +39,19 @@ export function tekstEllerDash(data) {
 }
 
 /* eslint-disable prefer-rest-params */
-export function storeForbokstaver() {
-  const tekst = Array.prototype.filter.call(arguments, (s) => s).join(" ");
-  return (
-    tekst &&
-    tekst.replace(/(\w|\u00C6|\u00D8|\u00C5)\S*/g, (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase())
+export function storeForbokstaver(originalOrd) {
+  return originalOrd?.replace(
+    /(\w|\u00C6|\u00D8|\u00C5)\S*/g,
+    (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase()
   );
 }
 
-export function storeForbokstaverForLand() {
-  const tekst = Array.prototype.filter.call(arguments, (s) => s).join(" ");
-  return (
-    tekst &&
-    tekst
-      .replace(/(\w|\u00C6|\u00D8|\u00C5)[^- ]*/g, (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase())
-      .replace(" Og ", " og ")
-      .replace(" Of ", " of ")
-      .replace(" I ", " i ")
-  );
+export function storeForbokstaverForLand(land) {
+  return land
+    ?.replace(/(\w|\u00C6|\u00D8|\u00C5)[^- ]*/g, (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase())
+    .replace(" Og ", " og ")
+    .replace(" Of ", " of ")
+    .replace(" I ", " i ");
 }
 
 export function arrayTilKonjunksjon(liste) {
