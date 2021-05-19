@@ -64,6 +64,7 @@ export const Utenlandsoppdraget = ({
           <Soknadsperiode
             redigerbart={redigerbart}
             lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+            tittel={KV.Menypunkter.Utenlandsoppdraget.undertitler.periode}
           />
         </Nav.Column>
         {behandlingsgrunnlagtype !== SØKNAD_FOLKETRYGDEN && (

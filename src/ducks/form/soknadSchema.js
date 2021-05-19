@@ -24,6 +24,41 @@ const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
+const erAltinnsøknad = (behandlingsgrunnlagtype) =>
+  behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+
+const hentSoknadsperiodeMeldingtekst = (behandlingsgrunnlagtype) => {
+  const menypunkt = erAltinnsøknad(behandlingsgrunnlagtype)
+    ? KV.Menypunkter.Utenlandsoppdraget.tittel
+    : KV.Menypunkter.Periode.tittel;
+  const periodeUndertittel = erAltinnsøknad(behandlingsgrunnlagtype)
+    ? KV.Menypunkter.Utenlandsoppdraget.undertitler.periode
+    : KV.Menypunkter.Periode.undertitler.periode;
+
+  return { menypunkt, periodeUndertittel };
+};
+
+const soknadsperiodeFomSchema = string().when("$behandlingsgrunnlagtype", (behandlingsgrunnlagtype) => {
+  const { menypunkt, periodeUndertittel } = hentSoknadsperiodeMeldingtekst(behandlingsgrunnlagtype);
+
+  return string()
+    .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))
+    .required(lagMelding(menypunkt, periodeUndertittel, MAA_FYLLES_UT.melding));
+});
+
+const soknadsperiodeTomSchema = string().when("$behandlingsgrunnlagtype", (behandlingsgrunnlagtype) => {
+  const { menypunkt, periodeUndertittel } = hentSoknadsperiodeMeldingtekst(behandlingsgrunnlagtype);
+
+  return string()
+    .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))
+    .erEtterDatofelt("soknadsperiodeFom", lagMelding(menypunkt, periodeUndertittel, TIDLIGERE_ENN_FOM.melding))
+    .when("$behandlingstema", {
+      is: MKVUtils.erUtsendt,
+      then: string().required(lagMelding(menypunkt, periodeUndertittel, MAA_FYLLES_UT.melding)),
+    })
+    .nullable();
+});
+
 const utenlandskIdent = object().shape({
   ident: string()
     .nullable()
@@ -222,15 +257,8 @@ const soknad = object().when("$behandlingstema", {
             lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Land kreves")
           ),
       }),
-    soknadsperiodeFom: string().erGyldigDato().required(MAA_FYLLES_UT),
-    soknadsperiodeTom: string()
-      .erGyldigDato()
-      .erEtterDatofelt("soknadsperiodeFom")
-      .when("$behandlingstema", {
-        is: MKVUtils.erUtsendt,
-        then: string().required(MAA_FYLLES_UT),
-      })
-      .nullable(),
+    soknadsperiodeFom: soknadsperiodeFomSchema,
+    soknadsperiodeTom: soknadsperiodeTomSchema,
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
     juridiskArbeidsgiverNorge: object().shape({
