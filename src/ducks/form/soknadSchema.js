@@ -27,6 +27,32 @@ const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
 const erElektroniskSoknad = (behandlingsgrunnlagtype) =>
   behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
+const lagSoknadsperiodeSchema = (behandlingsgrunnlagtype) => {
+  const menypunkt = erElektroniskSoknad(behandlingsgrunnlagtype)
+    ? KV.Menypunkter.Utenlandsoppdraget.tittel
+    : KV.Menypunkter.Periode.tittel;
+  const periodeUndertittel = erElektroniskSoknad(behandlingsgrunnlagtype)
+    ? KV.Menypunkter.Utenlandsoppdraget.undertitler.periode
+    : KV.Menypunkter.Periode.undertitler.periode;
+
+  return object().shape({
+    soknadsperiodeFom: string()
+      .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))
+      .required(lagMelding(menypunkt, periodeUndertittel, `Fra og med ${MAA_FYLLES_UT.melding}`)),
+    soknadsperiodeTom: string()
+      .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))
+      .erEtterDatofelt(
+        "soknadsperiodeFom",
+        lagMelding(menypunkt, periodeUndertittel, `Til og med ${TIDLIGERE_ENN_FOM.melding}`)
+      )
+      .when("$behandlingstema", {
+        is: MKVUtils.erUtsendt,
+        then: string().required(lagMelding(menypunkt, periodeUndertittel, `Til og med ${MAA_FYLLES_UT.melding}`)),
+      })
+      .nullable(),
+  });
+};
+
 const utenlandskIdent = object().shape({
   ident: string()
     .nullable()
@@ -286,97 +312,7 @@ const soknad = object().when("$behandlingstema", {
         }),
       }),
     })
-    .when("$behandlingsgrunnlagtype", {
-      is: erElektroniskSoknad,
-      then: object().shape({
-        soknadsperiodeFom: string()
-          .erGyldigDato(
-            lagMelding(
-              KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
-              SKRIV_INN_GYLDIG_DATO.melding
-            )
-          )
-          .required(
-            lagMelding(
-              KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
-              `Fra og med ${MAA_FYLLES_UT.melding}`
-            )
-          ),
-        soknadsperiodeTom: string()
-          .erGyldigDato(
-            lagMelding(
-              KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
-              SKRIV_INN_GYLDIG_DATO.melding
-            )
-          )
-          .erEtterDatofelt(
-            "soknadsperiodeFom",
-            lagMelding(
-              KV.Menypunkter.Utenlandsoppdraget.tittel,
-              KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
-              `Til og med ${TIDLIGERE_ENN_FOM.melding}`
-            )
-          )
-          .when("$behandlingstema", {
-            is: MKVUtils.erUtsendt,
-            then: string().required(
-              lagMelding(
-                KV.Menypunkter.Utenlandsoppdraget.tittel,
-                KV.Menypunkter.Utenlandsoppdraget.undertitler.periode,
-                `Til og med ${MAA_FYLLES_UT.melding}`
-              )
-            ),
-          })
-          .nullable(),
-      }),
-      otherwise: object().shape({
-        soknadsperiodeFom: string()
-          .erGyldigDato(
-            lagMelding(
-              KV.Menypunkter.Periode.tittel,
-              KV.Menypunkter.Periode.undertitler.periode,
-              SKRIV_INN_GYLDIG_DATO.melding
-            )
-          )
-          .required(
-            lagMelding(
-              KV.Menypunkter.Periode.tittel,
-              KV.Menypunkter.Periode.undertitler.periode,
-              `Fra og med ${MAA_FYLLES_UT.melding}`
-            )
-          ),
-        soknadsperiodeTom: string()
-          .erGyldigDato(
-            lagMelding(
-              KV.Menypunkter.Periode.tittel,
-              KV.Menypunkter.Periode.undertitler.periode,
-              SKRIV_INN_GYLDIG_DATO.melding
-            )
-          )
-          .erEtterDatofelt(
-            "soknadsperiodeFom",
-            lagMelding(
-              KV.Menypunkter.Periode.tittel,
-              KV.Menypunkter.Periode.undertitler.periode,
-              `Til og med ${TIDLIGERE_ENN_FOM.melding}`
-            )
-          )
-          .when("$behandlingstema", {
-            is: MKVUtils.erUtsendt,
-            then: string().required(
-              lagMelding(
-                KV.Menypunkter.Periode.tittel,
-                KV.Menypunkter.Periode.undertitler.periode,
-                `Til og med ${MAA_FYLLES_UT.melding}`
-              )
-            ),
-          })
-          .nullable(),
-      }),
-    }),
+    .when("$behandlingsgrunnlagtype", lagSoknadsperiodeSchema),
 });
 
 export default soknad;
