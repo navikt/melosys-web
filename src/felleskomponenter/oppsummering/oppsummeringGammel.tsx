@@ -57,7 +57,9 @@ const OppsummeringGammel = (props: OppsummeringProps) => {
 
   const arbeidslandTilSetning = (land: KTObject[]) =>
     land && land.length > 0
-      ? Utils.streng.arrayTilKonjunksjon(land.map((enkeltLand) => Utils.streng.storeForbokstaver(enkeltLand.term)))
+      ? Utils.streng.arrayTilKonjunksjon(
+          land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term))
+        )
       : "Ukjent";
 
   const lovvalgslandTilSetning = (landObject: KTObject) =>

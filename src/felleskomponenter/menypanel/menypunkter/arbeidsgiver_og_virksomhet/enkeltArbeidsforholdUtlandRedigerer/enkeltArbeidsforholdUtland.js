@@ -24,7 +24,7 @@ export const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, cl
                 if (b.term > a.term) return -1;
                 return 0;
               })
-              .map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))
+              .map((item) => ({ ...item, term: Utils.streng.storeForbokstaverForLand(item.term) }))
           );
         })
         .catch(Utils.logger.error);

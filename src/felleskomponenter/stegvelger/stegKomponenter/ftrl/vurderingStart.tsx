@@ -189,7 +189,7 @@ const VurderingStart = ({
               }
               feltNavn="land"
               placeholder="Velg..."
-              landkoder={alleLandkoder.map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))}
+              landkoder={alleLandkoder}
             />
           </Nav.Column>
         </Nav.Row>
