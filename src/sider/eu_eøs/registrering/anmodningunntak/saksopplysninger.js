@@ -229,7 +229,7 @@ const Saksopplysninger = ({
 
     try {
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
-      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID, {ytterligereInfo: ytterligereInfoFritekst});
+      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID, { ytterligereInfo: ytterligereInfoFritekst });
     } catch (e) {
       Utils.logger.error(e);
       return false;
