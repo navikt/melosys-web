@@ -38,16 +38,13 @@ const lagSoknadsperiodeSchema = (behandlingsgrunnlagtype) => {
   return object().shape({
     soknadsperiodeFom: string()
       .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))
-      .required(lagMelding(menypunkt, periodeUndertittel, `Fra og med ${MAA_FYLLES_UT.melding}`)),
+      .required(lagMelding(menypunkt, periodeUndertittel, MAA_FYLLES_UT.melding)),
     soknadsperiodeTom: string()
       .erGyldigDato(lagMelding(menypunkt, periodeUndertittel, SKRIV_INN_GYLDIG_DATO.melding))
-      .erEtterDatofelt(
-        "soknadsperiodeFom",
-        lagMelding(menypunkt, periodeUndertittel, `Til og med ${TIDLIGERE_ENN_FOM.melding}`)
-      )
+      .erEtterDatofelt("soknadsperiodeFom", lagMelding(menypunkt, periodeUndertittel, TIDLIGERE_ENN_FOM.melding))
       .when("$behandlingstema", {
         is: MKVUtils.erUtsendt,
-        then: string().required(lagMelding(menypunkt, periodeUndertittel, `Til og med ${MAA_FYLLES_UT.melding}`)),
+        then: string().required(lagMelding(menypunkt, periodeUndertittel, MAA_FYLLES_UT.melding)),
       })
       .nullable(),
   });
