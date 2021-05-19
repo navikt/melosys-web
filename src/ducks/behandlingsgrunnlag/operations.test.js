@@ -22,9 +22,6 @@ describe("Behandlingsgrunnlag operations", () => {
         [KV.Form.SOKNAD]: {
           values: {},
         },
-        [KV.Form.INNGANG]: {
-          values: {},
-        },
         [KV.Form.VURDER_UTPEKING]: {
           values: {},
         },
@@ -217,8 +214,6 @@ describe("Behandlingsgrunnlag operations", () => {
     it("lager OPPDATER_BEHANDLINGSGRUNNLAG action", () => {
       initialState.form[KV.Form.SOKNAD].values = {
         arbeidsforholdUtland: {},
-      };
-      initialState.form[KV.Form.INNGANG].values = {
         soknadsland: ["DK"],
       };
       const expectedActions = [

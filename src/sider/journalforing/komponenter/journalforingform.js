@@ -141,8 +141,6 @@ const mapStateToProps = (state) => {
       ingenVurdering: false,
       ikkeSendForvaltingsmelding: false,
       skalTilordnes: false,
-      journalforingUnntakFraLovvalgsland: MKV.Koder.landkoder.NO,
-      journalforingLovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
       submittable: false,
     },
   };

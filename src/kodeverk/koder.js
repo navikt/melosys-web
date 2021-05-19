@@ -1,15 +1,12 @@
 // Melosys-kodeverk
 // Se Confluence koder for oversikt
 
-import { BOOLSK_STRING } from "../constants";
-
 export const INNVILGET = "INNVILGET";
 export const DELVIS_INNVILGET = "DELVIS_INNVILGET";
 export const AVSLAATT = "AVSLAATT";
 
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
-export const SOKNADSLAND = "SOKNADSLAND";
 export const YRKESGRUPPE = "YRKESGRUPPE";
 export const YRKESAKTIVITET = "YRKESAKTIVITET";
 export const AVKLARTE_ARBEIDSGIVER = "AVKLARTE_ARBEIDSGIVER";
@@ -87,7 +84,6 @@ export const VurderingVesentligAktivitetINorgeTyper = {
 };
 
 export const SoknadslandFaktaTyper = {
-  ...BOOLSK_STRING,
   IKKE_ARBEIDSLAND: "IKKE_ARBEIDSLAND",
 };
 

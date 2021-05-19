@@ -192,11 +192,6 @@ export const RegistreringPanelerFormSelector = createSelector(
   (soknaden) => soknaden
 );
 
-export const InngangFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.INNGANG, {}),
-  (inngang) => inngang
-);
-
 export const JournalforingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.JOURNALFORING, {}),
   (journalforing) => journalforing
@@ -382,6 +377,16 @@ export const SoknadErrorsSelector = createSelector(
 
     return Utils._merge(soknadformErrors, soknadformSyncErrors);
   }
+);
+
+export const SoknadsperiodeTomErrorsSelector = createSelector(
+  (state) => SoknadenFormSelector(state).syncErrors || {},
+  (errors) => errors?.soknadsperiodeTom?.melding
+);
+
+export const SoknadsperiodeFomErrorsSelector = createSelector(
+  (state) => SoknadenFormSelector(state).syncErrors || {},
+  (errors) => errors?.soknadsperiodeFom?.melding
 );
 
 const finnPanelFeil = (errors) => {

@@ -133,12 +133,14 @@ const PeriodeElement = ({
             {formValues.medlemskapsperioder[index].feil}
           </Nav.AlertStripe>
         )}
-        {redigerbart && index === formValues.medlemskapsperioder.length - 1 && (
-          <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
-            <Ikoner.Bin />
-            <span>Slett periode</span>
-          </Nav.Lenker>
-        )}
+        {redigerbart &&
+          index === formValues.medlemskapsperioder.length - 1 &&
+          formValues.medlemskapsperioder.length !== 1 && (
+            <Nav.Lenker className="slettKnapp" href="#" onClick={() => handleSlett(index)} title="Slett periode">
+              <Ikoner.Bin />
+              <span>Slett periode</span>
+            </Nav.Lenker>
+          )}
       </Nav.Fieldset>
     </Fragment>
   );

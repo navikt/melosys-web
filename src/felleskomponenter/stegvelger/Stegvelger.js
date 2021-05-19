@@ -267,6 +267,7 @@ class Stegvelger extends Component {
     const { behandlingID, tilForsiden } = this.props;
     const body = {
       varsleUtland: data.varsleUtland || false,
+      fritekst: data.fritekst || null,
     };
 
     try {
@@ -409,7 +410,6 @@ class Stegvelger extends Component {
       redigerbart: props.redigerbart,
       generiskStegRedigerbart: props.generiskStegRedigerbart,
       erIDirekteTilArtikkel16Flyt: props.erIDirekteTilArtikkel16Flyt,
-      soknadslandFaktaer: props.soknadslandFaktaer,
       vurderUtpekingFom: props.vurderUtpekingFom,
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
@@ -592,7 +592,6 @@ Stegvelger.propTypes = {
   utpekingsperioder: MPT.Utpekingsperioder.isRequired,
   omfattesIAnnetLand: PT.bool.isRequired,
   stegMap: PT.objectOf(PT.arrayOf(PT.oneOfType([PT.string, PT.object]))).isRequired,
-  soknadslandFaktaer: PT.arrayOf(MPT.Avklartefakta).isRequired,
   vurderUtpekingFom: PT.string,
   vurderUtpekingTom: PT.string,
   vurderUtpekingValid: PT.bool.isRequired,
@@ -687,7 +686,6 @@ const mapStateToProps = (state) => ({
   erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
   utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
   omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
-  soknadslandFaktaer: avklartefaktaSelectors.Soknadsland(state),
   vurderUtpekingFom: formSelectors.VurderUtpekingFomSelector(state),
   vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
   vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
