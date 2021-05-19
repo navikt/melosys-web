@@ -8,10 +8,14 @@ const lagYupToReduxformErrorMapper = (schema, settings) => {
 
     try {
       schema.validateSync(values, { abortEarly: false, ...settings });
-    } catch (errors) {
-      errors.inner.forEach((error) => {
-        Utils._set(formErrors, error.path, error.message);
-      });
+    } catch (error) {
+      if (error.inner) {
+        error.inner.forEach((e) => {
+          Utils._set(formErrors, e.path, e.message);
+        });
+      } else {
+        throw error;
+      }
     }
 
     return formErrors;
