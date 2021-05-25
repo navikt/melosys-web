@@ -226,6 +226,7 @@ const VurderingBestemmelse = ({
                   onChange={handleEndreBegrunnelse}
                   name={vilkaar}
                   value={valgteBegrunnelser.get(`${vilkaar}`)}
+                  disabled={!redigerbart}
                 >
                   <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}`)}>
                     Velg
@@ -285,10 +286,15 @@ const VurderingBestemmelse = ({
         )}
 
       <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={false} className="fane__navigasjonsknapp" onClick={tilbake}>
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
-        <Nav.Hovedknapp mini disabled={!erAlleValgGjort} className="fane__navigasjonsknapp" onClick={handleBefreft}>
+        <Nav.Hovedknapp
+          mini
+          disabled={!erAlleValgGjort || !redigerbart}
+          className="fane__navigasjonsknapp"
+          onClick={handleBefreft}
+        >
           Fortsett
         </Nav.Hovedknapp>
       </div>
