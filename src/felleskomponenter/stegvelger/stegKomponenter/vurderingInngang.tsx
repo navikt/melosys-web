@@ -1,9 +1,10 @@
 import React from "react";
-import PT from "prop-types";
 import classNames from "classnames";
-import { connect } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 
-import * as MPT from "../../../proptypes";
 import * as Nav from "../../../utils/navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
@@ -17,13 +18,21 @@ import { vilkarOperations } from "../../../ducks/vilkar";
 
 const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 
+interface VarslerProps {
+  oppfyllerInngangsvilkar: boolean;
+  inngangsvilkaarErOverstyrtAvSaksbehandler: boolean;
+  inngangsvilkaarBegrunnelseKoder: string[];
+  inngangsvilkaar: Api.Vilkar.Vilkaar;
+  visHjelpeTekst: boolean;
+}
+
 export const Varsler = ({
   oppfyllerInngangsvilkar,
   inngangsvilkaarErOverstyrtAvSaksbehandler,
   inngangsvilkaarBegrunnelseKoder,
   inngangsvilkaar,
   visHjelpeTekst,
-}) => {
+}: VarslerProps) => {
   const inngangsvilkaarErOverstyrtEllerIkkeOppfylt =
     inngangsvilkaarErOverstyrtAvSaksbehandler || !oppfyllerInngangsvilkar;
   const inngangsvilkaarErOppfyltOgIkkeOverstyrt = oppfyllerInngangsvilkar && !inngangsvilkaarErOverstyrtAvSaksbehandler;
@@ -71,17 +80,23 @@ export const Varsler = ({
   );
 };
 
-Varsler.propTypes = {
-  oppfyllerInngangsvilkar: PT.bool,
-  inngangsvilkaarBegrunnelseKoder: PT.arrayOf(PT.string),
-  inngangsvilkaar: MPT.Vilkaar.isRequired,
-  visHjelpeTekst: PT.bool.isRequired,
-  inngangsvilkaarErOverstyrtAvSaksbehandler: PT.bool.isRequired,
-};
+const mapStateToProps = (state: RootState) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+});
 
-Varsler.defaultProps = {
-  oppfyllerInngangsvilkar: undefined,
-  inngangsvilkaarBegrunnelseKoder: [],
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  hentVilkar: (behandlingID: number) => dispatch(vilkarOperations.hent(behandlingID)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type VurderingInngangProps = PropsFromRedux & {
+  bekreftOgFortsett: () => void;
+  redigerbart: boolean;
+  oppfyllerInngangsvilkar: boolean;
+  inngangsvilkaar: Api.Vilkar.Vilkaar;
+  tilstand: { harAvklaring: boolean };
 };
 
 export const VurderingInngang = ({
@@ -93,7 +108,7 @@ export const VurderingInngang = ({
   tilstand: { harAvklaring },
   behandlingID,
   hentVilkar,
-}) => {
+}: VurderingInngangProps) => {
   const overstyrInngangsvilkaarToggle = useFeatureToggle("melosys.inngangsvilkaar.overstyr");
 
   const knappClickHandler = async () => {
@@ -140,26 +155,4 @@ export const VurderingInngang = ({
   );
 };
 
-VurderingInngang.propTypes = {
-  bekreftOgFortsett: PT.func.isRequired,
-  tilstand: PT.shape({
-    harAvklaring: PT.bool.isRequired,
-  }).isRequired,
-  redigerbart: PT.bool.isRequired,
-  inngangsvilkaar: MPT.Vilkaar.isRequired,
-  oppfyllerInngangsvilkar: PT.bool.isRequired,
-  behandlingID: PT.number.isRequired,
-  hentVilkar: PT.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-});
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingInngang);
+export default connector(VurderingInngang);

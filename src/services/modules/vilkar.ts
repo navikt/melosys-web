@@ -1,7 +1,7 @@
 import { getAsJson, postAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, INNGANGSVILKAAR, VILKAAR } from "../api-constants";
 
-interface Vilkaar {
+export interface Vilkaar {
   vilkaar: string;
   oppfylt: boolean;
   begrunnelseKoder: string[];
