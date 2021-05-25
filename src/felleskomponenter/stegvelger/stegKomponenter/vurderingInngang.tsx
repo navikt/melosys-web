@@ -20,7 +20,6 @@ const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 
 interface VarslerProps {
   oppfyllerInngangsvilkar: boolean;
-  inngangsvilkaarErOverstyrtAvSaksbehandler: boolean;
   inngangsvilkaarBegrunnelseKoder: string[];
   inngangsvilkaar: Api.Vilkar.Vilkaar;
   visHjelpeTekst: boolean;
@@ -28,11 +27,14 @@ interface VarslerProps {
 
 export const Varsler = ({
   oppfyllerInngangsvilkar,
-  inngangsvilkaarErOverstyrtAvSaksbehandler,
   inngangsvilkaarBegrunnelseKoder,
   inngangsvilkaar,
   visHjelpeTekst,
 }: VarslerProps) => {
+  const inngangsvilkaarErOverstyrtAvSaksbehandler = inngangsvilkaarBegrunnelseKoder.includes(
+    OVERSTYRT_AV_SAKSBEHANDLER
+  );
+
   const inngangsvilkaarErOverstyrtEllerIkkeOppfylt =
     inngangsvilkaarErOverstyrtAvSaksbehandler || !oppfyllerInngangsvilkar;
   const inngangsvilkaarErOppfyltOgIkkeOverstyrt = oppfyllerInngangsvilkar && !inngangsvilkaarErOverstyrtAvSaksbehandler;
@@ -127,10 +129,6 @@ export const VurderingInngang = ({
     (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
   );
 
-  const inngangsvilkaarErOverstyrtAvSaksbehandler = inngangsvilkaarBegrunnelseKoder.includes(
-    OVERSTYRT_AV_SAKSBEHANDLER
-  );
-
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
@@ -139,7 +137,6 @@ export const VurderingInngang = ({
         inngangsvilkaarBegrunnelseKoder={visbareInngangsvilkaarBegrunnelseKoder}
         inngangsvilkaar={inngangsvilkaar}
         visHjelpeTekst={overstyrInngangsvilkaarToggle === "enabled"}
-        inngangsvilkaarErOverstyrtAvSaksbehandler={inngangsvilkaarErOverstyrtAvSaksbehandler}
       />
       <div className="fane__knapplinje">
         <Nav.Knapp
