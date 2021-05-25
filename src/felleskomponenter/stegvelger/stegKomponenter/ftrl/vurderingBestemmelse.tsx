@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, Fragment, useEffect, useState } from "react";
+import React, { ChangeEventHandler, Fragment, useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -6,6 +6,7 @@ import { Action } from "redux";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../utils/navFrontend";
+import * as Utils from "../../../../utils";
 
 import { vilkarSelectors } from "../../../../ducks/vilkar";
 import { lagBegrunnelse, lagVilkaar } from "../../../../regler/vilkar";
@@ -95,6 +96,8 @@ const VurderingBestemmelse = ({
     oppdater();
   };
 
+  const debouncedLagreVilkar = useCallback(Utils._debounce(lagreVilkar, 1000), []);
+
   useEffect(() => {
     handleEndreBestemmelse(bestemmelse);
     vilkarListe.forEach((vilkar: any) => {
@@ -105,6 +108,7 @@ const VurderingBestemmelse = ({
     });
     setValgteVilkar(new Map(valgteVilkar));
     setValgteBegrunnelser(new Map(valgteBegrunnelser));
+    return () => debouncedLagreVilkar.cancel();
   }, []);
 
   useEffect(() => {
@@ -119,7 +123,7 @@ const VurderingBestemmelse = ({
 
     setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
     if (alleVilkarHarSvarJaOgvalgtBegrunnelse) {
-      lagreVilkar();
+      debouncedLagreVilkar();
     }
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
