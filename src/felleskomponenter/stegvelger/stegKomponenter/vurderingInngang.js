@@ -15,6 +15,8 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
+const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
+
 export const Varsler = ({
   oppfyllerInngangsvilkar,
   inngangsvilkaarBegrunnelseKoder,
@@ -100,12 +102,16 @@ export const VurderingInngang = ({
   const bekreftOgFortsettKnappDisabled =
     overstyrInngangsvilkaarToggle === "enabled" ? !redigerbart : !(redigerbart && harAvklaring);
 
+  const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
+    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
+  );
+
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
       <Varsler
         oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
-        inngangsvilkaarBegrunnelseKoder={inngangsvilkaarBegrunnelseKoder}
+        inngangsvilkaarBegrunnelseKoder={visbareInngangsvilkaarBegrunnelseKoder}
         inngangsvilkaar={inngangsvilkaar}
         overstyrInngangsvilkaarToggle={overstyrInngangsvilkaarToggle}
       />
