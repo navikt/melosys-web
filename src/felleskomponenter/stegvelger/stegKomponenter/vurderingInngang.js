@@ -22,7 +22,7 @@ export const Varsler = ({
   inngangsvilkaarErOverstyrtAvSaksbehandler,
   inngangsvilkaarBegrunnelseKoder,
   inngangsvilkaar,
-  overstyrInngangsvilkaarToggle,
+  visHjelpeTekst,
 }) => {
   const inngangsvilkaarErOverstyrtEllerIkkeOppfylt =
     inngangsvilkaarErOverstyrtAvSaksbehandler || !oppfyllerInngangsvilkar;
@@ -57,7 +57,7 @@ export const Varsler = ({
             </li>
           ))}
       </ul>
-      {overstyrInngangsvilkaarToggle === "enabled" && inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
+      {visHjelpeTekst && inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
         <Nav.AlertStripe type="info">
           Du har to valg:
           <ul>
@@ -75,7 +75,7 @@ Varsler.propTypes = {
   oppfyllerInngangsvilkar: PT.bool,
   inngangsvilkaarBegrunnelseKoder: PT.arrayOf(PT.string),
   inngangsvilkaar: MPT.Vilkaar.isRequired,
-  overstyrInngangsvilkaarToggle: PT.string.isRequired,
+  visHjelpeTekst: PT.bool.isRequired,
   inngangsvilkaarErOverstyrtAvSaksbehandler: PT.bool.isRequired,
 };
 
@@ -123,7 +123,7 @@ export const VurderingInngang = ({
         oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
         inngangsvilkaarBegrunnelseKoder={visbareInngangsvilkaarBegrunnelseKoder}
         inngangsvilkaar={inngangsvilkaar}
-        overstyrInngangsvilkaarToggle={overstyrInngangsvilkaarToggle}
+        visHjelpeTekst={overstyrInngangsvilkaarToggle === "enabled"}
         inngangsvilkaarErOverstyrtAvSaksbehandler={inngangsvilkaarErOverstyrtAvSaksbehandler}
       />
       <div className="fane__knapplinje">
