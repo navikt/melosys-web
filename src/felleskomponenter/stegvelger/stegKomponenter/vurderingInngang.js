@@ -19,18 +19,23 @@ const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 
 export const Varsler = ({
   oppfyllerInngangsvilkar,
+  inngangsvilkaarErOverstyrtAvSaksbehandler,
   inngangsvilkaarBegrunnelseKoder,
   inngangsvilkaar,
   overstyrInngangsvilkaarToggle,
 }) => {
+  const inngangsvilkaarErOverstyrtEllerIkkeOppfylt =
+    inngangsvilkaarErOverstyrtAvSaksbehandler || !oppfyllerInngangsvilkar;
+  const inngangsvilkaarErOppfyltOgIkkeOverstyrt = oppfyllerInngangsvilkar && !inngangsvilkaarErOverstyrtAvSaksbehandler;
+
   const oppfyllerInngangsvilkarCl = classNames({
     liste__element: true,
-    "liste__element--oppfylt": oppfyllerInngangsvilkar,
-    "liste__element--ikkeoppfylt": !oppfyllerInngangsvilkar,
+    "liste__element--oppfylt": inngangsvilkaarErOppfyltOgIkkeOverstyrt,
+    "liste__element--ikkeoppfylt": inngangsvilkaarErOverstyrtEllerIkkeOppfylt,
   });
 
   const oppfyltTekst = `Søknaden oppfyller${
-    oppfyllerInngangsvilkar ? " " : " ikke "
+    inngangsvilkaarErOppfyltOgIkkeOverstyrt ? " " : " ikke "
   }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   if (Utils._isEmpty(inngangsvilkaar)) {
@@ -45,14 +50,14 @@ export const Varsler = ({
     <>
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
-        {!oppfyllerInngangsvilkar &&
+        {inngangsvilkaarErOverstyrtEllerIkkeOppfylt &&
           inngangsvilkaarBegrunnelseKoder.map((begrunnelseKode) => (
             <li key={begrunnelseKode} className={oppfyllerInngangsvilkarCl}>
               {KV.kodeTilTerm(begrunnelseKode, MKV.KTObjects.begrunnelser.inngangsvilkaar)}
             </li>
           ))}
       </ul>
-      {overstyrInngangsvilkaarToggle === "enabled" && !oppfyllerInngangsvilkar && (
+      {overstyrInngangsvilkaarToggle === "enabled" && inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
         <Nav.AlertStripe type="info">
           Du har to valg:
           <ul>
@@ -71,6 +76,7 @@ Varsler.propTypes = {
   inngangsvilkaarBegrunnelseKoder: PT.arrayOf(PT.string),
   inngangsvilkaar: MPT.Vilkaar.isRequired,
   overstyrInngangsvilkaarToggle: PT.string.isRequired,
+  inngangsvilkaarErOverstyrtAvSaksbehandler: PT.bool.isRequired,
 };
 
 Varsler.defaultProps = {
@@ -106,6 +112,10 @@ export const VurderingInngang = ({
     (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
   );
 
+  const inngangsvilkaarErOverstyrtAvSaksbehandler = inngangsvilkaarBegrunnelseKoder.includes(
+    OVERSTYRT_AV_SAKSBEHANDLER
+  );
+
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
@@ -114,6 +124,7 @@ export const VurderingInngang = ({
         inngangsvilkaarBegrunnelseKoder={visbareInngangsvilkaarBegrunnelseKoder}
         inngangsvilkaar={inngangsvilkaar}
         overstyrInngangsvilkaarToggle={overstyrInngangsvilkaarToggle}
+        inngangsvilkaarErOverstyrtAvSaksbehandler={inngangsvilkaarErOverstyrtAvSaksbehandler}
       />
       <div className="fane__knapplinje">
         <Nav.Knapp
