@@ -127,7 +127,7 @@ const VurderingStart = ({
   const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalBehandlingsgrunnlag, 500), []);
 
   useEffect(() => {
-    debouncedOppdatering({ formValues, formIsValid });
+    if (redigerbart) debouncedOppdatering({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   const fortsettHandle = () => {

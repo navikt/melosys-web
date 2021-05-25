@@ -122,7 +122,7 @@ const VurderingBestemmelse = ({
       ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
 
     setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
-    if (alleVilkarHarSvarJaOgvalgtBegrunnelse) {
+    if (alleVilkarHarSvarJaOgvalgtBegrunnelse && redigerbart) {
       debouncedLagreVilkar();
     }
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);

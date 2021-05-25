@@ -491,7 +491,7 @@ const VurderingTrygdeavgift = ({
   }
 
   useEffect(() => {
-    if (formValues?.avgiftsgrunnlag && erAvgiftsgrunnlagGyldig(formValues.avgiftsgrunnlag)) {
+    if (redigerbart && formValues?.avgiftsgrunnlag && erAvgiftsgrunnlagGyldig(formValues.avgiftsgrunnlag)) {
       Api.Trygdeavgift.sendGrunnlag(behandlingID, {
         lønnsforhold: formValues.avgiftsgrunnlag.lønnsforhold,
         trygdeavgiftsgrunnlagNorge: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge || null,

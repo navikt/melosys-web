@@ -146,7 +146,7 @@ const VurderingFamilie = ({
   const debouncedLagring = useCallback(Utils._debounce(lagreMedfolgendeFamilie, 1000), []);
 
   useEffect(() => {
-    debouncedLagring({ formValues, formIsValid });
+    if (redigerbart) debouncedLagring({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   useEffect(() => {

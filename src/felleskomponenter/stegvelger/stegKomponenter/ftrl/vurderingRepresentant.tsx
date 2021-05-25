@@ -149,7 +149,7 @@ const VurderingRepresentant = ({
 
   useEffect(() => {
     oppdater();
-    debouncedLagring({ formValues, formIsValid });
+    if (redigerbart) debouncedLagring({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   return (
