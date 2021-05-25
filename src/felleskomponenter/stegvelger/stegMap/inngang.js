@@ -6,8 +6,6 @@ class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const { inngangsvilkaar } = propsLight;
-
     this.kriterier = [];
     this.id = STEG.INNGANG;
     this.tittel = "Inngang";
@@ -16,11 +14,11 @@ class Inngang extends Steg {
       alleLandkoder: _propsLight.landkoder,
       avklartefakta: _propsLight.avklartefakta,
       redigerbart: _propsLight.generiskStegRedigerbart,
-      oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(propsLight.inngangsvilkaar),
-      inngangsvilkaar,
+      oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(_propsLight.inngangsvilkaar),
+      inngangsvilkaar: _propsLight.inngangsvilkaar,
     });
     this.beregnRelevantUI = (_propsLight) => {
-      const harAvklaring = this.harAvklaring(inngangsvilkaar);
+      const harAvklaring = this.harAvklaring(_propsLight.inngangsvilkaar);
 
       return {
         harAvklaring,
@@ -34,11 +32,7 @@ class Inngang extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  harAvklaring = (inngangsvilkaar) => {
-    const oppfyllerInngangsvilkaar = this.oppfyllerInngangsvilkaar(inngangsvilkaar);
-
-    return oppfyllerInngangsvilkaar;
-  };
+  harAvklaring = (inngangsvilkaar) => this.oppfyllerInngangsvilkaar(inngangsvilkaar);
 
   oppfyllerInngangsvilkaar = (inngangsvilkaar) => inngangsvilkaar.oppfylt;
 }
