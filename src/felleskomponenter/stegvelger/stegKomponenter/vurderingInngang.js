@@ -17,7 +17,7 @@ import { vilkarOperations } from "../../../ducks/vilkar";
 
 export const Varsler = ({
   oppfyllerInngangsvilkar,
-  inngangsvilkaarBegrunnelser,
+  inngangsvilkaarBegrunnelseKoder,
   inngangsvilkaar,
   overstyrInngangsvilkaarToggle,
 }) => {
@@ -44,7 +44,7 @@ export const Varsler = ({
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
         {!oppfyllerInngangsvilkar &&
-          inngangsvilkaarBegrunnelser.map((begrunnelseKode) => (
+          inngangsvilkaarBegrunnelseKoder.map((begrunnelseKode) => (
             <li key={begrunnelseKode} className={oppfyllerInngangsvilkarCl}>
               {KV.kodeTilTerm(begrunnelseKode, MKV.KTObjects.begrunnelser.inngangsvilkaar)}
             </li>
@@ -66,14 +66,14 @@ export const Varsler = ({
 
 Varsler.propTypes = {
   oppfyllerInngangsvilkar: PT.bool,
-  inngangsvilkaarBegrunnelser: PT.arrayOf(PT.string),
+  inngangsvilkaarBegrunnelseKoder: PT.arrayOf(PT.string),
   inngangsvilkaar: MPT.Vilkaar.isRequired,
   overstyrInngangsvilkaarToggle: PT.string.isRequired,
 };
 
 Varsler.defaultProps = {
   oppfyllerInngangsvilkar: undefined,
-  inngangsvilkaarBegrunnelser: [],
+  inngangsvilkaarBegrunnelseKoder: [],
 };
 
 export const VurderingInngang = ({
@@ -81,7 +81,7 @@ export const VurderingInngang = ({
   redigerbart,
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
-  inngangsvilkaar: { begrunnelseKoder: inngangsvilkaarBegrunnelser },
+  inngangsvilkaar: { begrunnelseKoder: inngangsvilkaarBegrunnelseKoder },
   tilstand: { harAvklaring },
   behandlingID,
   hentVilkar,
@@ -105,7 +105,7 @@ export const VurderingInngang = ({
       <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
       <Varsler
         oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
-        inngangsvilkaarBegrunnelser={inngangsvilkaarBegrunnelser}
+        inngangsvilkaarBegrunnelseKoder={inngangsvilkaarBegrunnelseKoder}
         inngangsvilkaar={inngangsvilkaar}
         overstyrInngangsvilkaarToggle={overstyrInngangsvilkaarToggle}
       />
