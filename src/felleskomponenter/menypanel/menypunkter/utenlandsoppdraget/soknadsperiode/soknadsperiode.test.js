@@ -16,6 +16,7 @@ describe("Soknadsperiode", () => {
       lagreSoknadOgOppfriskSaksopplysninger: jest.fn(),
       soknadsperiodeFom: "12.12.2030",
       soknadsperiodeTom: "12.12.2033",
+      tittel: "Tittel",
     };
   });
 
