@@ -2,6 +2,8 @@ import Steg from "../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
 import VurderingInngang from "../../../felleskomponenter/stegvelger/stegKomponenter/vurderingInngang";
 
+import MKV from "../../../melosyskodeverk";
+
 class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
@@ -10,15 +12,19 @@ class Inngang extends Steg {
     this.id = STEG.INNGANG;
     this.tittel = "Inngang";
     this.komponent = VurderingInngang;
-    this.samleRelevanteData = (_propsLight) => ({
-      alleLandkoder: _propsLight.landkoder,
-      avklartefakta: _propsLight.avklartefakta,
-      redigerbart: _propsLight.generiskStegRedigerbart,
-      oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(_propsLight.inngangsvilkaar),
-      inngangsvilkaar: _propsLight.inngangsvilkaar,
-    });
+    this.samleRelevanteData = (_propsLight) => {
+      const inngangsvilkaar = this.hentInngangsvilkaar(_propsLight);
+
+      return {
+        alleLandkoder: _propsLight.landkoder,
+        avklartefakta: _propsLight.avklartefakta,
+        redigerbart: _propsLight.generiskStegRedigerbart,
+        oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(inngangsvilkaar),
+        inngangsvilkaar,
+      };
+    };
     this.beregnRelevantUI = (_propsLight) => {
-      const harAvklaring = this.harAvklaring(_propsLight.inngangsvilkaar);
+      const harAvklaring = this.harAvklaring(_propsLight);
 
       return {
         harAvklaring,
@@ -32,7 +38,13 @@ class Inngang extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  harAvklaring = (inngangsvilkaar) => this.oppfyllerInngangsvilkaar(inngangsvilkaar);
+  hentInngangsvilkaar = (propsLight) =>
+    propsLight.vilkar?.find((enkelt) => enkelt.vilkaar === MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR);
+
+  harAvklaring = (propsLight) => {
+    const inngangsvilkaar = this.hentInngangsvilkaar(propsLight);
+    return this.oppfyllerInngangsvilkaar(inngangsvilkaar);
+  };
 
   oppfyllerInngangsvilkaar = (inngangsvilkaar) => inngangsvilkaar.oppfylt;
 }

@@ -21,7 +21,7 @@ const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 interface VarslerProps {
   oppfyllerInngangsvilkar: boolean;
   inngangsvilkaarBegrunnelseKoder: string[];
-  inngangsvilkaar: Api.Vilkar.Vilkaar;
+  inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   visHjelpeTekst: boolean;
 }
 
@@ -97,7 +97,7 @@ type VurderingInngangProps = PropsFromRedux & {
   bekreftOgFortsett: () => void;
   redigerbart: boolean;
   oppfyllerInngangsvilkar: boolean;
-  inngangsvilkaar: Api.Vilkar.Vilkaar;
+  inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   tilstand: { harAvklaring: boolean };
 };
 
@@ -106,11 +106,12 @@ export const VurderingInngang = ({
   redigerbart,
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
-  inngangsvilkaar: { begrunnelseKoder: inngangsvilkaarBegrunnelseKoder },
   tilstand: { harAvklaring },
   behandlingID,
   hentVilkar,
 }: VurderingInngangProps) => {
+  const { begrunnelseKoder: inngangsvilkaarBegrunnelseKoder } = inngangsvilkaar || { begrunnelseKoder: [] };
+
   const overstyrInngangsvilkaarToggle = useFeatureToggle("melosys.inngangsvilkaar.overstyr");
 
   const knappClickHandler = async () => {
