@@ -119,10 +119,15 @@ const VurderingVirksomhet = ({
       />
 
       <div className="fane__knapplinje">
-        <Nav.Knapp mini className="fane__navigasjonsknapp" onClick={tilbake}>
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
-        <Nav.Hovedknapp mini disabled={!formIsValid} className="fane__navigasjonsknapp" onClick={handleFortsett}>
+        <Nav.Hovedknapp
+          mini
+          disabled={!formIsValid || !redigerbart}
+          className="fane__navigasjonsknapp"
+          onClick={handleFortsett}
+        >
           Fortsett
         </Nav.Hovedknapp>
       </div>

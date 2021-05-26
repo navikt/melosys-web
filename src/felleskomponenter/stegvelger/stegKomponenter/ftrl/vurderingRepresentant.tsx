@@ -149,7 +149,7 @@ const VurderingRepresentant = ({
 
   useEffect(() => {
     oppdater();
-    debouncedLagring({ formValues, formIsValid });
+    if (redigerbart) debouncedLagring({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   return (
@@ -186,7 +186,7 @@ const VurderingRepresentant = ({
                 </option>
               ))}
             </datalist>
-            <Skjema.Checkbox feltNavn="selvbetalende" label="Søker er selvbetalende" />
+            <Skjema.Checkbox feltNavn="selvbetalende" label="Søker er selvbetalende" disabled={!redigerbart} />
           </Nav.Column>
           {representantData && (
             <Nav.Column xs="6">

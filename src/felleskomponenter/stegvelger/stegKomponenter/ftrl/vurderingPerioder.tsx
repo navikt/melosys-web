@@ -307,7 +307,8 @@ const VurderingPerioder = ({
       }
     });
     oppdater();
-    debouncedLagreMedlemskapsperioder({ medlemskapsperioder: formValues?.medlemskapsperioder, valid: formIsValid });
+    if (redigerbart)
+      debouncedLagreMedlemskapsperioder({ medlemskapsperioder: formValues?.medlemskapsperioder, valid: formIsValid });
   }, [formValues?.medlemskapsperioder, formIsValid]);
 
   const handleSlett = (index: number) => {

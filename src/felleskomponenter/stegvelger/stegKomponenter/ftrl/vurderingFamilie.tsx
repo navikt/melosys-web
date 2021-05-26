@@ -146,7 +146,7 @@ const VurderingFamilie = ({
   const debouncedLagring = useCallback(Utils._debounce(lagreMedfolgendeFamilie, 1000), []);
 
   useEffect(() => {
-    debouncedLagring({ formValues, formIsValid });
+    if (redigerbart) debouncedLagring({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   useEffect(() => {
@@ -235,6 +235,7 @@ const VurderingFamilie = ({
                       emptyFieldText="Velg..."
                       emptyFieldDisabled={!redigerbart || !!formValues.barn[barn.uuid].begrunnelse}
                       name={barn.uuid}
+                      disabled={!redigerbart}
                     >
                       {medfolgende_barn_begrunnelser.map((begrunnelse: KTObject) => (
                         <option key={begrunnelse.kode} value={begrunnelse.kode}>
@@ -252,7 +253,7 @@ const VurderingFamilie = ({
             ) && (
               <div style={{ marginBottom: "2rem" }}>
                 <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
-                <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" />
+                <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" disabled={!redigerbart} />
               </div>
             )}
           </Nav.Fieldset>
@@ -293,6 +294,7 @@ const VurderingFamilie = ({
                           !redigerbart || !!formValues.ektefelle_samboer[ektefelleSamboer.uuid].begrunnelse
                         }
                         name={ektefelleSamboer.uuid}
+                        disabled={!redigerbart}
                       >
                         {medfolgende_ektefelle_samboer_begrunnelser.map((begrunnelse: KTObject) => (
                           <option key={begrunnelse.kode} value={begrunnelse.kode}>
@@ -311,7 +313,7 @@ const VurderingFamilie = ({
             ) && (
               <div>
                 <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
-                <Skjema.HTMLEditor feltNavn="ektefelle_samboer.fritekst" className="fritekst" />
+                <Skjema.HTMLEditor feltNavn="ektefelle_samboer.fritekst" className="fritekst" disabled={!redigerbart} />
               </div>
             )}
           </Nav.Fieldset>
@@ -326,7 +328,7 @@ const VurderingFamilie = ({
       )}
 
       <div className="fane__knapplinje">
-        <Nav.Knapp mini className="fane__navigasjonsknapp" onClick={tilbake}>
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
         <Nav.Hovedknapp
