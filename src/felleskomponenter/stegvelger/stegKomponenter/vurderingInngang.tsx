@@ -20,17 +20,17 @@ const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 
 interface VarslerProps {
   oppfyllerInngangsvilkar: boolean;
-  inngangsvilkaarBegrunnelseKoder: string[];
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   visHjelpeTekst: boolean;
 }
 
-export const Varsler = ({
-  oppfyllerInngangsvilkar,
-  inngangsvilkaarBegrunnelseKoder,
-  inngangsvilkaar,
-  visHjelpeTekst,
-}: VarslerProps) => {
+export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, visHjelpeTekst }: VarslerProps) => {
+  const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
+
+  const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
+    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
+  );
+
   const inngangsvilkaarErOverstyrtAvSaksbehandler = inngangsvilkaarBegrunnelseKoder.includes(
     OVERSTYRT_AV_SAKSBEHANDLER
   );
@@ -62,7 +62,7 @@ export const Varsler = ({
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
         {inngangsvilkaarErOverstyrtEllerIkkeOppfylt &&
-          inngangsvilkaarBegrunnelseKoder.map((begrunnelseKode) => (
+          visbareInngangsvilkaarBegrunnelseKoder.map((begrunnelseKode) => (
             <li key={begrunnelseKode} className={oppfyllerInngangsvilkarCl}>
               {KV.kodeTilTerm(begrunnelseKode, MKV.KTObjects.begrunnelser.inngangsvilkaar)}
             </li>
@@ -110,8 +110,6 @@ export const VurderingInngang = ({
   behandlingID,
   hentVilkar,
 }: VurderingInngangProps) => {
-  const { begrunnelseKoder: inngangsvilkaarBegrunnelseKoder } = inngangsvilkaar || { begrunnelseKoder: [] };
-
   const overstyrInngangsvilkaarToggle = useFeatureToggle("melosys.inngangsvilkaar.overstyr");
 
   const knappClickHandler = async () => {
@@ -126,16 +124,11 @@ export const VurderingInngang = ({
   const bekreftOgFortsettKnappDisabled =
     overstyrInngangsvilkaarToggle === "enabled" ? !redigerbart : !(redigerbart && harAvklaring);
 
-  const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
-    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
-  );
-
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
       <Varsler
         oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
-        inngangsvilkaarBegrunnelseKoder={visbareInngangsvilkaarBegrunnelseKoder}
         inngangsvilkaar={inngangsvilkaar}
         visHjelpeTekst={overstyrInngangsvilkaarToggle === "enabled"}
       />
