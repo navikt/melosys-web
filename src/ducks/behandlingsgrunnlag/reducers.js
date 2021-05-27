@@ -258,6 +258,29 @@ export default function reducer(state = initialState, action) {
             erArbeidsgiveravgiftHelePerioden: dokument.loennOgGodtgjoerelse.erArbeidsgiveravgiftHelePerioden,
             erTrukketTrygdeavgift: dokument.loennOgGodtgjoerelse.erTrukketTrygdeavgift,
           },
+          arbeidssituasjonOgOevrig: {
+            harLoennetArbeidMinstEnMndFoerUtsending: Utils._isNil(
+              dokument.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending
+            )
+              ? null
+              : dokument.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending,
+            beskrivelseArbeidSisteMnd: dokument.arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd,
+            harAndreArbeidsgivereIUtsendingsperioden: Utils._isNil(
+              dokument.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden
+            )
+              ? null
+              : dokument.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden,
+            beskrivelseAnnetArbeid: dokument.arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid,
+            erSkattepliktig: Utils._isNil(dokument.arbeidssituasjonOgOevrig.erSkattepliktig)
+              ? null
+              : dokument.arbeidssituasjonOgOevrig.erSkattepliktig,
+            mottarYtelserNorge: Utils._isNil(dokument.arbeidssituasjonOgOevrig.mottarYtelserNorge)
+              ? null
+              : dokument.arbeidssituasjonOgOevrig.mottarYtelserNorge,
+            mottarYtelserUtlandet: Utils._isNil(dokument.arbeidssituasjonOgOevrig.mottarYtelserUtlandet)
+              ? null
+              : dokument.arbeidssituasjonOgOevrig.mottarYtelserUtlandet,
+          },
           utenlandsoppdraget: {
             erUtsendelseForOppdragIUtlandet: dokument.utenlandsoppdraget.erUtsendelseForOppdragIUtlandet,
             erAnsattForOppdragIUtlandet: dokument.utenlandsoppdraget.erAnsattForOppdragIUtlandet,

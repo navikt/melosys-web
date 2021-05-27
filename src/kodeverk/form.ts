@@ -53,6 +53,15 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
+export interface ArbeidssituasjonOgOevrig {
+  harLoennetArbeidMinstEnMndFoerUtsending?: boolean | null;
+  beskrivelseArbeidSisteMnd?: string | null;
+  harAndreArbeidsgivereIUtsendingsperioden?: boolean | null;
+  beskrivelseAnnetArbeid?: string | null;
+  erSkattepliktig?: boolean | null;
+  mottarYtelserNorge?: boolean | null;
+  mottarYtelserUtlandet?: boolean | null;
+}
 export interface JuridiskArbeidsgiverNorge {
   antallUtsendte?: string;
   antallAdmAnsatte?: string;
