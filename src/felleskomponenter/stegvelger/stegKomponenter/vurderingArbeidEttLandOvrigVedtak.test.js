@@ -38,6 +38,33 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
     };
   });
 
+  test("lagreOgFatteVedtak kalles ved submit av form", () => {
+    props.handleSubmit = (onSubmitCallback) => () => {
+      onSubmitCallback(
+        {
+          forkortLovvalgsperiode: false,
+        },
+        () => {},
+        props
+      );
+    };
+
+    const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+    const form = vurderingArbeidEttLandOvrigVedtak.find("form");
+
+    form.props().onSubmit();
+
+    expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
+    expect(props.lagreOgFatteVedtak).toHaveBeenLastCalledWith({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: undefined,
+      fritekstSed: undefined,
+      mottakerinstitusjoner: null,
+      vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: undefined,
+    });
+  });
+
   describe("ved art11_5", () => {
     beforeEach(() => {
       props.formValues.lovvalgsbestemmelse =
