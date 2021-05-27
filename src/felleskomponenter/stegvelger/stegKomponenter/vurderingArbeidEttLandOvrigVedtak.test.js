@@ -43,6 +43,10 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       onSubmitCallback(
         {
           forkortLovvalgsperiode: false,
+          vedtaksbrevFritekst: "vedtaksbrevfritekst",
+          fritekstSed: "fritekst til SED",
+          vedtakstypebegrunnelse: "begrunnelse for revurdering",
+          vedtakstype: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK,
         },
         () => {},
         props
@@ -57,11 +61,11 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
     expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
     expect(props.lagreOgFatteVedtak).toHaveBeenLastCalledWith({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      fritekst: undefined,
-      fritekstSed: undefined,
+      fritekst: "vedtaksbrevfritekst",
+      fritekstSed: "fritekst til SED",
       mottakerinstitusjoner: null,
-      vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      revurderBegrunnelse: undefined,
+      vedtakstype: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK,
+      revurderBegrunnelse: "begrunnelse for revurdering",
     });
   });
 
