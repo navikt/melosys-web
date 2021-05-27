@@ -89,17 +89,19 @@ export const Menypanel = ({
 
   return (
     <>
-      {menypanelFeilmelding && (
-        <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
-          {menypanelFeilmelding}
-          <Nav.Xknapp
-            form="kompakt"
-            onClick={() => {
-              setMenypanelFeilmelding("");
-            }}
-          />
-        </Nav.AlertStripe>
-      )}
+      <div role="alert">
+        {menypanelFeilmelding && (
+          <Nav.AlertStripe type="feil" className="varsel menypanel__feilmelding">
+            {menypanelFeilmelding}
+            <Nav.Xknapp
+              form="kompakt"
+              onClick={() => {
+                setMenypanelFeilmelding("");
+              }}
+            />
+          </Nav.AlertStripe>
+        )}
+      </div>
       <div className="menypanel">
         <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
         <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>
