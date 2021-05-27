@@ -21,6 +21,7 @@ import * as Saksbehandler from "./modules/saksbehandler";
 import * as Saksflyt from "./modules/saksflyt";
 import * as Statistikk from "./modules/statistikk";
 import * as Trygdeavgift from "./modules/trygdeavgift";
+import * as Trygdeavtale from "./modules/trygdeavtale/flyt";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
 import * as Types from "./modules/types";
@@ -49,6 +50,7 @@ export {
   Saksflyt,
   Statistikk,
   Trygdeavgift,
+  Trygdeavtale,
   Utpekingsperioder,
   Vilkar,
 };

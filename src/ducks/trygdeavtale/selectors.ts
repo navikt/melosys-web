@@ -1,0 +1,18 @@
+import { createSelector, Selector } from "reselect";
+import { RootState, StateSection } from "AppTypes";
+import * as Types from "./types";
+import { StegNavn } from "../../kodeverk/koder";
+
+export const TrygdeavtaleSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
+  (state) => state.trygdeavtale,
+  (trygdeavtale) => trygdeavtale
+);
+
+export const TrygdeavtaleDataSelector: Selector<RootState, Types.Data> = createSelector(
+  TrygdeavtaleSelector,
+  (trygdeavtale) => (trygdeavtale.data ? trygdeavtale.data : [])
+);
+
+export const InngangStegDataSelector = createSelector(TrygdeavtaleDataSelector, (trygdeavtale) =>
+  trygdeavtale.find((steg) => steg.steg === StegNavn.INNGANG)
+);

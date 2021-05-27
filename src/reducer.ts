@@ -28,6 +28,7 @@ import personerReducer from "./ducks/personer";
 import saksbehandlerReducer from "./ducks/saksbehandler";
 import saksopplysningerReducer from "./ducks/saksopplysninger";
 import sokReducer from "./ducks/sok";
+import trygdeavtaleReducer from "./ducks/trygdeavtale";
 import menypanelReducer from "./ducks/menypanel";
 import utpekReducer from "./ducks/utpek";
 import utpekingsperioderReducer from "./ducks/utpekingsperioder";
@@ -66,6 +67,7 @@ const createRootReducer = (history: History) =>
     saksbehandler: saksbehandlerReducer,
     saksopplysninger: saksopplysningerReducer,
     sok: sokReducer,
+    trygdeavtale: trygdeavtaleReducer,
     menypanel: menypanelReducer,
     utpek: utpekReducer,
     utpekingsperioder: utpekingsperioderReducer,

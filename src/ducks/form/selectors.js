@@ -411,3 +411,13 @@ const finnPanelFeil = (errors) => {
 };
 
 export const PanelFeilSelector = createSelector(SoknadErrorsSelector, (soknadErrors) => finnPanelFeil(soknadErrors));
+
+export const TrygdeavtaleInngangFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.Trygdeavtale.INNGANG, {}),
+  (inngang) => inngang
+);
+
+export const TrygdeavtaleInngangFormValidSelector = createSelector(
+  (state) => TrygdeavtaleInngangFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);

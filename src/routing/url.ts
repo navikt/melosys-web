@@ -26,6 +26,8 @@ export const lagUrl = (saksnummer: number, behandlingID: number, behandlingstema
       return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET:
       return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+    case "TRYGDEAVTALE":
+      return `/TRYGDEAVTALE/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return null;
   }

@@ -18,6 +18,9 @@ const EuEøsSaksbehandlingLoadable = loadable(() => import("../sider/eu_eøs/sak
 const FtrlSaksbehandlingLoadable = loadable(() => import("../sider/ftrl/saksbehandling"), {
   fallback: SideLoadingStatus,
 });
+const TrygdeavtaleSaksbehandlingLoadable = loadable(() => import("../sider/trygdeavtale/saksbehandling"), {
+  fallback: SideLoadingStatus,
+});
 const JournalforingLoadable = loadable(() => import("../sider/journalforing"), { fallback: SideLoadingStatus });
 const RegistreringUnntaksperioderLoadable = loadable(() => import("../sider/eu_eøs/registrering/unntaksperioder"), {
   fallback: SideLoadingStatus,
@@ -60,6 +63,10 @@ const Routing = () => (
         <Route
           path={`/${FTRL}/saksbehandling/:snr`}
           render={(props) => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />}
+        />
+        <Route
+          path="/TRYGDEAVTALE/saksbehandling/:snr"
+          render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
           path="/journalforing/:journalpostID/:oppgaveID"
