@@ -75,7 +75,7 @@ const VurderingInngang = ({
       {hjelpetekst}
     </Nav.Hjelpetekst>
   );
-  const landkoder = [{ kode: "UK", term: "Storbritannia" }]; // TODO: temp
+  const landkoder = [{ kode: "GB", term: "Storbritannia" }]; // TODO: temp
 
   const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {

@@ -33,7 +33,6 @@ import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodev
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { stegMap } from "./stegMap";
@@ -92,7 +91,6 @@ const behandlingsstatusMap = {
 };
 
 const Saksbehandling = ({
-  anmodningsperioderErSendtUtlandet,
   annenBehandlingOppfriskes,
   apneTidligereBehandlinger,
   arbeidsland,
@@ -292,7 +290,6 @@ const Saksbehandling = ({
               renderBehandlingsmeny={() => (
                 <Behandlingsmeny
                   redigerbart={redigerbart}
-                  anmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
@@ -330,7 +327,6 @@ const Saksbehandling = ({
 };
 
 Saksbehandling.propTypes = {
-  anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
@@ -395,7 +391,6 @@ Saksbehandling.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

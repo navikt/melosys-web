@@ -50,7 +50,12 @@ const SideOppsummering = ({
   const [kanEndreBehandlingstema, setKanEndreBehandlingstema] = useState(false);
   const [kanEndreBehandlingsstatus, setKanEndreBehandlingsstatus] = useState(false);
 
-  const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || "";
+  // TODO: Endre tilbake når Trygdeavtale kommer i kodeverket
+  const tittel =
+    KV.kodeTilTerm(behandlingstema, [
+      ...MKV.KTObjects.behandlinger.behandlingstema,
+      { kode: "TRYGDEAVTALE", term: "Trygdeavtale" },
+    ]) || "";
   const behandlingsstatus = renderBehandlingsstatus();
 
   useEffect(() => {
