@@ -421,3 +421,13 @@ export const TrygdeavtaleInngangFormValidSelector = createSelector(
   (state) => TrygdeavtaleInngangFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
+
+export const TrygdeavtaleAvklarVirksomhetFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET, {}),
+  (inngang) => inngang
+);
+
+export const TrygdeavtaleAvklarVirksomhetFormValidSelector = createSelector(
+  (state) => TrygdeavtaleAvklarVirksomhetFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);

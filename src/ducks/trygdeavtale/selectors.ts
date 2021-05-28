@@ -19,6 +19,10 @@ export const InngangStegDataSelector = createSelector(TrygdeavtaleDataSelector, 
   trygdeavtale.find((steg) => steg.steg === StegNavn.INNGANG)
 );
 
+export const AvklarVirksomhetStegDataSelector = createSelector(TrygdeavtaleDataSelector, (trygdeavtale) =>
+  trygdeavtale.find((steg) => steg.steg === StegNavn.AVKLAR_VIRKSOMHET)
+);
+
 export const ArbeidslandSelector = createSelector(
   InngangStegDataSelector,
   (inngangsdata) => inngangsdata?.resultat?.land || []

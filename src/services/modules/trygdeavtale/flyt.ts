@@ -32,6 +32,7 @@ export interface StegDataReqDto {
     fom?: string;
     tom?: string;
     land?: string[];
+    virksomheter?: string[];
   };
 }
 

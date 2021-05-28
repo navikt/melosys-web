@@ -186,7 +186,7 @@ const Saksbehandling = ({
           <Nav.Column xs="7">
             {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
             {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-            {visStegVelger && <Stegvelger />}
+            {visStegVelger && <Stegvelger redigerbart={redigerbart} />}
             <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
           </Nav.Column>
           <Nav.Column xs="5">
