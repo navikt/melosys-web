@@ -16,6 +16,8 @@ import { useFeatureToggle } from "../../../featuretoggle";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
+import "./vurderingInngang.css";
+
 const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 
 interface VarslerProps {
@@ -58,7 +60,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, visHjelpeTek
   }
 
   return (
-    <>
+    <div className="vurderinginngang">
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
         {inngangsvilkaarErOverstyrtEllerIkkeOppfylt &&
@@ -69,7 +71,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, visHjelpeTek
           ))}
       </ul>
       {visHjelpeTekst && inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
-        <Nav.AlertStripe type="info">
+        <Nav.AlertStripe type="info" className="vurderinginngang__inngangsvilkaar-ikke-oppfylt-alertstripe">
           Du har to valg:
           <ul>
             <li>Hvis inngangsvilkår ikke er oppfylt, må du henlegge saken som bortfalt (i behandlingsmenyen).</li>
@@ -78,7 +80,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, visHjelpeTek
           Ved behov kan du begrunne avgjørelsen i et notat.
         </Nav.AlertStripe>
       )}
-    </>
+    </div>
   );
 };
 
