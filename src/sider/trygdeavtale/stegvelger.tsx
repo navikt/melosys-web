@@ -12,6 +12,7 @@ import StegFane from "../../felleskomponenter/stegvelger/felles/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger/stegMotor/typer";
 import VurderingInngang from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingInngang";
 import VurderingAvklarVirksomhet from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingAvklarVirksomhet";
+import VurderingBestemmelse from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingBestemmelse";
 
 import { StegData } from "../../services/modules/trygdeavtale/flyt";
 import { trygdeavtaleOperations, trygdeavtaleSelectors } from "../../ducks/trygdeavtale";
@@ -33,7 +34,7 @@ interface AktueltSteg {
 const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
-  BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingInngang },
+  BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
   FAMILIE: { tittel: "Familie", komponent: VurderingInngang },
   VEDTAK: { tittel: "Vedtak", komponent: VurderingInngang },
 };

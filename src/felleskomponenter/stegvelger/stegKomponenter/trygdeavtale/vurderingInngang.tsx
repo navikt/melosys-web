@@ -3,7 +3,7 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { reduxForm } from "redux-form";
+import { getFormValues, reduxForm } from "redux-form";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
@@ -12,20 +12,18 @@ import * as Utils from "../../../../utils";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { trygdeavtaleOperations, trygdeavtaleSelectors } from "../../../../ducks/trygdeavtale";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { formSelectors } from "../../../../ducks/form";
 
-import { FeatureToggle } from "../../../../featuretoggle";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import vurdering_inngang from "./vurderingInnganSchema";
+import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
 
 import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
 
 const initializeValues = (stegData: StegData | undefined) => ({
-  fom: stegData?.resultat?.fom || undefined,
-  tom: stegData?.resultat?.tom || undefined,
+  fom: stegData?.resultat?.fom ? Utils.dato.formatterDatoTilNorsk(stegData.resultat.fom) : undefined,
+  tom: stegData?.resultat?.tom ? Utils.dato.formatterDatoTilNorsk(stegData.resultat.tom) : undefined,
   land: stegData?.resultat?.land ? stegData.resultat.land[0] : undefined,
 });
 
@@ -34,10 +32,9 @@ const mapStateToProps = (state: RootState) => {
   return {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     inngangStegData,
-    formValues: formSelectors.TrygdeavtaleInngangFormSelector(state).values,
+    formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
     initialValues: initializeValues(inngangStegData),
     formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
-    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   };
 };
 
@@ -58,6 +55,8 @@ interface FormValuesProps {
 
 interface Props {
   fortsett: () => void;
+  formValues: FormValuesProps;
+  redigerbart: boolean;
 }
 
 const VurderingInngang = ({
@@ -99,26 +98,10 @@ const VurderingInngang = ({
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
-                ) : (
-                  <Skjema.Input datoFelt label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
-                ) : (
-                  <Skjema.Input datoFelt label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.LandVelger
@@ -140,7 +123,7 @@ const VurderingInngang = ({
       <div className="fane__knapplinje">
         <Nav.Hovedknapp
           mini
-          disabled={inngangStegData?.status !== "FERDIG" || !redigerbart}
+          disabled={inngangStegData?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >

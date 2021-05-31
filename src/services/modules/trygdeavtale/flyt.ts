@@ -1,3 +1,4 @@
+import { KTObject } from "@navikt/melosys-kodeverk";
 import { getAsJson, postAsJson } from "../../utils";
 import { FLYT_BASE_URL } from "../../api-constants";
 import { StegNavn } from "../../../kodeverk/koder";
@@ -18,7 +19,7 @@ export interface StegData {
   virksomheter?: string[];
   vedtakValg?: string[];
   innvilgelseValg?: string[];
-  bestemmelseValg?: Map<string, string>[];
+  bestemmelseValg?: KTObject[];
   barn?: string[];
   ektefelle?: string;
   resultat?: Resultat;
@@ -33,6 +34,9 @@ export interface StegDataReqDto {
     tom?: string;
     land?: string[];
     virksomheter?: string[];
+    vedtakValg?: string;
+    innvilgelseValg?: string;
+    bestemmelseValg?: string;
   };
 }
 
