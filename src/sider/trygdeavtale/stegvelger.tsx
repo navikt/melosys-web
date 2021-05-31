@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Component } from "react";
 import TrackVisibility from "react-on-screen";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -52,66 +52,81 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface Props {
+interface Props extends PropsFromRedux {
   redigerbart: boolean;
 }
 
-const Stegvelger = ({ behandlingID, hentStegData, redigerbart, stegdata }: PropsFromRedux & Props) => {
-  const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
-  const [aktuelleSteg, setAktuelleSteg] = useState<AktueltSteg[]>();
+interface State {
+  aktivtStegIndex: number;
+  aktuelleSteg: AktueltSteg[];
+}
 
-  useEffect(() => {
-    hentStegData(behandlingID);
-  }, []);
-
-  const oppdaterAktivtSteg = (nesteStegIndex: number, oppdatertAktuelleSteg?: AktueltSteg[]) => {
-    setAktivtStegIndex(nesteStegIndex);
-    const lokaltAktuelleSteg = oppdatertAktuelleSteg || aktuelleSteg;
-    setAktuelleSteg(lokaltAktuelleSteg?.map((steg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === nesteStegIndex })));
+class Stegvelger extends Component<Props, State> {
+  state = {
+    aktivtStegIndex: 0,
+    aktuelleSteg: [],
   };
 
-  const fortsett = () => {
-    oppdaterAktivtSteg(aktivtStegIndex + 1, stegdata.map(mapOmTilAktuelleSteg));
+  componentDidMount() {
+    this.props.hentStegData(this.props.behandlingID);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.stegdata !== this.props.stegdata && !Utils._isEmpty(this.props.stegdata)) {
+      this.setState({ aktuelleSteg: this.props.stegdata.map(this.mapOmTilAktuelleSteg) });
+    }
+  }
+
+  oppdaterAktivtSteg = (nesteStegIndex: number) => {
+    this.setState({
+      aktivtStegIndex: nesteStegIndex,
+      aktuelleSteg: this.state.aktuelleSteg?.map((steg: AktueltSteg) => ({
+        ...steg,
+        aktivtSteg: steg.stegPosisjon === nesteStegIndex,
+      })),
+    });
   };
 
-  const tilbake = () => {
-    oppdaterAktivtSteg(aktivtStegIndex - 1, stegdata.map(mapOmTilAktuelleSteg));
+  fortsett = () => {
+    this.oppdaterAktivtSteg(this.state.aktivtStegIndex + 1);
   };
 
-  const mapOmTilAktuelleSteg = (singelSteg: StegData, index: number): AktueltSteg => {
+  tilbake = () => {
+    this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
+  };
+
+  mapOmTilAktuelleSteg = (singelSteg: StegData, index: number): AktueltSteg => {
     const stegMapElement = stegMap[singelSteg.steg];
     return {
       id: singelSteg.steg,
       tittel: stegMapElement.tittel,
       stegPosisjon: index,
-      aktivtSteg: aktivtStegIndex === index,
+      aktivtSteg: this.state.aktivtStegIndex === index,
       komponent: stegMapElement.komponent,
       status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-      data: { redigerbart },
-      handlers: { fortsett: fortsett, tilbake: tilbake },
+      data: { redigerbart: this.props.redigerbart },
+      handlers: { fortsett: this.fortsett, tilbake: this.tilbake },
     };
   };
 
-  useEffect(() => {
-    if (!Utils._isEmpty(stegdata)) setAktuelleSteg(stegdata.map(mapOmTilAktuelleSteg));
-  }, [stegdata]);
-
-  return (
-    <TrackVisibility partialVisibility>
-      {() => (
-        <div className="stegvelger panelSeksjon">
-          {aktuelleSteg && (
-            <div>
-              <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-              {aktuelleSteg?.map((item) => (
-                <StegFane key={item.id} faneData={item} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </TrackVisibility>
-  );
-};
+  render() {
+    return (
+      <TrackVisibility partialVisibility>
+        {() => (
+          <div className="stegvelger panelSeksjon">
+            {this.state.aktuelleSteg && (
+              <div>
+                <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.oppdaterAktivtSteg} />
+                {this.state.aktuelleSteg?.map((item: AktueltSteg) => (
+                  <StegFane key={item.id} faneData={item} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </TrackVisibility>
+    );
+  }
+}
 
 export default connector(Stegvelger);
