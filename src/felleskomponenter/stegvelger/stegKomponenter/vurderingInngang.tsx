@@ -11,7 +11,6 @@ import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 
 import MKV from "../../../melosyskodeverk";
-import { useFeatureToggle } from "../../../featuretoggle";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
@@ -23,10 +22,9 @@ const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 interface VarslerProps {
   oppfyllerInngangsvilkar: boolean;
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
-  visHjelpeTekst: boolean;
 }
 
-export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, visHjelpeTekst }: VarslerProps) => {
+export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar }: VarslerProps) => {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
 
   const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
@@ -70,7 +68,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, visHjelpeTek
             </li>
           ))}
       </ul>
-      {visHjelpeTekst && inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
+      {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
         <Nav.AlertStripe type="info" className="vurderinginngang__inngangsvilkaar-ikke-oppfylt-alertstripe">
           Du har to valg:
           <ul>
@@ -100,7 +98,6 @@ type VurderingInngangProps = PropsFromRedux & {
   redigerbart: boolean;
   oppfyllerInngangsvilkar: boolean;
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
-  tilstand: { harAvklaring: boolean };
 };
 
 export const VurderingInngang = ({
@@ -108,14 +105,11 @@ export const VurderingInngang = ({
   redigerbart,
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
-  tilstand: { harAvklaring },
   behandlingID,
   hentVilkar,
 }: VurderingInngangProps) => {
-  const overstyrInngangsvilkaarToggle = useFeatureToggle("melosys.inngangsvilkaar.overstyr");
-
   const knappClickHandler = async () => {
-    if (overstyrInngangsvilkaarToggle === "enabled" && !oppfyllerInngangsvilkar) {
+    if (!oppfyllerInngangsvilkar) {
       await Api.Vilkar.overstyrInngangvilkaar(behandlingID);
       await hentVilkar(behandlingID);
     }
@@ -123,20 +117,13 @@ export const VurderingInngang = ({
     bekreftOgFortsett();
   };
 
-  const bekreftOgFortsettKnappDisabled =
-    overstyrInngangsvilkaarToggle === "enabled" ? !redigerbart : !(redigerbart && harAvklaring);
-
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
-      <Varsler
-        oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
-        inngangsvilkaar={inngangsvilkaar}
-        visHjelpeTekst={overstyrInngangsvilkaarToggle === "enabled"}
-      />
+      <Varsler oppfyllerInngangsvilkar={oppfyllerInngangsvilkar} inngangsvilkaar={inngangsvilkaar} />
       <div className="fane__knapplinje">
         <Nav.Knapp
-          disabled={bekreftOgFortsettKnappDisabled}
+          disabled={!redigerbart}
           className="fane__navigasjonsknapp"
           data-cy-nesteknapp="knapp_steg0"
           onClick={knappClickHandler}

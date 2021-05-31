@@ -33,7 +33,7 @@ describe("Varsler", () => {
     expect(lis.first().text()).toBe("Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.");
   });
 
-  it("Viser feilmelding ved ikke oppfylte inngangsvilkår", () => {
+  it("Viser feilmelding og hjelpetekst ved ikke oppfylte inngangsvilkår", () => {
     props.oppfyllerInngangsvilkar = false;
     props.inngangsvilkaar = {
       ...props.inngangsvilkaar,
@@ -47,7 +47,9 @@ describe("Varsler", () => {
       ],
     };
     const varsler = shallow(<Varsler {...props} />);
-    const lis = varsler.find("li");
+    const feilmeldingsliste = varsler.find("ul").first();
+    const lis = feilmeldingsliste.find("li");
+    const hjelpetekstalertstripe = varsler.find(Nav.AlertStripe);
 
     expect(lis).toHaveLength(3);
     expect(lis.first().text()).toBe(
@@ -55,9 +57,10 @@ describe("Varsler", () => {
     );
     expect(lis.at(1).text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.MANGLER_STATSBORGERSKAP);
     expect(lis.last().text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL);
+    expect(hjelpetekstalertstripe).toHaveLength(1);
   });
 
-  it("Viser feilmelding ved overstyrte inngangsvilkår", () => {
+  it("Viser feilmelding og hjelpetekst ved overstyrte inngangsvilkår", () => {
     props.oppfyllerInngangsvilkar = true;
     props.inngangsvilkaar = {
       ...props.inngangsvilkaar,
@@ -72,13 +75,16 @@ describe("Varsler", () => {
     };
 
     const varsler = shallow(<Varsler {...props} />);
-    const lis = varsler.find("li");
+    const feilmeldingsliste = varsler.find("ul").first();
+    const lis = feilmeldingsliste.find("li");
+    const hjelpetekstalertstripe = varsler.find(Nav.AlertStripe);
 
     expect(lis).toHaveLength(2);
     expect(lis.first().text()).toBe(
       "Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004."
     );
     expect(lis.last().text()).toBe(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL);
+    expect(hjelpetekstalertstripe).toHaveLength(1);
   });
 
   it("Viser feilmelding ved manglende inngangsvilkår", () => {
@@ -99,9 +105,6 @@ describe("VurderingInngang", () => {
   beforeEach(() => {
     props = {
       bekreftOgFortsett: jest.fn(),
-      tilstand: {
-        harAvklaring: true,
-      },
       redigerbart: true,
       inngangsvilkaar: {
         vilkaar: MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
@@ -152,14 +155,6 @@ describe("VurderingInngang", () => {
 
     it("er disabled dersom redigerbart er false", () => {
       props.redigerbart = false;
-      const vurderingInngang = shallow(<VurderingInngang {...props} />);
-      const bekreftOgFortsettKnapp = vurderingInngang.find(Nav.Knapp);
-
-      expect(bekreftOgFortsettKnapp.props().disabled).toBe(true);
-    });
-
-    it("er disabled dersom harAvklaring er false", () => {
-      props.tilstand.harAvklaring = false;
       const vurderingInngang = shallow(<VurderingInngang {...props} />);
       const bekreftOgFortsettKnapp = vurderingInngang.find(Nav.Knapp);
 
