@@ -30,13 +30,14 @@ interface AktueltSteg {
   data?: object;
   handlers?: object;
 }
+const DummySteg = () => <div>Dummy</div>;
 
 const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
-  FAMILIE: { tittel: "Familie", komponent: VurderingInngang },
-  VEDTAK: { tittel: "Vedtak", komponent: VurderingInngang },
+  FAMILIE: { tittel: "Familie", komponent: DummySteg },
+  VEDTAK: { tittel: "Vedtak", komponent: DummySteg },
 };
 
 const mapStateToProps = (state: RootState) => ({
@@ -73,9 +74,27 @@ class Stegvelger extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.stegdata !== this.props.stegdata && !Utils._isEmpty(this.props.stegdata)) {
-      this.setState({ aktuelleSteg: this.props.stegdata.map(this.mapOmTilAktuelleSteg) });
+      this.oppdaterAktuelleSteg();
     }
   }
+
+  oppdaterAktuelleSteg = () => {
+    this.setState({ aktuelleSteg: this.props.stegdata.map(this.mapOmTilAktuelleSteg) });
+  };
+
+  mapOmTilAktuelleSteg = (singelSteg: StegData, index: number): AktueltSteg => {
+    const stegMapElement = stegMap[singelSteg.steg];
+    return {
+      id: singelSteg.steg,
+      tittel: stegMapElement.tittel,
+      stegPosisjon: index,
+      aktivtSteg: this.state.aktivtStegIndex === index,
+      komponent: stegMapElement.komponent,
+      status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
+      data: { redigerbart: this.props.redigerbart },
+      handlers: { fortsett: this.fortsett, tilbake: this.tilbake },
+    };
+  };
 
   oppdaterAktivtSteg = (nesteStegIndex: number) => {
     this.setState({
@@ -93,20 +112,6 @@ class Stegvelger extends Component<Props, State> {
 
   tilbake = () => {
     this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
-  };
-
-  mapOmTilAktuelleSteg = (singelSteg: StegData, index: number): AktueltSteg => {
-    const stegMapElement = stegMap[singelSteg.steg];
-    return {
-      id: singelSteg.steg,
-      tittel: stegMapElement.tittel,
-      stegPosisjon: index,
-      aktivtSteg: this.state.aktivtStegIndex === index,
-      komponent: stegMapElement.komponent,
-      status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-      data: { redigerbart: this.props.redigerbart },
-      handlers: { fortsett: this.fortsett, tilbake: this.tilbake },
-    };
   };
 
   render() {

@@ -62,7 +62,6 @@ interface Props {
 
 const VurderingBestemmelse = ({
   behandlingID,
-
   bestemmelseStegData,
   bestemmelseValg,
   formIsValid,
@@ -75,31 +74,17 @@ const VurderingBestemmelse = ({
   vedtakValg,
 }: PropsFromRedux & Props) => {
   useEffect(() => {
-    if (formIsValid && formValues?.vedtak) {
+    if (formValues?.vedtak) {
       sendStegData(behandlingID, {
         stegId: KV.Koder.StegNavn.BESTEMMELSE,
-        stegData: { vedtakValg: formValues.vedtak },
+        stegData: {
+          vedtakValg: formValues.vedtak,
+          innvilgelseValg: formValues?.innvilgelse,
+          bestemmelseValg: formValues?.bestemmelse,
+        },
       });
     }
-  }, [formValues?.vedtak]);
-
-  useEffect(() => {
-    if (formIsValid && formValues?.innvilgelse) {
-      sendStegData(behandlingID, {
-        stegId: KV.Koder.StegNavn.BESTEMMELSE,
-        stegData: { innvilgelseValg: formValues.innvilgelse },
-      });
-    }
-  }, [formValues?.innvilgelse]);
-
-  useEffect(() => {
-    if (formIsValid && formValues?.bestemmelse) {
-      sendStegData(behandlingID, {
-        stegId: KV.Koder.StegNavn.BESTEMMELSE,
-        stegData: { bestemmelseValg: formValues.bestemmelse },
-      });
-    }
-  }, [formValues?.bestemmelse]);
+  }, [formValues]);
 
   if (!formValues) return null;
   return (
@@ -143,7 +128,7 @@ const VurderingBestemmelse = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={bestemmelseStegData?.status !== "FERDIG" || !redigerbart}
+          disabled={bestemmelseStegData?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >
