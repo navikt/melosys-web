@@ -112,7 +112,7 @@ const VurderingBestemmelse = ({
         ))}
       </Nav.Fieldset>
 
-      {formValues?.vedtak && (
+      {formValues?.vedtak && innvilgelseValg && (
         <Nav.Fieldset legend="Skal søknaden innvilges?">
           {innvilgelseValg?.map((valg) => (
             <Skjema.Radio key={valg} feltNavn="innvilgelse" label={valg} value={valg} disabled={!redigerbart} />
@@ -120,7 +120,7 @@ const VurderingBestemmelse = ({
         </Nav.Fieldset>
       )}
 
-      {formValues?.innvilgelse && (
+      {formValues?.innvilgelse && bestemmelseValg && (
         <Nav.Fieldset legend="Velg bestemmelse">
           <Skjema.Select
             label=""

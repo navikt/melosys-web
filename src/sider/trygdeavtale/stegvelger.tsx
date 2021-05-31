@@ -64,17 +64,18 @@ const Stegvelger = ({ behandlingID, hentStegData, redigerbart, stegdata }: Props
     hentStegData(behandlingID);
   }, []);
 
-  const oppdaterAktivtSteg = (nesteStegIndex: number) => {
+  const oppdaterAktivtSteg = (nesteStegIndex: number, oppdatertAktuelleSteg?: AktueltSteg[]) => {
     setAktivtStegIndex(nesteStegIndex);
-    setAktuelleSteg(aktuelleSteg?.map((steg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === nesteStegIndex })));
+    const lokaltAktuelleSteg = oppdatertAktuelleSteg || aktuelleSteg;
+    setAktuelleSteg(lokaltAktuelleSteg?.map((steg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === nesteStegIndex })));
   };
 
   const fortsett = () => {
-    oppdaterAktivtSteg(aktivtStegIndex + 1);
+    oppdaterAktivtSteg(aktivtStegIndex + 1, stegdata.map(mapOmTilAktuelleSteg));
   };
 
   const tilbake = () => {
-    oppdaterAktivtSteg(aktivtStegIndex - 1);
+    oppdaterAktivtSteg(aktivtStegIndex - 1, stegdata.map(mapOmTilAktuelleSteg));
   };
 
   const mapOmTilAktuelleSteg = (singelSteg: StegData, index: number): AktueltSteg => {
@@ -87,7 +88,7 @@ const Stegvelger = ({ behandlingID, hentStegData, redigerbart, stegdata }: Props
       komponent: stegMapElement.komponent,
       status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
       data: { redigerbart },
-      handlers: { fortsett, tilbake },
+      handlers: { fortsett: fortsett, tilbake: tilbake },
     };
   };
 
