@@ -1,4 +1,12 @@
-import React, { FocusEventHandler, MouseEventHandler, ChangeEventHandler, useState, useEffect } from "react";
+import React, {
+  FocusEventHandler,
+  MouseEventHandler,
+  ChangeEventHandler,
+  useState,
+  useEffect,
+  FocusEvent,
+  MouseEvent,
+} from "react";
 import { Organisasjon } from "Domene";
 
 import * as Nav from "../../../../utils/navFrontend";
@@ -19,20 +27,20 @@ interface KontaktOpplysningerProps {
   onChange: (kontaktopplysning: Types.KontaktOpplysning) => void;
   kontaktopplysninger: Types.KontaktOpplysning;
   redigerbart: boolean;
-  onKontaktnavnInputBlur: FocusEventHandler<HTMLInputElement>;
-  onKontaktorgnrInputBlur: FocusEventHandler<HTMLInputElement>;
-  onSlettKnappClick: MouseEventHandler<HTMLButtonElement>;
+  onInputBlur: (e: FocusEvent<HTMLInputElement>) => Promise<any> | void;
+  onSlettKnappClick: (e: MouseEvent<HTMLButtonElement>) => Promise<any> | void;
 }
 
 export const KontaktOpplysninger = ({
   onChange,
   kontaktopplysninger,
   redigerbart,
-  onKontaktnavnInputBlur,
-  onKontaktorgnrInputBlur,
+  onInputBlur,
   onSlettKnappClick,
 }: KontaktOpplysningerProps) => {
   const [sokeResultat, setSokeResultat] = useState<Organisasjon | null>(null);
+  const [lagreFeilmelding, setLagreFeilmelding] = useState("");
+  const [slettFeilmelding, setSlettFeilmelding] = useState("");
   const [orgnrFeilmelding, setOrgnrFeilmelding] = useState<Feilmelding | undefined>(undefined);
   const [renderedWithKontaktorgnrOnce, setRenderedWithKontaktorgnrOnce] = useState(false);
 
@@ -42,7 +50,6 @@ export const KontaktOpplysninger = ({
     try {
       return await Api.Organisasjoner.hentOrganisasjon(kontaktorgnr);
     } catch (e) {
-      Utils.logger.error(e);
       return null;
     }
   };
@@ -89,10 +96,36 @@ export const KontaktOpplysninger = ({
     onChange({ ...kontaktopplysninger, kontaktnavn: e.target.value });
   };
 
-  const kontaktorgnrBlurHandler: FocusEventHandler<HTMLInputElement> = (e) => {
+  const kontaktNavnBlurHandler: FocusEventHandler<HTMLInputElement> = async (event) => {
+    setLagreFeilmelding("");
+
+    try {
+      await onInputBlur(event);
+    } catch (error) {
+      setLagreFeilmelding(error.message);
+    }
+  };
+
+  const kontaktorgnrBlurHandler: FocusEventHandler<HTMLInputElement> = async (event) => {
+    setLagreFeilmelding("");
+
     validerOgFinnOrganisasjon();
 
-    onKontaktorgnrInputBlur(e);
+    try {
+      await onInputBlur(event);
+    } catch (error) {
+      setLagreFeilmelding(error.message);
+    }
+  };
+
+  const slettKnappClickHandler: MouseEventHandler<HTMLButtonElement> = async (event) => {
+    setSlettFeilmelding("");
+
+    try {
+      await onSlettKnappClick(event);
+    } catch (error) {
+      setSlettFeilmelding(error.message);
+    }
   };
 
   return (
@@ -104,7 +137,7 @@ export const KontaktOpplysninger = ({
               disabled={!redigerbart}
               onChange={kontaktNavnChangeHandler}
               value={kontaktopplysninger.kontaktnavn || ""}
-              onBlur={onKontaktnavnInputBlur}
+              onBlur={kontaktNavnBlurHandler}
               label="Kontaktperson"
               placeholder="Skriv inn..."
             />
@@ -124,10 +157,23 @@ export const KontaktOpplysninger = ({
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-      {sokeResultat && <OrganisasjonsAdresse visTittel={false} className="adresse" organisasjon={sokeResultat} />}
-      <Mui.Knapp className="slett__knapp" disabled={!redigerbart} mini onClick={onSlettKnappClick}>
+      {lagreFeilmelding && <Nav.Typo.Feilmelding>{lagreFeilmelding}</Nav.Typo.Feilmelding>}
+      {sokeResultat && (
+        <OrganisasjonsAdresse visTittel={false} className="kontaktopplysninger__adresse" organisasjon={sokeResultat} />
+      )}
+      <Mui.Knapp
+        className="kontaktopplysninger__slett-knapp"
+        disabled={!redigerbart}
+        mini
+        onClick={slettKnappClickHandler}
+      >
         Slett kontaktopplysninger
       </Mui.Knapp>
+      {slettFeilmelding && (
+        <Nav.Typo.Feilmelding className="kontaktopplysninger__slett-feilmelding">
+          {slettFeilmelding}
+        </Nav.Typo.Feilmelding>
+      )}
     </div>
   );
 };
