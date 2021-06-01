@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import TrackVisibility from "react-on-screen";
 import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 
-import * as Utils from "../../utils";
+import * as Api from "../../services/api";
 
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
@@ -14,8 +12,7 @@ import VurderingInngang from "../../felleskomponenter/stegvelger/stegKomponenter
 import VurderingAvklarVirksomhet from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingBestemmelse";
 
-import { StegData } from "../../services/modules/trygdeavtale/flyt";
-import { trygdeavtaleOperations, trygdeavtaleSelectors } from "../../ducks/trygdeavtale";
+import { StegData, StegDataReqDto } from "../../services/modules/trygdeavtale/flyt";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 
 import "./stegvelger.css";
@@ -42,14 +39,9 @@ const stegMap = {
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  stegdata: trygdeavtaleSelectors.TrygdeavtaleDataSelector(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  hentStegData: (behandllingID: number) => dispatch(trygdeavtaleOperations.hentStegData(behandllingID)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -69,31 +61,31 @@ class Stegvelger extends Component<Props, State> {
   };
 
   componentDidMount() {
-    this.props.hentStegData(this.props.behandlingID);
+    Api.Trygdeavtale.hentStegData(this.props.behandlingID).then((response) =>
+      this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
+    );
   }
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.stegdata !== this.props.stegdata && !Utils._isEmpty(this.props.stegdata)) {
-      this.oppdaterAktuelleSteg();
-    }
-  }
-
-  oppdaterAktuelleSteg = () => {
-    this.setState({ aktuelleSteg: this.props.stegdata.map(this.mapOmTilAktuelleSteg) });
+  oppdaterStegData = (stegData: StegDataReqDto) => {
+    Api.Trygdeavtale.sendStegData(this.props.behandlingID, stegData).then((response) =>
+      this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
+    );
   };
 
-  mapOmTilAktuelleSteg = (singelSteg: StegData, index: number): AktueltSteg => {
-    const stegMapElement = stegMap[singelSteg.steg];
-    return {
-      id: singelSteg.steg,
-      tittel: stegMapElement.tittel,
-      stegPosisjon: index,
-      aktivtSteg: this.state.aktivtStegIndex === index,
-      komponent: stegMapElement.komponent,
-      status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-      data: { redigerbart: this.props.redigerbart },
-      handlers: { fortsett: this.fortsett, tilbake: this.tilbake },
-    };
+  mapOmTilAktuelleSteg = (stegData: StegData[]): AktueltSteg[] => {
+    return stegData?.map((singelSteg: StegData, index: number) => {
+      const stegMapElement = stegMap[singelSteg.steg];
+      return {
+        id: singelSteg.steg,
+        tittel: stegMapElement.tittel,
+        stegPosisjon: index,
+        aktivtSteg: this.state.aktivtStegIndex === index,
+        komponent: stegMapElement.komponent,
+        status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
+        data: { redigerbart: this.props.redigerbart, stegData: stegData },
+        handlers: { fortsett: this.fortsett, tilbake: this.tilbake, oppdaterStegData: this.oppdaterStegData },
+      };
+    });
   };
 
   oppdaterAktivtSteg = (nesteStegIndex: number) => {

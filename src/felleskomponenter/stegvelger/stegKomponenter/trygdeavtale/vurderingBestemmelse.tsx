@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { RootState } from "AppTypes";
 import { getFormValues, reduxForm } from "redux-form";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
@@ -10,20 +8,18 @@ import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
 
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { trygdeavtaleOperations, trygdeavtaleSelectors } from "../../../../ducks/trygdeavtale";
 import { formSelectors } from "../../../../ducks/form";
-import { StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
+import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
+import { StegNavn } from "../../../../kodeverk/koder";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 
-const mapStateToProps = (state: RootState) => {
-  const bestemmelseStegData = trygdeavtaleSelectors.BestemmelseStegDataSelector(state);
+const mapStateToProps = (state: RootState, ownProps: Props) => {
+  const bestemmelseStegData = ownProps.stegData?.find((steg) => steg.steg === StegNavn.BESTEMMELSE);
   return {
-    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     bestemmelseStegData,
     formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
     formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
@@ -38,12 +34,7 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  sendStegData: (behandlingID: number, data: StegDataReqDto) =>
-    dispatch(trygdeavtaleOperations.sendStegData(behandlingID, data)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -58,10 +49,11 @@ interface Props {
   fortsett: () => void;
   tilbake: () => void;
   redigerbart: boolean;
+  oppdaterStegData: (data: StegDataReqDto) => void;
+  stegData: StegData[];
 }
 
 const VurderingBestemmelse = ({
-  behandlingID,
   bestemmelseStegData,
   bestemmelseValg,
   formIsValid,
@@ -70,12 +62,12 @@ const VurderingBestemmelse = ({
   innvilgelseValg,
   tilbake,
   redigerbart,
-  sendStegData,
+  oppdaterStegData,
   vedtakValg,
 }: PropsFromRedux & Props) => {
   useEffect(() => {
     if (formValues?.vedtak) {
-      sendStegData(behandlingID, {
+      oppdaterStegData({
         stegId: KV.Koder.StegNavn.BESTEMMELSE,
         stegData: {
           vedtakValg: formValues.vedtak,

@@ -18,7 +18,6 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { dokumenterOperations, dokumenterSelectors } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
-import { trygdeavtaleSelectors } from "../../ducks/trygdeavtale";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { formSelectors } from "../../ducks/form";
 
@@ -286,7 +285,7 @@ Saksbehandling.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  arbeidsland: trygdeavtaleSelectors.ArbeidslandKTSelector(state),
+  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).fom

@@ -171,6 +171,10 @@ export const SoknadslandSelector = createSelector(BehandlingsgrunnlagDataSelecto
   behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : []
 );
 
+export const SoknadslandKTSelector = createSelector(SoknadslandSelector, (soknadsland) =>
+  MKV.KTObjects.landkoder.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
+);
+
 export const TrygdedekningSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning || ""

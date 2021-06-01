@@ -10,19 +10,18 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 
-import { trygdeavtaleOperations, trygdeavtaleSelectors } from "../../../../ducks/trygdeavtale";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
-import { StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
+import { StegNavn } from "../../../../kodeverk/koder";
 
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
+
 import "./vurderingAvklarVirksomhet.css";
 
-const mapStateToProps = (state: RootState) => {
-  const avklarVirksomhetStegData = trygdeavtaleSelectors.AvklarVirksomhetStegDataSelector(state);
+const mapStateToProps = (state: RootState, ownProps: Props) => {
+  const avklarVirksomhetStegData = ownProps.stegData?.find((steg) => steg.steg === StegNavn.AVKLAR_VIRKSOMHET);
   return {
-    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     virksomheterListe: avklarVirksomhetStegData?.virksomheter || [],
     avklarVirksomhetStegData,
     formValues: getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
@@ -34,8 +33,6 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  sendStegData: (behandlingID: number, data: StegDataReqDto) =>
-    dispatch(trygdeavtaleOperations.sendStegData(behandlingID, data)),
   changeValgteVirksomheter: (data: string[]) =>
     dispatch(change(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET, "virksomheter", data)),
 });
@@ -52,17 +49,18 @@ interface Props {
   formValues: FormValuesProps;
   redigerbart: boolean;
   tilbake: () => void;
+  oppdaterStegData: (data: StegDataReqDto) => void;
+  stegData: StegData[];
 }
 
 const VurderingAvklarVirksomhet = ({
   avklarVirksomhetStegData,
-  behandlingID,
   changeValgteVirksomheter,
   formValues,
   formIsValid,
   fortsett,
   redigerbart,
-  sendStegData,
+  oppdaterStegData,
   tilbake,
   virksomheterListe,
 }: PropsFromRedux & Props) => {
@@ -72,7 +70,7 @@ const VurderingAvklarVirksomhet = ({
 
   const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
-      sendStegData(behandlingID, {
+      oppdaterStegData({
         stegId: KV.Koder.StegNavn.AVKLAR_VIRKSOMHET,
         stegData: { virksomheter: data.formValues.virksomheter || [] },
       });

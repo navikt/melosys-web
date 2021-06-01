@@ -1,7 +1,5 @@
 import React, { Fragment, useCallback, useEffect } from "react";
 import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 
@@ -10,16 +8,14 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
 import * as Utils from "../../../../utils";
 
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { trygdeavtaleOperations, trygdeavtaleSelectors } from "../../../../ducks/trygdeavtale";
 import { formSelectors } from "../../../../ducks/form";
+import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
+import { StegNavn } from "../../../../kodeverk/koder";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
-
-import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
 
 const initializeValues = (stegData: StegData | undefined) => ({
   fom: stegData?.resultat?.fom ? Utils.dato.formatterDatoTilNorsk(stegData.resultat.fom) : undefined,
@@ -27,10 +23,9 @@ const initializeValues = (stegData: StegData | undefined) => ({
   land: stegData?.resultat?.land ? stegData.resultat.land[0] : undefined,
 });
 
-const mapStateToProps = (state: RootState) => {
-  const inngangStegData = trygdeavtaleSelectors.InngangStegDataSelector(state);
+const mapStateToProps = (state: RootState, ownProps: Props) => {
+  const inngangStegData = ownProps.stegData?.find((steg) => steg.steg === StegNavn.INNGANG);
   return {
-    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
     inngangStegData,
     formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
     initialValues: initializeValues(inngangStegData),
@@ -38,12 +33,7 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  sendStegData: (behandlindID: number, data: StegDataReqDto) =>
-    dispatch(trygdeavtaleOperations.sendStegData(behandlindID, data)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -57,16 +47,17 @@ interface Props {
   fortsett: () => void;
   formValues: FormValuesProps;
   redigerbart: boolean;
+  stegData: StegData[];
+  oppdaterStegData: (data: StegDataReqDto) => void;
 }
 
 const VurderingInngang = ({
-  behandlingID,
   formValues,
   formIsValid,
   fortsett,
   inngangStegData,
   redigerbart,
-  sendStegData,
+  oppdaterStegData,
 }: PropsFromRedux & Props) => {
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
@@ -83,7 +74,7 @@ const VurderingInngang = ({
         tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
         land: data.formValues.land ? [data.formValues.land] : [],
       };
-      sendStegData(behandlingID, { stegId: KV.Koder.StegNavn.INNGANG, stegData: requestData });
+      oppdaterStegData({ stegId: KV.Koder.StegNavn.INNGANG, stegData: requestData });
     }
   };
   const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
