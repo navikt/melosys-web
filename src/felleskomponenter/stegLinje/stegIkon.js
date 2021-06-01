@@ -2,34 +2,13 @@ import React from "react";
 import PT from "prop-types";
 import classnames from "classnames";
 
-import { FANE_STATUS, STEG } from "../stegMotor/typer";
+import { FANE_STATUS } from "../stegvelger/stegMotor/typer";
 
-import * as Ikoner from "../../../resources/images";
+import * as Ikoner from "../../resources/images";
 
 import "./stegIkon.css";
 
-const erVedtakSteg = (id) =>
-  id === STEG.VEDTAK ||
-  id === STEG.ENDRET_PERIODE ||
-  id === STEG.AVSLAG_12_X_OG_16 ||
-  id === STEG.ARTIKKEL_16_VEDTAK ||
-  id === STEG.ARTIKKEL_13_1_A_VEDTAK ||
-  id === STEG.VIDERESEND ||
-  id === STEG.ARTIKKEL_13_1_B_VEDTAK ||
-  id === STEG.ARTIKKEL_13_1_B_UTPEK_LAND ||
-  id === STEG.ARTIKKEL_13_2_A_VEDTAK ||
-  id === STEG.GODKJENN_UTPEKING_NORGE ||
-  id === STEG.GODKJENN_UTPEKING_ANNET_LAND ||
-  id === STEG.AVSLAA_UTPEKING ||
-  id === STEG.ARTIKKEL_13_2_B_UTPEK_LAND ||
-  id === STEG.ARTIKKEL_13_3_VEDTAK ||
-  id === STEG.ARTIKKEL_13_3_UTPEK_LAND ||
-  id === STEG.ARTIKKEL_13_4_VEDTAK ||
-  id === STEG.ARTIKKEL_13_4_UTPEK_LAND ||
-  id === STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK ||
-  id === STEG.VEDTAK_FTRL;
-
-const ikonVelger = (id, status) => {
+const ikonVelger = (status, vedtakSteg) => {
   const IKONER = {
     STEG: {
       UBEHANDLET: Ikoner.Ubehandlet,
@@ -45,18 +24,14 @@ const ikonVelger = (id, status) => {
     },
   };
 
-  if (erVedtakSteg(id)) {
-    return IKONER.VEDTAK.OK;
-  }
-
-  return IKONER.STEG[status];
+  return vedtakSteg ? IKONER.VEDTAK.OK : IKONER.STEG[status];
 };
 
 const StegIkon = (props) => {
-  const { id, aktivtSteg, status, tittel, onClick, tilgjengelig } = props;
+  const { aktivtSteg, status, tittel, onClick, tilgjengelig, vedtakSteg } = props;
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
-  const Ikon = ikonVelger(id, status);
+  const Ikon = ikonVelger(status, vedtakSteg);
 
   const cl = classnames(
     "stegIkon",
@@ -66,8 +41,8 @@ const StegIkon = (props) => {
   );
 
   const knappKlasser = classnames({
-    stegIkon__enkeltSteg: !erVedtakSteg(id),
-    stegIkon__vedtak: erVedtakSteg(id),
+    stegIkon__enkeltSteg: !vedtakSteg,
+    stegIkon__vedtak: vedtakSteg,
   });
 
   /* eslint-disable react/no-danger */
@@ -89,11 +64,13 @@ StegIkon.propTypes = {
   tilgjengelig: PT.bool,
   onClick: PT.func.isRequired,
   aktivtSteg: PT.bool,
+  vedtakSteg: PT.bool,
 };
 
 StegIkon.defaultProps = {
   tilgjengelig: false,
   aktivtSteg: false,
+  vedtakSteg: false,
 };
 
 export default StegIkon;

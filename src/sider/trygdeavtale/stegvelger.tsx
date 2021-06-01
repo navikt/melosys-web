@@ -7,8 +7,8 @@ import { connect, ConnectedProps } from "react-redux";
 
 import * as Utils from "../../utils";
 
-import StegLinje from "../../felleskomponenter/stegvelger/felles/stegLinje";
-import StegFane from "../../felleskomponenter/stegvelger/felles/stegFane";
+import StegLinje from "../../felleskomponenter/stegLinje";
+import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger/stegMotor/typer";
 import VurderingInngang from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingInngang";
 import VurderingAvklarVirksomhet from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingAvklarVirksomhet";

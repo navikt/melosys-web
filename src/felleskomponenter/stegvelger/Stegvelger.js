@@ -10,8 +10,8 @@ import MKV from "../../melosyskodeverk";
 import * as MPT from "../../proptypes";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
-import StegLinje from "./felles/stegLinje";
-import StegFane from "./felles/stegFane";
+import StegLinje from "../stegLinje";
+import StegFane from "../stegFane";
 import StegMotor from "./stegMotor";
 
 import { anmodningunntakOperations } from "../../ducks/anmodningunntak";
