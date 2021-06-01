@@ -82,7 +82,7 @@ class Stegvelger extends Component<Props, State> {
         aktivtSteg: this.state.aktivtStegIndex === index,
         komponent: stegMapElement.komponent,
         status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-        data: { redigerbart: this.props.redigerbart, stegData: stegData },
+        data: { redigerbart: this.props.redigerbart, stegData },
         handlers: { fortsett: this.fortsett, tilbake: this.tilbake, oppdaterStegData: this.oppdaterStegData },
       };
     });
