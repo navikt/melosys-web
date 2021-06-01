@@ -10,12 +10,25 @@ import "./notat.css";
 const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpdate, overskrift, maksTekstLengde }) => {
   const [endres, setEndres] = useState(false);
   const [endretTekst, setEndretTekst] = useState(tekst);
+  const [lagringFeilmelding, setLagringFeilmelding] = useState("");
 
   const visLagreKnapp = endretTekst.length <= maksTekstLengde;
 
-  const lagre = () => {
-    onUpdate(endretTekst);
-    setEndres(false);
+  const lagre = async () => {
+    setLagringFeilmelding("");
+
+    try {
+      await onUpdate(endretTekst);
+      setEndres(false);
+    } catch (e) {
+      if (e.status >= 500) {
+        setLagringFeilmelding(
+          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger."
+        );
+      } else if (e.status >= 400) {
+        setLagringFeilmelding(e.body.message);
+      }
+    }
   };
 
   const apneEndring = () => {
@@ -24,6 +37,7 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
 
   const avbrytEndring = () => {
     setEndres(false);
+    setLagringFeilmelding("");
     setEndretTekst(tekst);
   };
 
@@ -64,7 +78,9 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
               <Nav.Textarea label="" value={endretTekst} onChange={endreTekst} maxLength={maksTekstLengde} />
             </Nav.Row>
             <Nav.Row>
-              <Nav.Column xs="8" />
+              <Nav.Column xs="8">
+                {lagringFeilmelding && <Nav.Typo.Feilmelding>{lagringFeilmelding}</Nav.Typo.Feilmelding>}
+              </Nav.Column>
               <Nav.Column xs="2">
                 {visLagreKnapp && (
                   <Nav.Lenker onClick={lagre}>
