@@ -79,7 +79,9 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
             </Nav.Row>
             <Nav.Row>
               <Nav.Column xs="8">
-                {lagringFeilmelding && <Nav.Typo.Feilmelding>{lagringFeilmelding}</Nav.Typo.Feilmelding>}
+                <div role="alert">
+                  {lagringFeilmelding && <Nav.Typo.Feilmelding>{lagringFeilmelding}</Nav.Typo.Feilmelding>}
+                </div>
               </Nav.Column>
               <Nav.Column xs="2">
                 {visLagreKnapp && (

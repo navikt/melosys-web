@@ -149,11 +149,9 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
               bekreftRedigerbart={!disableLagreKnapp}
               redigerbart
             />
-            {nyttNotatFeilmelding && (
-              <Nav.Typo.Feilmelding className="sidedialog-notater__nytt-notat-feilmelding">
-                {nyttNotatFeilmelding}
-              </Nav.Typo.Feilmelding>
-            )}
+            <div role="alert" className="sidedialog-notater__nytt-notat-feilmelding">
+              {nyttNotatFeilmelding && <Nav.Typo.Feilmelding>{nyttNotatFeilmelding}</Nav.Typo.Feilmelding>}
+            </div>
           </Fragment>
         )}
         {!leggTilNotatDialogSynlig && (
