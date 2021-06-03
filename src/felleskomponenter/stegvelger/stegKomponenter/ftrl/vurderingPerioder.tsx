@@ -244,7 +244,6 @@ const VurderingPerioder = ({
         changeField(`medlemskapsperioder[${index}].feil`, undefined);
       })
       .catch((error) => {
-        Utils.logger.error(error);
         changeField(
           `medlemskapsperioder[${index}].feil`,
           error.body && error.body.message ? error.body.message : error
@@ -264,7 +263,6 @@ const VurderingPerioder = ({
         });
       })
       .catch((error) => {
-        Utils.logger.error(error);
         changeField(
           `medlemskapsperioder[${index}].feil`,
           error.body && error.body.message ? error.body.message : error
@@ -324,7 +322,6 @@ const VurderingPerioder = ({
         removeField(index);
       })
       .catch((error) => {
-        Utils.logger.error(error);
         changeField(
           `medlemskapsperioder[${index}].feil`,
           error.body && error.body.message ? error.body.message : error

@@ -114,7 +114,6 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
           resetForm();
         }
       } catch (e) {
-        Utils.logger.error(e);
         if (e.status >= 500) setAlertmelding("Saken kunne ikke opprettes i RINA");
         else if (e.status >= 400) setAlertmelding(e.body.message);
       }

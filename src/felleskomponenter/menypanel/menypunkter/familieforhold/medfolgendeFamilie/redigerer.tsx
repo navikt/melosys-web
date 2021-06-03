@@ -30,7 +30,6 @@ const Redigerer = ({
         const person = await Api.Personer.hentPerson(idNummer);
         settVerdi("navn", person.sammensattNavn);
       } catch (e) {
-        if (e.status !== 404) Utils.logger.error(e);
         setDisableNavnInput(false);
       }
 

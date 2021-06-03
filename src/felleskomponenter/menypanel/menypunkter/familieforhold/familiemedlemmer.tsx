@@ -125,7 +125,6 @@ const Familiemedlemmer = ({
       oppdaterBehandling();
       setHarOppfrisket(true);
     } catch (e) {
-      Utils.logger.error(e);
       if (e.status >= 500) setMenypanelFeilmelding("Ikke svar fra TPS. Prøv igjen senere.");
       else if (e.status >= 400) setMenypanelFeilmelding(e.body.message);
     }

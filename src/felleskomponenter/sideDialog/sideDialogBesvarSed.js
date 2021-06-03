@@ -120,7 +120,6 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
         setHenterData(false);
       } catch (e) {
         setHenterData(false);
-        Utils.logger.error(e);
         setFeilmelding("Kunne ikke hente BUCer knyttet til saken");
       }
     }

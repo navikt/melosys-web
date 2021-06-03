@@ -158,9 +158,8 @@ class Saksbehandling extends Component {
       await hentDokumentOversikt(snr);
       return true;
     } catch (e) {
-      Utils.logger.error(e);
+      return false;
     }
-    return false;
   };
 
   lagreAvklartefaktaHandler = async () => {

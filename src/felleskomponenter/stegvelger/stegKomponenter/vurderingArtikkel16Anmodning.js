@@ -9,7 +9,6 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
-import * as Utils from "../../../utils";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 
@@ -80,7 +79,7 @@ class TidligereMedlemskapPerioder extends Component {
       await remove(eksistererVedPosisjon);
     }
 
-    oppdaterOgLagreBehandlinger().catch((e) => Utils.logger.error(e));
+    oppdaterOgLagreBehandlinger();
   };
 
   render() {
@@ -211,11 +210,11 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   lagreVilkar = () => {
-    this.props.lagreVilkarHandler().catch((e) => Utils.logger.error(e));
+    this.props.lagreVilkarHandler();
   };
 
   lagreBehandlinger = () => {
-    this.props.oppdaterOgLagreBehandlinger().catch((e) => Utils.logger.error(e));
+    this.props.oppdaterOgLagreBehandlinger();
   };
 
   begrunnelseFritekstBrevEndretHandler = (event) => {
