@@ -28,20 +28,24 @@ const ugyldigeInnvilgelsesResultater = (medlemskapsperioder, mottaksdato) => {
 const erFeilAktivPaaPerioder = (medlemskapsperioder) =>
   medlemskapsperioder && medlemskapsperioder.some((medlemskapsperiode) => !!medlemskapsperiode.feil);
 
-const erDatoGyldig = (dato) => (Utils._isEmpty(dato) ? true : Utils.dato.vaskInputDato(dato));
+const erPeriodeSisteMedlemskapsperiode = (id, formValues) => {
+  const medlemskapsperioder = formValues?.medlemskapsperioder || [];
+  return medlemskapsperioder[medlemskapsperioder?.length - 1]?.id?.toString() === id;
+};
 
 const gyldigTomDatoTest = {
   name: "Gyldig tomDato",
   message: "Utenfor søknadsperioden",
   test: (tomDato, schema) => {
     const tomDatoFraSoknadsperiode = schema.options.context.soknadsperiode.tom;
-    const medlemskapsperioder = schema.options.context.formValues?.medlemskapsperioder;
-    const erSisteMedlemskapsperiode =
-      medlemskapsperioder[medlemskapsperioder.length - 1]?.id.toString() === schema.parent.id;
+    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(
+      schema.parent.id,
+      schema.options.context.formValues
+    );
 
     return Utils._isEmpty(tomDato)
-      ? erSisteMedlemskapsperiode && Utils._isEmpty(tomDatoFraSoknadsperiode)
-      : erDatoGyldig(tomDato) &&
+      ? !erSisteMedlemskapsperiode || Utils._isEmpty(tomDatoFraSoknadsperiode)
+      : Utils.dato.vaskInputDato(tomDato) &&
           (Utils._isEmpty(tomDatoFraSoknadsperiode) ||
             Utils.dato.erGyldigPeriode(tomDato, Utils.dato.formatterDatoTilNorsk(tomDatoFraSoknadsperiode)));
   },
@@ -54,7 +58,15 @@ const vurdering_perioder = object().shape({
         id: string().required(),
         arbeidsland: string(),
         fomDato: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
-        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(gyldigTomDatoTest).nullable(),
+        tomDato: string()
+          .erGyldigDato()
+          .erEtterDatofelt("fomDato")
+          .test(gyldigTomDatoTest)
+          .when(["id", "$formValues"], {
+            is: (id, formValues) => !erPeriodeSisteMedlemskapsperiode(id, formValues),
+            then: string().required(MAA_FYLLES_UT),
+          })
+          .nullable(),
         bestemmelse: string(),
         innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
         trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),
