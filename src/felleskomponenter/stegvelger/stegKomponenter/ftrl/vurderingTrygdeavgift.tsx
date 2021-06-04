@@ -587,7 +587,6 @@ const VurderingTrygdeavgift = ({
               value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               id={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               disabled={!redigerbart}
-              defaultChecked={lønnsforholdErLønnFraNorge}
             />
             <Skjema.Radio
               feltNavn="avgiftsgrunnlag.lønnsforhold"
@@ -595,7 +594,6 @@ const VurderingTrygdeavgift = ({
               value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               id={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               disabled={!redigerbart}
-              defaultChecked={lønnsforholdErLønnFraUtlandet}
             />
             <Skjema.Radio
               label="Norsk og utenlandsk virksomhet"
@@ -603,7 +601,6 @@ const VurderingTrygdeavgift = ({
               value={MKV.Koder.loenn_forhold.DELT_LØNN}
               id={MKV.Koder.loenn_forhold.DELT_LØNN}
               disabled={!redigerbart}
-              defaultChecked={lønnsforholdErDeltLønn}
             />
           </Nav.Fieldset>
         </Nav.Column>
