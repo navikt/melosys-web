@@ -29,8 +29,8 @@ const erFeilAktivPaaPerioder = (medlemskapsperioder) =>
   medlemskapsperioder && medlemskapsperioder.some((medlemskapsperiode) => !!medlemskapsperiode.feil);
 
 const erPeriodeSisteMedlemskapsperiode = (id, formValues) => {
-  const medlemskapsperioder = formValues?.medlemskapsperioder || [];
-  return medlemskapsperioder[medlemskapsperioder?.length - 1]?.id?.toString() === id;
+  const medlemskapsperioder = formValues.medlemskapsperioder || [];
+  return medlemskapsperioder[medlemskapsperioder.length - 1]?.id?.toString() === id;
 };
 
 const gyldigTomDatoTest = {
