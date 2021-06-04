@@ -17,7 +17,6 @@ import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
-import { queryParamLogger } from "../../utils/queryParamLogger";
 
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
@@ -34,7 +33,6 @@ class Journalforing extends Component {
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
-    queryParamLogger(this.props.location, "kilde", "GOSYS");
     await this.props.hentJournalOppgave(journalpostID);
   }
 

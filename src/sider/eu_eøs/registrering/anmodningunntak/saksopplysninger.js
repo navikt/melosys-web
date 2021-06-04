@@ -231,7 +231,6 @@ const Saksopplysninger = ({
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       await Api.Saksflyt.Anmodningsperioder.svar(behandlingID, { ytterligereInfo: ytterligereInfoFritekst });
     } catch (e) {
-      Utils.logger.error(e);
       return false;
     } finally {
       setRegistreringPending(false);
@@ -261,7 +260,6 @@ const Saksopplysninger = ({
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       return true;
     } catch (e) {
-      Utils.logger.error(e);
       return false;
     }
   };

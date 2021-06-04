@@ -28,10 +28,14 @@ const VurderingGodkjennUtpekingAnnetLand = ({
   const hovedknappClickHandler = async () => {
     setGodkjenningPending(true);
 
-    await lagreOgGodkjennUnntaksperioder({
-      varsleUtland,
-      fritekst,
-    });
+    try {
+      await lagreOgGodkjennUnntaksperioder({
+        varsleUtland,
+        fritekst,
+      });
+    } catch (e) {
+      setGodkjenningPending(false);
+    }
 
     // godkjenn-operation navigerer til forside, og komponenten kan derfor være unmountet.
     if (isMounted.current) {

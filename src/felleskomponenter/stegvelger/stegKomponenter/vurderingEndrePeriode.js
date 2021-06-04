@@ -74,9 +74,7 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   hentOpprinneligPeriode = async (behandlingID) => {
-    const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID).catch(
-      Utils.logger.error
-    );
+    const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID);
     this.setState(opprinneligLovvalgsperiode);
   };
 

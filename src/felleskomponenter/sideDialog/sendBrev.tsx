@@ -83,16 +83,14 @@ const SendBrev = ({
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
   useEffect(() => {
-    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID)
-      .then((response) => {
-        response.forEach((mal) =>
-          mal.muligeMottakere.forEach((muligMottaker) => {
-            muligMottaker.uuid = Utils._uuid();
-          })
-        );
-        setTilgjengeligeMaler(response);
-      })
-      .catch(Utils.logger.error);
+    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
+      response.forEach((mal) =>
+        mal.muligeMottakere.forEach((muligMottaker) => {
+          muligMottaker.uuid = Utils._uuid();
+        })
+      );
+      setTilgjengeligeMaler(response);
+    });
   }, []);
 
   useEffect(() => {
@@ -105,9 +103,9 @@ const SendBrev = ({
   }, [formValues?.type]);
 
   const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
-    Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null })
-      .then(setMuligeMottakere)
-      .catch(Utils.logger.error);
+    Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
+      setMuligeMottakere
+    );
   };
 
   const finnMottakerFraValgtMal = (uuid?: string) => {

@@ -280,12 +280,8 @@ class Stegvelger extends Component {
       fritekst: data.fritekst || null,
     };
 
-    try {
-      await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
+    tilForsiden();
   };
 
   lagreOgGodkjennUnntaksperioder = async (data) => {
@@ -337,7 +333,7 @@ class Stegvelger extends Component {
     const { behandlingID, lovvalgsperioder } = this.props;
 
     const forkortetPeriode = lovvalgsperioder.map((periode) => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
-    Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch((e) => Utils.logger.error(e));
+    Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode);
   };
 
   endreVedtak = (data) => {

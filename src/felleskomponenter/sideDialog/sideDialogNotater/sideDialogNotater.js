@@ -35,12 +35,8 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   const [nyttNotatFeilmelding, setNyttNotatFeilmelding] = useState("");
 
   const hentNotater = async () => {
-    try {
-      const hentedeNotater = await Api.Fagsaker.notater.hent(saksnummer);
-      setNotater(hentedeNotater);
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    const hentedeNotater = await Api.Fagsaker.notater.hent(saksnummer);
+    setNotater(hentedeNotater);
   };
 
   useEffect(() => {
