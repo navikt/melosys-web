@@ -7,7 +7,6 @@ import MKV from "../../../../melosyskodeverk";
 
 import * as Mui from "../../../ui";
 import * as Api from "../../../../services/api";
-import * as Utils from "../../../../utils";
 import * as Hooks from "../../../../hooks";
 import * as Ikoner from "../../../../resources/images";
 
@@ -42,7 +41,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   const [fullmektige, setFullmektige] = Hooks.useAsyncCallbackState(
     () => Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT),
     [],
-    Utils.logger.error
+    () => {}
   );
   const [disableLeggTilFullmektig, setDisableLeggTilFullmektig] = useState(false);
 
@@ -54,7 +53,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       );
       setFullmektige(fullmektigAktoerer);
     } catch (e) {
-      Utils.logger.error(e);
+      setFullmektige([]);
     }
   };
 
@@ -93,8 +92,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
 
       setFullmektige((prevFullmektige) => byttUtTemplateMedLagretFullmektig(prevFullmektige, lagretFullmektig));
       setDisableLeggTilFullmektig(false);
+      return lagretFullmektig;
     } catch (e) {
-      Utils.logger.error(e);
+      if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
+      else if (e.status >= 400) throw new Error(e.body.message);
+      else throw e;
     }
   };
 
@@ -121,7 +123,9 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             }
             slettFullmektigLokalt(fullmektig.databaseID);
           } catch (e) {
-            Utils.logger.error(e);
+            if (e.status >= 500) throw new Error("Teknisk feil ved sletting av fullmektig");
+            else if (e.status >= 400) throw new Error(e.body.message);
+            else throw e;
           }
         };
 
@@ -130,7 +134,9 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             if (orgnr) await lagreFullmektig(representererKode, orgnr, fullmektig.databaseID);
             settRepresentant(index, representererKode);
           } catch (e) {
-            Utils.logger.error(e);
+            if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
+            else if (e.status >= 400) throw new Error(e.body.message);
+            else throw e;
           }
         };
 
