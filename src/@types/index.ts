@@ -1,4 +1,3 @@
-export type { StrukturertAdresse, UstrukturertAdresse, MidlertidigAdresse, GeneriskAdresse } from "./adresse";
 export type {
   default as Avklartfakta,
   Virksomheter,

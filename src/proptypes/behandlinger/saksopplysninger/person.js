@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from "prop-types";
 
-import { GeneriskAdresse, UstrukturertAdresse, MidlertidigAdresse } from "../../adresser";
+import { RegisterAdresse, UstrukturertAdresse, MidlertidigAdresse } from "../../adresser";
 import { Kodeverk } from "../../kodeverk";
 import { Periode } from "../../periode";
 
@@ -22,7 +22,7 @@ const PersonPropType = PT.shape({
   personhistorikk: PT.shape({
     bostedsadressePerioder: PT.arrayOf(
       PT.shape({
-        bostedsadresse: GeneriskAdresse,
+        bostedsadresse: RegisterAdresse,
         periode: Periode,
       })
     ),

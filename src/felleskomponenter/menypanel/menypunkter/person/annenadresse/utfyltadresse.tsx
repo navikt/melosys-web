@@ -1,10 +1,11 @@
 import React from "react";
-import { StrukturertAdresse } from "Domene";
+
+import * as Api from "../../../../../services/api";
 
 import StrukturertAdresseKomponent from "../../../../adresser/strukturertAdresse";
 
 interface UtfyltAdresseProps {
-  adresse: StrukturertAdresse;
+  adresse: Api.Types.StrukturertAdresse;
 }
 
 const UtfyltAdresse = ({ adresse }: UtfyltAdresseProps) => <StrukturertAdresseKomponent adresse={adresse} />;

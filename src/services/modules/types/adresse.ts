@@ -17,7 +17,7 @@ export interface UstrukturertAdresse {
   adresselinjer: string[];
 }
 
-interface StrukturertAdresse {
+export interface StrukturertAdresse {
   gatenavn: string | null;
   husnummer: string | null;
   region: string | null;

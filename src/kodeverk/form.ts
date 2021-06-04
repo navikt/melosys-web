@@ -1,4 +1,4 @@
-import { StrukturertAdresse } from "Domene";
+import * as Api from "../services/api";
 
 export const BEHANDLINGS_FORM = "behandlingsform";
 export interface BehandlingsFormData {
@@ -17,11 +17,11 @@ export interface ArbeidsforholdUtland {
   navn?: string;
   orgnr?: string;
   selvstendigNaeringsvirksomhet: boolean;
-  adresse?: Partial<StrukturertAdresse>;
+  adresse?: Partial<Api.Types.StrukturertAdresse>;
 }
 
 export interface FysiskArbeidssted {
-  adresse: Partial<StrukturertAdresse>;
+  adresse: Partial<Api.Types.StrukturertAdresse>;
   virksomhetNavn?: string | null;
 }
 export interface ArbeidsstedPaaLand {
