@@ -79,6 +79,11 @@ export const LonnOgGodtgjorelser = {
   },
 };
 
+export const OvrigOmArbeidstaker = {
+  tittel: "Øvrig om arbeidstaker",
+  undertitler: {},
+};
+
 export const OmVirksomhetenINorge = {
   tittel: "Om virksomheten i Norge",
   undertitler: {

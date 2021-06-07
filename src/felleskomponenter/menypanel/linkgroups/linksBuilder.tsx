@@ -14,6 +14,7 @@ import {
   Person,
   Familieforhold,
   LonnOgGodtgjorelser,
+  OvrigOmArbeidstaker,
   VirksomhetenINorge,
 } from "../menypunkter";
 
@@ -29,8 +30,8 @@ interface ILinksBuilder {
   addUtenlandsoppdraget: () => ILinksBuilder;
   addLonnOgGodtgjorelser: () => ILinksBuilder;
   addArbeidssteder: () => ILinksBuilder;
+  addOvrigOmArbeidstaker: () => ILinksBuilder;
   addOmVirksomhetenINorge: () => ILinksBuilder;
-  // addOvrigOmArbeidstaker: () => ILinksBuilder,
   build: () => Link[];
 }
 
@@ -186,6 +187,21 @@ class LinksBuilder implements ILinksBuilder {
       active: false,
       content: (
         <LonnOgGodtgjorelser
+          visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
+          redigerbart={this.contentProps.redigerbart}
+          behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+        />
+      ),
+    });
+    return this;
+  }
+
+  public addOvrigOmArbeidstaker() {
+    this.links.push({
+      label: "Øvrig om arbeidstaker",
+      active: false,
+      content: (
+        <OvrigOmArbeidstaker
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}

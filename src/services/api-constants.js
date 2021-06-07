@@ -33,3 +33,4 @@ export const UTPEKING = "utpeking";
 export const UTPEKINGSPERIODER = "utpekingsperioder";
 export const VEDTAK = "vedtak";
 export const VILKAAR = "vilkaar";
+export const INNGANGSVILKAAR = "inngangsvilkaar";

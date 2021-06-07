@@ -188,29 +188,26 @@ const Saksbehandling = ({
       await hentDokumentOversikt(snr);
       return true;
     } catch (e) {
-      Utils.logger.error(e);
+      return false;
     }
-    return false;
   };
 
   useEffect(() => {
     lastInnSaksopplysninger();
-    API.Kodeverk.hentLandkoderIso2()
-      .then((response) => {
-        setLandkoder(
-          response
-            .sort((a, b) => {
-              if (a.term > b.term) return 1;
-              if (b.term > a.term) return -1;
-              return 0;
-            })
-            .map((item) => ({
-              ...item,
-              term: Utils.streng.storeForbokstaverForLand(item.term),
-            }))
-        );
-      })
-      .catch(Utils.logger.error);
+    API.Kodeverk.hentLandkoderIso2().then((response) => {
+      setLandkoder(
+        response
+          .sort((a, b) => {
+            if (a.term > b.term) return 1;
+            if (b.term > a.term) return -1;
+            return 0;
+          })
+          .map((item) => ({
+            ...item,
+            term: Utils.streng.storeForbokstaverForLand(item.term),
+          }))
+      );
+    });
 
     return () => {
       resetFagsakState();

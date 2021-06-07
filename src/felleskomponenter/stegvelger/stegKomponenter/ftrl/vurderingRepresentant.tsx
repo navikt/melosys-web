@@ -86,11 +86,9 @@ const VurderingRepresentant = ({
   const debouncedHentValgtRepresentant = useCallback(Utils._debounce(hentValgtRepresentant, 1000), []);
 
   useEffect(() => {
-    Api.Representant.hentRepresentantListe()
-      .then((liste: Api.Representant.RepresentantListeResDto) => {
-        setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
-      })
-      .catch(Utils.logger.error);
+    Api.Representant.hentRepresentantListe().then((liste: Api.Representant.RepresentantListeResDto) => {
+      setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
+    });
     debouncedHentValgtRepresentant();
     return () => debouncedHentValgtRepresentant.cancel();
   }, []);
@@ -98,13 +96,7 @@ const VurderingRepresentant = ({
   async function hentOrganisasjonHvisValid(data: { orgnr: string; valid: boolean }) {
     if (data.valid) {
       const response = await hentOrganisasjon(data.orgnr);
-      if (response.data.response) {
-        Utils.logger.error(
-          response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon"
-        );
-      } else {
-        setOrganisasjon(response.data);
-      }
+      if (!response.data.response) setOrganisasjon(response.data);
     }
   }
   const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 500), []);
@@ -141,7 +133,7 @@ const VurderingRepresentant = ({
         selvbetalende: !!data.formValues.selvbetalende,
         organisasjonsnummer: data.formValues.organisasjonsnummer || null,
         kontaktperson: data.formValues.kontaktperson || null,
-      }).catch(Utils.logger.error);
+      });
     }
   }
 

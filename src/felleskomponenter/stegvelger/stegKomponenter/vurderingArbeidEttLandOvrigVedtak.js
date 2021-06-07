@@ -231,6 +231,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     await props.lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekst: values.vedtaksbrevFritekst,
+      fritekstSed: values.fritekstSed,
       mottakerinstitusjoner,
       vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       revurderBegrunnelse: values.vedtakstypebegrunnelse,

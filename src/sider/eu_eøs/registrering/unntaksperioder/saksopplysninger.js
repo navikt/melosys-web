@@ -258,17 +258,15 @@ const Saksopplysninger = ({
       case KV.Koder.Unntaksperiode.GODKJENT:
         godkjenn()
           .then(tilForsiden)
-          .catch((e) => {
+          .catch(() => {
             setRegistreringPending(false);
-            Utils.logger.error(e);
           });
         return true;
       case KV.Koder.Unntaksperiode.DELVIS_GODKJENT:
         delvisGodkjenn()
           .then(tilForsiden)
-          .catch((e) => {
+          .catch(() => {
             setRegistreringPending(false);
-            Utils.logger.error(e);
           });
         return true;
       case KV.Koder.Unntaksperiode.AVSLAG: {
@@ -278,9 +276,8 @@ const Saksopplysninger = ({
         };
         Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
           .then(tilForsiden)
-          .catch((e) => {
+          .catch(() => {
             setRegistreringPending(false);
-            Utils.logger.error(e);
           });
         return true;
       }

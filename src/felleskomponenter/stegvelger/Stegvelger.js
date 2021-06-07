@@ -280,12 +280,8 @@ class Stegvelger extends Component {
       fritekst: data.fritekst || null,
     };
 
-    try {
-      await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
+    tilForsiden();
   };
 
   lagreOgGodkjennUnntaksperioder = async (data) => {
@@ -337,7 +333,7 @@ class Stegvelger extends Component {
     const { behandlingID, lovvalgsperioder } = this.props;
 
     const forkortetPeriode = lovvalgsperioder.map((periode) => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
-    Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch((e) => Utils.logger.error(e));
+    Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode);
   };
 
   endreVedtak = (data) => {
@@ -416,7 +412,6 @@ class Stegvelger extends Component {
       valgteVirksomheter: props.valgteVirksomheter,
       valgteVirksomheterIkkeNaeringsDrivende: props.valgteVirksomheterIkkeNaeringsDrivende,
       vilkar: props.vilkar,
-      inngangsvilkaar: props.inngangsvilkaar,
       redigerbart: props.redigerbart,
       generiskStegRedigerbart: props.generiskStegRedigerbart,
       erIDirekteTilArtikkel16Flyt: props.erIDirekteTilArtikkel16Flyt,
@@ -576,7 +571,6 @@ Stegvelger.propTypes = {
   valgteVirksomheter: PT.array,
   valgteVirksomheterIkkeNaeringsDrivende: PT.array,
   vilkar: PT.array.isRequired,
-  inngangsvilkaar: MPT.Vilkaar,
   lagreVilkarHandler: PT.func,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func,
@@ -651,7 +645,6 @@ Stegvelger.defaultProps = {
   valgteLovvalgsVilkarBestemmelse: "",
   maritimtarbeid: [],
   hjemmebaser: [],
-  inngangsvilkaar: {},
   sakstype: "",
   lagreVilkarHandler: () => {},
   lagreLovvalgsperioderHandler: () => {},
@@ -666,7 +659,6 @@ const mapStateToProps = (state) => ({
   arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
-  inngangsvilkaar: vilkarSelectors.inngangsvilkaarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),

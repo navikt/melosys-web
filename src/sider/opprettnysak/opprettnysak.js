@@ -36,7 +36,6 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
         setOppgaver(oppgaverResponse);
         setOppgaverForsoktHentetFraEksisterendePerson(true);
       } catch (e) {
-        Utils.logger.error(e);
         setOppgaver([]);
       }
     } else {
@@ -254,7 +253,6 @@ const opprettNySak = async (values, dispatch, props) => {
     await Api.Fagsaker.fagsak.opprett(data);
     props.tilForsiden();
   } catch (e) {
-    Utils.logger.error(e);
     if (e.body.message) {
       throw new SubmissionError({ _error: e.body.message });
     }

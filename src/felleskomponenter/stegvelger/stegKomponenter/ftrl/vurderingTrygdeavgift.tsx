@@ -413,24 +413,22 @@ const VurderingTrygdeavgift = ({
   const debouncedHentBeregning = useCallback(Utils._debounce(hentBeregning, 1000), []);
 
   useEffect(() => {
-    Api.Trygdeavgift.hentGrunnlag(behandlingID)
-      .then((response) => {
-        if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
-          erSaerligAvgiftsGruppeValgt.set(
-            VurderingTrygdeavgiftVirksomhetTyper.NORSK,
-            !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
-          );
-        }
-        if (response?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe !== undefined) {
-          erSaerligAvgiftsGruppeValgt.set(
-            VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
-            !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe
-          );
-        }
-        setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
-        changeField("avgiftsgrunnlag", response);
-      })
-      .catch(Utils.logger.error);
+    Api.Trygdeavgift.hentGrunnlag(behandlingID).then((response) => {
+      if (response?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe !== undefined) {
+        erSaerligAvgiftsGruppeValgt.set(
+          VurderingTrygdeavgiftVirksomhetTyper.NORSK,
+          !!response.trygdeavgiftsgrunnlagNorge.særligAvgiftsgruppe
+        );
+      }
+      if (response?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe !== undefined) {
+        erSaerligAvgiftsGruppeValgt.set(
+          VurderingTrygdeavgiftVirksomhetTyper.UTENLANDSK,
+          !!response.trygdeavgiftsgrunnlagUtland.særligAvgiftsgruppe
+        );
+      }
+      setErSaerligAvgiftsGruppeValgt(new Map(erSaerligAvgiftsGruppeValgt));
+      changeField("avgiftsgrunnlag", response);
+    });
     debouncedHentBeregning();
     return () => debouncedHentBeregning.cancel();
   }, []);
@@ -496,12 +494,10 @@ const VurderingTrygdeavgift = ({
         lønnsforhold: formValues.avgiftsgrunnlag.lønnsforhold,
         trygdeavgiftsgrunnlagNorge: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge || null,
         trygdeavgiftsgrunnlagUtland: formValues.avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland || null,
-      })
-        .then((response) => {
-          changeField("avgiftsgrunnlag", response);
-          handleGrunnlagResponse(response);
-        })
-        .catch(Utils.logger.error);
+      }).then((response) => {
+        changeField("avgiftsgrunnlag", response);
+        handleGrunnlagResponse(response);
+      });
     }
   }, [formValues?.avgiftsgrunnlag]);
 
@@ -551,11 +547,9 @@ const VurderingTrygdeavgift = ({
   }
 
   function handleBeregnClick(erNorskVirksomhet: boolean) {
-    Api.Trygdeavgift.sendBeregning(behandlingID, oppdatertAvgiftsberegning)
-      .then((response) => {
-        changeField("avgiftsberegning", response);
-      })
-      .catch(Utils.logger.error);
+    Api.Trygdeavgift.sendBeregning(behandlingID, oppdatertAvgiftsberegning).then((response) => {
+      changeField("avgiftsberegning", response);
+    });
     setErTabellApen(
       new Map(
         erTabellApen.set(
@@ -587,7 +581,6 @@ const VurderingTrygdeavgift = ({
               value={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               id={MKV.Koder.loenn_forhold.LØNN_FRA_NORGE}
               disabled={!redigerbart}
-              defaultChecked={lønnsforholdErLønnFraNorge}
             />
             <Skjema.Radio
               feltNavn="avgiftsgrunnlag.lønnsforhold"
@@ -595,7 +588,6 @@ const VurderingTrygdeavgift = ({
               value={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               id={MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET}
               disabled={!redigerbart}
-              defaultChecked={lønnsforholdErLønnFraUtlandet}
             />
             <Skjema.Radio
               label="Norsk og utenlandsk virksomhet"
@@ -603,7 +595,6 @@ const VurderingTrygdeavgift = ({
               value={MKV.Koder.loenn_forhold.DELT_LØNN}
               id={MKV.Koder.loenn_forhold.DELT_LØNN}
               disabled={!redigerbart}
-              defaultChecked={lønnsforholdErDeltLønn}
             />
           </Nav.Fieldset>
         </Nav.Column>

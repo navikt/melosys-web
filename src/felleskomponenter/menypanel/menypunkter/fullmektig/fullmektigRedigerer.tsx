@@ -84,8 +84,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
             redigerbart={redigerbart}
             onChange={onKontaktOpplysningerChange}
             kontaktopplysninger={kontaktopplysninger}
-            onKontaktnavnInputBlur={onKontaktopplysningerInputBlur}
-            onKontaktorgnrInputBlur={onKontaktopplysningerInputBlur}
+            onInputBlur={onKontaktopplysningerInputBlur}
             onSlettKnappClick={onKontaktopplysningerSlettClick}
           />
         )}

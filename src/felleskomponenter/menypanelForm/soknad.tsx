@@ -90,6 +90,19 @@ const mapStateToProps = (state: RootState) => ({
         behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
       ),
     },
+    arbeidssituasjonOgOevrig: {
+      harLoennetArbeidMinstEnMndFoerUtsending: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .harLoennetArbeidMinstEnMndFoerUtsending,
+      beskrivelseArbeidSisteMnd: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .beskrivelseArbeidSisteMnd,
+      harAndreArbeidsgivereIUtsendingsperioden: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .harAndreArbeidsgivereIUtsendingsperioden,
+      beskrivelseAnnetArbeid: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .beskrivelseAnnetArbeid,
+      erSkattepliktig: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).erSkattepliktig,
+      mottarYtelserNorge: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserNorge,
+      mottarYtelserUtlandet: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserUtlandet,
+    },
     utenlandsoppdraget: {
       erUtsendelseForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
         .erUtsendelseForOppdragIUtlandet,

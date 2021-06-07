@@ -49,6 +49,7 @@ export function storeForbokstaver(originalOrd) {
 export function storeForbokstaverForLand(land) {
   return land
     ?.replace(/(\w|\u00C6|\u00D8|\u00C5)[^- ]*/g, (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase())
+    .replace("Usa", "USA")
     .replace(" Og ", " og ")
     .replace(" Of ", " of ")
     .replace(" I ", " i ");

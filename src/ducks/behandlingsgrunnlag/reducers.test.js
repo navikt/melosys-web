@@ -132,6 +132,15 @@ describe("behandlingsgrunnlag reducer", () => {
           erTrukketTrygdeavgift: false,
           utlArbTilhoererSammeKonsern: null,
         },
+        arbeidssituasjonOgOevrig: {
+          harLoennetArbeidMinstEnMndFoerUtsending: true,
+          beskrivelseArbeidSisteMnd: "Kjøring av oppvaskmaskin, rengjøring av gulv",
+          harAndreArbeidsgivereIUtsendingsperioden: true,
+          beskrivelseAnnetArbeid: null,
+          erSkattepliktig: null,
+          mottarYtelserNorge: true,
+          mottarYtelserUtlandet: false,
+        },
         juridiskArbeidsgiverNorge: {
           antallAnsatte: "12345",
           antallAdmAnsatte: "12345",
@@ -325,6 +334,15 @@ describe("behandlingsgrunnlag reducer", () => {
             antallUtsendte: 12345,
             ekstraArbeidsgivere: [],
             erOffentligVirksomhet: true,
+          },
+          arbeidssituasjonOgOevrig: {
+            harLoennetArbeidMinstEnMndFoerUtsending: true,
+            beskrivelseArbeidSisteMnd: "Kjøring av oppvaskmaskin, rengjøring av gulv",
+            harAndreArbeidsgivereIUtsendingsperioden: true,
+            beskrivelseAnnetArbeid: null,
+            erSkattepliktig: null,
+            mottarYtelserNorge: true,
+            mottarYtelserUtlandet: false,
           },
           arbeidsgiversBekreftelse: {
             arbeidsgiverBekrefterUtsendelse: true,
