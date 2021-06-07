@@ -1,6 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import { RegisterAdresse, MidlertidigAdresse, UstrukturertAdresse, Periode, Person } from "../../types";
+import { RegisterAdresse, MidlertidigAdresse, UstrukturertAdresse, Periode, Person, Organisasjon } from "../../types";
 
 export interface Oppsummering {
   saksnummer: string;
@@ -70,15 +70,6 @@ interface Arbeidsforhold {
   sistBekreftet: string;
   timerTimelonnet: TimerTimelonnet[];
   arbeidsforholdID: string;
-}
-
-interface Organisasjon {
-  orgnr: string;
-  oppstartdato: string | null;
-  postadresse: RegisterAdresse;
-  organisasjonsform: string | null;
-  navn: string;
-  forretningsadresse: RegisterAdresse;
 }
 
 interface Medlemsperiode {

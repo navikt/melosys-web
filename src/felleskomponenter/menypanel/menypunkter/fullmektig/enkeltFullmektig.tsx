@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import classNames from "classnames";
-import { Aktoer, Organisasjon } from "Domene";
+import { Aktoer } from "Domene";
 
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
@@ -29,7 +29,7 @@ const EnkeltFullmektig = ({
   onOrgFunnet,
   saksnummer,
 }: EnkeltFullmektigProps) => {
-  const [org, settOrg] = useState<Partial<Organisasjon>>({});
+  const [org, settOrg] = useState<Partial<Api.Types.Organisasjon>>({});
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
 
   const [
