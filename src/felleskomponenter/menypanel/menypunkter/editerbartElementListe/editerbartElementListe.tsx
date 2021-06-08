@@ -1,4 +1,4 @@
-import React, { ElementType } from "react";
+import React, { ElementType, MouseEvent } from "react";
 import PT from "prop-types";
 import { connect, ConnectedProps } from "react-redux";
 import { FieldArray, change, WrappedFieldArrayProps } from "redux-form";
@@ -30,6 +30,7 @@ interface BaseProps {
   flereRedigeringsknapper?: boolean;
   onBinClick?: (index: number) => void;
   symbolsynlighet?: SymbolsynlighetConfig;
+  onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
 }
 
 type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
@@ -65,6 +66,7 @@ export const InnerEditerbartElementListe = ({
   settFeltVerdi,
   onBinClick,
   symbolsynlighet,
+  onLagreClick,
 }: InnerEditerbartElementListeProps & PropsFromRedux) => {
   const editerbartElementListeCls = classNames(className);
 
@@ -90,6 +92,7 @@ export const InnerEditerbartElementListe = ({
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
           onBinClick={onBinClick}
+          onLagreClick={onLagreClick}
         />
       ) : (
         <EnRedigeringsknappListe
@@ -110,6 +113,7 @@ export const InnerEditerbartElementListe = ({
           leggTil={leggTil}
           onBinClick={onBinClick}
           symbolsynlighet={symbolsynlighet}
+          onLagreClick={onLagreClick}
         />
       )}
     </div>

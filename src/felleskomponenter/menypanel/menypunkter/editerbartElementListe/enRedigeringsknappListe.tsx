@@ -1,4 +1,4 @@
-import React, { ElementType } from "react";
+import React, { ElementType, MouseEvent } from "react";
 import { FieldArrayFieldsProps } from "redux-form";
 import classNames from "classnames";
 
@@ -53,6 +53,7 @@ interface EnRedigeringsKnappListeProps<T> {
   leggTilTekst: string;
   onBinClick?: (index: number) => void;
   symbolsynlighet?: SymbolsynlighetConfig;
+  onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
 }
 
 function EnRedigeringsKnappListe<T>({
@@ -73,6 +74,7 @@ function EnRedigeringsKnappListe<T>({
   leggTilTekst,
   onBinClick,
   symbolsynlighet,
+  onLagreClick,
 }: EnRedigeringsKnappListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
@@ -119,6 +121,7 @@ function EnRedigeringsKnappListe<T>({
       harData={harData()}
       symbolsynlighet={symbolsynlighet}
       visLagreKnappBareHvisHarData
+      onLagreClick={onLagreClick}
       redigererRender={() => (
         <div>
           {RedigererPreElementerKomponent && (
