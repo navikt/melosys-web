@@ -6,7 +6,7 @@ import MKV from "../../melosyskodeverk";
 
 import * as Nav from "../../utils/navFrontend";
 import * as Api from "../../services/api";
-import * as Utils from "../../utils";
+
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
 import { kodeTilObjekt } from "../../kodeverk";
@@ -52,7 +52,6 @@ const SideDialogOpprettNyBuc = ({ behandlingID, dokumenter }) => {
         const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(buc, landkode);
         setTilgjengeligeMottakerinstitusjoner(institusjoner);
       } catch (e) {
-        Utils.logger.error(e);
         setAlertmelding("Finner ingen mottakerinstitusjoner");
       }
     } else {

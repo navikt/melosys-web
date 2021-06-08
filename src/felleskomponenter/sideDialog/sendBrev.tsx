@@ -193,9 +193,8 @@ const SendBrev = ({
     }
     Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
       .then(() => setBrevSendt(true))
-      .catch((error) => {
+      .catch(() => {
         setBrevSendtFeil(true);
-        Utils.logger.error(error);
       });
   };
 
