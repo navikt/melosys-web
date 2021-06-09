@@ -40,6 +40,7 @@ import {
   queryParamsTilObjekt,
   erPropertyUnik,
   finnVerdierMedKey,
+  isEqual,
 } from "./utils";
 
 const uuid = require("uuid/v4");
@@ -53,6 +54,7 @@ export {
   queryParamsTilObjekt,
   erPropertyUnik,
   finnVerdierMedKey,
+  isEqual,
   adresse,
   dato,
   streng,

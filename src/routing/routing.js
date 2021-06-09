@@ -34,7 +34,7 @@ const VurderUtpekingLoadable = loadable(() => import("../sider/eu_eøs/vurderutp
   fallback: SideLoadingStatus,
 });
 
-const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
+const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 const Routing = () => (
   <FellesHandlersContext.Consumer>
@@ -65,7 +65,7 @@ const Routing = () => (
           render={(props) => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
-          path="/TRYGDEAVTALE/saksbehandling/:snr"
+          path={`/${TRYGDEAVTALE}/saksbehandling/:snr`}
           render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route

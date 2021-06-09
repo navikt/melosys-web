@@ -116,6 +116,15 @@ class LinkGroupsFactory {
           .addFraSoknad(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
           .build();
       }
+      case "TRYGDEAVTALE": {
+        return new LinkgroupsBuilder()
+          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegister(
+            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
+          )
+          .addFraSoknad(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
+          .build();
+      }
       default:
         return [];
     }

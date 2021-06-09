@@ -68,8 +68,10 @@ export const ArbeidsforholdUtlandSelector = createSelector(ForetakUtlandSelector
   foretakUtland.filter((arbeidsforhold) => !arbeidsforhold.selvstendigNaeringsvirksomhet)
 );
 
-export const SelvstendigNaeringsvirksomhetUtlandSelector = createSelector(ForetakUtlandSelector, (foretakUtland) =>
-  foretakUtland.filter((arbeidsforhold) => arbeidsforhold.selvstendigNaeringsvirksomhet)
+export const SelvstendigNaeringsvirksomhetUtlandSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlag) =>
+    behandlingsgrunnlag?.foretakUtland?.filter((arbeidsforhold) => arbeidsforhold.selvstendigNaeringsvirksomhet)
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(

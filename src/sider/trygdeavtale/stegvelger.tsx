@@ -2,18 +2,24 @@ import React, { Component } from "react";
 import TrackVisibility from "react-on-screen";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 
 import * as Api from "../../services/api";
+import * as Utils from "../../utils";
 
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger/stegMotor/typer";
+import { BehandlingsgrunnlagFeilmeldinger } from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger/behandlingsgrunnlagFeilmeldinger";
 import VurderingInngang from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingInngang";
 import VurderingAvklarVirksomhet from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingBestemmelse";
 
 import { StegData, StegDataReqDto } from "../../services/modules/trygdeavtale/flyt";
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
 
@@ -39,9 +45,17 @@ const stegMap = {
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
+  behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
+  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -52,12 +66,14 @@ interface Props extends PropsFromRedux {
 interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
+  skalLagreBehandlingsgrunnlag: boolean;
 }
 
 class Stegvelger extends Component<Props, State> {
   state = {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
+    skalLagreBehandlingsgrunnlag: false,
   };
 
   componentDidMount() {
@@ -65,6 +81,30 @@ class Stegvelger extends Component<Props, State> {
       this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
     );
   }
+
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    const soknadValues = this.props.soknadForm?.values;
+    const prevSoknadValues = prevProps.soknadForm?.values;
+
+    if (
+      this.harEndringer(
+        soknadValues?.juridiskArbeidsgiverNorge?.ekstraArbeidsgivere,
+        prevSoknadValues?.juridiskArbeidsgiverNorge?.ekstraArbeidsgivere
+      ) ||
+      this.harEndringer(soknadValues?.selvstendigForetak, prevSoknadValues?.selvstendigForetak) ||
+      this.harEndringer(soknadValues?.arbeidsforholdUtland, prevSoknadValues?.arbeidsforholdUtland) ||
+      this.harEndringer(
+        soknadValues?.selvstendigNaeringsvirksomhetUtland,
+        prevSoknadValues?.selvstendigNaeringsvirksomhetUtland
+      )
+    ) {
+      this.behandlingsGrunnlagSkalEndres();
+    }
+  }
+
+  behandlingsGrunnlagSkalEndres = () => this.setState({ skalLagreBehandlingsgrunnlag: true });
+
+  harEndringer = (a: any[], b: any[]) => !Utils.isEqual(a, b, true);
 
   oppdaterStegData = (stegData: StegDataReqDto) => {
     Api.Trygdeavtale.sendStegData(this.props.behandlingID, stegData).then((response) =>
@@ -88,14 +128,44 @@ class Stegvelger extends Component<Props, State> {
     });
   };
 
-  oppdaterAktivtSteg = (nesteStegIndex: number) => {
-    this.setState({
-      aktivtStegIndex: nesteStegIndex,
-      aktuelleSteg: this.state.aktuelleSteg?.map((steg: AktueltSteg) => ({
-        ...steg,
-        aktivtSteg: steg.stegPosisjon === nesteStegIndex,
-      })),
-    });
+  lagreBehandlingsgrunnlagOgOppdaterStegData = async () => {
+    const {
+      props: { lagreBehandlingsgrunnlag, behandlingID },
+      mapOmTilAktuelleSteg,
+    } = this;
+
+    await lagreBehandlingsgrunnlag();
+    Api.Trygdeavtale.hentStegData(behandlingID).then((response) =>
+      this.setState({ aktuelleSteg: mapOmTilAktuelleSteg(response), skalLagreBehandlingsgrunnlag: false })
+    );
+  };
+
+  harBehandlingsgrunnlagFeilmeldinger = () => !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
+
+  oppdaterAktivtSteg = async (nesteStegIndex: number) => {
+    const {
+      state: { skalLagreBehandlingsgrunnlag, aktuelleSteg },
+      props: { oppdaterBehandlingsgrunnlag },
+      harBehandlingsgrunnlagFeilmeldinger,
+      lagreBehandlingsgrunnlagOgOppdaterStegData,
+    } = this;
+
+    if (!harBehandlingsgrunnlagFeilmeldinger()) {
+      if (skalLagreBehandlingsgrunnlag) {
+        this.setState({ aktivtStegIndex: nesteStegIndex });
+        await lagreBehandlingsgrunnlagOgOppdaterStegData();
+      } else {
+        await oppdaterBehandlingsgrunnlag();
+        this.setState({
+          aktivtStegIndex: nesteStegIndex,
+          skalLagreBehandlingsgrunnlag: false,
+          aktuelleSteg: aktuelleSteg?.map((steg: AktueltSteg) => ({
+            ...steg,
+            aktivtSteg: steg.stegPosisjon === nesteStegIndex,
+          })),
+        });
+      }
+    }
   };
 
   fortsett = () => {
@@ -107,18 +177,25 @@ class Stegvelger extends Component<Props, State> {
   };
 
   render() {
+    const {
+      state: { aktuelleSteg },
+      harBehandlingsgrunnlagFeilmeldinger,
+      oppdaterAktivtSteg,
+    } = this;
+
     return (
       <TrackVisibility partialVisibility>
         {() => (
           <div className="stegvelger panelSeksjon">
-            {this.state.aktuelleSteg && (
+            {aktuelleSteg && (
               <div>
-                <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.oppdaterAktivtSteg} />
-                {this.state.aktuelleSteg?.map((item: AktueltSteg) => (
+                <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
+                {aktuelleSteg?.map((item: AktueltSteg) => (
                   <StegFane key={item.id} faneData={item} />
                 ))}
               </div>
             )}
+            {harBehandlingsgrunnlagFeilmeldinger() && <BehandlingsgrunnlagFeilmeldinger />}
           </div>
         )}
       </TrackVisibility>
