@@ -1,12 +1,12 @@
 import PT from "prop-types";
 
-import { GeneriskAdresse, UstrukturertAdresse, MidlertidigAdresse } from "./adresser";
+import { RegisterAdresse, UstrukturertAdresse, MidlertidigAdresse } from "./adresser";
 import { Periode } from "./periode";
 
 const PersonhistorikkPropType = PT.shape({
   bostedsadressePerioder: PT.arrayOf(
     PT.shape({
-      bostedsadresse: GeneriskAdresse,
+      bostedsadresse: RegisterAdresse,
       periode: Periode,
     })
   ),

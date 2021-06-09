@@ -22,7 +22,7 @@ interface OppsummeringProps {
   oppsummering: Api.Behandlinger.behandling.Oppsummering;
   behandlingsstatus: ReactNode;
   behandlingstema: ReactNode;
-  person: Api.Types.Person;
+  person: Api.Person;
   behandlingsgrunnlagPeriodeFom?: string;
   behandlingsgrunnlagPeriodeTom?: string;
   lovvalgsperiodeFom?: string;

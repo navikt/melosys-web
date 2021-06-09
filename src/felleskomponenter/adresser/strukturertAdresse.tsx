@@ -1,8 +1,9 @@
 import React from "react";
-import { StrukturertAdresse as StrukturertAdresseType } from "Domene";
+
+import * as Api from "../../services/api";
 
 interface StrukturertAdresseProps {
-  adresse: Partial<StrukturertAdresseType>;
+  adresse: Partial<Api.StrukturertAdresse>;
 }
 
 const StrukturertAdresse = ({

@@ -4,7 +4,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
-import { Organisasjon } from "Domene";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 
 import * as Api from "../../services/api";
@@ -74,7 +73,7 @@ const SendBrev = ({
   const [mottakerFeil, setMottakerFeil] = useState<string>();
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
-    organisasjonsAdresse?: Organisasjon;
+    organisasjonsAdresse?: Api.Organisasjon;
   }>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);

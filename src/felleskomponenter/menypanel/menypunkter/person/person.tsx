@@ -10,7 +10,7 @@ import * as Api from "../../../../services/api";
 
 import PersonInfo from "./personinfo";
 
-import GeneriskAdresse from "../../../adresser/generiskAdresse";
+import RegisterAdresse from "../../../adresser/registerAdresse";
 import StrukturertAdresse from "../../../adresser/strukturertAdresse";
 import UstrukturertAdresse from "../../../adresser/ustrukturertAdresse";
 import EnkeltDato from "../../../datoOmrade/enkeltDato";
@@ -23,7 +23,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import "./person.css";
 
 interface AdresseRadProps {
-  periode: Api.Types.Periode;
+  periode: Api.Periode;
   adresseNode: ReactNode;
 }
 
@@ -110,7 +110,7 @@ export const Person = ({
               idFromElement={() => Utils._uuid()}
               renderElement={(element) => (
                 <AdresseRad
-                  adresseNode={<GeneriskAdresse adresse={element.bostedsadresse} />}
+                  adresseNode={<RegisterAdresse adresse={element.bostedsadresse} />}
                   periode={element.periode}
                 />
               )}

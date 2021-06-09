@@ -2,7 +2,7 @@
 import PT from "prop-types";
 import { Kodeverk } from "./kodeverk";
 
-const GeneriskAdressePropType = PT.shape({
+const RegisterAdressePropType = PT.shape({
   gateadresse: PT.shape({
     gatenavn: PT.string,
     gatenummer: PT.number,
@@ -35,7 +35,7 @@ const MidlertidigAdressePropType = PT.shape({
 });
 
 export {
-  GeneriskAdressePropType as GeneriskAdresse,
+  RegisterAdressePropType as RegisterAdresse,
   StrukturertAdressePropType as StrukturertAdresse,
   UstrukturertAdressePropType as UstrukturertAdresse,
   MidlertidigAdressePropType as MidlertidigAdresse,

@@ -1,5 +1,4 @@
 import React from "react";
-import { Organisasjon } from "Domene";
 
 import * as Api from "../../../../../services/api";
 import * as Nav from "../../../../../utils/navFrontend";
@@ -12,7 +11,7 @@ import OrganisasjonsAdresse from "../../../../adresser/organisasjonsAdresse";
 import "./enkeltArbeidsforholdNorgeRedigeringUtfort.css";
 
 interface EnkeltArbeidsforholdNorgeRedigeringUtfortProps {
-  org: Organisasjon;
+  org: Api.Organisasjon;
   saksnummer: string;
 }
 
@@ -26,8 +25,8 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
     Utils.logger.error,
     [saksnummer, org.orgnr]
   );
-  const [kontaktopplysningerOrg] = useAsyncCallbackState(
-    () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr),
+  const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Organisasjon>>(
+    () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr || ""),
     {},
     Utils.logger.error,
     [kontaktopplysninger.kontaktorgnr]
@@ -66,7 +65,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
           <Nav.Row>
             <Nav.Column xs="5">
               <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
-              <Nav.Typo.Element>{kontaktopplysningerOrg.orgnr || "Ikke oppgitt"}</Nav.Typo.Element>
+              <Nav.Typo.Element>Ikke oppgitt</Nav.Typo.Element>
             </Nav.Column>
           </Nav.Row>
         )}

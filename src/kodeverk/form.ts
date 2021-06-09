@@ -1,4 +1,4 @@
-import { StrukturertAdresse } from "Domene";
+import { StrukturertAdresse } from "../services/api";
 
 export const BEHANDLINGS_FORM = "behandlingsform";
 export interface BehandlingsFormData {

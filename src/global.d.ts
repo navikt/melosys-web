@@ -16,17 +16,14 @@ declare module "AppTypes" {
 }
 
 declare module "Domene" {
-  export type StrukturertAdresse = import("./@types").StrukturertAdresse;
   export type Aktoer = import("./@types").Aktoer;
   export type Avklartfakta = import("./@types").Avklartfakta;
   export type Fagsak = import("./@types").Fagsak;
-  export type GeneriskAdresse = import("./@types").GeneriskAdresse;
   export type MedlPeriode = import("./@types").MedlPeriode;
   export type Periode = import("./@types").Periode;
   export type OppsummertFaktaVirksomheter = import("./@types").Virksomheter;
   export type OppsummertFaktaMedfolgendeFamilie = import("./@types").MedfolgendeFamilie;
   export type MedfolgendeFamiliemedlem = import("./@types").MedfolgendeFamiliemedlem;
-  export type Organisasjon = import("./@types").Organisasjon;
   export type DokumentOversikt = import("./@types").DokumentOversikt;
   export type Dokument = import("./@types").Dokument;
   export type FysiskDokument = import("./@types").FysiskDokument;

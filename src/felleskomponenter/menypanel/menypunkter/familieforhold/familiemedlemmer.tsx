@@ -19,7 +19,7 @@ import KopierbarTekst from "../kopierbarTekst";
 import "./familiemedlemmer.css";
 
 interface FamiliemedlemmerEnkeltProps {
-  familiemedlem: Api.Types.Familiemedlem;
+  familiemedlem: Api.Familiemedlem;
   erBarn: boolean;
 }
 
@@ -57,7 +57,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
 }
 
 interface FamiliemedlemmerGruppeProps {
-  familiemedlemmer: Api.Types.Familiemedlem[];
+  familiemedlemmer: Api.Familiemedlem[];
   ingenFamiliemedlemmerTekst: string;
   overskrift: string;
   kolonneHeadinger: string[];
@@ -131,9 +131,9 @@ const Familiemedlemmer = ({
   };
 
   const barn = familiemedlemmer.filter(
-    (familiemedlem: Api.Types.Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
+    (familiemedlem: Api.Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
   );
-  const ektefellePartnerSamboer = familiemedlemmer.filter((familiemedlem: Api.Types.Familiemedlem) =>
+  const ektefellePartnerSamboer = familiemedlemmer.filter((familiemedlem: Api.Familiemedlem) =>
     [KV.Koder.Relasjonsrolle.EKTE, KV.Koder.Relasjonsrolle.REPA, KV.Koder.Relasjonsrolle.SAMB].includes(
       familiemedlem.relasjonstype.kode
     )
