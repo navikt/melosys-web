@@ -1,4 +1,4 @@
-import React, { ElementType } from "react";
+import React, { ElementType, MouseEvent } from "react";
 import { FieldArrayFieldsProps } from "redux-form";
 import classNames from "classnames";
 
@@ -24,6 +24,7 @@ interface FlereRedigeringsKnapperListeProps<T> {
   leggTil: () => void;
   leggTilTekst: string;
   onBinClick?: (index: number) => void;
+  onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
 }
 
 function FlereRedigeringsKnapperListe<T>({
@@ -41,6 +42,7 @@ function FlereRedigeringsKnapperListe<T>({
   leggTil,
   leggTilTekst,
   onBinClick,
+  onLagreClick,
 }: FlereRedigeringsKnapperListeProps<T>) {
   const RedigererKomponent = redigererKomponent;
   const RedigeringUtfortKomponent = redigeringUtfortKomponent;
@@ -72,6 +74,7 @@ function FlereRedigeringsKnapperListe<T>({
               tittelUnderstrek
               onBinClick={slett}
               symbolsynlighet={visAlltidBinSymbolsynlighet}
+              onLagreClick={onLagreClick}
               redigererRender={() => (
                 <RedigererKomponent
                   redigerbart={redigerbart}

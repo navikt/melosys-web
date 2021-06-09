@@ -299,18 +299,22 @@ export default function reducer(state = initialState, action) {
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [
-              ...dokument.medfolgendeBarn.map((enkeltBarn) => ({
-                uuid: enkeltBarn.uuid,
-                navn: enkeltBarn.navn,
-                fnr: enkeltBarn.fnr,
-                relasjonsrolle: KV.Koder.Relasjonsrolle.BARN,
-              })),
-              ...dokument.medfolgendeEktefelleSamboer.map((enkeltEktefelleSamboer) => ({
-                uuid: enkeltEktefelleSamboer.uuid,
-                navn: enkeltEktefelleSamboer.navn,
-                fnr: enkeltEktefelleSamboer.fnr,
-                relasjonsrolle: KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER,
-              })),
+              ...dokument.medfolgendeBarn
+                .filter((enkeltBarn) => enkeltBarn.fnr && enkeltBarn.navn)
+                .map((enkeltBarn) => ({
+                  uuid: enkeltBarn.uuid,
+                  navn: enkeltBarn.navn,
+                  fnr: enkeltBarn.fnr,
+                  relasjonsrolle: KV.Koder.Relasjonsrolle.BARN,
+                })),
+              ...dokument.medfolgendeEktefelleSamboer
+                .filter((enkeltEktefelleSamboer) => enkeltEktefelleSamboer.fnr && enkeltEktefelleSamboer.navn)
+                .map((enkeltEktefelleSamboer) => ({
+                  uuid: enkeltEktefelleSamboer.uuid,
+                  navn: enkeltEktefelleSamboer.navn,
+                  fnr: enkeltEktefelleSamboer.fnr,
+                  relasjonsrolle: KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER,
+                })),
             ],
           },
           overgangsregelbestemmelser:
