@@ -29,7 +29,7 @@ const EnkeltFullmektig = ({
   onOrgFunnet,
   saksnummer,
 }: EnkeltFullmektigProps) => {
-  const [org, settOrg] = useState<Partial<Api.Types.Organisasjon>>({});
+  const [org, settOrg] = useState<Partial<Api.Organisasjon>>({});
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
 
   const [

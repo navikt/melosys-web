@@ -11,7 +11,7 @@ import OrganisasjonsAdresse from "../../../../adresser/organisasjonsAdresse";
 import "./enkeltArbeidsforholdNorgeRedigeringUtfort.css";
 
 interface EnkeltArbeidsforholdNorgeRedigeringUtfortProps {
-  org: Api.Types.Organisasjon;
+  org: Api.Organisasjon;
   saksnummer: string;
 }
 
@@ -25,7 +25,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
     Utils.logger.error,
     [saksnummer, org.orgnr]
   );
-  const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Types.Organisasjon>>(
+  const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Organisasjon>>(
     () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr || ""),
     {},
     Utils.logger.error,

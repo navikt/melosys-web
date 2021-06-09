@@ -28,7 +28,7 @@ const hentRepresentererTekst = (representererKode: string) => {
 };
 
 interface FullmektigRedigeringUtfortProps {
-  org: Partial<Api.Types.Organisasjon>;
+  org: Partial<Api.Organisasjon>;
   representererKode: string | null;
   kontaktopplysninger: KontaktOpplysning;
 }
@@ -38,7 +38,7 @@ const FullmektigRedigeringUtfort = ({
   representererKode,
   kontaktopplysninger,
 }: FullmektigRedigeringUtfortProps) => {
-  const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Types.Organisasjon>>(
+  const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Organisasjon>>(
     () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr || ""),
     {},
     Utils.logger.error,

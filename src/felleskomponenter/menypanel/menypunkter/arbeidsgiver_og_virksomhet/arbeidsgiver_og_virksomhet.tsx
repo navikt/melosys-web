@@ -11,7 +11,8 @@ import * as KV from "../../../../kodeverk";
 import * as Etiketter from "../../etiketter";
 import * as Ikoner from "../../../../resources/images";
 import * as Utils from "../../../../utils";
-import * as Api from "../../../../services/api";
+
+import { Organisasjon } from "../../../../services/api";
 
 import ArbeidsforholdNorgeListe from "./arbeidsforholdNorgeListe";
 import EditerbartElementListe from "../editerbartElementListe";
@@ -70,7 +71,7 @@ export const ArbeidsgiverOgVirksomhet = ({
   behandlingsgrunnlagEtikett,
 }: ArbeidsgiverOgVirksomhetProps) => {
   const finnOrganisasjon = (orgnr: string) => {
-    const org: Api.Types.Organisasjon = organisasjoner.find((o: Api.Types.Organisasjon) => o.orgnr === orgnr);
+    const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
     return org || { orgnr };
   };
 
@@ -103,7 +104,7 @@ export const ArbeidsgiverOgVirksomhet = ({
         feltNavn="juridiskArbeidsgiverNorge.ekstraArbeidsgivere"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
-        transformerOrgTilElement={(org: Api.Types.Organisasjon) => org.orgnr}
+        transformerOrgTilElement={(org: Organisasjon) => org.orgnr}
         findOrganisasjon={finnOrganisasjon}
         defaultElement={null}
         elementerInneholderOrg={(orgListe: string[], orgnr: string) => orgListe.includes(orgnr)}
@@ -124,12 +125,12 @@ export const ArbeidsgiverOgVirksomhet = ({
         feltNavn="selvstendigForetak"
         redigerbart={redigerbart}
         hentOrganisasjon={hentOrganisasjon}
-        transformerOrgTilElement={(org: Api.Types.Organisasjon) => ({ orgnr: org.orgnr })}
-        findOrganisasjon={(org: Api.Types.Organisasjon) =>
-          organisasjoner.find((enkeltOrg: Api.Types.Organisasjon) => enkeltOrg.orgnr === org.orgnr)
+        transformerOrgTilElement={(org: Organisasjon) => ({ orgnr: org.orgnr })}
+        findOrganisasjon={(org: Organisasjon) =>
+          organisasjoner.find((enkeltOrg: Organisasjon) => enkeltOrg.orgnr === org.orgnr)
         }
         defaultElement={{}}
-        elementerInneholderOrg={(orgListe: Api.Types.Organisasjon[], orgnr: string) =>
+        elementerInneholderOrg={(orgListe: Organisasjon[], orgnr: string) =>
           orgListe.find((org) => org.orgnr === orgnr)
         }
       />

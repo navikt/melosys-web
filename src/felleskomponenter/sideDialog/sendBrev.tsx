@@ -73,7 +73,7 @@ const SendBrev = ({
   const [mottakerFeil, setMottakerFeil] = useState<string>();
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
-    organisasjonsAdresse?: Api.Types.Organisasjon;
+    organisasjonsAdresse?: Api.Organisasjon;
   }>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);

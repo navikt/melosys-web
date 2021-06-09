@@ -23,7 +23,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import "./person.css";
 
 interface AdresseRadProps {
-  periode: Api.Types.Periode;
+  periode: Api.Periode;
   adresseNode: ReactNode;
 }
 

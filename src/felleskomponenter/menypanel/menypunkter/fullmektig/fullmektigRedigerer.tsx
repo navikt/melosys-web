@@ -3,7 +3,8 @@ import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler } from 
 import MKV from "../../../../melosyskodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
-import * as Api from "../../../../services/api";
+
+import { Organisasjon } from "../../../../services/api";
 
 import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
@@ -17,7 +18,7 @@ interface FullmektigRedigererProps {
   databaseID: number;
   onOrgFunnet: (orgnr: string) => void;
   representererKode: string | null;
-  org: Partial<Api.Types.Organisasjon>;
+  org: Partial<Organisasjon>;
   onKontaktOpplysningerChange: (kontaktopplysning: KontaktOpplysning) => void;
   kontaktopplysninger: KontaktOpplysning;
   onKontaktopplysningerInputBlur: FocusEventHandler<HTMLInputElement>;

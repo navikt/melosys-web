@@ -23,7 +23,16 @@ import * as Statistikk from "./modules/statistikk";
 import * as Trygdeavgift from "./modules/trygdeavgift";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
-import * as Types from "./modules/types";
+import {
+  RegisterAdresse,
+  UstrukturertAdresse,
+  MidlertidigAdresse,
+  StrukturertAdresse,
+  Periode,
+  Person,
+  Familiemedlem,
+  Organisasjon,
+} from "./modules/types";
 
 export {
   Anmodningsperioder,
@@ -53,4 +62,13 @@ export {
   Vilkar,
 };
 
-export type { Types };
+export type {
+  RegisterAdresse,
+  UstrukturertAdresse,
+  MidlertidigAdresse,
+  StrukturertAdresse,
+  Periode,
+  Person,
+  Familiemedlem,
+  Organisasjon,
+};

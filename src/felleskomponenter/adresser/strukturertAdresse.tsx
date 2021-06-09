@@ -3,7 +3,7 @@ import React from "react";
 import * as Api from "../../services/api";
 
 interface StrukturertAdresseProps {
-  adresse: Partial<Api.Types.StrukturertAdresse>;
+  adresse: Partial<Api.StrukturertAdresse>;
 }
 
 const StrukturertAdresse = ({
