@@ -1,5 +1,7 @@
-import React, { Fragment, useCallback, useEffect } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 
@@ -8,6 +10,8 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
 import * as Utils from "../../../../utils";
 
+import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
+import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
 import { StegNavn } from "../../../../kodeverk/koder";
@@ -33,7 +37,11 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
   };
 };
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -44,21 +52,34 @@ interface FormValuesProps {
 }
 
 interface Props {
+  annenBehandlingOppfriskes: boolean;
   fortsett: () => void;
   formValues: FormValuesProps;
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
   redigerbart: boolean;
   stegData: StegData[];
+  tilForsiden: () => void;
   oppdaterStegData: (data: StegDataReqDto) => void;
 }
 
 const VurderingInngang = ({
+  annenBehandlingOppfriskes,
   formValues,
   formIsValid,
   fortsett,
+  initialValues,
   inngangStegData,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   redigerbart,
+  tilForsiden,
   oppdaterStegData,
+  visMenypanel,
 }: PropsFromRedux & Props) => {
+  const [initialFomTom, setInitialFomTom] = useState<{ fom: string | undefined; tom: string | undefined }>({
+    fom: undefined,
+    tom: undefined,
+  });
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
     <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
@@ -66,6 +87,13 @@ const VurderingInngang = ({
     </Nav.Hjelpetekst>
   );
   const landkoder = [{ kode: "GB", term: "Storbritannia" }]; // TODO: temp
+
+  useEffect(() => {
+    if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
+      visMenypanel();
+      setInitialFomTom({ fom: initialValues.fom, tom: initialValues.tom });
+    }
+  }, []);
 
   const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
@@ -82,6 +110,15 @@ const VurderingInngang = ({
   useEffect(() => {
     if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
   }, [formValues, formIsValid]);
+
+  const fortsettHandle = () => {
+    if (formValues.fom !== initialFomTom.fom || formValues.tom !== initialFomTom.tom) {
+      setInitialFomTom({ fom: formValues.fom, tom: formValues.tom });
+      setVisOppfrisk(true);
+    } else {
+      fortsett();
+    }
+  };
 
   return (
     <div className="vurderingInngang">
@@ -116,11 +153,29 @@ const VurderingInngang = ({
           mini
           disabled={inngangStegData?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
-          onClick={fortsett}
+          onClick={fortsettHandle}
         >
           Fortsett
         </Nav.Hovedknapp>
       </div>
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            visMenypanel();
+            fortsett();
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            tilForsiden();
+          }}
+          behandlingOppfriskes
+          annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+        />
+      )}
     </div>
   );
 };
