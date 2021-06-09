@@ -28,45 +28,68 @@ const Redigerer = ({
     <Nav.Row>
       <Nav.Column xs="9">
         <Skjema.Input
-          label="Gateadresse"
-          feltNavn={`${overordnetFeltNavn}.adresse.gatenavn`}
-          disabled={!redigerbart}
+          label="Adressetilleggsnavn"
+          feltNavn={`${overordnetFeltNavn}.adresse.tilleggsnavn`}
           bredde="fullbredde"
-          datoFelt={false}
         />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
-      <Nav.Column xs="4">
+      <Nav.Column xs="5">
         <Skjema.Input
-          label="Postnummer"
-          feltNavn={`${overordnetFeltNavn}.adresse.postnummer`}
+          label="Gateadresse"
+          feltNavn={`${overordnetFeltNavn}.adresse.gatenavn`}
           disabled={!redigerbart}
           bredde="fullbredde"
-          datoFelt={false}
         />
       </Nav.Column>
+      <Nav.Column xs="4">
+        <Skjema.Input
+          label="Husnummer"
+          feltNavn={`${overordnetFeltNavn}.adresse.husnummerEtasjeLeilighet`}
+          disabled={!redigerbart}
+          bredde="fullbredde"
+        />
+      </Nav.Column>
+    </Nav.Row>
+    <Nav.Row>
       <Nav.Column xs="5">
         <Skjema.Input
           label="Poststed"
           feltNavn={`${overordnetFeltNavn}.adresse.poststed`}
           disabled={!redigerbart}
           bredde="fullbredde"
-          datoFelt={false}
+        />
+      </Nav.Column>
+      <Nav.Column xs="4">
+        <Skjema.Input
+          label="Postnummer"
+          feltNavn={`${overordnetFeltNavn}.adresse.postnummer`}
+          disabled={!redigerbart}
+          bredde="fullbredde"
         />
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
-      <Nav.Column xs="4">
+      <Nav.Column xs="9">
+        <Skjema.Input
+          label="Postboks"
+          feltNavn={`${overordnetFeltNavn}.adresse.postboks`}
+          disabled={!redigerbart}
+          bredde="fullbredde"
+        />
+      </Nav.Column>
+    </Nav.Row>
+    <Nav.Row>
+      <Nav.Column xs="5">
         <Skjema.Input
           label="Region"
           feltNavn={`${overordnetFeltNavn}.adresse.region`}
           disabled={!redigerbart}
           bredde="fullbredde"
-          datoFelt={false}
         />
       </Nav.Column>
-      <Nav.Column xs="5">
+      <Nav.Column xs="4">
         <Skjema.LandVelger
           label="Land"
           feltNavn={`${overordnetFeltNavn}.adresse.landkode`}
