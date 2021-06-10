@@ -60,6 +60,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props extends PropsFromRedux {
+  annenBehandlingOppfriskes: boolean;
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
+  tilForsiden: () => void;
   redigerbart: boolean;
 }
 
@@ -106,6 +109,10 @@ class Stegvelger extends Component<Props, State> {
 
   harEndringer = (a: any[], b: any[]) => !Utils.isEqual(a, b, true);
 
+  slettStegData = () => {
+    Api.Trygdeavtale.slettStegData(this.props.behandlingID);
+  };
+
   oppdaterStegData = (stegData: StegDataReqDto) => {
     Api.Trygdeavtale.sendStegData(this.props.behandlingID, stegData).then((response) =>
       this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
@@ -122,8 +129,20 @@ class Stegvelger extends Component<Props, State> {
         aktivtSteg: this.state.aktivtStegIndex === index,
         komponent: stegMapElement.komponent,
         status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-        data: { redigerbart: this.props.redigerbart, stegData },
-        handlers: { fortsett: this.fortsett, tilbake: this.tilbake, oppdaterStegData: this.oppdaterStegData },
+        data: {
+          redigerbart: this.props.redigerbart,
+          stegData,
+          annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
+          lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props
+            .lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+        },
+        handlers: {
+          fortsett: this.fortsett,
+          tilbake: this.tilbake,
+          oppdaterStegData: this.oppdaterStegData,
+          slettStegData: this.slettStegData,
+          tilForsiden: this.props.tilForsiden,
+        },
       };
     });
   };

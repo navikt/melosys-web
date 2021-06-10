@@ -60,6 +60,7 @@ interface Props {
   stegData: StegData[];
   tilForsiden: () => void;
   oppdaterStegData: (data: StegDataReqDto) => void;
+  slettStegData: () => void;
 }
 
 const VurderingInngang = ({
@@ -73,12 +74,10 @@ const VurderingInngang = ({
   redigerbart,
   tilForsiden,
   oppdaterStegData,
+  slettStegData,
   visMenypanel,
 }: PropsFromRedux & Props) => {
-  const [initialFomTom, setInitialFomTom] = useState<{ fom: string | undefined; tom: string | undefined }>({
-    fom: undefined,
-    tom: undefined,
-  });
+  const [initialFomTom, setInitialFomTom] = useState<{ fom?: string; tom?: string }>({});
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
@@ -112,12 +111,17 @@ const VurderingInngang = ({
   }, [formValues, formIsValid]);
 
   const fortsettHandle = () => {
-    if (formValues.fom !== initialFomTom.fom || formValues.tom !== initialFomTom.tom) {
+    if (formValues.fom !== initialFomTom?.fom || formValues.tom !== initialFomTom?.tom) {
       setInitialFomTom({ fom: formValues.fom, tom: formValues.tom });
       setVisOppfrisk(true);
     } else {
       fortsett();
     }
+  };
+
+  const periodeEndringHandle = async () => {
+    await slettStegData();
+    sendOppdatertStegData({ formValues, formIsValid });
   };
 
   return (
@@ -164,6 +168,7 @@ const VurderingInngang = ({
           oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
+            periodeEndringHandle();
             setVisOppfrisk(false);
             visMenypanel();
             fortsett();

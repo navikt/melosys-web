@@ -12,6 +12,7 @@ import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummer
 import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
+import Behandlingsmeny from "../ftrl/saksbehandling/behandlingsmeny";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
@@ -19,11 +20,11 @@ import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behan
 import { dokumenterOperations, dokumenterSelectors } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { menypanelOperations } from "../../ducks/menypanel";
 import { formSelectors } from "../../ducks/form";
 
 import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
-import Behandlingsmeny from "../ftrl/saksbehandling/behandlingsmeny";
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -78,6 +79,7 @@ const behandlingsstatusMap = {
 };
 
 const Saksbehandling = ({
+  annenBehandlingOppfriskes,
   apneTidligereBehandlinger,
   arbeidsland,
   behandlingOppfriskes,
@@ -88,8 +90,6 @@ const Saksbehandling = ({
   behandlingsresultat,
   behandlingstema,
   behandlingsstatus,
-  brevBestillingRedigerbart,
-  brevBestillingRedigerbartIArtikkel13,
   dokumenter,
   dokumentOversikt,
   fagsak,
@@ -100,13 +100,19 @@ const Saksbehandling = ({
   hentDokumentOversikt,
   hentFagsaker,
   lagreOgLukk,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   location,
   match,
   oppsummering,
   person,
   redigerbart,
+  resetBehandlingerState,
+  resetBehandlingsgrunnlagState,
+  resetFagsakState,
+  skjulMenypanel,
   startOgVisOppfriskModal,
   soknadForm,
+  tilForsiden,
   tilbakeleggOppgave,
   visAvslagSoknadDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
@@ -158,6 +164,12 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
+    return () => {
+      resetBehandlingerState();
+      resetBehandlingsgrunnlagState();
+      resetFagsakState();
+      skjulMenypanel();
+    };
   }, []);
 
   if (Utils._isNil(redigerbart)) {
@@ -185,7 +197,14 @@ const Saksbehandling = ({
           <Nav.Column xs="7">
             {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
             {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-            {visStegVelger && <Stegvelger redigerbart={redigerbart} />}
+            {visStegVelger && (
+              <Stegvelger
+                redigerbart={redigerbart}
+                annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+                tilForsiden={tilForsiden}
+              />
+            )}
             <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
           </Nav.Column>
           <Nav.Column xs="5">
@@ -227,8 +246,8 @@ const Saksbehandling = ({
               saksnummer={saksnummer}
               redigerbart={redigerbart}
               behandlingID={behandlingID}
-              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-              brevBestillingRedigerbart={brevBestillingRedigerbart}
+              brevBestillingRedigerbartIArtikkel13
+              brevBestillingRedigerbart={redigerbart}
               dokumenter={dokumenter}
             />
           </Nav.Column>
@@ -239,6 +258,7 @@ const Saksbehandling = ({
 };
 
 Saksbehandling.propTypes = {
+  annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   behandlingsgrunnlag: MPT.Behandlingsgrunnlag,
@@ -248,8 +268,6 @@ Saksbehandling.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   behandlingstema: PT.string.isRequired,
   behandlingsstatus: PT.string.isRequired,
-  brevBestillingRedigerbart: PT.bool.isRequired,
-  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   dokumenter: PT.array.isRequired,
   dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
@@ -268,7 +286,13 @@ Saksbehandling.propTypes = {
   hentDokumentOversikt: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
+  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
+  tilForsiden: PT.func.isRequired,
+  resetBehandlingerState: PT.func.isRequired,
+  resetBehandlingsgrunnlagState: PT.func.isRequired,
+  resetFagsakState: PT.func.isRequired,
+  skjulMenypanel: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
@@ -299,8 +323,6 @@ const mapStateToProps = (state) => ({
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
-  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
@@ -317,6 +339,10 @@ const mapDispatchToProps = (dispatch) => ({
   hentBehandlingsresultat: (bid) => dispatch(behandlingsresultatOperations.hent(bid)),
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
+  resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
+  resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
+  resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
+  skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Saksbehandling);

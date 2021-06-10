@@ -104,8 +104,9 @@ export function isEqual(listA, listB, canEitherBeUndefined = false) {
       if (!isEqual(listA, listB)) {
         return false;
       }
-    } else if (listA[i] != listB[i]) {
-      // eslint-disable-line eqeqeq
+    }
+    // eslint-disable-next-line eqeqeq
+    else if (listA[i] != listB[i]) {
       return false;
     }
   }

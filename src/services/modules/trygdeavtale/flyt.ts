@@ -1,5 +1,5 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { getAsJson, postAsJson } from "../../utils";
+import { deleteAsJson, getAsJson, postAsJson } from "../../utils";
 import { FLYT_BASE_URL } from "../../api-constants";
 import { StegNavn } from "../../../kodeverk/koder";
 
@@ -45,3 +45,5 @@ export const hentStegData = (behandlingID: number): Promise<StegDataResDto> =>
 
 export const sendStegData = (behandlingID: number, data: StegDataReqDto): Promise<StegDataResDto> =>
   postAsJson(`${FLYT_BASE_URL}${behandlingID}`, data);
+
+export const slettStegData = (behandlingID: number) => deleteAsJson(`${FLYT_BASE_URL}${behandlingID}`);
