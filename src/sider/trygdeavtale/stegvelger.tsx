@@ -4,6 +4,7 @@ import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { get as getValueAtPath } from "lodash";
 
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
@@ -70,6 +71,7 @@ interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
   skalLagreBehandlingsgrunnlag: boolean;
+  oppstartErFerdig: boolean;
 }
 
 class Stegvelger extends Component<Props, State> {
@@ -77,12 +79,14 @@ class Stegvelger extends Component<Props, State> {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
     skalLagreBehandlingsgrunnlag: false,
+    oppstartErFerdig: false,
   };
 
   componentDidMount() {
     Api.Trygdeavtale.hentStegData(this.props.behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
     );
+    setTimeout(() => this.setState({ oppstartErFerdig: true }), 500);
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
@@ -90,16 +94,13 @@ class Stegvelger extends Component<Props, State> {
     const prevSoknadValues = prevProps.soknadForm?.values;
 
     if (
-      this.harEndringer(
-        soknadValues?.juridiskArbeidsgiverNorge?.ekstraArbeidsgivere,
-        prevSoknadValues?.juridiskArbeidsgiverNorge?.ekstraArbeidsgivere
-      ) ||
-      this.harEndringer(soknadValues?.selvstendigForetak, prevSoknadValues?.selvstendigForetak) ||
-      this.harEndringer(soknadValues?.arbeidsforholdUtland, prevSoknadValues?.arbeidsforholdUtland) ||
-      this.harEndringer(
-        soknadValues?.selvstendigNaeringsvirksomhetUtland,
-        prevSoknadValues?.selvstendigNaeringsvirksomhetUtland
-      )
+      this.state.oppstartErFerdig &&
+      (this.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
+        this.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
+        this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
+        this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
+        this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
+        this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer"))
     ) {
       this.behandlingsGrunnlagSkalEndres();
     }
@@ -107,7 +108,8 @@ class Stegvelger extends Component<Props, State> {
 
   behandlingsGrunnlagSkalEndres = () => this.setState({ skalLagreBehandlingsgrunnlag: true });
 
-  harEndringer = (a: any[], b: any[]) => !Utils.isEqual(a, b, true);
+  harEndringer = (propsObject: any, prevPropsObject: any, path: string) =>
+    !Utils.isEqual(getValueAtPath(propsObject, path), getValueAtPath(prevPropsObject, path), true);
 
   slettStegData = () => {
     Api.Trygdeavtale.slettStegData(this.props.behandlingID);
@@ -120,6 +122,20 @@ class Stegvelger extends Component<Props, State> {
   };
 
   mapOmTilAktuelleSteg = (stegData: StegData[]): AktueltSteg[] => {
+    const data = {
+      redigerbart: this.props.redigerbart,
+      stegData,
+      annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
+      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+    };
+    const handlers = {
+      fortsett: this.fortsett,
+      tilbake: this.tilbake,
+      oppdaterStegData: this.oppdaterStegData,
+      slettStegData: this.slettStegData,
+      tilForsiden: this.props.tilForsiden,
+    };
+
     return stegData?.map((singelSteg: StegData, index: number) => {
       const stegMapElement = stegMap[singelSteg.steg];
       return {
@@ -129,20 +145,8 @@ class Stegvelger extends Component<Props, State> {
         aktivtSteg: this.state.aktivtStegIndex === index,
         komponent: stegMapElement.komponent,
         status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-        data: {
-          redigerbart: this.props.redigerbart,
-          stegData,
-          annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
-          lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props
-            .lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
-        },
-        handlers: {
-          fortsett: this.fortsett,
-          tilbake: this.tilbake,
-          oppdaterStegData: this.oppdaterStegData,
-          slettStegData: this.slettStegData,
-          tilForsiden: this.props.tilForsiden,
-        },
+        data,
+        handlers,
       };
     });
   };
