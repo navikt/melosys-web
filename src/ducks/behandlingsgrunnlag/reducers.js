@@ -7,7 +7,7 @@ import { formatterDatoTilISO } from "../../utils/dato";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-const lagNullableAdresse = (adresse) => {
+const lagNullableStrukturertAdresse = (adresse) => {
   if (Utils._isNil(adresse)) {
     return {
       tilleggsnavn: null,
@@ -106,14 +106,14 @@ export default function reducer(state = initialState, action) {
           navn: forhold.navn || null,
           orgnr: forhold.orgnr || null,
           selvstendigNaeringsvirksomhet: false,
-          adresse: lagNullableAdresse(forhold.adresse),
+          adresse: lagNullableStrukturertAdresse(forhold.adresse),
         })),
         ...dokument.selvstendigNaeringsvirksomhetUtland.map((virksomhet) => ({
           uuid: virksomhet.uuid,
           navn: virksomhet.navn || null,
           orgnr: virksomhet.orgnr || null,
           selvstendigNaeringsvirksomhet: true,
-          adresse: lagNullableAdresse(virksomhet.adresse),
+          adresse: lagNullableStrukturertAdresse(virksomhet.adresse),
         })),
       ];
 
