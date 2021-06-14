@@ -20,9 +20,11 @@ const UstrukturertAdressePropType = PT.shape({
 });
 
 const StrukturertAdressePropType = PT.shape({
+  tilleggsnavn: PT.string,
   gatenavn: PT.string,
-  husnummer: PT.string,
+  husnummerEtasjeLeilighet: PT.string,
   region: PT.string,
+  postboks: PT.string,
   postnummer: PT.string,
   poststed: PT.string,
   landkode: PT.string,
