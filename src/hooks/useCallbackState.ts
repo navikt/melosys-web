@@ -5,8 +5,8 @@ import * as Utils from "../utils";
 export const useCallbackState = <StateType>(
   callback: () => StateType,
   defaultState: StateType,
-  errorHandler: (e: Error) => void = Utils.logger.error,
-  deps: any[] = []
+  deps: any[],
+  errorHandler?: (e: Error) => void
 ): [StateType, Dispatch<SetStateAction<StateType>>] => {
   const [state, setState] = useState<StateType>(defaultState);
 
@@ -16,7 +16,7 @@ export const useCallbackState = <StateType>(
       try {
         setState(callback());
       } catch (e) {
-        errorHandler(e);
+        if (errorHandler) errorHandler(e);
       }
     }
   }, deps);
@@ -27,8 +27,8 @@ export const useCallbackState = <StateType>(
 export const useAsyncCallbackState = <StateType>(
   asyncCallback: () => Promise<StateType>,
   defaultState: StateType,
-  errorHandler: (e: Error) => void = Utils.logger.error,
-  deps: any[] = []
+  deps: any[],
+  errorHandler?: (e: Error) => void
 ): [StateType, Dispatch<SetStateAction<StateType>>] => {
   const [state, setState] = useState(defaultState);
 
@@ -44,7 +44,7 @@ export const useAsyncCallbackState = <StateType>(
           }
         });
       } catch (e) {
-        errorHandler(e);
+        if (errorHandler) errorHandler(e);
       }
     }
 

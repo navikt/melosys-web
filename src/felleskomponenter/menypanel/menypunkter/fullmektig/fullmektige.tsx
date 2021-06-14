@@ -42,7 +42,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   const [fullmektige, setFullmektige] = Hooks.useAsyncCallbackState(
     () => Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT),
     [],
-    Utils.logger.error
+    []
   );
   const [disableLeggTilFullmektig, setDisableLeggTilFullmektig] = useState(false);
 
