@@ -5,7 +5,7 @@ import classNames from "classnames";
 import * as MPT from "../../proptypes";
 import * as Utils from "../../utils";
 
-import GeneriskAdresse from "./generiskAdresse";
+import RegisterAdresse from "./registerAdresse";
 
 import "./organisasjonsAdresse.css";
 
@@ -14,7 +14,7 @@ const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, bol
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
 
-  const visPostadresse = !Utils.adresse.erGeneriskAdresseObjektTomt(postadresse);
+  const visPostadresse = !Utils.adresse.erRegisterAdresseObjektTomt(postadresse);
   const adresse = visPostadresse ? postadresse : forretningsadresse;
   const tittel = visPostadresse ? "Postadresse" : "Forretningsadresse";
 
@@ -28,7 +28,7 @@ const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, bol
     <div className={cl}>
       {visNavn && <div className={navnCls}>{navn}</div>}
       {visTittel && <div className="tittel">{tittel}</div>}
-      <GeneriskAdresse adresse={adresse} />
+      <RegisterAdresse adresse={adresse} />
     </div>
   );
 };

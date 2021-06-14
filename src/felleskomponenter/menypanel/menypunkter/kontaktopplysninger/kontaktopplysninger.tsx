@@ -7,7 +7,6 @@ import React, {
   FocusEvent,
   MouseEvent,
 } from "react";
-import { Organisasjon } from "Domene";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Mui from "../../../ui";
@@ -38,7 +37,7 @@ export const KontaktOpplysninger = ({
   onInputBlur,
   onSlettKnappClick,
 }: KontaktOpplysningerProps) => {
-  const [sokeResultat, setSokeResultat] = useState<Organisasjon | null>(null);
+  const [sokeResultat, setSokeResultat] = useState<Api.Organisasjon | null>(null);
   const [lagreFeilmelding, setLagreFeilmelding] = useState("");
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
   const [orgnrFeilmelding, setOrgnrFeilmelding] = useState<Feilmelding | undefined>(undefined);

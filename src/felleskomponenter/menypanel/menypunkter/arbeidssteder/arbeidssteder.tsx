@@ -37,9 +37,11 @@ const fysiskArbeidsstedErIkkeTomt = (fysiskArbeidssted: KV.Form.FysiskArbeidsste
 
 const fysiskArbeidsstedDefaultElement: KV.Form.FysiskArbeidssted = {
   adresse: {
+    tilleggsnavn: "",
     gatenavn: "",
-    husnummer: "",
+    husnummerEtasjeLeilighet: "",
     landkode: "",
+    postboks: "",
     postnummer: "",
     poststed: "",
     region: "",

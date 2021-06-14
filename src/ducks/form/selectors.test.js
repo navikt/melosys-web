@@ -10,11 +10,13 @@ describe("FormSelectors", () => {
           [KV.Form.SOKNAD]: {
             values: {
               oppgittAdresseRegion: "Oslo",
-              oppgittAdresseHusnummer: "1234",
+              oppgittAdresseHusnummerEtasjeLeilighet: "1234",
               oppgittAdressePoststed: "Oslo",
               oppgittAdresseLand: "NO",
               oppgittAdresseGatenavn: null,
               oppgittAdressePostnummer: null,
+              oppgittAdresseTilleggsnavn: "tilleggsnavn",
+              oppgittAdressePostboks: "Postboks oslo",
               selvstendigNaeringsvirksomhetUtland: [
                 {
                   navn: "NAV",

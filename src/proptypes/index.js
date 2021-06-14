@@ -13,7 +13,7 @@ import { Dokument, DokumentNullable, Vedlegg } from "./dokument";
 import { DokumentMetadataListe } from "./dokumentMetadata";
 import { Fagsak } from "./fagsak";
 import { FagsakSokListe } from "./fagsakSokListe";
-import { GeneriskAdresse } from "./adresser";
+import { RegisterAdresse } from "./adresser";
 import { Inntekt, InntektListe, InntekterPrAarMaaned } from "./inntekt";
 import { Journalforing, JournalforingSkjemaVerdier } from "./journalforing";
 import { Kodeverk } from "./kodeverk";
@@ -59,7 +59,7 @@ export {
   FagsakSokListe,
   Feilmelding,
   Feilmeldinger,
-  GeneriskAdresse,
+  RegisterAdresse,
   Inntekt,
   InntekterPrAarMaaned,
   InntektListe,

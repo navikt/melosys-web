@@ -1,9 +1,10 @@
 import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler, useState } from "react";
-import { Organisasjon } from "Domene";
 
 import MKV from "../../../../melosyskodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
+
+import { Organisasjon } from "../../../../services/api";
 
 import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";

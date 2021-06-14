@@ -1,6 +1,6 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import classNames from "classnames";
-import { Aktoer, Organisasjon } from "Domene";
+import { Aktoer } from "Domene";
 
 import * as Api from "../../../../services/api";
 import * as Nav from "../../../../utils/navFrontend";
@@ -29,7 +29,7 @@ const EnkeltFullmektig = ({
   onOrgFunnet,
   saksnummer,
 }: EnkeltFullmektigProps) => {
-  const [org, settOrg] = useState<Partial<Organisasjon>>({});
+  const [org, settOrg] = useState<Partial<Api.Organisasjon>>({});
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
 

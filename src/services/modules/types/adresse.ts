@@ -17,10 +17,12 @@ export interface UstrukturertAdresse {
   adresselinjer: string[];
 }
 
-interface StrukturertAdresse {
+export interface StrukturertAdresse {
+  tilleggsnavn: string | null;
   gatenavn: string | null;
-  husnummer: string | null;
+  husnummerEtasjeLeilighet: string | null;
   region: string | null;
+  postboks: string | null;
   postnummer: string | null;
   poststed: string | null;
   landkode: string | null;

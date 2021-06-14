@@ -42,9 +42,12 @@ const mapStateToProps = (state: RootState) => ({
     trygdeavgiftTrukketGjennomSkattDato: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato
     ),
+    oppgittAdresseTilleggsnavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).tilleggsnavn,
     oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
-    oppgittAdresseHusnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummer,
     oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
+    oppgittAdresseHusnummerEtasjeLeilighet: behandlingsgrunnlagSelectors.BostedAdresseSelector(state)
+      .husnummerEtasjeLeilighet,
+    oppgittAdressePostboks: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postboks,
     oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,

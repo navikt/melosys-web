@@ -13,22 +13,30 @@ const Felter = ({ redigerbart }: Felter) => (
   <div className="felter">
     <dl className="person__detaljer">
       <Nav.Row>
+        <Nav.Column xs="12">
+          <Skjema.Input
+            feltNavn="oppgittAdresseTilleggsnavn"
+            label="Tilleggsnavn:"
+            disabled={!redigerbart}
+            bredde="fullbredde"
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
         <Nav.Column xs="8">
           <Skjema.Input
             feltNavn="oppgittAdresseGatenavn"
             label="Gatenavn:"
             disabled={!redigerbart}
             bredde="fullbredde"
-            datoFelt={false}
           />
         </Nav.Column>
         <Nav.Column xs="4">
           <Skjema.Input
-            feltNavn="oppgittAdresseHusnummer"
+            feltNavn="oppgittAdresseHusnummerEtasjeLeilighet"
             label="Husnummer:"
             disabled={!redigerbart}
             bredde="fullbredde"
-            datoFelt={false}
           />
         </Nav.Column>
       </Nav.Row>
@@ -39,7 +47,6 @@ const Felter = ({ redigerbart }: Felter) => (
             label="Postnr:"
             disabled={!redigerbart}
             bredde="fullbredde"
-            datoFelt={false}
           />
         </Nav.Column>
         <Nav.Column xs="8">
@@ -48,19 +55,22 @@ const Felter = ({ redigerbart }: Felter) => (
             label="Poststed:"
             disabled={!redigerbart}
             bredde="fullbredde"
-            datoFelt={false}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Skjema.Input
+            feltNavn="oppgittAdressePostboks"
+            label="Postboks:"
+            disabled={!redigerbart}
+            bredde="fullbredde"
           />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="8">
-          <Skjema.Input
-            feltNavn="oppgittAdresseRegion"
-            label="Region:"
-            disabled={!redigerbart}
-            bredde="fullbredde"
-            datoFelt={false}
-          />
+          <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" disabled={!redigerbart} bredde="fullbredde" />
         </Nav.Column>
         <Nav.Column xs="4">
           <Skjema.LandVelger disabled={!redigerbart} bredde="fullbredde" feltNavn="oppgittAdresseLand" label="Land:" />
