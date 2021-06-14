@@ -17,7 +17,7 @@ import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
-import DialogboksValidering from "../../felleskomponenter/dialogboks/validering";
+import { DialogboksValidering } from "../../felleskomponenter/dialogboks";
 
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";

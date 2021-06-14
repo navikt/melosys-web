@@ -8,12 +8,14 @@ import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { feiletresponsSelectors } from "../ducks/feiletrespons";
 
-import DialogboksOppfriskSak from "../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
-import DialogboksHenlegg from "../felleskomponenter/dialogboks/henlegg/dialogboksHenlegg";
-import DialogboksAvsluttSakSomBortfalt from "../felleskomponenter/dialogboks/avsluttSakSomBortfalt/dialogboksAvsluttSakSomBortfalt";
-import DialogboksAvslagSoknad from "../felleskomponenter/dialogboks/avslagSoknad/dialogboksAvslagSoknad";
-import DialogboksRevurderFagsak from "../felleskomponenter/dialogboks/revurderFagsak/dialogboksRevurderFagsak";
-import DialogboksValidering from "../felleskomponenter/dialogboks/validering";
+import {
+  DialogboksOppfriskSak,
+  DialogboksHenleggSak,
+  DialogboksAvsluttSakSomBortfalt,
+  DialogboksAvslagSoknad,
+  DialogboksRevurderFagsak,
+  DialogboksValidering,
+} from "../felleskomponenter/dialogboks";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -54,7 +56,7 @@ const Modals = ({
         annenBehandlingOppfriskes={annenBehandlingOppfriskes}
       />
     )}
-    {visHenleggDialog && <DialogboksHenlegg avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
+    {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} henleggHandle={henleggHandle} />}
     {visAvslagSoknadDialog && (
       <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} avslaaSoknadHandle={avslaaSoknadHandle} />
     )}
