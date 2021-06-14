@@ -37,15 +37,15 @@ export const useAsyncCallbackState = <StateType>(
 
     // Kaller callback og oppdaterer state dersom alle dependencies finnes
     if (deps.every((dep) => !Utils._isEmpty(dep))) {
-      try {
-        asyncCallback().then((result) => {
+      asyncCallback()
+        .then((result) => {
           if (isMounted) {
             setState(result);
           }
+        })
+        .catch((e) => {
+          if (errorHandler) errorHandler(e);
         });
-      } catch (e) {
-        if (errorHandler) errorHandler(e);
-      }
     }
 
     return () => {
