@@ -137,13 +137,9 @@ const FellesHandlersProviderUnconnected = ({
   };
 
   const avsluttSakSomBortfalt = async () => {
-    try {
-      await Api.Fagsaker.fagsak.bortfall(saksnummer);
-      skjulAvsluttSakSomBortfaltDialogHandle();
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await Api.Fagsaker.fagsak.bortfall(saksnummer);
+    skjulAvsluttSakSomBortfaltDialogHandle();
+    tilForsiden();
   };
 
   const fellesHandlers = {
