@@ -9,27 +9,56 @@ import { FellesHandlersContext } from "../contexts";
 
 const SideLoadingStatus = <div>Laster inn siden...</div>;
 
-const UkjentSideLoadable = loadable(() => import("../sider/ukjentSide"), { fallback: SideLoadingStatus });
-const ForsideLoadable = loadable(() => import("../sider/forside"), { fallback: SideLoadingStatus });
-const SokLoadable = loadable(() => import("../sider/sok"), { fallback: SideLoadingStatus });
-const EuEøsSaksbehandlingLoadable = loadable(() => import("../sider/eu_eøs/saksbehandling"), {
+const UkjentSideLoadable = loadable(() => import(/* webpackChunkName: "ukjent-side" */ "../sider/ukjentSide"), {
   fallback: SideLoadingStatus,
 });
-const FtrlSaksbehandlingLoadable = loadable(() => import("../sider/ftrl/saksbehandling"), {
+const ForsideLoadable = loadable(() => import(/* webpackChunkName: "forside" */ "../sider/forside"), {
   fallback: SideLoadingStatus,
 });
-const JournalforingLoadable = loadable(() => import("../sider/journalforing"), { fallback: SideLoadingStatus });
-const RegistreringUnntaksperioderLoadable = loadable(() => import("../sider/eu_eøs/registrering/unntaksperioder"), {
+const SokLoadable = loadable(() => import(/* webpackChunkName: "sok" */ "../sider/sok"), {
   fallback: SideLoadingStatus,
 });
-const RegistreringAnmodningunntakLoadable = loadable(() => import("../sider/eu_eøs/registrering/anmodningunntak"), {
+const EuEøsSaksbehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "eu-eøs-saksbehandling" */ "../sider/eu_eøs/saksbehandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const FtrlSaksbehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "ftrl-saksbehandling" */ "../sider/ftrl/saksbehandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const JournalforingLoadable = loadable(() => import(/* webpackChunkName: "journalføring" */ "../sider/journalforing"), {
   fallback: SideLoadingStatus,
 });
-const SedBehandlingLoadable = loadable(() => import("../sider/eu_eøs/sedbehandling"), { fallback: SideLoadingStatus });
-const OpprettNySakLoadable = loadable(() => import("../sider/opprettnysak"), { fallback: SideLoadingStatus });
-const VurderUtpekingLoadable = loadable(() => import("../sider/eu_eøs/vurderutpeking"), {
+const RegistreringUnntaksperioderLoadable = loadable(
+  () => import(/* webpackChunkName: "registrering-unntaksperioder" */ "../sider/eu_eøs/registrering/unntaksperioder"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const RegistreringAnmodningunntakLoadable = loadable(
+  () =>
+    import(/* webpackChunkName: "registrering-anmodning-om-unntak" */ "../sider/eu_eøs/registrering/anmodningunntak"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
+const SedBehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "sed-behandling" */ "../sider/eu_eøs/sedbehandling"),
+  { fallback: SideLoadingStatus }
+);
+const OpprettNySakLoadable = loadable(() => import(/* webpackChunkName: "opprett-ny-sak" */ "../sider/opprettnysak"), {
   fallback: SideLoadingStatus,
 });
+const VurderUtpekingLoadable = loadable(
+  () => import(/* webpackChunkName: "vurder-utpeking" */ "../sider/eu_eøs/vurderutpeking"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
 
 const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
 
