@@ -25,4 +25,18 @@ describe("useAsyncCallbackState", () => {
     const [state] = rh.result.current;
     expect(state).toBe(3);
   });
+
+  it("kaller errorHandler når callback rejectes", async () => {
+    const rejectionReason = new Error();
+    const rejected = () => Promise.reject(rejectionReason);
+
+    const errorHandler = jest.fn();
+
+    renderHook(() => useAsyncCallbackState(rejected, null, [], errorHandler));
+
+    await act(async () => {});
+
+    expect(errorHandler).toHaveBeenCalledTimes(1);
+    expect(errorHandler).toHaveBeenLastCalledWith(rejectionReason);
+  });
 });
