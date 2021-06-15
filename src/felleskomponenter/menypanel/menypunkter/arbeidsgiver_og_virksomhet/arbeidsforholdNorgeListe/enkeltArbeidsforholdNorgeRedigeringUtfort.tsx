@@ -22,13 +22,11 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
   const [kontaktopplysninger] = useAsyncCallbackState(
     () => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, org.orgnr),
     { kontaktnavn: null, kontaktorgnr: null },
-    Utils.logger.error,
     [saksnummer, org.orgnr]
   );
   const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Organisasjon>>(
     () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr || ""),
     {},
-    Utils.logger.error,
     [kontaktopplysninger.kontaktorgnr]
   );
 

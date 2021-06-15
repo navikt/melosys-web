@@ -38,7 +38,7 @@ export const Behandling = ({
   handleSubmit,
   history,
 }: InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps) => {
-  const [statistikk] = useAsyncCallbackState(Api.Statistikk.hent, { aapneBehandlinger: {} });
+  const [statistikk] = useAsyncCallbackState(Api.Statistikk.hent, { aapneBehandlinger: {} }, []);
 
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
