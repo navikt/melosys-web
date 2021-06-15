@@ -35,7 +35,7 @@ const FellesHandlersProviderUnconnected = ({
   saksnummer,
   sakstype,
   apneTidligereBehandlinger,
-  avslaSoknad,
+  avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
   skjulAvsluttSakSomBortfaltDialogHandle,
@@ -127,17 +127,13 @@ const FellesHandlersProviderUnconnected = ({
   };
 
   const avslaaSoknadHandle = async (data) => {
-    try {
-      // Hvis perioden er blitt opprettet må den fjernes før avslag.
-      await resetLovvalgsperioder();
-      await resetAnmodningsperioder();
-      await resetUtpekingsperioder();
+    // Hvis perioden er blitt opprettet må den fjernes før avslag.
+    await resetLovvalgsperioder();
+    await resetAnmodningsperioder();
+    await resetUtpekingsperioder();
 
-      await lagreAllData(sakstype);
-      avslaSoknad(behandlingID, data);
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await lagreAllData(sakstype);
+    avslaaSoknad(behandlingID, data);
   };
 
   const avsluttSakSomBortfalt = async () => {
@@ -189,7 +185,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   saksnummer: PT.string,
   sakstype: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
-  avslaSoknad: PT.func.isRequired,
+  avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
@@ -229,7 +225,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
-  avslaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaSoknad(behandlingID, data)),
+  avslaaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaaSoknad(behandlingID, data)),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
   oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
