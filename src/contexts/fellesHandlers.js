@@ -35,7 +35,7 @@ const FellesHandlersProviderUnconnected = ({
   saksnummer,
   sakstype,
   apneTidligereBehandlinger,
-  avslaSoknad,
+  avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
   skjulAvsluttSakSomBortfaltDialogHandle,
@@ -91,10 +91,10 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const debouncedSetVenterPaVurderVedtak = Utils._debounce(() => setVenterPaRevurderFagsak(true), 500);
+  const debouncedSetVenterPaVurderFagsak = Utils._debounce(() => setVenterPaRevurderFagsak(true), 500);
 
   const revurderFagsak = async () => {
-    debouncedSetVenterPaVurderVedtak();
+    debouncedSetVenterPaVurderFagsak();
 
     try {
       const res = await Api.Fagsaker.fagsak.revurder(saksnummer);
@@ -102,12 +102,11 @@ const FellesHandlersProviderUnconnected = ({
 
       history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
       lastInnSaksopplysninger(sakstype, saksnummer, nyBehandlingID);
-    } catch (e) {
-      Utils.logger.error(e);
+    } finally {
+      debouncedSetVenterPaVurderFagsak.cancel();
+      setVenterPaRevurderFagsak(false);
     }
 
-    debouncedSetVenterPaVurderVedtak.cancel();
-    setVenterPaRevurderFagsak(false);
     skjulRevurderFagsakDialogHandle();
   };
 
@@ -121,38 +120,26 @@ const FellesHandlersProviderUnconnected = ({
   const henleggSak = async (data) => Api.Fagsaker.fagsak.henlegg(saksnummer, data);
 
   const henleggHandle = async (data) => {
-    try {
-      await lagreAllData(sakstype);
-      await henleggSak(data);
-      skjulHenleggDialogHandle();
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await lagreAllData(sakstype);
+    await henleggSak(data);
+    skjulHenleggDialogHandle();
+    tilForsiden();
   };
 
   const avslaaSoknadHandle = async (data) => {
-    try {
-      // Hvis perioden er blitt opprettet må den fjernes før avslag.
-      await resetLovvalgsperioder();
-      await resetAnmodningsperioder();
-      await resetUtpekingsperioder();
+    // Hvis perioden er blitt opprettet må den fjernes før avslag.
+    await resetLovvalgsperioder();
+    await resetAnmodningsperioder();
+    await resetUtpekingsperioder();
 
-      await lagreAllData(sakstype);
-      avslaSoknad(behandlingID, data);
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await lagreAllData(sakstype);
+    avslaaSoknad(behandlingID, data);
   };
 
   const avsluttSakSomBortfalt = async () => {
-    try {
-      await Api.Fagsaker.fagsak.bortfall(saksnummer);
-      skjulAvsluttSakSomBortfaltDialogHandle();
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await Api.Fagsaker.fagsak.bortfall(saksnummer);
+    skjulAvsluttSakSomBortfaltDialogHandle();
+    tilForsiden();
   };
 
   const fellesHandlers = {
@@ -194,7 +181,7 @@ FellesHandlersProviderUnconnected.propTypes = {
   saksnummer: PT.string,
   sakstype: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
-  avslaSoknad: PT.func.isRequired,
+  avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
@@ -234,7 +221,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
-  avslaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaSoknad(behandlingID, data)),
+  avslaaSoknad: (behandlingID, data) => dispatch(vedtakOperations.avslaaSoknad(behandlingID, data)),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
   oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
