@@ -120,14 +120,10 @@ const FellesHandlersProviderUnconnected = ({
   const henleggSak = async (data) => Api.Fagsaker.fagsak.henlegg(saksnummer, data);
 
   const henleggHandle = async (data) => {
-    try {
-      await lagreAllData(sakstype);
-      await henleggSak(data);
-      skjulHenleggDialogHandle();
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await lagreAllData(sakstype);
+    await henleggSak(data);
+    skjulHenleggDialogHandle();
+    tilForsiden();
   };
 
   const avslaaSoknadHandle = async (data) => {
