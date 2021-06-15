@@ -91,10 +91,10 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const debouncedSetVenterPaVurderVedtak = Utils._debounce(() => setVenterPaRevurderFagsak(true), 500);
+  const debouncedSetVenterPaVurderFagsak = Utils._debounce(() => setVenterPaRevurderFagsak(true), 500);
 
   const revurderFagsak = async () => {
-    debouncedSetVenterPaVurderVedtak();
+    debouncedSetVenterPaVurderFagsak();
 
     try {
       const res = await Api.Fagsaker.fagsak.revurder(saksnummer);
@@ -102,12 +102,11 @@ const FellesHandlersProviderUnconnected = ({
 
       history.replace(`${location.pathname}?${stringify({ behandlingID: nyBehandlingID })}`);
       lastInnSaksopplysninger(sakstype, saksnummer, nyBehandlingID);
-    } catch (e) {
-      Utils.logger.error(e);
+    } finally {
+      debouncedSetVenterPaVurderFagsak.cancel();
+      setVenterPaRevurderFagsak(false);
     }
 
-    debouncedSetVenterPaVurderVedtak.cancel();
-    setVenterPaRevurderFagsak(false);
     skjulRevurderFagsakDialogHandle();
   };
 
