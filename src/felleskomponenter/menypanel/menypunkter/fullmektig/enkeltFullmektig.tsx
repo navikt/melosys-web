@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import classNames from "classnames";
-import { Aktoer } from "Domene";
 
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
@@ -12,7 +11,7 @@ import { useKontaktOpplysninger } from "../kontaktopplysninger";
 
 interface EnkeltFullmektigProps {
   className?: string;
-  fullmektig: Aktoer;
+  fullmektig: Api.Fagsaker.aktoer.Aktoer;
   redigerbart: boolean;
   slett: () => void;
   onRolleChange: (rolle: string, org?: string) => void;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-import { Aktoer } from "Domene";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -17,7 +16,7 @@ import EnkeltFullmektig from "./enkeltFullmektig";
 
 import "./fullmektige.css";
 
-const aktoerTemplate: Aktoer = {
+const aktoerTemplate: Api.Fagsaker.aktoer.Aktoer = {
   aktoerID: null,
   databaseID: -1,
   institusjonsID: null,
@@ -48,10 +47,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
 
   const hentFullmektige = async () => {
     try {
-      const fullmektigAktoerer: Aktoer[] = await Api.Fagsaker.aktoer.hent(
-        saksnummer,
-        MKV.Koder.aktoersroller.REPRESENTANT
-      );
+      const fullmektigAktoerer = await Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
       setFullmektige(fullmektigAktoerer);
     } catch (e) {
       Utils.logger.error(e);
@@ -81,7 +77,10 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       representererKode: representererKode || null,
     });
 
-  const byttUtTemplateMedLagretFullmektig = (aktoerer: Aktoer[], lagretFullmektig: Aktoer) =>
+  const byttUtTemplateMedLagretFullmektig = (
+    aktoerer: Api.Fagsaker.aktoer.Aktoer[],
+    lagretFullmektig: Api.Fagsaker.aktoer.Aktoer
+  ) =>
     aktoerer.map((fullmektig) => {
       if (fullmektig.databaseID === aktoerTemplate.databaseID) return { ...lagretFullmektig };
       return { ...fullmektig };
