@@ -20,7 +20,7 @@ export const hent = (saksnr: string, rolleKode: string, representererKode?: stri
   return getAsJson(URI_AKTOER);
 };
 
-type UlagretAktoer = Aktoer & {
+type UlagretAktoer = Omit<Aktoer, "databaseID"> & {
   databaseID: number | null;
 };
 
