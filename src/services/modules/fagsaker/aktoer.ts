@@ -2,7 +2,7 @@ import * as QS from "qs";
 import { getAsJson, postAsJson, deleteAsJson } from "../../utils";
 import { API_BASE_URL, FAGSAKER } from "../../api-constants";
 
-export interface HentAktoer {
+export interface Aktoer {
   databaseID: number;
   aktoerID: string | null;
   institusjonsID: string | null;
@@ -12,9 +12,7 @@ export interface HentAktoer {
   representererKode: string | null;
 }
 
-export type HentResDto = HentAktoer[];
-
-export const hent = (saksnr: string, rolleKode: string, representererKode?: string): Promise<HentResDto> => {
+export const hent = (saksnr: string, rolleKode: string, representererKode?: string): Promise<Aktoer[]> => {
   const URI_PATH = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;
   const qs = QS.stringify({ rolleKode, representererKode });
 
@@ -22,19 +20,11 @@ export const hent = (saksnr: string, rolleKode: string, representererKode?: stri
   return getAsJson(URI_AKTOER);
 };
 
-interface SendAktoer {
+type UlagretAktoer = Aktoer & {
   databaseID: number | null;
-  aktoerID: string | null;
-  institusjonsID: string | null;
-  orgnr: string | null;
-  rolleKode: string;
-  utenlandskPersonID: string | null;
-  representererKode: string | null;
-}
+};
 
-type SendReqDto = SendAktoer;
-
-export const send = (saksnr: string, data: SendReqDto) =>
+export const send = (saksnr: string, data: UlagretAktoer): Promise<Aktoer> =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`, data);
 
 export const slett = (databaseid: number) => deleteAsJson(`${API_BASE_URL}${FAGSAKER}/aktoerer/${databaseid}`);
