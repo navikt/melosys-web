@@ -1,9 +1,15 @@
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 export type AvgiftsgrunnlagInfo = {
   erSkattepliktig: boolean | null;
   betalerArbeidsgiverAvgift: boolean | null;
   særligAvgiftsgruppe: string | null;
 };
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 export type Avgiftsgrunnlag = {
   lønnsforhold: string | null;
   trygdeavgiftsgrunnlagNorge: AvgiftsgrunnlagInfo | null;
@@ -12,6 +18,9 @@ export type Avgiftsgrunnlag = {
   vurderingTrygdeavgiftUtenlandskInntekt: string | null;
 };
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 export type Avgiftsperiode = {
   fom: string;
   tom: string;
@@ -20,6 +29,9 @@ export type Avgiftsperiode = {
   avgiftPerMd: number;
 };
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 export type Avgiftsberegning = {
   avgiftspliktigLønnNorge: number | null;
   avgiftspliktigLønnUtland: number | null;

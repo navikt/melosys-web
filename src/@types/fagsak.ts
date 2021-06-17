@@ -2,6 +2,9 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import { Periode } from "./periode";
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 type BehandlingOversikt = {
   behandlingID: number;
   behandlingsstatus: KTObject;
@@ -11,6 +14,9 @@ type BehandlingOversikt = {
   periode: Periode;
 };
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 type Fagsak = {
   saksnummer: string;
   sakstype: KTObject;

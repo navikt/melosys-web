@@ -1,6 +1,9 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { Periode } from "./periode";
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 export type MedlPeriode = {
   periodeID: number;
   periode: Periode;

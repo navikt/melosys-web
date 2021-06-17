@@ -1,3 +1,6 @@
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 type Aktoer = {
   databaseID: number;
   aktoerID: string | null;
