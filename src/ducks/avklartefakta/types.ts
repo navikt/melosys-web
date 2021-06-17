@@ -4,7 +4,7 @@
  * Dette er action types som benyttes for å indikere hvordan fagsaker skal manipuleres
  * eller oppdateres.
  */
-import { Avklartfakta } from "Domene";
+import * as Api from "../../services/api";
 
 export const OK = "avklartefakta/OK";
 export const FEILET = "avklartefakta/FEILET";
@@ -14,7 +14,7 @@ export const OPPDATER_AVKLARTEFAKTA = "avklartefakta/OPPDATER_AVKLARTEFAKTA";
 export const RESET = "avklartefakta/RESET";
 
 export type Data =
-  | Avklartfakta[]
+  | Api.Avklartefakta.Avklartfakta[]
   | {
       data: {
         status?: number;
@@ -41,7 +41,7 @@ export interface OkAction {
 }
 
 export interface OppdaterActionData {
-  [key: string]: Avklartfakta[];
+  [key: string]: Api.Avklartefakta.Avklartfakta[];
 }
 
 export interface OppdaterAction {

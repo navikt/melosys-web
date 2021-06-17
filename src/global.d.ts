@@ -16,13 +16,9 @@ declare module "AppTypes" {
 }
 
 declare module "Domene" {
-  export type Avklartfakta = import("./@types").Avklartfakta;
   export type Fagsak = import("./@types").Fagsak;
   export type MedlPeriode = import("./@types").MedlPeriode;
   export type Periode = import("./@types").Periode;
-  export type OppsummertFaktaVirksomheter = import("./@types").Virksomheter;
-  export type OppsummertFaktaMedfolgendeFamilie = import("./@types").MedfolgendeFamilie;
-  export type MedfolgendeFamiliemedlem = import("./@types").MedfolgendeFamiliemedlem;
   export type DokumentOversikt = import("./@types").DokumentOversikt;
   export type Dokument = import("./@types").Dokument;
   export type FysiskDokument = import("./@types").FysiskDokument;

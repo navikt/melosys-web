@@ -1,7 +1,7 @@
-import { OppsummertFaktaVirksomheter } from "Domene";
 import * as Types from "./types";
+import * as Api from "../../services/api";
 
-export function oppdaterVirksomheter(virksomheter: OppsummertFaktaVirksomheter): Types.OppdaterVirksomheterAction {
+export function oppdaterVirksomheter(virksomheter: Api.Avklartefakta.Virksomheter): Types.OppdaterVirksomheterAction {
   return {
     type: Types.OPPDATER_VIRKSOMHETER,
     data: virksomheter,
