@@ -522,7 +522,7 @@ const SendBrev = ({
 
       {brevSendt && (
         <AlertStripeSuksess className="brev_sendt">
-          Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.
+          Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
         </AlertStripeSuksess>
       )}
       {brevSendtFeil && (
