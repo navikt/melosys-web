@@ -25,10 +25,6 @@ declare module "Domene" {
   export type SedPdfData = import("./@types").SedPdfData;
   export type Medlemskapsperiode = import("./@types").Medlemskapsperiode;
   export type OppdaterMedlemskapsperiode = import("./@types").OppdaterMedlemskapsperiode;
-  export type Avgiftsgrunnlag = import("./@types").Avgiftsgrunnlag;
-  export type Avgiftsberegning = import("./@types").Avgiftsberegning;
-  export type Avgiftsperiode = import("./@types").Avgiftsperiode;
-  export type AvgiftsgrunnlagInfo = import("./@types").AvgiftsgrunnlagInfo;
 }
 
 declare module "@navikt/melosys-kodeverk" {
