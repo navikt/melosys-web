@@ -72,7 +72,7 @@ interface Arbeidsforhold {
   arbeidsforholdID: string;
 }
 
-interface Medlemsperiode {
+export interface Medlemsperiode {
   periodeID: number;
   periode: Periode;
   periodetype: KTObject | null;
