@@ -204,7 +204,7 @@ class BrevBestilling extends Component {
             </Nav.Knapp>
             {this.state.erBrevSendt && (
               <Nav.AlertStripe type="suksess" className="varsel">
-                Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.
+                Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
               </Nav.AlertStripe>
             )}
             {this.state.feilmelding && (
