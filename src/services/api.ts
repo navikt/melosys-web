@@ -24,6 +24,7 @@ import * as Trygdeavgift from "./modules/trygdeavgift";
 import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
 import {
+  Fagsak,
   RegisterAdresse,
   UstrukturertAdresse,
   MidlertidigAdresse,
@@ -63,6 +64,7 @@ export {
 };
 
 export type {
+  Fagsak,
   RegisterAdresse,
   UstrukturertAdresse,
   MidlertidigAdresse,
