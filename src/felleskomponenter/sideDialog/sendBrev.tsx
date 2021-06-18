@@ -15,7 +15,7 @@ import * as Utils from "../../utils";
 
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { OrganisasjonsAdresse } from "../adresser";
-import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import { formSelectors } from "../../ducks/form";
 import PdfLenkeListe from "../pdfLenkeListe";
@@ -38,6 +38,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   changeField: (field: string, data: any) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   hentOrganisasjon: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
+  oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -65,6 +66,7 @@ const SendBrev = ({
   formValues,
   formIsValid,
   hentOrganisasjon,
+  oppdaterBehandling,
   orgnrValid,
   redigerbart,
   resetForm,
@@ -191,7 +193,10 @@ const SendBrev = ({
       };
     }
     Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
-      .then(() => setBrevSendt(true))
+      .then(() => {
+        setBrevSendt(true);
+        oppdaterBehandling();
+      })
       .catch((error) => {
         setBrevSendtFeil(true);
         Utils.logger.error(error);

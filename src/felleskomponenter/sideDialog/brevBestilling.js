@@ -5,19 +5,19 @@ import PT from "prop-types";
 
 import MKV from "../../melosyskodeverk";
 
+import * as Utils from "../../utils";
+import * as Api from "../../services/api";
 import * as KV from "../../kodeverk";
 import * as Nav from "../../utils/navFrontend";
 import * as Skjema from "../skjema";
 
 import { formSelectors } from "../../ducks/form";
-import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 
 import { brevbestillingValidering, erSkjemaGyldig } from "../skjema/validering/brevbestilling";
 import PdfLenkeListe from "../pdfLenkeListe";
 
 import "./brevBestilling.css";
-import * as Utils from "../../utils";
-import * as Api from "../../services/api";
 
 const InfoPanel = () => (
   <Nav.Lesmerpanel intro="Se hva som skal stå i mangelbrevet:" apneTekst="Klikk her for tips" lukkTekst="Lukk">
@@ -81,6 +81,7 @@ class BrevBestilling extends Component {
 
     if (dokumentResponse) {
       this.setState({ erBrevSendt: true });
+      this.props.oppdaterBehandling();
       this.props.resetBrevBestillingForm();
       await Utils.delay(6000);
       this.setState({ erBrevSendt: false });
@@ -228,6 +229,7 @@ BrevBestilling.propTypes = {
   settFeltInnhold: PT.func.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   behandlingstype: PT.string.isRequired,
+  oppdaterBehandling: PT.func.isRequired,
 };
 BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},
@@ -262,6 +264,7 @@ const mapDispatchToProps = (dispatch) => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.BREV_BESTILLING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.BREV_BESTILLING, ...feltNavn)),
   resetBrevBestillingForm: () => dispatch(reset(KV.Form.BREV_BESTILLING)),
+  oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(BrevBestilling));
