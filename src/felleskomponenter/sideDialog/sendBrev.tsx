@@ -197,9 +197,8 @@ const SendBrev = ({
         setBrevSendt(true);
         oppdaterBehandling();
       })
-      .catch((error) => {
+      .catch(() => {
         setBrevSendtFeil(true);
-        Utils.logger.error(error);
       });
   };
 

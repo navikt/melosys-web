@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler } from "react";
+import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler, useState } from "react";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -8,15 +8,15 @@ import { Organisasjon } from "../../../../services/api";
 
 import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
-import SokFullmektigOrgProps from "./sokFullmektigOrg";
+import SokFullmektigOrg from "./sokFullmektigOrg";
 
 import "./fullmektigRedigerer.css";
 
 interface FullmektigRedigererProps {
-  onRolleChange: (rolle: string, org?: string) => void;
+  onRolleChange: (rolle: string, org?: string) => Promise<any>;
   redigerbart: boolean;
   databaseID: number;
-  onOrgFunnet: (orgnr: string) => void;
+  onOrgFunnet: (orgnr: string) => Promise<any>;
   representererKode: string | null;
   org: Partial<Organisasjon>;
   onKontaktOpplysningerChange: (kontaktopplysning: KontaktOpplysning) => void;
@@ -39,8 +39,14 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
     onKontaktopplysningerSlettClick,
   } = props;
 
-  const onRadioChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    onRolleChange(event.target.value, org.orgnr);
+  const [rolleFeilmelding, setRolleFeilmelding] = useState("");
+
+  const rolleChangeHandler: ChangeEventHandler<HTMLInputElement> = async (event) => {
+    try {
+      await onRolleChange(event.target.value, org.orgnr);
+    } catch (error) {
+      setRolleFeilmelding(error.message);
+    }
   };
 
   const databaseIDString = databaseID.toString();
@@ -48,35 +54,40 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
   return (
     <Nav.Row className="fullmektig__redigerer">
       <Nav.Column xs="6">
-        <SokFullmektigOrgProps onOrgFunnet={onOrgFunnet} defaultOrgnr={org.orgnr || ""} />
+        <SokFullmektigOrg onOrgFunnet={onOrgFunnet} defaultOrgnr={org.orgnr || ""} />
         {org.orgnr && <OrganisasjonsAdresse organisasjon={org} className="adresse" visNavn={false} visTittel={false} />}
         {org.orgnr && (
-          <Nav.Fieldset legend="Hvem er dette fullmektig for?" className="radioknapper">
-            <Nav.Radio
-              onChange={onRadioChange}
-              checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
-              label="Arbeidsgiver"
-              value={MKV.Koder.representerer.ARBEIDSGIVER}
-              name={databaseIDString}
-              disabled={!redigerbart}
-            />
-            <Nav.Radio
-              onChange={onRadioChange}
-              checked={representererKode === MKV.Koder.representerer.BRUKER}
-              label="Arbeidstaker"
-              value={MKV.Koder.representerer.BRUKER}
-              name={databaseIDString}
-              disabled={!redigerbart}
-            />
-            <Nav.Radio
-              onChange={onRadioChange}
-              checked={representererKode === MKV.Koder.representerer.BEGGE}
-              label="Både arbeidstaker og arbeidsgiver"
-              value={MKV.Koder.representerer.BEGGE}
-              name={databaseIDString}
-              disabled={!redigerbart}
-            />
-          </Nav.Fieldset>
+          <>
+            <Nav.Fieldset legend="Hvem er dette fullmektig for?" className="radioknapper">
+              <Nav.Radio
+                onChange={rolleChangeHandler}
+                checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
+                label="Arbeidsgiver"
+                value={MKV.Koder.representerer.ARBEIDSGIVER}
+                name={databaseIDString}
+                disabled={!redigerbart}
+              />
+              <Nav.Radio
+                onChange={rolleChangeHandler}
+                checked={representererKode === MKV.Koder.representerer.BRUKER}
+                label="Arbeidstaker"
+                value={MKV.Koder.representerer.BRUKER}
+                name={databaseIDString}
+                disabled={!redigerbart}
+              />
+              <Nav.Radio
+                onChange={rolleChangeHandler}
+                checked={representererKode === MKV.Koder.representerer.BEGGE}
+                label="Både arbeidstaker og arbeidsgiver"
+                value={MKV.Koder.representerer.BEGGE}
+                name={databaseIDString}
+                disabled={!redigerbart}
+              />
+            </Nav.Fieldset>
+            <div role="alert">
+              {rolleFeilmelding && <Nav.Typo.Feilmelding>{rolleFeilmelding}</Nav.Typo.Feilmelding>}
+            </div>
+          </>
         )}
       </Nav.Column>
       <Nav.Column xs="6">

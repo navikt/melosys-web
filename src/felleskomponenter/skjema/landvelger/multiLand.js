@@ -37,7 +37,6 @@ function MultiLand(props) {
 
     if (!landkode) {
       const e = new Error("landkode må inneholde verdi.");
-      Utils.logger.error(e);
       throw e;
     }
 
