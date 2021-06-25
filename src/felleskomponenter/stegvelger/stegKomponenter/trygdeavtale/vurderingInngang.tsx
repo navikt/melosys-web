@@ -119,7 +119,7 @@ const VurderingInngang = ({
   };
 
   const periodeEndringHandle = async () => {
-    await slettStegData();
+    // await slettStegData();
     sendOppdatertStegData({ formValues, formIsValid });
   };
 
