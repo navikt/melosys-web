@@ -57,7 +57,7 @@ interface Props {
   flyt: FlytResDto;
   tilForsiden: () => void;
   oppdaterStegData: (data: FlytReqDto) => void;
-  slettStegData: () => void;
+  // slettStegData: () => void;
 }
 
 const VurderingInngang = ({
@@ -72,7 +72,7 @@ const VurderingInngang = ({
   redigerbart,
   tilForsiden,
   oppdaterStegData,
-  slettStegData,
+  // slettStegData,
   visMenypanel,
 }: PropsFromRedux & Props) => {
   const [initialFomTom, setInitialFomTom] = useState<{ fom?: string; tom?: string }>({});
