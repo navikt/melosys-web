@@ -11,9 +11,10 @@ interface ExpandableListProps<T> {
   idFromElement: (element: T) => string | number;
   elements: T[];
   header?: ReactNode;
+  showHeader?: (collapsed: boolean) => boolean;
   amountOfItemsCollapsed: number;
-  btnTextExpanded: string;
-  btnTextCollapsed: string;
+  btnTextExpanded?: string;
+  btnTextCollapsed?: string;
   chevron: boolean;
   dividers?: boolean;
 }
@@ -24,9 +25,10 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
     idFromElement,
     elements,
     header,
+    showHeader = () => true,
     amountOfItemsCollapsed,
-    btnTextExpanded,
-    btnTextCollapsed,
+    btnTextExpanded = "Lukke",
+    btnTextCollapsed = "Åpne",
     chevron = false,
     dividers = false,
   } = props;
@@ -51,7 +53,7 @@ function ExpandableList<T>(props: ExpandableListProps<T>) {
 
   return (
     <div className="expandableList">
-      {header}
+      {showHeader(collapsed) ? header : null}
       <div className="list">
         {alwaysVisibleElements.map((element) => (
           <div className={elementCls} key={idFromElement(element)}>

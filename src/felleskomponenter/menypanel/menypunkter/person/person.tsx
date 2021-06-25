@@ -7,6 +7,8 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as Etiketter from "../../etiketter";
 import * as Api from "../../../../services/api";
+import * as Mui from "../../../ui";
+import * as Ikoner from "../../../../resources/images";
 
 import PersonInfo from "./personinfo";
 
@@ -17,6 +19,7 @@ import EnkeltDato from "../../../datoOmrade/enkeltDato";
 import AnnenAdresse from "./annenadresse";
 import UtenlandskIdent from "./utenlandskident";
 import ExpandableList from "../../../expandablelist";
+import Statsborgerskapsliste from "./statsborgerskapsliste";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
@@ -60,6 +63,7 @@ export const AdresseHeader = ({ adresseTittel }: AdresseHeaderProps) => (
 const mapStateToProps = (state: RootState) => ({
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -78,6 +82,7 @@ export const Person = ({
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
   visBehandlingsgrunnlagData,
+  behandlingID,
 }: PersonProps) => {
   const {
     bostedsadressePerioder,
@@ -99,6 +104,12 @@ export const Person = ({
       <Nav.Row>
         <Nav.Column xs="12">
           <PersonInfo person={person} />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row className="statsborgerskapsliste-row">
+        <Nav.Column xs="12">
+          <Mui.Undertittel ikon={Ikoner.Globe} tekst="Statsborgerskap" className="statsborgerskapsliste-row__tittel" />
+          <Statsborgerskapsliste behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="registrerteAdresser">
