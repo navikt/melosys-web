@@ -4,13 +4,13 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
-import { MedfolgendeFamiliemedlem, OppsummertFaktaMedfolgendeFamilie } from "Domene";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as Skjema from "../../../skjema";
 import * as KV from "../../../../kodeverk";
+import * as Api from "../../../../services/api";
 
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -60,7 +60,7 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   changeField: (field: string, data: any) => dispatch(change(KV.Form.FAMILIE, field, data)),
-  sendMedfolgendeFamilie: (behandlingID: number, data: OppsummertFaktaMedfolgendeFamilie) =>
+  sendMedfolgendeFamilie: (behandlingID: number, data: Api.Avklartefakta.MedfolgendeFamilie) =>
     dispatch(oppsummertfaktaOperations.sendMedfolgendeFamilie(behandlingID, data)),
 });
 
@@ -111,8 +111,8 @@ const VurderingFamilie = ({
 }: Props & PropsFromRedux) => {
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
-  function tilMedfolgendeFamilie(fraFormValues: FormValueProp): OppsummertFaktaMedfolgendeFamilie {
-    const medfolgendeFamiliemedlem: MedfolgendeFamiliemedlem[] = [];
+  function tilMedfolgendeFamilie(fraFormValues: FormValueProp): Api.Avklartefakta.MedfolgendeFamilie {
+    const medfolgendeFamiliemedlem: Api.Avklartefakta.MedfolgendeFamiliemedlem[] = [];
 
     medfolgendeBarn.forEach((familiemedlem: MedfolgendeFamilie) => {
       medfolgendeFamiliemedlem.push({

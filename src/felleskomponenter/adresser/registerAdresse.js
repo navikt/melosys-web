@@ -3,13 +3,13 @@ import * as MPT from "../../proptypes";
 
 import * as KV from "../../kodeverk";
 
-import "./generiskAdresse.css";
+import "./registerAdresse.css";
 
 /** Forretningsadresse formatterer adressen korrekt med sjekk på
  * varierende keys i objektet.
  *
  */
-const GeneriskAdresse = ({ adresse }) => {
+const RegisterAdresse = ({ adresse }) => {
   const INGEN_TILGJENGELIG_TEKST = <>(ingen tilgjengelig)</>;
   if (!adresse) {
     return INGEN_TILGJENGELIG_TEKST;
@@ -23,7 +23,7 @@ const GeneriskAdresse = ({ adresse }) => {
   const visGate = gatenavn || husnummer || husbokstav;
 
   return gatenavn || husnummer || husbokstav || land || postnr || poststed ? (
-    <address className="generiskadresse">
+    <address className="registeradresse">
       {visGate && (
         <div>
           {gatenavn} {husnummer} {husbokstav}
@@ -41,12 +41,12 @@ const GeneriskAdresse = ({ adresse }) => {
   );
 };
 
-GeneriskAdresse.propTypes = {
-  adresse: MPT.GeneriskAdresse,
+RegisterAdresse.propTypes = {
+  adresse: MPT.RegisterAdresse,
 };
 
-GeneriskAdresse.defaultProps = {
+RegisterAdresse.defaultProps = {
   adresse: {},
 };
 
-export default GeneriskAdresse;
+export default RegisterAdresse;

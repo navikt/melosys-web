@@ -263,101 +263,42 @@ export const Artikkel16MottaSvarSyncErrorsSelector = createSelector(
   (errors) => errors
 );
 
-export const SoknadOppgittAdresseHusnummerSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseHusnummer
-);
-
-export const SoknadOppgittAdresseGatenavnSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseGatenavn
-);
-
-export const SoknadOppgittAdresseRegionSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseRegion
-);
-
-export const SoknadOppgittAdressePostnummerSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdressePostnummer
-);
-
-export const SoknadOppgittAdressePoststedSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdressePoststed
-);
-
-export const SoknadOppgittAdresseLandSelector = createSelector(
-  (state) => SoknadenFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseLand
-);
-
 export const SoknadOppgittAdresseSelector = createSelector(
-  SoknadOppgittAdresseHusnummerSelector,
-  SoknadOppgittAdresseGatenavnSelector,
-  SoknadOppgittAdresseRegionSelector,
-  SoknadOppgittAdressePostnummerSelector,
-  SoknadOppgittAdressePoststedSelector,
-  SoknadOppgittAdresseLandSelector,
-  (husnummer, gatenavn, region, postnummer, poststed, landkode) => ({
-    husnummer,
-    gatenavn,
-    region,
-    postnummer,
-    poststed,
-    landkode,
+  (state) => SoknadenFormSelector(state).values || {},
+  (soknad) => ({
+    husnummerEtasjeLeilighet: soknad.oppgittAdresseHusnummerEtasjeLeilighet,
+    gatenavn: soknad.oppgittAdresseGatenavn,
+    region: soknad.oppgittAdresseRegion,
+    postnummer: soknad.oppgittAdressePostnummer,
+    poststed: soknad.oppgittAdressePoststed,
+    landkode: soknad.oppgittAdresseLand,
+    tilleggsnavn: soknad.oppgittAdresseTilleggsnavn,
+    postboks: soknad.oppgittAdressePostboks,
   })
 );
 
 export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
-  SoknadOppgittAdresseHusnummerSelector,
-  SoknadOppgittAdresseGatenavnSelector,
-  SoknadOppgittAdresseRegionSelector,
-  SoknadOppgittAdressePostnummerSelector,
-  SoknadOppgittAdressePoststedSelector,
-  SoknadOppgittAdresseLandSelector,
-  (...felter) => !felter.every((felt) => Utils._isNil(felt) || felt === "")
+  SoknadOppgittAdresseSelector,
+  (oppgittadresse) => !Object.values(oppgittadresse).every((felt) => Utils._isNil(felt) || felt === "")
 );
 
-export const RegistreringPanelerOppgittAdresseHusnummerSelector = createSelector(
+export const RegistreringPanelerOppgittAdresseSelector = createSelector(
   (state) => RegistreringPanelerFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseHusnummer
-);
-
-export const RegistreringPanelerOppgittAdresseGatenavnSelector = createSelector(
-  (state) => RegistreringPanelerFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseGatenavn
-);
-
-export const RegistreringPanelerOppgittAdresseRegionSelector = createSelector(
-  (state) => RegistreringPanelerFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseRegion
-);
-
-export const RegistreringPanelerOppgittAdressePostnummerSelector = createSelector(
-  (state) => RegistreringPanelerFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdressePostnummer
-);
-
-export const RegistreringPanelerOppgittAdressePoststedSelector = createSelector(
-  (state) => RegistreringPanelerFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdressePoststed
-);
-
-export const RegistreringPanelerOppgittAdresseLandSelector = createSelector(
-  (state) => RegistreringPanelerFormSelector(state).values || {},
-  (soknad) => soknad.oppgittAdresseLand
+  (registrering) => ({
+    husnummerEtasjeLeilighet: registrering.oppgittAdresseHusnummerEtasjeLeilighet,
+    gatenavn: registrering.oppgittAdresseGatenavn,
+    region: registrering.oppgittAdresseRegion,
+    postnummer: registrering.oppgittAdressePostnummer,
+    poststed: registrering.oppgittAdressePoststed,
+    landkode: registrering.oppgittAdresseLand,
+    tilleggsnavn: registrering.oppgittAdresseTilleggsnavn,
+    postboks: registrering.oppgittAdressePostboks,
+  })
 );
 
 export const RegistreringPanelerOppgittAdresseHarVerdierSelector = createSelector(
-  RegistreringPanelerOppgittAdresseHusnummerSelector,
-  RegistreringPanelerOppgittAdresseGatenavnSelector,
-  RegistreringPanelerOppgittAdresseRegionSelector,
-  RegistreringPanelerOppgittAdressePostnummerSelector,
-  RegistreringPanelerOppgittAdressePoststedSelector,
-  RegistreringPanelerOppgittAdresseLandSelector,
-  (...felter) => !felter.every((felt) => Utils._isNil(felt) || felt === "")
+  RegistreringPanelerOppgittAdresseSelector,
+  (oppgittadresse) => !Object.values(oppgittadresse).every((felt) => Utils._isNil(felt) || felt === "")
 );
 
 export const SoknadErrorsSelector = createSelector(

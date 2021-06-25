@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-import { Aktoer } from "Domene";
 
 import MKV from "../../../../melosyskodeverk";
 
 import * as Mui from "../../../ui";
 import * as Api from "../../../../services/api";
-import * as Utils from "../../../../utils";
 import * as Hooks from "../../../../hooks";
 import * as Ikoner from "../../../../resources/images";
 
@@ -17,7 +15,7 @@ import EnkeltFullmektig from "./enkeltFullmektig";
 
 import "./fullmektige.css";
 
-const aktoerTemplate: Aktoer = {
+const aktoerTemplate: Api.Fagsaker.aktoer.Aktoer = {
   aktoerID: null,
   databaseID: -1,
   institusjonsID: null,
@@ -42,19 +40,16 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
   const [fullmektige, setFullmektige] = Hooks.useAsyncCallbackState(
     () => Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT),
     [],
-    Utils.logger.error
+    []
   );
   const [disableLeggTilFullmektig, setDisableLeggTilFullmektig] = useState(false);
 
   const hentFullmektige = async () => {
     try {
-      const fullmektigAktoerer: Aktoer[] = await Api.Fagsaker.aktoer.hent(
-        saksnummer,
-        MKV.Koder.aktoersroller.REPRESENTANT
-      );
+      const fullmektigAktoerer = await Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
       setFullmektige(fullmektigAktoerer);
     } catch (e) {
-      Utils.logger.error(e);
+      setFullmektige([]);
     }
   };
 
@@ -81,7 +76,10 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       representererKode: representererKode || null,
     });
 
-  const byttUtTemplateMedLagretFullmektig = (aktoerer: Aktoer[], lagretFullmektig: Aktoer) =>
+  const byttUtTemplateMedLagretFullmektig = (
+    aktoerer: Api.Fagsaker.aktoer.Aktoer[],
+    lagretFullmektig: Api.Fagsaker.aktoer.Aktoer
+  ) =>
     aktoerer.map((fullmektig) => {
       if (fullmektig.databaseID === aktoerTemplate.databaseID) return { ...lagretFullmektig };
       return { ...fullmektig };
@@ -93,8 +91,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
 
       setFullmektige((prevFullmektige) => byttUtTemplateMedLagretFullmektig(prevFullmektige, lagretFullmektig));
       setDisableLeggTilFullmektig(false);
+      return lagretFullmektig;
     } catch (e) {
-      Utils.logger.error(e);
+      if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
+      else if (e.status >= 400) throw new Error(e.body.message);
+      else throw e;
     }
   };
 
@@ -121,7 +122,9 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             }
             slettFullmektigLokalt(fullmektig.databaseID);
           } catch (e) {
-            Utils.logger.error(e);
+            if (e.status >= 500) throw new Error("Teknisk feil ved sletting av fullmektig");
+            else if (e.status >= 400) throw new Error(e.body.message);
+            else throw e;
           }
         };
 
@@ -130,7 +133,9 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             if (orgnr) await lagreFullmektig(representererKode, orgnr, fullmektig.databaseID);
             settRepresentant(index, representererKode);
           } catch (e) {
-            Utils.logger.error(e);
+            if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
+            else if (e.status >= 400) throw new Error(e.body.message);
+            else throw e;
           }
         };
 

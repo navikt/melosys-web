@@ -7,21 +7,25 @@ import { formatterDatoTilISO } from "../../utils/dato";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-const lagNullableAdresse = (adresse) => {
+const lagNullableStrukturertAdresse = (adresse) => {
   if (Utils._isNil(adresse)) {
     return {
+      tilleggsnavn: null,
       gatenavn: null,
-      husnummer: null,
+      husnummerEtasjeLeilighet: null,
       region: null,
+      postboks: null,
       postnummer: null,
       poststed: null,
       landkode: null,
     };
   }
   return {
+    tilleggsnavn: adresse.tilleggsnavn || null,
     gatenavn: adresse.gatenavn || null,
-    husnummer: adresse.husnummer || null,
+    husnummerEtasjeLeilighet: adresse.husnummerEtasjeLeilighet || null,
     region: adresse.region || null,
+    postboks: adresse.postboks || null,
     postnummer: adresse.postnummer || null,
     poststed: adresse.poststed || null,
     landkode: adresse.landkode || null,
@@ -102,14 +106,14 @@ export default function reducer(state = initialState, action) {
           navn: forhold.navn || null,
           orgnr: forhold.orgnr || null,
           selvstendigNaeringsvirksomhet: false,
-          adresse: lagNullableAdresse(forhold.adresse),
+          adresse: lagNullableStrukturertAdresse(forhold.adresse),
         })),
         ...dokument.selvstendigNaeringsvirksomhetUtland.map((virksomhet) => ({
           uuid: virksomhet.uuid,
           navn: virksomhet.navn || null,
           orgnr: virksomhet.orgnr || null,
           selvstendigNaeringsvirksomhet: true,
-          adresse: lagNullableAdresse(virksomhet.adresse),
+          adresse: lagNullableStrukturertAdresse(virksomhet.adresse),
         })),
       ];
 
@@ -145,9 +149,11 @@ export default function reducer(state = initialState, action) {
           arbeidPaaLand: {
             fysiskeArbeidssteder: dokument.arbeidPaaLand.fysiskeArbeidssteder.map((arbeidPaaLand) => ({
               adresse: {
+                tilleggsnavn: arbeidPaaLand.adresse.tilleggsnavn || null,
                 gatenavn: arbeidPaaLand.adresse.gatenavn || null,
-                husnummer: arbeidPaaLand.adresse.husnummer || null,
+                husnummerEtasjeLeilighet: arbeidPaaLand.adresse.husnummerEtasjeLeilighet || null,
                 landkode: arbeidPaaLand.adresse.landkode || null,
+                postboks: arbeidPaaLand.adresse.postboks || null,
                 postnummer: arbeidPaaLand.adresse.postnummer || null,
                 poststed: arbeidPaaLand.adresse.poststed || null,
                 region: arbeidPaaLand.adresse.region || null,
@@ -216,9 +222,11 @@ export default function reducer(state = initialState, action) {
             antallMaanederINorge: null,
             EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
             oppgittAdresse: {
+              tilleggsnavn: dokument.oppgittAdresseTilleggsnavn,
               gatenavn: dokument.oppgittAdresseGatenavn,
-              husnummer: dokument.oppgittAdresseHusnummer,
+              husnummerEtasjeLeilighet: dokument.oppgittAdresseHusnummerEtasjeLeilighet,
               region: dokument.oppgittAdresseRegion,
+              postboks: dokument.oppgittAdressePostboks,
               postnummer: dokument.oppgittAdressePostnummer,
               poststed: dokument.oppgittAdressePoststed,
               landkode: dokument.oppgittAdresseLand,
@@ -299,18 +307,22 @@ export default function reducer(state = initialState, action) {
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
             medfolgendeFamilie: [
-              ...dokument.medfolgendeBarn.map((enkeltBarn) => ({
-                uuid: enkeltBarn.uuid,
-                navn: enkeltBarn.navn,
-                fnr: enkeltBarn.fnr,
-                relasjonsrolle: KV.Koder.Relasjonsrolle.BARN,
-              })),
-              ...dokument.medfolgendeEktefelleSamboer.map((enkeltEktefelleSamboer) => ({
-                uuid: enkeltEktefelleSamboer.uuid,
-                navn: enkeltEktefelleSamboer.navn,
-                fnr: enkeltEktefelleSamboer.fnr,
-                relasjonsrolle: KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER,
-              })),
+              ...dokument.medfolgendeBarn
+                .filter((enkeltBarn) => enkeltBarn.fnr && enkeltBarn.navn)
+                .map((enkeltBarn) => ({
+                  uuid: enkeltBarn.uuid,
+                  navn: enkeltBarn.navn,
+                  fnr: enkeltBarn.fnr,
+                  relasjonsrolle: KV.Koder.Relasjonsrolle.BARN,
+                })),
+              ...dokument.medfolgendeEktefelleSamboer
+                .filter((enkeltEktefelleSamboer) => enkeltEktefelleSamboer.fnr && enkeltEktefelleSamboer.navn)
+                .map((enkeltEktefelleSamboer) => ({
+                  uuid: enkeltEktefelleSamboer.uuid,
+                  navn: enkeltEktefelleSamboer.navn,
+                  fnr: enkeltEktefelleSamboer.fnr,
+                  relasjonsrolle: KV.Koder.Relasjonsrolle.EKTEFELLE_SAMBOER,
+                })),
             ],
           },
           overgangsregelbestemmelser:

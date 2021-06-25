@@ -1,4 +1,4 @@
-import { Avgiftsberegning, Avgiftsgrunnlag, AvgiftsgrunnlagInfo } from "Domene";
+import { Avgiftsberegning, Avgiftsgrunnlag, AvgiftsgrunnlagInfo } from "./types";
 import { getAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, TRYGDEAVGIFT } from "../api-constants";
 

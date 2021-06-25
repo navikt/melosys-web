@@ -4,7 +4,7 @@ import { oppgaverOperations } from "../oppgaver";
 
 export const tilForsiden = () => async (dispatch) => {
   dispatch(oppgaverOperations.oversikt());
-  dispatch(push("/"));
+  return dispatch(push("/"));
 };
 
 export const tilAnnenSide = (link) => (dispatch) => {

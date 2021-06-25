@@ -12,7 +12,7 @@ export type Avgiftsgrunnlag = {
   vurderingTrygdeavgiftUtenlandskInntekt: string | null;
 };
 
-export type Avgiftsperiode = {
+type Avgiftsperiode = {
   fom: string;
   tom: string;
   trygdedekning: string;

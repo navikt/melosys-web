@@ -25,8 +25,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   resetOppgittAdresse: () =>
     dispatch(
       formOperations.reset(KV.Form.SOKNAD, [
+        "oppgittAdresseTilleggsnavn",
         "oppgittAdresseGatenavn",
-        "oppgittAdresseHusnummer",
+        "oppgittAdresseHusnummerEtasjeLeilighet",
+        "oppgittAdressePostboks",
         "oppgittAdressePostnummer",
         "oppgittAdressePoststed",
         "oppgittAdresseRegion",

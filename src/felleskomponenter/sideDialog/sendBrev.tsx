@@ -4,7 +4,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
-import { Organisasjon } from "Domene";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 
 import * as Api from "../../services/api";
@@ -16,7 +15,7 @@ import * as Utils from "../../utils";
 
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { OrganisasjonsAdresse } from "../adresser";
-import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import { formSelectors } from "../../ducks/form";
 import PdfLenkeListe from "../pdfLenkeListe";
@@ -39,6 +38,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   changeField: (field: string, data: any) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   hentOrganisasjon: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
+  oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -66,6 +66,7 @@ const SendBrev = ({
   formValues,
   formIsValid,
   hentOrganisasjon,
+  oppdaterBehandling,
   orgnrValid,
   redigerbart,
   resetForm,
@@ -74,7 +75,7 @@ const SendBrev = ({
   const [mottakerFeil, setMottakerFeil] = useState<string>();
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
-    organisasjonsAdresse?: Organisasjon;
+    organisasjonsAdresse?: Api.Organisasjon;
   }>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [brevSendt, setBrevSendt] = useState(false);
@@ -192,10 +193,12 @@ const SendBrev = ({
       };
     }
     Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
-      .then(() => setBrevSendt(true))
-      .catch((error) => {
+      .then(() => {
+        setBrevSendt(true);
+        oppdaterBehandling();
+      })
+      .catch(() => {
         setBrevSendtFeil(true);
-        Utils.logger.error(error);
       });
   };
 
@@ -523,7 +526,7 @@ const SendBrev = ({
 
       {brevSendt && (
         <AlertStripeSuksess className="brev_sendt">
-          Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.
+          Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
         </AlertStripeSuksess>
       )}
       {brevSendtFeil && (

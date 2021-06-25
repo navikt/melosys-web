@@ -115,16 +115,12 @@ export const Registrering = (props) => {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   const lastInnSaksopplysninger = async () => {
-    try {
-      await Promise.all([
-        hentBehandling(behandlingID),
-        hentFagsaker(saksnummer),
-        hentAvklartefakta(behandlingID),
-        hentLovvalgsperioder(behandlingID),
-      ]);
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await Promise.all([
+      hentBehandling(behandlingID),
+      hentFagsaker(saksnummer),
+      hentAvklartefakta(behandlingID),
+      hentLovvalgsperioder(behandlingID),
+    ]);
   };
 
   React.useEffect(() => {

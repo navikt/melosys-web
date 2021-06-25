@@ -1,8 +1,8 @@
-import { GeneriskAdresse, StrukturertAdresse } from "Domene";
+import { RegisterAdresse, StrukturertAdresse } from "../services/api";
 
 import * as Utils from "./index";
 
-const erGeneriskAdresseObjektTomt = (adresse: Partial<GeneriskAdresse>) =>
+const erRegisterAdresseObjektTomt = (adresse: Partial<RegisterAdresse>) =>
   Object.values(adresse).every((value) => Utils._isNil(value) || Utils._isObject(value)) &&
   adresse.gateadresse &&
   Object.values(adresse.gateadresse).every(Utils._isNil);
@@ -10,4 +10,4 @@ const erGeneriskAdresseObjektTomt = (adresse: Partial<GeneriskAdresse>) =>
 const erStrukturertAdresseObjektTomt = (adresse: Partial<StrukturertAdresse>) =>
   Object.values(adresse).every((value) => Utils._isNil(value) || value === "");
 
-export { erGeneriskAdresseObjektTomt, erStrukturertAdresseObjektTomt };
+export { erRegisterAdresseObjektTomt, erStrukturertAdresseObjektTomt };

@@ -9,7 +9,7 @@ interface Feilmelding {
 }
 
 interface SokFullmektigOrgProps {
-  onOrgFunnet: (orgnr: string) => void;
+  onOrgFunnet: (orgnr: string) => Promise<any>;
   defaultOrgnr: string | null;
 }
 
@@ -19,6 +19,14 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   const [orgnr, setOrgnr] = useState(defaultOrgnr || "");
   const [feilmelding, setFeilmelding] = useState<Feilmelding | undefined>(undefined);
   const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
+
+  const orgFunnetHandler = async (funnetOrgnr: string) => {
+    try {
+      await onOrgFunnet(funnetOrgnr);
+    } catch (e) {
+      setFeilmelding({ feilmelding: e.message });
+    }
+  };
 
   const sok = async (sokOrgnr: string) => {
     if (!Utils.organisasjon.erOrgnrLengde(sokOrgnr)) {
@@ -33,7 +41,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
     if (Utils.organisasjon.erOrgnrGyldig(sokOrgnr)) {
       try {
         await Api.Organisasjoner.hentOrganisasjon(sokOrgnr);
-        onOrgFunnet(sokOrgnr);
+        orgFunnetHandler(sokOrgnr);
       } catch (e) {
         if (e.response.status === 404) setFeilmelding({ feilmelding: "Kunne ikke finne organisasjon" });
         else setFeilmelding({ feilmelding: "Ukjent feil ved søk på org.nr." });

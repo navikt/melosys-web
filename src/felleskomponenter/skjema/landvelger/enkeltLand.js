@@ -43,7 +43,6 @@ export class EnkeltLand extends Component {
   reduxOppdaterLand = (landkode) => {
     if (!landkode) {
       const e = new Error("landkode må inneholde verdi.");
-      Utils.logger.error(e);
       throw e;
     }
     const { onChange } = this.props.input;

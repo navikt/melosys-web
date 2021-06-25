@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { Fagsak } from "Domene";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
@@ -18,11 +17,11 @@ interface OppsummeringProps {
   arbeidsland?: KTObject[];
   oppholdsland?: KTObject[];
   lovvalgsland?: KTObject;
-  fagsak: Fagsak;
+  fagsak: Api.Fagsak;
   oppsummering: Api.Behandlinger.behandling.Oppsummering;
   behandlingsstatus: ReactNode;
   behandlingstema: ReactNode;
-  person: Api.Types.Person;
+  person: Api.Person;
   behandlingsgrunnlagPeriodeFom?: string;
   behandlingsgrunnlagPeriodeTom?: string;
   lovvalgsperiodeFom?: string;

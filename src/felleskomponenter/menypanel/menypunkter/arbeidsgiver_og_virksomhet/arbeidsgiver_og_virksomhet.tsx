@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-import { Organisasjon } from "Domene";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { formValueSelector } from "redux-form";
@@ -12,6 +11,8 @@ import * as KV from "../../../../kodeverk";
 import * as Etiketter from "../../etiketter";
 import * as Ikoner from "../../../../resources/images";
 import * as Utils from "../../../../utils";
+
+import { Organisasjon } from "../../../../services/api";
 
 import ArbeidsforholdNorgeListe from "./arbeidsforholdNorgeListe";
 import EditerbartElementListe from "../editerbartElementListe";
