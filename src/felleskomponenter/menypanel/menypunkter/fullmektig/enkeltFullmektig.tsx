@@ -1,6 +1,5 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import classNames from "classnames";
-import { Aktoer } from "Domene";
 
 import * as Api from "../../../../services/api";
 import * as Nav from "../../../../utils/navFrontend";
@@ -12,7 +11,7 @@ import { useKontaktOpplysninger } from "../kontaktopplysninger";
 
 interface EnkeltFullmektigProps {
   className?: string;
-  fullmektig: Aktoer;
+  fullmektig: Api.Fagsaker.aktoer.Aktoer;
   redigerbart: boolean;
   slett: (e: MouseEvent) => Promise<any> | void;
   onRolleChange: (rolle: string, org?: string) => Promise<any>;

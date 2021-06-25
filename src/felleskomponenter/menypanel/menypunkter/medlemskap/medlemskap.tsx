@@ -1,11 +1,11 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { MedlPeriode } from "Domene";
 import { RootState } from "AppTypes";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
+import * as Api from "../../../../services/api";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
@@ -14,7 +14,7 @@ import ExpandableList from "../../../expandablelist";
 import "./medlemskap.css";
 
 interface MedlemskapEnkeltPeriodeProps {
-  enkeltPeriode: MedlPeriode;
+  enkeltPeriode: Api.Behandlinger.behandling.Medlemsperiode;
 }
 
 export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPeriodeProps) {
@@ -48,7 +48,7 @@ export function MedlemskapEnkeltPeriode({ enkeltPeriode }: MedlemskapEnkeltPerio
 }
 
 interface MedlemskapGruppeProps {
-  perioder: MedlPeriode[];
+  perioder: Api.Behandlinger.behandling.Medlemsperiode[];
   overskrift: string;
 }
 

@@ -25,13 +25,12 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
 
-      - name: npm install
+      - name: install dependencies
         env:
           CYPRESS_INSTALL_BINARY: 0
           # NPM krever tydeligvis en token for å hente pakker fra github packages
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: |
-          npm i
+        run: npm ci
 
       - name: check formatting
         run: npm run prettier:check

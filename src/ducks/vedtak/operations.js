@@ -61,7 +61,7 @@ export function endre(behandlingID, body) {
   );
 }
 
-export function avslaSoknad(behandlingID, data) {
+export function avslaaSoknad(behandlingID, data) {
   const body = {
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
     fritekst: data.fritekst || null,

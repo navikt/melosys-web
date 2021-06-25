@@ -16,14 +16,7 @@ declare module "AppTypes" {
 }
 
 declare module "Domene" {
-  export type Aktoer = import("./@types").Aktoer;
-  export type Avklartfakta = import("./@types").Avklartfakta;
-  export type Fagsak = import("./@types").Fagsak;
-  export type MedlPeriode = import("./@types").MedlPeriode;
   export type Periode = import("./@types").Periode;
-  export type OppsummertFaktaVirksomheter = import("./@types").Virksomheter;
-  export type OppsummertFaktaMedfolgendeFamilie = import("./@types").MedfolgendeFamilie;
-  export type MedfolgendeFamiliemedlem = import("./@types").MedfolgendeFamiliemedlem;
   export type DokumentOversikt = import("./@types").DokumentOversikt;
   export type Dokument = import("./@types").Dokument;
   export type FysiskDokument = import("./@types").FysiskDokument;
@@ -32,10 +25,6 @@ declare module "Domene" {
   export type SedPdfData = import("./@types").SedPdfData;
   export type Medlemskapsperiode = import("./@types").Medlemskapsperiode;
   export type OppdaterMedlemskapsperiode = import("./@types").OppdaterMedlemskapsperiode;
-  export type Avgiftsgrunnlag = import("./@types").Avgiftsgrunnlag;
-  export type Avgiftsberegning = import("./@types").Avgiftsberegning;
-  export type Avgiftsperiode = import("./@types").Avgiftsperiode;
-  export type AvgiftsgrunnlagInfo = import("./@types").AvgiftsgrunnlagInfo;
 }
 
 declare module "@navikt/melosys-kodeverk" {

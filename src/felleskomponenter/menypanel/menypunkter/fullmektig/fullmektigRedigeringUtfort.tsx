@@ -41,7 +41,6 @@ const FullmektigRedigeringUtfort = ({
   const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Organisasjon>>(
     () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr || ""),
     {},
-    Utils.logger.error,
     [kontaktopplysninger.kontaktorgnr]
   );
 

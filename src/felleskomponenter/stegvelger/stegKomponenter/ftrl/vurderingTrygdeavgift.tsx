@@ -5,7 +5,6 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { change, getFormValues, reduxForm } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { Avgiftsgrunnlag, Avgiftsberegning, AvgiftsgrunnlagInfo } from "Domene";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../utils/navFrontend";
@@ -59,8 +58,8 @@ const PeriodeTabellComponent = ({ perioder }: { perioder: string[][] | undefined
 
 interface TrygdeavgiftsgrunnlagProps {
   formValues: {
-    avgiftsberegning?: Avgiftsberegning | undefined;
-    avgiftsgrunnlag?: Avgiftsgrunnlag | undefined;
+    avgiftsberegning?: Api.Avgiftsberegning | undefined;
+    avgiftsgrunnlag?: Api.Avgiftsgrunnlag | undefined;
   };
   oppdatertAvgiftsberegning: OppdaterAvgiftsberegning;
   erTabellApen: Map<string, boolean>;
@@ -374,8 +373,8 @@ interface Props {
   tilbake: () => void;
   redigerbart: boolean;
   formValues: {
-    avgiftsgrunnlag?: Avgiftsgrunnlag;
-    avgiftsberegning?: Avgiftsberegning;
+    avgiftsgrunnlag?: Api.Avgiftsgrunnlag;
+    avgiftsberegning?: Api.Avgiftsberegning;
   };
   erStegGyldig: boolean;
 }
@@ -437,7 +436,7 @@ const VurderingTrygdeavgift = ({
     oppdater();
   }, [formValid]);
 
-  function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag: AvgiftsgrunnlagInfo | null | undefined) {
+  function erTrygdeavgiftsgrunnlagGyldig(trygdeavgiftsgrunnlag: Api.AvgiftsgrunnlagInfo | null | undefined) {
     return (
       trygdeavgiftsgrunnlag &&
       (trygdeavgiftsgrunnlag.erSkattepliktig || trygdeavgiftsgrunnlag.erSkattepliktig === false) &&
@@ -447,7 +446,7 @@ const VurderingTrygdeavgift = ({
     );
   }
 
-  function erAvgiftsgrunnlagGyldig(avgiftsgrunnlag: Avgiftsgrunnlag) {
+  function erAvgiftsgrunnlagGyldig(avgiftsgrunnlag: Api.Avgiftsgrunnlag) {
     if (!avgiftsgrunnlag || !avgiftsgrunnlag.lønnsforhold) return false;
     switch (avgiftsgrunnlag.lønnsforhold) {
       case MKV.Koder.loenn_forhold.LØNN_FRA_NORGE:
@@ -464,7 +463,7 @@ const VurderingTrygdeavgift = ({
     }
   }
 
-  function handleGrunnlagResponse(avgiftsgrunnlag: Avgiftsgrunnlag) {
+  function handleGrunnlagResponse(avgiftsgrunnlag: Api.Avgiftsgrunnlag) {
     if (!avgiftsgrunnlag) return;
     if (
       avgiftsgrunnlag.vurderingTrygdeavgiftNorskInntekt ===
