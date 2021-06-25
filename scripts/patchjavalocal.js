@@ -21,6 +21,7 @@ const DEFAULT_JAVA_SERVER = "http://localhost:8080";
 dotenv.set("REACT_APP_BUILD_VERSION", "java_local");
 dotenv.set("REACT_APP_LOCAL_CONTEXT", "/melosys");
 dotenv.set("REACT_APP_API_BASE_URL", "/api/");
+dotenv.set("REACT_APP_GRAPHQL_URL", "/graphql/");
 dotenv.set("REACT_APP_JAVA_LOCAL_HOST", DEFAULT_JAVA_SERVER);
 
 proxy["/api"].target = DEFAULT_JAVA_SERVER;

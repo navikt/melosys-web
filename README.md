@@ -61,3 +61,7 @@ I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kj
 ```
 npm login --scope=@OWNER --registry=https://npm.pkg.github.com
 ```
+
+## Genering av graphql-kode
+
+Se dokumentasjon [her](./src/graphql/README.md).
