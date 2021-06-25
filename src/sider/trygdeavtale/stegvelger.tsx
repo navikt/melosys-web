@@ -17,7 +17,6 @@ import VurderingInngang from "../../felleskomponenter/stegvelger/stegKomponenter
 import VurderingAvklarVirksomhet from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "../../felleskomponenter/stegvelger/stegKomponenter/trygdeavtale/vurderingBestemmelse";
 
-import { StegData, StegDataReqDto } from "../../services/modules/trygdeavtale/flyt";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { formSelectors } from "../../ducks/form";
@@ -115,19 +114,20 @@ class Stegvelger extends Component<Props, State> {
     Api.Trygdeavtale.slettStegData(this.props.behandlingID);
   };
 
-  oppdaterStegData = (stegData: StegDataReqDto) => {
-    Api.Trygdeavtale.sendStegData(this.props.behandlingID, stegData).then((response) =>
+  oppdaterStegData = (request: Api.Trygdeavtale.FlytReqDto) => {
+    Api.Trygdeavtale.sendStegData(this.props.behandlingID, request).then((response) =>
       this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
     );
   };
 
-  mapOmTilAktuelleSteg = (stegData: StegData[]): AktueltSteg[] => {
+  mapOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {
       redigerbart: this.props.redigerbart,
-      stegData,
+      flyt: response,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
       lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     };
+
     const handlers = {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
@@ -136,13 +136,13 @@ class Stegvelger extends Component<Props, State> {
       tilForsiden: this.props.tilForsiden,
     };
 
-    return stegData?.map((singelSteg: StegData, index: number) => {
-      const stegMapElement = stegMap[singelSteg.steg];
+    return response.steg?.map((singelSteg: Api.Trygdeavtale.Steg) => {
+      const stegMapElement = stegMap[singelSteg.navn];
       return {
-        id: singelSteg.steg,
+        id: singelSteg.navn,
         tittel: stegMapElement.tittel,
-        stegPosisjon: index,
-        aktivtSteg: this.state.aktivtStegIndex === index,
+        stegPosisjon: singelSteg.nummer,
+        aktivtSteg: this.state.aktivtStegIndex === singelSteg.nummer,
         komponent: stegMapElement.komponent,
         status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
         data,

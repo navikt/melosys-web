@@ -11,7 +11,7 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 
 import { formSelectors } from "../../../../ducks/form";
-import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
+import { Virksomhet, FlytReqDto, FlytResDto } from "../../../../services/modules/trygdeavtale/flyt";
 import { StegNavn } from "../../../../kodeverk/koder";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
@@ -19,18 +19,19 @@ import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 
 import "./vurderingAvklarVirksomhet.css";
 
-const mapStateToProps = (state: RootState, ownProps: Props) => {
-  const avklarVirksomhetStegData = ownProps.stegData?.find((steg) => steg.steg === StegNavn.AVKLAR_VIRKSOMHET);
-  return {
-    virksomheterListe: avklarVirksomhetStegData?.virksomheter || [],
-    avklarVirksomhetStegData,
-    formValues: getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
-    initialValues: {
-      virksomheter: avklarVirksomhetStegData?.resultat?.virksomheter,
-    },
-    formIsValid: formSelectors.TrygdeavtaleAvklarVirksomhetFormValidSelector(state),
-  };
-};
+const mapStateToProps = (state: RootState, ownProps: Props) => ({
+  virksomheterListe:
+    ownProps.flyt.data?.virksomheter?.map((virksomhet: Virksomhet) => ({
+      kode: virksomhet.orgId,
+      term: virksomhet.navn,
+    })) || [],
+  avklarVirksomhetSteg: ownProps.flyt.steg?.find((steg) => steg.navn === StegNavn.AVKLAR_VIRKSOMHET),
+  formValues: getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
+  initialValues: {
+    virksomheter: ownProps.flyt.resultat?.virksomheter,
+  },
+  formIsValid: formSelectors.TrygdeavtaleAvklarVirksomhetFormValidSelector(state),
+});
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   changeValgteVirksomheter: (data: string[]) =>
@@ -49,13 +50,14 @@ interface Props {
   formValues: FormValuesProps;
   redigerbart: boolean;
   tilbake: () => void;
-  oppdaterStegData: (data: StegDataReqDto) => void;
-  stegData: StegData[];
+  oppdaterStegData: (data: FlytReqDto) => void;
+  flyt: FlytResDto;
 }
 
 const VurderingAvklarVirksomhet = ({
-  avklarVirksomhetStegData,
+  avklarVirksomhetSteg,
   changeValgteVirksomheter,
+  flyt,
   formValues,
   formIsValid,
   fortsett,
@@ -71,8 +73,7 @@ const VurderingAvklarVirksomhet = ({
   const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
       oppdaterStegData({
-        stegId: KV.Koder.StegNavn.AVKLAR_VIRKSOMHET,
-        stegData: { virksomheter: data.formValues.virksomheter || [] },
+        resultat: { ...flyt.resultat, virksomheter: data.formValues.virksomheter || [] },
       });
     }
   };
@@ -95,7 +96,7 @@ const VurderingAvklarVirksomhet = ({
         muligeValg={virksomheterListe}
         onChange={(checkedVirksomheter) => changeValgteVirksomheter(checkedVirksomheter)}
         disabled={!redigerbart}
-        defaultValg={formValues?.virksomheter}
+        defaultValg={formValues?.virksomheter || []}
       />
 
       <div className="fane__knapplinje">
@@ -104,7 +105,7 @@ const VurderingAvklarVirksomhet = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={avklarVirksomhetStegData?.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={avklarVirksomhetSteg?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >

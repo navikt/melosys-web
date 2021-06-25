@@ -9,7 +9,7 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
 
 import { formSelectors } from "../../../../ducks/form";
-import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
+import { FlytReqDto, FlytResDto } from "../../../../services/modules/trygdeavtale/flyt";
 import { StegNavn } from "../../../../kodeverk/koder";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
@@ -17,22 +17,19 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
 
-const mapStateToProps = (state: RootState, ownProps: Props) => {
-  const bestemmelseStegData = ownProps.stegData?.find((steg) => steg.steg === StegNavn.BESTEMMELSE);
-  return {
-    bestemmelseStegData,
-    formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
-    formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
-    initialValues: {
-      vedtak: bestemmelseStegData?.resultat?.vedtakValg || undefined,
-      innvilgelse: bestemmelseStegData?.resultat?.innvilgelseValg || undefined,
-      bestemmelse: bestemmelseStegData?.resultat?.bestemmelseValg || undefined,
-    },
-    bestemmelseValg: bestemmelseStegData?.bestemmelseValg || undefined,
-    innvilgelseValg: bestemmelseStegData?.innvilgelseValg || undefined,
-    vedtakValg: bestemmelseStegData?.vedtakValg || undefined,
-  };
-};
+const mapStateToProps = (state: RootState, ownProps: Props) => ({
+  bestemmelseSteg: ownProps.flyt.steg?.find((steg) => steg.navn === StegNavn.BESTEMMELSE),
+  formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
+  formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
+  initialValues: {
+    vedtak: ownProps.flyt.resultat?.vedtakValg || undefined,
+    innvilgelse: ownProps.flyt.resultat?.innvilgelseValg || undefined,
+    bestemmelse: ownProps.flyt.resultat?.bestemmelseValg || undefined,
+  },
+  bestemmelseValg: ownProps.flyt.data?.bestemmelseValg || undefined,
+  innvilgelseValg: ownProps.flyt.data?.innvilgelseValg || undefined,
+  vedtakValg: ownProps.flyt.data?.vedtakValg || undefined,
+});
 
 const connector = connect(mapStateToProps, {});
 
@@ -49,13 +46,14 @@ interface Props {
   fortsett: () => void;
   tilbake: () => void;
   redigerbart: boolean;
-  oppdaterStegData: (data: StegDataReqDto) => void;
-  stegData: StegData[];
+  oppdaterStegData: (data: FlytReqDto) => void;
+  flyt: FlytResDto;
 }
 
 const VurderingBestemmelse = ({
-  bestemmelseStegData,
+  bestemmelseSteg,
   bestemmelseValg,
+  flyt,
   formIsValid,
   formValues,
   fortsett,
@@ -68,8 +66,8 @@ const VurderingBestemmelse = ({
   useEffect(() => {
     if (formValues?.vedtak) {
       oppdaterStegData({
-        stegId: KV.Koder.StegNavn.BESTEMMELSE,
-        stegData: {
+        resultat: {
+          ...flyt.resultat,
           vedtakValg: formValues.vedtak,
           innvilgelseValg: formValues?.innvilgelse,
           bestemmelseValg: formValues?.bestemmelse,
@@ -85,14 +83,20 @@ const VurderingBestemmelse = ({
 
       <Nav.Fieldset legend="Kan du fatte vedtak?">
         {vedtakValg?.map((valg) => (
-          <Skjema.Radio key={valg} feltNavn="vedtak" label={valg} value={valg} disabled={!redigerbart} />
+          <Skjema.Radio key={valg.kode} feltNavn="vedtak" label={valg.term} value={valg.kode} disabled={!redigerbart} />
         ))}
       </Nav.Fieldset>
 
       {formValues?.vedtak && innvilgelseValg && (
         <Nav.Fieldset legend="Skal søknaden innvilges?">
           {innvilgelseValg?.map((valg) => (
-            <Skjema.Radio key={valg} feltNavn="innvilgelse" label={valg} value={valg} disabled={!redigerbart} />
+            <Skjema.Radio
+              key={valg.kode}
+              feltNavn="innvilgelse"
+              label={valg.term}
+              value={valg.kode}
+              disabled={!redigerbart}
+            />
           ))}
         </Nav.Fieldset>
       )}
@@ -120,7 +124,7 @@ const VurderingBestemmelse = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={bestemmelseStegData?.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={bestemmelseSteg?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >

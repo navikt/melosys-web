@@ -1,7 +1,12 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { deleteAsJson, getAsJson, postAsJson } from "../../utils";
+import { deleteAsJson, getAsJson, putAsJson } from "../../utils";
 import { FLYT_BASE_URL } from "../../api-constants";
 import { StegNavn } from "../../../kodeverk/koder";
+
+export interface Virksomhet {
+  orgId: string;
+  navn: string;
+}
 
 export interface Resultat {
   fom?: string;
@@ -13,37 +18,34 @@ export interface Resultat {
   bestemmelseValg?: string;
 }
 
-export interface StegData {
-  steg: StegNavn;
+export interface Steg {
+  navn: StegNavn;
   status: string;
-  virksomheter?: string[];
-  vedtakValg?: string[];
-  innvilgelseValg?: string[];
+  nummer: number;
+}
+
+export interface StegData {
+  virksomheter?: Virksomhet[];
+  vedtakValg?: KTObject[];
+  innvilgelseValg?: KTObject[];
   bestemmelseValg?: KTObject[];
   barn?: string[];
   ektefelle?: string;
-  resultat?: Resultat;
 }
 
-export type StegDataResDto = StegData[];
+export type FlytResDto = {
+  steg: Steg[];
+  resultat: Resultat;
+  data: StegData;
+};
 
-export interface StegDataReqDto {
-  stegId: StegNavn;
-  stegData: {
-    fom?: string;
-    tom?: string;
-    land?: string[];
-    virksomheter?: string[];
-    vedtakValg?: string;
-    innvilgelseValg?: string;
-    bestemmelseValg?: string;
-  };
+export interface FlytReqDto {
+  resultat: Resultat;
 }
 
-export const hentStegData = (behandlingID: number): Promise<StegDataResDto> =>
-  getAsJson(`${FLYT_BASE_URL}${behandlingID}`);
+export const hentStegData = (behandlingID: number): Promise<FlytResDto> => getAsJson(`${FLYT_BASE_URL}${behandlingID}`);
 
-export const sendStegData = (behandlingID: number, data: StegDataReqDto): Promise<StegDataResDto> =>
-  postAsJson(`${FLYT_BASE_URL}${behandlingID}`, data);
+export const sendStegData = (behandlingID: number, data: FlytReqDto): Promise<FlytResDto> =>
+  putAsJson(`${FLYT_BASE_URL}${behandlingID}`, data);
 
 export const slettStegData = (behandlingID: number) => deleteAsJson(`${FLYT_BASE_URL}${behandlingID}`);

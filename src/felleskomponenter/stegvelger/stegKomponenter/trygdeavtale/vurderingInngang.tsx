@@ -13,7 +13,7 @@ import * as Utils from "../../../../utils";
 import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
-import { StegData, StegDataReqDto } from "../../../../services/modules/trygdeavtale/flyt";
+import { FlytReqDto, FlytResDto } from "../../../../services/modules/trygdeavtale/flyt";
 import { StegNavn } from "../../../../kodeverk/koder";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
@@ -21,21 +21,18 @@ import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
 
-const initializeValues = (stegData: StegData | undefined) => ({
-  fom: stegData?.resultat?.fom ? Utils.dato.formatterDatoTilNorsk(stegData.resultat.fom) : undefined,
-  tom: stegData?.resultat?.tom ? Utils.dato.formatterDatoTilNorsk(stegData.resultat.tom) : undefined,
-  land: stegData?.resultat?.land ? stegData.resultat.land[0] : undefined,
+const initializeValues = (flyt: FlytResDto | undefined) => ({
+  fom: flyt?.resultat?.fom ? Utils.dato.formatterDatoTilNorsk(flyt.resultat.fom) : undefined,
+  tom: flyt?.resultat?.tom ? Utils.dato.formatterDatoTilNorsk(flyt.resultat.tom) : undefined,
+  land: flyt?.resultat?.land ? flyt.resultat.land[0] : undefined,
 });
 
-const mapStateToProps = (state: RootState, ownProps: Props) => {
-  const inngangStegData = ownProps.stegData?.find((steg) => steg.steg === StegNavn.INNGANG);
-  return {
-    inngangStegData,
-    formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
-    initialValues: initializeValues(inngangStegData),
-    formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
-  };
-};
+const mapStateToProps = (state: RootState, ownProps: Props) => ({
+  inngangsSteg: ownProps.flyt.steg?.find((steg) => steg.navn === StegNavn.INNGANG),
+  formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
+  initialValues: initializeValues(ownProps.flyt),
+  formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
+});
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
@@ -57,19 +54,20 @@ interface Props {
   formValues: FormValuesProps;
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
   redigerbart: boolean;
-  stegData: StegData[];
+  flyt: FlytResDto;
   tilForsiden: () => void;
-  oppdaterStegData: (data: StegDataReqDto) => void;
+  oppdaterStegData: (data: FlytReqDto) => void;
   slettStegData: () => void;
 }
 
 const VurderingInngang = ({
   annenBehandlingOppfriskes,
+  flyt,
   formValues,
   formIsValid,
   fortsett,
   initialValues,
-  inngangStegData,
+  inngangsSteg,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   redigerbart,
   tilForsiden,
@@ -85,7 +83,7 @@ const VurderingInngang = ({
       {hjelpetekst}
     </Nav.Hjelpetekst>
   );
-  const landkoder = [{ kode: "GB", term: "Storbritannia" }]; // TODO: temp
+  const landkoder = [{ kode: "UK", term: "Storbritannia" }]; // TODO: temp
 
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
@@ -97,11 +95,12 @@ const VurderingInngang = ({
   const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
       const requestData = {
+        ...flyt.resultat,
         fom: data.formValues.fom ? Utils.dato.formatterDatoTilISO(data.formValues.fom) : undefined,
         tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
         land: data.formValues.land ? [data.formValues.land] : [],
       };
-      oppdaterStegData({ stegId: KV.Koder.StegNavn.INNGANG, stegData: requestData });
+      oppdaterStegData({ resultat: requestData });
     }
   };
   const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
@@ -155,7 +154,7 @@ const VurderingInngang = ({
       <div className="fane__knapplinje">
         <Nav.Hovedknapp
           mini
-          disabled={inngangStegData?.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={inngangsSteg?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsettHandle}
         >
