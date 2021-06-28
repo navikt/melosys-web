@@ -5,12 +5,15 @@ schema:
 documents: "src/**/*.gql"
 config:
   scalars:
+    # Mapper custom scalars i graphql-skjemaet til typescript-typer.
     Date: string
     DateTime: string
     Long: number
 generates:
   src/graphql/generated/types.ts:
     - typescript
+
+  # Genererer react-hooks for operations på samme sted som operations er definert.
   src/:
     preset: near-operation-file
     presetConfig:
@@ -19,12 +22,15 @@ generates:
     plugins:
       - typescript-operations
       - typescript-react-apollo
+
+  # Genererer sdk til bruk utenfor react-komponenter.
   src/graphql/generated/getSdk.ts:
     plugins:
       - typescript
       - typescript-operations
-      # Fant ingen måte å peke typescript-generic-sdk til typer generert i src/graphql/generated/types.ts.
-      # Derfor genereres typene også i src/graphql/generated/getSdk.ts.
       - typescript-generic-sdk
     config:
+      # Fant ingen måte å peke typescript-generic-sdk til typer generert i src/graphql/generated/types.ts,
+      # derfor genereres typene også i src/graphql/generated/getSdk.ts.
+      # Siden typene allerede er generert i src/graphql/generated/types.ts er det ikke nødvendig å eksportere de her.
       noExport: true
