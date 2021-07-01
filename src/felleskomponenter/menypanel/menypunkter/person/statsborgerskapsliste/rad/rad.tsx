@@ -2,6 +2,7 @@ import React from "react";
 import classNames from "classnames";
 
 import * as Nav from "../../../../../../utils/navFrontend";
+import * as Utils from "../../../../../../utils";
 
 import { Statsborgerskap } from "../../../../../../graphql";
 
@@ -27,6 +28,8 @@ const Rad = ({
     "statsborgerskapsliste__rad--groenn": gyldigFomFarge === "groenn",
   });
 
+  const bekreftelsesdatoNorsk = Utils.dato.formatterDatoTilNorsk(bekreftelsesdato);
+
   return (
     <Nav.Row className={cls}>
       <Nav.Column xs="2">
@@ -36,10 +39,10 @@ const Rad = ({
         <Nav.Typo.Normaltekst>{master}</Nav.Typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="3">
-        <Nav.Typo.Normaltekst>{kilde}</Nav.Typo.Normaltekst>
+        <Nav.Typo.Normaltekst>{kilde || ""}</Nav.Typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="3">
-        <Nav.Typo.Normaltekst>{bekreftelsesdato}</Nav.Typo.Normaltekst>
+        <Nav.Typo.Normaltekst>{bekreftelsesdatoNorsk || ""}</Nav.Typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="2">
         <Nav.Typo.Normaltekst className={gyldigFomCls}>
