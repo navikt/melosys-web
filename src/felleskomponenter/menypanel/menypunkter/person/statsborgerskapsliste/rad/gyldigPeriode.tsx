@@ -11,8 +11,8 @@ interface GyldigPeriodeProps {
 }
 
 const GyldigPeriode = ({ periode: { fom, tom }, erHistorisk }: GyldigPeriodeProps) => {
-  const fomNorsk = Utils.dato.formatterDatoTilNorsk(fom);
-  const tomNorsk = Utils.dato.formatterDatoTilNorsk(tom);
+  const fomNorsk = fom ? Utils.dato.formatterDatoTilNorsk(fom) : "";
+  const tomNorsk = tom ? Utils.dato.formatterDatoTilNorsk(tom) : "";
 
   if (erHistorisk) {
     if (fomNorsk || tomNorsk) return <>{`${fomNorsk} - ${tomNorsk}`}</>;
