@@ -10,16 +10,16 @@ export type HentStatsborgerskapQueryVariables = Types.Exact<{
 
 export type HentStatsborgerskapQuery = (
   { __typename?: 'Query' }
-  & { hentSaksopplysninger?: Types.Maybe<(
+  & { hentSaksopplysninger: (
     { __typename?: 'Saksopplysninger' }
-    & { persondata?: Types.Maybe<(
+    & { persondata: (
       { __typename?: 'Personopplysninger' }
       & { statsborgerskap: Array<(
         { __typename?: 'Statsborgerskap' }
         & Pick<Types.Statsborgerskap, 'land' | 'bekreftelsesdato' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'master' | 'kilde' | 'erHistorisk'>
       )> }
-    )> }
-  )> }
+    ) }
+  ) }
 );
 
 

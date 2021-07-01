@@ -20,14 +20,14 @@ const Statsborgerkapsliste = ({ behandlingID }: StatsborgerkapslisteProps) => {
   const { loading, error, data } = useHentStatsborgerskapQuery({ variables: { behandlingID } });
 
   if (error) return <Nav.AlertStripe type="feil">Kunne ikke hente statsborgerskap!</Nav.AlertStripe>;
-  if (loading || !data?.hentSaksopplysninger?.persondata?.statsborgerskap) return <div>Laster statsborgerskap...</div>;
+  if (loading) return <div>Laster statsborgerskap...</div>;
 
-  const gyldigeStatsborgerskap = data.hentSaksopplysninger.persondata.statsborgerskap.filter(
-    (statsborgerskap) => !statsborgerskap.erHistorisk
-  );
-  const historiskeStatsborgerskap = data.hentSaksopplysninger.persondata.statsborgerskap.filter(
-    (statsborgerskap) => statsborgerskap.erHistorisk
-  );
+  const gyldigeStatsborgerskap =
+    data?.hentSaksopplysninger.persondata.statsborgerskap.filter((statsborgerskap) => !statsborgerskap.erHistorisk) ||
+    [];
+  const historiskeStatsborgerskap =
+    data?.hentSaksopplysninger.persondata.statsborgerskap.filter((statsborgerskap) => statsborgerskap.erHistorisk) ||
+    [];
 
   return (
     <div className="statsborgerskapsliste">

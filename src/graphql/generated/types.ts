@@ -27,7 +27,7 @@ export type Personopplysninger = {
 
 export type Query = {
   __typename?: 'Query';
-  hentSaksopplysninger?: Maybe<Saksopplysninger>;
+  hentSaksopplysninger: Saksopplysninger;
 };
 
 
@@ -38,7 +38,7 @@ export type QueryHentSaksopplysningerArgs = {
 export type Saksopplysninger = {
   __typename?: 'Saksopplysninger';
   behandlingID: Scalars['Long'];
-  persondata?: Maybe<Personopplysninger>;
+  persondata: Personopplysninger;
 };
 
 export type Statsborgerskap = {
@@ -47,7 +47,7 @@ export type Statsborgerskap = {
   bekreftelsesdato?: Maybe<Scalars['Date']>;
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   gyldigTilOgMed?: Maybe<Scalars['Date']>;
-  master?: Maybe<Scalars['String']>;
+  master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
-  erHistorisk?: Maybe<Scalars['Boolean']>;
+  erHistorisk: Scalars['Boolean'];
 };

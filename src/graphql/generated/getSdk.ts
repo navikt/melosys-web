@@ -29,7 +29,7 @@ type Personopplysninger = {
 
 type Query = {
   __typename?: 'Query';
-  hentSaksopplysninger?: Maybe<Saksopplysninger>;
+  hentSaksopplysninger: Saksopplysninger;
 };
 
 
@@ -40,7 +40,7 @@ type QueryHentSaksopplysningerArgs = {
 type Saksopplysninger = {
   __typename?: 'Saksopplysninger';
   behandlingID: Scalars['Long'];
-  persondata?: Maybe<Personopplysninger>;
+  persondata: Personopplysninger;
 };
 
 type Statsborgerskap = {
@@ -49,9 +49,9 @@ type Statsborgerskap = {
   bekreftelsesdato?: Maybe<Scalars['Date']>;
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   gyldigTilOgMed?: Maybe<Scalars['Date']>;
-  master?: Maybe<Scalars['String']>;
+  master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
-  erHistorisk?: Maybe<Scalars['Boolean']>;
+  erHistorisk: Scalars['Boolean'];
 };
 
 type HentStatsborgerskapQueryVariables = Exact<{
@@ -61,16 +61,16 @@ type HentStatsborgerskapQueryVariables = Exact<{
 
 type HentStatsborgerskapQuery = (
   { __typename?: 'Query' }
-  & { hentSaksopplysninger?: Maybe<(
+  & { hentSaksopplysninger: (
     { __typename?: 'Saksopplysninger' }
-    & { persondata?: Maybe<(
+    & { persondata: (
       { __typename?: 'Personopplysninger' }
       & { statsborgerskap: Array<(
         { __typename?: 'Statsborgerskap' }
         & Pick<Statsborgerskap, 'land' | 'bekreftelsesdato' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'master' | 'kilde' | 'erHistorisk'>
       )> }
-    )> }
-  )> }
+    ) }
+  ) }
 );
 
 
