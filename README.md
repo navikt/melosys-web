@@ -4,6 +4,9 @@ Dette er prosjektet for Melosys - Medlems og Lovvalgssystem.
 ## Plattform
 Frontend bygger på React og Redux. For detaljer og dokumentasjon, se intern Confluence.
 
+Applikasjonen er opprinnelig skrevet i javascript, men ny kode skal helst skrives i typescript der det er mulig.
+
+
 ## Utvikling på laptop
 
 ### Bygging
