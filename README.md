@@ -6,6 +6,18 @@ Frontend bygger på React og Redux. For detaljer og dokumentasjon, se intern Con
 
 Applikasjonen er opprinnelig skrevet i javascript, men ny kode skal helst skrives i typescript der det er mulig.
 
+## Struktur
+Nedenfor er en beskrivelse av komponent- og containerstruktur i prosjektet.
+Oversikten er ikke uttømmende, men er ment å gi en idé om den overordnede
+arkitekturen for prosjektet.
+
+### Sider (./src/sider)
+Dette er selvstående skjermbilder / sider. Sider kan normalt ikke kombineres eller nøstes, men
+er individuelle og tar hele nettleser-flaten.
+
+### Felles komponenter (./src/felles-komponenter)
+Dette er komponenter som gjenbrukes i diverse
+sider. Komponenter kan også nøste hverandre.
 
 ## Utvikling på laptop
 
