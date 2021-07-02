@@ -12,7 +12,7 @@ export const BehandlingsgrunnlagFeilmeldinger = ({ panelFeil }) => {
 
   return (
     <Nav.AlertStripe className="feilmelding" type="advarsel">
-      Ugyldige felter. Sjekk følgende panel(er):
+      Ugyldige felter. Sjekk følgende menypunkt(er):
       <ul>
         {panelFeil.map(({ panel, feil }) => (
           <Fragment key={panel}>
