@@ -128,5 +128,6 @@
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
-  }
+  },
+  "ignorePatterns": ["**/*generated.tsx"]
 }

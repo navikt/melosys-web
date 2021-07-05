@@ -7,9 +7,10 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as Etiketter from "../../etiketter";
 import * as Api from "../../../../services/api";
+import * as Mui from "../../../ui";
+import * as Ikoner from "../../../../resources/images";
 
 import PersonInfo from "./personinfo";
-
 import RegisterAdresse from "../../../adresser/registerAdresse";
 import StrukturertAdresse from "../../../adresser/strukturertAdresse";
 import UstrukturertAdresse from "../../../adresser/ustrukturertAdresse";
@@ -17,8 +18,11 @@ import EnkeltDato from "../../../datoOmrade/enkeltDato";
 import AnnenAdresse from "./annenadresse";
 import UtenlandskIdent from "./utenlandskident";
 import ExpandableList from "../../../expandablelist";
+import Statsborgerskapsliste from "./statsborgerskapsliste";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 import "./person.css";
 
@@ -60,6 +64,7 @@ export const AdresseHeader = ({ adresseTittel }: AdresseHeaderProps) => (
 const mapStateToProps = (state: RootState) => ({
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -78,12 +83,15 @@ export const Person = ({
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
   visBehandlingsgrunnlagData,
+  behandlingID,
 }: PersonProps) => {
   const {
     bostedsadressePerioder,
     postadressePerioder,
     midlertidigAdressePerioder,
   } = personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
+
+  const visFlereStatsborgerskapToggle = useFeatureToggle("melosys.vis_flere_statsborgerskap");
 
   if (Object.keys(person).length === 0) {
     return null;
@@ -101,6 +109,18 @@ export const Person = ({
           <PersonInfo person={person} />
         </Nav.Column>
       </Nav.Row>
+      {visFlereStatsborgerskapToggle === "enabled" && (
+        <Nav.Row className="statsborgerskapsliste-row">
+          <Nav.Column xs="12">
+            <Mui.Undertittel
+              ikon={Ikoner.Globe}
+              tekst="Statsborgerskap"
+              className="statsborgerskapsliste-row__tittel"
+            />
+            <Statsborgerskapsliste behandlingID={behandlingID} />
+          </Nav.Column>
+        </Nav.Row>
+      )}
       <Nav.Row className="registrerteAdresser">
         <Nav.Column xs="12">
           {bostedsadressePerioder.length > 0 && (
