@@ -5,15 +5,13 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { reduxForm, change, getFormValues } from "redux-form";
 
+import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 
 import { formSelectors } from "../../../../ducks/form";
-import { Virksomhet, FlytReqDto, FlytResDto } from "../../../../services/modules/trygdeavtale/flyt";
-import { StegNavn } from "../../../../kodeverk/koder";
-
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 
@@ -21,11 +19,11 @@ import "./vurderingAvklarVirksomhet.css";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   virksomheterListe:
-    ownProps.flyt.data?.virksomheter?.map((virksomhet: Virksomhet) => ({
+    ownProps.flyt.data?.virksomheter?.map((virksomhet: Api.Trygdeavtale.Virksomhet) => ({
       kode: virksomhet.orgId,
       term: virksomhet.navn,
     })) || [],
-  avklarVirksomhetSteg: ownProps.flyt.steg?.find((steg) => steg.navn === StegNavn.AVKLAR_VIRKSOMHET),
+  avklarVirksomhetSteg: ownProps.flyt.steg?.find((steg) => steg.navn === KV.Koder.StegNavn.AVKLAR_VIRKSOMHET),
   formValues: getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
   initialValues: {
     virksomheter: ownProps.flyt.resultat?.virksomheter,
@@ -50,8 +48,8 @@ interface Props {
   formValues: FormValuesProps;
   redigerbart: boolean;
   tilbake: () => void;
-  oppdaterStegData: (data: FlytReqDto) => void;
-  flyt: FlytResDto;
+  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  flyt: Api.Trygdeavtale.FlytResDto;
 }
 
 const VurderingAvklarVirksomhet = ({
