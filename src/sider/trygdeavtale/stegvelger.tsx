@@ -83,7 +83,7 @@ class Stegvelger extends Component<Props, State> {
 
   componentDidMount() {
     Api.Trygdeavtale.hentStegData(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
     setTimeout(() => this.setState({ oppstartErFerdig: true }), 500);
   }
@@ -116,11 +116,11 @@ class Stegvelger extends Component<Props, State> {
 
   oppdaterStegData = (request: Api.Trygdeavtale.FlytReqDto) => {
     Api.Trygdeavtale.sendStegData(this.props.behandlingID, request).then((response) =>
-      this.setState({ aktuelleSteg: this.mapOmTilAktuelleSteg(response) })
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
   };
 
-  mapOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
+  mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {
       redigerbart: this.props.redigerbart,
       flyt: response,
@@ -154,12 +154,12 @@ class Stegvelger extends Component<Props, State> {
   lagreBehandlingsgrunnlagOgOppdaterStegData = async () => {
     const {
       props: { lagreBehandlingsgrunnlag, behandlingID },
-      mapOmTilAktuelleSteg,
+      mapFlytResDtoOmTilAktuelleSteg,
     } = this;
 
     await lagreBehandlingsgrunnlag();
     Api.Trygdeavtale.hentStegData(behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: mapOmTilAktuelleSteg(response), skalLagreBehandlingsgrunnlag: false })
+      this.setState({ aktuelleSteg: mapFlytResDtoOmTilAktuelleSteg(response), skalLagreBehandlingsgrunnlag: false })
     );
   };
 
