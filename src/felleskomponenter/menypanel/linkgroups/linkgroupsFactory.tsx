@@ -20,6 +20,7 @@ const {
   ØVRIGE_SED_UFM,
   TRYGDETID,
   ARBEID_I_UTLANDET,
+  TRYGDEAVTALE_UK,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
@@ -107,16 +108,8 @@ class LinkGroupsFactory {
           )
           .build();
       }
+      case TRYGDEAVTALE_UK:
       case ARBEID_I_UTLANDET: {
-        return new LinkgroupsBuilder()
-          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
-          .addFraRegister(
-            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
-          )
-          .addFraSoknad(new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().build())
-          .build();
-      }
-      case "TRYGDEAVTALE": {
         return new LinkgroupsBuilder()
           .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
