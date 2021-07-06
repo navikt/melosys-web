@@ -7,9 +7,9 @@ import * as MPT from "../../proptypes";
 import * as Nav from "../../utils/navFrontend";
 import * as Utils from "../../utils";
 
+import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
-import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Behandlingsmeny from "../ftrl/saksbehandling/behandlingsmeny";
