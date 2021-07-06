@@ -182,7 +182,7 @@ class Stegvelger extends Component<Props, State> {
         this.setState({
           aktivtStegIndex: nesteStegIndex,
           skalLagreBehandlingsgrunnlag: false,
-          aktuelleSteg: aktuelleSteg?.map((steg: AktueltSteg) => ({
+          aktuelleSteg: aktuelleSteg.map((steg: AktueltSteg) => ({
             ...steg,
             aktivtSteg: steg.stegPosisjon === nesteStegIndex,
           })),
@@ -213,7 +213,7 @@ class Stegvelger extends Component<Props, State> {
             {aktuelleSteg && (
               <div>
                 <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-                {aktuelleSteg?.map((item: AktueltSteg) => (
+                {aktuelleSteg.map((item: AktueltSteg) => (
                   <StegFane key={item.id} faneData={item} />
                 ))}
               </div>

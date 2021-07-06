@@ -24,7 +24,7 @@ import "./vurderingInngang.css";
 const initializeValues = (flyt: FlytResDto | undefined) => ({
   fom: flyt?.resultat?.fom ? Utils.dato.formatterDatoTilNorsk(flyt.resultat.fom) : undefined,
   tom: flyt?.resultat?.tom ? Utils.dato.formatterDatoTilNorsk(flyt.resultat.tom) : undefined,
-  land: flyt?.resultat?.land ? flyt.resultat.land[0] : undefined,
+  land: flyt?.resultat?.land?.[0],
 });
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
