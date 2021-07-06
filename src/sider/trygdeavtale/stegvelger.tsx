@@ -119,6 +119,7 @@ class Stegvelger extends Component<Props, State> {
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
   };
+  debouncedOppdaterStegData = Utils._debounce(this.oppdaterStegData, 100);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {
@@ -132,7 +133,7 @@ class Stegvelger extends Component<Props, State> {
     const handlers = {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
-      oppdaterStegData: this.oppdaterStegData,
+      oppdaterStegData: this.debouncedOppdaterStegData,
       slettStegData: this.slettStegData,
       tilForsiden: this.props.tilForsiden,
     };
