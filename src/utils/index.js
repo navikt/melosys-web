@@ -1,5 +1,6 @@
 import {
   capitalize,
+  isEqual,
   isFunction,
   isNil,
   isNumber,
@@ -40,7 +41,6 @@ import {
   queryParamsTilObjekt,
   erPropertyUnik,
   finnVerdierMedKey,
-  isEqual,
 } from "./utils";
 
 const uuid = require("uuid/v4");
@@ -54,7 +54,6 @@ export {
   queryParamsTilObjekt,
   erPropertyUnik,
   finnVerdierMedKey,
-  isEqual,
   adresse,
   dato,
   streng,
@@ -67,6 +66,7 @@ export {
   capitalize as _capitalize,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
+  isEqual as _isEqual,
   isNil as _isNil,
   isNumber as _isNumber,
   isString as _isString,

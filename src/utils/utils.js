@@ -88,27 +88,3 @@ function finnVerdierMedKeyHjelper(obj, key, list, finnParent) {
 export function finnVerdierMedKey(obj, key, finnParent = false) {
   return finnVerdierMedKeyHjelper(obj, key, [], finnParent);
 }
-
-export function isEqual(listA, listB, canEitherBeUndefined = false) {
-  if (!listA && !listB) {
-    return true;
-  }
-  if (!listA || !listB) {
-    return canEitherBeUndefined;
-  }
-  if (listA.length !== listB.length) {
-    return false;
-  }
-  for (let i = 0; i < listA.length; i += 1) {
-    if (listA[i] instanceof Array && listB[i] instanceof Array) {
-      if (!isEqual(listA, listB)) {
-        return false;
-      }
-    }
-    // eslint-disable-next-line eqeqeq
-    else if (listA[i] != listB[i]) {
-      return false;
-    }
-  }
-  return true;
-}

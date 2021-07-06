@@ -107,8 +107,11 @@ class Stegvelger extends Component<Props, State> {
 
   behandlingsGrunnlagSkalEndres = () => this.setState({ skalLagreBehandlingsgrunnlag: true });
 
-  harEndringer = (propsObject: any, prevPropsObject: any, path: string) =>
-    !Utils.isEqual(getValueAtPath(propsObject, path), getValueAtPath(prevPropsObject, path), true);
+  harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
+    const propsValue = getValueAtPath(propsObject, path);
+    const prevPropsValue = getValueAtPath(prevPropsObject, path);
+    return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
+  };
 
   slettStegData = () => {
     Api.Trygdeavtale.slettStegData(this.props.behandlingID);
