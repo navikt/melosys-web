@@ -1,5 +1,5 @@
 import { object, string } from "yup";
-import * as KV from "../../../../kodeverk";
+import * as KV from "../../../kodeverk";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 

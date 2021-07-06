@@ -5,14 +5,14 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { reduxForm, change, getFormValues } from "redux-form";
 
-import * as Api from "../../../../services/api";
-import * as KV from "../../../../kodeverk";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Nav from "../../../../utils/navFrontend";
-import * as Utils from "../../../../utils";
+import * as Api from "../../../services/api";
+import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../utils/navFrontend";
+import * as Utils from "../../../utils";
 
-import { formSelectors } from "../../../../ducks/form";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { formSelectors } from "../../../ducks/form";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 
 import "./vurderingAvklarVirksomhet.css";

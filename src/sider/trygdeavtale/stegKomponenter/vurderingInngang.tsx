@@ -5,17 +5,17 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 
-import * as Api from "../../../../services/api";
-import * as KV from "../../../../kodeverk";
-import * as Nav from "../../../../utils/navFrontend";
-import * as Skjema from "../../../skjema";
-import * as Utils from "../../../../utils";
+import * as Api from "../../../services/api";
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Utils from "../../../utils";
 
-import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
-import { menypanelOperations } from "../../../../ducks/menypanel";
-import { formSelectors } from "../../../../ducks/form";
+import DialogboksOppfriskSak from "../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
+import { menypanelOperations } from "../../../ducks/menypanel";
+import { formSelectors } from "../../../ducks/form";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";

@@ -4,14 +4,14 @@ import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import * as Api from "../../../../services/api";
-import * as KV from "../../../../kodeverk";
-import * as Nav from "../../../../utils/navFrontend";
-import * as Skjema from "../../../skjema";
+import * as Api from "../../../services/api";
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../utils/navFrontend";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
-import { formSelectors } from "../../../../ducks/form";
+import { formSelectors } from "../../../ducks/form";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.css";
