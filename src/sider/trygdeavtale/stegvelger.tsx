@@ -122,8 +122,9 @@ class Stegvelger extends Component<Props, State> {
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {
+      data: response.data,
+      resultat: response.resultat,
       redigerbart: this.props.redigerbart,
-      flyt: response,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
       lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     };
@@ -145,7 +146,7 @@ class Stegvelger extends Component<Props, State> {
         aktivtSteg: this.state.aktivtStegIndex === singelSteg.nummer,
         komponent: stegMapElement.komponent,
         status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-        data,
+        data: { ...data, steg: singelSteg },
         handlers,
       };
     });

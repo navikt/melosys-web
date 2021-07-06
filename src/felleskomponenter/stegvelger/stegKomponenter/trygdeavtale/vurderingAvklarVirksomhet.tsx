@@ -19,14 +19,13 @@ import "./vurderingAvklarVirksomhet.css";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   virksomheterListe:
-    ownProps.flyt.data?.virksomheter?.map((virksomhet: Api.Trygdeavtale.Virksomhet) => ({
+    ownProps.data?.virksomheter?.map((virksomhet: Api.Trygdeavtale.Virksomhet) => ({
       kode: virksomhet.orgId,
       term: virksomhet.navn,
     })) || [],
-  avklarVirksomhetSteg: ownProps.flyt.steg?.find((steg) => steg.navn === KV.Koder.StegNavn.AVKLAR_VIRKSOMHET),
   formValues: getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
   initialValues: {
-    virksomheter: ownProps.flyt.resultat?.virksomheter,
+    virksomheter: ownProps.resultat?.virksomheter,
   },
   formIsValid: formSelectors.TrygdeavtaleAvklarVirksomhetFormValidSelector(state),
 });
@@ -44,22 +43,24 @@ interface FormValuesProps {
   virksomheter?: string[];
 }
 interface Props {
+  data: Api.Trygdeavtale.StegData;
   fortsett: () => void;
   formValues: FormValuesProps;
   redigerbart: boolean;
+  resultat: Api.Trygdeavtale.Resultat;
+  steg: Api.Trygdeavtale.Steg;
   tilbake: () => void;
   oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
-  flyt: Api.Trygdeavtale.FlytResDto;
 }
 
 const VurderingAvklarVirksomhet = ({
-  avklarVirksomhetSteg,
   changeValgteVirksomheter,
-  flyt,
   formValues,
   formIsValid,
   fortsett,
   redigerbart,
+  resultat,
+  steg,
   oppdaterStegData,
   tilbake,
   virksomheterListe,
@@ -71,7 +72,7 @@ const VurderingAvklarVirksomhet = ({
   const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
       oppdaterStegData({
-        resultat: { ...flyt.resultat, virksomheter: data.formValues.virksomheter || [] },
+        resultat: { ...resultat, virksomheter: data.formValues.virksomheter || [] },
       });
     }
   };
@@ -103,7 +104,7 @@ const VurderingAvklarVirksomhet = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={avklarVirksomhetSteg?.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={steg?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >

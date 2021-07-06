@@ -4,13 +4,12 @@ import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
+import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
 
 import { formSelectors } from "../../../../ducks/form";
-import { FlytReqDto, FlytResDto } from "../../../../services/modules/trygdeavtale/flyt";
-import { StegNavn } from "../../../../kodeverk/koder";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
@@ -18,17 +17,16 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import "./vurderingBestemmelse.css";
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
-  bestemmelseSteg: ownProps.flyt.steg?.find((steg) => steg.navn === StegNavn.BESTEMMELSE),
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
   initialValues: {
-    vedtak: ownProps.flyt.resultat?.vedtakValg || undefined,
-    innvilgelse: ownProps.flyt.resultat?.innvilgelseValg || undefined,
-    bestemmelse: ownProps.flyt.resultat?.bestemmelseValg || undefined,
+    vedtak: ownProps.resultat?.vedtakValg || undefined,
+    innvilgelse: ownProps.resultat?.innvilgelseValg || undefined,
+    bestemmelse: ownProps.resultat?.bestemmelseValg || undefined,
   },
-  bestemmelseValg: ownProps.flyt.data?.bestemmelseValg || undefined,
-  innvilgelseValg: ownProps.flyt.data?.innvilgelseValg || undefined,
-  vedtakValg: ownProps.flyt.data?.vedtakValg || undefined,
+  bestemmelseValg: ownProps.data?.bestemmelseValg || undefined,
+  innvilgelseValg: ownProps.data?.innvilgelseValg || undefined,
+  vedtakValg: ownProps.data?.vedtakValg || undefined,
 });
 
 const connector = connect(mapStateToProps, {});
@@ -42,24 +40,26 @@ interface FormValuesProps {
 }
 
 interface Props {
+  data: Api.Trygdeavtale.StegData;
   formValues: FormValuesProps;
   fortsett: () => void;
   tilbake: () => void;
   redigerbart: boolean;
-  oppdaterStegData: (data: FlytReqDto) => void;
-  flyt: FlytResDto;
+  resultat: Api.Trygdeavtale.Resultat;
+  steg: Api.Trygdeavtale.Steg;
+  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
 }
 
 const VurderingBestemmelse = ({
-  bestemmelseSteg,
   bestemmelseValg,
-  flyt,
   formIsValid,
   formValues,
   fortsett,
   innvilgelseValg,
   tilbake,
   redigerbart,
+  resultat,
+  steg,
   oppdaterStegData,
   vedtakValg,
 }: PropsFromRedux & Props) => {
@@ -67,7 +67,7 @@ const VurderingBestemmelse = ({
     if (formValues?.vedtak) {
       oppdaterStegData({
         resultat: {
-          ...flyt.resultat,
+          ...resultat,
           vedtakValg: formValues.vedtak,
           innvilgelseValg: formValues?.innvilgelse,
           bestemmelseValg: formValues?.bestemmelse,
@@ -124,7 +124,7 @@ const VurderingBestemmelse = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={bestemmelseSteg?.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={steg?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >

@@ -5,6 +5,7 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 
+import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../skjema";
@@ -13,24 +14,21 @@ import * as Utils from "../../../../utils";
 import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
-import { FlytReqDto, FlytResDto } from "../../../../services/modules/trygdeavtale/flyt";
-import { StegNavn } from "../../../../kodeverk/koder";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
 
-const initializeValues = (flyt: FlytResDto | undefined) => ({
-  fom: flyt?.resultat?.fom ? Utils.dato.formatterDatoTilNorsk(flyt.resultat.fom) : undefined,
-  tom: flyt?.resultat?.tom ? Utils.dato.formatterDatoTilNorsk(flyt.resultat.tom) : undefined,
-  land: flyt?.resultat?.land?.[0],
+const initializeValues = (resultat: Api.Trygdeavtale.Resultat | undefined) => ({
+  fom: resultat?.fom ? Utils.dato.formatterDatoTilNorsk(resultat.fom) : undefined,
+  tom: resultat?.tom ? Utils.dato.formatterDatoTilNorsk(resultat.tom) : undefined,
+  land: resultat?.land?.[0],
 });
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
-  inngangsSteg: ownProps.flyt.steg?.find((steg) => steg.navn === StegNavn.INNGANG),
   formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
-  initialValues: initializeValues(ownProps.flyt),
+  initialValues: initializeValues(ownProps.resultat),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
 });
 
@@ -54,22 +52,23 @@ interface Props {
   formValues: FormValuesProps;
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
   redigerbart: boolean;
-  flyt: FlytResDto;
+  resultat: Api.Trygdeavtale.Resultat;
+  steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
-  oppdaterStegData: (data: FlytReqDto) => void;
+  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
   // slettStegData: () => void;
 }
 
 const VurderingInngang = ({
   annenBehandlingOppfriskes,
-  flyt,
   formValues,
   formIsValid,
   fortsett,
   initialValues,
-  inngangsSteg,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   redigerbart,
+  resultat,
+  steg,
   tilForsiden,
   oppdaterStegData,
   // slettStegData,
@@ -95,7 +94,7 @@ const VurderingInngang = ({
   const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
       const requestData = {
-        ...flyt.resultat,
+        ...resultat,
         fom: data.formValues.fom ? Utils.dato.formatterDatoTilISO(data.formValues.fom) : undefined,
         tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
         land: data.formValues.land ? [data.formValues.land] : [],
@@ -154,7 +153,7 @@ const VurderingInngang = ({
       <div className="fane__knapplinje">
         <Nav.Hovedknapp
           mini
-          disabled={inngangsSteg?.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={steg?.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsettHandle}
         >
