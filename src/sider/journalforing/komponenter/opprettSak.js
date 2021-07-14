@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
@@ -22,6 +22,8 @@ const OpprettFagsak = (props) => {
   const { journalforingSkjemaVerdier } = props;
   const { settFeltInnhold } = props;
   const { opprettnysak_behandlingstema: valgtBehandlingstema, sakstype: valgtSakstype } = journalforingSkjemaVerdier;
+  const [ukjentFlereLandChecked, setUkjentFlereLandChecked] = useState(false);
+  const [valgteLand, setValgteLand] = useState([]);
 
   useEffect(() => {
     settFeltInnhold(
@@ -114,12 +116,31 @@ const OpprettFagsak = (props) => {
                 </Nav.Row>
               </Nav.Fieldset>
               <Nav.Fieldset legend="Land:">
+                <Nav.Row className="landcheckbox">
+                  <Skjema.Checkbox
+                    feltNavn="journalforingSoknadslandUkjentFlere"
+                    onClick={(e) => setUkjentFlereLandChecked(e.currentTarget.checked)}
+                    disabled={valgteLand.length > 0}
+                    label={
+                      <div>
+                        Flere EØS-land/Sveits. Ikke kjent hvilke
+                        <Nav.Hjelpetekst className="hjelpetekst" tittel="tittel" type={Nav.PopoverOrientering.Hoyre}>
+                          Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
+                          <br />
+                          Det er ikke mulig å legge til andre land i tillegg.
+                        </Nav.Hjelpetekst>
+                      </div>
+                    }
+                  />
+                </Nav.Row>
                 <Nav.Row className="">
                   <Nav.Column xs="12">
                     <Skjema.LandVelger
                       feltNavn="journalforingSoknadsland"
                       multiLand
                       errorConfig={{ submitFailed: true }}
+                      disabled={ukjentFlereLandChecked}
+                      onChange={setValgteLand}
                     />
                   </Nav.Column>
                 </Nav.Row>

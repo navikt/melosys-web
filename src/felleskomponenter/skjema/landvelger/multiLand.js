@@ -42,12 +42,15 @@ function MultiLand(props) {
 
     if (!valgteLand.includes(landkode)) {
       props.fields.push(landkode);
+      props.onChange?.(valgteLand.concat(landkode));
     }
   };
 
   const reduxSlettEttLand = (landkode) => {
     const index = props.fields.getAll().findIndex((item) => item === landkode);
-    return index > -1 && props.fields.remove(index);
+    if (index < 0) return;
+    props.fields.remove(index);
+    props.onChange?.(props.fields.getAll().filter((land) => land !== landkode));
   };
 
   const finnFlereLand = (verdi) =>
@@ -138,7 +141,7 @@ function MultiLand(props) {
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
         />
-        <Nav.Knapp htmlType="button" mini className="landliste__linje__knapp">
+        <Nav.Knapp htmlType="button" mini className="landliste__linje__knapp" disabled={disabled}>
           Legg til
         </Nav.Knapp>
       </div>
@@ -155,6 +158,7 @@ MultiLand.propTypes = {
   meta: PT.object.isRequired,
   disabled: PT.bool,
   bredde: PT.string,
+  onChange: PT.func,
   errorConfig: PT.object,
 };
 
@@ -163,6 +167,7 @@ MultiLand.defaultProps = {
   feil: {},
   disabled: false,
   bredde: "XL",
+  onChange: null,
   errorConfig: {},
 };
 
