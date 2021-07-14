@@ -25,6 +25,8 @@ import { FeatureToggle } from "../../featuretoggle";
 const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, error }) => {
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
+  const [ukjentFlereLandChecked, setUkjentFlereLandChecked] = useState(false);
+  const [valgteLand, setValgteLand] = useState([]);
 
   const { behandlingstema } = formValues;
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
@@ -155,7 +157,30 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                             feltNavn="land"
                             label="Land"
                             errorConfig={{ submitFailed: true }}
+                            disabled={ukjentFlereLandChecked}
+                            onChange={setValgteLand}
                           />
+                          {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+                            <Skjema.Checkbox
+                              feltNavn="journalforingSoknadslandUkjentFlere"
+                              onClick={(e) => setUkjentFlereLandChecked(e.currentTarget.checked)}
+                              disabled={valgteLand.length > 0}
+                              label={
+                                <div>
+                                  Flere EØS-land/Sveits. Ikke kjent hvilke
+                                  <Nav.Hjelpetekst
+                                    className="hjelpetekst"
+                                    tittel="tittel"
+                                    type={Nav.PopoverOrientering.Hoyre}
+                                  >
+                                    Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
+                                    <br />
+                                    Det er ikke mulig å legge til andre land i tillegg.
+                                  </Nav.Hjelpetekst>
+                                </div>
+                              }
+                            />
+                          )}
                         </FormSection>
                       </Fragment>
                     )}
