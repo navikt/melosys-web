@@ -42,15 +42,12 @@ function MultiLand(props) {
 
     if (!valgteLand.includes(landkode)) {
       props.fields.push(landkode);
-      props.onChange?.(valgteLand.concat(landkode));
     }
   };
 
   const reduxSlettEttLand = (landkode) => {
     const index = props.fields.getAll().findIndex((item) => item === landkode);
-    if (index < 0) return;
-    props.fields.remove(index);
-    props.onChange?.(props.fields.getAll().filter((land) => land !== landkode));
+    return index > -1 && props.fields.remove(index);
   };
 
   const finnFlereLand = (verdi) =>
@@ -158,7 +155,6 @@ MultiLand.propTypes = {
   meta: PT.object.isRequired,
   disabled: PT.bool,
   bredde: PT.string,
-  onChange: PT.func,
   errorConfig: PT.object,
 };
 
@@ -167,7 +163,6 @@ MultiLand.defaultProps = {
   feil: {},
   disabled: false,
   bredde: "XL",
-  onChange: null,
   errorConfig: {},
 };
 

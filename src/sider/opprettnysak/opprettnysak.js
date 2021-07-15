@@ -25,10 +25,9 @@ import { FeatureToggle } from "../../featuretoggle";
 const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, error }) => {
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
-  const [ukjentFlereLandChecked, setUkjentFlereLandChecked] = useState(false);
-  const [valgteLand, setValgteLand] = useState([]);
 
-  const { behandlingstema } = formValues;
+  const { behandlingstema, soknadsinfo } = formValues;
+  const { land, erUkjenteEllerAlleEosLand } = soknadsinfo || { land: null, erUkjenteEllerAlleEosLand: null };
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const hentOppgaver = async (brukerID) => {
@@ -81,6 +80,9 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
     change("journalpostID", journalpostID);
   };
 
+  const erLandvelgerDisabled =
+    erUkjenteEllerAlleEosLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+
   return (
     <form className="opprettnysak" onSubmit={handleSubmit}>
       <Nav.Container fluid>
@@ -117,7 +119,12 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                           </option>
                         ))}
                     </Skjema.Select>
-                    <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
+                    <Skjema.Select
+                      feltNavn="behandlingstema"
+                      bredde="fullbredde"
+                      label="Behandlingstema"
+                      onChange={() => change("soknadsinfo.erUkjenteEllerAlleEosLand", false)}
+                    >
                       {filtrerteBehandlingstemaer.map(({ kode, term }) => (
                         <option key={kode} value={kode}>
                           {term}
@@ -157,14 +164,12 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                             feltNavn="land"
                             label="Land"
                             errorConfig={{ submitFailed: true }}
-                            disabled={ukjentFlereLandChecked}
-                            onChange={setValgteLand}
+                            disabled={erLandvelgerDisabled}
                           />
                           {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
                             <Skjema.Checkbox
-                              feltNavn="journalforingSoknadslandUkjentFlere"
-                              onClick={(e) => setUkjentFlereLandChecked(e.currentTarget.checked)}
-                              disabled={valgteLand.length > 0}
+                              feltNavn="erUkjenteEllerAlleEosLand"
+                              disabled={land?.length > 0}
                               label={
                                 <div>
                                   Flere EØS-land/Sveits. Ikke kjent hvilke
@@ -262,7 +267,10 @@ const opprettNySak = async (values, dispatch, props) => {
       fom,
       tom,
     },
-    land: soknadErValgt ? values.soknadsinfo.land : [],
+    land: {
+      landkoder: soknadErValgt ? values.soknadsinfo.land : [],
+      erUkjenteEllerAlleEosLand: soknadErValgt ? values.soknadsinfo.erUkjenteEllerAlleEosLand : false,
+    },
   };
 
   const data = {

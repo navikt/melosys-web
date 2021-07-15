@@ -1,4 +1,4 @@
-import { object, string, mixed, array, lazy } from "yup";
+import { object, string, mixed, array, lazy, boolean } from "yup";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
@@ -16,12 +16,22 @@ const VELG_EN_OPPGAVE = { melding: "Velg en oppgave" };
 const MANGLER_JOURNALPOST = { melding: "Den valgte oppgaven har ingen journalpost" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
+const land = object().shape({
+  landkoder: array()
+    .of(string())
+    .when("journalforingSoknadslandUkjenteEllerAlle", {
+      is: false,
+      then: array().of(string()).required({ _error: VELG_LAND }).min(1, { _error: VELG_LAND }),
+    }),
+  journalforingSoknadslandUkjenteEllerAlle: boolean(),
+});
+
 const soknadsinfo = object().shape({
   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: lazy((value) =>
     !value ? string().ensure() : string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT)
   ),
-  land: array().of(string()).required({ _error: VELG_LAND }).min(1, { _error: VELG_LAND }),
+  land,
 });
 
 const opprettnysak = object().shape({
