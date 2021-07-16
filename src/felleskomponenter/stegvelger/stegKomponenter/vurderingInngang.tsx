@@ -66,12 +66,6 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
     <div className="vurderinginngang">
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>{oppfyltTekst}</li>
-        {flereLandEnnLovlig && (
-          <Nav.AlertStripeAdvarsel>
-            Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre
-            behandlingstema for å kunne fatte vedtak.
-          </Nav.AlertStripeAdvarsel>
-        )}
         {inngangsvilkaarErOverstyrtEllerIkkeOppfylt &&
           visbareInngangsvilkaarBegrunnelseKoder.map((begrunnelseKode) => (
             <li key={begrunnelseKode} className={oppfyllerInngangsvilkarCl}>
@@ -79,6 +73,12 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
             </li>
           ))}
       </ul>
+      {flereLandEnnLovlig && (
+        <Nav.AlertStripeAdvarsel>
+          Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre
+          behandlingstema for å kunne fatte vedtak.
+        </Nav.AlertStripeAdvarsel>
+      )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
         <Nav.AlertStripe type="info" className="vurderinginngang__inngangsvilkaar-ikke-oppfylt-alertstripe">
           Du har to valg:
