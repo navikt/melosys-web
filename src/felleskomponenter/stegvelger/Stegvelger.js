@@ -82,23 +82,8 @@ class Stegvelger extends Component {
   componentDidUpdate(prevProps) {
     const { aktivtStegNummer } = this.state;
 
-    if (
-      this.props.oppsummering.behandlingsstatus !== prevProps.oppsummering.behandlingsstatus ||
-      this.props.artikkel12_vedtak_skjema !== prevProps.artikkel12_vedtak_skjema ||
-      this.props.vurder_virksomhet_valid !== prevProps.vurder_virksomhet_valid ||
-      // Opplysninger
-      // Fra Register og søknad: Familieforhold
-      this.props.saksopplysninger.familiemedlemmer !== prevProps.saksopplysninger.familiemedlemmer ||
-      this.props.soknad_skjema.medfolgendeBarn !== prevProps.soknad_skjema.medfolgendeBarn ||
-      // Fra Søknad: Arbeidsgiver/virksomhet
-      this.props.soknad_skjema.juridiskArbeidsgiverNorge.ekstraArbeidsgivere !==
-        prevProps.soknad_skjema.juridiskArbeidsgiverNorge.ekstraArbeidsgivere ||
-      this.props.soknad_skjema.selvstendigForetak !== prevProps.soknad_skjema.selvstendigForetak ||
-      this.props.soknad_skjema.arbeidsforholdUtland !== prevProps.soknad_skjema.arbeidsforholdUtland ||
-      this.props.soknad_skjema.selvstendigNaeringsvirksomhetUtland !==
-        prevProps.soknad_skjema.selvstendigNaeringsvirksomhetUtland
-    ) {
-      this.oppdaterAktuelleSteg(aktivtStegNummer);
+    if (!Utils._isEqual(prevProps, this.props)) {
+      this.debouncedOppdaterAktuelleSteg(aktivtStegNummer);
     }
   }
 
@@ -464,6 +449,10 @@ class Stegvelger extends Component {
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
   };
+
+  debouncedOppdaterAktuelleSteg = Utils._debounce(async (aktivtStegNummer) => {
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
+  }, 300);
 
   validerSoknadOgGaTilSteg = (nyttStegNummer) => {
     if (this.validerOgVisBehandlingsgrunnlagFeilmeldinger()) {
