@@ -2,50 +2,96 @@ name: Build
 
 on: pull_request
 
+env:
+  NODE_VERSION: '12.3.1'
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Cache
-        uses: actions/cache@v1
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Setup node
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: '12.3.1'
+          node-version: ${{env.NODE_VERSION}}
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
-
-      - name: install dependencies
+      - run: npm ci --prefer-offline --no-audit
         env:
           CYPRESS_INSTALL_BINARY: 0
-          # NPM krever tydeligvis en token for å hente pakker fra github packages
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: npm ci
-
-      - name: check formatting
-        run: npm run prettier:check
-
-      - name: build css
-        run: npm run build:css
-
-      - name: lint
-        run: npm run eslint
-
-      - name: test
-        run: npm run test:ci
+      - run: npm run test:ci
         env:
           CI: true
 
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
+      - run: npm ci --prefer-offline --no-audit
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - run: npm run prettier:check
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
+      - run: npm ci --prefer-offline --no-audit
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - run: npm run build:css
+      - name: lint
+        run: npm run eslint
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
+      - run: npm ci --prefer-offline --no-audit
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - run: npm run build:css
       - name: build
         run: |
           BRANCH_NAME=$GITHUB_REF
