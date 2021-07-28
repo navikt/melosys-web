@@ -146,7 +146,11 @@ export class VurderingEndrePeriode extends React.Component {
         fritekstSed,
       };
 
-      await endreVedtak(data);
+      const endreVedtakRes = await endreVedtak(data);
+
+      if (endreVedtakRes?.data?.data?.status >= 400) {
+        this.setState({ vedtakFeilmelding: endreVedtakRes?.data?.data?.message });
+      }
 
       if (this._isMounted) {
         this.setState({ endringPending: false });
@@ -283,7 +287,11 @@ export class VurderingEndrePeriode extends React.Component {
           </Nav.Row>
         )}
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
-        {vedtakFeilmelding && <div className="skjemaelement__feilmelding vedtakfeilmelding">{vedtakFeilmelding}</div>}
+        {vedtakFeilmelding && (
+          <Nav.AlertStripe className="vedtakfeilmelding" type="feil">
+            {vedtakFeilmelding}
+          </Nav.AlertStripe>
+        )}
         <Nav.Hovedknapp
           spinner={endringPending}
           autoDisableVedSpinner
