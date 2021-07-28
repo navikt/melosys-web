@@ -3,51 +3,101 @@ name: Build
 on: pull_request
 
 jobs:
-  build:
+  setup-test:
     runs-on: ubuntu-latest
-
+    outputs:
+      test-chunks: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
+      test-chunk-ids: ${{ steps['set-test-chunk-ids'].outputs['test-chunk-ids'] }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Cache
-        uses: actions/cache@v1
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.3.1'
-          registry-url: https://npm.pkg.github.com/
-          scope: '@navikt'
-
-      - name: install dependencies
+      - run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
-          # NPM krever tydeligvis en token for å hente pakker fra github packages
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: npm ci
-
-      - name: check formatting
-        run: npm run prettier:check
-
-      - name: build css
-        run: npm run build:css
-
-      - name: lint
-        run: npm run eslint
-
-      - name: test
-        run: npm run test:ci
+      - id: set-test-chunks
+        name: Set Chunks
+        run: echo "::set-output name=test-chunks::$(npx jest --listTests --json | jq -cM '[_nwise(length / 10 | floor)]')"
+      - id: set-test-chunk-ids
+        name: Set Chunk IDs
+        run: echo "::set-output name=test-chunk-ids::$(echo $CHUNKS | jq -cM 'to_entries | map(.key)')"
         env:
+          CHUNKS: ${{ steps['set-test-chunks'].outputs['test-chunks'] }}
+
+  test:
+    runs-on: ubuntu-latest
+    name: test (chunk ${{ matrix.chunk }})
+    needs:
+      - setup-test
+    strategy:
+      matrix:
+        chunk: ${{ fromJson(needs.setup-test.outputs['test-chunk-ids']) }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+      - name: jest
+        run: echo $CHUNKS | jq '.[${{ matrix.chunk }}] | .[] | @text' | xargs npm run test:ci
+        env:
+          CHUNKS: ${{ needs.setup-test.outputs['test-chunks'] }}
           CI: true
 
-      - name: build
-        run: |
-          BRANCH_NAME=$GITHUB_REF
-          BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
-          npm run build
+  # build:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v1
+
+  #     - name: Cache
+  #       uses: actions/cache@v1
+  #       with:
+  #         path: ~/.npm
+  #         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+
+  #     - name: Setup node
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: '12.3.1'
+  #         registry-url: https://npm.pkg.github.com/
+  #         scope: '@navikt'
+
+  #     - name: install dependencies
+  #       env:
+  #         CYPRESS_INSTALL_BINARY: 0
+  #         # NPM krever tydeligvis en token for å hente pakker fra github packages
+  #         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  #       run: npm ci
+
+  #     - name: check formatting
+  #       run: npm run prettier:check
+
+  #     - name: build css
+  #       run: npm run build:css
+
+  #     - name: lint
+  #       run: npm run eslint
+
+  #     - name: test
+  #       run: npm run test:ci
+  #       env:
+  #         CI: true
+
+  #     - name: build
+  #       run: |
+  #         BRANCH_NAME=$GITHUB_REF
+  #         BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
+  #         npm run build
