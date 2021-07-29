@@ -30,13 +30,28 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
   children: PT.node.isRequired,
 };
 
+const lagLandStreng = (landkoder, erUkjenteEllerAlleEosLand) => {
+  if (erUkjenteEllerAlleEosLand) return "Flere EØS-land/Sveits. Ikke kjent hvilke.";
+
+  return landkoder ? landkoder.join(", ") : "(ukjent)";
+};
+
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
 const BehandlingOppgave = ({ sak }) => {
-  const { sammensattNavn, sakstype, saksnummer, behandling, aktivTil, periode, land, fnr } = sak;
+  const {
+    sammensattNavn,
+    sakstype,
+    saksnummer,
+    behandling,
+    aktivTil,
+    periode,
+    land: { landkoder, erUkjenteEllerAlleEosLand },
+    fnr,
+  } = sak;
 
   const {
     behandlingID,
@@ -52,7 +67,7 @@ const BehandlingOppgave = ({ sak }) => {
   const { fom, tom } = periode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
   const link = Routing.lagUrl(saksnummer, behandlingID, behandlingstema.kode);
-  const landListeSomStreng = land ? land.join(", ") : "(ukjent)";
+  const landStreng = lagLandStreng(landkoder, erUkjenteEllerAlleEosLand);
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
   const cl = classNames({
@@ -161,7 +176,7 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Land:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">{landStreng}</dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>
