@@ -14,6 +14,12 @@ import sorterElementerEtterDato from "../sorterbarListe/sorterElementerEtterDato
 
 import "./fagsak.css";
 
+const lagLandStreng = (landkoder, erUkjenteEllerAlleEosLand) => {
+  if (erUkjenteEllerAlleEosLand) return "Flere EØS-land/Sveits. Ikke kjent hvilke.";
+
+  return landkoder ? landkoder.join(", ") : "(ukjent)";
+};
+
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
@@ -22,9 +28,12 @@ import "./fagsak.css";
 const Fagsak = ({ sak }) => {
   const { opprettetDato, sakstype, saksstatus, saksnummer, behandlingOversikter } = sak;
   const VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND = 0;
-  const { periode, land } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
+  const {
+    periode,
+    land: { landkoder, erUkjenteEllerAlleEosLand },
+  } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const landListeSomStreng = land ? land.join(", ") : "(ukjent)";
+  const landStreng = lagLandStreng(landkoder, erUkjenteEllerAlleEosLand);
   const customMargin = { marginLeft: "1em" };
 
   const sorterteBehandlinger = behandlingOversikter
@@ -48,7 +57,7 @@ const Fagsak = ({ sak }) => {
               <dt>Opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
               <dt>Land:</dt>
-              <dd>{landListeSomStreng}</dd>
+              <dd>{landStreng}</dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="3">
