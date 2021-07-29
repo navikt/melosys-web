@@ -7,7 +7,13 @@ import { BOOLSK_STRING } from "../../../constants";
 import MKV from "../../../melosyskodeverk";
 import { lagAvklartfakta } from "../../../regler/avklartefakta";
 
-import { VurderingArbeidsmonster, LandLinje } from "./vurderingArbeidsmonster";
+import {
+  VurderingArbeidsmonster,
+  MarginaltArbeid,
+  CheckableLandLinje,
+  ConnectedCheckableLandLinje,
+  UkjenteEllerFlereEosLandLinje,
+} from "./vurderingArbeidsmonster";
 
 describe("VurderingVurderarbeidsland", () => {
   let props = null;
@@ -42,7 +48,47 @@ describe("VurderingVurderarbeidsland", () => {
   });
 });
 
-describe("LandLinje", () => {
+describe("MarginaltArbeid", () => {
+  let props = null;
+
+  beforeEach(() => {
+    props = {
+      arbeidsland: [
+        {
+          land: { kode: "DK", term: "Danmark" },
+          erLonnetArbeid: true,
+          erSelvstendigNaeringsvirksomhet: true,
+        },
+      ],
+      marginaltArbeid: [],
+      redigerbart: true,
+      oppdaterData: jest.fn(),
+      soknadsland: {
+        landkoder: ["DK"],
+        erUkjenteEllerAlleEosLand: false,
+      },
+    };
+  });
+
+  it("viser ConnectedCheckableLandLinje`r når erUkjenteEllerAlleEosLand er false", () => {
+    const marginaltArbeid = shallow(<MarginaltArbeid {...props} />);
+
+    const landLinjer = marginaltArbeid.find(ConnectedCheckableLandLinje);
+
+    expect(landLinjer).toHaveLength(1);
+  });
+
+  it("viser 1 UkjenteEllerFlereEosLandLinje når erUkjenteEllerAlleEosLand er true", () => {
+    props.soknadsland.erUkjenteEllerAlleEosLand = true;
+    const marginaltArbeid = shallow(<MarginaltArbeid {...props} />);
+
+    const landLinjer = marginaltArbeid.find(UkjenteEllerFlereEosLandLinje);
+
+    expect(landLinjer).toHaveLength(1);
+  });
+});
+
+describe("CheckableLandLinje", () => {
   describe("ved klikk på checkbox", () => {
     let props = null;
 
@@ -55,7 +101,7 @@ describe("LandLinje", () => {
         resetForm: jest.fn(),
       };
 
-      const landLinje = shallow(<LandLinje {...props} />);
+      const landLinje = shallow(<CheckableLandLinje {...props} />);
       const checkbox = landLinje.find(Mui.Checkbox);
       const checkboxOnCheck = checkbox.props().onCheck;
 
@@ -74,5 +120,15 @@ describe("LandLinje", () => {
       expect(props.resetForm).toHaveBeenCalledWith(KV.Form.ARTIKKEL_13_X_VEDTAK);
       expect(props.resetForm).toHaveBeenCalledWith(KV.Form.ARTIKKEL_13_UTPEKLAND);
     });
+  });
+});
+
+describe("UkjenteEllerFlereEosLandLinje", () => {
+  it("viser en disabled checkbox", () => {
+    const landLinje = shallow(<UkjenteEllerFlereEosLandLinje />);
+    const checkbox = landLinje.find(Mui.Checkbox);
+
+    expect(checkbox).toHaveLength(1);
+    expect(checkbox.props().disabled).toBe(true);
   });
 });
