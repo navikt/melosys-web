@@ -3,35 +3,32 @@ import { reset, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../utils/navFrontend";
-import * as MPT from "../../../proptypes";
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../../utils/navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as KV from "../../../../kodeverk";
 
-import EnkeltAvklartfakta from "./felles/enkeltAvklartfakta";
-import { VurderingVesentligAktivitetINorgeTyper } from "../../../kodeverk/koder";
-import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from "../../../regler/avklartefakta";
+import LandLinje from "./landlinje";
+import EnkeltAvklartfakta from "../felles/enkeltAvklartfakta";
+import { VurderingVesentligAktivitetINorgeTyper } from "../../../../kodeverk/koder";
+import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from "../../../../regler/avklartefakta";
 import {
   lagLovvalgsbestemmelse,
   slettLovvalgsbestemmelse,
   konverterLovvalgsbestemmelseTilStegData,
-} from "../../../regler/lovvalgsbestemmelser";
+} from "../../../../regler/lovvalgsbestemmelser";
 import {
   lagTilleggBestemmelse,
   slettTilleggBestemmelse,
   konverterTilleggBestemmelseTilStegData,
-} from "../../../regler/tilleggbestemmelser";
-import { BOOLSK_STRING } from "../../../constants";
+} from "../../../../regler/tilleggbestemmelser";
+import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingArbeidsmonster.css";
 
 export const UkjenteEllerFlereEosLandLinje = () => (
-  <div className="land__enkeltlinje">
-    <span>Flere EØS-land/Sveits. Ikke oppgitt hvilke.</span>
-    <Mui.Checkbox disabled checked label="ja" className="marginaltArbeidCheckbox" />
-  </div>
+  <LandLinje land="Flere EØS-land/Sveits. Ikke oppgitt hvilke" checkbox={{ redigerbart: false, checked: true }} />
 );
 
 /**
@@ -63,17 +60,15 @@ export const CheckableLandLinje = (props) => {
   };
 
   return (
-    <div className="land__enkeltlinje">
-      <span>{`${landKode.term} (${landKode.kode})`}</span>
-      <Mui.Checkbox
-        disabled={!redigerbart}
-        checked={erMarginaltArbeidIArbeidsland === true}
-        value={BOOLSK_STRING.SANN}
-        onCheck={klikkHandler}
-        label="ja"
-        className="marginaltArbeidCheckbox"
-      />
-    </div>
+    <LandLinje
+      land={`${landKode.term} (${landKode.kode})`}
+      checkbox={{
+        redigerbart,
+        checked: erMarginaltArbeidIArbeidsland === true,
+        value: BOOLSK_STRING.SANN,
+        onCheck: klikkHandler,
+      }}
+    />
   );
 };
 

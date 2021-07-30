@@ -1,11 +1,10 @@
 import React from "react";
 
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as KV from "../../../../kodeverk";
 
-import { BOOLSK_STRING } from "../../../constants";
-import MKV from "../../../melosyskodeverk";
-import { lagAvklartfakta } from "../../../regler/avklartefakta";
+import { BOOLSK_STRING } from "../../../../constants";
+import MKV from "../../../../melosyskodeverk";
+import { lagAvklartfakta } from "../../../../regler/avklartefakta";
 
 import {
   VurderingArbeidsmonster,
@@ -14,6 +13,7 @@ import {
   ConnectedCheckableLandLinje,
   UkjenteEllerFlereEosLandLinje,
 } from "./vurderingArbeidsmonster";
+import LandLinje from "./landlinje";
 
 describe("VurderingVurderarbeidsland", () => {
   let props = null;
@@ -101,9 +101,10 @@ describe("CheckableLandLinje", () => {
         resetForm: jest.fn(),
       };
 
-      const landLinje = shallow(<CheckableLandLinje {...props} />);
-      const checkbox = landLinje.find(Mui.Checkbox);
-      const checkboxOnCheck = checkbox.props().onCheck;
+      const checkableLandLinje = shallow(<CheckableLandLinje {...props} />);
+      const landLinje = checkableLandLinje.find(LandLinje);
+
+      const checkboxOnCheck = landLinje.props().checkbox.onCheck;
 
       checkboxOnCheck();
     });
@@ -124,11 +125,11 @@ describe("CheckableLandLinje", () => {
 });
 
 describe("UkjenteEllerFlereEosLandLinje", () => {
-  it("viser en disabled checkbox", () => {
-    const landLinje = shallow(<UkjenteEllerFlereEosLandLinje />);
-    const checkbox = landLinje.find(Mui.Checkbox);
+  it("viser en LandLinje med ikke-redigerbar checkbox", () => {
+    const ukjenteEllerFlereEosLandLinje = shallow(<UkjenteEllerFlereEosLandLinje />);
+    const landLinje = ukjenteEllerFlereEosLandLinje.find(LandLinje);
 
-    expect(checkbox).toHaveLength(1);
-    expect(checkbox.props().disabled).toBe(true);
+    expect(landLinje).toHaveLength(1);
+    expect(landLinje.props().checkbox.redigerbart).toBe(false);
   });
 });
