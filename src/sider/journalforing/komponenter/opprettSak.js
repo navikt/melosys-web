@@ -42,8 +42,8 @@ const OpprettFagsak = (props) => {
   const { journalforingSkjemaVerdier } = props;
   const { settFeltInnhold } = props;
   const { opprettnysak_behandlingstema: valgtBehandlingstema, sakstype: valgtSakstype } = journalforingSkjemaVerdier;
-  const [sakstyper, setSakstyper] = useState([]);
-  const [behandlingstemaer, setBehandlingstemaer] = useState([]);
+  const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
+  const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
   const trygdeavtaleToggle = useFeatureToggle("melosys.trygdeavtale");
 
@@ -73,11 +73,11 @@ const OpprettFagsak = (props) => {
 
   useEffect(() => {
     settFeltInnhold("opprettnysak_behandlingstema", defaultBehandlingstema(valgtSakstype));
-    setBehandlingstemaer(behandlingstemaerEtterSakstype(valgtSakstype));
+    setValgbareBehandlingstemaer(behandlingstemaerEtterSakstype(valgtSakstype));
   }, [valgtSakstype]);
 
   useEffect(() => {
-    setSakstyper(
+    setValgbareSakstyper(
       MKV.KTObjects.sakstyper.filter(
         ({ kode }) =>
           kode === MKV.Koder.sakstyper.EU_EOS ||
@@ -98,14 +98,14 @@ const OpprettFagsak = (props) => {
   return (
     <div className="panelramme">
       <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
-        {sakstyper.map((elem) => (
+        {valgbareSakstyper.map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
           </option>
         ))}
       </Skjema.Select>
       <Skjema.Select feltNavn="opprettnysak_behandlingstema" bredde="fullbredde" label="Behandlingstema">
-        {behandlingstemaer.map((elem) => (
+        {valgbareBehandlingstemaer.map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
           </option>
