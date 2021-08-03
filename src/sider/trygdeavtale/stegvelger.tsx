@@ -141,16 +141,16 @@ class Stegvelger extends Component<Props, State> {
       tilForsiden: this.props.tilForsiden,
     };
 
-    return response.steg?.map((singelSteg: Api.Trygdeavtale.Steg) => {
-      const stegMapElement = stegMap[singelSteg.navn];
+    return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
+      const stegMapElement = stegMap[enkeltSteg.navn];
       return {
-        id: singelSteg.navn,
+        id: enkeltSteg.navn,
         tittel: stegMapElement.tittel,
-        stegPosisjon: singelSteg.nummer,
-        aktivtSteg: this.state.aktivtStegIndex === singelSteg.nummer,
+        stegPosisjon: enkeltSteg.nummer,
+        aktivtSteg: this.state.aktivtStegIndex === enkeltSteg.nummer,
         komponent: stegMapElement.komponent,
-        status: singelSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
-        data: { ...data, steg: singelSteg },
+        status: enkeltSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
+        data: { ...data, steg: enkeltSteg },
         handlers,
       };
     });
