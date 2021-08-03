@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import PT from "prop-types";
 
 import * as Skjema from "../../../felleskomponenter/skjema/";
-import * as MPT from "../../../proptypes/";
 
 import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
@@ -17,7 +16,7 @@ const behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(
 );
 
 const FagsakVelger = (props) => {
-  const { sakstyper, behandlingstemaer, fagsakListe, settJournalforingHensikt } = props;
+  const { fagsakListe, settJournalforingHensikt } = props;
   const notifier = async (saksnummer) => {
     const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
     await settJournalforingHensikt(hensikt);
@@ -36,7 +35,7 @@ const FagsakVelger = (props) => {
   radioValg.push({
     value: "-1",
     innhold: <OpprettSakTittel />,
-    footer: <OpprettSak sakstyper={sakstyper} behandlingstemaer={behandlingstemaer} />,
+    footer: <OpprettSak />,
   });
   return (
     <Fragment>
@@ -49,8 +48,6 @@ const FagsakVelger = (props) => {
 };
 
 FagsakVelger.propTypes = {
-  sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
-  behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   fagsakListe: PT.array.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
 };
