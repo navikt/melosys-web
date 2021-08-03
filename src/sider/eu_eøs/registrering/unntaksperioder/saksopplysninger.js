@@ -332,7 +332,6 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
                       checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={!erGyldigLovvalgsperiode()}
                       label="Godkjenn, men endre periode"
                     />
                     {kanEndrePeriode() && (
