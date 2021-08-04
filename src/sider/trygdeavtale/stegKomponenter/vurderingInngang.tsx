@@ -153,7 +153,7 @@ const VurderingInngang = ({
       <div className="fane__knapplinje">
         <Nav.Hovedknapp
           mini
-          disabled={steg?.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={steg.status !== "FERDIG" || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsettHandle}
         >
