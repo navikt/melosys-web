@@ -285,6 +285,7 @@ describe("behandlingsgrunnlag reducer", () => {
             term: "Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a",
           },
         ],
+        trygdedekning: "Full dekning",
       },
     };
 
@@ -409,7 +410,7 @@ describe("behandlingsgrunnlag reducer", () => {
           ],
           bosted: {
             intensjonOmRetur: null,
-            antallMaanederINorge: null,
+            antallMaanederINorge: 11,
             EOSBarnetrygdFraNAV: true,
             oppgittAdresse: {
               tilleggsnavn: "Storgård",
@@ -487,6 +488,7 @@ describe("behandlingsgrunnlag reducer", () => {
             },
           ],
           ytterligereInformasjon: null,
+          trygdedekning: "Full dekning",
         },
       },
     };
