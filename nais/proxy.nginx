@@ -3,6 +3,10 @@ location  /api/ {
     access_by_lua_file oidc_protected.lua;
     proxy_pass "${APP_URL_MELOSYS}/api/";
 }
+location  /flyt/ {
+   access_by_lua_file oidc_protected.lua;
+   proxy_pass "${APP_URL_TRYGDEAVTALE}/flyt/";
+}
 location  /graphql/ {
     access_by_lua_file oidc_protected.lua;
     proxy_pass "${APP_URL_MELOSYS}/graphql/";
