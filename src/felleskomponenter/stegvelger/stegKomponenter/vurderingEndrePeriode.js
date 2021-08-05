@@ -2,6 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as UfiltrertMKV from "@navikt/melosys-kodeverk";
+import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -20,7 +21,6 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnlag";
 
 import * as Api from "../../../services/api";
-import * as EKV from "eessi-kodeverk";
 
 import "./vurderingEndrePeriode.css";
 
