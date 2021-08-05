@@ -20,6 +20,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnlag";
 
 import * as Api from "../../../services/api";
+import * as EKV from "eessi-kodeverk";
 
 import "./vurderingEndrePeriode.css";
 
@@ -199,8 +200,6 @@ export class VurderingEndrePeriode extends React.Component {
       endringPending,
     } = this.state;
 
-    const endretPeriodeBegrunnelse = begrunnelse;
-
     const pdfDokumenter = [
       {
         navn: "Forhåndsvis vedtaksbrev og A1",
@@ -208,7 +207,15 @@ export class VurderingEndrePeriode extends React.Component {
         data: {
           mottaker: MKV.Koder.aktoersroller.BRUKER,
           fritekst: null,
-          begrunnelseKode: endretPeriodeBegrunnelse,
+          begrunnelseKode: begrunnelse,
+        },
+      },
+      {
+        navn: "Forhåndsvis SED A009 ",
+        type: EKV.Koder.sedtyper.A009,
+        erSed: true,
+        data: {
+          fritekst: fritekstSed,
         },
       },
     ];
