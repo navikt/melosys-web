@@ -42,6 +42,7 @@ const Saksopplysninger = ({
   lastInnSaksopplysninger,
   tilForsiden,
   startOgVisOppfriskModal,
+  behandlingsresultatErHentet,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState("");
@@ -366,7 +367,7 @@ const Saksopplysninger = ({
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
-              {unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && (
+              {unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && behandlingsresultatErHentet && (
                 <Fragment>
                   <Nav.Row>
                     <Nav.Column xs="6">
@@ -378,7 +379,7 @@ const Saksopplysninger = ({
                           tillatFritekst={false}
                           onChange={listevalgEndringHandler}
                           feil={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
-                          defaultElementer={ikkeGodkjentBegrunnelseKoder}
+                          defaultElementer={behandlingsresultat.begrunnelseKoder}
                         />
                       </Nav.Fieldset>
                     </Nav.Column>
@@ -439,6 +440,7 @@ Saksopplysninger.propTypes = {
   behandlingsresultat: PT.object,
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  behandlingsresultatErHentet: PT.bool.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -453,6 +455,7 @@ const mapStateToProps = (state) => ({
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
+  behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
 });
 const mapDispatchToProps = (dispatch) => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
