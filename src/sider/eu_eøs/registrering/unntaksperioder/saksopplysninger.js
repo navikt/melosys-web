@@ -113,7 +113,7 @@ const Saksopplysninger = ({
     ) {
       godkjentUnntaksperiode();
     } else if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT) {
-      ikkeGodkjentUnntaksperiode(behandlingsresultat);
+      ikkeGodkjentUnntaksperiode();
     }
   };
 
