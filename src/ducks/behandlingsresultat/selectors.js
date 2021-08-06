@@ -9,19 +9,14 @@ import { createSelector } from "reselect";
 
 import * as Utils from "../../services/utils";
 
-const BehandlingsResultatStateSelector = createSelector(
-  (state) => state.behandlingsresultat || {},
+export const BehandlingsresultatSelector = createSelector(
+  (state) => state.behandlingsresultat.data || {},
   (behandlingsresultat) => behandlingsresultat
 );
 
-export const BehandlingsresultatSelector = createSelector(
-  BehandlingsResultatStateSelector,
-  (behandlingsresultatState) => behandlingsresultatState.data || {}
-);
-
 const BehandlingsresultatStatusSelector = createSelector(
-  BehandlingsResultatStateSelector,
-  (behandlingsresultatState) => behandlingsresultatState.status || {}
+  (state) => state.behandlingsresultat.status,
+  (behandlingsresultatStatus) => behandlingsresultatStatus
 );
 
 export const BehandlingsresultatStatusErOkSelector = createSelector(
