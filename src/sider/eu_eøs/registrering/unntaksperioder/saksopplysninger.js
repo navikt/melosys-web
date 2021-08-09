@@ -154,9 +154,11 @@ const Saksopplysninger = ({
   ];
 
   const endrePeriodeOgLagre = (dispatchSaksflyt) =>
-    oppdaterAvklartefakta(behandlingID, [...avklartefakta, lagAvklartfakta()]).then(() =>
-      oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder()).then(() => dispatchSaksflyt())
-    );
+    oppdaterAvklartefakta(behandlingID, [
+      /* Har opplevd at det forsøkes å lagre 2 AARSAK_ENDRING_PERIODE-faktaer, derfor brukes filter(). */
+      ...avklartefakta.filter((af) => af.referanse !== MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE),
+      lagAvklartfakta(),
+    ]).then(() => oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder()).then(() => dispatchSaksflyt()));
 
   const godkjenn = () => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
 
@@ -332,7 +334,6 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
                       checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={!erGyldigLovvalgsperiode()}
                       label="Godkjenn, men endre periode"
                     />
                     {kanEndrePeriode() && (
