@@ -1,6 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { deleteAsJson, getAsJson, putAsJson } from "../../utils";
-import { FLYT_BASE_URL } from "../../api-constants";
+import { TRYGDEAVTALE_FLYT_BASE_URL } from "../../api-constants";
 import { StegNavn } from "../../../kodeverk/koder";
 
 export interface Virksomhet {
@@ -43,9 +43,10 @@ export interface FlytReqDto {
   resultat: Resultat;
 }
 
-export const hentStegData = (behandlingID: number): Promise<FlytResDto> => getAsJson(`${FLYT_BASE_URL}${behandlingID}`);
+export const hentStegData = (behandlingID: number): Promise<FlytResDto> =>
+  getAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
 
 export const sendStegData = (behandlingID: number, data: FlytReqDto): Promise<FlytResDto> =>
-  putAsJson(`${FLYT_BASE_URL}${behandlingID}`, data);
+  putAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`, data);
 
-export const slettStegData = (behandlingID: number) => deleteAsJson(`${FLYT_BASE_URL}${behandlingID}`);
+export const slettStegData = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
