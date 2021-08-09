@@ -7,10 +7,21 @@
 
 import { createSelector } from "reselect";
 
-/* eslint import/prefer-default-export:"off" */
+import * as Utils from "../../services/utils";
+
 export const BehandlingsresultatSelector = createSelector(
-  (state) => (state.behandlingsresultat ? state.behandlingsresultat.data : []),
+  (state) => state.behandlingsresultat.data || {},
   (behandlingsresultat) => behandlingsresultat
+);
+
+const BehandlingsresultatStatusSelector = createSelector(
+  (state) => state.behandlingsresultat.status,
+  (behandlingsresultatStatus) => behandlingsresultatStatus
+);
+
+export const BehandlingsresultatStatusErOkSelector = createSelector(
+  BehandlingsresultatStatusSelector,
+  (behandlingsresultatStatus) => behandlingsresultatStatus === Utils.STATUS.OK
 );
 
 export const VedtakstypeSelector = createSelector(
