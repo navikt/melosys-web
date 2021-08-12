@@ -86,11 +86,6 @@ class Stegvelger extends Component<Props, State> {
     setTimeout(() => this.setState({ oppstartErFerdig: true }), 500);
   }
 
-  hentStegDataOgOppdaterAktuelleSteg = () =>
-    Api.Trygdeavtale.hentStegData(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
-    );
-
   componentDidUpdate(prevProps: Readonly<Props>) {
     const soknadValues = this.props.soknadForm?.values;
     const prevSoknadValues = prevProps.soknadForm?.values;
@@ -107,6 +102,11 @@ class Stegvelger extends Component<Props, State> {
       this.behandlingsGrunnlagSkalEndres();
     }
   }
+
+  hentStegDataOgOppdaterAktuelleSteg = () =>
+    Api.Trygdeavtale.hentStegData(this.props.behandlingID).then((response) =>
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
+    );
 
   behandlingsGrunnlagSkalEndres = () => this.setState({ skalLagreBehandlingsgrunnlag: true });
 
