@@ -50,12 +50,13 @@ interface Props {
   annenBehandlingOppfriskes: boolean;
   fortsett: () => void;
   formValues: FormValuesProps;
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
+  hentStegDataOgOppdaterAktuelleSteg: () => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
   oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppfriskSaksopplysningerOgLastInnSaksopplysninger: () => void;
   // slettStegData: () => void;
 }
 
@@ -64,13 +65,14 @@ const VurderingInngang = ({
   formValues,
   formIsValid,
   fortsett,
+  hentStegDataOgOppdaterAktuelleSteg,
   initialValues,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   redigerbart,
   resultat,
   steg,
   tilForsiden,
   oppdaterStegData,
+  oppfriskSaksopplysningerOgLastInnSaksopplysninger,
   // slettStegData,
   visMenypanel,
 }: PropsFromRedux & Props) => {
@@ -163,7 +165,10 @@ const VurderingInngang = ({
 
       {visOppfrisk && (
         <DialogboksOppfriskSak
-          oppfrisk={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+          oppfrisk={() => {
+            oppfriskSaksopplysningerOgLastInnSaksopplysninger();
+            hentStegDataOgOppdaterAktuelleSteg();
+          }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
             periodeEndringHandle();

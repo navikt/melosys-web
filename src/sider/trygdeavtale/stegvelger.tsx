@@ -61,7 +61,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props extends PropsFromRedux {
   annenBehandlingOppfriskes: boolean;
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
+  oppfriskSaksopplysningerOgLastInnSaksopplysninger: () => void;
   tilForsiden: () => void;
   redigerbart: boolean;
 }
@@ -82,11 +82,14 @@ class Stegvelger extends Component<Props, State> {
   };
 
   componentDidMount() {
+    this.hentStegDataOgOppdaterAktuelleSteg();
+    setTimeout(() => this.setState({ oppstartErFerdig: true }), 500);
+  }
+
+  hentStegDataOgOppdaterAktuelleSteg = () =>
     Api.Trygdeavtale.hentStegData(this.props.behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
-    setTimeout(() => this.setState({ oppstartErFerdig: true }), 500);
-  }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
     const soknadValues = this.props.soknadForm?.values;
@@ -130,7 +133,6 @@ class Stegvelger extends Component<Props, State> {
       resultat: response.resultat,
       redigerbart: this.props.redigerbart,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
-      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     };
 
     const handlers = {
@@ -139,6 +141,8 @@ class Stegvelger extends Component<Props, State> {
       oppdaterStegData: this.debouncedOppdaterStegData,
       slettStegData: this.slettStegData,
       tilForsiden: this.props.tilForsiden,
+      oppfriskSaksopplysningerOgLastInnSaksopplysninger: this.props.oppfriskSaksopplysningerOgLastInnSaksopplysninger,
+      hentStegDataOgOppdaterAktuelleSteg: this.hentStegDataOgOppdaterAktuelleSteg,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -158,14 +162,13 @@ class Stegvelger extends Component<Props, State> {
 
   lagreBehandlingsgrunnlagOgOppdaterStegData = async () => {
     const {
-      props: { lagreBehandlingsgrunnlag, behandlingID },
-      mapFlytResDtoOmTilAktuelleSteg,
+      props: { lagreBehandlingsgrunnlag },
+      hentStegDataOgOppdaterAktuelleSteg,
     } = this;
 
     await lagreBehandlingsgrunnlag();
-    Api.Trygdeavtale.hentStegData(behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: mapFlytResDtoOmTilAktuelleSteg(response), skalLagreBehandlingsgrunnlag: false })
-    );
+    hentStegDataOgOppdaterAktuelleSteg();
+    this.setState({ skalLagreBehandlingsgrunnlag: false });
   };
 
   harBehandlingsgrunnlagFeilmeldinger = () => !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);

@@ -100,9 +100,9 @@ const Saksbehandling = ({
   hentDokumentOversikt,
   hentFagsaker,
   lagreOgLukk,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   location,
   match,
+  oppfriskSaksopplysningerOgLastInnSaksopplysninger,
   oppsummering,
   person,
   redigerbart,
@@ -201,7 +201,7 @@ const Saksbehandling = ({
               <Stegvelger
                 redigerbart={redigerbart}
                 annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
+                oppfriskSaksopplysningerOgLastInnSaksopplysninger={oppfriskSaksopplysningerOgLastInnSaksopplysninger}
                 tilForsiden={tilForsiden}
               />
             )}
@@ -286,7 +286,7 @@ Saksbehandling.propTypes = {
   hentDokumentOversikt: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
+  oppfriskSaksopplysningerOgLastInnSaksopplysninger: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,

@@ -65,6 +65,13 @@ const FellesHandlersProviderUnconnected = ({
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
+  const oppfriskSaksopplysningerOgLastInnSaksopplysninger = async () => {
+    await leggTilBehandlingOppfriskes(behandlingID);
+    await oppfriskSaksopplysninger(behandlingID);
+    await fjernBehandlingOppfriskes();
+    await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+  };
+
   const startOgVisOppfriskModal = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
     visOppfriskDialogHandle();
@@ -160,6 +167,7 @@ const FellesHandlersProviderUnconnected = ({
     avslaaSoknadHandle,
     avsluttSakSomBortfalt,
     lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+    oppfriskSaksopplysningerOgLastInnSaksopplysninger,
     venterPaRevurderFagsak,
     behandlingOppfriskes,
     annenBehandlingOppfriskes,
