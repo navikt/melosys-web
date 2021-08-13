@@ -70,7 +70,6 @@ interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
   skalLagreBehandlingsgrunnlag: boolean;
-  oppstartErFerdig: boolean;
 }
 
 class Stegvelger extends Component<Props, State> {
@@ -78,12 +77,10 @@ class Stegvelger extends Component<Props, State> {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
     skalLagreBehandlingsgrunnlag: false,
-    oppstartErFerdig: false,
   };
 
   componentDidMount() {
     this.hentStegDataOgOppdaterAktuelleSteg();
-    setTimeout(() => this.setState({ oppstartErFerdig: true }), 500);
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
@@ -91,13 +88,12 @@ class Stegvelger extends Component<Props, State> {
     const prevSoknadValues = prevProps.soknadForm?.values;
 
     if (
-      this.state.oppstartErFerdig &&
-      (this.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
-        this.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
-        this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
-        this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
-        this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
-        this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer"))
+      this.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
+      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
+      this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
+      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
+      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
+      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
       this.behandlingsGrunnlagSkalEndres();
     }
@@ -189,7 +185,6 @@ class Stegvelger extends Component<Props, State> {
         await oppdaterBehandlingsgrunnlag();
         this.setState({
           aktivtStegIndex: nesteStegIndex,
-          skalLagreBehandlingsgrunnlag: false,
           aktuelleSteg: aktuelleSteg.map((steg: AktueltSteg) => ({
             ...steg,
             aktivtSteg: steg.stegPosisjon === nesteStegIndex,
