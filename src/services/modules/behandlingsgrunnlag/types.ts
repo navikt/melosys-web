@@ -1,229 +1,47 @@
-export type TheArbeidsgiverbekrefterutsendelseSchema = boolean | null;
-export type TheArbeidstakeransattunderutsendelsenSchema = boolean | null;
-export type TheErstatterarbeidstakerenutsendteSchema = boolean | null;
-export type TheArbeidstakertidligereutsendt24MndSchema = boolean | null;
-export type TheArbeidsgiverbetalerarbeidsgiveravgiftSchema = boolean | null;
-export type TheTrygdeavgifttrukketgjennomskattSchema = boolean | null;
-export type TheLoennOgGodtgjoerelseSchema = {
-  norskArbgUtbetalerLoenn: TheNorskArbgUtbetalerLoennSchema;
-  erArbeidstakerAnsattHelePerioden: TheErArbeidstakerAnsattHelePeriodenSchema;
-  utlArbgUtbetalerLoenn: TheUtlArbgUtbetalerLoennSchema;
-  bruttoLoennPerMnd: TheBruttoLoennPerMndSchema;
-  bruttoLoennUtlandPerMnd: TheBruttoLoennUtlandPerMndSchema;
-  mottarNaturalytelser: TheMottarNaturalytelserSchema;
-  samletVerdiNaturalytelser: TheSamletVerdiNaturalytelserSchema;
-  erArbeidsgiveravgiftHelePerioden: TheErArbeidsgiveravgiftHelePeriodenSchema;
-  erTrukketTrygdeavgift: TheErTrukketTrygdeavgiftSchema;
-  utlArbTilhoererSammeKonsern: TheUtlArbTilhoererSammeKonsernSchema;
+type Arbeidsgiverbekrefterutsendelse = boolean | null;
+type Arbeidstakeransattunderutsendelsen = boolean | null;
+type Erstatterarbeidstakerenutsendte = boolean | null;
+type Arbeidstakertidligereutsendt24Mnd = boolean | null;
+type Arbeidsgiverbetalerarbeidsgiveravgift = boolean | null;
+type Trygdeavgifttrukketgjennomskatt = boolean | null;
+type LoennOgGodtgjoerelse = {
+  norskArbgUtbetalerLoenn: NorskArbgUtbetalerLoenn;
+  erArbeidstakerAnsattHelePerioden: ErArbeidstakerAnsattHelePerioden;
+  utlArbgUtbetalerLoenn: UtlArbgUtbetalerLoenn;
+  bruttoLoennPerMnd: BruttoLoennPerMnd;
+  bruttoLoennUtlandPerMnd: BruttoLoennUtlandPerMnd;
+  mottarNaturalytelser: MottarNaturalytelser;
+  samletVerdiNaturalytelser: SamletVerdiNaturalytelser;
+  erArbeidsgiveravgiftHelePerioden: ErArbeidsgiveravgiftHelePerioden;
+  erTrukketTrygdeavgift: ErTrukketTrygdeavgift;
+  utlArbTilhoererSammeKonsern: UtlArbTilhoererSammeKonsern;
 } | null;
-export type TheNorskArbgUtbetalerLoennSchema = boolean | null;
-export type TheErArbeidstakerAnsattHelePeriodenSchema = boolean | null;
-export type TheUtlArbgUtbetalerLoennSchema = boolean | null;
-export type TheBruttoLoennPerMndSchema = number | null;
-export type TheBruttoLoennUtlandPerMndSchema = number | null;
-export type TheMottarNaturalytelserSchema = boolean | null;
-export type TheSamletVerdiNaturalytelserSchema = number | null;
-export type TheErArbeidsgiveravgiftHelePeriodenSchema = boolean | null;
-export type TheErTrukketTrygdeavgiftSchema = boolean | null;
-export type TheUtlArbTilhoererSammeKonsernSchema = boolean | null;
-export type TheIdSchema = string | null;
-export type TheLandkodeSchema = string;
-export type TheUtenlandskIdentSchema = TheItemsSchema[];
-export type TheMedfolgendeBarnSchema = {
+type NorskArbgUtbetalerLoenn = boolean | null;
+type ErArbeidstakerAnsattHelePerioden = boolean | null;
+type UtlArbgUtbetalerLoenn = boolean | null;
+type BruttoLoennPerMnd = number | null;
+type BruttoLoennUtlandPerMnd = number | null;
+type MottarNaturalytelser = boolean | null;
+type SamletVerdiNaturalytelser = number | null;
+type ErArbeidsgiveravgiftHelePerioden = boolean | null;
+type ErTrukketTrygdeavgift = boolean | null;
+type UtlArbTilhoererSammeKonsern = boolean | null;
+type Id = string | null;
+type Landkode = string;
+type UtenlandskIdent = {
+  ident: Id;
+  landkode: Landkode;
+};
+type MedfolgendeBarn = {
   uuid: string;
   fnr: string | null;
   navn: string | null;
   relasjonsrolle: "BARN" | "EKTEFELLE_SAMBOER";
 }[];
-export type TheNavnSchema = string | null;
-export type TheForetakutlandSchema = TheItemsSchema1[];
-export type TheItemsSchema2 = string | null;
-export type TheOppholdslandkoderSchema = TheItemsSchema2[];
-export type TheEktefelleellerbarninorgeSchema = boolean | null;
-export type TheStudentfinansieringkodeSchema = string | null;
-export type TheStudentsemesterSchema = string | null;
-export type TheIntensjonomreturSchema = boolean | null;
-export type TheAntallmaanederinorgeSchema = number | null;
-export type TheErselvstendigSchema = boolean | null;
-export type TheOrgnrSchema = string | null;
-export type TheFortsetteretterarbeidiutlandetSchema = boolean | null;
-export type TheSelvstendigforetakSchema = TheItemsSchema3[];
-export type TheEnhetNavnSchema = string | null;
-export type TheFartsomradekodeSchema = string | null;
-export type TheFlagglandkodeSchema = string | null;
-export type TheTerritorialfarvannSchema = string | null;
-export type TheInnretningstypeSchema = string | null;
-export type TheMaritimtArbeidSchema = TheMaritimtarbeidSchema[];
-export type TheHjemmebaseNavnSchema = string | null;
-export type TheHjemmebaseLandSchema = string | null;
-export type TheTypeFlyvningerSchema = "NASJONAL" | "INTERNASJONAL" | "BEGGE" | null;
-export type TheLuftfartBaserSchema = TheLuftfartBaserItemSchema[];
-export type TheAntalladmansatteSchema = number | null;
-export type TheAntallAnsatteSchema = number | null;
-export type TheAntallUtsendteSchema = number | null;
-export type TheAndelomsetninginorgeSchema = number | null;
-export type TheAndelOppdragINorgeSchema = number | null;
-export type TheAndelkontrakterinorgeSchema = number | null;
-export type TheAndelRekruttertINorgeSchema = number | null;
-export type TheItemsSchema4 = string;
-export type TheEkstraArbeidsgivereSchema = TheItemsSchema4[];
-export type TheKodeSchema = string;
-export type TheTermSchema = string | null;
-
-export interface TheRootSchema {
-  mottaksdato: string | null;
-  data:
-    | {
-        arbeidsgiversBekreftelse: {
-          arbeidsgiverBekrefterUtsendelse: TheArbeidsgiverbekrefterutsendelseSchema;
-          arbeidstakerAnsattUnderUtsendelsen: TheArbeidstakeransattunderutsendelsenSchema;
-          erstatterArbeidstakerenUtsendte: TheErstatterarbeidstakerenutsendteSchema;
-          arbeidstakerTidligereUtsendt24Mnd: TheArbeidstakertidligereutsendt24MndSchema;
-          arbeidsgiverBetalerArbeidsgiveravgift: TheArbeidsgiverbetalerarbeidsgiveravgiftSchema;
-          trygdeavgiftTrukketGjennomSkatt: TheTrygdeavgifttrukketgjennomskattSchema;
-          trygdeavgiftTrukketGjennomSkattDato: string | null;
-        };
-        loennOgGodtgjoerelse: TheLoennOgGodtgjoerelseSchema;
-        personOpplysninger: ThePersonopplysningerSchema;
-        arbeidPaaLand: {
-          fysiskeArbeidssteder: {
-            adresse: {
-              tilleggsnavn: string | null;
-              gatenavn: string | null;
-              husnummerEtasjeLeilighet: string | null;
-              postboks: string | null;
-              region: string | null;
-              postnummer: string | null;
-              poststed: string | null;
-              landkode: string | null;
-            };
-            virksomhetNavn: string | null;
-          }[];
-          erHjemmekontor: boolean | null;
-          erFastArbeidssted: boolean | null;
-        };
-        foretakUtland: TheForetakutlandSchema;
-        oppholdUtland: TheOppholdutlandSchema;
-        bosted: TheBostedSchema;
-        selvstendigArbeid: TheSelvstendigarbeidSchema;
-        maritimtArbeid: TheMaritimtArbeidSchema;
-        luftfartBaser: TheLuftfartBaserSchema;
-        soeknadsland: TheSoeknadslandSchema;
-        periode: PeriodeMedFomTom;
-        juridiskArbeidsgiverNorge: TheJuridiskarbeidsgivernorgeSchema;
-        arbeidssituasjonOgOevrig: {
-          harLoennetArbeidMinstEnMndFoerUtsending: boolean | null;
-          beskrivelseArbeidSisteMnd: string | null;
-          harAndreArbeidsgivereIUtsendingsperioden: boolean | null;
-          beskrivelseAnnetArbeid: string | null;
-          erSkattepliktig: boolean | null;
-          mottarYtelserNorge: boolean | null;
-          mottarYtelserUtlandet: boolean | null;
-        };
-        utenlandsoppdraget: {
-          erUtsendelseForOppdragIUtlandet: boolean | null;
-          erAnsattForOppdragIUtlandet: boolean | null;
-          erFortsattAnsattEtterOppdraget: boolean | null;
-          erDrattPaaEgetInitiativ: boolean | null;
-          erErstatningTidligereUtsendte: boolean | null;
-          samletUtsendingsperiode: PeriodeMedFomTom1;
-        } | null;
-      }
-    | {
-        juridiskArbeidsgiverNorge: TheJuridiskarbeidsgivernorgeSchema;
-        personOpplysninger: ThePersonopplysningerSchema;
-        arbeidPaaLand: {
-          fysiskeArbeidssteder: {
-            adresse: {
-              tilleggsnavn: string | null;
-              gatenavn: string | null;
-              husnummerEtasjeLeilighet: string | null;
-              postboks: string | null;
-              region: string | null;
-              postnummer: string | null;
-              poststed: string | null;
-              landkode: string | null;
-            };
-            virksomhetNavn: string | null;
-          }[];
-          erHjemmekontor: boolean | null;
-          erFastArbeidssted: boolean | null;
-        };
-        foretakUtland: TheForetakutlandSchema;
-        oppholdUtland: TheOppholdutlandSchema;
-        bosted: TheBostedSchema;
-        selvstendigArbeid: TheSelvstendigarbeidSchema;
-        maritimtArbeid: TheMaritimtArbeidSchema;
-        luftfartBaser: TheLuftfartBaserSchema;
-        soeknadsland: TheSoeknadslandSchema;
-        periode: PeriodeMedFomTom;
-        overgangsregelbestemmelser: (TheKodeverkSchema | string)[];
-        ytterligereInformasjon: string | null;
-      }
-    | {
-        arbeidsgiversBekreftelse: {
-          arbeidsgiverBekrefterUtsendelse: TheArbeidsgiverbekrefterutsendelseSchema;
-          arbeidstakerAnsattUnderUtsendelsen: TheArbeidstakeransattunderutsendelsenSchema;
-          erstatterArbeidstakerenUtsendte: TheErstatterarbeidstakerenutsendteSchema;
-          arbeidstakerTidligereUtsendt24Mnd: TheArbeidstakertidligereutsendt24MndSchema;
-          arbeidsgiverBetalerArbeidsgiveravgift: TheArbeidsgiverbetalerarbeidsgiveravgiftSchema;
-          trygdeavgiftTrukketGjennomSkatt: TheTrygdeavgifttrukketgjennomskattSchema;
-          trygdeavgiftTrukketGjennomSkattDato: string | null;
-        };
-        loennOgGodtgjoerelse: TheLoennOgGodtgjoerelseSchema;
-        personOpplysninger: ThePersonopplysningerSchema;
-        arbeidPaaLand: {
-          fysiskeArbeidssteder: {
-            adresse: {
-              tilleggsnavn: string | null;
-              gatenavn: string | null;
-              husnummerEtasjeLeilighet: string | null;
-              postboks: string | null;
-              region: string | null;
-              postnummer: string | null;
-              poststed: string | null;
-              landkode: string | null;
-            };
-            virksomhetNavn: string | null;
-          }[];
-          erHjemmekontor: boolean | null;
-          erFastArbeidssted: boolean | null;
-        };
-        foretakUtland: TheForetakutlandSchema;
-        oppholdUtland: TheOppholdutlandSchema;
-        bosted: TheBostedSchema;
-        selvstendigArbeid: TheSelvstendigarbeidSchema;
-        maritimtArbeid: TheMaritimtArbeidSchema;
-        luftfartBaser: TheLuftfartBaserSchema;
-        soeknadsland: TheSoeknadslandSchema;
-        periode: PeriodeMedFomTom;
-        juridiskArbeidsgiverNorge: TheJuridiskarbeidsgivernorgeSchema;
-        trygdedekning:
-          | (
-              | "UTEN_DEKNING"
-              | "FULL_DEKNING_EOSFO"
-              | "HELSEDEL"
-              | "HELSEDEL_MED_SYKE_OG_FORELDREPENGER"
-              | "PENSJONSDEL"
-              | "HELSE_OG_PENSJONSDEL"
-              | "HELSE_OG_PENSJONSDEL_MED_SYKE_OG_FORELDREPENGER"
-              | "FULL_DEKNING_FTRL"
-            )
-          | null;
-      };
-  type: string;
-}
-export interface ThePersonopplysningerSchema {
-  utenlandskIdent: TheUtenlandskIdentSchema;
-  medfolgendeFamilie: TheMedfolgendeBarnSchema;
-}
-export interface TheItemsSchema {
-  ident: TheIdSchema;
-  landkode: TheLandkodeSchema;
-}
-export interface TheItemsSchema1 {
+type Navn = string | null;
+type Foretakutland = {
   uuid: string;
-  navn: TheNavnSchema;
+  navn: Navn;
   orgnr: string | null;
   selvstendigNaeringsvirksomhet: boolean;
   adresse: {
@@ -236,21 +54,207 @@ export interface TheItemsSchema1 {
     poststed: string | null;
     landkode: string | null;
   };
+};
+
+type Oppholdslandkode = string | null;
+type Ektefelleellerbarninorge = boolean | null;
+type Studentfinansieringkode = string | null;
+type Studentsemester = string | null;
+type Intensjonomretur = boolean | null;
+type Antallmaanederinorge = number | null;
+type Erselvstendig = boolean | null;
+type Orgnr = string | null;
+type Fortsetteretterarbeidiutlandet = boolean | null;
+type Selvstendigforetak = {
+  orgnr: Orgnr;
+  fortsetterEtterArbeidIUtlandet: Fortsetteretterarbeidiutlandet;
+};
+type EnhetNavn = string | null;
+type Fartsomradekode = string | null;
+type Flagglandkode = string | null;
+type Territorialfarvann = string | null;
+type Innretningstype = string | null;
+type MaritimtArbeid = Maritimtarbeid[];
+type HjemmebaseNavn = string | null;
+type HjemmebaseLand = string | null;
+type TypeFlyvninger = "NASJONAL" | "INTERNASJONAL" | "BEGGE" | null;
+type Antalladmansatte = number | null;
+type AntallAnsatte = number | null;
+type AntallUtsendte = number | null;
+type Andelomsetninginorge = number | null;
+type AndelOppdragINorge = number | null;
+type Andelkontrakterinorge = number | null;
+type AndelRekruttertINorge = number | null;
+type EkstraArbeidsgiver = string;
+type Kode = string;
+type Term = string | null;
+
+type BehandlingsgrunnlagData =
+  | {
+      arbeidsgiversBekreftelse: {
+        arbeidsgiverBekrefterUtsendelse: Arbeidsgiverbekrefterutsendelse;
+        arbeidstakerAnsattUnderUtsendelsen: Arbeidstakeransattunderutsendelsen;
+        erstatterArbeidstakerenUtsendte: Erstatterarbeidstakerenutsendte;
+        arbeidstakerTidligereUtsendt24Mnd: Arbeidstakertidligereutsendt24Mnd;
+        arbeidsgiverBetalerArbeidsgiveravgift: Arbeidsgiverbetalerarbeidsgiveravgift;
+        trygdeavgiftTrukketGjennomSkatt: Trygdeavgifttrukketgjennomskatt;
+        trygdeavgiftTrukketGjennomSkattDato: string | null;
+      };
+      loennOgGodtgjoerelse: LoennOgGodtgjoerelse;
+      personOpplysninger: Personopplysninger;
+      arbeidPaaLand: {
+        fysiskeArbeidssteder: {
+          adresse: {
+            tilleggsnavn: string | null;
+            gatenavn: string | null;
+            husnummerEtasjeLeilighet: string | null;
+            postboks: string | null;
+            region: string | null;
+            postnummer: string | null;
+            poststed: string | null;
+            landkode: string | null;
+          };
+          virksomhetNavn: string | null;
+        }[];
+        erHjemmekontor: boolean | null;
+        erFastArbeidssted: boolean | null;
+      };
+      foretakUtland: Foretakutland[];
+      oppholdUtland: Oppholdutland;
+      bosted: Bosted;
+      selvstendigArbeid: Selvstendigarbeid;
+      maritimtArbeid: MaritimtArbeid;
+      luftfartBaser: LuftfartBase[];
+      soeknadsland: Soeknadsland;
+      periode: Periode;
+      juridiskArbeidsgiverNorge: Juridiskarbeidsgivernorge;
+      arbeidssituasjonOgOevrig: {
+        harLoennetArbeidMinstEnMndFoerUtsending: boolean | null;
+        beskrivelseArbeidSisteMnd: string | null;
+        harAndreArbeidsgivereIUtsendingsperioden: boolean | null;
+        beskrivelseAnnetArbeid: string | null;
+        erSkattepliktig: boolean | null;
+        mottarYtelserNorge: boolean | null;
+        mottarYtelserUtlandet: boolean | null;
+      };
+      utenlandsoppdraget: {
+        erUtsendelseForOppdragIUtlandet: boolean | null;
+        erAnsattForOppdragIUtlandet: boolean | null;
+        erFortsattAnsattEtterOppdraget: boolean | null;
+        erDrattPaaEgetInitiativ: boolean | null;
+        erErstatningTidligereUtsendte: boolean | null;
+        samletUtsendingsperiode: NullablePeriode;
+      } | null;
+    }
+  | {
+      juridiskArbeidsgiverNorge: Juridiskarbeidsgivernorge;
+      personOpplysninger: Personopplysninger;
+      arbeidPaaLand: {
+        fysiskeArbeidssteder: {
+          adresse: {
+            tilleggsnavn: string | null;
+            gatenavn: string | null;
+            husnummerEtasjeLeilighet: string | null;
+            postboks: string | null;
+            region: string | null;
+            postnummer: string | null;
+            poststed: string | null;
+            landkode: string | null;
+          };
+          virksomhetNavn: string | null;
+        }[];
+        erHjemmekontor: boolean | null;
+        erFastArbeidssted: boolean | null;
+      };
+      foretakUtland: Foretakutland[];
+      oppholdUtland: Oppholdutland;
+      bosted: Bosted;
+      selvstendigArbeid: Selvstendigarbeid;
+      maritimtArbeid: MaritimtArbeid;
+      luftfartBaser: LuftfartBase[];
+      soeknadsland: Soeknadsland;
+      periode: Periode;
+      overgangsregelbestemmelser: (Kodeverk | string)[];
+      ytterligereInformasjon: string | null;
+    }
+  | {
+      arbeidsgiversBekreftelse: {
+        arbeidsgiverBekrefterUtsendelse: Arbeidsgiverbekrefterutsendelse;
+        arbeidstakerAnsattUnderUtsendelsen: Arbeidstakeransattunderutsendelsen;
+        erstatterArbeidstakerenUtsendte: Erstatterarbeidstakerenutsendte;
+        arbeidstakerTidligereUtsendt24Mnd: Arbeidstakertidligereutsendt24Mnd;
+        arbeidsgiverBetalerArbeidsgiveravgift: Arbeidsgiverbetalerarbeidsgiveravgift;
+        trygdeavgiftTrukketGjennomSkatt: Trygdeavgifttrukketgjennomskatt;
+        trygdeavgiftTrukketGjennomSkattDato: string | null;
+      };
+      loennOgGodtgjoerelse: LoennOgGodtgjoerelse;
+      personOpplysninger: Personopplysninger;
+      arbeidPaaLand: {
+        fysiskeArbeidssteder: {
+          adresse: {
+            tilleggsnavn: string | null;
+            gatenavn: string | null;
+            husnummerEtasjeLeilighet: string | null;
+            postboks: string | null;
+            region: string | null;
+            postnummer: string | null;
+            poststed: string | null;
+            landkode: string | null;
+          };
+          virksomhetNavn: string | null;
+        }[];
+        erHjemmekontor: boolean | null;
+        erFastArbeidssted: boolean | null;
+      };
+      foretakUtland: Foretakutland[];
+      oppholdUtland: Oppholdutland;
+      bosted: Bosted;
+      selvstendigArbeid: Selvstendigarbeid;
+      maritimtArbeid: MaritimtArbeid;
+      luftfartBaser: LuftfartBase[];
+      soeknadsland: Soeknadsland;
+      periode: Periode;
+      juridiskArbeidsgiverNorge: Juridiskarbeidsgivernorge;
+      trygdedekning:
+        | (
+            | "UTEN_DEKNING"
+            | "FULL_DEKNING_EOSFO"
+            | "HELSEDEL"
+            | "HELSEDEL_MED_SYKE_OG_FORELDREPENGER"
+            | "PENSJONSDEL"
+            | "HELSE_OG_PENSJONSDEL"
+            | "HELSE_OG_PENSJONSDEL_MED_SYKE_OG_FORELDREPENGER"
+            | "FULL_DEKNING_FTRL"
+          )
+        | null;
+    };
+
+export type BehandlingsgrunnlagReqDto = BehandlingsgrunnlagData;
+
+export interface BehandlingsgrunnlagResDto {
+  mottaksdato: string | null;
+  data: BehandlingsgrunnlagData;
+  type: string;
 }
-export interface TheOppholdutlandSchema {
-  oppholdslandkoder: TheOppholdslandkoderSchema;
-  oppholdsPeriode: TheOppholdsperiodeSchema;
-  ektefelleEllerBarnINorge: TheEktefelleellerbarninorgeSchema;
-  studentFinansieringKode: TheStudentfinansieringkodeSchema;
-  studentSemester: TheStudentsemesterSchema;
+interface Personopplysninger {
+  utenlandskIdent: UtenlandskIdent[];
+  medfolgendeFamilie: MedfolgendeBarn;
 }
-export interface TheOppholdsperiodeSchema {
+
+interface Oppholdutland {
+  oppholdslandkoder: Oppholdslandkode[];
+  oppholdsPeriode: Oppholdsperiode;
+  ektefelleEllerBarnINorge: Ektefelleellerbarninorge;
+  studentFinansieringKode: Studentfinansieringkode;
+  studentSemester: Studentsemester;
+}
+interface Oppholdsperiode {
   fom: string;
   tom: string | null;
 }
-export interface TheBostedSchema {
-  intensjonOmRetur: TheIntensjonomreturSchema;
-  antallMaanederINorge: TheAntallmaanederinorgeSchema;
+interface Bosted {
+  intensjonOmRetur: Intensjonomretur;
+  antallMaanederINorge: Antallmaanederinorge;
   oppgittAdresse: {
     tilleggsnavn: string | null;
     gatenavn: string | null;
@@ -262,51 +266,48 @@ export interface TheBostedSchema {
     landkode: string | null;
   };
 }
-export interface TheSelvstendigarbeidSchema {
-  erSelvstendig: TheErselvstendigSchema;
-  selvstendigForetak: TheSelvstendigforetakSchema;
+interface Selvstendigarbeid {
+  erSelvstendig: Erselvstendig;
+  selvstendigForetak: Selvstendigforetak[];
 }
-export interface TheItemsSchema3 {
-  orgnr: TheOrgnrSchema;
-  fortsetterEtterArbeidIUtlandet: TheFortsetteretterarbeidiutlandetSchema;
-}
-export interface TheMaritimtarbeidSchema {
-  enhetNavn: TheEnhetNavnSchema;
-  fartsomradeKode: TheFartsomradekodeSchema;
-  flaggLandkode: TheFlagglandkodeSchema;
+
+interface Maritimtarbeid {
+  enhetNavn: EnhetNavn;
+  fartsomradeKode: Fartsomradekode;
+  flaggLandkode: Flagglandkode;
   innretningLandkode: string | null;
-  territorialfarvann: TheTerritorialfarvannSchema;
-  innretningstype: TheInnretningstypeSchema;
+  territorialfarvann: Territorialfarvann;
+  innretningstype: Innretningstype;
 }
-export interface TheLuftfartBaserItemSchema {
-  hjemmebaseNavn: TheHjemmebaseNavnSchema;
-  hjemmebaseLand: TheHjemmebaseLandSchema;
-  typeFlyvninger: TheTypeFlyvningerSchema;
+interface LuftfartBase {
+  hjemmebaseNavn: HjemmebaseNavn;
+  hjemmebaseLand: HjemmebaseLand;
+  typeFlyvninger: TypeFlyvninger;
 }
-export interface TheSoeknadslandSchema {
+interface Soeknadsland {
   landkoder: string[];
   erUkjenteEllerAlleEosLand: boolean;
 }
-export interface PeriodeMedFomTom {
+interface Periode {
   fom: string;
   tom: string | null;
 }
-export interface TheJuridiskarbeidsgivernorgeSchema {
-  antallAdmAnsatte: TheAntalladmansatteSchema;
-  antallAnsatte: TheAntallAnsatteSchema;
-  antallUtsendte: TheAntallUtsendteSchema;
-  andelOmsetningINorge: TheAndelomsetninginorgeSchema;
-  andelOppdragINorge: TheAndelOppdragINorgeSchema;
-  andelKontrakterINorge: TheAndelkontrakterinorgeSchema;
-  andelRekruttertINorge: TheAndelRekruttertINorgeSchema;
-  ekstraArbeidsgivere: TheEkstraArbeidsgivereSchema;
+interface Juridiskarbeidsgivernorge {
+  antallAdmAnsatte: Antalladmansatte;
+  antallAnsatte: AntallAnsatte;
+  antallUtsendte: AntallUtsendte;
+  andelOmsetningINorge: Andelomsetninginorge;
+  andelOppdragINorge: AndelOppdragINorge;
+  andelKontrakterINorge: Andelkontrakterinorge;
+  andelRekruttertINorge: AndelRekruttertINorge;
+  ekstraArbeidsgivere: EkstraArbeidsgiver[];
   erOffentligVirksomhet: boolean | null;
 }
-export interface PeriodeMedFomTom1 {
+interface NullablePeriode {
   fom: string | null;
   tom: string | null;
 }
-export interface TheKodeverkSchema {
-  kode: TheKodeSchema;
-  term: TheTermSchema;
+interface Kodeverk {
+  kode: Kode;
+  term: Term;
 }
