@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 
 import * as Skjema from "./skjema";
 import * as Api from "../services/api";
-import * as Utils from "../utils";
 import * as Nav from "../utils/navFrontend";
 
 import "./brukernavnskjema.css";
@@ -23,7 +22,6 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
         settFormBruker(brukerRespons);
       } catch (e) {
         settFormBruker("");
-        Utils.logger.error(e);
       }
     }
 

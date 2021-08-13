@@ -7,6 +7,7 @@ import {
   strengTilInt,
   tekstEllerDash,
   storeForbokstaver,
+  storeForbokstaverForLand,
   arrayTilKonjunksjon,
 } from "./streng";
 
@@ -74,6 +75,33 @@ describe("streng.js", () => {
     test("Oppdaterer forste bokstav i hvert ord i setningen med stor bokstav", () => {
       const testString = "en to tre fire fem";
       expect(storeForbokstaver(testString)).toEqual("En To Tre Fire Fem");
+    });
+  });
+
+  describe("storeForbokstaverForLand for landnavn", () => {
+    test("Gjør første bokstav i hvert ord om til stor bokstav", () => {
+      const testString = "LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Langtvekkistan");
+    });
+
+    test("Gjør første bokstav etter bindestrek om til stor bokstav", () => {
+      const testString = "BORTE-VEKK";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk");
+    });
+
+    test('"og" blir ikke gjort om til stor bokstav', () => {
+      const testString = "BORTE-VEKK OG LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk og Langtvekkistan");
+    });
+
+    test('"of" blir ikke gjort om til stor bokstav', () => {
+      const testString = "BORTE-VEKK OF LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk of Langtvekkistan");
+    });
+
+    test('"i" blir ikke gjort om til stor bokstav', () => {
+      const testString = "BORTE-VEKK I LANGTVEKKISTAN";
+      expect(storeForbokstaverForLand(testString)).toEqual("Borte-Vekk i Langtvekkistan");
     });
   });
 

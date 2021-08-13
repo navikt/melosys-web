@@ -62,8 +62,7 @@ export const EnkeltArbeidsforholdNorgeRedigerer = ({
             redigerbart={redigerbart}
             onChange={onKontaktopplysningerChange}
             kontaktopplysninger={kontaktopplysninger}
-            onKontaktnavnInputBlur={onKontaktopplysningerInputBlur}
-            onKontaktorgnrInputBlur={onKontaktopplysningerInputBlur}
+            onInputBlur={onKontaktopplysningerInputBlur}
             onSlettKnappClick={onKontaktopplysningerSlettClick}
           />
         )}

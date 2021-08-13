@@ -247,6 +247,11 @@ export const LonnOgGodtgjorelseSelector = createSelector(
     }
 );
 
+export const ArbeidssituasjonOgOevrigSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidssituasjonOgOevrig || {}
+);
+
 export const UtenlandsoppdragetSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlagData) =>

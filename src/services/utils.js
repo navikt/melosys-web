@@ -51,12 +51,6 @@ export const handterFeil = (dispatch, action, callback) => async (error) => {
     callback(dispatch, data);
   }
 
-  window.frontendlogger.error({
-    error,
-    stack: error.stack,
-    data: error.response ? JSON.stringify(data) : data,
-  });
-
   if (error.response) {
     return dispatch({
       type: action,

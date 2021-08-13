@@ -5,3 +5,6 @@ coverage
 node_modules
 nais
 *.md
+
+src/graphql/generated/**
+**/*generated.tsx

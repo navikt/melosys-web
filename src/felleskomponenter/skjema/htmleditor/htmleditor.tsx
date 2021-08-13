@@ -41,6 +41,8 @@ function InnerHTMLEditorComponent({ input, ...rest }: InnerHtmlEditorComponentPr
         editorClassName="editor"
         onEditorStateChange={onEditorStateChange}
         placeholder={rest.placeholder || ""}
+        readOnly={rest?.disabled}
+        stripPastedStyles
       />
     </div>
   );

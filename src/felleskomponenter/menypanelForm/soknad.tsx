@@ -22,6 +22,7 @@ import { formSelectors } from "../../ducks/form";
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
@@ -41,9 +42,12 @@ const mapStateToProps = (state: RootState) => ({
     trygdeavgiftTrukketGjennomSkattDato: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato
     ),
+    oppgittAdresseTilleggsnavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).tilleggsnavn,
     oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
-    oppgittAdresseHusnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummer,
     oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
+    oppgittAdresseHusnummerEtasjeLeilighet: behandlingsgrunnlagSelectors.BostedAdresseSelector(state)
+      .husnummerEtasjeLeilighet,
+    oppgittAdressePostboks: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postboks,
     oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).landkode,
@@ -88,6 +92,19 @@ const mapStateToProps = (state: RootState) => ({
       samletVerdiNaturalytelser: Utils.streng.tryParseFloat(
         behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
       ),
+    },
+    arbeidssituasjonOgOevrig: {
+      harLoennetArbeidMinstEnMndFoerUtsending: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .harLoennetArbeidMinstEnMndFoerUtsending,
+      beskrivelseArbeidSisteMnd: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .beskrivelseArbeidSisteMnd,
+      harAndreArbeidsgivereIUtsendingsperioden: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .harAndreArbeidsgivereIUtsendingsperioden,
+      beskrivelseAnnetArbeid: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
+        .beskrivelseAnnetArbeid,
+      erSkattepliktig: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).erSkattepliktig,
+      mottarYtelserNorge: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserNorge,
+      mottarYtelserUtlandet: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserUtlandet,
     },
     utenlandsoppdraget: {
       erUtsendelseForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
@@ -201,6 +218,7 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
       context: {
         skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
         behandlingstema: props.behandlingstema,
+        behandlingsgrunnlagtype: props.behandlingsgrunnlagtype,
       },
     };
 

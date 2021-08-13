@@ -1,4 +1,4 @@
-import { OppsummertFaktaVirksomheter, MedfolgendeFamiliemedlem } from "Domene";
+import * as Api from "../../services/api";
 
 export const OK = "oppsummertfakta/OK";
 export const FEILET = "oppsummertfakta/FEILET";
@@ -9,8 +9,8 @@ export const OPPDATER_VIRKSOMHETER = "oppsummertfakta/OPPDATER_VIRKSOMHETER";
 export const RESET = "oppsummertfakta/RESET";
 
 export type Data = {
-  virksomheter?: OppsummertFaktaVirksomheter;
-  medfolgendeFamilie?: MedfolgendeFamiliemedlem[];
+  virksomheter?: Api.Avklartefakta.Virksomheter;
+  medfolgendeFamilie?: Api.Avklartefakta.MedfolgendeFamiliemedlem[];
 };
 
 export interface FeiletAction {
@@ -33,7 +33,7 @@ export interface ResetAction {
 
 export interface OppdaterVirksomheterAction {
   type: typeof OPPDATER_VIRKSOMHETER;
-  data: OppsummertFaktaVirksomheter;
+  data: Api.Avklartefakta.Virksomheter;
 }
 
 export interface OppdaterOppsummertfaktaAction {

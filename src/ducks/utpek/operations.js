@@ -2,7 +2,6 @@ import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 import * as DucksUtils from "../utils";
-import * as Utils from "../../utils";
 
 import { modalerOperations } from "../modaler";
 import { behandlingerSelectors } from "../behandlinger";
@@ -34,11 +33,7 @@ export function avvis(body) {
   return async (dispatch, getState) => {
     const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
 
-    try {
-      await Api.Saksflyt.Utpeking.avvis(behandlingID, body);
-      dispatch(navigeringOperations.tilForsiden());
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    await Api.Saksflyt.Utpeking.avvis(behandlingID, body);
+    dispatch(navigeringOperations.tilForsiden());
   };
 }

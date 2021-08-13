@@ -1,4 +1,4 @@
-import { StrukturertAdresse } from "Domene";
+import { StrukturertAdresse } from "../services/api";
 
 export const BEHANDLINGS_FORM = "behandlingsform";
 export interface BehandlingsFormData {
@@ -53,6 +53,15 @@ export interface MedfolgendeFamilie {
   relasjonsrolle?: string;
 }
 
+export interface ArbeidssituasjonOgOevrig {
+  harLoennetArbeidMinstEnMndFoerUtsending?: boolean | null;
+  beskrivelseArbeidSisteMnd?: string | null;
+  harAndreArbeidsgivereIUtsendingsperioden?: boolean | null;
+  beskrivelseAnnetArbeid?: string | null;
+  erSkattepliktig?: boolean | null;
+  mottarYtelserNorge?: boolean | null;
+  mottarYtelserUtlandet?: boolean | null;
+}
 export interface JuridiskArbeidsgiverNorge {
   antallUtsendte?: string;
   antallAdmAnsatte?: string;
@@ -88,9 +97,11 @@ export const VURDER_UTPEKING = "vurder_utpeking";
 export const AVSLAA_UTPEKING = "avslaa_utpeking";
 export const REGISTRERING_PANELER = "registrering_paneler";
 export interface RegistreringPanelerFormData {
+  oppgittAdresseTilleggsnavn: string;
   oppgittAdresseGatenavn: string;
-  oppgittAdresseHusnummer: string;
+  oppgittAdresseHusnummerEtasjeLeilighet: string;
   oppgittAdresseRegion: string;
+  oppgittAdressePostboks: string;
   oppgittAdressePostnummer: string;
   oppgittAdressePoststed: string;
   oppgittAdresseLand: string;

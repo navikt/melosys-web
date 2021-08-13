@@ -1,4 +1,3 @@
-import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
 
 const finnKontaktopplysninger = async (
@@ -9,10 +8,6 @@ const finnKontaktopplysninger = async (
     const kontaktopplysninger = await Api.Fagsaker.kontaktopplysninger.hent(saksnummer, orgnr);
     return kontaktopplysninger;
   } catch (e) {
-    if (e.response.status !== 404) {
-      Utils.logger.error(e);
-    }
-
     return {
       kontaktnavn: null,
       kontaktorgnr: null,

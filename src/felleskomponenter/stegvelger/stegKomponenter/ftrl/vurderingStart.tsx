@@ -127,7 +127,7 @@ const VurderingStart = ({
   const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalBehandlingsgrunnlag, 500), []);
 
   useEffect(() => {
-    debouncedOppdatering({ formValues, formIsValid });
+    if (redigerbart) debouncedOppdatering({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   const fortsettHandle = () => {
@@ -189,7 +189,8 @@ const VurderingStart = ({
               }
               feltNavn="land"
               placeholder="Velg..."
-              landkoder={alleLandkoder.map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))}
+              landkoder={alleLandkoder}
+              disabled={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -202,6 +203,7 @@ const VurderingStart = ({
               feltNavn="trygdedekning"
               emptyFieldText="Velg"
               emptyFieldDisabled={!!formValues.trygdedekning}
+              disabled={!redigerbart}
             >
               {trygdedekninger.map((item: KTObject) => (
                 <option key={item.kode} value={item.kode}>
@@ -214,7 +216,12 @@ const VurderingStart = ({
       </Nav.Fieldset>
 
       <div className="fane__knapplinje">
-        <Nav.Hovedknapp mini disabled={!formIsValid} className="fane__navigasjonsknapp" onClick={fortsettHandle}>
+        <Nav.Hovedknapp
+          mini
+          disabled={!formIsValid || !redigerbart}
+          className="fane__navigasjonsknapp"
+          onClick={fortsettHandle}
+        >
           Fortsett
         </Nav.Hovedknapp>
       </div>

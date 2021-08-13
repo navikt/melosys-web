@@ -89,12 +89,16 @@ const EditerbartElement = ({
     (visLagreKnappBareHvisHarData ? harData : true) &&
     (visLagreKnapp !== undefined ? visLagreKnapp : true);
 
-  const lagreClickHandler: MouseEventHandler<HTMLButtonElement> = async (e) => {
-    e.persist();
+  const lagreClickHandler: MouseEventHandler<HTMLButtonElement> = async (event) => {
+    event.persist();
 
     if (onLagreClick) {
-      const validert = await onLagreClick(e);
-      if (!validert) return;
+      try {
+        const validert = await onLagreClick(event);
+        if (!validert) return;
+      } catch (error) {
+        return;
+      }
     }
 
     setStatus(hentNesteStatus());

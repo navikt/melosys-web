@@ -1,8 +1,14 @@
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 type Periode = {
   fom: string;
   tom: string;
 };
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 type Lovvalgsperiode = {
   fomDato: string;
   tomDato: string;
@@ -10,6 +16,9 @@ type Lovvalgsperiode = {
 
 export type { Periode, Lovvalgsperiode };
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 export type Medlemskapsperiode = {
   id: number;
   arbeidsland: string;
@@ -21,6 +30,9 @@ export type Medlemskapsperiode = {
   medlemskapstype: string;
 };
 
+/**
+ * @deprecated Typer fra Api flyttes til Api-modul
+ */
 export type OppdaterMedlemskapsperiode = {
   fomDato: string;
   tomDato: string | null;

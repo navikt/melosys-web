@@ -5,7 +5,6 @@
  * action types som sendes inn sammen med dataene.
  */
 import { StateSection } from "AppTypes";
-import { Avklartfakta } from "Domene";
 
 import MKV from "../../melosyskodeverk";
 
@@ -13,6 +12,7 @@ import { STATUS } from "../../services/utils";
 import * as Utils from "../../utils";
 import * as Types from "./types";
 import * as KV from "../../kodeverk";
+import * as Api from "../../services/api";
 
 export const initialState: StateSection<Types.Data> = {
   data: [],
@@ -20,9 +20,9 @@ export const initialState: StateSection<Types.Data> = {
 };
 
 const lagAvklartfaktaObjekterMedKode = (
-  avklarteFakta: Avklartfakta[],
+  avklarteFakta: Api.Avklartefakta.Avklartfakta[],
   avklartefaktaKode: string | null
-): Avklartfakta[] => {
+): Api.Avklartefakta.Avklartfakta[] => {
   if (Utils._isNil(avklarteFakta)) {
     return [];
   }

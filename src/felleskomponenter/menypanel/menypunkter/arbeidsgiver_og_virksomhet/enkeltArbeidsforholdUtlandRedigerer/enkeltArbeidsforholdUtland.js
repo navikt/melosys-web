@@ -15,19 +15,17 @@ export const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, cl
 
   useEffect(() => {
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
-      API.Kodeverk.hentLandkoderIso2()
-        .then((response) => {
-          setAlternativLandsliste(
-            response
-              .sort((a, b) => {
-                if (a.term > b.term) return 1;
-                if (b.term > a.term) return -1;
-                return 0;
-              })
-              .map((item) => ({ ...item, term: Utils.streng.storeForbokstaver(item.term) }))
-          );
-        })
-        .catch(Utils.logger.error);
+      API.Kodeverk.hentLandkoderIso2().then((response) => {
+        setAlternativLandsliste(
+          response
+            .sort((a, b) => {
+              if (a.term > b.term) return 1;
+              if (b.term > a.term) return -1;
+              return 0;
+            })
+            .map((item) => ({ ...item, term: Utils.streng.storeForbokstaverForLand(item.term) }))
+        );
+      });
     }
   }, [sakstype]);
 
@@ -42,6 +40,15 @@ export const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, cl
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
+        <Nav.Column xs="12">
+          <Skjema.Input
+            label="Adressetilleggsnavn"
+            feltNavn={`${overordnetFeltNavn}.adresse.tilleggsnavn`}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
         <Nav.Column xs="6">
           <Skjema.Input
             label="Adresse til arbeidsgiver"
@@ -49,15 +56,29 @@ export const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, cl
             disabled={!redigerbart}
           />
         </Nav.Column>
-        <Nav.Column xs="3">
+        <Nav.Column xs="6">
+          <Skjema.Input
+            label="Husnummer"
+            feltNavn={`${overordnetFeltNavn}.adresse.husnummerEtasjeLeilighet`}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="6">
           <Skjema.Input label="Poststed" feltNavn={`${overordnetFeltNavn}.adresse.poststed`} disabled={!redigerbart} />
         </Nav.Column>
-        <Nav.Column xs="3">
+        <Nav.Column xs="6">
           <Skjema.Input
             label="Postnummer"
             feltNavn={`${overordnetFeltNavn}.adresse.postnummer`}
             disabled={!redigerbart}
           />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Skjema.Input label="Postboks" feltNavn={`${overordnetFeltNavn}.adresse.postboks`} disabled={!redigerbart} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

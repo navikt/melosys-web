@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, Fragment, useEffect, useState } from "react";
+import React, { ChangeEventHandler, Fragment, useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -6,6 +6,7 @@ import { Action } from "redux";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../utils/navFrontend";
+import * as Utils from "../../../../utils";
 
 import { vilkarSelectors } from "../../../../ducks/vilkar";
 import { lagBegrunnelse, lagVilkaar } from "../../../../regler/vilkar";
@@ -95,6 +96,8 @@ const VurderingBestemmelse = ({
     oppdater();
   };
 
+  const debouncedLagreVilkar = useCallback(Utils._debounce(lagreVilkar, 1000), []);
+
   useEffect(() => {
     handleEndreBestemmelse(bestemmelse);
     vilkarListe.forEach((vilkar: any) => {
@@ -105,6 +108,7 @@ const VurderingBestemmelse = ({
     });
     setValgteVilkar(new Map(valgteVilkar));
     setValgteBegrunnelser(new Map(valgteBegrunnelser));
+    return () => debouncedLagreVilkar.cancel();
   }, []);
 
   useEffect(() => {
@@ -118,8 +122,8 @@ const VurderingBestemmelse = ({
       ).length === valgteBestemmelseVilkar.vilkårOgBegrunnelser.length;
 
     setErAlleValgGjort(!!alleVilkarHarSvarJaOgvalgtBegrunnelse);
-    if (alleVilkarHarSvarJaOgvalgtBegrunnelse) {
-      lagreVilkar();
+    if (alleVilkarHarSvarJaOgvalgtBegrunnelse && redigerbart) {
+      debouncedLagreVilkar();
     }
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
@@ -222,6 +226,7 @@ const VurderingBestemmelse = ({
                   onChange={handleEndreBegrunnelse}
                   name={vilkaar}
                   value={valgteBegrunnelser.get(`${vilkaar}`)}
+                  disabled={!redigerbart}
                 >
                   <option key="" value="" disabled={!!valgteBegrunnelser.get(`${vilkaar}`)}>
                     Velg
@@ -281,10 +286,15 @@ const VurderingBestemmelse = ({
         )}
 
       <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={false} className="fane__navigasjonsknapp" onClick={tilbake}>
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
-        <Nav.Hovedknapp mini disabled={!erAlleValgGjort} className="fane__navigasjonsknapp" onClick={handleBefreft}>
+        <Nav.Hovedknapp
+          mini
+          disabled={!erAlleValgGjort || !redigerbart}
+          className="fane__navigasjonsknapp"
+          onClick={handleBefreft}
+        >
           Fortsett
         </Nav.Hovedknapp>
       </div>

@@ -4,7 +4,6 @@ import { change, getFormValues, reduxForm } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import { Action } from "redux";
-import { Organisasjon } from "Domene";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
@@ -69,7 +68,7 @@ const VurderingRepresentant = ({
 }: Props & PropsFromRedux) => {
   const [representantListe, setRepresentantListe] = useState<Api.Representant.RepresentantListeResDto>([]);
   const [representantData, setRepresentantData] = useState<Api.Representant.RepresentantDataResDto>();
-  const [organisasjon, setOrganisasjon] = useState<Organisasjon | undefined>();
+  const [organisasjon, setOrganisasjon] = useState<Api.Organisasjon | undefined>();
   const hjelpetekstNummer =
     "Representantnummeret du legger til her vil bli overført til Avgiftssystemet (ME7-bildet) når du fatter vedtak.\nSkal du opprette en ny representant, må du gjøre det i Avgiftssystemet.\nListen du finner her oppdateres hvert døgn. Hvis du har opprettet eller endret en representant i Avgiftssystemet i dag, vil du derfor ikke finne oppdateringen her. Dette har ikke betydning for overføringen til Avgiftssystemet, så lenge nummeret er riktig.";
   const hjelpetekstAdresse =
@@ -86,11 +85,9 @@ const VurderingRepresentant = ({
   const debouncedHentValgtRepresentant = useCallback(Utils._debounce(hentValgtRepresentant, 1000), []);
 
   useEffect(() => {
-    Api.Representant.hentRepresentantListe()
-      .then((liste: Api.Representant.RepresentantListeResDto) => {
-        setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
-      })
-      .catch(Utils.logger.error);
+    Api.Representant.hentRepresentantListe().then((liste: Api.Representant.RepresentantListeResDto) => {
+      setRepresentantListe(liste.sort((a, b) => a.nummer.localeCompare(b.nummer)));
+    });
     debouncedHentValgtRepresentant();
     return () => debouncedHentValgtRepresentant.cancel();
   }, []);
@@ -98,13 +95,7 @@ const VurderingRepresentant = ({
   async function hentOrganisasjonHvisValid(data: { orgnr: string; valid: boolean }) {
     if (data.valid) {
       const response = await hentOrganisasjon(data.orgnr);
-      if (response.data.response) {
-        Utils.logger.error(
-          response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon"
-        );
-      } else {
-        setOrganisasjon(response.data);
-      }
+      if (!response.data.response) setOrganisasjon(response.data);
     }
   }
   const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonHvisValid, 500), []);
@@ -141,7 +132,7 @@ const VurderingRepresentant = ({
         selvbetalende: !!data.formValues.selvbetalende,
         organisasjonsnummer: data.formValues.organisasjonsnummer || null,
         kontaktperson: data.formValues.kontaktperson || null,
-      }).catch(Utils.logger.error);
+      });
     }
   }
 
@@ -149,7 +140,7 @@ const VurderingRepresentant = ({
 
   useEffect(() => {
     oppdater();
-    debouncedLagring({ formValues, formIsValid });
+    if (redigerbart) debouncedLagring({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   return (
@@ -186,7 +177,7 @@ const VurderingRepresentant = ({
                 </option>
               ))}
             </datalist>
-            <Skjema.Checkbox feltNavn="selvbetalende" label="Søker er selvbetalende" />
+            <Skjema.Checkbox feltNavn="selvbetalende" label="Søker er selvbetalende" disabled={!redigerbart} />
           </Nav.Column>
           {representantData && (
             <Nav.Column xs="6">

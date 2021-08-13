@@ -1,19 +1,21 @@
 import React from "react";
-import { StrukturertAdresse as StrukturertAdresseType } from "Domene";
+
+import * as Api from "../../services/api";
 
 interface StrukturertAdresseProps {
-  adresse: Partial<StrukturertAdresseType>;
+  adresse: Partial<Api.StrukturertAdresse>;
 }
 
 const StrukturertAdresse = ({
-  adresse: { gatenavn, husnummer, region, postnummer, poststed, landkode },
+  adresse: { tilleggsnavn, gatenavn, husnummerEtasjeLeilighet, region, postboks, postnummer, poststed, landkode },
 }: StrukturertAdresseProps) => (
   <address>
+    <div>{tilleggsnavn}</div>
     <div>
-      {gatenavn} {husnummer}
+      {gatenavn} {husnummerEtasjeLeilighet}
     </div>
     <div>
-      {postnummer} {poststed}
+      {postnummer} {poststed} {postboks}
     </div>
     <div>
       {region} {landkode}

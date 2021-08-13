@@ -42,6 +42,7 @@ const Saksopplysninger = ({
   lastInnSaksopplysninger,
   tilForsiden,
   startOgVisOppfriskModal,
+  behandlingsresultatErHentet,
 }) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState("");
@@ -112,7 +113,7 @@ const Saksopplysninger = ({
     ) {
       godkjentUnntaksperiode();
     } else if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT) {
-      ikkeGodkjentUnntaksperiode(behandlingsresultat);
+      ikkeGodkjentUnntaksperiode();
     }
   };
 
@@ -154,9 +155,11 @@ const Saksopplysninger = ({
   ];
 
   const endrePeriodeOgLagre = (dispatchSaksflyt) =>
-    oppdaterAvklartefakta(behandlingID, [...avklartefakta, lagAvklartfakta()]).then(() =>
-      oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder()).then(() => dispatchSaksflyt())
-    );
+    oppdaterAvklartefakta(behandlingID, [
+      /* Har opplevd at det forsøkes å lagre 2 AARSAK_ENDRING_PERIODE-faktaer, derfor brukes filter(). */
+      ...avklartefakta.filter((af) => af.referanse !== MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE),
+      lagAvklartfakta(),
+    ]).then(() => oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder()).then(() => dispatchSaksflyt()));
 
   const godkjenn = () => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
 
@@ -258,17 +261,15 @@ const Saksopplysninger = ({
       case KV.Koder.Unntaksperiode.GODKJENT:
         godkjenn()
           .then(tilForsiden)
-          .catch((e) => {
+          .catch(() => {
             setRegistreringPending(false);
-            Utils.logger.error(e);
           });
         return true;
       case KV.Koder.Unntaksperiode.DELVIS_GODKJENT:
         delvisGodkjenn()
           .then(tilForsiden)
-          .catch((e) => {
+          .catch(() => {
             setRegistreringPending(false);
-            Utils.logger.error(e);
           });
         return true;
       case KV.Koder.Unntaksperiode.AVSLAG: {
@@ -278,9 +279,8 @@ const Saksopplysninger = ({
         };
         Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
           .then(tilForsiden)
-          .catch((e) => {
+          .catch(() => {
             setRegistreringPending(false);
-            Utils.logger.error(e);
           });
         return true;
       }
@@ -335,7 +335,6 @@ const Saksopplysninger = ({
                       value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
                       checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
                       onChange={endreUnntaksperiodeVurdering}
-                      disabled={!erGyldigLovvalgsperiode()}
                       label="Godkjenn, men endre periode"
                     />
                     {kanEndrePeriode() && (
@@ -368,7 +367,7 @@ const Saksopplysninger = ({
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
-              {unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && (
+              {unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && behandlingsresultatErHentet && (
                 <Fragment>
                   <Nav.Row>
                     <Nav.Column xs="6">
@@ -380,7 +379,7 @@ const Saksopplysninger = ({
                           tillatFritekst={false}
                           onChange={listevalgEndringHandler}
                           feil={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
-                          defaultElementer={ikkeGodkjentBegrunnelseKoder}
+                          defaultElementer={behandlingsresultat.begrunnelseKoder}
                         />
                       </Nav.Fieldset>
                     </Nav.Column>
@@ -441,6 +440,7 @@ Saksopplysninger.propTypes = {
   behandlingsresultat: PT.object,
   tilForsiden: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  behandlingsresultatErHentet: PT.bool.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -455,6 +455,7 @@ const mapStateToProps = (state) => ({
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
+  behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
 });
 const mapDispatchToProps = (dispatch) => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>

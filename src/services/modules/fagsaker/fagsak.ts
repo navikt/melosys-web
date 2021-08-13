@@ -1,7 +1,9 @@
+import { Fagsak } from "../types";
+
 import { getAsJson, postAsJson, putAsText } from "../../utils";
 import { API_BASE_URL, FAGSAKER } from "../../api-constants";
 
-export const hent = (saksnummer: string) => getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}`);
+export const hent = (saksnummer: string): Promise<Fagsak> => getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}`);
 
 interface SoknadDto {
   periode: {

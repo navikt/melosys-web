@@ -23,13 +23,14 @@ interface BaseProps {
   className?: string;
   hentNavn?: (element: any) => string;
   tittelTekst: string;
-  harData: (elementListe: any[], element: any) => boolean;
+  harData: (elementer: any[], element: any) => boolean;
   tittelIkon?: ElementType;
   tittelUnderstrek?: boolean;
   elementUnderstrek?: boolean;
   flereRedigeringsknapper?: boolean;
   onBinClick?: (index: number) => void;
   symbolsynlighet?: SymbolsynlighetConfig;
+  onLagreClick?: (elementer: any[]) => boolean | Promise<boolean>;
 }
 
 type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
@@ -65,12 +66,22 @@ export const InnerEditerbartElementListe = ({
   settFeltVerdi,
   onBinClick,
   symbolsynlighet,
+  onLagreClick,
 }: InnerEditerbartElementListeProps & PropsFromRedux) => {
   const editerbartElementListeCls = classNames(className);
 
   const leggTil = () => fields.push(hentDefaultElement());
 
-  const innerLeggTilTekst = typeof leggTilTekst === "function" ? leggTilTekst(fields.getAll()) : leggTilTekst;
+  const elementer = fields.getAll();
+
+  const innerLeggTilTekst = typeof leggTilTekst === "function" ? leggTilTekst(elementer) : leggTilTekst;
+
+  const lagreClickHandler = () => {
+    if (onLagreClick) {
+      return onLagreClick(elementer);
+    }
+    return true;
+  };
 
   return (
     <div className={editerbartElementListeCls}>
@@ -90,6 +101,7 @@ export const InnerEditerbartElementListe = ({
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
           onBinClick={onBinClick}
+          onLagreClick={lagreClickHandler}
         />
       ) : (
         <EnRedigeringsknappListe
@@ -110,6 +122,7 @@ export const InnerEditerbartElementListe = ({
           leggTil={leggTil}
           onBinClick={onBinClick}
           symbolsynlighet={symbolsynlighet}
+          onLagreClick={lagreClickHandler}
         />
       )}
     </div>

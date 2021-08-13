@@ -5,8 +5,7 @@ class VurderUtpekingInngang extends Inngang {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const { inngangsvilkaar } = propsLight;
-    const harAvklaring = this.harAvklaring(inngangsvilkaar);
+    const harAvklaring = this.harAvklaring(propsLight);
 
     this.kriterier = [
       {

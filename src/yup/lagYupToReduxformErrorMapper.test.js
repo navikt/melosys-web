@@ -1,4 +1,4 @@
-import { object, array, number } from "yup";
+import { object, array, number, mixed } from "yup";
 
 import { lagYupToReduxformErrorMapper } from "./lagYupToReduxformErrorMapper";
 
@@ -24,11 +24,23 @@ describe("lagYupToReduxformErrorMapper", () => {
       ).toHaveLength(1);
     });
 
-    it("returnerer ingen feilmeldinger for et tomt schema", () => {
-      const schema = object().shape({});
+    it("returnerer ingen feilmeldinger for et schema som matcher verdiene", () => {
+      const schema = mixed();
       const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
 
       expect(mapYupToReduxformError({})).toEqual({});
+    });
+
+    it("obfuskerer ikke errors som ikke er valideringsfeil(error.inner er undefined)", () => {
+      const schema = mixed();
+      schema.validateSync = () => {
+        throw new Error("Feil");
+      };
+      const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
+
+      expect(() => {
+        mapYupToReduxformError({});
+      }).toThrowError(new Error("Feil"));
     });
   });
 });

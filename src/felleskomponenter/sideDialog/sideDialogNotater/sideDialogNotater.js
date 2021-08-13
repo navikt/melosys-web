@@ -32,14 +32,11 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   const [notater, setNotater] = useState([]);
   const [leggTilNotatDialogSynlig, setLeggTilNotatDialogSynlig] = useState(false);
   const [nyttNotatTekst, setNyttNotatTekst] = useState("");
+  const [nyttNotatFeilmelding, setNyttNotatFeilmelding] = useState("");
 
   const hentNotater = async () => {
-    try {
-      const hentedeNotater = await Api.Fagsaker.notater.hent(saksnummer);
-      setNotater(hentedeNotater);
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    const hentedeNotater = await Api.Fagsaker.notater.hent(saksnummer);
+    setNotater(hentedeNotater);
   };
 
   useEffect(() => {
@@ -60,12 +57,8 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   };
 
   const oppdaterNotat = async (notatID, tekst) => {
-    try {
-      const oppdatertNotat = await Api.Fagsaker.notater.oppdater(saksnummer, notatID, { tekst });
-      oppdaterNotatState(oppdatertNotat);
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    const oppdatertNotat = await Api.Fagsaker.notater.oppdater(saksnummer, notatID, { tekst });
+    oppdaterNotatState(oppdatertNotat);
   };
 
   const visLeggTilNotatDialog = () => {
@@ -79,6 +72,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   const avbrytLeggTilNotat = () => {
     skjulLeggTilNotatDialog();
     setNyttNotatTekst("");
+    setNyttNotatFeilmelding("");
   };
 
   const endreNyttNotatTekst = (e) => {
@@ -86,6 +80,8 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   };
 
   const opprettNotat = async () => {
+    setNyttNotatFeilmelding("");
+
     try {
       const nyttNotat = await Api.Fagsaker.notater.opprett(saksnummer, { tekst: nyttNotatTekst });
 
@@ -93,7 +89,13 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
       skjulLeggTilNotatDialog();
       setNyttNotatTekst("");
     } catch (e) {
-      Utils.logger.error(e);
+      if (e.status >= 500) {
+        setNyttNotatFeilmelding(
+          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger."
+        );
+      } else if (e.status >= 400) {
+        setNyttNotatFeilmelding(e.body.message);
+      }
     }
   };
 
@@ -102,9 +104,9 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
     "Her kan du notere særlige vurderinger eller handlinger du gjør, for eksempel at du innhenter opplysninger. Notater brukes for å holde oversikt over hva som er gjort i saken, men lagres ikke som saksdokumenter.";
 
   return (
-    <Nav.Panel>
+    <Nav.Panel className="sidedialog-notater">
       {notater.length > 0 && (
-        <div className="notater">
+        <div className="sidedialog-notater__notater">
           {notater.sort(sortNotaterByOpprettetDato).map((notat) => {
             const overskrift = lagNotatOverskrift(notat.behandlingstypeKode, notat.behandlingstemaKode);
             const onUpdate = (tekst) => oppdaterNotat(notat.notatId, tekst);
@@ -143,6 +145,9 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
               bekreftRedigerbart={!disableLagreKnapp}
               redigerbart
             />
+            <div role="alert" className="sidedialog-notater__nytt-notat-feilmelding">
+              {nyttNotatFeilmelding && <Nav.Typo.Feilmelding>{nyttNotatFeilmelding}</Nav.Typo.Feilmelding>}
+            </div>
           </Fragment>
         )}
         {!leggTilNotatDialogSynlig && (

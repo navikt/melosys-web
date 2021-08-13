@@ -6,7 +6,6 @@ import { utpekTypes } from "../utpek";
 import { vedtakTypes } from "../vedtak";
 import { videresendingTypes } from "../videresending";
 import { anmodningunntakTypes } from "../anmodningunntak";
-import { journalforingTypes } from "../journalforing";
 
 const initalState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,
@@ -23,13 +22,11 @@ export default function reducer(state = initalState, action: Types.Action): Stat
     case vedtakTypes.FEILET:
     case videresendingTypes.FEILET:
     case anmodningunntakTypes.FEILET:
-    case journalforingTypes.FEILET:
       return { ...state, status: STATUS.ERROR, data: { ...state.data, ...action.data } };
     case utpekTypes.OK:
     case vedtakTypes.OK:
     case videresendingTypes.OK:
     case anmodningunntakTypes.OK:
-    case journalforingTypes.OK:
       return { ...initalState, status: STATUS.OK };
     default:
       return state;

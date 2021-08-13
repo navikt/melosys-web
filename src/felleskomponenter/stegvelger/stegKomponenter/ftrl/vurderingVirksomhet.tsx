@@ -4,11 +4,11 @@ import { change, getFormValues, reduxForm } from "redux-form";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { OppsummertFaktaVirksomheter } from "Domene";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as KV from "../../../../kodeverk";
+import * as Api from "../../../../services/api";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
@@ -35,7 +35,7 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentOppsummertFakta: (behandlingID: number) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
-  sendVirksomheter: (behandlingID: number, virksomheter: OppsummertFaktaVirksomheter) =>
+  sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
     dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
   hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
   changeValgteVirksomheter: (data: string[]) => dispatch(change(KV.Form.VIRKSOMHET, "valgteVirksomheter", data)),
@@ -119,10 +119,15 @@ const VurderingVirksomhet = ({
       />
 
       <div className="fane__knapplinje">
-        <Nav.Knapp mini className="fane__navigasjonsknapp" onClick={tilbake}>
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
-        <Nav.Hovedknapp mini disabled={!formIsValid} className="fane__navigasjonsknapp" onClick={handleFortsett}>
+        <Nav.Hovedknapp
+          mini
+          disabled={!formIsValid || !redigerbart}
+          className="fane__navigasjonsknapp"
+          onClick={handleFortsett}
+        >
           Fortsett
         </Nav.Hovedknapp>
       </div>

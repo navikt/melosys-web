@@ -162,7 +162,7 @@ const Saksopplysninger = ({
 
     switch (anmodningsperiodeSvarType) {
       case INNVILGELSE:
-        return makeResponse(tomPeriode, ytterligereInfoFritekst);
+        return makeResponse(tomPeriode);
       case DELVIS_INNVILGELSE:
         return makeResponse(
           {
@@ -229,9 +229,8 @@ const Saksopplysninger = ({
 
     try {
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
-      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
+      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID, { ytterligereInfo: ytterligereInfoFritekst });
     } catch (e) {
-      Utils.logger.error(e);
       return false;
     } finally {
       setRegistreringPending(false);
@@ -261,7 +260,6 @@ const Saksopplysninger = ({
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       return true;
     } catch (e) {
-      Utils.logger.error(e);
       return false;
     }
   };

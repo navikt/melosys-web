@@ -4,13 +4,13 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
-import { MedfolgendeFamiliemedlem, OppsummertFaktaMedfolgendeFamilie } from "Domene";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as Skjema from "../../../skjema";
 import * as KV from "../../../../kodeverk";
+import * as Api from "../../../../services/api";
 
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -60,7 +60,7 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   changeField: (field: string, data: any) => dispatch(change(KV.Form.FAMILIE, field, data)),
-  sendMedfolgendeFamilie: (behandlingID: number, data: OppsummertFaktaMedfolgendeFamilie) =>
+  sendMedfolgendeFamilie: (behandlingID: number, data: Api.Avklartefakta.MedfolgendeFamilie) =>
     dispatch(oppsummertfaktaOperations.sendMedfolgendeFamilie(behandlingID, data)),
 });
 
@@ -111,8 +111,8 @@ const VurderingFamilie = ({
 }: Props & PropsFromRedux) => {
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
-  function tilMedfolgendeFamilie(fraFormValues: FormValueProp): OppsummertFaktaMedfolgendeFamilie {
-    const medfolgendeFamiliemedlem: MedfolgendeFamiliemedlem[] = [];
+  function tilMedfolgendeFamilie(fraFormValues: FormValueProp): Api.Avklartefakta.MedfolgendeFamilie {
+    const medfolgendeFamiliemedlem: Api.Avklartefakta.MedfolgendeFamiliemedlem[] = [];
 
     medfolgendeBarn.forEach((familiemedlem: MedfolgendeFamilie) => {
       medfolgendeFamiliemedlem.push({
@@ -146,7 +146,7 @@ const VurderingFamilie = ({
   const debouncedLagring = useCallback(Utils._debounce(lagreMedfolgendeFamilie, 1000), []);
 
   useEffect(() => {
-    debouncedLagring({ formValues, formIsValid });
+    if (redigerbart) debouncedLagring({ formValues, formIsValid });
   }, [formIsValid, formValues]);
 
   useEffect(() => {
@@ -235,6 +235,7 @@ const VurderingFamilie = ({
                       emptyFieldText="Velg..."
                       emptyFieldDisabled={!redigerbart || !!formValues.barn[barn.uuid].begrunnelse}
                       name={barn.uuid}
+                      disabled={!redigerbart}
                     >
                       {medfolgende_barn_begrunnelser.map((begrunnelse: KTObject) => (
                         <option key={begrunnelse.kode} value={begrunnelse.kode}>
@@ -252,7 +253,7 @@ const VurderingFamilie = ({
             ) && (
               <div style={{ marginBottom: "2rem" }}>
                 <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
-                <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" />
+                <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" disabled={!redigerbart} />
               </div>
             )}
           </Nav.Fieldset>
@@ -293,6 +294,7 @@ const VurderingFamilie = ({
                           !redigerbart || !!formValues.ektefelle_samboer[ektefelleSamboer.uuid].begrunnelse
                         }
                         name={ektefelleSamboer.uuid}
+                        disabled={!redigerbart}
                       >
                         {medfolgende_ektefelle_samboer_begrunnelser.map((begrunnelse: KTObject) => (
                           <option key={begrunnelse.kode} value={begrunnelse.kode}>
@@ -311,7 +313,7 @@ const VurderingFamilie = ({
             ) && (
               <div>
                 <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
-                <Skjema.HTMLEditor feltNavn="ektefelle_samboer.fritekst" className="fritekst" />
+                <Skjema.HTMLEditor feltNavn="ektefelle_samboer.fritekst" className="fritekst" disabled={!redigerbart} />
               </div>
             )}
           </Nav.Fieldset>
@@ -326,7 +328,7 @@ const VurderingFamilie = ({
       )}
 
       <div className="fane__knapplinje">
-        <Nav.Knapp mini className="fane__navigasjonsknapp" onClick={tilbake}>
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
         </Nav.Knapp>
         <Nav.Hovedknapp

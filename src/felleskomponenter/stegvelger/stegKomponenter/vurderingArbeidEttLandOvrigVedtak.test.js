@@ -38,6 +38,37 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
     };
   });
 
+  test("lagreOgFatteVedtak kalles ved submit av form", () => {
+    props.handleSubmit = (onSubmitCallback) => () => {
+      onSubmitCallback(
+        {
+          forkortLovvalgsperiode: false,
+          vedtaksbrevFritekst: "vedtaksbrevfritekst",
+          fritekstSed: "fritekst til SED",
+          vedtakstypebegrunnelse: "begrunnelse for revurdering",
+          vedtakstype: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK,
+        },
+        () => {},
+        props
+      );
+    };
+
+    const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);
+    const form = vurderingArbeidEttLandOvrigVedtak.find("form");
+
+    form.props().onSubmit();
+
+    expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
+    expect(props.lagreOgFatteVedtak).toHaveBeenLastCalledWith({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: "vedtaksbrevfritekst",
+      fritekstSed: "fritekst til SED",
+      mottakerinstitusjoner: null,
+      vedtakstype: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK,
+      revurderBegrunnelse: "begrunnelse for revurdering",
+    });
+  });
+
   describe("ved art11_5", () => {
     beforeEach(() => {
       props.formValues.lovvalgsbestemmelse =

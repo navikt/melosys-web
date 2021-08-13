@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { Fagsak } from "Domene";
 
 import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
@@ -10,16 +9,17 @@ import * as MPT from "../../proptypes";
 import * as Nav from "../../utils/navFrontend";
 import * as Api from "../../services/api";
 
-import "./oppsummering.css";
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 import { erSedForesporsel } from "../../melosyskodeverk/utils";
-import { arrayTilKonjunksjon, storeForbokstaver } from "../../utils/streng";
+import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../utils/streng";
+
+import "./oppsummering.css";
 
 interface OppsummeringProps {
   arbeidsland: KTObject[];
   lovvalgsland: KTObject;
-  fagsak: Fagsak;
+  fagsak: Api.Fagsak;
   oppsummering: Api.Behandlinger.behandling.Oppsummering;
   behandlingstema: string;
   behandlingsfristLinje: ReactNode;
@@ -56,7 +56,7 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
-      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaver(enkeltLand.term)))
+      ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term)))
       : "Ukjent";
 
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
@@ -135,7 +135,10 @@ const Oppsummering = (props: OppsummeringProps) => {
               </Nav.Row>
               <Nav.Row>
                 <Nav.Column xs="12">
-                  <OppsummeringVerdiPar nokkel="Lovvalgsland fra SED" verdi={storeForbokstaver(lovvalgsland.term)} />
+                  <OppsummeringVerdiPar
+                    nokkel="Lovvalgsland fra SED"
+                    verdi={storeForbokstaverForLand(lovvalgsland.term)}
+                  />
                 </Nav.Column>
               </Nav.Row>
             </div>

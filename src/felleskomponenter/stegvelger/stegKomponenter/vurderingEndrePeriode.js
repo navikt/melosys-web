@@ -2,6 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as UfiltrertMKV from "@navikt/melosys-kodeverk";
+import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -74,9 +75,7 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   hentOpprinneligPeriode = async (behandlingID) => {
-    const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID).catch(
-      Utils.logger.error
-    );
+    const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID);
     this.setState(opprinneligLovvalgsperiode);
   };
 
@@ -148,7 +147,11 @@ export class VurderingEndrePeriode extends React.Component {
         fritekstSed,
       };
 
-      await endreVedtak(data);
+      const endreVedtakRes = await endreVedtak(data);
+
+      if (endreVedtakRes?.data?.data?.status >= 400) {
+        this.setState({ vedtakFeilmelding: endreVedtakRes?.data?.data?.message });
+      }
 
       if (this._isMounted) {
         this.setState({ endringPending: false });
@@ -197,8 +200,6 @@ export class VurderingEndrePeriode extends React.Component {
       endringPending,
     } = this.state;
 
-    const endretPeriodeBegrunnelse = begrunnelse;
-
     const pdfDokumenter = [
       {
         navn: "Forhåndsvis vedtaksbrev og A1",
@@ -206,7 +207,15 @@ export class VurderingEndrePeriode extends React.Component {
         data: {
           mottaker: MKV.Koder.aktoersroller.BRUKER,
           fritekst: null,
-          begrunnelseKode: endretPeriodeBegrunnelse,
+          begrunnelseKode: begrunnelse,
+        },
+      },
+      {
+        navn: "Forhåndsvis SED A009 ",
+        type: EKV.Koder.sedtyper.A009,
+        erSed: true,
+        data: {
+          fritekst: fritekstSed,
         },
       },
     ];
@@ -285,7 +294,11 @@ export class VurderingEndrePeriode extends React.Component {
           </Nav.Row>
         )}
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
-        {vedtakFeilmelding && <div className="skjemaelement__feilmelding vedtakfeilmelding">{vedtakFeilmelding}</div>}
+        {vedtakFeilmelding && (
+          <Nav.AlertStripe className="vedtakfeilmelding" type="feil">
+            {vedtakFeilmelding}
+          </Nav.AlertStripe>
+        )}
         <Nav.Hovedknapp
           spinner={endringPending}
           autoDisableVedSpinner
