@@ -29,17 +29,20 @@ type RedigeringUtfortProps = PropsFromRedux & {
 const RedigeringUtfort = ({ soknadsland, soknadslandErUkjenteEllerAlleEosLand, className }: RedigeringUtfortProps) => {
   const cls = classNames(className, "soknadslandvelger-redigering-utfort");
 
+  const soknadslandTekst = soknadslandErUkjenteEllerAlleEosLand ? (
+    "Flere EØS-land/Sveits. Ikke kjent hvilke."
+  ) : (
+    <Nav.Typo.Element className="element">
+      {Utils.streng.arrayTilKonjunksjon(
+        soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder))
+      ) || "Ingen land valgt"}
+    </Nav.Typo.Element>
+  );
+
   return (
     <div className={cls}>
       <Nav.Typo.Normaltekst className="etikett-liten">Land</Nav.Typo.Normaltekst>
-      {soknadslandErUkjenteEllerAlleEosLand && "Flere EØS-land/Sveits. Ikke kjent hvilke."}
-      {!soknadslandErUkjenteEllerAlleEosLand && (
-        <Nav.Typo.Element className="element">
-          {Utils.streng.arrayTilKonjunksjon(
-            soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder))
-          ) || "Ingen land valgt"}
-        </Nav.Typo.Element>
-      )}
+      {soknadslandTekst}
     </div>
   );
 };
