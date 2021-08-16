@@ -11,6 +11,8 @@ import * as Routing from "../../routing";
 
 import PanelHeader from "../panelHeader/panelHeader";
 import EnkeltDato from "../datoOmrade/enkeltDato";
+import Soknadsland from "../soknadsland";
+
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import "./behandlingOppgave.css";
@@ -52,7 +54,6 @@ const BehandlingOppgave = ({ sak }) => {
   const { fom, tom } = periode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
   const link = Routing.lagUrl(saksnummer, behandlingID, behandlingstema.kode);
-  const landListeSomStreng = land ? land.join(", ") : "(ukjent)";
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
   const cl = classNames({
@@ -161,7 +162,9 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Land:</dt>
                     </Nav.Column>
                     <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
+                      <dd className="behandlingOppgave__meta__detalj">
+                        <Soknadsland land={land} />
+                      </dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>

@@ -11,7 +11,7 @@ interface onCheckProperties {
 }
 
 interface CheckboxProps extends FilteredNavCheckboxProps {
-  onCheck: (properties: onCheckProperties) => void;
+  onCheck?: (properties: onCheckProperties) => void;
 }
 
 class Checkbox extends Component<CheckboxProps> {
@@ -22,7 +22,7 @@ class Checkbox extends Component<CheckboxProps> {
 
     const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter" && this.navCheckbox) {
-        onCheck({
+        onCheck?.({
           checked: !this.navCheckbox.checked,
           value: rest.value,
         });
@@ -30,7 +30,7 @@ class Checkbox extends Component<CheckboxProps> {
     };
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      onCheck({
+      onCheck?.({
         checked: e.target.checked,
         value: rest.value,
       });

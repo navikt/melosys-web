@@ -25,7 +25,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
-  soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
 });

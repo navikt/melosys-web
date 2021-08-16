@@ -11,6 +11,7 @@ import PanelHeader from "../panelHeader/panelHeader";
 import EnkeltDato from "../datoOmrade/enkeltDato";
 import { DatoOmradeDescription } from "../datoOmrade/datoOmrade";
 import sorterElementerEtterDato from "../sorterbarListe/sorterElementerEtterDato";
+import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
 
@@ -24,7 +25,6 @@ const Fagsak = ({ sak }) => {
   const VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND = 0;
   const { periode, land } = behandlingOversikter[VIS_FORSTE_BEHANDLING_OVERSIKT_PERIODE_LAND]; // UX ønsker å ha periode og land vist kun en gang. på topp
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const landListeSomStreng = land ? land.join(", ") : "(ukjent)";
   const customMargin = { marginLeft: "1em" };
 
   const sorterteBehandlinger = behandlingOversikter
@@ -48,7 +48,9 @@ const Fagsak = ({ sak }) => {
               <dt>Opprettet:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || "(ukjent)"}</dd>
               <dt>Land:</dt>
-              <dd>{landListeSomStreng}</dd>
+              <dd>
+                <Soknadsland land={land} />
+              </dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="3">

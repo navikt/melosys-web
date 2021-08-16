@@ -58,6 +58,7 @@ const mapStateToProps = (state: RootState) => {
     erHjemmekontor: arbeidPaaLand.erHjemmekontor,
     erFastArbeidssted: arbeidPaaLand.erFastArbeidssted,
     behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+    soknadsland: soknadFormValueSelector(state, "soknadsland"),
   };
 };
 
@@ -85,19 +86,13 @@ export const Arbeidssteder = ({
   erFastArbeidssted,
   erHjemmekontor,
   behandlingsgrunnlagtype,
+  soknadsland: { erUkjenteEllerAlleEosLand },
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
     behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
-  return (
-    <div className="arbeidssteder">
-      <div>
-        <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
-          {KV.Menypunkter.Arbeidssteder.tittel}
-        </Nav.Typo.Innholdstittel>
-        <span>{behandlingsgrunnlagEtikett}</span>
-        {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
-      </div>
+  const arbeidsstederLister = (
+    <>
       <EditerbartElementListe
         redigerbart={redigerbart}
         feltNavn="arbeidPaaLand.fysiskeArbeidssteder"
@@ -162,6 +157,26 @@ export const Arbeidssteder = ({
         harData={(elementListe) => elementListe.length !== 0 && elementListe.every(flattArbeidsstedErIkkeTomt)}
         flereRedigeringsknapper={false}
       />
+    </>
+  );
+
+  const ukjenteEllerAlleEosLandValgtAlertstripe = (
+    <Nav.AlertStripe type="info">
+      Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt
+      “Periode og land”.
+    </Nav.AlertStripe>
+  );
+
+  return (
+    <div className="arbeidssteder">
+      <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
+        {KV.Menypunkter.Arbeidssteder.tittel}
+      </Nav.Typo.Innholdstittel>
+      <span>{behandlingsgrunnlagEtikett}</span>
+      {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
+      <div className="innhold">
+        {erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidsstederLister}
+      </div>
     </div>
   );
 };
