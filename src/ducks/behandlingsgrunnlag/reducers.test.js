@@ -487,7 +487,7 @@ describe("behandlingsgrunnlag reducer", () => {
               term: "Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a",
             },
           ],
-          ytterligereInformasjon: null,
+          ytterligereInformasjon: undefined,
           trygdedekning: "Full dekning",
         },
       },

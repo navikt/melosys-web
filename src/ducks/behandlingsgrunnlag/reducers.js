@@ -325,9 +325,12 @@ export default function reducer(state = initialState, action) {
                 })),
             ],
           },
-          overgangsregelbestemmelser:
-            dokument.overgangsregelbestemmelser || state.data.data.overgangsregelbestemmelser || [],
-          ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
+          overgangsregelbestemmelser: Utils._has(dokument, "overgangsregelbestemmelser")
+            ? dokument.overgangsregelbestemmelser || state.data.data.overgangsregelbestemmelser || []
+            : undefined,
+          ytterligereInformasjon: Utils._has(dokument, "ytterligereInformasjon")
+            ? state.data.data.ytterligereInformasjon || null
+            : undefined,
           trygdedekning: dokument.trygdedekning,
         },
       };
