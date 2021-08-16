@@ -59,7 +59,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
     );
   }
 
-  const flereLandEnnLovlig =
+  const flereLandEnnTillatt =
     landkoder.length > 1 && behandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
 
   return (
@@ -73,7 +73,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
             </li>
           ))}
       </ul>
-      {flereLandEnnLovlig && (
+      {flereLandEnnTillatt && (
         <Nav.AlertStripeAdvarsel>
           Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre
           behandlingstema for å kunne fatte vedtak.
