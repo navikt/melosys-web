@@ -51,7 +51,7 @@ const finnSedMottakerLand = (arbeidsland, bostedsland, lovvalgsperiode) => {
     return bostedslandKode;
   }
 
-  return arbeidsland[0].kode;
+  return arbeidsland[0]?.kode;
 };
 
 const VurderingVedtak = ({
@@ -163,7 +163,7 @@ const VurderingVedtak = ({
             </Nav.Column>
           </Nav.Row>
         )}
-        {erSoknadEllerNyVurdering && (
+        {erSoknadEllerNyVurdering && sedMottakerLand && (
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
               <Mottakerinstitusjonvelger
