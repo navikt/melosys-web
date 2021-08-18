@@ -25,7 +25,7 @@ const OpprettFagsak = (props) => {
     opprettnysak_behandlingstema: valgtBehandlingstema,
     sakstype: valgtSakstype,
     journalforingSoknadsland: valgteLand,
-    journalforingSoknadslandUkjenteEllerAlle: ukjentEllerAlleLand,
+    journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
   } = journalforingSkjemaVerdier;
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const OpprettFagsak = (props) => {
         feltNavn="opprettnysak_behandlingstema"
         bredde="fullbredde"
         label="Behandlingstema"
-        onChange={() => settFeltInnhold("journalforingSoknadslandUkjenteEllerAlle", false)}
+        onChange={() => settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false)}
       >
         {behandlingstemaer &&
           behandlingstemaer
@@ -127,8 +127,8 @@ const OpprettFagsak = (props) => {
                 {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
                   <Nav.Row className="landcheckbox">
                     <Skjema.Checkbox
-                      feltNavn="journalforingSoknadslandUkjenteEllerAlle"
-                      disabled={valgteLand?.length > 0}
+                      feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                      disabled={valgteLand.length > 0}
                       label={
                         <div>
                           Flere EØS-land/Sveits. Ikke kjent hvilke
@@ -148,7 +148,7 @@ const OpprettFagsak = (props) => {
                       feltNavn="journalforingSoknadsland"
                       multiLand
                       errorConfig={{ submitFailed: true }}
-                      disabled={ukjentEllerAlleLand}
+                      disabled={ukjentEllerAlleEosLand}
                     />
                   </Nav.Column>
                 </Nav.Row>

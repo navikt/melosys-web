@@ -32,8 +32,8 @@ const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
   ].includes(behandlingstema);
 
-const kreverPeriodeOgLandTemaFlereLand = (journalforingHensikt, ukjentEllerAlleLand) =>
-  !ukjentEllerAlleLand &&
+const kreverPeriodeOgLandTemaFlereLand = (journalforingHensikt, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand &&
   kreverPeriodeOgLand(journalforingHensikt, MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND);
 
 const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
@@ -103,11 +103,10 @@ const journalforing = object().shape({
   journalforingSoknadsland: array()
     .of(string())
     .ensure()
-    .when(["journalforingHensikt", "journalforingSoknadslandUkjenteEllerAlle"], {
+    .when(["journalforingHensikt", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
       is: kreverPeriodeOgLandTemaFlereLand,
       then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
-  journalforingSoknadslandUkjenteEllerAlle: boolean(),
   utenlandskTrygdemyndighetLandkode: string().when("avsenderType", {
     is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
     then: string().required(VELG_ETT_LAND),
@@ -126,6 +125,7 @@ const journalforing = object().shape({
   journalforingHensikt: string(),
   representantNavn: string(),
   opprettnysak_behandlingstema: string(),
+  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
 });
 
 export default journalforing;

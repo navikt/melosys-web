@@ -240,7 +240,7 @@ class Journalforing extends Component {
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
       journalforingSoknadsland,
-      journalforingSoknadslandUkjenteEllerAlle,
+      journalforingSoknadslandUkjenteEllerAlleEosLand,
       journalforingPeriodeFraOgMed,
       journalforingPeriodeTilOgMed,
       avsenderType,
@@ -268,7 +268,7 @@ class Journalforing extends Component {
       },
       land: {
         landkoder: journalforingSoknadsland || [],
-        erUkjenteEllerAlleEosLand: journalforingSoknadslandUkjenteEllerAlle,
+        erUkjenteEllerAlleEosLand: journalforingSoknadslandUkjenteEllerAlleEosLand,
       },
     };
 
@@ -374,7 +374,7 @@ class Journalforing extends Component {
     settFeltInnhold("journalforingPeriodeTilOgMed", "");
     settFeltInnhold("representantID", "");
     settFeltInnhold("journalforingSoknadsland", []);
-    settFeltInnhold("journalforingSoknadslandUkjenteEllerAlle", false);
+    settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {

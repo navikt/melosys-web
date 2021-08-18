@@ -27,7 +27,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
   const { behandlingstema, soknadsinfo } = formValues;
-  const { land, erUkjenteEllerAlleEosLand } = soknadsinfo || { land: null, erUkjenteEllerAlleEosLand: null };
+  const { land, erUkjenteEllerAlleEosLand } = soknadsinfo;
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const hentOppgaver = async (brukerID) => {
@@ -169,7 +169,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                           {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
                             <Skjema.Checkbox
                               feltNavn="erUkjenteEllerAlleEosLand"
-                              disabled={land?.length > 0}
+                              disabled={land.length > 0}
                               label={
                                 <div>
                                   Flere EØS-land/Sveits. Ikke kjent hvilke
@@ -245,7 +245,7 @@ OpprettNySak.propTypes = {
 };
 
 OpprettNySak.defaultProps = {
-  formValues: {},
+  formValues: { soknadsinfo: {} },
   error: undefined,
 };
 
@@ -253,6 +253,8 @@ const mapStateToProps = (state) => ({
   formValues: getFormValues(KV.Form.OPPRETT_NY_SAK)(state),
   initialValues: {
     skalTilordnes: false,
+    behandlingstema: undefined,
+    soknadsinfo: { land: [], erUkjenteEllerAlleEosLand: false },
   },
 });
 

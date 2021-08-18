@@ -19,11 +19,11 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const land = object().shape({
   landkoder: array()
     .of(string())
-    .when("journalforingSoknadslandUkjenteEllerAlle", {
+    .when("journalforingSoknadslandUkjenteEllerAlleEosLand", {
       is: false,
       then: array().of(string()).required({ _error: VELG_LAND }).min(1, { _error: VELG_LAND }),
     }),
-  journalforingSoknadslandUkjenteEllerAlle: boolean(),
+  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
 });
 
 const soknadsinfo = object().shape({
