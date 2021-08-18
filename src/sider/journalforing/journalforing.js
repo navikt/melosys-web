@@ -452,19 +452,6 @@ class Journalforing extends Component {
 
     const { visDialogboksValidering, dialogboksValideringFeilmeldinger, dialogboksValideringValideringer } = this.state;
 
-    const behandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-      ({ kode }) =>
-        kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER ||
-        kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG ||
-        kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG ||
-        kode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV ||
-        kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
-        kode === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-        kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED ||
-        kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM ||
-        kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-    );
-
     const { knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant } = this;
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = "Hoveddokument" } = hoveddokument;
@@ -510,7 +497,6 @@ class Journalforing extends Component {
                           knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                           opprettFagsak={opprettFagsak}
                           hentOgVisRepresentant={hentOgVisRepresentant}
-                          behandlingstemaer={behandlingstemaer}
                           submitJournalforing={this.submitJournalforing}
                           avbrytJournalforing={this.avbrytJournalforing}
                           kanSubmittes={this.kanSubmittes()}

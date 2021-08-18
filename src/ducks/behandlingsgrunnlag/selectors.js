@@ -167,8 +167,19 @@ export const HjemmebaserSelector = createSelector(LuftfartBaserSelector, (luftfa
   luftfartBaser.map((base) => base.hjemmebaseLand).filter((base) => base)
 );
 
-export const SoknadslandSelector = createSelector(BehandlingsgrunnlagDataSelector, (behandlingsgrunnlag) =>
-  behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : []
+export const SoknadslandSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlag) => behandlingsgrunnlag.soeknadsland || {}
+);
+
+export const SoknadslandkoderSelector = createSelector(
+  SoknadslandSelector,
+  (soknadsland) => soknadsland.landkoder || []
+);
+
+export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
+  SoknadslandSelector,
+  (soknadsland) => soknadsland.erUkjenteEllerAlleEosLand
 );
 
 export const TrygdedekningSelector = createSelector(

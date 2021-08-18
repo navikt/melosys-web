@@ -30,6 +30,7 @@ const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
+    MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
   ].includes(behandlingstema);
 
 const kreverPeriodeOgLandTemaFlereLand = (journalforingHensikt, ukjentEllerAlleEosLand) =>

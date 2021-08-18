@@ -65,7 +65,7 @@ export const VurderingUnntakPeriode = createSelector(
  */
 export const Soknadsland = createSelector(
   (state) => SoknadslandFaktaerSelector(state),
-  (state) => behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+  (state) => behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
   (soknadslandFaktaer, alleLandISoknaden) =>
     alleLandISoknaden.map(
       (enkeltLand) =>

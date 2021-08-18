@@ -6,7 +6,6 @@ import { reduxForm, getFormValues, change } from "redux-form";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
-import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
 
@@ -29,7 +28,6 @@ export const JournalforingForm = (props) => {
     hentOgVisBruker,
     fagsakListe,
     hentOgVisRepresentant,
-    behandlingstemaer,
     formValues,
     settFeltInnhold,
     settJournalforingHensikt,
@@ -40,7 +38,10 @@ export const JournalforingForm = (props) => {
   const visForvaltningsMelding =
     formValues.saksnummer === "-1" &&
     (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
-      formValues.opprettnysak_behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET);
+      [
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
+        MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
+      ].includes(formValues.opprettnysak_behandlingstema));
 
   return (
     <form onSubmit={handleSubmit}>
@@ -57,12 +58,7 @@ export const JournalforingForm = (props) => {
         ikon={Ikoner.CheckList}
         className="undertittel oversteUndertittel"
       />
-      <FagsakVelger
-        sakstyper={MKV.KTObjects.sakstyper.filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)}
-        behandlingstemaer={behandlingstemaer}
-        fagsakListe={fagsakListe}
-        settJournalforingHensikt={settJournalforingHensikt}
-      />
+      <FagsakVelger fagsakListe={fagsakListe} settJournalforingHensikt={settJournalforingHensikt} />
       {visForvaltningsMelding && (
         <Fragment>
           <Mui.Undertittel
@@ -90,7 +86,6 @@ JournalforingForm.propTypes = {
   formValues: PT.object,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
-  behandlingstemaer: PT.arrayOf(MPT.Kodeverk).isRequired,
   submitJournalforing: PT.func.isRequired,
   avbrytJournalforing: PT.func.isRequired,
   kanSubmittes: PT.bool.isRequired,
