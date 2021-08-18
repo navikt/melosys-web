@@ -388,7 +388,7 @@ Saksbehandling.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).fom

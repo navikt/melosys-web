@@ -22,8 +22,6 @@ import Statsborgerskapsliste from "./statsborgerskapsliste";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
-import { useFeatureToggle } from "../../../../featuretoggle";
-
 import "./person.css";
 
 interface AdresseRadProps {
@@ -91,8 +89,6 @@ export const Person = ({
     midlertidigAdressePerioder,
   } = personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
 
-  const visFlereStatsborgerskapToggle = useFeatureToggle("melosys.vis_flere_statsborgerskap");
-
   if (Object.keys(person).length === 0) {
     return null;
   }
@@ -109,18 +105,12 @@ export const Person = ({
           <PersonInfo person={person} />
         </Nav.Column>
       </Nav.Row>
-      {visFlereStatsborgerskapToggle === "enabled" && (
-        <Nav.Row className="statsborgerskapsliste-row">
-          <Nav.Column xs="12">
-            <Mui.Undertittel
-              ikon={Ikoner.Globe}
-              tekst="Statsborgerskap"
-              className="statsborgerskapsliste-row__tittel"
-            />
-            <Statsborgerskapsliste behandlingID={behandlingID} />
-          </Nav.Column>
-        </Nav.Row>
-      )}
+      <Nav.Row className="statsborgerskapsliste-row">
+        <Nav.Column xs="12">
+          <Mui.Undertittel ikon={Ikoner.Globe} tekst="Statsborgerskap" className="statsborgerskapsliste-row__tittel" />
+          <Statsborgerskapsliste behandlingID={behandlingID} />
+        </Nav.Column>
+      </Nav.Row>
       <Nav.Row className="registrerteAdresser">
         <Nav.Column xs="12">
           {bostedsadressePerioder.length > 0 && (

@@ -273,7 +273,7 @@ const soknadFormValuesSelector = formValueSelector(KV.Form.SOKNAD);
 const mapStateToProps = (state) => ({
   maritimtArbeid: formSelectors.MaritimtArbeidSelector(state),
   hjemmebaser: behandlingsgrunnlagSelectors.HjemmebaserSelector(state),
-  soknadsland: soknadFormValuesSelector(state, "soknadsland"),
+  soknadsland: soknadFormValuesSelector(state, "soknadsland.landkoder"),
   arbeidsland: avklartefaktaSelectors.ArbeidslandSelector(state),
   fjernedeArbeidsland: avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector(state),
 });

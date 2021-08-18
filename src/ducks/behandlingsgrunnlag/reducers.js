@@ -239,7 +239,8 @@ export default function reducer(state = initialState, action) {
             typeFlyvninger: arbeidssted.typeFlyvninger || null,
           })),
           soeknadsland: {
-            landkoder: dokument.soknadsland,
+            landkoder: dokument.soknadsland.landkoder,
+            erUkjenteEllerAlleEosLand: dokument.soknadsland.erUkjenteEllerAlleEosLand,
           },
           periode: {
             fom: dokument.soknadsperiodeFom ? formatterDatoTilISO(dokument.soknadsperiodeFom) : null,

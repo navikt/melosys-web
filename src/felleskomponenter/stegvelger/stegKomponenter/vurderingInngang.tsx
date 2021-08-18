@@ -22,9 +22,11 @@ const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 interface VarslerProps {
   oppfyllerInngangsvilkar: boolean;
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
+  landkoder: Array<string>;
+  behandlingstema: string;
 }
 
-export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar }: VarslerProps) => {
+export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema }: VarslerProps) => {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
 
   const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
@@ -57,6 +59,9 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar }: VarslerPro
     );
   }
 
+  const flereLandEnnTillatt =
+    landkoder.length > 1 && behandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+
   return (
     <div className="vurderinginngang">
       <ul className="betingelser__liste">
@@ -68,6 +73,12 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar }: VarslerPro
             </li>
           ))}
       </ul>
+      {flereLandEnnTillatt && (
+        <Nav.AlertStripeAdvarsel>
+          Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre
+          behandlingstema for å kunne fatte vedtak.
+        </Nav.AlertStripeAdvarsel>
+      )}
       {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
         <Nav.AlertStripe type="info" className="vurderinginngang__inngangsvilkaar-ikke-oppfylt-alertstripe">
           Du har to valg:
@@ -98,6 +109,8 @@ type VurderingInngangProps = PropsFromRedux & {
   redigerbart: boolean;
   oppfyllerInngangsvilkar: boolean;
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
+  landkoder: Array<string>;
+  behandlingstema: string;
 };
 
 export const VurderingInngang = ({
@@ -107,6 +120,8 @@ export const VurderingInngang = ({
   inngangsvilkaar,
   behandlingID,
   hentVilkar,
+  landkoder,
+  behandlingstema,
 }: VurderingInngangProps) => {
   const knappClickHandler = async () => {
     if (!oppfyllerInngangsvilkar) {
@@ -120,7 +135,12 @@ export const VurderingInngang = ({
   return (
     <div className="vurderingInngang">
       <Nav.Typo.Undertittel>Kontroller inngangsvilkår</Nav.Typo.Undertittel>
-      <Varsler oppfyllerInngangsvilkar={oppfyllerInngangsvilkar} inngangsvilkaar={inngangsvilkaar} />
+      <Varsler
+        oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
+        inngangsvilkaar={inngangsvilkaar}
+        landkoder={landkoder}
+        behandlingstema={behandlingstema}
+      />
       <div className="fane__knapplinje">
         <Nav.Knapp
           disabled={!redigerbart}

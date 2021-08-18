@@ -252,7 +252,10 @@ describe("behandlingsgrunnlag reducer", () => {
             typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
           },
         ],
-        soknadsland: [],
+        soknadsland: {
+          landkoder: ["DK"],
+          erUkjenteEllerAlleEosLand: true,
+        },
         soknadsperiodeFom: "11.11.11",
         soknadsperiodeTom: "11.11.11",
         erSelvstendig: true,
@@ -448,7 +451,8 @@ describe("behandlingsgrunnlag reducer", () => {
             },
           ],
           soeknadsland: {
-            landkoder: [],
+            landkoder: ["DK"],
+            erUkjenteEllerAlleEosLand: true,
           },
           periode: {
             fom: "2011-11-11",
