@@ -12,20 +12,20 @@ import "./rad.css";
 
 interface RadProps {
   className?: string;
-  gyldigFomFarge: "groenn" | "roed";
+  gyldigPeriodeFarge: "groenn" | "roed";
   statsborgerskap: Statsborgerskap;
 }
 
 const Rad = ({
   className,
-  gyldigFomFarge,
+  gyldigPeriodeFarge,
   statsborgerskap: { land, master, kilde, bekreftelsesdato, gyldigFraOgMed, gyldigTilOgMed, erHistorisk },
 }: RadProps) => {
   const cls = classNames(className, "statsborgerskapsliste__rad");
 
-  const gyldigFomCls = classNames({
-    "statsborgerskapsliste__rad--roed": gyldigFomFarge === "roed",
-    "statsborgerskapsliste__rad--groenn": gyldigFomFarge === "groenn",
+  const gyldigPeriodeCls = classNames({
+    "statsborgerskapsliste__rad--roed": gyldigPeriodeFarge === "roed",
+    "statsborgerskapsliste__rad--groenn": gyldigPeriodeFarge === "groenn",
   });
 
   const bekreftelsesdatoNorsk = Utils.dato.formatterDatoTilNorsk(bekreftelsesdato);
@@ -45,7 +45,7 @@ const Rad = ({
         <Nav.Typo.Normaltekst>{bekreftelsesdatoNorsk || ""}</Nav.Typo.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="2">
-        <Nav.Typo.Normaltekst className={gyldigFomCls}>
+        <Nav.Typo.Normaltekst className={gyldigPeriodeCls}>
           <GyldigPeriode erHistorisk={erHistorisk} periode={{ fom: gyldigFraOgMed, tom: gyldigTilOgMed }} />
         </Nav.Typo.Normaltekst>
       </Nav.Column>

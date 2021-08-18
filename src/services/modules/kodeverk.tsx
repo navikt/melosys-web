@@ -9,5 +9,5 @@ export const hentFolketrygdenKodeverk = () => getAsJson(`${API_BASE_URL}${KODEVE
 export const hentNavFellesKodeverk = (kodeverknavn: string) =>
   cachedGetAsJson(`${API_BASE_URL}${KODEVERK}/${NAV_FELLES}/${kodeverknavn}`);
 export function hentLandkoderIso2() {
-  return hentNavFellesKodeverk("LANDKODERISO2");
+  return hentNavFellesKodeverk("LANDKODER_ISO2");
 }
