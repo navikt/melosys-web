@@ -56,7 +56,7 @@ export function lagre() {
 
 const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
   const periode = behandlingsgrunnlagSelectors.PeriodeSelector(reduxState);
-  const soknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(reduxState);
+  const soknadsland = behandlingsgrunnlagSelectors.SoknadslandkoderSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   const unntakFraLovvalgsland = soknadsland.join("");

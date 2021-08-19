@@ -145,7 +145,10 @@ const mapStateToProps = (state: RootState) => ({
     EOSBarnetrygdFraNAV: behandlingsgrunnlagSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).fom),
     soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingsgrunnlagSelectors.PeriodeSelector(state).tom),
-    soknadsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+    soknadsland: {
+      landkoder: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
+      erUkjenteEllerAlleEosLand: behandlingsgrunnlagSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(state),
+    },
     arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
     selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(
       state

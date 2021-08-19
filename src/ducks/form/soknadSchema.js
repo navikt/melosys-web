@@ -1,4 +1,4 @@
-import { object, array, string, lazy, mixed, number } from "yup";
+import { object, array, string, lazy, mixed, number, boolean } from "yup";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
@@ -309,6 +309,20 @@ const soknad = object().when("$behandlingstema", {
             )
           ),
       }),
+    }),
+    soknadsland: object().shape({
+      landkoder: array().when("erUkjenteEllerAlleEosLand", {
+        is: (erUkjenteEllerAlleEosLand) => !erUkjenteEllerAlleEosLand,
+        then: array().min(
+          1,
+          lagMelding(
+            KV.Menypunkter.Utenlandsoppdraget.tittel,
+            KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
+            "Oppgi minst ett søknadsland"
+          )
+        ),
+      }),
+      erUkjenteEllerAlleEosLand: boolean(),
     }),
   }),
 });

@@ -36,7 +36,7 @@ const Statsborgerkapsliste = ({ behandlingID }: StatsborgerkapslisteProps) => {
         header={<GyldigeStatsborgerskapHeader className="statsborgerskapsliste__header" />}
         idFromElement={() => Utils._uuid()}
         renderElement={(statsborgerskap) => (
-          <Rad statsborgerskap={statsborgerskap} gyldigFomFarge="groenn" className="statsborgerskapsliste__rad" />
+          <Rad statsborgerskap={statsborgerskap} gyldigPeriodeFarge="groenn" className="statsborgerskapsliste__rad" />
         )}
         amountOfItemsCollapsed={gyldigeStatsborgerskap.length}
         chevron
@@ -48,7 +48,7 @@ const Statsborgerkapsliste = ({ behandlingID }: StatsborgerkapslisteProps) => {
         showHeader={(collapsed) => !collapsed}
         idFromElement={() => Utils._uuid()}
         renderElement={(statsborgerskap) => (
-          <Rad statsborgerskap={statsborgerskap} gyldigFomFarge="roed" className="statsborgerskapsliste__rad" />
+          <Rad statsborgerskap={statsborgerskap} gyldigPeriodeFarge="roed" className="statsborgerskapsliste__rad" />
         )}
         amountOfItemsCollapsed={0}
         btnTextCollapsed="Åpne historikk"

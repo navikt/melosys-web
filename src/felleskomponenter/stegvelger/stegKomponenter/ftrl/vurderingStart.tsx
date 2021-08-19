@@ -24,7 +24,7 @@ import { FeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
-  const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(state);
+  const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state);
   const initialTrygdedekning = behandlingsgrunnlagSelectors.TrygdedekningSelector(state);
   return {
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),

@@ -14,6 +14,7 @@ describe("Varsler", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
+    props.landkoder = ["DK"];
   });
 
   it("Viser melding om oppfyllte inngangsvilkår", () => {
@@ -96,6 +97,27 @@ describe("Varsler", () => {
     expect(lis).toHaveLength(1);
     expect(lis.first().text()).toBe("Teknisk feil, finner ingen inngangsvilkår.");
   });
+
+  it("Viser feilmelding ved flere valgte land og ikke tema ARBEID_FLERE_LAND", () => {
+    props.oppfyllerInngangsvilkar = true;
+    props.inngangsvilkaar = {
+      vilkaar: MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR,
+      oppfylt: true,
+      begrunnelseKoder: [],
+      begrunnelseFritekst: null,
+      begrunnelseFritekstEngelsk: null,
+    };
+    props.behandlingstema = MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER;
+    props.landkoder = ["DK", "SE"];
+
+    const varsler = shallow(<Varsler {...props} />);
+    const advarsel = varsler.find(Nav.AlertStripeAdvarsel);
+
+    expect(advarsel).toHaveLength(1);
+    expect(advarsel.childAt(0).text()).toBe(
+      "Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre behandlingstema for å kunne fatte vedtak."
+    );
+  });
 });
 
 describe("VurderingInngang", () => {
@@ -116,6 +138,8 @@ describe("VurderingInngang", () => {
       oppfyllerInngangsvilkar: true,
       behandlingID: 1,
       hentVilkar: jest.fn(),
+      landkoder: ["DK"],
+      behandlingstema: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND.kode,
     };
   });
 

@@ -1,12 +1,9 @@
-import MKV from "../../../../melosyskodeverk";
-
 import * as Utils from "../../../../utils";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 import VurderingArtikkel16MottaSvar from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16MottaSvar";
 import vurderingArtikkel16MottaSvarSchema from "../../../../felleskomponenter/stegvelger/stegKomponenter//vurderingArtikkel16MottaSvarSchema";
-import { hentFakta } from "../../../../regler/avklartefakta";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 class Artikkel16MottaSvar extends Steg {
@@ -31,10 +28,6 @@ class Artikkel16MottaSvar extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => ({
-      svarAnmodningUnntakAvklartfakta: hentFakta(
-        MKV.Koder.avklartefaktatyper.SVAR_ANMODNING_UNNTAK,
-        _propsLight.avklartefakta
-      ),
       harAvklaring,
     });
     this.handlers = {
