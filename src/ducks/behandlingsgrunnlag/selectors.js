@@ -184,7 +184,7 @@ export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
 
 export const TrygdedekningSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning || ""
+  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning
 );
 
 export const PeriodeSelector = createSelector(

@@ -45,7 +45,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (soeknadsland: string[]) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland)),
-  oppdaterTrygdedekning: (trygdedekning: string) =>
+  oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning)),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
@@ -116,7 +116,7 @@ const VurderingStart = ({
     await Promise.all([
       oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
       oppdaterSoeknadsland(data.formValues.land ? [data.formValues.land] : []),
-      oppdaterTrygdedekning(data.formValues.trygdedekning ? data.formValues.trygdedekning : ""),
+      oppdaterTrygdedekning(data.formValues.trygdedekning),
     ]);
     oppdater();
     if (data.formIsValid) {
