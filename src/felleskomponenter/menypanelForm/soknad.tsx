@@ -1,6 +1,6 @@
-import React, { FormEventHandler } from "react";
+import React, { FormEventHandler, useEffect, useCallback } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { reduxForm, InjectedFormProps } from "redux-form";
+import { reduxForm, InjectedFormProps, getFormValues } from "redux-form";
 import { RootState } from "AppTypes";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -23,6 +23,7 @@ const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  formValues: getFormValues(KV.Form.SOKNAD)(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
@@ -180,7 +181,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  lagreSoknad: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -191,15 +192,21 @@ type SoknadProps = PropsFromRedux & {
 };
 
 const Soknad = ({
-  lagreSoknad,
+  lagreBehandlingsgrunnlag,
   startOgVisOppfriskModal,
+  formValues,
 }: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
+  const debouncedLagreBehandlingsgrunnlag = useCallback(Utils._debounce(lagreBehandlingsgrunnlag, 1000), []);
+  useEffect(() => {
+    debouncedLagreBehandlingsgrunnlag();
+  }, [formValues]);
+
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
   };
 
   const lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    await lagreSoknad();
+    await lagreBehandlingsgrunnlag();
     startOgVisOppfriskModal();
   };
 
