@@ -149,6 +149,7 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
+  const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   const oppdaterBehandlingIDState = () => {
@@ -188,6 +189,7 @@ const Saksbehandling = ({
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(snr);
+      setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
       return false;
@@ -230,12 +232,9 @@ const Saksbehandling = ({
     params: { snr: saksnummer },
   } = match;
 
-  if (Utils._isNil(redigerbart)) {
-    return null;
-  }
-  if (!behandlingID || behandlingID < 0) {
-    return null;
-  }
+  if (Utils._isNil(redigerbart)) return null;
+  if (!behandlingID || behandlingID < 0) return null;
+  if (!saksopplysningerLastet) return null;
   if (folketrygdenToggle === "fetching" || folketrygdenToggle === "disabled") return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;

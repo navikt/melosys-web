@@ -47,7 +47,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland)),
   oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning)),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -78,12 +77,10 @@ const VurderingStart = ({
   redigerbart,
   formValues = {},
   alleLandkoder,
-  oppdater,
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppdaterTrygdedekning,
   trygdedekninger,
-  lagreBehandlingsgrunnlag,
   formIsValid,
   initialValues,
   tilForsiden,
@@ -118,10 +115,6 @@ const VurderingStart = ({
       oppdaterSoeknadsland(data.formValues.land ? [data.formValues.land] : []),
       oppdaterTrygdedekning(data.formValues.trygdedekning),
     ]);
-    oppdater();
-    if (data.formIsValid) {
-      lagreBehandlingsgrunnlag();
-    }
   };
 
   const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalBehandlingsgrunnlag, 500), []);
