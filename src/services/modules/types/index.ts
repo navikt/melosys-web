@@ -4,6 +4,7 @@ import Periode from "./periode";
 import Person, { Familiemedlem } from "./person";
 import Organisasjon from "./organisasjon";
 import { Avgiftsberegning, Avgiftsgrunnlag, AvgiftsgrunnlagInfo } from "./trygdeavgift";
+import { Nullable } from "./utilityTypes";
 
 export type {
   Avgiftsberegning,
@@ -18,4 +19,5 @@ export type {
   Person,
   Familiemedlem,
   Organisasjon,
+  Nullable,
 };

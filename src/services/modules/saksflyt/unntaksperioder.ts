@@ -1,0 +1,35 @@
+import { postAsJson, putAsText } from "../../utils";
+import { API_BASE_URL, SAKSFLYT, UNNTAKSPERIODER } from "../../api-constants";
+import { Periode, Nullable } from "../types";
+
+interface GodkjennUnntaksperiodeReqDto {
+  varsleUtland: boolean;
+  fritekst: string | null;
+  endretPeriode: Nullable<Periode>;
+  lovvalgsbestemmelse: string;
+}
+
+export const godkjenn = (
+  behandlingID: number,
+  data: GodkjennUnntaksperiodeReqDto = {
+    /* TODO: kan default fjernes her? */
+    varsleUtland: false,
+    fritekst: null,
+    endretPeriode: {
+      fom: null,
+      tom: null,
+    },
+    lovvalgsbestemmelse: "",
+  }
+) => postAsJson(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/godkjenn`, data);
+
+export const innhentinfo = (behandlingID: number) =>
+  putAsText(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/innhentinfo`);
+
+interface IkkeGodkjennUnnntaksperiodeReqDto {
+  ikkeGodkjentBegrunnelseKoder: string[];
+  begrunnelseFritekst: string;
+}
+
+export const ikkegodkjenn = (behandlingID: number, data: IkkeGodkjennUnnntaksperiodeReqDto) =>
+  postAsJson(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/ikkegodkjenn`, data);
