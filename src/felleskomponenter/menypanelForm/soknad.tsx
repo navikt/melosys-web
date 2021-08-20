@@ -18,10 +18,12 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../ducks/avklartefakta";
 import { vilkarSelectors } from "../../ducks/vilkar";
 import { formSelectors } from "../../ducks/form";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
   formValues: getFormValues(KV.Form.SOKNAD)(state),
   initialValues: {
@@ -195,11 +197,12 @@ const Soknad = ({
   lagreBehandlingsgrunnlag,
   startOgVisOppfriskModal,
   formValues,
+  redigerbart,
 }: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
   const debouncedLagreBehandlingsgrunnlag = useCallback(Utils._debounce(lagreBehandlingsgrunnlag, 1000), []);
   useEffect(() => {
-    debouncedLagreBehandlingsgrunnlag();
-  }, [formValues]);
+    if (redigerbart) debouncedLagreBehandlingsgrunnlag();
+  }, [formValues, redigerbart]);
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
