@@ -1,4 +1,4 @@
-import { postAsJson, putAsText } from "../../utils";
+import { postAsJson } from "../../utils";
 import { API_BASE_URL, SAKSFLYT, UNNTAKSPERIODER } from "../../api-constants";
 import { Periode, Nullable } from "../types";
 
@@ -22,9 +22,6 @@ export const godkjenn = (
     lovvalgsbestemmelse: "",
   }
 ) => postAsJson(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/godkjenn`, data);
-
-export const innhentinfo = (behandlingID: number) =>
-  putAsText(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/innhentinfo`);
 
 interface IkkeGodkjennUnnntaksperiodeReqDto {
   ikkeGodkjentBegrunnelseKoder: string[];
