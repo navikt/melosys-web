@@ -9,19 +9,8 @@ interface GodkjennUnntaksperiodeReqDto {
   lovvalgsbestemmelse: string;
 }
 
-export const godkjenn = (
-  behandlingID: number,
-  data: GodkjennUnntaksperiodeReqDto = {
-    /* TODO: kan default fjernes her? */
-    varsleUtland: false,
-    fritekst: null,
-    endretPeriode: {
-      fom: null,
-      tom: null,
-    },
-    lovvalgsbestemmelse: "",
-  }
-) => postAsJson(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/godkjenn`, data);
+export const godkjenn = (behandlingID: number, data: GodkjennUnntaksperiodeReqDto) =>
+  postAsJson(`${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/godkjenn`, data);
 
 interface IkkeGodkjennUnnntaksperiodeReqDto {
   ikkeGodkjentBegrunnelseKoder: string[];
