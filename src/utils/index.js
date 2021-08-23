@@ -1,6 +1,5 @@
 import {
   capitalize,
-  isEqual,
   isFunction,
   isNil,
   isNumber,
@@ -68,7 +67,6 @@ export {
   isUndefined as _isUndefined,
   isEqual as _isEqual,
   isFunction as _isFunction,
-  isEqual as _isEqual,
   isNil as _isNil,
   isNumber as _isNumber,
   isString as _isString,
