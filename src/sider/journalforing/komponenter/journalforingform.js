@@ -130,6 +130,8 @@ const mapStateToProps = (state) => {
       vedlegg: {
         pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
       },
+      journalforingSoknadsland: [],
+      journalforingSoknadslandUkjenteEllerAlleEosLand: false,
       sakstype: MKV.Koder.sakstyper.EU_EOS,
       opprettBehandling: BOOLSK.USANN,
       opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
