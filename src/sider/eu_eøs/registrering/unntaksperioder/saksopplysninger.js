@@ -138,14 +138,6 @@ const Saksopplysninger = ({
     begrunnelseFritekst: endrePeriodeFritekst || null,
   });
 
-  
-  const endrePeriodeOgLagre = (dispatchSaksflyt) =>
-    oppdaterAvklartefakta(behandlingID, [
-      /* Har opplevd at det forsøkes å lagre 2 AARSAK_ENDRING_PERIODE-faktaer, derfor brukes filter(). */
-      ...avklartefakta.filter((af) => af.referanse !== MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE),
-      lagAvklartfakta(),
-    ]).then(() => dispatchSaksflyt());
-
   const godkjenn = () =>
     Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
       varsleUtland: false,
@@ -155,7 +147,11 @@ const Saksopplysninger = ({
     });
 
   const delvisGodkjenn = () =>
-    endrePeriodeOgLagre(() =>
+    oppdaterAvklartefakta(behandlingID, [
+      /* Har opplevd at det forsøkes å lagre 2 AARSAK_ENDRING_PERIODE-faktaer, derfor brukes filter(). */
+      ...avklartefakta.filter((af) => af.referanse !== MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE),
+      lagAvklartfakta(),
+    ]).then(() =>
       Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
         varsleUtland: false,
         fritekst: null,
