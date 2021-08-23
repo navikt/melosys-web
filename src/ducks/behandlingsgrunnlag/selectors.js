@@ -182,7 +182,7 @@ export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
   (soknadsland) => soknadsland.erUkjenteEllerAlleEosLand
 );
 
-export const SoknadslandKTSelector = createSelector(SoknadslandSelector, (soknadsland) =>
+export const SoknadslandKTSelector = createSelector(SoknadslandkoderSelector, (soknadsland) =>
   MKV.KTObjects.landkoder.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
 );
 
