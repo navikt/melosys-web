@@ -1,4 +1,4 @@
-import { object, string, lazy, array } from "yup";
+import { object, string, lazy, array, boolean } from "yup";
 
 import MKV from "../../../melosyskodeverk";
 import * as Konstanter from "../../../constants";
@@ -32,6 +32,10 @@ const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
     MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
   ].includes(behandlingstema);
+
+const kreverPeriodeOgLandTemaFlereLand = (journalforingHensikt, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand &&
+  kreverPeriodeOgLand(journalforingHensikt, MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND);
 
 const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   const organisasjonAliasTyper = [
@@ -100,8 +104,8 @@ const journalforing = object().shape({
   journalforingSoknadsland: array()
     .of(string())
     .ensure()
-    .when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-      is: kreverPeriodeOgLand,
+    .when(["journalforingHensikt", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
+      is: kreverPeriodeOgLandTemaFlereLand,
       then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
   utenlandskTrygdemyndighetLandkode: string().when("avsenderType", {
@@ -122,6 +126,7 @@ const journalforing = object().shape({
   journalforingHensikt: string(),
   representantNavn: string(),
   opprettnysak_behandlingstema: string(),
+  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
 });
 
 export default journalforing;

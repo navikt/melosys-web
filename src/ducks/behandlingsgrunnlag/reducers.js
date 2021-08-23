@@ -219,7 +219,7 @@ export default function reducer(state = initialState, action) {
           foretakUtland,
           bosted: {
             intensjonOmRetur: null,
-            antallMaanederINorge: null,
+            antallMaanederINorge: dokument.antallMaanederINorge || 0,
             EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
             oppgittAdresse: {
               tilleggsnavn: dokument.oppgittAdresseTilleggsnavn,
@@ -326,9 +326,12 @@ export default function reducer(state = initialState, action) {
                 })),
             ],
           },
-          overgangsregelbestemmelser:
-            dokument.overgangsregelbestemmelser || state.data.data.overgangsregelbestemmelser || [],
-          ytterligereInformasjon: state.data.data.ytterligereInformasjon || null,
+          overgangsregelbestemmelser: Utils._has(dokument, "overgangsregelbestemmelser")
+            ? dokument.overgangsregelbestemmelser || state.data.data.overgangsregelbestemmelser || []
+            : undefined,
+          ytterligereInformasjon: Utils._has(dokument, "ytterligereInformasjon")
+            ? state.data.data.ytterligereInformasjon || null
+            : undefined,
           trygdedekning: dokument.trygdedekning,
         },
       };

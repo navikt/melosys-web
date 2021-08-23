@@ -18,6 +18,7 @@ import {
   uniqBy,
   has,
   merge,
+  isEqual,
 } from "lodash";
 
 import throttle from "lodash.throttle";
@@ -65,6 +66,7 @@ export {
   organisasjon,
   capitalize as _capitalize,
   isUndefined as _isUndefined,
+  isEqual as _isEqual,
   isFunction as _isFunction,
   isEqual as _isEqual,
   isNil as _isNil,

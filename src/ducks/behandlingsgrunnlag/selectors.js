@@ -188,7 +188,7 @@ export const SoknadslandKTSelector = createSelector(SoknadslandkoderSelector, (s
 
 export const TrygdedekningSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning || ""
+  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning
 );
 
 export const PeriodeSelector = createSelector(
