@@ -15,7 +15,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
 import EndrePeriode from "./komponenter/endrePeriode";
 import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { datalastingOperations } from "../../../../ducks/datalasting";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
@@ -39,7 +39,6 @@ const Saksopplysninger = ({
   behandlingsresultat,
   avklartefakta,
   oppdaterAvklartefakta,
-  oppdaterLovvalgsperioder,
   lastInnSaksopplysninger,
   tilForsiden,
   startOgVisOppfriskModal,
@@ -139,28 +138,13 @@ const Saksopplysninger = ({
     begrunnelseFritekst: endrePeriodeFritekst || null,
   });
 
-  const lagLovvalgsperioder = () => [
-    {
-      fomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeFom)}`,
-      tomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeTom)}`,
-      lovvalgsbestemmelse: sed.lovvalgsbestemmelse,
-      tilleggBestemmelse: null,
-      unntakFraBestemmelse: null,
-      innvilgelsesResultat: KV.Koder.INNVILGET,
-      lovvalgsland: sed.lovvalgslandKode,
-      unntakFraLovvalgsland: null,
-      trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
-      medlemskapstype: MKV.Koder.medlemskapstyper.UNNTATT,
-      medlemskapsperiodeID: null,
-    },
-  ];
-
+  
   const endrePeriodeOgLagre = (dispatchSaksflyt) =>
     oppdaterAvklartefakta(behandlingID, [
       /* Har opplevd at det forsøkes å lagre 2 AARSAK_ENDRING_PERIODE-faktaer, derfor brukes filter(). */
       ...avklartefakta.filter((af) => af.referanse !== MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE),
       lagAvklartfakta(),
-    ]).then(() => oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder()).then(() => dispatchSaksflyt()));
+    ]).then(() => dispatchSaksflyt());
 
   const godkjenn = () =>
     Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
@@ -454,7 +438,6 @@ Saksopplysninger.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
-  oppdaterLovvalgsperioder: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   behandlingsresultat: PT.object,
   tilForsiden: PT.func.isRequired,
@@ -480,8 +463,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
     dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
-  oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) =>
-    dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
   lastInnSaksopplysninger: (saksnummer, behandlingID) =>
     datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
 });
