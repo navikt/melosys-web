@@ -120,7 +120,6 @@ const Saksbehandling = ({
   hentOppsummertFakta,
   lagreAllData,
   lagreAvklartefakta,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   lagreOgLukk,
   lagreVilkar,
   location,
@@ -260,7 +259,6 @@ const Saksbehandling = ({
                 behandlingID={behandlingID}
                 lagreAvklartefaktaHandler={lagreAvklartefakta}
                 lagreAllData={lagreAllData}
-                lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
                 lagreVilkarHandler={lagreVilkar}
                 oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
                 begrunnelser={MKV.KTObjects.begrunnelser}
@@ -291,7 +289,6 @@ const Saksbehandling = ({
                   anmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}
-                  oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visHenleggDialogHandle={visHenleggDialogHandle}
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
@@ -362,7 +359,6 @@ Saksbehandling.propTypes = {
   hentFolketrygdenKodeverk: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   lagreAvklartefakta: PT.func.isRequired,
-  lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
   lagreVilkar: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,

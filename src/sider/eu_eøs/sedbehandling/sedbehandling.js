@@ -142,8 +142,6 @@ const SedBehandling = ({
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
-  visOppfriskModal,
-  behandlingOppfriskes,
   apneTidligereBehandlinger,
   dokumentOversikt,
   dokumenter,
@@ -155,10 +153,6 @@ const SedBehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
-
-    if (behandlingOppfriskes) {
-      visOppfriskModal();
-    }
 
     return () => {
       resetSaksopplysninger();
@@ -213,8 +207,6 @@ const SedBehandling = ({
                   visHenleggSak={!behandlingstemaErTrygdetid}
                   visAvslagManglendeOpplysninger={!behandlingstemaErTrygdetid}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                  visOppfriskSaksopplysninger
-                  oppfriskSaksopplysningerHandle={visOppfriskModal}
                 />
               )}
               renderBehandlingsstatus={() => (
@@ -266,7 +258,6 @@ SedBehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   dokumentOversikt: PT.array.isRequired,

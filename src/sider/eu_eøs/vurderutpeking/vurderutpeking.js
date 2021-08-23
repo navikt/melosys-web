@@ -117,9 +117,7 @@ const Vurderutpeking = ({
   oppdaterOgLagreBehandlingsperioder,
   lagreAllData,
   tilForsiden,
-  visOppfriskModal,
   startOgVisOppfriskModal,
-  behandlingOppfriskes,
   soknadForm,
   behandlingsgrunnlag,
   dokumentOversikt,
@@ -134,10 +132,6 @@ const Vurderutpeking = ({
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
-
-    if (behandlingOppfriskes) {
-      visOppfriskModal();
-    }
 
     return () => {
       resetSaksopplysninger();
@@ -212,8 +206,6 @@ const Vurderutpeking = ({
                   visHenleggSak
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visAvslagManglendeOpplysninger
-                  visOppfriskSaksopplysninger
-                  oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                   visRevurderFagsak={visRevurderFagsak}
                 />

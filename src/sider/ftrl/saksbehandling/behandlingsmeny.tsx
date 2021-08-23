@@ -10,7 +10,6 @@ interface Props {
   behandlingsstatus: string;
   lagreOgLukkHandle: () => void;
   tilbakeleggeHandle: () => void;
-  oppfriskSaksopplysningerHandle: () => void;
   visHenleggDialogHandle: () => void;
   visAvsluttSakSomBortfaltDialogHandle: () => void;
   visAvslagSoknadDialogHandle: () => void;
@@ -22,7 +21,6 @@ const Behandlingsmeny = ({
   behandlingsstatus,
   lagreOgLukkHandle,
   tilbakeleggeHandle,
-  oppfriskSaksopplysningerHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
@@ -46,11 +44,6 @@ const Behandlingsmeny = ({
         {redigerbart && (
           <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={tilbakeleggeHandle}>
             Legg tilbake i kø
-          </Nav.Knapp>
-        )}
-        {redigerbart && (
-          <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={oppfriskSaksopplysningerHandle}>
-            Oppdater registeropplysninger
           </Nav.Knapp>
         )}
         {redigerbart && (

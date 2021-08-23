@@ -15,8 +15,6 @@ const Behandlingsmeny = ({
   visHenleggSak,
   visAvslagManglendeOpplysninger,
   visAvslagSoknadDialogHandle,
-  oppfriskSaksopplysningerHandle,
-  visOppfriskSaksopplysninger,
 }) => (
   <Nav.EkspanderbartpanelBase
     ariaTittel="Behandlingsmeny"
@@ -32,11 +30,6 @@ const Behandlingsmeny = ({
       <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>
         Legg tilbake i kø
       </Nav.Knapp>
-      {visOppfriskSaksopplysninger && (
-        <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>
-          Oppdater registeropplysninger
-        </Nav.Knapp>
-      )}
       {redigerbart && visHenleggSak && (
         <Nav.Knapp mini className="innhold__element" onClick={visHenleggDialogHandle}>
           Henlegg sak
@@ -69,12 +62,6 @@ Behandlingsmeny.propTypes = {
   redigerbart: PT.bool.isRequired,
   visHenleggSak: PT.bool.isRequired,
   visAvslagManglendeOpplysninger: PT.bool.isRequired,
-  oppfriskSaksopplysningerHandle: PT.func.isRequired,
-  visOppfriskSaksopplysninger: PT.bool,
-};
-
-Behandlingsmeny.defaultProps = {
-  visOppfriskSaksopplysninger: true,
 };
 
 export default Behandlingsmeny;

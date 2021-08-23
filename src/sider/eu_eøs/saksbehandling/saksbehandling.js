@@ -21,7 +21,7 @@ import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/be
 import { anmodningsperioderOperations, anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { vilkarOperations, vilkarSelectors } from "../../../ducks/vilkar";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { saksopplysningerOperations, saksopplysningerSelectors } from "../../../ducks/saksopplysninger";
+import { saksopplysningerSelectors } from "../../../ducks/saksopplysninger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
@@ -243,9 +243,6 @@ class Saksbehandling extends Component {
       anmodningsperioderErSendtUtlandet ||
       (behandlingErAvsluttet && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
 
-    const visOppfriskSaksopplysninger =
-      behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE && !anmodningsperioderErSendtUtlandet;
-
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
@@ -290,8 +287,6 @@ class Saksbehandling extends Component {
                     visAvslagManglendeOpplysninger={
                       behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
                     }
-                    visOppfriskSaksopplysninger={visOppfriskSaksopplysninger}
-                    oppfriskSaksopplysningerHandle={visOppfriskModal}
                     visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                     visRevurderFagsak={visRevurderFagsak}
                     visAvsluttSakSomBortfalt={
@@ -343,7 +338,6 @@ Saksbehandling.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentBehandlingsgrunnlag: PT.func.isRequired,
-  oppfriskSaksopplysninger: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   resetBehandlingsresultatState: PT.func.isRequired,
   resetVilkarState: PT.func.isRequired,
@@ -449,7 +443,6 @@ const mapDispatchToProps = (dispatch) => ({
   hentBehandlingsresultat: (bid) => dispatch(behandlingsresultatOperations.hent(bid)),
   hentBehandlingsgrunnlag: (bid) => dispatch(behandlingsgrunnlagOperations.hent(bid)),
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
-  oppfriskSaksopplysninger: (saksnummer) => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),
