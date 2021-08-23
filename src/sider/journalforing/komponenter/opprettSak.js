@@ -160,24 +160,29 @@ const OpprettFagsak = (props) => {
             </Nav.Row>
           </Nav.Fieldset>
           <Nav.Fieldset legend="Land:">
-            {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
-              <Nav.Row className="landcheckbox">
-                <Skjema.Checkbox
-                  feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
-                  disabled={valgteLand.length > 0}
-                  label={
-                    <div>
-                      Flere EØS-land/Sveits. Ikke kjent hvilke
-                      <Nav.Hjelpetekst className="hjelpetekst" tittel="tittel" type={Nav.PopoverOrientering.Hoyre}>
-                        Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
-                        <br />
-                        Det er ikke mulig å legge til andre land i tillegg.
-                      </Nav.Hjelpetekst>
-                    </div>
-                  }
-                />
-              </Nav.Row>
-            )}
+            <FeatureToggle togglename="melosys.UKJENT_ELLER_ALLE_EOS_LAND">
+              {(toggleStatus) =>
+                toggleStatus === "enabled" &&
+                valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+                  <Nav.Row className="landcheckbox">
+                    <Skjema.Checkbox
+                      feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                      disabled={valgteLand.length > 0}
+                      label={
+                        <div>
+                          Flere EØS-land/Sveits. Ikke kjent hvilke
+                          <Nav.Hjelpetekst className="hjelpetekst" tittel="tittel" type={Nav.PopoverOrientering.Hoyre}>
+                            Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
+                            <br />
+                            Det er ikke mulig å legge til andre land i tillegg.
+                          </Nav.Hjelpetekst>
+                        </div>
+                      }
+                    />
+                  </Nav.Row>
+                )
+              }
+            </FeatureToggle>
             <Nav.Row className="">
               <Nav.Column xs="12">
                 <Skjema.LandVelger
