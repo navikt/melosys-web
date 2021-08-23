@@ -17,6 +17,8 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import "./menypanel.css";
 import { menypanelSelectors } from "../../ducks/menypanel";
+import { OppdaterRegisteroppslysninger } from "./oppdaterRegisteropplysninger";
+import { formatterDatoTilNorsk } from "../../utils/dato";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
@@ -26,6 +28,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  mottaksdato: behandlingsgrunnlagSelectors.MottaksdatoSelector(state),
   visMenypanel: menypanelSelectors.ErMenypanelSynlig(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
@@ -38,6 +41,7 @@ type MenypanelProps = PropsFromRedux & {
 };
 
 export const Menypanel = ({
+  mottaksdato,
   behandlingsgrunnlagtype,
   behandlingstema,
   behandlingstype,
@@ -102,6 +106,10 @@ export const Menypanel = ({
           </Nav.AlertStripe>
         )}
       </div>
+      <OppdaterRegisteroppslysninger
+        sistOppdatert={formatterDatoTilNorsk(mottaksdato)}
+        oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+      />
       <div className="menypanel">
         <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
         <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>
