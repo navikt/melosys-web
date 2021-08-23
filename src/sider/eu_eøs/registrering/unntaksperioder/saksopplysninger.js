@@ -33,6 +33,7 @@ const Saksopplysninger = ({
   redigerbart,
   sed,
   sedLovvalgsperiode,
+  sedLovvalgsbestemmelse,
   vurderingBegrunnelser,
   lovvalgsperiode,
   behandlingsresultat,
@@ -161,9 +162,26 @@ const Saksopplysninger = ({
       lagAvklartfakta(),
     ]).then(() => oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder()).then(() => dispatchSaksflyt()));
 
-  const godkjenn = () => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
+  const godkjenn = () =>
+    Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
+      varsleUtland: false,
+      fritekst: null,
+      endretPeriode: { fom: null, tom: null },
+      lovvalgsbestemmelse: sedLovvalgsbestemmelse,
+    });
 
-  const delvisGodkjenn = () => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
+  const delvisGodkjenn = () =>
+    endrePeriodeOgLagre(() =>
+      Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
+        varsleUtland: false,
+        fritekst: null,
+        endretPeriode: {
+          fom: Utils.dato.formatterDatoTilISO(endrePeriodeFom),
+          tom: Utils.dato.formatterDatoTilISO(endrePeriodeTom),
+        },
+        lovvalgsbestemmelse: sedLovvalgsbestemmelse,
+      })
+    );
 
   const kanEndrePeriode = () => unntaksperiodeVurdering === KV.Koder.Unntaksperiode.DELVIS_GODKJENT;
 
@@ -432,6 +450,7 @@ Saksopplysninger.propTypes = {
   avklartefakta: PT.array.isRequired,
   lovvalgsperiode: PT.object.isRequired,
   sedLovvalgsperiode: MPT.Periode,
+  sedLovvalgsbestemmelse: PT.string.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
@@ -454,6 +473,7 @@ const mapStateToProps = (state) => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
+  sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse,
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
 });
