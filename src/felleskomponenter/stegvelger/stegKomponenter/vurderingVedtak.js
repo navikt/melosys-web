@@ -27,7 +27,6 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 
 import "./vurderingVedtak.css";
-import { kanHaFlereLand } from "../../../melosyskodeverk/utils";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -120,7 +119,7 @@ const VurderingVedtak = ({
   };
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
-  const flereLandEnnLovlig = arbeidsland.length > 1 && !kanHaFlereLand(behandlingstema);
+  const flereSoknadslandEnnLovlig = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
   return (
     <div className="vedtak">
@@ -180,7 +179,7 @@ const VurderingVedtak = ({
             {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           </Nav.Column>
         </Nav.Row>
-        {flereLandEnnLovlig && (
+        {flereSoknadslandEnnLovlig && (
           <Nav.AlertStripe type="feil">Det er kun tillat med ett arbeidsland i vedtaket.</Nav.AlertStripe>
         )}
         <Nav.Row>
@@ -188,7 +187,7 @@ const VurderingVedtak = ({
             <Nav.Hovedknapp
               spinner={vedtakPending}
               autoDisableVedSpinner
-              disabled={!redigerbart || flereLandEnnLovlig}
+              disabled={!redigerbart || flereSoknadslandEnnLovlig}
               onClick={fattVedtak}
             >
               Fatt vedtak
