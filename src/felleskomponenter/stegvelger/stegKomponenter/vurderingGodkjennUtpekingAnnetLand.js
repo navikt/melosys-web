@@ -1,10 +1,14 @@
 import React, { Fragment, useState } from "react";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
+import { connect } from "react-redux";
+import { getFormValues } from "redux-form";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as Mui from "../../ui";
 import * as Hooks from "../../../hooks";
+import * as Utils from "../../../utils";
+import * as KV from "../../../kodeverk";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
@@ -15,6 +19,7 @@ const VurderingGodkjennUtpekingAnnetLand = ({
   redigerbart,
   overskrift,
   behandlingID,
+  vurderUtpekingFormValues,
 }) => {
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
@@ -32,6 +37,11 @@ const VurderingGodkjennUtpekingAnnetLand = ({
       await lagreOgGodkjennUnntaksperioder({
         varsleUtland,
         fritekst,
+        endretPeriode: {
+          fom: Utils.dato.formatterDatoTilISO(vurderUtpekingFormValues.fom),
+          tom: Utils.dato.formatterDatoTilISO(vurderUtpekingFormValues.tom),
+        },
+        lovvalgsbestemmelse: vurderUtpekingFormValues.lovvalgsbestemmelse,
       });
     } catch (e) {
       setGodkjenningPending(false);
@@ -92,11 +102,16 @@ const VurderingGodkjennUtpekingAnnetLand = ({
   );
 };
 
+const mapStateToProps = (state) => ({
+  vurderUtpekingFormValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
+});
+
 VurderingGodkjennUtpekingAnnetLand.propTypes = {
   lagreOgGodkjennUnntaksperioder: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   overskrift: PT.string.isRequired,
   behandlingID: PT.number.isRequired,
+  vurderUtpekingFormValues: PT.object.isRequired,
 };
 
-export default VurderingGodkjennUtpekingAnnetLand;
+export default connect(mapStateToProps)(VurderingGodkjennUtpekingAnnetLand);

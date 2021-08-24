@@ -271,12 +271,16 @@ class Stegvelger extends Component {
 
   godkjennUnntaksperioder = async (data) => {
     const { behandlingID, tilForsiden } = this.props;
-    const body = {
+
+    await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
       varsleUtland: data.varsleUtland || false,
       fritekst: data.fritekst || null,
-    };
-
-    await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, body);
+      endretPeriode: {
+        fom: data.endretPeriode.fom,
+        tom: data.endretPeriode.tom,
+      },
+      lovvalgsbestemmelse: data.lovvalgsbestemmelse,
+    });
     tilForsiden();
   };
 
