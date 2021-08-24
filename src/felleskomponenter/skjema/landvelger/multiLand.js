@@ -138,7 +138,7 @@ function MultiLand(props) {
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
         />
-        <Nav.Knapp htmlType="button" mini className="landliste__linje__knapp">
+        <Nav.Knapp htmlType="button" mini className="landliste__linje__knapp" disabled={disabled}>
           Legg til
         </Nav.Knapp>
       </div>

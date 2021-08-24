@@ -41,7 +41,22 @@ export const OpprettSakTittel = () => (
 const OpprettFagsak = (props) => {
   const { journalforingSkjemaVerdier } = props;
   const { settFeltInnhold } = props;
-  const { opprettnysak_behandlingstema: valgtBehandlingstema, sakstype: valgtSakstype } = journalforingSkjemaVerdier;
+  const {
+    opprettnysak_behandlingstema: valgtBehandlingstema,
+    sakstype: valgtSakstype,
+    journalforingSoknadsland: valgteLand,
+    journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
+  } = journalforingSkjemaVerdier;
+
+  useEffect(() => {
+    settFeltInnhold(
+      "opprettnysak_behandlingstema",
+      valgtSakstype === MKV.Koder.sakstyper.FTRL
+        ? MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+        : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
+    );
+  }, [valgtSakstype]);
+
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -104,7 +119,12 @@ const OpprettFagsak = (props) => {
           </option>
         ))}
       </Skjema.Select>
-      <Skjema.Select feltNavn="opprettnysak_behandlingstema" bredde="fullbredde" label="Behandlingstema">
+      <Skjema.Select
+        feltNavn="opprettnysak_behandlingstema"
+        bredde="fullbredde"
+        label="Behandlingstema"
+        onChange={() => settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false)}
+      >
         {valgbareBehandlingstemaer.map((elem) => (
           <option key={elem.kode} value={elem.kode}>
             {elem.term}
@@ -140,9 +160,37 @@ const OpprettFagsak = (props) => {
             </Nav.Row>
           </Nav.Fieldset>
           <Nav.Fieldset legend="Land:">
+            <FeatureToggle togglename="melosys.UKJENT_ELLER_ALLE_EOS_LAND">
+              {(toggleStatus) =>
+                toggleStatus === "enabled" &&
+                valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+                  <Nav.Row className="landcheckbox">
+                    <Skjema.Checkbox
+                      feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                      disabled={valgteLand.length > 0}
+                      label={
+                        <div>
+                          Flere EØS-land/Sveits. Ikke kjent hvilke
+                          <Nav.Hjelpetekst className="hjelpetekst" tittel="tittel" type={Nav.PopoverOrientering.Hoyre}>
+                            Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
+                            <br />
+                            Det er ikke mulig å legge til andre land i tillegg.
+                          </Nav.Hjelpetekst>
+                        </div>
+                      }
+                    />
+                  </Nav.Row>
+                )
+              }
+            </FeatureToggle>
             <Nav.Row className="">
               <Nav.Column xs="12">
-                <Skjema.LandVelger feltNavn="journalforingSoknadsland" multiLand errorConfig={{ submitFailed: true }} />
+                <Skjema.LandVelger
+                  feltNavn="journalforingSoknadsland"
+                  multiLand
+                  errorConfig={{ submitFailed: true }}
+                  disabled={ukjentEllerAlleEosLand}
+                />
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>

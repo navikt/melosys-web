@@ -26,7 +26,8 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
-  const { behandlingstema } = formValues;
+  const { behandlingstema, soknadsinfo } = formValues;
+  const { land, erUkjenteEllerAlleEosLand } = soknadsinfo;
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const hentOppgaver = async (brukerID) => {
@@ -79,6 +80,9 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
     change("journalpostID", journalpostID);
   };
 
+  const erLandvelgerDisabled =
+    erUkjenteEllerAlleEosLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+
   return (
     <form className="opprettnysak" onSubmit={handleSubmit}>
       <Nav.Container fluid>
@@ -115,7 +119,12 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                           </option>
                         ))}
                     </Skjema.Select>
-                    <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
+                    <Skjema.Select
+                      feltNavn="behandlingstema"
+                      bredde="fullbredde"
+                      label="Behandlingstema"
+                      onChange={() => change("soknadsinfo.erUkjenteEllerAlleEosLand", false)}
+                    >
                       {filtrerteBehandlingstemaer.map(({ kode, term }) => (
                         <option key={kode} value={kode}>
                           {term}
@@ -155,7 +164,34 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                             feltNavn="land"
                             label="Land"
                             errorConfig={{ submitFailed: true }}
+                            disabled={erLandvelgerDisabled}
                           />
+                          <FeatureToggle togglename="melosys.UKJENT_ELLER_ALLE_EOS_LAND">
+                            {(toggleStatus) =>
+                              toggleStatus === "enabled" &&
+                              behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+                                <Skjema.Checkbox
+                                  feltNavn="erUkjenteEllerAlleEosLand"
+                                  disabled={land.length > 0}
+                                  label={
+                                    <div>
+                                      Flere EØS-land/Sveits. Ikke kjent hvilke
+                                      <Nav.Hjelpetekst
+                                        className="hjelpetekst"
+                                        tittel="tittel"
+                                        type={Nav.PopoverOrientering.Hoyre}
+                                      >
+                                        Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av
+                                        her.
+                                        <br />
+                                        Det er ikke mulig å legge til andre land i tillegg.
+                                      </Nav.Hjelpetekst>
+                                    </div>
+                                  }
+                                />
+                              )
+                            }
+                          </FeatureToggle>
                         </FormSection>
                       </Fragment>
                     )}
@@ -215,7 +251,7 @@ OpprettNySak.propTypes = {
 };
 
 OpprettNySak.defaultProps = {
-  formValues: {},
+  formValues: { soknadsinfo: {} },
   error: undefined,
 };
 
@@ -223,6 +259,8 @@ const mapStateToProps = (state) => ({
   formValues: getFormValues(KV.Form.OPPRETT_NY_SAK)(state),
   initialValues: {
     skalTilordnes: false,
+    behandlingstema: undefined,
+    soknadsinfo: { land: [], erUkjenteEllerAlleEosLand: false },
   },
 });
 
@@ -237,7 +275,10 @@ const opprettNySak = async (values, dispatch, props) => {
       fom,
       tom,
     },
-    land: soknadErValgt ? values.soknadsinfo.land : [],
+    land: {
+      landkoder: soknadErValgt ? values.soknadsinfo.land : [],
+      erUkjenteEllerAlleEosLand: soknadErValgt ? values.soknadsinfo.erUkjenteEllerAlleEosLand : false,
+    },
   };
 
   const data = {
