@@ -68,7 +68,6 @@ const FellesHandlersProviderUnconnected = ({
   const startOgVisOppfriskModal = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
     visOppfriskDialogHandle();
-    await oppfriskSaksopplysninger(behandlingID);
     await fjernBehandlingOppfriskes();
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
