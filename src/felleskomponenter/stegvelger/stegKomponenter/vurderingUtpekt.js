@@ -16,6 +16,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { flytSelectors } from "../../../ducks/flyt";
+import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from "../../../regler/lovvalgsbestemmelser";
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../regler/lovvalgsland";
@@ -245,26 +246,49 @@ VurderingUtpekt.defaultProps = {
   ytterligereInformasjon: null,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  lovvalgsperiode: {
-    fomDato: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
-    tomDato: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
-  },
-  formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
-  initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-    lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
-    lovvalgsland: ownProps.tilstand.lovvalgsland,
-    utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
-    overgangsregelbestemmelser: behandlingsgrunnlagSelectors
-      .OvergangsregelbestemmelserSelector(state)
-      .map((o) => o.kode),
-  },
-  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
-  ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-});
+const mapStateToProps = (state, ownProps) => {
+  const { behandlingsstatus } = ownProps;
+
+  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
+    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET &&
+    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
+
+  const lovvalgsperiode = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? {
+        fomDato: lovvalgsperioderSelectors.FomDatoSelector(state),
+        tomDato: lovvalgsperioderSelectors.TomDatoSelector(state),
+      }
+    : {
+        fomDato: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
+        tomDato: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
+      };
+
+  const initialLovvalgsperiodeFom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? lovvalgsperioderSelectors.FomDatoSelector(state)
+    : behandlingerSelectors.LovvalgsperiodeFomSelector(state);
+  const initialLovvalgsperiodeTom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? lovvalgsperioderSelectors.TomDatoSelector(state)
+    : behandlingerSelectors.LovvalgsperiodeTomSelector(state);
+
+  return {
+    lovvalgsperiode,
+    formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
+    initialValues: {
+      fom: Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeFom),
+      tom: Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeTom),
+      lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
+      lovvalgsland: ownProps.tilstand.lovvalgsland,
+      utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
+      overgangsregelbestemmelser: behandlingsgrunnlagSelectors
+        .OvergangsregelbestemmelserSelector(state)
+        .map((o) => o.kode),
+    },
+    vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
+    ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
+    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+    behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
+  };
+};
 
 const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();
