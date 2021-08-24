@@ -22,3 +22,10 @@ export const erUtsendt = (behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
   ].includes(behandlingstema);
+
+export const kanHaFlereLand = (behandlingstema) =>
+  [
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+    MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
+    MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
+  ].includes(behandlingstema);

@@ -16,6 +16,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
 
 import "./vurderingInngang.css";
+import { kanHaFlereLand } from "../../../melosyskodeverk/utils";
 
 const { OVERSTYRT_AV_SAKSBEHANDLER } = MKV.Koder.begrunnelser.inngangsvilkaar;
 
@@ -59,8 +60,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
     );
   }
 
-  const flereLandEnnTillatt =
-    landkoder.length > 1 && behandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+  const flereLandEnnTillatt = landkoder.length > 1 && !kanHaFlereLand(behandlingstema);
 
   return (
     <div className="vurderinginngang">

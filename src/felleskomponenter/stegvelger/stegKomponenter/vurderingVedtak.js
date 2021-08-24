@@ -27,6 +27,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
 
 import "./vurderingVedtak.css";
+import { kanHaFlereLand } from "../../../melosyskodeverk/utils";
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelse = {}, tilleggsbestemmelse = {}) => {
   if (
@@ -119,8 +120,7 @@ const VurderingVedtak = ({
   };
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
-  const flereLandEnnLovlig =
-    arbeidsland.length > 1 && behandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+  const flereLandEnnLovlig = arbeidsland.length > 1 && !kanHaFlereLand(behandlingstema);
 
   return (
     <div className="vedtak">
