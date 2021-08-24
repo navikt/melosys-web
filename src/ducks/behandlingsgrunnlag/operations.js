@@ -108,7 +108,7 @@ const lagFTRLFelter = (behandlingsgrunnlag) => ({
 const lagSedGrunnlagFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
-  ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon,
+  ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon || null,
 });
 
 const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
