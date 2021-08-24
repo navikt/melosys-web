@@ -10,7 +10,7 @@ import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 
-import MKV from "../../../melosyskodeverk";
+import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../ducks/vilkar";
@@ -59,8 +59,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
     );
   }
 
-  const flereLandEnnTillatt =
-    landkoder.length > 1 && behandlingstema !== MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND;
+  const flereSoknadslandEnnTillatt = landkoder.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
   return (
     <div className="vurderinginngang">
@@ -73,7 +72,7 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
             </li>
           ))}
       </ul>
-      {flereLandEnnTillatt && (
+      {flereSoknadslandEnnTillatt && (
         <Nav.AlertStripeAdvarsel>
           Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne arbeidsland, eller endre
           behandlingstema for å kunne fatte vedtak.
