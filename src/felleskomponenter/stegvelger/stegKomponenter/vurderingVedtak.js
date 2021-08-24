@@ -119,7 +119,7 @@ const VurderingVedtak = ({
   };
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
-  const flereSoknadslandEnnLovlig = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
+  const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
   return (
     <div className="vedtak">
@@ -179,7 +179,7 @@ const VurderingVedtak = ({
             {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           </Nav.Column>
         </Nav.Row>
-        {flereSoknadslandEnnLovlig && (
+        {flereSoknadslandEnnTillatt && (
           <Nav.AlertStripe type="feil">Det er kun tillat med ett arbeidsland i vedtaket.</Nav.AlertStripe>
         )}
         <Nav.Row>
@@ -187,7 +187,7 @@ const VurderingVedtak = ({
             <Nav.Hovedknapp
               spinner={vedtakPending}
               autoDisableVedSpinner
-              disabled={!redigerbart || flereSoknadslandEnnLovlig}
+              disabled={!redigerbart || flereSoknadslandEnnTillatt}
               onClick={fattVedtak}
             >
               Fatt vedtak
