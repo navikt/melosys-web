@@ -167,7 +167,7 @@ const FellesHandlersProviderUnconnected = ({
     avslaaSoknadHandle,
     avsluttSakSomBortfalt,
     lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
-    oppfriskOgLastInnSaksopplysninger: oppfriskOgLastInnSaksopplysninger,
+    oppfriskOgLastInnSaksopplysninger,
     venterPaRevurderFagsak,
     behandlingOppfriskes,
     annenBehandlingOppfriskes,
