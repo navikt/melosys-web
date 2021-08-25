@@ -12,6 +12,7 @@ import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponente
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
+import { useFeatureToggle } from "../../featuretoggle";
 import Behandlingsmeny from "./behandlingsmeny";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
@@ -121,6 +122,8 @@ const Saksbehandling = ({
   visRevurderFagsakDialogHandle,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
+  const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
+  const trygdeavtaleToggle = useFeatureToggle("melosys.trygdeavtale");
   const saksnummer = match?.params?.snr;
 
   const oppdaterBehandlingIDState = () => {
@@ -151,6 +154,7 @@ const Saksbehandling = ({
 
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(saksnummer);
+      setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
       Utils.logger.error(e);
@@ -172,13 +176,10 @@ const Saksbehandling = ({
     };
   }, []);
 
-  if (Utils._isNil(redigerbart)) {
-    return null;
-  }
-
-  if (!behandlingID || behandlingID < 0) {
-    return null;
-  }
+  if (Utils._isNil(redigerbart)) return null;
+  if (!behandlingID || behandlingID < 0) return null;
+  if (trygdeavtaleToggle === "fetching" || trygdeavtaleToggle === "disabled") return null;
+  if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
   const erAvslaattSoknad =
