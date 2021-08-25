@@ -12,7 +12,7 @@ import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponente
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import Behandlingsmeny from "../ftrl/saksbehandling/behandlingsmeny";
+import Behandlingsmeny from "./behandlingsmeny";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";

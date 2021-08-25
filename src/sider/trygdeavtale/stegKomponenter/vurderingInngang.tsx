@@ -50,14 +50,14 @@ interface Props {
   annenBehandlingOppfriskes: boolean;
   fortsett: () => void;
   formValues: FormValuesProps;
-  hentStegDataOgOppdaterAktuelleSteg: () => void;
+  hentFlytOgOppdaterAktuelleSteg: () => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
   oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
-  // slettStegData: () => void;
+  // slettFlyt: () => void;
 }
 
 const VurderingInngang = ({
@@ -65,7 +65,7 @@ const VurderingInngang = ({
   formValues,
   formIsValid,
   fortsett,
-  hentStegDataOgOppdaterAktuelleSteg,
+  hentFlytOgOppdaterAktuelleSteg,
   initialValues,
   redigerbart,
   resultat,
@@ -73,7 +73,7 @@ const VurderingInngang = ({
   tilForsiden,
   oppdaterStegData,
   oppfriskOgLastInnSaksopplysninger,
-  // slettStegData,
+  // slettFlyt,
   visMenypanel,
 }: PropsFromRedux & Props) => {
   const [initialFomTom, setInitialFomTom] = useState<{ fom?: string; tom?: string }>({});
@@ -120,7 +120,7 @@ const VurderingInngang = ({
   };
 
   const periodeEndringHandle = async () => {
-    // await slettStegData();
+    // await slettFlyt();
     sendOppdatertStegData({ formValues, formIsValid });
   };
 
@@ -167,7 +167,7 @@ const VurderingInngang = ({
         <DialogboksOppfriskSak
           oppfrisk={() => {
             oppfriskOgLastInnSaksopplysninger();
-            hentStegDataOgOppdaterAktuelleSteg();
+            hentFlytOgOppdaterAktuelleSteg();
           }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {

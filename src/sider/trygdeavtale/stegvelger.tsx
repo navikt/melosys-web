@@ -80,7 +80,7 @@ class Stegvelger extends Component<Props, State> {
   };
 
   componentDidMount() {
-    this.hentStegDataOgOppdaterAktuelleSteg();
+    this.hentFlytOgOppdaterAktuelleSteg();
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
@@ -99,8 +99,8 @@ class Stegvelger extends Component<Props, State> {
     }
   }
 
-  hentStegDataOgOppdaterAktuelleSteg = () =>
-    Api.Trygdeavtale.hentStegData(this.props.behandlingID).then((response) =>
+  hentFlytOgOppdaterAktuelleSteg = () =>
+    Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
 
@@ -112,12 +112,12 @@ class Stegvelger extends Component<Props, State> {
     return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
   };
 
-  slettStegData = () => {
-    Api.Trygdeavtale.slettStegData(this.props.behandlingID);
+  slettFlyt = () => {
+    Api.Trygdeavtale.slettFlyt(this.props.behandlingID);
   };
 
   oppdaterStegData = (request: Api.Trygdeavtale.FlytReqDto) => {
-    Api.Trygdeavtale.sendStegData(this.props.behandlingID, request).then((response) =>
+    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
   };
@@ -135,10 +135,10 @@ class Stegvelger extends Component<Props, State> {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
       oppdaterStegData: this.debouncedOppdaterStegData,
-      slettStegData: this.slettStegData,
+      slettFlyt: this.slettFlyt,
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
-      hentStegDataOgOppdaterAktuelleSteg: this.hentStegDataOgOppdaterAktuelleSteg,
+      hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -159,11 +159,11 @@ class Stegvelger extends Component<Props, State> {
   lagreBehandlingsgrunnlagOgOppdaterStegData = async () => {
     const {
       props: { lagreBehandlingsgrunnlag },
-      hentStegDataOgOppdaterAktuelleSteg,
+      hentFlytOgOppdaterAktuelleSteg,
     } = this;
 
     await lagreBehandlingsgrunnlag();
-    hentStegDataOgOppdaterAktuelleSteg();
+    hentFlytOgOppdaterAktuelleSteg();
     this.setState({ skalLagreBehandlingsgrunnlag: false });
   };
 

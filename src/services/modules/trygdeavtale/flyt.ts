@@ -43,10 +43,10 @@ export interface FlytReqDto {
   resultat: Resultat;
 }
 
-export const hentStegData = (behandlingID: number): Promise<FlytResDto> =>
+export const hentFlyt = (behandlingID: number): Promise<FlytResDto> =>
   getAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
 
-export const sendStegData = (behandlingID: number, data: FlytReqDto): Promise<FlytResDto> =>
+export const sendFlyt = (behandlingID: number, data: FlytReqDto): Promise<FlytResDto> =>
   putAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`, data);
 
-export const slettStegData = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
+export const slettFlyt = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
