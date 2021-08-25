@@ -14,7 +14,7 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 import "./vurderingGodkjennUtpekingAnnetLand.css";
 
-const VurderingGodkjennUtpekingAnnetLand = ({
+export const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,
   redigerbart,
   overskrift,

@@ -139,6 +139,7 @@ describe("Behandlingsgrunnlag operations", () => {
               periode: {},
               luftfartBaser: [],
               overgangsregelbestemmelser: [],
+              ytterligereInformasjon: null,
             },
           }),
         })
