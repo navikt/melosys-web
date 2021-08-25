@@ -56,7 +56,7 @@ interface Props {
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
   oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
-  oppfriskSaksopplysningerOgLastInnSaksopplysninger: () => void;
+  oppfriskOgLastInnSaksopplysninger: () => void;
   // slettStegData: () => void;
 }
 
@@ -72,7 +72,7 @@ const VurderingInngang = ({
   steg,
   tilForsiden,
   oppdaterStegData,
-  oppfriskSaksopplysningerOgLastInnSaksopplysninger,
+  oppfriskOgLastInnSaksopplysninger,
   // slettStegData,
   visMenypanel,
 }: PropsFromRedux & Props) => {
@@ -166,7 +166,7 @@ const VurderingInngang = ({
       {visOppfrisk && (
         <DialogboksOppfriskSak
           oppfrisk={() => {
-            oppfriskSaksopplysningerOgLastInnSaksopplysninger();
+            oppfriskOgLastInnSaksopplysninger();
             hentStegDataOgOppdaterAktuelleSteg();
           }}
           avbryt={() => setVisOppfrisk(false)}

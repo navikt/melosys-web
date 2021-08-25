@@ -61,7 +61,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props extends PropsFromRedux {
   annenBehandlingOppfriskes: boolean;
-  oppfriskSaksopplysningerOgLastInnSaksopplysninger: () => void;
+  oppfriskOgLastInnSaksopplysninger: () => void;
   tilForsiden: () => void;
   redigerbart: boolean;
 }
@@ -137,7 +137,7 @@ class Stegvelger extends Component<Props, State> {
       oppdaterStegData: this.debouncedOppdaterStegData,
       slettStegData: this.slettStegData,
       tilForsiden: this.props.tilForsiden,
-      oppfriskSaksopplysningerOgLastInnSaksopplysninger: this.props.oppfriskSaksopplysningerOgLastInnSaksopplysninger,
+      oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentStegDataOgOppdaterAktuelleSteg: this.hentStegDataOgOppdaterAktuelleSteg,
     };
 

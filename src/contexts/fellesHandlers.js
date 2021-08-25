@@ -65,7 +65,7 @@ const FellesHandlersProviderUnconnected = ({
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
-  const oppfriskSaksopplysningerOgLastInnSaksopplysninger = async () => {
+  const oppfriskOgLastInnSaksopplysninger = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
     await oppfriskSaksopplysninger(behandlingID);
     await fjernBehandlingOppfriskes();
@@ -167,7 +167,7 @@ const FellesHandlersProviderUnconnected = ({
     avslaaSoknadHandle,
     avsluttSakSomBortfalt,
     lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
-    oppfriskSaksopplysningerOgLastInnSaksopplysninger,
+    oppfriskOgLastInnSaksopplysninger: oppfriskOgLastInnSaksopplysninger,
     venterPaRevurderFagsak,
     behandlingOppfriskes,
     annenBehandlingOppfriskes,
