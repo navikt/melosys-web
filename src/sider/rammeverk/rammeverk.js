@@ -4,12 +4,15 @@ import Topplinje from "./komponenter/topplinje";
 
 import "./rammeverk.css";
 import Personlinje from "./komponenter/personlinje";
+import { FeatureToggle } from "../../featuretoggle";
 
 function Hovedside({ children }) {
   return (
     <div className="hovedside">
       <Topplinje />
-      <Personlinje />
+      <FeatureToggle togglename="melosys.design.PERSONLINJE">
+        {(status) => status === "enabled" && <Personlinje />}
+      </FeatureToggle>
       <div className="main-container">{children}</div>
     </div>
   );

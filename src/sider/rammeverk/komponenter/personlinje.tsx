@@ -11,8 +11,10 @@ import * as KV from "../../../kodeverk";
 import * as Ikon from "../../../resources/images";
 
 import "./personlinje.css";
+import Behandlingsmeny from "./behandlingsmeny";
 
 const mapStateToProps = (state: RootState) => ({
+  // TODO: flere av personfeltene mappes fra PDL i api. Oppdater med de nye verdiene når det blir klart
   person: behandlingerSelectors.PersonSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
@@ -58,9 +60,7 @@ const Personlinje = ({
         <Separator />
         <Sivilstand />
       </div>
-      <div className="personlinje__behandlingsmeny">
-        <Ikon.Hamburger className="hamburger" />
-      </div>
+      <Behandlingsmeny />
     </div>
   );
 };
