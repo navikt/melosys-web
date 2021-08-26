@@ -3,11 +3,13 @@ import PT from "prop-types";
 import Topplinje from "./komponenter/topplinje";
 
 import "./rammeverk.css";
+import Personlinje from "./komponenter/personlinje";
 
 function Hovedside({ children }) {
   return (
     <div className="hovedside">
       <Topplinje />
+      <Personlinje />
       <div className="main-container">{children}</div>
     </div>
   );

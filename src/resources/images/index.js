@@ -21,12 +21,14 @@ import { ReactComponent as Fly } from "./fly.svg";
 import { ReactComponent as Varsel } from "./ikon-steg-varsel.svg";
 import { ReactComponent as Globe } from "./line-version-globe-1.svg";
 import { ReactComponent as GreenCheckmark } from "./green-checkmark.svg";
+import { ReactComponent as Hamburger } from "./hamburger-filled.svg";
 import { ReactComponent as Helikopter } from "./helikopter.svg";
 import { ReactComponent as InformationCircle } from "./infomationcircle.svg";
 import { ReactComponent as IkonSak } from "./ikon-sak.svg";
 import { ReactComponent as Inntekt } from "./ikon-inntekt.svg";
 import { ReactComponent as Kalkulator } from "./kalkulator.svg";
 import { ReactComponent as KalkulatorDisabled } from "./kalkulator-disabled.svg";
+import { ReactComponent as Kors } from "./kors.svg";
 import { ReactComponent as Kvinne } from "./ikon-kvinne.svg";
 import { ReactComponent as Kontor } from "./kontor.svg";
 import { ReactComponent as Man } from "./man.svg";
@@ -47,6 +49,7 @@ import { ReactComponent as VedakUbehandlet } from "./ikon-vedtak-ubehandlet.svg"
 import { ReactComponent as Ukjentkjoenn } from "./ikon-ukjentkjonn.svg";
 import { ReactComponent as Kopier } from "./file-copy.svg";
 import { ReactComponent as HentOpplysninger } from "./folder-add.svg";
+import { Kjoenn } from "./imageutils";
 
 export {
   AccountCircle,
@@ -71,6 +74,7 @@ export {
   Fly,
   Globe,
   GreenCheckmark,
+  Hamburger,
   Helikopter,
   HentOpplysninger,
   IkonSak,
@@ -78,6 +82,8 @@ export {
   Inntekt,
   Kalkulator,
   KalkulatorDisabled,
+  Kjoenn,
+  Kors,
   Kvinne,
   Kontor,
   Kopier,
