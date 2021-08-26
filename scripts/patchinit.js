@@ -5,6 +5,7 @@ const createDotEnvFileIfnotExists = (dir = `${process.cwd()}/.env`) => !fs.exist
 createDotEnvFileIfnotExists();
 dotenv.set("REACT_APP_NAME", "Melosys");
 dotenv.set("REACT_APP_API_BASE_URL", "/api/");
+dotenv.set("REACT_APP_TRYGDEAVTALE_FLYT_BASE_URL", "/trygdeavtale-flyt/");
 dotenv.set("REACT_APP_GRAPHQL_URL", "/graphql/");
 dotenv.set("REACT_APP_JAVA_LOCAL_HOST", "");
 dotenv.set("REACT_APP_LOCAL_CONTEXT", "");
