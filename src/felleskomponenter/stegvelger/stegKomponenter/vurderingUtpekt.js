@@ -250,7 +250,7 @@ const mapStateToProps = (state, ownProps) => {
   const { behandlingsstatus } = ownProps;
 
   const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
-    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET &&
+    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
     behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
 
   const lovvalgsperiode = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
