@@ -34,13 +34,19 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
     setGodkjenningPending(true);
 
     try {
+      const { fom, tom } = vurderUtpekingFormValues;
+      const endretPeriode =
+        fom && tom
+          ? {
+              fom: fom && Utils.dato.formatterDatoTilISO(fom),
+              tom: tom && Utils.dato.formatterDatoTilISO(tom),
+            }
+          : null;
+
       await lagreOgGodkjennUnntaksperioder({
         varsleUtland,
         fritekst,
-        endretPeriode: {
-          fom: Utils.dato.formatterDatoTilISO(vurderUtpekingFormValues.fom),
-          tom: Utils.dato.formatterDatoTilISO(vurderUtpekingFormValues.tom),
-        },
+        endretPeriode,
         lovvalgsbestemmelse: vurderUtpekingFormValues.lovvalgsbestemmelse,
       });
     } catch (e) {

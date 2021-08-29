@@ -274,8 +274,8 @@ const mapStateToProps = (state, ownProps) => {
     lovvalgsperiode,
     formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
     initialValues: {
-      fom: Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeFom),
-      tom: Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeTom),
+      fom: initialLovvalgsperiodeFom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeFom) : "",
+      tom: initialLovvalgsperiodeTom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeTom) : "",
       lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
       lovvalgsland: ownProps.tilstand.lovvalgsland,
       utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
