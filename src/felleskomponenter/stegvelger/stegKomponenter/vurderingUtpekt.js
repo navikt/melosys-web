@@ -247,7 +247,7 @@ VurderingUtpekt.defaultProps = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { behandlingsstatus } = ownProps;
+  const behandlingsstatus = behandlingerSelectors.BehandlingsstatusKodeSelector(state);
 
   const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
     behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
@@ -286,7 +286,6 @@ const mapStateToProps = (state, ownProps) => {
     vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
     ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-    behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   };
 };
 
