@@ -54,7 +54,7 @@ const Personlinje = ({
     <div className="personlinje">
       <div className="personlinje__personinfo">
         <Navn />
-        {KV.objektTilKode(personStatus) === "DØD" && <Doed />}
+        {KV.Utils.erDoed(personStatus) && <Doed />}
         <Separator />
         <Fnr fnr={fnr} />
         <Separator />

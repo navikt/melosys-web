@@ -159,3 +159,18 @@ export const Relasjonsrolle = {
   REPA: "REPA",
   SAMB: "SAMB",
 };
+
+export const PersonStatus = {
+  ADNR: "ADNR",
+  UTPE: "UTPE",
+  BOSA: "BOSA",
+  UREG: "UREG",
+  ABNR: "ABNR",
+  UFUL: "UFUL",
+  UTVA: "UTVA",
+  FOSV: "FOSV",
+  DØDD: "DØDD",
+  DØD: "DØD",
+  UTAN: "UTAN",
+  FØDR: "FØDR",
+};
