@@ -1,5 +1,5 @@
 import React from "react";
-import * as Ikon from "../../../resources/images";
+import * as Ikon from "../../../../resources/images";
 import "./personlinje.css";
 
 const Behandlingsmeny = () => {

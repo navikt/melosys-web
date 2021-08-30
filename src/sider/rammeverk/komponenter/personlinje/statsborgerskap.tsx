@@ -1,7 +1,7 @@
 import React from "react";
 import "./personlinje.css";
-import * as StringUtils from "../../../utils/streng";
-import { useHentStatsborgerskapQuery } from "../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapsliste/hentStatsborgerskap.generated";
+import * as StringUtils from "../../../../utils/streng";
+import { useHentStatsborgerskapQuery } from "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapsliste/hentStatsborgerskap.generated";
 
 type StatsborgerskapProps = {
   behandlingID: number;

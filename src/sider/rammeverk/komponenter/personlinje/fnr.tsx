@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GreenCheckmark, Kopier } from "../../../resources/images";
+import { GreenCheckmark, Kopier } from "../../../../resources/images";
 import "./personlinje.css";
 
 type FnrProps = {

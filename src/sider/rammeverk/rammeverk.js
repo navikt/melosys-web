@@ -3,7 +3,7 @@ import PT from "prop-types";
 import Topplinje from "./komponenter/topplinje";
 
 import "./rammeverk.css";
-import Personlinje from "./komponenter/personlinje";
+import Personlinje from "./komponenter/personlinje/personlinje";
 import { FeatureToggle } from "../../featuretoggle";
 
 function Hovedside({ children }) {
