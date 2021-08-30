@@ -2,7 +2,6 @@ schema:
   - http://localhost:8080/graphql:
       headers:
         Cookie: ""
-documents: "src/**/*.gql"
 config:
   scalars:
     # Mapper custom scalars i graphql-skjemaet til typescript-typer.
@@ -16,6 +15,9 @@ generates:
   # Genererer react-hooks for operations på samme sted som operations er definert.
   src/:
     preset: near-operation-file
+    documents:
+      - "src/**/*.gql"
+      - "!src/graphql/**/*.gql"
     presetConfig:
       extension: .generated.tsx
       baseTypesPath: graphql/generated/types.ts
