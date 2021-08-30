@@ -29,6 +29,11 @@ export const BehandlingsgrunnlagDataSelector = createSelector(
   (behandlingsgrunnlagState) => behandlingsgrunnlagState.data || {}
 );
 
+export const SisteOpplysningerHentetDatoSelector = createSelector(
+  BehandlingsgrunnlagSelector,
+  (behandlingsgrunnlag) => behandlingsgrunnlag.sisteOpplysningerHentetDato
+);
+
 export const ArbeidPaaLandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidPaaLand || {}

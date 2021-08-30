@@ -9,7 +9,7 @@ type OppdaterRegisteroppslysningerProps = {
   oppdaterRegisteropplysninger: () => void;
 };
 
-export const OppdaterRegisteroppslysninger = ({
+export const OppdaterRegisteropplysninger = ({
   sistOppdatert,
   oppdaterRegisteropplysninger,
 }: OppdaterRegisteroppslysningerProps) => {
@@ -20,10 +20,10 @@ export const OppdaterRegisteroppslysninger = ({
   };
 
   return (
-    <Nav.Panel className="oppdater_registeropplysninger" border>
+    <Nav.Panel className="oppdater-registeropplysninger" border>
       <span>{` (sist oppdatert ${sistOppdatert})`}</span>
       <span
-        className="oppdater_button"
+        className="oppdater-registeropplysninger__oppdateringsknapp"
         role="button"
         tabIndex={0}
         onClick={oppdaterRegisteropplysninger}
@@ -37,4 +37,4 @@ export const OppdaterRegisteroppslysninger = ({
   );
 };
 
-export default OppdaterRegisteroppslysninger;
+export default OppdaterRegisteropplysninger;
