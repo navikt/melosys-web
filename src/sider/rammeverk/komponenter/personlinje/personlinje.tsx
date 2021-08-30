@@ -28,7 +28,7 @@ type PersonlinjeProps = PropsFromRedux & {
 };
 
 const Personlinje = ({
-  person: { sammensattNavn, kjoenn, doedsdato, fnr, sivilstand },
+  person: { sammensattNavn, kjoenn, personStatus, fnr, sivilstand },
   behandlingID,
 }: PersonlinjeProps) => {
   if (behandlingID < 0) return null;
@@ -54,7 +54,7 @@ const Personlinje = ({
     <div className="personlinje">
       <div className="personlinje__personinfo">
         <Navn />
-        {doedsdato && <Doed />}
+        {KV.objektTilKode(personStatus) === "DØD" && <Doed />}
         <Separator />
         <Fnr fnr={fnr} />
         <Separator />
