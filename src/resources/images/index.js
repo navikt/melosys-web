@@ -39,6 +39,7 @@ import { ReactComponent as PaperPlane } from "./paperplane.svg";
 import { ReactComponent as ParentAndKid } from "./parent-and-kid.svg";
 import { ReactComponent as Pencil } from "./pencil-2.svg";
 import { ReactComponent as ParagraphTwoColumns } from "./line-version-paragraph-two-columns.svg";
+import { ReactComponent as Refresh } from "./refresh.svg";
 import { ReactComponent as RemoveOne } from "./filled-version-remove-1.svg";
 import { ReactComponent as Skip } from "./skip.svg";
 import { ReactComponent as Svar } from "./reply.svg";
@@ -95,6 +96,7 @@ export {
   ParentAndKid,
   Pencil,
   ParagraphTwoColumns,
+  Refresh,
   RemoveOne,
   Skip,
   Svar,

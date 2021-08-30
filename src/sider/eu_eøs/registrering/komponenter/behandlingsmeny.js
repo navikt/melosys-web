@@ -9,7 +9,6 @@ const Behandlingsmeny = (props) => {
     lagreOgLukkHandle,
     apneTidligereBehandlinger,
     tilbakeleggeHandle,
-    oppfriskSaksopplysningerHandle,
     visRevurderFagsak,
     visRevurderFagsakDialogHandle,
   } = props;
@@ -29,9 +28,6 @@ const Behandlingsmeny = (props) => {
         <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>
           Legg tilbake i kø
         </Nav.Knapp>
-        <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>
-          Oppdater registeropplysninger
-        </Nav.Knapp>
         <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>
           Vis alle behandlinger
         </Nav.Knapp>
@@ -48,7 +44,6 @@ const Behandlingsmeny = (props) => {
 Behandlingsmeny.propTypes = {
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
-  oppfriskSaksopplysningerHandle: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,

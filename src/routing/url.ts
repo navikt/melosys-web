@@ -1,7 +1,7 @@
 import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
 
-const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
+const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 export const lagUrl = (saksnummer: number, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
@@ -26,6 +26,8 @@ export const lagUrl = (saksnummer: number, behandlingID: number, behandlingstema
       return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET:
       return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK:
+      return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return null;
   }

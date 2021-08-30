@@ -30,6 +30,12 @@ const FtrlSaksbehandlingLoadable = loadable(
     fallback: SideLoadingStatus,
   }
 );
+const TrygdeavtaleSaksbehandlingLoadable = loadable(
+  () => import(/* webpackChunkName: "trygdeavtale-saksbehandling" */ "../sider/trygdeavtale/saksbehandling"),
+  {
+    fallback: SideLoadingStatus,
+  }
+);
 const JournalforingLoadable = loadable(() => import(/* webpackChunkName: "journalføring" */ "../sider/journalforing"), {
   fallback: SideLoadingStatus,
 });
@@ -60,7 +66,7 @@ const VurderUtpekingLoadable = loadable(
   }
 );
 
-const { EU_EOS, FTRL } = MKV.Koder.sakstyper;
+const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 const Routing = () => (
   <FellesHandlersContext.Consumer>
@@ -89,6 +95,10 @@ const Routing = () => (
         <Route
           path={`/${FTRL}/saksbehandling/:snr`}
           render={(props) => <FtrlSaksbehandlingLoadable {...props} {...fellesHandlers} />}
+        />
+        <Route
+          path={`/${TRYGDEAVTALE}/saksbehandling/:snr`}
+          render={(props) => <TrygdeavtaleSaksbehandlingLoadable {...props} {...fellesHandlers} />}
         />
         <Route
           path="/journalforing/:journalpostID/:oppgaveID"

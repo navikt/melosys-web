@@ -1,6 +1,6 @@
 import React from "react";
-import MKV from "../../../melosyskodeverk";
-import * as Nav from "../../../utils/navFrontend";
+import MKV from "../../melosyskodeverk";
+import * as Nav from "../../utils/navFrontend";
 import "./behandlingsmeny.css";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
@@ -10,6 +10,7 @@ interface Props {
   behandlingsstatus: string;
   lagreOgLukkHandle: () => void;
   tilbakeleggeHandle: () => void;
+  oppfriskSaksopplysningerHandle: () => void;
   visHenleggDialogHandle: () => void;
   visAvsluttSakSomBortfaltDialogHandle: () => void;
   visAvslagSoknadDialogHandle: () => void;
@@ -21,6 +22,7 @@ const Behandlingsmeny = ({
   behandlingsstatus,
   lagreOgLukkHandle,
   tilbakeleggeHandle,
+  oppfriskSaksopplysningerHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
@@ -44,6 +46,11 @@ const Behandlingsmeny = ({
         {redigerbart && (
           <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={tilbakeleggeHandle}>
             Legg tilbake i kø
+          </Nav.Knapp>
+        )}
+        {redigerbart && (
+          <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={oppfriskSaksopplysningerHandle}>
+            Oppdater registeropplysninger
           </Nav.Knapp>
         )}
         {redigerbart && (

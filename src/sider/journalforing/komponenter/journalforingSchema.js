@@ -23,7 +23,7 @@ const VELG_EN_AVSENDER = { melding: "Velg en avsender" };
 const VELG_REPRESENTERER = { melding: "Velg hvem fullmektig representerer" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
-const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) =>
+const kreverPeriode = (journalforingHensikt, behandlingstema) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
   ![
     MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,
@@ -33,9 +33,8 @@ const kreverPeriodeOgLand = (journalforingHensikt, behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
   ].includes(behandlingstema);
 
-const kreverPeriodeOgLandTemaFlereLand = (journalforingHensikt, ukjentEllerAlleEosLand) =>
-  !ukjentEllerAlleEosLand &&
-  kreverPeriodeOgLand(journalforingHensikt, MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND);
+const kreverLand = (journalforingHensikt, behandlingstema, ukjentEllerAlleEosLand) =>
+  !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, behandlingstema);
 
 const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
   const organisasjonAliasTyper = [
@@ -90,22 +89,22 @@ const journalforing = object().shape({
     then: string().required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
   }),
   journalforingPeriodeFraOgMed: string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-    is: kreverPeriodeOgLand,
+    is: kreverPeriode,
     then: string().erGyldigDato().required(MAA_FYLLES_UT),
   }),
   journalforingPeriodeTilOgMed: lazy((value) =>
     !value
       ? string().ensure()
       : string().when(["journalforingHensikt", "opprettnysak_behandlingstema"], {
-          is: kreverPeriodeOgLand,
+          is: kreverPeriode,
           then: string().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato().required(MAA_FYLLES_UT),
         })
   ),
   journalforingSoknadsland: array()
     .of(string())
     .ensure()
-    .when(["journalforingHensikt", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
-      is: kreverPeriodeOgLandTemaFlereLand,
+    .when(["journalforingHensikt", "opprettnysak_behandlingstema", "journalforingSoknadslandUkjenteEllerAlleEosLand"], {
+      is: kreverLand,
       then: array().of(string()).min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
   utenlandskTrygdemyndighetLandkode: string().when("avsenderType", {

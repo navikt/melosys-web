@@ -174,3 +174,11 @@ export const PersonStatus = {
   UTAN: "UTAN",
   FØDR: "FØDR",
 };
+
+export enum StegNavn {
+  INNGANG = "INNGANG",
+  AVKLAR_VIRKSOMHET = "AVKLAR_VIRKSOMHET",
+  BESTEMMELSE = "BESTEMMELSE",
+  FAMILIE = "FAMILIE",
+  VEDTAK = "VEDTAK",
+}
