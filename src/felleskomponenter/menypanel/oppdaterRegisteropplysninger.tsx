@@ -21,18 +21,17 @@ export const OppdaterRegisteropplysninger = ({
 
   return (
     <Nav.Panel className="oppdater-registeropplysninger" border>
-      <span>{` (sist oppdatert ${sistOppdatert})`}</span>
       <span
         className="oppdater-registeropplysninger__oppdateringsknapp"
         role="button"
         tabIndex={0}
         onClick={oppdaterRegisteropplysninger}
         onKeyPress={handleKeyPress}
-        onKeyUp={handleKeyPress}
       >
         <Refresh />
         Oppdater registeropplysninger
       </span>
+      <span>{` (sist oppdatert ${sistOppdatert || "- "})`}</span>
     </Nav.Panel>
   );
 };
