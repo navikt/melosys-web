@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, MouseEvent } from "react";
 import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
@@ -25,7 +25,8 @@ describe("Oppdater Registeropplysninger", () => {
   it("oppdaterer registeropplysninger når knapp klikkes", () => {
     const oppdaterRegisteropplysninger = shallow(<OppdaterRegisteropplysninger {...props} />);
 
-    oppdaterRegisteropplysninger.find(".oppdater-registeropplysninger__oppdateringsknapp").simulate("click");
+    const event = mock<MouseEvent>();
+    oppdaterRegisteropplysninger.find(".oppdater-registeropplysninger__oppdateringsknapp")?.props().onClick?.(event);
 
     expect(props.oppdaterRegisteropplysninger).toHaveBeenCalledTimes(1);
   });
