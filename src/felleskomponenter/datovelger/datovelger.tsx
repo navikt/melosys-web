@@ -17,6 +17,7 @@ interface DatovelgerProps {
   minDate?: Date;
   maxDate?: Date;
   onBlur?: FocusEventHandler;
+  dateRegex?: RegExp;
 }
 
 const Datovelger = ({
@@ -29,7 +30,27 @@ const Datovelger = ({
   minDate,
   maxDate,
   onBlur,
+  dateRegex = /^[0-2]+[1-9]*[.\-/]?\d{0,2}[.\-/]?\d{0,4}$/, // dd(separator?)MM(separator?)yy(yy)
 }: DatovelgerProps) => {
+  const dateFormat = [
+    "dd.MM.yyyy", // Det første formatet er det som vil vises i inputfeltet etter valgt dato
+    "ddMMyyyy",
+    "ddMMyy",
+    "dd.MM.yy",
+    "dd/MM/yyyy",
+    "dd/MM/yy",
+    "dd-MM-yyyy",
+    "dd-MM-yy",
+  ];
+
+  // Stopper skriving av ugyldige tegn (ikke blant dateFormat over)
+  const handleOnChangeRaw = (e: React.SyntheticEvent<any>) => {
+    const val = e.currentTarget.value;
+    if (val !== "" && !dateRegex.test(val)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className="datovelger">
       {label && <label className="datovelger__label">{label}</label>}
@@ -39,10 +60,11 @@ const Datovelger = ({
           datovelger__input_feil: feil,
         })}
         onChange={onChange}
+        onChangeRaw={handleOnChangeRaw}
         onBlur={onBlur}
         selected={value}
         locale="nb"
-        dateFormat="dd.MM.yyyy"
+        dateFormat={dateFormat}
         placeholderText={disabled || feil ? "" : "Velg en dato"}
         disabled={disabled}
         minDate={minDate}
