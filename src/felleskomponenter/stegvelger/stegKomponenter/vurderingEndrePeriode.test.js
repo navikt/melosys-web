@@ -50,7 +50,6 @@ describe("vurderingEndrePeriode", () => {
   // TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
   it.skip("viser to datofelt for fradato og tildato", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    console.log(component.debug());
     expect(component.find(<Datovelger />)).toHaveLength(2);
   });
 });
