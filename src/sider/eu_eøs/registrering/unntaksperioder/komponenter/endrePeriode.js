@@ -70,7 +70,7 @@ const EndrePeriode = ({
                   value={Utils.dato.norskStringTilDate(fom)}
                   onChange={fomChange}
                   onBlur={fomChange}
-                  feil={feilmeldinger.fom}
+                  feil={feilmeldinger.fom?.feilmelding}
                   disabled={!redigerbart}
                 />
               ) : (
@@ -96,7 +96,7 @@ const EndrePeriode = ({
                   value={Utils.dato.norskStringTilDate(tom)}
                   onChange={tomChange}
                   onBlur={tomChange}
-                  feil={feilmeldinger.tom}
+                  feil={feilmeldinger.tom?.feilmelding}
                   disabled={!redigerbart}
                 />
               ) : (
