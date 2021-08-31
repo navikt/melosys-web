@@ -12,7 +12,6 @@ import * as Api from "../../services/api";
 import * as Types from "./types";
 import * as Actions from "../journalforing/actions";
 
-// eslint-disable-next-line import/prefer-default-export
 export function hent(journalpostID) {
   return doThenDispatch(() => Api.Journalforing.hent(journalpostID), {
     OK: Types.OK,

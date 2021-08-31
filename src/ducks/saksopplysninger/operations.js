@@ -11,7 +11,6 @@ import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 
-/* eslint-disable import/prefer-default-export */
 export function sjekkStatus(behandlingID) {
   return doThenDispatch(() => Api.Saksopplysninger.sjekkStatus(behandlingID), {
     OK: Types.OK,

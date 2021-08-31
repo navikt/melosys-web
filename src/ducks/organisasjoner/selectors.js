@@ -7,7 +7,6 @@
 
 import { createSelector } from "reselect";
 
-/* eslint import/prefer-default-export:"off" */
 export const organisasjonerSelector = createSelector(
   (state) => state.organisasjoner.data || [],
   (organisasjoner) => organisasjoner || []
