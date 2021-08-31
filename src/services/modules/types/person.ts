@@ -18,7 +18,6 @@ interface Person {
   kjoenn: KTObject;
   fnr: string;
   foedselsdato: string;
-  doedsdato: string;
   sivilstand: KTObject;
   statsborgerskap: KTObject;
   statsborgerskapDato: string;

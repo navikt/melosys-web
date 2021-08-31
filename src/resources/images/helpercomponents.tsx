@@ -1,16 +1,14 @@
 import React from "react";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Ikon from "./";
-import * as KV from "../../kodeverk";
 
 type KjoennProps = {
   className: string;
-  kjoenn: KTObject;
+  kjoennKode: string;
 };
 
-export const Kjoenn = ({ className, kjoenn }: KjoennProps) => {
-  if (!kjoenn) return <Ikon.Ukjentkjoenn className={className} />;
-  switch (KV.objektTilKode(kjoenn)) {
+export const Kjoenn = ({ className, kjoennKode }: KjoennProps) => {
+  if (!kjoennKode) return <Ikon.Ukjentkjoenn className={className} />;
+  switch (kjoennKode) {
     case "M":
       return <Ikon.Mann className={className} />;
     case "K":

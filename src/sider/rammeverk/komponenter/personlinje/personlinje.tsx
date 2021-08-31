@@ -1,15 +1,16 @@
 import React from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Person } from "../../../../services/modules/types";
-import Fnr from "./fnr";
 
+import Fnr from "./fnr";
 import Statsborgerskap from "./statsborgerskap";
 import * as KV from "../../../../kodeverk";
-import * as Ikon from "../../../../resources/images";
 
+import * as Ikon from "../../../../resources/images";
 import "./personlinje.css";
 import Behandlingsmeny from "./behandlingsmeny";
 
@@ -27,40 +28,44 @@ type PersonlinjeProps = PropsFromRedux & {
   behandlingID: number;
 };
 
+const Navn = ({ kjoenn, navn }: { kjoenn: KTObject; navn: string }) => (
+  <div className="personlinje__navn">
+    <Ikon.Kjoenn kjoennKode={KV.objektTilKode(kjoenn)} className="ikon-kjoenn" />
+    {navn}
+  </div>
+);
+
+const Doed = () => (
+  <div className="personlinje_dod">
+    <span>(Død)</span> <Ikon.Kors className="ikon-doed" />
+  </div>
+);
+
+const Sivilstand = ({ sivilstand }: { sivilstand: KTObject }) => (
+  <div className="personlinje__sivilstand">{KV.objektTilTerm(sivilstand)}</div>
+);
+
+const Separator = () => <div className="personlinje__separator">/</div>;
+
 const Personlinje = ({
   person: { sammensattNavn, kjoenn, personStatus, fnr, sivilstand },
   behandlingID,
 }: PersonlinjeProps) => {
   if (behandlingID < 0) return null;
 
-  const Navn = () => (
-    <div className="personlinje__navn">
-      <Ikon.Kjoenn kjoenn={kjoenn} className="ikon-kjoenn" />
-      {sammensattNavn}
-    </div>
-  );
-
-  const Doed = () => (
-    <div className="personlinje_dod">
-      <span>(Død)</span> <Ikon.Kors className="ikon-doed" />
-    </div>
-  );
-
-  const Sivilstand = () => <div className="personlinje__sivilstand">{KV.objektTilTerm(sivilstand)}</div>;
-
-  const Separator = () => <div className="personlinje__separator">/</div>;
+  const erDoed = KV.Utils.erDoed(KV.objektTilKode(personStatus));
 
   return (
     <div className="personlinje">
       <div className="personlinje__personinfo">
-        <Navn />
-        {KV.Utils.erDoed(personStatus) && <Doed />}
+        <Navn navn={sammensattNavn} kjoenn={kjoenn} />
+        {erDoed && <Doed />}
         <Separator />
         <Fnr fnr={fnr} />
         <Separator />
         <Statsborgerskap behandlingID={behandlingID} />
         <Separator />
-        <Sivilstand />
+        <Sivilstand sivilstand={sivilstand} />
       </div>
       <Behandlingsmeny />
     </div>

@@ -50,7 +50,7 @@ import { ReactComponent as VedakUbehandlet } from "./ikon-vedtak-ubehandlet.svg"
 import { ReactComponent as Ukjentkjoenn } from "./ikon-ukjentkjonn.svg";
 import { ReactComponent as Kopier } from "./file-copy.svg";
 import { ReactComponent as HentOpplysninger } from "./folder-add.svg";
-import { Kjoenn } from "./imageutils";
+import { Kjoenn } from "./helpercomponents";
 
 export {
   AccountCircle,
