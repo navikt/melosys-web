@@ -6,7 +6,7 @@ kode og interfaces/types automatisk.
 
 For øyeblikket genereres:
 * React hooks
-  * Genereres der hvor operations(.gql-filer) ligger
+  * Genereres der hvor [operations](https://graphql.org/learn/queries/#operation-name) (.gql-filer) ligger. Se [hentStatsborgerskap.gql](../felleskomponenter/menypanel/menypunkter/person/statsborgerskapsliste/hentStatsborgerskap.gql) for eksempel på en query-operation.
 * En SDK som tilbyr alle operations i prosjektet, til bruk utenfor react-komponenter
   * Genereres i `src/graphql` og må importeres herfra til dit den skal brukes
 
