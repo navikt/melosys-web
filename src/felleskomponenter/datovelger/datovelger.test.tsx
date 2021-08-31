@@ -65,14 +65,4 @@ describe("Datovelger", () => {
     expect(feilmelding).toHaveLength(1);
     expect(feilmelding.children().text()).toBe(feilmeldingTekst);
   });
-
-  it("kan ikke skrive ugyldig verdi", () => {
-    const datovelger = shallow(<Datovelger {...props} />);
-    const input = datovelger.find(DatePicker);
-
-    datovelger.prop("");
-
-    expect(input.prop("className")).toContain("datovelger__input_feil");
-    expect(input.prop("placeholderText")).toBe("");
-  });
 });
