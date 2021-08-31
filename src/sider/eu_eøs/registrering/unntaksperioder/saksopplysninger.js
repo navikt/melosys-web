@@ -142,7 +142,7 @@ const Saksopplysninger = ({
     Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
       varsleUtland: false,
       fritekst: null,
-      endretPeriode: { fom: null, tom: null },
+      endretPeriode: null,
       lovvalgsbestemmelse: sedLovvalgsbestemmelse,
     });
 

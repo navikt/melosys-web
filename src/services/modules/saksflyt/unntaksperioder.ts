@@ -1,11 +1,11 @@
 import { postAsJson } from "../../utils";
 import { API_BASE_URL, SAKSFLYT, UNNTAKSPERIODER } from "../../api-constants";
-import { Periode, Nullable } from "../types";
+import { Periode } from "../types";
 
 interface GodkjennUnntaksperiodeReqDto {
   varsleUtland: boolean;
   fritekst: string | null;
-  endretPeriode: Nullable<Periode>;
+  endretPeriode: Periode | null;
   lovvalgsbestemmelse: string;
 }
 

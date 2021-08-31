@@ -275,10 +275,7 @@ class Stegvelger extends Component {
     await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
       varsleUtland: data.varsleUtland || false,
       fritekst: data.fritekst || null,
-      endretPeriode: {
-        fom: data.endretPeriode.fom,
-        tom: data.endretPeriode.tom,
-      },
+      endretPeriode: data.endretPeriode,
       lovvalgsbestemmelse: data.lovvalgsbestemmelse,
     });
     tilForsiden();
