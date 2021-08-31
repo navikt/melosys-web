@@ -10,7 +10,9 @@ import { ReactComponent as BlyantDisabled } from "./blyant-disabled.svg";
 import { ReactComponent as BrevSendt } from "./emailsend.svg";
 import { ReactComponent as Building } from "./building.svg";
 import { ReactComponent as Calendar } from "./calendar.svg";
+import { ReactComponent as Cancel } from "./cancel.svg";
 import { ReactComponent as CheckList } from "./check-list.svg";
+import { ReactComponent as Copy } from "./copy.svg";
 import { ReactComponent as Eye } from "./eye.svg";
 import { ReactComponent as Familie } from "./familie.svg";
 import { ReactComponent as Forhandsvis } from "./forhandsvis.svg";
@@ -65,7 +67,9 @@ export {
   BrevSendt as InnBrev,
   Building,
   Calendar,
+  Cancel,
   CheckList,
+  Copy,
   Eye,
   Familie,
   Forhandsvis,

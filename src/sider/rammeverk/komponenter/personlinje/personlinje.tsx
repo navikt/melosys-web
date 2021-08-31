@@ -12,7 +12,7 @@ import * as KV from "../../../../kodeverk";
 
 import * as Ikon from "../../../../resources/images";
 import "./personlinje.css";
-import Behandlingsmeny from "./behandlingsmeny";
+import Behandlingsmeny from "../behandlingsmeny/behandlingsmeny";
 
 const mapStateToProps = (state: RootState) => ({
   // TODO: flere av personfeltene skal mappes fra PDL i api. Oppdater med de nye verdiene når det blir klart
