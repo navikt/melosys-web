@@ -2,7 +2,6 @@ schema:
   - http://localhost:8080/graphql:
       headers:
         Cookie: ""
-documents: "src/**/*.gql"
 config:
   scalars:
     # Mapper custom scalars i graphql-skjemaet til typescript-typer.
@@ -16,6 +15,9 @@ generates:
   # Genererer react-hooks for operations på samme sted som operations er definert.
   src/:
     preset: near-operation-file
+    documents:
+      - "src/**/*.gql"
+      - "!src/graphql/**/*.gql"
     presetConfig:
       extension: .generated.tsx
       baseTypesPath: graphql/generated/types.ts
@@ -25,12 +27,14 @@ generates:
 
   # Genererer sdk til bruk utenfor react-komponenter.
   src/graphql/generated/getSdk.ts:
+    # Fjern utkommentert documents-key når man ønsker å legge til operations til SDKen(codegen-script ender med error hvis ingen documents finnes).
+    # documents: "src/graphql/**/*.gql"
     plugins:
+      # Fant ingen måte å peke typescript-generic-sdk til typer generert i src/graphql/generated/types.ts,
+      # derfor genereres typene også i src/graphql/generated/getSdk.ts.
       - typescript
       - typescript-operations
       - typescript-generic-sdk
     config:
-      # Fant ingen måte å peke typescript-generic-sdk til typer generert i src/graphql/generated/types.ts,
-      # derfor genereres typene også i src/graphql/generated/getSdk.ts.
       # Siden typene allerede er generert i src/graphql/generated/types.ts er det ikke nødvendig å eksportere de her.
       noExport: true
