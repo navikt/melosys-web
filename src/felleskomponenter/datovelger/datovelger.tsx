@@ -18,7 +18,6 @@ interface DatovelgerProps {
   maxDate?: Date;
   onBlur?: FocusEventHandler;
   onCalendarClose?: () => void;
-  dateRegex?: RegExp;
 }
 
 const Datovelger = ({
@@ -32,7 +31,6 @@ const Datovelger = ({
   maxDate,
   onBlur,
   onCalendarClose,
-  dateRegex = /^[0-2]+[1-9]*[.\-/]?\d{0,2}[.\-/]?\d{0,4}$/, // dd(separator?)MM(separator?)yy(yy?)
 }: DatovelgerProps) => {
   const dateFormat = [
     "dd.MM.yyyy", // Det første formatet er det som vil vises i inputfeltet etter valgt dato
@@ -45,8 +43,10 @@ const Datovelger = ({
     "dd-MM-yy",
   ];
 
+  const dateRegex = /^[0-2]+[1-9]*[.\-/]?\d{0,2}[.\-/]?\d{0,4}$/; // dd(separator?)MM(separator?)yy(yy?)
+
   // Stopper skriving av ugyldige tegn (ikke blant dateFormat over)
-  const handleOnChangeRaw = (e: React.SyntheticEvent<any>) => {
+  const handleOnChangeRaw = (e: React.SyntheticEvent<HTMLInputElement>) => {
     const val = e.currentTarget.value;
     if (val !== "" && !dateRegex.test(val)) {
       e.preventDefault();
