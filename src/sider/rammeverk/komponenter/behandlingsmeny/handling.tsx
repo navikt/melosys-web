@@ -16,8 +16,8 @@ const Handling = ({ ikon, tekst, onClick }: handlingProps) => {
 
   return (
     <div className="behandlingsmeny__handling" role="button" tabIndex={0} onKeyPress={handleKeyPress} onClick={onClick}>
-      {ikon}
-      {tekst}
+      {ikon && <div className="behandlingsmeny__handling__ikon">{ikon}</div>}
+      <div className="behandlingsmeny__handling__tekst">{tekst}</div>
     </div>
   );
 };

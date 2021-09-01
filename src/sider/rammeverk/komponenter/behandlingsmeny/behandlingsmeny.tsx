@@ -38,12 +38,14 @@ const Behandlingsmeny = () => {
         <Ikon.Hamburger className={classNameHamburger} />
       </div>
       {visBehandlingsmeny && (
-        <div className="behandlingsmeny__meny">
-          <LeggBehandlingTilbake />
-          <AvsluttSak />
-          <div className="behandlingsmeny__meny__handlinger">
-            <Handling ikon={<Ikon.Copy />} tekst="Vis saksoversikt" onClick={visSaksoversikt} />
-            <Handling ikon={<Ikon.Cancel />} tekst="Vurder saken på nytt" onClick={vurderSakenPaaNytt} />
+        <div className="behandlingsmeny__padding">
+          <div className="behandlingsmeny__meny">
+            <LeggBehandlingTilbake />
+            <AvsluttSak />
+            <div className="behandlingsmeny__meny__handlinger">
+              <Handling ikon={<Ikon.Copy />} tekst="Vis saksoversikt" onClick={visSaksoversikt} />
+              <Handling ikon={<Ikon.Cancel />} tekst="Vurder saken på nytt" onClick={vurderSakenPaaNytt} />
+            </div>
           </div>
         </div>
       )}

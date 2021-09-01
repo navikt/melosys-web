@@ -36,9 +36,16 @@
     }
   }
 
-  &__meny {
-    z-index: 1000;
+  &__padding {
     width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__meny {
+    width: 350px;
+
     &__legg-behandling-tilbake {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
@@ -54,6 +61,13 @@
       border-top-left-radius: 0;
       border-top-right-radius: 0;
       border: 1px solid @navMorkGra;
+      padding: 1rem;
+    }
+    .ekspanderbartPanel--apen .ekspanderbartPanel__hode {
+      padding-bottom: 0;
+    }
+    .ekspanderbartPanel__hode {
+      font-weight: bold;
     }
   }
 }

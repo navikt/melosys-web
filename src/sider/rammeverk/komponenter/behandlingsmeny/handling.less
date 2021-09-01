@@ -1,6 +1,22 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
 
 .behandlingsmeny__handling {
-  color: @navBla;
-  text-decoration: underline;
+  display: flex;
+  margin: 10px 5px 5px 0;
+
+  &__ikon {
+    height: 20px;
+    width: 20px;
+  }
+  &:hover &__ikon {
+    color: @navGra60;
+  }
+
+  &__tekst {
+    color: @navBla;
+    text-decoration: underline;
+  }
+  &:hover &__tekst {
+    color: @navBlaLighten20;
+  }
 }
