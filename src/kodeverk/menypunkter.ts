@@ -59,6 +59,7 @@ export const Utenlandsoppdraget = {
   tittel: "Utenlandsoppdraget",
   undertitler: {
     periode: "Periode",
+    land: "Land",
     tilleggsopplysninger: "Tilleggsopplysninger",
   },
 };

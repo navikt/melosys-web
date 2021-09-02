@@ -252,7 +252,10 @@ describe("behandlingsgrunnlag reducer", () => {
             typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
           },
         ],
-        soknadsland: [],
+        soknadsland: {
+          landkoder: ["DK"],
+          erUkjenteEllerAlleEosLand: true,
+        },
         soknadsperiodeFom: "11.11.11",
         soknadsperiodeTom: "11.11.11",
         erSelvstendig: true,
@@ -285,6 +288,7 @@ describe("behandlingsgrunnlag reducer", () => {
             term: "Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a",
           },
         ],
+        trygdedekning: "Full dekning",
       },
     };
 
@@ -409,7 +413,7 @@ describe("behandlingsgrunnlag reducer", () => {
           ],
           bosted: {
             intensjonOmRetur: null,
-            antallMaanederINorge: null,
+            antallMaanederINorge: 11,
             EOSBarnetrygdFraNAV: true,
             oppgittAdresse: {
               tilleggsnavn: "Storgård",
@@ -448,7 +452,8 @@ describe("behandlingsgrunnlag reducer", () => {
             },
           ],
           soeknadsland: {
-            landkoder: [],
+            landkoder: ["DK"],
+            erUkjenteEllerAlleEosLand: true,
           },
           periode: {
             fom: "2011-11-11",
@@ -486,7 +491,8 @@ describe("behandlingsgrunnlag reducer", () => {
               term: "Rfo. 1408/1971 artikkel 14 nr. 2 bokstav a",
             },
           ],
-          ytterligereInformasjon: null,
+          ytterligereInformasjon: undefined,
+          trygdedekning: "Full dekning",
         },
       },
     };

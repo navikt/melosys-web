@@ -29,6 +29,11 @@ export const BehandlingsgrunnlagDataSelector = createSelector(
   (behandlingsgrunnlagState) => behandlingsgrunnlagState.data || {}
 );
 
+export const SisteOpplysningerHentetDatoSelector = createSelector(
+  BehandlingsgrunnlagSelector,
+  (behandlingsgrunnlag) => behandlingsgrunnlag.sisteOpplysningerHentetDato
+);
+
 export const ArbeidPaaLandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidPaaLand || {}
@@ -167,13 +172,28 @@ export const HjemmebaserSelector = createSelector(LuftfartBaserSelector, (luftfa
   luftfartBaser.map((base) => base.hjemmebaseLand).filter((base) => base)
 );
 
-export const SoknadslandSelector = createSelector(BehandlingsgrunnlagDataSelector, (behandlingsgrunnlag) =>
-  behandlingsgrunnlag.soeknadsland ? behandlingsgrunnlag.soeknadsland.landkoder : []
+export const SoknadslandSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlag) => behandlingsgrunnlag.soeknadsland || {}
+);
+
+export const SoknadslandkoderSelector = createSelector(
+  SoknadslandSelector,
+  (soknadsland) => soknadsland.landkoder || []
+);
+
+export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
+  SoknadslandSelector,
+  (soknadsland) => soknadsland.erUkjenteEllerAlleEosLand
+);
+
+export const SoknadslandKTSelector = createSelector(SoknadslandkoderSelector, (soknadsland) =>
+  MKV.KTObjects.landkoder.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
 );
 
 export const TrygdedekningSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
-  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning || ""
+  (behandlingsgrunnlag) => behandlingsgrunnlag.trygdedekning
 );
 
 export const PeriodeSelector = createSelector(

@@ -159,3 +159,11 @@ export const Relasjonsrolle = {
   REPA: "REPA",
   SAMB: "SAMB",
 };
+
+export enum StegNavn {
+  INNGANG = "INNGANG",
+  AVKLAR_VIRKSOMHET = "AVKLAR_VIRKSOMHET",
+  BESTEMMELSE = "BESTEMMELSE",
+  FAMILIE = "FAMILIE",
+  VEDTAK = "VEDTAK",
+}

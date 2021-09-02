@@ -33,7 +33,6 @@ import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodev
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { stegMap } from "./stegMap";
@@ -92,7 +91,6 @@ const behandlingsstatusMap = {
 };
 
 const Saksbehandling = ({
-  anmodningsperioderErSendtUtlandet,
   annenBehandlingOppfriskes,
   apneTidligereBehandlinger,
   arbeidsland,
@@ -149,6 +147,7 @@ const Saksbehandling = ({
   const [behandlingID, setBehandlingID] = useState(-1);
   const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
+  const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
 
   const oppdaterBehandlingIDState = () => {
@@ -188,6 +187,7 @@ const Saksbehandling = ({
       await hentMedlemskapsperioder(behandlingIDFraParam);
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(snr);
+      setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
       return false;
@@ -230,12 +230,9 @@ const Saksbehandling = ({
     params: { snr: saksnummer },
   } = match;
 
-  if (Utils._isNil(redigerbart)) {
-    return null;
-  }
-  if (!behandlingID || behandlingID < 0) {
-    return null;
-  }
+  if (Utils._isNil(redigerbart)) return null;
+  if (!behandlingID || behandlingID < 0) return null;
+  if (!saksopplysningerLastet) return null;
   if (folketrygdenToggle === "fetching" || folketrygdenToggle === "disabled") return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
@@ -289,7 +286,6 @@ const Saksbehandling = ({
               renderBehandlingsmeny={() => (
                 <Behandlingsmeny
                   redigerbart={redigerbart}
-                  anmodningsperioderErSendtUtlandet={anmodningsperioderErSendtUtlandet}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
@@ -327,7 +323,6 @@ const Saksbehandling = ({
 };
 
 Saksbehandling.propTypes = {
-  anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
   arbeidsland: PT.arrayOf(PT.string).isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
@@ -392,8 +387,7 @@ Saksbehandling.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
-  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandSelector(state),
+  arbeidsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).fom

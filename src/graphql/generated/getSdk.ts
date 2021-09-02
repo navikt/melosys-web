@@ -19,11 +19,48 @@ type Scalars = {
   Long: number;
 };
 
+type Bostedsadresse = {
+  __typename?: 'Bostedsadresse';
+  coAdressenavn?: Maybe<Scalars['String']>;
+  adresse: StrukturertAdresseformat;
+  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
+};
 
 
+
+type Kontaktadresse = {
+  __typename?: 'Kontaktadresse';
+  coAdressenavn?: Maybe<Scalars['String']>;
+  semistrukturertAdresse?: Maybe<SemistrukturertAdresseformat>;
+  strukturertAdresse?: Maybe<StrukturertAdresseformat>;
+  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
+};
+
+
+type Oppholdsadresse = {
+  __typename?: 'Oppholdsadresse';
+  coAdressenavn?: Maybe<Scalars['String']>;
+  adresse: StrukturertAdresseformat;
+  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
+};
 
 type Personopplysninger = {
   __typename?: 'Personopplysninger';
+  bostedsadresser: Array<Bostedsadresse>;
+  kontaktadresser: Array<Kontaktadresse>;
+  oppholdsadresser: Array<Oppholdsadresse>;
   statsborgerskap: Array<Statsborgerskap>;
 };
 
@@ -43,6 +80,17 @@ type Saksopplysninger = {
   persondata: Personopplysninger;
 };
 
+type SemistrukturertAdresseformat = {
+  __typename?: 'SemistrukturertAdresseformat';
+  adresselinje1?: Maybe<Scalars['String']>;
+  adresselinje2?: Maybe<Scalars['String']>;
+  adresselinje3?: Maybe<Scalars['String']>;
+  adresselinje4?: Maybe<Scalars['String']>;
+  postnummer?: Maybe<Scalars['String']>;
+  poststed?: Maybe<Scalars['String']>;
+  land: Scalars['String'];
+};
+
 type Statsborgerskap = {
   __typename?: 'Statsborgerskap';
   land: Scalars['String'];
@@ -54,49 +102,23 @@ type Statsborgerskap = {
   erHistorisk: Scalars['Boolean'];
 };
 
-type HentStatsborgerskapQueryVariables = Exact<{
-  behandlingID: Scalars['Long'];
-}>;
+type StrukturertAdresseformat = {
+  __typename?: 'StrukturertAdresseformat';
+  tilleggsnavn?: Maybe<Scalars['String']>;
+  gatenavn?: Maybe<Scalars['String']>;
+  husnummerEtasjeLeilighet?: Maybe<Scalars['String']>;
+  postboks?: Maybe<Scalars['String']>;
+  postnummer?: Maybe<Scalars['String']>;
+  poststed?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  land: Scalars['String'];
+};
 
 
-type HentStatsborgerskapQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & { statsborgerskap: Array<(
-        { __typename?: 'Statsborgerskap' }
-        & Pick<Statsborgerskap, 'land' | 'bekreftelsesdato' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'master' | 'kilde' | 'erHistorisk'>
-      )> }
-    ) }
-  ) }
-);
-
-
- const HentStatsborgerskapDocument = gql`
-    query hentStatsborgerskap($behandlingID: Long!) {
-  hentSaksopplysninger(behandlingID: $behandlingID) {
-    persondata {
-      statsborgerskap {
-        land
-        bekreftelsesdato
-        gyldigFraOgMed
-        gyldigTilOgMed
-        master
-        kilde
-        erHistorisk
-      }
-    }
-  }
-}
-    `;
 export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
-    hentStatsborgerskap(variables: HentStatsborgerskapQueryVariables, options?: C): Promise<HentStatsborgerskapQuery> {
-      return requester<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>(HentStatsborgerskapDocument, variables, options);
-    }
+
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;

@@ -10,7 +10,6 @@ describe("behandlingsmeny", () => {
     props = {
       lagreOgLukkHandle: jest.fn(),
       tilbakeleggeHandle: jest.fn(),
-      oppfriskSaksopplysningerHandle: jest.fn(),
       visHenleggDialogHandle: jest.fn(),
       visAvsluttSakSomBortfaltDialogHandle: jest.fn(),
       apneTidligereBehandlinger: jest.fn(),
@@ -36,7 +35,6 @@ describe("behandlingsmeny", () => {
 
     expect(props.lagreOgLukkHandle).toHaveBeenCalledTimes(1);
     expect(props.tilbakeleggeHandle).toHaveBeenCalledTimes(1);
-    expect(props.oppfriskSaksopplysningerHandle).toHaveBeenCalledTimes(1);
     expect(props.visHenleggDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.visAvsluttSakSomBortfaltDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.apneTidligereBehandlinger).toHaveBeenCalledTimes(1);

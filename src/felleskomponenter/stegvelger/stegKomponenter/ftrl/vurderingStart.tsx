@@ -24,7 +24,7 @@ import { FeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
-  const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandSelector(state);
+  const initialSoeknadsland = behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state);
   const initialTrygdedekning = behandlingsgrunnlagSelectors.TrygdedekningSelector(state);
   return {
     trygdedekninger: folketrygdenkodeverkSelectors.TrygdedekningerSelector(state),
@@ -45,9 +45,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
     dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
   oppdaterSoeknadsland: (soeknadsland: string[]) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland)),
-  oppdaterTrygdedekning: (trygdedekning: string) =>
+  oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning)),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -78,12 +77,10 @@ const VurderingStart = ({
   redigerbart,
   formValues = {},
   alleLandkoder,
-  oppdater,
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppdaterTrygdedekning,
   trygdedekninger,
-  lagreBehandlingsgrunnlag,
   formIsValid,
   initialValues,
   tilForsiden,
@@ -116,12 +113,8 @@ const VurderingStart = ({
     await Promise.all([
       oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
       oppdaterSoeknadsland(data.formValues.land ? [data.formValues.land] : []),
-      oppdaterTrygdedekning(data.formValues.trygdedekning ? data.formValues.trygdedekning : ""),
+      oppdaterTrygdedekning(data.formValues.trygdedekning),
     ]);
-    oppdater();
-    if (data.formIsValid) {
-      lagreBehandlingsgrunnlag();
-    }
   };
 
   const debouncedOppdatering = useCallback(Utils._debounce(oppdaterLokalBehandlingsgrunnlag, 500), []);

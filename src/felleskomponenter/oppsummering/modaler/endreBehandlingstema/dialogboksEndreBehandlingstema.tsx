@@ -5,6 +5,7 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { behandlingerOperations, behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsgrunnlagOperations } from "../../../../ducks/behandlingsgrunnlag";
 import { behandlingstemaSelectors } from "../../../../ducks/behandlingstema";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { navigeringOperations } from "../../../../ducks/navigering";
@@ -26,6 +27,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentBehandling: (behandlingID: number) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  hentBehandlingsgrunnlag: (behandlingID: number) => dispatch(behandlingsgrunnlagOperations.hent(behandlingID)),
   tilAnnenSide: (link: string) => dispatch(navigeringOperations.tilAnnenSide(link)),
 });
 
@@ -41,6 +43,7 @@ function DialogboksEndreBehandlingstema({
   avbryt,
   behandlingID,
   hentBehandling,
+  hentBehandlingsgrunnlag,
   muligeBehandlingstema,
   saksnummer,
   tilAnnenSide,
@@ -61,6 +64,7 @@ function DialogboksEndreBehandlingstema({
       .then(() => {
         setBehandlingstemaEndret(true);
         hentBehandling(behandlingID);
+        hentBehandlingsgrunnlag(behandlingID);
         const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
       })
@@ -139,6 +143,7 @@ DialogboksEndreBehandlingstema.propTypes = {
   behandlingID: PT.number.isRequired,
   behandlingstema: PT.string.isRequired,
   hentBehandling: PT.func.isRequired,
+  hentBehandlingsgrunnlag: PT.func.isRequired,
   muligeBehandlingstema: PT.array.isRequired,
   saksnummer: PT.string.isRequired,
   tilAnnenSide: PT.func.isRequired,
