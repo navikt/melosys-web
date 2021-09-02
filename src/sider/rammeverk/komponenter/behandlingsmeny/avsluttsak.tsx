@@ -2,19 +2,13 @@ import React from "react";
 import * as Nav from "../../../../utils/navFrontend";
 import Handling from "./handling";
 
-const AvsluttSak = () => {
-  const avslaaSoknad = () => {
-    console.log("avslå");
-  };
+type avsluttSakProps = {
+  avslaaSoknad: () => void;
+  henleggSak: () => void;
+  avsluttSakSomBortfalt: () => void;
+};
 
-  const henleggSak = () => {
-    console.log("henlegg");
-  };
-
-  const avsluttSakSomBortfalt = () => {
-    console.log("avslutt");
-  };
-
+const AvsluttSak = ({ avslaaSoknad, henleggSak, avsluttSakSomBortfalt }: avsluttSakProps) => {
   return (
     <Nav.EkspanderbartpanelBase
       ariaTittel="avsluttsak"

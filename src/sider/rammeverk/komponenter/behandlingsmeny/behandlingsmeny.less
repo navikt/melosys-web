@@ -1,11 +1,9 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
 
 .behandlingsmeny {
-  align-items: flex-end;
   justify-content: flex-end;
   display: flex;
   flex-grow: 1;
-  flex-wrap: wrap;
   margin-right: 34px;
 
   .behandlingsmeny__knapp {
@@ -16,12 +14,10 @@
     width: 48px;
     margin-top: -1px;
     border: 1px solid @navMorkGra;
-    background: #f8f8f8;
 
     &:hover {
       background-color: @navGra20;
     }
-
     &__aapen {
       background-color: @navMorkGra !important;
     }
@@ -36,15 +32,12 @@
     }
   }
 
-  &__padding {
-    width: 100%;
-    z-index: 1000;
-    display: flex;
-    justify-content: flex-end;
-  }
-
   &__meny {
+    position: absolute;
+    z-index: 1000;
     width: 350px;
+    top: 95px;
+    box-shadow: 0 2px 4px 0 @navGra20;
 
     &__legg-behandling-tilbake {
       border-bottom-left-radius: 0;
@@ -58,8 +51,7 @@
     }
     &__handlinger {
       background-color: #fff;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
+      border-radius: 0 0 3px 3px;
       border: 1px solid @navMorkGra;
       padding: 1rem;
     }
