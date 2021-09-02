@@ -35,13 +35,13 @@ class Artikkel16Anmodning extends Steg {
       };
     };
     this.handlers = {
-      lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers.lagreOgBestillAnmodningsperioder,
-      byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.byggAnmodningsperioderHandler,
-      oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers.oppdaterOgLagreBehandlinger,
-      lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers.lagreVilkarHandler,
-      lagreAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.lagreAnmodningsperioderHandler,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers?.lagreOgBestillAnmodningsperioder,
+      byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers?.byggAnmodningsperioderHandler,
+      oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers?.oppdaterOgLagreBehandlinger,
+      lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers?.lagreVilkarHandler,
+      lagreAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers?.lagreAnmodningsperioderHandler,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers?.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers?.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }
@@ -50,11 +50,23 @@ class Artikkel16Anmodning extends Steg {
     return this.erUnderBehandlingEllerAvsluttet(propsLight) && this.anmodningErSendtUtland(propsLight);
   }
 
-  static erUnderBehandlingEllerAvsluttet({ behandlingsstatus }) {
-    return [
-      MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-    ].includes(KV.objektTilKode(behandlingsstatus));
+  static erUnderBehandlingEllerAvsluttet({ behandlingsstatus, anmodningsperiodesvar }) {
+    const behandlingsstatusKode = KV.objektTilKode(behandlingsstatus);
+
+    return (
+      behandlingsstatusKode === MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING ||
+      (behandlingsstatusKode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET &&
+        !this.anmodningsperiodesvarErTom(anmodningsperiodesvar))
+    );
+  }
+
+  static anmodningsperiodesvarErTom(anmodningsperiodesvar) {
+    return (
+      anmodningsperiodesvar.anmodningsperiodeSvarType === null &&
+      anmodningsperiodesvar.endretPeriode?.tom === null &&
+      anmodningsperiodesvar.endretPeriode?.fom === null &&
+      anmodningsperiodesvar.begrunnelseFritekst === null
+    );
   }
 
   static anmodningErSendtUtland({ anmodningsperioder }) {
