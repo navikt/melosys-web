@@ -8,6 +8,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
+import * as Api from "../../../services/api";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
@@ -31,6 +32,7 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 
 import "./saksbehandling.css";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
+import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiodesvar";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
@@ -138,6 +140,7 @@ class Saksbehandling extends Component {
       visOppfriskModal,
       behandlingOppfriskes,
       hentDokumentOversikt,
+      hentAnmodningsperiodesvar,
     } = this.props;
 
     try {
@@ -156,6 +159,11 @@ class Saksbehandling extends Component {
 
       await hentBehandlingsgrunnlag(behandlingID);
       await hentDokumentOversikt(snr);
+
+      const anmodningsperioderRes = await Api.Anmodningsperioder.hent(behandlingID);
+      const anmodningsperiodeID = anmodningsperioderRes.anmodningsperioder[0]?.id;
+      if (anmodningsperiodeID) await hentAnmodningsperiodesvar(anmodningsperiodeID);
+
       return true;
     } catch (e) {
       return false;
@@ -385,6 +393,7 @@ Saksbehandling.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   behandlingsstatus: PT.string.isRequired,
+  hentAnmodningsperiodesvar: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -460,6 +469,8 @@ const mapDispatchToProps = (dispatch) => ({
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData(MKV.Koder.sakstyper.EU_EOS)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
+  hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
+    dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
