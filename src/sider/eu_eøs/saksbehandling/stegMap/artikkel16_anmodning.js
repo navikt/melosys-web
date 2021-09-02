@@ -7,6 +7,8 @@ import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/steg
 import VurderingArtikkel16Anmodning from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16Anmodning";
 import { hentVilkar, hentBegrunnelser } from "../../../../regler/vilkar";
 
+const { UNDER_BEHANDLING, AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
+
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
@@ -47,17 +49,22 @@ class Artikkel16Anmodning extends Steg {
   }
 
   static skalArt16SvarstegVaereSynlig(propsLight) {
-    return this.erUnderBehandlingEllerAvsluttet(propsLight) && this.anmodningErSendtUtland(propsLight);
-  }
-
-  static erUnderBehandlingEllerAvsluttet({ behandlingsstatus, anmodningsperiodesvar }) {
+    const { behandlingsstatus, anmodningsperiodesvar, anmodningsperioder } = propsLight;
     const behandlingsstatusKode = KV.objektTilKode(behandlingsstatus);
 
     return (
-      behandlingsstatusKode === MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING ||
-      (behandlingsstatusKode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET &&
-        !this.anmodningsperiodesvarErTom(anmodningsperiodesvar))
+      (this.behandlingErUnderBehandling(behandlingsstatusKode) ||
+        this.behandlingErAvsluttetOgUtlandHarBesvartAnmodning(behandlingsstatusKode, anmodningsperiodesvar)) &&
+      this.anmodningErSendtUtland(anmodningsperioder)
     );
+  }
+
+  static behandlingErUnderBehandling(behandlingsstatusKode) {
+    return behandlingsstatusKode === UNDER_BEHANDLING;
+  }
+
+  static behandlingErAvsluttetOgUtlandHarBesvartAnmodning(behandlingsstatusKode, anmodningsperiodesvar) {
+    return behandlingsstatusKode === AVSLUTTET && !this.anmodningsperiodesvarErTom(anmodningsperiodesvar);
   }
 
   static anmodningsperiodesvarErTom(anmodningsperiodesvar) {
@@ -69,7 +76,7 @@ class Artikkel16Anmodning extends Steg {
     );
   }
 
-  static anmodningErSendtUtland({ anmodningsperioder }) {
+  static anmodningErSendtUtland(anmodningsperioder) {
     return (
       anmodningsperioder.length > 0 && anmodningsperioder.every((anmodningsperiode) => anmodningsperiode.sendtUtland)
     );
