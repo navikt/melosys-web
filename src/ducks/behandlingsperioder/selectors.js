@@ -7,7 +7,6 @@
 
 import { createSelector } from "reselect";
 
-/* eslint import/prefer-default-export:"off" */
 export const behandlingsPerioderSelector = createSelector(
   (state) => (state.behandlingsperioder.data ? state.behandlingsperioder.data : {}),
   (behandlingsperioder) => behandlingsperioder

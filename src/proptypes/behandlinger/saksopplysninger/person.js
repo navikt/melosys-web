@@ -1,4 +1,3 @@
-/* eslint import/prefer-default-export:"off" */
 import PT from "prop-types";
 
 import { RegisterAdresse, UstrukturertAdresse, MidlertidigAdresse } from "../../adresser";
