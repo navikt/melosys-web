@@ -2,6 +2,7 @@ import React from "react";
 
 import { VurderingEndrePeriode } from "./vurderingEndrePeriode";
 import { lagAvklartfakta } from "../../../regler/avklartefakta";
+import Datovelger from "../../datovelger";
 
 describe("vurderingEndrePeriode", () => {
   let props = null;
@@ -46,8 +47,9 @@ describe("vurderingEndrePeriode", () => {
     });
   });
 
-  it("viser to inputs for fradato og tildato", () => {
+  // TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
+  it.skip("viser to datofelt for fradato og tildato", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find("Input")).toHaveLength(2);
+    expect(component.find(<Datovelger />)).toHaveLength(2);
   });
 });
