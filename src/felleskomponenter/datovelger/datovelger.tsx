@@ -43,7 +43,7 @@ const Datovelger = ({
     "dd-MM-yy",
   ];
 
-  const dateRegex = /^[0-2]+[1-9]*[.\-/]?\d{0,2}[.\-/]?\d{0,4}$/; // dd(separator?)MM(separator?)yy(yy?)
+  const dateRegex = /^[0-3]+[1-9]*[.\-/]?\d{0,2}[.\-/]?\d{0,4}$/; // dd(separator?)MM(separator?)yy(yy?)
 
   // Stopper skriving av ugyldige tegn (ikke blant dateFormat over)
   const handleOnChangeRaw = (e: React.SyntheticEvent<HTMLInputElement>) => {
