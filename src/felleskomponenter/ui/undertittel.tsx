@@ -28,15 +28,19 @@ const Undertittel = ({
   understrek = false,
 }: UndertittelProps) => {
   const cl = classNames("undertittel", className);
-  const navUndertittelCl = classNames({ understrek }, "navUndertittel");
+  const navUndertittelCl = classNames({ "undertittel--understrek": understrek }, "undertittel__navUndertittel");
 
   return (
     <div className={cl}>
       <Nav.Typo.Undertittel className={navUndertittelCl}>
-        {Ikon && ikonOrientering === IkonOrientering.Venstre && <Ikon className="ikon ikon-venstre" />}
-        <span className="tekst">{tekst}</span>
+        {Ikon && ikonOrientering === IkonOrientering.Venstre && (
+          <Ikon className="undertittel__ikon undertittel__ikon-venstre" />
+        )}
+        <span className="undertittel__tekst">{tekst}</span>
         <span>{etterTekst}</span>
-        {Ikon && ikonOrientering === IkonOrientering.Hoyre && <Ikon className="ikon ikon-hoyre" />}
+        {Ikon && ikonOrientering === IkonOrientering.Hoyre && (
+          <Ikon className="undertittel__ikon undertittel__ikon-hoyre" />
+        )}
       </Nav.Typo.Undertittel>
     </div>
   );
