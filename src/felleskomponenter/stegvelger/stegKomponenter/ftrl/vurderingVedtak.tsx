@@ -37,7 +37,8 @@ const mapStateToProps = (state: RootState) => ({
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
-  vedtaktype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+  familieFormValues: formSelectors.VurderFamilieFormSelector(state).values,
+  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
 });
 
@@ -69,8 +70,9 @@ const VurderingVedtak = ({
   soknadsland,
   alleLandkoder,
   trygdeavgiftFormValues,
+  familieFormValues,
   lagreOgFatteVedtak,
-  vedtaktype,
+  vedtakstype,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -192,7 +194,10 @@ const VurderingVedtak = ({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       fritekstInnledning: formValues?.fritekstInnledning || null,
       fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
-      vedtakstype: vedtaktype,
+      fritekstEktefelle: familieFormValues?.ektefelle_samboer?.fritekst || null,
+      fritekstBarn: familieFormValues?.barn?.fritekst || null,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      kopiMottakere: [],
     });
 
     if (isMounted.current) {

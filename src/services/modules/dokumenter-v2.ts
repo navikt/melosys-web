@@ -42,6 +42,12 @@ export type TilgjengeligeMaler = {
 };
 export type TilgjengeligeMalerResDto = TilgjengeligeMaler[];
 
+export type KopiMottaker = {
+  rolle: string;
+  orgnr: string | null;
+  aktørId: string | null;
+};
+
 export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
@@ -50,11 +56,7 @@ export type OpprettBrevReqDto = {
   begrunnelseFritekst?: string;
   manglerFritekst?: string;
   kontaktpersonNavn?: string | null;
-  kopiMottakere: {
-    rolle: string;
-    orgnr: string | null;
-    aktørId: string | null;
-  }[];
+  kopiMottakere: KopiMottaker[];
 };
 
 export type MuligMottaker = {
