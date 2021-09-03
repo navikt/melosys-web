@@ -111,6 +111,12 @@ export const Person = ({
           <Statsborgerskapsliste behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Mui.Undertittel ikon={Ikoner.House} tekst="Adresser" />
+        </Nav.Column>
+      </Nav.Row>
+
       <Nav.Row className="registrerteAdresser">
         <Nav.Column xs="12">
           {bostedsadressePerioder.length > 0 && (
