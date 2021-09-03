@@ -9,7 +9,7 @@ Prosjektet er satt opp til å kunne generere graphQL-relatert kode og interfaces
 
 ### For å generere graphQL-kode:
 1.  Lag en .gql-fil med den [operation](https://graphql.org/learn/queries/#operation-name) (query/mutation) du ønsker å bruke. Se [hentStatsborgerskap.gql](../felleskomponenter/menypanel/menypunkter/person/statsborgerskapsliste/hentStatsborgerskap.gql) for eksempel på et query.
-2.  Kjør opp melosys lokalt ved hjelp av [melosys-docker-compose](https://github.com/navikt/melosys-docker-compose/), logg inn og hent cookie fra en request. Lim cookie inn i codegen.yml.
+2.  Kjør opp melosys lokalt ved hjelp av [melosys-docker-compose](https://github.com/navikt/melosys-docker-compose/), logg inn og hent cookie fra en request. Lim cookie inn i codegen.yml. (se avsnitt om [autentisering](#autentisering-mot-melosys-api))
 3.  Kjør `npm run generate-graphql`
 
 <br/>
