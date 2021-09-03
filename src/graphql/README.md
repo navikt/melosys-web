@@ -5,12 +5,15 @@
 
 Prosjektet er satt opp til å kunne generere graphQL-relatert kode og interfaces/types automatisk.
 
+<br/>
+
 ### For å generere graphQL-kode:
 1.  Lag en .gql-fil med den [operation](https://graphql.org/learn/queries/#operation-name) (query/mutation) du ønsker å bruke. Se [hentStatsborgerskap.gql](../felleskomponenter/menypanel/menypunkter/person/statsborgerskapsliste/hentStatsborgerskap.gql) for eksempel på et query.
 2.  Kjør opp melosys lokalt ved hjelp av [melosys-docker-compose](https://github.com/navikt/melosys-docker-compose/), logg inn og hent cookie fra en request. Lim cookie inn i codegen.yml.
 3.  Kjør `npm run generate-graphql`
 
-<br/><br/>
+<br/>
+
 ### Hva genereres:
 
 * React hooks
@@ -21,7 +24,7 @@ Prosjektet er satt opp til å kunne generere graphQL-relatert kode og interfaces
 
   * Genereres i `src/graphql` og må importeres herfra til dit den skal brukes
 
-<br/><br/>
+<br/>
 
 ### Autentisering mot melosys-api:
 Ved generering av kode forventes det at [melosys-api](https://github.com/navikt/melosys-api/) kjører på localhost:8080, slik at kodegeneratoren kan få tak i graphQL-skjemaet til melosys-api.
@@ -42,6 +45,7 @@ schema:
 
 ```
 
-<br/><br/>
+<br/>
+
 ### Lokalt graphQL-skjema
 Det er også mulig å endre `schema`-feltet til å peke på et lokalt graphQL-skjema, se [dokumentasjon](https://www.graphql-code-generator.com/docs/getting-started/schema-field) for GraphQL Code Generator.
