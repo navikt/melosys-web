@@ -6,9 +6,15 @@ type leggBehandlingTilbakeProps = {
   lagreOgLukkHandle: () => void;
   tilbakeleggHandle: (oppgaveID: string, venterPaaDokumentasjon: boolean) => void;
   behandlingID: string;
+  redigerbart: boolean;
 };
 
-const LeggBehandlingTilbake = ({ lagreOgLukkHandle, tilbakeleggHandle, behandlingID }: leggBehandlingTilbakeProps) => {
+const LeggBehandlingTilbake = ({
+  lagreOgLukkHandle,
+  tilbakeleggHandle,
+  behandlingID,
+  redigerbart,
+}: leggBehandlingTilbakeProps) => {
   const tilbakeleggOppgave = async () => {
     const venterPaaDokumentasjon = true;
     await tilbakeleggHandle(behandlingID, venterPaaDokumentasjon);
@@ -21,8 +27,8 @@ const LeggBehandlingTilbake = ({ lagreOgLukkHandle, tilbakeleggHandle, behandlin
       className="behandlingsmeny__meny__legg-behandling-tilbake"
       heading={<div className="title">Legg behandling tilbake</div>}
     >
-      <Handling tekst="Til min oppgaveliste" onClick={lagreOgLukkHandle} />
-      <Handling tekst="Til felles oppgaveliste" onClick={tilbakeleggOppgave} />
+      {redigerbart && <Handling tekst="Til min oppgaveliste" onClick={lagreOgLukkHandle} />}
+      <Handling tekst="Til felles oppgaveliste" onClick={tilbakeleggOppgave} disabled={!redigerbart} />
     </Nav.EkspanderbartpanelBase>
   );
 };
