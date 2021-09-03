@@ -7,14 +7,19 @@ import * as Ikoner from "../../../../resources/images";
 import "./kopierbarTekst.css";
 
 interface KopierbarTekstProps {
+  hovertekst?: string;
   children: string;
 }
 
-const KopierbarTekst = ({ children }: KopierbarTekstProps) => {
+const KopierbarTekst = ({ hovertekst, children }: KopierbarTekstProps) => {
+  const [visHoverTekst, setVisHoverTekst] = useState(true);
   const [erKopiert, setErKopiert] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setErKopiert(false), 50);
+    setTimeout(() => {
+      setErKopiert(false);
+      setVisHoverTekst(false);
+    }, 1000);
   }, [erKopiert]);
 
   const containerCls = classNames({
@@ -23,12 +28,21 @@ const KopierbarTekst = ({ children }: KopierbarTekstProps) => {
   });
 
   return (
-    <span className="kopierbar-tekst">
+    <span
+      className="kopierbar-tekst"
+      onMouseOver={() => setVisHoverTekst(true)}
+      onFocus={() => setVisHoverTekst(true)}
+      onMouseLeave={() => setVisHoverTekst(false)}
+      onBlur={() => setVisHoverTekst(false)}
+    >
+      {hovertekst && visHoverTekst && (
+        <div className="kopierbar-tekst__hovertekst">{erKopiert ? "Kopiert" : hovertekst}</div>
+      )}
       <span className={containerCls}>
         <CopyToClipboard text={children} onCopy={() => setErKopiert(true)}>
           <span>
             {children}
-            <Ikoner.Kopier className="kopier-ikon" />
+            {erKopiert ? <Ikoner.GreenCheckmark className="kopier-ikon" /> : <Ikoner.Kopier className="kopier-ikon" />}
           </span>
         </CopyToClipboard>
       </span>

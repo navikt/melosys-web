@@ -1,17 +1,22 @@
 .kopierbar-tekst {
-  .kopierbar-tekst__container {
-    background-color: white;
-    will-change: background-color;
-    transition: 500ms all ease;
+  position: relative;
+
+  &__container {
+    cursor: pointer;
   }
 
-  .kopierbar-tekst__container--kopiert {
-    background-color: gray;
+  &__hovertekst {
+    position: absolute;
+    bottom: 24px;
+    right: -20px;
+    width: 110%;
+    border-radius: 3px;
+    padding: 7px;
+    background-color: white;
   }
 
   .kopier-ikon {
-    cursor: pointer;
-    width: auto;
+    width: 18px;
     height: 18px;
     padding-left: 5px;
     padding-top: 3px;
