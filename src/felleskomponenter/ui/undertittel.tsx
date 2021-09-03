@@ -1,12 +1,19 @@
-import React from "react";
-import PT from "prop-types";
+import React, { ElementType, ReactNode } from "react";
 import classNames from "classnames";
 
 import * as Nav from "../../utils/navFrontend";
 
 import "./undertittel.css";
 
-const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek }) => {
+interface UndertittelProps {
+  ikon?: ElementType;
+  tekst: string;
+  etterTekst?: ReactNode;
+  className?: string;
+  understrek?: boolean;
+}
+
+const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek = false }: UndertittelProps) => {
   const cl = classNames("undertittel", className);
   const navUndertittelCl = classNames({ understrek }, "navUndertittel");
 
@@ -19,21 +26,6 @@ const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek }) =
       </Nav.Typo.Undertittel>
     </div>
   );
-};
-
-Undertittel.propTypes = {
-  ikon: PT.elementType,
-  tekst: PT.string.isRequired,
-  etterTekst: PT.node,
-  className: PT.string,
-  understrek: PT.bool,
-};
-
-Undertittel.defaultProps = {
-  ikon: undefined,
-  className: undefined,
-  understrek: false,
-  etterTekst: undefined,
 };
 
 export default Undertittel;

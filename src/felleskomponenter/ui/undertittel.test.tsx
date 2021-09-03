@@ -1,4 +1,6 @@
-import React from "react";
+import React, { ComponentProps } from "react";
+import { mock, instance } from "ts-mockito";
+import { shallow } from "enzyme";
 
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../utils/navFrontend";
@@ -6,14 +8,11 @@ import * as Nav from "../../utils/navFrontend";
 import Undertittel from "./undertittel";
 
 describe("undertittel", () => {
-  let props = null;
+  const mockedProps = mock<ComponentProps<typeof Undertittel>>();
+  let props = instance(mockedProps);
 
   beforeEach(() => {
-    props = {
-      ikon: Ikoner.ParagraphTwoColumns,
-      tekst: "Tittel",
-      className: "klasse",
-    };
+    props = instance(mockedProps);
   });
 
   it("viser en nav undertittel", () => {
@@ -23,6 +22,7 @@ describe("undertittel", () => {
   });
 
   it("viser et ikon", () => {
+    props.ikon = Ikoner.ParagraphTwoColumns;
     const undertittel = shallow(<Undertittel {...props} />);
     const ikon = undertittel.find(props.ikon);
 
