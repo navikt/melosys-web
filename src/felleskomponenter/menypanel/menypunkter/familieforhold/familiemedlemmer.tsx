@@ -14,7 +14,7 @@ import { behandlingerOperations, behandlingerSelectors } from "../../../../ducks
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import ExpandableList from "../../../expandablelist";
-import KopierbarTekst from "../kopierbarTekst";
+import KopierbarTekst from "../../../kopierbarTekst";
 
 import "./familiemedlemmer.css";
 
