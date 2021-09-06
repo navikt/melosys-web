@@ -105,6 +105,12 @@ const lagFTRLFelter = (behandlingsgrunnlag) => ({
   trygdedekning: behandlingsgrunnlag.trygdedekning,
 });
 
+const lagTrygdeavtaleFelter = (behandlingsgrunnlag) => ({
+  ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
+  arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
+});
+
 const lagSedGrunnlagFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
@@ -122,6 +128,8 @@ const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
       return lagSoeknadFelter(behandlingsgrunnlag);
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET:
       return lagFTRLFelter(behandlingsgrunnlag);
+    case MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK:
+      return lagTrygdeavtaleFelter(behandlingsgrunnlag);
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return lagSedGrunnlagFelter(behandlingsgrunnlag);

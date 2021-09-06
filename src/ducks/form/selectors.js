@@ -352,3 +352,33 @@ const finnPanelFeil = (errors) => {
 };
 
 export const PanelFeilSelector = createSelector(SoknadErrorsSelector, (soknadErrors) => finnPanelFeil(soknadErrors));
+
+export const TrygdeavtaleInngangFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.Trygdeavtale.INNGANG, {}),
+  (inngang) => inngang
+);
+
+export const TrygdeavtaleInngangFormValidSelector = createSelector(
+  (state) => TrygdeavtaleInngangFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const TrygdeavtaleAvklarVirksomhetFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET, {}),
+  (avklarVirksomhet) => avklarVirksomhet
+);
+
+export const TrygdeavtaleAvklarVirksomhetFormValidSelector = createSelector(
+  (state) => TrygdeavtaleAvklarVirksomhetFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const TrygdeavtaleBestemmelseFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.Trygdeavtale.BESTEMMELSE, {}),
+  (bestemmelse) => bestemmelse
+);
+
+export const TrygdeavtaleBestemmelseFormValidSelector = createSelector(
+  (state) => TrygdeavtaleBestemmelseFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);

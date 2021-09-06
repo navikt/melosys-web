@@ -1,5 +1,5 @@
 import * as Utils from "../../../utils";
-import { FANE_STATUS } from "./typer";
+import { FANE_STATUS, STEG } from "./typer";
 
 class Steg {
   _id = null;
@@ -76,6 +76,7 @@ class Steg {
     status: this.hentStatus(),
     stegPosisjon: this._stegPosisjon,
     aktivtSteg: this._aktiv,
+    vedtakSteg: this.erVedtakSteg(this._id),
   });
 
   nesteSteg = () => {
@@ -96,6 +97,27 @@ class Steg {
     }
     return relevantUI.harAvklaring ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET;
   };
+
+  erVedtakSteg = (id) =>
+    id === STEG.VEDTAK ||
+    id === STEG.ENDRET_PERIODE ||
+    id === STEG.AVSLAG_12_X_OG_16 ||
+    id === STEG.ARTIKKEL_16_VEDTAK ||
+    id === STEG.ARTIKKEL_13_1_A_VEDTAK ||
+    id === STEG.VIDERESEND ||
+    id === STEG.ARTIKKEL_13_1_B_VEDTAK ||
+    id === STEG.ARTIKKEL_13_1_B_UTPEK_LAND ||
+    id === STEG.ARTIKKEL_13_2_A_VEDTAK ||
+    id === STEG.GODKJENN_UTPEKING_NORGE ||
+    id === STEG.GODKJENN_UTPEKING_ANNET_LAND ||
+    id === STEG.AVSLAA_UTPEKING ||
+    id === STEG.ARTIKKEL_13_2_B_UTPEK_LAND ||
+    id === STEG.ARTIKKEL_13_3_VEDTAK ||
+    id === STEG.ARTIKKEL_13_3_UTPEK_LAND ||
+    id === STEG.ARTIKKEL_13_4_VEDTAK ||
+    id === STEG.ARTIKKEL_13_4_UTPEK_LAND ||
+    id === STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK ||
+    id === STEG.VEDTAK_FTRL;
 
   assertRegel = (regel, avklartefakta, vilkar) => (Utils._isFunction(regel) ? regel(avklartefakta, vilkar) : false);
 }

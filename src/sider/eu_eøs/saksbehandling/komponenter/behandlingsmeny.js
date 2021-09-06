@@ -9,14 +9,12 @@ const Behandlingsmeny = ({
   redigerbart,
   lagreOgLukkHandle,
   tilbakeleggeHandle,
-  oppfriskSaksopplysningerHandle,
   visHenleggDialogHandle,
   apneTidligereBehandlinger,
   visAvsluttSakSomBortfaltDialogHandle,
   visHenleggSak,
   visAvslagSoknadDialogHandle,
   visAvslagManglendeOpplysninger,
-  visOppfriskSaksopplysninger,
   visRevurderFagsakDialogHandle,
   visRevurderFagsak,
   visAvsluttSakSomBortfalt,
@@ -35,11 +33,6 @@ const Behandlingsmeny = ({
       <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>
         Legg tilbake i kø
       </Nav.Knapp>
-      {visOppfriskSaksopplysninger && (
-        <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>
-          Oppdater registeropplysninger
-        </Nav.Knapp>
-      )}
       {redigerbart && visHenleggSak && (
         <Nav.Knapp mini className="innhold__element" onClick={visHenleggDialogHandle}>
           Henlegg sak
@@ -70,14 +63,12 @@ const Behandlingsmeny = ({
 Behandlingsmeny.propTypes = {
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
-  oppfriskSaksopplysningerHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   visHenleggSak: PT.bool.isRequired,
-  visOppfriskSaksopplysninger: PT.bool,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   visAvslagManglendeOpplysninger: PT.bool.isRequired,
   visRevurderFagsak: PT.bool.isRequired,
@@ -85,7 +76,6 @@ Behandlingsmeny.propTypes = {
 };
 
 Behandlingsmeny.defaultProps = {
-  visOppfriskSaksopplysninger: true,
   visAvsluttSakSomBortfalt: true,
 };
 

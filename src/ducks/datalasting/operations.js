@@ -17,16 +17,17 @@ import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 
 export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => (dispatch) => {
   dispatch(fagsakOperations.hent(saksnummer));
-  dispatch(vilkarOperations.hent(behandlingID));
   dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
   dispatch(behandlingerOperations.hentBehandling(behandlingID));
   dispatch(behandlingsgrunnlagOperations.hent(behandlingID));
   dispatch(behandlingsresultatOperations.hent(behandlingID));
 
   if (sakstype === MKV.Koder.sakstyper.FTRL) {
+    dispatch(vilkarOperations.hent(behandlingID));
     dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID));
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-  } else {
+  } else if (sakstype === MKV.Koder.sakstyper.EU_EOS) {
+    dispatch(vilkarOperations.hent(behandlingID));
     dispatch(anmodningsperioderOperations.hent(behandlingID));
     dispatch(avklartefaktaOperations.hent(behandlingID));
     dispatch(lovvalgsperioderOperations.hent(behandlingID));

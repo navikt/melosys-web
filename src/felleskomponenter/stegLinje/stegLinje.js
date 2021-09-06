@@ -18,6 +18,7 @@ const StegLinje = (props) => {
       tittel={item.tittel}
       status={item.status}
       aktivtSteg={item.aktivtSteg}
+      vedtakSteg={item.vedtakSteg}
     />
   ));
 

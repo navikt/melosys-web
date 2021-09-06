@@ -29,6 +29,11 @@ export const BehandlingsgrunnlagDataSelector = createSelector(
   (behandlingsgrunnlagState) => behandlingsgrunnlagState.data || {}
 );
 
+export const SisteOpplysningerHentetDatoSelector = createSelector(
+  BehandlingsgrunnlagSelector,
+  (behandlingsgrunnlag) => behandlingsgrunnlag.sisteOpplysningerHentetDato
+);
+
 export const ArbeidPaaLandSelector = createSelector(
   BehandlingsgrunnlagDataSelector,
   (behandlingsgrunnlagData) => behandlingsgrunnlagData.arbeidPaaLand || {}
@@ -180,6 +185,10 @@ export const SoknadslandkoderSelector = createSelector(
 export const SoknadslandErUkjenteEllerAlleEosLandSelector = createSelector(
   SoknadslandSelector,
   (soknadsland) => soknadsland.erUkjenteEllerAlleEosLand
+);
+
+export const SoknadslandKTSelector = createSelector(SoknadslandkoderSelector, (soknadsland) =>
+  MKV.KTObjects.landkoder.filter((landkodeObjekt) => soknadsland.includes(landkodeObjekt.kode))
 );
 
 export const TrygdedekningSelector = createSelector(

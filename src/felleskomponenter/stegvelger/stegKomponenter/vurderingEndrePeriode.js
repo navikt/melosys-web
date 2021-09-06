@@ -23,6 +23,8 @@ import { behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnla
 import * as Api from "../../../services/api";
 
 import "./vurderingEndrePeriode.css";
+import Datovelger from "../../datovelger";
+import { FeatureToggle } from "../../../featuretoggle";
 
 export class VurderingEndrePeriode extends React.Component {
   state = {
@@ -79,8 +81,8 @@ export class VurderingEndrePeriode extends React.Component {
     this.setState(opprinneligLovvalgsperiode);
   };
 
-  vedTomDatoEndring = (event) => {
-    this.setState({ nyTomDato: event.target.value, nyTomDatoFeilmelding: undefined });
+  vedTomDatoEndring = (dato) => {
+    this.setState({ nyTomDato: dato, nyTomDatoFeilmelding: undefined });
   };
 
   lagrePeriodeForForhandsvisning = () => {
@@ -238,18 +240,47 @@ export class VurderingEndrePeriode extends React.Component {
         <Nav.Typo.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Nav.Input bredde="fullbredde" label="Startdato" value={formattertOpprinneligFom} disabled />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Datovelger
+                    label="Startdato"
+                    value={Utils.dato.norskStringTilDate(formattertOpprinneligFom)}
+                    disabled
+                  />
+                ) : (
+                  <Nav.Input bredde="fullbredde" label="Startdato" value={formattertOpprinneligFom} disabled />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
           <Nav.Column xs="3">
-            <Nav.Input
-              bredde="fullbredde"
-              label="Sluttdato"
-              onChange={vedTomDatoEndring}
-              onBlur={lagrePeriodeForForhandsvisning}
-              value={nyTomDato}
-              feil={nyTomDatoFeilmelding}
-              disabled={!redigerbart}
-            />
+            <FeatureToggle togglename="melosys.input.DATOFELT">
+              {(status) =>
+                status === "enabled" ? (
+                  <Datovelger
+                    label="Sluttdato"
+                    value={Utils.dato.norskStringTilDate(nyTomDato)}
+                    // Oppdater parameter til "vedTomDatoEndring()" etter featuretoggle fjernes
+                    onChange={(dato) => vedTomDatoEndring(Utils.dato.dateTilNorskString(dato))}
+                    onBlur={lagrePeriodeForForhandsvisning}
+                    onCalendarClose={lagrePeriodeForForhandsvisning}
+                    feil={nyTomDatoFeilmelding?.feilmelding}
+                    disabled={!redigerbart}
+                  />
+                ) : (
+                  <Nav.Input
+                    bredde="fullbredde"
+                    label="Sluttdato"
+                    onChange={(e) => vedTomDatoEndring(e.target.value)}
+                    onBlur={lagrePeriodeForForhandsvisning}
+                    value={nyTomDato}
+                    feil={nyTomDatoFeilmelding}
+                    disabled={!redigerbart}
+                  />
+                )
+              }
+            </FeatureToggle>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>

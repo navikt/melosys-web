@@ -10,7 +10,6 @@ import * as Api from "../../services/api";
 import { doThenDispatch } from "../../services/utils";
 import * as Types from "../personer/types";
 
-/* eslint-disable import/prefer-default-export */
 export function hent(fnr) {
   return doThenDispatch(() => Api.Personer.hentPerson(fnr), {
     OK: Types.OK,
