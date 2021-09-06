@@ -3,6 +3,7 @@ import { AnyAction } from "redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { connect, ConnectedProps } from "react-redux";
+import classNames from "classnames";
 
 import * as Ikon from "../../../../resources/images";
 import * as KV from "../../../../kodeverk";
@@ -43,7 +44,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const Behandlingsmeny = ({
+export const Behandlingsmeny = ({
   lagreOgLukkHandle,
   tilbakeleggHandle,
   visAvslagSoknadDialogHandle,
@@ -88,29 +89,22 @@ const Behandlingsmeny = ({
         return behandlingErAvsluttet && behandlingstemaErRegistreringOmUnntakNorskTrygd;
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
         return redigerbart && behandlingErAvsluttet;
-      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
-        return false;
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
         return behandlingErAvsluttet;
+      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
       default:
         return false;
     }
   };
 
-  const classNameKnapp = `behandlingsmeny__knapp${visBehandlingsmeny ? " behandlingsmeny__knapp__aapen" : ""}`;
-  const classNameHamburger = `hamburger${visBehandlingsmeny ? " hamburger__aapen" : ""}`;
+  const knappCls = classNames("behandlingsmeny__knapp", { behandlingsmeny__knapp__aapen: visBehandlingsmeny });
+  const hamburgerCls = classNames("hamburger", { hamburger__aapen: visBehandlingsmeny });
 
   return (
     <div className="behandlingsmeny">
-      <div
-        className={classNameKnapp}
-        role="button"
-        tabIndex={0}
-        onClick={toggleBehandlingsmeny}
-        onKeyPress={handleKeyPress}
-      >
-        <Ikon.Hamburger className={classNameHamburger} />
+      <div className={knappCls} role="button" tabIndex={0} onClick={toggleBehandlingsmeny} onKeyPress={handleKeyPress}>
+        <Ikon.Hamburger className={hamburgerCls} />
       </div>
       {visBehandlingsmeny && (
         <div className="behandlingsmeny__meny">
