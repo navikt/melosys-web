@@ -1,4 +1,5 @@
 import React, { ComponentProps } from "react";
+import { act } from "react-dom/test-utils";
 import { instance, mock } from "ts-mockito";
 import { mount } from "enzyme";
 
@@ -8,7 +9,6 @@ import { Behandlingsmeny } from "./behandlingsmeny";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
-import { act } from "react-dom/test-utils";
 
 const { BESLUTNING_LOVVALG_NORGE, ARBEID_I_UTLANDET } = MKV.Koder.behandlinger.behandlingstema;
 const { AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;
