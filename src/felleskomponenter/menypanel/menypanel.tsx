@@ -108,7 +108,7 @@ export const Menypanel = ({
           </Nav.AlertStripe>
         )}
       </div>
-      {visOppdaterRegisteropplysninger && (
+      {visOppdaterRegisteropplysninger && redigerbart && (
         <OppdaterRegisteropplysninger
           sistOppdatert={formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
           oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
