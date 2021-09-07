@@ -16,6 +16,7 @@ import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../../../ducks/behandlingsgrunnlag";
+import { anmodningsperioderSelectors } from "../../../../../ducks/anmodningsperioder";
 
 import { avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
@@ -49,6 +50,7 @@ const Saksopplysninger = ({
   lagreAllData,
   oppdaterBehandlingsgrunnlag,
   startOgVisOppfriskModal,
+  anmodningsperioderErSendtUtlandet,
 }) => {
   if (Utils._isNil(redigerbart)) return null;
 
@@ -66,6 +68,9 @@ const Saksopplysninger = ({
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
   const forsteSteg = hentForsteSteg(behandlingstype);
+
+  const visOppdaterRegisteropplysninger =
+    behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE && !anmodningsperioderErSendtUtlandet;
 
   return (
     <Fragment>
@@ -88,7 +93,10 @@ const Saksopplysninger = ({
           forsteSteg={forsteSteg}
         />
       )}
-      <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+      <SoknadMenypanelForm
+        startOgVisOppfriskModal={startOgVisOppfriskModal}
+        visOppdaterRegisteropplysninger={visOppdaterRegisteropplysninger}
+      />
     </Fragment>
   );
 };
@@ -118,6 +126,7 @@ Saksopplysninger.propTypes = {
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
+  anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -137,6 +146,7 @@ const mapStateToProps = (state) => ({
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
