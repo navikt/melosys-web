@@ -1,0 +1,10 @@
+query hentStatsborgerskap($behandlingID: Long!) {
+  hentSaksopplysninger(behandlingID: $behandlingID) {
+    persondata {
+      statsborgerskap {
+        land
+        erHistorisk
+      }
+    }
+  }
+}

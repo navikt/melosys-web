@@ -160,6 +160,21 @@ export const Relasjonsrolle = {
   SAMB: "SAMB",
 };
 
+export const PersonStatus = {
+  ADNR: "ADNR",
+  UTPE: "UTPE",
+  BOSA: "BOSA",
+  UREG: "UREG",
+  ABNR: "ABNR",
+  UFUL: "UFUL",
+  UTVA: "UTVA",
+  FOSV: "FOSV",
+  DØDD: "DØDD",
+  DØD: "DØD",
+  UTAN: "UTAN",
+  FØDR: "FØDR",
+};
+
 export enum StegNavn {
   INNGANG = "INNGANG",
   AVKLAR_VIRKSOMHET = "AVKLAR_VIRKSOMHET",

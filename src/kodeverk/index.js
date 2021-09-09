@@ -3,6 +3,7 @@ import * as Koder from "./koder";
 import * as Form from "./form";
 import * as Menypunkter from "./menypunkter";
 import * as Feilmeldinger from "./feilmeldinger";
+import * as Utils from "./utils";
 
 const objektTilTermUtenFeilmelding = (KTObjekt) => {
   if (!KTObjekt || !KTObjekt.term) return null;
@@ -59,6 +60,7 @@ export {
   Form,
   Menypunkter,
   Feilmeldinger,
+  Utils,
   objektTilTerm,
   objektTilTermUtenFeilmelding,
   objektTilKode,
