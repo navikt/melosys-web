@@ -6,13 +6,14 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Person } from "../../../../services/modules/types";
 
-import Fnr from "./fnr";
-import Statsborgerskap from "./statsborgerskap";
 import * as KV from "../../../../kodeverk";
-
 import * as Ikon from "../../../../resources/images";
-import "./personlinje.css";
+
+import Statsborgerskap from "./statsborgerskap";
 import Behandlingsmeny from "../behandlingsmeny/behandlingsmeny";
+import KopierbarTekst from "../../../../felleskomponenter/kopierbarTekst";
+
+import "./personlinje.css";
 
 const mapStateToProps = (state: RootState) => ({
   // TODO: flere av personfeltene skal mappes fra PDL i api. Oppdater med de nye verdiene når det blir klart
@@ -34,6 +35,8 @@ const Navn = ({ kjoenn, navn }: { kjoenn: KTObject; navn: string }) => (
     {navn}
   </div>
 );
+
+const Fnr = ({ fnr }: { fnr: string }) => <KopierbarTekst hovertekst="Kopier fødselsnummer">{fnr}</KopierbarTekst>;
 
 const Doed = () => (
   <div className="personlinje_dod">

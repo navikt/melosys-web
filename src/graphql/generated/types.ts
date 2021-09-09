@@ -17,11 +17,48 @@ export type Scalars = {
   Long: number;
 };
 
+export type Bostedsadresse = {
+  __typename?: 'Bostedsadresse';
+  coAdressenavn?: Maybe<Scalars['String']>;
+  adresse: StrukturertAdresseformat;
+  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
+};
 
 
+
+export type Kontaktadresse = {
+  __typename?: 'Kontaktadresse';
+  coAdressenavn?: Maybe<Scalars['String']>;
+  semistrukturertAdresse?: Maybe<SemistrukturertAdresseformat>;
+  strukturertAdresse?: Maybe<StrukturertAdresseformat>;
+  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
+};
+
+
+export type Oppholdsadresse = {
+  __typename?: 'Oppholdsadresse';
+  coAdressenavn?: Maybe<Scalars['String']>;
+  adresse: StrukturertAdresseformat;
+  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
+};
 
 export type Personopplysninger = {
   __typename?: 'Personopplysninger';
+  bostedsadresser: Array<Bostedsadresse>;
+  kontaktadresser: Array<Kontaktadresse>;
+  oppholdsadresser: Array<Oppholdsadresse>;
   statsborgerskap: Array<Statsborgerskap>;
 };
 
@@ -41,6 +78,17 @@ export type Saksopplysninger = {
   persondata: Personopplysninger;
 };
 
+export type SemistrukturertAdresseformat = {
+  __typename?: 'SemistrukturertAdresseformat';
+  adresselinje1?: Maybe<Scalars['String']>;
+  adresselinje2?: Maybe<Scalars['String']>;
+  adresselinje3?: Maybe<Scalars['String']>;
+  adresselinje4?: Maybe<Scalars['String']>;
+  postnummer?: Maybe<Scalars['String']>;
+  poststed?: Maybe<Scalars['String']>;
+  land: Scalars['String'];
+};
+
 export type Statsborgerskap = {
   __typename?: 'Statsborgerskap';
   land: Scalars['String'];
@@ -50,4 +98,16 @@ export type Statsborgerskap = {
   master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
+};
+
+export type StrukturertAdresseformat = {
+  __typename?: 'StrukturertAdresseformat';
+  tilleggsnavn?: Maybe<Scalars['String']>;
+  gatenavn?: Maybe<Scalars['String']>;
+  husnummerEtasjeLeilighet?: Maybe<Scalars['String']>;
+  postboks?: Maybe<Scalars['String']>;
+  postnummer?: Maybe<Scalars['String']>;
+  poststed?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  land: Scalars['String'];
 };

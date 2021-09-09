@@ -16,7 +16,6 @@ import MKV from "../../melosyskodeverk";
 import { modalerOperations } from "../modaler";
 import { navigeringOperations } from "../navigering";
 
-/* eslint-disable import/prefer-default-export */
 export function fatt(behandlingID, body) {
   return doThenDispatch(
     () => Api.Saksflyt.Vedtak.fatt(behandlingID, body),
