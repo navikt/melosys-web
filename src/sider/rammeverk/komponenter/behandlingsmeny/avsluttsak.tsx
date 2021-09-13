@@ -3,7 +3,6 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import Handling from "./handling";
-import { mapBehandlingstemaToBehandlingskategori } from "../../../../kodeverk/utils";
 
 type avsluttSakProps = {
   avslaaSoknad: () => void;
@@ -22,7 +21,7 @@ const AvsluttSak = ({
   behandlingstype,
   redigerbart,
 }: avsluttSakProps) => {
-  const behandlingskategori = mapBehandlingstemaToBehandlingskategori(behandlingstema);
+  const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
 
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;

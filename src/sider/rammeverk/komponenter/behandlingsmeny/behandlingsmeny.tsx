@@ -99,7 +99,9 @@ export const Behandlingsmeny = ({
   };
 
   const knappCls = classNames("behandlingsmeny__knapp", { behandlingsmeny__knapp__aapen: visBehandlingsmeny });
-  const hamburgerCls = classNames("hamburger", { hamburger__aapen: visBehandlingsmeny });
+  const hamburgerCls = classNames("behandlingsmeny__hamburger", {
+    behandlingsmeny__hamburger__aapen: visBehandlingsmeny,
+  });
 
   return (
     <div className="behandlingsmeny">
