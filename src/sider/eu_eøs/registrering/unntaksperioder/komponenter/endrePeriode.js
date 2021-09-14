@@ -120,7 +120,7 @@ const EndrePeriode = ({
             onChange={(e) => oppdaterFelt(e, oppdaterBegrunnelse)}
             disabled={!redigerbart}
             feil={feilmeldinger.begrunnelse}
-            defaultValue="0"
+            value={begrunnelse || "0"}
           >
             <option key={uuid()} value="0" disabled>
               Velg i listen
