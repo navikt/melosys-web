@@ -30,7 +30,11 @@ spec:
   vault:
     enabled: true
   ingresses:
-    - {{ingress}}
+    - {{INGRESS}}
   env:
     - name: REDIS_HOST
       value: {{REDIS_APP_NAME}}.teammelosys.svc.nais.local
+    - name: APP_URL_MELOSYS
+      value: {{APP_URL_MELOSYS}}
+    - name: APP_URL_TRYGDEAVTALE
+      value: {{APP_URL_TRYGDEAVTALE}}
