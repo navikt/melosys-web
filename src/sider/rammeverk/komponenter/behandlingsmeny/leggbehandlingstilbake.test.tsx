@@ -6,11 +6,9 @@ import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import Handling from "./handling";
 
 const mockedProps = mock<ComponentProps<typeof LeggBehandlingTilbake>>();
-const mockedEvent = mock<React.MouseEvent>();
 
 describe("LeggBehandlingTilbake", () => {
   let props = instance(mockedProps);
-  const event = instance(mockedEvent);
 
   beforeEach(() => {
     props = instance(mockedProps);

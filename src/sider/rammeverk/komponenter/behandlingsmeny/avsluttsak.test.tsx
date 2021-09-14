@@ -9,11 +9,9 @@ import Handling from "./handling";
 
 const { BESLUTNING_LOVVALG_NORGE, ARBEID_I_UTLANDET, TRYGDETID } = MKV.Koder.behandlinger.behandlingstema;
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
-const mockedEvent = mock<React.MouseEvent>();
 
 describe("AvsluttSak", () => {
   let props = instance(mockedProps);
-  const event = instance(mockedEvent);
 
   beforeEach(() => {
     props = instance(mockedProps);
