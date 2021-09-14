@@ -47,6 +47,6 @@ describe("AvsluttSak", () => {
 
     const behandlingsmeny = shallow(<AvsluttSak {...props} />);
 
-    expect(behandlingsmeny.find(".behandlingsmeny__meny__avslutt-sak").exists()).toBeFalsy();
+    expect(behandlingsmeny.find(".behandlingsmeny__meny__avslutt-sak").isEmptyRender()).toBeTruthy();
   });
 });
