@@ -3,7 +3,6 @@ FROM navikt/nginx-oidc:latest
 ENV APP_DIR="/app" \
   APP_CALLBACK_PATH="/openid_connect_login" \
   APP_PATH_PREFIX="/melosys" \
-  APP_URL_MELOSYS="http://melosys" \
   APP_URL_TRYGDEAVTALE="http://melosys" \
   APP_PORT="3000"
 

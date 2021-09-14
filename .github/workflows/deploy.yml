@@ -113,7 +113,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/nais.yaml
-          VAR: APP_NAME=melosys-web-q1,REDIS_APP_NAME=melosys-web-redis-q1,ingress=https://melosys.dev.adeo.no
+          VAR: APP_NAME=melosys-web-q1,REDIS_APP_NAME=melosys-web-redis-q1,APP_URL_MELOSYS=http://melosys-q1,ingress=https://melosys.dev.adeo.no
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
@@ -151,7 +151,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/nais.yaml
-          VAR: APP_NAME=melosys-web,REDIS_APP_NAME=melosys-web-redis,ingress=https://melosys.dev.intern.nav.no
+          VAR: APP_NAME=melosys-web,REDIS_APP_NAME=melosys-web-redis,APP_URL_MELOSYS=http://melosys.q2.svc.nais.local,ingress=https://melosys.dev.intern.nav.no
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
@@ -189,7 +189,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           RESOURCE: nais/nais.yaml
-          VAR: APP_NAME=melosys-web,REDIS_APP_NAME=melosys-web-redis,ingress=https://melosys.nais.adeo.no
+          VAR: APP_NAME=melosys-web,REDIS_APP_NAME=melosys-web-redis,APP_URL_MELOSYS=http://melosys,ingress=https://melosys.nais.adeo.no
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV
