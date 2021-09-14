@@ -4,7 +4,7 @@ import * as Nav from "../../../../../utils/navFrontend";
 import * as KV from "../../../../../kodeverk";
 
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
-import KopierbarTekst from "../../kopierbarTekst";
+import KopierbarTekst from "../../../../kopierbarTekst";
 
 import ExpandableList from "../../../../expandablelist";
 

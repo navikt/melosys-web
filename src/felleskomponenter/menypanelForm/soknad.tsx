@@ -191,6 +191,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SoknadProps = PropsFromRedux & {
   startOgVisOppfriskModal: () => void;
+  visOppdaterRegisteropplysninger?: boolean;
 };
 
 const Soknad = ({
@@ -198,6 +199,7 @@ const Soknad = ({
   startOgVisOppfriskModal,
   formValues,
   redigerbart,
+  visOppdaterRegisteropplysninger,
 }: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
   const debouncedLagreBehandlingsgrunnlag = useCallback(Utils._debounce(lagreBehandlingsgrunnlag, 1000), []);
   useEffect(() => {
@@ -215,7 +217,10 @@ const Soknad = ({
 
   return (
     <form name="soknad" id="soknad" onSubmit={submitHandler}>
-      <Menypanel lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      <Menypanel
+        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        visOppdaterRegisteropplysninger={visOppdaterRegisteropplysninger}
+      />
     </form>
   );
 };

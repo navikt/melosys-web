@@ -68,3 +68,15 @@ export function arrayTilKonjunksjon(liste) {
     return `${samling}${element}${!erVedSisteElement ? konjunksjon : ""}`;
   }, "");
 }
+
+export function separerListeMedBindestrek(liste) {
+  if (!liste) {
+    return "";
+  }
+  if (typeof liste === "string") {
+    return liste;
+  }
+  return liste.reduce((s, e, i) => {
+    return `${s}${e}${i === liste.length - 1 ? "" : " - "}`;
+  }, "");
+}
