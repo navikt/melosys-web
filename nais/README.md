@@ -2,8 +2,7 @@
 Frontend deployes i en nginx-container som tar seg av oidc-oppsett. I `proxy.nginx`
 defineres proxy til melosys backend.
 
-## Automtatisk deploy
-Melosys-web deployer automatisk til q2 ved push på `master`-branch
+Melosys-web deployer automatisk til dev ved push på `master`-branch
 (TODO: utfyll etter flere miljøer legges til)
 
 ## Manuell deploy
