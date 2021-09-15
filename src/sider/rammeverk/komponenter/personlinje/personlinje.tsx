@@ -6,16 +6,17 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Person } from "../../../../services/modules/types";
 
-import Statsborgerskap from "./statsborgerskap";
 import * as KV from "../../../../kodeverk";
-
 import * as Ikon from "../../../../resources/images";
-import "./personlinje.css";
-import Behandlingsmeny from "./behandlingsmeny";
+
+import Statsborgerskap from "./statsborgerskap";
+import Behandlingsmeny from "../behandlingsmeny/behandlingsmeny";
 import KopierbarTekst from "../../../../felleskomponenter/kopierbarTekst";
 
+import "./personlinje.css";
+
 const mapStateToProps = (state: RootState) => ({
-  // TODO: flere av personfeltene skal mappes fra PDL i api. Oppdater med de nye verdiene når det blir klart (MELOSYS-4695)
+  // TODO: flere av personfeltene skal mappes fra PDL i api. Oppdater med de nye verdiene når det blir klart
   person: behandlingerSelectors.PersonSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
