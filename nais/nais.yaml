@@ -1,8 +1,8 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: melosys-web
-  namespace: {{namespace}}
+  name: {{APP_NAME}}
+  namespace: teammelosys
   labels:
     team: teammelosys
 spec:
@@ -30,7 +30,11 @@ spec:
   vault:
     enabled: true
   ingresses:
-    - {{ingress}}
+    - {{INGRESS}}
   env:
     - name: REDIS_HOST
-      value: melosys-web-redis.{{namespace}}.svc.nais.local
+      value: {{REDIS_APP_NAME}}.teammelosys.svc.nais.local
+    - name: APP_URL_MELOSYS
+      value: {{APP_URL_MELOSYS}}
+    - name: APP_URL_TRYGDEAVTALE
+      value: {{APP_URL_TRYGDEAVTALE}}
