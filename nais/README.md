@@ -9,7 +9,7 @@ Melosys-web deployer automatisk til dev ved push på `master`-branch
 ## Manuell deploy
 For manuell deploy, så kan man gå til https://github.com/navikt/melosys-web/actions/, velge deploy-workflow og trykke "run workflow".
 
-Alterativt kan man finne ønsket docker-image fra docker-repoet til melosys-web på github.
+Alternativt kan man finne ønsket docker-image fra docker-repoet til melosys-web på github.
 Dette limer man inn i feltet `spec.image` i nais.yaml.
 Husk også å bytte ut variabler som `INGRESS` og `APP_NAME` med faktiske verdier. Verdiene for de ulike miljøene kan finnes i vars-dev.json, vars-prod.json osv.
 
