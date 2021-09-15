@@ -1,1 +1,2 @@
-export { useHentAdresserQuery } from "./hentAdresser.generated";
+export { useHentAdresserQuery, HentAdresserDocument } from "./hentAdresser.generated";
+export type { HentAdresserQuery } from "./hentAdresser.generated";
