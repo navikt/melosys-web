@@ -6,6 +6,7 @@ import * as Skjema from "../../../../skjema";
 import * as Sporsmal from "./sporsmal";
 
 import "./editerbareUtenlandsoppdragetSporsmal.css";
+import DatovelgerSkjema from "../../../../skjema/datovelger";
 
 interface RadioknappSvarProps {
   feltNavn: string;
@@ -25,8 +26,8 @@ interface PeriodeSvarProps {
 
 const PeriodeSvar = ({ fomFeltNavn, tomFeltNavn }: PeriodeSvarProps) => (
   <>
-    <Skjema.Input datoFelt feltNavn={fomFeltNavn} label="Fra og med:" />
-    <Skjema.Input datoFelt feltNavn={tomFeltNavn} label="Til og med:" />
+    <DatovelgerSkjema feltNavn={fomFeltNavn} label="Fra og med:" />
+    <DatovelgerSkjema feltNavn={tomFeltNavn} label="Til og med:" />
   </>
 );
 
