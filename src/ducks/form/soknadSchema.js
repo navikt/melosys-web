@@ -261,6 +261,18 @@ const soknad = object().when("$behandlingstema", {
     soknadsperiodeTom: soknadsperiodeTomSchema,
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
+    foedestedOgLand: object().shape({
+      foedested: string()
+        .nullable()
+        .required(
+          lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
+        ),
+      foedeland: string()
+        .nullable()
+        .required(
+          lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødeland kreves")
+        ),
+    }),
     juridiskArbeidsgiverNorge: object().shape({
       antallAnsatte: number().transform(tomStringTilNull).nullable(),
       antallAdmAnsatte: number().transform(tomStringTilNull).nullable(),

@@ -29,6 +29,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
+    foedestedOgLand: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).foedestedOgLand,
     medfolgendeEktefelleSamboer: behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state),
     arbeidsgiverBekrefterUtsendelse: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
       .arbeidsgiverBekrefterUtsendelse,
