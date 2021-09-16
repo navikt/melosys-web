@@ -24,7 +24,6 @@ const Redigerer = ({
           feltNavn={`${overordnetFeltNavn}.hjemmebaseNavn`}
           disabled={!redigerbart}
           bredde="fullbredde"
-          datoFelt={false}
         />
       </Nav.Column>
     </Nav.Row>

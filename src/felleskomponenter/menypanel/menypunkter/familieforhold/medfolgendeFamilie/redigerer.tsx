@@ -58,7 +58,6 @@ const Redigerer = ({
           feltNavn={`${overordnetFeltNavn}.fnr`}
           disabled={!redigerbart}
           bredde="fullbredde"
-          datoFelt={false}
           onChange={idNummerChangeHandler}
         />
       </Nav.Column>
@@ -68,7 +67,6 @@ const Redigerer = ({
           feltNavn={`${overordnetFeltNavn}.navn`}
           disabled={!redigerbart || disableNavnInput}
           bredde="fullbredde"
-          datoFelt={false}
         />
         {visNavnSpinner && <Nav.NavFrontendSpinner className="navn-spinner" />}
       </Nav.Column>

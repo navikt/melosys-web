@@ -75,13 +75,7 @@ type InntektRedigererProps = {
 
 const InntektRedigerer = ({ tittel, feltNavn, redigerbart }: InntektRedigererProps) => (
   <Nav.Column xs="4" className="inntekt-redigerer">
-    <Skjema.Input
-      feltNavn={`loennOgGodtgjoerelse.${feltNavn}`}
-      label={tittel}
-      bredde="S"
-      datoFelt={false}
-      disabled={!redigerbart}
-    />
+    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} bredde="S" disabled={!redigerbart} />
   </Nav.Column>
 );
 
