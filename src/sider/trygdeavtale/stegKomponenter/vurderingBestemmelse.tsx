@@ -20,13 +20,13 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
   initialValues: {
-    vedtak: ownProps.resultat?.vedtakValg || undefined,
-    innvilgelse: ownProps.resultat?.innvilgelseValg || undefined,
-    bestemmelse: ownProps.resultat?.bestemmelseValg || undefined,
+    vedtak: ownProps.resultat?.vedtak || undefined,
+    innvilgelse: ownProps.resultat?.innvilgelse || undefined,
+    bestemmelse: ownProps.resultat?.bestemmelse || undefined,
   },
-  bestemmelseValg: ownProps.data?.bestemmelseValg || undefined,
-  innvilgelseValg: ownProps.data?.innvilgelseValg || undefined,
   vedtakValg: ownProps.data?.vedtakValg || undefined,
+  innvilgelseValg: ownProps.data?.innvilgelseValg || undefined,
+  bestemmelseValg: ownProps.data?.bestemmelseValg || undefined,
 });
 
 const connector = connect(mapStateToProps, {});
@@ -68,9 +68,9 @@ const VurderingBestemmelse = ({
       oppdaterStegData({
         resultat: {
           ...resultat,
-          vedtakValg: formValues.vedtak,
-          innvilgelseValg: formValues?.innvilgelse,
-          bestemmelseValg: formValues?.bestemmelse,
+          vedtak: formValues.vedtak,
+          innvilgelse: formValues?.innvilgelse,
+          bestemmelse: formValues?.bestemmelse,
         },
       });
     }
@@ -87,7 +87,7 @@ const VurderingBestemmelse = ({
         ))}
       </Nav.Fieldset>
 
-      {formValues?.vedtak && innvilgelseValg && (
+      {formValues?.vedtak && innvilgelseValg?.length && (
         <Nav.Fieldset legend="Skal søknaden innvilges?">
           {innvilgelseValg?.map((valg) => (
             <Skjema.Radio
@@ -101,7 +101,7 @@ const VurderingBestemmelse = ({
         </Nav.Fieldset>
       )}
 
-      {formValues?.innvilgelse && bestemmelseValg && (
+      {formValues?.innvilgelse && bestemmelseValg?.length && (
         <Nav.Fieldset legend="Velg bestemmelse">
           <Skjema.Select
             label=""
