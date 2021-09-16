@@ -5,6 +5,7 @@ metadata:
     team: teammelosys
   annotations:
     nais.io/read-only-file-system: "false"
+    nais.io/restricted: "false"
   name: {{APP_NAME}}
   namespace: teammelosys
 spec:
