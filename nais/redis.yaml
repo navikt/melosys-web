@@ -3,6 +3,8 @@ kind: "Application"
 metadata:
   labels:
     team: teammelosys
+  annotations:
+    nais.io/read-only-file-system: "false"
   name: {{APP_NAME}}
   namespace: teammelosys
 spec:
