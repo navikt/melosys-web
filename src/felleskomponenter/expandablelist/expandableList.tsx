@@ -6,7 +6,7 @@ import * as Nav from "../../utils/navFrontend";
 
 import "./expandableList.css";
 
-interface ExpandableListProps<T> {
+export interface ExpandableListProps<T> {
   renderElement: (element: T) => ReactNode;
   idFromElement: (element: T) => string | number;
   elements: T[];
