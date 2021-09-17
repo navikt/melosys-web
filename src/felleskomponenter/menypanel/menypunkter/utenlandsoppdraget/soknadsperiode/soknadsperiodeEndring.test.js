@@ -4,7 +4,7 @@ import Knapperad from "../../../../knapperad";
 
 import SoknadsperiodeEndring from "./soknadsperiodeEndring";
 import Datovelger from "../../../../datovelger";
-import * as Utils from "../../../../../utils/dato";
+import * as Utils from "../../../../../utils";
 
 describe("SoknadsperiodeEndring", () => {
   const lagProps = () => ({
@@ -27,12 +27,12 @@ describe("SoknadsperiodeEndring", () => {
 
     it("vises", () => {
       expect(fomInput).toHaveLength(1);
-      expect(fomInputProps.value).toStrictEqual(Utils.norskStringTilDate(props.soknadsperiodeFom));
+      expect(fomInputProps.value).toStrictEqual(Utils.dato.norskStringTilDate(props.soknadsperiodeFom));
     });
 
     it("kaller vedFeltEndring ved change", () => {
       const nyDato = "01.01.2011";
-      fomInput.simulate("change", Utils.norskStringTilDate(nyDato));
+      fomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
       expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
       expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeFom", nyDato);
@@ -49,12 +49,12 @@ describe("SoknadsperiodeEndring", () => {
 
     it("vises", () => {
       expect(tomInput).toHaveLength(1);
-      expect(tomInputProps.value).toStrictEqual(Utils.norskStringTilDate(props.soknadsperiodeTom));
+      expect(tomInputProps.value).toStrictEqual(Utils.dato.norskStringTilDate(props.soknadsperiodeTom));
     });
 
     it("kaller vedFeltEndring ved change", () => {
       const nyDato = "02.02.2012";
-      tomInput.simulate("change", Utils.norskStringTilDate(nyDato));
+      tomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
       expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
       expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeTom", nyDato);
