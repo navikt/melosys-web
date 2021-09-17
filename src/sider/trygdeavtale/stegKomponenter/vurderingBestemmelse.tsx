@@ -8,6 +8,7 @@ import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../utils/navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Utils from "../../../utils";
 
 import { formSelectors } from "../../../ducks/form";
 
@@ -87,7 +88,7 @@ const VurderingBestemmelse = ({
         ))}
       </Nav.Fieldset>
 
-      {formValues?.vedtak && innvilgelseValg?.length && (
+      {formValues?.vedtak && !Utils._isEmpty(innvilgelseValg) && (
         <Nav.Fieldset legend="Skal søknaden innvilges?">
           {innvilgelseValg?.map((valg) => (
             <Skjema.Radio
@@ -101,7 +102,7 @@ const VurderingBestemmelse = ({
         </Nav.Fieldset>
       )}
 
-      {formValues?.innvilgelse && bestemmelseValg?.length && (
+      {formValues?.innvilgelse && !Utils._isEmpty(bestemmelseValg) && (
         <Nav.Fieldset legend="Velg bestemmelse">
           <Skjema.Select
             label=""
