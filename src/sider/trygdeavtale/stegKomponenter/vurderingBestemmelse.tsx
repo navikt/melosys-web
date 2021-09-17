@@ -25,10 +25,6 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
     innvilgelse: ownProps.resultat?.innvilgelse || undefined,
     bestemmelse: ownProps.resultat?.bestemmelse || undefined,
   },
-  vedtakValg: ownProps.data?.vedtakValg || undefined,
-  innvilgelseValg: ownProps.data?.innvilgelseValg || undefined,
-  bestemmelseValg: ownProps.data?.bestemmelseValg || undefined,
-  bestemmelseTekst: ownProps.data?.bestemmelseTekst || "",
 });
 
 const connector = connect(mapStateToProps, {});
@@ -53,18 +49,15 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  bestemmelseTekst,
-  bestemmelseValg,
+  data: { vedtakValg, innvilgelseValg, bestemmelseValg, bestemmelseTekst },
   formIsValid,
   formValues,
   fortsett,
-  innvilgelseValg,
   tilbake,
   redigerbart,
   resultat,
   steg,
   oppdaterStegData,
-  vedtakValg,
 }: PropsFromRedux & Props) => {
   useEffect(() => {
     if (formValues?.vedtak) {
