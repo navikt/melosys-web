@@ -4,9 +4,7 @@ import { mock, instance } from "ts-mockito";
 
 import { Bostedsadresse, Oppholdsadresse, Kontaktadresse } from "../../../../../graphql";
 import { Adresser } from "./adresser";
-import Bostedsadresser from "./bostedsadresser";
-import Oppholdsadresser from "./oppholdsadresser";
-import Kontaktadresser from "./kontaktadresser";
+import Adresseliste from "./adresseliste";
 
 describe("Adresser", () => {
   const mockedProps = mock<ComponentProps<typeof Adresser>>();
@@ -38,9 +36,10 @@ describe("Adresser", () => {
   it("viser bostedsadresser hvis de finnes", () => {
     const adresser = shallow(<Adresser {...props} />);
 
-    const bostedsadresseKomponenter = adresser.find(Bostedsadresser);
+    const bostedsadresseKomponenter = adresser.findWhere(
+      (n) => n.type() === Adresseliste && n.props().adresser === bostedsadresser
+    );
     expect(bostedsadresseKomponenter).toHaveLength(1);
-    expect(bostedsadresseKomponenter.props().bostedsadresser).toBe(bostedsadresser);
   });
 
   it("viser ikke bostedsadresser hvis ingen finnes", () => {
@@ -48,16 +47,19 @@ describe("Adresser", () => {
 
     const adresser = shallow(<Adresser {...props} />);
 
-    const bostedsadresseKomponenter = adresser.find(Bostedsadresser);
+    const bostedsadresseKomponenter = adresser.findWhere(
+      (n) => n.type() === Adresseliste && n.props().adresser === bostedsadresser
+    );
     expect(bostedsadresseKomponenter).toHaveLength(0);
   });
 
   it("viser oppholdsadresser hvis de finnes", () => {
     const adresser = shallow(<Adresser {...props} />);
 
-    const oppholdsadresseKomponenter = adresser.find(Oppholdsadresser);
+    const oppholdsadresseKomponenter = adresser.findWhere(
+      (n) => n.type() === Adresseliste && n.props().adresser === oppholdsadresser
+    );
     expect(oppholdsadresseKomponenter).toHaveLength(1);
-    expect(oppholdsadresseKomponenter.props().oppholdsadresser).toBe(oppholdsadresser);
   });
 
   it("viser ikke oppholdsadresser hvis ingen finnes", () => {
@@ -65,16 +67,19 @@ describe("Adresser", () => {
 
     const adresser = shallow(<Adresser {...props} />);
 
-    const oppholdsadresseKomponenter = adresser.find(Oppholdsadresser);
+    const oppholdsadresseKomponenter = adresser.findWhere(
+      (n) => n.type() === Adresseliste && n.props().adresser === oppholdsadresser
+    );
     expect(oppholdsadresseKomponenter).toHaveLength(0);
   });
 
   it("viser kontaktadresser hvis de finnes", () => {
     const adresser = shallow(<Adresser {...props} />);
 
-    const kontaktadresseKomponenter = adresser.find(Kontaktadresser);
+    const kontaktadresseKomponenter = adresser.findWhere(
+      (n) => n.type() === Adresseliste && n.props().adresser === kontaktadresser
+    );
     expect(kontaktadresseKomponenter).toHaveLength(1);
-    expect(kontaktadresseKomponenter.props().kontaktadresser).toBe(kontaktadresser);
   });
 
   it("viser ikke kontaktadresser hvis ingen finnes", () => {
@@ -82,7 +87,9 @@ describe("Adresser", () => {
 
     const adresser = shallow(<Adresser {...props} />);
 
-    const kontaktadresseKomponenter = adresser.find(Kontaktadresser);
+    const kontaktadresseKomponenter = adresser.findWhere(
+      (n) => n.type() === Adresseliste && n.props().adresser === kontaktadresser
+    );
     expect(kontaktadresseKomponenter).toHaveLength(0);
   });
 });

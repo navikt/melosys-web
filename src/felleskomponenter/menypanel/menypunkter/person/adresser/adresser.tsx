@@ -2,9 +2,7 @@ import React from "react";
 
 import * as Nav from "../../../../../utils/navFrontend";
 
-import Bostedsadresser from "./bostedsadresser";
-import Oppholdsadresser from "./oppholdsadresser";
-import Kontaktadresser from "./kontaktadresser";
+import Adresseliste, { Adressetype } from "./adresseliste";
 
 import { useHentAdresserQuery, HentAdresserQuery } from "./hentAdresser";
 
@@ -17,9 +15,15 @@ export const Adresser = ({ data }: AdresserProps) => {
 
   return (
     <div>
-      {bostedsadresser.length > 0 && <Bostedsadresser bostedsadresser={bostedsadresser} />}
-      {oppholdsadresser.length > 0 && <Oppholdsadresser oppholdsadresser={oppholdsadresser} />}
-      {kontaktadresser.length > 0 && <Kontaktadresser kontaktadresser={kontaktadresser} />}
+      {bostedsadresser.length > 0 && (
+        <Adresseliste adresser={bostedsadresser} adressetype={Adressetype.Bostedsadresse} />
+      )}
+      {oppholdsadresser.length > 0 && (
+        <Adresseliste adresser={oppholdsadresser} adressetype={Adressetype.Oppholdsadresse} />
+      )}
+      {kontaktadresser.length > 0 && (
+        <Adresseliste adresser={kontaktadresser} adressetype={Adressetype.Kontaktadresse} />
+      )}
     </div>
   );
 };

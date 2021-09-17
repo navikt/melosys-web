@@ -2,32 +2,49 @@ import React from "react";
 
 import * as Utils from "../../../../../../utils";
 
-import { Bostedsadresse } from "../../../../../../graphql";
+import { Bostedsadresse, Oppholdsadresse, Kontaktadresse } from "../../../../../../graphql";
 
 import ExpandableList from "../../../../../expandablelist";
-import { StrukturertAdresse } from "../../../../../adresser";
+import { StrukturertAdresse, SemistrukturertAdresse } from "../../../../../adresser";
 import Adresseheader, { Adressetype } from "../adresseheader";
 import Adresserad from "../adresserad";
 
-interface BostedsadresserProps {
-  bostedsadresser: Bostedsadresse[];
+type Adresse = Bostedsadresse | Oppholdsadresse | Kontaktadresse;
+
+function isKontaktAdresse(adresse: Adresse): adresse is Kontaktadresse {
+  return (adresse as Kontaktadresse).semistrukturertAdresse !== undefined;
 }
 
-const Bostedsadresser = ({ bostedsadresser }: BostedsadresserProps) => {
-  const gyldigeBostedsadresser = bostedsadresser.filter((adresse) => !adresse.erHistorisk);
-  const historiskeBostedsadresser = bostedsadresser.filter((adresse) => adresse.erHistorisk);
+const renderAdressekomponent = (adresse: Adresse) => {
+  if (isKontaktAdresse(adresse)) {
+    if (adresse.strukturertAdresse) return <StrukturertAdresse adresse={adresse.strukturertAdresse} />;
+    if (adresse.semistrukturertAdresse) return <SemistrukturertAdresse adresse={adresse.semistrukturertAdresse} />;
+    return null;
+  }
+
+  return <StrukturertAdresse adresse={adresse.adresse} />;
+};
+
+interface AdresselisteProps {
+  adressetype: Adressetype;
+  adresser: Adresse[];
+}
+
+const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
+  const gyldigeAdresser = adresser.filter((adresse) => !adresse.erHistorisk);
+  const historiskeAdresser = adresser.filter((adresse) => adresse.erHistorisk);
 
   return (
     <>
       <ExpandableList
-        elements={gyldigeBostedsadresser}
-        header={<Adresseheader adressetype={Adressetype.Bostedsadresse} />}
+        elements={gyldigeAdresser}
+        header={<Adresseheader adressetype={adressetype} />}
         idFromElement={() => Utils._uuid()}
         renderElement={(adresse) => (
           <Adresserad
             kolonner={[
               {
-                innhold: <StrukturertAdresse adresse={adresse.adresse} />,
+                innhold: renderAdressekomponent(adresse),
                 bredde: "3",
               },
               {
@@ -45,19 +62,20 @@ const Bostedsadresser = ({ bostedsadresser }: BostedsadresserProps) => {
             ]}
           />
         )}
-        amountOfItemsCollapsed={bostedsadresser.length}
+        amountOfItemsCollapsed={adresser.length}
         chevron
         dividers
       />
       <ExpandableList
-        elements={historiskeBostedsadresser}
-        header={<Adresseheader adressetype={Adressetype.Bostedsadresse} visTom />}
+        elements={historiskeAdresser}
+        header={<Adresseheader adressetype={adressetype} visTom />}
+        showHeader={(collapsed) => !collapsed}
         idFromElement={() => Utils._uuid()}
         renderElement={(adresse) => (
           <Adresserad
             kolonner={[
               {
-                innhold: <StrukturertAdresse adresse={adresse.adresse} />,
+                innhold: renderAdressekomponent(adresse),
                 bredde: "3",
               },
               {
@@ -87,4 +105,5 @@ const Bostedsadresser = ({ bostedsadresser }: BostedsadresserProps) => {
   );
 };
 
-export default Bostedsadresser;
+export { Adressetype };
+export default Adresseliste;

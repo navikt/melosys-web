@@ -122,7 +122,7 @@ export const Person = ({
       </Nav.Row>
 
       {pdlAdresserToggle === "enabled" ? (
-        <Adresser />
+        <Adresser behandlingID={behandlingID} />
       ) : (
         <Nav.Row className="registrerteAdresser">
           <Nav.Column xs="12">
