@@ -3,6 +3,7 @@ import { RootState } from "AppTypes";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import ReactHtmlParser from "react-html-parser";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
@@ -27,6 +28,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   bestemmelseValg: ownProps.data?.bestemmelseValg || undefined,
   innvilgelseValg: ownProps.data?.innvilgelseValg || undefined,
   vedtakValg: ownProps.data?.vedtakValg || undefined,
+  bestemmelseTekst: ownProps.data?.bestemmelseTekst || "",
 });
 
 const connector = connect(mapStateToProps, {});
@@ -51,6 +53,7 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
+  bestemmelseTekst,
   bestemmelseValg,
   formIsValid,
   formValues,
@@ -102,22 +105,35 @@ const VurderingBestemmelse = ({
       )}
 
       {formValues?.innvilgelse && bestemmelseValg && (
-        <Nav.Fieldset legend="Velg bestemmelse">
-          <Skjema.Select
-            label=""
-            feltNavn="bestemmelse"
-            disabled={!redigerbart}
-            emptyFieldText="Velg"
-            emptyFieldDisabled={!!formValues.bestemmelse}
-          >
-            {bestemmelseValg?.map((bestemmelse: KTObject) => (
-              <option key={bestemmelse.kode} value={bestemmelse.kode}>
-                {bestemmelse.term}
-              </option>
-            ))}
-          </Skjema.Select>
+        <Nav.Fieldset legend="Velg bestemmelse" className="bestemmelseValg">
+          <Nav.Row>
+            <Nav.Column xs="10">
+              <Skjema.Select
+                label=""
+                feltNavn="bestemmelse"
+                disabled={!redigerbart}
+                emptyFieldText="Velg"
+                emptyFieldDisabled={!!formValues.bestemmelse}
+              >
+                {bestemmelseValg?.map((bestemmelse: KTObject) => (
+                  <option key={bestemmelse.kode} value={bestemmelse.kode}>
+                    {bestemmelse.term}
+                  </option>
+                ))}
+              </Skjema.Select>
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Fieldset>
       )}
+
+      {bestemmelseTekst && (
+        <Nav.Row>
+          <Nav.Column xs="10" className="bestemmelseTekst">
+            <div>{ReactHtmlParser(bestemmelseTekst)}</div>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
       <div className="fane__knapplinje">
         <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake
