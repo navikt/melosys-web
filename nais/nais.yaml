@@ -5,6 +5,8 @@ metadata:
   namespace: teammelosys
   labels:
     team: teammelosys
+  annotations:
+    nais.io/security-does-not-matter: "true"
 spec:
   image: {{image}}
   port: 3000
