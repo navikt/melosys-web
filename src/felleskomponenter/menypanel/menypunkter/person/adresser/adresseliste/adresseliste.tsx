@@ -74,7 +74,7 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
       />
       <ExpandableList
         elements={historiskeAdresser}
-        header={<Adresseheader adressetype={adressetype} visTom />}
+        header={<Adresseheader adressetype={adressetype} visBareFomTom />}
         showHeader={(collapsed) => !collapsed}
         idFromElement={() => Utils._uuid()}
         renderElement={(adresse) => (

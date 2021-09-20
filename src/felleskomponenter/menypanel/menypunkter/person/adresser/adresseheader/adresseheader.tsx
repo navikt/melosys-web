@@ -14,29 +14,35 @@ export enum Adressetype {
 
 interface AdresseheaderProps {
   adressetype: Adressetype;
-  visTom?: boolean;
+  visBareFomTom?: boolean;
 }
 
-const Adresseheader = ({ adressetype, visTom }: AdresseheaderProps) => {
-  const periodetekst = `Gyldig f.o.m.${visTom ? " - t.o.m." : ""}`;
+const Adresseheader = ({ adressetype, visBareFomTom }: AdresseheaderProps) => {
+  const periodetekst = `Gyldig f.o.m.${visBareFomTom ? " - t.o.m." : ""}`;
+  const innhold = {
+    adressetype: visBareFomTom ? "" : <Nav.Typo.Element>{Adressetype[adressetype]}</Nav.Typo.Element>,
+    register: visBareFomTom ? "" : <Nav.Typo.Element>Register</Nav.Typo.Element>,
+    kilde: visBareFomTom ? "" : <Nav.Typo.Element>Kilde</Nav.Typo.Element>,
+    periode: <Nav.Typo.Element>{periodetekst}</Nav.Typo.Element>,
+  };
 
   return (
     <Adresserad
       kolonner={[
         {
-          innhold: <Nav.Typo.Element>{Adressetype[adressetype]}</Nav.Typo.Element>,
+          innhold: innhold.adressetype,
           bredde: "3",
         },
         {
-          innhold: <Nav.Typo.Element>Register</Nav.Typo.Element>,
+          innhold: innhold.register,
           bredde: "3",
         },
         {
-          innhold: <Nav.Typo.Element>Kilde</Nav.Typo.Element>,
+          innhold: innhold.kilde,
           bredde: "3",
         },
         {
-          innhold: <Nav.Typo.Element>{periodetekst}</Nav.Typo.Element>,
+          innhold: innhold.periode,
           bredde: "3",
         },
       ]}

@@ -44,15 +44,32 @@ describe("Adresseheader", () => {
     ]);
   });
 
-  it("tillater at man kan vise t.o.m.-tekst", () => {
+  it("tillater at man kan vise bare f.o.m. - t.o.m.", () => {
     props.adressetype = Adressetype.Kontaktadresse;
-    props.visTom = true;
+    props.visBareFomTom = true;
 
     const adresseheader = shallow(<Adresseheader {...props} />);
 
     const adresserad = adresseheader.find(Adresserad);
     const { kolonner } = adresserad.props();
 
-    expect(kolonner[kolonner.length - 1].innhold).toEqual(<Nav.Typo.Element>Gyldig f.o.m. - t.o.m.</Nav.Typo.Element>);
+    expect(kolonner).toEqual([
+      {
+        innhold: "",
+        bredde: "3",
+      },
+      {
+        innhold: "",
+        bredde: "3",
+      },
+      {
+        innhold: "",
+        bredde: "3",
+      },
+      {
+        innhold: <Nav.Typo.Element>Gyldig f.o.m. - t.o.m.</Nav.Typo.Element>,
+        bredde: "3",
+      },
+    ]);
   });
 });
