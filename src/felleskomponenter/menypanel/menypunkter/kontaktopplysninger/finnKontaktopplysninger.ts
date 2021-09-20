@@ -11,6 +11,7 @@ const finnKontaktopplysninger = async (
     return {
       kontaktnavn: null,
       kontaktorgnr: null,
+      kontakttelefon: null,
     };
   }
 };
