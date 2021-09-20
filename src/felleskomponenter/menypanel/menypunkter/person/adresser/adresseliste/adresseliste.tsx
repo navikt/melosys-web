@@ -56,7 +56,7 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
                 bredde: "3",
               },
               {
-                innhold: adresse.gyldigFraOgMed,
+                innhold: Utils.dato.formatterDatoTilNorsk(adresse.gyldigFraOgMed),
                 bredde: "3",
               },
             ]}
@@ -89,7 +89,8 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
               {
                 innhold: (
                   <>
-                    {adresse.gyldigFraOgMed} - {adresse.gyldigTilOgMed}
+                    {Utils.dato.formatterDatoTilNorsk(adresse.gyldigFraOgMed)} -{" "}
+                    {Utils.dato.formatterDatoTilNorsk(adresse.gyldigTilOgMed)}
                   </>
                 ),
                 bredde: "3",
