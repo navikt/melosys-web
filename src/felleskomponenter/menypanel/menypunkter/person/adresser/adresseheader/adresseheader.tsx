@@ -1,5 +1,7 @@
 import React from "react";
 
+import * as Nav from "../../../../../../utils/navFrontend";
+
 import Adresserad from "../adresserad";
 
 export enum Adressetype {
@@ -13,27 +15,31 @@ interface AdresseheaderProps {
   visTom?: boolean;
 }
 
-const Adresseheader = ({ adressetype, visTom }: AdresseheaderProps) => (
-  <Adresserad
-    kolonner={[
-      {
-        innhold: Adressetype[adressetype],
-        bredde: "3",
-      },
-      {
-        innhold: "Register",
-        bredde: "3",
-      },
-      {
-        innhold: "Kilde",
-        bredde: "3",
-      },
-      {
-        innhold: `Gyldig f.o.m.${visTom ? " - t.o.m." : ""}`,
-        bredde: "3",
-      },
-    ]}
-  />
-);
+const Adresseheader = ({ adressetype, visTom }: AdresseheaderProps) => {
+  const periodetekst = `Gyldig f.o.m.${visTom ? " - t.o.m." : ""}`;
+
+  return (
+    <Adresserad
+      kolonner={[
+        {
+          innhold: <Nav.Typo.Element>{Adressetype[adressetype]}</Nav.Typo.Element>,
+          bredde: "3",
+        },
+        {
+          innhold: <Nav.Typo.Element>Register</Nav.Typo.Element>,
+          bredde: "3",
+        },
+        {
+          innhold: <Nav.Typo.Element>Kilde</Nav.Typo.Element>,
+          bredde: "3",
+        },
+        {
+          innhold: <Nav.Typo.Element>{periodetekst}</Nav.Typo.Element>,
+          bredde: "3",
+        },
+      ]}
+    />
+  );
+};
 
 export default Adresseheader;
