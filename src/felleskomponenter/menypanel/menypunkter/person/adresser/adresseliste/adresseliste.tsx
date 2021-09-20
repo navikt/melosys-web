@@ -17,12 +17,15 @@ function isKontaktAdresse(adresse: Adresse): adresse is Kontaktadresse {
 
 const renderAdressekomponent = (adresse: Adresse) => {
   if (isKontaktAdresse(adresse)) {
-    if (adresse.strukturertAdresse) return <StrukturertAdresse adresse={adresse.strukturertAdresse} />;
+    if (adresse.strukturertAdresse)
+      return (
+        <StrukturertAdresse adresse={{ ...adresse.strukturertAdresse, landkode: adresse.strukturertAdresse.land }} />
+      );
     if (adresse.semistrukturertAdresse) return <SemistrukturertAdresse adresse={adresse.semistrukturertAdresse} />;
     return null;
   }
 
-  return <StrukturertAdresse adresse={adresse.adresse} />;
+  return <StrukturertAdresse adresse={{ ...adresse.adresse, landkode: adresse.adresse.land }} />;
 };
 
 interface AdresselisteProps {
