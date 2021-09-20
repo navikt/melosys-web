@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { RootState } from "AppTypes";
-import { getFormValues, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import ReactHtmlParser from "react-html-parser";
@@ -21,13 +23,20 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
   initialValues: {
-    vedtak: ownProps.resultat?.vedtak || undefined,
-    innvilgelse: ownProps.resultat?.innvilgelse || undefined,
-    bestemmelse: ownProps.resultat?.bestemmelse || undefined,
+    vedtak: ownProps.resultat?.vedtak,
+    innvilgelse: ownProps.resultat?.innvilgelse,
+    bestemmelse: ownProps.resultat?.bestemmelse,
   },
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  resetField: (field: string) => {
+    dispatch(change(KV.Form.Trygdeavtale.BESTEMMELSE, field, null));
+    dispatch(untouch(KV.Form.Trygdeavtale.BESTEMMELSE, field));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -55,6 +64,7 @@ const VurderingBestemmelse = ({
   fortsett,
   tilbake,
   redigerbart,
+  resetField,
   resultat,
   steg,
   oppdaterStegData,
@@ -71,6 +81,15 @@ const VurderingBestemmelse = ({
       });
     }
   }, [formValues]);
+
+  useEffect(() => {
+    resetField("innvilgelse");
+    resetField("bestemmelse");
+  }, [formValues?.vedtak]);
+
+  useEffect(() => {
+    resetField("bestemmelse");
+  }, [formValues?.innvilgelse]);
 
   if (!formValues) return null;
   return (
