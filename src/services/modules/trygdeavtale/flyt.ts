@@ -13,9 +13,9 @@ export interface Resultat {
   tom?: string;
   land?: string[];
   virksomheter?: string[];
-  vedtakValg?: string;
-  innvilgelseValg?: string;
-  bestemmelseValg?: string;
+  vedtak?: string;
+  innvilgelse?: string;
+  bestemmelse?: string;
 }
 
 export interface Steg {
