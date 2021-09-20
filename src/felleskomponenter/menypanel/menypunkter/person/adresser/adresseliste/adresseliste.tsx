@@ -7,7 +7,7 @@ import { Bostedsadresse, Oppholdsadresse, Kontaktadresse } from "../../../../../
 import ExpandableList from "../../../../../expandablelist";
 import { StrukturertAdresse, SemistrukturertAdresse } from "../../../../../adresser";
 import Adresseheader, { Adressetype } from "../adresseheader";
-import Adresserad from "../adresserad";
+import Adresserad, { Farge } from "../adresserad";
 
 type Adresse = Bostedsadresse | Oppholdsadresse | Kontaktadresse;
 
@@ -35,7 +35,7 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
   const historiskeAdresser = adresser.filter((adresse) => adresse.erHistorisk);
 
   return (
-    <>
+    <div className="adresseliste">
       <ExpandableList
         elements={gyldigeAdresser}
         header={<Adresseheader adressetype={adressetype} />}
@@ -58,6 +58,7 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
               {
                 innhold: Utils.dato.formatterDatoTilNorsk(adresse.gyldigFraOgMed),
                 bredde: "3",
+                tekstfarge: Farge.Groenn,
               },
             ]}
           />
@@ -94,6 +95,7 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
                   </>
                 ),
                 bredde: "3",
+                tekstfarge: Farge.Roed,
               },
             ]}
           />
@@ -102,7 +104,7 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
         dividers
         chevron
       />
-    </>
+    </div>
   );
 };
 
