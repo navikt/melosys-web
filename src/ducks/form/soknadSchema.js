@@ -262,16 +262,8 @@ const soknad = object().when("$behandlingstema", {
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
     foedestedOgLand: object().shape({
-      foedested: string()
-        .nullable()
-        .required(
-          lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
-        ),
-      foedeland: string()
-        .nullable()
-        .required(
-          lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødeland kreves")
-        ),
+      foedested: string().nullable(),
+      foedeland: string().nullable(),
     }),
     juridiskArbeidsgiverNorge: object().shape({
       antallAnsatte: number().transform(tomStringTilNull).nullable(),
