@@ -117,7 +117,7 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Mui.Undertittel ikon={Ikoner.House} tekst="Adresser" />
+          <Mui.Undertittel ikon={Ikoner.Location} tekst="Adresser" />
         </Nav.Column>
       </Nav.Row>
 
