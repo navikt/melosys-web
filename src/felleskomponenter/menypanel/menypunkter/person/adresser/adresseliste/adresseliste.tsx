@@ -64,6 +64,8 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
           />
         )}
         amountOfItemsCollapsed={adresser.length}
+        btnTextCollapsed="Åpne historikk"
+        btnTextExpanded="Lukk historikk"
         chevron
         dividers
       />
@@ -101,6 +103,8 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
           />
         )}
         amountOfItemsCollapsed={0}
+        btnTextCollapsed="Åpne historikk"
+        btnTextExpanded="Lukk historikk"
         dividers
         chevron
       />
