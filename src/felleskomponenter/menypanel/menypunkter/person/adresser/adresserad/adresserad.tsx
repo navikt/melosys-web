@@ -23,11 +23,11 @@ interface AdresseradProps {
 }
 
 const Adresserad = ({ kolonner }: AdresseradProps) => (
-  <Nav.Row className="adresseliste__rad">
+  <Nav.Row className="adresselisterad">
     {kolonner.map((kolonne) => {
       const columnCls = classNames({
-        "adresseliste__rad--roed": kolonne.tekstfarge === Farge.Roed,
-        "adresseliste__rad--groenn": kolonne.tekstfarge === Farge.Groenn,
+        "adresselisterad--roed": kolonne.tekstfarge === Farge.Roed,
+        "adresselisterad--groenn": kolonne.tekstfarge === Farge.Groenn,
       });
 
       return (

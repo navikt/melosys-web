@@ -4,6 +4,8 @@ import * as Nav from "../../../../../../utils/navFrontend";
 
 import Adresserad from "../adresserad";
 
+import "./adresseheader.css";
+
 export enum Adressetype {
   Bostedsadresse = "Bostedsadresse",
   Oppholdsadresse = "Oppholdsadresse",
