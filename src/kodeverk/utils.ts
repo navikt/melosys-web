@@ -1,9 +1,6 @@
 import * as Koder from "./koder";
 import MKV from "../melosyskodeverk";
 
-export const erDoed = (personStatusKode: string) =>
-  [Koder.PersonStatus.DØD, Koder.PersonStatus.DØDD, MKV.Koder.personer].includes(personStatusKode);
-
 export const mapBehandlingstemaToBehandlingskategori = (behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:

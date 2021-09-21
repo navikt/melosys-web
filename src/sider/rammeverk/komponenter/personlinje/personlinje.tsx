@@ -33,11 +33,12 @@ const Navn = ({ kjoenn, navn }: { kjoenn: string; navn: string }) => (
 
 const Fnr = ({ fnr }: { fnr: string }) => <KopierbarTekst hovertekst="Kopier fødselsnummer">{fnr}</KopierbarTekst>;
 
-const Doed = () => (
-  <div className="personlinje_dod">
-    <span>(Død)</span> <Ikon.Kors className="ikon-doed" />
-  </div>
-);
+const Doed = ({ erDoed }: { erDoed: boolean }) =>
+  erDoed ? (
+    <div className="personlinje_dod">
+      <span>(Død)</span> <Ikon.Kors className="ikon-doed" />
+    </div>
+  ) : null;
 
 const Statsborgerskap = ({ statsborgerskap }: { statsborgerskap: string[] }) => (
   <div className="personlinje__statsborgerskap">{StringUtils.separerListeMedBindestrek(statsborgerskap)}</div>
@@ -59,7 +60,7 @@ const Personlinje = ({ behandlingID }: PersonlinjeProps) => {
       {personopplysninger ? (
         <div className="personlinje__personinfo">
           <Navn navn={personopplysninger.navn} kjoenn={personopplysninger.kjoenn} />
-          {personopplysninger.erDoed && <Doed />}
+          <Doed erDoed={personopplysninger.erDoed} />
           <Separator />
           <Fnr fnr={personopplysninger.fnr} />
           <Separator />
