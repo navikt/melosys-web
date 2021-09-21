@@ -42,4 +42,7 @@ const erGyldigFnr = (verdi) => {
  */
 const erGyldigDnr = (verdi) => erGyldigFnr(verdi);
 
-export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr };
+const tilSammensattNavn = (fornavn, mellomnavn, etternavn) =>
+  `${fornavn}${mellomnavn ? ` ${mellomnavn}` : ""} ${etternavn}`;
+
+export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr, tilSammensattNavn };
