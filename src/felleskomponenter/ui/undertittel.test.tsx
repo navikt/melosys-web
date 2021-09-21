@@ -5,7 +5,7 @@ import { shallow } from "enzyme";
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../utils/navFrontend";
 
-import Undertittel, { IkonOrientering } from "./undertittel";
+import Undertittel from "./undertittel";
 
 describe("undertittel", () => {
   const mockedProps = mock<ComponentProps<typeof Undertittel>>();
@@ -21,23 +21,11 @@ describe("undertittel", () => {
     expect(undertittel.find(Nav.Typo.Undertittel)).toHaveLength(1);
   });
 
-  it("kan vise ikon til venstre for tekst", () => {
+  it("viser et ikon", () => {
     props.ikon = Ikoner.ParagraphTwoColumns;
-    props.ikonOrientering = IkonOrientering.Venstre;
     const undertittel = shallow(<Undertittel {...props} />);
-    const navUndertittel = undertittel.find(Nav.Typo.Undertittel);
-    const ikonErTilVenstre = navUndertittel.children().first().is(Ikoner.ParagraphTwoColumns);
+    const ikon = undertittel.find(props.ikon);
 
-    expect(ikonErTilVenstre).toBe(true);
-  });
-
-  it("kan vise ikon til høyre for tekst", () => {
-    props.ikon = Ikoner.ParagraphTwoColumns;
-    props.ikonOrientering = IkonOrientering.Hoyre;
-    const undertittel = shallow(<Undertittel {...props} />);
-    const navUndertittel = undertittel.find(Nav.Typo.Undertittel);
-    const ikonErTilHoyre = navUndertittel.children().last().is(Ikoner.ParagraphTwoColumns);
-
-    expect(ikonErTilHoyre).toBe(true);
+    expect(ikon).toHaveLength(1);
   });
 });

@@ -3,7 +3,7 @@ import Knappelenke from "./knappelenke";
 import { KodeTermSelect } from "./kodeTermSelect";
 import Checkboxgruppe from "./checkboxgruppe";
 import ListevelgerFlervalg from "./listevelgerFlervalg";
-import Undertittel, { IkonOrientering as UndertittelIkonOrientering } from "./undertittel";
+import Undertittel from "./undertittel";
 import Elementskrift from "./elementskrift";
 import RedigerbarListe from "./redigerbarliste";
 import LesMerPanel from "./lesmerpanel";
@@ -17,7 +17,6 @@ export {
   Checkboxgruppe,
   ListevelgerFlervalg,
   Undertittel,
-  UndertittelIkonOrientering,
   Elementskrift,
   RedigerbarListe,
   LesMerPanel,
