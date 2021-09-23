@@ -5,7 +5,7 @@ import { Action } from "redux";
 import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import ReactHtmlParser from "react-html-parser";
+import parse from "html-react-parser";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
@@ -142,7 +142,7 @@ const VurderingBestemmelse = ({
       {bestemmelseTekst && (
         <Nav.Row>
           <Nav.Column xs="10" className="bestemmelseTekst">
-            <div>{ReactHtmlParser(bestemmelseTekst)}</div>
+            <div>{parse(bestemmelseTekst)}</div>
           </Nav.Column>
         </Nav.Row>
       )}
