@@ -20,7 +20,6 @@ import vurderingStartSchema from "./vurderingStartSchema";
 import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
-import { FeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
@@ -139,38 +138,10 @@ const VurderingStart = ({
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
-                ) : (
-                  <Skjema.Input
-                    datoFelt
-                    label="Fra og med:"
-                    feltNavn="fom"
-                    bredde="fullbredde"
-                    disabled={!redigerbart}
-                  />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
-                ) : (
-                  <Skjema.Input
-                    datoFelt
-                    label="Til og med:"
-                    feltNavn="tom"
-                    bredde="fullbredde"
-                    disabled={!redigerbart}
-                  />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.LandVelger

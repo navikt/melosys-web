@@ -43,8 +43,7 @@ describe("VurderingUtpekt", () => {
     expect(select).toHaveLength(1);
   });
 
-  // TODO: Fjern skip etter featuretoggle melosys.input.DATOFELT er fjernet
-  it.skip("viser lovvalgsperioden Norge er utpekt for", () => {
+  it("viser lovvalgsperioden Norge er utpekt for", () => {
     const vurderingUtpekt = shallow(<VurderingUtpekt {...props} />);
     const datovelgere = vurderingUtpekt.find(Skjema.Datovelger);
 

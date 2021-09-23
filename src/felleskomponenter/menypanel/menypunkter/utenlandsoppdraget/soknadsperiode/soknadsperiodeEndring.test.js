@@ -3,6 +3,8 @@ import React from "react";
 import Knapperad from "../../../../knapperad";
 
 import SoknadsperiodeEndring from "./soknadsperiodeEndring";
+import Datovelger from "../../../../datovelger";
+import * as Utils from "../../../../../utils";
 
 describe("SoknadsperiodeEndring", () => {
   const lagProps = () => ({
@@ -15,8 +17,7 @@ describe("SoknadsperiodeEndring", () => {
     vedFeltEndring: jest.fn(),
   });
 
-  // TODO: Fjern kommentar etter featuretoggle melosys.input.DATOFELT er fjernet. (Skip funket ikke for some reason)
-  /* describe("fom inputfelt", () => {
+  describe("fom inputfelt", () => {
     const props = lagProps();
     const soknadsperiodeEndring = shallow(<SoknadsperiodeEndring {...props} />);
     const fomInput = soknadsperiodeEndring.findWhere(
@@ -30,7 +31,7 @@ describe("SoknadsperiodeEndring", () => {
     });
 
     it("kaller vedFeltEndring ved change", () => {
-      const nyDato = "01.01.2011"
+      const nyDato = "01.01.2011";
       fomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
       expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
@@ -52,13 +53,13 @@ describe("SoknadsperiodeEndring", () => {
     });
 
     it("kaller vedFeltEndring ved change", () => {
-      const nyDato = "02.02.2012"
+      const nyDato = "02.02.2012";
       tomInput.simulate("change", Utils.dato.norskStringTilDate(nyDato));
 
       expect(props.vedFeltEndring).toHaveBeenCalledTimes(1);
       expect(props.vedFeltEndring).toHaveBeenLastCalledWith("soknadsperiodeTom", nyDato);
     });
-  }); */
+  });
 
   describe("Knapperad", () => {
     const props = lagProps();
