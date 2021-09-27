@@ -12,7 +12,6 @@ const Behandlingsmeny = ({
   visHenleggDialogHandle,
   apneTidligereBehandlinger,
   visAvsluttSakSomBortfaltDialogHandle,
-  visHenleggSak,
   visAvslagSoknadDialogHandle,
   visAvslagManglendeOpplysninger,
   visRevurderFagsakDialogHandle,
@@ -33,7 +32,7 @@ const Behandlingsmeny = ({
       <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>
         Legg tilbake i kø
       </Nav.Knapp>
-      {redigerbart && visHenleggSak && (
+      {redigerbart && (
         <Nav.Knapp mini className="innhold__element" onClick={visHenleggDialogHandle}>
           Henlegg sak
         </Nav.Knapp>

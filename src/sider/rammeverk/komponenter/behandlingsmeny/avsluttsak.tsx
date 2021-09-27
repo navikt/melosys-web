@@ -46,12 +46,11 @@ const AvsluttSak = ({
 
   const skalViseHenleggSak = () => {
     switch (behandlingskategori) {
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-        return redigerbart && !behandlingstypeErEndretPeriode;
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
         return redigerbart && !behandlingstemaErTrygdetid;
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
         return false;
+      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
