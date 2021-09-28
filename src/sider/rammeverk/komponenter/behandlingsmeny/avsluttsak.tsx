@@ -22,7 +22,7 @@ const AvsluttSak = ({
   redigerbart,
 }: avsluttSakProps) => {
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
-  console.log(behandlingstype);
+
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
