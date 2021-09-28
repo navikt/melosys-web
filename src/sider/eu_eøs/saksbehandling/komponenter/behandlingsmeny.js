@@ -16,7 +16,6 @@ const Behandlingsmeny = ({
   visAvslagManglendeOpplysninger,
   visRevurderFagsakDialogHandle,
   visRevurderFagsak,
-  visAvsluttSakSomBortfalt,
 }) => (
   <Nav.EkspanderbartpanelBase
     ariaTittel="Behandlingsmeny"
@@ -37,7 +36,7 @@ const Behandlingsmeny = ({
           Henlegg sak
         </Nav.Knapp>
       )}
-      {redigerbart && visAvsluttSakSomBortfalt && (
+      {redigerbart && (
         <Nav.Knapp mini className="innhold__element" onClick={visAvsluttSakSomBortfaltDialogHandle}>
           Avslutt sak som bortfalt
         </Nav.Knapp>
@@ -71,11 +70,6 @@ Behandlingsmeny.propTypes = {
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   visAvslagManglendeOpplysninger: PT.bool.isRequired,
   visRevurderFagsak: PT.bool.isRequired,
-  visAvsluttSakSomBortfalt: PT.bool,
-};
-
-Behandlingsmeny.defaultProps = {
-  visAvsluttSakSomBortfalt: true,
 };
 
 export default Behandlingsmeny;

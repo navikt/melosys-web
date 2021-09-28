@@ -288,9 +288,6 @@ class Saksbehandling extends Component {
                     }
                     visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                     visRevurderFagsak={visRevurderFagsak}
-                    visAvsluttSakSomBortfalt={
-                      behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
-                    }
                   />
                 )}
                 renderBehandlingsstatus={() => (

@@ -291,6 +291,7 @@ const Saksbehandling = ({
                   oppfriskSaksopplysningerHandle={visOppfriskModal}
                   visHenleggDialogHandle={visHenleggDialogHandle}
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                  visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   apneTidligereBehandlinger={apneTidligereBehandlinger}
                   visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}

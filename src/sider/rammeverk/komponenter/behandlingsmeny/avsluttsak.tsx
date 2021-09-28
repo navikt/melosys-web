@@ -22,7 +22,7 @@ const AvsluttSak = ({
   redigerbart,
 }: avsluttSakProps) => {
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
-
+  console.log(behandlingstype);
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
@@ -46,11 +46,12 @@ const AvsluttSak = ({
 
   const skalViseHenleggSak = () => {
     switch (behandlingskategori) {
+      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+        return redigerbart && !behandlingstypeErEndretPeriode;
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
         return redigerbart && !behandlingstemaErTrygdetid;
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
         return false;
-      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
@@ -63,14 +64,12 @@ const AvsluttSak = ({
   const skalViseAvsluttSak = () => {
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-        return redigerbart && !behandlingstypeErEndretPeriode;
-      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
-        return false;
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
         return redigerbart;
+      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
       default:
         return false;
     }
