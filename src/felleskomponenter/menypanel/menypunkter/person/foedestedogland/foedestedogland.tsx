@@ -19,15 +19,15 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
 
   if (value === undefined) return null;
 
-  const slettFoedestedOgLand = () => onChange({ foedested: null, foedeland: null });
+  const slettFoedestedOgLand = () => onChange(null);
 
   return (
     <EditerbartElement
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
-      harData={value.foedeland && value.foedested}
-      redigererRender={() => <EnkeltFoedestedSkjema redigerbart={redigerbart} overordnetFeltNavn="foedestedOgLand" />}
+      harData={value.foedested && value.foedeland}
+      redigererRender={() => <EnkeltFoedestedSkjema redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}
       ingenDataRender={(apneRedigering) => (
         <>

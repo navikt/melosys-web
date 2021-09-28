@@ -3,31 +3,27 @@ import React from "react";
 import * as Skjema from "../../../../skjema";
 import * as Nav from "../../../../../utils/navFrontend";
 
-import Landvelger from "../../../../skjema/landvelger";
-
 import "./enkeltfoedestedoglandskjema.css";
 
 interface EnkeltFoedestedSkjemaProps {
   redigerbart: boolean;
-  overordnetFeltNavn: string;
 }
 
-const Enkeltfoedestoglandedskjema = ({ overordnetFeltNavn, redigerbart }: EnkeltFoedestedSkjemaProps) => (
+const Enkeltfoedestoglandedskjema = ({ redigerbart }: EnkeltFoedestedSkjemaProps) => (
   <div className="enkeltFoedestedSkjema">
     <Nav.Row>
       <Nav.Column xs="5">
         <Skjema.Input
           disabled={!redigerbart}
-          bredde="fullbredde"
-          feltNavn={`${overordnetFeltNavn}.foedested`}
+          feltNavn="foedestedOgLand.foedested"
           label="Fødested"
-          datoFelt={false}
+          bredde="fullbredde"
         />
       </Nav.Column>
       <Nav.Column xs="6">
-        <Landvelger
+        <Skjema.LandVelger
           disabled={!redigerbart}
-          feltNavn={`${overordnetFeltNavn}.foedeland`}
+          feltNavn="foedestedOgLand.foedeland"
           label="Fødeland"
           bredde="fullbredde"
         />
