@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
 import { RootState } from "AppTypes";
-import { getFormValues, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import parse from "html-react-parser";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
@@ -21,16 +24,20 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
   initialValues: {
-    vedtak: ownProps.resultat?.vedtak || undefined,
-    innvilgelse: ownProps.resultat?.innvilgelse || undefined,
-    bestemmelse: ownProps.resultat?.bestemmelse || undefined,
+    vedtak: ownProps.resultat?.vedtak,
+    innvilgelse: ownProps.resultat?.innvilgelse,
+    bestemmelse: ownProps.resultat?.bestemmelse,
   },
-  vedtakValg: ownProps.data?.vedtakValg || undefined,
-  innvilgelseValg: ownProps.data?.innvilgelseValg || undefined,
-  bestemmelseValg: ownProps.data?.bestemmelseValg || undefined,
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  resetField: (field: string) => {
+    dispatch(change(KV.Form.Trygdeavtale.BESTEMMELSE, field, null));
+    dispatch(untouch(KV.Form.Trygdeavtale.BESTEMMELSE, field));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -52,17 +59,16 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  bestemmelseValg,
+  data: { vedtakValg, innvilgelseValg, bestemmelseValg, bestemmelseTekst },
   formIsValid,
   formValues,
   fortsett,
-  innvilgelseValg,
   tilbake,
   redigerbart,
+  resetField,
   resultat,
   steg,
   oppdaterStegData,
-  vedtakValg,
 }: PropsFromRedux & Props) => {
   useEffect(() => {
     if (formValues?.vedtak) {
@@ -76,6 +82,15 @@ const VurderingBestemmelse = ({
       });
     }
   }, [formValues]);
+
+  useEffect(() => {
+    resetField("innvilgelse");
+    resetField("bestemmelse");
+  }, [formValues?.vedtak]);
+
+  useEffect(() => {
+    resetField("bestemmelse");
+  }, [formValues?.innvilgelse]);
 
   if (!formValues) return null;
   return (
@@ -103,22 +118,35 @@ const VurderingBestemmelse = ({
       )}
 
       {formValues?.innvilgelse && !Utils._isEmpty(bestemmelseValg) && (
-        <Nav.Fieldset legend="Velg bestemmelse">
-          <Skjema.Select
-            label=""
-            feltNavn="bestemmelse"
-            disabled={!redigerbart}
-            emptyFieldText="Velg"
-            emptyFieldDisabled={!!formValues.bestemmelse}
-          >
-            {bestemmelseValg?.map((bestemmelse: KTObject) => (
-              <option key={bestemmelse.kode} value={bestemmelse.kode}>
-                {bestemmelse.term}
-              </option>
-            ))}
-          </Skjema.Select>
+        <Nav.Fieldset legend="Velg bestemmelse" className="bestemmelseValg">
+          <Nav.Row>
+            <Nav.Column xs="10">
+              <Skjema.Select
+                label=""
+                feltNavn="bestemmelse"
+                disabled={!redigerbart}
+                emptyFieldText="Velg"
+                emptyFieldDisabled={!!formValues.bestemmelse}
+              >
+                {bestemmelseValg?.map((bestemmelse: KTObject) => (
+                  <option key={bestemmelse.kode} value={bestemmelse.kode}>
+                    {bestemmelse.term}
+                  </option>
+                ))}
+              </Skjema.Select>
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Fieldset>
       )}
+
+      {bestemmelseTekst && (
+        <Nav.Row>
+          <Nav.Column xs="10" className="bestemmelseTekst">
+            <div>{parse(bestemmelseTekst)}</div>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
       <div className="fane__knapplinje">
         <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake

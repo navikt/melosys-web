@@ -29,6 +29,7 @@ export interface StegData {
   vedtakValg?: KTObject[];
   innvilgelseValg?: KTObject[];
   bestemmelseValg?: KTObject[];
+  bestemmelseTekst?: string;
   barn?: string[];
   ektefelle?: string;
 }
