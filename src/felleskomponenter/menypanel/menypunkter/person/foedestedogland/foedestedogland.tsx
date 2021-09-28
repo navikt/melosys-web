@@ -1,19 +1,31 @@
 import React from "react";
 import { Field, WrappedFieldProps } from "redux-form";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "AppTypes";
 
 import * as Mui from "../../../../ui";
 import * as KV from "../../../../../kodeverk";
 import * as Ikoner from "../../../../../resources/images";
+import * as Utils from "../../../../../utils";
+
+import { formSelectors } from "../../../../../ducks/form";
 
 import EditerbartElement from "../../editerbartElement";
-import EnkeltFoedestedSkjema from "./enkeltfoedestoglandedskjema";
+import Enkeltfoedestedoglandskjema from "./enkeltfoedestedoglandskjema";
 import Utfyltfoedestedogland from "./utfyltfoedestedogland";
 
-type InnerFoedestedProps = WrappedFieldProps & { redigerbart: boolean };
+const mapStateToProps = (state: RootState) => ({
+  behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+});
+
+const connector = connect(mapStateToProps);
+
+type InnerFoedestedProps = WrappedFieldProps & { redigerbart: boolean } & ConnectedProps<typeof connector>;
 
 const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
   const {
     redigerbart,
+    behandlingsgrunnlagFeilmeldinger,
     input: { value, onChange },
   } = props;
 
@@ -26,8 +38,9 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
+      onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
       harData={value.foedested && value.foedeland}
-      redigererRender={() => <EnkeltFoedestedSkjema redigerbart={redigerbart} />}
+      redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}
       ingenDataRender={(apneRedigering) => (
         <>
@@ -55,4 +68,4 @@ const FoedestedWrapper = ({ ...rest }: FoedestedWrapperProps) => (
   <Field name="foedestedOgLand" component={InnerFoedestedComponent} props={rest} />
 );
 
-export default FoedestedWrapper;
+export default connector(FoedestedWrapper);

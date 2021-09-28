@@ -5,12 +5,12 @@ import * as Nav from "../../../../../utils/navFrontend";
 
 import "./enkeltfoedestedoglandskjema.css";
 
-interface EnkeltFoedestedSkjemaProps {
+interface EnkeltFoedestedOgLandSkjemaProps {
   redigerbart: boolean;
 }
 
-const Enkeltfoedestoglandedskjema = ({ redigerbart }: EnkeltFoedestedSkjemaProps) => (
-  <div className="enkeltFoedestedSkjema">
+const Enkeltfoedestedoglandskjema = ({ redigerbart }: EnkeltFoedestedOgLandSkjemaProps) => (
+  <div className="enkeltFoedestedOgLandSkjema">
     <Nav.Row>
       <Nav.Column xs="5">
         <Skjema.Input
@@ -32,4 +32,4 @@ const Enkeltfoedestoglandedskjema = ({ redigerbart }: EnkeltFoedestedSkjemaProps
   </div>
 );
 
-export default Enkeltfoedestoglandedskjema;
+export default Enkeltfoedestedoglandskjema;
