@@ -22,7 +22,6 @@ import { ReactComponent as Varsel } from "./ikon-steg-varsel.svg";
 import { ReactComponent as Globe } from "./line-version-globe-1.svg";
 import { ReactComponent as GreenCheckmark } from "./green-checkmark.svg";
 import { ReactComponent as Helikopter } from "./helikopter.svg";
-import { ReactComponent as House } from "./house.svg";
 import { ReactComponent as InformationCircle } from "./infomationcircle.svg";
 import { ReactComponent as IkonSak } from "./ikon-sak.svg";
 import { ReactComponent as Inntekt } from "./ikon-inntekt.svg";
@@ -76,7 +75,6 @@ export {
   GreenCheckmark,
   Helikopter,
   HentOpplysninger,
-  House,
   IkonSak,
   InformationCircle,
   Inntekt,
