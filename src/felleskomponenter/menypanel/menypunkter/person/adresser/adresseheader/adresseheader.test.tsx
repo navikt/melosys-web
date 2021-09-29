@@ -26,19 +26,19 @@ describe("Adresseheader", () => {
     expect(adresserad).toHaveLength(1);
     expect(kolonner).toEqual([
       {
-        innhold: <Nav.Typo.Element>{Adressetype.Bostedsadresse}</Nav.Typo.Element>,
+        innhold: <Nav.Typo.Normaltekst>{Adressetype.Bostedsadresse}</Nav.Typo.Normaltekst>,
         bredde: "3",
       },
       {
-        innhold: <Nav.Typo.Element>Register</Nav.Typo.Element>,
+        innhold: <Nav.Typo.Normaltekst>Register</Nav.Typo.Normaltekst>,
         bredde: "3",
       },
       {
-        innhold: <Nav.Typo.Element>Kilde</Nav.Typo.Element>,
+        innhold: <Nav.Typo.Normaltekst>Kilde</Nav.Typo.Normaltekst>,
         bredde: "3",
       },
       {
-        innhold: <Nav.Typo.Element>Gyldig f.o.m.</Nav.Typo.Element>,
+        innhold: <Nav.Typo.Normaltekst>Gyldig f.o.m.</Nav.Typo.Normaltekst>,
         bredde: "3",
       },
     ]);
@@ -67,7 +67,7 @@ describe("Adresseheader", () => {
         bredde: "3",
       },
       {
-        innhold: <Nav.Typo.Element>Gyldig f.o.m. - t.o.m.</Nav.Typo.Element>,
+        innhold: <Nav.Typo.Normaltekst>Gyldig f.o.m. - t.o.m.</Nav.Typo.Normaltekst>,
         bredde: "3",
       },
     ]);
