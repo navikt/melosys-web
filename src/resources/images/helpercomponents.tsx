@@ -1,17 +1,18 @@
 import React from "react";
 import * as Ikon from "./";
+import { KjoennType } from "../../graphql";
 
 type KjoennProps = {
   className: string;
-  kjoennKode: string;
+  kjoenn: KjoennType;
 };
 
-export const Kjoenn = ({ className, kjoennKode }: KjoennProps) => {
-  if (!kjoennKode) return <Ikon.Ukjentkjoenn className={className} />;
-  switch (kjoennKode) {
-    case "M":
+export const Kjoenn = ({ className, kjoenn }: KjoennProps) => {
+  if (!kjoenn) return <Ikon.Ukjentkjoenn className={className} />;
+  switch (kjoenn) {
+    case KjoennType.Mann:
       return <Ikon.Mann className={className} />;
-    case "K":
+    case KjoennType.Kvinne:
       return <Ikon.Kvinne className={className} />;
     default:
       return <Ikon.Ukjentkjoenn className={className} />;
