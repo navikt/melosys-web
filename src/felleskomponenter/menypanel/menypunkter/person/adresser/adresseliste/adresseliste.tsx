@@ -93,12 +93,9 @@ const Adresseliste = ({ adressetype, adresser }: AdresselisteProps) => {
                 bredde: "3",
               },
               {
-                innhold: (
-                  <>
-                    {Utils.dato.formatterDatoTilNorsk(adresse.gyldigFraOgMed)} -{" "}
-                    {Utils.dato.formatterDatoTilNorsk(adresse.gyldigTilOgMed)}
-                  </>
-                ),
+                innhold: `${adresse.gyldigFraOgMed ? Utils.dato.formatterDatoTilNorsk(adresse.gyldigFraOgMed) : ""} - ${
+                  adresse.gyldigTilOgMed ? Utils.dato.formatterDatoTilNorsk(adresse.gyldigTilOgMed) : ""
+                }`,
                 bredde: "3",
                 tekstfarge: Farge.Roed,
               },
