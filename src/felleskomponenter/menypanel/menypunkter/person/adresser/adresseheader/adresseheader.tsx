@@ -20,14 +20,15 @@ interface AdresseheaderProps {
 const Adresseheader = ({ adressetype, visBareFomTom }: AdresseheaderProps) => {
   const periodetekst = `Gyldig f.o.m.${visBareFomTom ? " - t.o.m." : ""}`;
   const innhold = {
-    adressetype: visBareFomTom ? "" : <Nav.Typo.Element>{Adressetype[adressetype]}</Nav.Typo.Element>,
-    register: visBareFomTom ? "" : <Nav.Typo.Element>Register</Nav.Typo.Element>,
-    kilde: visBareFomTom ? "" : <Nav.Typo.Element>Kilde</Nav.Typo.Element>,
-    periode: <Nav.Typo.Element>{periodetekst}</Nav.Typo.Element>,
+    adressetype: visBareFomTom ? "" : <Nav.Typo.Normaltekst>{Adressetype[adressetype]}</Nav.Typo.Normaltekst>,
+    register: visBareFomTom ? "" : <Nav.Typo.Normaltekst>Register</Nav.Typo.Normaltekst>,
+    kilde: visBareFomTom ? "" : <Nav.Typo.Normaltekst>Kilde</Nav.Typo.Normaltekst>,
+    periode: <Nav.Typo.Normaltekst>{periodetekst}</Nav.Typo.Normaltekst>,
   };
 
   return (
     <Adresserad
+      className="adresselisteheader"
       kolonner={[
         {
           innhold: innhold.adressetype,

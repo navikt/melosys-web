@@ -20,23 +20,28 @@ interface Kolonne {
 
 interface AdresseradProps {
   kolonner: Kolonne[];
+  className?: string;
 }
 
-const Adresserad = ({ kolonner }: AdresseradProps) => (
-  <Nav.Row className="adresselisterad">
-    {kolonner.map((kolonne) => {
-      const columnCls = classNames({
-        "adresselisterad--roed": kolonne.tekstfarge === Farge.Roed,
-        "adresselisterad--groenn": kolonne.tekstfarge === Farge.Groenn,
-      });
+const Adresserad = ({ kolonner, className }: AdresseradProps) => {
+  const cls = classNames("adresselisterad", className);
 
-      return (
-        <Nav.Column className={columnCls} key={Utils._uuid()} xs={kolonne.bredde}>
-          {kolonne.innhold}
-        </Nav.Column>
-      );
-    })}
-  </Nav.Row>
-);
+  return (
+    <Nav.Row className={cls}>
+      {kolonner.map((kolonne) => {
+        const columnCls = classNames({
+          "adresselisterad--roed": kolonne.tekstfarge === Farge.Roed,
+          "adresselisterad--groenn": kolonne.tekstfarge === Farge.Groenn,
+        });
+
+        return (
+          <Nav.Column className={columnCls} key={Utils._uuid()} xs={kolonne.bredde}>
+            {kolonne.innhold}
+          </Nav.Column>
+        );
+      })}
+    </Nav.Row>
+  );
+};
 
 export default Adresserad;
