@@ -32,6 +32,37 @@ type Bostedsadresse = {
 
 
 
+type Familiemedlem = {
+  __typename?: 'Familiemedlem';
+  navn: Scalars['String'];
+  ident: Scalars['String'];
+  relasjonsrolle: Familierelasjonsrolle;
+  alder?: Maybe<Scalars['Int']>;
+  foreldreansvar?: Maybe<Scalars['String']>;
+  fnrAnnenForelder?: Maybe<Scalars['String']>;
+  sivilstand?: Maybe<Scalars['String']>;
+  sivilstandGyldighetsperiodeFom?: Maybe<Scalars['Date']>;
+};
+
+enum Familierelasjonsrolle {
+  Barn = 'BARN',
+  Far = 'FAR',
+  Mor = 'MOR',
+  RelatertVedSivilstand = 'RELATERT_VED_SIVILSTAND'
+}
+
+type Folkeregisterpersonstatus = {
+  __typename?: 'Folkeregisterpersonstatus';
+  kode: Scalars['String'];
+  tekst: Scalars['String'];
+};
+
+enum KjoennType {
+  Kvinne = 'KVINNE',
+  Mann = 'MANN',
+  Ukjent = 'UKJENT'
+}
+
 type Kontaktadresse = {
   __typename?: 'Kontaktadresse';
   coAdressenavn?: Maybe<Scalars['String']>;
@@ -44,6 +75,13 @@ type Kontaktadresse = {
   erHistorisk: Scalars['Boolean'];
 };
 
+
+type Navn = {
+  __typename?: 'Navn';
+  fornavn: Scalars['String'];
+  mellomnavn?: Maybe<Scalars['String']>;
+  etternavn: Scalars['String'];
+};
 
 type Oppholdsadresse = {
   __typename?: 'Oppholdsadresse';
@@ -59,8 +97,14 @@ type Oppholdsadresse = {
 type Personopplysninger = {
   __typename?: 'Personopplysninger';
   bostedsadresser: Array<Bostedsadresse>;
+  familiemedlemmer: Array<Familiemedlem>;
+  folkeregisteridentifikator?: Maybe<Scalars['String']>;
+  folkeregisterpersonstatus?: Maybe<Folkeregisterpersonstatus>;
+  kjoenn: KjoennType;
   kontaktadresser: Array<Kontaktadresse>;
+  navn: Navn;
   oppholdsadresser: Array<Oppholdsadresse>;
+  sivilstand: Array<Sivilstand>;
   statsborgerskap: Array<Statsborgerskap>;
 };
 
@@ -89,6 +133,17 @@ type SemistrukturertAdresseformat = {
   postnummer?: Maybe<Scalars['String']>;
   poststed?: Maybe<Scalars['String']>;
   land: Scalars['String'];
+};
+
+type Sivilstand = {
+  __typename?: 'Sivilstand';
+  type: Scalars['String'];
+  relatertVedSivilstand?: Maybe<Scalars['String']>;
+  gyldigFraOgMed?: Maybe<Scalars['Date']>;
+  bekreftelsesdato?: Maybe<Scalars['Date']>;
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
 };
 
 type Statsborgerskap = {

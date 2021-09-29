@@ -25,43 +25,14 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurderingArtikkel16MottaSvarSchema from "./vurderingArtikkel16MottaSvarSchema";
 
 import "./vurderingArtikkel16MottaSvar.css";
-import { FeatureToggle } from "../../../featuretoggle";
 
 const Periode = ({ redigerbart }) => (
   <Nav.Row>
     <Nav.Column xs="6">
-      <FeatureToggle togglename="melosys.input.DATOFELT">
-        {(status) =>
-          status === "enabled" ? (
-            <Skjema.Datovelger label="Startdato" feltNavn="endretPeriode.fom" disabled={!redigerbart} />
-          ) : (
-            <Skjema.Input
-              bredde="fullbredde"
-              label="Startdato"
-              feltNavn="endretPeriode.fom"
-              disabled={!redigerbart}
-              datoFelt
-            />
-          )
-        }
-      </FeatureToggle>
+      <Skjema.Datovelger label="Startdato" feltNavn="endretPeriode.fom" disabled={!redigerbart} />
     </Nav.Column>
     <Nav.Column xs="6">
-      <FeatureToggle togglename="melosys.input.DATOFELT">
-        {(status) =>
-          status === "enabled" ? (
-            <Skjema.Datovelger label="Sluttdato" feltNavn="endretPeriode.tom" disabled={!redigerbart} />
-          ) : (
-            <Skjema.Input
-              bredde="fullbredde"
-              label="Sluttdato"
-              feltNavn="endretPeriode.tom"
-              disabled={!redigerbart}
-              datoFelt
-            />
-          )
-        }
-      </FeatureToggle>
+      <Skjema.Datovelger label="Sluttdato" feltNavn="endretPeriode.tom" disabled={!redigerbart} />
     </Nav.Column>
   </Nav.Row>
 );

@@ -88,4 +88,22 @@ describe("Tester person.js:", () => {
       expect(Person.erGyldigDnr(mockData4)).toEqual(forventet);
     });
   });
+
+  describe("tilSammensattNavn", () => {
+    test("riktig med mellomnavn", () => {
+      const fornavn = "Per";
+      const mellomnavn = "Pål";
+      const etternavn = "Askeladden";
+      const forventet = "Per Pål Askeladden";
+      expect(Person.tilSammensattNavn(fornavn, mellomnavn, etternavn)).toEqual(forventet);
+    });
+
+    test("riktig uten mellomnavn", () => {
+      const fornavn = "Espen";
+      const mellomnavn = null;
+      const etternavn = "Askeladden";
+      const forventet = "Espen Askeladden";
+      expect(Person.tilSammensattNavn(fornavn, mellomnavn, etternavn)).toEqual(forventet);
+    });
+  });
 });

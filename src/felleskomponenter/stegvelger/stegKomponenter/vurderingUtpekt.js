@@ -1,7 +1,7 @@
-import React, { useEffect, Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { reduxForm, getFormValues } from "redux-form";
+import { getFormValues, reduxForm } from "redux-form";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as KV from "../../../kodeverk";
@@ -29,7 +29,6 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.css";
-import { FeatureToggle } from "../../../featuretoggle";
 
 const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleLovvalg.filter(
   ({ kode }) =>
@@ -155,26 +154,10 @@ export const VurderingUtpekt = ({
           <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
           <Nav.Row>
             <Nav.Column xs="6">
-              <FeatureToggle togglename="melosys.input.DATOFELT">
-                {(status) =>
-                  status === "enabled" ? (
-                    <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
-                  ) : (
-                    <Skjema.Input datoFelt label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
-                  )
-                }
-              </FeatureToggle>
+              <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="6">
-              <FeatureToggle togglename="melosys.input.DATOFELT">
-                {(status) =>
-                  status === "enabled" ? (
-                    <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
-                  ) : (
-                    <Skjema.Input datoFelt label="Til og med" feltNavn="tom" disabled={!redigerbart} />
-                  )
-                }
-              </FeatureToggle>
+              <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>

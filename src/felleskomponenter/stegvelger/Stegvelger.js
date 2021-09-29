@@ -478,6 +478,7 @@ class Stegvelger extends Component {
       lagreAnmodningsperioderHandler,
       lagreUtpekingsperioderHandler,
       sakstype,
+      anmodningErSendtUtland,
     } = this.props;
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
@@ -485,11 +486,14 @@ class Stegvelger extends Component {
     if (redigerbart) {
       if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
-        await lagreAvklartefaktaHandler();
-        await lagreVilkarHandler();
         await lagreLovvalgsperioderHandler();
-        await lagreAnmodningsperioderHandler();
-        await lagreUtpekingsperioderHandler();
+
+        if (!anmodningErSendtUtland) {
+          await lagreAvklartefaktaHandler();
+          await lagreVilkarHandler();
+          await lagreAnmodningsperioderHandler();
+          await lagreUtpekingsperioderHandler();
+        }
       }
 
       if (this.erSisteSteg(nyttStegNummer)) {
@@ -581,6 +585,7 @@ Stegvelger.propTypes = {
   behandlingsgrunnlagFeilmeldinger: PT.object.isRequired,
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
+  anmodningErSendtUtland: PT.bool.isRequired,
   oppdaterAnmodningsPerioder: PT.func.isRequired,
   lagreAnmodningsperioderHandler: PT.func,
   lagreUtpekingsperioderHandler: PT.func.isRequired,
@@ -656,6 +661,7 @@ Stegvelger.defaultProps = {
 
 const mapStateToProps = (state) => ({
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
+  anmodningErSendtUtland: anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(state),
   anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
   arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
