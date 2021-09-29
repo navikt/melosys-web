@@ -12,7 +12,7 @@ interface KopierbarTekstProps {
 }
 
 const KopierbarTekst = ({ hovertekst, children }: KopierbarTekstProps) => {
-  const [visHoverTekst, setVisHoverTekst] = useState(true);
+  const [visHoverTekst, setVisHoverTekst] = useState(false);
   const [erKopiert, setErKopiert] = useState(false);
 
   useEffect(() => {

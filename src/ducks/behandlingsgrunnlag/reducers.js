@@ -307,6 +307,7 @@ export default function reducer(state = initialState, action) {
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
+            foedestedOgLand: dokument.foedestedOgLand,
             medfolgendeFamilie: [
               ...dokument.medfolgendeBarn
                 .filter((enkeltBarn) => enkeltBarn.fnr && enkeltBarn.navn)

@@ -65,6 +65,10 @@ const PersonOpplysningerPropType = PT.shape({
       landkode: PT.string,
     })
   ),
+  foedestedOgLand: PT.shape({
+    foedested: PT.string,
+    foedeland: PT.string,
+  }),
 });
 const SelvstendigArbeidPropType = PT.shape({
   erSelvstendig: PT.bool,

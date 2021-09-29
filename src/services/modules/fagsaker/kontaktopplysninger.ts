@@ -4,6 +4,7 @@ import { API_BASE_URL, FAGSAKER } from "../../api-constants";
 export interface HentResDto {
   kontaktorgnr: string | null;
   kontaktnavn: string | null;
+  kontakttelefon: string | null;
 }
 
 export const hent = (saksnr: string, juridiskorgnr: string): Promise<HentResDto> =>
@@ -12,6 +13,7 @@ export const hent = (saksnr: string, juridiskorgnr: string): Promise<HentResDto>
 export interface SendReqDto {
   kontaktorgnr: string | null;
   kontaktnavn: string | null;
+  kontakttelefon: string | null;
 }
 
 export const send = (saksnr: string, juridiskorgnr: string, data: SendReqDto) =>

@@ -6,6 +6,7 @@ import { BehandlingsgrunnlagResDto, BehandlingsgrunnlagReqDto } from "./types";
 
 export const hent = (behandlingID: number): Promise<BehandlingsgrunnlagResDto> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGSGRUNNLAG}/${behandlingID}`);
+
 export const send = (
   behandlingID: number,
   behandlingsgrunnlag: BehandlingsgrunnlagReqDto

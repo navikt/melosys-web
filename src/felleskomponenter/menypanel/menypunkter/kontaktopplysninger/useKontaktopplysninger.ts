@@ -13,13 +13,18 @@ const useKontaktopplysninger = (
   const [kontaktopplysninger, setKontaktopplysninger] = useState<KontaktOpplysning>({
     kontaktorgnr: "",
     kontaktnavn: "",
+    kontakttelefon: "",
   });
 
   useEffect(() => {
     if (!Utils.organisasjon.erOrgnrGyldig(orgnr)) return;
 
-    finnKontaktopplysninger(saksnummer, orgnr).then(({ kontaktnavn, kontaktorgnr }) => {
-      setKontaktopplysninger({ kontaktnavn: kontaktnavn || undefined, kontaktorgnr: kontaktorgnr || undefined });
+    finnKontaktopplysninger(saksnummer, orgnr).then(({ kontaktnavn, kontaktorgnr, kontakttelefon }) => {
+      setKontaktopplysninger({
+        kontaktnavn: kontaktnavn || undefined,
+        kontaktorgnr: kontaktorgnr || undefined,
+        kontakttelefon: kontakttelefon || undefined,
+      });
     });
   }, [orgnr]);
 
@@ -42,6 +47,7 @@ const useKontaktopplysninger = (
     const data = {
       kontaktorgnr: kontaktopplysninger.kontaktorgnr || null,
       kontaktnavn: kontaktopplysninger.kontaktnavn || null,
+      kontakttelefon: kontaktopplysninger.kontakttelefon || null,
     };
 
     try {

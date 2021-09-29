@@ -21,7 +21,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
 }: EnkeltArbeidsforholdNorgeRedigeringUtfortProps) => {
   const [kontaktopplysninger] = useAsyncCallbackState(
     () => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, org.orgnr),
-    { kontaktnavn: null, kontaktorgnr: null },
+    { kontaktnavn: null, kontaktorgnr: null, kontakttelefon: null },
     [saksnummer, org.orgnr]
   );
   const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Organisasjon>>(
@@ -40,6 +40,10 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
           <Nav.Column xs="5">
             <Nav.Typo.Normaltekst>Kontaktperson:</Nav.Typo.Normaltekst>
             <Nav.Typo.Element>{kontaktopplysninger.kontaktnavn || "Ikke oppgitt"}</Nav.Typo.Element>
+          </Nav.Column>
+          <Nav.Column xs="5">
+            <Nav.Typo.Normaltekst>Telefonnummer:</Nav.Typo.Normaltekst>
+            <Nav.Typo.Element>{kontaktopplysninger.kontakttelefon || "Ikke oppgitt"}</Nav.Typo.Element>
           </Nav.Column>
         </Nav.Row>
         {!Utils._isEmpty(kontaktopplysningerOrg) ? (
