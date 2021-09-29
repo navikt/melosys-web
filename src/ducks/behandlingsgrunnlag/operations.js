@@ -147,7 +147,6 @@ export function lagre() {
     const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(getState());
 
     const data = lagBehandlingsgrunnlagData(behandlingstema, behandlingsgrunnlag);
-    if (!Utils._isEmpty(formSelectors.SoknadErrorsSelector(getState()))) return null;
 
     return dispatch(send(bid, { data }));
   };

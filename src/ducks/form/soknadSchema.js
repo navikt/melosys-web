@@ -123,9 +123,13 @@ const medfolgendeBarn = object().shape({
 const foedestedOgLandSchema = object()
   .nullable()
   .shape({
-    foedested: string().required(
-      lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
-    ),
+    foedested: string()
+      .required(
+        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
+      )
+      .erIkkeBlank(
+        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
+      ),
     foedeland: string().required(
       lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødeland kreves")
     ),

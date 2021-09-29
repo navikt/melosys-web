@@ -95,6 +95,7 @@ const EditerbartElement = ({
     if (onLagreClick) {
       try {
         const validert = await onLagreClick(event);
+        console.log(validert);
         if (!validert) return;
       } catch (error) {
         return;

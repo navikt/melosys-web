@@ -21,6 +21,7 @@ describe("Behandlingsgrunnlag operations", () => {
       form: {
         [KV.Form.SOKNAD]: {
           values: {},
+          syncErrors: {},
         },
         [KV.Form.VURDER_UTPEKING]: {
           values: {},
