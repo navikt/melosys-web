@@ -10,6 +10,7 @@ function InnerInputComponent({
   input,
   forhandsvalgt,
   meta, // eslint-disable-line no-unused-vars
+  customOnChange,
   ...rest
 }) {
   const inputProps = {
@@ -32,6 +33,10 @@ function InnerInputComponent({
       }}
       feil={feil}
       onFocus={() => {}}
+      onChange={(event) => {
+        inputProps.onChange(event);
+        customOnChange();
+      }}
     />
   );
 }
@@ -40,12 +45,14 @@ InnerInputComponent.defaultProps = {
   input: undefined,
   meta: undefined,
   forhandsvalgt: false,
+  customOnChange: () => {},
 };
 
 InnerInputComponent.propTypes = {
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   forhandsvalgt: PT.bool,
+  customOnChange: PT.func,
 };
 
 /** Redux støtter i utgangspunktet ikke boolske valg i
