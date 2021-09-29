@@ -6,12 +6,13 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 import * as Ikon from "../../../../resources/images";
 
-import hentPersonopplysninger from "./personopplysninger";
+import hentPersonopplysninger from "./hentpersonopplysninger";
 import Behandlingsmeny from "../behandlingsmeny/behandlingsmeny";
 import KopierbarTekst from "../../../../felleskomponenter/kopierbarTekst";
 
 import "./personlinje.css";
 import * as StringUtils from "../../../../utils/streng";
+import { KjoennType } from "../../../../graphql";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -24,7 +25,7 @@ type PersonlinjeProps = PropsFromRedux & {
   behandlingID: number;
 };
 
-const Navn = ({ kjoenn, navn }: { kjoenn: string; navn: string }) => (
+const Navn = ({ kjoenn, navn }: { kjoenn: KjoennType; navn: string }) => (
   <div className="personlinje__navn">
     <Ikon.Kjoenn kjoenn={kjoenn} className="ikon-kjoenn" />
     {navn}
