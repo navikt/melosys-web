@@ -21,7 +21,6 @@ const Redigerer = ({
           feltNavn={`${overordnetFeltNavn}.virksomhetNavn`}
           disabled={!redigerbart}
           bredde="fullbredde"
-          datoFelt={false}
         />
       </Nav.Column>
     </Nav.Row>

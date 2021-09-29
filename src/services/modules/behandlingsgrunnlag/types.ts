@@ -38,6 +38,10 @@ type MedfolgendeBarn = {
   navn: string | null;
   relasjonsrolle: "BARN" | "EKTEFELLE_SAMBOER";
 }[];
+type FoedestedOgLand = {
+  foedested: string;
+  foedeland: Landkode;
+};
 type Navn = string | null;
 type Foretakutland = {
   uuid: string;
@@ -239,6 +243,7 @@ export interface BehandlingsgrunnlagResDto {
 interface Personopplysninger {
   utenlandskIdent: UtenlandskIdent[];
   medfolgendeFamilie: MedfolgendeBarn;
+  foedestedOgLand: FoedestedOgLand;
 }
 
 interface Oppholdutland {

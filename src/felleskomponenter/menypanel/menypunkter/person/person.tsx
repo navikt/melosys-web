@@ -21,6 +21,7 @@ import UtenlandskIdent from "./utenlandskident";
 import ExpandableList from "../../../expandablelist";
 import Statsborgerskapsliste from "./statsborgerskapsliste";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import FoedestedOgLand from "./foedestedogland";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
@@ -205,7 +206,10 @@ export const Person = ({
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Column xs="7">
+            <Nav.Column xs="6">
+              <FoedestedOgLand redigerbart={redigerbart} />
+            </Nav.Column>
+            <Nav.Column xs="6">
               <UtenlandskIdent redigerbart={redigerbart} />
             </Nav.Column>
           </Nav.Row>

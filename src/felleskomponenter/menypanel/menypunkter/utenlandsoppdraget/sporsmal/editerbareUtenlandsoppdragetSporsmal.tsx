@@ -25,8 +25,8 @@ interface PeriodeSvarProps {
 
 const PeriodeSvar = ({ fomFeltNavn, tomFeltNavn }: PeriodeSvarProps) => (
   <>
-    <Skjema.Input datoFelt feltNavn={fomFeltNavn} label="Fra og med:" />
-    <Skjema.Input datoFelt feltNavn={tomFeltNavn} label="Til og med:" />
+    <Skjema.Datovelger feltNavn={fomFeltNavn} label="Fra og med:" />
+    <Skjema.Datovelger feltNavn={tomFeltNavn} label="Til og med:" />
   </>
 );
 

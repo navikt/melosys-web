@@ -38,6 +38,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MenypanelProps = PropsFromRedux & {
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
+  visOppdaterRegisteropplysninger?: boolean;
 };
 
 export const Menypanel = ({
@@ -48,6 +49,7 @@ export const Menypanel = ({
   visMenypanel,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
+  visOppdaterRegisteropplysninger = true,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [menypanelFeilmelding, setMenypanelFeilmelding] = useState("");
@@ -106,10 +108,12 @@ export const Menypanel = ({
           </Nav.AlertStripe>
         )}
       </div>
-      <OppdaterRegisteropplysninger
-        sistOppdatert={formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
-        oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-      />
+      {visOppdaterRegisteropplysninger && redigerbart && (
+        <OppdaterRegisteropplysninger
+          sistOppdatert={formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
+          oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        />
+      )}
       <div className="menypanel">
         <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
         <Nav.Panel className="content">{activeContent || <div />}</Nav.Panel>

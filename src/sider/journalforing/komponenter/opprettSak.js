@@ -136,26 +136,10 @@ const OpprettFagsak = (props) => {
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
               <Nav.Column xs="6">
-                <FeatureToggle togglename="melosys.input.DATOFELT">
-                  {(status) =>
-                    status === "enabled" ? (
-                      <Skjema.Datovelger label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
-                    ) : (
-                      <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
-                    )
-                  }
-                </FeatureToggle>
+                <Skjema.Datovelger label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
               </Nav.Column>
               <Nav.Column xs="6">
-                <FeatureToggle togglename="melosys.input.DATOFELT">
-                  {(status) =>
-                    status === "enabled" ? (
-                      <Skjema.Datovelger label="Til" feltNavn="journalforingPeriodeTilOgMed" />
-                    ) : (
-                      <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
-                    )
-                  }
-                </FeatureToggle>
+                <Skjema.Datovelger label="Til" feltNavn="journalforingPeriodeTilOgMed" />
               </Nav.Column>
             </Nav.Row>
           </Nav.Fieldset>

@@ -1,0 +1,7 @@
+{
+  "APP_NAME": "melosys-web",
+  "REDIS_APP_NAME": "melosys-web-redis",
+  "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.teammelosys",
+  "APP_URL_MELOSYS": "http://melosys.teammelosys",
+  "INGRESS": "https://melosys.dev.intern.nav.no"
+}

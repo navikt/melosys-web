@@ -1,6 +1,6 @@
-import React, { FormEventHandler, useEffect, useCallback } from "react";
+import React, { FormEventHandler, useCallback, useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { reduxForm, InjectedFormProps, getFormValues } from "redux-form";
+import { getFormValues, InjectedFormProps, reduxForm } from "redux-form";
 import { RootState } from "AppTypes";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -25,10 +25,12 @@ const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   formValues: getFormValues(KV.Form.SOKNAD)(state),
   initialValues: {
     utenlandskIdent: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
+    foedestedOgLand: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).foedestedOgLand,
     medfolgendeEktefelleSamboer: behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state),
     arbeidsgiverBekrefterUtsendelse: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
       .arbeidsgiverBekrefterUtsendelse,
@@ -191,6 +193,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SoknadProps = PropsFromRedux & {
   startOgVisOppfriskModal: () => void;
+  visOppdaterRegisteropplysninger?: boolean;
 };
 
 const Soknad = ({
@@ -198,10 +201,14 @@ const Soknad = ({
   startOgVisOppfriskModal,
   formValues,
   redigerbart,
+  visOppdaterRegisteropplysninger,
+  behandlingsgrunnlagFeilmeldinger,
 }: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
   const debouncedLagreBehandlingsgrunnlag = useCallback(Utils._debounce(lagreBehandlingsgrunnlag, 1000), []);
+  const validertOk = Utils._isEmpty(behandlingsgrunnlagFeilmeldinger);
+
   useEffect(() => {
-    if (redigerbart) debouncedLagreBehandlingsgrunnlag();
+    if (redigerbart && validertOk) debouncedLagreBehandlingsgrunnlag();
   }, [formValues, redigerbart]);
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
@@ -215,7 +222,10 @@ const Soknad = ({
 
   return (
     <form name="soknad" id="soknad" onSubmit={submitHandler}>
-      <Menypanel lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
+      <Menypanel
+        lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+        visOppdaterRegisteropplysninger={visOppdaterRegisteropplysninger}
+      />
     </form>
   );
 };

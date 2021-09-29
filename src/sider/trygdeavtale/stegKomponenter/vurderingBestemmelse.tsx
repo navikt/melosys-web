@@ -1,13 +1,17 @@
 import React, { useEffect } from "react";
 import { RootState } from "AppTypes";
-import { getFormValues, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import { change, getFormValues, reduxForm, untouch } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import parse from "html-react-parser";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../utils/navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Utils from "../../../utils";
 
 import { formSelectors } from "../../../ducks/form";
 
@@ -20,16 +24,20 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
   formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
   initialValues: {
-    vedtak: ownProps.resultat?.vedtakValg || undefined,
-    innvilgelse: ownProps.resultat?.innvilgelseValg || undefined,
-    bestemmelse: ownProps.resultat?.bestemmelseValg || undefined,
+    vedtak: ownProps.resultat?.vedtak,
+    innvilgelse: ownProps.resultat?.innvilgelse,
+    bestemmelse: ownProps.resultat?.bestemmelse,
   },
-  bestemmelseValg: ownProps.data?.bestemmelseValg || undefined,
-  innvilgelseValg: ownProps.data?.innvilgelseValg || undefined,
-  vedtakValg: ownProps.data?.vedtakValg || undefined,
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  resetField: (field: string) => {
+    dispatch(change(KV.Form.Trygdeavtale.BESTEMMELSE, field, null));
+    dispatch(untouch(KV.Form.Trygdeavtale.BESTEMMELSE, field));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -51,30 +59,38 @@ interface Props {
 }
 
 const VurderingBestemmelse = ({
-  bestemmelseValg,
+  data: { vedtakValg, innvilgelseValg, bestemmelseValg, bestemmelseTekst },
   formIsValid,
   formValues,
   fortsett,
-  innvilgelseValg,
   tilbake,
   redigerbart,
+  resetField,
   resultat,
   steg,
   oppdaterStegData,
-  vedtakValg,
 }: PropsFromRedux & Props) => {
   useEffect(() => {
     if (formValues?.vedtak) {
       oppdaterStegData({
         resultat: {
           ...resultat,
-          vedtakValg: formValues.vedtak,
-          innvilgelseValg: formValues?.innvilgelse,
-          bestemmelseValg: formValues?.bestemmelse,
+          vedtak: formValues.vedtak,
+          innvilgelse: formValues?.innvilgelse,
+          bestemmelse: formValues?.bestemmelse,
         },
       });
     }
   }, [formValues]);
+
+  useEffect(() => {
+    resetField("innvilgelse");
+    resetField("bestemmelse");
+  }, [formValues?.vedtak]);
+
+  useEffect(() => {
+    resetField("bestemmelse");
+  }, [formValues?.innvilgelse]);
 
   if (!formValues) return null;
   return (
@@ -87,7 +103,7 @@ const VurderingBestemmelse = ({
         ))}
       </Nav.Fieldset>
 
-      {formValues?.vedtak && innvilgelseValg && (
+      {formValues?.vedtak && !Utils._isEmpty(innvilgelseValg) && (
         <Nav.Fieldset legend="Skal søknaden innvilges?">
           {innvilgelseValg?.map((valg) => (
             <Skjema.Radio
@@ -101,23 +117,36 @@ const VurderingBestemmelse = ({
         </Nav.Fieldset>
       )}
 
-      {formValues?.innvilgelse && bestemmelseValg && (
-        <Nav.Fieldset legend="Velg bestemmelse">
-          <Skjema.Select
-            label=""
-            feltNavn="bestemmelse"
-            disabled={!redigerbart}
-            emptyFieldText="Velg"
-            emptyFieldDisabled={!!formValues.bestemmelse}
-          >
-            {bestemmelseValg?.map((bestemmelse: KTObject) => (
-              <option key={bestemmelse.kode} value={bestemmelse.kode}>
-                {bestemmelse.term}
-              </option>
-            ))}
-          </Skjema.Select>
+      {formValues?.innvilgelse && !Utils._isEmpty(bestemmelseValg) && (
+        <Nav.Fieldset legend="Velg bestemmelse" className="bestemmelseValg">
+          <Nav.Row>
+            <Nav.Column xs="10">
+              <Skjema.Select
+                label=""
+                feltNavn="bestemmelse"
+                disabled={!redigerbart}
+                emptyFieldText="Velg"
+                emptyFieldDisabled={!!formValues.bestemmelse}
+              >
+                {bestemmelseValg?.map((bestemmelse: KTObject) => (
+                  <option key={bestemmelse.kode} value={bestemmelse.kode}>
+                    {bestemmelse.term}
+                  </option>
+                ))}
+              </Skjema.Select>
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Fieldset>
       )}
+
+      {bestemmelseTekst && (
+        <Nav.Row>
+          <Nav.Column xs="10" className="bestemmelseTekst">
+            <div>{parse(bestemmelseTekst)}</div>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
       <div className="fane__knapplinje">
         <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
           Tilbake

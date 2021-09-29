@@ -48,7 +48,7 @@ class Inngang extends Steg {
     return this.oppfyllerInngangsvilkaar(inngangsvilkaar);
   };
 
-  oppfyllerInngangsvilkaar = (inngangsvilkaar) => inngangsvilkaar.oppfylt;
+  oppfyllerInngangsvilkaar = (inngangsvilkaar) => inngangsvilkaar?.oppfylt;
 }
 
 export default Inngang;

@@ -37,7 +37,6 @@ const Redigerer = ({
             feltNavn={`${overordnetFeltNavn}.enhetNavn`}
             disabled={!redigerbart}
             bredde="fullbredde"
-            datoFelt={false}
           />
         </Nav.Column>
       </Nav.Row>

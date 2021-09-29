@@ -167,11 +167,18 @@ const SideOppsummering = ({
           ) : (
             <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
               <Nav.Panel className="saksbehandling__soknadSammendrag">
-                <Nav.Row>
-                  <Nav.Column xs="12" md="12">
-                    <div className="oppsummering__menylinje">{renderBehandlingsmeny()}</div>
-                  </Nav.Column>
-                </Nav.Row>
+                <FeatureToggle togglename="melosys.design.PERSONLINJE">
+                  {(status) =>
+                    status === "disabled" && (
+                      <Nav.Row>
+                        <Nav.Column xs="12" md="12">
+                          <div className="oppsummering__menylinje">{renderBehandlingsmeny()}</div>
+                        </Nav.Column>
+                      </Nav.Row>
+                    )
+                  }
+                </FeatureToggle>
+
                 <Nav.Row>
                   <Nav.Column xs="12" md="12">
                     <Nav.Typo.Undertittel

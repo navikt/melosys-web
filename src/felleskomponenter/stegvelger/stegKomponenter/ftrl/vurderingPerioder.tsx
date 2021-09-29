@@ -22,7 +22,6 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import { formSelectors } from "../../../../ducks/form";
-import { FeatureToggle } from "../../../../featuretoggle";
 
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
@@ -42,6 +41,7 @@ interface PeriodeElementProps {
   handleSlett: (index: number) => void;
   erPeriodeFoerSoknadMottatDato: (medlemskapsperiode: MedlemskapsperiodeProp) => boolean;
 }
+
 const PeriodeElement = ({
   index,
   redigerbart,
@@ -62,40 +62,14 @@ const PeriodeElement = ({
       <Nav.Fieldset legend="Periode" className="understrek">
         <Nav.Row>
           <Nav.Column xs="2">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger label="Fra og med:" feltNavn={`medlemskapsperioder[${index}].fomDato`} disabled />
-                ) : (
-                  <Skjema.Input
-                    datoFelt
-                    label="Fra og med:"
-                    feltNavn={`medlemskapsperioder[${index}].fomDato`}
-                    disabled
-                  />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger label="Fra og med:" feltNavn={`medlemskapsperioder[${index}].fomDato`} disabled />
           </Nav.Column>
           <Nav.Column xs="2">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger
-                    label="Til og med:"
-                    feltNavn={`medlemskapsperioder[${index}].tomDato`}
-                    disabled={!redigerbart}
-                  />
-                ) : (
-                  <Skjema.Input
-                    datoFelt
-                    label="Til og med:"
-                    feltNavn={`medlemskapsperioder[${index}].tomDato`}
-                    disabled={!redigerbart}
-                  />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger
+              label="Til og med:"
+              feltNavn={`medlemskapsperioder[${index}].tomDato`}
+              disabled={!redigerbart}
+            />
           </Nav.Column>
           <Nav.Column xs="4">
             <Skjema.Select
