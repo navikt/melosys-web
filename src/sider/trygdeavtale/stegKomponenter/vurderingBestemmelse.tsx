@@ -62,6 +62,7 @@ const VurderingBestemmelse = ({
   data: { vedtakValg, innvilgelseValg, bestemmelseValg, bestemmelseTekst },
   formIsValid,
   formValues,
+  initialValues,
   fortsett,
   tilbake,
   redigerbart,
@@ -84,12 +85,16 @@ const VurderingBestemmelse = ({
   }, [formValues]);
 
   useEffect(() => {
-    resetField("innvilgelse");
-    resetField("bestemmelse");
+    if (formValues?.vedtak && !Utils._isEqual(formValues.vedtak, initialValues.vedtak)) {
+      resetField("innvilgelse");
+      resetField("bestemmelse");
+    }
   }, [formValues?.vedtak]);
 
   useEffect(() => {
-    resetField("bestemmelse");
+    if (formValues?.innvilgelse && !Utils._isEqual(formValues.innvilgelse, initialValues.innvilgelse)) {
+      resetField("bestemmelse");
+    }
   }, [formValues?.innvilgelse]);
 
   if (!formValues) return null;
