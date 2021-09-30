@@ -1,7 +1,7 @@
 import React from "react";
-import MKV from "../../../melosyskodeverk";
-import * as Nav from "../../../utils/navFrontend";
-import "./behandlingsmeny.css";
+import MKV from "../../melosyskodeverk";
+import * as Nav from "../../utils/navFrontend";
+import "./legacybehandlingsmeny.css";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
@@ -10,17 +10,19 @@ interface Props {
   behandlingsstatus: string;
   lagreOgLukkHandle: () => void;
   tilbakeleggeHandle: () => void;
+  oppfriskSaksopplysningerHandle: () => void;
   visHenleggDialogHandle: () => void;
   visAvsluttSakSomBortfaltDialogHandle: () => void;
   visAvslagSoknadDialogHandle: () => void;
   apneTidligereBehandlinger: () => void;
   visRevurderFagsakDialogHandle: () => void;
 }
-const Behandlingsmeny = ({
+const Legacybehandlingsmeny = ({
   redigerbart,
   behandlingsstatus,
   lagreOgLukkHandle,
   tilbakeleggeHandle,
+  oppfriskSaksopplysningerHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
@@ -32,7 +34,7 @@ const Behandlingsmeny = ({
   return (
     <Nav.EkspanderbartpanelBase
       ariaTittel="Behandlingsmeny"
-      className="behandlingsmeny"
+      className="legacybehandlingsmeny"
       heading={<div className="title">Behandlingsmeny</div>}
     >
       <div className="innhold">
@@ -44,6 +46,11 @@ const Behandlingsmeny = ({
         {redigerbart && (
           <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={tilbakeleggeHandle}>
             Legg tilbake i kø
+          </Nav.Knapp>
+        )}
+        {redigerbart && (
+          <Nav.Knapp disabled={!redigerbart} mini className="element" onClick={oppfriskSaksopplysningerHandle}>
+            Oppdater registeropplysninger
           </Nav.Knapp>
         )}
         {redigerbart && (
@@ -74,4 +81,4 @@ const Behandlingsmeny = ({
   );
 };
 
-export default Behandlingsmeny;
+export default Legacybehandlingsmeny;

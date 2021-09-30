@@ -3,9 +3,9 @@ import PT from "prop-types";
 
 import * as Nav from "../../../../utils/navFrontend";
 
-import "./behandlingsmeny.css";
+import "./legacybehandlingsmeny.css";
 
-const Behandlingsmeny = ({
+const Legacybehandlingsmeny = ({
   redigerbart,
   lagreOgLukkHandle,
   tilbakeleggeHandle,
@@ -13,10 +13,8 @@ const Behandlingsmeny = ({
   apneTidligereBehandlinger,
   visAvsluttSakSomBortfaltDialogHandle,
   visHenleggSak,
-  visAvslagSoknadDialogHandle,
   visAvslagManglendeOpplysninger,
-  visRevurderFagsakDialogHandle,
-  visRevurderFagsak,
+  visAvslagSoknadDialogHandle,
 }) => (
   <Nav.EkspanderbartpanelBase
     ariaTittel="Behandlingsmeny"
@@ -50,16 +48,11 @@ const Behandlingsmeny = ({
       <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>
         Vis alle behandlinger
       </Nav.Knapp>
-      {visRevurderFagsak && (
-        <Nav.Knapp mini className="innhold__element" onClick={visRevurderFagsakDialogHandle}>
-          Vurder saken på nytt
-        </Nav.Knapp>
-      )}
     </div>
   </Nav.EkspanderbartpanelBase>
 );
 
-Behandlingsmeny.propTypes = {
+Legacybehandlingsmeny.propTypes = {
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
@@ -68,9 +61,7 @@ Behandlingsmeny.propTypes = {
   apneTidligereBehandlinger: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   visHenleggSak: PT.bool.isRequired,
-  visRevurderFagsakDialogHandle: PT.func.isRequired,
   visAvslagManglendeOpplysninger: PT.bool.isRequired,
-  visRevurderFagsak: PT.bool.isRequired,
 };
 
-export default Behandlingsmeny;
+export default Legacybehandlingsmeny;
