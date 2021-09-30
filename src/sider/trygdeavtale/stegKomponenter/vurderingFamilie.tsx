@@ -215,6 +215,7 @@ const VurderingFamilie = ({
               </div>
             )}
           </Nav.Fieldset>
+
           <Nav.Fieldset legend="Ektefelle/partner/samboer">
             {tilknyttetEktefelle && (
               <div>
@@ -227,8 +228,8 @@ const VurderingFamilie = ({
                       <Nav.Column xs="2">
                         <Skjema.Radio
                           label="Ja"
-                          feltNavn={`ektefelle.innvilget`}
-                          id={`${tilknyttetEktefelle.uuid}.${BOOLSK_STRING.SANN}`}
+                          feltNavn="ektefelle.innvilget"
+                          id={`${BOOLSK_STRING.SANN}`}
                           value={BOOLSK_STRING.SANN}
                           disabled={!redigerbart}
                         />
@@ -236,8 +237,8 @@ const VurderingFamilie = ({
                       <Nav.Column xs="2">
                         <Skjema.Radio
                           label="Nei"
-                          feltNavn={`ektefelle.innvilget`}
-                          id={`${tilknyttetEktefelle.uuid}.${BOOLSK_STRING.USANN}`}
+                          feltNavn="ektefelle.innvilget"
+                          id={`${BOOLSK_STRING.USANN}`}
                           value={BOOLSK_STRING.USANN}
                           disabled={!redigerbart}
                         />
@@ -246,10 +247,9 @@ const VurderingFamilie = ({
                     {formValues.ektefelle?.innvilget === BOOLSK_STRING.USANN && (
                       <Skjema.Select
                         label="Begrunnelse:"
-                        feltNavn={`ektefelle.begrunnelse`}
+                        feltNavn="ektefelle.begrunnelse"
                         emptyFieldText="Velg..."
                         emptyFieldDisabled={!redigerbart || !!formValues.ektefelle.begrunnelse}
-                        name={tilknyttetEktefelle.uuid}
                         disabled={!redigerbart}
                       >
                         {ektefelleBegrunnelseValg?.map((begrunnelse: KTObject) => (
