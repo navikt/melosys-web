@@ -1,9 +1,8 @@
 import { object, string } from "yup";
-
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
-
 import { BOOLSK_STRING } from "../../../constants";
+
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 function manglerObligatoriskeFelt(tilknyttedeBarn, tilknyttetEktefelle, barn, ektefelle) {
@@ -32,7 +31,7 @@ function manglerObligatoriskeFelt(tilknyttedeBarn, tilknyttetEktefelle, barn, ek
 const vurdering_familie = object().shape({
   barn: object().nullable(),
   ektefelle: object().nullable(),
-  alleFamiliemedlemmerErDekket: string().when(["$tilknyttedeBarn", "tilknyttetEktefelle", "barn", "ektefelle"], {
+  alleFamiliemedlemmerErDekket: string().when(["$tilknyttedeBarn", "$tilknyttetEktefelle", "barn", "ektefelle"], {
     is: manglerObligatoriskeFelt,
     then: string().required(MAA_FYLLES_UT),
   }),

@@ -389,6 +389,6 @@ export const TrygdeavtaleFamileFormSelector = createSelector(
 );
 
 export const TrygdeavtaleFamilieFormValidSelector = createSelector(
-  (state) => TrygdeavtaleBestemmelseFormSelector(state).syncErrors || {},
+  (state) => TrygdeavtaleFamileFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );

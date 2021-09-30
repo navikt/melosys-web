@@ -26,9 +26,9 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
         ? data.barn.map((barn) => [
             barn.uuid,
             {
-              innvilget:
-                resultat.barn?.find((x: Api.Avklartefakta.MedfolgendeFamiliemedlem) => x.uuid === barn.uuid)
-                  ?.omfattet || null,
+              innvilget: Utils.streng.boolTilBOOLSK_STRING(
+                resultat.barn?.find((x: Api.Avklartefakta.MedfolgendeFamiliemedlem) => x.uuid === barn.uuid)?.omfattet
+              ),
               begrunnelse:
                 resultat.barn?.find((x: Api.Avklartefakta.MedfolgendeFamiliemedlem) => x.uuid === barn.uuid)
                   ?.begrunnelseKode || null,
@@ -39,7 +39,7 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
   },
   ektefelle: {
     fritekst: resultat.ektefelle?.begrunnelseFritekst || "",
-    innvilget: resultat.ektefelle?.omfattet || null,
+    innvilget: Utils.streng.boolTilBOOLSK_STRING(resultat.ektefelle?.omfattet),
     begrunnelse: resultat.ektefelle?.begrunnelseKode || null,
   },
 });
@@ -134,7 +134,7 @@ const VurderingFamilie = ({
       });
     }
   };
-  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 1000), []);
+  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
 
   useEffect(() => {
     if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
@@ -301,7 +301,7 @@ const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
         tilknyttedeBarn: props.data.barn,
         tilknyttetEktefelle: props.data.ektefelle,
       },
-    }),
+    })(values),
 })(VurderingFamilie);
 
 export default connector(VurderingFamilieForm);

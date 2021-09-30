@@ -1,4 +1,5 @@
 import { toInteger } from "lodash";
+import { BOOLSK_STRING } from "../constants";
 
 export function boolTilNorsk(value) {
   return value ? "JA" : "NEI";
@@ -13,6 +14,13 @@ export function boolTilStreng(value) {
     return undefined;
   }
   return value ? "true" : "false";
+}
+
+export function boolTilBOOLSK_STRING(value) {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return value ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
 }
 
 export function strengTilBool(value) {
