@@ -58,8 +58,7 @@ const EndrePeriode = ({
             label="Startdato"
             value={Utils.dato.norskStringTilDate(fom)}
             onChange={fomChange}
-            onBlur={fomChange}
-            feil={feilmeldinger.fom}
+            feil={feilmeldinger.fom?.feilmelding}
             disabled={!redigerbart}
           />
         </Nav.Column>
@@ -68,8 +67,7 @@ const EndrePeriode = ({
             label="Sluttdato"
             value={Utils.dato.norskStringTilDate(tom)}
             onChange={tomChange}
-            onBlur={tomChange}
-            feil={feilmeldinger.tom}
+            feil={feilmeldinger.tom?.feilmelding}
             disabled={!redigerbart}
           />
         </Nav.Column>
@@ -80,7 +78,7 @@ const EndrePeriode = ({
             onChange={(e) => oppdaterFelt(e, oppdaterBegrunnelse)}
             disabled={!redigerbart}
             feil={feilmeldinger.begrunnelse}
-            defaultValue="0"
+            value={begrunnelse || "0"}
           >
             <option key={uuid()} value="0" disabled>
               Velg i listen

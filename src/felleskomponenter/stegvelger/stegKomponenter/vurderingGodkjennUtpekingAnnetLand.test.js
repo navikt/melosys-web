@@ -3,7 +3,9 @@ import React from "react";
 import * as Mui from "../../ui";
 import * as Nav from "../../../utils/navFrontend";
 
-import VurderingGodkjennUtpekingAnnetLand from "./vurderingGodkjennUtpekingAnnetLand";
+import MKV from "../../../melosyskodeverk";
+
+import { VurderingGodkjennUtpekingAnnetLand } from "./vurderingGodkjennUtpekingAnnetLand";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 describe("vurderingGodkjennUtpekingAnnetLand", () => {
@@ -15,6 +17,11 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
       redigerbart: true,
       overskrift: "Godkjenn utpeking",
       behandlingID: 4,
+      vurderUtpekingFormValues: {
+        fom: "12.12.2020",
+        tom: "12.12.2021",
+        lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
+      },
     };
   });
 
@@ -29,12 +36,17 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
     fritekstfelt.props().onChange({ target: { value: "Fritekst her" } });
 
     const hovedknapp = komponent.find(Mui.Knapp);
-    hovedknapp.simulate("click");
+    hovedknapp.props().onClick();
 
     expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenCalledTimes(1);
     expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenLastCalledWith({
       varsleUtland: true,
       fritekst: "Fritekst her",
+      endretPeriode: {
+        fom: "2020-12-12",
+        tom: "2021-12-12",
+      },
+      lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
     });
   });
 
