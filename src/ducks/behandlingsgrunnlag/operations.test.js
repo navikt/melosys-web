@@ -7,6 +7,8 @@ import * as types from "./types";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 
+const { NO, DK } = MKV.Koder.landkoder;
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -232,6 +234,28 @@ describe("Behandlingsgrunnlag operations", () => {
       const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterState());
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("oppdaterSoeknadsland", () => {
+    it("lager OPPDATER_SOEKNADSLAND action", () => {
+      const expectedActions = [
+        {
+          type: types.OPPDATER_SOEKNADSLAND,
+          data: {
+            soeknadsland: {
+              landkoder: [DK, NO],
+              erUkjenteEllerAlleEosLand: true,
+            },
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterSoeknadsland([DK, NO], true));
 
       expect(store.getActions()).toEqual(expectedActions);
     });

@@ -58,6 +58,33 @@ describe("behandlingsgrunnlag reducer", () => {
     expect(nextState).toEqual(expectedState);
   });
 
+  it(`oppdaterer Soeknadsland ved action-type ${Types.OPPDATER_SOEKNADSLAND}`, () => {
+    const action = {
+      type: Types.OPPDATER_SOEKNADSLAND,
+      data: {
+        soeknadsland: {
+          landkoder: [],
+          erUkjenteEllerAlleEosLand: true,
+        },
+      },
+    };
+    const expectedState = {
+      status: initialState.status,
+      data: {
+        data: {
+          soeknadsland: {
+            landkoder: [],
+            erUkjenteEllerAlleEosLand: true,
+          },
+        },
+      },
+    };
+
+    const nextState = reducer(initialState, action);
+
+    expect(nextState).toEqual(expectedState);
+  });
+
   it("Oppdaterer periode ved action.type OPPDATER_PERIODE", () => {
     initialState.data.data = {
       ...initialState.data.data,
