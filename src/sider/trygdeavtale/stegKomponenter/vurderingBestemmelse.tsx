@@ -96,7 +96,7 @@ const VurderingBestemmelse = ({
             label={valg.term}
             value={valg.kode}
             disabled={!redigerbart}
-            customOnChange={() => {
+            onChange={() => {
               resetField("innvilgelse");
               resetField("bestemmelse");
             }}
@@ -113,7 +113,7 @@ const VurderingBestemmelse = ({
               label={valg.term}
               value={valg.kode}
               disabled={!redigerbart}
-              customOnChange={() => resetField("bestemmelse")}
+              onChange={() => resetField("bestemmelse")}
             />
           ))}
         </Nav.Fieldset>
