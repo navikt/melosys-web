@@ -3,7 +3,7 @@ import PT from "prop-types";
 
 import * as Nav from "../../../../utils/navFrontend";
 
-const Behandlingsmeny = (props) => {
+const Legacybehandlingsmeny = (props) => {
   const {
     redigerbart,
     lagreOgLukkHandle,
@@ -41,7 +41,7 @@ const Behandlingsmeny = (props) => {
   );
 };
 
-Behandlingsmeny.propTypes = {
+Legacybehandlingsmeny.propTypes = {
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
@@ -50,4 +50,4 @@ Behandlingsmeny.propTypes = {
   visRevurderFagsak: PT.bool.isRequired,
 };
 
-export default Behandlingsmeny;
+export default Legacybehandlingsmeny;

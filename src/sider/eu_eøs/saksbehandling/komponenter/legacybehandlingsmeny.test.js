@@ -1,6 +1,6 @@
 import React from "react";
 
-import Behandlingsmeny from "./behandlingsmeny";
+import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 import * as Nav from "../../../../utils/navFrontend";
 
 describe("behandlingsmeny", () => {
@@ -23,13 +23,13 @@ describe("behandlingsmeny", () => {
   });
 
   it("viser en NavEkspanderbartPanelBase", () => {
-    const behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
+    const behandlingsmeny = shallow(<Legacybehandlingsmeny {...props} />);
 
     expect(behandlingsmeny.find(Nav.EkspanderbartpanelBase)).toHaveLength(1);
   });
 
   it("kaller handlere ved klikk på knapper", () => {
-    const behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
+    const behandlingsmeny = shallow(<Legacybehandlingsmeny {...props} />);
 
     behandlingsmeny.find("Knapp").forEach((knapp) => knapp.simulate("click"));
 

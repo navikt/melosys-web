@@ -13,7 +13,7 @@ import * as MPT from "../../../proptypes";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Behandlingsmeny from "./komponenter/behandlingsmeny";
+import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -181,7 +181,7 @@ export const Registrering = (props) => {
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               lovvalgsland={lovvalgsland}
               renderBehandlingsmeny={() => (
-                <Behandlingsmeny
+                <Legacybehandlingsmeny
                   redigerbart={redigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggHandle}

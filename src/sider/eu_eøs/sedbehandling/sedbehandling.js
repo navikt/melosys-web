@@ -11,7 +11,7 @@ import * as Api from "../../../services/api";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Behandlingsmeny from "./komponenter/behandlingsmeny";
+import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -197,7 +197,7 @@ const SedBehandling = ({
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               renderBehandlingsmeny={() => (
-                <Behandlingsmeny
+                <Legacybehandlingsmeny
                   redigerbart={redigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}

@@ -13,7 +13,7 @@ import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Behandlingsmeny from "./komponenter/behandlingsmeny";
+import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations } from "../../../ducks/behandlingsresultat";
@@ -275,7 +275,7 @@ class Saksbehandling extends Component {
                 behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                 behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                 renderBehandlingsmeny={() => (
-                  <Behandlingsmeny
+                  <Legacybehandlingsmeny
                     redigerbart={behandlingsmenyRedigerbart}
                     lagreOgLukkHandle={lagreOgLukk}
                     tilbakeleggeHandle={tilbakeleggOppgave}

@@ -3,9 +3,9 @@ import PT from "prop-types";
 
 import * as Nav from "../../../../utils/navFrontend";
 
-import "./behandlingsmeny.css";
+import "./legacybehandlingsmeny.css";
 
-const Behandlingsmeny = ({
+const Legacybehandlingsmeny = ({
   redigerbart,
   lagreOgLukkHandle,
   tilbakeleggeHandle,
@@ -59,7 +59,7 @@ const Behandlingsmeny = ({
   </Nav.EkspanderbartpanelBase>
 );
 
-Behandlingsmeny.propTypes = {
+Legacybehandlingsmeny.propTypes = {
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
@@ -73,4 +73,4 @@ Behandlingsmeny.propTypes = {
   visRevurderFagsak: PT.bool.isRequired,
 };
 
-export default Behandlingsmeny;
+export default Legacybehandlingsmeny;
