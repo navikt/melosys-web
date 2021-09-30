@@ -2,6 +2,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { deleteAsJson, getAsJson, putAsJson } from "../../utils";
 import { TRYGDEAVTALE_FLYT_BASE_URL } from "../../api-constants";
 import { StegNavn } from "../../../kodeverk/koder";
+import { MedfolgendeFamiliemedlem } from "../avklartefakta";
 
 export interface Virksomhet {
   orgId: string;
@@ -10,12 +11,14 @@ export interface Virksomhet {
 
 export interface Resultat {
   fom?: string;
-  tom?: string;
+  tom?: string | null;
   land?: string[];
   virksomheter?: string[];
   vedtak?: string;
   innvilgelse?: string;
   bestemmelse?: string;
+  barn?: MedfolgendeFamiliemedlem[];
+  ektefelle?: MedfolgendeFamiliemedlem;
 }
 
 export interface Steg {
@@ -24,14 +27,22 @@ export interface Steg {
   nummer: number;
 }
 
+export interface FamilieValg {
+  uuid: string;
+  fnr: string | null;
+  navn: string;
+}
+
 export interface StegData {
   virksomheter?: Virksomhet[];
   vedtakValg?: KTObject[];
   innvilgelseValg?: KTObject[];
   bestemmelseValg?: KTObject[];
   bestemmelseTekst?: string;
-  barn?: string[];
-  ektefelle?: string;
+  barn?: FamilieValg[];
+  barnBegrunnelseValg?: KTObject[];
+  ektefelle?: FamilieValg;
+  ektefelleBegrunnelseValg?: KTObject[];
 }
 
 export type FlytResDto = {

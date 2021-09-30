@@ -16,6 +16,7 @@ import { BehandlingsgrunnlagFeilmeldinger } from "../../felleskomponenter/behand
 import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
+import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
@@ -39,7 +40,7 @@ const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
-  FAMILIE: { tittel: "Familie", komponent: DummySteg },
+  FAMILIE: { tittel: "Familie", komponent: VurderingFamilie },
   VEDTAK: { tittel: "Vedtak", komponent: DummySteg },
 };
 
