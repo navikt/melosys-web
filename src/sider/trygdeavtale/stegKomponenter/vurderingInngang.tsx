@@ -55,7 +55,7 @@ interface Props {
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
-  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
   // slettFlyt: () => void;
 }
@@ -71,7 +71,7 @@ const VurderingInngang = ({
   resultat,
   steg,
   tilForsiden,
-  oppdaterStegData,
+  oppdaterFlyt,
   oppfriskOgLastInnSaksopplysninger,
   // slettFlyt,
   visMenypanel,
@@ -93,7 +93,7 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
+  const sendOppdaterFlyt = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
       const requestData = {
         ...resultat,
@@ -101,13 +101,13 @@ const VurderingInngang = ({
         tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
         land: data.formValues.land ? [data.formValues.land] : [],
       };
-      oppdaterStegData({ resultat: requestData });
+      oppdaterFlyt({ resultat: requestData });
     }
   };
-  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
+  const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);
 
   useEffect(() => {
-    if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
+    if (redigerbart) debouncedOppdaterFlyt({ formValues, formIsValid });
   }, [formValues, formIsValid]);
 
   const fortsettHandle = () => {
@@ -121,7 +121,7 @@ const VurderingInngang = ({
 
   const periodeEndringHandle = async () => {
     // await slettFlyt();
-    sendOppdatertStegData({ formValues, formIsValid });
+    sendOppdaterFlyt({ formValues, formIsValid });
   };
 
   return (

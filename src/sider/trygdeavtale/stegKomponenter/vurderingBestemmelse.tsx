@@ -55,7 +55,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
 }
 
 const VurderingBestemmelse = ({
@@ -68,11 +68,11 @@ const VurderingBestemmelse = ({
   resetField,
   resultat,
   steg,
-  oppdaterStegData,
+  oppdaterFlyt,
 }: PropsFromRedux & Props) => {
   useEffect(() => {
     if (formValues?.vedtak) {
-      oppdaterStegData({
+      oppdaterFlyt({
         resultat: {
           ...resultat,
           vedtak: formValues.vedtak,

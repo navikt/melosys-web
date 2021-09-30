@@ -78,7 +78,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
 }
 
 const VurderingFamilie = ({
@@ -90,13 +90,13 @@ const VurderingFamilie = ({
   redigerbart,
   resultat,
   steg,
-  oppdaterStegData,
+  oppdaterFlyt,
 }: PropsFromRedux & Props) => {
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
-  const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
+  const sendOppdaterFlyt = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
-      oppdaterStegData({
+      oppdaterFlyt({
         resultat: {
           ...resultat,
           barn:
@@ -134,10 +134,10 @@ const VurderingFamilie = ({
       });
     }
   };
-  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
+  const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);
 
   useEffect(() => {
-    if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
+    if (redigerbart) debouncedOppdaterFlyt({ formValues, formIsValid });
   }, [formValues, formIsValid]);
 
   if (!formValues) return null;

@@ -117,12 +117,12 @@ class Stegvelger extends Component<Props, State> {
     Api.Trygdeavtale.slettFlyt(this.props.behandlingID);
   };
 
-  oppdaterStegData = (request: Api.Trygdeavtale.FlytReqDto) => {
+  oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto) => {
     Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
   };
-  debouncedOppdaterStegData = Utils._debounce(this.oppdaterStegData, 100);
+  debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 100);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {
@@ -135,7 +135,7 @@ class Stegvelger extends Component<Props, State> {
     const handlers = {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
-      oppdaterStegData: this.debouncedOppdaterStegData,
+      oppdaterFlyt: this.debouncedOppdaterFlyt,
       slettFlyt: this.slettFlyt,
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,

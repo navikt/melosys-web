@@ -50,7 +50,7 @@ interface Props {
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilbake: () => void;
-  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
 }
 
 const VurderingAvklarVirksomhet = ({
@@ -61,7 +61,7 @@ const VurderingAvklarVirksomhet = ({
   redigerbart,
   resultat,
   steg,
-  oppdaterStegData,
+  oppdaterFlyt,
   tilbake,
   virksomheterListe,
 }: PropsFromRedux & Props) => {
@@ -69,17 +69,17 @@ const VurderingAvklarVirksomhet = ({
     "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
     'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
-  const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
+  const sendOppdaterFlyt = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
-      oppdaterStegData({
+      oppdaterFlyt({
         resultat: { ...resultat, virksomheter: data.formValues.virksomheter || [] },
       });
     }
   };
-  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
+  const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);
 
   useEffect(() => {
-    if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
+    if (redigerbart) debouncedOppdaterFlyt({ formValues, formIsValid });
   }, [formValues, formIsValid]);
 
   return (
