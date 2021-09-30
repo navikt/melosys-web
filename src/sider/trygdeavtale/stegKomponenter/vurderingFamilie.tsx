@@ -158,53 +158,56 @@ const VurderingFamilie = ({
       ) : (
         <div>
           <Nav.Fieldset legend="Barn" className="barn">
-            {tilknyttedeBarn?.map((barn: Api.Trygdeavtale.FamilieValg) => (
-              <Nav.Row key={barn.uuid} className="barnet">
-                <Nav.Column xs="8">
-                  <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
-                    barn.fnr
-                  })`}</Nav.Typo.Normaltekst>
-                  <Nav.Row className="familiemedlem_radio">
-                    <Nav.Column xs="2">
-                      <Skjema.Radio
-                        label="Ja"
-                        feltNavn={`barn.${barn.uuid}.innvilget`}
-                        id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
-                        value={BOOLSK_STRING.SANN}
-                        disabled={!redigerbart}
-                      />
-                    </Nav.Column>
-                    <Nav.Column xs="2">
-                      <Skjema.Radio
-                        label="Nei"
-                        feltNavn={`barn.${barn.uuid}.innvilget`}
-                        id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
-                        value={BOOLSK_STRING.USANN}
-                        disabled={!redigerbart}
-                      />
+            {tilknyttedeBarn?.map(
+              (barn: Api.Trygdeavtale.FamilieValg) =>
+                formValues.barn[barn.uuid] && (
+                  <Nav.Row key={barn.uuid} className="barnet">
+                    <Nav.Column xs="8">
+                      <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
+                        barn.fnr
+                      })`}</Nav.Typo.Normaltekst>
+                      <Nav.Row className="familiemedlem_radio">
+                        <Nav.Column xs="2">
+                          <Skjema.Radio
+                            label="Ja"
+                            feltNavn={`barn.${barn.uuid}.innvilget`}
+                            id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
+                            value={BOOLSK_STRING.SANN}
+                            disabled={!redigerbart}
+                          />
+                        </Nav.Column>
+                        <Nav.Column xs="2">
+                          <Skjema.Radio
+                            label="Nei"
+                            feltNavn={`barn.${barn.uuid}.innvilget`}
+                            id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
+                            value={BOOLSK_STRING.USANN}
+                            disabled={!redigerbart}
+                          />
+                        </Nav.Column>
+                      </Nav.Row>
+                      {formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN && (
+                        <Skjema.Select
+                          label="Begrunnelse:"
+                          feltNavn={`barn.${barn.uuid}.begrunnelse`}
+                          emptyFieldText="Velg..."
+                          emptyFieldDisabled={!redigerbart || !!formValues.barn[barn.uuid].begrunnelse}
+                          name={barn.uuid}
+                          disabled={!redigerbart}
+                        >
+                          {barnBegrunnelseValg?.map((begrunnelse: KTObject) => (
+                            <option key={begrunnelse.kode} value={begrunnelse.kode}>
+                              {begrunnelse.term}
+                            </option>
+                          ))}
+                        </Skjema.Select>
+                      )}
                     </Nav.Column>
                   </Nav.Row>
-                  {formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN && (
-                    <Skjema.Select
-                      label="Begrunnelse:"
-                      feltNavn={`barn.${barn.uuid}.begrunnelse`}
-                      emptyFieldText="Velg..."
-                      emptyFieldDisabled={!redigerbart || !!formValues.barn[barn.uuid].begrunnelse}
-                      name={barn.uuid}
-                      disabled={!redigerbart}
-                    >
-                      {barnBegrunnelseValg?.map((begrunnelse: KTObject) => (
-                        <option key={begrunnelse.kode} value={begrunnelse.kode}>
-                          {begrunnelse.term}
-                        </option>
-                      ))}
-                    </Skjema.Select>
-                  )}
-                </Nav.Column>
-              </Nav.Row>
-            ))}
+                )
+            )}
             {tilknyttedeBarn?.some(
-              (barn: Api.Trygdeavtale.FamilieValg) => formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN
+              (barn: Api.Trygdeavtale.FamilieValg) => formValues.barn[barn.uuid]?.innvilget === BOOLSK_STRING.USANN
             ) && (
               <div style={{ marginBottom: "2rem" }}>
                 <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
@@ -290,7 +293,7 @@ const VurderingFamilie = ({
 const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.FAMILIE,
   destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
+  enableReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
     lagYupToReduxformErrorMapper(vurdering_familie, {
