@@ -1,6 +1,6 @@
 import React from "react";
 
-import Legacybehandlingsmeny from "./behandlingsmeny";
+import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 import * as Nav from "../../../../utils/navFrontend";
 
 describe("behandlingsmeny", () => {
