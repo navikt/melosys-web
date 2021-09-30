@@ -83,15 +83,6 @@ const VurderingBestemmelse = ({
     }
   }, [formValues]);
 
-  useEffect(() => {
-    resetField("innvilgelse");
-    resetField("bestemmelse");
-  }, [formValues?.vedtak]);
-
-  useEffect(() => {
-    resetField("bestemmelse");
-  }, [formValues?.innvilgelse]);
-
   if (!formValues) return null;
   return (
     <div className="vurderingBestemmelse">
@@ -99,7 +90,17 @@ const VurderingBestemmelse = ({
 
       <Nav.Fieldset legend="Kan du fatte vedtak?">
         {vedtakValg?.map((valg) => (
-          <Skjema.Radio key={valg.kode} feltNavn="vedtak" label={valg.term} value={valg.kode} disabled={!redigerbart} />
+          <Skjema.Radio
+            key={valg.kode}
+            feltNavn="vedtak"
+            label={valg.term}
+            value={valg.kode}
+            disabled={!redigerbart}
+            onChange={() => {
+              resetField("innvilgelse");
+              resetField("bestemmelse");
+            }}
+          />
         ))}
       </Nav.Fieldset>
 
@@ -112,6 +113,7 @@ const VurderingBestemmelse = ({
               label={valg.term}
               value={valg.kode}
               disabled={!redigerbart}
+              onChange={() => resetField("bestemmelse")}
             />
           ))}
         </Nav.Fieldset>
