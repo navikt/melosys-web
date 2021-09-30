@@ -33,6 +33,7 @@ import { ReactComponent as KalkulatorDisabled } from "./kalkulator-disabled.svg"
 import { ReactComponent as Kors } from "./kors.svg";
 import { ReactComponent as Kvinne } from "./ikon-kvinne.svg";
 import { ReactComponent as Kontor } from "./kontor.svg";
+import { ReactComponent as Location } from "./location.svg";
 import { ReactComponent as Man } from "./man.svg";
 import { ReactComponent as Mann } from "./ikon-mann.svg";
 import { ReactComponent as Medlemskap } from "./ikon-medlemsskap.svg";
@@ -92,6 +93,7 @@ export {
   Kvinne,
   Kontor,
   Kopier,
+  Location,
   Man,
   Mann,
   Medlemskap,
