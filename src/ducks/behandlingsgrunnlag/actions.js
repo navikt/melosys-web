@@ -23,11 +23,14 @@ export function oppdaterPeriode(periode) {
   };
 }
 
-export function oppdaterSoeknadsland(soeknadsland) {
+export function oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand) {
   return {
     type: Types.OPPDATER_SOEKNADSLAND,
     data: {
-      soeknadsland,
+      soeknadsland: {
+        landkoder,
+        erUkjenteEllerAlleEosLand,
+      },
     },
   };
 }

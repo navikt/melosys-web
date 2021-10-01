@@ -79,7 +79,8 @@ export default function reducer(state = initialState, action) {
           data: {
             ...state.data.data,
             soeknadsland: {
-              landkoder: action.data.soeknadsland,
+              landkoder: action.data.soeknadsland.landkoder,
+              erUkjenteEllerAlleEosLand: action.data.soeknadsland.erUkjenteEllerAlleEosLand,
             },
           },
         },
