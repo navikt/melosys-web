@@ -1,4 +1,4 @@
-import { object, array, string, lazy, mixed, number, boolean } from "yup";
+import { array, boolean, lazy, mixed, number, object, string } from "yup";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
@@ -119,6 +119,21 @@ const medfolgendeBarn = object().shape({
       : mixed()
   ),
 });
+
+const foedestedOgLandSchema = object()
+  .nullable()
+  .shape({
+    foedested: string()
+      .required(
+        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
+      )
+      .erIkkeBlank(
+        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
+      ),
+    foedeland: string().required(
+      lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødeland kreves")
+    ),
+  });
 
 const soknad = object().when("$behandlingstema", {
   is: erIkkeBeslutningLovvalgAnnetLand,
@@ -261,6 +276,7 @@ const soknad = object().when("$behandlingstema", {
     soknadsperiodeTom: soknadsperiodeTomSchema,
     utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeBarn),
+    foedestedOgLand: foedestedOgLandSchema,
     juridiskArbeidsgiverNorge: object().shape({
       antallAnsatte: number().transform(tomStringTilNull).nullable(),
       antallAdmAnsatte: number().transform(tomStringTilNull).nullable(),

@@ -85,6 +85,10 @@ export const KontaktOpplysninger = ({
     }
   }, [kontaktopplysninger.kontaktorgnr]);
 
+  const kontakttelefonChangeHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
+    onChange({ ...kontaktopplysninger, kontakttelefon: e.target.value });
+  };
+
   const kontaktOrgnrChangeHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
     onChange({ ...kontaktopplysninger, kontaktorgnr: e.target.value });
     setSokeResultat(null);
@@ -95,7 +99,7 @@ export const KontaktOpplysninger = ({
     onChange({ ...kontaktopplysninger, kontaktnavn: e.target.value });
   };
 
-  const kontaktNavnBlurHandler: FocusEventHandler<HTMLInputElement> = async (event) => {
+  const kontaktNavnTlfBlurHandler: FocusEventHandler<HTMLInputElement> = async (event) => {
     setLagreFeilmelding("");
 
     try {
@@ -136,13 +140,23 @@ export const KontaktOpplysninger = ({
               disabled={!redigerbart}
               onChange={kontaktNavnChangeHandler}
               value={kontaktopplysninger.kontaktnavn || ""}
-              onBlur={kontaktNavnBlurHandler}
+              onBlur={kontaktNavnTlfBlurHandler}
               label="Kontaktperson"
               placeholder="Skriv inn..."
             />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
+          <Nav.Column xs="6">
+            <Nav.Input
+              disabled={!redigerbart}
+              onChange={kontakttelefonChangeHandler}
+              value={kontaktopplysninger.kontakttelefon || ""}
+              onBlur={kontaktNavnTlfBlurHandler}
+              label="Telefonnummer"
+              placeholder="Skriv inn..."
+            />
+          </Nav.Column>
           <Nav.Column xs="6">
             <Nav.Input
               disabled={!redigerbart}

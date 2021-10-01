@@ -9,19 +9,19 @@ interface GyldigeStatsborgerskapHeaderProps {
 const GyldigeStatsborgerskapHeader = ({ className }: GyldigeStatsborgerskapHeaderProps) => (
   <Nav.Row className={className}>
     <Nav.Column xs="2">
-      <Nav.Typo.Element>Land</Nav.Typo.Element>
+      <Nav.Typo.Normaltekst>Land</Nav.Typo.Normaltekst>
     </Nav.Column>
     <Nav.Column xs="2">
-      <Nav.Typo.Element>Register</Nav.Typo.Element>
+      <Nav.Typo.Normaltekst>Register</Nav.Typo.Normaltekst>
     </Nav.Column>
     <Nav.Column xs="3">
-      <Nav.Typo.Element>Kilde</Nav.Typo.Element>
+      <Nav.Typo.Normaltekst>Kilde</Nav.Typo.Normaltekst>
     </Nav.Column>
     <Nav.Column xs="3">
-      <Nav.Typo.Element>Bekreftelsesdato</Nav.Typo.Element>
+      <Nav.Typo.Normaltekst>Bekreftelsesdato</Nav.Typo.Normaltekst>
     </Nav.Column>
     <Nav.Column xs="2">
-      <Nav.Typo.Element>Gyldig f.o.m.</Nav.Typo.Element>
+      <Nav.Typo.Normaltekst>Gyldig f.o.m.</Nav.Typo.Normaltekst>
     </Nav.Column>
   </Nav.Row>
 );

@@ -20,7 +20,6 @@ import vurderingStartSchema from "./vurderingStartSchema";
 import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
-import { FeatureToggle } from "../../../../featuretoggle";
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
@@ -43,8 +42,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
-  oppdaterSoeknadsland: (soeknadsland: string[]) =>
-    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland)),
+  oppdaterSoeknadslandkoder: (landkoder: string[]) =>
+    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(landkoder, false)),
   oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning)),
 });
@@ -78,7 +77,7 @@ const VurderingStart = ({
   formValues = {},
   alleLandkoder,
   oppdaterPeriode,
-  oppdaterSoeknadsland,
+  oppdaterSoeknadslandkoder,
   oppdaterTrygdedekning,
   trygdedekninger,
   formIsValid,
@@ -112,7 +111,7 @@ const VurderingStart = ({
     const tom = Utils.dato.formatterDatoTilISO(data.formValues.tom);
     await Promise.all([
       oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
-      oppdaterSoeknadsland(data.formValues.land ? [data.formValues.land] : []),
+      oppdaterSoeknadslandkoder(data.formValues.land ? [data.formValues.land] : []),
       oppdaterTrygdedekning(data.formValues.trygdedekning),
     ]);
   };
@@ -139,38 +138,10 @@ const VurderingStart = ({
       <Nav.Fieldset legend="Periode">
         <Nav.Row>
           <Nav.Column xs="3">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
-                ) : (
-                  <Skjema.Input
-                    datoFelt
-                    label="Fra og med:"
-                    feltNavn="fom"
-                    bredde="fullbredde"
-                    disabled={!redigerbart}
-                  />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger label="Fra og med:" feltNavn="fom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="3">
-            <FeatureToggle togglename="melosys.input.DATOFELT">
-              {(status) =>
-                status === "enabled" ? (
-                  <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
-                ) : (
-                  <Skjema.Input
-                    datoFelt
-                    label="Til og med:"
-                    feltNavn="tom"
-                    bredde="fullbredde"
-                    disabled={!redigerbart}
-                  />
-                )
-              }
-            </FeatureToggle>
+            <Skjema.Datovelger label="Til og med:" feltNavn="tom" disabled={!redigerbart} />
           </Nav.Column>
           <Nav.Column xs="5">
             <Skjema.LandVelger

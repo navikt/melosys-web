@@ -1,0 +1,65 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
+.behandlingsmeny {
+  justify-content: flex-end;
+  display: flex;
+  flex-grow: 1;
+  margin-right: 34px;
+
+  &__knapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 48px;
+    margin-top: -1px;
+    border: 1px solid @navMorkGra;
+
+    &:hover {
+      background-color: @navGra20;
+    }
+    &__aapen {
+      background-color: @navMorkGra !important;
+    }
+  }
+
+  &__hamburger {
+    height: 16px;
+    width: 16px;
+
+    &__aapen {
+      color: white;
+    }
+  }
+
+  &__meny {
+    position: absolute;
+    z-index: 1000;
+    width: 350px;
+    top: 95px;
+    box-shadow: 0 2px 4px 0 @navGra20;
+
+    &__legg-behandling-tilbake {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border: 1px solid @navMorkGra;
+    }
+    &__avslutt-sak {
+      border-radius: 0;
+      border-left: 1px solid @navMorkGra;
+      border-right: 1px solid @navMorkGra;
+    }
+    &__handlinger {
+      background-color: #fff;
+      border-radius: 0 0 3px 3px;
+      border: 1px solid @navMorkGra;
+      padding: 1rem;
+    }
+    .ekspanderbartPanel--apen .ekspanderbartPanel__hode {
+      padding-bottom: 0;
+    }
+    .ekspanderbartPanel__hode {
+      font-weight: bold;
+    }
+  }
+}

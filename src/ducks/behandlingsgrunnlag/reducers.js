@@ -79,7 +79,8 @@ export default function reducer(state = initialState, action) {
           data: {
             ...state.data.data,
             soeknadsland: {
-              landkoder: action.data.soeknadsland,
+              landkoder: action.data.soeknadsland.landkoder,
+              erUkjenteEllerAlleEosLand: action.data.soeknadsland.erUkjenteEllerAlleEosLand,
             },
           },
         },
@@ -307,6 +308,7 @@ export default function reducer(state = initialState, action) {
           },
           personOpplysninger: {
             utenlandskIdent: dokument.utenlandskIdent,
+            foedestedOgLand: dokument.foedestedOgLand,
             medfolgendeFamilie: [
               ...dokument.medfolgendeBarn
                 .filter((enkeltBarn) => enkeltBarn.fnr && enkeltBarn.navn)

@@ -1,0 +1,29 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
+.behandlingsmeny__handling {
+  display: flex;
+  margin: 10px 5px 5px 0;
+
+  &__ikon {
+    height: 20px;
+    width: 20px;
+  }
+  &:hover &__ikon {
+    color: @navGra60;
+  }
+
+  &__tekst {
+    color: @navBla;
+  }
+  &:hover &__tekst {
+    color: @navBlaLighten20;
+  }
+
+  &__tekst-disabled {
+    color: #a0a0a0;
+
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+}

@@ -7,7 +7,6 @@ import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../utils/navFrontend";
 import * as MPT from "../../../../../proptypes";
 import "./endrePeriode.css";
-import { FeatureToggle } from "../../../../../featuretoggle";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
 
 const uuid = require("uuid/v4");
@@ -43,13 +42,6 @@ const EndrePeriode = ({
 
   const fritekstPaakrevd = () => begrunnelse === MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.ANNET;
 
-  const formaterDato = (event, oppdater) => {
-    const nyDato = Utils.dato.vaskInputDato(event.target.value);
-    if (nyDato) {
-      oppdater(nyDato);
-    }
-  };
-
   const oppdaterFelt = (event, oppdater) => {
     event.stopPropagation();
     oppdater(event.target.value);
@@ -62,56 +54,22 @@ const EndrePeriode = ({
     <div className="endre_periode">
       <React.Fragment>
         <Nav.Column xs="3">
-          <FeatureToggle togglename="melosys.input.DATOFELT">
-            {(status) =>
-              status === "enabled" ? (
-                <Datovelger
-                  label="Startdato"
-                  value={Utils.dato.norskStringTilDate(fom)}
-                  onChange={fomChange}
-                  onBlur={fomChange}
-                  feil={feilmeldinger.fom}
-                  disabled={!redigerbart}
-                />
-              ) : (
-                <Nav.Input
-                  bredde="fullbredde"
-                  label="Startdato"
-                  value={fom}
-                  onChange={(e) => oppdaterFelt(e, oppdaterFom)}
-                  onBlur={(e) => formaterDato(e, oppdaterFom)}
-                  feil={feilmeldinger.fom}
-                  disabled={!redigerbart}
-                />
-              )
-            }
-          </FeatureToggle>
+          <Datovelger
+            label="Startdato"
+            value={Utils.dato.norskStringTilDate(fom)}
+            onChange={fomChange}
+            feil={feilmeldinger.fom?.feilmelding}
+            disabled={!redigerbart}
+          />
         </Nav.Column>
         <Nav.Column xs="3">
-          <FeatureToggle togglename="melosys.input.DATOFELT">
-            {(status) =>
-              status === "enabled" ? (
-                <Datovelger
-                  label="Sluttdato"
-                  value={Utils.dato.norskStringTilDate(tom)}
-                  onChange={tomChange}
-                  onBlur={tomChange}
-                  feil={feilmeldinger.tom}
-                  disabled={!redigerbart}
-                />
-              ) : (
-                <Nav.Input
-                  bredde="fullbredde"
-                  label="Sluttdato"
-                  value={tom}
-                  onChange={(e) => oppdaterFelt(e, oppdaterTom)}
-                  onBlur={(e) => formaterDato(e, oppdaterTom)}
-                  feil={feilmeldinger.tom}
-                  disabled={!redigerbart}
-                />
-              )
-            }
-          </FeatureToggle>
+          <Datovelger
+            label="Sluttdato"
+            value={Utils.dato.norskStringTilDate(tom)}
+            onChange={tomChange}
+            feil={feilmeldinger.tom?.feilmelding}
+            disabled={!redigerbart}
+          />
         </Nav.Column>
         <Nav.Column xs="12">
           <Nav.Select
@@ -120,7 +78,7 @@ const EndrePeriode = ({
             onChange={(e) => oppdaterFelt(e, oppdaterBegrunnelse)}
             disabled={!redigerbart}
             feil={feilmeldinger.begrunnelse}
-            defaultValue="0"
+            value={begrunnelse || "0"}
           >
             <option key={uuid()} value="0" disabled>
               Velg i listen

@@ -7,6 +7,8 @@ import * as types from "./types";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 
+const { NO, DK } = MKV.Koder.landkoder;
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -21,6 +23,7 @@ describe("Behandlingsgrunnlag operations", () => {
       form: {
         [KV.Form.SOKNAD]: {
           values: {},
+          syncErrors: {},
         },
         [KV.Form.VURDER_UTPEKING]: {
           values: {},
@@ -139,6 +142,7 @@ describe("Behandlingsgrunnlag operations", () => {
               periode: {},
               luftfartBaser: [],
               overgangsregelbestemmelser: [],
+              ytterligereInformasjon: null,
             },
           }),
         })
@@ -216,14 +220,14 @@ describe("Behandlingsgrunnlag operations", () => {
     it("lager OPPDATER_BEHANDLINGSGRUNNLAG action", () => {
       initialState.form[KV.Form.SOKNAD].values = {
         arbeidsforholdUtland: {},
-        soknadsland: ["DK"],
+        soknadsland: [DK],
       };
       const expectedActions = [
         {
           type: types.OPPDATER_BEHANDLINGSGRUNNLAG,
           dokument: {
             arbeidsforholdUtland: {},
-            soknadsland: ["DK"],
+            soknadsland: [DK],
           },
         },
       ];
@@ -231,6 +235,28 @@ describe("Behandlingsgrunnlag operations", () => {
       const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterState());
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("oppdaterSoeknadsland", () => {
+    it("lager OPPDATER_SOEKNADSLAND action", () => {
+      const expectedActions = [
+        {
+          type: types.OPPDATER_SOEKNADSLAND,
+          data: {
+            soeknadsland: {
+              landkoder: [DK, NO],
+              erUkjenteEllerAlleEosLand: true,
+            },
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
+
+      store.dispatch(operations.oppdaterSoeknadsland([DK, NO], true));
 
       expect(store.getActions()).toEqual(expectedActions);
     });

@@ -7,7 +7,6 @@ import * as Types from "./types";
  * uten support for asynkrone kall.
  */
 
-/* eslint-disable import/prefer-default-export */
 export function oppdaterState(dokument) {
   return {
     type: Types.OPPDATER_BEHANDLINGSGRUNNLAG,
@@ -24,11 +23,14 @@ export function oppdaterPeriode(periode) {
   };
 }
 
-export function oppdaterSoeknadsland(soeknadsland) {
+export function oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand) {
   return {
     type: Types.OPPDATER_SOEKNADSLAND,
     data: {
-      soeknadsland,
+      soeknadsland: {
+        landkoder,
+        erUkjenteEllerAlleEosLand,
+      },
     },
   };
 }

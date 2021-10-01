@@ -10,7 +10,7 @@ const HistoriskeStatsborgerskapHeader = ({ className }: HistoriskeStatsborgerska
   <Nav.Row className={className}>
     <Nav.Column xs="10" />
     <Nav.Column xs="2">
-      <Nav.Typo.Element>Gyldig f.o.m.- t.o.m.</Nav.Typo.Element>
+      <Nav.Typo.Normaltekst>Gyldig f.o.m.- t.o.m.</Nav.Typo.Normaltekst>
     </Nav.Column>
   </Nav.Row>
 );

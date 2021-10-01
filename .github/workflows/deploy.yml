@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Miljø'
+        description: 'Miljø (dev, q1 eller prod)'
         required: true
-        default: 'q2'
+        default: 'dev'
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/melosys-web:${{ github.sha }}
@@ -106,14 +106,14 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/redis.yaml
-          VAR: namespace=default
+          VAR: APP_NAME=melosys-web-redis-q1
       - name: Deploy melosys-web
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/nais.yaml
-          VAR: namespace=default,ingress=https://melosys.dev.adeo.no
+          VARS: nais/vars-q1.json
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
@@ -128,12 +128,12 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
 
-  # Deploy til Q2 manuelt eller ved push på master-branch
-  deploy_q2:
-    name: Deploy til Q2
+  # Deploy til dev manuelt eller ved push på master-branch
+  deploy_dev:
+    name: Deploy til dev
     needs: build
     # always() er nødvendig for å kunne kjøre denne jobben selv om build-job er skipped, https://github.com/actions/runner/issues/491
-    if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped') && (github.event.inputs.environment == 'q2' || (github.event_name == 'push' && github.ref == 'refs/heads/master'))
+    if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped') && (github.event.inputs.environment == 'dev' || (github.event_name == 'push' && github.ref == 'refs/heads/master'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -144,14 +144,14 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/redis.yaml
-          VAR: namespace=q2
+          VAR: APP_NAME=melosys-web-redis
       - name: Deploy
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais/nais.yaml
-          VAR: namespace=q2,ingress=https://melosys-q2.dev.adeo.no
+          VARS: nais/vars-dev.json
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1 ${{ github.event.after }})" >> $GITHUB_ENV
@@ -162,7 +162,7 @@ jobs:
           SLACK_COLOR: good
           SLACK_USERNAME: Github Actions
           SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: ':clap: melosys-web ble deployet til q2 :rocket:'
+          SLACK_TITLE: ':clap: melosys-web ble deployet til dev :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
 
@@ -171,7 +171,7 @@ jobs:
     name: Deploy til prod
     needs: build
     # always() er nødvendig for å kunne kjøre denne jobben selv om build-job er skipped, https://github.com/actions/runner/issues/491
-    if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped') && github.event.inputs.environment == 'p'
+    if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped') && github.event.inputs.environment == 'prod'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -182,14 +182,14 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           RESOURCE: nais/redis.yaml
-          VAR: namespace=default
+          VAR: APP_NAME=melosys-web-redis
       - name: Deploy
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           RESOURCE: nais/nais.yaml
-          VAR: namespace=default,ingress=https://melosys.nais.adeo.no
+          VARS: nais/vars-prod.json
       - name: get commit message
         run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
           echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV

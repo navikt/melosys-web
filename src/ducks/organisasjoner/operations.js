@@ -7,12 +7,10 @@
  *
  */
 
-// import { doThenDispatch } from '../../services/utils';
 import * as Api from "../../services/api";
 import { doThenDispatch } from "../../services/utils";
 import * as Types from "./types";
 
-/* eslint-disable import/prefer-default-export */
 export function hent(orgnr) {
   return doThenDispatch(() => Api.Organisasjoner.hentOrganisasjon(orgnr), {
     OK: Types.OK,

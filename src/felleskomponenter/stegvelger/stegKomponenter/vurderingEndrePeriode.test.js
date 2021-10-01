@@ -2,6 +2,7 @@ import React from "react";
 
 import { VurderingEndrePeriode } from "./vurderingEndrePeriode";
 import { lagAvklartfakta } from "../../../regler/avklartefakta";
+import Datovelger from "../../datovelger";
 
 describe("vurderingEndrePeriode", () => {
   let props = null;
@@ -46,8 +47,8 @@ describe("vurderingEndrePeriode", () => {
     });
   });
 
-  it("viser to inputs for fradato og tildato", () => {
+  it("viser to datofelt for fradato og tildato", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find("Input")).toHaveLength(2);
+    expect(component.find(Datovelger)).toHaveLength(2);
   });
 });

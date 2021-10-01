@@ -7,7 +7,6 @@ import * as Types from "./types";
  * uten support for asynkrone kall.
  */
 
-/* eslint-disable import/prefer-default-export */
 export function oppdaterLovvalgsperioderState(dokument) {
   return {
     type: Types.OPPDATER_LOVVALGSPERIODER,

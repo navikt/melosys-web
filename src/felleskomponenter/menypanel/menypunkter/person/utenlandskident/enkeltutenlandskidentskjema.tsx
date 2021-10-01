@@ -23,7 +23,6 @@ const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }:
           bredde="fullbredde"
           feltNavn={`${overordnetFeltNavn}.ident`}
           label="Utenlandsk ID"
-          datoFelt={false}
         />
       </Nav.Column>
       <Nav.Column xs="6">

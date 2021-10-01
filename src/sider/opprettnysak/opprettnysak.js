@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { reduxForm, getFormValues, FormSection, SubmissionError } from "redux-form";
+import { FormSection, getFormValues, reduxForm, SubmissionError } from "redux-form";
 
 import * as Nav from "../../utils/navFrontend";
 import * as Skjema from "../../felleskomponenter/skjema";
@@ -137,26 +137,10 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                         <FormSection name="soknadsinfo">
                           <Nav.Row>
                             <Nav.Column xs="5">
-                              <FeatureToggle togglename="melosys.input.DATOFELT">
-                                {(status) =>
-                                  status === "enabled" ? (
-                                    <Skjema.Datovelger label="Fra" feltNavn="fom" />
-                                  ) : (
-                                    <Skjema.Input datoFelt feltNavn="fom" label="Fra" />
-                                  )
-                                }
-                              </FeatureToggle>
+                              <Skjema.Datovelger label="Fra" feltNavn="fom" />
                             </Nav.Column>
                             <Nav.Column xs="5">
-                              <FeatureToggle togglename="melosys.input.DATOFELT">
-                                {(status) =>
-                                  status === "enabled" ? (
-                                    <Skjema.Datovelger label="Til" feltNavn="tom" />
-                                  ) : (
-                                    <Skjema.Input datoFelt feltNavn="tom" label="Til" />
-                                  )
-                                }
-                              </FeatureToggle>
+                              <Skjema.Datovelger label="Til" feltNavn="tom" />
                             </Nav.Column>
                           </Nav.Row>
                           <Skjema.LandVelger

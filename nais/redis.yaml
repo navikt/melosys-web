@@ -3,8 +3,10 @@ kind: "Application"
 metadata:
   labels:
     team: teammelosys
-  name: melosys-web-redis
-  namespace: {{namespace}}
+  annotations:
+    nais.io/security-does-not-matter: "true"
+  name: {{APP_NAME}}
+  namespace: teammelosys
 spec:
   image: redis:5-alpine
   port: 6379
