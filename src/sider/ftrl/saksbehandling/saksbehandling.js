@@ -283,6 +283,8 @@ const Saksbehandling = ({
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
+              lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
+              lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
               renderBehandlingsmeny={() => (
                 <Legacybehandlingsmeny
                   redigerbart={redigerbart}
