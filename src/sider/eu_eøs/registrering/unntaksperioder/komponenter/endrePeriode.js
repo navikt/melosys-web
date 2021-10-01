@@ -62,7 +62,7 @@ const EndrePeriode = ({
             disabled={!redigerbart}
           />
         </Nav.Column>
-        <Nav.Column xs="3">
+        <Nav.Column xs="3" className="sluttdato-datovelger">
           <Datovelger
             label="Sluttdato"
             value={Utils.dato.norskStringTilDate(tom)}
