@@ -61,17 +61,23 @@ interface SpesiellGruppeHjelpetekstProps {
 }
 
 const SpesiellGruppeHjelpetekst = ({ erVirksomhetNorsk }: SpesiellGruppeHjelpetekstProps) => {
+  const hovedtekst =
+    "Du skal velge ja dersom søker tilhører en spesiell gruppe og det har betydning for trygdeavgiften. Dette gjelder følgende grupper:";
+  const grupper = [
+    erVirksomhetNorsk
+      ? "Misjonærer som skal arbeide i utlandet i minst to år"
+      : "Ansatte i FN som betaler staff assessment",
+    "Arbeidstakere i Malaysia",
+  ];
+  const tittel = `${hovedtekst} ${Utils.streng.arrayTilKonjunksjon(grupper)}.`;
+
   return (
-    <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Under}>
-      Du skal velge &quot;ja&quot; dersom søker tilhører en spesiell gruppe og det har betydning for trygdeavgiften.
-      Dette gjelder følgende grupper:
+    <Nav.Hjelpetekst tittel={tittel} className="hjelpetekst" type={Nav.PopoverOrientering.Under}>
+      {hovedtekst}
       <ul>
-        <li>
-          {erVirksomhetNorsk
-            ? "Misjonærer som skal arbeide i utlandet i minst to år"
-            : "Ansatte i FN som betaler staff assessment"}
-        </li>
-        <li>Arbeidstakere i Malaysia</li>
+        {grupper.map((gruppe) => (
+          <li>{gruppe}</li>
+        ))}
       </ul>
     </Nav.Hjelpetekst>
   );
