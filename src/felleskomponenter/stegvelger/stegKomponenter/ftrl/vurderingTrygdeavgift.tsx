@@ -56,6 +56,27 @@ const PeriodeTabellComponent = ({ perioder }: { perioder: string[][] | undefined
   );
 };
 
+interface SpesiellGruppeHjelpetekstProps {
+  erVirksomhetNorsk: boolean;
+}
+
+const SpesiellGruppeHjelpetekst = ({ erVirksomhetNorsk }: SpesiellGruppeHjelpetekstProps) => {
+  return (
+    <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Under}>
+      Du skal velge &quot;ja&quot; dersom søker tilhører en spesiell gruppe og det har betydning for trygdeavgiften.
+      Dette gjelder følgende grupper:
+      <ul>
+        <li>
+          {erVirksomhetNorsk
+            ? "Misjonærer som skal arbeide i utlandet i minst to år"
+            : "Ansatte i FN som betaler staff assessment"}
+        </li>
+        <li>Arbeidstakere i Malaysia</li>
+      </ul>
+    </Nav.Hjelpetekst>
+  );
+};
+
 interface TrygdeavgiftsgrunnlagProps {
   formValues: {
     avgiftsberegning?: Api.Avgiftsberegning | undefined;
@@ -88,18 +109,6 @@ const TrygdeavgiftsgrunnlagComponent = ({
   redigerbart,
   saerligeavgiftsgrupper,
 }: TrygdeavgiftsgrunnlagProps) => {
-  const Hjelpetekst = () => (
-    <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Under}>
-      Du skal velge &quot;ja&quot; dersom søker tilhører en spesiell gruppe og det kan ha betydning for trygdeavgiften.
-      Dette gjelder følgende grupper:
-      <ul>
-        <li>Ansatte i FN som betaler staff assessment</li>
-        <li>Misjonærer som skal arbeide i utlandet i minst to år</li>
-        <li>Arbeidstakere i Malaysia</li>
-      </ul>
-    </Nav.Hjelpetekst>
-  );
-
   function mapTabell() {
     const avgiftsperioder = erVirksomhetNorsk
       ? formValues?.avgiftsberegning?.avgiftsperioderNorge
@@ -196,7 +205,7 @@ const TrygdeavgiftsgrunnlagComponent = ({
             legend={
               <Fragment>
                 Tilhører søker en spesiell gruppe?
-                <Hjelpetekst />
+                <SpesiellGruppeHjelpetekst erVirksomhetNorsk={erVirksomhetNorsk} />
               </Fragment>
             }
           >
