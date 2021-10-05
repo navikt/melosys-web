@@ -60,7 +60,7 @@ interface SpesiellGruppeHjelpetekstProps {
   erVirksomhetNorsk: boolean;
 }
 
-const SpesiellGruppeHjelpetekst = ({ erVirksomhetNorsk }: SpesiellGruppeHjelpetekstProps) => {
+export const SpesiellGruppeHjelpetekst = ({ erVirksomhetNorsk }: SpesiellGruppeHjelpetekstProps) => {
   const hovedtekst =
     "Du skal velge ja dersom søker tilhører en spesiell gruppe og det har betydning for trygdeavgiften. Dette gjelder følgende grupper:";
   const grupper = [
@@ -76,7 +76,7 @@ const SpesiellGruppeHjelpetekst = ({ erVirksomhetNorsk }: SpesiellGruppeHjelpete
       {hovedtekst}
       <ul>
         {grupper.map((gruppe) => (
-          <li>{gruppe}</li>
+          <li key={gruppe}>{gruppe}</li>
         ))}
       </ul>
     </Nav.Hjelpetekst>
