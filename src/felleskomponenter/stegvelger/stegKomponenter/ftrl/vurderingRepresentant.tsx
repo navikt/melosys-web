@@ -24,7 +24,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formValues: getFormValues(KV.Form.REPRESENTANT)(state),
   initialValues: {
-    selvbetalende: true,
+    selvbetalende: false,
   },
   formIsValid: formSelectors.VurderRepresentantFormValid(state),
   representantnummerValid: formSelectors.VurderRepresentantRepresentantnummerValid(state),
