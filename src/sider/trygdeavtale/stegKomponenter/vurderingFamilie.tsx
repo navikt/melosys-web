@@ -20,28 +20,30 @@ import "./vurderingFamilie.css";
 
 const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: Api.Trygdeavtale.Resultat) => ({
   barn: {
-    fritekst: (resultat.barn && resultat.barn[0]?.omfattet) || "",
+    fritekst: (resultat.barn && resultat.barn[0]?.begrunnelseFritekst) || "",
     ...Object.fromEntries(
       data.barn
         ? data.barn.map((barn) => [
             barn.uuid,
             {
               innvilget: Utils.streng.boolTilBOOLSK_STRING(
-                resultat.barn?.find((x: Api.Avklartefakta.MedfolgendeFamiliemedlem) => x.uuid === barn.uuid)?.omfattet
+                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.omfattet
               ),
               begrunnelse:
-                resultat.barn?.find((x: Api.Avklartefakta.MedfolgendeFamiliemedlem) => x.uuid === barn.uuid)
-                  ?.begrunnelseKode || null,
+                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.begrunnelseKode ||
+                null,
             },
           ])
         : []
     ),
   },
-  ektefelle: {
-    fritekst: resultat.ektefelle?.begrunnelseFritekst || "",
-    innvilget: Utils.streng.boolTilBOOLSK_STRING(resultat.ektefelle?.omfattet),
-    begrunnelse: resultat.ektefelle?.begrunnelseKode || null,
-  },
+  ektefelle: data.ektefelle
+    ? {
+        fritekst: resultat.ektefelle?.begrunnelseFritekst || "",
+        innvilget: Utils.streng.boolTilBOOLSK_STRING(resultat.ektefelle?.omfattet),
+        begrunnelse: resultat.ektefelle?.begrunnelseKode || null,
+      }
+    : {},
 });
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
@@ -94,51 +96,44 @@ const VurderingFamilie = ({
 }: PropsFromRedux & Props) => {
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
-  const sendOppdaterFlyt = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
-    if (data.formIsValid && data.formValues) {
-      oppdaterFlyt({
-        resultat: {
-          ...resultat,
-          barn:
-            tilknyttedeBarn && !Utils._isEmpty(tilknyttedeBarn)
-              ? [
-                  ...tilknyttedeBarn.map((barn) => ({
-                    uuid: barn?.uuid || "",
-                    omfattet: data.formValues.barn[barn?.uuid]?.innvilget === BOOLSK_STRING.SANN,
-                    begrunnelseKode:
-                      data.formValues.barn[barn?.uuid]?.innvilget === BOOLSK_STRING.SANN
-                        ? null
-                        : data.formValues.barn[barn?.uuid]?.begrunnelse,
-                    begrunnelseFritekst:
-                      data.formValues.barn[barn?.uuid]?.innvilget === BOOLSK_STRING.SANN
-                        ? null
-                        : data.formValues.barn.fritekst,
-                  })),
-                ]
-              : [],
-          ektefelle: tilknyttetEktefelle
-            ? {
-                uuid: tilknyttetEktefelle?.uuid || "",
-                omfattet: data.formValues.ektefelle.innvilget === BOOLSK_STRING.SANN,
-                begrunnelseKode:
-                  data.formValues.ektefelle.innvilget === BOOLSK_STRING.SANN
-                    ? null
-                    : data.formValues.ektefelle.begrunnelse,
-                begrunnelseFritekst:
-                  data.formValues.ektefelle.innvilget === BOOLSK_STRING.SANN
-                    ? null
-                    : data.formValues.ektefelle.fritekst,
-              }
-            : undefined,
-        },
-      });
-    }
+  const erIkkeInnvilget = (innvilget?: string | null): Boolean => innvilget === BOOLSK_STRING.USANN;
+
+  const sendOppdaterFlyt = (data: {
+    formValues: FormValuesProps;
+    tilknyttedeBarn: Api.Trygdeavtale.FamilieValg[] | undefined;
+    tilknyttetEktefelle: Api.Trygdeavtale.FamilieValg | undefined;
+  }) => {
+    if (!data.formValues) return;
+    oppdaterFlyt({
+      resultat: {
+        ...resultat,
+        barn:
+          data.tilknyttedeBarn && !Utils._isEmpty(data.tilknyttedeBarn)
+            ? [
+                ...data.tilknyttedeBarn.map((barn) => ({
+                  uuid: barn?.uuid || "",
+                  omfattet: Utils.streng.BOOLSK_STRINGTilBool(data.formValues.barn[barn?.uuid]?.innvilget),
+                  begrunnelseKode: data.formValues.barn[barn?.uuid]?.begrunnelse,
+                  begrunnelseFritekst: data.formValues.barn.fritekst,
+                })),
+              ]
+            : [],
+        ektefelle: data.tilknyttetEktefelle
+          ? {
+              uuid: data.tilknyttetEktefelle?.uuid || "",
+              omfattet: Utils.streng.BOOLSK_STRINGTilBool(data.formValues.ektefelle.innvilget),
+              begrunnelseKode: data.formValues.ektefelle.begrunnelse,
+              begrunnelseFritekst: data.formValues.ektefelle.fritekst,
+            }
+          : null,
+      },
+    });
   };
   const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);
 
   useEffect(() => {
-    if (redigerbart) debouncedOppdaterFlyt({ formValues, formIsValid });
-  }, [formValues, formIsValid]);
+    if (redigerbart) debouncedOppdaterFlyt({ formValues, tilknyttedeBarn, tilknyttetEktefelle });
+  }, [formValues, formIsValid, tilknyttedeBarn, tilknyttetEktefelle]);
 
   if (!formValues) return null;
 
@@ -186,7 +181,7 @@ const VurderingFamilie = ({
                           />
                         </Nav.Column>
                       </Nav.Row>
-                      {formValues.barn[barn.uuid].innvilget === BOOLSK_STRING.USANN && (
+                      {erIkkeInnvilget(formValues.barn[barn.uuid].innvilget) && (
                         <Skjema.Select
                           label="Begrunnelse:"
                           feltNavn={`barn.${barn.uuid}.begrunnelse`}
@@ -206,8 +201,8 @@ const VurderingFamilie = ({
                   </Nav.Row>
                 )
             )}
-            {tilknyttedeBarn?.some(
-              (barn: Api.Trygdeavtale.FamilieValg) => formValues.barn[barn.uuid]?.innvilget === BOOLSK_STRING.USANN
+            {tilknyttedeBarn?.some((barn: Api.Trygdeavtale.FamilieValg) =>
+              erIkkeInnvilget(formValues.barn[barn.uuid]?.innvilget)
             ) && (
               <div style={{ marginBottom: "2rem" }}>
                 <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
@@ -244,7 +239,7 @@ const VurderingFamilie = ({
                         />
                       </Nav.Column>
                     </Nav.Row>
-                    {formValues.ektefelle?.innvilget === BOOLSK_STRING.USANN && (
+                    {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
                       <Skjema.Select
                         label="Begrunnelse:"
                         feltNavn="ektefelle.begrunnelse"
@@ -261,7 +256,7 @@ const VurderingFamilie = ({
                     )}
                   </Nav.Column>
                 </Nav.Row>
-                {formValues.ektefelle?.innvilget === BOOLSK_STRING.USANN && (
+                {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
                   <div>
                     <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
                     <Skjema.HTMLEditor feltNavn="ektefelle.fritekst" className="fritekst" disabled={!redigerbart} />

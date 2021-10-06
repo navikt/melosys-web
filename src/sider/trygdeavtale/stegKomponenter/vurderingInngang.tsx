@@ -95,13 +95,14 @@ const VurderingInngang = ({
 
   const sendOppdaterFlyt = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
     if (data.formIsValid && data.formValues) {
-      const requestData = {
-        ...resultat,
-        fom: data.formValues.fom ? Utils.dato.formatterDatoTilISO(data.formValues.fom) : undefined,
-        tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
-        land: data.formValues.land ? [data.formValues.land] : [],
-      };
-      oppdaterFlyt({ resultat: requestData });
+      oppdaterFlyt({
+        resultat: {
+          ...resultat,
+          fom: data.formValues.fom ? Utils.dato.formatterDatoTilISO(data.formValues.fom) : undefined,
+          tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
+          land: data.formValues.land ? [data.formValues.land] : [],
+        },
+      });
     }
   };
   const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);

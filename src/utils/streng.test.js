@@ -3,13 +3,16 @@ import {
   boolTilNorsk,
   norskTilBool,
   boolTilStreng,
+  boolTilBOOLSK_STRING,
   strengTilBool,
+  BOOLSK_STRINGTilBool,
   strengTilInt,
   tekstEllerDash,
   storeForbokstaver,
   storeForbokstaverForLand,
   arrayTilKonjunksjon,
 } from "./streng";
+import { BOOLSK_STRING } from "../constants";
 
 describe("streng.js", () => {
   describe("boolTilNorsk", () => {
@@ -42,6 +45,20 @@ describe("streng.js", () => {
       expect(boolTilStreng(null)).toEqual(undefined);
     });
   });
+  describe("boolTilBOOLSK_STRING", () => {
+    test("Oversetter true => BOOLSK_STRING.SANN", () => {
+      expect(boolTilBOOLSK_STRING(true)).toEqual(BOOLSK_STRING.SANN);
+    });
+    test("Oversetter false => BOOLSK_STRING.USANN", () => {
+      expect(boolTilBOOLSK_STRING(false)).toEqual(BOOLSK_STRING.USANN);
+    });
+    test("Oversetter ikke undefined", () => {
+      expect(boolTilBOOLSK_STRING(undefined)).toEqual(undefined);
+    });
+    test("Oversetter ikke null", () => {
+      expect(boolTilBOOLSK_STRING(null)).toEqual(undefined);
+    });
+  });
   describe("strengTilBool", () => {
     test('Transformerer "true" => true', () => {
       expect(strengTilBool("true")).toEqual(true);
@@ -51,6 +68,21 @@ describe("streng.js", () => {
     });
     test('Transformerer "undefined" => false', () => {
       expect(strengTilBool("undefined")).toEqual(false);
+    });
+  });
+
+  describe("BOOLSK_STRINGTilBool", () => {
+    test("Transformerer BOOLSK_STRING.SANN => true", () => {
+      expect(BOOLSK_STRINGTilBool(BOOLSK_STRING.SANN)).toEqual(true);
+    });
+    test("Transformerer BOOLSK_STRING.USANN => false", () => {
+      expect(BOOLSK_STRINGTilBool(BOOLSK_STRING.USANN)).toEqual(false);
+    });
+    test("Transformerer undefined => undefined", () => {
+      expect(BOOLSK_STRINGTilBool(undefined)).toEqual(undefined);
+    });
+    test("Transformerer null => undefined", () => {
+      expect(BOOLSK_STRINGTilBool(null)).toEqual(undefined);
     });
   });
   describe("strengTilInt", () => {

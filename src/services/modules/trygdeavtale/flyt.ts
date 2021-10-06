@@ -2,12 +2,18 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { deleteAsJson, getAsJson, putAsJson } from "../../utils";
 import { TRYGDEAVTALE_FLYT_BASE_URL } from "../../api-constants";
 import { StegNavn } from "../../../kodeverk/koder";
-import { MedfolgendeFamiliemedlem } from "../avklartefakta";
 
 export interface Virksomhet {
   orgId: string;
   navn: string;
 }
+
+export type Familiemedlem = {
+  uuid: string;
+  omfattet?: boolean;
+  begrunnelseKode: string | null;
+  begrunnelseFritekst: string | null;
+};
 
 export interface Resultat {
   fom?: string;
@@ -17,8 +23,8 @@ export interface Resultat {
   vedtak?: string;
   innvilgelse?: string;
   bestemmelse?: string;
-  barn?: MedfolgendeFamiliemedlem[];
-  ektefelle?: MedfolgendeFamiliemedlem;
+  barn?: Familiemedlem[] | null;
+  ektefelle?: Familiemedlem | null;
 }
 
 export interface Steg {

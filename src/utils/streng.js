@@ -27,6 +27,13 @@ export function strengTilBool(value) {
   return value === "true";
 }
 
+export function BOOLSK_STRINGTilBool(value) {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return value === BOOLSK_STRING.SANN;
+}
+
 export function tryParseBool(value) {
   if (value === "true" || value === "TRUE") return true;
   if (value === "false" || value === "FALSE") return false;
