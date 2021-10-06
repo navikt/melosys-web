@@ -2,9 +2,9 @@ import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../../../utils/navFrontend";
 
-import { SpesiellGruppeHjelpetekst } from "./vurderingTrygdeavgift";
+import SpesiellGruppeHjelpetekst from "./spesiellGruppeHjelpeTekst";
 
 describe("SpesiellGruppeHjelpetekst", () => {
   const mockedProps = mock<ComponentProps<typeof SpesiellGruppeHjelpetekst>>();
