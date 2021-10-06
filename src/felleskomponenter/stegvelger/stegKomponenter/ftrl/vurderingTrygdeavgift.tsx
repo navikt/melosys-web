@@ -528,6 +528,7 @@ const VurderingTrygdeavgift = ({
     changeField(`${fieldBase}.særligAvgiftsgruppe`, erSærligAvgiftsgruppe ? "TRUE" : null);
     changeField(`${fieldBase}.betalerArbeidsgiverAvgift`, erNorskVirksomhet ? BOOLSK.SANN : BOOLSK.USANN);
     changeField(`${fieldBase}.erSkattepliktig`, undefined);
+    changeField("avgiftsberegning", {});
   }
 
   useEffect(() => {
