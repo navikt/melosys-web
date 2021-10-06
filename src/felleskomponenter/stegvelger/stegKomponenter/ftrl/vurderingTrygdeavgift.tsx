@@ -582,6 +582,20 @@ const VurderingTrygdeavgift = ({
     formValues?.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET;
   const lønnsforholdErDeltLønn = formValues?.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN;
 
+  const trygdeavgiftsgrunnlagComponentProps = {
+    formValues,
+    oppdatertAvgiftsberegning,
+    erTabellApen,
+    erSaerligAvgiftsGruppeValgt,
+    handleBeregnClick,
+    handleSærligAvgiftsgruppeRadioChange,
+    handleAvgiftspliktigLønnInputChange,
+    redigerbart,
+    erTrygdeavgiftsgrunnlagNorgeUgyldig,
+    erTrygdeavgiftsgrunnlagUtlandUgyldig,
+    saerligeavgiftsgrupper,
+  };
+
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Typo.Undertittel className="undertittel">Trygdeavgift</Nav.Typo.Undertittel>
@@ -615,36 +629,10 @@ const VurderingTrygdeavgift = ({
       </Nav.Row>
 
       {(lønnsforholdErLønnFraNorge || lønnsforholdErDeltLønn) && (
-        <TrygdeavgiftsgrunnlagComponent
-          erVirksomhetNorsk
-          formValues={formValues}
-          oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
-          erTabellApen={erTabellApen}
-          erSaerligAvgiftsGruppeValgt={erSaerligAvgiftsGruppeValgt}
-          handleBeregnClick={handleBeregnClick}
-          handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
-          handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
-          redigerbart={redigerbart}
-          erTrygdeavgiftsgrunnlagNorgeUgyldig={erTrygdeavgiftsgrunnlagNorgeUgyldig}
-          erTrygdeavgiftsgrunnlagUtlandUgyldig={erTrygdeavgiftsgrunnlagUtlandUgyldig}
-          saerligeavgiftsgrupper={saerligeavgiftsgrupper}
-        />
+        <TrygdeavgiftsgrunnlagComponent {...trygdeavgiftsgrunnlagComponentProps} erVirksomhetNorsk />
       )}
       {(lønnsforholdErLønnFraUtlandet || lønnsforholdErDeltLønn) && (
-        <TrygdeavgiftsgrunnlagComponent
-          erVirksomhetNorsk={false}
-          formValues={formValues}
-          oppdatertAvgiftsberegning={oppdatertAvgiftsberegning}
-          erTabellApen={erTabellApen}
-          erSaerligAvgiftsGruppeValgt={erSaerligAvgiftsGruppeValgt}
-          handleBeregnClick={handleBeregnClick}
-          handleSærligAvgiftsgruppeRadioChange={handleSærligAvgiftsgruppeRadioChange}
-          handleAvgiftspliktigLønnInputChange={handleAvgiftspliktigLønnInputChange}
-          redigerbart={redigerbart}
-          erTrygdeavgiftsgrunnlagNorgeUgyldig={erTrygdeavgiftsgrunnlagNorgeUgyldig}
-          erTrygdeavgiftsgrunnlagUtlandUgyldig={erTrygdeavgiftsgrunnlagUtlandUgyldig}
-          saerligeavgiftsgrupper={saerligeavgiftsgrupper}
-        />
+        <TrygdeavgiftsgrunnlagComponent {...trygdeavgiftsgrunnlagComponentProps} erVirksomhetNorsk={false} />
       )}
 
       <div className="fane__knapplinje">
