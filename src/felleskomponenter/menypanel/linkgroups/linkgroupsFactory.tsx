@@ -25,21 +25,15 @@ const {
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
-export interface LinkGroupsFactoryConfig {
+interface LinkGroupsConfig {
   behandlingstema: string;
   behandlingsgrunnlagtype: string;
   contentProps: ContentProps;
 }
 
 class LinkGroupsFactory {
-  private readonly config: LinkGroupsFactoryConfig;
-
-  constructor(config: LinkGroupsFactoryConfig) {
-    this.config = config;
-  }
-
-  createLinkGroups(): LinkGroup[] {
-    const { behandlingstema, contentProps, behandlingsgrunnlagtype } = this.config;
+  static createLinkGroups(config: LinkGroupsConfig): LinkGroup[] {
+    const { behandlingstema, contentProps, behandlingsgrunnlagtype } = config;
 
     switch (behandlingstema) {
       case UTSENDT_ARBEIDSTAKER:

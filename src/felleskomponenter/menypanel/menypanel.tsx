@@ -70,12 +70,11 @@ export const Menypanel = ({
     setMenypanelFeilmelding,
   };
 
-  const linkGroupsFactory = new LinkGroupsFactory({
+  const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
     behandlingstema,
     contentProps,
     behandlingsgrunnlagtype,
   });
-  const linkGroupsWithContent = linkGroupsFactory.createLinkGroups();
 
   const handleClick = (groupIndex: number, linkIndex: number) => {
     setActive([groupIndex, linkIndex]);
