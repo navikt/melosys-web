@@ -7,7 +7,14 @@ import MKV from "../../../../melosyskodeverk";
 import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
 
-const { BESLUTNING_LOVVALG_NORGE, ARBEID_I_UTLANDET, TRYGDETID } = MKV.Koder.behandlinger.behandlingstema;
+const {
+  BESLUTNING_LOVVALG_NORGE,
+  ARBEID_I_UTLANDET,
+  TRYGDETID,
+  UTSENDT_ARBEIDSTAKER,
+} = MKV.Koder.behandlinger.behandlingstema;
+const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
+
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
 
 describe("AvsluttSak", () => {
@@ -45,8 +52,21 @@ describe("AvsluttSak", () => {
     props.redigerbart = false;
     props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
 
-    const behandlingsmeny = shallow(<AvsluttSak {...props} />);
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
 
-    expect(behandlingsmeny.find(".behandlingsmeny__meny__avslutt-sak").isEmptyRender()).toBeTruthy();
+    expect(avsluttSak.find(".behandlingsmeny__meny__avslutt-sak").isEmptyRender()).toBeTruthy();
+  });
+
+  it(`viser ikke 'Avslutt sak som bortfalt' dersom behandlingstema er ${UTSENDT_ARBEIDSTAKER} og behandlingstype er ${NY_VURDERING}`, () => {
+    props.redigerbart = true;
+    props.behandlingstema = UTSENDT_ARBEIDSTAKER;
+    props.behandlingstype = NY_VURDERING;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+
+    const avsluttSakSomBortfalt = avsluttSak.findWhere(
+      (n) => n.type() === Handling && n.props().tekst === "Avslutt sak som bortfalt"
+    );
+    expect(avsluttSakSomBortfalt).toHaveLength(0);
   });
 });

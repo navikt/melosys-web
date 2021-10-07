@@ -64,6 +64,7 @@ const AvsluttSak = ({
   const skalViseAvsluttSak = () => {
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+        return redigerbart && !behandlingstypeErNyVurdering;
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:

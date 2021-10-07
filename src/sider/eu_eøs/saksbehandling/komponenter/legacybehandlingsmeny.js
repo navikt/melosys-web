@@ -11,6 +11,7 @@ const Legacybehandlingsmeny = ({
   tilbakeleggeHandle,
   visHenleggDialogHandle,
   apneTidligereBehandlinger,
+  visAvsluttSakSomBortfalt,
   visAvsluttSakSomBortfaltDialogHandle,
   visHenleggSak,
   visAvslagSoknadDialogHandle,
@@ -37,7 +38,7 @@ const Legacybehandlingsmeny = ({
           Henlegg sak
         </Nav.Knapp>
       )}
-      {redigerbart && (
+      {redigerbart && visAvsluttSakSomBortfalt && (
         <Nav.Knapp mini className="innhold__element" onClick={visAvsluttSakSomBortfaltDialogHandle}>
           Avslutt sak som bortfalt
         </Nav.Knapp>
@@ -64,6 +65,7 @@ Legacybehandlingsmeny.propTypes = {
   tilbakeleggeHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
+  visAvsluttSakSomBortfalt: PT.bool.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
