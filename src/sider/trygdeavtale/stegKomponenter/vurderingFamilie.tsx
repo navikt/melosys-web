@@ -56,18 +56,20 @@ const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface FamilieProps {
+  innvilget: string | null;
+  begrunnelse: string | null;
+}
+
+interface BarnProps {
+  [key: string]: FamilieProps;
+}
+
 interface FormValuesProps {
-  barn: {
-    fritekst: string;
-  } & {
-    [key: string]: {
-      innvilget: string | null;
-      begrunnelse: string | null;
-    };
+  barn?: BarnProps & {
+    fritekst: string | null;
   };
-  ektefelle: {
-    innvilget: string | null;
-    begrunnelse: string | null;
+  ektefelle?: FamilieProps & {
     fritekst: string | null;
   };
 }
@@ -97,13 +99,14 @@ const VurderingFamilie = ({
   const obsTekst = '* Hvis dette ikke stemmer, må du legge inn nødvendig informasjon i menypunktet "Familieforhold".';
 
   const erIkkeInnvilget = (innvilget?: string | null): Boolean => innvilget === BOOLSK_STRING.USANN;
+  const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
   const sendOppdaterFlyt = (data: {
     formValues: FormValuesProps;
     tilknyttedeBarn: Api.Trygdeavtale.FamilieValg[] | undefined;
     tilknyttetEktefelle: Api.Trygdeavtale.FamilieValg | undefined;
   }) => {
-    if (!data.formValues) return;
+    if (!data.formValues || !data.formValues.barn || !data.formValues.ektefelle) return;
     oppdaterFlyt({
       resultat: {
         ...resultat,
@@ -112,9 +115,9 @@ const VurderingFamilie = ({
             ? [
                 ...data.tilknyttedeBarn.map((barn) => ({
                   uuid: barn?.uuid || "",
-                  omfattet: Utils.streng.BOOLSK_STRINGTilBool(data.formValues.barn[barn?.uuid]?.innvilget),
-                  begrunnelseKode: data.formValues.barn[barn?.uuid]?.begrunnelse,
-                  begrunnelseFritekst: data.formValues.barn.fritekst,
+                  omfattet: Utils.streng.BOOLSK_STRINGTilBool(finnBarn(barn?.uuid, data.formValues.barn)?.innvilget),
+                  begrunnelseKode: finnBarn(barn?.uuid, data.formValues.barn)?.begrunnelse || null,
+                  begrunnelseFritekst: data.formValues.barn?.fritekst || null,
                 })),
               ]
             : [],
@@ -135,7 +138,7 @@ const VurderingFamilie = ({
     if (redigerbart) debouncedOppdaterFlyt({ formValues, tilknyttedeBarn, tilknyttetEktefelle });
   }, [formValues, formIsValid, tilknyttedeBarn, tilknyttetEktefelle]);
 
-  if (!formValues) return null;
+  if (!formValues || !formValues.barn || !formValues.ektefelle) return null;
 
   return (
     <div className="vurderingFamilie">
@@ -155,7 +158,7 @@ const VurderingFamilie = ({
           <Nav.Fieldset legend="Barn" className="barn">
             {tilknyttedeBarn?.map(
               (barn: Api.Trygdeavtale.FamilieValg) =>
-                formValues.barn[barn.uuid] && (
+                finnBarn(barn?.uuid, formValues.barn) && (
                   <Nav.Row key={barn.uuid} className="barnet">
                     <Nav.Column xs="8">
                       <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
@@ -181,12 +184,12 @@ const VurderingFamilie = ({
                           />
                         </Nav.Column>
                       </Nav.Row>
-                      {erIkkeInnvilget(formValues.barn[barn.uuid].innvilget) && (
+                      {erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget) && (
                         <Skjema.Select
                           label="Begrunnelse:"
                           feltNavn={`barn.${barn.uuid}.begrunnelse`}
                           emptyFieldText="Velg..."
-                          emptyFieldDisabled={!redigerbart || !!formValues.barn[barn.uuid].begrunnelse}
+                          emptyFieldDisabled={!redigerbart || !!finnBarn(barn?.uuid, formValues.barn)?.begrunnelse}
                           name={barn.uuid}
                           disabled={!redigerbart}
                         >
@@ -202,7 +205,7 @@ const VurderingFamilie = ({
                 )
             )}
             {tilknyttedeBarn?.some((barn: Api.Trygdeavtale.FamilieValg) =>
-              erIkkeInnvilget(formValues.barn[barn.uuid]?.innvilget)
+              erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget)
             ) && (
               <div style={{ marginBottom: "2rem" }}>
                 <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
