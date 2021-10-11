@@ -204,6 +204,8 @@ const VurderingVedtak = ({
     }
   };
 
+  const soknadslandErEtAvtaleland = avtaleland[soknadsland?.toString()] !== undefined;
+
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.Typo.Undertittel>
@@ -226,9 +228,7 @@ const VurderingVedtak = ({
         </Nav.Column>
         <Nav.Column xs="4">
           <Nav.Typo.Element className="info">Arbeid utføres i avtaleland</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">
-            {avtaleland.includes(soknadsland?.toString()) ? "Ja" : "Nei"}
-          </Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst className="info">{soknadslandErEtAvtaleland ? "Ja" : "Nei"}</Nav.Typo.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="3">
           <Nav.Typo.Element className="info">Familiemedlemmer</Nav.Typo.Element>
