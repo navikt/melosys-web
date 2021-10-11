@@ -27,8 +27,7 @@ import PdfLenkeListe from "../../../pdfLenkeListe";
 
 import "./vurderingVedtak.css";
 
-// https://confluence.adeo.no/display/TEESSI/Avtaleland
-const avtaleland = ["AU", "BA", "CA", "CL", "IN", "IL", "ME", "RS", "GB", "TR", "US"];
+const { avtaleland } = MKV.Koder;
 
 const mapStateToProps = (state: RootState) => ({
   medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
