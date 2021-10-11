@@ -22,8 +22,8 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
   barn: {
     fritekst: (resultat.barn && resultat.barn[0]?.begrunnelseFritekst) || "",
     ...Object.fromEntries(
-      data.barn
-        ? data.barn.map((barn) => [
+      data.barnValg
+        ? data.barnValg.map((barn) => [
             barn.uuid,
             {
               innvilget: Utils.streng.boolTilBOOLSK_STRING(
@@ -37,7 +37,7 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
         : []
     ),
   },
-  ektefelle: data.ektefelle
+  ektefelle: data.ektefelleValg
     ? {
         fritekst: resultat.ektefelle?.begrunnelseFritekst || "",
         innvilget: Utils.streng.boolTilBOOLSK_STRING(resultat.ektefelle?.omfattet),
@@ -86,7 +86,12 @@ interface Props {
 }
 
 const VurderingFamilie = ({
-  data: { barn: tilknyttedeBarn, barnBegrunnelseValg, ektefelle: tilknyttetEktefelle, ektefelleBegrunnelseValg },
+  data: {
+    barnValg: tilknyttedeBarn,
+    barnBegrunnelseValg,
+    ektefelleValg: tilknyttetEktefelle,
+    ektefelleBegrunnelseValg,
+  },
   formIsValid,
   formValues,
   fortsett,
@@ -296,8 +301,8 @@ const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   validate: (values, props) =>
     lagYupToReduxformErrorMapper(vurdering_familie, {
       context: {
-        tilknyttedeBarn: props.data.barn,
-        tilknyttetEktefelle: props.data.ektefelle,
+        tilknyttedeBarn: props.data.barnValg,
+        tilknyttetEktefelle: props.data.ektefelleValg,
       },
     })(values),
 })(VurderingFamilie);

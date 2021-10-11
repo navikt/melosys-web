@@ -45,9 +45,9 @@ export interface StegData {
   innvilgelseValg?: KTObject[];
   bestemmelseValg?: KTObject[];
   bestemmelseTekst?: string;
-  barn?: FamilieValg[];
+  barnValg?: FamilieValg[];
   barnBegrunnelseValg?: KTObject[];
-  ektefelle?: FamilieValg;
+  ektefelleValg?: FamilieValg;
   ektefelleBegrunnelseValg?: KTObject[];
 }
 
