@@ -240,7 +240,7 @@ const VurderingVedtak = ({
 
       {trygdeavgiftTilNorge && (
         <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
-          <Ikoner.Inntekt className="trygdeavgift_ikon" />
+          <Ikoner.Inntekt className="trygdeavgift_ikon" focusable={false} />
           <Nav.Typo.Normaltekst>
             {getTrygdeavgiftString(
               KV.finnTermFraListe(
@@ -254,7 +254,7 @@ const VurderingVedtak = ({
       )}
       {trygdeavgiftTilUtlandet && (
         <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
-          <Ikoner.Inntekt className="trygdeavgift_ikon" />
+          <Ikoner.Inntekt className="trygdeavgift_ikon" focusable={false} />
           <Nav.Typo.Normaltekst>
             {getTrygdeavgiftString(
               KV.finnTermFraListe(
