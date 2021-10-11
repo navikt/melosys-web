@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { RootState } from "AppTypes";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
@@ -106,42 +106,33 @@ const VurderingFamilie = ({
   const erIkkeInnvilget = (innvilget?: string | null): Boolean => innvilget === BOOLSK_STRING.USANN;
   const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
-  const sendOppdaterFlyt = (data: {
-    formValues: FormValuesProps;
-    tilknyttedeBarn: Api.Trygdeavtale.FamilieValg[] | undefined;
-    tilknyttetEktefelle: Api.Trygdeavtale.FamilieValg | undefined;
-  }) => {
-    if (!data.formValues || !data.formValues.barn || !data.formValues.ektefelle) return;
+  useEffect(() => {
+    if (!redigerbart || !formValues || !formValues.barn || !formValues.ektefelle) return;
     oppdaterFlyt({
       resultat: {
         ...resultat,
         barn:
-          data.tilknyttedeBarn && !Utils._isEmpty(data.tilknyttedeBarn)
+          tilknyttedeBarn && !Utils._isEmpty(tilknyttedeBarn)
             ? [
-                ...data.tilknyttedeBarn.map((barn) => ({
+                ...tilknyttedeBarn.map((barn) => ({
                   uuid: barn?.uuid || "",
-                  omfattet: Utils.streng.uppercaseStrengTilBool(finnBarn(barn?.uuid, data.formValues.barn)?.innvilget),
-                  begrunnelseKode: finnBarn(barn?.uuid, data.formValues.barn)?.begrunnelse || null,
-                  begrunnelseFritekst: data.formValues.barn?.fritekst || null,
+                  omfattet: Utils.streng.uppercaseStrengTilBool(finnBarn(barn?.uuid, formValues.barn)?.innvilget),
+                  begrunnelseKode: finnBarn(barn?.uuid, formValues.barn)?.begrunnelse || null,
+                  begrunnelseFritekst: formValues.barn?.fritekst || null,
                 })),
               ]
             : [],
-        ektefelle: data.tilknyttetEktefelle
+        ektefelle: tilknyttetEktefelle
           ? {
-              uuid: data.tilknyttetEktefelle?.uuid || "",
-              omfattet: Utils.streng.uppercaseStrengTilBool(data.formValues.ektefelle.innvilget),
-              begrunnelseKode: data.formValues.ektefelle.begrunnelse,
-              begrunnelseFritekst: data.formValues.ektefelle.fritekst,
+              uuid: tilknyttetEktefelle?.uuid || "",
+              omfattet: Utils.streng.uppercaseStrengTilBool(formValues.ektefelle.innvilget),
+              begrunnelseKode: formValues.ektefelle.begrunnelse,
+              begrunnelseFritekst: formValues.ektefelle.fritekst,
             }
           : null,
       },
     });
-  };
-  const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);
-
-  useEffect(() => {
-    if (redigerbart) debouncedOppdaterFlyt({ formValues, tilknyttedeBarn, tilknyttetEktefelle });
-  }, [formValues, formIsValid, tilknyttedeBarn, tilknyttetEktefelle]);
+  }, [formValues, tilknyttedeBarn, tilknyttetEktefelle]);
 
   if (!formValues || !formValues.barn || !formValues.ektefelle) return null;
 
@@ -298,13 +289,7 @@ const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   destroyOnUnmount: true,
   enableReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) =>
-    lagYupToReduxformErrorMapper(vurdering_familie, {
-      context: {
-        tilknyttedeBarn: props.data.barnValg,
-        tilknyttetEktefelle: props.data.ektefelleValg,
-      },
-    })(values),
+  validate: lagYupToReduxformErrorMapper(vurdering_familie),
 })(VurderingFamilie);
 
 export default connector(VurderingFamilieForm);

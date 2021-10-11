@@ -71,11 +71,11 @@ const VurderingBestemmelse = ({
   oppdaterFlyt,
 }: PropsFromRedux & Props) => {
   useEffect(() => {
-    if (formValues?.vedtak) {
+    if (redigerbart && formValues) {
       oppdaterFlyt({
         resultat: {
           ...resultat,
-          vedtak: formValues.vedtak,
+          vedtak: formValues?.vedtak,
           innvilgelse: formValues?.innvilgelse,
           bestemmelse: formValues?.bestemmelse,
         },

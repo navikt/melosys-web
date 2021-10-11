@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -93,23 +93,18 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const sendOppdaterFlyt = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
-    if (data.formIsValid && data.formValues) {
+  useEffect(() => {
+    if (redigerbart && formValues) {
       oppdaterFlyt({
         resultat: {
           ...resultat,
-          fom: data.formValues.fom ? Utils.dato.formatterDatoTilISO(data.formValues.fom) : undefined,
-          tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
-          land: data.formValues.land ? [data.formValues.land] : [],
+          fom: formValues.fom ? Utils.dato.formatterDatoTilISO(formValues.fom) : undefined,
+          tom: formValues.tom ? Utils.dato.formatterDatoTilISO(formValues.tom) : undefined,
+          land: formValues.land ? [formValues.land] : [],
         },
       });
     }
-  };
-  const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);
-
-  useEffect(() => {
-    if (redigerbart) debouncedOppdaterFlyt({ formValues, formIsValid });
-  }, [formValues, formIsValid]);
+  }, [formValues]);
 
   const fortsettHandle = () => {
     if (formValues.fom !== initialFomTom?.fom || formValues.tom !== initialFomTom?.tom) {
@@ -118,11 +113,6 @@ const VurderingInngang = ({
     } else {
       fortsett();
     }
-  };
-
-  const periodeEndringHandle = async () => {
-    // await slettFlyt();
-    sendOppdaterFlyt({ formValues, formIsValid });
   };
 
   return (
@@ -172,7 +162,6 @@ const VurderingInngang = ({
           }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
-            periodeEndringHandle();
             setVisOppfrisk(false);
             visMenypanel();
             fortsett();

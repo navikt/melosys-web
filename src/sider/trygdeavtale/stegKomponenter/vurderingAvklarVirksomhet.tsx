@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -9,7 +9,6 @@ import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../utils/navFrontend";
-import * as Utils from "../../../utils";
 
 import { formSelectors } from "../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
@@ -69,18 +68,13 @@ const VurderingAvklarVirksomhet = ({
     "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
     'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
-  const sendOppdaterFlyt = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
-    if (data.formIsValid && data.formValues) {
+  useEffect(() => {
+    if (redigerbart && formValues) {
       oppdaterFlyt({
-        resultat: { ...resultat, virksomheter: data.formValues.virksomheter || [] },
+        resultat: { ...resultat, virksomheter: formValues.virksomheter || [] },
       });
     }
-  };
-  const debouncedOppdaterFlyt = useCallback(Utils._debounce(sendOppdaterFlyt, 500), []);
-
-  useEffect(() => {
-    if (redigerbart) debouncedOppdaterFlyt({ formValues, formIsValid });
-  }, [formValues, formIsValid]);
+  }, [formValues]);
 
   return (
     <div className="vurderingAvklarVirksomhet">
