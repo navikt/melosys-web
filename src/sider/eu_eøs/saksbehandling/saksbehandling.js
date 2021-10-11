@@ -250,6 +250,7 @@ class Saksbehandling extends Component {
     const visRevurderFagsak =
       anmodningsperioderErSendtUtlandet ||
       (behandlingErAvsluttet && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
+    const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
     return (
       <div className="saksbehandling">
@@ -289,12 +290,11 @@ class Saksbehandling extends Component {
                     tilbakeleggeHandle={tilbakeleggOppgave}
                     visHenleggDialogHandle={visHenleggDialogHandle}
                     apneTidligereBehandlinger={apneTidligereBehandlinger}
+                    visAvsluttSakSomBortfalt={!behandlingstypeErNyVurdering}
                     visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
                     visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                     visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                    visAvslagManglendeOpplysninger={
-                      behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
-                    }
+                    visAvslagManglendeOpplysninger={!behandlingstypeErNyVurdering}
                     visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
                     visRevurderFagsak={visRevurderFagsak}
                   />
