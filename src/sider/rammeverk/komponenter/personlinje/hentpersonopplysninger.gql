@@ -1,0 +1,24 @@
+query hentPersonopplysninger($behandlingID: Long!) {
+  hentSaksopplysninger(behandlingID: $behandlingID) {
+    persondata {
+      navn {
+        fornavn
+        mellomnavn
+        etternavn
+      }
+      kjoenn
+      folkeregisterpersonstatus {
+        kode
+      }
+      folkeregisteridentifikator
+      statsborgerskap {
+        land
+        erHistorisk
+      }
+      sivilstand {
+        type
+        erHistorisk
+      }
+    }
+  }
+}

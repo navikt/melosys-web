@@ -13,7 +13,7 @@ import * as API from "../../../services/api";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Behandlingsmeny from "./behandlingsmeny";
+import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 import Stegvelger from "../../../felleskomponenter/stegvelger";
 import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -283,8 +283,10 @@ const Saksbehandling = ({
               behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
+              lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
+              lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
               renderBehandlingsmeny={() => (
-                <Behandlingsmeny
+                <Legacybehandlingsmeny
                   redigerbart={redigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}

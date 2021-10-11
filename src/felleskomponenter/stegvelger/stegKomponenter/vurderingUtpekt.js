@@ -1,7 +1,7 @@
-import React, { useEffect, Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { reduxForm, getFormValues } from "redux-form";
+import { getFormValues, reduxForm } from "redux-form";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as KV from "../../../kodeverk";
@@ -16,6 +16,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { flytSelectors } from "../../../ducks/flyt";
+import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 
 import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from "../../../regler/lovvalgsbestemmelser";
 import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../regler/lovvalgsland";
@@ -28,7 +29,6 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.css";
-import { FeatureToggle } from "../../../featuretoggle";
 
 const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleLovvalg.filter(
   ({ kode }) =>
@@ -154,26 +154,10 @@ export const VurderingUtpekt = ({
           <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
           <Nav.Row>
             <Nav.Column xs="6">
-              <FeatureToggle togglename="melosys.input.DATOFELT">
-                {(status) =>
-                  status === "enabled" ? (
-                    <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
-                  ) : (
-                    <Skjema.Input datoFelt label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
-                  )
-                }
-              </FeatureToggle>
+              <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="6">
-              <FeatureToggle togglename="melosys.input.DATOFELT">
-                {(status) =>
-                  status === "enabled" ? (
-                    <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
-                  ) : (
-                    <Skjema.Input datoFelt label="Til og med" feltNavn="tom" disabled={!redigerbart} />
-                  )
-                }
-              </FeatureToggle>
+              <Skjema.Datovelger label="Til og med" feltNavn="tom" disabled={!redigerbart} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Column>
@@ -245,26 +229,48 @@ VurderingUtpekt.defaultProps = {
   ytterligereInformasjon: null,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  lovvalgsperiode: {
-    fomDato: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
-    tomDato: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
-  },
-  formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
-  initialValues: {
-    fom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
-    tom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-    lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
-    lovvalgsland: ownProps.tilstand.lovvalgsland,
-    utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
-    overgangsregelbestemmelser: behandlingsgrunnlagSelectors
-      .OvergangsregelbestemmelserSelector(state)
-      .map((o) => o.kode),
-  },
-  vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
-  ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-});
+const mapStateToProps = (state, ownProps) => {
+  const behandlingsstatus = behandlingerSelectors.BehandlingsstatusKodeSelector(state);
+
+  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
+    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET ||
+    behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING;
+
+  const lovvalgsperiode = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? {
+        fomDato: lovvalgsperioderSelectors.FomDatoSelector(state),
+        tomDato: lovvalgsperioderSelectors.TomDatoSelector(state),
+      }
+    : {
+        fomDato: behandlingsgrunnlagSelectors.PeriodeFomSelector(state),
+        tomDato: behandlingsgrunnlagSelectors.PeriodeTomSelector(state),
+      };
+
+  const initialLovvalgsperiodeFom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? lovvalgsperioderSelectors.FomDatoSelector(state)
+    : behandlingerSelectors.LovvalgsperiodeFomSelector(state);
+  const initialLovvalgsperiodeTom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? lovvalgsperioderSelectors.TomDatoSelector(state)
+    : behandlingerSelectors.LovvalgsperiodeTomSelector(state);
+
+  return {
+    lovvalgsperiode,
+    formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
+    initialValues: {
+      fom: initialLovvalgsperiodeFom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeFom) : "",
+      tom: initialLovvalgsperiodeTom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeTom) : "",
+      lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
+      lovvalgsland: ownProps.tilstand.lovvalgsland,
+      utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
+      overgangsregelbestemmelser: behandlingsgrunnlagSelectors
+        .OvergangsregelbestemmelserSelector(state)
+        .map((o) => o.kode),
+    },
+    vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
+    ytterligereInformasjon: behandlingsgrunnlagSelectors.YtterligereInformasjonSelector(state),
+    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  };
+};
 
 const nesteSteg = (values, dispatch, props) => {
   props.bekreftOgFortsett();

@@ -13,7 +13,7 @@ import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummer
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import { useFeatureToggle } from "../../featuretoggle";
-import Behandlingsmeny from "./behandlingsmeny";
+import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
@@ -220,7 +220,7 @@ const Saksbehandling = ({
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
               renderBehandlingsmeny={() => (
-                <Behandlingsmeny
+                <Legacybehandlingsmeny
                   redigerbart={redigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}

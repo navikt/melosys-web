@@ -1,7 +1,5 @@
 import React from "react";
 
-import * as Utils from "../../../utils";
-
 import Input, { InnerInputComponent, normalizeDecimal, normalizeInt } from "./input";
 
 describe("Input", () => {
@@ -11,7 +9,6 @@ describe("Input", () => {
     props = {
       bredde: "M",
       feltNavn: "",
-      datoFelt: false,
     };
   });
 
@@ -43,22 +40,6 @@ describe("Input", () => {
       const input = shallow(<Input {...props} />);
 
       expect(input.props().normalize).toBe(forventetNormaliseringsfunksjon);
-    });
-  });
-
-  describe("datofelt prop", () => {
-    it("setter normalize og placeholder props korrekt", () => {
-      props.datoFelt = true;
-      let input = shallow(<Input {...props} />);
-
-      expect(input.props().normalize).toBe(Utils.dato.normaliserInputDato);
-      expect(input.props().placeholder).toBe("ddmmåå");
-
-      props.datoFelt = false;
-      input = shallow(<Input {...props} />);
-
-      expect(input.props().normalize).toBeUndefined();
-      expect(input.props().placeholder).toBeNull();
     });
   });
 });

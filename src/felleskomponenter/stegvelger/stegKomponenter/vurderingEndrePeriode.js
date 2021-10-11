@@ -11,7 +11,7 @@ import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
-import { konverterTilStegData, hentFaktaVerdi } from "../../../regler/avklartefakta";
+import { hentFaktaVerdi, konverterTilStegData } from "../../../regler/avklartefakta";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import * as Mui from "../../ui";
@@ -23,6 +23,7 @@ import { behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnla
 import * as Api from "../../../services/api";
 
 import "./vurderingEndrePeriode.css";
+import Datovelger from "../../datovelger";
 
 export class VurderingEndrePeriode extends React.Component {
   state = {
@@ -79,8 +80,8 @@ export class VurderingEndrePeriode extends React.Component {
     this.setState(opprinneligLovvalgsperiode);
   };
 
-  vedTomDatoEndring = (event) => {
-    this.setState({ nyTomDato: event.target.value, nyTomDatoFeilmelding: undefined });
+  vedTomDatoEndring = (dato) => {
+    this.setState({ nyTomDato: Utils.dato.dateTilNorskString(dato), nyTomDatoFeilmelding: undefined });
   };
 
   lagrePeriodeForForhandsvisning = () => {
@@ -238,16 +239,16 @@ export class VurderingEndrePeriode extends React.Component {
         <Nav.Typo.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Nav.Input bredde="fullbredde" label="Startdato" value={formattertOpprinneligFom} disabled />
+            <Datovelger label="Startdato" value={Utils.dato.norskStringTilDate(formattertOpprinneligFom)} disabled />
           </Nav.Column>
           <Nav.Column xs="3">
-            <Nav.Input
-              bredde="fullbredde"
+            <Datovelger
               label="Sluttdato"
+              value={Utils.dato.norskStringTilDate(nyTomDato)}
               onChange={vedTomDatoEndring}
               onBlur={lagrePeriodeForForhandsvisning}
-              value={nyTomDato}
-              feil={nyTomDatoFeilmelding}
+              onCalendarClose={lagrePeriodeForForhandsvisning}
+              feil={nyTomDatoFeilmelding?.feilmelding}
               disabled={!redigerbart}
             />
           </Nav.Column>
@@ -269,17 +270,17 @@ export class VurderingEndrePeriode extends React.Component {
          * TODO: Vise når brev er klar.
          */
         /* <Nav.Row>
-          <Nav.Column xs="6">
-            <Nav.Textarea
-              label="Fritekst til vedtaksbrev"
-              placeholder="Skriv inn tekst til vedtaksbrevet..."
-              value={vedtaksbrevFritekst}
-              onChange={settVedtaksbrevFritekst}
-              maxLength={500}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row> */}
+            <Nav.Column xs="6">
+              <Nav.Textarea
+                label="Fritekst til vedtaksbrev"
+                placeholder="Skriv inn tekst til vedtaksbrevet..."
+                value={vedtaksbrevFritekst}
+                onChange={settVedtaksbrevFritekst}
+                maxLength={500}
+                disabled={!redigerbart}
+              />
+            </Nav.Column>
+          </Nav.Row> */}
         {redigerbart && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="6">

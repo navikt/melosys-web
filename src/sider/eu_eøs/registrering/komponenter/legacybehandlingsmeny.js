@@ -1,0 +1,53 @@
+import React from "react";
+import PT from "prop-types";
+
+import * as Nav from "../../../../utils/navFrontend";
+
+const Legacybehandlingsmeny = (props) => {
+  const {
+    redigerbart,
+    lagreOgLukkHandle,
+    apneTidligereBehandlinger,
+    tilbakeleggeHandle,
+    visRevurderFagsak,
+    visRevurderFagsakDialogHandle,
+  } = props;
+
+  return (
+    <Nav.EkspanderbartpanelBase
+      ariaTittel="Behandlingsmeny"
+      className="oppsummering__meny"
+      heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}
+    >
+      <div className="meny__innhold">
+        {redigerbart && (
+          <Nav.Knapp mini className="innhold__element" onClick={lagreOgLukkHandle}>
+            Lukk
+          </Nav.Knapp>
+        )}
+        <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>
+          Legg tilbake i kø
+        </Nav.Knapp>
+        <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>
+          Vis alle behandlinger
+        </Nav.Knapp>
+        {visRevurderFagsak && (
+          <Nav.Knapp mini className="innhold__element" onClick={visRevurderFagsakDialogHandle}>
+            Vurder saken på nytt
+          </Nav.Knapp>
+        )}
+      </div>
+    </Nav.EkspanderbartpanelBase>
+  );
+};
+
+Legacybehandlingsmeny.propTypes = {
+  lagreOgLukkHandle: PT.func.isRequired,
+  tilbakeleggeHandle: PT.func.isRequired,
+  apneTidligereBehandlinger: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
+  visRevurderFagsakDialogHandle: PT.func.isRequired,
+  visRevurderFagsak: PT.bool.isRequired,
+};
+
+export default Legacybehandlingsmeny;

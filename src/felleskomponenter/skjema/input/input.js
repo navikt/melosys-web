@@ -5,8 +5,6 @@ import { Field } from "redux-form";
 import * as Nav from "../../../utils/navFrontend";
 import * as Utils from "../../../utils";
 
-import { normaliserInputDato } from "../../../utils/dato";
-
 import "../skjema.css";
 
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
@@ -73,11 +71,8 @@ export const normalizeDecimal = (value, previousValue) => {
   return isIntOrDecimal ? valuePreferDot : previousValue;
 };
 
-function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, feltType = undefined, ...rest }) {
+function Input({ feltNavn, bredde = "fullbredde", feltType = undefined, ...rest }) {
   const hentNormalizer = () => {
-    // TODO: Fjern datoFelt og tilhørende felter etter melosys.input.DATOFELT blir skrudd på
-    if (datoFelt) return normaliserInputDato;
-
     switch (feltType) {
       case "desimal":
         return normalizeDecimal;
@@ -88,15 +83,12 @@ function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, feltType = u
     }
   };
 
-  const placeholderTekst = datoFelt ? "ddmmåå" : null;
-
   return (
     <Field
       bredde={bredde}
       name={feltNavn}
       normalize={hentNormalizer()}
       component={InnerInputComponent}
-      placeholder={placeholderTekst}
       props={{ ...rest }}
     />
   );
@@ -105,16 +97,11 @@ function Input({ feltNavn, bredde = "fullbredde", datoFelt = false, feltType = u
 Input.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
-  /**
-   * @deprecated Blir fjernet når melosys.input.DATOFELT fjernes. For normalisering, bruk feltType i stedet.
-   */
-  datoFelt: PT.bool,
   feltType: PT.oneOf(["desimal", "heltall"]),
 };
 
 Input.defaultProps = {
   bredde: "fullbredde",
-  datoFelt: false,
   feltType: undefined,
 };
 

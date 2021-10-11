@@ -2,18 +2,20 @@
 Frontend deployes i en nginx-container som tar seg av oidc-oppsett. I `proxy.nginx`
 defineres proxy til melosys backend.
 
-## Automtatisk deploy
-Melosys-web deployer automatisk til q2 ved push på `master`-branch
+## Automatisk deploy
+Melosys-web deployer automatisk til dev ved push på `master`-branch
 (TODO: utfyll etter flere miljøer legges til)
 
 ## Manuell deploy
-For manuell deploy, så kan man finne ønsket docker-image fra docker-repoet til melosys-web på github.
-Dette limer man inn i feltet `spec.image` i app.yaml.
-Husk også å endre `ingress`, `namespace` og `REDIS_HOST`.
+For manuell deploy, så kan man gå til https://github.com/navikt/melosys-web/actions/, velge deploy-workflow og trykke "run workflow".
+
+Alternativt kan man finne ønsket docker-image fra docker-repoet til melosys-web på github.
+Dette limer man inn i feltet `spec.image` i nais.yaml.
+Husk også å bytte ut variabler som `INGRESS` og `APP_NAME` med faktiske verdier. Verdiene for de ulike miljøene kan finnes i vars-dev.json, vars-prod.json osv.
 
 Sett ønsket cluster med `kubectl config use-context dev-fss`.
 
-Etter app.yaml er konfigurert kjører man videre kommandoen `kubectl apply -f app.yaml`.
+Etter app.yaml er konfigurert kjører man videre kommandoen `kubectl apply -f nais.yaml`.
 Melosys-web blir nå deployet til ønsket cluster og namespace i nais.
 
 Det er viktig at følgende ENV-variabler er satt i vault for å kunne rulle ut til et miljø.

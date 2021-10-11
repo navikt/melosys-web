@@ -1,4 +1,3 @@
-/* eslint import/prefer-default-export:"off" */
 import PT from "prop-types";
 import { Periode } from "./periode";
 import { StrukturertAdresse } from "./adresser";
@@ -66,6 +65,10 @@ const PersonOpplysningerPropType = PT.shape({
       landkode: PT.string,
     })
   ),
+  foedestedOgLand: PT.shape({
+    foedested: PT.string,
+    foedeland: PT.string,
+  }),
 });
 const SelvstendigArbeidPropType = PT.shape({
   erSelvstendig: PT.bool,

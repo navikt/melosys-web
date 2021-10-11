@@ -165,8 +165,8 @@ const VurderingInngang = ({
 
       {visOppfrisk && (
         <DialogboksOppfriskSak
-          oppfrisk={() => {
-            oppfriskOgLastInnSaksopplysninger();
+          oppfrisk={async () => {
+            await oppfriskOgLastInnSaksopplysninger();
             hentFlytOgOppdaterAktuelleSteg();
           }}
           avbryt={() => setVisOppfrisk(false)}

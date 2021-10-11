@@ -15,7 +15,6 @@ import * as behandlingsgrunnlagSelectors from "../behandlingsgrunnlag/selectors"
 import * as Utils from "../../utils";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
 
-/* eslint import/prefer-default-export:"off" */
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
   (behandling) => behandling

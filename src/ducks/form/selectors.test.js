@@ -83,8 +83,19 @@ describe("FormSelectors", () => {
             },
           },
         ],
+        foedestedOgLand: {
+          foedested: {
+            melding: "Fødested kreves",
+            panel: KV.Menypunkter.Person.tittel,
+            undertittel: KV.Menypunkter.Person.undertitler.foedestedOgLand,
+          },
+          foedeland: {
+            melding: "Fødeland kreves",
+            panel: KV.Menypunkter.Person.tittel,
+            undertittel: KV.Menypunkter.Person.undertitler.foedestedOgLand,
+          },
+        },
       };
-
       expect(selectors.SoknadErrorsSelector(state)).toEqual(forventetResultat);
     });
   });

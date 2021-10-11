@@ -1,0 +1,69 @@
+query hentAdresser($behandlingID: Long!) {
+  hentSaksopplysninger(behandlingID: $behandlingID) {
+    persondata {
+      bostedsadresser {
+        coAdressenavn
+        adresse {
+          tilleggsnavn
+          gatenavn
+          husnummerEtasjeLeilighet
+          postboks
+          postnummer
+          poststed
+          region
+          land
+        }
+        gyldigFraOgMed
+        gyldigTilOgMed
+        kilde
+        master
+        erHistorisk
+      }
+      oppholdsadresser {
+        coAdressenavn
+        adresse {
+          tilleggsnavn
+          gatenavn
+          husnummerEtasjeLeilighet
+          postboks
+          postnummer
+          poststed
+          region
+          land
+        }
+        gyldigFraOgMed
+        gyldigTilOgMed
+        kilde
+        master
+        erHistorisk
+      }
+      kontaktadresser {
+        coAdressenavn
+        semistrukturertAdresse {
+          adresselinje1
+          adresselinje2
+          adresselinje3
+          adresselinje4
+          postnummer
+          poststed
+          land
+        }
+        strukturertAdresse {
+          tilleggsnavn
+          gatenavn
+          husnummerEtasjeLeilighet
+          postboks
+          postnummer
+          poststed
+          region
+          land
+        }
+        gyldigFraOgMed
+        gyldigTilOgMed
+        master
+        kilde
+        erHistorisk
+      }
+    }
+  }
+}

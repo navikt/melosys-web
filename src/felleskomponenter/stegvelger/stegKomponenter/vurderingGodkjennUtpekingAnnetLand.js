@@ -1,20 +1,25 @@
 import React, { Fragment, useState } from "react";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
+import { connect } from "react-redux";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as Mui from "../../ui";
 import * as Hooks from "../../../hooks";
+import * as Utils from "../../../utils";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
+import { formSelectors } from "../../../ducks/form";
+
 import "./vurderingGodkjennUtpekingAnnetLand.css";
 
-const VurderingGodkjennUtpekingAnnetLand = ({
+export const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,
   redigerbart,
   overskrift,
   behandlingID,
+  vurderUtpekingFormValues,
 }) => {
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
@@ -29,9 +34,20 @@ const VurderingGodkjennUtpekingAnnetLand = ({
     setGodkjenningPending(true);
 
     try {
+      const { fom, tom } = vurderUtpekingFormValues;
+      const endretPeriode =
+        fom && tom
+          ? {
+              fom: fom && Utils.dato.formatterDatoTilISO(fom),
+              tom: tom && Utils.dato.formatterDatoTilISO(tom),
+            }
+          : null;
+
       await lagreOgGodkjennUnntaksperioder({
         varsleUtland,
         fritekst,
+        endretPeriode,
+        lovvalgsbestemmelse: vurderUtpekingFormValues.lovvalgsbestemmelse,
       });
     } catch (e) {
       setGodkjenningPending(false);
@@ -92,11 +108,16 @@ const VurderingGodkjennUtpekingAnnetLand = ({
   );
 };
 
+const mapStateToProps = (state) => ({
+  vurderUtpekingFormValues: formSelectors.VurderUtpekingFormValuesSelector(state),
+});
+
 VurderingGodkjennUtpekingAnnetLand.propTypes = {
   lagreOgGodkjennUnntaksperioder: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   overskrift: PT.string.isRequired,
   behandlingID: PT.number.isRequired,
+  vurderUtpekingFormValues: PT.object.isRequired,
 };
 
-export default VurderingGodkjennUtpekingAnnetLand;
+export default connect(mapStateToProps)(VurderingGodkjennUtpekingAnnetLand);

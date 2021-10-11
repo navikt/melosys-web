@@ -28,7 +28,16 @@ describe("Datovelger", () => {
     expect(input.prop("className")).toBe("datovelger__input input--fullbredde");
     expect(input.prop("selected")).toBe(dato);
     expect(input.prop("locale")).toBe("nb");
-    expect(input.prop("dateFormat")).toBe("dd.MM.yyyy");
+    expect(input.prop("dateFormat")).toStrictEqual([
+      "dd.MM.yyyy",
+      "ddMMyyyy",
+      "ddMMyy",
+      "dd.MM.yy",
+      "dd/MM/yyyy",
+      "dd/MM/yy",
+      "dd-MM-yyyy",
+      "dd-MM-yy",
+    ]);
     expect(input.prop("placeholderText")).toBe("Velg en dato");
     expect(input.prop("disabled")).toBe(false);
     expect(input.prop("onChange")).toBe(props.onChange);

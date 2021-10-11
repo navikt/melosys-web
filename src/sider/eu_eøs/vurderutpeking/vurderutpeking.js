@@ -14,7 +14,7 @@ import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger from "../../../felleskomponenter/stegvelger";
 import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
-import Behandlingsmeny from "./komponenter/behandlingsmeny";
+import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 
 import { formSelectors } from "../../../ducks/form";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -196,7 +196,7 @@ const Vurderutpeking = ({
               behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
               periodeLabel="Periode fra SED"
               renderBehandlingsmeny={() => (
-                <Behandlingsmeny
+                <Legacybehandlingsmeny
                   redigerbart={behandlingsmenyRedigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggOppgave}

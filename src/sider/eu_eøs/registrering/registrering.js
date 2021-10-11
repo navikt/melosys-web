@@ -13,7 +13,7 @@ import * as MPT from "../../../proptypes";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Behandlingsmeny from "./komponenter/behandlingsmeny";
+import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -114,6 +114,8 @@ export const Registrering = (props) => {
   const saksnummer = snr;
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
+  const [saksopplysningerErHentet, setSaksopplysningerErHentet] = React.useState(false);
+
   const lastInnSaksopplysninger = async () => {
     await Promise.all([
       hentBehandling(behandlingID),
@@ -121,6 +123,8 @@ export const Registrering = (props) => {
       hentAvklartefakta(behandlingID),
       hentLovvalgsperioder(behandlingID),
     ]);
+
+    setSaksopplysningerErHentet(true);
   };
 
   React.useEffect(() => {
@@ -160,15 +164,17 @@ export const Registrering = (props) => {
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="7">
-            <Saksopplysninger
-              redigerbart={redigerbart}
-              behandlingID={behandlingID}
-              saksnummer={saksnummer}
-              sed={sed}
-              vurderingBegrunnelser={vurderingBegrunnelser}
-              tilForsiden={tilForsiden}
-              startOgVisOppfriskModal={startOgVisOppfriskModal}
-            />
+            {saksopplysningerErHentet && (
+              <Saksopplysninger
+                redigerbart={redigerbart}
+                behandlingID={behandlingID}
+                saksnummer={saksnummer}
+                sed={sed}
+                vurderingBegrunnelser={vurderingBegrunnelser}
+                tilForsiden={tilForsiden}
+                startOgVisOppfriskModal={startOgVisOppfriskModal}
+              />
+            )}
           </Nav.Column>
           <Nav.Column xs="5">
             <SideOppsummering
@@ -181,7 +187,7 @@ export const Registrering = (props) => {
               lovvalgsperiodeTom={lovvalgsperiodeTom}
               lovvalgsland={lovvalgsland}
               renderBehandlingsmeny={() => (
-                <Behandlingsmeny
+                <Legacybehandlingsmeny
                   redigerbart={redigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
                   tilbakeleggeHandle={tilbakeleggHandle}
