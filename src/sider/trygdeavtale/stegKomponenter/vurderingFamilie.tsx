@@ -26,7 +26,7 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
         ? data.barnValg.map((barn) => [
             barn.uuid,
             {
-              innvilget: Utils.streng.boolTilBOOLSK_STRING(
+              innvilget: Utils.streng.boolTilUppercaseStreng(
                 resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.omfattet
               ),
               begrunnelse:
@@ -40,7 +40,7 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
   ektefelle: data.ektefelleValg
     ? {
         fritekst: resultat.ektefelle?.begrunnelseFritekst || "",
-        innvilget: Utils.streng.boolTilBOOLSK_STRING(resultat.ektefelle?.omfattet),
+        innvilget: Utils.streng.boolTilUppercaseStreng(resultat.ektefelle?.omfattet),
         begrunnelse: resultat.ektefelle?.begrunnelseKode || null,
       }
     : {},
@@ -120,7 +120,7 @@ const VurderingFamilie = ({
             ? [
                 ...data.tilknyttedeBarn.map((barn) => ({
                   uuid: barn?.uuid || "",
-                  omfattet: Utils.streng.BOOLSK_STRINGTilBool(finnBarn(barn?.uuid, data.formValues.barn)?.innvilget),
+                  omfattet: Utils.streng.uppercaseStrengTilBool(finnBarn(barn?.uuid, data.formValues.barn)?.innvilget),
                   begrunnelseKode: finnBarn(barn?.uuid, data.formValues.barn)?.begrunnelse || null,
                   begrunnelseFritekst: data.formValues.barn?.fritekst || null,
                 })),
@@ -129,7 +129,7 @@ const VurderingFamilie = ({
         ektefelle: data.tilknyttetEktefelle
           ? {
               uuid: data.tilknyttetEktefelle?.uuid || "",
-              omfattet: Utils.streng.BOOLSK_STRINGTilBool(data.formValues.ektefelle.innvilget),
+              omfattet: Utils.streng.uppercaseStrengTilBool(data.formValues.ektefelle.innvilget),
               begrunnelseKode: data.formValues.ektefelle.begrunnelse,
               begrunnelseFritekst: data.formValues.ektefelle.fritekst,
             }
