@@ -114,7 +114,7 @@ const lagTrygdeavtaleFelter = (behandlingsgrunnlag) => ({
 const lagSedGrunnlagFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
-  ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon,
+  ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon || null,
 });
 
 const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
@@ -156,8 +156,8 @@ export function oppdaterPeriode(periode) {
   return (dispatch) => dispatch(Actions.oppdaterPeriode(periode));
 }
 
-export function oppdaterSoeknadsland(soeknadsland) {
-  return (dispatch) => dispatch(Actions.oppdaterSoeknadsland(soeknadsland));
+export function oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand) {
+  return (dispatch) => dispatch(Actions.oppdaterSoeknadsland(landkoder, erUkjenteEllerAlleEosLand));
 }
 
 export function oppdaterTrygdedekning(trygdedekning) {

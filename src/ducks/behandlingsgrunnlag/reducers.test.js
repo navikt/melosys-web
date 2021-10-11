@@ -5,6 +5,8 @@ import reducer, { initialState } from "./reducers";
 
 import MKV from "../../melosyskodeverk";
 
+const { DK, DE } = MKV.Koder.landkoder;
+
 describe("behandlingsgrunnlag reducer", () => {
   it("setter status pending ved action.type PENDING", () => {
     const action = {
@@ -49,6 +51,33 @@ describe("behandlingsgrunnlag reducer", () => {
       data: {
         data: {
           test: "testdata",
+        },
+      },
+    };
+
+    const nextState = reducer(initialState, action);
+
+    expect(nextState).toEqual(expectedState);
+  });
+
+  it(`oppdaterer Soeknadsland ved action-type ${Types.OPPDATER_SOEKNADSLAND}`, () => {
+    const action = {
+      type: Types.OPPDATER_SOEKNADSLAND,
+      data: {
+        soeknadsland: {
+          landkoder: [],
+          erUkjenteEllerAlleEosLand: true,
+        },
+      },
+    };
+    const expectedState = {
+      status: initialState.status,
+      data: {
+        data: {
+          soeknadsland: {
+            landkoder: [],
+            erUkjenteEllerAlleEosLand: true,
+          },
         },
       },
     };
@@ -114,7 +143,7 @@ describe("behandlingsgrunnlag reducer", () => {
                 postboks: "Oslo",
                 postnummer: "1234",
                 poststed: "Poststedet",
-                landkode: "DE",
+                landkode: DE,
               },
               virksomhetNavn: "EQUINOR",
             },
@@ -253,7 +282,7 @@ describe("behandlingsgrunnlag reducer", () => {
           },
         ],
         soknadsland: {
-          landkoder: ["DK"],
+          landkoder: [DK],
           erUkjenteEllerAlleEosLand: true,
         },
         soknadsperiodeFom: "11.11.11",
@@ -330,7 +359,7 @@ describe("behandlingsgrunnlag reducer", () => {
                   postboks: "Oslo",
                   postnummer: "1234",
                   poststed: "Poststedet",
-                  landkode: "DE",
+                  landkode: DE,
                 },
                 virksomhetNavn: "EQUINOR",
               },
@@ -452,7 +481,7 @@ describe("behandlingsgrunnlag reducer", () => {
             },
           ],
           soeknadsland: {
-            landkoder: ["DK"],
+            landkoder: [DK],
             erUkjenteEllerAlleEosLand: true,
           },
           periode: {

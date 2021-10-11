@@ -155,7 +155,7 @@ const OpprettFagsak = (props) => {
                       label={
                         <div>
                           Flere EØS-land/Sveits. Ikke kjent hvilke
-                          <Nav.Hjelpetekst className="hjelpetekst" tittel="tittel" type={Nav.PopoverOrientering.Hoyre}>
+                          <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}>
                             Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
                             <br />
                             Det er ikke mulig å legge til andre land i tillegg.

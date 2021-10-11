@@ -42,8 +42,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
   oppdaterPeriode: (periode: { fom: string; tom: string }) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
-  oppdaterSoeknadsland: (soeknadsland: string[]) =>
-    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(soeknadsland)),
+  oppdaterSoeknadslandkoder: (landkoder: string[]) =>
+    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(landkoder, false)),
   oppdaterTrygdedekning: (trygdedekning: string | undefined) =>
     dispatch(behandlingsgrunnlagOperations.oppdaterTrygdedekning(trygdedekning)),
 });
@@ -77,7 +77,7 @@ const VurderingStart = ({
   formValues = {},
   alleLandkoder,
   oppdaterPeriode,
-  oppdaterSoeknadsland,
+  oppdaterSoeknadslandkoder,
   oppdaterTrygdedekning,
   trygdedekninger,
   formIsValid,
@@ -111,7 +111,7 @@ const VurderingStart = ({
     const tom = Utils.dato.formatterDatoTilISO(data.formValues.tom);
     await Promise.all([
       oppdaterPeriode({ fom: fom === "Invalid date" ? "" : fom, tom: tom === "Invalid date" ? "" : tom }),
-      oppdaterSoeknadsland(data.formValues.land ? [data.formValues.land] : []),
+      oppdaterSoeknadslandkoder(data.formValues.land ? [data.formValues.land] : []),
       oppdaterTrygdedekning(data.formValues.trygdedekning),
     ]);
   };

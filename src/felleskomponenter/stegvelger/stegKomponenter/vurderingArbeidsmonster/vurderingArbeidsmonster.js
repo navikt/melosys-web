@@ -28,7 +28,7 @@ import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingArbeidsmonster.css";
 
 export const UkjenteEllerFlereEosLandLinje = () => (
-  <LandLinje land="Flere EØS-land/Sveits. Ikke oppgitt hvilke" checkbox={{ redigerbart: false, checked: true }} />
+  <LandLinje land="Flere EØS-land/Sveits. Ikke kjent hvilke" checkbox={{ redigerbart: false, checked: true }} />
 );
 
 /**

@@ -1,6 +1,6 @@
 import { object, string, array, bool, number } from "yup";
 
-import MKV from "../../../../melosyskodeverk";
+import MKV from "../../../../../melosyskodeverk";
 
 const AVGIFTSGRUNNLAG_FEIL = { melding: "Avgiftsgrunnlag er ikke gyldig" };
 const AVGIFTSBEREGNING_FEIL = { melding: "Avgiftsberegning er ikke beregnet" };
