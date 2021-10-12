@@ -21,7 +21,6 @@ import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunn
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { formSelectors } from "../../../../ducks/form";
-import { BOOLSK } from "../../../../constants";
 import MottakerTabell from "../../../tabell/mottakerTabell";
 import PdfLenkeListe from "../../../pdfLenkeListe";
 
@@ -31,7 +30,7 @@ const { avtaleland } = MKV.Koder;
 const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
 
 const mapStateToProps = (state: RootState) => ({
-  medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
+  medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state) || [],
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector(state),
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
@@ -248,9 +247,7 @@ const VurderingVedtak = ({
         </Nav.Column>
         <Nav.Column xs="3">
           <Nav.Typo.Element className="info">Familiemedlemmer</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">
-            {medfolgendeFamilie?.every((familie) => familie.omfattet === BOOLSK.SANN) ? "Ja" : "Nei"}
-          </Nav.Typo.Normaltekst>
+          <Nav.Typo.Normaltekst className="info">{medfolgendeFamilie.length > 0 ? "Ja" : "Nei"}</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
 
