@@ -28,6 +28,7 @@ import PdfLenkeListe from "../../../pdfLenkeListe";
 import "./vurderingVedtak.css";
 
 const { avtaleland } = MKV.Koder;
+const { INNVILGELSE_FOLKETRYGDLOVEN_2_8 } = MKV.Koder.brev.produserbaredokumenter;
 
 const mapStateToProps = (state: RootState) => ({
   medfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
@@ -79,7 +80,6 @@ const VurderingVedtak = ({
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
-  const INNVILGELSE_FOLKETRYGDLOVEN_2_8 = "INNVILGELSE_FOLKETRYGDLOVEN_2_8";
 
   useEffect(() => {
     Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
