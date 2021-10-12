@@ -113,7 +113,14 @@ const VurderingVedtak = ({
     return [
       {
         sendesTilDokumenterV2: true,
-        navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
+        navn: ikon ? (
+          <>
+            <Ikoner.Forhandsvis />
+            <span className="sr-only">Forhåndsvis {muligMottaker.dokumentNavn}</span>
+          </>
+        ) : (
+          muligMottaker.dokumentNavn
+        ),
         data: {
           produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
           mottaker: muligMottaker.rolle,
