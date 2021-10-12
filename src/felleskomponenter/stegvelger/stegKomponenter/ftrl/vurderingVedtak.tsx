@@ -39,6 +39,9 @@ const mapStateToProps = (state: RootState) => ({
   familieFormValues: formSelectors.VurderFamilieFormSelector(state).values,
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
+  initialValues: {
+    fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+  },
 });
 
 const connector = connect(mapStateToProps);
@@ -281,14 +284,18 @@ const VurderingVedtak = ({
         </div>
       )}
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        Fritekst til innledning <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
-      </Nav.Typo.Element>
-      <Skjema.HTMLEditor
-        feltNavn="fritekstInnledning"
-        className="fritekst_editor"
-        placeholder="Skriv inn tilleggsinformasjon til innledning..."
-      />
+      {redigerbart && (
+        <>
+          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+            Fritekst til innledning <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
+          </Nav.Typo.Element>
+          <Skjema.HTMLEditor
+            feltNavn="fritekstInnledning"
+            className="fritekst_editor"
+            placeholder="Skriv inn tilleggsinformasjon til innledning..."
+          />
+        </>
+      )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
@@ -297,6 +304,7 @@ const VurderingVedtak = ({
         feltNavn="fritekstBegrunnelse"
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
+        disabled={!redigerbart}
       />
 
       {redigerbart && (
