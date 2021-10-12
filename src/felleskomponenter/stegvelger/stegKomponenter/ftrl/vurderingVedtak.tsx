@@ -116,7 +116,7 @@ const VurderingVedtak = ({
         navn: ikon ? (
           <>
             <Ikoner.Forhandsvis />
-            <span className="sr-only">Forhåndsvis {muligMottaker.dokumentNavn}</span>
+            <span className="sr-only">Forhåndsvis dokument {muligMottaker.dokumentNavn}</span>
           </>
         ) : (
           muligMottaker.dokumentNavn
@@ -134,6 +134,13 @@ const VurderingVedtak = ({
   };
 
   const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
+    const sletteknapp = (
+      <Nav.Knapp type="flat" form="kompakt" onClick={() => slettKopiMottaker(muligMottaker)}>
+        <Ikoner.Bin />
+        <span className="sr-only">Slett dokument {muligMottaker.dokumentNavn}</span>
+      </Nav.Knapp>
+    );
+
     return [
       {
         verdi: (
@@ -158,7 +165,7 @@ const VurderingVedtak = ({
         style: "midtstilt",
       },
       {
-        verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(muligMottaker)} /> : <></>,
+        verdi: kanSlettes ? sletteknapp : <></>,
         style: "slettKnapp",
       },
     ];
