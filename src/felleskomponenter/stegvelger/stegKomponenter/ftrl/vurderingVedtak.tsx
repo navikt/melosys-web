@@ -85,9 +85,7 @@ const VurderingVedtak = ({
     Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
       produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
       orgnr: null,
-    })
-      .then(setMuligeMottakere)
-      .catch(Utils.logger.error);
+    }).then(setMuligeMottakere);
   }, []);
 
   function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
