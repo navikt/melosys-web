@@ -282,7 +282,7 @@ const VurderingVedtak = ({
       )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        Fritekst til innleding <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
+        Fritekst til innledning <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="fritekstInnledning"
