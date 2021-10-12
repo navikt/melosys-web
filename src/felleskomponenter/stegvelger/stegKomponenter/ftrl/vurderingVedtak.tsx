@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
@@ -77,16 +77,17 @@ const VurderingVedtak = ({
   lagreOgFatteVedtak,
   vedtakstype,
 }: Props & PropsFromRedux) => {
-  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [muligeMottakere, setMuligeMottakere] = Hooks.useAsyncCallbackState(
+    () =>
+      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+        produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+        orgnr: null,
+      }),
+    Api.DokumenterV2.tomHentMuligeMottakereResDto(),
+    []
+  );
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
-
-  useEffect(() => {
-    Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
-      orgnr: null,
-    }).then(setMuligeMottakere);
-  }, []);
 
   function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
     return perioder

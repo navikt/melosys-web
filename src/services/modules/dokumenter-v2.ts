@@ -73,6 +73,18 @@ export type HentMuligeMottakereResDto = {
   fasteMottakere: MuligMottaker[];
 };
 
+export const tomHentMuligeMottakereResDto = (): HentMuligeMottakereResDto => ({
+  hovedMottaker: {
+    mottakerNavn: "",
+    dokumentNavn: "",
+    rolle: "",
+    orgnr: null,
+    aktørId: null,
+  },
+  kopiMottakere: [],
+  fasteMottakere: [],
+});
+
 export type HentMuligeMottakereReqDto = {
   produserbartdokument: string;
   orgnr: string | null;
