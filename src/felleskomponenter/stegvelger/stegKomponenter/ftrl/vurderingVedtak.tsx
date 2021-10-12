@@ -299,15 +299,17 @@ const VurderingVedtak = ({
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
       />
 
-      <MottakerTabell
-        rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
-        kolonner={[
-          { verdi: "Dokumenter", bredde: "60%" },
-          { verdi: "Mottaker", bredde: "20%" },
-          { verdi: "Forhåndsvis", bredde: "10%", style: "normal_font_weight midtstilt" },
-          { verdi: "Slett", bredde: "10%", style: "normal_font_weight midtstilt" },
-        ]}
-      />
+      {redigerbart && (
+        <MottakerTabell
+          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
+          kolonner={[
+            { verdi: "Dokumenter", bredde: "60%" },
+            { verdi: "Mottaker", bredde: "20%" },
+            { verdi: "Forhåndsvis", bredde: "10%", style: "normal_font_weight midtstilt" },
+            { verdi: "Slett", bredde: "10%", style: "normal_font_weight midtstilt" },
+          ]}
+        />
+      )}
 
       <div className="fane__knapplinje">
         <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
