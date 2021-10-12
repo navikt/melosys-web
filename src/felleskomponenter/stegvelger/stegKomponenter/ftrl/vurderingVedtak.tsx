@@ -221,6 +221,11 @@ const VurderingVedtak = ({
 
   const soknadslandErEtAvtaleland = avtaleland[soknadsland?.toString()] !== undefined;
 
+  const fritekstInnledningHjelpetekstTittel =
+    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024. Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel. Friteksten kommer her.";
+  const fritekstBegrunnelseHjelpetekstTittel =
+    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge. Friteksten kommer her.";
+
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Undertittel className="undertittel">Frivillig medlemskap etter paragraf 2.8</Nav.Typo.Undertittel>
@@ -283,7 +288,17 @@ const VurderingVedtak = ({
       {redigerbart && (
         <>
           <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-            Fritekst til innledning <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
+            Fritekst til innledning
+            <Nav.Hjelpetekst
+              tittel={fritekstInnledningHjelpetekstTittel}
+              className="hjelpetekst"
+              type={Nav.PopoverOrientering.Hoyre}
+            >
+              <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel:</p>
+              <p>&quot;Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024.</p>
+              <p>Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel.&quot;</p>
+              <p>Friteksten kommer her.</p>
+            </Nav.Hjelpetekst>
           </Nav.Typo.Element>
           <Skjema.HTMLEditor
             feltNavn="fritekstInnledning"
@@ -294,7 +309,17 @@ const VurderingVedtak = ({
       )}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-        Fritekst til begrunnelse <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre} />
+        Fritekst til begrunnelse{" "}
+        <Nav.Hjelpetekst
+          tittel={fritekstBegrunnelseHjelpetekstTittel}
+          className="hjelpetekst"
+          type={Nav.PopoverOrientering.Hoyre}
+        >
+          <p>Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel:</p>
+          <p>&quot;Du har opplyst at du arbeider for Equinor ASA i Brasil.</p>
+          <p>Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge.&quot;</p>
+          <p>Friteksten kommer her.</p>
+        </Nav.Hjelpetekst>
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="fritekstBegrunnelse"
