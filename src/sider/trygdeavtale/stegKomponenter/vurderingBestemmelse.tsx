@@ -95,7 +95,7 @@ const VurderingBestemmelse = ({
             feltNavn="vedtak"
             label={valg.term}
             value={valg.kode}
-            disabled={!redigerbart}
+            disabled={!redigerbart || valg.kode.startsWith("NEI")}
             onChange={() => {
               resetField("innvilgelse");
               resetField("bestemmelse");
@@ -112,7 +112,7 @@ const VurderingBestemmelse = ({
               feltNavn="innvilgelse"
               label={valg.term}
               value={valg.kode}
-              disabled={!redigerbart}
+              disabled={!redigerbart || valg.kode.startsWith("NEI")}
               onChange={() => resetField("bestemmelse")}
             />
           ))}
