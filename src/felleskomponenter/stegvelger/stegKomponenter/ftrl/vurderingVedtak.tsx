@@ -212,7 +212,7 @@ const VurderingVedtak = ({
       fritekstEktefelle: familieFormValues?.ektefelle_samboer?.fritekst || null,
       fritekstBarn: familieFormValues?.barn?.fritekst || null,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      kopiMottakere: [],
+      kopiMottakere: muligeMottakere.kopiMottakere,
     });
 
     if (isMounted.current) {
