@@ -5,6 +5,7 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 
+import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../utils/navFrontend";
@@ -12,6 +13,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 
 import DialogboksOppfriskSak from "../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { menypanelOperations } from "../../../ducks/menypanel";
 import { formSelectors } from "../../../ducks/form";
 
@@ -30,6 +32,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
   initialValues: initializeValues(ownProps.resultat),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -62,6 +65,7 @@ interface Props {
 
 const VurderingInngang = ({
   annenBehandlingOppfriskes,
+  behandlingstema,
   formValues,
   formIsValid,
   fortsett,
@@ -84,7 +88,6 @@ const VurderingInngang = ({
       {hjelpetekst}
     </Nav.Hjelpetekst>
   );
-  const landkoder = [{ kode: "UK", term: "Storbritannia" }]; // TODO: temp
 
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
@@ -145,8 +148,7 @@ const VurderingInngang = ({
               }
               feltNavn="land"
               placeholder="Velg..."
-              landkoder={landkoder}
-              disabled
+              disabled={!redigerbart || behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK}
             />
           </Nav.Column>
         </Nav.Row>
