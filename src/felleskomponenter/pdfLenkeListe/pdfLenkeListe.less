@@ -1,3 +1,4 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
 @import "../../constants";
 
 .pdfLenkeListe {
@@ -6,7 +7,7 @@
   button {
     display: block;
     border: 0;
-    padding: 0;
+    padding: 2px;
     outline: 0;
     background: transparent;
     color: @blue-nav;
@@ -15,6 +16,7 @@
     &:focus,
     &:hover {
       text-decoration: underline;
+      box-shadow: 0 0 0 3px @fokusFarge;
     }
   }
 
