@@ -135,7 +135,7 @@ const VurderingVedtak = ({
     ];
   };
 
-  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
+  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
     const sletteknapp = (
       <Nav.Knapp type="flat" form="kompakt" onClick={() => slettKopiMottaker(muligMottaker)}>
         <Ikoner.Bin />
@@ -175,9 +175,9 @@ const VurderingVedtak = ({
 
   const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
-      mapRad(mottakere.hovedMottaker, false),
-      ...mottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker, true)),
-      ...mottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker, false)),
+      mapMottakerRad(mottakere.hovedMottaker, false),
+      ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, true)),
+      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, false)),
     ];
   };
 
