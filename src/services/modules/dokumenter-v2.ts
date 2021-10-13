@@ -45,7 +45,7 @@ export type TilgjengeligeMalerResDto = TilgjengeligeMaler[];
 export type KopiMottaker = {
   rolle: string;
   orgnr: string | null;
-  aktørId: string | null;
+  aktørId: string;
 };
 
 export type OpprettBrevReqDto = {
@@ -66,6 +66,12 @@ export type MuligMottaker = {
   orgnr: string | null;
   aktørId: string | null;
 };
+
+export const konverterMuligMottakerTilKopiMottaker = (muligMottaker: MuligMottaker): KopiMottaker => ({
+  rolle: muligMottaker.rolle,
+  orgnr: muligMottaker.orgnr,
+  aktørId: muligMottaker.aktørId || "",
+});
 
 export type HentMuligeMottakereResDto = {
   hovedMottaker: MuligMottaker;
