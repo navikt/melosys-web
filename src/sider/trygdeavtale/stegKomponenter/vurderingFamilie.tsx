@@ -30,8 +30,7 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
                 resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.omfattet
               ),
               begrunnelse:
-                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.begrunnelseKode ||
-                null,
+                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.begrunnelseKode || "",
             },
           ])
         : []
@@ -41,7 +40,7 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
     ? {
         fritekst: resultat.ektefelle?.begrunnelseFritekst || "",
         innvilget: Utils.streng.boolTilUppercaseStreng(resultat.ektefelle?.omfattet),
-        begrunnelse: resultat.ektefelle?.begrunnelseKode || null,
+        begrunnelse: resultat.ektefelle?.begrunnelseKode || "",
       }
     : {},
 });
