@@ -16,10 +16,7 @@ export function boolTilStreng(value) {
 }
 
 export function boolTilUppercaseStreng(value) {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-  return boolTilStreng(value).toUpperCase();
+  return boolTilStreng(value)?.toUpperCase();
 }
 
 export function strengTilBool(value) {
