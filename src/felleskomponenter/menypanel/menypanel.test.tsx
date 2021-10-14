@@ -36,6 +36,7 @@ const {
   ØVRIGE_SED_UFM,
   TRYGDETID,
   ARBEID_I_UTLANDET,
+  TRYGDEAVTALE_UK,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 describe("MenyPanel", () => {
@@ -252,7 +253,7 @@ describe("MenyPanel", () => {
     }
   );
 
-  each([ARBEID_I_UTLANDET]).it(
+  each([ARBEID_I_UTLANDET, TRYGDEAVTALE_UK]).it(
     `viser familie med på reisen istedenfor barn med på reisen hvis behandlingstema er %p`,
     (behandlingstema) => {
       props.behandlingstema = behandlingstema;

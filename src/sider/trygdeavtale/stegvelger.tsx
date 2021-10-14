@@ -16,6 +16,7 @@ import { BehandlingsgrunnlagFeilmeldinger } from "../../felleskomponenter/behand
 import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
+import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
@@ -39,7 +40,7 @@ const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
-  FAMILIE: { tittel: "Familie", komponent: DummySteg },
+  FAMILIE: { tittel: "Familie", komponent: VurderingFamilie },
   VEDTAK: { tittel: "Vedtak", komponent: DummySteg },
 };
 
@@ -116,12 +117,12 @@ class Stegvelger extends Component<Props, State> {
     Api.Trygdeavtale.slettFlyt(this.props.behandlingID);
   };
 
-  oppdaterStegData = (request: Api.Trygdeavtale.FlytReqDto) => {
+  oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto) => {
     Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
   };
-  debouncedOppdaterStegData = Utils._debounce(this.oppdaterStegData, 100);
+  debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 100);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {
@@ -134,7 +135,7 @@ class Stegvelger extends Component<Props, State> {
     const handlers = {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
-      oppdaterStegData: this.debouncedOppdaterStegData,
+      oppdaterFlyt: this.debouncedOppdaterFlyt,
       slettFlyt: this.slettFlyt,
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,

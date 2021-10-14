@@ -120,4 +120,5 @@ export const Trygdeavtale = {
   INNGANG: "trygdeavtale_inngang",
   AVKLAR_VIRKSOMHET: "trygdeavtale_avklar_virksomhet",
   BESTEMMELSE: "trygdeavtale_bestemmelse",
+  FAMILIE: "trygdeavtale_familie",
 };

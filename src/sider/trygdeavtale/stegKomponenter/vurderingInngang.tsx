@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -58,7 +58,7 @@ interface Props {
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
-  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
   // slettFlyt: () => void;
 }
@@ -75,7 +75,7 @@ const VurderingInngang = ({
   resultat,
   steg,
   tilForsiden,
-  oppdaterStegData,
+  oppdaterFlyt,
   oppfriskOgLastInnSaksopplysninger,
   // slettFlyt,
   visMenypanel,
@@ -96,22 +96,18 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
-    if (data.formIsValid && data.formValues) {
-      const requestData = {
-        ...resultat,
-        fom: data.formValues.fom ? Utils.dato.formatterDatoTilISO(data.formValues.fom) : undefined,
-        tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
-        land: data.formValues.land ? [data.formValues.land] : [],
-      };
-      oppdaterStegData({ resultat: requestData });
-    }
-  };
-  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
-
   useEffect(() => {
-    if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
-  }, [formValues, formIsValid]);
+    if (redigerbart && formValues) {
+      oppdaterFlyt({
+        resultat: {
+          ...resultat,
+          fom: formValues.fom ? Utils.dato.formatterDatoTilISO(formValues.fom) : undefined,
+          tom: formValues.tom ? Utils.dato.formatterDatoTilISO(formValues.tom) : undefined,
+          land: formValues.land ? [formValues.land] : [],
+        },
+      });
+    }
+  }, [formValues]);
 
   const fortsettHandle = () => {
     if (formValues.fom !== initialFomTom?.fom || formValues.tom !== initialFomTom?.tom) {
@@ -120,11 +116,6 @@ const VurderingInngang = ({
     } else {
       fortsett();
     }
-  };
-
-  const periodeEndringHandle = async () => {
-    // await slettFlyt();
-    sendOppdatertStegData({ formValues, formIsValid });
   };
 
   return (
@@ -173,7 +164,6 @@ const VurderingInngang = ({
           }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
-            periodeEndringHandle();
             setVisOppfrisk(false);
             visMenypanel();
             fortsett();

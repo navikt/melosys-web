@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -9,7 +9,6 @@ import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../utils/navFrontend";
-import * as Utils from "../../../utils";
 
 import { formSelectors } from "../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
@@ -50,7 +49,7 @@ interface Props {
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilbake: () => void;
-  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
 }
 
 const VurderingAvklarVirksomhet = ({
@@ -61,7 +60,7 @@ const VurderingAvklarVirksomhet = ({
   redigerbart,
   resultat,
   steg,
-  oppdaterStegData,
+  oppdaterFlyt,
   tilbake,
   virksomheterListe,
 }: PropsFromRedux & Props) => {
@@ -69,18 +68,13 @@ const VurderingAvklarVirksomhet = ({
     "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
     'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
 
-  const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
-    if (data.formIsValid && data.formValues) {
-      oppdaterStegData({
-        resultat: { ...resultat, virksomheter: data.formValues.virksomheter || [] },
+  useEffect(() => {
+    if (redigerbart && formValues) {
+      oppdaterFlyt({
+        resultat: { ...resultat, virksomheter: formValues.virksomheter || [] },
       });
     }
-  };
-  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
-
-  useEffect(() => {
-    if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
-  }, [formValues, formIsValid]);
+  }, [formValues]);
 
   return (
     <div className="vurderingAvklarVirksomhet">
