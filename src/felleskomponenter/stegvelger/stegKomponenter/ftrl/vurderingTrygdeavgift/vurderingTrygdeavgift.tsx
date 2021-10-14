@@ -21,6 +21,7 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import { OppdaterAvgiftsberegning } from "../../../../../services/modules/trygdeavgift";
 import { BOOLSK } from "../../../../../constants";
 import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../kodeverk/koder";
+import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "../selectors";
 
 import "./vurderingTrygdeavgift.css";
 
@@ -31,6 +32,8 @@ const mapStateToProps = (state: RootState) => ({
   saerligeavgiftsgrupper: folketrygdenkodeverkSelectors.SaerligeavgiftsgrupperSelector(state),
   erTrygdeavgiftsgrunnlagNorgeUgyldig: formSelectors.VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagNorgeUgyldig(state),
   erTrygdeavgiftsgrunnlagUtlandUgyldig: formSelectors.VurderTrygdeavgiftFormErTrygdeavgiftsgrunnlagUtlandUgyldig(state),
+  lonnsforholdErNorgeEllerDelt: LonnsforholdErNorgeEllerDelt(state),
+  lonnsforholdErUtlandetEllerDelt: LonnsforholdErUtlandetEllerDelt(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -66,6 +69,8 @@ const VurderingTrygdeavgift = ({
   erTrygdeavgiftsgrunnlagNorgeUgyldig,
   erTrygdeavgiftsgrunnlagUtlandUgyldig,
   erStegGyldig,
+  lonnsforholdErNorgeEllerDelt,
+  lonnsforholdErUtlandetEllerDelt,
 }: Props & PropsFromRedux) => {
   const [erTabellApen, setErTabellApen] = useState(new Map());
   const [erSaerligAvgiftsGruppeValgt, setErSaerligAvgiftsGruppeValgt] = useState(new Map());
@@ -236,12 +241,6 @@ const VurderingTrygdeavgift = ({
     );
   }
 
-  const lønnsforholdErLønnFraNorge =
-    formValues?.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_NORGE;
-  const lønnsforholdErLønnFraUtlandet =
-    formValues?.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET;
-  const lønnsforholdErDeltLønn = formValues?.avgiftsgrunnlag?.lønnsforhold === MKV.Koder.loenn_forhold.DELT_LØNN;
-
   const trygdeavgiftsgrunnlagComponentProps = {
     formValues,
     oppdatertAvgiftsberegning,
@@ -288,10 +287,10 @@ const VurderingTrygdeavgift = ({
         </Nav.Column>
       </Nav.Row>
 
-      {(lønnsforholdErLønnFraNorge || lønnsforholdErDeltLønn) && (
+      {lonnsforholdErNorgeEllerDelt && (
         <Trygdeavgiftsgrunnlag {...trygdeavgiftsgrunnlagComponentProps} erVirksomhetNorsk />
       )}
-      {(lønnsforholdErLønnFraUtlandet || lønnsforholdErDeltLønn) && (
+      {lonnsforholdErUtlandetEllerDelt && (
         <Trygdeavgiftsgrunnlag {...trygdeavgiftsgrunnlagComponentProps} erVirksomhetNorsk={false} />
       )}
 

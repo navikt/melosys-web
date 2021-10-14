@@ -21,6 +21,7 @@ import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunn
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import { formSelectors } from "../../../../ducks/form";
+import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
 import MottakerTabell from "../../../tabell/mottakerTabell";
 import PdfLenkeListe from "../../../pdfLenkeListe";
 
@@ -36,6 +37,8 @@ const mapStateToProps = (state: RootState) => ({
   innvilgelsesResultater: folketrygdenkodeverkSelectors.InnvilgelsesResultatSelector(state),
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
   trygdeavgiftFormValues: formSelectors.VurderTrygdeavgiftFormSelector(state).values,
+  skalBetaleTrygdeavgiftTilNorge: LonnsforholdErNorgeEllerDelt(state),
+  skalBetaleTrygdeavgiftTilUtlandet: LonnsforholdErUtlandetEllerDelt(state),
   familieFormValues: formSelectors.VurderFamilieFormSelector(state).values,
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
@@ -72,6 +75,8 @@ const VurderingVedtak = ({
   soknadsland,
   alleLandkoder,
   trygdeavgiftFormValues,
+  skalBetaleTrygdeavgiftTilNorge,
+  skalBetaleTrygdeavgiftTilUtlandet,
   familieFormValues,
   lagreOgFatteVedtak,
   vedtakstype,
@@ -193,14 +198,6 @@ const VurderingVedtak = ({
     );
   }
 
-  const trygdeavgiftTilNorge = [MKV.Koder.loenn_forhold.LØNN_FRA_NORGE, MKV.Koder.loenn_forhold.DELT_LØNN].includes(
-    trygdeavgiftFormValues?.avgiftsgrunnlag?.lønnsforhold
-  );
-  const trygdeavgiftTilUtlandet = [
-    MKV.Koder.loenn_forhold.LØNN_FRA_UTLANDET,
-    MKV.Koder.loenn_forhold.DELT_LØNN,
-  ].includes(trygdeavgiftFormValues?.avgiftsgrunnlag?.lønnsforhold);
-
   const fattVedtak = async () => {
     setVedtakPending(true);
 
@@ -256,7 +253,7 @@ const VurderingVedtak = ({
         </Nav.Column>
       </Nav.Row>
 
-      {trygdeavgiftTilNorge && (
+      {skalBetaleTrygdeavgiftTilNorge && (
         <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
           <Ikoner.Inntekt className="trygdeavgift_ikon" focusable={false} />
           <Nav.Typo.Normaltekst>
@@ -270,7 +267,7 @@ const VurderingVedtak = ({
           </Nav.Typo.Normaltekst>
         </div>
       )}
-      {trygdeavgiftTilUtlandet && (
+      {skalBetaleTrygdeavgiftTilUtlandet && (
         <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
           <Ikoner.Inntekt className="trygdeavgift_ikon" focusable={false} />
           <Nav.Typo.Normaltekst>
