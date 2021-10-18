@@ -16,9 +16,6 @@ export type Familiemedlem = {
 };
 
 export interface Resultat {
-  fom?: string;
-  tom?: string | null;
-  land?: string[];
   virksomheter?: string[];
   vedtak?: string;
   innvilgelse?: string;
@@ -40,6 +37,10 @@ export interface FamilieValg {
 }
 
 export interface StegData {
+  periodeFom?: string;
+  periodeTom?: string | null;
+  soeknadsland?: string[];
+  landValg: KTObject[];
   virksomheter?: Virksomhet[];
   vedtakValg?: KTObject[];
   innvilgelseValg?: KTObject[];
