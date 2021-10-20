@@ -140,6 +140,7 @@ class Stegvelger extends Component<Props, State> {
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
+      lagreBehandlingsgrunnlagOgOppdaterStegData: this.lagreBehandlingsgrunnlagOgOppdaterStegData,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
