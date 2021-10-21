@@ -67,12 +67,10 @@ interface Props {
   hentFlytOgOppdaterAktuelleSteg: () => void;
   lagreBehandlingsgrunnlagOgOppdaterStegData: () => void;
   redigerbart: boolean;
-  resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
-  // slettFlyt: () => void;
+  resetFlyt: () => void;
 }
 
 const VurderingInngang = ({
@@ -85,14 +83,12 @@ const VurderingInngang = ({
   hentFlytOgOppdaterAktuelleSteg,
   lagreBehandlingsgrunnlag,
   redigerbart,
-  resultat,
   steg,
   tilForsiden,
-  oppdaterFlyt,
   oppdaterPeriode,
   oppdaterSoeknadsland,
   oppfriskOgLastInnSaksopplysninger,
-  // slettFlyt,
+  resetFlyt,
   visMenypanel,
 }: PropsFromRedux & Props) => {
   const [initialFomTom, setInitialFomTom] = useState<{ fom?: string; tom?: string }>({});
@@ -114,7 +110,6 @@ const VurderingInngang = ({
   const lagreBehandlingsgrunnlagOgHentStegStatus = async () => {
     await lagreBehandlingsgrunnlag();
     hentFlytOgOppdaterAktuelleSteg();
-    oppdaterFlyt({ resultat });
   };
   const debouncedLagrebehandlingsgrunnlagOgHentStegStatus = useCallback(
     Utils._debounce(lagreBehandlingsgrunnlagOgHentStegStatus, 300),
@@ -192,7 +187,7 @@ const VurderingInngang = ({
         <DialogboksOppfriskSak
           oppfrisk={async () => {
             await oppfriskOgLastInnSaksopplysninger();
-            hentFlytOgOppdaterAktuelleSteg();
+            resetFlyt();
           }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
