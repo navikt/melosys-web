@@ -10,7 +10,7 @@ import * as Nav from "../../../../../utils/navFrontend";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 import * as KV from "../../../../../kodeverk";
-import * as Skjema from "../../../../skjema";
+import * as Skjema from "../../../../../felleskomponenter/skjema";
 
 import Trygdeavgiftsgrunnlag from "./trygdeavgiftsgrunnlag/trygdeavgiftsgrunnlag";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";

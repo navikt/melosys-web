@@ -7,7 +7,7 @@ import * as Api from "../../../../../../services/api";
 import * as Ikoner from "../../../../../../resources/images";
 import * as Utils from "../../../../../../utils";
 import * as KV from "../../../../../../kodeverk";
-import * as Skjema from "../../../../../skjema";
+import * as Skjema from "../../../../../../felleskomponenter/skjema";
 
 import PeriodeTabell from "./periodetabell";
 import SpesiellGruppeHjelpetekst from "./spesiellGruppeHjelpeTekst";
