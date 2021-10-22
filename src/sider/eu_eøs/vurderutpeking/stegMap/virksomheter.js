@@ -1,4 +1,4 @@
-import { Virksomheter } from "../../../../felleskomponenter/stegvelger/stegMap";
+import { Virksomheter } from "../../stegMap";
 import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 class VurderUtpekingVirksomheter extends Virksomheter {

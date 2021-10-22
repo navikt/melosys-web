@@ -1,4 +1,4 @@
-import { Inngang } from "../../../../felleskomponenter/stegvelger/stegMap";
+import { Inngang } from "../../stegMap";
 import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 class SaksbehandlingInngang extends Inngang {
