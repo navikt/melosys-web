@@ -114,7 +114,7 @@ class Stegvelger extends Component<Props, State> {
   };
 
   resetFlyt = () => {
-    Api.Trygdeavtale.resetFlyt(this.props.behandlingID).then((response) =>
+    return Api.Trygdeavtale.resetFlyt(this.props.behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
   };
