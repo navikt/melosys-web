@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
@@ -24,6 +24,7 @@ import { formSelectors } from "../../../../ducks/form";
 import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "./selectors";
 import MottakerTabell from "../../../tabell/mottakerTabell";
 import PdfLenkeListe from "../../../pdfLenkeListe";
+import { RepresentantformValues } from "./vurderingRepresentant";
 
 import "./vurderingVedtak.css";
 
@@ -42,6 +43,7 @@ const mapStateToProps = (state: RootState) => ({
   familieFormValues: formSelectors.VurderFamilieFormSelector(state).values,
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
+  formValuesRepresentant: getFormValues(KV.Form.REPRESENTANT)(state) as RepresentantformValues,
   initialValues: {
     fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
   },
@@ -71,6 +73,7 @@ const VurderingVedtak = ({
   medlemskapsperioder,
   innvilgelsesResultater,
   formValues,
+  formValuesRepresentant,
   medfolgendeFamilie,
   soknadsland,
   alleLandkoder,
@@ -81,15 +84,30 @@ const VurderingVedtak = ({
   lagreOgFatteVedtak,
   vedtakstype,
 }: Props & PropsFromRedux) => {
-  const [muligeMottakere, setMuligeMottakere] = Hooks.useAsyncCallbackState(
-    () =>
-      Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-        produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
-        orgnr: null,
-      }),
-    Api.DokumenterV2.tomHentMuligeMottakereResDto(),
-    []
-  );
+  const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+
+  const hentMuligeMottakere = async () => {
+    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+      produserbartdokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+      orgnr: null,
+    });
+    setMuligeMottakere(res);
+  };
+  useEffect(() => {
+    hentMuligeMottakere();
+  }, []);
+
+  /* Mottakere settes av backend og følger regler:
+      TODO: BRUKER_FÅR_KOPI_HVIS_FULLMEKTIG_FINNES,
+      ARBEIDSGIVER_FÅR_KOPI_HVIS_IKKE_SELVBETALENDE_BRUKER,
+      TODO: SKATT_FÅR_KOPI_HVIS_AVGIFTSPLIKTIG_INNTEKT
+    Burde derfor hente mottakere på nytt når disse dataene endres.
+   */
+  const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 2000), []);
+  useEffect(() => {
+    debouncedHentMuligeMottakere();
+  }, [formValuesRepresentant.selvbetalende]);
+
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
 
