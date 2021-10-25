@@ -222,7 +222,7 @@ const VurderingVedtak = ({
     setVedtakPending(true);
 
     await lagreOgFatteVedtak({
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
       fritekstInnledning: formValues?.fritekstInnledning || null,
       fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
       fritekstEktefelle: familieFormValues?.ektefelle_samboer?.fritekst || null,
