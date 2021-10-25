@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingSokkelSkip from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingSokkelSkip";
+import VurderingSokkelSkip from "../../stegKomponenter/vurderingSokkelSkip";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import { hentFaktaListe, hentFakta, hentFaktaVerdi } from "../../../../regler/avklartefakta";

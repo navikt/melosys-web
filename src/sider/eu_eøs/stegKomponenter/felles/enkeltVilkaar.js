@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import PT from "prop-types";
 import * as Nav from "../../../../utils/navFrontend";
 import * as MPT from "../../../../proptypes";
-import * as Mui from "../../../ui";
+import * as Mui from "../../../../felleskomponenter/ui";
 
 import { BOOLSK } from "../../../../constants";
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from "../../../../regler/vilkar";

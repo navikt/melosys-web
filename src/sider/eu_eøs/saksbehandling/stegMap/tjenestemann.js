@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingTjenestemannn from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingTjenestemann";
+import VurderingTjenestemannn from "../../stegKomponenter/vurderingTjenestemann";
 import * as KV from "../../../../kodeverk";
 
 class Tjenestemann extends Steg {

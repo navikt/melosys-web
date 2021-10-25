@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingVurderarbeidsland from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVurderarbeidsland";
+import VurderingVurderarbeidsland from "../../stegKomponenter/vurderingVurderarbeidsland";
 
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";

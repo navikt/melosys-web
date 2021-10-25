@@ -5,7 +5,7 @@ import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../regler/avklartefakta";
-import VurderingArbeidsmonster from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArbeidsmonster";
+import VurderingArbeidsmonster from "../../stegKomponenter/vurderingArbeidsmonster";
 import Yrkesaktivitet from "./yrkesaktivitet";
 import { BOOLSK_STRING } from "../../../../constants";
 

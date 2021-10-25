@@ -3,7 +3,7 @@ import { BOOLSK_STRING } from "../../../../constants";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingMedfolgendeBarn from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingMedfolgendeBarn";
+import VurderingMedfolgendeBarn from "../../stegKomponenter/vurderingMedfolgendeBarn";
 import { hentFaktaListe } from "../../../../regler/avklartefakta";
 import { erVilkarOppfylt } from "../../../../regler/vilkar";
 
