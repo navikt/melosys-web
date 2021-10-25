@@ -178,12 +178,7 @@ const SendBrev = ({
         (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" && formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
         null,
       manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
-      kopiMottakere:
-        muligeMottakere?.kopiMottakere.map((kopiMottaker) => ({
-          rolle: kopiMottaker.rolle,
-          aktørId: kopiMottaker.aktørId,
-          orgnr: kopiMottaker.orgnr,
-        })) || [],
+      kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
     };
     if (mottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {

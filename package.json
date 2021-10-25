@@ -14,7 +14,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.20",
     "@loadable/component": "^5.10.3",
-    "@navikt/melosys-kodeverk": "^5.15.89",
+    "@navikt/melosys-kodeverk": "5.15.90",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",
     "date-fns": "^2.20.0",
@@ -194,7 +194,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-select": "^3.1.2",
-    "@types/redux-form": "^8.2.7",
+    "@types/redux-form": "^8.3.3",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",

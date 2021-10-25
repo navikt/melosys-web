@@ -42,18 +42,21 @@ export type TilgjengeligeMaler = {
 };
 export type TilgjengeligeMalerResDto = TilgjengeligeMaler[];
 
+export type KopiMottaker = {
+  rolle: string;
+  orgnr: string | null;
+  aktørId: string;
+};
+
 export type OpprettBrevReqDto = {
   produserbardokument: string;
   mottaker: string;
   orgNr?: string;
   innledningFritekst?: string;
+  begrunnelseFritekst?: string;
   manglerFritekst?: string;
   kontaktpersonNavn?: string | null;
-  kopiMottakere: {
-    rolle: string;
-    orgnr: string | null;
-    aktørId: string | null;
-  }[];
+  kopiMottakere: KopiMottaker[];
 };
 
 export type MuligMottaker = {
@@ -64,11 +67,29 @@ export type MuligMottaker = {
   aktørId: string | null;
 };
 
+export const konverterMuligMottakerTilKopiMottaker = (muligMottaker: MuligMottaker): KopiMottaker => ({
+  rolle: muligMottaker.rolle,
+  orgnr: muligMottaker.orgnr,
+  aktørId: muligMottaker.aktørId || "",
+});
+
 export type HentMuligeMottakereResDto = {
   hovedMottaker: MuligMottaker;
   kopiMottakere: MuligMottaker[];
   fasteMottakere: MuligMottaker[];
 };
+
+export const tomHentMuligeMottakereResDto = (): HentMuligeMottakereResDto => ({
+  hovedMottaker: {
+    mottakerNavn: "",
+    dokumentNavn: "",
+    rolle: "",
+    orgnr: null,
+    aktørId: null,
+  },
+  kopiMottakere: [],
+  fasteMottakere: [],
+});
 
 export type HentMuligeMottakereReqDto = {
   produserbartdokument: string;

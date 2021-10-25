@@ -20,9 +20,16 @@ import { OrganisasjonsAdresse } from "../../../adresser";
 
 import "./vurderingRepresentant.css";
 
+export interface RepresentantformValues {
+  representantnummer?: string;
+  selvbetalende?: boolean;
+  organisasjonsnummer?: string;
+  kontaktperson?: string;
+}
+
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  formValues: getFormValues(KV.Form.REPRESENTANT)(state),
+  formValues: getFormValues(KV.Form.REPRESENTANT)(state) as RepresentantformValues,
   initialValues: {
     selvbetalende: false,
   },
@@ -45,12 +52,6 @@ interface Props {
   oppdater: () => void;
   tilbake: () => void;
   redigerbart: boolean;
-  formValues: {
-    representantnummer?: string;
-    selvbetalende?: boolean;
-    organisasjonsnummer?: string;
-    kontaktperson?: string;
-  };
 }
 
 const VurderingRepresentant = ({
