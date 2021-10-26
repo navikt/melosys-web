@@ -10,14 +10,14 @@ import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Ikoner from "../../../../resources/images";
-import * as Skjema from "../../../skjema";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
 import { behandlingsgrunnlagSelectors } from "../../../../ducks/behandlingsgrunnlag";
 import { formSelectors } from "../../../../ducks/form";
-import MottakerTabell from "../../../tabell/mottakerTabell";
+import MottakerTabell from "../../../../felleskomponenter/tabell/mottakerTabell";
 
 import "./vurderingVedtak.css";
 

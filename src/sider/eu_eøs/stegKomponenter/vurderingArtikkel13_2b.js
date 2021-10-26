@@ -7,7 +7,7 @@ import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 
 import MKV from "../../../melosyskodeverk";
-import EnkeltLandPure from "../../skjema/landvelger/enkeltLandPure";
+import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
 import {
   avklartefaktaType,
   lagAvklartfakta,

@@ -8,7 +8,7 @@ import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../utils/navFrontend";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as Hooks from "../../../hooks";
@@ -19,9 +19,9 @@ import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { flytSelectors } from "../../../ducks/flyt";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
-import DatoOmrade from "../../datoOmrade/datoOmrade";
-import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";

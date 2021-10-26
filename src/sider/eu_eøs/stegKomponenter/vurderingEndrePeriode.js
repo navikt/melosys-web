@@ -13,8 +13,8 @@ import * as KV from "../../../kodeverk";
 
 import { hentFaktaVerdi, konverterTilStegData } from "../../../regler/avklartefakta";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
-import * as Mui from "../../ui";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -23,7 +23,7 @@ import { behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnla
 import * as Api from "../../../services/api";
 
 import "./vurderingEndrePeriode.css";
-import Datovelger from "../../datovelger";
+import Datovelger from "../../../felleskomponenter/datovelger";
 
 export class VurderingEndrePeriode extends React.Component {
   state = {

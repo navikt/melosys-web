@@ -4,7 +4,7 @@ import * as EKV from "eessi-kodeverk";
 import { connect } from "react-redux";
 
 import * as Nav from "../../../utils/navFrontend";
-import * as Mui from "../../ui";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 import * as Utils from "../../../utils";
 

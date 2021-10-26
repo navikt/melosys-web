@@ -8,7 +8,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
 import * as Utils from "../../../../utils";
-import * as Skjema from "../../../skjema";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
 

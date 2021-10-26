@@ -21,10 +21,10 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from "../../../utils/dato";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
-import DatoOmrade from "../../datoOmrade/datoOmrade";
-import PdfLenkeListe from "../../pdfLenkeListe";
-import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
-import VedleggVelger from "../../vedleggvelger";
+import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
 
 import { konverterTilStegData, lagBegrunnelse } from "../../../regler/vilkar";
 import { konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
@@ -34,7 +34,7 @@ import {
 } from "../../../regler/unntakfrabestemmelse";
 
 import "./vurderingArtikkel16Anmodning.css";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 const uuid = require("uuid/v4");
 

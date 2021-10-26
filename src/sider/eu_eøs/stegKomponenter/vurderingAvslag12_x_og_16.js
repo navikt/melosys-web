@@ -6,15 +6,15 @@ import MKV from "../../../melosyskodeverk";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../utils/navFrontend";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Hooks from "../../../hooks";
 import * as VilkarSelectors from "../../../ducks/vilkar/selectors";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
-import Begrunnelser from "../../begrunnelser";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Begrunnelser from "../../../felleskomponenter/begrunnelser";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";

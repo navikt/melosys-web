@@ -5,14 +5,14 @@ import { reduxForm, getFormValues } from "redux-form";
 
 import MKV from "../../../melosyskodeverk";
 
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Services from "../../../services";
 
-import { DatoOmradeMedVarighet } from "../../datoOmrade/datoOmrade";
+import { DatoOmradeMedVarighet } from "../../../felleskomponenter/datoOmrade/datoOmrade";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";

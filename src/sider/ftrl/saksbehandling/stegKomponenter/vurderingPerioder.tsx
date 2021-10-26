@@ -11,7 +11,7 @@ import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
 import * as Ikoner from "../../../../resources/images";
 import * as KV from "../../../../kodeverk";
-import * as Mui from "../../../ui";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../utils/navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";

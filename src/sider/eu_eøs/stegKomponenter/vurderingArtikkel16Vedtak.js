@@ -7,13 +7,13 @@ import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../utils/navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Hooks from "../../../hooks";
 import * as Utils from "../../../utils";
 
-import Begrunnelser from "../../begrunnelser";
-import PdfLenkeListe from "../../pdfLenkeListe";
-import DatoOmrade from "../../datoOmrade/datoOmrade";
+import Begrunnelser from "../../../felleskomponenter/begrunnelser";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import DatoOmrade from "../../../felleskomponenter/datoOmrade/datoOmrade";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";

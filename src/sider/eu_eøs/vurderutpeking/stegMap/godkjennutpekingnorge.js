@@ -3,7 +3,7 @@ import * as EKV from "eessi-kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingVedtak from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVedtak";
+import VurderingVedtak from "../../stegKomponenter/vurderingVedtak";
 
 class GodkjennUtpekingNorge extends Steg {
   constructor(propsLight, stegPosisjon) {

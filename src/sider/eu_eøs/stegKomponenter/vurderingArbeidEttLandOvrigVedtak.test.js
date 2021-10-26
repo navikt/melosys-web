@@ -2,11 +2,13 @@ import React from "react";
 import * as EKV from "eessi-kodeverk";
 
 import { VurderingArbeidEttLandOvrigVedtak } from "./vurderingArbeidEttLandOvrigVedtak";
-import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
-import PdfLenkeListe from "../../pdfLenkeListe";
+import Mottakerinstitusjonvelger, {
+  MottakerinstitusjonvelgerFlervalg,
+} from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 import * as KV from "../../../kodeverk";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 import MKV from "../../../melosyskodeverk";
 

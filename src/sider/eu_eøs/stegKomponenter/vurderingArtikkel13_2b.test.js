@@ -3,7 +3,7 @@ import React from "react";
 import MKV from "../../../melosyskodeverk";
 
 import VurderingArtikkel13_2b from "./vurderingArtikkel13_2b";
-import EnkeltLandPure from "../../skjema/landvelger/enkeltLandPure";
+import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
 
 /* eslint-disable react/jsx-pascal-case */
 describe("VurderingArtikkel13_2b", () => {

@@ -10,11 +10,11 @@ import * as Nav from "../../../utils/navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
-import { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
 
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";

@@ -16,7 +16,7 @@ import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingRepresentantSchema from "./vurderingRepresentantSchema";
-import { OrganisasjonsAdresse } from "../../../adresser";
+import { OrganisasjonsAdresse } from "../../../../felleskomponenter/adresser";
 
 import "./vurderingRepresentant.css";
 

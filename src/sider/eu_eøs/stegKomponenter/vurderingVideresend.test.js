@@ -5,8 +5,8 @@ import { reducer as formReducer } from "redux-form";
 import * as Nav from "../../../utils/navFrontend";
 
 import { VurderingVideresend } from "./vurderingVideresend";
-import PdfLenkeListe from "../../pdfLenkeListe";
-import * as Skjema from "../../skjema";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 describe("Vurderingvideresend", () => {
   let props = null;

@@ -11,9 +11,9 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
-import Mottakerinstitusjonvelger from "../../mottakerinstitusjonvelger";
-import VedleggVelger from "../../vedleggvelger";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
+import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -23,7 +23,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurderingVideresendSchema from "./vurderingVideresendSchema";
 
 import "./vurderingVideresend.css";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 export const VurderingVideresend = ({
   redigerbart,

@@ -1,6 +1,6 @@
 import React, { ComponentProps, InputHTMLAttributes } from "react";
 
-import * as Mui from "../../../../ui";
+import * as Mui from "../../../../../felleskomponenter/ui";
 
 import "./landlinje.css";
 

@@ -8,10 +8,10 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as Utils from "../../../utils";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
-import * as Mui from "../../ui";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -21,8 +21,10 @@ import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
-import Mottakerinstitusjonvelger, { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+import Mottakerinstitusjonvelger, {
+  MottakerinstitusjonvelgerFlervalg,
+} from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import { BOOLSK_STRING } from "../../../constants";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArbeidEttLandOvrigVedtakSchema from "./vurderingArbeidEttLandOvrigVedtakSchema";

@@ -1,10 +1,10 @@
 import React from "react";
 
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 import MKV from "../../../melosyskodeverk";
 
-import RegisterKontrollTreff from "../../registerkontrollTreff";
+import RegisterKontrollTreff from "../../../felleskomponenter/registerkontrollTreff";
 import { VurderingUtpekt } from "./vurderingUtpekt";
 
 describe("VurderingUtpekt", () => {

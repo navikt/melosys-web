@@ -9,8 +9,8 @@ import * as Nav from "../../../utils/navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 
-import EnkeltLandPure from "../../skjema/landvelger/enkeltLandPure";
-import * as Mui from "../../ui";
+import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import { BOOLSK } from "../../../constants";
 import {

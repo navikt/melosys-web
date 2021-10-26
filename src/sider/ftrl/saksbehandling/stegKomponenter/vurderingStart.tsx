@@ -7,7 +7,7 @@ import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../utils/navFrontend";
-import * as Skjema from "../../../skjema";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 
@@ -17,7 +17,7 @@ import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingStartSchema from "./vurderingStartSchema";
-import DialogboksOppfriskSak from "../../../dialogboks/oppfrisk/dialogboksOppfrisk";
+import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
 

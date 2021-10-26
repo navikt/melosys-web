@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 
-import * as Mui from "../../../../ui";
+import * as Mui from "../../../../../felleskomponenter/ui";
 
 import LandLinje from "./landlinje";
 

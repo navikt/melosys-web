@@ -8,13 +8,13 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as Utils from "../../../utils";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
-import * as Mui from "../../ui";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 
-import PdfLenkeListe from "../../pdfLenkeListe";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -23,7 +23,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { formOperations } from "../../../ducks/form";
-import { MottakerinstitusjonvelgerFlervalg } from "../../mottakerinstitusjonvelger";
+import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
 

@@ -4,7 +4,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Services from "../../../services";
 
 import { VurderingArtikkel16MottaSvar, FormKomponent } from "./vurderingArtikkel16MottaSvar";
-import { DatoOmradeMedVarighet } from "../../datoOmrade/datoOmrade";
+import { DatoOmradeMedVarighet } from "../../../felleskomponenter/datoOmrade/datoOmrade";
 
 describe("VurderingArtikkel16MottaSvar", () => {
   let props = null;

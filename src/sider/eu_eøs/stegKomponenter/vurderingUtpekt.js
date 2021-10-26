@@ -5,12 +5,12 @@ import { getFormValues, reduxForm } from "redux-form";
 
 import * as Nav from "../../../utils/navFrontend";
 import * as KV from "../../../kodeverk";
-import * as Skjema from "../../skjema";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 
 import MKV from "../../../melosyskodeverk";
-import RegisterKontrollTreff from "../../registerkontrollTreff";
+import RegisterKontrollTreff from "../../../felleskomponenter/registerkontrollTreff";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
