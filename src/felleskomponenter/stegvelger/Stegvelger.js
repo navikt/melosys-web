@@ -204,17 +204,7 @@ class Stegvelger extends Component {
 
   fatteVedtakHandler = (data) => {
     const { behandlingID, fattVedtak } = this.props;
-
-    const vedtakBody = {
-      behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
-      fritekst: data.fritekst || null,
-      fritekstSed: data.fritekstSed || null,
-      mottakerinstitusjoner: data.mottakerinstitusjoner || [],
-      vedtakstype: data.vedtakstype,
-      revurderBegrunnelse: data.revurderBegrunnelse || null,
-    };
-
-    return fattVedtak(behandlingID, vedtakBody);
+    return fattVedtak(behandlingID, data);
   };
 
   lagreOgFatteVedtak = async (data) => {
