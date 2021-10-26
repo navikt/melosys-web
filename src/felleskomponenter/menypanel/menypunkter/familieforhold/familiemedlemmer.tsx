@@ -133,7 +133,7 @@ const Familiemedlemmer = ({
   const barn = familiemedlemmer.filter(
     (familiemedlem: Api.Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
   );
-  const ektefellePartner = familiemedlemmer.filter((familiemedlem: Api.Familiemedlem) =>
+  const ektefellerOgPartnere = familiemedlemmer.filter((familiemedlem: Api.Familiemedlem) =>
     [KV.Koder.Relasjonsrolle.EKTE, KV.Koder.Relasjonsrolle.REPA].includes(familiemedlem.relasjonstype.kode)
   );
 
@@ -161,7 +161,7 @@ const Familiemedlemmer = ({
       )}
       {familiemedlemmer.length !== 0 && (
         <FamiliemedlemmerGruppe
-          familiemedlemmer={ektefellePartner}
+          familiemedlemmer={ektefellerOgPartnere}
           ingenFamiliemedlemmerTekst="Fant ingen ektefelle/partner"
           overskrift="Ektefelle/partner"
           kolonneHeadinger={["Navn", "F.nr./d-nr.", "Fra og med", "Bor med bruker", "Relasjon"]}
