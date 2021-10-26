@@ -15,8 +15,19 @@ export function boolTilStreng(value) {
   return value ? "true" : "false";
 }
 
+export function boolTilUppercaseStreng(value) {
+  return boolTilStreng(value)?.toUpperCase();
+}
+
 export function strengTilBool(value) {
   return value === "true";
+}
+
+export function uppercaseStrengTilBool(value) {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return strengTilBool(value.toLowerCase());
 }
 
 export function tryParseBool(value) {

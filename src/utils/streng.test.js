@@ -3,13 +3,16 @@ import {
   boolTilNorsk,
   norskTilBool,
   boolTilStreng,
+  boolTilUppercaseStreng,
   strengTilBool,
+  uppercaseStrengTilBool,
   strengTilInt,
   tekstEllerDash,
   storeForbokstaver,
   storeForbokstaverForLand,
   arrayTilKonjunksjon,
 } from "./streng";
+import { BOOLSK_STRING } from "../constants";
 
 describe("streng.js", () => {
   describe("boolTilNorsk", () => {
@@ -42,6 +45,26 @@ describe("streng.js", () => {
       expect(boolTilStreng(null)).toEqual(undefined);
     });
   });
+  describe("boolTilUppercaseStreng", () => {
+    test("Oversetter true => 'TRUE'", () => {
+      expect(boolTilUppercaseStreng(true)).toEqual("TRUE");
+    });
+    test("Oversetter false => 'FALSE", () => {
+      expect(boolTilUppercaseStreng(false)).toEqual("FALSE");
+    });
+    test("Oversetter true => BOOLSK_STRING.SANN", () => {
+      expect(boolTilUppercaseStreng(true)).toEqual(BOOLSK_STRING.SANN);
+    });
+    test("Oversetter false => BOOLSK_STRING.USANN", () => {
+      expect(boolTilUppercaseStreng(false)).toEqual(BOOLSK_STRING.USANN);
+    });
+    test("Oversetter ikke undefined", () => {
+      expect(boolTilUppercaseStreng(undefined)).toEqual(undefined);
+    });
+    test("Oversetter ikke null", () => {
+      expect(boolTilUppercaseStreng(null)).toEqual(undefined);
+    });
+  });
   describe("strengTilBool", () => {
     test('Transformerer "true" => true', () => {
       expect(strengTilBool("true")).toEqual(true);
@@ -51,6 +74,27 @@ describe("streng.js", () => {
     });
     test('Transformerer "undefined" => false', () => {
       expect(strengTilBool("undefined")).toEqual(false);
+    });
+  });
+
+  describe("uppercaseStrengTilBool", () => {
+    test("Transformerer 'TRUE' => true", () => {
+      expect(uppercaseStrengTilBool("TRUE")).toEqual(true);
+    });
+    test("Transformerer 'FALSE' => false", () => {
+      expect(uppercaseStrengTilBool("FALSE")).toEqual(false);
+    });
+    test("Transformerer BOOLSK_STRING.SANN => true", () => {
+      expect(uppercaseStrengTilBool(BOOLSK_STRING.SANN)).toEqual(true);
+    });
+    test("Transformerer BOOLSK_STRING.USANN => false", () => {
+      expect(uppercaseStrengTilBool(BOOLSK_STRING.USANN)).toEqual(false);
+    });
+    test("Transformerer undefined => undefined", () => {
+      expect(uppercaseStrengTilBool(undefined)).toEqual(undefined);
+    });
+    test("Transformerer null => undefined", () => {
+      expect(uppercaseStrengTilBool(null)).toEqual(undefined);
     });
   });
   describe("strengTilInt", () => {

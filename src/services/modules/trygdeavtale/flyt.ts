@@ -8,14 +8,20 @@ export interface Virksomhet {
   navn: string;
 }
 
+export type Familiemedlem = {
+  uuid: string;
+  omfattet?: boolean;
+  begrunnelseKode: string | null;
+  begrunnelseFritekst: string | null;
+};
+
 export interface Resultat {
-  fom?: string;
-  tom?: string;
-  land?: string[];
   virksomheter?: string[];
   vedtak?: string;
   innvilgelse?: string;
   bestemmelse?: string;
+  barn?: Familiemedlem[] | null;
+  ektefelle?: Familiemedlem | null;
 }
 
 export interface Steg {
@@ -24,14 +30,26 @@ export interface Steg {
   nummer: number;
 }
 
+export interface FamilieValg {
+  uuid: string;
+  fnr: string | null;
+  navn: string;
+}
+
 export interface StegData {
+  periodeFom?: string;
+  periodeTom?: string | null;
+  soeknadsland?: string[];
+  landValg: KTObject[];
   virksomheter?: Virksomhet[];
   vedtakValg?: KTObject[];
   innvilgelseValg?: KTObject[];
   bestemmelseValg?: KTObject[];
   bestemmelseTekst?: string;
-  barn?: string[];
-  ektefelle?: string;
+  barnValg?: FamilieValg[];
+  barnBegrunnelseValg?: KTObject[];
+  ektefelleValg?: FamilieValg;
+  ektefelleBegrunnelseValg?: KTObject[];
 }
 
 export type FlytResDto = {
@@ -50,4 +68,4 @@ export const hentFlyt = (behandlingID: number): Promise<FlytResDto> =>
 export const sendFlyt = (behandlingID: number, data: FlytReqDto): Promise<FlytResDto> =>
   putAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`, data);
 
-export const slettFlyt = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
+export const resetFlyt = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);

@@ -382,3 +382,13 @@ export const TrygdeavtaleBestemmelseFormValidSelector = createSelector(
   (state) => TrygdeavtaleBestemmelseFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
+
+export const TrygdeavtaleFamileFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.Trygdeavtale.FAMILIE, {}),
+  (bestemmelse) => bestemmelse
+);
+
+export const TrygdeavtaleFamilieFormValidSelector = createSelector(
+  (state) => TrygdeavtaleFamileFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);

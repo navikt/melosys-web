@@ -12,6 +12,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 
 import DialogboksOppfriskSak from "../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { menypanelOperations } from "../../../ducks/menypanel";
 import { formSelectors } from "../../../ducks/form";
 
@@ -20,20 +21,32 @@ import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
 
-const initializeValues = (resultat: Api.Trygdeavtale.Resultat | undefined) => ({
-  fom: resultat?.fom ? Utils.dato.formatterDatoTilNorsk(resultat.fom) : undefined,
-  tom: resultat?.tom ? Utils.dato.formatterDatoTilNorsk(resultat.tom) : undefined,
-  land: resultat?.land?.[0],
+interface Periode {
+  fom?: string | null;
+  tom?: string | null;
+}
+
+const initializeValues = (periode: Periode, landkoder: String[]) => ({
+  fom: periode.fom ? Utils.dato.formatterDatoTilNorsk(periode.fom) : undefined,
+  tom: periode.tom ? Utils.dato.formatterDatoTilNorsk(periode.tom) : undefined,
+  land: landkoder[0],
 });
 
-const mapStateToProps = (state: RootState, ownProps: Props) => ({
+const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
-  initialValues: initializeValues(ownProps.resultat),
+  initialValues: initializeValues(
+    behandlingsgrunnlagSelectors.PeriodeSelector(state),
+    behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state)
+  ),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   visMenypanel: () => dispatch(menypanelOperations.visMenypanel()),
+  oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  oppdaterSoeknadsland: (landkoder: String[]) =>
+    dispatch(behandlingsgrunnlagOperations.oppdaterSoeknadsland(landkoder, false)),
+  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -48,32 +61,34 @@ interface FormValuesProps {
 
 interface Props {
   annenBehandlingOppfriskes: boolean;
+  data: Api.Trygdeavtale.StegData;
   fortsett: () => void;
   formValues: FormValuesProps;
   hentFlytOgOppdaterAktuelleSteg: () => void;
+  lagreBehandlingsgrunnlagOgOppdaterStegData: () => void;
   redigerbart: boolean;
-  resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
-  oppdaterStegData: (data: Api.Trygdeavtale.FlytReqDto) => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
-  // slettFlyt: () => void;
+  resetFlyt: () => void;
 }
 
 const VurderingInngang = ({
   annenBehandlingOppfriskes,
+  data: { landValg },
   formValues,
   formIsValid,
   fortsett,
-  hentFlytOgOppdaterAktuelleSteg,
   initialValues,
+  hentFlytOgOppdaterAktuelleSteg,
+  lagreBehandlingsgrunnlag,
   redigerbart,
-  resultat,
   steg,
   tilForsiden,
-  oppdaterStegData,
+  oppdaterPeriode,
+  oppdaterSoeknadsland,
   oppfriskOgLastInnSaksopplysninger,
-  // slettFlyt,
+  resetFlyt,
   visMenypanel,
 }: PropsFromRedux & Props) => {
   const [initialFomTom, setInitialFomTom] = useState<{ fom?: string; tom?: string }>({});
@@ -84,7 +99,6 @@ const VurderingInngang = ({
       {hjelpetekst}
     </Nav.Hjelpetekst>
   );
-  const landkoder = [{ kode: "UK", term: "Storbritannia" }]; // TODO: temp
 
   useEffect(() => {
     if (initialValues && initialValues.fom && !Utils._isEmpty(initialValues.fom)) {
@@ -93,22 +107,33 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const sendOppdatertStegData = (data: { formValues: FormValuesProps; formIsValid: boolean }) => {
-    if (data.formIsValid && data.formValues) {
-      const requestData = {
-        ...resultat,
-        fom: data.formValues.fom ? Utils.dato.formatterDatoTilISO(data.formValues.fom) : undefined,
-        tom: data.formValues.tom ? Utils.dato.formatterDatoTilISO(data.formValues.tom) : undefined,
-        land: data.formValues.land ? [data.formValues.land] : [],
-      };
-      oppdaterStegData({ resultat: requestData });
-    }
+  const lagreBehandlingsgrunnlagOgHentStegStatus = async () => {
+    await lagreBehandlingsgrunnlag();
+    hentFlytOgOppdaterAktuelleSteg();
   };
-  const debouncedLagreStegData = useCallback(Utils._debounce(sendOppdatertStegData, 500), []);
+  const debouncedLagrebehandlingsgrunnlagOgHentStegStatus = useCallback(
+    Utils._debounce(lagreBehandlingsgrunnlagOgHentStegStatus, 300),
+    []
+  );
 
   useEffect(() => {
-    if (redigerbart) debouncedLagreStegData({ formValues, formIsValid });
-  }, [formValues, formIsValid]);
+    if (redigerbart && formValues) {
+      const isoFom = Utils.dato.formatterDatoTilISO(formValues.fom);
+      const isoTom = Utils.dato.formatterDatoTilISO(formValues.tom);
+      oppdaterPeriode({
+        fom: isoFom === "Invalid date" ? null : isoFom,
+        tom: isoTom === "Invalid date" ? null : isoTom,
+      });
+      debouncedLagrebehandlingsgrunnlagOgHentStegStatus();
+    }
+  }, [formValues?.fom, formValues?.tom]);
+
+  useEffect(() => {
+    if (redigerbart && formValues) {
+      oppdaterSoeknadsland(formValues?.land ? [formValues.land] : []);
+      debouncedLagrebehandlingsgrunnlagOgHentStegStatus();
+    }
+  }, [formValues?.land]);
 
   const fortsettHandle = () => {
     if (formValues.fom !== initialFomTom?.fom || formValues.tom !== initialFomTom?.tom) {
@@ -117,11 +142,6 @@ const VurderingInngang = ({
     } else {
       fortsett();
     }
-  };
-
-  const periodeEndringHandle = async () => {
-    // await slettFlyt();
-    sendOppdatertStegData({ formValues, formIsValid });
   };
 
   return (
@@ -143,10 +163,10 @@ const VurderingInngang = ({
                   <Hjelpetekst />
                 </Fragment>
               }
+              landkoder={landValg}
               feltNavn="land"
               placeholder="Velg..."
-              landkoder={landkoder}
-              disabled
+              disabled={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -167,11 +187,10 @@ const VurderingInngang = ({
         <DialogboksOppfriskSak
           oppfrisk={async () => {
             await oppfriskOgLastInnSaksopplysninger();
-            hentFlytOgOppdaterAktuelleSteg();
+            resetFlyt();
           }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
-            periodeEndringHandle();
             setVisOppfrisk(false);
             visMenypanel();
             fortsett();

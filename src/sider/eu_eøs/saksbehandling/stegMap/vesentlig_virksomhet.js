@@ -1,8 +1,8 @@
 import MKV from "../../../../melosyskodeverk";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingVesentligVirksomhet from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingVesentligVirksomhet";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
+import VurderingVesentligVirksomhet from "../../stegKomponenter/vurderingVesentligVirksomhet";
 import { hentVilkar } from "../../../../regler/vilkar";
 
 class VesentligVirksomhet extends Steg {

@@ -17,6 +17,7 @@ describe("behandlingsmeny", () => {
       visRevurderFagsakDialogHandle: jest.fn(),
       redigerbart: true,
       visHenleggSak: true,
+      visAvsluttSakSomBortfalt: true,
       visAvslagManglendeOpplysninger: true,
       visRevurderFagsak: true,
     };

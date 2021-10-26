@@ -11,8 +11,7 @@ import * as KV from "../../../kodeverk";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Stegvelger from "../../../felleskomponenter/stegvelger";
-import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
+import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 

@@ -1,5 +1,5 @@
-import { Virksomheter } from "../../../../felleskomponenter/stegvelger/stegMap";
-import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { Virksomheter } from "../../stegMap";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 class VurderUtpekingVirksomheter extends Virksomheter {
   constructor(propsLight, stegPosisjon) {

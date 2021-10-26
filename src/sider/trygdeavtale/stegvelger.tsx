@@ -11,11 +11,12 @@ import * as Utils from "../../utils";
 
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
-import { FANE_STATUS } from "../../felleskomponenter/stegvelger/stegMotor/typer";
+import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import { BehandlingsgrunnlagFeilmeldinger } from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger/behandlingsgrunnlagFeilmeldinger";
 import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
+import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
@@ -39,7 +40,7 @@ const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
-  FAMILIE: { tittel: "Familie", komponent: DummySteg },
+  FAMILIE: { tittel: "Familie", komponent: VurderingFamilie },
   VEDTAK: { tittel: "Vedtak", komponent: DummySteg },
 };
 
@@ -112,16 +113,18 @@ class Stegvelger extends Component<Props, State> {
     return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
   };
 
-  slettFlyt = () => {
-    Api.Trygdeavtale.slettFlyt(this.props.behandlingID);
+  resetFlyt = () => {
+    return Api.Trygdeavtale.resetFlyt(this.props.behandlingID).then((response) =>
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
+    );
   };
 
-  oppdaterStegData = (request: Api.Trygdeavtale.FlytReqDto) => {
+  oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto) => {
     Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
   };
-  debouncedOppdaterStegData = Utils._debounce(this.oppdaterStegData, 100);
+  debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 100);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
     const data = {
@@ -134,11 +137,12 @@ class Stegvelger extends Component<Props, State> {
     const handlers = {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
-      oppdaterStegData: this.debouncedOppdaterStegData,
-      slettFlyt: this.slettFlyt,
+      oppdaterFlyt: this.debouncedOppdaterFlyt,
+      resetFlyt: this.resetFlyt,
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
+      lagreBehandlingsgrunnlagOgOppdaterStegData: this.lagreBehandlingsgrunnlagOgOppdaterStegData,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {

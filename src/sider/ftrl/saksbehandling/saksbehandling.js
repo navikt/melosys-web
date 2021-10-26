@@ -14,8 +14,7 @@ import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
-import Stegvelger from "../../../felleskomponenter/stegvelger";
-import { STEG } from "../../../felleskomponenter/stegvelger/stegMotor/typer";
+import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import { useFeatureToggle } from "../../../featuretoggle";
 

@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingVedtak from "../../../../felleskomponenter/stegvelger/stegKomponenter/ftrl/vurderingVedtak";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
+import VurderingVedtak from "../stegKomponenter/vurderingVedtak";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -24,7 +24,7 @@ class Vedtak extends Steg {
       bekreft: propsLight.tilgjengeligeHandlers.bekreft,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
-      tilForsiden: propsLight.tilgjengeligeHandlers.tilForsiden,
+      lagreOgFatteVedtak: propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
     };
     this.status = FANE_STATUS.OK;
   }
