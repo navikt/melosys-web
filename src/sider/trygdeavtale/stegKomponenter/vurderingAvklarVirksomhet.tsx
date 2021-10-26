@@ -112,7 +112,7 @@ const VurderingAvklarVirksomhet = ({
 const VurderingAvklarVirksomhetForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET,
   destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
+  enableReinitialize: true,
   updateUnregisteredFields: true,
   validate: lagYupToReduxformErrorMapper(vurdering_avklar_virksomhet),
 })(VurderingAvklarVirksomhet);

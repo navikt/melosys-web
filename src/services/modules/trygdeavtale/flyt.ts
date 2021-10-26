@@ -68,4 +68,4 @@ export const hentFlyt = (behandlingID: number): Promise<FlytResDto> =>
 export const sendFlyt = (behandlingID: number, data: FlytReqDto): Promise<FlytResDto> =>
   putAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`, data);
 
-export const slettFlyt = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);
+export const resetFlyt = (behandlingID: number) => deleteAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);

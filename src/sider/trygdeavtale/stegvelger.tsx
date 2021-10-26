@@ -113,8 +113,10 @@ class Stegvelger extends Component<Props, State> {
     return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
   };
 
-  slettFlyt = () => {
-    Api.Trygdeavtale.slettFlyt(this.props.behandlingID);
+  resetFlyt = () => {
+    return Api.Trygdeavtale.resetFlyt(this.props.behandlingID).then((response) =>
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
+    );
   };
 
   oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto) => {
@@ -136,7 +138,7 @@ class Stegvelger extends Component<Props, State> {
       fortsett: this.fortsett,
       tilbake: this.tilbake,
       oppdaterFlyt: this.debouncedOppdaterFlyt,
-      slettFlyt: this.slettFlyt,
+      resetFlyt: this.resetFlyt,
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
