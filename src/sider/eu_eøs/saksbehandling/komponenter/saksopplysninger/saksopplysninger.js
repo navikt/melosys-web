@@ -7,8 +7,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
 import * as MPT from "../../../../../proptypes";
 
-import Stegvelger from "../../../../../felleskomponenter/stegvelger";
-import { STEG } from "../../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import Stegvelger, { STEG } from "../../../../../felleskomponenter/stegvelger";
 import { HenlagtSak, AvslaattSoknad } from "../stegErstatter";
 import { SoknadMenypanelForm } from "../../../../../felleskomponenter/menypanelForm";
 

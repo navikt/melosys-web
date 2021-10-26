@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingArbeidEttLandOvrigVedtak from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArbeidEttLandOvrigVedtak";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
+import VurderingArbeidEttLandOvrigVedtak from "../../stegKomponenter/vurderingArbeidEttLandOvrigVedtak";
 
 import { hentFakta } from "../../../../regler/avklartefakta";
 

@@ -3,8 +3,8 @@ import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import VurderingArtikkel16Anmodning from "../../../../felleskomponenter/stegvelger/stegKomponenter/vurderingArtikkel16Anmodning";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
+import VurderingArtikkel16Anmodning from "../../stegKomponenter/vurderingArtikkel16Anmodning";
 import { hentVilkar, hentBegrunnelser } from "../../../../regler/vilkar";
 
 const { UNDER_BEHANDLING, AVSLUTTET } = MKV.Koder.behandlinger.behandlingsstatus;

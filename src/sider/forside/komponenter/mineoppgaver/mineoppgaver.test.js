@@ -62,7 +62,10 @@ describe("MineOppgaver", () => {
         tom: "2019-08-31",
       },
       prioritet: "HOY",
-      land: ["NO"],
+      land: {
+        landkoder: ["NO"],
+        erUkjenteEllerAlleEosLand: true,
+      },
       versjon: 1,
       ansvarligID: "Z991001",
     },
