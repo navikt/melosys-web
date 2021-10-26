@@ -1,5 +1,5 @@
 import { Virksomheter } from "../../stegMap";
-import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 import * as KV from "../../../../kodeverk";
 
 import SokkelSkip from "./sokkel_skip";

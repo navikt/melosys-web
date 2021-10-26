@@ -11,7 +11,7 @@ import * as Utils from "../../utils";
 
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
-import { FANE_STATUS } from "../../felleskomponenter/stegvelger/stegMotor/typer";
+import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
 import { BehandlingsgrunnlagFeilmeldinger } from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger/behandlingsgrunnlagFeilmeldinger";
 import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";

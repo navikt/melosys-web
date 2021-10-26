@@ -38,7 +38,7 @@ import EndrePeriode from "./endre_periode";
 import Videresend from "./videresend";
 import VurderArbeidsland from "./vurderarbeidsland";
 
-import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 export const stegMap = new Map([
   [STEG.INNGANG, Inngang],

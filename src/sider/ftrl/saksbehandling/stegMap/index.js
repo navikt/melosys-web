@@ -7,7 +7,7 @@ import Representant from "./representant";
 import Familie from "./familie";
 import Vedtak from "./vedtak";
 
-import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 export const stegMap = new Map([
   [STEG.START, Start],

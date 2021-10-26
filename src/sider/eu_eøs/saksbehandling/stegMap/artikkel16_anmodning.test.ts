@@ -2,7 +2,7 @@ import * as KV from "../../../../kodeverk";
 
 import Artikkel16Anmodning from "./artikkel16_anmodning";
 
-import { STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 import MKV from "../../../../melosyskodeverk";
 

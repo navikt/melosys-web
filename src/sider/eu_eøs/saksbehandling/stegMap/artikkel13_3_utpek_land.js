@@ -1,5 +1,5 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel13UtpekLand from "../../stegKomponenter/vurderingArtikkel13UtpekLand";
 
 class Artikkel13_3_utpek_land extends Steg {

@@ -4,7 +4,7 @@ import * as Utils from "../../../../utils";
 import MKV from "../../../../melosyskodeverk";
 
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel13_2b from "../../stegKomponenter/vurderingArtikkel13_2b";
 import { hentFakta, hentFaktaVerdi } from "../../../../regler/avklartefakta";
 

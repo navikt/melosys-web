@@ -3,7 +3,7 @@ import * as KV from "../../../../kodeverk";
 
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingVedtak from "../../stegKomponenter/vurderingVedtak";
 
 class Vedtak extends Steg {

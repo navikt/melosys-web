@@ -1,5 +1,5 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
 import VurderingAvslaaUtpeking from "../../stegKomponenter/vurderingAvslaaUtpeking";
 
 class AvslaaUtpeking extends Steg {
