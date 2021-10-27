@@ -41,7 +41,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
     alder !== null && alder < 18 ? <Etiketter.Under18Aar className="ikon__under18Aar" /> : null;
 
   return (
-    <div aria-label="Enkelt familiemedlem" className="familiemedlemmer__enkelt">
+    <div className="familiemedlemmer__enkelt">
       <Nav.Row>
         <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
