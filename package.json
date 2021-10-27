@@ -139,18 +139,13 @@
     "eslint": "npm-run-all -p eslint:*",
     "eslint-auto-fix": "eslint-auto-fix --fix-on-startup",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
-    "pretty-quick": "pretty-quick",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "generate-graphql": "graphql-codegen --config ./src/graphql/codegen.yml"
+    "generate-graphql": "graphql-codegen --config ./src/graphql/codegen.yml",
+    "prepare": "husky install"
   },
   "prettier": {
     "printWidth": 120
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
   },
   "jest-junit": {
     "suiteName": "jest tests",
