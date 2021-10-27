@@ -18,6 +18,8 @@ import KopierbarTekst from "../../../kopierbarTekst";
 
 import "./familiemedlemmer.css";
 
+const { BARN, EKTE, REPA } = KV.Koder.Relasjonsrolle;
+
 interface FamiliemedlemmerEnkeltProps {
   familiemedlem: Api.Familiemedlem;
   erBarn: boolean;
@@ -98,7 +100,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  familiemedlemmer: behandlingerSelectors.FamiliemedlemmerSelector(state),
+  familiemedlemmer: behandlingerSelectors.FamiliemedlemmerSelector(state) as Api.Familiemedlem[],
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({
@@ -130,11 +132,10 @@ const Familiemedlemmer = ({
     }
   };
 
-  const barn = familiemedlemmer.filter(
-    (familiemedlem: Api.Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
-  );
-  const ektefellerOgPartnere = familiemedlemmer.filter((familiemedlem: Api.Familiemedlem) =>
-    [KV.Koder.Relasjonsrolle.EKTE, KV.Koder.Relasjonsrolle.REPA].includes(familiemedlem.relasjonstype.kode)
+  const barn = familiemedlemmer.filter((familiemedlem) => familiemedlem.relasjonstype.kode === BARN);
+
+  const ektefellerOgPartnere = familiemedlemmer.filter((familiemedlem) =>
+    [EKTE, REPA].includes(familiemedlem.relasjonstype.kode)
   );
 
   return (
