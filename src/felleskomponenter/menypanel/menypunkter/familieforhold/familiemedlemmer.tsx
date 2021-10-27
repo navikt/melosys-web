@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Api from "../../../../services/api";
 import * as Etiketter from "../../etiketter";
@@ -113,7 +114,7 @@ type FamiliemedlemmerProps = PropsFromRedux & {
   setMenypanelFeilmelding: (feilmelding: string) => void;
 };
 
-const Familiemedlemmer = ({
+export const Familiemedlemmer = ({
   behandlingID,
   familiemedlemmer,
   oppdaterBehandling,
@@ -134,9 +135,19 @@ const Familiemedlemmer = ({
 
   const barn = familiemedlemmer.filter((familiemedlem) => familiemedlem.relasjonstype.kode === BARN);
 
-  const ektefellerOgPartnere = familiemedlemmer.filter((familiemedlem) =>
-    [EKTE, REPA].includes(familiemedlem.relasjonstype.kode)
-  );
+  const hentRelasjonstypeTerm = (relasjonstype: KTObject) => {
+    if (relasjonstype.kode === EKTE) return "Ektefelle";
+    else if (relasjonstype.kode === REPA) return "Partner";
+
+    return relasjonstype.term;
+  };
+  const mapEkteFellerOgPartnere = (familiemedlem: Api.Familiemedlem) => ({
+    ...familiemedlem,
+    relasjonstype: { ...familiemedlem.relasjonstype, term: hentRelasjonstypeTerm(familiemedlem.relasjonstype) },
+  });
+  const ektefellerOgPartnere = familiemedlemmer
+    .filter((familiemedlem) => [EKTE, REPA].includes(familiemedlem.relasjonstype.kode))
+    .map(mapEkteFellerOgPartnere);
 
   return (
     <div className="familiemedlemmer">
