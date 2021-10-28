@@ -82,7 +82,7 @@ interface Props {
   annenBehandlingOppfriskes: boolean;
 }
 
-const VurderingStart = ({
+export const VurderingStart = ({
   bekreft,
   redigerbart,
   formValues = {},
