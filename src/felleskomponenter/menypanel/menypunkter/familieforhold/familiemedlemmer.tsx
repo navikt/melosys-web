@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Api from "../../../../services/api";
 import * as Etiketter from "../../etiketter";
@@ -17,6 +18,8 @@ import ExpandableList from "../../../expandablelist";
 import KopierbarTekst from "../../../kopierbarTekst";
 
 import "./familiemedlemmer.css";
+
+const { BARN, EKTE, REPA } = KV.Koder.Relasjonsrolle;
 
 interface FamiliemedlemmerEnkeltProps {
   familiemedlem: Api.Familiemedlem;
@@ -38,7 +41,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
     alder !== null && alder < 18 ? <Etiketter.Under18Aar className="ikon__under18Aar" /> : null;
 
   return (
-    <div aria-label="Enkelt familiemedlem" className="familiemedlemmer__enkelt">
+    <div className="familiemedlemmer__enkelt">
       <Nav.Row>
         <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
@@ -98,7 +101,7 @@ export function FamiliemedlemmerGruppe(props: FamiliemedlemmerGruppeProps) {
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  familiemedlemmer: behandlingerSelectors.FamiliemedlemmerSelector(state),
+  familiemedlemmer: behandlingerSelectors.FamiliemedlemmerSelector(state) as Api.Familiemedlem[],
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({
@@ -111,7 +114,7 @@ type FamiliemedlemmerProps = PropsFromRedux & {
   setMenypanelFeilmelding: (feilmelding: string) => void;
 };
 
-const Familiemedlemmer = ({
+export const Familiemedlemmer = ({
   behandlingID,
   familiemedlemmer,
   oppdaterBehandling,
@@ -130,14 +133,21 @@ const Familiemedlemmer = ({
     }
   };
 
-  const barn = familiemedlemmer.filter(
-    (familiemedlem: Api.Familiemedlem) => familiemedlem.relasjonstype.kode === KV.Koder.Relasjonsrolle.BARN
-  );
-  const ektefellePartnerSamboer = familiemedlemmer.filter((familiemedlem: Api.Familiemedlem) =>
-    [KV.Koder.Relasjonsrolle.EKTE, KV.Koder.Relasjonsrolle.REPA, KV.Koder.Relasjonsrolle.SAMB].includes(
-      familiemedlem.relasjonstype.kode
-    )
-  );
+  const barn = familiemedlemmer.filter((familiemedlem) => familiemedlem.relasjonstype.kode === BARN);
+
+  const hentRelasjonstypeTerm = (relasjonstype: KTObject) => {
+    if (relasjonstype.kode === EKTE) return "Ektefelle";
+    else if (relasjonstype.kode === REPA) return "Partner";
+
+    return relasjonstype.term;
+  };
+  const mapEkteFellerOgPartnere = (familiemedlem: Api.Familiemedlem) => ({
+    ...familiemedlem,
+    relasjonstype: { ...familiemedlem.relasjonstype, term: hentRelasjonstypeTerm(familiemedlem.relasjonstype) },
+  });
+  const ektefellerOgPartnere = familiemedlemmer
+    .filter((familiemedlem) => [EKTE, REPA].includes(familiemedlem.relasjonstype.kode))
+    .map(mapEkteFellerOgPartnere);
 
   return (
     <div className="familiemedlemmer">
@@ -163,9 +173,9 @@ const Familiemedlemmer = ({
       )}
       {familiemedlemmer.length !== 0 && (
         <FamiliemedlemmerGruppe
-          familiemedlemmer={ektefellePartnerSamboer}
-          ingenFamiliemedlemmerTekst="Fant ingen ektefelle/partner/samboer"
-          overskrift="Ektefelle/partner/samboer"
+          familiemedlemmer={ektefellerOgPartnere}
+          ingenFamiliemedlemmerTekst="Fant ingen ektefelle/partner"
+          overskrift="Ektefelle/partner"
           kolonneHeadinger={["Navn", "F.nr./d-nr.", "Fra og med", "Bor med bruker", "Relasjon"]}
           erBarn={false}
         />
