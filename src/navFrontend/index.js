@@ -4,17 +4,6 @@ import AlertStripe, { AlertStripeAdvarsel, AlertStripeInfo } from "nav-frontend-
 import EtikettBase from "nav-frontend-etiketter";
 import { Container, Row, Column } from "nav-frontend-grid";
 import Hjelpetekst from "nav-frontend-hjelpetekst";
-import {
-  Checkbox,
-  Radio,
-  RadioPanelGruppe,
-  SkjemaGruppe,
-  Fieldset,
-  Select,
-  SelectProps,
-  Input,
-  Textarea,
-} from "nav-frontend-skjema";
 import * as Typo from "nav-frontend-typografi";
 import { Knapp, Hovedknapp, Flatknapp } from "nav-frontend-knapper";
 import Lesmerpanel from "nav-frontend-lesmerpanel";
@@ -28,6 +17,17 @@ import Chevron from "nav-frontend-chevron";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
 import { PopoverOrientering } from "nav-frontend-popover";
 import { Xknapp } from "nav-frontend-ikonknapper";
+import {
+  Checkbox,
+  Radio,
+  RadioPanelGruppe,
+  SkjemaGruppe,
+  Fieldset,
+  Select,
+  SelectProps,
+  Input,
+  Textarea,
+} from "./skjema";
 
 export {
   AlertStripeAdvarsel,
