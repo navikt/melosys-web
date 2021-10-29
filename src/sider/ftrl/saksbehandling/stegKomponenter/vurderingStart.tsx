@@ -16,10 +16,21 @@ import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkod
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { formSelectors } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
+
+import MKV from "../../../../melosyskodeverk";
 import vurderingStartSchema from "./vurderingStartSchema";
 import DialogboksOppfriskSak from "../../../../felleskomponenter/dialogboks/oppfrisk/dialogboksOppfrisk";
 
 import "./vurderingStart.css";
+
+const landHarTrygdeavtaleMedNorgeEllerErEosLand = (landKode: string) => {
+  const landMedTrygdeAvtaleEllerEosLand = [
+    ...MKV.KTObjects.landkoder.map((land: KTObject) => land.kode),
+    ...MKV.KTObjects.avtaleland.map((land: KTObject) => land.kode),
+  ];
+
+  return landMedTrygdeAvtaleEllerEosLand.includes(landKode);
+};
 
 const mapStateToProps = (state: RootState) => {
   const initialSoknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
@@ -71,7 +82,7 @@ interface Props {
   annenBehandlingOppfriskes: boolean;
 }
 
-const VurderingStart = ({
+export const VurderingStart = ({
   bekreft,
   redigerbart,
   formValues = {},
@@ -131,6 +142,10 @@ const VurderingStart = ({
     }
   };
 
+  const valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand = formValues.land
+    ? landHarTrygdeavtaleMedNorgeEllerErEosLand(formValues.land)
+    : false;
+
   return (
     <div className="vurderingStart">
       <Nav.Typo.Undertittel className="undertittel">Oppgi søknadsperiode og -land</Nav.Typo.Undertittel>
@@ -159,6 +174,16 @@ const VurderingStart = ({
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
+      {valgtLandHarTrygdeavtaleMedNorgeEllerErEosLand && (
+        <Nav.Row>
+          <Nav.Column xs="6" />
+          <Nav.Column xs="5">
+            <Nav.AlertStripeAdvarsel>
+              Landet er et EØS-land og/eller et land Norge har trygdeavtale med
+            </Nav.AlertStripeAdvarsel>
+          </Nav.Column>
+        </Nav.Row>
+      )}
       <Nav.Fieldset legend="Trygdedekning">
         <Nav.Row>
           <Nav.Column xs="6">
