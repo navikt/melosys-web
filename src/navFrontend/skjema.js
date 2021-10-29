@@ -3,7 +3,7 @@ import React from "react";
 import { Textarea as NavFrontendTextarea } from "nav-frontend-skjema";
 
 // eslint-disable-next-line react/prop-types
-const Textarea = (props) => <NavFrontendTextarea {...props} spellCheck={props.spellCheck || true} />;
+const Textarea = ({ spellCheck = true, ...rest }) => <NavFrontendTextarea {...rest} spellCheck={spellCheck} />;
 
 export { Textarea };
 export {
