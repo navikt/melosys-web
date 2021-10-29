@@ -22,10 +22,7 @@ const KopierbarTekst = ({ hovertekst, children }: KopierbarTekstProps) => {
     }, 1000);
   }, [erKopiert]);
 
-  const containerCls = classNames({
-    "kopierbar-tekst__container--kopiert": erKopiert,
-    "kopierbar-tekst__container": !erKopiert,
-  });
+  const containerCls = classNames("kopierbar-tekst__container");
 
   return (
     <span
