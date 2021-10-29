@@ -32,7 +32,7 @@ describe("VurderingStart", () => {
 
     const alertstripe = vurderingStart.findWhere(
       (n) =>
-        n.type() === Nav.AlertStripe &&
+        n.type() === Nav.AlertStripeAdvarsel &&
         n.children().text() === "Landet er et EØS-land og/eller et land Norge har trygdeavtale med"
     );
     expect(alertstripe).toHaveLength(1);
@@ -48,7 +48,7 @@ describe("VurderingStart", () => {
 
     const alertstripe = vurderingStart.findWhere(
       (n) =>
-        n.type() === Nav.AlertStripe &&
+        n.type() === Nav.AlertStripeAdvarsel &&
         n.children().text() === "Landet er et EØS-land og/eller et land Norge har trygdeavtale med"
     );
     expect(alertstripe).toHaveLength(0);
