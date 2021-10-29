@@ -1,7 +1,7 @@
 import React, { ElementType, MouseEventHandler } from "react";
 import classnames from "classnames";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Symboler from "../symboler";
 
 import { Symbolsynlighet } from "./types";

@@ -10,7 +10,7 @@ import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
 import * as MPT from "../../../../proptypes";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
 import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";

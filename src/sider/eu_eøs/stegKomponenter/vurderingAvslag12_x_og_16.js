@@ -5,7 +5,7 @@ import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
 
 import * as KV from "../../../kodeverk";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Hooks from "../../../hooks";
 import * as VilkarSelectors from "../../../ducks/vilkar/selectors";

@@ -3,7 +3,7 @@ import PT from "prop-types";
 import classNames from "classnames";
 import { Field } from "redux-form";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as SkjemaUtils from "../utils";
 

@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";

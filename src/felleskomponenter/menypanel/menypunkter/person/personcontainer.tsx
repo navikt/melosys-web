@@ -1,6 +1,6 @@
 import React, { ComponentProps } from "react";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
 import Person from "./person";

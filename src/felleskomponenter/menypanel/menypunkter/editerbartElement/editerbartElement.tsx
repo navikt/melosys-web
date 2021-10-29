@@ -1,7 +1,7 @@
 import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType, useEffect } from "react";
 import classnames from "classnames";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../ui";
 
 import Legend from "./legend";

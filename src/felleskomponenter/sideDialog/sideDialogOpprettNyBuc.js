@@ -4,7 +4,7 @@ import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../melosyskodeverk";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";

@@ -4,7 +4,7 @@ import PT from "prop-types";
 import MKV from "../../../../../melosyskodeverk";
 
 import * as Utils from "../../../../../utils";
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
 import "./endrePeriode.css";
 import Datovelger from "../../../../../felleskomponenter/datovelger";

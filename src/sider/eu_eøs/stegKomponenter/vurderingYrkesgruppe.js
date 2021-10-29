@@ -3,7 +3,7 @@ import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from "../../../regler/avklartefakta";
 import {

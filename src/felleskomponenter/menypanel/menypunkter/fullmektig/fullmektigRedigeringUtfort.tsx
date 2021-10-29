@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Ikoner from "../../../../resources/images";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";

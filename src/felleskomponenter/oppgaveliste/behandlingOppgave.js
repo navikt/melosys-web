@@ -5,7 +5,7 @@ import PT from "prop-types";
 
 import * as MPT from "../../proptypes";
 import * as Ikoner from "../../resources/images";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as Routing from "../../routing";
 

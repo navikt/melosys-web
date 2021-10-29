@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
 import * as Utils from "../../utils";
 import Fagsak from "../../felleskomponenter/oppgaveliste/fagsak";

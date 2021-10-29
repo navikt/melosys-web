@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 
 import * as Utils from "../../../../../utils";
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as Symboler from "../../symboler";
 
 import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../../../ducks/behandlingsgrunnlag";

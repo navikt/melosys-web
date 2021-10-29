@@ -2,7 +2,7 @@ import React, { ComponentProps, KeyboardEvent, ChangeEvent } from "react";
 import { mount, shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import Checkbox from "./index";
 

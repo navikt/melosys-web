@@ -1,7 +1,7 @@
 import React from "react";
 import PT from "prop-types";
 import { Field } from "redux-form";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
 
 /** Returnerer en tekst som gir brukeren en indikasjon på hvor mange tegn

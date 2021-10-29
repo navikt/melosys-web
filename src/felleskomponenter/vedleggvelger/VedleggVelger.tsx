@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { FysiskDokument } from "Domene";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";

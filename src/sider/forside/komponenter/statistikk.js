@@ -1,7 +1,7 @@
 import React from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import { oppgaverSelectors } from "../../../ducks/oppgaver";
 
 import "./statistikk.css";

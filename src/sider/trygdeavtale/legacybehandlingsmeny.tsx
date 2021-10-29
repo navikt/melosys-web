@@ -1,6 +1,6 @@
 import React from "react";
 import MKV from "../../melosyskodeverk";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import "./legacybehandlingsmeny.css";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;

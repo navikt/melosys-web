@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 import { WrappedFieldMetaProps } from "redux-form";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import Select, { SelectWrappedComponent } from "./select";
 

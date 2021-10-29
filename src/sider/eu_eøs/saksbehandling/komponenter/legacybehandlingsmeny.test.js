@@ -1,7 +1,7 @@
 import React from "react";
 
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 describe("behandlingsmeny", () => {
   let props = null;

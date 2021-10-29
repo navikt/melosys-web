@@ -7,7 +7,7 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Utils from "../../../utils";
 import * as Routing from "../../../routing";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";

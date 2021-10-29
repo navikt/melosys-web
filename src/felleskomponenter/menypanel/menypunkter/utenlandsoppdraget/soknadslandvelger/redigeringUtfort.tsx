@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 
 import * as Utils from "../../../../../utils";
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
 
 import MKV from "../../../../../melosyskodeverk";

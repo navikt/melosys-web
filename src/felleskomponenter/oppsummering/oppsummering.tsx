@@ -6,7 +6,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";

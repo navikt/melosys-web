@@ -8,7 +8,7 @@ import React, {
   MouseEvent,
 } from "react";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../ui";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";

@@ -3,7 +3,7 @@ import { formValueSelector } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import * as Sporsmal from "./sporsmal";

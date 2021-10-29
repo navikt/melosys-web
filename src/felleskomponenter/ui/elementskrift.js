@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import "./elementskrift.css";
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import MKV from "../../../melosyskodeverk";
 

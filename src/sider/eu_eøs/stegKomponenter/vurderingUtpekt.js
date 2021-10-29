@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as MPT from "../../../proptypes";

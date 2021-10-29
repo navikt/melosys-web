@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import { DialogboksHenleggSak } from "./dialogboksHenlegg";
 import Knapperad from "../../knapperad";

@@ -5,7 +5,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 
 import MKV from "../../../../melosyskodeverk";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
 import { vilkarSelectors } from "../../../../ducks/vilkar";

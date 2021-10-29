@@ -1,7 +1,7 @@
 import React from "react";
 import ReactHighcharts from "react-highcharts";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 import Tabell from "../../../tabell/tabell";
 import Inntekt from "./inntekt";

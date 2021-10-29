@@ -3,7 +3,7 @@ import PT from "prop-types";
 import MKV from "@navikt/melosys-kodeverk";
 
 import * as Skjema from "../../../felleskomponenter/skjema/";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
 

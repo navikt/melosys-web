@@ -7,7 +7,7 @@ import * as Api from "../../../../services/api";
 import * as Etiketter from "../../etiketter";
 import * as Ikoner from "../../../../resources/images";
 import * as Mui from "../../../ui";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 

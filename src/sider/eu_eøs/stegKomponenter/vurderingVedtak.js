@@ -7,7 +7,7 @@ import * as EKV from "eessi-kodeverk";
 import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 
 import * as KV from "../../../kodeverk";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";

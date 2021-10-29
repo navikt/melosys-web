@@ -5,7 +5,7 @@ import PT from "prop-types";
 
 import * as Utils from "../../../utils";
 import * as Skjema from "../../../felleskomponenter/skjema/";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes/";
 import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";

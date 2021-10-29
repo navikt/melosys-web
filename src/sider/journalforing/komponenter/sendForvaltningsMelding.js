@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import { BOOLSK } from "../../../constants";

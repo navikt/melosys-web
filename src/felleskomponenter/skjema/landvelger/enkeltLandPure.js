@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PT from "prop-types";
 import classnames from "classnames";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";

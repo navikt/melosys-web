@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import PT from "prop-types";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import EnkeltVilkaar from "./felles/enkeltVilkaar";
 

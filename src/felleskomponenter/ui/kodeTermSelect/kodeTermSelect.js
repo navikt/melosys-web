@@ -1,6 +1,6 @@
 import React from "react";
 import PT from "prop-types";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 const kodeTermSelect = ({ koder, value, onChange, label, feil, disableForsteValg, redigerbart, onBlur }) => {
   const visValueIkkeOppgittIKoder = !redigerbart && !koder.includes(value);

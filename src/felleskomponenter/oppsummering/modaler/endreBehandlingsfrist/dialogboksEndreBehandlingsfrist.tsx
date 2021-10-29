@@ -12,7 +12,7 @@ import Knapperad from "../../../knapperad";
 
 import * as Mui from "../../../ui";
 import * as Api from "../../../../services/api";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Routing from "../../../../routing";
 
 import "./dialogboksEndreBehandlingsfrist.css";

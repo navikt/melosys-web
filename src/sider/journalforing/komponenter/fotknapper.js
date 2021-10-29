@@ -1,7 +1,7 @@
 import React from "react";
 import * as PT from "prop-types";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
 const Fotknapper = ({ avbrytJournalforing, kanSubmittes }) => (

@@ -1,7 +1,7 @@
 import React from "react";
 
 import * as Skjema from "../../../../skjema";
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 
 import "./enkeltfoedestedoglandskjema.css";
 

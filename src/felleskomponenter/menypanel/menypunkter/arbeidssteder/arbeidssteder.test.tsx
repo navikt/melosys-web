@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Land from "./land";
 
 import MKV from "../../../../melosyskodeverk";

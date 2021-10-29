@@ -3,7 +3,7 @@ import PT from "prop-types";
 
 import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar, slettVilkar } from "../../../../regler/vilkar";
 
 import * as Mui from "../../../../felleskomponenter/ui";

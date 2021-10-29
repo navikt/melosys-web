@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import { Field } from "redux-form";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
 import "../skjema.css";

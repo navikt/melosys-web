@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { formValueSelector } from "redux-form";
 
 import * as Skjema from "../../../../skjema";
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
 
 import { useFeatureToggle } from "../../../../../featuretoggle";

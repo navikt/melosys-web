@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { KnappBaseProps } from "nav-frontend-knapper";
 import classnames from "classnames";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import "./knapp.css";
 

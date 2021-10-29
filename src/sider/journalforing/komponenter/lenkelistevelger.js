@@ -5,7 +5,7 @@ import PT from "prop-types";
 import * as Skjema from "../../../felleskomponenter/skjema/";
 import * as Utils from "../../../utils";
 import * as Ikoner from "../../../resources/images";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 import { formSelectors } from "../../../ducks/form";
 

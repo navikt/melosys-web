@@ -6,7 +6,7 @@ import { reduxForm, getFormValues } from "redux-form";
 import MKV from "../../../melosyskodeverk";
 
 import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";

@@ -3,7 +3,7 @@ import classnames from "classnames";
 import PT from "prop-types";
 import { DokumentOversikt, FysiskDokument } from "Domene";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import SideDialogSendBrev from "./sendBrev";

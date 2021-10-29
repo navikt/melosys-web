@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Mui from "..";
 import * as Ikoner from "../../../resources/images";
 

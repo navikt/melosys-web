@@ -3,7 +3,7 @@ import PT from "prop-types";
 import classNames from "classnames";
 import * as MPT from "../../proptypes";
 import { dokumenterOperations } from "../../ducks/dokumenter";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import "./pdfLenkeListe.css";
 

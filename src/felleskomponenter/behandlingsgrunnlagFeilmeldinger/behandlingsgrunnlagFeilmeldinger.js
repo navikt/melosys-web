@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 import { formSelectors } from "../../ducks/form";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import "./behandlingsgrunnlagFeilmeldinger.css";
 
