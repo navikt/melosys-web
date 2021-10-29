@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 import { FormSection, getFormValues, reduxForm, SubmissionError } from "redux-form";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as Skjema from "../../felleskomponenter/skjema";
 import * as Mui from "../../felleskomponenter/ui";
 import * as Ikoner from "../../resources/images";

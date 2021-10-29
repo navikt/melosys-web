@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import { DialogboksAvsluttSakSomBortfalt } from "./dialogboksAvsluttSakSomBortfalt";
 import Knapperad from "../../knapperad";

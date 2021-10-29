@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import * as PT from "prop-types";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as MPT from "../../proptypes";
 

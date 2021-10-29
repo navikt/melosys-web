@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 import each from "jest-each";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 import MKV from "../../../../melosyskodeverk";
 import { VurderingStart } from "./vurderingStart";

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { reduxForm, formValueSelector, isValid } from "redux-form";
 import * as EKV from "eessi-kodeverk";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";

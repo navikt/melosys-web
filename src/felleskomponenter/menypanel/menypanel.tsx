@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as Etiketter from "./etiketter";
 
 import MKV from "../../melosyskodeverk";

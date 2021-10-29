@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import { Link } from "react-router-dom";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import EnkeltDato from "../datoOmrade/enkeltDato";
 

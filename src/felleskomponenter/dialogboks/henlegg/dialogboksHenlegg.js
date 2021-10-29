@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import * as Mui from "../../ui";

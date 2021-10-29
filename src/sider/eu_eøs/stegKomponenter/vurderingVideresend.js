@@ -6,7 +6,7 @@ import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Hooks from "../../../hooks";

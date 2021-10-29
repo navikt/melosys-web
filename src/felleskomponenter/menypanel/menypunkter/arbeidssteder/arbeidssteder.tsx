@@ -8,7 +8,7 @@ import { Action } from "redux";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import * as Ikoner from "../../../../resources/images";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Etiketter from "../../etiketter";
 import * as Fly from "./fly";
 import * as Land from "./land";

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { combineReducers, createStore } from "redux";
 import { reducer as formReducer } from "redux-form";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import { VurderingVideresend } from "./vurderingVideresend";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";

@@ -9,7 +9,7 @@ import parse from "html-react-parser";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 

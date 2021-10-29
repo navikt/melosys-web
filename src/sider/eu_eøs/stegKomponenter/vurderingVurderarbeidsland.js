@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import { formValueSelector } from "redux-form";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";

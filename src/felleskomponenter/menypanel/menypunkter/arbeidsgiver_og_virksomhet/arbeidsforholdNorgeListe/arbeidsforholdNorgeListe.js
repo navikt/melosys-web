@@ -5,7 +5,7 @@ import classnames from "classnames";
 
 import * as Utils from "../../../../../utils";
 import * as Mui from "../../../../ui";
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 import * as MPT from "../../../../../proptypes";
 

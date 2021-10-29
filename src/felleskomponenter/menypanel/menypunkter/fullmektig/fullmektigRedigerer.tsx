@@ -2,7 +2,7 @@ import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler, useSta
 
 import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 import { Organisasjon } from "../../../../services/api";
 

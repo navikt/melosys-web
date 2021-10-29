@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import MKV from "../../../melosyskodeverk";
 import useEventTargetValueState from "../../../hooks/useEventTargetValueState";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
 
 import PdfLenkeListe from "../../pdfLenkeListe";

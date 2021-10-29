@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactHighcharts from "react-highcharts";
 
 import * as MPT from "../../../../proptypes";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import Tabell from "../../../tabell/tabell";
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from "../../../regler/avklartefakta";
 

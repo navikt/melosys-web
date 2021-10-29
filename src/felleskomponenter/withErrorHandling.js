@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
-import * as Nav from "../utils/navFrontend";
+import * as Nav from "../navFrontend";
 import * as Utils from "../utils";
 
 import "./withErrorHandling.css";

@@ -1,7 +1,7 @@
 import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 
 import DialogboksValidering, { Validering, ModalBody, Valideringsfeil } from "./dialogboksValidering";

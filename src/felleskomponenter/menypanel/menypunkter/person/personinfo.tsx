@@ -1,7 +1,7 @@
 import React from "react";
 
 import * as KV from "../../../../kodeverk";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import { Person } from "../../../../services/api";
 
 import EnkeltDato from "../../../datoOmrade/enkeltDato";

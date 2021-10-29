@@ -1,6 +1,6 @@
 import React, { Component, ComponentProps, ChangeEvent, KeyboardEvent } from "react";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 type NavCheckboxProps = ComponentProps<typeof Nav.Checkbox>;
 type FilteredNavCheckboxProps = Omit<NavCheckboxProps, "onChange" | "onKeyPress">;

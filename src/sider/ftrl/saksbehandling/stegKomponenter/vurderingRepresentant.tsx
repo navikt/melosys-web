@@ -5,7 +5,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import { Action } from "redux";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";

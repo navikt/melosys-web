@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 
 import withErrorHandling from "../../felleskomponenter/withErrorHandling";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import Behandling from "./komponenter/behandling";
 import MineOppgaver from "./komponenter/mineoppgaver";

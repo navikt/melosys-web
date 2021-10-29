@@ -2,7 +2,7 @@ import React, { ChangeEvent, Fragment } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../../../melosyskodeverk";
-import * as Nav from "../../../../../../utils/navFrontend";
+import * as Nav from "../../../../../../navFrontend";
 import * as Api from "../../../../../../services/api";
 import * as Ikoner from "../../../../../../resources/images";
 import * as Utils from "../../../../../../utils";

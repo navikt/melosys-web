@@ -3,7 +3,7 @@ import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 import { connect } from "react-redux";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 import * as Utils from "../../../utils";

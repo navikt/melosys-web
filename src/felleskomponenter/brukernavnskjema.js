@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import * as Skjema from "./skjema";
 import * as Api from "../services/api";
-import * as Nav from "../utils/navFrontend";
+import * as Nav from "../navFrontend";
 
 import "./brukernavnskjema.css";
 

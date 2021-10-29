@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import SorterbarListe from "./sorterbarListe";
 import JournalforingOppgave from "../oppgaveliste/journalforingOppgave";

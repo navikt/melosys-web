@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as Skjema from "../../../../../felleskomponenter/skjema";
 
 import { EnRedigeringsknappListeRedigererPreElementer } from "../../editerbartElementListe";

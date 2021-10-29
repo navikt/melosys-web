@@ -4,7 +4,7 @@ import PT from "prop-types";
 import Ikon from "melosys-ikoner-assets";
 
 import * as KV from "../../../kodeverk";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
 
 import "./listevelger.css";

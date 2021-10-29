@@ -2,7 +2,7 @@ import React, { useState, useEffect, MouseEvent } from "react";
 import classNames from "classnames";
 
 import * as Api from "../../../../services/api";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 import FullmektigRedigerer from "./fullmektigRedigerer";
 import FullmektigRedigeringUtfort from "./fullmektigRedigeringUtfort";

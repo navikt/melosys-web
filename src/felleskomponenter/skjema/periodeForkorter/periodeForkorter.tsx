@@ -1,6 +1,6 @@
 import React, { Fragment, ReactNode, MouseEventHandler } from "react";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Skjema from "../index";
 
 interface PeriodeForkorterProps {

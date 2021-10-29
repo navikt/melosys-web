@@ -2,7 +2,7 @@ import React from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as KV from "../../../../../kodeverk";
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as Skjema from "../../../../skjema";
 
 import Sletterad from "../sletterad";

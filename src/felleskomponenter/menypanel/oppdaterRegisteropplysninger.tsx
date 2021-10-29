@@ -1,7 +1,7 @@
 import React, { KeyboardEvent } from "react";
 
 import "./oppdaterRegisteropplysninger.css";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import { Refresh } from "../../resources/images";
 
 type OppdaterRegisteroppslysningerProps = {

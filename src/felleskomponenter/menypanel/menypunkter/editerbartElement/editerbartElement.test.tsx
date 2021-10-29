@@ -4,7 +4,7 @@ import { mock, instance } from "ts-mockito";
 import each from "jest-each";
 
 import * as Mui from "../../../ui";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 import EditerbartElement from "./editerbartElement";
 import { Status } from "./types";

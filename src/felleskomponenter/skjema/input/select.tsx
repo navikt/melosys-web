@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler } from "react";
 import PT from "prop-types";
 import { Field, WrappedFieldProps } from "redux-form";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
 
 import "../skjema.css";

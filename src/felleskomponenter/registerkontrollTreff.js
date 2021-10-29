@@ -4,7 +4,7 @@ import PT from "prop-types";
 import MKV from "../melosyskodeverk";
 
 import * as KV from "../kodeverk";
-import * as Nav from "../utils/navFrontend";
+import * as Nav from "../navFrontend";
 import * as Utils from "../utils";
 
 import "./registerkontrolltreff.css";

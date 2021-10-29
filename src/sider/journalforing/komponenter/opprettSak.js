@@ -4,7 +4,7 @@ import { change } from "redux-form";
 import PT from "prop-types";
 
 import * as Skjema from "../../../felleskomponenter/skjema/";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import { formSelectors } from "../../../ducks/form";
 import MKV from "../../../melosyskodeverk";
 import { FeatureToggle, useFeatureToggle } from "../../../featuretoggle";

@@ -2,7 +2,7 @@ import React, { ComponentProps, MouseEvent } from "react";
 import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import MKV from "../../../melosyskodeverk";
 

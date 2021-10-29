@@ -2,7 +2,7 @@ import React, { useState, ReactNode } from "react";
 import classNames from "classnames";
 import { Collapse } from "react-collapse";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import "./expandableList.css";
 

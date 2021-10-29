@@ -1,7 +1,7 @@
 import React from "react";
 
 import * as MPT from "../../../../proptypes";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 
 import EnkeltDato from "../../../datoOmrade/enkeltDato";
 import Tabell from "../../../tabell/tabell";

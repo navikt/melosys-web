@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, useState } from "react";
 
 import * as Utils from "../../../../utils";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 
 interface Feilmelding {

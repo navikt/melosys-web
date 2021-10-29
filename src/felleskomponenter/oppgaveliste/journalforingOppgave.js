@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import * as MPT from "../../proptypes";
 import * as Ikoner from "../../resources/images";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import PanelHeader from "../panelHeader/panelHeader";
 

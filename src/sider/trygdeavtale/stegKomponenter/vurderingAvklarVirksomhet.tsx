@@ -8,7 +8,7 @@ import { reduxForm, change, getFormValues } from "redux-form";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 import { formSelectors } from "../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../yup";

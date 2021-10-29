@@ -4,7 +4,7 @@ import uuid from "uuid";
 
 import MKV from "../../melosyskodeverk";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 

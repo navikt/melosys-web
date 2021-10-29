@@ -2,7 +2,7 @@ import React from "react";
 
 import { CustomRadioPanelElement } from "./customRadioPanelGruppe";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 
 describe("CustomRadioPanelElement", () => {
   let props = null;

@@ -4,7 +4,7 @@ import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
 import Soknadsperiode from "./soknadsperiode";

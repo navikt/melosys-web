@@ -3,7 +3,7 @@ import { ColumnWidth } from "nav-frontend-grid";
 import classNames from "classnames";
 
 import * as Utils from "../../../../../../utils";
-import * as Nav from "../../../../../../utils/navFrontend";
+import * as Nav from "../../../../../../navFrontend";
 
 import "./adresserad.css";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import * as Api from "../../services/api";

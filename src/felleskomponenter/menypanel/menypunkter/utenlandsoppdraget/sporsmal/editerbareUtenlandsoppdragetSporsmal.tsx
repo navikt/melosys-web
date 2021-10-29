@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
 
-import * as Nav from "../../../../../utils/navFrontend";
+import * as Nav from "../../../../../navFrontend";
 import * as Skjema from "../../../../skjema";
 import * as Sporsmal from "./sporsmal";
 

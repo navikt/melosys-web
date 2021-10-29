@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 import MKV from "../../../melosyskodeverk";
 
-import * as Nav from "../../../utils/navFrontend";
+import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";

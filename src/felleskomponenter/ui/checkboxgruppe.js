@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
 import * as Mui from ".";
 

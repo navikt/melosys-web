@@ -5,7 +5,7 @@ import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { formValueSelector } from "redux-form";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../ui";
 import * as KV from "../../../../kodeverk";
 import * as Etiketter from "../../etiketter";

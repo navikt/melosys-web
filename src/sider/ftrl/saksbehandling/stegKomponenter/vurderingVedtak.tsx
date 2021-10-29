@@ -7,7 +7,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Hooks from "../../../../hooks";

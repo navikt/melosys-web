@@ -6,7 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import * as Nav from "../../../../utils/navFrontend";
+import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";

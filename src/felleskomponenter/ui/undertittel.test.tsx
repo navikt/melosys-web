@@ -3,7 +3,7 @@ import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 
 import * as Ikoner from "../../resources/images";
-import * as Nav from "../../utils/navFrontend";
+import * as Nav from "../../navFrontend";
 
 import Undertittel from "./undertittel";
 
