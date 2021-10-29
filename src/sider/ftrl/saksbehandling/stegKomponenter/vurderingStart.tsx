@@ -178,9 +178,9 @@ export const VurderingStart = ({
         <Nav.Row>
           <Nav.Column xs="6" />
           <Nav.Column xs="5">
-            <Nav.AlertStripe type="advarsel">
+            <Nav.AlertStripeAdvarsel>
               Landet er et EØS-land og/eller et land Norge har trygdeavtale med
-            </Nav.AlertStripe>
+            </Nav.AlertStripeAdvarsel>
           </Nav.Column>
         </Nav.Row>
       )}
