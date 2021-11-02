@@ -319,7 +319,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
   oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData(MKV.Koder.sakstyper.EU_EOS)),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Vurderutpeking);
