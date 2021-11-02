@@ -93,7 +93,7 @@ const FellesHandlersProviderUnconnected = ({
   };
 
   const lagreOgLukk = async () => {
-    await lagreAllData(sakstype);
+    await lagreAllData();
     tilForsiden();
   };
 
@@ -126,7 +126,7 @@ const FellesHandlersProviderUnconnected = ({
   const henleggSak = async (data) => Api.Fagsaker.fagsak.henlegg(saksnummer, data);
 
   const henleggHandle = async (data) => {
-    await lagreAllData(sakstype);
+    await lagreAllData();
     await henleggSak(data);
     skjulHenleggDialogHandle();
     tilForsiden();
@@ -138,7 +138,7 @@ const FellesHandlersProviderUnconnected = ({
     await resetAnmodningsperioder();
     await resetUtpekingsperioder();
 
-    await lagreAllData(sakstype);
+    await lagreAllData();
     avslaaSoknad(behandlingID, data);
   };
 
@@ -224,7 +224,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  lagreAllData: (sakstype) => dispatch(datalastingOperations.lagreAllData(sakstype)),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) =>
     oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
