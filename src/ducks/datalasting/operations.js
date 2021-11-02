@@ -70,21 +70,23 @@ export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(dokumenterOperations.resetDokument());
 };
 
-export const lagreAllData = (sakstype) => async (dispatch) => {
+export const lagreAllData = (sakstype) => async (dispatch, getState) => {
   if (sakstype === MKV.Koder.sakstyper.FTRL) {
     return Promise.all([dispatch(behandlingsgrunnlagOperations.lagre()), dispatch(vilkarOperations.lagre())]);
   }
 
+  const anmodningErSendtUtland = anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(getState());
+
   await Promise.all([
     dispatch(behandlingsgrunnlagOperations.lagre()),
-    dispatch(vilkarOperations.lagre()),
-    dispatch(avklartefaktaOperations.lagre()),
-    dispatch(behandlingsperioderOperations.lagre()),
+    ...(anmodningErSendtUtland ? [] : [dispatch(vilkarOperations.lagre())]),
+    ...(anmodningErSendtUtland ? [] : [dispatch(avklartefaktaOperations.lagre())]),
+    ...(anmodningErSendtUtland ? [] : [dispatch(behandlingsperioderOperations.lagre())]),
   ]);
 
   return Promise.all([
-    dispatch(anmodningsperioderOperations.lagre()),
+    ...(anmodningErSendtUtland ? [] : [dispatch(anmodningsperioderOperations.lagre())]),
     dispatch(lovvalgsperioderOperations.lagre()),
-    dispatch(utpekingsperioderOperations.lagre()),
+    ...(anmodningErSendtUtland ? [] : [dispatch(utpekingsperioderOperations.lagre())]),
   ]);
 };
