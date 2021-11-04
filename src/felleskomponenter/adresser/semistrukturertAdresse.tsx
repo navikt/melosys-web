@@ -11,7 +11,7 @@ export const PostnrStedLandLinje = ({ land, postnummer, poststed }: PostnrStedLa
     skalViseKomma ? ", " : ""
   }${land ?? ""}`;
 
-  return <div>{postNrStedLandLinje}</div>;
+  return <>{postNrStedLandLinje}</>;
 };
 
 interface SemistrukturertAdresseProps {
@@ -20,14 +20,22 @@ interface SemistrukturertAdresseProps {
 
 const SemistrukturertAdresse = ({
   adresse: { adresselinje1, adresselinje2, adresselinje3, adresselinje4, postnummer, poststed, land },
-}: SemistrukturertAdresseProps) => (
-  <address>
-    {adresselinje1 && <div>{adresselinje1}</div>}
-    {adresselinje2 && <div>{adresselinje2}</div>}
-    {adresselinje3 && <div>{adresselinje3}</div>}
-    {adresselinje4 && <div>{adresselinje4}</div>}
-    <PostnrStedLandLinje postnummer={postnummer} poststed={poststed} land={land} />
-  </address>
-);
+}: SemistrukturertAdresseProps) => {
+  const visPostnrStedLandLinje = [postnummer, poststed, land].some((element) => element);
+
+  return (
+    <address>
+      {adresselinje1 && <div>{adresselinje1}</div>}
+      {adresselinje2 && <div>{adresselinje2}</div>}
+      {adresselinje3 && <div>{adresselinje3}</div>}
+      {adresselinje4 && <div>{adresselinje4}</div>}
+      {visPostnrStedLandLinje && (
+        <div>
+          <PostnrStedLandLinje postnummer={postnummer} poststed={poststed} land={land} />
+        </div>
+      )}
+    </address>
+  );
+};
 
 export default SemistrukturertAdresse;

@@ -53,15 +53,25 @@ describe("SemistrukturertAdresse", () => {
     expect(postnrStedLandLinje.props().poststed).toBe("Oslo");
   });
 
+  it("ikke vis PostnrStedLandLinje hvis postnummer, poststed og land mangler", () => {
+    props.adresse = {
+      land: undefined,
+      postnummer: null,
+      poststed: null,
+    };
+
+    const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
+
+    const postnrStedLandLinje = semistrukturertAdresse.find(PostnrStedLandLinje);
+    expect(postnrStedLandLinje).toHaveLength(0);
+  });
+
   it("viser ikke null- eller undefined-stringer dersom felter mangler", () => {
     props.adresse = {
       adresselinje1: null,
       adresselinje2: null,
       adresselinje3: null,
       adresselinje4: null,
-      land: undefined,
-      postnummer: null,
-      poststed: null,
     };
 
     const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
@@ -104,14 +114,6 @@ describe("PostnrStedLandLinje", () => {
         land: MKV.Koder.landkoder.NO,
       },
       "Trondheim, NO",
-    ],
-    [
-      {
-        postnummer: null,
-        poststed: null,
-        land: undefined,
-      },
-      "",
     ],
     [
       {
