@@ -9,8 +9,8 @@ interface SemistrukturertAdresseProps {
 const SemistrukturertAdresse = ({
   adresse: { adresselinje1, adresselinje2, adresselinje3, adresselinje4, postnummer, poststed, land },
 }: SemistrukturertAdresseProps) => {
-  const kommaLand = `, ${land}`;
-  const postNrStedLandLinje = `${postnummer ?? ""} ${poststed ?? ""}${land ? kommaLand : ""}`;
+  const skalViseKomma = (postnummer || poststed) && land;
+  const postNrStedLandLinje = `${postnummer ?? ""} ${poststed ?? ""}${skalViseKomma ? ", " : ""}${land ?? ""}`;
 
   return (
     <address>

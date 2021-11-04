@@ -57,7 +57,7 @@ describe("SemistrukturertAdresse", () => {
     expect(semistrukturertAdresse.text()).not.toContain("undefined");
   });
 
-  it("viser ikke komma ved land-tekst dersom land er undefined", () => {
+  it("viser ikke komma dersom land mangler", () => {
     props.adresse.postnummer = "1234";
     props.adresse.poststed = "Trondheim";
     props.adresse.land = undefined;
@@ -65,5 +65,25 @@ describe("SemistrukturertAdresse", () => {
     const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
 
     expect(semistrukturertAdresse.text()).not.toContain(",");
+  });
+
+  it("viser ikke komma dersom postnummer og poststed mangler", () => {
+    props.adresse.postnummer = null;
+    props.adresse.poststed = null;
+    props.adresse.land = MKV.Koder.landkoder.NO;
+
+    const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
+
+    expect(semistrukturertAdresse.text()).not.toContain(",");
+  });
+
+  it("viser komma dersom bare poststed mangler", () => {
+    props.adresse.postnummer = "1234";
+    props.adresse.poststed = null;
+    props.adresse.land = MKV.Koder.landkoder.NO;
+
+    const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
+
+    expect(semistrukturertAdresse.text()).toContain(",");
   });
 });
