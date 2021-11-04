@@ -27,11 +27,11 @@ describe("SemistrukturertAdresse", () => {
 
     const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
 
-    expect(semistrukturertAdresse.contains("Oslogata 1")).toBe(true);
-    expect(semistrukturertAdresse.contains("Trondheimsgata 1")).toBe(true);
-    expect(semistrukturertAdresse.contains("Bergensgata 1")).toBe(true);
-    expect(semistrukturertAdresse.contains("Tromsøgata 1")).toBe(true);
-    expect(semistrukturertAdresse.contains(`0000 Oslo, ${MKV.Koder.landkoder.NO}`)).toBe(true);
+    expect(semistrukturertAdresse.text()).toContain("Oslogata 1");
+    expect(semistrukturertAdresse.text()).toContain("Trondheimsgata 1");
+    expect(semistrukturertAdresse.text()).toContain("Bergensgata 1");
+    expect(semistrukturertAdresse.text()).toContain("Tromsøgata 1");
+    expect(semistrukturertAdresse.text()).toContain(`0000 Oslo, ${MKV.Koder.landkoder.NO}`);
   });
 
   it("viser et adresse-element", () => {
