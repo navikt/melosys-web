@@ -1,10 +1,11 @@
 import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
+import each from "jest-each";
 
 import MKV from "../../melosyskodeverk";
 
-import SemistrukturertAdresse from "./semistrukturertAdresse";
+import SemistrukturertAdresse, { PostnrStedLandLinje } from "./semistrukturertAdresse";
 
 describe("SemistrukturertAdresse", () => {
   const mockedProps = mock<ComponentProps<typeof SemistrukturertAdresse>>();
@@ -14,15 +15,12 @@ describe("SemistrukturertAdresse", () => {
     props = instance(mockedProps);
   });
 
-  it("viser alle felter for semistrukturert adresse", () => {
+  it("viser noen felter for semistrukturert adresse", () => {
     props.adresse = {
       adresselinje1: "Oslogata 1",
       adresselinje2: "Trondheimsgata 1",
       adresselinje3: "Bergensgata 1",
       adresselinje4: "Tromsøgata 1",
-      land: MKV.Koder.landkoder.NO,
-      postnummer: "0000",
-      poststed: "Oslo",
     };
 
     const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
@@ -31,7 +29,6 @@ describe("SemistrukturertAdresse", () => {
     expect(semistrukturertAdresse.text()).toContain("Trondheimsgata 1");
     expect(semistrukturertAdresse.text()).toContain("Bergensgata 1");
     expect(semistrukturertAdresse.text()).toContain("Tromsøgata 1");
-    expect(semistrukturertAdresse.text()).toContain(`0000 Oslo, ${MKV.Koder.landkoder.NO}`);
   });
 
   it("viser et adresse-element", () => {
@@ -40,7 +37,23 @@ describe("SemistrukturertAdresse", () => {
     expect(semistrukturertAdresse.find("address")).toHaveLength(1);
   });
 
-  it("viser ikke null- eller undefined-stringer dersom felter er null eller undefined", () => {
+  it("viser en PostnrStedLandLinje", () => {
+    props.adresse = {
+      land: MKV.Koder.landkoder.NO,
+      postnummer: "0000",
+      poststed: "Oslo",
+    };
+
+    const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
+
+    const postnrStedLandLinje = semistrukturertAdresse.find(PostnrStedLandLinje);
+    expect(postnrStedLandLinje).toHaveLength(1);
+    expect(postnrStedLandLinje.props().land).toBe(MKV.Koder.landkoder.NO);
+    expect(postnrStedLandLinje.props().postnummer).toBe("0000");
+    expect(postnrStedLandLinje.props().poststed).toBe("Oslo");
+  });
+
+  it("viser ikke null- eller undefined-stringer dersom felter mangler", () => {
     props.adresse = {
       adresselinje1: null,
       adresselinje2: null,
@@ -56,34 +69,61 @@ describe("SemistrukturertAdresse", () => {
     expect(semistrukturertAdresse.text()).not.toContain("null");
     expect(semistrukturertAdresse.text()).not.toContain("undefined");
   });
+});
 
-  it("viser ikke komma dersom land mangler", () => {
-    props.adresse.postnummer = "1234";
-    props.adresse.poststed = "Trondheim";
-    props.adresse.land = undefined;
+describe("PostnrStedLandLinje", () => {
+  each([
+    [
+      {
+        postnummer: "1234",
+        poststed: "Trondheim",
+        land: undefined,
+      },
+      "1234 Trondheim",
+    ],
+    [
+      {
+        postnummer: null,
+        poststed: null,
+        land: MKV.Koder.landkoder.NO,
+      },
+      "NO",
+    ],
+    [
+      {
+        postnummer: "1234",
+        poststed: null,
+        land: MKV.Koder.landkoder.NO,
+      },
+      "1234, NO",
+    ],
+    [
+      {
+        postnummer: null,
+        poststed: "Trondheim",
+        land: MKV.Koder.landkoder.NO,
+      },
+      "Trondheim, NO",
+    ],
+    [
+      {
+        postnummer: null,
+        poststed: null,
+        land: undefined,
+      },
+      "",
+    ],
+    [
+      {
+        postnummer: "1234",
+        poststed: "Trondheim",
+        land: MKV.Koder.landkoder.NO,
+      },
+      "1234 Trondheim, NO",
+    ],
+  ]).test("for props %s, viser %s", (props, rendretTekst) => {
+    const postnrStedLandLinje = shallow(<PostnrStedLandLinje {...props} />);
 
-    const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
-
-    expect(semistrukturertAdresse.text()).not.toContain(",");
-  });
-
-  it("viser ikke komma dersom postnummer og poststed mangler", () => {
-    props.adresse.postnummer = null;
-    props.adresse.poststed = null;
-    props.adresse.land = MKV.Koder.landkoder.NO;
-
-    const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
-
-    expect(semistrukturertAdresse.text()).not.toContain(",");
-  });
-
-  it("viser komma dersom bare poststed mangler", () => {
-    props.adresse.postnummer = "1234";
-    props.adresse.poststed = null;
-    props.adresse.land = MKV.Koder.landkoder.NO;
-
-    const semistrukturertAdresse = shallow(<SemistrukturertAdresse {...props} />);
-
-    expect(semistrukturertAdresse.text()).toContain(",");
+    expect(postnrStedLandLinje.text()).toBe(rendretTekst);
   });
 });
