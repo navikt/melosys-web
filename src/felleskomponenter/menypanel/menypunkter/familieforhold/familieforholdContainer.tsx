@@ -9,7 +9,9 @@ import * as Etiketter from "../../etiketter";
 import * as MedfolgendeFamilie from "./medfolgendeFamilie";
 
 import Familiemedlemmer from "./familiemedlemmer";
+import FamiliemedlemmerFraPDL from "./familiemedlemmerFraPDL";
 import EditerbartElementListe from "../editerbartElementListe";
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 import "./familieforholdContainer.css";
 
@@ -30,6 +32,8 @@ const FamilieforholdContainer = ({
   setMenypanelFeilmelding,
   visEktefelleSamboerMedPaReisen,
 }: FamilieforholdContainerProps) => {
+  const [familiemedlemmerFraPDLToggle] = useFeatureToggle("melosys.hent-familiemedlemmer-fra-pdl");
+
   const sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn = (familiemedlemmer: KV.Form.MedfolgendeFamilie[]) =>
     familiemedlemmer.every((familiemedlem) => familiemedlem.fnr && familiemedlem.navn);
 
@@ -44,7 +48,10 @@ const FamilieforholdContainer = ({
       </Nav.Row>
       <Nav.Row className="familiemedlemmer-row">
         <Nav.Column xs="12">
-          <Familiemedlemmer setMenypanelFeilmelding={setMenypanelFeilmelding} />
+          {familiemedlemmerFraPDLToggle === "enabled" && <FamiliemedlemmerFraPDL />}
+          {familiemedlemmerFraPDLToggle === "disabled" && (
+            <Familiemedlemmer setMenypanelFeilmelding={setMenypanelFeilmelding} />
+          )}
         </Nav.Column>
       </Nav.Row>
       {visBehandlingsgrunnlagData && (
