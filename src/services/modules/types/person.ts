@@ -19,7 +19,6 @@ interface Person {
   foedselsdato: string;
   sivilstand: KTObject;
   statsborgerskap: KTObject;
-  statsborgerskapDato: string;
   familiemedlemmer: Familiemedlem[];
 }
 
