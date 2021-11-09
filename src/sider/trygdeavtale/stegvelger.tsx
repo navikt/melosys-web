@@ -17,6 +17,7 @@ import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
 import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
+import VurderingVedtak from "./stegKomponenter/vurderingVedtak";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
@@ -29,19 +30,19 @@ interface AktueltSteg {
   tittel: string;
   stegPosisjon: number;
   aktivtSteg?: boolean;
+  vedtakSteg?: boolean;
   komponent: any;
   status: string;
   data?: object;
   handlers?: object;
 }
-const DummySteg = () => <div>Dummy</div>;
 
 const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
   FAMILIE: { tittel: "Familie", komponent: VurderingFamilie },
-  VEDTAK: { tittel: "Vedtak", komponent: DummySteg },
+  VEDTAK: { tittel: "Vedtak", komponent: VurderingVedtak },
 };
 
 const mapStateToProps = (state: RootState) => ({
@@ -62,6 +63,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props extends PropsFromRedux {
   annenBehandlingOppfriskes: boolean;
+  fattVedtak: (behandlingID: string, data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
+  lagreAllData: () => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
   tilForsiden: () => void;
   redigerbart: boolean;
@@ -143,6 +146,7 @@ class Stegvelger extends Component<Props, State> {
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
       lagreBehandlingsgrunnlagOgOppdaterStegData: this.lagreBehandlingsgrunnlagOgOppdaterStegData,
+      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -156,6 +160,7 @@ class Stegvelger extends Component<Props, State> {
         status: enkeltSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
         data: { ...data, steg: enkeltSteg },
         handlers,
+        vedtakSteg: enkeltSteg.navn === "VEDTAK",
       };
     });
   };
@@ -196,6 +201,19 @@ class Stegvelger extends Component<Props, State> {
         });
       }
     }
+  };
+
+  lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
+    const {
+      props: { behandlingID, fattVedtak, lagreAllData },
+      harBehandlingsgrunnlagFeilmeldinger,
+    } = this;
+
+    if (!harBehandlingsgrunnlagFeilmeldinger()) {
+      await lagreAllData();
+      return fattVedtak(behandlingID, data);
+    }
+    return Promise.resolve();
   };
 
   fortsett = () => {

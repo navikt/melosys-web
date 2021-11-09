@@ -210,7 +210,7 @@ const VurderingFamilie = ({
           </Nav.Fieldset>
 
           <Nav.Fieldset legend="Ektefelle/partner/samboer">
-            {tilknyttetEktefelle && (
+            {tilknyttetEktefelle ? (
               <div>
                 <Nav.Row className="ektefelle">
                   <Nav.Column xs="8">
@@ -261,6 +261,8 @@ const VurderingFamilie = ({
                   </div>
                 )}
               </div>
+            ) : (
+              <></>
             )}
           </Nav.Fieldset>
         </div>

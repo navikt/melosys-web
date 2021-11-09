@@ -121,4 +121,5 @@ export const Trygdeavtale = {
   AVKLAR_VIRKSOMHET: "trygdeavtale_avklar_virksomhet",
   BESTEMMELSE: "trygdeavtale_bestemmelse",
   FAMILIE: "trygdeavtale_familie",
+  VEDTAK: "trygdeavtale_vedtak",
 };

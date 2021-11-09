@@ -74,6 +74,9 @@ export const lagreAllData = (sakstype) => async (dispatch) => {
   if (sakstype === MKV.Koder.sakstyper.FTRL) {
     return Promise.all([dispatch(behandlingsgrunnlagOperations.lagre()), dispatch(vilkarOperations.lagre())]);
   }
+  if (sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE) {
+    return Promise.all[dispatch(behandlingsgrunnlagOperations.lagre())];
+  }
 
   await Promise.all([
     dispatch(behandlingsgrunnlagOperations.lagre()),

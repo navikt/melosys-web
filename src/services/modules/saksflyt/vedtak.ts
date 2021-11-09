@@ -22,6 +22,7 @@ export interface FattVedtakFTRLReqDto {
   fritekstBarn: string | null;
   kopiMottakere: KopiMottaker[];
 }
+export type FattVedtakTrygdeavtaleReqDto = FattVedtakFTRLReqDto;
 
 interface EndreVedtakReqDto {
   begrunnelseKode: string;

@@ -117,23 +117,18 @@ const VurderingInngang = ({
   );
 
   useEffect(() => {
-    if (redigerbart && formValues) {
+    if (redigerbart && formValues && formIsValid) {
       const isoFom = Utils.dato.formatterDatoTilISO(formValues.fom);
       const isoTom = Utils.dato.formatterDatoTilISO(formValues.tom);
       oppdaterPeriode({
         fom: isoFom === "Invalid date" ? null : isoFom,
         tom: isoTom === "Invalid date" ? null : isoTom,
       });
-      debouncedLagrebehandlingsgrunnlagOgHentStegStatus();
-    }
-  }, [formValues?.fom, formValues?.tom]);
-
-  useEffect(() => {
-    if (redigerbart && formValues) {
       oppdaterSoeknadsland(formValues?.land ? [formValues.land] : []);
+
       debouncedLagrebehandlingsgrunnlagOgHentStegStatus();
     }
-  }, [formValues?.land]);
+  }, [formValues?.fom, formValues?.tom, formValues?.land, formIsValid]);
 
   const fortsettHandle = () => {
     if (formValues.fom !== initialFomTom?.fom || formValues.tom !== initialFomTom?.tom) {

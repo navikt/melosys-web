@@ -135,17 +135,17 @@ const SendBrev = ({
     if (!formValues || !formValues.type) return;
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!mottaker) return;
-    if (mottaker.rolle === "BRUKER") {
+    if (mottaker.rolle === KV.Koder.MottakerRolle.BRUKER) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
       else {
         setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.orgnrSettesAvSaksbehandler) {
+    if (mottaker.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER && mottaker.orgnrSettesAvSaksbehandler) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.orgnrSettesAvSaksbehandler) {
+    if (mottaker.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
@@ -180,7 +180,7 @@ const SendBrev = ({
       manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
       kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
     };
-    if (mottaker.rolle === "ARBEIDSGIVER") {
+    if (mottaker.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
       requestBody = {
         ...requestBody,
         orgNr: mottaker.orgnrSettesAvSaksbehandler ? formValues.organisasjonsnummer : formValues.arbeidsgiver,
@@ -228,9 +228,10 @@ const SendBrev = ({
             null,
           manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
           kopiMottakere: [],
-          orgNr: muligMottaker.rolle !== "BRUKER" ? muligMottaker.orgnr || orgnrFraFormValues : null,
+          orgNr:
+            muligMottaker.rolle !== KV.Koder.MottakerRolle.BRUKER ? muligMottaker.orgnr || orgnrFraFormValues : null,
           kontaktpersonNavn:
-            muligMottaker.rolle === "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
+            muligMottaker.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER && valgtMottaker.orgnrSettesAvSaksbehandler
               ? formValues.kontaktperson
               : null,
         },
@@ -305,12 +306,12 @@ const SendBrev = ({
 
   const maltypeErValgt = formValues?.type;
   const mottakerErValgt = formValues?.mottaker;
-  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "BRUKER";
+  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === KV.Koder.MottakerRolle.BRUKER;
   const mottakerErArbeidsgiver =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER &&
     !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER &&
     finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
 
   if (!tilgjengeligeMaler || !formValues) return null;
