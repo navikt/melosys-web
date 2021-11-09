@@ -32,7 +32,7 @@ const FamilieforholdContainer = ({
   setMenypanelFeilmelding,
   visEktefelleSamboerMedPaReisen,
 }: FamilieforholdContainerProps) => {
-  const [familiemedlemmerFraPDLToggle] = useFeatureToggle("melosys.hent-familiemedlemmer-fra-pdl");
+  const familiemedlemmerFraPDLToggle = useFeatureToggle("melosys.hent_familiemedlemmer_fra_pdl");
 
   const sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn = (familiemedlemmer: KV.Form.MedfolgendeFamilie[]) =>
     familiemedlemmer.every((familiemedlem) => familiemedlem.fnr && familiemedlem.navn);

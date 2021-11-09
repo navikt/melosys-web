@@ -27,7 +27,7 @@ describe("FamiliemedlemmerFraPDL", () => {
     expect(familiemedlemmerFraPDL.contains("Henter familiemedlemmer...")).toBe(true);
   });
 
-  it("viser melding ved error", () => {
+  it("viser melding ved nettverkserror", () => {
     return act(async () => {
       const familiemedlemmerFraPDL = mount(<FamiliemedlemmerFraPDL {...props} />, {
         wrappingComponent: MockedProvider,

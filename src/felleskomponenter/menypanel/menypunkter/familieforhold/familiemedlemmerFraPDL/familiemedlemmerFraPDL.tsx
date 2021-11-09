@@ -3,11 +3,15 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
 import * as Nav from "../../../../../navFrontend";
+import * as Utils from "../../../../../utils";
+import * as Ikoner from "../../../../../resources/images";
+import * as Mui from "../../../../ui";
 
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { Familierelasjonsrolle } from "../../../../../graphql";
+import Ident from "./ident";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -26,17 +30,71 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
       (fm) => fm.relasjonsrolle === Familierelasjonsrolle.Barn
     ) || [];
 
-  // TODO: Avklare om det skal filtreres mer på sivilstand her.
-  // https://pdldocs-navno.msappproxy.net/ekstern/index.html#_sivilstand
   const ektefellePartner =
     data?.hentSaksopplysninger.persondata.familiemedlemmer.filter(
       (fm) => fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand
     ) || [];
 
+  const over18Etikett = <Nav.EtikettBase type="info">&gt;18 år</Nav.EtikettBase>;
+
   return (
     <>
-      {barn.length > 0 && <FamiliemedlemGruppe familiemedlemmer={barn} />}
-      {ektefellePartner.length > 0 && <FamiliemedlemGruppe familiemedlemmer={ektefellePartner} />}
+      {barn.length > 0 && (
+        <>
+          <Mui.Undertittel ikon={Ikoner.Child} tekst="Barn" />
+          <FamiliemedlemGruppe
+            familiemedlemmer={barn}
+            headers={[
+              { width: "2", text: "Navn" },
+              { width: "3", text: "F.nr./d-nr." },
+              { width: "2", text: "Foreldreansvar" },
+              { width: "3", text: "F.nr. annen forelder" },
+              { width: "2", text: "" },
+            ]}
+            renderFamiliemedlemColumns={(familiemedlem) => [
+              { width: "2", content: familiemedlem.navn },
+              {
+                width: "3",
+                content: <Ident ident={familiemedlem.ident} />,
+              },
+              { width: "2", content: familiemedlem.foreldreansvar },
+              {
+                width: "3",
+                content: familiemedlem.fnrAnnenForelder ? (
+                  <Ident ident={familiemedlem.fnrAnnenForelder} visMerInformasjon />
+                ) : null,
+              },
+              {
+                width: "2",
+                content: familiemedlem.alder && familiemedlem.alder >= 18 ? over18Etikett : "",
+              },
+            ]}
+          />
+        </>
+      )}
+      {ektefellePartner.length > 0 && (
+        <>
+          <Mui.Undertittel ikon={Ikoner.CoApplicant} tekst="Ektefelle/partner" />
+          <FamiliemedlemGruppe
+            familiemedlemmer={ektefellePartner}
+            headers={[
+              { width: "3", text: "Navn" },
+              { width: "3", text: "F.nr./d-nr." },
+              { width: "3", text: "Fra og med" },
+              { width: "3", text: "Relasjon" },
+            ]}
+            renderFamiliemedlemColumns={(familiemedlem) => [
+              { width: "3", content: familiemedlem.navn },
+              {
+                width: "3",
+                content: <Ident ident={familiemedlem.ident} />,
+              },
+              { width: "3", content: Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstandGyldighetsperiodeFom) },
+              { width: "3", content: familiemedlem.sivilstand },
+            ]}
+          />
+        </>
+      )}
     </>
   );
 };
