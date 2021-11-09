@@ -17,7 +17,11 @@ type InnerHtmlEditorComponentProps = {
   [x: string]: any;
 };
 
-function InnerHTMLEditorComponent({ input, ...rest }: InnerHtmlEditorComponentProps & WrappedFieldProps) {
+function InnerHTMLEditorComponent({
+  input,
+  spellcheck = true,
+  ...rest
+}: InnerHtmlEditorComponentProps & WrappedFieldProps) {
   const [currentEditorState, setCurrentEditorState] = useState(
     EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(input.value).contentBlocks))
   );
@@ -43,6 +47,7 @@ function InnerHTMLEditorComponent({ input, ...rest }: InnerHtmlEditorComponentPr
         placeholder={rest.placeholder || ""}
         readOnly={rest?.disabled}
         stripPastedStyles
+        spellCheck={spellcheck}
       />
     </div>
   );
