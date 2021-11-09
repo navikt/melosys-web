@@ -24,7 +24,9 @@ interface RadProps {
 
 const Rad = ({ navn, idNummer }: RadProps) => (
   <Nav.Row className="rad">
-    <Nav.Column xs="6">{idNummer && <KopierbarTekst>{idNummer.toString()}</KopierbarTekst>}</Nav.Column>
+    <Nav.Column xs="6">
+      {idNummer && <KopierbarTekst hovertekst="Kopier fødselsnummer">{idNummer.toString()}</KopierbarTekst>}
+    </Nav.Column>
     <Nav.Column xs="6">{navn}</Nav.Column>
   </Nav.Row>
 );
