@@ -38,7 +38,6 @@ const PersonPropType = PT.shape({
       })
     ),
   }),
-  erEgenAnsatt: PT.bool,
   familiemedlemmer: PT.arrayOf(FamiliemedlemmerPropType),
 });
 
