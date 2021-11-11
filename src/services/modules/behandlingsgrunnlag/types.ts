@@ -126,6 +126,7 @@ type BehandlingsgrunnlagData =
       foretakUtland: Foretakutland[];
       oppholdUtland: Oppholdutland;
       bosted: Bosted;
+      representantIUtlandet: RepresentantIUtlandet;
       selvstendigArbeid: Selvstendigarbeid;
       maritimtArbeid: MaritimtArbeid;
       luftfartBaser: LuftfartBase[];
@@ -173,6 +174,7 @@ type BehandlingsgrunnlagData =
       foretakUtland: Foretakutland[];
       oppholdUtland: Oppholdutland;
       bosted: Bosted;
+      representantIUtlandet: RepresentantIUtlandet;
       selvstendigArbeid: Selvstendigarbeid;
       maritimtArbeid: MaritimtArbeid;
       luftfartBaser: LuftfartBase[];
@@ -213,6 +215,7 @@ type BehandlingsgrunnlagData =
       foretakUtland: Foretakutland[];
       oppholdUtland: Oppholdutland;
       bosted: Bosted;
+      representantIUtlandet: RepresentantIUtlandet;
       selvstendigArbeid: Selvstendigarbeid;
       maritimtArbeid: MaritimtArbeid;
       luftfartBaser: LuftfartBase[];
@@ -283,6 +286,11 @@ interface Maritimtarbeid {
   innretningLandkode: string | null;
   territorialfarvann: Territorialfarvann;
   innretningstype: Innretningstype;
+}
+interface RepresentantIUtlandet {
+  representantNavn: string;
+  adresselinjer: string[];
+  representantLand: string;
 }
 interface LuftfartBase {
   hjemmebaseNavn: HjemmebaseNavn;

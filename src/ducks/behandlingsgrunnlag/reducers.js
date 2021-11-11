@@ -1,4 +1,4 @@
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 import * as Types from "./types";
 
@@ -233,6 +233,13 @@ export default function reducer(state = initialState, action) {
               landkode: dokument.oppgittAdresseLand,
             },
           },
+          representantIUtlandet: Utils._isNil(dokument.representantIUtlandet)
+            ? null
+            : {
+                representantNavn: dokument.representantIUtlandet.representantNavn,
+                adresselinjer: dokument.representantIUtlandet.adresselinjer || [],
+                representantLand: dokument.representantIUtlandet.representantLand,
+              },
           maritimtArbeid,
           luftfartBaser: dokument.arbeidsstedFly.map((arbeidssted) => ({
             hjemmebaseNavn: arbeidssted.hjemmebaseNavn || null,

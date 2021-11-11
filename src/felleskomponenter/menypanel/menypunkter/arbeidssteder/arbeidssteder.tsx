@@ -16,6 +16,7 @@ import * as Offshore from "./offshore";
 import * as Skip from "./skip";
 
 import EditerbartElementListe from "../editerbartElementListe";
+import RepresentantIUtlandet from "./representantIUtlandet";
 import { Status } from "../editerbartElement";
 
 import MKV from "../../../../melosyskodeverk";
@@ -76,6 +77,7 @@ type ArbeidsstederProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
+  visRepresentantIUtlandet: boolean;
 };
 
 export const Arbeidssteder = ({
@@ -86,6 +88,7 @@ export const Arbeidssteder = ({
   erFastArbeidssted,
   erHjemmekontor,
   behandlingsgrunnlagtype,
+  visRepresentantIUtlandet,
   soknadsland: { erUkjenteEllerAlleEosLand },
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
@@ -160,6 +163,12 @@ export const Arbeidssteder = ({
     </>
   );
 
+  const arbeidssteder = visRepresentantIUtlandet ? (
+    <RepresentantIUtlandet redigerbart={redigerbart} />
+  ) : (
+    arbeidsstederLister
+  );
+
   const ukjenteEllerAlleEosLandValgtAlertstripe = (
     <Nav.AlertStripe type="info">
       Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt
@@ -175,7 +184,7 @@ export const Arbeidssteder = ({
       <span>{behandlingsgrunnlagEtikett}</span>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
-        {erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidsstederLister}
+        {erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidssteder}
       </div>
     </div>
   );

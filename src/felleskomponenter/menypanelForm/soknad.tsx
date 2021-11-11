@@ -141,6 +141,7 @@ const mapStateToProps = (state: RootState) => ({
     arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
     arbeidsstedSkip: behandlingsgrunnlagSelectors.SkipArbeidSelector(state),
     arbeidsstedFly: behandlingsgrunnlagSelectors.LuftfartBaserSelector(state),
+    representantIUtlandet: behandlingsgrunnlagSelectors.RepresentantIUtlandetSelector(state),
     ektefelleEllerBarnINorge: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).studentSemester,
     erSelvstendig: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).erSelvstendig,

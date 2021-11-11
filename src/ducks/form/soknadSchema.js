@@ -228,6 +228,29 @@ const soknad = object().when("$behandlingstema", {
           )
         )
     ),
+    representantIUtlandet: object()
+      .shape({
+        representantNavn: string().required(
+          lagMelding(
+            KV.Menypunkter.Arbeidssteder.tittel,
+            KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
+            "Navn kreves"
+          )
+        ),
+        adresselinjer: array()
+          .of(
+            string().required(
+              lagMelding(
+                KV.Menypunkter.Arbeidssteder.tittel,
+                KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
+                "Adresselinje kan ikke være tom. Fjern eller fyll linjen"
+              )
+            )
+          )
+          .nullable(),
+        representantLand: string().nullable(),
+      })
+      .nullable(),
     oppgittAdresseGatenavn: string()
       .nullable()
       .when("$skalOppgittAdresseValideres", {
