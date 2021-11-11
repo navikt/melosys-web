@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import * as Nav from "../../../../../../navFrontend";
+import * as Mui from "../../../../../ui";
 
 import KopierbarTekst from "../../../../../kopierbarTekst";
 import Informasjonsmodal from "./informasjonsmodal";
@@ -17,9 +17,7 @@ const Ident = ({ ident, visMerInformasjon = false }: IdentProps) => {
     <>
       <KopierbarTekst hovertekst="Kopier fødselsnummer">{ident}</KopierbarTekst>
       {visMerInformasjon && (
-        <Nav.Flatknapp mini onClick={() => setVisInformasjonsmodal(true)}>
-          Vis mer informasjon
-        </Nav.Flatknapp>
+        <Mui.Lenkeknapp onClick={() => setVisInformasjonsmodal(true)}>Vis mer informasjon</Mui.Lenkeknapp>
       )}
       {visInformasjonsmodal && (
         <Informasjonsmodal
