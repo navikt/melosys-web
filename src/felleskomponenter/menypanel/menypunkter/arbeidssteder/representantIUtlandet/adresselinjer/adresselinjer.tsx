@@ -5,7 +5,6 @@ import * as Skjema from "../../../../../skjema";
 import * as Nav from "../../../../../../navFrontend";
 import * as Ikoner from "../../../../../../resources/images";
 import * as Mui from "../../../../../ui";
-import * as Utils from "../../../../../../utils";
 import * as Symboler from "../../../symboler";
 
 import "./adresselinjer.css";
@@ -25,7 +24,8 @@ const InnerAdresselinjer = (props: InnerAdresselinjerProps) => {
       <Nav.Typo.Normaltekst>Fullstendig adresse</Nav.Typo.Normaltekst>
       {felter &&
         felter.map((felt, index) => (
-          <Nav.Row key={Utils._uuid()} className="adresselinje">
+          /* eslint-disable-next-line react/no-array-index-key */
+          <Nav.Row key={index} className="adresselinje">
             <Nav.Column xs="9">
               <Skjema.Input
                 label=""
@@ -56,9 +56,7 @@ interface AdresselinjerProps {
 }
 
 const Adresselinjer = ({ ...rest }: AdresselinjerProps) => (
-  <>
-    <FieldArray name="representantIUtlandet.adresselinjer" component={InnerAdresselinjer} props={rest} />
-  </>
+  <FieldArray name="representantIUtlandet.adresselinjer" component={InnerAdresselinjer} props={rest} />
 );
 
 export default Adresselinjer;
