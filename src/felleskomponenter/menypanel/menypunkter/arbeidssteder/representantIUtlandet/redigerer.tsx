@@ -22,12 +22,7 @@ const Redigerer = ({ redigerbart }: RedigererProps) => (
     <Adresselinjer redigerbart={redigerbart} />
     <Nav.Row>
       <Nav.Column xs="9">
-        <Skjema.LandVelger
-          disabled={!redigerbart}
-          feltNavn="representantIUtlandet.representantLand"
-          label="Land"
-          bredde="fullbredde"
-        />
+        <Skjema.LandVelger disabled feltNavn="soknadsland.landkoder[0]" label="Land" bredde="fullbredde" />
       </Nav.Column>
     </Nav.Row>
   </div>

@@ -49,7 +49,6 @@ export interface ArbeidsstedSkip extends MaritimtArbeid {
 export interface RepresentantIUtlandet {
   representantNavn?: string;
   adresselinjer?: string[];
-  representantLand?: string;
 }
 export interface MedfolgendeFamilie {
   uuid: string;

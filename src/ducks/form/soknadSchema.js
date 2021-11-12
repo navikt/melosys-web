@@ -248,7 +248,6 @@ const soknad = object().when("$behandlingstema", {
             )
           )
           .nullable(),
-        representantLand: string().nullable(),
       })
       .nullable(),
     oppgittAdresseGatenavn: string()

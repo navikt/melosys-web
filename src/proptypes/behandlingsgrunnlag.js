@@ -54,7 +54,6 @@ const RepresentantIUtlandetPropType = PT.arrayOf(
   PT.shape({
     representantNavn: PT.string,
     adresselinjer: PT.arrayOf(PT.string),
-    representantLand: PT.string,
   })
 );
 const OppholdUtlandPropType = PT.shape({

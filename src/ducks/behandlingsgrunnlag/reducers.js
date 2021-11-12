@@ -238,7 +238,7 @@ export default function reducer(state = initialState, action) {
             : {
                 representantNavn: dokument.representantIUtlandet.representantNavn,
                 adresselinjer: dokument.representantIUtlandet.adresselinjer || [],
-                representantLand: dokument.representantIUtlandet.representantLand,
+                representantLand: dokument.soknadsland.landkoder[0] || null,
               },
           maritimtArbeid,
           luftfartBaser: dokument.arbeidsstedFly.map((arbeidssted) => ({
