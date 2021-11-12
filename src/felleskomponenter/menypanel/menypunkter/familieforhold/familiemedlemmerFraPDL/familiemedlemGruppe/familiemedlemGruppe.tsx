@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
 
-import * as Nav from "../../../../../navFrontend";
+import * as Nav from "../../../../../../navFrontend";
+import * as Utils from "../../../../../../utils";
 
-import { Familiemedlem } from "../../../../../graphql";
-import ExpandableList from "../../../../expandablelist";
+import { Familiemedlem } from "../../../../../../graphql";
+import ExpandableList from "../../../../../expandablelist";
 
 import "./familiemedlemGruppe.css";
 
@@ -32,7 +33,7 @@ function FamiliemedlemGruppe<T extends Header[]>({
   const renderFamiliemedlemInRow = (familiemedlem: Familiemedlem) => (
     <Nav.Row>
       {renderFamiliemedlemColumns(familiemedlem).map(({ width, content }) => (
-        <Nav.Column className="familiemedlemgruppe__familiemedlem-enkelt" xs={width}>
+        <Nav.Column key={Utils._uuid()} className="familiemedlemgruppe__familiemedlem-enkelt" xs={width}>
           {content}
         </Nav.Column>
       ))}
@@ -43,7 +44,9 @@ function FamiliemedlemGruppe<T extends Header[]>({
     <>
       <Nav.Row className="familiemedlemgruppe__header">
         {headers.map((header) => (
-          <Nav.Column xs={header.width}>{header.text}</Nav.Column>
+          <Nav.Column key={Utils._uuid()} xs={header.width}>
+            {header.text}
+          </Nav.Column>
         ))}
       </Nav.Row>
       <ExpandableList

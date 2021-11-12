@@ -99,8 +99,8 @@ type Personopplysninger = {
   kontaktadresser: Array<Kontaktadresse>;
   navn: Navn;
   oppholdsadresser: Array<Oppholdsadresse>;
-  statsborgerskap: Array<Statsborgerskap>;
   sivilstand: Array<Sivilstand>;
+  statsborgerskap: Array<Statsborgerskap>;
 };
 
 type Query = {
@@ -143,7 +143,7 @@ type Sivilstand = {
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   bekreftelsesdato?: Maybe<Scalars['Date']>;
   master: Scalars['String'];
-  kilde?: Maybe<Array<Scalars['String']>>;
+  kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
 };
 

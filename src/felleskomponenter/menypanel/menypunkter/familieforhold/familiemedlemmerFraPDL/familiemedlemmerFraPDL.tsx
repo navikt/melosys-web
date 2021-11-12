@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
@@ -10,8 +10,9 @@ import * as Mui from "../../../../ui";
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import FamiliemedlemGruppe from "./familiemedlemGruppe";
-import { Familierelasjonsrolle } from "../../../../../graphql";
+import { Familierelasjonsrolle, Familiemedlem } from "../../../../../graphql";
 import Ident from "./ident";
+import Informasjonsmodal from "./informasjonsmodal";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -20,6 +21,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
+  const [barnValgtForMerInformasjon, setBarnValgtForMerInformasjon] = useState<Familiemedlem | null>(null);
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
   if (error) return <Nav.AlertStripeFeil>Kunne ikke hente familiemedlemmer!</Nav.AlertStripeFeil>;
@@ -61,7 +63,12 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
               {
                 width: "3",
                 content: familiemedlem.fnrAnnenForelder ? (
-                  <Ident ident={familiemedlem.fnrAnnenForelder} visMerInformasjon />
+                  <>
+                    <Ident ident={familiemedlem.fnrAnnenForelder} />
+                    <Mui.Lenkeknapp onClick={() => setBarnValgtForMerInformasjon(familiemedlem)}>
+                      Vis mer informasjon
+                    </Mui.Lenkeknapp>
+                  </>
                 ) : null,
               },
               {
@@ -94,6 +101,14 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
             ]}
           />
         </>
+      )}
+      {barnValgtForMerInformasjon && barnValgtForMerInformasjon.fnrAnnenForelder && (
+        <Informasjonsmodal
+          contentLabel="Informasjon om annen forelder"
+          onRequestClose={() => setBarnValgtForMerInformasjon(null)}
+          barnNavn={barnValgtForMerInformasjon.navn}
+          forelderIdent={barnValgtForMerInformasjon.fnrAnnenForelder}
+        />
       )}
     </>
   );
