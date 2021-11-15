@@ -1,26 +1,37 @@
-import React, { ElementType, ReactNode } from "react";
+import React, { ElementType, ReactNode, SVGProps } from "react";
 import classNames from "classnames";
 
 import * as Nav from "../../navFrontend";
+import * as Utils from "../../utils";
 
 import "./undertittel.css";
 
 interface UndertittelProps {
   ikon?: ElementType;
+  ikonProps?: SVGProps<SVGElement>;
   tekst: string;
   etterTekst?: ReactNode;
   className?: string;
   understrek?: boolean;
 }
 
-const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek = false }: UndertittelProps) => {
+const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek = false, ikonProps }: UndertittelProps) => {
   const cl = classNames("undertittel", className);
   const navUndertittelCl = classNames({ "undertittel--understrek": understrek }, "undertittel__navUndertittel");
 
+  const undertittelId = Utils._uuid();
+
+  const defaultIkonProps = {
+    role: "img",
+    focusable: "false",
+    "aria-labelledby": undertittelId,
+    title: `${tekst} - ${etterTekst}`,
+  };
+
   return (
     <div className={cl}>
-      <Nav.Typo.Undertittel className={navUndertittelCl}>
-        {Ikon && <Ikon className="undertittel__ikon" />}
+      <Nav.Typo.Undertittel id={undertittelId} className={navUndertittelCl}>
+        {Ikon && <Ikon className="undertittel__ikon" {...defaultIkonProps} {...ikonProps} />}
         <span className="undertittel__tekst">{tekst}</span>
         <span>{etterTekst}</span>
       </Nav.Typo.Undertittel>
