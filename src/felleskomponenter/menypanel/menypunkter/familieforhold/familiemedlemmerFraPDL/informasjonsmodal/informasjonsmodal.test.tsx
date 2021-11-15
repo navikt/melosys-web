@@ -136,7 +136,7 @@ describe("Informasjonsmodal", () => {
     });
   });
 
-  it("viser melding ved ingen bostedsadresse funnet", () => {
+  it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () => {
     return act(async () => {
       const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
@@ -169,8 +169,13 @@ describe("Informasjonsmodal", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       informasjonsmodal.update();
 
-      const alertstripe = informasjonsmodal.find(Nav.AlertStripeInfo);
-      expect(alertstripe.children().text()).toContain("Fant ingen bostedsadresser for annen forelder");
+      const tabellRow = informasjonsmodal.find(".informasjonsmodal__tabell-row").hostNodes();
+      expect(tabellRow).toHaveLength(1);
+      const tabellColumns = tabellRow.find(Nav.Column);
+      expect(tabellColumns.first().text()).toContain("LILLA MAGER HEST");
+      expect(tabellColumns.at(1).text()).toContain("Ukjent");
+      expect(tabellColumns.at(2).text()).toContain("Ukjent");
+      expect(tabellColumns.at(3).text()).toContain("Ukjent");
     });
   });
 });

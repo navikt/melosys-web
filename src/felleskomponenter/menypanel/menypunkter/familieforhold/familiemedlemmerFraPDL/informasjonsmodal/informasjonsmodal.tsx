@@ -43,16 +43,16 @@ const Informasjonsmodal = ({
   const aktiveBostedsadresser =
     data?.hentPersonopplysninger.bostedsadresser.filter((bostedsadresse) => !bostedsadresse.erHistorisk) || [];
 
-  const mainContent =
-    aktiveBostedsadresser.length > 0 ? (
-      <div>
-        <Nav.Row className="informasjonsmodal__tabell-header">
-          <Nav.Column xs="3">Navn forelder</Nav.Column>
-          <Nav.Column xs="3">Adresse</Nav.Column>
-          <Nav.Column xs="3">Register</Nav.Column>
-          <Nav.Column xs="3">Kilde</Nav.Column>
-        </Nav.Row>
-        {aktiveBostedsadresser.map((bostedsadresse) => (
+  const mainContent = (
+    <div>
+      <Nav.Row className="informasjonsmodal__tabell-header">
+        <Nav.Column xs="3">Navn forelder</Nav.Column>
+        <Nav.Column xs="3">Adresse</Nav.Column>
+        <Nav.Column xs="3">Register</Nav.Column>
+        <Nav.Column xs="3">Kilde</Nav.Column>
+      </Nav.Row>
+      {aktiveBostedsadresser.length > 0 ? (
+        aktiveBostedsadresser.map((bostedsadresse) => (
           <Nav.Row className="informasjonsmodal__tabell-row" key={Utils._uuid()}>
             <Nav.Column xs="3">{navn}</Nav.Column>
             <Nav.Column xs="3">
@@ -61,11 +61,17 @@ const Informasjonsmodal = ({
             <Nav.Column xs="3">{bostedsadresse.master}</Nav.Column>
             <Nav.Column xs="3">{bostedsadresse.kilde}</Nav.Column>
           </Nav.Row>
-        ))}
-      </div>
-    ) : (
-      <Nav.AlertStripeInfo>Fant ingen bostedsadresser for annen forelder</Nav.AlertStripeInfo>
-    );
+        ))
+      ) : (
+        <Nav.Row className="informasjonsmodal__tabell-row">
+          <Nav.Column xs="3">{navn}</Nav.Column>
+          <Nav.Column xs="3">Ukjent</Nav.Column>
+          <Nav.Column xs="3">Ukjent</Nav.Column>
+          <Nav.Column xs="3">Ukjent</Nav.Column>
+        </Nav.Row>
+      )}
+    </div>
+  );
 
   return (
     <Nav.Modal
