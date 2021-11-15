@@ -20,7 +20,6 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 
 import "./opprettnysak.css";
-import { FeatureToggle } from "../../featuretoggle";
 
 const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, error }) => {
   const [oppgaver, setOppgaver] = useState([]);
@@ -150,28 +149,22 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                             errorConfig={{ submitFailed: true }}
                             disabled={erLandvelgerDisabled}
                           />
-                          <FeatureToggle togglename="melosys.UKJENT_ELLER_ALLE_EOS_LAND">
-                            {(toggleStatus) =>
-                              toggleStatus === "enabled" &&
-                              behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
-                                <Skjema.Checkbox
-                                  feltNavn="erUkjenteEllerAlleEosLand"
-                                  disabled={land.length > 0}
-                                  label={
-                                    <div>
-                                      Flere EØS-land/Sveits. Ikke kjent hvilke
-                                      <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}>
-                                        Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av
-                                        her.
-                                        <br />
-                                        Det er ikke mulig å legge til andre land i tillegg.
-                                      </Nav.Hjelpetekst>
-                                    </div>
-                                  }
-                                />
-                              )
-                            }
-                          </FeatureToggle>
+                          {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+                            <Skjema.Checkbox
+                              feltNavn="erUkjenteEllerAlleEosLand"
+                              disabled={land.length > 0}
+                              label={
+                                <div>
+                                  Flere EØS-land/Sveits. Ikke kjent hvilke
+                                  <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}>
+                                    Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
+                                    <br />
+                                    Det er ikke mulig å legge til andre land i tillegg.
+                                  </Nav.Hjelpetekst>
+                                </div>
+                              }
+                            />
+                          )}
                         </FormSection>
                       </Fragment>
                     )}
