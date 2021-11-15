@@ -45,66 +45,70 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
   return (
     <div className="familiemedlemmerFraPDL">
       <Etiketter.FraRegister className="familiemedlemmerFraPDL__fra-register-etikett" />
-      {barn.length > 0 && (
-        <>
-          <Mui.Undertittel ikon={Ikoner.Child} tekst="Barn" />
-          <FamiliemedlemGruppe
-            familiemedlemmer={barn}
-            headers={[
-              { width: "2", text: "Navn" },
-              { width: "3", text: "F.nr./d-nr." },
-              { width: "2", text: "Foreldreansvar" },
-              { width: "3", text: "F.nr. annen forelder" },
-              { width: "2", text: "" },
-            ]}
-            renderFamiliemedlemColumns={(familiemedlem) => [
-              { width: "2", content: familiemedlem.navn },
-              {
-                width: "3",
-                content: <Ident ident={familiemedlem.ident} />,
-              },
-              { width: "2", content: familiemedlem.foreldreansvar },
-              {
-                width: "3",
-                content: familiemedlem.fnrAnnenForelder ? (
-                  <>
-                    <Ident ident={familiemedlem.fnrAnnenForelder} />
-                    <Mui.Lenkeknapp onClick={() => setBarnValgtForMerInformasjon(familiemedlem)}>
-                      Vis mer informasjon
-                    </Mui.Lenkeknapp>
-                  </>
-                ) : null,
-              },
-              {
-                width: "2",
-                content: familiemedlem.alder && familiemedlem.alder >= 18 ? over18Etikett : "",
-              },
-            ]}
-          />
-        </>
+      <Mui.Undertittel className="familiemedlemmerFraPDL__undertittel" ikon={Ikoner.Child} tekst="Barn" />
+      {barn.length > 0 ? (
+        <FamiliemedlemGruppe
+          familiemedlemmer={barn}
+          headers={[
+            { width: "2", text: "Navn" },
+            { width: "3", text: "F.nr./d-nr." },
+            { width: "2", text: "Foreldreansvar" },
+            { width: "3", text: "F.nr. annen forelder" },
+            { width: "2", text: "" },
+          ]}
+          renderFamiliemedlemColumns={(familiemedlem) => [
+            { width: "2", content: familiemedlem.navn },
+            {
+              width: "3",
+              content: <Ident ident={familiemedlem.ident} />,
+            },
+            { width: "2", content: familiemedlem.foreldreansvar },
+            {
+              width: "3",
+              content: familiemedlem.fnrAnnenForelder ? (
+                <>
+                  <Ident ident={familiemedlem.fnrAnnenForelder} />
+                  <Mui.Lenkeknapp onClick={() => setBarnValgtForMerInformasjon(familiemedlem)}>
+                    Vis mer informasjon
+                  </Mui.Lenkeknapp>
+                </>
+              ) : null,
+            },
+            {
+              width: "2",
+              content: familiemedlem.alder && familiemedlem.alder >= 18 ? over18Etikett : "",
+            },
+          ]}
+        />
+      ) : (
+        <Nav.Typo.Normaltekst>Ingen barn registrert.</Nav.Typo.Normaltekst>
       )}
-      {ektefellePartner.length > 0 && (
-        <>
-          <Mui.Undertittel ikon={Ikoner.CoApplicant} tekst="Ektefelle/partner" />
-          <FamiliemedlemGruppe
-            familiemedlemmer={ektefellePartner}
-            headers={[
-              { width: "3", text: "Navn" },
-              { width: "3", text: "F.nr./d-nr." },
-              { width: "3", text: "Fra og med" },
-              { width: "3", text: "Relasjon" },
-            ]}
-            renderFamiliemedlemColumns={(familiemedlem) => [
-              { width: "3", content: familiemedlem.navn },
-              {
-                width: "3",
-                content: <Ident ident={familiemedlem.ident} />,
-              },
-              { width: "3", content: Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstandGyldighetsperiodeFom) },
-              { width: "3", content: familiemedlem.sivilstand },
-            ]}
-          />
-        </>
+      <Mui.Undertittel
+        className="familiemedlemmerFraPDL__undertittel"
+        ikon={Ikoner.CoApplicant}
+        tekst="Ektefelle/partner"
+      />
+      {ektefellePartner.length > 0 ? (
+        <FamiliemedlemGruppe
+          familiemedlemmer={ektefellePartner}
+          headers={[
+            { width: "3", text: "Navn" },
+            { width: "3", text: "F.nr./d-nr." },
+            { width: "3", text: "Fra og med" },
+            { width: "3", text: "Relasjon" },
+          ]}
+          renderFamiliemedlemColumns={(familiemedlem) => [
+            { width: "3", content: familiemedlem.navn },
+            {
+              width: "3",
+              content: <Ident ident={familiemedlem.ident} />,
+            },
+            { width: "3", content: Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstandGyldighetsperiodeFom) },
+            { width: "3", content: familiemedlem.sivilstand },
+          ]}
+        />
+      ) : (
+        <Nav.Typo.Normaltekst>Ingen ektefelle/partner registrert.</Nav.Typo.Normaltekst>
       )}
       {barnValgtForMerInformasjon && barnValgtForMerInformasjon.fnrAnnenForelder && (
         <Informasjonsmodal
