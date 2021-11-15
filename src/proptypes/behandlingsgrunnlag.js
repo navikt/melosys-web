@@ -50,12 +50,6 @@ const MaritimtArbeidPropType = PT.arrayOf(
     innretningstype: PT.string,
   })
 );
-const RepresentantIUtlandetPropType = PT.arrayOf(
-  PT.shape({
-    representantNavn: PT.string,
-    adresselinjer: PT.arrayOf(PT.string),
-  })
-);
 const OppholdUtlandPropType = PT.shape({
   ektefelleEllerBarnINorge: PT.bool,
   oppholdsPeriode: Periode,
@@ -95,7 +89,6 @@ const BehandlingsgrunnnlagDataPropType = PT.shape({
   bosted: BostedPropType,
   foretakUtland: ForetakUtlandPropType,
   maritimtArbeid: MaritimtArbeidPropType,
-  representantIUtlandet: RepresentantIUtlandetPropType,
   oppholdUtland: OppholdUtlandPropType,
   periode: Periode,
   personOpplysninger: PersonOpplysningerPropType,

@@ -79,20 +79,19 @@ export function oppdaterState() {
 const lagBehandlingsgrunnlagFelter = (behandlingsgrunnlag) => ({
   juridiskArbeidsgiverNorge: behandlingsgrunnlag.juridiskArbeidsgiverNorge,
   personOpplysninger: behandlingsgrunnlag.personOpplysninger,
-  arbeidPaaLand: behandlingsgrunnlag.arbeidPaaLand,
   foretakUtland: behandlingsgrunnlag.foretakUtland,
   oppholdUtland: behandlingsgrunnlag.oppholdUtland,
   bosted: behandlingsgrunnlag.bosted,
-  representantIUtlandet: behandlingsgrunnlag.representantIUtlandet,
   selvstendigArbeid: behandlingsgrunnlag.selvstendigArbeid,
-  maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
   soeknadsland: behandlingsgrunnlag.soeknadsland,
   periode: behandlingsgrunnlag.periode,
-  luftfartBaser: behandlingsgrunnlag.luftfartBaser,
 });
 
-const lagSoeknadFelter = (behandlingsgrunnlag) => ({
+const lagEØSFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  arbeidPaaLand: behandlingsgrunnlag.arbeidPaaLand,
+  maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
+  luftfartBaser: behandlingsgrunnlag.luftfartBaser,
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
   arbeidssituasjonOgOevrig: behandlingsgrunnlag.arbeidssituasjonOgOevrig,
@@ -101,6 +100,9 @@ const lagSoeknadFelter = (behandlingsgrunnlag) => ({
 
 const lagFTRLFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  arbeidPaaLand: behandlingsgrunnlag.arbeidPaaLand,
+  maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
+  luftfartBaser: behandlingsgrunnlag.luftfartBaser,
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
   trygdedekning: behandlingsgrunnlag.trygdedekning,
@@ -110,6 +112,7 @@ const lagTrygdeavtaleFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
+  representantIUtlandet: behandlingsgrunnlag.representantIUtlandet,
 });
 
 const lagSedGrunnlagFelter = (behandlingsgrunnlag) => ({
@@ -126,7 +129,7 @@ const lagBehandlingsgrunnlagData = (behandlingstema, behandlingsgrunnlag) => {
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
-      return lagSoeknadFelter(behandlingsgrunnlag);
+      return lagEØSFelter(behandlingsgrunnlag);
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET:
       return lagFTRLFelter(behandlingsgrunnlag);
     case MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK:

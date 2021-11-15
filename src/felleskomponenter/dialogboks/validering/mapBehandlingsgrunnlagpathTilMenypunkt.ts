@@ -32,6 +32,11 @@ const feltMap = {
     luftfartBaser: {
       hjemmebaseNavn: "Navn på hjemmebase",
     },
+    representantIUtlandet: {
+      representantNavn: "Navn",
+      adresselinjer: "Adresselnjene",
+      representantLand: "Land",
+    },
   },
 };
 
@@ -41,6 +46,7 @@ const overordnetFeltMap = {
     foretakUtland: KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
     maritimtArbeid: `${KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore}/${KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip}`,
     luftfartBaser: KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedFly,
+    representantIUtlandet: KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
   },
 };
 

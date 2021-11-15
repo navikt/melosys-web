@@ -126,7 +126,6 @@ type BehandlingsgrunnlagData =
       foretakUtland: Foretakutland[];
       oppholdUtland: Oppholdutland;
       bosted: Bosted;
-      representantIUtlandet: RepresentantIUtlandet;
       selvstendigArbeid: Selvstendigarbeid;
       maritimtArbeid: MaritimtArbeid;
       luftfartBaser: LuftfartBase[];
@@ -174,7 +173,6 @@ type BehandlingsgrunnlagData =
       foretakUtland: Foretakutland[];
       oppholdUtland: Oppholdutland;
       bosted: Bosted;
-      representantIUtlandet: RepresentantIUtlandet;
       selvstendigArbeid: Selvstendigarbeid;
       maritimtArbeid: MaritimtArbeid;
       luftfartBaser: LuftfartBase[];
@@ -215,7 +213,6 @@ type BehandlingsgrunnlagData =
       foretakUtland: Foretakutland[];
       oppholdUtland: Oppholdutland;
       bosted: Bosted;
-      representantIUtlandet: RepresentantIUtlandet;
       selvstendigArbeid: Selvstendigarbeid;
       maritimtArbeid: MaritimtArbeid;
       luftfartBaser: LuftfartBase[];
@@ -234,6 +231,27 @@ type BehandlingsgrunnlagData =
             | "FULL_DEKNING_FTRL"
           )
         | null;
+    }
+  | {
+      arbeidsgiversBekreftelse: {
+        arbeidsgiverBekrefterUtsendelse: Arbeidsgiverbekrefterutsendelse;
+        arbeidstakerAnsattUnderUtsendelsen: Arbeidstakeransattunderutsendelsen;
+        erstatterArbeidstakerenUtsendte: Erstatterarbeidstakerenutsendte;
+        arbeidstakerTidligereUtsendt24Mnd: Arbeidstakertidligereutsendt24Mnd;
+        arbeidsgiverBetalerArbeidsgiveravgift: Arbeidsgiverbetalerarbeidsgiveravgift;
+        trygdeavgiftTrukketGjennomSkatt: Trygdeavgifttrukketgjennomskatt;
+        trygdeavgiftTrukketGjennomSkattDato: string | null;
+      };
+      loennOgGodtgjoerelse: LoennOgGodtgjoerelse;
+      personOpplysninger: Personopplysninger;
+      foretakUtland: Foretakutland[];
+      oppholdUtland: Oppholdutland;
+      bosted: Bosted;
+      selvstendigArbeid: Selvstendigarbeid;
+      soeknadsland: Soeknadsland;
+      periode: Periode;
+      juridiskArbeidsgiverNorge: Juridiskarbeidsgivernorge;
+      representantIUtlandet: RepresentantIUtlandet | null;
     };
 
 export type BehandlingsgrunnlagReqDto = BehandlingsgrunnlagData;
@@ -290,7 +308,7 @@ interface Maritimtarbeid {
 interface RepresentantIUtlandet {
   representantNavn: string;
   adresselinjer: string[];
-  representantLand: string;
+  representantLand: string | null;
 }
 interface LuftfartBase {
   hjemmebaseNavn: HjemmebaseNavn;
