@@ -6,6 +6,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../ui";
+import * as Etiketter from "../../../etiketter";
 
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -13,6 +14,8 @@ import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { Familierelasjonsrolle, Familiemedlem } from "../../../../../graphql";
 import Ident from "./ident";
 import Informasjonsmodal from "./informasjonsmodal";
+
+import "./familiemedlemmerFraPDL.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -40,7 +43,8 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
   const over18Etikett = <Nav.EtikettBase type="info">&gt;18 år</Nav.EtikettBase>;
 
   return (
-    <>
+    <div className="familiemedlemmerFraPDL">
+      <Etiketter.FraRegister className="familiemedlemmerFraPDL__fra-register-etikett" />
       {barn.length > 0 && (
         <>
           <Mui.Undertittel ikon={Ikoner.Child} tekst="Barn" />
@@ -110,7 +114,7 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
           forelderIdent={barnValgtForMerInformasjon.fnrAnnenForelder}
         />
       )}
-    </>
+    </div>
   );
 };
 
