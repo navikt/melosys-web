@@ -8,7 +8,7 @@ import * as Ikoner from "../../../../resources/images";
 import * as Etiketter from "../../etiketter";
 import * as MedfolgendeFamilie from "./medfolgendeFamilie";
 
-import Familiemedlemmer from "./familiemedlemmer";
+import FamiliemedlemmerFraTPS from "./familiemedlemmer";
 import FamiliemedlemmerFraPDL from "./familiemedlemmerFraPDL";
 import EditerbartElementListe from "../editerbartElementListe";
 import { useFeatureToggle } from "../../../../featuretoggle";
@@ -50,7 +50,7 @@ const FamilieforholdContainer = ({
         <Nav.Column xs="12">
           {familiemedlemmerFraPDLToggle === "enabled" && <FamiliemedlemmerFraPDL />}
           {familiemedlemmerFraPDLToggle === "disabled" && (
-            <Familiemedlemmer setMenypanelFeilmelding={setMenypanelFeilmelding} />
+            <FamiliemedlemmerFraTPS setMenypanelFeilmelding={setMenypanelFeilmelding} />
           )}
         </Nav.Column>
       </Nav.Row>
