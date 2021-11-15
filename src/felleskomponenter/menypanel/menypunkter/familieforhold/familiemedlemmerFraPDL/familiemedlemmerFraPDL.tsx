@@ -81,13 +81,18 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
           ]}
         />
       ) : (
-        <Nav.Typo.Normaltekst>Ingen barn registrert.</Nav.Typo.Normaltekst>
+        <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
+          Ingen barn registrert.
+        </Nav.Typo.EtikettLiten>
       )}
       <Mui.Undertittel
-        className="familiemedlemmerFraPDL__undertittel"
+        className="familiemedlemmerFraPDL__undertittel familiemedlemmerFraPDL__ektefelle-partner-undertittel"
         ikon={Ikoner.CoApplicant}
         tekst="Ektefelle/partner"
       />
+      <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__samboer-etikett">
+        Samboer registreres ikke som relasjon i PDL
+      </Nav.Typo.EtikettLiten>
       {ektefellePartner.length > 0 ? (
         <FamiliemedlemGruppe
           familiemedlemmer={ektefellePartner}
@@ -108,7 +113,9 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
           ]}
         />
       ) : (
-        <Nav.Typo.Normaltekst>Ingen ektefelle/partner registrert.</Nav.Typo.Normaltekst>
+        <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
+          Ingen ektefelle/partner registrert.
+        </Nav.Typo.EtikettLiten>
       )}
       {barnValgtForMerInformasjon && barnValgtForMerInformasjon.fnrAnnenForelder && (
         <Informasjonsmodal
