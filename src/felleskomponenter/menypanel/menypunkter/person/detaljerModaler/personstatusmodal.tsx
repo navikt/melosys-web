@@ -34,10 +34,11 @@ const PersonstatusRad = (data: PersonstatusLinjeProps) => (
 );
 
 interface PersonstatusModalProps {
+  skalViseModal: boolean;
   lukkModal: () => void;
 }
 
-const PersonstatusModal = ({ lukkModal }: PersonstatusModalProps) => {
+const PersonstatusModal = ({ skalViseModal, lukkModal }: PersonstatusModalProps) => {
   const status: PersonstatusLinjeProps[] = [
     {
       personstatus: "Bosatt",
@@ -71,7 +72,13 @@ const PersonstatusModal = ({ lukkModal }: PersonstatusModalProps) => {
     },
   ];
   return (
-    <Nav.Modal className="personinfo__modal" contentLabel="Personstatus" onRequestClose={lukkModal} closeButton isOpen>
+    <Nav.Modal
+      className="personinfo__modal"
+      contentLabel="Personstatus"
+      onRequestClose={lukkModal}
+      isOpen={skalViseModal}
+      closeButton
+    >
       <Nav.Typo.Innholdstittel>Personstatus</Nav.Typo.Innholdstittel>
       <ExpandableList
         renderElement={(s) => (

@@ -19,9 +19,10 @@ const PersonInfo = ({ person: { fnr, foedselsdato, sivilstand, personStatus } }:
 
   return (
     <div className="personinfo">
-      {skalVisePersonstatusModal && (
-        <Detaljer.PersonstatusModal lukkModal={() => setSkalVisePersonstatusModal(false)} />
-      )}
+      <Detaljer.PersonstatusModal
+        skalViseModal={skalVisePersonstatusModal}
+        lukkModal={() => setSkalVisePersonstatusModal(false)}
+      />
       <div className="personinfo__element">
         <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
         <Nav.Typo.Element>{fnr}</Nav.Typo.Element>
