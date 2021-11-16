@@ -22,8 +22,6 @@ import { formatterDatoTilNorsk } from "../../utils/dato";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
 
-const { ARBEID_I_UTLANDET, TRYGDEAVTALE_UK } = MKV.Koder.behandlinger.behandlingstema;
-
 const mapStateToProps = (state: RootState) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
@@ -62,7 +60,7 @@ export const Menypanel = ({
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
     ),
-    visEktefelleSamboerMedPaReisen: behandlingstema === ARBEID_I_UTLANDET || behandlingstema === TRYGDEAVTALE_UK,
+    behandlingstema,
     behandlingsgrunnlagEtikett:
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
     visRepresentantIUtlandet: behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,

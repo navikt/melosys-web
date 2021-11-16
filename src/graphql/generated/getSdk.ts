@@ -11,11 +11,7 @@ type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Format: YYYY-MM-DD (ISO-8601), example: 2017-11-24 */
   Date: string;
-  /** Format: YYYY-MM-DDTHH:mm:SS (ISO-8601), example: 2011-12-03T10:15:30 */
-  DateTime: string;
-  /** Custom scalar for Long */
   Long: number;
 };
 
@@ -23,13 +19,12 @@ type Bostedsadresse = {
   __typename?: 'Bostedsadresse';
   coAdressenavn?: Maybe<Scalars['String']>;
   adresse: StrukturertAdresseformat;
-  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
-  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigFraOgMed?: Maybe<Scalars['Date']>;
+  gyldigTilOgMed?: Maybe<Scalars['Date']>;
   master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
 };
-
 
 
 type Familiemedlem = {
@@ -68,8 +63,8 @@ type Kontaktadresse = {
   coAdressenavn?: Maybe<Scalars['String']>;
   semistrukturertAdresse?: Maybe<SemistrukturertAdresseformat>;
   strukturertAdresse?: Maybe<StrukturertAdresseformat>;
-  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
-  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigFraOgMed?: Maybe<Scalars['Date']>;
+  gyldigTilOgMed?: Maybe<Scalars['Date']>;
   master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
@@ -87,8 +82,8 @@ type Oppholdsadresse = {
   __typename?: 'Oppholdsadresse';
   coAdressenavn?: Maybe<Scalars['String']>;
   adresse: StrukturertAdresseformat;
-  gyldigFraOgMed?: Maybe<Scalars['DateTime']>;
-  gyldigTilOgMed?: Maybe<Scalars['DateTime']>;
+  gyldigFraOgMed?: Maybe<Scalars['Date']>;
+  gyldigTilOgMed?: Maybe<Scalars['Date']>;
   master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
@@ -111,11 +106,17 @@ type Personopplysninger = {
 type Query = {
   __typename?: 'Query';
   hentSaksopplysninger: Saksopplysninger;
+  hentPersonopplysninger: Personopplysninger;
 };
 
 
 type QueryHentSaksopplysningerArgs = {
   behandlingID: Scalars['Long'];
+};
+
+
+type QueryHentPersonopplysningerArgs = {
+  ident: Scalars['String'];
 };
 
 type Saksopplysninger = {

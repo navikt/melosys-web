@@ -1,11 +1,11 @@
-interface BemUtilInterface {
+interface BemUtils {
   block: string;
   element: (e: string) => string;
   modifier: (m: string) => string;
   elementWithModifier: (e: string, m: string) => string;
 }
 
-const bemUtils = (cls: string): BemUtilInterface => ({
+const bemUtils = (cls: string): BemUtils => ({
   block: cls,
   element: (e: string): string => `${cls}__${e}`,
   modifier: (m: string): string => `${cls}--${m}`,
