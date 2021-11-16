@@ -23,6 +23,8 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+const Over18Etikett = () => <Nav.EtikettBase type="info">&gt;18 år</Nav.EtikettBase>;
+
 export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
   const [barnValgtForMerInformasjon, setBarnValgtForMerInformasjon] = useState<Familiemedlem | null>(null);
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
@@ -39,8 +41,6 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
     data?.hentSaksopplysninger.persondata.familiemedlemmer.filter(
       (fm) => fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand
     ) || [];
-
-  const over18Etikett = <Nav.EtikettBase type="info">&gt;18 år</Nav.EtikettBase>;
 
   return (
     <div className="familiemedlemmerFraPDL">
@@ -77,7 +77,8 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
             {
               width: "2",
               headerText: "",
-              renderContent: (familiemedlem) => (familiemedlem.alder && familiemedlem.alder >= 18 ? over18Etikett : ""),
+              renderContent: (familiemedlem) =>
+                familiemedlem.alder && familiemedlem.alder >= 18 ? <Over18Etikett /> : "",
             },
           ]}
         />
