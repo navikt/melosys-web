@@ -234,26 +234,30 @@ const soknad = object().when("$behandlingstema", {
     representantIUtlandet: object()
       .when("$behandlingstema", {
         is: erTrygdeavtaleSak,
-        then: object().shape({
-          representantNavn: string().required(
-            lagMelding(
-              KV.Menypunkter.Arbeidssteder.tittel,
-              KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
-              "Navn kreves"
-            )
-          ),
-          adresselinjer: array()
-            .of(
-              string().required(
+        then: object()
+          .shape({
+            representantNavn: string()
+              .required(
                 lagMelding(
                   KV.Menypunkter.Arbeidssteder.tittel,
                   KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
-                  "Adresselinje kan ikke være tom. Fjern eller fyll linjen"
+                  "Navn kreves"
                 )
               )
-            )
-            .nullable(),
-        }),
+              .nullable(),
+            adresselinjer: array()
+              .of(
+                string().required(
+                  lagMelding(
+                    KV.Menypunkter.Arbeidssteder.tittel,
+                    KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
+                    "Adresselinje kan ikke være tom. Fjern eller fyll linjen"
+                  )
+                )
+              )
+              .nullable(),
+          })
+          .nullable(),
       })
       .nullable(),
     oppgittAdresseGatenavn: string()

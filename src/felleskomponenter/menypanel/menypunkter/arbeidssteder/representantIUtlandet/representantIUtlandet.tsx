@@ -50,7 +50,7 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
       redigerbart={redigerbart}
       onBinClick={slettRepresentantIUtlandet}
       onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
-      harData={value.representantNavn}
+      harData={value.representantNavn || value.representantNavn === ""}
       redigererRender={() => <Redigerer redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <RedigeringUtfort adresselinjer={value.adresselinjer} soknadsland={soknadsland} />}
       ingenDataRender={(apneRedigering) => (

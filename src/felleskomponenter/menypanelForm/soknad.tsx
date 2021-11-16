@@ -210,7 +210,8 @@ const Soknad = ({
 
   useEffect(() => {
     if (redigerbart && validertOk) debouncedLagreBehandlingsgrunnlag();
-  }, [formValues, redigerbart]);
+    else debouncedLagreBehandlingsgrunnlag.cancel();
+  }, [formValues, redigerbart, validertOk]);
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
