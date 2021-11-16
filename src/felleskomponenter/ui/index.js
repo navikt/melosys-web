@@ -2,6 +2,7 @@ import Knapp from "./knapp";
 import Knappelenke from "./knappelenke";
 import { KodeTermSelect } from "./kodeTermSelect";
 import Checkboxgruppe from "./checkboxgruppe";
+import Lenkeknapp from "./lenkeknapp";
 import ListevelgerFlervalg from "./listevelgerFlervalg";
 import Undertittel from "./undertittel";
 import Elementskrift from "./elementskrift";
@@ -15,6 +16,7 @@ export {
   KodeTermSelect,
   Checkbox,
   Checkboxgruppe,
+  Lenkeknapp,
   ListevelgerFlervalg,
   Undertittel,
   Elementskrift,
