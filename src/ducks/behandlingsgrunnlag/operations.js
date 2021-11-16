@@ -87,11 +87,15 @@ const lagBehandlingsgrunnlagFelter = (behandlingsgrunnlag) => ({
   periode: behandlingsgrunnlag.periode,
 });
 
-const lagEØSFelter = (behandlingsgrunnlag) => ({
-  ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+const lagArbeidsstederFelter = (behandlingsgrunnlag) => ({
   arbeidPaaLand: behandlingsgrunnlag.arbeidPaaLand,
   maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
   luftfartBaser: behandlingsgrunnlag.luftfartBaser,
+});
+
+const lagEØSFelter = (behandlingsgrunnlag) => ({
+  ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  ...lagArbeidsstederFelter(behandlingsgrunnlag),
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
   arbeidssituasjonOgOevrig: behandlingsgrunnlag.arbeidssituasjonOgOevrig,
@@ -100,9 +104,7 @@ const lagEØSFelter = (behandlingsgrunnlag) => ({
 
 const lagFTRLFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
-  arbeidPaaLand: behandlingsgrunnlag.arbeidPaaLand,
-  maritimtArbeid: behandlingsgrunnlag.maritimtArbeid,
-  luftfartBaser: behandlingsgrunnlag.luftfartBaser,
+  ...lagArbeidsstederFelter(behandlingsgrunnlag),
   loennOgGodtgjoerelse: behandlingsgrunnlag.loennOgGodtgjoerelse,
   arbeidsgiversBekreftelse: behandlingsgrunnlag.arbeidsgiversBekreftelse,
   trygdedekning: behandlingsgrunnlag.trygdedekning,
@@ -117,6 +119,7 @@ const lagTrygdeavtaleFelter = (behandlingsgrunnlag) => ({
 
 const lagSedGrunnlagFelter = (behandlingsgrunnlag) => ({
   ...lagBehandlingsgrunnlagFelter(behandlingsgrunnlag),
+  ...lagArbeidsstederFelter(behandlingsgrunnlag),
   overgangsregelbestemmelser: behandlingsgrunnlag.overgangsregelbestemmelser,
   ytterligereInformasjon: behandlingsgrunnlag.ytterligereInformasjon || null,
 });
