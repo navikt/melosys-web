@@ -13,7 +13,9 @@ function Hovedside({ children }) {
       <FeatureToggle togglename="melosys.design.PERSONLINJE">
         {(status) => status === "enabled" && <Personlinje />}
       </FeatureToggle>
-      <div className="main-container">{children}</div>
+      <div id="main-container" className="main-container">
+        {children}
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import MKV from "../../melosyskodeverk";
 
 import { avklartefaktaOperations } from "../avklartefakta";
-import { fagsakOperations } from "../fagsaker";
+import { fagsakOperations, fagsakSelectors } from "../fagsaker";
 import { behandlingerOperations } from "../behandlinger";
 import { behandlingsresultatOperations } from "../behandlingsresultat";
 import { behandlingsgrunnlagOperations } from "../behandlingsgrunnlag";
@@ -70,7 +70,9 @@ export const resetSaksopplysninger = () => (dispatch) => {
   dispatch(dokumenterOperations.resetDokument());
 };
 
-export const lagreAllData = (sakstype) => async (dispatch) => {
+export const lagreAllData = () => async (dispatch, getState) => {
+  const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
+
   if (sakstype === MKV.Koder.sakstyper.FTRL) {
     return Promise.all([dispatch(behandlingsgrunnlagOperations.lagre()), dispatch(vilkarOperations.lagre())]);
   }
@@ -78,16 +80,18 @@ export const lagreAllData = (sakstype) => async (dispatch) => {
     return Promise.all[dispatch(behandlingsgrunnlagOperations.lagre())];
   }
 
+  const anmodningErSendtUtland = anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(getState());
+
   await Promise.all([
     dispatch(behandlingsgrunnlagOperations.lagre()),
-    dispatch(vilkarOperations.lagre()),
-    dispatch(avklartefaktaOperations.lagre()),
-    dispatch(behandlingsperioderOperations.lagre()),
+    ...(anmodningErSendtUtland ? [] : [dispatch(vilkarOperations.lagre())]),
+    ...(anmodningErSendtUtland ? [] : [dispatch(avklartefaktaOperations.lagre())]),
+    ...(anmodningErSendtUtland ? [] : [dispatch(behandlingsperioderOperations.lagre())]),
   ]);
 
   return Promise.all([
-    dispatch(anmodningsperioderOperations.lagre()),
+    ...(anmodningErSendtUtland ? [] : [dispatch(anmodningsperioderOperations.lagre())]),
     dispatch(lovvalgsperioderOperations.lagre()),
-    dispatch(utpekingsperioderOperations.lagre()),
+    ...(anmodningErSendtUtland ? [] : [dispatch(utpekingsperioderOperations.lagre())]),
   ]);
 };

@@ -12,7 +12,6 @@ export interface Familiemedlem {
 }
 
 interface Person {
-  erEgenAnsatt: boolean;
   personStatus: KTObject;
   sammensattNavn: string;
   kjoenn: KTObject;
@@ -20,7 +19,6 @@ interface Person {
   foedselsdato: string;
   sivilstand: KTObject;
   statsborgerskap: KTObject;
-  statsborgerskapDato: string;
   familiemedlemmer: Familiemedlem[];
 }
 

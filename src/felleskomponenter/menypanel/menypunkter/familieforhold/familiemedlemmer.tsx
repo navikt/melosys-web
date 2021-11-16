@@ -45,7 +45,7 @@ export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: Familiemedlemm
       <Nav.Row>
         <Nav.Column xs="2">{sammensattNavn}</Nav.Column>
         <Nav.Column xs="3">
-          <KopierbarTekst>{fnr}</KopierbarTekst>
+          <KopierbarTekst hovertekst="Kopier fødselsnummer">{fnr}</KopierbarTekst>
         </Nav.Column>
         <Nav.Column xs="2">
           {erBarn
