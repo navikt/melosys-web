@@ -49,34 +49,35 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
       {barn.length > 0 ? (
         <FamiliemedlemGruppe
           familiemedlemmer={barn}
-          headers={[
-            { width: "2", text: "Navn" },
-            { width: "3", text: "F.nr./d-nr." },
-            { width: "2", text: "Foreldreansvar" },
-            { width: "3", text: "F.nr. annen forelder" },
-            { width: "2", text: "" },
-          ]}
-          renderFamiliemedlemColumns={(familiemedlem) => [
-            { width: "2", content: familiemedlem.navn },
+          columns={[
+            { width: "2", headerText: "Navn", renderContent: (familiemedlem) => familiemedlem.navn },
             {
               width: "3",
-              content: <Ident ident={familiemedlem.ident} />,
-            },
-            { width: "2", content: familiemedlem.foreldreansvar },
-            {
-              width: "3",
-              content: familiemedlem.fnrAnnenForelder ? (
-                <>
-                  <Ident ident={familiemedlem.fnrAnnenForelder} />
-                  <Mui.Lenkeknapp onClick={() => setBarnValgtForMerInformasjon(familiemedlem)}>
-                    Vis mer informasjon
-                  </Mui.Lenkeknapp>
-                </>
-              ) : null,
+              headerText: "F.nr./d-nr.",
+              renderContent: (familiemedlem) => <Ident ident={familiemedlem.ident} />,
             },
             {
               width: "2",
-              content: familiemedlem.alder && familiemedlem.alder >= 18 ? over18Etikett : "",
+              headerText: "Foreldreansvar",
+              renderContent: (familiemedlem) => familiemedlem.foreldreansvar,
+            },
+            {
+              width: "3",
+              headerText: "F.nr. annen forelder",
+              renderContent: (familiemedlem) =>
+                familiemedlem.fnrAnnenForelder ? (
+                  <>
+                    <Ident ident={familiemedlem.fnrAnnenForelder} />
+                    <Mui.Lenkeknapp onClick={() => setBarnValgtForMerInformasjon(familiemedlem)}>
+                      Vis mer informasjon
+                    </Mui.Lenkeknapp>
+                  </>
+                ) : null,
+            },
+            {
+              width: "2",
+              headerText: "",
+              renderContent: (familiemedlem) => (familiemedlem.alder && familiemedlem.alder >= 18 ? over18Etikett : ""),
             },
           ]}
         />
@@ -96,20 +97,20 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
       {ektefellePartner.length > 0 ? (
         <FamiliemedlemGruppe
           familiemedlemmer={ektefellePartner}
-          headers={[
-            { width: "3", text: "Navn" },
-            { width: "3", text: "F.nr./d-nr." },
-            { width: "3", text: "Fra og med" },
-            { width: "3", text: "Relasjon" },
-          ]}
-          renderFamiliemedlemColumns={(familiemedlem) => [
-            { width: "3", content: familiemedlem.navn },
+          columns={[
+            { width: "3", headerText: "Navn", renderContent: (familiemedlem) => familiemedlem.navn },
             {
               width: "3",
-              content: <Ident ident={familiemedlem.ident} />,
+              headerText: "F.nr./d-nr.",
+              renderContent: (familiemedlem) => <Ident ident={familiemedlem.ident} />,
             },
-            { width: "3", content: Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstandGyldighetsperiodeFom) },
-            { width: "3", content: familiemedlem.sivilstand },
+            {
+              width: "3",
+              headerText: "Fra og med",
+              renderContent: (familiemedlem) =>
+                Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstandGyldighetsperiodeFom),
+            },
+            { width: "3", headerText: "Relasjon", renderContent: (familiemedlem) => familiemedlem.sivilstand },
           ]}
         />
       ) : (

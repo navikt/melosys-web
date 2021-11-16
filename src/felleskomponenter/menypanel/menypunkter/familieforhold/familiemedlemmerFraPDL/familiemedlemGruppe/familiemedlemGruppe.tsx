@@ -9,32 +9,23 @@ import ExpandableList from "../../../../../expandablelist";
 
 import "./familiemedlemGruppe.css";
 
-interface Header {
-  width: ColumnWidth;
-  text: string;
-}
-
 interface Column {
   width: ColumnWidth;
-  content: ReactNode;
+  headerText: string;
+  renderContent: (familiemedlem: Familiemedlem) => ReactNode;
 }
 
-interface FamiliemedlemProps<T extends Header[]> {
+interface FamiliemedlemProps {
   familiemedlemmer: Familiemedlem[];
-  headers: [...T];
-  renderFamiliemedlemColumns: (familiemedlem: Familiemedlem) => [...{ [I in keyof T]: Column }];
+  columns: Column[];
 }
 
-function FamiliemedlemGruppe<T extends Header[]>({
-  familiemedlemmer,
-  headers,
-  renderFamiliemedlemColumns,
-}: FamiliemedlemProps<T>) {
+function FamiliemedlemGruppe({ familiemedlemmer, columns }: FamiliemedlemProps) {
   const renderFamiliemedlemInRow = (familiemedlem: Familiemedlem) => (
     <Nav.Row>
-      {renderFamiliemedlemColumns(familiemedlem).map(({ width, content }) => (
-        <Nav.Column key={Utils._uuid()} className="familiemedlemgruppe__familiemedlem-enkelt" xs={width}>
-          {content}
+      {columns.map((column) => (
+        <Nav.Column key={Utils._uuid()} className="familiemedlemgruppe__familiemedlem-enkelt" xs={column.width}>
+          {column.renderContent(familiemedlem)}
         </Nav.Column>
       ))}
     </Nav.Row>
@@ -43,9 +34,9 @@ function FamiliemedlemGruppe<T extends Header[]>({
   return (
     <>
       <Nav.Row className="familiemedlemgruppe__header">
-        {headers.map((header) => (
-          <Nav.Column key={Utils._uuid()} xs={header.width}>
-            {header.text}
+        {columns.map((column) => (
+          <Nav.Column key={Utils._uuid()} xs={column.width}>
+            {column.headerText}
           </Nav.Column>
         ))}
       </Nav.Row>
