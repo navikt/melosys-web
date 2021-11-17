@@ -93,6 +93,7 @@ export const Arbeidssteder = ({
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
     behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const visRepresentantIUtlandet = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK;
 
   const arbeidsstederLister = (
     <>
@@ -163,19 +164,14 @@ export const Arbeidssteder = ({
     </>
   );
 
-  const arbeidssteder =
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK ? (
-      <RepresentantIUtlandet redigerbart={redigerbart} />
-    ) : (
-      arbeidsstederLister
-    );
-
   const ukjenteEllerAlleEosLandValgtAlertstripe = (
     <Nav.AlertStripe type="info">
       Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt
       “Periode og land”.
     </Nav.AlertStripe>
   );
+
+  const arbeidssteder = erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidsstederLister;
 
   return (
     <div className="arbeidssteder">
@@ -185,7 +181,7 @@ export const Arbeidssteder = ({
       <span>{behandlingsgrunnlagEtikett}</span>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
-        {erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidssteder}
+        {visRepresentantIUtlandet ? <RepresentantIUtlandet redigerbart={redigerbart} /> : arbeidssteder}
       </div>
     </div>
   );
