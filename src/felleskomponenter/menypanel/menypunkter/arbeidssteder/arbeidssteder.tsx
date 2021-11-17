@@ -77,7 +77,7 @@ type ArbeidsstederProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
-  visRepresentantIUtlandet: boolean;
+  behandlingstema: string;
 };
 
 export const Arbeidssteder = ({
@@ -88,7 +88,7 @@ export const Arbeidssteder = ({
   erFastArbeidssted,
   erHjemmekontor,
   behandlingsgrunnlagtype,
-  visRepresentantIUtlandet,
+  behandlingstema,
   soknadsland: { erUkjenteEllerAlleEosLand },
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
@@ -163,11 +163,12 @@ export const Arbeidssteder = ({
     </>
   );
 
-  const arbeidssteder = visRepresentantIUtlandet ? (
-    <RepresentantIUtlandet redigerbart={redigerbart} />
-  ) : (
-    arbeidsstederLister
-  );
+  const arbeidssteder =
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK ? (
+      <RepresentantIUtlandet redigerbart={redigerbart} />
+    ) : (
+      arbeidsstederLister
+    );
 
   const ukjenteEllerAlleEosLandValgtAlertstripe = (
     <Nav.AlertStripe type="info">

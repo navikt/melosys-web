@@ -156,78 +156,74 @@ describe("Behandlingsgrunnlag operations", () => {
       );
     });
 
-    each([MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET]).it(
-      "lagrer FtrlGrunnlagData ved behandlingstema %p",
-      async (behandlingstema) => {
-        initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
+    it("lagrer FtrlGrunnlagData ved behandlingstema ARBEID_I_UTLANDET", async () => {
+      initialState.behandlinger.data.oppsummering.behandlingstema.kode =
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
 
-        const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
-        const store = mockStore(initialState);
+      const store = mockStore(initialState);
 
-        await store.dispatch(operations.lagre());
+      await store.dispatch(operations.lagre());
 
-        expect(store.getActions()).toEqual(expectedActions);
-        expect(fetch).toHaveBeenLastCalledWith(
-          "/api/behandlingsgrunnlag/4",
-          expect.objectContaining({
-            body: JSON.stringify({
-              data: {
-                juridiskArbeidsgiverNorge: {},
-                personOpplysninger: {},
-                foretakUtland: {},
-                oppholdUtland: {},
-                bosted: {},
-                selvstendigArbeid: {},
-                soeknadsland: {},
-                periode: {},
-                arbeidPaaLand: {},
-                maritimtArbeid: [],
-                luftfartBaser: [],
-                loennOgGodtgjoerelse: {},
-                arbeidsgiversBekreftelse: {},
-                trygdedekning: {},
-              },
-            }),
-          })
-        );
-      }
-    );
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/behandlingsgrunnlag/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              juridiskArbeidsgiverNorge: {},
+              personOpplysninger: {},
+              foretakUtland: {},
+              oppholdUtland: {},
+              bosted: {},
+              selvstendigArbeid: {},
+              soeknadsland: {},
+              periode: {},
+              arbeidPaaLand: {},
+              maritimtArbeid: [],
+              luftfartBaser: [],
+              loennOgGodtgjoerelse: {},
+              arbeidsgiversBekreftelse: {},
+              trygdedekning: {},
+            },
+          }),
+        })
+      );
+    });
 
-    each([MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK]).it(
-      "lagrer TrygdeavtaleGrunnlagData ved behandlingstema %p",
-      async (behandlingstema) => {
-        initialState.behandlinger.data.oppsummering.behandlingstema.kode = behandlingstema;
+    it("lagrer TrygdeavtaleGrunnlagData ved behandlingstema TRYGDEAVTALE_UK", async () => {
+      initialState.behandlinger.data.oppsummering.behandlingstema.kode =
+        MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK;
 
-        const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
-        const store = mockStore(initialState);
+      const store = mockStore(initialState);
 
-        await store.dispatch(operations.lagre());
+      await store.dispatch(operations.lagre());
 
-        expect(store.getActions()).toEqual(expectedActions);
-        expect(fetch).toHaveBeenLastCalledWith(
-          "/api/behandlingsgrunnlag/4",
-          expect.objectContaining({
-            body: JSON.stringify({
-              data: {
-                juridiskArbeidsgiverNorge: {},
-                personOpplysninger: {},
-                foretakUtland: {},
-                oppholdUtland: {},
-                bosted: {},
-                selvstendigArbeid: {},
-                soeknadsland: {},
-                periode: {},
-                loennOgGodtgjoerelse: {},
-                arbeidsgiversBekreftelse: {},
-                representantIUtlandet: {},
-              },
-            }),
-          })
-        );
-      }
-    );
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/behandlingsgrunnlag/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              juridiskArbeidsgiverNorge: {},
+              personOpplysninger: {},
+              foretakUtland: {},
+              oppholdUtland: {},
+              bosted: {},
+              selvstendigArbeid: {},
+              soeknadsland: {},
+              periode: {},
+              loennOgGodtgjoerelse: {},
+              arbeidsgiversBekreftelse: {},
+              representantIUtlandet: {},
+            },
+          }),
+        })
+      );
+    });
 
     it("lager FEILET ved feil i api-kall", async () => {
       const error = new Error("feil ved kall til Api");

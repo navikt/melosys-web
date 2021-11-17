@@ -63,7 +63,6 @@ export const Menypanel = ({
     behandlingstema,
     behandlingsgrunnlagEtikett:
       behandlingstype === MKV.Koder.behandlinger.behandlingstyper.SED ? <Etiketter.FraSed /> : <Etiketter.FraSoknad />,
-    visRepresentantIUtlandet: behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
     redigerbart,
     lagreSoknadOgOppfriskSaksopplysninger,
     setMenypanelFeilmelding,

@@ -34,7 +34,7 @@ const feltMap = {
     },
     representantIUtlandet: {
       representantNavn: "Navn",
-      adresselinjer: "Adresselnjene",
+      adresselinjer: "Adresselinjer",
       representantLand: "Land",
     },
   },

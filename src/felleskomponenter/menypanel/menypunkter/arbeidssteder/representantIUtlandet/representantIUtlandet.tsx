@@ -26,7 +26,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type InnerRepresentantIUtlandetProps = WrappedFieldProps & { redigerbart: boolean } & ConnectedProps<typeof connector>;
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type InnerRepresentantIUtlandetProps = WrappedFieldProps & PropsFromRedux & { redigerbart: boolean };
 
 const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
   const {
@@ -40,6 +42,11 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
   if (value === undefined) return null;
 
   const slettRepresentantIUtlandet = () => onChange(null);
+
+  const handleApneRedigering = async (apneRedigering: () => void) => {
+    await initializeRepresentantNavn();
+    apneRedigering();
+  };
 
   return (
     <EditerbartElement
@@ -56,8 +63,8 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
       ingenDataRender={(apneRedigering) => (
         <IngenDataRender
           redigerbart={redigerbart}
-          apneRedigering={apneRedigering}
-          initialize={initializeRepresentantNavn}
+          onClick={() => handleApneRedigering(apneRedigering)}
+          lenketekst="Legg til representant i utlandet"
         />
       )}
     />

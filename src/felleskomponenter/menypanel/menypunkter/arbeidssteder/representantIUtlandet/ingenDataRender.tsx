@@ -4,21 +4,15 @@ import * as Mui from "../../../../ui";
 
 interface IngenDataRenderProps {
   redigerbart: boolean;
-  apneRedigering: () => void;
-  initialize: () => void;
+  onClick: () => void;
+  lenketekst: string;
 }
 
-const IngenDataRender = ({ redigerbart, apneRedigering, initialize }: IngenDataRenderProps) => (
+const IngenDataRender = ({ redigerbart, onClick, lenketekst }: IngenDataRenderProps) => (
   <>
     {redigerbart && (
-      <Mui.Knappelenke
-        onClick={async () => {
-          await initialize();
-          apneRedigering();
-        }}
-        ikon={Ikoner.Add}
-      >
-        Legg til representant i utlandet
+      <Mui.Knappelenke onClick={onClick} ikon={Ikoner.Add}>
+        {lenketekst}
       </Mui.Knappelenke>
     )}
   </>
