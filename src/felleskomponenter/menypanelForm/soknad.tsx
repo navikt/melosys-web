@@ -141,6 +141,7 @@ const mapStateToProps = (state: RootState) => ({
     arbeidsstedOffshore: behandlingsgrunnlagSelectors.OffshoreArbeidSelector(state),
     arbeidsstedSkip: behandlingsgrunnlagSelectors.SkipArbeidSelector(state),
     arbeidsstedFly: behandlingsgrunnlagSelectors.LuftfartBaserSelector(state),
+    representantIUtlandet: behandlingsgrunnlagSelectors.RepresentantIUtlandetSelector(state),
     ektefelleEllerBarnINorge: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: behandlingsgrunnlagSelectors.OppholdUtlandSelector(state).studentSemester,
     erSelvstendig: behandlingsgrunnlagSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
@@ -209,7 +210,8 @@ const Soknad = ({
 
   useEffect(() => {
     if (redigerbart && validertOk) debouncedLagreBehandlingsgrunnlag();
-  }, [formValues, redigerbart]);
+    else debouncedLagreBehandlingsgrunnlag.cancel();
+  }, [formValues, redigerbart, validertOk]);
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();

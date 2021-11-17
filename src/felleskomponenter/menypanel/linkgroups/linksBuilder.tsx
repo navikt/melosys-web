@@ -175,6 +175,7 @@ class LinksBuilder implements ILinksBuilder {
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+          behandlingstema={this.contentProps.behandlingstema}
         />
       ),
     });

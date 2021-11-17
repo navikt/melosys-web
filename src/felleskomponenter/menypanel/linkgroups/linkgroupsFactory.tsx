@@ -102,7 +102,17 @@ class LinkGroupsFactory {
           )
           .build();
       }
-      case TRYGDEAVTALE_UK:
+      case TRYGDEAVTALE_UK: {
+        return new LinkgroupsBuilder()
+          .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
+          .addFraRegister(
+            new LinksBuilder(contentProps).addMedlemskap().addEUEOSBarnetrygd().addArbeidsforholdOgInntekt().build()
+          )
+          .addFraSoknad(
+            new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().addArbeidssteder().build()
+          )
+          .build();
+      }
       case ARBEID_I_UTLANDET: {
         return new LinkgroupsBuilder()
           .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
