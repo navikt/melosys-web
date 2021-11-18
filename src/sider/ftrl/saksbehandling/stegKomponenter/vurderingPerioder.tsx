@@ -93,7 +93,9 @@ const PeriodeElement = ({
               emptyFieldDisabled={!!formValues.medlemskapsperioder[index].innvilgelsesResultat}
             >
               {innvilgelsesResultater
-                .filter((item: KTObject) => (skalDelvisInnvilgetVises ? true : item.kode !== KV.Koder.DELVIS_INNVILGET))
+                .filter((item: KTObject) =>
+                  skalDelvisInnvilgetVises ? true : item.kode !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET
+                )
                 .map((item: KTObject) => (
                   <option key={item.kode} value={item.kode}>
                     {item.term}
@@ -201,11 +203,11 @@ const VurderingPerioder = ({
   const erKombinasjonGyldig = (medlemskapsperiode: MedlemskapsperiodeProp) => {
     if (erPeriodeFoerSoknadMottatDato(medlemskapsperiode)) {
       return (
-        medlemskapsperiode.innvilgelsesResultat !== KV.Koder.DELVIS_INNVILGET ||
+        medlemskapsperiode.innvilgelsesResultat !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET ||
         medlemskapsperiode.trygdedekning === MKV.Koder.trygdedekninger.PENSJONSDEL
       );
     }
-    return medlemskapsperiode.innvilgelsesResultat !== KV.Koder.DELVIS_INNVILGET;
+    return medlemskapsperiode.innvilgelsesResultat !== MKV.Koder.innvilgelsesResultat.DELVIS_INNVILGET;
   };
 
   const oppdaterMedlemskapsperiode = (
@@ -335,12 +337,12 @@ const VurderingPerioder = ({
   const visIkkeStottetIMelosys =
     !ingenMedlemskapsperioder &&
     (formValues?.medlemskapsperioder?.every(
-      (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT
+      (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
     ) ||
       formValues?.medlemskapsperioder?.find(
         (medlemskapsperiode) =>
           !erPeriodeFoerSoknadMottatDato(medlemskapsperiode) &&
-          medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT
+          medlemskapsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
       ));
 
   return (
