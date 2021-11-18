@@ -1,0 +1,33 @@
+@import (reference) "~nav-frontend-core/less/_variabler";
+
+.sivilstand-modal {
+  width: 95%;
+  @media (min-width: @screen-lg-min) {
+    width: 80%;
+  }
+
+  &__content {
+    padding: 1em 2.5em;
+
+    > * {
+      margin-bottom: 1em;
+    }
+  }
+
+  &__main-content {
+    > * {
+      margin-bottom: 1em;
+    }
+  }
+}
+
+.sivilstand-tabell {
+  &__header {
+    color: @navGra60;
+  }
+
+  &__row {
+    border-top: 1px solid @navGra60;
+    padding: 0.3em 0;
+  }
+}
