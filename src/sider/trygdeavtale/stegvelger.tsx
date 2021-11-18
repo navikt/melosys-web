@@ -12,7 +12,7 @@ import * as Utils from "../../utils";
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
-import { BehandlingsgrunnlagFeilmeldinger } from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger/behandlingsgrunnlagFeilmeldinger";
+import BehandlingsgrunnlagFeilmeldinger from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger";
 import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
@@ -74,6 +74,7 @@ interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
   skalLagreBehandlingsgrunnlag: boolean;
+  visBehandlingsgrunnlagFeilmeldinger: boolean;
 }
 
 class Stegvelger extends Component<Props, State> {
@@ -81,6 +82,7 @@ class Stegvelger extends Component<Props, State> {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
     skalLagreBehandlingsgrunnlag: false,
+    visBehandlingsgrunnlagFeilmeldinger: false,
   };
 
   componentDidMount() {
@@ -176,7 +178,11 @@ class Stegvelger extends Component<Props, State> {
     this.setState({ skalLagreBehandlingsgrunnlag: false });
   };
 
-  harBehandlingsgrunnlagFeilmeldinger = () => !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
+  harBehandlingsgrunnlagFeilmeldinger = () => {
+    const harFeilmeldinger = !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
+    this.setState({ visBehandlingsgrunnlagFeilmeldinger: harFeilmeldinger });
+    return harFeilmeldinger;
+  };
 
   oppdaterAktivtSteg = async (nesteStegIndex: number) => {
     const {
@@ -226,8 +232,7 @@ class Stegvelger extends Component<Props, State> {
 
   render() {
     const {
-      state: { aktuelleSteg },
-      harBehandlingsgrunnlagFeilmeldinger,
+      state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger },
       oppdaterAktivtSteg,
     } = this;
 
@@ -243,7 +248,7 @@ class Stegvelger extends Component<Props, State> {
                 ))}
               </div>
             )}
-            {harBehandlingsgrunnlagFeilmeldinger() && <BehandlingsgrunnlagFeilmeldinger />}
+            {visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
           </div>
         )}
       </TrackVisibility>

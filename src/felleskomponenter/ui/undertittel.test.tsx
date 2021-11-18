@@ -23,9 +23,13 @@ describe("undertittel", () => {
 
   it("viser et ikon", () => {
     props.ikon = Ikoner.ParagraphTwoColumns;
+    props.ikonProps = {
+      focusable: true,
+    };
     const undertittel = shallow(<Undertittel {...props} />);
     const ikon = undertittel.find(props.ikon);
 
     expect(ikon).toHaveLength(1);
+    expect(ikon.props().focusable).toBe(true);
   });
 });

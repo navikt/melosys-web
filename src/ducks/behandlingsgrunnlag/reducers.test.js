@@ -281,6 +281,10 @@ describe("behandlingsgrunnlag reducer", () => {
             typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
           },
         ],
+        representantIUtlandet: {
+          representantNavn: "Representant I Danmark",
+          adresselinjer: ["Adresselinje 1", "Adresselinje 2"],
+        },
         soknadsland: {
           landkoder: [DK],
           erUkjenteEllerAlleEosLand: true,
@@ -487,6 +491,11 @@ describe("behandlingsgrunnlag reducer", () => {
           periode: {
             fom: "2011-11-11",
             tom: "2011-11-11",
+          },
+          representantIUtlandet: {
+            representantNavn: "Representant I Danmark",
+            adresselinjer: ["Adresselinje 1", "Adresselinje 2"],
+            representantLand: "DK",
           },
           selvstendigArbeid: {
             erSelvstendig: true,

@@ -1,0 +1,27 @@
+query hentBostedsadresseForPerson($ident: String!) {
+  hentPersonopplysninger(ident: $ident) {
+    bostedsadresser {
+      coAdressenavn
+      adresse {
+        tilleggsnavn
+        gatenavn
+        husnummerEtasjeLeilighet
+        postboks
+        postnummer
+        poststed
+        region
+        land
+      }
+      gyldigFraOgMed
+      gyldigTilOgMed
+      kilde
+      master
+      erHistorisk
+    }
+    navn {
+      fornavn
+      mellomnavn
+      etternavn
+    }
+  }
+}

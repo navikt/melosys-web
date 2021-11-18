@@ -28,6 +28,12 @@
 @import "@{frontendModuler}hjelpetekst-style/src/hjelpetekst-style";
 @import "@{frontendModuler}popover-style/src/popover-style";
 
+// Av en eller annen grunn fungerte det ikke med en vanlig import av lukknapp-style. Bruker derfor dette som workaround.
+@import (reference) "@{frontendModuler}lukknapp-style/src/lukknapp-style";
+.lukknapp {
+  .lukknapp();
+}
+
 @import "./constants";
 
 /** Denne løsningen har en avhengighet av nav-frontend-typografi-* for å hente inn

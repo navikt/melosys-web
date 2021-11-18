@@ -2,7 +2,7 @@ import React from "react";
 
 import * as Nav from "../../navFrontend";
 
-import bem from "./bemUtils";
+import bem from "../../bemUtils";
 import MenyLink from "./menylink";
 import { Link } from "./types";
 

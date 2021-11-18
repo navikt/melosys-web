@@ -27,7 +27,7 @@ generates:
 
   # Genererer sdk til bruk utenfor react-komponenter.
   src/graphql/generated/getSdk.ts:
-    # Fjern utkommentert documents-key når man ønsker å legge til operations til SDKen(codegen-script ender med error hvis ingen documents finnes).
+    # Per nå har ikke SDKen noen operations - fjern utkommentert documents-key når man ønsker å legge til operations til SDKen(codegen-script ender med error hvis ingen documents finnes).
     # documents: "src/graphql/**/*.gql"
     plugins:
       # Fant ingen måte å peke typescript-generic-sdk til typer generert i src/graphql/generated/types.ts,

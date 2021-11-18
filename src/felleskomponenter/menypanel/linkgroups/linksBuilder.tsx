@@ -70,7 +70,7 @@ class LinksBuilder implements ILinksBuilder {
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
           visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
           setMenypanelFeilmelding={this.contentProps.setMenypanelFeilmelding}
-          visEktefelleSamboerMedPaReisen={this.contentProps.visEktefelleSamboerMedPaReisen}
+          behandlingstema={this.contentProps.behandlingstema}
         />
       ),
     });
@@ -175,6 +175,7 @@ class LinksBuilder implements ILinksBuilder {
           visArbeidsforholdRolleEtiketter={this.contentProps.visArbeidsforholdRolleEtiketter}
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
+          behandlingstema={this.contentProps.behandlingstema}
         />
       ),
     });

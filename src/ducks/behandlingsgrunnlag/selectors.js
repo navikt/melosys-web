@@ -168,6 +168,11 @@ export const LuftfartBaserSelector = createSelector(
   (behandlingsgrunnlag) => behandlingsgrunnlag.luftfartBaser || []
 );
 
+export const RepresentantIUtlandetSelector = createSelector(
+  BehandlingsgrunnlagDataSelector,
+  (behandlingsgrunnlag) => behandlingsgrunnlag.representantIUtlandet
+);
+
 export const HjemmebaserSelector = createSelector(LuftfartBaserSelector, (luftfartBaser) =>
   luftfartBaser.map((base) => base.hjemmebaseLand).filter((base) => base)
 );

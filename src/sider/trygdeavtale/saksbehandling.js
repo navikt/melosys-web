@@ -146,7 +146,6 @@ const Saksbehandling = ({
 
       await hentBehandlingsresultat(behandlingIDFraParam);
 
-      // Sjekk om saken er iferd under oppdatering
       if (behandlingOppfriskes) {
         visOppfriskModal();
         return false;

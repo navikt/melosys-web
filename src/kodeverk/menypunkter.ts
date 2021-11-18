@@ -22,6 +22,7 @@ export const Arbeidssteder = {
     arbeidsstedOffshore: "Arbeidssted offshore",
     arbeidsstedSkip: "Arbeidssted på skip",
     arbeidsstedFly: "Arbeidssted på fly",
+    representantIUtlandet: "Representant i utlandet",
   },
 };
 
