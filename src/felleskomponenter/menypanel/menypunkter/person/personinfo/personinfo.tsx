@@ -8,16 +8,39 @@ import { Person } from "../../../../../services/api";
 
 import EnkeltDato from "../../../../datoOmrade/enkeltDato";
 import SivilstandModal from "./sivilstandModal";
+import { useHentSivilstandQuery } from "./hentSivilstand.generated";
 
 import "./personinfo.css";
 
 interface PersonInfoProps {
   person: Person;
   behandlingID: number;
+  sivilstandModalAriaHideApp?: boolean;
 }
 
-const PersonInfo = ({ person: { fnr, foedselsdato, sivilstand, personStatus }, behandlingID }: PersonInfoProps) => {
+const PersonInfo = ({
+  person: { fnr, foedselsdato, personStatus },
+  behandlingID,
+  sivilstandModalAriaHideApp,
+}: PersonInfoProps) => {
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
+  const { data: sivilstandData, loading: sivilstandLoading, error: sivilstandError } = useHentSivilstandQuery({
+    variables: { behandlingID },
+  });
+
+  const sivilstandLoadingContent = (
+    <>
+      Henter sivilstand...
+      <Nav.NavFrontendSpinner />
+    </>
+  );
+
+  const sivilstandErrorContent = <Nav.AlertStripeFeil>Feil ved henting av sivilstand!</Nav.AlertStripeFeil>;
+
+  const aktiveSivilstander =
+    sivilstandData?.hentSaksopplysninger.persondata.sivilstand.filter((sivilstand) => !sivilstand.erHistorisk) || [];
+  const historiskeSivilstander =
+    sivilstandData?.hentSaksopplysninger.persondata.sivilstand.filter((sivilstand) => sivilstand.erHistorisk) || [];
 
   return (
     <div className="personinfo">
@@ -35,17 +58,28 @@ const PersonInfo = ({ person: { fnr, foedselsdato, sivilstand, personStatus }, b
         <Nav.Typo.EtikettLiten>Personstatus</Nav.Typo.EtikettLiten>
         <Nav.Typo.Element>{KV.objektTilTerm(personStatus)}</Nav.Typo.Element>
       </div>
-      <div className="personinfo__element">
+      <div className="personinfo__element" aria-live="polite" aria-atomic>
         <Nav.Typo.EtikettLiten>Sivilstand</Nav.Typo.EtikettLiten>
-        <Nav.Typo.Element>
-          {KV.objektTilTerm(sivilstand)}
-          <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)} className="personinfo__vis-detaljer-button">
-            Vis detaljer
-          </Mui.Lenkeknapp>
-        </Nav.Typo.Element>
+        {sivilstandLoading && sivilstandLoadingContent}
+        {sivilstandError && sivilstandErrorContent}
+        {
+          /* TODO: fjern. !sivilstandLoading && !sivilstandError && */ sivilstandData && (
+            <Nav.Typo.Element>
+              {aktiveSivilstander[0].type}
+              <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)} className="personinfo__vis-detaljer-button">
+                Vis detaljer
+              </Mui.Lenkeknapp>
+            </Nav.Typo.Element>
+          )
+        }
       </div>
       {visSivilstandModal && (
-        <SivilstandModal behandlingID={behandlingID} onRequestClose={() => setVisSivilstandModal(false)} />
+        <SivilstandModal
+          aktiveSivilstander={aktiveSivilstander}
+          historiskeSivilstander={historiskeSivilstander}
+          onRequestClose={() => setVisSivilstandModal(false)}
+          ariaHideApp={sivilstandModalAriaHideApp}
+        />
       )}
     </div>
   );

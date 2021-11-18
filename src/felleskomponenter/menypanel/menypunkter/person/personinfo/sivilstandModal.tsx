@@ -8,7 +8,6 @@ import * as Mui from "../../../../ui";
 import bem from "../../../../../bemUtils";
 import { Sivilstand } from "../../../../../graphql";
 import KopierbarTekst from "../../../../kopierbarTekst";
-import { useHentSivilstandQuery } from "./hentSivilstand.generated";
 
 import "./sivilstandModal.css";
 
@@ -18,7 +17,7 @@ interface SivilstandTabellProps {
   sivilstander: Sivilstand[];
 }
 
-const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
+export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
   const sivilstandTabellCls = bem("sivilstand-tabell");
 
   return (
@@ -52,38 +51,16 @@ const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
 interface SivilstandModalProps {
   onRequestClose: ComponentProps<typeof Nav.Modal>["onRequestClose"];
   ariaHideApp?: boolean;
-  behandlingID: number;
+  aktiveSivilstander: Sivilstand[];
+  historiskeSivilstander: Sivilstand[];
 }
 
-const SivilstandModal = ({ onRequestClose, ariaHideApp = true, behandlingID }: SivilstandModalProps) => {
-  const { data, loading, error } = useHentSivilstandQuery({ variables: { behandlingID } });
-
-  const loadingContent = (
-    <>
-      Henter sivilstand...
-      <Nav.NavFrontendSpinner />
-    </>
-  );
-
-  const errorContent = <Nav.AlertStripeFeil>Feil ved henting av sivilstand!</Nav.AlertStripeFeil>;
-
-  const aktiveSivilstander =
-    data?.hentSaksopplysninger.persondata.sivilstand.filter((sivilstand) => !sivilstand.erHistorisk) || [];
-  const historiskeSivilstander =
-    data?.hentSaksopplysninger.persondata.sivilstand.filter((sivilstand) => sivilstand.erHistorisk) || [];
-
-  const mainContent = (
-    <>
-      {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
-      {historiskeSivilstander.length > 0 && (
-        <>
-          <Nav.Typo.Element>Historikk</Nav.Typo.Element>
-          <SivilstandTabell sivilstander={historiskeSivilstander} />
-        </>
-      )}
-    </>
-  );
-
+const SivilstandModal = ({
+  onRequestClose,
+  ariaHideApp = true,
+  aktiveSivilstander,
+  historiskeSivilstander,
+}: SivilstandModalProps) => {
   const sivilstandModalCls = bem("sivilstand-modal");
 
   return (
@@ -98,17 +75,15 @@ const SivilstandModal = ({ onRequestClose, ariaHideApp = true, behandlingID }: S
       contentClass={sivilstandModalCls.element("content")}
     >
       <Mui.Undertittel tekst="Sivilstand" ikon={Ikoner.Ring} />
-      {loading && loadingContent}
-      {error && (
-        <div aria-live="polite" aria-atomic>
-          {errorContent}
-        </div>
-      )}
-      {!loading && !error && data && (
-        <div aria-live="polite" aria-atomic className={sivilstandModalCls.element("main-content")}>
-          {mainContent}
-        </div>
-      )}
+      <div className={sivilstandModalCls.element("main-content")}>
+        {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
+        {historiskeSivilstander.length > 0 && (
+          <>
+            <Nav.Typo.Element>Historikk</Nav.Typo.Element>
+            <SivilstandTabell sivilstander={historiskeSivilstander} />
+          </>
+        )}
+      </div>
     </Nav.Modal>
   );
 };
