@@ -1,10 +1,3 @@
-// Melosys-kodeverk
-// Se Confluence koder for oversikt
-
-export const INNVILGET = "INNVILGET";
-export const DELVIS_INNVILGET = "DELVIS_INNVILGET";
-export const AVSLAATT = "AVSLAATT";
-
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
 export const YRKESGRUPPE = "YRKESGRUPPE";

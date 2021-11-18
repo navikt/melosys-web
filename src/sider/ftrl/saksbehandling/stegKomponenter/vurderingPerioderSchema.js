@@ -1,4 +1,5 @@
 import { object, string, array } from "yup";
+import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 
@@ -16,11 +17,13 @@ const erPeriodeTidligereEnnMottattDato = (medlemskapsperiode, mottaksdato) => {
 const ugyldigeInnvilgelsesResultater = (medlemskapsperioder, mottaksdato) => {
   if (!medlemskapsperioder) return false;
   return (
-    medlemskapsperioder.every((medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT) ||
+    medlemskapsperioder.every(
+      (medlemskapsperiode) => medlemskapsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
+    ) ||
     medlemskapsperioder.find(
       (medlemskapsperiode) =>
         !erPeriodeTidligereEnnMottattDato(medlemskapsperiode, mottaksdato) &&
-        medlemskapsperiode.innvilgelsesResultat === KV.Koder.AVSLAATT
+        medlemskapsperiode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.AVSLAATT
     )
   );
 };
