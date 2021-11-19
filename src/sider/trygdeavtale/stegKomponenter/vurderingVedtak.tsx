@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RootState } from "AppTypes";
@@ -33,27 +33,24 @@ interface Periode {
   tom?: string | null;
 }
 
-const mapStateToProps = (state: RootState) => {
-  const soknadsperiode = behandlingsgrunnlagSelectors.PeriodeSelector(state);
-  return {
-    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-    soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state)[0],
-    soknadsperiode,
-    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-    familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
-    formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
-    initialValues: {
-      fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-      soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom),
-      soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom),
-    },
-    formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
-  };
-};
+const mapStateToProps = (state: RootState, ownProps: Props) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state)[0],
+  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+  familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
+  formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
+  initialValues: {
+    fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    lovvalgsperiodeFom:
+      ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
+    lovvalgsperiodeTom:
+      ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
+  },
+  formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
+});
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -62,15 +59,15 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   data: Api.Trygdeavtale.StegData;
-  hentFlytOgOppdaterAktuelleSteg: () => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
   formValues: {
-    soknadsperiodeFom?: string;
-    soknadsperiodeTom?: string;
+    lovvalgsperiodeFom?: string;
+    lovvalgsperiodeTom?: string;
     fritekstInnledning?: string;
     fritekstBegrunnelse?: string;
     kopiTilArbeidsgiver?: boolean;
@@ -79,8 +76,7 @@ interface Props {
 
 const VurderingVedtak = ({
   behandlingID,
-  data: { bestemmelseValg },
-  hentFlytOgOppdaterAktuelleSteg,
+  data: { bestemmelseValg, lovvalgsperiodeTekst },
   tilbake,
   redigerbart,
   resultat,
@@ -88,11 +84,9 @@ const VurderingVedtak = ({
   familieFormValues,
   formValues,
   formIsValid,
+  oppdaterFlyt,
   soknadsland,
-  soknadsperiode,
-  oppdaterPeriode,
   lagreOgFatteVedtak,
-  lagreBehandlingsgrunnlag,
   vedtakstype,
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
@@ -102,7 +96,7 @@ const VurderingVedtak = ({
   const fritekstBegrunnelseHjelpetekstTittel =
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel: 'Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for er ansatt av Equinor ASA.' Friteksten kommer her.";
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
-  const [visTomEndingFelt, setVisTomEndingFelt] = useState(false);
+  const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
 
@@ -124,15 +118,17 @@ const VurderingVedtak = ({
   }, [steg]);
 
   const handleLagreTomEndring = async () => {
-    if (redigerbart && formIsValid) {
-      const isoTom = Utils.dato.formatterDatoTilISO(formValues.soknadsperiodeTom);
-      await oppdaterPeriode({
-        fom: soknadsperiode.fom,
-        tom: isoTom === "Invalid date" ? null : isoTom,
+    if (redigerbart && formValues) {
+      const isoFom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom);
+      const isoTom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom);
+      oppdaterFlyt({
+        resultat: {
+          ...resultat,
+          lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
+          lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
+        },
       });
-      await lagreBehandlingsgrunnlag();
-      hentFlytOgOppdaterAktuelleSteg();
-      setVisTomEndingFelt(false);
+      setVisTomEndringFelt(false);
     }
   };
 
@@ -212,8 +208,8 @@ const VurderingVedtak = ({
         role="button"
         className="endreTom"
         tabIndex={0}
-        onClick={() => setVisTomEndingFelt(true)}
-        onKeyPress={() => setVisTomEndingFelt(true)}
+        onClick={() => setVisTomEndringFelt(true)}
+        onKeyPress={() => setVisTomEndringFelt(true)}
       >
         <Ikoner.BlyantActive className="ikon" />
         <span className="tekst">Endre</span>
@@ -252,18 +248,18 @@ const VurderingVedtak = ({
             </Nav.Hjelpetekst>
           </Nav.Typo.Element>
           <Nav.Typo.Normaltekst className="info datofelt_wrapper" tag="div">
-            {`${soknadsperiode?.fom ? Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom) : ""} - `}
-            {visTomEndingFelt ? (
+            {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} - `}
+            {visTomEndringFelt ? (
               <span className="datofelt">
-                <Skjema.Datovelger label="" feltNavn="soknadsperiodeTom" disabled={!redigerbart} />
+                <Skjema.Datovelger label="" feltNavn="lovvalgsperiodeTom" disabled={!redigerbart} />
                 <Nav.Hovedknapp mini disabled={!redigerbart || !formIsValid} onClick={handleLagreTomEndring}>
                   Lagre
                 </Nav.Hovedknapp>
               </span>
             ) : (
-              formValues?.soknadsperiodeTom
+              formValues?.lovvalgsperiodeTom
             )}
-            {!visTomEndingFelt && <EndreTom />}
+            {!visTomEndringFelt && <EndreTom />}
           </Nav.Typo.Normaltekst>
         </Nav.Column>
 
@@ -274,6 +270,14 @@ const VurderingVedtak = ({
           </Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
+
+      {!Utils._isEmpty(lovvalgsperiodeTekst) && (
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.AlertStripeFeil>{lovvalgsperiodeTekst}</Nav.AlertStripeFeil>
+          </Nav.Column>
+        </Nav.Row>
+      )}
 
       {redigerbart && (
         <>
@@ -350,7 +354,7 @@ const VurderingVedtak = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== "FERDIG" || !redigerbart || !formIsValid || visTomEndingFelt}
+          disabled={steg.status !== "FERDIG" || !redigerbart || !formIsValid || visTomEndringFelt}
           className="fane__navigasjonsknapp"
           onClick={fattVedtak}
           autoDisableVedSpinner

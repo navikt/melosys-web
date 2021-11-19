@@ -4,8 +4,8 @@ import * as KV from "../../../kodeverk";
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
 const vurdering_vedtak = object().shape({
-  soknadsperiodeFom: string().erGyldigDato().required(MAA_FYLLES_UT),
-  soknadsperiodeTom: string().erGyldigDato().erEtterDatofelt("soknadsperiodeFom").required(MAA_FYLLES_UT),
+  lovvalgsperiodeFom: string().erGyldigDato().required(MAA_FYLLES_UT),
+  lovvalgsperiodeTom: string().erGyldigDato().erEtterDatofelt("lovvalgsperiodeFom").required(MAA_FYLLES_UT),
   fritekstInnledning: string().nullable(),
   fritekstBegrunnelse: string().nullable(),
   kopiTilArbeidsgiver: bool().nullable(),
