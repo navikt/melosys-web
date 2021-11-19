@@ -65,6 +65,9 @@ const VurderUtpekingLoadable = loadable(
     fallback: SideLoadingStatus,
   }
 );
+const BrevmenyLoadable = loadable(() => import(/* webpackChunkName: "brevmeny" */ "../sider/brevmeny"), {
+  fallback: SideLoadingStatus,
+});
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
@@ -109,6 +112,7 @@ const Routing = () => (
           path={`/${EU_EOS}/vurderutpeking/:snr`}
           render={(props) => <VurderUtpekingLoadable {...props} {...fellesHandlers} />}
         />
+        <Route path="/brevmeny/:behandlingID" render={(props) => <BrevmenyLoadable {...props} {...fellesHandlers} />} />
         <Route component={UkjentSideLoadable} />
       </Switch>
     )}

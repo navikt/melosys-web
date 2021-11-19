@@ -14,6 +14,7 @@ import * as Skjema from "../skjema";
 import * as Utils from "../../utils";
 
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
+import { URL_BASENAME } from "../../constants";
 import { OrganisasjonsAdresse } from "../adresser";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
@@ -315,8 +316,16 @@ const SendBrev = ({
 
   if (!tilgjengeligeMaler || !formValues) return null;
 
+  const nyttvinduHref = `${URL_BASENAME}/brevmeny/${behandlingID}`;
+
   return (
     <div className="send_brev">
+      <div className="send_brev__apne-nytt-vindu-container">
+        <Nav.Lenker target="_blank" href={nyttvinduHref}>
+          <span>Åpne i nytt vindu</span>
+          <Ikoner.ExternalLink />
+        </Nav.Lenker>
+      </div>
       <Skjema.Select
         feltNavn="type"
         label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
