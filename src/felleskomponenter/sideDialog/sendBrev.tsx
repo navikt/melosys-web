@@ -5,6 +5,7 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
+import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Api from "../../services/api";
 import * as KV from "../../kodeverk";
@@ -16,7 +17,7 @@ import * as Utils from "../../utils";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { URL_BASENAME } from "../../constants";
 import { OrganisasjonsAdresse } from "../adresser";
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
+import { behandlingerOperations } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import { formSelectors } from "../../ducks/form";
 import PdfLenkeListe from "../pdfLenkeListe";
@@ -26,7 +27,6 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 
 const mapStateToProps = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formIsValid: formSelectors.SendBrevValidSelector(state),
   formValues: getFormValues(KV.Form.SEND_BREV)(state),
   initialValues: {
@@ -48,6 +48,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
+  visApneINyttVindu: boolean;
+  behandlingID: number;
+  brevTypeSelectWidth?: ColumnWidth;
+  mottakerSelectWidth?: ColumnWidth;
+  mottakerTabellWidth?: ColumnWidth;
+  orgnrInputWidth?: ColumnWidth;
+  kontaktpersonInputWidth?: ColumnWidth;
   formValues: {
     valgtMal?: Api.DokumenterV2.TilgjengeligeMaler;
     type?: string;
@@ -71,6 +78,12 @@ const SendBrev = ({
   orgnrValid,
   redigerbart,
   resetForm,
+  visApneINyttVindu,
+  brevTypeSelectWidth = "12",
+  mottakerSelectWidth = "12",
+  mottakerTabellWidth = "12",
+  orgnrInputWidth = "6",
+  kontaktpersonInputWidth = "6",
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
@@ -320,58 +333,69 @@ const SendBrev = ({
 
   return (
     <div className="send_brev">
-      <div className="send_brev__apne-nytt-vindu-container">
-        <Nav.Lenker target="_blank" href={nyttvinduHref}>
-          <span>Åpne i nytt vindu</span>
-          <Ikoner.ExternalLink />
-        </Nav.Lenker>
-      </div>
-      <Skjema.Select
-        feltNavn="type"
-        label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
-        disabled={!redigerbart}
-        emptyFieldText="Velg..."
-        emptyFieldDisabled={!!formValues.type}
-      >
-        {tilgjengeligeMaler.map((mal) => (
-          <option key={mal.type.kode} value={mal.type.kode}>
-            {mal.type.term}
-          </option>
-        ))}
-      </Skjema.Select>
+      {visApneINyttVindu && (
+        <div className="send_brev__apne-nytt-vindu-container">
+          <Nav.Lenker target="_blank" href={nyttvinduHref}>
+            <span>Åpne i nytt vindu</span>
+            <Ikoner.ExternalLink />
+          </Nav.Lenker>
+        </div>
+      )}
+
+      <Nav.Row>
+        <Nav.Column xs={brevTypeSelectWidth}>
+          <Skjema.Select
+            feltNavn="type"
+            label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
+            disabled={!redigerbart}
+            emptyFieldText="Velg..."
+            emptyFieldDisabled={!!formValues.type}
+          >
+            {tilgjengeligeMaler.map((mal) => (
+              <option key={mal.type.kode} value={mal.type.kode}>
+                {mal.type.term}
+              </option>
+            ))}
+          </Skjema.Select>
+        </Nav.Column>
+      </Nav.Row>
 
       {maltypeErValgt && !!formValues.valgtMal && (
-        <Skjema.Select
-          feltNavn="mottaker"
-          label={
-            <Nav.Typo.Element tag="div">
-              Mottaker
-              {formValues.valgtMal.mottakereHjelpetekst && (
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={formValues.valgtMal.mottakereHjelpetekst}
-                  type={Nav.PopoverOrientering.Venstre}
-                >
-                  {formValues.valgtMal.mottakereHjelpetekst}
-                </Nav.Hjelpetekst>
-              )}
-            </Nav.Typo.Element>
-          }
-          disabled={!redigerbart || formValues.valgtMal?.muligeMottakere.length === 1}
-          emptyFieldText="Velg..."
-          emptyFieldDisabled={!!formValues.mottaker}
-        >
-          {formValues.valgtMal?.muligeMottakere.map((mottaker) => (
-            <option key={mottaker.uuid} value={mottaker.uuid}>
-              {mottaker.type}
-            </option>
-          ))}
-        </Skjema.Select>
+        <Nav.Row>
+          <Nav.Column xs={mottakerSelectWidth}>
+            <Skjema.Select
+              feltNavn="mottaker"
+              label={
+                <Nav.Typo.Element tag="div">
+                  Mottaker
+                  {formValues.valgtMal.mottakereHjelpetekst && (
+                    <Nav.Hjelpetekst
+                      className="hjelpetekst"
+                      tittel={formValues.valgtMal.mottakereHjelpetekst}
+                      type={Nav.PopoverOrientering.Venstre}
+                    >
+                      {formValues.valgtMal.mottakereHjelpetekst}
+                    </Nav.Hjelpetekst>
+                  )}
+                </Nav.Typo.Element>
+              }
+              disabled={!redigerbart || formValues.valgtMal?.muligeMottakere.length === 1}
+              emptyFieldText="Velg..."
+              emptyFieldDisabled={!!formValues.mottaker}
+            >
+              {formValues.valgtMal?.muligeMottakere.map((mottaker) => (
+                <option key={mottaker.uuid} value={mottaker.uuid}>
+                  {mottaker.type}
+                </option>
+              ))}
+            </Skjema.Select>
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       {mottakerErBruker && (
         <Nav.Row>
-          <Nav.Column xs="12">
+          <Nav.Column xs={mottakerSelectWidth}>
             {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
             {adresse?.mottakerAdresse && (
               <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="brukeradresse" />
@@ -422,28 +446,36 @@ const SendBrev = ({
       )}
 
       {mottakerOrgNrSettesAvSaksbehandler && (
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <Skjema.Input
-              feltNavn="organisasjonsnummer"
-              label="Organisasjonsnummer"
-              placeholder="Skriv inn"
-              disabled={!redigerbart}
-            />
-            {adresse?.organisasjonsAdresse && (
-              <OrganisasjonsAdresse organisasjon={adresse.organisasjonsAdresse} visNavn boldNavn visTittel={false} />
-            )}
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <Skjema.Input
-              feltNavn="kontaktperson"
-              label="Kontaktperson"
-              placeholder="Skriv inn"
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-          {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-        </Nav.Row>
+        <>
+          <Nav.Row>
+            <Nav.Column xs={orgnrInputWidth}>
+              <Skjema.Input
+                feltNavn="organisasjonsnummer"
+                label="Organisasjonsnummer"
+                placeholder="Skriv inn"
+                disabled={!redigerbart}
+              />
+              {adresse?.organisasjonsAdresse && (
+                <OrganisasjonsAdresse organisasjon={adresse.organisasjonsAdresse} visNavn boldNavn visTittel={false} />
+              )}
+            </Nav.Column>
+            <Nav.Column xs={kontaktpersonInputWidth}>
+              <Skjema.Input
+                feltNavn="kontaktperson"
+                label="Kontaktperson"
+                placeholder="Skriv inn"
+                disabled={!redigerbart}
+              />
+            </Nav.Column>
+          </Nav.Row>
+          {mottakerFeil && (
+            <Nav.Row>
+              <Nav.Column xs={orgnrInputWidth}>
+                <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
+              </Nav.Column>
+            </Nav.Row>
+          )}
+        </>
       )}
 
       {mottakerErValgt &&
@@ -502,16 +534,20 @@ const SendBrev = ({
         })}
 
       {mottakerErValgt && (
-        <MottakerTabell
-          className="tabell"
-          rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
-          kolonner={[
-            { verdi: "Dokumenter", bredde: "44%" },
-            { verdi: "Mottaker", bredde: "40%" },
-            { verdi: "Forhåndsvis", bredde: "8%", style: "normal_font_weight midtstilt" },
-            { verdi: "Slett", bredde: "8%", style: "normal_font_weight midtstilt" },
-          ]}
-        />
+        <Nav.Row>
+          <Nav.Column xs={mottakerTabellWidth}>
+            <MottakerTabell
+              className="tabell"
+              rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
+              kolonner={[
+                { verdi: "Dokumenter", bredde: "44%" },
+                { verdi: "Mottaker", bredde: "40%" },
+                { verdi: "Forhåndsvis", bredde: "8%", style: "normal_font_weight midtstilt" },
+                { verdi: "Slett", bredde: "8%", style: "normal_font_weight midtstilt" },
+              ]}
+            />
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       <div>

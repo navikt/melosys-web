@@ -47,7 +47,7 @@ export const FaneViser = ({
         <FeatureToggle togglename="melosys.nytt_send_brev">
           {(status) => {
             if (status === "enabled") {
-              return <SideDialogSendBrev redigerbart={redigerbart} />;
+              return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} visApneINyttVindu />;
             } else if (status === "disabled") {
               return (
                 <SideDialogBrevBestilling
