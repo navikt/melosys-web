@@ -20,7 +20,9 @@ import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
 import VurderingVedtak from "./stegKomponenter/vurderingVedtak";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
@@ -55,6 +57,9 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  fattVedtak: (behandlingID: string, data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) =>
+    dispatch(vedtakOperations.fatt(behandlingID, data)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -63,8 +68,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props extends PropsFromRedux {
   annenBehandlingOppfriskes: boolean;
-  fattVedtak: (behandlingID: string, data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
-  lagreAllData: () => void;
   oppfriskOgLastInnSaksopplysninger: () => void;
   tilForsiden: () => void;
   redigerbart: boolean;
