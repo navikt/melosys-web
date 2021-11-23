@@ -31,12 +31,22 @@ describe("Input", () => {
     expect(input.props().name).toBe(props.feltNavn);
   });
 
+  it("Sender normalizer prop hvis feltType ikke er riktig", () => {
+    props.normalize = () => "test";
+    props.feltType = "noe_som_ikke_finnes";
+    const input = shallow(<Input {...props} />);
+
+    expect(input.props().normalize).toBe(props.normalize);
+  });
+
   describe("feltType prop", () => {
     each([
       ["heltall", normalizeInt],
       ["desimal", normalizeDecimal],
     ]).it("setter korrekt normaliseringsfunksjon for feltType %p", (feltType, forventetNormaliseringsfunksjon) => {
       props.feltType = feltType;
+      props.normalize = () => "test"; // Denne linjen tester at normalize ikke blir satt dersom man har oppgitt riktig feltType
+
       const input = shallow(<Input {...props} />);
 
       expect(input.props().normalize).toBe(forventetNormaliseringsfunksjon);

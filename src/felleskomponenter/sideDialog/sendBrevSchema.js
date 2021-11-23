@@ -7,6 +7,7 @@ const ARBEIDSGIVER_MANGLER = { melding: "Velg arbeidsgiver" };
 const FELT_MANGLER = { melding: "Fyll ut alle felter" };
 const ORGNUMMER_FELT_MANGLER = { melding: "Fyll ut organisasjonsnummer" };
 const ORGNUMMER_UGYLDIG = { melding: "Ugyldig organisasjonsnummer" };
+const TITTEL_MANGLER = { melding: "Fyll inn tittel" };
 
 const manglerNoenFeltValgt = (felt, valgtMal) => {
   if (!valgtMal) return true;
@@ -14,6 +15,23 @@ const manglerNoenFeltValgt = (felt, valgtMal) => {
   if (!felt) return true;
   for (let i = 0; i < valgtMal.felter.length; i += 1) {
     if (valgtMal.felter[i]?.paakrevd && !felt[valgtMal.felter[i]?.kode]) return true;
+  }
+  return false;
+};
+
+const hentFritekstTittel = (felt) => {
+  return felt?.FRITEKST_TITTEL?.valg === "Fritekst"
+    ? felt?.FRITEKST_TITTEL?.fritekst_string || null
+    : felt?.FRITEKST_TITTEL?.valg;
+};
+
+const manglerFritekstTittel = (valgtMal, felt) => {
+  if (
+    valgtMal &&
+    (valgtMal["type"]?.kode === "GENERELT_FRITEKSTBREV_ARBEIDSGIVER" ||
+      valgtMal["type"]?.kode === "GENERELT_FRITEKSTBREV_BRUKER")
+  ) {
+    return hentFritekstTittel(felt) === null;
   }
   return false;
 };
@@ -38,6 +56,10 @@ const send_brev = object().shape({
     then: string().required(ARBEIDSGIVER_MANGLER),
   }),
   felt: object(),
+  fritekstTittel: string().when(["valgtMal", "felt"], {
+    is: manglerFritekstTittel,
+    then: string().required(TITTEL_MANGLER),
+  }),
   erFeltGyldig: string().when(["felt", "valgtMal"], {
     is: manglerNoenFeltValgt,
     then: string().required(FELT_MANGLER),

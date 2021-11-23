@@ -178,7 +178,13 @@ const SendBrev = ({
         (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" && formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
         null,
       manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
+      fritekstTittel:
+        formValues?.felt?.FRITEKST_TITTEL?.valg === "Fritekst"
+          ? formValues?.felt?.FRITEKST_TITTEL?.fritekst_string || null
+          : formValues?.felt?.FRITEKST_TITTEL?.valg,
+      fritekst: formValues?.felt?.FRITEKST?.fritekst || null,
       kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
+      kontaktopplysninger: formValues?.felt?.STANDARDTEKST_KONTAKTINFORMASJON?.sjekkboks,
     };
     if (mottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {
@@ -211,6 +217,10 @@ const SendBrev = ({
     });
   };
 
+  const begrensAntalLTegn = (antallTegn: number | null) => (value: string) => {
+    return antallTegn && value.length > antallTegn ? value.substr(0, antallTegn) : value;
+  };
+
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, valgtMottaker: any, ikon?: boolean) => {
     const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
       ? formValues.organisasjonsnummer
@@ -227,12 +237,18 @@ const SendBrev = ({
               formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
             null,
           manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
+          fritekstTittel:
+            formValues?.felt?.FRITEKST_TITTEL?.valg === "Fritekst"
+              ? formValues?.felt?.FRITEKST_TITTEL?.fritekst_string || null
+              : formValues?.felt?.FRITEKST_TITTEL?.valg,
+          fritekst: formValues?.felt?.FRITEKST?.fritekst || null,
           kopiMottakere: [],
           orgNr: muligMottaker.rolle !== "BRUKER" ? muligMottaker.orgnr || orgnrFraFormValues : null,
           kontaktpersonNavn:
             muligMottaker.rolle === "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
               ? formValues.kontaktperson
               : null,
+          kontaktopplysninger: formValues?.felt?.STANDARDTEKST_KONTAKTINFORMASJON?.sjekkboks,
         },
       },
     ];
@@ -442,7 +458,7 @@ const SendBrev = ({
       {mottakerErValgt &&
         formValues?.valgtMal?.felter &&
         formValues.valgtMal.felter.map((felt) => {
-          if (felt.valg?.length && felt.valg.length > 0) {
+          if (felt.kode === "INNLEDNING_FRITEKST" && felt.valg?.length && felt.valg.length > 0) {
             return (
               <Fragment key="radioknapper">
                 <Nav.Typo.Element className="fritekst_label">
@@ -475,7 +491,7 @@ const SendBrev = ({
           } else if (felt.feltType === "FRITEKST") {
             return (
               <Fragment key="fritekst">
-                <Nav.Typo.Element className="fritekst_label">
+                <Nav.Typo.Element className="fritekst_label" tag="div">
                   {felt.beskrivelse}
                   {felt.hjelpetekst && (
                     <Nav.Hjelpetekst
@@ -487,11 +503,56 @@ const SendBrev = ({
                     </Nav.Hjelpetekst>
                   )}
                 </Nav.Typo.Element>
-                <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.fritekst`} />
+                <Skjema.HTMLEditor
+                  label={<Nav.Typo.Element>Test</Nav.Typo.Element>}
+                  feltNavn={`felt.${felt.kode}.fritekst`}
+                />
+              </Fragment>
+            );
+          } else if (felt.feltType === "FRITEKST_STRING" && felt.valg?.length && felt.valg?.length > 0) {
+            // @ts-ignore
+            return (
+              <Fragment key="fritekstlinje">
+                <Skjema.Select
+                  feltNavn={`felt.${felt.kode}.valg`}
+                  label={
+                    <Nav.Typo.Element tag="div" className="fritekst_label">
+                      {felt.beskrivelse}
+                      {felt.hjelpetekst && (
+                        <Nav.Hjelpetekst
+                          className="hjelpetekst"
+                          tittel={felt.hjelpetekst}
+                          type={Nav.PopoverOrientering.Venstre}
+                        >
+                          {felt.hjelpetekst}
+                        </Nav.Hjelpetekst>
+                      )}
+                    </Nav.Typo.Element>
+                  }
+                  emptyFieldText="Velg..."
+                >
+                  {felt.valg.map((valg) => (
+                    <option key={valg.kode} value={valg.beskrivelse}>
+                      {valg.beskrivelse}
+                    </option>
+                  ))}
+                </Skjema.Select>
+                {formValues.felt && formValues.felt[felt.kode]?.valg === "Fritekst" && (
+                  <Skjema.Input
+                    feltNavn={`felt.${felt.kode}.fritekst_string`}
+                    normalize={begrensAntalLTegn(felt.tegnBegrensning)}
+                    label=""
+                  />
+                )}
+              </Fragment>
+            );
+          } else if (felt.feltType === "SJEKKBOKS") {
+            return (
+              <Fragment key={`sjekkboks-${felt.kode}`}>
+                <Skjema.Checkbox feltNavn={`felt.${felt.kode}.sjekkboks`} label={felt.beskrivelse} />
               </Fragment>
             );
           }
-          return <></>;
         })}
 
       {mottakerErValgt && (

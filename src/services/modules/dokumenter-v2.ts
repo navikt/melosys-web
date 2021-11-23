@@ -22,6 +22,7 @@ export type TilgjengeligeMaler = {
         feltType: string;
         hjelpetekst: string | null;
         paakrevd: boolean;
+        tegnBegrensning: number | null;
         valg:
           | null
           | {
@@ -55,8 +56,11 @@ export type OpprettBrevReqDto = {
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
   manglerFritekst?: string;
+  fritekstTittel?: string;
+  fritekst?: string;
   kontaktpersonNavn?: string | null;
   kopiMottakere: KopiMottaker[];
+  kontaktopplysninger: boolean | null;
 };
 
 export type MuligMottaker = {
