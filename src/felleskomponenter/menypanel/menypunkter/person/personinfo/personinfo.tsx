@@ -62,16 +62,14 @@ const PersonInfo = ({
         <Nav.Typo.EtikettLiten>Sivilstand</Nav.Typo.EtikettLiten>
         {sivilstandLoading && sivilstandLoadingContent}
         {sivilstandError && sivilstandErrorContent}
-        {
-          sivilstandData && (
-            <Nav.Typo.Element>
-              {aktiveSivilstander[0].type}
-              <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)} className="personinfo__vis-detaljer-button">
-                Vis detaljer
-              </Mui.Lenkeknapp>
-            </Nav.Typo.Element>
-          )
-        }
+        {sivilstandData && (
+          <Nav.Typo.Element>
+            {aktiveSivilstander[0].type}
+            <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)} className="personinfo__vis-detaljer-button">
+              Vis detaljer
+            </Mui.Lenkeknapp>
+          </Nav.Typo.Element>
+        )}
       </div>
       {visSivilstandModal && (
         <SivilstandModal
