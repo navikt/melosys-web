@@ -63,7 +63,7 @@ const PersonInfo = ({
         {sivilstandLoading && sivilstandLoadingContent}
         {sivilstandError && sivilstandErrorContent}
         {
-          /* TODO: fjern. !sivilstandLoading && !sivilstandError && */ sivilstandData && (
+          sivilstandData && (
             <Nav.Typo.Element>
               {aktiveSivilstander[0].type}
               <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)} className="personinfo__vis-detaljer-button">
