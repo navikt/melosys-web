@@ -1,9 +1,9 @@
 import "./personlinje.css";
-import MKV from "../../../../melosyskodeverk";
-import * as StringUtils from "../../../../utils/streng";
-import * as PersonUtils from "../../../../utils/person";
+import MKV from "../../melosyskodeverk";
+import * as StringUtils from "../../utils/streng";
+import * as PersonUtils from "../../utils/person";
 import { useHentPersonopplysningerQuery } from "./hentpersonopplysninger.generated";
-import { KjoennType } from "../../../../graphql";
+import { KjoennType } from "../../graphql";
 
 type PersonopplysningerProps = {
   navn: string;

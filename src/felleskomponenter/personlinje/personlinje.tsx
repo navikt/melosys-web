@@ -2,17 +2,17 @@ import React from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
 
-import * as Ikon from "../../../../resources/images";
+import * as Ikon from "../../resources/images";
 
 import hentPersonopplysninger from "./hentpersonopplysninger";
-import Behandlingsmeny from "../behandlingsmeny/behandlingsmeny";
-import KopierbarTekst from "../../../../felleskomponenter/kopierbarTekst";
+import Behandlingsmeny from "./behandlingsmeny";
+import KopierbarTekst from "../kopierbarTekst";
 
 import "./personlinje.css";
-import * as StringUtils from "../../../../utils/streng";
-import { KjoennType } from "../../../../graphql";
+import * as StringUtils from "../../utils/streng";
+import { KjoennType } from "../../graphql";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
