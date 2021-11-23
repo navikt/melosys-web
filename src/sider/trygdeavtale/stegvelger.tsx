@@ -7,6 +7,7 @@ import { Action } from "redux";
 import { get as getValueAtPath } from "lodash";
 
 import * as Api from "../../services/api";
+import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
 import StegLinje from "../../felleskomponenter/stegLinje";
@@ -162,7 +163,7 @@ class Stegvelger extends Component<Props, State> {
         stegPosisjon: enkeltSteg.nummer,
         aktivtSteg: this.state.aktivtStegIndex === enkeltSteg.nummer,
         komponent: stegMapElement.komponent,
-        status: enkeltSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
+        status: enkeltSteg.status === KV.Koder.StegStatus.FERDIG ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
         data: { ...data, steg: enkeltSteg },
         handlers,
         vedtakSteg: enkeltSteg.navn === "VEDTAK",

@@ -274,7 +274,7 @@ const VurderingFamilie = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={steg.status !== KV.Koder.StegStatus.FERDIG || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >

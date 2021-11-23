@@ -107,12 +107,12 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const lagreBehandlingsgrunnlagOgHentStegStatus = async () => {
+  const lagreBehandlingsgrunnlagOgOppdaterFlyt = async () => {
     await lagreBehandlingsgrunnlag();
     hentFlytOgOppdaterAktuelleSteg();
   };
-  const debouncedLagrebehandlingsgrunnlagOgHentStegStatus = useCallback(
-    Utils._debounce(lagreBehandlingsgrunnlagOgHentStegStatus, 300),
+  const debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt = useCallback(
+    Utils._debounce(lagreBehandlingsgrunnlagOgOppdaterFlyt, 300),
     []
   );
 
@@ -126,7 +126,7 @@ const VurderingInngang = ({
       });
       oppdaterSoeknadsland(formValues?.land ? [formValues.land] : []);
 
-      debouncedLagrebehandlingsgrunnlagOgHentStegStatus();
+      debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt();
     }
   }, [formValues?.fom, formValues?.tom, formValues?.land, formIsValid]);
 
@@ -170,7 +170,7 @@ const VurderingInngang = ({
       <div className="fane__knapplinje">
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={steg.status !== KV.Koder.StegStatus.FERDIG || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsettHandle}
         >

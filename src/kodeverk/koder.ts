@@ -93,6 +93,11 @@ export const SedStatus = {
   AVBRUTT: "AVBRUTT",
 };
 
+export enum StegStatus {
+  FERDIG = "FERDIG",
+  IKKE_FERDIG = "IKKE_FERDIG",
+}
+
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */

@@ -110,7 +110,7 @@ const VurderingVedtak = ({
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
 
   useEffect(() => {
-    if (steg.status === "FERDIG") {
+    if (steg.status === KV.Koder.StegStatus.FERDIG) {
       debouncedHentMuligeMottakere();
     } else {
       debouncedHentMuligeMottakere.cancel();
@@ -354,7 +354,7 @@ const VurderingVedtak = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== "FERDIG" || !redigerbart || !formIsValid || visTomEndringFelt}
+          disabled={steg.status !== KV.Koder.StegStatus.FERDIG || !redigerbart || !formIsValid || visTomEndringFelt}
           className="fane__navigasjonsknapp"
           onClick={fattVedtak}
           autoDisableVedSpinner
