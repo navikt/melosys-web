@@ -65,7 +65,7 @@ const VurderUtpekingLoadable = loadable(
     fallback: SideLoadingStatus,
   }
 );
-const BrevmenyLoadable = loadable(() => import(/* webpackChunkName: "brevmeny" */ "../sider/brevmeny"), {
+const SendbrevLoadable = loadable(() => import(/* webpackChunkName: "sendbrev" */ "../sider/sendbrev"), {
   fallback: SideLoadingStatus,
 });
 
@@ -112,7 +112,7 @@ const Routing = () => (
           path={`/${EU_EOS}/vurderutpeking/:snr`}
           render={(props) => <VurderUtpekingLoadable {...props} {...fellesHandlers} />}
         />
-        <Route path="/brevmeny/:behandlingID" render={(props) => <BrevmenyLoadable {...props} {...fellesHandlers} />} />
+        <Route path="/sendbrev/:behandlingID" render={(props) => <SendbrevLoadable {...props} {...fellesHandlers} />} />
         <Route component={UkjentSideLoadable} />
       </Switch>
     )}

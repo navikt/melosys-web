@@ -15,7 +15,7 @@ import { SendBrev } from "../../felleskomponenter/sideDialog";
 import { behandlingerOperations } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 
-import "./brevmeny.css";
+import "./sendbrev.css";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -33,9 +33,9 @@ interface RouteParams {
   behandlingID: string;
 }
 
-type BrevmenyProps = RouteComponentProps<RouteParams> & PropsFromRedux;
+type SendbrevProps = RouteComponentProps<RouteParams> & PropsFromRedux;
 
-const Brevmeny = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }: BrevmenyProps) => {
+const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }: SendbrevProps) => {
   const behandlingID = Utils._toInteger(match.params.behandlingID);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const Brevmeny = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }
   });
 
   return (
-    <Nav.Container fluid className="brevmeny">
+    <Nav.Container fluid className="sendbrev">
       <Nav.Panel>
         <SendBrev
           behandlingID={behandlingID}
@@ -70,4 +70,4 @@ const Brevmeny = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }
   );
 };
 
-export default withRouter(connector(Brevmeny));
+export default withRouter(connector(Sendbrev));

@@ -329,7 +329,7 @@ const SendBrev = ({
 
   if (!tilgjengeligeMaler || !formValues) return null;
 
-  const nyttvinduHref = `${URL_BASENAME}/brevmeny/${behandlingID}`;
+  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
 
   return (
     <div className="send_brev">
