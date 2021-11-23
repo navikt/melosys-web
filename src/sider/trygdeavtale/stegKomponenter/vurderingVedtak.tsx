@@ -215,7 +215,9 @@ const VurderingVedtak = ({
         <span className="tekst">Endre</span>
       </div>
     ) : (
-      <Ikoner.BlyantDisabled className="ikon" />
+      <div style={{ marginLeft: "0.5rem" }}>
+        <Ikoner.BlyantDisabled className="ikon" />
+      </div>
     );
 
   return (
