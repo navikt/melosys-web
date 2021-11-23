@@ -289,16 +289,18 @@ const SendBrev = ({
   }: Api.DokumenterV2.MottakerAdresse & { className: string }) => {
     return (
       <div className={className}>
-        <div>
-          <b>{tittel.mottakerNavn}</b>
-        </div>
+        {!tittel?.orgnr && (
+          <div>
+            <b>{tittel.mottakerNavn}</b>
+          </div>
+        )}
+
         {adresselinjer.map((linje) => (
-          <div key={Utils._uuid()}>{linje}</div>
+          <span key={Utils._uuid()}>{linje}, </span>
         ))}
-        <div>
-          {postnr} {poststed}
-        </div>
-        <div>{land}</div>
+        <span>
+          {postnr} {poststed}, {land}
+        </span>
       </div>
     );
   };
