@@ -209,7 +209,12 @@ const VurderingVedtak = ({
         className="endreTom"
         tabIndex={0}
         onClick={() => setVisTomEndringFelt(true)}
-        onKeyPress={() => setVisTomEndringFelt(true)}
+        onKeyDown={(event) => {
+          if ([" ", "Enter"].includes(event.key)) {
+            event.preventDefault();
+            setVisTomEndringFelt(true);
+          }
+        }}
       >
         <Ikoner.BlyantActive className="ikon" />
         <span className="tekst">Endre</span>
