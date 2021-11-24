@@ -22,8 +22,14 @@
 }
 
 .sivilstand-tabell {
+  padding-left: 0.5em;
+
   &__header {
     color: @navGra60;
+
+    > * {
+      padding-left: 0;
+    }
   }
 
   &__row {
@@ -32,6 +38,10 @@
 
     &:last-child {
       border-bottom: 1px solid @navGra60;
+    }
+
+    > * {
+      padding-left: 0;
     }
   }
 }
