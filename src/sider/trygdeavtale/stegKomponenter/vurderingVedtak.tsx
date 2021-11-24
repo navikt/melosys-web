@@ -22,6 +22,7 @@ import MottakerTabell from "../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { StegStatus } from "../stegvelger";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 
 import "./vurderingVedtak.css";
@@ -110,7 +111,7 @@ const VurderingVedtak = ({
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
 
   useEffect(() => {
-    if (steg.status === KV.Koder.StegStatus.FERDIG) {
+    if (steg.status === StegStatus.FERDIG) {
       debouncedHentMuligeMottakere();
     } else {
       debouncedHentMuligeMottakere.cancel();
@@ -361,7 +362,7 @@ const VurderingVedtak = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== KV.Koder.StegStatus.FERDIG || !redigerbart || !formIsValid || visTomEndringFelt}
+          disabled={steg.status !== StegStatus.FERDIG || !redigerbart || !formIsValid || visTomEndringFelt}
           className="fane__navigasjonsknapp"
           onClick={fattVedtak}
           autoDisableVedSpinner

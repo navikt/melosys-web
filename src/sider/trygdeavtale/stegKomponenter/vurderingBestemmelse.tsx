@@ -14,6 +14,7 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 
 import { formSelectors } from "../../../ducks/form";
+import { StegStatus } from "../stegvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
@@ -155,7 +156,7 @@ const VurderingBestemmelse = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== KV.Koder.StegStatus.FERDIG || !formIsValid || !redigerbart}
+          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >

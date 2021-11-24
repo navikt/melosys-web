@@ -17,6 +17,7 @@ import { menypanelOperations } from "../../../ducks/menypanel";
 import { formSelectors } from "../../../ducks/form";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { StegStatus } from "../stegvelger";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
@@ -170,7 +171,7 @@ const VurderingInngang = ({
       <div className="fane__knapplinje">
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== KV.Koder.StegStatus.FERDIG || !formIsValid || !redigerbart}
+          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsettHandle}
         >

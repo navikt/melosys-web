@@ -12,6 +12,7 @@ import * as Utils from "../../../utils";
 
 import { formSelectors } from "../../../ducks/form";
 import { BOOLSK_STRING } from "../../../constants";
+import { StegStatus } from "../stegvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
@@ -272,7 +273,7 @@ const VurderingFamilie = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== KV.Koder.StegStatus.FERDIG || !formIsValid || !redigerbart}
+          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >
