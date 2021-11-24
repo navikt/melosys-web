@@ -217,7 +217,7 @@ const SendBrev = ({
     });
   };
 
-  const begrensAntalLTegn = (antallTegn: number | null) => (value: string) => {
+  const begrensAntallTegn = (antallTegn: number | null) => (value: string) => {
     return antallTegn && value.length > antallTegn ? value.substr(0, antallTegn) : value;
   };
 
@@ -503,14 +503,10 @@ const SendBrev = ({
                     </Nav.Hjelpetekst>
                   )}
                 </Nav.Typo.Element>
-                <Skjema.HTMLEditor
-                  label={<Nav.Typo.Element>Test</Nav.Typo.Element>}
-                  feltNavn={`felt.${felt.kode}.fritekst`}
-                />
+                <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.fritekst`} />
               </Fragment>
             );
           } else if (felt.feltType === "FRITEKST_STRING" && felt.valg?.length && felt.valg?.length > 0) {
-            // @ts-ignore
             return (
               <Fragment key="fritekstlinje">
                 <Skjema.Select
@@ -540,7 +536,7 @@ const SendBrev = ({
                 {formValues.felt && formValues.felt[felt.kode]?.valg === "Fritekst" && (
                   <Skjema.Input
                     feltNavn={`felt.${felt.kode}.fritekst_string`}
-                    normalize={begrensAntalLTegn(felt.tegnBegrensning)}
+                    normalize={begrensAntallTegn(felt.tegnBegrensning)}
                     label=""
                   />
                 )}
