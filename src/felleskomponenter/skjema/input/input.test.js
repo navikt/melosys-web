@@ -81,6 +81,14 @@ describe("begrensAntallTegn", () => {
   it("returnerer begrenset antall tegn", () => {
     expect(begrensAntallTegn(5)("12345678911")).toBe("12345");
   });
+
+  it("begrenser ikke dersom antallet tegn ikke er nådd maksimum", () => {
+    expect(begrensAntallTegn(10)("Heihei")).toBe("Heihei");
+  });
+
+  it("begrenser ikke dersom antallet tegn er like mange som maksimalt tillatte tegn", () => {
+    expect(begrensAntallTegn(18)("her har vi 18 tegn")).toBe("her har vi 18 tegn");
+  });
 });
 
 describe("InnerInputComponent", () => {
