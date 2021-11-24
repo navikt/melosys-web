@@ -1,0 +1,389 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import { RootState } from "AppTypes";
+import { connect, ConnectedProps } from "react-redux";
+import { getFormValues, reduxForm } from "redux-form";
+
+import MKV from "../../../melosyskodeverk";
+import * as Api from "../../../services/api";
+import * as Hooks from "../../../hooks";
+import * as Nav from "../../../navFrontend";
+import * as Utils from "../../../utils";
+import * as KV from "../../../kodeverk";
+import * as Ikoner from "../../../resources/images";
+import * as Skjema from "../../../felleskomponenter/skjema";
+
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { formSelectors } from "../../../ducks/form";
+import MottakerTabell from "../../../felleskomponenter/tabell/mottakerTabell";
+import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
+
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { StegStatus } from "../stegvelger";
+import bem from "../../../bemUtils";
+import vurdering_vedtak from "./vurderingVedtakSchema";
+
+import "./vurderingVedtak.css";
+
+const { INNVILGELSE_UK } = MKV.Koder.brev.produserbaredokumenter;
+
+const vurderingVedtakCls = bem("vurderingVedtak");
+
+interface Periode {
+  fom?: string | null;
+  tom?: string | null;
+}
+
+const mapStateToProps = (state: RootState, ownProps: Props) => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state)[0],
+  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+  familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
+  formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
+  initialValues: {
+    fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    lovvalgsperiodeFom:
+      ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
+    lovvalgsperiodeTom:
+      ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
+  },
+  formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
+});
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface Props {
+  data: Api.Trygdeavtale.StegData;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  tilbake: () => void;
+  lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
+  redigerbart: boolean;
+  resultat: Api.Trygdeavtale.Resultat;
+  steg: Api.Trygdeavtale.Steg;
+  formValues: {
+    lovvalgsperiodeFom?: string;
+    lovvalgsperiodeTom?: string;
+    fritekstInnledning?: string;
+    fritekstBegrunnelse?: string;
+    kopiTilArbeidsgiver?: boolean;
+  };
+}
+
+const VurderingVedtak = ({
+  behandlingID,
+  data: { bestemmelseValg, lovvalgsperiodeTekst },
+  tilbake,
+  redigerbart,
+  resultat,
+  steg,
+  familieFormValues,
+  formValues,
+  formIsValid,
+  oppdaterFlyt,
+  soknadsland,
+  lagreOgFatteVedtak,
+  vedtakstype,
+}: Props & PropsFromRedux) => {
+  const periodeHjelpetekst =
+    "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
+  const fritekstInnledningHjelpetekstTittel =
+    "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: 'Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31. desember 2024.' Friteksten kommer her";
+  const fritekstBegrunnelseHjelpetekstTittel =
+    "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel: 'Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for er ansatt av Equinor ASA.' Friteksten kommer her.";
+  const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+  const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
+
+  const hentMuligeMottakere = async () => {
+    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+      produserbartdokument: INNVILGELSE_UK,
+      orgnr: null,
+    });
+    setMuligeMottakere(res);
+  };
+  const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
+
+  useEffect(() => {
+    if (steg.status === StegStatus.FERDIG) {
+      debouncedHentMuligeMottakere();
+    } else {
+      debouncedHentMuligeMottakere.cancel();
+    }
+  }, [steg]);
+
+  const handleLagreTomEndring = async () => {
+    if (redigerbart && formValues) {
+      const isoFom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom);
+      const isoTom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom);
+      oppdaterFlyt({
+        resultat: {
+          ...resultat,
+          lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
+          lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
+        },
+      });
+      setVisTomEndringFelt(false);
+    }
+  };
+
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    return [
+      {
+        sendesTilDokumenterV2: true,
+        navn: muligMottaker.dokumentNavn,
+        data: {
+          produserbardokument: INNVILGELSE_UK,
+          mottaker: muligMottaker.rolle,
+          kopiMottakere: [],
+          innledningFritekst: formValues?.fritekstInnledning || null,
+          begrunnelseFritekst: formValues?.fritekstBegrunnelse || null,
+          orgNr: muligMottaker?.orgnr || null,
+          ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
+          barnFritekst: familieFormValues?.barn?.fritekst || null,
+        },
+      },
+    ];
+  };
+
+  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    return [
+      {
+        verdi: (
+          <PdfLenkeListe
+            behandlingID={behandlingID}
+            dokumenter={lagDokumenterData(muligMottaker)}
+            vedKlikk={() => true}
+            className={vurderingVedtakCls.element("forhåndsvisning")}
+          />
+        ),
+      },
+      { verdi: muligMottaker.mottakerNavn },
+    ];
+  };
+
+  const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
+      return formValues?.kopiTilArbeidsgiver;
+    }
+    return false;
+  };
+
+  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+    return [
+      mapMottakerRad(mottakere.hovedMottaker),
+      ...mottakere.kopiMottakere.filter(filterKopiMottakere).map((muligMottaker) => mapMottakerRad(muligMottaker)),
+      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
+    ];
+  };
+
+  const fattVedtak = async () => {
+    setVedtakPending(true);
+
+    await lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekstInnledning: formValues?.fritekstInnledning || null,
+      fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
+      fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
+      fritekstBarn: familieFormValues?.barn?.fritekst || null,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      kopiMottakere: muligeMottakere.kopiMottakere
+        .filter(filterKopiMottakere)
+        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    });
+
+    if (isMounted.current) {
+      setVedtakPending(false);
+    }
+  };
+
+  const EndreTom = () =>
+    redigerbart ? (
+      <div
+        role="button"
+        className={vurderingVedtakCls.element("endreTom")}
+        tabIndex={0}
+        onClick={() => setVisTomEndringFelt(true)}
+        onKeyDown={(event) => {
+          if ([" ", "Enter"].includes(event.key)) {
+            event.preventDefault();
+            setVisTomEndringFelt(true);
+          }
+        }}
+      >
+        <Ikoner.BlyantActive className={vurderingVedtakCls.element("ikon")} />
+        <span className={vurderingVedtakCls.element("endreTomTekst")}>Endre</span>
+      </div>
+    ) : (
+      <div className={vurderingVedtakCls.elementWithModifier("endreTom", "disabled")}>
+        <Ikoner.BlyantDisabled className={vurderingVedtakCls.element("ikon")} />
+      </div>
+    );
+
+  return (
+    <div className={vurderingVedtakCls.block}>
+      <Nav.Typo.Undertittel className={vurderingVedtakCls.element("undertittel")}>
+        Omfattet av norsk trygdelovgivning - trygdeavtale med {soknadsland.term}
+      </Nav.Typo.Undertittel>
+
+      <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
+        <Nav.Column xs="4">
+          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>
+            {Utils.streng.storeForbokstaver(
+              KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[1]
+            )}
+          </Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
+            {KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[0]}
+          </Nav.Typo.Normaltekst>
+        </Nav.Column>
+
+        <Nav.Column xs="5">
+          <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
+            Periode
+            <Nav.Hjelpetekst
+              tittel={periodeHjelpetekst}
+              className={vurderingVedtakCls.element("hjelpetekst")}
+              type={Nav.PopoverOrientering.Hoyre}
+            >
+              {periodeHjelpetekst}
+            </Nav.Hjelpetekst>
+          </Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
+            {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} - `}
+            {visTomEndringFelt ? (
+              <span className={vurderingVedtakCls.element("datofelt")}>
+                <Skjema.Datovelger label="" feltNavn="lovvalgsperiodeTom" disabled={!redigerbart} />
+                <Nav.Hovedknapp mini disabled={!redigerbart || !formIsValid} onClick={handleLagreTomEndring}>
+                  Lagre
+                </Nav.Hovedknapp>
+              </span>
+            ) : (
+              formValues?.lovvalgsperiodeTom
+            )}
+            {!visTomEndringFelt && <EndreTom />}
+          </Nav.Typo.Normaltekst>
+        </Nav.Column>
+
+        <Nav.Column xs="3">
+          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>Familiemedlemmer</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
+            {resultat.ektefelle || !Utils._isEmpty(resultat.barn) ? "Ja" : "-"}
+          </Nav.Typo.Normaltekst>
+        </Nav.Column>
+      </Nav.Row>
+
+      {!Utils._isEmpty(lovvalgsperiodeTekst) && (
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.AlertStripeFeil>{lovvalgsperiodeTekst}</Nav.AlertStripeFeil>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {redigerbart && (
+        <>
+          <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
+            Fritekst til innledning
+            <Nav.Hjelpetekst
+              tittel={fritekstInnledningHjelpetekstTittel}
+              className={vurderingVedtakCls.element("hjelpetekst")}
+              type={Nav.PopoverOrientering.Hoyre}
+            >
+              <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.</p>
+              <p>
+                Eksempel:
+                <br />
+                &quot;Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31.
+                desember 2024.&quot;
+              </p>
+              <p>Friteksten kommer her.</p>
+            </Nav.Hjelpetekst>
+          </Nav.Typo.Element>
+          <Skjema.HTMLEditor
+            feltNavn="fritekstInnledning"
+            className={vurderingVedtakCls.element("fritekst_editor")}
+            placeholder="Skriv inn tilleggsinformasjon til innledning..."
+          />
+        </>
+      )}
+
+      <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
+        Fritekst til begrunnelse{" "}
+        <Nav.Hjelpetekst
+          tittel={fritekstBegrunnelseHjelpetekstTittel}
+          className={vurderingVedtakCls.element("hjelpetekst")}
+          type={Nav.PopoverOrientering.Hoyre}
+        >
+          <p>Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.</p>
+          <p>
+            Eksempel:
+            <br />
+            &quot;Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i
+            Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for/er ansatt av
+            Equinor ASA.&quot;
+          </p>
+          <p>Friteksten kommer her.</p>
+        </Nav.Hjelpetekst>
+      </Nav.Typo.Element>
+      <Skjema.HTMLEditor
+        feltNavn="fritekstBegrunnelse"
+        className={vurderingVedtakCls.element("fritekst_editor")}
+        placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
+        disabled={!redigerbart}
+      />
+
+      <Skjema.Checkbox
+        feltNavn="kopiTilArbeidsgiver"
+        label="Send kopi til arbeidsgiver/virksomhet"
+        className={vurderingVedtakCls.element("kopiCheckbox")}
+        disabled={!redigerbart}
+      />
+
+      {redigerbart && (
+        <MottakerTabell
+          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
+          kolonner={[
+            { verdi: "Dokumenter", bredde: "60%" },
+            { verdi: "Mottaker", bredde: "40%" },
+          ]}
+        />
+      )}
+
+      <div className="fane__knapplinje">
+        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
+          Tilbake
+        </Nav.Knapp>
+        <Nav.Hovedknapp
+          mini
+          disabled={steg.status !== StegStatus.FERDIG || !redigerbart || !formIsValid || visTomEndringFelt}
+          className="fane__navigasjonsknapp"
+          onClick={fattVedtak}
+          autoDisableVedSpinner
+          spinner={vedtakPending}
+        >
+          Fatt vedtak
+        </Nav.Hovedknapp>
+      </div>
+    </div>
+  );
+};
+
+const VurderingVedtakForm = reduxForm<{}, PropsFromRedux & Props>({
+  form: KV.Form.Trygdeavtale.VEDTAK,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: lagYupToReduxformErrorMapper(vurdering_vedtak),
+})(VurderingVedtak);
+
+export default connector(VurderingVedtakForm);

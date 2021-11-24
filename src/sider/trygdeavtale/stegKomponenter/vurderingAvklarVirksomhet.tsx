@@ -12,6 +12,7 @@ import * as Nav from "../../../navFrontend";
 
 import { formSelectors } from "../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { StegStatus } from "../stegvelger";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 
 import "./vurderingAvklarVirksomhet.css";
@@ -98,7 +99,7 @@ const VurderingAvklarVirksomhet = ({
         </Nav.Knapp>
         <Nav.Hovedknapp
           mini
-          disabled={steg.status !== "FERDIG" || !formIsValid || !redigerbart}
+          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
           className="fane__navigasjonsknapp"
           onClick={fortsett}
         >
