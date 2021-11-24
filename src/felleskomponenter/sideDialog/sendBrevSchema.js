@@ -28,8 +28,8 @@ const hentFritekstTittel = (felt) => {
 const manglerFritekstTittel = (valgtMal, felt) => {
   if (
     valgtMal &&
-    (valgtMal["type"]?.kode === "GENERELT_FRITEKSTBREV_ARBEIDSGIVER" ||
-      valgtMal["type"]?.kode === "GENERELT_FRITEKSTBREV_BRUKER")
+    (valgtMal.type?.kode === "GENERELT_FRITEKSTBREV_ARBEIDSGIVER" ||
+      valgtMal.type?.kode === "GENERELT_FRITEKSTBREV_BRUKER")
   ) {
     return hentFritekstTittel(felt) === null;
   }

@@ -553,6 +553,7 @@ const SendBrev = ({
               </Fragment>
             );
           }
+          return <></>;
         })}
 
       {mottakerErValgt && (
