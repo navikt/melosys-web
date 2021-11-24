@@ -12,6 +12,11 @@ import { HentSivilstandDocument } from "./hentSivilstand.generated";
 import Personinfo from "./personinfo";
 import SivilstandModal from "./sivilstandModal";
 
+jest.mock("../../../../../featuretoggle", () => ({
+  __esModule: true,
+  useFeatureToggle: () => "enabled",
+}));
+
 describe("Personinfo", () => {
   const mockedProps = mock<ComponentProps<typeof Personinfo>>();
   let props = instance(mockedProps);
