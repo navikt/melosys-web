@@ -7,6 +7,7 @@ import * as Mui from "../../../../ui";
 import { Person } from "../../../../../services/api";
 
 import EnkeltDato from "../../../../datoOmrade/enkeltDato";
+import { useFeatureToggle } from "../../../../../featuretoggle";
 import SivilstandModal from "./sivilstandModal";
 import { useHentSivilstandQuery } from "./hentSivilstand.generated";
 
@@ -23,6 +24,7 @@ const PersonInfo = ({
   behandlingID,
   sivilstandModalAriaHideApp,
 }: PersonInfoProps) => {
+  const sivilstandFraPDLToggle = useFeatureToggle("melosys.vis_sivilstandhistorikk");
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
   const { data: sivilstandData, loading: sivilstandLoading, error: sivilstandError } = useHentSivilstandQuery({
     variables: { behandlingID },
@@ -65,9 +67,11 @@ const PersonInfo = ({
         {sivilstandData && (
           <Nav.Typo.Element>
             {aktiveSivilstander[0].type}
-            <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)} className="personinfo__vis-detaljer-button">
-              Vis detaljer
-            </Mui.Lenkeknapp>
+            {sivilstandFraPDLToggle === "enabled" && (
+              <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)} className="personinfo__vis-detaljer-button">
+                Vis detaljer
+              </Mui.Lenkeknapp>
+            )}
           </Nav.Typo.Element>
         )}
       </div>
