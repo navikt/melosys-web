@@ -23,11 +23,14 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import { StegStatus } from "../stegvelger";
+import bem from "../../../bemUtils";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 
 import "./vurderingVedtak.css";
 
 const { INNVILGELSE_UK } = MKV.Koder.brev.produserbaredokumenter;
+
+const vurderingVedtakCls = bem("vurderingVedtak");
 
 interface Periode {
   fom?: string | null;
@@ -160,7 +163,7 @@ const VurderingVedtak = ({
             behandlingID={behandlingID}
             dokumenter={lagDokumenterData(muligMottaker)}
             vedKlikk={() => true}
-            className="forhåndsvisning"
+            className={vurderingVedtakCls.element("forhåndsvisning")}
           />
         ),
       },
@@ -207,7 +210,7 @@ const VurderingVedtak = ({
     redigerbart ? (
       <div
         role="button"
-        className="endreTom"
+        className={vurderingVedtakCls.element("endreTom")}
         tabIndex={0}
         onClick={() => setVisTomEndringFelt(true)}
         onKeyDown={(event) => {
@@ -217,48 +220,48 @@ const VurderingVedtak = ({
           }
         }}
       >
-        <Ikoner.BlyantActive className="ikon" />
-        <span className="tekst">Endre</span>
+        <Ikoner.BlyantActive className={vurderingVedtakCls.element("ikon")} />
+        <span className={vurderingVedtakCls.element("endreTomTekst")}>Endre</span>
       </div>
     ) : (
-      <div style={{ marginLeft: "0.5rem" }}>
-        <Ikoner.BlyantDisabled className="ikon" />
+      <div className={vurderingVedtakCls.elementWithModifier("endreTom", "disabled")}>
+        <Ikoner.BlyantDisabled className={vurderingVedtakCls.element("ikon")} />
       </div>
     );
 
   return (
-    <div className="vurderingVedtak">
-      <Nav.Typo.Undertittel className="undertittel">
+    <div className={vurderingVedtakCls.block}>
+      <Nav.Typo.Undertittel className={vurderingVedtakCls.element("undertittel")}>
         Omfattet av norsk trygdelovgivning - trygdeavtale med {soknadsland.term}
       </Nav.Typo.Undertittel>
 
-      <Nav.Row className="margin_bottom">
+      <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
         <Nav.Column xs="4">
-          <Nav.Typo.Element className="info">
+          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>
             {Utils.streng.storeForbokstaver(
               KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[1]
             )}
           </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">
+          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
             {KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[0]}
           </Nav.Typo.Normaltekst>
         </Nav.Column>
 
         <Nav.Column xs="5">
-          <Nav.Typo.Element className="info" tag="div">
+          <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
             Periode
             <Nav.Hjelpetekst
               tittel={periodeHjelpetekst}
-              className="hjelpetekst ikon"
+              className={vurderingVedtakCls.element("hjelpetekst")}
               type={Nav.PopoverOrientering.Hoyre}
             >
               {periodeHjelpetekst}
             </Nav.Hjelpetekst>
           </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info datofelt_wrapper" tag="div">
+          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
             {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} - `}
             {visTomEndringFelt ? (
-              <span className="datofelt">
+              <span className={vurderingVedtakCls.element("datofelt")}>
                 <Skjema.Datovelger label="" feltNavn="lovvalgsperiodeTom" disabled={!redigerbart} />
                 <Nav.Hovedknapp mini disabled={!redigerbart || !formIsValid} onClick={handleLagreTomEndring}>
                   Lagre
@@ -272,8 +275,8 @@ const VurderingVedtak = ({
         </Nav.Column>
 
         <Nav.Column xs="3">
-          <Nav.Typo.Element className="info">Familiemedlemmer</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">
+          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>Familiemedlemmer</Nav.Typo.Element>
+          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
             {resultat.ektefelle || !Utils._isEmpty(resultat.barn) ? "Ja" : "-"}
           </Nav.Typo.Normaltekst>
         </Nav.Column>
@@ -289,11 +292,11 @@ const VurderingVedtak = ({
 
       {redigerbart && (
         <>
-          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+          <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
             Fritekst til innledning
             <Nav.Hjelpetekst
               tittel={fritekstInnledningHjelpetekstTittel}
-              className="hjelpetekst ikon"
+              className={vurderingVedtakCls.element("hjelpetekst")}
               type={Nav.PopoverOrientering.Hoyre}
             >
               <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.</p>
@@ -308,17 +311,17 @@ const VurderingVedtak = ({
           </Nav.Typo.Element>
           <Skjema.HTMLEditor
             feltNavn="fritekstInnledning"
-            className="fritekst_editor"
+            className={vurderingVedtakCls.element("fritekst_editor")}
             placeholder="Skriv inn tilleggsinformasjon til innledning..."
           />
         </>
       )}
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til begrunnelse{" "}
         <Nav.Hjelpetekst
           tittel={fritekstBegrunnelseHjelpetekstTittel}
-          className="hjelpetekst ikon"
+          className={vurderingVedtakCls.element("hjelpetekst")}
           type={Nav.PopoverOrientering.Hoyre}
         >
           <p>Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.</p>
@@ -334,7 +337,7 @@ const VurderingVedtak = ({
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
         feltNavn="fritekstBegrunnelse"
-        className="fritekst_editor"
+        className={vurderingVedtakCls.element("fritekst_editor")}
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}
       />
@@ -342,7 +345,7 @@ const VurderingVedtak = ({
       <Skjema.Checkbox
         feltNavn="kopiTilArbeidsgiver"
         label="Send kopi til arbeidsgiver/virksomhet"
-        className="kopiCheckbox"
+        className={vurderingVedtakCls.element("kopiCheckbox")}
         disabled={!redigerbart}
       />
 
