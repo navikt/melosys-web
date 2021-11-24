@@ -34,6 +34,10 @@ describe("Personinfo", () => {
     props.sivilstandModalAriaHideApp = false;
   });
 
+  afterAll(() => {
+    jest.resetModules();
+  });
+
   it("viser melding ved henting av sivilstand", () => {
     const sivilstandModal = mount(<Personinfo {...props} />, {
       wrappingComponent: MockedProvider,
