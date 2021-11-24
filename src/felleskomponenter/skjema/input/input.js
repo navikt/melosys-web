@@ -71,26 +71,13 @@ export const normalizeDecimal = (value, previousValue) => {
   return isIntOrDecimal ? valuePreferDot : previousValue;
 };
 
-function Input({ feltNavn, bredde = "fullbredde", feltType = undefined, normalize = undefined, ...rest }) {
-  const hentNormalizer = () => {
-    switch (feltType) {
-      case "desimal":
-        return normalizeDecimal;
-      case "heltall":
-        return normalizeInt;
-      default:
-        return normalize;
-    }
-  };
+export const begrensAntallTegn = (antallTegn) => (value) => {
+  return antallTegn && value.length > antallTegn ? value.substr(0, antallTegn) : value;
+};
 
+function Input({ feltNavn, bredde = "fullbredde", normalize = undefined, ...rest }) {
   return (
-    <Field
-      bredde={bredde}
-      name={feltNavn}
-      normalize={hentNormalizer()}
-      component={InnerInputComponent}
-      props={{ ...rest }}
-    />
+    <Field bredde={bredde} name={feltNavn} normalize={normalize} component={InnerInputComponent} props={{ ...rest }} />
   );
 }
 

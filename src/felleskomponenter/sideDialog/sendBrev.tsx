@@ -12,6 +12,7 @@ import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 import * as Skjema from "../skjema";
 import * as Utils from "../../utils";
+import { begrensAntallTegn } from "../skjema/input/input";
 
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { OrganisasjonsAdresse } from "../adresser";
@@ -215,10 +216,6 @@ const SendBrev = ({
       ...muligeMottakere,
       kopiMottakere: muligeMottakere.kopiMottakere.filter((mottaker) => mottaker !== kopiMottaker),
     });
-  };
-
-  const begrensAntallTegn = (antallTegn: number | null) => (value: string) => {
-    return antallTegn && value.length > antallTegn ? value.substr(0, antallTegn) : value;
   };
 
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, valgtMottaker: any, ikon?: boolean) => {

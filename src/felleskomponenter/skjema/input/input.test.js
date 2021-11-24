@@ -1,6 +1,6 @@
 import React from "react";
 
-import Input, { InnerInputComponent, normalizeDecimal, normalizeInt } from "./input";
+import Input, { begrensAntallTegn, InnerInputComponent, normalizeDecimal, normalizeInt } from "./input";
 
 describe("Input", () => {
   let props = null;
@@ -31,26 +31,11 @@ describe("Input", () => {
     expect(input.props().name).toBe(props.feltNavn);
   });
 
-  it("Sender normalizer prop hvis feltType ikke er riktig", () => {
+  it("sender normalizer prop korrekt", () => {
     props.normalize = () => "test";
-    props.feltType = "noe_som_ikke_finnes";
     const input = shallow(<Input {...props} />);
 
     expect(input.props().normalize).toBe(props.normalize);
-  });
-
-  describe("feltType prop", () => {
-    each([
-      ["heltall", normalizeInt],
-      ["desimal", normalizeDecimal],
-    ]).it("setter korrekt normaliseringsfunksjon for feltType %p", (feltType, forventetNormaliseringsfunksjon) => {
-      props.feltType = feltType;
-      props.normalize = () => "test"; // Denne linjen tester at normalize ikke blir satt dersom man har oppgitt riktig feltType
-
-      const input = shallow(<Input {...props} />);
-
-      expect(input.props().normalize).toBe(forventetNormaliseringsfunksjon);
-    });
   });
 });
 
@@ -89,6 +74,12 @@ describe("normalizeInt", () => {
 
   it("returnerer value hvis value er heltall", () => {
     expect(normalizeInt("5", null)).toBe("5");
+  });
+});
+
+describe("begrensAntallTegn", () => {
+  it("returnerer begrenset antall tegn", () => {
+    expect(begrensAntallTegn(5)("12345678911")).toBe("12345");
   });
 });
 
