@@ -16,7 +16,8 @@ import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
-import { useFeatureToggle } from "../../../featuretoggle";
+import { useFeatureToggle, FeatureToggle } from "../../../featuretoggle";
+import Personlinje from "../../../felleskomponenter/personlinje";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
@@ -245,81 +246,92 @@ const Saksbehandling = ({
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
 
   return (
-    <div className="saksbehandling">
-      <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="7">
-            {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-            {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-            {visStegVelger && (
-              <Stegvelger
-                annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                behandlingID={behandlingID}
-                lagreAvklartefaktaHandler={lagreAvklartefakta}
-                lagreAllData={lagreAllData}
-                lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger}
-                lagreVilkarHandler={lagreVilkar}
-                oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
-                begrunnelser={MKV.KTObjects.begrunnelser}
-                landkoder={landkoder}
-                bestemmelser={bestemmelser}
-                tilForsiden={tilForsiden}
-                stegMap={stegMap}
-                forsteSteg={STEG.START}
-                sakstype={MKV.Koder.sakstyper.FTRL}
-              />
-            )}
-            <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <SideOppsummering
-              behandlingstema={behandlingstema}
-              redigerbart={redigerbart}
-              fagsak={fagsak}
-              oppsummering={oppsummering}
-              person={person}
-              arbeidsland={landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))}
-              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-              behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
-              lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
-              lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
-              renderBehandlingsmeny={() => (
-                <Legacybehandlingsmeny
+    <>
+      <FeatureToggle togglename="melosys.design.PERSONLINJE">
+        {(status) => status === "enabled" && <Personlinje />}
+      </FeatureToggle>
+      <div id="main-container" className="main-container">
+        <div className="saksbehandling">
+          <Nav.Container fluid>
+            <Nav.Row>
+              <Nav.Column xs="7">
+                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+                {visStegVelger && (
+                  <Stegvelger
+                    annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                    behandlingID={behandlingID}
+                    lagreAvklartefaktaHandler={lagreAvklartefakta}
+                    lagreAllData={lagreAllData}
+                    lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger={
+                      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger
+                    }
+                    lagreVilkarHandler={lagreVilkar}
+                    oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
+                    begrunnelser={MKV.KTObjects.begrunnelser}
+                    landkoder={landkoder}
+                    bestemmelser={bestemmelser}
+                    tilForsiden={tilForsiden}
+                    stegMap={stegMap}
+                    forsteSteg={STEG.START}
+                    sakstype={MKV.Koder.sakstyper.FTRL}
+                  />
+                )}
+                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+              </Nav.Column>
+              <Nav.Column xs="5">
+                <SideOppsummering
+                  behandlingstema={behandlingstema}
                   redigerbart={redigerbart}
-                  lagreOgLukkHandle={lagreOgLukk}
-                  tilbakeleggeHandle={tilbakeleggOppgave}
-                  oppfriskSaksopplysningerHandle={visOppfriskModal}
-                  visHenleggDialogHandle={visHenleggDialogHandle}
-                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                  apneTidligereBehandlinger={apneTidligereBehandlinger}
-                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                  behandlingsstatus={behandlingsstatus}
-                />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
+                  fagsak={fagsak}
                   oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
+                  person={person}
+                  arbeidsland={
+                    landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
+                  }
+                  behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+                  behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                  behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
+                  lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
+                  lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
+                  renderBehandlingsmeny={() => (
+                    <Legacybehandlingsmeny
+                      redigerbart={redigerbart}
+                      lagreOgLukkHandle={lagreOgLukk}
+                      tilbakeleggeHandle={tilbakeleggOppgave}
+                      oppfriskSaksopplysningerHandle={visOppfriskModal}
+                      visHenleggDialogHandle={visHenleggDialogHandle}
+                      visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                      visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                      apneTidligereBehandlinger={apneTidligereBehandlinger}
+                      visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                      behandlingsstatus={behandlingsstatus}
+                    />
+                  )}
+                  renderBehandlingsstatus={() => (
+                    <Behandlingsstatus
+                      behandlingID={behandlingID}
+                      redigerbart={redigerbart}
+                      oppsummering={oppsummering}
+                      behandlingsstatusMap={behandlingsstatusMap}
+                    />
+                  )}
                 />
-              )}
-            />
-            <SideDialog
-              behandlingID={behandlingID}
-              saksnummer={saksnummer}
-              brevBestillingRedigerbart={brevBestillingRedigerbart}
-              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-              redigerbart={redigerbart}
-              dokumentOversikt={dokumentOversikt}
-              dokumenter={dokumenter}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
-    </div>
+                <SideDialog
+                  behandlingID={behandlingID}
+                  saksnummer={saksnummer}
+                  brevBestillingRedigerbart={brevBestillingRedigerbart}
+                  brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+                  redigerbart={redigerbart}
+                  dokumentOversikt={dokumentOversikt}
+                  dokumenter={dokumenter}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Container>
+        </div>
+      </div>
+    </>
   );
 };
 
