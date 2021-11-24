@@ -46,6 +46,7 @@ import { ReactComponent as Pencil } from "./pencil-2.svg";
 import { ReactComponent as ParagraphTwoColumns } from "./line-version-paragraph-two-columns.svg";
 import { ReactComponent as Refresh } from "./refresh.svg";
 import { ReactComponent as RemoveOne } from "./filled-version-remove-1.svg";
+import { ReactComponent as Ring } from "./ring.svg";
 import { ReactComponent as Skip } from "./skip.svg";
 import { ReactComponent as Svar } from "./reply.svg";
 import { ReactComponent as Ubehandlet } from "./ikon-steg-ubehandlet.svg";
@@ -108,6 +109,7 @@ export {
   ParagraphTwoColumns,
   Refresh,
   RemoveOne,
+  Ring,
   Skip,
   Svar,
   Varsel,
