@@ -296,8 +296,8 @@ const VurderingTrygdeavgift = ({
       )}
 
       <Mui.StegKnapper
-        bekreft={{ onClick: bekreft, disabled: !redigerbart || !erStegGyldig }}
-        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+        bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !erStegGyldig }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );

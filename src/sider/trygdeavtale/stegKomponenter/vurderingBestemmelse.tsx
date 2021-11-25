@@ -152,8 +152,11 @@ const VurderingBestemmelse = ({
       )}
 
       <Mui.StegKnapper
-        bekreft={{ onClick: fortsett, disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart }}
-        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+        bekreftKnappProps={{
+          onClick: fortsett,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+        }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );

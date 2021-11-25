@@ -170,7 +170,7 @@ const VurderingInngang = ({
       </Nav.Fieldset>
 
       <Mui.StegKnapper
-        bekreft={{
+        bekreftKnappProps={{
           onClick: fortsettHandle,
           disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
         }}

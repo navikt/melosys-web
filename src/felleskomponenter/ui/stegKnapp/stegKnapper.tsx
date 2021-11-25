@@ -7,28 +7,28 @@ import * as Ikoner from "../../../resources/images";
 import "./stegKnapper.css";
 
 interface StegKnapperProps {
-  bekreft: ComponentProps<typeof Nav.Hovedknapp>;
+  bekreftKnappProps: ComponentProps<typeof Nav.Hovedknapp>;
   bekreftTekst?: string;
   visTilbakeKnapp?: boolean;
-  tilbake?: ComponentProps<typeof Nav.Flatknapp>;
+  tilbakeKnappProps?: ComponentProps<typeof Nav.Flatknapp>;
   className?: string;
 }
 
 const StegKnapper = ({
-  bekreft,
+  bekreftKnappProps,
   bekreftTekst = "Bekreft og fortsett",
   visTilbakeKnapp = true,
-  tilbake,
+  tilbakeKnappProps,
   className,
 }: StegKnapperProps) => {
   const cls = classNames("stegKnapper", className);
   return (
     <div className={cls}>
-      <Nav.Hovedknapp mini className="stegKnapper__bekreft" {...bekreft}>
+      <Nav.Hovedknapp mini className="stegKnapper__bekreft" {...bekreftKnappProps}>
         {bekreftTekst}
       </Nav.Hovedknapp>
-      {visTilbakeKnapp && tilbake && (
-        <Nav.Flatknapp mini className="stegKnapper__tilbake" {...tilbake}>
+      {visTilbakeKnapp && tilbakeKnappProps && (
+        <Nav.Flatknapp mini className="stegKnapper__tilbake" {...tilbakeKnappProps}>
           <Ikoner.ArrowLeft />
           <span>Tilbake</span>
         </Nav.Flatknapp>

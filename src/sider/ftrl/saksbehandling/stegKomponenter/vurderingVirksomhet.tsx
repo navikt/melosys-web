@@ -119,8 +119,8 @@ const VurderingVirksomhet = ({
       />
 
       <Mui.StegKnapper
-        bekreft={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
-        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+        bekreftKnappProps={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );

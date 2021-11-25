@@ -359,9 +359,14 @@ const VurderingVedtak = ({
       )}
 
       <Mui.StegKnapper
-        bekreft={{ onClick: fattVedtak, disabled: !redigerbart, autoDisableVedSpinner: true, spinner: vedtakPending }}
+        bekreftKnappProps={{
+          onClick: fattVedtak,
+          disabled: !redigerbart,
+          autoDisableVedSpinner: true,
+          spinner: vedtakPending,
+        }}
         bekreftTekst="Fatt vedtak"
-        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );

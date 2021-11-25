@@ -206,7 +206,7 @@ export const VurderingStart = ({
       </Nav.Fieldset>
 
       <Mui.StegKnapper
-        bekreft={{ onClick: fortsettHandle, disabled: !formIsValid || !redigerbart }}
+        bekreftKnappProps={{ onClick: fortsettHandle, disabled: !formIsValid || !redigerbart }}
         visTilbakeKnapp={false}
       />
 

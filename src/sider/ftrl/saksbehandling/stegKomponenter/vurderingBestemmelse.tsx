@@ -287,8 +287,8 @@ const VurderingBestemmelse = ({
         )}
 
       <Mui.StegKnapper
-        bekreft={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}
-        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+        bekreftKnappProps={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );

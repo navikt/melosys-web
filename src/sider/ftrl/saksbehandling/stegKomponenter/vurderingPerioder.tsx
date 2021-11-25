@@ -400,8 +400,8 @@ const VurderingPerioder = ({
       )}
 
       <Mui.StegKnapper
-        bekreft={{ onClick: handleBekreft, disabled: !redigerbart || !formIsValid }}
-        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+        bekreftKnappProps={{ onClick: handleBekreft, disabled: !redigerbart || !formIsValid }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );

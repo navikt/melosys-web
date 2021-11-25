@@ -329,8 +329,8 @@ const VurderingFamilie = ({
       )}
 
       <Mui.StegKnapper
-        bekreft={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }}
-        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+        bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );

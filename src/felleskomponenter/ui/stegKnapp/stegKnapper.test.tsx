@@ -26,7 +26,7 @@ describe("stegKnapper", () => {
 
   it("viser tilbake-knapp når visTilbakeKnapp = true", () => {
     props.visTilbakeKnapp = true;
-    props.tilbake = {};
+    props.tilbakeKnappProps = {};
     const stegKnapper = shallow(<StegKnapper {...props} />);
 
     const bekreftKnapp = stegKnapper.find(Nav.Hovedknapp);
