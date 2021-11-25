@@ -7,6 +7,7 @@ import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
+import Personlinje from "../../felleskomponenter/personlinje";
 import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
@@ -14,7 +15,6 @@ import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import { useFeatureToggle, FeatureToggle } from "../../featuretoggle";
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
-import Personlinje from "../../felleskomponenter/personlinje";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";

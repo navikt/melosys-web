@@ -8,11 +8,11 @@ import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
+import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
-import Personlinje from "../../../felleskomponenter/personlinje";
 import { FeatureToggle } from "../../../featuretoggle";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";

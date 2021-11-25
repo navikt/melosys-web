@@ -8,13 +8,13 @@ import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
+import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
-import Personlinje from "../../../felleskomponenter/personlinje";
 import { FeatureToggle } from "../../../featuretoggle";
 
 import { formSelectors } from "../../../ducks/form";
