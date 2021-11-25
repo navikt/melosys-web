@@ -51,7 +51,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   initialValues: initializeFamilieFormValues(ownProps.data, ownProps.resultat),
 });
 
-const connector = connect(mapStateToProps, {});
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

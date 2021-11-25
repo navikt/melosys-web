@@ -27,7 +27,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleAvklarVirksomhetFormValidSelector(state),
 });
 
-const connector = connect(mapStateToProps, {});
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
