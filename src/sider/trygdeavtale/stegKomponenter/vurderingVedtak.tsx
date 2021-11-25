@@ -8,6 +8,7 @@ import { getFormValues, reduxForm } from "redux-form";
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as Hooks from "../../../hooks";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as KV from "../../../kodeverk";
@@ -359,21 +360,16 @@ const VurderingVedtak = ({
         />
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={steg.status !== StegStatus.FERDIG || !redigerbart || !formIsValid || visTomEndringFelt}
-          className="fane__navigasjonsknapp"
-          onClick={fattVedtak}
-          autoDisableVedSpinner
-          spinner={vedtakPending}
-        >
-          Fatt vedtak
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreft={{
+          onClick: fattVedtak,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || visTomEndringFelt,
+          autoDisableVedSpinner: true,
+          spinner: vedtakPending,
+        }}
+        bekreftTekst="Fatt vedtak"
+        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 
 import MKV from "../../../../../melosyskodeverk";
+import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
@@ -294,19 +295,10 @@ const VurderingTrygdeavgift = ({
         <Trygdeavgiftsgrunnlag {...trygdeavgiftsgrunnlagComponentProps} erVirksomhetNorsk={false} />
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!redigerbart || !erStegGyldig}
-          className="fane__navigasjonsknapp"
-          onClick={bekreft}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreft={{ onClick: bekreft, disabled: !redigerbart || !erStegGyldig }}
+        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

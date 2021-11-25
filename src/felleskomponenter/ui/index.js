@@ -9,6 +9,7 @@ import Elementskrift from "./elementskrift";
 import RedigerbarListe from "./redigerbarliste";
 import LesMerPanel from "./lesmerpanel";
 import Checkbox from "./checkbox";
+import StegKnapper from "./stegKnapp";
 
 export {
   Knapp,
@@ -22,4 +23,5 @@ export {
   Elementskrift,
   RedigerbarListe,
   LesMerPanel,
+  StegKnapper,
 };

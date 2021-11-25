@@ -7,6 +7,7 @@ import { change, getFormValues, reduxForm } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
@@ -327,19 +328,10 @@ const VurderingFamilie = ({
         </div>
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!redigerbart || !formIsValid}
-          className="fane__navigasjonsknapp"
-          onClick={bekreft}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreft={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }}
+        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

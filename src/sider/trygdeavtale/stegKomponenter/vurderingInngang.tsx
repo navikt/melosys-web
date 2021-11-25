@@ -7,6 +7,7 @@ import { getFormValues, reduxForm } from "redux-form";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
@@ -168,16 +169,13 @@ const VurderingInngang = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      <div className="fane__knapplinje">
-        <Nav.Hovedknapp
-          mini
-          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fortsettHandle}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreft={{
+          onClick: fortsettHandle,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+        }}
+        visTilbakeKnapp={false}
+      />
 
       {visOppfrisk && (
         <DialogboksOppfriskSak

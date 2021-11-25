@@ -6,6 +6,7 @@ import { Action } from "redux";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import { vilkarSelectors } from "../../../../ducks/vilkar";
@@ -127,7 +128,7 @@ const VurderingBestemmelse = ({
     }
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
-  const handleBefreft = () => {
+  const handleBekreft = () => {
     opprettMedlemskapsperiodeFraBestemmelse();
     bekreft();
   };
@@ -285,19 +286,10 @@ const VurderingBestemmelse = ({
           ))
         )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!erAlleValgGjort || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={handleBefreft}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreft={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}
+        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

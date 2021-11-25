@@ -6,6 +6,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
@@ -267,19 +268,10 @@ const VurderingFamilie = ({
         </div>
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fortsett}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreft={{ onClick: fortsett, disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart }}
+        tilbake={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };
