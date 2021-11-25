@@ -22,7 +22,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
     })) || [],
   formValues: getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
   initialValues: {
-    virksomhet: ownProps.resultat?.virksomheter && ownProps.resultat.virksomheter[0],
+    virksomhet: ownProps.resultat?.virksomhet,
   },
   formIsValid: formSelectors.TrygdeavtaleAvklarVirksomhetFormValidSelector(state),
 });
@@ -63,7 +63,7 @@ const VurderingAvklarVirksomhet = ({
   useEffect(() => {
     if (redigerbart && formValues) {
       oppdaterFlyt({
-        resultat: { ...resultat, virksomheter: formValues.virksomhet ? [formValues.virksomhet] : [] },
+        resultat: { ...resultat, virksomhet: formValues.virksomhet },
       });
     }
   }, [formValues]);
