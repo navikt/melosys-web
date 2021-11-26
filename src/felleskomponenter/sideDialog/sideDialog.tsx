@@ -9,10 +9,8 @@ import * as Utils from "../../utils";
 import SideDialogSendBrev from "./sendBrev";
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogDokumenter from "./sideDialogDokumenter";
-import SideDialogBrevBestilling from "./brevBestilling";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
 import SideDialogNotater from "./sideDialogNotater/sideDialogNotater";
-import { FeatureToggle } from "../../featuretoggle";
 
 import "./sideDialog.css";
 
@@ -44,23 +42,10 @@ export const FaneViser = ({
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case "brevbestilling":
       return (
-        <FeatureToggle togglename="melosys.nytt_send_brev">
-          {(status) => {
-            if (status === "enabled") {
-              return <SideDialogSendBrev redigerbart={redigerbart} />;
-            } else if (status === "disabled") {
-              return (
-                <SideDialogBrevBestilling
-                  // @ts-ignore TODO skriv om SideDialogBrevBestilling til TS.
-                  behandlingID={behandlingID}
-                  redigerbart={brevBestillingRedigerbart}
-                  brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-                />
-              );
-            }
-            return null;
-          }}
-        </FeatureToggle>
+        <SideDialogSendBrev
+          redigerbart={brevBestillingRedigerbart}
+          brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+        />
       );
     case "sedbestilling":
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} dokumenter={dokumenter} />;

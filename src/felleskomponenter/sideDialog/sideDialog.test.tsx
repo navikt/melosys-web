@@ -6,7 +6,7 @@ import { FaneViser, FaneViserProps } from "./sideDialog";
 import SideDialogDokumenter from "./sideDialogDokumenter";
 import SideDialogSedBestilling from "./sideDialogOpprettNyBuc";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
-import { FeatureToggle } from "../../featuretoggle";
+import SideDialogSendBrev from "./sendBrev";
 
 describe("SideDialog", () => {
   describe("FaneViser", () => {
@@ -53,11 +53,10 @@ describe("SideDialog", () => {
         props.navn = "brevbestilling";
         const faner = shallow(<FaneViser {...props} />);
 
-        const featureToggle = faner.find(FeatureToggle);
-        const childProps = featureToggle.props();
+        const sendBrev = faner.find(SideDialogSendBrev);
 
-        expect(featureToggle).toHaveLength(1);
-        expect(childProps.togglename).toBe("melosys.nytt_send_brev");
+        expect(sendBrev).toHaveLength(1);
+        expect(sendBrev.props().redigerbart).toBe(props.redigerbart);
       });
 
       it("SideDialogSedBestilling", () => {
