@@ -105,7 +105,6 @@ const Vurderutpeking = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
   visRevurderFagsakDialogHandle,
-  brevBestillingRedigerbart,
   resetSaksopplysninger,
   oppdaterBehandlingsgrunnlag,
   lagreVilkar,
@@ -220,7 +219,6 @@ const Vurderutpeking = ({
             <SideDialog
               behandlingID={behandlingID}
               saksnummer={saksnummer}
-              brevBestillingRedigerbart={brevBestillingRedigerbart}
               redigerbart={redigerbart}
               dokumentOversikt={dokumentOversikt}
               dokumenter={dokumenter}
@@ -257,7 +255,6 @@ Vurderutpeking.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
-  brevBestillingRedigerbart: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -297,7 +294,6 @@ const mapStateToProps = (state) => ({
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
   ),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
-  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),

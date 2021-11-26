@@ -209,7 +209,6 @@ export const Registrering = (props) => {
             <SideDialog
               saksnummer={saksnummer}
               behandlingID={behandlingID}
-              brevBestillingRedigerbart={redigerbart}
               redigerbart={redigerbart}
               dokumentOversikt={dokumentOversikt}
               dokumenter={dokumenter}

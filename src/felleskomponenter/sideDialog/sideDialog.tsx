@@ -20,7 +20,6 @@ export interface FaneViserProps {
   navn: FaneNavn;
   saksnummer: string;
   behandlingID: number;
-  brevBestillingRedigerbart: boolean;
   redigerbart: boolean;
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
@@ -30,7 +29,6 @@ export const FaneViser = ({
   navn,
   behandlingID,
   saksnummer,
-  brevBestillingRedigerbart,
   redigerbart,
   dokumentOversikt,
   dokumenter,
@@ -39,7 +37,7 @@ export const FaneViser = ({
     case "dokumenter":
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case "brevbestilling":
-      return <SideDialogSendBrev redigerbart={brevBestillingRedigerbart} />;
+      return <SideDialogSendBrev redigerbart={redigerbart} />;
     case "sedbestilling":
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} dokumenter={dokumenter} />;
     case "besvarsed":
@@ -57,7 +55,6 @@ interface SideDialogProps {
   faner?: Fane[];
   saksnummer: string;
   behandlingID: number;
-  brevBestillingRedigerbart: boolean;
   redigerbart: boolean;
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
@@ -66,7 +63,6 @@ interface SideDialogProps {
 const SideDialog = ({
   behandlingID,
   saksnummer,
-  brevBestillingRedigerbart,
   redigerbart,
   dokumentOversikt,
   dokumenter,
@@ -93,7 +89,6 @@ const SideDialog = ({
             navn={aktivFane}
             behandlingID={behandlingID}
             saksnummer={saksnummer}
-            brevBestillingRedigerbart={brevBestillingRedigerbart}
             redigerbart={redigerbart}
             dokumentOversikt={dokumentOversikt}
             dokumenter={dokumenter}
@@ -108,7 +103,6 @@ SideDialog.propTypes = {
   faner: PT.arrayOf(PT.object),
   saksnummer: PT.string.isRequired,
   behandlingID: PT.number.isRequired,
-  brevBestillingRedigerbart: PT.bool.isRequired,
   redigerbart: PT.bool.isRequired,
   dokumentOversikt: PT.arrayOf(PT.object).isRequired,
   dokumenter: PT.arrayOf(PT.object).isRequired,

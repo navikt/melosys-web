@@ -120,7 +120,6 @@ const behandlingsstatusMap = {
 };
 
 const SedBehandling = ({
-  brevBestillingRedigerbart,
   match,
   behandlingstema,
   redigerbart,
@@ -221,7 +220,6 @@ const SedBehandling = ({
             <SideDialog
               behandlingID={behandlingID}
               saksnummer={saksnummer}
-              brevBestillingRedigerbart={brevBestillingRedigerbart}
               redigerbart={redigerbart}
               dokumentOversikt={dokumentOversikt}
               dokumenter={dokumenter}
@@ -234,7 +232,6 @@ const SedBehandling = ({
 };
 
 SedBehandling.propTypes = {
-  brevBestillingRedigerbart: PT.bool.isRequired,
   match: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -286,7 +283,6 @@ const mapStateToProps = (state) => ({
   ),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });

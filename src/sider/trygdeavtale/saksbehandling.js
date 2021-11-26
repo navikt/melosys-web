@@ -251,7 +251,6 @@ const Saksbehandling = ({
               saksnummer={saksnummer}
               redigerbart={redigerbart}
               behandlingID={behandlingID}
-              brevBestillingRedigerbart={redigerbart}
               dokumenter={dokumenter}
             />
           </Nav.Column>

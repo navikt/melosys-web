@@ -101,7 +101,6 @@ const Saksbehandling = ({
   behandlingsresultat,
   behandlingstema,
   behandlingsstatus,
-  brevBestillingRedigerbart,
   dokumenter,
   dokumentOversikt,
   fagsak,
@@ -309,7 +308,6 @@ const Saksbehandling = ({
             <SideDialog
               behandlingID={behandlingID}
               saksnummer={saksnummer}
-              brevBestillingRedigerbart={brevBestillingRedigerbart}
               redigerbart={redigerbart}
               dokumentOversikt={dokumentOversikt}
               dokumenter={dokumenter}
@@ -332,7 +330,6 @@ Saksbehandling.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   behandlingstema: PT.string.isRequired,
   behandlingsstatus: PT.string.isRequired,
-  brevBestillingRedigerbart: PT.bool.isRequired,
   dokumenter: PT.array.isRequired,
   dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
@@ -399,7 +396,6 @@ const mapStateToProps = (state) => ({
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
-  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),

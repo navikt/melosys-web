@@ -38,11 +38,6 @@ export const PanelerRedigerbartSelector = createSelector(
     redigerbart &&
     !erArtikkel16AnmodningSendt
 );
-export const BrevBestillingRedigerbartSelector = createSelector(
-  RedigerbartSelector,
-  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
-);
 
 export const BehandlingsmenyRedigerbartSelector = createSelector(
   RedigerbartSelector,
