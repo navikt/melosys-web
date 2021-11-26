@@ -1,5 +1,3 @@
-import Regler from "./Regler";
-
 import { anmodningsperiodesvartype } from "./anmodningsperiodesvar";
 import { avklartefaktaType } from "./avklartefakta";
 import { lovvalgsbestemmelseType } from "./lovvalgsbestemmelser";
@@ -19,7 +17,5 @@ const StegStoreTyper = {
   Lovvalgsperiode: lovvalgsperiodeType,
   Lovvalgsland: lovvalgslandType,
 };
-
-export default Regler;
 
 export { StegStoreTyper };
