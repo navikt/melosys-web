@@ -1,10 +1,10 @@
 import AvklartefaktaStore from "./AvklartefaktaStore";
 import {
-  konverterTilStegData,
+  konverterAvklartfaktaTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
   slettAvklartfakta,
-} from "../../../regler/avklartefakta";
+} from "./tilStegstateMapping";
 import * as KV from "../../../kodeverk";
 
 const fakta = {
@@ -21,7 +21,7 @@ describe("AvklartefaktaStore oppdatering av eksisterende data med subjektID", ()
   beforeEach(() => {
     store = new AvklartefaktaStore();
 
-    const af = konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, fakta);
+    const af = konverterAvklartfaktaTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, fakta);
     store.oppdaterStegData("TESTSTEG-1", af);
   });
 

@@ -9,7 +9,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
 import { vilkarSelectors } from "../../../../ducks/vilkar";
-import { lagBegrunnelse, lagVilkaar } from "../../../../regler/vilkar";
+import { lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -138,13 +138,13 @@ const VurderingBestemmelse = ({
     if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
       valgteBegrunnelser.delete(event.target.name);
       setValgteBegrunnelser(new Map(valgteBegrunnelser));
-      oppdaterData(lagBegrunnelse(event.target.name, []));
+      oppdaterData(lagVilkarbegrunnelse(event.target.name, []));
     }
   };
 
   const handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement> = (event) => {
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
-    oppdaterData(lagBegrunnelse(event.target.name, [event.target.value]));
+    oppdaterData(lagVilkarbegrunnelse(event.target.name, [event.target.value]));
   };
 
   const Alert = () => (

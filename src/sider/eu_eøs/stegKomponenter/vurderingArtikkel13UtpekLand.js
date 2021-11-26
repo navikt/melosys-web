@@ -25,7 +25,7 @@ import { flytSelectors } from "../../../ducks/flyt";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 
-import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../regler/lovvalgsland";
+import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../felleskomponenter/stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSchema";
 
