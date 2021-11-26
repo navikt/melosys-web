@@ -102,7 +102,6 @@ const Saksbehandling = ({
   behandlingstema,
   behandlingsstatus,
   brevBestillingRedigerbart,
-  brevBestillingRedigerbartIArtikkel13,
   dokumenter,
   dokumentOversikt,
   fagsak,
@@ -311,7 +310,6 @@ const Saksbehandling = ({
               behandlingID={behandlingID}
               saksnummer={saksnummer}
               brevBestillingRedigerbart={brevBestillingRedigerbart}
-              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
               redigerbart={redigerbart}
               dokumentOversikt={dokumentOversikt}
               dokumenter={dokumenter}
@@ -335,7 +333,6 @@ Saksbehandling.propTypes = {
   behandlingstema: PT.string.isRequired,
   behandlingsstatus: PT.string.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
-  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   dokumenter: PT.array.isRequired,
   dokumentOversikt: PT.array.isRequired,
   fagsak: MPT.Fagsak,
@@ -403,7 +400,6 @@ const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),

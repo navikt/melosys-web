@@ -210,7 +210,6 @@ export const Registrering = (props) => {
               saksnummer={saksnummer}
               behandlingID={behandlingID}
               brevBestillingRedigerbart={redigerbart}
-              brevBestillingRedigerbartIArtikkel13={redigerbart}
               redigerbart={redigerbart}
               dokumentOversikt={dokumentOversikt}
               dokumenter={dokumenter}

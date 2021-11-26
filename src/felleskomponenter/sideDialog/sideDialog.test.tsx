@@ -17,7 +17,6 @@ describe("SideDialog", () => {
         navn: "dokumenter",
         behandlingID: 4,
         saksnummer: "4",
-        brevBestillingRedigerbartIArtikkel13: false,
         brevBestillingRedigerbart: false,
         redigerbart: true,
         dokumentOversikt: [

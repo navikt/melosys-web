@@ -251,7 +251,6 @@ const Saksbehandling = ({
               saksnummer={saksnummer}
               redigerbart={redigerbart}
               behandlingID={behandlingID}
-              brevBestillingRedigerbartIArtikkel13
               brevBestillingRedigerbart={redigerbart}
               dokumenter={dokumenter}
             />

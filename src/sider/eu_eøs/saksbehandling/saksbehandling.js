@@ -210,7 +210,6 @@ class Saksbehandling extends Component {
       anmodningsperioderErSendtUtlandet,
       redigerbart,
       brevBestillingRedigerbart,
-      brevBestillingRedigerbartIArtikkel13,
       behandlingsmenyRedigerbart,
       match,
       lagreOgLukk,
@@ -312,7 +311,6 @@ class Saksbehandling extends Component {
                 behandlingID={behandlingID}
                 saksnummer={saksnummer}
                 brevBestillingRedigerbart={brevBestillingRedigerbart}
-                brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
                 redigerbart={redigerbart}
                 dokumentOversikt={dokumentOversikt}
                 dokumenter={dokumenter}
@@ -360,7 +358,6 @@ Saksbehandling.propTypes = {
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
-  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   behandlingsmenyRedigerbart: PT.bool.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   lagreAllData: PT.func.isRequired,
@@ -428,7 +425,6 @@ const mapStateToProps = (state) => ({
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(

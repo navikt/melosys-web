@@ -1,11 +1,7 @@
 import { createSelector } from "reselect";
 
-import MKV from "../../melosyskodeverk";
-
 import { anmodningsperioderSelectors } from "../anmodningsperioder";
 import { behandlingerSelectors } from "../behandlinger";
-import { flytSelectors } from "../flyt";
-import { formSelectors } from "../form";
 
 export const RedigerbartSelector = createSelector(
   (state) => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
@@ -47,16 +43,7 @@ export const BrevBestillingRedigerbartSelector = createSelector(
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
-export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
-  flytSelectors.ErIArtikkel13_1FlytSelector,
-  flytSelectors.EnVirksomhetErAvklartSelector,
-  formSelectors.BrevBestillingFormSelector,
-  (erIArtikkel13_1Flyt, enVirksomhetErAvklart, brevBestillingForm) => {
-    const { values: { mottaker } = {} } = brevBestillingForm;
 
-    return !erIArtikkel13_1Flyt || enVirksomhetErAvklart || mottaker !== MKV.Koder.aktoersroller.ARBEIDSGIVER;
-  }
-);
 export const BehandlingsmenyRedigerbartSelector = createSelector(
   RedigerbartSelector,
   behandlingerSelectors.ErStatusAnmodningUnntakSendtSelector,
