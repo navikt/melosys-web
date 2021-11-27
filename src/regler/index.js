@@ -1,21 +1,7 @@
-import { anmodningsperiodesvartype } from "./anmodningsperiodesvar";
-import { avklartefaktaType } from "./avklartefakta";
-import { lovvalgsbestemmelseType } from "./lovvalgsbestemmelser";
-import { tilleggBestemmelseType } from "./tilleggbestemmelser";
-import { unntakfrabestemmelseType } from "./unntakfrabestemmelse";
-import { vilkaarType } from "./vilkar";
-import { lovvalgsperiodeType } from "./lovvalgsperiode";
-import { lovvalgslandType } from "./lovvalgsland";
-
-const StegStoreTyper = {
-  Anmodningsperiodersvar: anmodningsperiodesvartype,
-  Avklartefakta: avklartefaktaType,
-  Lovvalgsbestemmelser: lovvalgsbestemmelseType,
-  Tilleggbestemmelser: tilleggBestemmelseType,
-  UnntakFraBestemmelse: unntakfrabestemmelseType,
-  Vilkar: vilkaarType,
-  Lovvalgsperiode: lovvalgsperiodeType,
-  Lovvalgsland: lovvalgslandType,
-};
-
-export { StegStoreTyper };
+export * from "./avklartefakta";
+export * from "./lovvalgsbestemmelser";
+export * from "./tilleggbestemmelser";
+export * from "./unntakfrabestemmelse";
+export * from "./vilkar";
+export * from "./lovvalgsperiode";
+export * from "./lovvalgsland";

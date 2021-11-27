@@ -16,10 +16,10 @@ import { BOOLSK } from "../../../constants";
 import {
   avklartefaktaType,
   lagAvklartfakta,
-  konverterTilStegData,
+  konverterAvklartfaktaTilStegData,
   lagAvklartefaktaBegrunnelse,
-  hentFaktaVerdi,
-} from "../../../regler/avklartefakta";
+} from "../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../regler/avklartefakta";
 
 import "./vurderingBostedsland.css";
 
@@ -57,7 +57,7 @@ const VurderingBostedsland = (props) => {
 
   useEffect(() => {
     const { bostedslandFakta } = tilstand;
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, bostedslandFakta));
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, bostedslandFakta));
     const cleanup = () => {
       slettData();
     };

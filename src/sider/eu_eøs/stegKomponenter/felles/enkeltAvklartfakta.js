@@ -4,13 +4,13 @@ import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
 
+import { hentFaktaVerdi } from "../../../../regler/avklartefakta";
 import {
-  hentFaktaVerdi,
-  konverterTilStegData,
-  lagAvklartefaktaBegrunnelse,
+  konverterAvklartfaktaTilStegData,
   lagAvklartfakta,
   slettAvklartfakta,
-} from "../../../../regler/avklartefakta";
+  lagAvklartefaktaBegrunnelse,
+} from "../../../../felleskomponenter/stegvelger";
 
 const uuid = require("uuid/v4");
 
@@ -29,7 +29,7 @@ const EnkeltAvklartfakta = (props) => {
   const fakta = hentFaktaVerdi(avklartfakta);
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(avklartfaktaKode, avklartfakta));
+    oppdaterData(konverterAvklartfaktaTilStegData(avklartfaktaKode, avklartfakta));
     const cleanup = () => {
       if (props.slettData) {
         props.slettData(slettAvklartfakta(avklartfaktaKode));

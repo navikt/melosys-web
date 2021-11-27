@@ -12,17 +12,17 @@ import * as KV from "../../../../kodeverk";
 import LandLinje from "./landlinje";
 import EnkeltAvklartfakta from "../felles/enkeltAvklartfakta";
 import { VurderingVesentligAktivitetINorgeTyper } from "../../../../kodeverk/koder";
-import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from "../../../../regler/avklartefakta";
 import {
+  konverterAvklartfaktaTilStegData,
+  lagAvklartfakta,
   lagLovvalgsbestemmelse,
   slettLovvalgsbestemmelse,
   konverterLovvalgsbestemmelseTilStegData,
-} from "../../../../regler/lovvalgsbestemmelser";
-import {
   lagTilleggBestemmelse,
   slettTilleggBestemmelse,
   konverterTilleggBestemmelseTilStegData,
-} from "../../../../regler/tilleggbestemmelser";
+} from "../../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../../regler/avklartefakta";
 import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingArbeidsmonster.css";
@@ -41,7 +41,9 @@ export const CheckableLandLinje = (props) => {
 
   useEffect(() => {
     if (avklartMarginaltArbeidILand) {
-      oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand));
+      oppdaterData(
+        konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand)
+      );
     }
   }, []);
 

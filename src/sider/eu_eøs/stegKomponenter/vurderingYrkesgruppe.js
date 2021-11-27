@@ -5,14 +5,17 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
-import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from "../../../regler/avklartefakta";
 import {
-  finnTilleggBestemmelse,
+  konverterAvklartfaktaTilStegData,
+  lagAvklartfakta,
   konverterTilleggBestemmelseTilStegData,
   lagTilleggBestemmelse,
   slettTilleggBestemmelse,
-} from "../../../regler/tilleggbestemmelser";
-import { lagVilkaar, slettVilkar } from "../../../regler/vilkar";
+  lagVilkaar,
+  slettVilkar,
+} from "../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../regler/avklartefakta";
+import { finnTilleggBestemmelse } from "../../../regler/tilleggbestemmelser";
 import { BOOLSK } from "../../../constants";
 
 const stegetsTilleggbestemmelser = [
@@ -27,7 +30,7 @@ const VurderingYrkesgruppe = (props) => {
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
 
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggbestemmelser);
     if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));

@@ -11,13 +11,13 @@ import { BOOLSK_STRING } from "../../../constants";
 
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 
+import { hentFaktaVerdi } from "../../../regler/avklartefakta";
 import {
-  konverterTilStegData,
+  konverterAvklartfaktaTilStegData,
   lagAvklartfakta,
   slettAvklartfakta,
   lagAvklartefaktaBegrunnelse,
-  hentFaktaVerdi,
-} from "../../../regler/avklartefakta";
+} from "../../../felleskomponenter/stegvelger";
 
 import "./vurderingMedfolgendeBarn.css";
 
@@ -189,7 +189,10 @@ const VurderingMedfolgendeBarn = ({
         const onMount = () => {
           if (medfolgendeBarnEnkeltfakta) {
             oppdaterData(
-              konverterTilStegData(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, medfolgendeBarnEnkeltfakta)
+              konverterAvklartfaktaTilStegData(
+                MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+                medfolgendeBarnEnkeltfakta
+              )
             );
           }
         };

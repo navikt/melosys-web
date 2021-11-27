@@ -3,11 +3,11 @@ export const slettEnkelData = (felt, type) => ({
   type,
 });
 
-export const lagEnkelData = (felt, type) => ({
+export const lagEnkelData = (data, type) => ({
   felt: type,
   oppdaterRedux: true,
   type,
-  innhold: felt,
+  innhold: data,
 });
 
 export const konverterEnkelDataTilStegData = (data, type) => ({

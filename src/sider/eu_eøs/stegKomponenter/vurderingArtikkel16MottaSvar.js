@@ -20,7 +20,7 @@ import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { formSelectors } from "../../../ducks/form";
 import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
 
-import { lagAnmodningsperiodesvar } from "../../../regler/anmodningsperiodesvar";
+import { lagAnmodningsperiodesvar } from "../../../felleskomponenter/stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurderingArtikkel16MottaSvarSchema from "./vurderingArtikkel16MottaSvarSchema";
 
