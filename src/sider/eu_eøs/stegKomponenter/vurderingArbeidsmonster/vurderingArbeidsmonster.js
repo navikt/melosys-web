@@ -22,7 +22,7 @@ import {
   slettTilleggBestemmelse,
   konverterTilleggBestemmelseTilStegData,
 } from "../../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../../regler/avklartefakta";
+import { hentFaktaVerdi } from "../../../../domeneUtils/avklartefakta";
 import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingArbeidsmonster.css";

@@ -19,7 +19,7 @@ import {
   konverterAvklartfaktaTilStegData,
   lagAvklartefaktaBegrunnelse,
 } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../regler/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 
 import "./vurderingBostedsland.css";
 

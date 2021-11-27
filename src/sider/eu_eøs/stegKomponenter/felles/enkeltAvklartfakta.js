@@ -4,7 +4,7 @@ import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import { hentFaktaVerdi } from "../../../../regler/avklartefakta";
+import { hentFaktaVerdi } from "../../../../domeneUtils/avklartefakta";
 import {
   konverterAvklartfaktaTilStegData,
   lagAvklartfakta,

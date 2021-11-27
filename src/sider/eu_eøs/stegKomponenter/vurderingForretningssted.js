@@ -6,7 +6,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 
-import { hentFaktaVerdi } from "../../../regler/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 import {
   lagAvklartfakta,
   konverterAvklartfaktaTilStegData,
@@ -20,7 +20,7 @@ import EnkeltAvklartfakta from "./felles/enkeltAvklartfakta";
 import { BOOLSK_STRING } from "../../../constants";
 
 import "./vurderingForretningssted.css";
-import { finnLovvalgsbestemmelse } from "../../../regler/lovvalgsbestemmelser";
+import { finnLovvalgsbestemmelse } from "../../../domeneUtils/lovvalgsbestemmelser";
 
 const Forretningsstedet = (props) => {
   const { forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart } = props;

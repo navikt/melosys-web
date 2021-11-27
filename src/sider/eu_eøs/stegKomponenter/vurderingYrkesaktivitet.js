@@ -4,7 +4,7 @@ import PT from "prop-types";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../regler/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 
 const VurderingYrkesaktivitet = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, erSoknadArbeidFlereLand } = props;

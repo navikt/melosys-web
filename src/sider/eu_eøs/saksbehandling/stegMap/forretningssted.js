@@ -2,10 +2,10 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingForretningssted from "../../stegKomponenter/vurderingForretningssted";
-import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../regler/avklartefakta";
+import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../domeneUtils/avklartefakta";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
-import { hentLovvalgsbestemmelse } from "../../../../regler/lovvalgsbestemmelser";
+import { hentLovvalgsbestemmelse } from "../../../../domeneUtils/lovvalgsbestemmelser";
 import { BOOLSK_STRING } from "../../../../constants";
 
 class Forretningssted extends Steg {
