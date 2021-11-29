@@ -1,7 +1,7 @@
 import React from "react";
-import * as Nav from "../../../../navFrontend";
-import * as KV from "../../../../kodeverk";
-import MKV from "../../../../melosyskodeverk";
+import * as Nav from "../../../navFrontend";
+import * as KV from "../../../kodeverk";
+import MKV from "../../../melosyskodeverk";
 import Handling from "./handling";
 
 type avsluttSakProps = {

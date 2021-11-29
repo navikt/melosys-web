@@ -1,5 +1,5 @@
 import React from "react";
-import * as Nav from "../../../../navFrontend";
+import * as Nav from "../../../navFrontend";
 import Handling from "./handling";
 
 type leggBehandlingTilbakeProps = {

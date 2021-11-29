@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import { shallow } from "enzyme";
 
-import MKV from "../../../../melosyskodeverk";
+import MKV from "../../../melosyskodeverk";
 
 import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
