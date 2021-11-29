@@ -16,7 +16,7 @@ export type Familiemedlem = {
 };
 
 export interface Resultat {
-  virksomheter?: string[];
+  virksomhet?: string;
   vedtak?: string;
   innvilgelse?: string;
   bestemmelse?: string;

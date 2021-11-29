@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
-import { reduxForm, change, getFormValues } from "redux-form";
+import { reduxForm, getFormValues } from "redux-form";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 
 import { formSelectors } from "../../../ducks/form";
@@ -25,22 +23,17 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
     })) || [],
   formValues: getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
   initialValues: {
-    virksomheter: ownProps.resultat?.virksomheter,
+    virksomhet: ownProps.resultat?.virksomhet,
   },
   formIsValid: formSelectors.TrygdeavtaleAvklarVirksomhetFormValidSelector(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  changeValgteVirksomheter: (data: string[]) =>
-    dispatch(change(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET, "virksomheter", data)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface FormValuesProps {
-  virksomheter?: string[];
+  virksomhet?: string;
 }
 interface Props {
   data: Api.Trygdeavtale.StegData;
@@ -54,7 +47,6 @@ interface Props {
 }
 
 const VurderingAvklarVirksomhet = ({
-  changeValgteVirksomheter,
   formValues,
   formIsValid,
   fortsett,
@@ -72,7 +64,7 @@ const VurderingAvklarVirksomhet = ({
   useEffect(() => {
     if (redigerbart && formValues) {
       oppdaterFlyt({
-        resultat: { ...resultat, virksomheter: formValues.virksomheter || [] },
+        resultat: { ...resultat, virksomhet: formValues.virksomhet },
       });
     }
   }, [formValues]);
@@ -86,12 +78,11 @@ const VurderingAvklarVirksomhet = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Undertittel>
 
-      <Mui.Checkboxgruppe
-        muligeValg={virksomheterListe}
-        onChange={(checkedVirksomheter) => changeValgteVirksomheter(checkedVirksomheter)}
-        disabled={!redigerbart}
-        defaultValg={formValues?.virksomheter || []}
-      />
+      <Skjema.RadioGruppe feltNavn="virksomhet" label="">
+        {virksomheterListe?.map((virksomhet) => (
+          <Skjema.Radio feltNavn="virksomhet" label={virksomhet.term} id={virksomhet.kode} value={virksomhet.kode} />
+        ))}
+      </Skjema.RadioGruppe>
 
       <Mui.StegKnapper
         bekreftKnappProps={{
