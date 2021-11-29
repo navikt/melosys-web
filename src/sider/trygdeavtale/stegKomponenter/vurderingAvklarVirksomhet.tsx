@@ -6,6 +6,7 @@ import { reduxForm, getFormValues } from "redux-form";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 
 import { formSelectors } from "../../../ducks/form";
