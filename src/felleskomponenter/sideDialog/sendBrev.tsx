@@ -207,6 +207,7 @@ const SendBrev = ({
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
+        resetForm();
       })
       .catch(() => {
         setBrevSendtFeil(true);
