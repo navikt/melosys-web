@@ -8,13 +8,13 @@ import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 import * as Mui from "../../../felleskomponenter/ui";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 import {
-  hentFaktaVerdi,
-  konverterTilStegData,
+  konverterAvklartfaktaTilStegData,
   lagAvklartfakta,
-  lagAvklartefaktaBegrunnelse,
   slettAvklartfakta,
-} from "../../../regler/avklartefakta";
+  lagAvklartefaktaBegrunnelse,
+} from "../../../felleskomponenter/stegvelger";
 
 import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 
@@ -29,7 +29,10 @@ import "./vurderingVurderarbeidsland.css";
 const IngenSokkelSkipEllerHjemmebaser = ({ oppdaterData, slettData, redigerbart, arbeidUtforesIOppgittLandFakta }) => {
   useEffect(() => {
     oppdaterData(
-      konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND, arbeidUtforesIOppgittLandFakta)
+      konverterAvklartfaktaTilStegData(
+        KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND,
+        arbeidUtforesIOppgittLandFakta
+      )
     );
 
     return () => {
@@ -105,10 +108,10 @@ export const VurderingVurderarbeidsland = ({
 
   useEffect(() => {
     soknadslandFaktaListe.forEach((fakta) => {
-      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKNADSLAND, fakta));
+      oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.SOKNADSLAND, fakta));
     });
     arbeidslandFaktaListe.forEach((fakta) => {
-      oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, fakta));
+      oppdaterData(konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, fakta));
     });
 
     setMounted(true);

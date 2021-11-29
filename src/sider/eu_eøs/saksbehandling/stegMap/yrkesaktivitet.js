@@ -4,7 +4,7 @@ import VurderingYrkesaktivitet from "../../stegKomponenter/vurderingYrkesaktivit
 import Yrkesgruppe from "./yrkesgruppe";
 
 import * as KV from "../../../../kodeverk";
-import { hentFakta } from "../../../../regler/avklartefakta";
+import { hentFakta } from "../../../../domeneUtils/avklartefakta";
 
 class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {

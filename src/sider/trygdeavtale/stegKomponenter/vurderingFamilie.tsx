@@ -6,6 +6,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
@@ -52,7 +53,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   initialValues: initializeFamilieFormValues(ownProps.data, ownProps.resultat),
 });
 
-const connector = connect(mapStateToProps, {});
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -267,19 +268,13 @@ const VurderingFamilie = ({
         </div>
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fortsett}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: fortsett,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+        }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

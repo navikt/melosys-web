@@ -4,7 +4,7 @@ import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 
-import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../regler/avklartefakta";
+import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../domeneUtils/avklartefakta";
 import VurderingArbeidsmonster from "../../stegKomponenter/vurderingArbeidsmonster";
 import Yrkesaktivitet from "./yrkesaktivitet";
 import { BOOLSK_STRING } from "../../../../constants";

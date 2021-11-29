@@ -10,10 +10,12 @@ import * as Routing from "../../../routing";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 
+import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
+import { FeatureToggle } from "../../../featuretoggle";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -160,63 +162,70 @@ export const Registrering = (props) => {
     [REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING, REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE].includes(behandlingstema);
 
   return (
-    <div className="registrering">
-      <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="7">
-            {saksopplysningerErHentet && (
-              <Saksopplysninger
-                redigerbart={redigerbart}
-                behandlingID={behandlingID}
-                saksnummer={saksnummer}
-                sed={sed}
-                vurderingBegrunnelser={vurderingBegrunnelser}
-                tilForsiden={tilForsiden}
-                startOgVisOppfriskModal={startOgVisOppfriskModal}
-              />
-            )}
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <SideOppsummering
-              behandlingstema={behandlingstema}
-              redigerbart={redigerbart}
-              fagsak={fagsak}
-              oppsummering={oppsummering}
-              person={person}
-              lovvalgsperiodeFom={lovvalgsperiodeFom}
-              lovvalgsperiodeTom={lovvalgsperiodeTom}
-              lovvalgsland={lovvalgsland}
-              renderBehandlingsmeny={() => (
-                <Legacybehandlingsmeny
+    <>
+      <FeatureToggle togglename="melosys.design.PERSONLINJE">
+        {(status) => status === "enabled" && <Personlinje />}
+      </FeatureToggle>
+      <div id="main-container" className="main-container">
+        <div className="registrering">
+          <Nav.Container fluid>
+            <Nav.Row>
+              <Nav.Column xs="7">
+                {saksopplysningerErHentet && (
+                  <Saksopplysninger
+                    redigerbart={redigerbart}
+                    behandlingID={behandlingID}
+                    saksnummer={saksnummer}
+                    sed={sed}
+                    vurderingBegrunnelser={vurderingBegrunnelser}
+                    tilForsiden={tilForsiden}
+                    startOgVisOppfriskModal={startOgVisOppfriskModal}
+                  />
+                )}
+              </Nav.Column>
+              <Nav.Column xs="5">
+                <SideOppsummering
+                  behandlingstema={behandlingstema}
                   redigerbart={redigerbart}
-                  lagreOgLukkHandle={lagreOgLukk}
-                  tilbakeleggeHandle={tilbakeleggHandle}
-                  apneTidligereBehandlinger={apneTidligereBehandlinger}
-                  oppfriskSaksopplysningerHandle={visOppfriskModal}
-                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                  visRevurderFagsak={visRevurderFagsak}
+                  fagsak={fagsak}
+                  oppsummering={oppsummering}
+                  person={person}
+                  lovvalgsperiodeFom={lovvalgsperiodeFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom}
+                  lovvalgsland={lovvalgsland}
+                  renderBehandlingsmeny={() => (
+                    <Legacybehandlingsmeny
+                      redigerbart={redigerbart}
+                      lagreOgLukkHandle={lagreOgLukk}
+                      tilbakeleggeHandle={tilbakeleggHandle}
+                      apneTidligereBehandlinger={apneTidligereBehandlinger}
+                      oppfriskSaksopplysningerHandle={visOppfriskModal}
+                      visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                      visRevurderFagsak={visRevurderFagsak}
+                    />
+                  )}
+                  renderBehandlingsstatus={() => (
+                    <Behandlingsstatus
+                      behandlingID={behandlingID}
+                      redigerbart={redigerbart}
+                      oppsummering={oppsummering}
+                      behandlingsstatusMap={behandlingsstatusMap}
+                    />
+                  )}
                 />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
+                <SideDialog
+                  saksnummer={saksnummer}
                   behandlingID={behandlingID}
                   redigerbart={redigerbart}
-                  oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
+                  dokumentOversikt={dokumentOversikt}
+                  dokumenter={dokumenter}
                 />
-              )}
-            />
-            <SideDialog
-              saksnummer={saksnummer}
-              behandlingID={behandlingID}
-              redigerbart={redigerbart}
-              dokumentOversikt={dokumentOversikt}
-              dokumenter={dokumenter}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
-    </div>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Container>
+        </div>
+      </div>
+    </>
   );
 };
 Registrering.propTypes = {

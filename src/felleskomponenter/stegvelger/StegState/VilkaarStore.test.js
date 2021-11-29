@@ -1,6 +1,6 @@
 import MKV from "../../../melosyskodeverk";
 import VilkaarStore from "./VilkaarStore";
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from "../../../regler/vilkar";
+import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "./tilStegstateMapping";
 
 const eksisterendeVilkar = {
   vilkaar: MKV.Koder.vilkaar.FO_883_2004_ART11_3A,
@@ -15,7 +15,7 @@ describe("VilkaarStore oppdatering av eksisterende data", () => {
   beforeEach(() => {
     store = new VilkaarStore();
 
-    const vilkaarCmd = konverterTilStegData("art11_3A", eksisterendeVilkar);
+    const vilkaarCmd = konverterVilkarTilStegData("art11_3A", eksisterendeVilkar);
     store.oppdaterStegData("TESTSTEG-1", vilkaarCmd);
   });
 
@@ -36,7 +36,7 @@ describe("VilkaarStore oppdatering av eksisterende data", () => {
   });
 
   it("Oppdater vilkaarbegrunnelse", () => {
-    const vilkaarCmd = lagBegrunnelse("art11_3A", ["Mer enn 5 år"], "Fritekst", "Free text");
+    const vilkaarCmd = lagVilkarbegrunnelse("art11_3A", ["Mer enn 5 år"], "Fritekst", "Free text");
     store.oppdaterStegData("TESTSTEG-1", vilkaarCmd);
 
     const vilkaar = store.hent();

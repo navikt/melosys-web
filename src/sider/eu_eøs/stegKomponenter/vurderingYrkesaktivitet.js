@@ -3,14 +3,15 @@ import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
-import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from "../../../regler/avklartefakta";
+import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 
 const VurderingYrkesaktivitet = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, erSoknadArbeidFlereLand } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
     const cleanup = () => {
       slettData();
     };
