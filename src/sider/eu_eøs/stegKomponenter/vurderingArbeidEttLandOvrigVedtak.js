@@ -31,11 +31,13 @@ import VurderingArbeidEttLandOvrigVedtakSchema from "./vurderingArbeidEttLandOvr
 import {
   lagAvklartfakta,
   slettAvklartfakta,
-  konverterTilStegData as konverterAvklartfaktaTilStegData,
-} from "../../../regler/avklartefakta";
-import { lagLovvalgsbestemmelse, konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
-import { lagLovvalgsperiode } from "../../../regler/lovvalgsperiode";
-import { lagTilleggBestemmelse, slettTilleggBestemmelse } from "../../../regler/tilleggbestemmelser";
+  konverterAvklartfaktaTilStegData,
+  lagLovvalgsbestemmelse,
+  konverterLovvalgsbestemmelseTilStegData,
+  lagLovvalgsperiode,
+  lagTilleggBestemmelse,
+  slettTilleggBestemmelse,
+} from "../../../felleskomponenter/stegvelger";
 
 import "./vurderingArbeidEttLandOvrigVedtak.css";
 

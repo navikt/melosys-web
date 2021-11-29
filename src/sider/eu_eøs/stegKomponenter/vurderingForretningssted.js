@@ -6,22 +6,21 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 import {
-  hentFaktaVerdi,
   lagAvklartfakta,
-  konverterTilStegData,
+  konverterAvklartfaktaTilStegData,
   slettAvklartfakta,
-} from "../../../regler/avklartefakta";
+  konverterLovvalgsbestemmelseTilStegData,
+  lagLovvalgsbestemmelse,
+} from "../../../felleskomponenter/stegvelger";
+
 import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
 import EnkeltAvklartfakta from "./felles/enkeltAvklartfakta";
 import { BOOLSK_STRING } from "../../../constants";
 
 import "./vurderingForretningssted.css";
-import {
-  finnLovvalgsbestemmelse,
-  konverterLovvalgsbestemmelseTilStegData,
-  lagLovvalgsbestemmelse,
-} from "../../../regler/lovvalgsbestemmelser";
+import { finnLovvalgsbestemmelse } from "../../../domeneUtils/lovvalgsbestemmelser";
 
 const Forretningsstedet = (props) => {
   const { forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart } = props;
@@ -29,7 +28,10 @@ const Forretningsstedet = (props) => {
   useEffect(() => {
     if (avklartForretningsland) {
       oppdaterData(
-        konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland)
+        konverterAvklartfaktaTilStegData(
+          MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED,
+          avklartForretningsland
+        )
       );
     }
     const cleanup = () => {
@@ -148,8 +150,8 @@ export const VurderingForretningssted = (props) => {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     }
 
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, omfattetINorge));
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, omfattetINorge));
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
 
     const cleanup = () => {
       slettData();

@@ -8,7 +8,8 @@ import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 
-import { hentFaktaVerdi, konverterTilStegData, slettAvklartfakta } from "../../regler/avklartefakta";
+import { konverterAvklartfaktaTilStegData, slettAvklartfakta } from "../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../domeneUtils/avklartefakta";
 
 import "./sokkelskipenkelt.css";
 
@@ -74,11 +75,16 @@ const SokkelSkipEnkelt = (props) => {
   const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${enhetNavn}`;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sokkelEllerSkip));
-    oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
-    oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND), arbeidslandFakta);
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sokkelEllerSkip));
     oppdaterData(
-      konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta)
+      konverterAvklartfaktaTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta)
+    );
+    oppdaterData(konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.ARBEIDSLAND), arbeidslandFakta);
+    oppdaterData(
+      konverterAvklartfaktaTilStegData(
+        KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE,
+        arbeidslandTypeAvklartfakta
+      )
     );
     const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn));

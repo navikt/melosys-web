@@ -8,13 +8,14 @@ import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 
 import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
-import { lagVilkaar, slettVilkar } from "../../../regler/vilkar";
 import {
-  hentFaktaVerdi,
-  konverterTilStegData,
+  lagVilkaar,
+  slettVilkar,
+  konverterAvklartfaktaTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
-} from "../../../regler/avklartefakta";
+} from "../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 
 import { formSelectors } from "../../../ducks/form";
 
@@ -25,7 +26,9 @@ class VurderingSokkelSkip extends React.Component {
     const { tilstand, oppdaterData } = this.props;
     const { sokkelSkipKonklusjon } = tilstand;
 
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon));
+    oppdaterData(
+      konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon)
+    );
   }
 
   componentWillUnmount() {

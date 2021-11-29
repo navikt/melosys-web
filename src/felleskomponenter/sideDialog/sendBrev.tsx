@@ -26,6 +26,8 @@ import MottakerTabell from "../tabell/mottakerTabell";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 
+const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
+
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
   formValues: getFormValues(KV.Form.SEND_BREV)(state),
@@ -149,17 +151,17 @@ const SendBrev = ({
     if (!formValues || !formValues.type) return;
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!mottaker) return;
-    if (mottaker.rolle === "BRUKER") {
+    if (mottaker.rolle === BRUKER) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
       else {
         setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.orgnrSettesAvSaksbehandler) {
+    if (mottaker.rolle === ARBEIDSGIVER && mottaker.orgnrSettesAvSaksbehandler) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.orgnrSettesAvSaksbehandler) {
+    if (mottaker.rolle === ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
@@ -194,7 +196,7 @@ const SendBrev = ({
       manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
       kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
     };
-    if (mottaker.rolle === "ARBEIDSGIVER") {
+    if (mottaker.rolle === ARBEIDSGIVER) {
       requestBody = {
         ...requestBody,
         orgNr: mottaker.orgnrSettesAvSaksbehandler ? formValues.organisasjonsnummer : formValues.arbeidsgiver,
@@ -242,9 +244,9 @@ const SendBrev = ({
             null,
           manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
           kopiMottakere: [],
-          orgNr: muligMottaker.rolle !== "BRUKER" ? muligMottaker.orgnr || orgnrFraFormValues : null,
+          orgNr: muligMottaker.rolle !== BRUKER ? muligMottaker.orgnr || orgnrFraFormValues : null,
           kontaktpersonNavn:
-            muligMottaker.rolle === "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
+            muligMottaker.rolle === ARBEIDSGIVER && valgtMottaker.orgnrSettesAvSaksbehandler
               ? formValues.kontaktperson
               : null,
         },
@@ -319,12 +321,12 @@ const SendBrev = ({
 
   const maltypeErValgt = formValues?.type;
   const mottakerErValgt = formValues?.mottaker;
-  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "BRUKER";
+  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === BRUKER;
   const mottakerErArbeidsgiver =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
     !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
     finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
 
   if (!tilgjengeligeMaler || !formValues) return null;

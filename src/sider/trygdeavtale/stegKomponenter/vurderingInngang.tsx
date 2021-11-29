@@ -7,6 +7,7 @@ import { getFormValues, reduxForm } from "redux-form";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
@@ -17,6 +18,7 @@ import { menypanelOperations } from "../../../ducks/menypanel";
 import { formSelectors } from "../../../ducks/form";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
+import { StegStatus } from "../stegvelger";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.css";
@@ -107,33 +109,28 @@ const VurderingInngang = ({
     }
   }, []);
 
-  const lagreBehandlingsgrunnlagOgHentStegStatus = async () => {
+  const lagreBehandlingsgrunnlagOgOppdaterFlyt = async () => {
     await lagreBehandlingsgrunnlag();
     hentFlytOgOppdaterAktuelleSteg();
   };
-  const debouncedLagrebehandlingsgrunnlagOgHentStegStatus = useCallback(
-    Utils._debounce(lagreBehandlingsgrunnlagOgHentStegStatus, 300),
+  const debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt = useCallback(
+    Utils._debounce(lagreBehandlingsgrunnlagOgOppdaterFlyt, 300),
     []
   );
 
   useEffect(() => {
-    if (redigerbart && formValues) {
+    if (redigerbart && formValues && formIsValid) {
       const isoFom = Utils.dato.formatterDatoTilISO(formValues.fom);
       const isoTom = Utils.dato.formatterDatoTilISO(formValues.tom);
       oppdaterPeriode({
         fom: isoFom === "Invalid date" ? null : isoFom,
         tom: isoTom === "Invalid date" ? null : isoTom,
       });
-      debouncedLagrebehandlingsgrunnlagOgHentStegStatus();
-    }
-  }, [formValues?.fom, formValues?.tom]);
-
-  useEffect(() => {
-    if (redigerbart && formValues) {
       oppdaterSoeknadsland(formValues?.land ? [formValues.land] : []);
-      debouncedLagrebehandlingsgrunnlagOgHentStegStatus();
+
+      debouncedLagrebehandlingsgrunnlagOgOppdaterFlyt();
     }
-  }, [formValues?.land]);
+  }, [formValues?.fom, formValues?.tom, formValues?.land, formIsValid]);
 
   const fortsettHandle = () => {
     if (formValues.fom !== initialFomTom?.fom || formValues.tom !== initialFomTom?.tom) {
@@ -172,16 +169,13 @@ const VurderingInngang = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      <div className="fane__knapplinje">
-        <Nav.Hovedknapp
-          mini
-          disabled={steg.status !== "FERDIG" || !formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fortsettHandle}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: fortsettHandle,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+        }}
+        visTilbakeKnapp={false}
+      />
 
       {visOppfrisk && (
         <DialogboksOppfriskSak

@@ -2,20 +2,11 @@ import React from "react";
 import PT from "prop-types";
 import Topplinje from "./komponenter/topplinje";
 
-import "./rammeverk.css";
-import Personlinje from "./komponenter/personlinje/personlinje";
-import { FeatureToggle } from "../../featuretoggle";
-
 function Hovedside({ children }) {
   return (
-    <div className="hovedside">
+    <div>
       <Topplinje />
-      <FeatureToggle togglename="melosys.design.PERSONLINJE">
-        {(status) => status === "enabled" && <Personlinje />}
-      </FeatureToggle>
-      <div id="main-container" className="main-container">
-        {children}
-      </div>
+      {children}
     </div>
   );
 }

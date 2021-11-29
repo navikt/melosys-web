@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingSokkelSkip from "../../stegKomponenter/vurderingSokkelSkip";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
-import { hentFaktaListe, hentFakta, hentFaktaVerdi } from "../../../../regler/avklartefakta";
+import { hentFaktaListe, hentFakta, hentFaktaVerdi } from "../../../../domeneUtils/avklartefakta";
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
