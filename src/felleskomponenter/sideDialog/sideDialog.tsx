@@ -9,10 +9,8 @@ import * as Utils from "../../utils";
 import SideDialogSendBrev from "./sendBrev";
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogDokumenter from "./sideDialogDokumenter";
-import SideDialogBrevBestilling from "./brevBestilling";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
 import SideDialogNotater from "./sideDialogNotater/sideDialogNotater";
-import { FeatureToggle } from "../../featuretoggle";
 
 import "./sideDialog.css";
 
@@ -22,8 +20,6 @@ export interface FaneViserProps {
   navn: FaneNavn;
   saksnummer: string;
   behandlingID: number;
-  brevBestillingRedigerbartIArtikkel13: boolean;
-  brevBestillingRedigerbart: boolean;
   redigerbart: boolean;
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
@@ -33,8 +29,6 @@ export const FaneViser = ({
   navn,
   behandlingID,
   saksnummer,
-  brevBestillingRedigerbartIArtikkel13,
-  brevBestillingRedigerbart,
   redigerbart,
   dokumentOversikt,
   dokumenter,
@@ -43,25 +37,7 @@ export const FaneViser = ({
     case "dokumenter":
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case "brevbestilling":
-      return (
-        <FeatureToggle togglename="melosys.nytt_send_brev">
-          {(status) => {
-            if (status === "enabled") {
-              return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} visApneINyttVindu />;
-            } else if (status === "disabled") {
-              return (
-                <SideDialogBrevBestilling
-                  // @ts-ignore TODO skriv om SideDialogBrevBestilling til TS.
-                  behandlingID={behandlingID}
-                  redigerbart={brevBestillingRedigerbart}
-                  brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-                />
-              );
-            }
-            return null;
-          }}
-        </FeatureToggle>
-      );
+      return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} visApneINyttVindu />;
     case "sedbestilling":
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} dokumenter={dokumenter} />;
     case "besvarsed":
@@ -79,8 +55,6 @@ interface SideDialogProps {
   faner?: Fane[];
   saksnummer: string;
   behandlingID: number;
-  brevBestillingRedigerbartIArtikkel13: boolean;
-  brevBestillingRedigerbart: boolean;
   redigerbart: boolean;
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
@@ -89,8 +63,6 @@ interface SideDialogProps {
 const SideDialog = ({
   behandlingID,
   saksnummer,
-  brevBestillingRedigerbart,
-  brevBestillingRedigerbartIArtikkel13,
   redigerbart,
   dokumentOversikt,
   dokumenter,
@@ -117,8 +89,6 @@ const SideDialog = ({
             navn={aktivFane}
             behandlingID={behandlingID}
             saksnummer={saksnummer}
-            brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-            brevBestillingRedigerbart={brevBestillingRedigerbart}
             redigerbart={redigerbart}
             dokumentOversikt={dokumentOversikt}
             dokumenter={dokumenter}
@@ -133,8 +103,6 @@ SideDialog.propTypes = {
   faner: PT.arrayOf(PT.object),
   saksnummer: PT.string.isRequired,
   behandlingID: PT.number.isRequired,
-  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
-  brevBestillingRedigerbart: PT.bool.isRequired,
   redigerbart: PT.bool.isRequired,
   dokumentOversikt: PT.arrayOf(PT.object).isRequired,
   dokumenter: PT.arrayOf(PT.object).isRequired,

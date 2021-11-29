@@ -218,11 +218,6 @@ export const SendBrevOrgnummerValidSelector = createSelector(
   (errors) => !errors?.organisasjonsnummer
 );
 
-export const BrevBestillingFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.BREV_BESTILLING, {}),
-  (brevbestilling) => brevbestilling
-);
-
 export const MaritimtArbeidSelector = createSelector(
   (state) => SoknadenFormSelector(state).values,
   (skjemaverdier) => [...skjemaverdier.arbeidsstedOffshore, ...skjemaverdier.arbeidsstedSkip]
