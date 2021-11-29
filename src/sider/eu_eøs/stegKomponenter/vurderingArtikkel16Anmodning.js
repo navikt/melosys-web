@@ -26,12 +26,13 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../felleskomponenter/vedleggvelger";
 
-import { konverterTilStegData, lagBegrunnelse } from "../../../regler/vilkar";
-import { konverterLovvalgsbestemmelseTilStegData } from "../../../regler/lovvalgsbestemmelser";
 import {
+  konverterVilkarTilStegData,
+  lagVilkarbegrunnelse,
+  konverterLovvalgsbestemmelseTilStegData,
   konverterUnntakFraBestemmelseTilStegData,
   lagUnntakFraBestemmelse,
-} from "../../../regler/unntakfrabestemmelse";
+} from "../../../felleskomponenter/stegvelger";
 
 import "./vurderingArtikkel16Anmodning.css";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -152,7 +153,7 @@ class VurderingArtikkel16Anmodning extends Component {
       tilstand: { art16_1 },
       unntakFraBestemmelse,
     } = this.props;
-    oppdaterData(konverterTilStegData("art16_1_anmodning", art16_1));
+    oppdaterData(konverterVilkarTilStegData("art16_1_anmodning", art16_1));
     oppdaterData(
       konverterLovvalgsbestemmelseTilStegData(
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1
@@ -223,7 +224,7 @@ class VurderingArtikkel16Anmodning extends Component {
     const { oppdaterData } = this.props;
     const { id, value } = event.target;
 
-    oppdaterData(lagBegrunnelse(id, null, value));
+    oppdaterData(lagVilkarbegrunnelse(id, null, value));
   };
 
   begrunnelseFritekstSedEndretHandler = (event) => {
@@ -232,7 +233,7 @@ class VurderingArtikkel16Anmodning extends Component {
     const { oppdaterData } = this.props;
     const { id, value } = event.target;
 
-    oppdaterData(lagBegrunnelse(id, null, null, value));
+    oppdaterData(lagVilkarbegrunnelse(id, null, null, value));
   };
 
   begrunnelseFritekstFokusFlyttetHandler = () => {
@@ -245,7 +246,7 @@ class VurderingArtikkel16Anmodning extends Component {
     const { value } = target;
     const begrunnelse = value ? [value] : [];
     const { oppdaterData } = this.props;
-    await oppdaterData(lagBegrunnelse("art16_1_anmodning", begrunnelse));
+    await oppdaterData(lagVilkarbegrunnelse("art16_1_anmodning", begrunnelse));
     this.lagreVilkar();
   };
 

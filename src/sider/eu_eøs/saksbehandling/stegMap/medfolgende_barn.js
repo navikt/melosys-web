@@ -4,8 +4,8 @@ import { BOOLSK_STRING } from "../../../../constants";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingMedfolgendeBarn from "../../stegKomponenter/vurderingMedfolgendeBarn";
-import { hentFaktaListe } from "../../../../regler/avklartefakta";
-import { erVilkarOppfylt } from "../../../../regler/vilkar";
+import { hentFaktaListe } from "../../../../domeneUtils/avklartefakta";
+import { erVilkarOppfylt } from "../../../../domeneUtils/vilkar";
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {

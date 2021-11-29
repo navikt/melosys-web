@@ -17,31 +17,39 @@ import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
 import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
+import VurderingVedtak from "./stegKomponenter/vurderingVedtak";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
+
+export enum StegStatus {
+  FERDIG = "FERDIG",
+  IKKE_FERDIG = "IKKE_FERDIG",
+}
 
 interface AktueltSteg {
   id: any;
   tittel: string;
   stegPosisjon: number;
   aktivtSteg?: boolean;
+  vedtakSteg?: boolean;
   komponent: any;
   status: string;
   data?: object;
   handlers?: object;
 }
-const DummySteg = () => <div>Dummy</div>;
 
 const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
   FAMILIE: { tittel: "Familie", komponent: VurderingFamilie },
-  VEDTAK: { tittel: "Vedtak", komponent: DummySteg },
+  VEDTAK: { tittel: "Vedtak", komponent: VurderingVedtak },
 };
 
 const mapStateToProps = (state: RootState) => ({
@@ -54,6 +62,9 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  fattVedtak: (behandlingID: string, data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) =>
+    dispatch(vedtakOperations.fatt(behandlingID, data)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -145,6 +156,7 @@ class Stegvelger extends Component<Props, State> {
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
       lagreBehandlingsgrunnlagOgOppdaterStegData: this.lagreBehandlingsgrunnlagOgOppdaterStegData,
+      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -155,9 +167,10 @@ class Stegvelger extends Component<Props, State> {
         stegPosisjon: enkeltSteg.nummer,
         aktivtSteg: this.state.aktivtStegIndex === enkeltSteg.nummer,
         komponent: stegMapElement.komponent,
-        status: enkeltSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
+        status: enkeltSteg.status === StegStatus.FERDIG ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
         data: { ...data, steg: enkeltSteg },
         handlers,
+        vedtakSteg: enkeltSteg.navn === "VEDTAK",
       };
     });
   };
@@ -202,6 +215,19 @@ class Stegvelger extends Component<Props, State> {
         });
       }
     }
+  };
+
+  lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
+    const {
+      props: { behandlingID, fattVedtak, lagreAllData },
+      harBehandlingsgrunnlagFeilmeldinger,
+    } = this;
+
+    if (!harBehandlingsgrunnlagFeilmeldinger()) {
+      await lagreAllData();
+      return fattVedtak(behandlingID, data);
+    }
+    return Promise.resolve();
   };
 
   fortsett = () => {

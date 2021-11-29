@@ -1,5 +1,5 @@
 import EnkelDataStore from "./EnkelDataStore";
-import { konverterEnkelDataTilStegData, lagEnkelData } from "../../../regler/enkelData";
+import { konverterEnkelDataTilStegData, lagEnkelData } from "./tilStegstateMapping";
 
 const TEST_TYPE = "testtype";
 const testData = {

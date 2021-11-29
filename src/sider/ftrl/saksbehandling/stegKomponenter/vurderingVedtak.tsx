@@ -7,6 +7,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
@@ -357,21 +358,16 @@ const VurderingVedtak = ({
         />
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fattVedtak}
-          spinner={vedtakPending}
-          autoDisableVedSpinner
-        >
-          Fatt vedtak
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: fattVedtak,
+          disabled: !redigerbart,
+          autoDisableVedSpinner: true,
+          spinner: vedtakPending,
+        }}
+        bekreftTekst="Fatt vedtak"
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

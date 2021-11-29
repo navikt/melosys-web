@@ -4,7 +4,7 @@ import * as KV from "../../../../kodeverk";
 
 import { BOOLSK_STRING } from "../../../../constants";
 import MKV from "../../../../melosyskodeverk";
-import { lagAvklartfakta } from "../../../../regler/avklartefakta";
+import { lagAvklartfakta } from "../../../../felleskomponenter/stegvelger";
 
 import {
   VurderingArbeidsmonster,

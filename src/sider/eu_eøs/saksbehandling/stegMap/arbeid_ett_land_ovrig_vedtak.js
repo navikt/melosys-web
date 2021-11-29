@@ -2,7 +2,7 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArbeidEttLandOvrigVedtak from "../../stegKomponenter/vurderingArbeidEttLandOvrigVedtak";
 
-import { hentFakta } from "../../../../regler/avklartefakta";
+import { hentFakta } from "../../../../domeneUtils/avklartefakta";
 
 import MKV from "../../../../melosyskodeverk";
 

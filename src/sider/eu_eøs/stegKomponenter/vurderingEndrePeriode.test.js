@@ -1,7 +1,7 @@
 import React from "react";
 
 import { VurderingEndrePeriode } from "./vurderingEndrePeriode";
-import { lagAvklartfakta } from "../../../regler/avklartefakta";
+import { lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
 import Datovelger from "../../../felleskomponenter/datovelger";
 
 describe("vurderingEndrePeriode", () => {

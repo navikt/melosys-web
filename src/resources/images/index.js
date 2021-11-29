@@ -1,5 +1,6 @@
 import { ReactComponent as AccountCircle } from "./line-version-account-circle.svg";
 import { ReactComponent as Add } from "./add.svg";
+import { ReactComponent as ArrowLeft } from "./arrow-left.svg";
 import { ReactComponent as AddOne } from "./line-version-add-1.svg";
 import { ReactComponent as Arbeidsgiver } from "./ikon-arbeidsgiver.svg";
 import { ReactComponent as Arbeidsforhold } from "./ikon-arbeidsforhold.svg";
@@ -46,6 +47,7 @@ import { ReactComponent as Pencil } from "./pencil-2.svg";
 import { ReactComponent as ParagraphTwoColumns } from "./line-version-paragraph-two-columns.svg";
 import { ReactComponent as Refresh } from "./refresh.svg";
 import { ReactComponent as RemoveOne } from "./filled-version-remove-1.svg";
+import { ReactComponent as Ring } from "./ring.svg";
 import { ReactComponent as Skip } from "./skip.svg";
 import { ReactComponent as Svar } from "./reply.svg";
 import { ReactComponent as Ubehandlet } from "./ikon-steg-ubehandlet.svg";
@@ -60,6 +62,7 @@ import { Kjoenn } from "./helpercomponents";
 export {
   AccountCircle,
   Add,
+  ArrowLeft,
   AddOne,
   Arbeidsgiver,
   Arbeidsforhold,
@@ -108,6 +111,7 @@ export {
   ParagraphTwoColumns,
   Refresh,
   RemoveOne,
+  Ring,
   Skip,
   Svar,
   Varsel,

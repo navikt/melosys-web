@@ -385,10 +385,20 @@ export const TrygdeavtaleBestemmelseFormValidSelector = createSelector(
 
 export const TrygdeavtaleFamileFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.Trygdeavtale.FAMILIE, {}),
-  (bestemmelse) => bestemmelse
+  (familie) => familie
 );
 
 export const TrygdeavtaleFamilieFormValidSelector = createSelector(
   (state) => TrygdeavtaleFamileFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors)
+);
+
+export const TrygdeavtaleVedtakFormSelector = createSelector(
+  (state) => getFormState(state, KV.Form.Trygdeavtale.VEDTAK, {}),
+  (vedtak) => vedtak
+);
+
+export const TrygdeavtaleVedtakFormValidSelector = createSelector(
+  (state) => TrygdeavtaleVedtakFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );

@@ -11,9 +11,9 @@ import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltL
 import {
   avklartefaktaType,
   lagAvklartfakta,
-  konverterTilStegData,
-  hentFaktaVerdi,
-} from "../../../regler/avklartefakta";
+  konverterAvklartfaktaTilStegData,
+} from "../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 
 const radioValg = {
   NORGE: "NORGE",
@@ -28,7 +28,7 @@ const VurderingArtikkel13_2b = ({
   bekreftOgFortsett,
 }) => {
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattesILandFakta));
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattesILandFakta));
 
     return () => {
       slettData();
