@@ -11,6 +11,8 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
+import { useFeatureToggle } from "../../featuretoggle";
+import Personlinje from "../../felleskomponenter/personlinje";
 import { SendBrev } from "../../felleskomponenter/sideDialog";
 import { behandlingerOperations } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
@@ -36,6 +38,7 @@ interface RouteParams {
 type SendbrevProps = RouteComponentProps<RouteParams> & PropsFromRedux;
 
 const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }: SendbrevProps) => {
+  const personlinjeToggle = useFeatureToggle("melosys.design.PERSONLINJE");
   const behandlingID = Utils._toInteger(match.params.behandlingID);
 
   useEffect(() => {
@@ -53,20 +56,25 @@ const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }
   });
 
   return (
-    <Nav.Container fluid className="sendbrev">
-      <Nav.Panel>
-        <SendBrev
-          behandlingID={behandlingID}
-          redigerbart={redigerbart}
-          visApneINyttVindu={false}
-          brevTypeSelectWidth="5"
-          mottakerSelectWidth="5"
-          mottakerTabellWidth="5"
-          orgnrInputWidth="2"
-          kontaktpersonInputWidth="3"
-        />
-      </Nav.Panel>
-    </Nav.Container>
+    <>
+      {personlinjeToggle && <Personlinje visBehandlingsmeny={false} />}
+      <div id="main-container" className="main-container">
+        <Nav.Container fluid className="sendbrev">
+          <Nav.Panel>
+            <SendBrev
+              behandlingID={behandlingID}
+              redigerbart={redigerbart}
+              visApneINyttVindu={false}
+              brevTypeSelectWidth="5"
+              mottakerSelectWidth="5"
+              mottakerTabellWidth="5"
+              orgnrInputWidth="2"
+              kontaktpersonInputWidth="3"
+            />
+          </Nav.Panel>
+        </Nav.Container>
+      </div>
+    </>
   );
 };
 
