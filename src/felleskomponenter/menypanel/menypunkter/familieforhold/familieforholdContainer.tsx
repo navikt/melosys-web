@@ -16,7 +16,7 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 
 import "./familieforholdContainer.css";
 
-const { ARBEID_I_UTLANDET, TRYGDEAVTALE_UK } = MKV.Koder.behandlinger.behandlingstema;
+const { ARBEID_I_UTLANDET, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 interface FamilieforholdContainerProps {
   redigerbart: boolean;
@@ -65,7 +65,7 @@ const FamilieforholdContainer = ({
               {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>
-          {behandlingstema === ARBEID_I_UTLANDET || behandlingstema === TRYGDEAVTALE_UK ? (
+          {behandlingstema === ARBEID_I_UTLANDET || behandlingstema === YRKESAKTIV ? (
             <div>
               <Mui.Undertittel
                 tekst={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}

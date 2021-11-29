@@ -192,9 +192,9 @@ describe("Behandlingsgrunnlag operations", () => {
       );
     });
 
-    it("lagrer TrygdeavtaleGrunnlagData ved behandlingstema TRYGDEAVTALE_UK", async () => {
+    it("lagrer TrygdeavtaleGrunnlagData ved behandlingstema YRKESAKTIV", async () => {
       initialState.behandlinger.data.oppsummering.behandlingstema.kode =
-        MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK;
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
 
       const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
 
