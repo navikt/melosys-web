@@ -7,6 +7,7 @@ import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
@@ -204,16 +205,10 @@ export const VurderingStart = ({
         </Nav.Row>
       </Nav.Fieldset>
 
-      <div className="fane__knapplinje">
-        <Nav.Hovedknapp
-          mini
-          disabled={!formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fortsettHandle}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{ onClick: fortsettHandle, disabled: !formIsValid || !redigerbart }}
+        visTilbakeKnapp={false}
+      />
 
       {visOppfrisk && (
         <DialogboksOppfriskSak

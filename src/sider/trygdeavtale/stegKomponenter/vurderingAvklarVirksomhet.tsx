@@ -93,19 +93,13 @@ const VurderingAvklarVirksomhet = ({
         defaultValg={formValues?.virksomheter || []}
       />
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fortsett}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: fortsett,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+        }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };
