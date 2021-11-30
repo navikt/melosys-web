@@ -13,6 +13,7 @@ import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import sendBrevSchema from "../sendBrevSchema";
 import * as Ikoner from "../../../resources/images";
+const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -59,9 +60,9 @@ const MottakereComponent = ({
         navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
         data: {
           ...hentBrevRequest(muligMottaker.rolle),
-          orgNr: muligMottaker.rolle !== "BRUKER" ? muligMottaker.orgnr || orgnrFraFormValues : null,
+          orgNr: muligMottaker.rolle !== BRUKER ? muligMottaker.orgnr || orgnrFraFormValues : null,
           kontaktpersonNavn:
-            muligMottaker.rolle === "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
+            muligMottaker.rolle === ARBEIDSGIVER && valgtMottaker.orgnrSettesAvSaksbehandler
               ? formValues.kontaktperson
               : null,
         },

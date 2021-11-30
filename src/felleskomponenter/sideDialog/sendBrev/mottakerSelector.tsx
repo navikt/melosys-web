@@ -20,6 +20,7 @@ import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state),
@@ -96,17 +97,17 @@ const BrevMottaker = ({
     if (!formValues || !formValues.type) return;
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!mottaker) return;
-    if (mottaker.rolle === "BRUKER") {
+    if (mottaker.rolle === BRUKER) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
       else {
         setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.orgnrSettesAvSaksbehandler) {
+    if (mottaker.rolle === ARBEIDSGIVER && mottaker.orgnrSettesAvSaksbehandler) {
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
     }
-    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.orgnrSettesAvSaksbehandler) {
+    if (mottaker.rolle === ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
@@ -133,12 +134,12 @@ const BrevMottaker = ({
     if (!formValues?.valgtMal) return undefined;
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
-  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "BRUKER";
+  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === BRUKER;
   const mottakerErArbeidsgiver =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
     !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
   const mottakerOrgNrSettesAvSaksbehandler =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
     finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
 
   const arbeidsgiverHjelptekst =
