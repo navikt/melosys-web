@@ -1,7 +1,7 @@
 import React from "react";
 
 import * as Skjema from "../../../skjema";
-import { normalizeDecimal, normalizeInt } from "../../../skjema/input/input";
+import { normalizeDecimal, normalizeInt } from "../../../../utils/normalisering";
 
 import "./redigerbarSamletVirksomhetINorge.css";
 
