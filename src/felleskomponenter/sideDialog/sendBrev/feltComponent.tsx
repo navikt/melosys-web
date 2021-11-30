@@ -22,7 +22,7 @@ const FeltComponent = (props: FeltComponentProps) => {
           <Skjema.HTMLEditor feltNavn={`felt.${props.felt.kode}.feltVerdi`} />
         </>
       );
-    case FeltType.FRITEKST_STRING:
+    case FeltType.TEKST:
       return (
         <Skjema.Input
           feltNavn={`felt.${props.felt.kode}.feltVerdi`}

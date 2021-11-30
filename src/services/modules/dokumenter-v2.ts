@@ -30,7 +30,7 @@ export interface Valg {
 }
 
 export enum FeltType {
-  FRITEKST_STRING = "FRITEKST_STRING",
+  TEKST = "TEKST",
   FRITEKST = "FRITEKST",
   SJEKKBOKS = "SJEKKBOKS",
 }
