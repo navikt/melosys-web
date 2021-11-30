@@ -13,24 +13,41 @@ export type MottakerAdresse = {
   land: string;
 };
 
+export enum ValgType {
+  RADIO = "RADIO",
+  SELECT = "SELECT",
+}
+
+export interface ValgAlternativ {
+  kode: string;
+  beskrivelse: string;
+}
+
+export interface Valg {
+  valgType: ValgType;
+  valgAltnerativer: ValgAlternativ[];
+  valgAlternativTrigger: ValgAlternativ;
+}
+
+export enum FeltType {
+  FRITEKST_STRING = "FRITEKST_STRING",
+  FRITEKST = "FRITEKST",
+  SJEKKBOKS = "SJEKKBOKS",
+}
+
+export interface Felt {
+  kode: string;
+  beskrivelse: string;
+  feltType: FeltType;
+  hjelpetekst: string | null;
+  paakrevd: boolean;
+  tegnBegrensning: number | null;
+  valg: null | Valg;
+}
+
 export type TilgjengeligeMaler = {
   type: KTObject;
-  felter:
-    | {
-        kode: string;
-        beskrivelse: string;
-        feltType: string;
-        hjelpetekst: string | null;
-        paakrevd: boolean;
-        tegnBegrensning: number | null;
-        valg:
-          | null
-          | {
-              kode: string;
-              beskrivelse: string;
-            }[];
-      }[]
-    | null;
+  felter: Felt[] | null;
   muligeMottakere: {
     uuid: string;
     type: string;

@@ -19,21 +19,17 @@ const manglerNoenFeltValgt = (felt, valgtMal) => {
   return false;
 };
 
-const hentFritekstTittel = (felt) => {
-  return felt?.FRITEKST_TITTEL?.valg === "Fritekst"
-    ? felt?.FRITEKST_TITTEL?.fritekst_string || null
-    : felt?.FRITEKST_TITTEL?.valg;
-};
-
-const manglerFritekstTittel = (valgtMal, felt) => {
-  if (
-    valgtMal &&
-    (valgtMal.type?.kode === "GENERELT_FRITEKSTBREV_ARBEIDSGIVER" ||
-      valgtMal.type?.kode === "GENERELT_FRITEKSTBREV_BRUKER")
-  ) {
-    return hentFritekstTittel(felt) === null;
+const manglerFeltMedValg = (feltNavn) => (felt, valgtMal) => {
+  const feltFraValgtMal = valgtMal?.felter?.find((felt) => felt.kode === feltNavn);
+  if (!feltFraValgtMal) {
+    return false;
   }
-  return false;
+  const valgAlternativTrigger = feltFraValgtMal.valg?.valgAlternativTrigger;
+  if (valgAlternativTrigger) {
+    return !(felt?.[feltNavn]?.valg === valgAlternativTrigger.beskrivelse ? felt?.[feltNavn]?.feltVerdi : true);
+  } else {
+    return !felt?.[feltNavn]?.feltVerdi;
+  }
 };
 
 const stemmerMottakerMedParameterne = (valgtMal, mottakerUuid, rolle, orgNrSettesAvSaksbehandler) => {
@@ -56,8 +52,8 @@ const send_brev = object().shape({
     then: string().required(ARBEIDSGIVER_MANGLER),
   }),
   felt: object(),
-  fritekstTittel: string().when(["valgtMal", "felt"], {
-    is: manglerFritekstTittel,
+  fritekstTittel: string().when(["felt", "valgtMal"], {
+    is: manglerFeltMedValg("FRITEKST_TITTEL"),
     then: string().required(TITTEL_MANGLER),
   }),
   erFeltGyldig: string().when(["felt", "valgtMal"], {

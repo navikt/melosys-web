@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -8,22 +8,20 @@ import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 
 import * as Api from "../../services/api";
 import * as KV from "../../kodeverk";
-import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 import * as Skjema from "../skjema";
 import * as Utils from "../../utils";
-import { begrensAntallTegn } from "../skjema/input/input";
-
-import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import { OrganisasjonsAdresse } from "../adresser";
+import BrevMottaker from "./sendBrev/mottakerSelector";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
+import ValgAlternativerComponent from "./sendBrev/valgAlternativer";
+import BeskrivelseHjelpetekstComponent from "./sendBrev/beskrivelseHjelpetekst";
 import { formSelectors } from "../../ducks/form";
-import PdfLenkeListe from "../pdfLenkeListe";
-import MottakerTabell from "../tabell/mottakerTabell";
 
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
+import FeltComponent from "./sendBrev/feltComponent";
+import MottakereComponent from "./sendBrev/mottakere";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -32,12 +30,10 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   changeField: (field: string, data: any) => dispatch(change(KV.Form.SEND_BREV, field, data)),
-  hentOrganisasjon: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
 });
@@ -66,23 +62,16 @@ const SendBrev = ({
   changeField,
   formValues,
   formIsValid,
-  hentOrganisasjon,
   oppdaterBehandling,
-  orgnrValid,
   redigerbart,
   resetForm,
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
-  const [mottakerFeil, setMottakerFeil] = useState<string>();
-  const [adresse, setAdresse] = useState<{
-    mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
-    organisasjonsAdresse?: Api.Organisasjon;
-  }>();
-  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
-  const arbeidsgiverHjelptekst =
-    "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
+  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [mottakerFeil, setMottakerFeil] = useState<string>();
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -104,89 +93,47 @@ const SendBrev = ({
     }
   }, [formValues?.type]);
 
-  const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
-    Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
-      setMuligeMottakere
-    );
-  };
-
   const finnMottakerFraValgtMal = (uuid?: string) => {
     if (!formValues?.valgtMal) return undefined;
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
-  const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean; type: string }) => {
-    if (!data.valid || !data.orgnr) return;
-    const response = await hentOrganisasjon(data.orgnr);
-    if (response.data.response) {
-      setMottakerFeil(
-        response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon"
-      );
+  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
+    return {
+      produserbardokument: formValues.type || "",
+      mottaker: mottakerRolle,
+      innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
+      manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+      fritekstTittel: hentFormVerdi("FRITEKST_TITTEL", true),
+      fritekst: hentFormVerdi("FRITEKST"),
+      kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
+      kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+    };
+  };
+
+  const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false): any => {
+    const feltFraValgtMal = formValues?.valgtMal?.felter?.find((felt) => felt.kode === feltNavn);
+    if (!feltFraValgtMal) {
+      return null;
+    }
+    const valgAlternativTrigger = feltFraValgtMal.valg?.valgAlternativTrigger;
+
+    if (!valgAlternativTrigger) {
+      return formValues.felt?.[feltNavn]?.feltVerdi;
     } else {
-      setAdresse({ organisasjonsAdresse: response.data });
-      hentMuligeMottakere(data.type, data.orgnr);
+      const valgtAlternativ = formValues.felt?.[feltNavn]?.valg;
+
+      if (valgtAlternativ === valgAlternativTrigger?.beskrivelse) {
+        return formValues.felt?.[feltNavn]?.feltVerdi;
+      }
+      return hentValgverdi ? valgtAlternativ : null;
     }
   };
-  const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonIfValid, 500), []);
-
-  useEffect(() => {
-    setAdresse(undefined);
-    setMottakerFeil(undefined);
-    setMuligeMottakere(undefined);
-    if (!formValues || !formValues.type) return;
-    const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
-    if (!mottaker) return;
-    if (mottaker.rolle === "BRUKER") {
-      if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
-      else {
-        setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
-        hentMuligeMottakere(formValues.type, undefined);
-      }
-    }
-    if (mottaker.rolle === "ARBEIDSGIVER" && mottaker.orgnrSettesAvSaksbehandler) {
-      debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
-    }
-    if (mottaker.rolle === "ARBEIDSGIVER" && !mottaker.orgnrSettesAvSaksbehandler) {
-      if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
-    }
-  }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
-
-  useEffect(() => {
-    setAdresse(undefined);
-    setMuligeMottakere(undefined);
-    if (formValues?.arbeidsgiver && formValues?.type) {
-      const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
-      setAdresse({
-        mottakerAdresse:
-          mottaker && mottaker?.adresser
-            ? mottaker.adresser.find(
-                (mottakerAdresse: Api.DokumenterV2.MottakerAdresse) =>
-                  mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
-              )
-            : undefined,
-      });
-      hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
-    }
-  }, [formValues?.arbeidsgiver]);
 
   const sendBrev = () => {
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!mottaker) return;
-    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = {
-      produserbardokument: formValues.type || "",
-      mottaker: mottaker.rolle,
-      innledningFritekst:
-        (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" && formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
-        null,
-      manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
-      fritekstTittel:
-        formValues?.felt?.FRITEKST_TITTEL?.valg === "Fritekst"
-          ? formValues?.felt?.FRITEKST_TITTEL?.fritekst_string || null
-          : formValues?.felt?.FRITEKST_TITTEL?.valg,
-      fritekst: formValues?.felt?.FRITEKST?.fritekst || null,
-      kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
-      kontaktopplysninger: formValues?.felt?.STANDARDTEKST_KONTAKTINFORMASJON?.sjekkboks,
-    };
+    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
     if (mottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {
         ...requestBody,
@@ -210,123 +157,8 @@ const SendBrev = ({
     setBrevSendtFeil(false);
   };
 
-  const slettKopiMottaker = (kopiMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (!muligeMottakere) return;
-    setMuligeMottakere({
-      ...muligeMottakere,
-      kopiMottakere: muligeMottakere.kopiMottakere.filter((mottaker) => mottaker !== kopiMottaker),
-    });
-  };
-
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, valgtMottaker: any, ikon?: boolean) => {
-    const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
-      ? formValues.organisasjonsnummer
-      : formValues.arbeidsgiver;
-    return [
-      {
-        sendesTilDokumenterV2: true,
-        navn: ikon ? <Ikoner.Forhandsvis /> : muligMottaker.dokumentNavn,
-        data: {
-          produserbardokument: formValues.type,
-          mottaker: muligMottaker.rolle,
-          innledningFritekst:
-            (formValues?.felt?.INNLEDNING_FRITEKST?.valg === "FRITEKST" &&
-              formValues.felt.INNLEDNING_FRITEKST?.fritekst) ||
-            null,
-          manglerFritekst: formValues?.felt?.MANGLER_FRITEKST?.fritekst || null,
-          fritekstTittel:
-            formValues?.felt?.FRITEKST_TITTEL?.valg === "Fritekst"
-              ? formValues?.felt?.FRITEKST_TITTEL?.fritekst_string || null
-              : formValues?.felt?.FRITEKST_TITTEL?.valg,
-          fritekst: formValues?.felt?.FRITEKST?.fritekst || null,
-          kopiMottakere: [],
-          orgNr: muligMottaker.rolle !== "BRUKER" ? muligMottaker.orgnr || orgnrFraFormValues : null,
-          kontaktpersonNavn:
-            muligMottaker.rolle === "ARBEIDSGIVER" && valgtMottaker.orgnrSettesAvSaksbehandler
-              ? formValues.kontaktperson
-              : null,
-          kontaktopplysninger: formValues?.felt?.STANDARDTEKST_KONTAKTINFORMASJON?.sjekkboks,
-        },
-      },
-    ];
-  };
-
-  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean, valgtMottaker: any) => {
-    return [
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, valgtMottaker)}
-            vedKlikk={() => formIsValid}
-            className="forhåndsvisning"
-          />
-        ),
-      },
-      { verdi: muligMottaker.mottakerNavn },
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, valgtMottaker, true)}
-            vedKlikk={() => formIsValid}
-            className="forhåndsvisning"
-          />
-        ),
-        style: "midtstilt",
-      },
-      {
-        verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(muligMottaker)} /> : <></>,
-        style: "slettKnapp",
-      },
-    ];
-  };
-
-  const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    const valgtMottaker = finnMottakerFraValgtMal(formValues.mottaker);
-    if (!valgtMottaker) return [];
-    return [
-      mapRad(muligeBrevMottakere.hovedMottaker, false, valgtMottaker),
-      ...muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker, true, valgtMottaker)),
-      ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker, false, valgtMottaker)),
-    ];
-  };
-
-  const MottakerAdresseComponent = ({
-    tittel,
-    adresselinjer,
-    postnr,
-    poststed,
-    land,
-    className,
-  }: Api.DokumenterV2.MottakerAdresse & { className: string }) => {
-    return (
-      <div className={className}>
-        {!tittel?.orgnr && (
-          <div>
-            <b>{tittel.mottakerNavn}</b>
-          </div>
-        )}
-
-        {adresselinjer.map((linje) => (
-          <span key={Utils._uuid()}>{linje}, </span>
-        ))}
-        <span>
-          {postnr} {poststed}, {land}
-        </span>
-      </div>
-    );
-  };
-
   const maltypeErValgt = formValues?.type;
   const mottakerErValgt = formValues?.mottaker;
-  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "BRUKER";
-  const mottakerErArbeidsgiver =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
-    !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
-  const mottakerOrgNrSettesAvSaksbehandler =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === "ARBEIDSGIVER" &&
-    finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
 
   if (!tilgjengeligeMaler || !formValues) return null;
 
@@ -347,218 +179,35 @@ const SendBrev = ({
       </Skjema.Select>
 
       {maltypeErValgt && !!formValues.valgtMal && (
-        <Skjema.Select
-          feltNavn="mottaker"
-          label={
-            <Nav.Typo.Element tag="div">
-              Mottaker
-              {formValues.valgtMal.mottakereHjelpetekst && (
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={formValues.valgtMal.mottakereHjelpetekst}
-                  type={Nav.PopoverOrientering.Venstre}
-                >
-                  {formValues.valgtMal.mottakereHjelpetekst}
-                </Nav.Hjelpetekst>
-              )}
-            </Nav.Typo.Element>
-          }
-          disabled={!redigerbart || formValues.valgtMal?.muligeMottakere.length === 1}
-          emptyFieldText="Velg..."
-          emptyFieldDisabled={!!formValues.mottaker}
-        >
-          {formValues.valgtMal?.muligeMottakere.map((mottaker) => (
-            <option key={mottaker.uuid} value={mottaker.uuid}>
-              {mottaker.type}
-            </option>
-          ))}
-        </Skjema.Select>
+        <BrevMottaker
+          redigerbart={redigerbart}
+          muligeMottakere={muligeMottakere}
+          setMuligeMottakere={setMuligeMottakere}
+          mottakerFeil={mottakerFeil}
+          setMottakerFeil={setMottakerFeil}
+        />
       )}
 
-      {mottakerErBruker && (
-        <Nav.Row>
-          <Nav.Column xs="12">
-            {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-            {adresse?.mottakerAdresse && (
-              <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="brukeradresse" />
-            )}
-          </Nav.Column>
-        </Nav.Row>
-      )}
-
-      {mottakerErArbeidsgiver && (
-        <Nav.Row>
-          {mottakerFeil ? (
-            <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>
-          ) : (
-            <Nav.Column xs="12">
-              <Nav.Typo.Normaltekst style={{ marginBottom: "0.5rem" }} tag="div">
-                Velg:
-                <Nav.Hjelpetekst
-                  className="hjelpetekst"
-                  tittel={arbeidsgiverHjelptekst}
-                  type={Nav.PopoverOrientering.Venstre}
-                >
-                  {arbeidsgiverHjelptekst.split("\n").map((paragraf) => (
-                    <p key={Utils._uuid()}>{paragraf}</p>
-                  ))}
-                </Nav.Hjelpetekst>
-              </Nav.Typo.Normaltekst>
-              {finnMottakerFraValgtMal(formValues.mottaker)?.adresser?.map(
-                (virksomhet: Api.DokumenterV2.MottakerAdresse) => (
-                  <Fragment key={Utils._uuid()}>
-                    <Skjema.Radio
-                      className="arbeidsgiver_radio"
-                      feltNavn="arbeidsgiver"
-                      label={`${virksomhet.tittel.mottakerNavn} (org.nr. ${virksomhet.tittel.orgnr})`}
-                      id={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
-                      key={`arbeidsgiver.${virksomhet.tittel.orgnr}`}
-                      value={virksomhet.tittel.orgnr}
-                      disabled={!redigerbart}
-                    />
-                    {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
-                      <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
-                    )}
-                  </Fragment>
-                )
-              )}
-            </Nav.Column>
+      {formValues.valgtMal?.felter?.map((felt) => (
+        <Fragment key={`fragment_${felt.kode}`}>
+          {felt.valg && (
+            <>
+              <BeskrivelseHjelpetekstComponent beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
+              <ValgAlternativerComponent valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
+            </>
           )}
-        </Nav.Row>
-      )}
-
-      {mottakerOrgNrSettesAvSaksbehandler && (
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <Skjema.Input
-              feltNavn="organisasjonsnummer"
-              label="Organisasjonsnummer"
-              placeholder="Skriv inn"
-              disabled={!redigerbart}
-            />
-            {adresse?.organisasjonsAdresse && (
-              <OrganisasjonsAdresse organisasjon={adresse.organisasjonsAdresse} visNavn boldNavn visTittel={false} />
-            )}
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <Skjema.Input
-              feltNavn="kontaktperson"
-              label="Kontaktperson"
-              placeholder="Skriv inn"
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-          {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-        </Nav.Row>
-      )}
-
-      {mottakerErValgt &&
-        formValues?.valgtMal?.felter &&
-        formValues.valgtMal.felter.map((felt) => {
-          if (felt.kode === "INNLEDNING_FRITEKST" && felt.valg?.length && felt.valg.length > 0) {
-            return (
-              <Fragment key="radioknapper">
-                <Nav.Typo.Element className="fritekst_label">
-                  {felt.beskrivelse}
-                  {felt.hjelpetekst && (
-                    <Nav.Hjelpetekst
-                      className="hjelpetekst"
-                      tittel={felt.hjelpetekst}
-                      type={Nav.PopoverOrientering.Venstre}
-                    >
-                      {felt.hjelpetekst}
-                    </Nav.Hjelpetekst>
-                  )}
-                </Nav.Typo.Element>
-                {felt.valg.map((valg) => (
-                  <Skjema.Radio
-                    feltNavn={`felt.${felt.kode}.valg`}
-                    label={valg.beskrivelse}
-                    id={`${felt.kode}.${valg.kode}`}
-                    key={`${felt.kode}.${valg.kode}`}
-                    value={valg.kode}
-                    disabled={!redigerbart}
-                  />
-                ))}
-                {formValues.felt && formValues.felt[felt.kode]?.valg === "FRITEKST" && felt.feltType === "FRITEKST" && (
-                  <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.fritekst`} />
-                )}
-              </Fragment>
-            );
-          } else if (felt.feltType === "FRITEKST") {
-            return (
-              <Fragment key="fritekst">
-                <Nav.Typo.Element className="fritekst_label" tag="div">
-                  {felt.beskrivelse}
-                  {felt.hjelpetekst && (
-                    <Nav.Hjelpetekst
-                      className="hjelpetekst"
-                      tittel={felt.hjelpetekst}
-                      type={Nav.PopoverOrientering.Venstre}
-                    >
-                      {felt.hjelpetekst}
-                    </Nav.Hjelpetekst>
-                  )}
-                </Nav.Typo.Element>
-                <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.fritekst`} />
-              </Fragment>
-            );
-          } else if (felt.feltType === "FRITEKST_STRING" && felt.valg?.length && felt.valg?.length > 0) {
-            return (
-              <Fragment key="fritekstlinje">
-                <Skjema.Select
-                  feltNavn={`felt.${felt.kode}.valg`}
-                  label={
-                    <Nav.Typo.Element tag="div" className="fritekst_label">
-                      {felt.beskrivelse}
-                      {felt.hjelpetekst && (
-                        <Nav.Hjelpetekst
-                          className="hjelpetekst"
-                          tittel={felt.hjelpetekst}
-                          type={Nav.PopoverOrientering.Venstre}
-                        >
-                          {felt.hjelpetekst}
-                        </Nav.Hjelpetekst>
-                      )}
-                    </Nav.Typo.Element>
-                  }
-                  emptyFieldText="Velg..."
-                >
-                  {felt.valg.map((valg) => (
-                    <option key={valg.kode} value={valg.beskrivelse}>
-                      {valg.beskrivelse}
-                    </option>
-                  ))}
-                </Skjema.Select>
-                {formValues.felt && formValues.felt[felt.kode]?.valg === "Fritekst" && (
-                  <Skjema.Input
-                    feltNavn={`felt.${felt.kode}.fritekst_string`}
-                    normalize={begrensAntallTegn(felt.tegnBegrensning)}
-                    label=""
-                  />
-                )}
-              </Fragment>
-            );
-          } else if (felt.feltType === "SJEKKBOKS") {
-            return (
-              <Fragment key={`sjekkboks-${felt.kode}`}>
-                <Skjema.Checkbox feltNavn={`felt.${felt.kode}.sjekkboks`} label={felt.beskrivelse} />
-              </Fragment>
-            );
-          }
-          return <></>;
-        })}
+          {(felt.valg === null ||
+            (formValues.felt && formValues.felt[felt.kode]?.valg === felt.valg.valgAlternativTrigger.beskrivelse)) && (
+            <FeltComponent felt={felt} visHjelpetekst={felt.valg === null} />
+          )}
+        </Fragment>
+      ))}
 
       {mottakerErValgt && (
-        <MottakerTabell
-          className="tabell"
-          rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
-          kolonner={[
-            { verdi: "Dokumenter", bredde: "44%" },
-            { verdi: "Mottaker", bredde: "40%" },
-            { verdi: "Forhåndsvis", bredde: "8%", style: "normal_font_weight midtstilt" },
-            { verdi: "Slett", bredde: "8%", style: "normal_font_weight midtstilt" },
-          ]}
+        <MottakereComponent
+          muligeMottakere={muligeMottakere}
+          valgtMottaker={finnMottakerFraValgtMal(formValues.mottaker)}
+          hentBrevRequest={hentBrevRequest}
         />
       )}
 

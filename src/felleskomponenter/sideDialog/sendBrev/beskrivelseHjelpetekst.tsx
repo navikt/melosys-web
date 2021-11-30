@@ -1,0 +1,21 @@
+import React from "react";
+import * as Nav from "../../../navFrontend";
+
+interface BeskrivelseComponentProps {
+  beskrivelse: string;
+  hjelpetekst: string | null;
+}
+const BeskrivelseHjelpetekstComponent = (felt: BeskrivelseComponentProps) => {
+  return (
+    <Nav.Typo.Element className="fritekst_label" tag="div">
+      {felt.beskrivelse}
+      {felt.hjelpetekst && (
+        <Nav.Hjelpetekst className="hjelpetekst" tittel={felt.hjelpetekst} type={Nav.PopoverOrientering.Venstre}>
+          {felt.hjelpetekst}
+        </Nav.Hjelpetekst>
+      )}
+    </Nav.Typo.Element>
+  );
+};
+
+export default BeskrivelseHjelpetekstComponent;
