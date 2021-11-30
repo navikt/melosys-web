@@ -98,6 +98,24 @@ const SendBrev = ({
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
+  const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false): any => {
+    const feltFraValgtMal = formValues?.valgtMal?.felter?.find((felt) => felt.kode === feltNavn);
+    if (!feltFraValgtMal) {
+      return null;
+    }
+    const valgAlternativTrigger = feltFraValgtMal.valg?.valgAlternativTrigger;
+
+    if (!valgAlternativTrigger) {
+      return formValues.felt?.[feltNavn]?.feltVerdi;
+    }
+
+    const valgtAlternativ = formValues.felt?.[feltNavn]?.valg;
+    if (valgtAlternativ === valgAlternativTrigger?.beskrivelse) {
+      return formValues.felt?.[feltNavn]?.feltVerdi;
+    }
+    return hentValgverdi ? valgtAlternativ : null;
+  };
+
   const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
     return {
       produserbardokument: formValues.type || "",
@@ -109,25 +127,6 @@ const SendBrev = ({
       kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
     };
-  };
-
-  const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false): any => {
-    const feltFraValgtMal = formValues?.valgtMal?.felter?.find((felt) => felt.kode === feltNavn);
-    if (!feltFraValgtMal) {
-      return null;
-    }
-    const valgAlternativTrigger = feltFraValgtMal.valg?.valgAlternativTrigger;
-
-    if (!valgAlternativTrigger) {
-      return formValues.felt?.[feltNavn]?.feltVerdi;
-    } else {
-      const valgtAlternativ = formValues.felt?.[feltNavn]?.valg;
-
-      if (valgtAlternativ === valgAlternativTrigger?.beskrivelse) {
-        return formValues.felt?.[feltNavn]?.feltVerdi;
-      }
-      return hentValgverdi ? valgtAlternativ : null;
-    }
   };
 
   const sendBrev = () => {

@@ -1,5 +1,5 @@
-import { Valg, ValgType } from "../../../services/modules/dokumenter-v2";
 import React from "react";
+import { Valg, ValgType } from "../../../services/modules/dokumenter-v2";
 import * as Skjema from "../../skjema";
 
 interface ValgAlternativComponentProps {
@@ -23,7 +23,7 @@ const ValgAlternativerComponent: React.FC<ValgAlternativComponentProps> = (props
       );
     });
     return <React.Fragment>{alternativer}</React.Fragment>;
-  } else {
+  } else if (props.valg.valgType === ValgType.SELECT) {
     const alternativer = props.valg.valgAltnerativer.map((alternativ) => {
       return (
         <option key={alternativ.kode} value={alternativ.beskrivelse}>
@@ -37,6 +37,7 @@ const ValgAlternativerComponent: React.FC<ValgAlternativComponentProps> = (props
       </Skjema.Select>
     );
   }
+  return <></>;
 };
 
 export default ValgAlternativerComponent;

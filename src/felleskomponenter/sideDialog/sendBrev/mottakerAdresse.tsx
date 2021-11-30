@@ -1,5 +1,5 @@
-import * as Api from "../../../services/api";
 import React from "react";
+import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
 const MottakerAdresseComponent = ({

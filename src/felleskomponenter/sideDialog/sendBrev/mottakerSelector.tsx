@@ -1,25 +1,24 @@
 import React, { Fragment, useCallback, useEffect, useState } from "react";
-
-import { connect, ConnectedProps } from "react-redux";
-
-import * as Skjema from "../../skjema";
 import { RootState } from "AppTypes";
+import { connect, ConnectedProps } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 import { getFormValues, reduxForm } from "redux-form";
+import { AlertStripeFeil } from "nav-frontend-alertstriper";
+import * as Skjema from "../../skjema";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 import sendBrevSchema from "../sendBrevSchema";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
-import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import { OrganisasjonsAdresse } from "../../adresser";
 import MottakerAdresseComponent from "./mottakerAdresse";
 import BeskrivelseHjelpetekstComponent from "./beskrivelseHjelpetekst";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
+
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
@@ -69,6 +68,27 @@ const BrevMottaker = ({
     organisasjonsAdresse?: Api.Organisasjon;
   }>();
 
+  const finnMottakerFraValgtMal = (uuid?: string) => {
+    if (!formValues?.valgtMal) return undefined;
+    return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
+  };
+  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === BRUKER;
+  const mottakerErArbeidsgiver =
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
+    !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
+  const mottakerOrgNrSettesAvSaksbehandler =
+    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
+    finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
+
+  const arbeidsgiverHjelptekst =
+    "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
+
+  const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
+    Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
+      setMuligeMottakere
+    );
+  };
+
   const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean; type: string }) => {
     if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
@@ -83,12 +103,6 @@ const BrevMottaker = ({
   };
 
   const debouncedHentOrganisasjon = useCallback(Utils._debounce(hentOrganisasjonIfValid, 500), []);
-
-  const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
-    Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
-      setMuligeMottakere
-    );
-  };
 
   useEffect(() => {
     setAdresse(undefined);
@@ -130,28 +144,13 @@ const BrevMottaker = ({
     }
   }, [formValues?.arbeidsgiver]);
 
-  const finnMottakerFraValgtMal = (uuid?: string) => {
-    if (!formValues?.valgtMal) return undefined;
-    return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
-  };
-  const mottakerErBruker = finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === BRUKER;
-  const mottakerErArbeidsgiver =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
-    !finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
-  const mottakerOrgNrSettesAvSaksbehandler =
-    finnMottakerFraValgtMal(formValues?.mottaker)?.rolle === ARBEIDSGIVER &&
-    finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
-
-  const arbeidsgiverHjelptekst =
-    "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
-
   return (
     <>
       <Skjema.Select
         feltNavn="mottaker"
         label={
           <BeskrivelseHjelpetekstComponent
-            beskrivelse={"Mottaker"}
+            beskrivelse="Mottaker"
             hjelpetekst={formValues.valgtMal?.mottakereHjelpetekst || null}
           />
         }

@@ -1,18 +1,18 @@
-import { HentMuligeMottakereResDto } from "../../../services/modules/dokumenter-v2";
 import React from "react";
+import { RootState } from "AppTypes";
+import { getFormValues, reduxForm } from "redux-form";
+import { connect, ConnectedProps } from "react-redux";
+import { HentMuligeMottakereResDto } from "../../../services/modules/dokumenter-v2";
 import MottakerTabell from "../../tabell/mottakerTabell";
 import * as KV from "../../../kodeverk";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
-
 import * as Api from "../../../services/api";
 import PdfLenkeListe from "../../pdfLenkeListe";
-import { RootState } from "AppTypes";
-import { getFormValues, reduxForm } from "redux-form";
-import { connect, ConnectedProps } from "react-redux";
 import sendBrevSchema from "../sendBrevSchema";
 import * as Ikoner from "../../../resources/images";
+
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
@@ -50,7 +50,7 @@ const MottakereComponent = ({
   formIsValid,
   hentBrevRequest,
 }: MottakereComponentProps & PropsFromRedux) => {
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, valgtMottaker: any, ikon?: boolean) => {
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
     const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
       ? formValues.organisasjonsnummer
       : formValues.arbeidsgiver;
@@ -76,7 +76,7 @@ const MottakereComponent = ({
         verdi: (
           <PdfLenkeListe
             behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, valgtMottaker)}
+            dokumenter={lagDokumenterData(muligMottaker)}
             vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
@@ -87,7 +87,7 @@ const MottakereComponent = ({
         verdi: (
           <PdfLenkeListe
             behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, valgtMottaker, true)}
+            dokumenter={lagDokumenterData(muligMottaker, true)}
             vedKlikk={() => formIsValid}
             className="forhåndsvisning"
           />
