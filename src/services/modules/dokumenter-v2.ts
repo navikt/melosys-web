@@ -25,7 +25,7 @@ export interface ValgAlternativ {
 
 export interface Valg {
   valgType: ValgType;
-  valgAltnerativer: ValgAlternativ[];
+  valgAlternativer: ValgAlternativ[];
   valgAlternativTrigger: ValgAlternativ;
 }
 

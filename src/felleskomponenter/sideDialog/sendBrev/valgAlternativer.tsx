@@ -10,7 +10,7 @@ interface ValgAlternativComponentProps {
 
 const ValgAlternativerComponent: React.FC<ValgAlternativComponentProps> = (props: ValgAlternativComponentProps) => {
   if (props.valg.valgType === ValgType.RADIO) {
-    const alternativer = props.valg.valgAltnerativer.map((alternativ) => {
+    const alternativer = props.valg.valgAlternativer.map((alternativ) => {
       return (
         <Skjema.Radio
           feltNavn={`felt.${props.feltKode}.valg`}
@@ -24,7 +24,7 @@ const ValgAlternativerComponent: React.FC<ValgAlternativComponentProps> = (props
     });
     return <React.Fragment>{alternativer}</React.Fragment>;
   } else if (props.valg.valgType === ValgType.SELECT) {
-    const alternativer = props.valg.valgAltnerativer.map((alternativ) => {
+    const alternativer = props.valg.valgAlternativer.map((alternativ) => {
       return (
         <option key={alternativ.kode} value={alternativ.beskrivelse}>
           {alternativ.beskrivelse}
