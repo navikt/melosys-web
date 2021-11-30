@@ -47,16 +47,6 @@ const OpprettFagsak = (props) => {
     journalforingSoknadsland: valgteLand,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
   } = journalforingSkjemaVerdier;
-
-  useEffect(() => {
-    settFeltInnhold(
-      "opprettnysak_behandlingstema",
-      valgtSakstype === MKV.Koder.sakstyper.FTRL
-        ? MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
-        : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
-    );
-  }, [valgtSakstype]);
-
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
