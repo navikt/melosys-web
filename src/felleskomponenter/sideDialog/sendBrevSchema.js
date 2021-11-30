@@ -53,7 +53,7 @@ const send_brev = object().shape({
   }),
   felt: object(),
   fritekstTittel: string().when(["felt", "valgtMal"], {
-    is: manglerFeltMedValg("FRITEKST_TITTEL"),
+    is: manglerFeltMedValg("BREV_TITTEL"),
     then: string().required(TITTEL_MANGLER),
   }),
   erFeltGyldig: string().when(["felt", "valgtMal"], {

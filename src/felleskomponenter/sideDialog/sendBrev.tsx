@@ -104,7 +104,7 @@ const SendBrev = ({
       mottaker: mottakerRolle,
       innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
       manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
-      fritekstTittel: hentFormVerdi("FRITEKST_TITTEL", true),
+      fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
       fritekst: hentFormVerdi("FRITEKST"),
       kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
