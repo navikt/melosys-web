@@ -35,7 +35,7 @@ const FamilieforholdContainer = ({
   setMenypanelFeilmelding,
   behandlingstema,
 }: FamilieforholdContainerProps) => {
-  const familiemedlemmerFraPDLToggle = useFeatureToggle("melosys.hent_familiemedlemmer_fra_pdl");
+  const familiemedlemmerFraPDLToggle = useFeatureToggle("melosys.pdl.aktiv");
 
   const sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn = (familiemedlemmer: KV.Form.MedfolgendeFamilie[]) =>
     familiemedlemmer.every((familiemedlem) => familiemedlem.fnr && familiemedlem.navn);
