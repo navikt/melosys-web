@@ -24,7 +24,7 @@ const PersonInfo = ({
   behandlingID,
   sivilstandModalAriaHideApp,
 }: PersonInfoProps) => {
-  const sivilstandFraPDLToggle = useFeatureToggle("melosys.vis_sivilstandhistorikk");
+  const sivilstandFraPDLToggle = useFeatureToggle("melosys.pdl.aktiv");
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
   const { data: sivilstandData, loading: sivilstandLoading, error: sivilstandError } = useHentSivilstandQuery({
     variables: { behandlingID },
