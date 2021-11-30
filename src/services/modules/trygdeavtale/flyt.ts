@@ -16,12 +16,14 @@ export type Familiemedlem = {
 };
 
 export interface Resultat {
-  virksomheter?: string[];
+  virksomhet?: string;
   vedtak?: string;
   innvilgelse?: string;
   bestemmelse?: string;
   barn?: Familiemedlem[] | null;
   ektefelle?: Familiemedlem | null;
+  lovvalgsperiodeFom?: string;
+  lovvalgsperiodeTom?: string;
 }
 
 export interface Steg {
@@ -50,6 +52,7 @@ export interface StegData {
   barnBegrunnelseValg?: KTObject[];
   ektefelleValg?: FamilieValg;
   ektefelleBegrunnelseValg?: KTObject[];
+  lovvalgsperiodeTekst?: string;
 }
 
 export type FlytResDto = {

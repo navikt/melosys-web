@@ -8,10 +8,12 @@ import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as Api from "../../../services/api";
 
+import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
+import { FeatureToggle } from "../../../featuretoggle";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -120,8 +122,6 @@ const behandlingsstatusMap = {
 };
 
 const SedBehandling = ({
-  brevBestillingRedigerbart,
-  brevBestillingRedigerbartIArtikkel13,
   match,
   behandlingstema,
   redigerbart,
@@ -176,68 +176,71 @@ const SedBehandling = ({
   };
 
   return (
-    <div className="sedbehandling">
-      <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="7" />
-          <Nav.Column xs="5">
-            <SideOppsummering
-              behandlingstema={behandlingstema}
-              redigerbart={redigerbart}
-              fagsak={fagsak}
-              oppsummering={oppsummering}
-              person={person}
-              oppholdsland={behandlingstemaErIkkeYrkesaktiv ? oppholdsland : []}
-              behandlingsgrunnlagPeriodeFom={
-                behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined
-              }
-              behandlingsgrunnlagPeriodeTom={
-                behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined
-              }
-              lovvalgsperiodeFom={lovvalgsperiodeFom}
-              lovvalgsperiodeTom={lovvalgsperiodeTom}
-              renderBehandlingsmeny={() => (
-                <Legacybehandlingsmeny
+    <>
+      <FeatureToggle togglename="melosys.design.PERSONLINJE">
+        {(status) => status === "enabled" && <Personlinje />}
+      </FeatureToggle>
+      <div id="main-container" className="main-container">
+        <div className="sedbehandling">
+          <Nav.Container fluid>
+            <Nav.Row>
+              <Nav.Column xs="7" />
+              <Nav.Column xs="5">
+                <SideOppsummering
+                  behandlingstema={behandlingstema}
                   redigerbart={redigerbart}
-                  lagreOgLukkHandle={lagreOgLukk}
-                  tilbakeleggeHandle={tilbakeleggOppgave}
-                  visHenleggDialogHandle={visHenleggDialogHandle}
-                  apneTidligereBehandlinger={apneTidligereBehandlinger}
-                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                  visHenleggSak={!behandlingstemaErTrygdetid}
-                  visAvslagManglendeOpplysninger={!behandlingstemaErTrygdetid}
-                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
+                  fagsak={fagsak}
                   oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
-                  oppdaterStatus={oppdaterStatus}
+                  person={person}
+                  oppholdsland={behandlingstemaErIkkeYrkesaktiv ? oppholdsland : []}
+                  behandlingsgrunnlagPeriodeFom={
+                    behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined
+                  }
+                  behandlingsgrunnlagPeriodeTom={
+                    behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined
+                  }
+                  lovvalgsperiodeFom={lovvalgsperiodeFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom}
+                  renderBehandlingsmeny={() => (
+                    <Legacybehandlingsmeny
+                      redigerbart={redigerbart}
+                      lagreOgLukkHandle={lagreOgLukk}
+                      tilbakeleggeHandle={tilbakeleggOppgave}
+                      visHenleggDialogHandle={visHenleggDialogHandle}
+                      apneTidligereBehandlinger={apneTidligereBehandlinger}
+                      visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                      visHenleggSak={!behandlingstemaErTrygdetid}
+                      visAvslagManglendeOpplysninger={!behandlingstemaErTrygdetid}
+                      visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                    />
+                  )}
+                  renderBehandlingsstatus={() => (
+                    <Behandlingsstatus
+                      behandlingID={behandlingID}
+                      redigerbart={redigerbart}
+                      oppsummering={oppsummering}
+                      behandlingsstatusMap={behandlingsstatusMap}
+                      oppdaterStatus={oppdaterStatus}
+                    />
+                  )}
                 />
-              )}
-            />
-            <SideDialog
-              behandlingID={behandlingID}
-              saksnummer={saksnummer}
-              brevBestillingRedigerbart={brevBestillingRedigerbart}
-              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-              redigerbart={redigerbart}
-              dokumentOversikt={dokumentOversikt}
-              dokumenter={dokumenter}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
-    </div>
+                <SideDialog
+                  behandlingID={behandlingID}
+                  saksnummer={saksnummer}
+                  redigerbart={redigerbart}
+                  dokumentOversikt={dokumentOversikt}
+                  dokumenter={dokumenter}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Container>
+        </div>
+      </div>
+    </>
   );
 };
 
 SedBehandling.propTypes = {
-  brevBestillingRedigerbart: PT.bool.isRequired,
-  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   match: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -289,8 +292,6 @@ const mapStateToProps = (state) => ({
   ),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
-  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
 });

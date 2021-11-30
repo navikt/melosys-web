@@ -8,12 +8,14 @@ import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
+import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
+import { FeatureToggle } from "../../../featuretoggle";
 
 import { formSelectors } from "../../../ducks/form";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -105,8 +107,6 @@ const Vurderutpeking = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visAvslagSoknadDialogHandle,
   visRevurderFagsakDialogHandle,
-  brevBestillingRedigerbart,
-  brevBestillingRedigerbartIArtikkel13,
   resetSaksopplysninger,
   oppdaterBehandlingsgrunnlag,
   lagreVilkar,
@@ -157,80 +157,85 @@ const Vurderutpeking = ({
   const visRevurderFagsak = behandlingErAvsluttet;
 
   return (
-    <div className="vurderutpeking">
-      <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="7">
-            {behandlingsgrunnlagErKlart && (
-              <Stegvelger
-                behandlingID={behandlingID}
-                stegMap={stegMap}
-                lagreVilkarHandler={lagreVilkar}
-                lagreAvklartefaktaHandler={lagreAvklartefakta}
-                lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
-                lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
-                oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
-                lagreAllData={lagreAllData}
-                oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
-                begrunnelser={MKV.KTObjects.begrunnelser}
-                landkoder={MKV.KTObjects.landkoder}
-                tilForsiden={tilForsiden}
-                forsteSteg={forsteSteg}
-              />
-            )}
-            <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <SideOppsummering
-              behandlingstema={behandlingstema}
-              redigerbart={redigerbart}
-              fagsak={fagsak}
-              oppsummering={oppsummering}
-              person={person}
-              lovvalgsperiodeFom={lovvalgsperiodeFom}
-              lovvalgsperiodeTom={lovvalgsperiodeTom}
-              arbeidsland={arbeidsland}
-              lovvalgsland={lovvalgslandKTOBject}
-              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-              periodeLabel="Periode fra SED"
-              renderBehandlingsmeny={() => (
-                <Legacybehandlingsmeny
-                  redigerbart={behandlingsmenyRedigerbart}
-                  lagreOgLukkHandle={lagreOgLukk}
-                  tilbakeleggeHandle={tilbakeleggOppgave}
-                  visHenleggDialogHandle={visHenleggDialogHandle}
-                  apneTidligereBehandlinger={apneTidligereBehandlinger}
-                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                  visHenleggSak
-                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                  visAvslagManglendeOpplysninger
-                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                  visRevurderFagsak={visRevurderFagsak}
-                />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
-                  behandlingID={behandlingID}
+    <>
+      <FeatureToggle togglename="melosys.design.PERSONLINJE">
+        {(status) => status === "enabled" && <Personlinje />}
+      </FeatureToggle>
+      <div id="main-container" className="main-container">
+        <div className="vurderutpeking">
+          <Nav.Container fluid>
+            <Nav.Row>
+              <Nav.Column xs="7">
+                {behandlingsgrunnlagErKlart && (
+                  <Stegvelger
+                    behandlingID={behandlingID}
+                    stegMap={stegMap}
+                    lagreVilkarHandler={lagreVilkar}
+                    lagreAvklartefaktaHandler={lagreAvklartefakta}
+                    lagreLovvalgsperioderHandler={lagreLovvalgsperioder}
+                    lagreAnmodningsperioderHandler={lagreAnmodningsperioder}
+                    oppdaterOgLagreBehandlingerHandler={oppdaterOgLagreBehandlingsperioder}
+                    lagreAllData={lagreAllData}
+                    oppdaterBehandlingsgrunnlag={oppdaterBehandlingsgrunnlag}
+                    begrunnelser={MKV.KTObjects.begrunnelser}
+                    landkoder={MKV.KTObjects.landkoder}
+                    tilForsiden={tilForsiden}
+                    forsteSteg={forsteSteg}
+                  />
+                )}
+                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+              </Nav.Column>
+              <Nav.Column xs="5">
+                <SideOppsummering
+                  behandlingstema={behandlingstema}
                   redigerbart={redigerbart}
+                  fagsak={fagsak}
                   oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
+                  person={person}
+                  lovvalgsperiodeFom={lovvalgsperiodeFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom}
+                  arbeidsland={arbeidsland}
+                  lovvalgsland={lovvalgslandKTOBject}
+                  behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+                  behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                  periodeLabel="Periode fra SED"
+                  renderBehandlingsmeny={() => (
+                    <Legacybehandlingsmeny
+                      redigerbart={behandlingsmenyRedigerbart}
+                      lagreOgLukkHandle={lagreOgLukk}
+                      tilbakeleggeHandle={tilbakeleggOppgave}
+                      visHenleggDialogHandle={visHenleggDialogHandle}
+                      apneTidligereBehandlinger={apneTidligereBehandlinger}
+                      visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                      visHenleggSak
+                      visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                      visAvslagManglendeOpplysninger
+                      visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                      visRevurderFagsak={visRevurderFagsak}
+                    />
+                  )}
+                  renderBehandlingsstatus={() => (
+                    <Behandlingsstatus
+                      behandlingID={behandlingID}
+                      redigerbart={redigerbart}
+                      oppsummering={oppsummering}
+                      behandlingsstatusMap={behandlingsstatusMap}
+                    />
+                  )}
                 />
-              )}
-            />
-            <SideDialog
-              behandlingID={behandlingID}
-              saksnummer={saksnummer}
-              brevBestillingRedigerbart={brevBestillingRedigerbart}
-              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-              redigerbart={redigerbart}
-              dokumentOversikt={dokumentOversikt}
-              dokumenter={dokumenter}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
-    </div>
+                <SideDialog
+                  behandlingID={behandlingID}
+                  saksnummer={saksnummer}
+                  redigerbart={redigerbart}
+                  dokumentOversikt={dokumentOversikt}
+                  dokumenter={dokumenter}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Container>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -259,8 +264,6 @@ Vurderutpeking.propTypes = {
   visOppfriskModal: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
-  brevBestillingRedigerbart: PT.bool.isRequired,
-  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -300,8 +303,6 @@ const mapStateToProps = (state) => ({
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
   ),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
-  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),

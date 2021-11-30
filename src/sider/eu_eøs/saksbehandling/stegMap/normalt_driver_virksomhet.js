@@ -2,7 +2,7 @@ import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingNormaltDriverVirksomhet from "../../stegKomponenter/vurderingNormaltDriverVirksomhet";
-import { erVilkarOppfylt, hentVilkar } from "../../../../regler/vilkar";
+import { erVilkarOppfylt, hentVilkar } from "../../../../domeneUtils/vilkar";
 
 class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {

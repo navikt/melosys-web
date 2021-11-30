@@ -6,10 +6,11 @@ import { Action } from "redux";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Utils from "../../../../utils";
 
 import { vilkarSelectors } from "../../../../ducks/vilkar";
-import { lagBegrunnelse, lagVilkaar } from "../../../../regler/vilkar";
+import { lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { folketrygdenkodeverkSelectors } from "../../../../ducks/folketrygdenkodeverk";
@@ -127,7 +128,7 @@ const VurderingBestemmelse = ({
     }
   }, [valgteBegrunnelser, valgtBestemmelse, valgteVilkar]);
 
-  const handleBefreft = () => {
+  const handleBekreft = () => {
     opprettMedlemskapsperiodeFraBestemmelse();
     bekreft();
   };
@@ -138,13 +139,13 @@ const VurderingBestemmelse = ({
     if (event.target.value === BOOLSK_STRING.USANN && valgteBegrunnelser.get(event.target.name)) {
       valgteBegrunnelser.delete(event.target.name);
       setValgteBegrunnelser(new Map(valgteBegrunnelser));
-      oppdaterData(lagBegrunnelse(event.target.name, []));
+      oppdaterData(lagVilkarbegrunnelse(event.target.name, []));
     }
   };
 
   const handleEndreBegrunnelse: ChangeEventHandler<HTMLSelectElement> = (event) => {
     setValgteBegrunnelser(new Map(valgteBegrunnelser.set(event.target.name, event.target.value)));
-    oppdaterData(lagBegrunnelse(event.target.name, [event.target.value]));
+    oppdaterData(lagVilkarbegrunnelse(event.target.name, [event.target.value]));
   };
 
   const Alert = () => (
@@ -285,19 +286,10 @@ const VurderingBestemmelse = ({
           ))
         )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!erAlleValgGjort || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={handleBefreft}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{ onClick: handleBekreft, disabled: !erAlleValgGjort || !redigerbart }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

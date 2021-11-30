@@ -399,19 +399,10 @@ const VurderingPerioder = ({
         <Nav.AlertStripe type="advarsel">Du må legge inn minst én periode før du kan fortsette.</Nav.AlertStripe>
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!redigerbart || !formIsValid}
-          className="fane__navigasjonsknapp"
-          onClick={handleBekreft}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{ onClick: handleBekreft, disabled: !redigerbart || !formIsValid }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

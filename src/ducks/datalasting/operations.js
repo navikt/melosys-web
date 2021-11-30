@@ -73,22 +73,28 @@ export const resetSaksopplysninger = () => (dispatch) => {
 export const lagreAllData = () => async (dispatch, getState) => {
   const sakstype = fagsakSelectors.SakstypeKodeSelector(getState());
 
-  if (sakstype === MKV.Koder.sakstyper.FTRL) {
-    return Promise.all([dispatch(behandlingsgrunnlagOperations.lagre()), dispatch(vilkarOperations.lagre())]);
+  switch (sakstype) {
+    case MKV.Koder.sakstyper.FTRL:
+      return Promise.all([dispatch(behandlingsgrunnlagOperations.lagre()), dispatch(vilkarOperations.lagre())]);
+    case MKV.Koder.sakstyper.TRYGDEAVTALE:
+      return Promise.all[dispatch(behandlingsgrunnlagOperations.lagre())];
+    case MKV.Koder.sakstyper.EU_EOS: {
+      const anmodningErSendtUtland = anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(getState());
+
+      await Promise.all([
+        dispatch(behandlingsgrunnlagOperations.lagre()),
+        ...(anmodningErSendtUtland ? [] : [dispatch(vilkarOperations.lagre())]),
+        ...(anmodningErSendtUtland ? [] : [dispatch(avklartefaktaOperations.lagre())]),
+        ...(anmodningErSendtUtland ? [] : [dispatch(behandlingsperioderOperations.lagre())]),
+      ]);
+
+      return Promise.all([
+        ...(anmodningErSendtUtland ? [] : [dispatch(anmodningsperioderOperations.lagre())]),
+        dispatch(lovvalgsperioderOperations.lagre()),
+        ...(anmodningErSendtUtland ? [] : [dispatch(utpekingsperioderOperations.lagre())]),
+      ]);
+    }
+    default:
+      return Promise.resolve();
   }
-
-  const anmodningErSendtUtland = anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(getState());
-
-  await Promise.all([
-    dispatch(behandlingsgrunnlagOperations.lagre()),
-    ...(anmodningErSendtUtland ? [] : [dispatch(vilkarOperations.lagre())]),
-    ...(anmodningErSendtUtland ? [] : [dispatch(avklartefaktaOperations.lagre())]),
-    ...(anmodningErSendtUtland ? [] : [dispatch(behandlingsperioderOperations.lagre())]),
-  ]);
-
-  return Promise.all([
-    ...(anmodningErSendtUtland ? [] : [dispatch(anmodningsperioderOperations.lagre())]),
-    dispatch(lovvalgsperioderOperations.lagre()),
-    ...(anmodningErSendtUtland ? [] : [dispatch(utpekingsperioderOperations.lagre())]),
-  ]);
 };

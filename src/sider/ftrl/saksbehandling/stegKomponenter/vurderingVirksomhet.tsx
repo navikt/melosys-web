@@ -118,19 +118,10 @@ const VurderingVirksomhet = ({
         defaultValg={lagredeValgtevirksomheter}
       />
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={handleFortsett}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { arrayTilKonjunksjon } from "../../../utils/streng";
 
 import "./vurderingArtikkel11_4.css";
 import { BOOLSK } from "../../../constants";
-import { konverterTilStegData, lagVilkaar, slettVilkar } from "../../../regler/vilkar";
+import { konverterVilkarTilStegData, lagVilkaar, slettVilkar } from "../../../felleskomponenter/stegvelger";
 
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -28,10 +28,10 @@ class VurderingArtikkel11_4 extends Component {
   componentDidMount() {
     const { oppdaterData, tilstand } = this.props;
     const { art11_4_1, art11_4_2, art11_3A, nis } = tilstand;
-    oppdaterData(konverterTilStegData("art11_4_1", art11_4_1));
-    oppdaterData(konverterTilStegData("art11_4_2", art11_4_2));
-    oppdaterData(konverterTilStegData("art11_3A", art11_3A));
-    oppdaterData(konverterTilStegData("nis", nis));
+    oppdaterData(konverterVilkarTilStegData("art11_4_1", art11_4_1));
+    oppdaterData(konverterVilkarTilStegData("art11_4_2", art11_4_2));
+    oppdaterData(konverterVilkarTilStegData("art11_3A", art11_3A));
+    oppdaterData(konverterVilkarTilStegData("nis", nis));
   }
 
   componentWillUnmount() {
