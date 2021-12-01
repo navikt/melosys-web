@@ -23,6 +23,7 @@ import "./sendBrev.css";
 import BrevFelt from "./brevFelt";
 import BrevMottakereTabell from "./brevMottakereTabell";
 import { SendBrevFormValues } from "./types";
+import { Felt } from "../../../services/modules/dokumenter-v2";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -89,22 +90,27 @@ const SendBrev = ({
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
+  const finnValgAlternativ = (felt: Felt) => {
+    return felt?.valg?.valgAlternativer.find(
+      (alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg
+    );
+  };
+
   const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false): any => {
     const feltFraValgtMal = formValues?.valgtMal?.felter?.find((felt) => felt.kode === feltNavn);
     if (!feltFraValgtMal) {
       return null;
     }
-    const valgAlternativTrigger = feltFraValgtMal.valg?.valgAlternativTrigger;
+    const feltVerdi = formValues.felt?.[feltNavn]?.feltVerdi;
 
-    if (!valgAlternativTrigger) {
-      return formValues.felt?.[feltNavn]?.feltVerdi;
+    if (feltFraValgtMal?.valg) {
+      const valgtAlternativ = finnValgAlternativ(feltFraValgtMal);
+      if (!hentValgverdi) {
+        return valgtAlternativ?.visFelt ? feltVerdi : null;
+      }
+      return valgtAlternativ?.visFelt ? feltVerdi : valgtAlternativ?.beskrivelse;
     }
-
-    const valgtAlternativ = formValues.felt?.[feltNavn]?.valg;
-    if (valgtAlternativ === valgAlternativTrigger?.beskrivelse) {
-      return formValues.felt?.[feltNavn]?.feltVerdi;
-    }
-    return hentValgverdi ? valgtAlternativ : null;
+    return feltVerdi;
   };
 
   const hentBrevRequest = (mottakerRolle: string): DokumenterV2.OpprettBrevReqDto => {
@@ -186,8 +192,7 @@ const SendBrev = ({
               <ValgAlternativer valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
             </>
           )}
-          {(felt.valg === null ||
-            (formValues.felt && formValues.felt[felt.kode]?.valg === felt.valg.valgAlternativTrigger.beskrivelse)) && (
+          {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
             <BrevFelt felt={felt} visHjelpetekst={felt.valg === null} />
           )}
         </Fragment>

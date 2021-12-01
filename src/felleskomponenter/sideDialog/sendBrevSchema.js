@@ -24,11 +24,10 @@ const manglerFeltMedValg = (feltNavn) => (felt, valgtMal) => {
   if (!feltFraValgtMal) {
     return false;
   }
-  const valgAlternativTrigger = feltFraValgtMal.valg?.valgAlternativTrigger;
-  if (valgAlternativTrigger) {
-    return !(felt?.[feltNavn]?.valg === valgAlternativTrigger.beskrivelse ? felt?.[feltNavn]?.feltVerdi : true);
-  }
-  return !felt?.[feltNavn]?.feltVerdi;
+  const valgtAlternativ = feltFraValgtMal?.valg?.valgAlternativer.find(
+    (alternativ) => alternativ.beskrivelse === felt?.[feltNavn]?.valg
+  );
+  return valgtAlternativ && !valgtAlternativ.visFelt ? false : !felt?.[feltNavn]?.feltVerdi;
 };
 
 const stemmerMottakerMedParameterne = (valgtMal, mottakerUuid, rolle, orgNrSettesAvSaksbehandler) => {

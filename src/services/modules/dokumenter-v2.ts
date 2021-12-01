@@ -21,12 +21,12 @@ export enum ValgType {
 interface ValgAlternativ {
   kode: string;
   beskrivelse: string;
+  visFelt: boolean;
 }
 
 export interface Valg {
   valgType: ValgType;
   valgAlternativer: ValgAlternativ[];
-  valgAlternativTrigger: ValgAlternativ;
 }
 
 export enum FeltType {
