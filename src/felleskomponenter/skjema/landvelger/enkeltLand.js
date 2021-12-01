@@ -91,6 +91,11 @@ export class EnkeltLand extends Component {
     return landListe.length === 1 ? landListe[0] : false;
   };
 
+  landErValgt = (landkodeObjekt) => {
+    this.reduxOppdaterLand(landkodeObjekt.kode);
+    this.setState({ inputVerdi: Utils.land.landTekstFormat(landkodeObjekt), error: null });
+  };
+
   fokusUtHandler = () => {
     const { inputVerdi } = this.state;
 
@@ -103,8 +108,7 @@ export class EnkeltLand extends Component {
     const landkodeObjekt = this.finnEttLand(inputVerdi);
 
     if (landkodeObjekt) {
-      this.reduxOppdaterLand(landkodeObjekt.kode);
-      this.setState({ inputVerdi: Utils.land.landTekstFormat(landkodeObjekt), error: null });
+      this.landErValgt(landkodeObjekt);
     } else {
       this.setState({ error: "Finner ikke landet du har skrevet inn." });
     }
@@ -113,6 +117,12 @@ export class EnkeltLand extends Component {
   inputEndringHandler = (e) => {
     const inputVerdi = e.target.value;
     this.setState({ inputVerdi });
+
+    const landkodeObjekt = this.finnEttLand(inputVerdi);
+
+    if (inputVerdi === Utils.land.landTekstFormat(landkodeObjekt)) {
+      this.landErValgt(landkodeObjekt);
+    }
   };
 
   tomFeilmelding = () => {
