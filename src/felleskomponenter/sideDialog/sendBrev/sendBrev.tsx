@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 
-import * as Api from "../../../services/api";
+import { DokumenterV2 } from "../../../services/api";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
@@ -57,15 +57,15 @@ const SendBrev = ({
   redigerbart,
   resetForm,
 }: Props & PropsFromRedux) => {
-  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
+  const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<DokumenterV2.TilgjengeligeMalerResDto>();
 
   const [brevSendt, setBrevSendt] = useState(false);
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
-  const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
+  const [muligeMottakere, setMuligeMottakere] = useState<DokumenterV2.HentMuligeMottakereResDto>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
 
   useEffect(() => {
-    Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
+    DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
       response.forEach((mal) =>
         mal.muligeMottakere.forEach((muligMottaker) => {
           muligMottaker.uuid = Utils._uuid();
@@ -107,7 +107,7 @@ const SendBrev = ({
     return hentValgverdi ? valgtAlternativ : null;
   };
 
-  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => {
+  const hentBrevRequest = (mottakerRolle: string): DokumenterV2.OpprettBrevReqDto => {
     return {
       produserbardokument: formValues.type || "",
       mottaker: mottakerRolle,
@@ -115,7 +115,7 @@ const SendBrev = ({
       manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
       fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
       fritekst: hentFormVerdi("FRITEKST"),
-      kopiMottakere: muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
+      kopiMottakere: muligeMottakere?.kopiMottakere.map(DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
     };
   };
@@ -123,7 +123,7 @@ const SendBrev = ({
   const sendBrev = () => {
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!mottaker) return;
-    let requestBody: Api.DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
+    let requestBody: DokumenterV2.OpprettBrevReqDto = hentBrevRequest(mottaker.rolle);
     if (mottaker.rolle === "ARBEIDSGIVER") {
       requestBody = {
         ...requestBody,
@@ -131,7 +131,7 @@ const SendBrev = ({
         kontaktpersonNavn: mottaker.orgnrSettesAvSaksbehandler ? formValues.kontaktperson : null,
       };
     }
-    Api.DokumenterV2.opprettBrev(behandlingID, requestBody)
+    DokumenterV2.opprettBrev(behandlingID, requestBody)
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();

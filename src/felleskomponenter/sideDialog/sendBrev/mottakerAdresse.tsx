@@ -1,5 +1,5 @@
 import React from "react";
-import * as Api from "../../../services/api";
+import { DokumenterV2 } from "../../../services/api";
 import * as Utils from "../../../utils";
 
 const MottakerAdresse = ({
@@ -9,7 +9,7 @@ const MottakerAdresse = ({
   poststed,
   land,
   className,
-}: Api.DokumenterV2.MottakerAdresse & { className: string }) => {
+}: DokumenterV2.MottakerAdresse & { className: string }) => {
   return (
     <div className={className}>
       {!tittel?.orgnr && (

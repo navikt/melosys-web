@@ -8,7 +8,7 @@ import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import * as Skjema from "../../skjema";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
-import * as Api from "../../../services/api";
+import { DokumenterV2, Organisasjon } from "../../../services/api";
 import * as Utils from "../../../utils";
 import { OrganisasjonsAdresse } from "../../adresser";
 import MottakerAdresse from "./mottakerAdresse";
@@ -35,8 +35,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
-  muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto | undefined;
-  setMuligeMottakere: (muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto | undefined) => void;
+  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined;
+  setMuligeMottakere: (muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined) => void;
   setMottakerFeil: (mottakerFeil: string | undefined) => void;
   mottakerFeil: string | undefined;
 }
@@ -52,8 +52,8 @@ const BrevMottaker = ({
   mottakerFeil,
 }: Props & PropsFromRedux) => {
   const [adresse, setAdresse] = useState<{
-    mottakerAdresse?: Api.DokumenterV2.MottakerAdresse;
-    organisasjonsAdresse?: Api.Organisasjon;
+    mottakerAdresse?: DokumenterV2.MottakerAdresse;
+    organisasjonsAdresse?: Organisasjon;
   }>();
 
   const finnMottakerFraValgtMal = (uuid?: string) => {
@@ -74,7 +74,7 @@ const BrevMottaker = ({
     "\nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
   const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
-    Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
+    DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
       setMuligeMottakere
     );
   };
@@ -125,7 +125,7 @@ const BrevMottaker = ({
         mottakerAdresse:
           mottaker && mottaker?.adresser
             ? mottaker.adresser.find(
-                (mottakerAdresse: Api.DokumenterV2.MottakerAdresse) =>
+                (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
                   mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
               )
             : undefined,
@@ -179,7 +179,7 @@ const BrevMottaker = ({
                 </Nav.Hjelpetekst>
               </Nav.Typo.Normaltekst>
               {finnMottakerFraValgtMal(formValues.mottaker)?.adresser?.map(
-                (virksomhet: Api.DokumenterV2.MottakerAdresse) => (
+                (virksomhet: DokumenterV2.MottakerAdresse) => (
                   <Fragment key={Utils._uuid()}>
                     <Skjema.Radio
                       className="arbeidsgiver_radio"

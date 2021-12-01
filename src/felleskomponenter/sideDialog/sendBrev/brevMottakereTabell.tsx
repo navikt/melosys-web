@@ -6,7 +6,7 @@ import MottakerTabell from "../../tabell/mottakerTabell";
 import * as KV from "../../../kodeverk";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
-import * as Api from "../../../services/api";
+import { DokumenterV2 } from "../../../services/api";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import * as Ikoner from "../../../resources/images";
 import { SendBrevFormValues } from "./types";
@@ -23,7 +23,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
-  muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto | undefined;
+  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined;
   formIsValid: boolean;
   valgtMottaker: any;
   hentBrevRequest: any;
@@ -37,7 +37,7 @@ const BrevMottakereTabell = ({
   formIsValid,
   hentBrevRequest,
 }: BrevMottakereTabellProps & PropsFromRedux) => {
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
+  const lagDokumenterData = (muligMottaker: DokumenterV2.MuligMottaker, ikon?: boolean) => {
     const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
       ? formValues.organisasjonsnummer
       : formValues.arbeidsgiver;
@@ -57,7 +57,7 @@ const BrevMottakereTabell = ({
     ];
   };
 
-  const mapRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+  const mapRad = (muligMottaker: DokumenterV2.MuligMottaker) => {
     return [
       {
         verdi: (
@@ -84,7 +84,7 @@ const BrevMottakereTabell = ({
     ];
   };
 
-  const mapMottakerRader = (muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
+  const mapMottakerRader = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
     // const valgtMottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!valgtMottaker) return [];
     return [

@@ -1,15 +1,15 @@
 import React from "react";
-import * as Api from "../../../services/api";
+import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
 
 interface ValgAlternativProps {
-  valg: Api.DokumenterV2.Valg;
+  valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
 }
 
 const ValgAlternativer = (props: ValgAlternativProps) => {
-  if (props.valg.valgType === Api.DokumenterV2.ValgType.RADIO) {
+  if (props.valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
       <>
         {props.valg.valgAlternativer.map((alternativ) => (
@@ -24,7 +24,7 @@ const ValgAlternativer = (props: ValgAlternativProps) => {
         ))}
       </>
     );
-  } else if (props.valg.valgType === Api.DokumenterV2.ValgType.SELECT) {
+  } else if (props.valg.valgType === DokumenterV2.ValgType.SELECT) {
     return (
       <Skjema.Select feltNavn={`felt.${props.feltKode}.valg`} label="" emptyFieldText="Velg...">
         {props.valg.valgAlternativer.map((alternativ) => (

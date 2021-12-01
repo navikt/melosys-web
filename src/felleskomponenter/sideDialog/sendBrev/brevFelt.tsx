@@ -1,16 +1,16 @@
 import React from "react";
 import * as Skjema from "../../skjema";
-import * as Api from "../../../services/api";
+import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
 import FeltBeskrivelse from "./feltBeskrivelse";
 
 interface BrevFeltProps {
-  felt: Api.DokumenterV2.Felt;
+  felt: DokumenterV2.Felt;
   visHjelpetekst: boolean;
 }
 const BrevFelt = (props: BrevFeltProps) => {
   switch (props.felt?.feltType) {
-    case Api.DokumenterV2.FeltType.FRITEKST:
+    case DokumenterV2.FeltType.FRITEKST:
       return (
         <>
           {props.visHjelpetekst && (
@@ -19,7 +19,7 @@ const BrevFelt = (props: BrevFeltProps) => {
           <Skjema.HTMLEditor feltNavn={`felt.${props.felt.kode}.feltVerdi`} />
         </>
       );
-    case Api.DokumenterV2.FeltType.TEKST:
+    case DokumenterV2.FeltType.TEKST:
       return (
         <Skjema.Input
           feltNavn={`felt.${props.felt.kode}.feltVerdi`}
@@ -33,7 +33,7 @@ const BrevFelt = (props: BrevFeltProps) => {
           }
         />
       );
-    case Api.DokumenterV2.FeltType.SJEKKBOKS:
+    case DokumenterV2.FeltType.SJEKKBOKS:
       return <Skjema.Checkbox feltNavn={`felt.${props.felt.kode}.feltVerdi`} label={props.felt.beskrivelse} />;
     default:
       return <></>;
