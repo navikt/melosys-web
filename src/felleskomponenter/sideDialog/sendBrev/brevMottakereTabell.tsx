@@ -1,23 +1,22 @@
 import React from "react";
 import { RootState } from "AppTypes";
-import { getFormValues, reduxForm } from "redux-form";
+import { getFormValues } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import MottakerTabell from "../../tabell/mottakerTabell";
 import * as KV from "../../../kodeverk";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
 import * as Api from "../../../services/api";
 import PdfLenkeListe from "../../pdfLenkeListe";
-import sendBrevSchema from "../sendBrevSchema";
 import * as Ikoner from "../../../resources/images";
+import { FormValuesType } from "./types";
 
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formIsValid: formSelectors.SendBrevValidSelector(state),
-  formValues: getFormValues(KV.Form.SEND_BREV)(state),
+  formValues: getFormValues(KV.Form.SEND_BREV)(state) as FormValuesType,
 });
 
 const connector = connect(mapStateToProps);
@@ -27,17 +26,6 @@ interface BrevMottakereTabellProps {
   muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto | undefined;
   formIsValid: boolean;
   valgtMottaker: any;
-  formValues: {
-    valgtMal?: Api.DokumenterV2.TilgjengeligeMaler;
-    type?: string;
-    mottaker?: string;
-    organisasjonsnummer?: string;
-    kontaktperson?: string;
-    arbeidsgiver?: string;
-    felt?: {
-      [key: string]: any;
-    };
-  };
   hentBrevRequest: any;
 }
 
@@ -120,12 +108,4 @@ const BrevMottakereTabell = ({
   );
 };
 
-const BrevMottakereTabellForm = reduxForm<{}, BrevMottakereTabellProps & PropsFromRedux>({
-  form: KV.Form.SEND_BREV,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(sendBrevSchema),
-})(BrevMottakereTabell);
-
-export default connector(BrevMottakereTabellForm);
+export default connector(BrevMottakereTabell);

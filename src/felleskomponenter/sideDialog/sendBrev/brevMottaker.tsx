@@ -3,26 +3,25 @@ import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { getFormValues, reduxForm } from "redux-form";
+import { getFormValues } from "redux-form";
 import { AlertStripeFeil } from "nav-frontend-alertstriper";
 import * as Skjema from "../../skjema";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
-import sendBrevSchema from "../sendBrevSchema";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
 import { OrganisasjonsAdresse } from "../../adresser";
 import MottakerAdresse from "./mottakerAdresse";
 import FeltBeskrivelse from "./feltBeskrivelse";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
+import { FormValuesType } from "./types";
 
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.SEND_BREV)(state),
+  formValues: getFormValues(KV.Form.SEND_BREV)(state) as FormValuesType,
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
 });
@@ -36,17 +35,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
-  formValues: {
-    valgtMal?: Api.DokumenterV2.TilgjengeligeMaler;
-    type?: string;
-    mottaker?: string;
-    organisasjonsnummer?: string;
-    kontaktperson?: string;
-    arbeidsgiver?: string;
-    felt?: {
-      [key: string]: any;
-    };
-  };
   muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto | undefined;
   setMuligeMottakere: (muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto | undefined) => void;
   setMottakerFeil: (mottakerFeil: string | undefined) => void;
@@ -81,7 +69,9 @@ const BrevMottaker = ({
     finnMottakerFraValgtMal(formValues?.mottaker)?.orgnrSettesAvSaksbehandler;
 
   const arbeidsgiverHjelptekst =
-    "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. \nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
+    "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen " +
+    "under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. " +
+    "\nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
   const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
     Api.DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
@@ -239,12 +229,4 @@ const BrevMottaker = ({
   );
 };
 
-const BrevMottakerForm = reduxForm<{}, Props & PropsFromRedux>({
-  form: KV.Form.SEND_BREV,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(sendBrevSchema),
-})(BrevMottaker);
-
-export default connector(BrevMottakerForm);
+export default connector(BrevMottaker);
