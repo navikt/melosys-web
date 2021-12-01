@@ -7,7 +7,7 @@ interface FeltBeskrivelseProps {
 }
 const FeltBeskrivelse = (felt: FeltBeskrivelseProps) => {
   return (
-    <Nav.Typo.Element className="fritekst_label" tag="div">
+    <Nav.Typo.Element className="fritekst_label" tag={felt.hjelpetekst ? "div" : "p"}>
       {felt.beskrivelse}
       {felt.hjelpetekst && (
         <Nav.Hjelpetekst className="hjelpetekst" tittel={felt.hjelpetekst} type={Nav.PopoverOrientering.Venstre}>

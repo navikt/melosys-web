@@ -8,32 +8,30 @@ interface ValgAlternativProps {
   redigerbart: boolean;
 }
 
-const ValgAlternativer: React.FC<ValgAlternativProps> = (props: ValgAlternativProps) => {
+const ValgAlternativer = (props: ValgAlternativProps) => {
   if (props.valg.valgType === Api.DokumenterV2.ValgType.RADIO) {
-    const alternativer = props.valg.valgAlternativer.map((alternativ) => {
-      return (
-        <Skjema.Radio
-          feltNavn={`felt.${props.feltKode}.valg`}
-          label={alternativ.beskrivelse}
-          id={`${props.feltKode}.${alternativ.kode}`}
-          key={`${props.feltKode}.${alternativ.kode}`}
-          value={alternativ.beskrivelse}
-          disabled={!props.redigerbart}
-        />
-      );
-    });
-    return <React.Fragment>{alternativer}</React.Fragment>;
+    return (
+      <>
+        {props.valg.valgAlternativer.map((alternativ) => (
+          <Skjema.Radio
+            feltNavn={`felt.${props.feltKode}.valg`}
+            label={alternativ.beskrivelse}
+            id={`${props.feltKode}.${alternativ.kode}`}
+            key={`${props.feltKode}.${alternativ.kode}`}
+            value={alternativ.beskrivelse}
+            disabled={!props.redigerbart}
+          />
+        ))}
+      </>
+    );
   } else if (props.valg.valgType === Api.DokumenterV2.ValgType.SELECT) {
-    const alternativer = props.valg.valgAlternativer.map((alternativ) => {
-      return (
-        <option key={alternativ.kode} value={alternativ.beskrivelse}>
-          {alternativ.beskrivelse}
-        </option>
-      );
-    });
     return (
       <Skjema.Select feltNavn={`felt.${props.feltKode}.valg`} label="" emptyFieldText="Velg...">
-        {alternativer}
+        {props.valg.valgAlternativer.map((alternativ) => (
+          <option key={alternativ.kode} value={alternativ.beskrivelse}>
+            {alternativ.beskrivelse}
+          </option>
+        ))}
       </Skjema.Select>
     );
   }
