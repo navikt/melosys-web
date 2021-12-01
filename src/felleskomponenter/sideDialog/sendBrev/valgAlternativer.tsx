@@ -1,15 +1,15 @@
 import React from "react";
-import { Valg, ValgType } from "../../../services/modules/dokumenter-v2";
+import * as Api from "../../../services/api";
 import * as Skjema from "../../skjema";
 
 interface ValgAlternativProps {
-  valg: Valg;
+  valg: Api.DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
 }
 
 const ValgAlternativer: React.FC<ValgAlternativProps> = (props: ValgAlternativProps) => {
-  if (props.valg.valgType === ValgType.RADIO) {
+  if (props.valg.valgType === Api.DokumenterV2.ValgType.RADIO) {
     const alternativer = props.valg.valgAlternativer.map((alternativ) => {
       return (
         <Skjema.Radio
@@ -23,7 +23,7 @@ const ValgAlternativer: React.FC<ValgAlternativProps> = (props: ValgAlternativPr
       );
     });
     return <React.Fragment>{alternativer}</React.Fragment>;
-  } else if (props.valg.valgType === ValgType.SELECT) {
+  } else if (props.valg.valgType === Api.DokumenterV2.ValgType.SELECT) {
     const alternativer = props.valg.valgAlternativer.map((alternativ) => {
       return (
         <option key={alternativ.kode} value={alternativ.beskrivelse}>

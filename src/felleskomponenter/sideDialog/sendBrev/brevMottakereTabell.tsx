@@ -2,7 +2,6 @@ import React from "react";
 import { RootState } from "AppTypes";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
-import { HentMuligeMottakereResDto } from "../../../services/modules/dokumenter-v2";
 import MottakerTabell from "../../tabell/mottakerTabell";
 import * as KV from "../../../kodeverk";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -25,7 +24,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
-  muligeMottakere: HentMuligeMottakereResDto | undefined;
+  muligeMottakere: Api.DokumenterV2.HentMuligeMottakereResDto | undefined;
   formIsValid: boolean;
   valgtMottaker: any;
   formValues: {
