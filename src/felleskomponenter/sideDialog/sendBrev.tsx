@@ -22,7 +22,7 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import BrevFelt from "./sendBrev/brevFelt";
 import BrevMottakereTabell from "./sendBrev/brevMottakereTabell";
-import { FormValuesType } from "./sendBrev/types";
+import { SendBrevFormValues } from "./sendBrev/types";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -45,7 +45,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
-  formValues: FormValuesType;
+  formValues: SendBrevFormValues;
 }
 
 const SendBrev = ({

@@ -16,12 +16,12 @@ import FeltBeskrivelse from "./feltBeskrivelse";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
-import { FormValuesType } from "./types";
+import { SendBrevFormValues } from "./types";
 
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.SEND_BREV)(state) as FormValuesType,
+  formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
 });

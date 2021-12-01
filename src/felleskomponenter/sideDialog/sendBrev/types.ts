@@ -1,6 +1,6 @@
 import * as Api from "../../../services/api";
 
-export interface FormValuesType {
+export interface SendBrevFormValues {
   valgtMal?: Api.DokumenterV2.TilgjengeligeMaler;
   type?: string;
   mottaker?: string;

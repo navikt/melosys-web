@@ -9,14 +9,14 @@ import { formSelectors } from "../../../ducks/form";
 import * as Api from "../../../services/api";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import * as Ikoner from "../../../resources/images";
-import { FormValuesType } from "./types";
+import { SendBrevFormValues } from "./types";
 
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formIsValid: formSelectors.SendBrevValidSelector(state),
-  formValues: getFormValues(KV.Form.SEND_BREV)(state) as FormValuesType,
+  formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
 });
 
 const connector = connect(mapStateToProps);
