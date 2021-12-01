@@ -6,23 +6,23 @@ import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
 
-import * as Api from "../../services/api";
-import * as KV from "../../kodeverk";
-import * as Nav from "../../navFrontend";
-import * as Skjema from "../skjema";
-import * as Utils from "../../utils";
-import BrevMottaker from "./sendBrev/brevMottaker";
-import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
-import { lagYupToReduxformErrorMapper } from "../../yup";
-import ValgAlternativer from "./sendBrev/valgAlternativer";
-import FeltBeskrivelse from "./sendBrev/feltBeskrivelse";
-import { formSelectors } from "../../ducks/form";
+import * as Api from "../../../services/api";
+import * as KV from "../../../kodeverk";
+import * as Nav from "../../../navFrontend";
+import * as Skjema from "../../skjema";
+import * as Utils from "../../../utils";
+import BrevMottaker from "./brevMottaker";
+import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+import { lagYupToReduxformErrorMapper } from "../../../yup";
+import ValgAlternativer from "./valgAlternativer";
+import FeltBeskrivelse from "./feltBeskrivelse";
+import { formSelectors } from "../../../ducks/form";
 
-import sendBrevSchema from "./sendBrevSchema";
+import sendBrevSchema from "../sendBrevSchema";
 import "./sendBrev.css";
-import BrevFelt from "./sendBrev/brevFelt";
-import BrevMottakereTabell from "./sendBrev/brevMottakereTabell";
-import { SendBrevFormValues } from "./sendBrev/types";
+import BrevFelt from "./brevFelt";
+import BrevMottakereTabell from "./brevMottakereTabell";
+import { SendBrevFormValues } from "./types";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
