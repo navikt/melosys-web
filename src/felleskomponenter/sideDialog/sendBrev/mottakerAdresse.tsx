@@ -2,7 +2,7 @@ import React from "react";
 import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
-const MottakerAdresseComponent = ({
+const MottakerAdresse = ({
   tittel,
   adresselinjer,
   postnr,
@@ -28,4 +28,4 @@ const MottakerAdresseComponent = ({
   );
 };
 
-export default MottakerAdresseComponent;
+export default MottakerAdresse;

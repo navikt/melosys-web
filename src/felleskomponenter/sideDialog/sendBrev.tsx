@@ -11,17 +11,17 @@ import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 import * as Skjema from "../skjema";
 import * as Utils from "../../utils";
-import BrevMottaker from "./sendBrev/mottakerSelector";
+import BrevMottaker from "./sendBrev/brevMottaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../yup";
-import ValgAlternativerComponent from "./sendBrev/valgAlternativer";
-import BeskrivelseHjelpetekstComponent from "./sendBrev/beskrivelseHjelpetekst";
+import ValgAlternativer from "./sendBrev/valgAlternativer";
+import FeltBeskrivelse from "./sendBrev/feltBeskrivelse";
 import { formSelectors } from "../../ducks/form";
 
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
-import FeltComponent from "./sendBrev/feltComponent";
-import MottakereComponent from "./sendBrev/mottakere";
+import BrevFelt from "./sendBrev/brevFelt";
+import BrevMottakereTabell from "./sendBrev/brevMottakereTabell";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -191,19 +191,19 @@ const SendBrev = ({
         <Fragment key={`fragment_${felt.kode}`}>
           {felt.valg && (
             <>
-              <BeskrivelseHjelpetekstComponent beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
-              <ValgAlternativerComponent valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
+              <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
+              <ValgAlternativer valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
             </>
           )}
           {(felt.valg === null ||
             (formValues.felt && formValues.felt[felt.kode]?.valg === felt.valg.valgAlternativTrigger.beskrivelse)) && (
-            <FeltComponent felt={felt} visHjelpetekst={felt.valg === null} />
+            <BrevFelt felt={felt} visHjelpetekst={felt.valg === null} />
           )}
         </Fragment>
       ))}
 
       {mottakerErValgt && (
-        <MottakereComponent
+        <BrevMottakereTabell
           muligeMottakere={muligeMottakere}
           valgtMottaker={finnMottakerFraValgtMal(formValues.mottaker)}
           hentBrevRequest={hentBrevRequest}

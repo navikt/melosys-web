@@ -13,8 +13,8 @@ import * as Utils from "../../../utils";
 import sendBrevSchema from "../sendBrevSchema";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import { OrganisasjonsAdresse } from "../../adresser";
-import MottakerAdresseComponent from "./mottakerAdresse";
-import BeskrivelseHjelpetekstComponent from "./beskrivelseHjelpetekst";
+import MottakerAdresse from "./mottakerAdresse";
+import FeltBeskrivelse from "./feltBeskrivelse";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
@@ -149,10 +149,7 @@ const BrevMottaker = ({
       <Skjema.Select
         feltNavn="mottaker"
         label={
-          <BeskrivelseHjelpetekstComponent
-            beskrivelse="Mottaker"
-            hjelpetekst={formValues.valgtMal?.mottakereHjelpetekst || null}
-          />
+          <FeltBeskrivelse beskrivelse="Mottaker" hjelpetekst={formValues.valgtMal?.mottakereHjelpetekst || null} />
         }
         disabled={!redigerbart || formValues.valgtMal?.muligeMottakere.length === 1}
         emptyFieldText="Velg..."
@@ -168,9 +165,7 @@ const BrevMottaker = ({
         <Nav.Row>
           <Nav.Column xs="12">
             {mottakerFeil && <AlertStripeFeil>{mottakerFeil}</AlertStripeFeil>}
-            {adresse?.mottakerAdresse && (
-              <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="brukeradresse" />
-            )}
+            {adresse?.mottakerAdresse && <MottakerAdresse {...adresse?.mottakerAdresse} className="brukeradresse" />}
           </Nav.Column>
         </Nav.Row>
       )}
@@ -206,7 +201,7 @@ const BrevMottaker = ({
                       disabled={!redigerbart}
                     />
                     {formValues.arbeidsgiver === virksomhet.tittel.orgnr && adresse?.mottakerAdresse && (
-                      <MottakerAdresseComponent {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
+                      <MottakerAdresse {...adresse?.mottakerAdresse} className="arbeidsgiveradresse" />
                     )}
                   </Fragment>
                 )

@@ -1,11 +1,11 @@
 import React from "react";
 import * as Nav from "../../../navFrontend";
 
-interface BeskrivelseComponentProps {
+interface FeltBeskrivelseProps {
   beskrivelse: string;
   hjelpetekst: string | null;
 }
-const BeskrivelseHjelpetekstComponent = (felt: BeskrivelseComponentProps) => {
+const FeltBeskrivelse = (felt: FeltBeskrivelseProps) => {
   return (
     <Nav.Typo.Element className="fritekst_label" tag="div">
       {felt.beskrivelse}
@@ -18,4 +18,4 @@ const BeskrivelseHjelpetekstComponent = (felt: BeskrivelseComponentProps) => {
   );
 };
 
-export default BeskrivelseHjelpetekstComponent;
+export default FeltBeskrivelse;

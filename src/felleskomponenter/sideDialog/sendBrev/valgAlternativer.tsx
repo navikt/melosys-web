@@ -2,13 +2,13 @@ import React from "react";
 import { Valg, ValgType } from "../../../services/modules/dokumenter-v2";
 import * as Skjema from "../../skjema";
 
-interface ValgAlternativComponentProps {
+interface ValgAlternativProps {
   valg: Valg;
   feltKode: string;
   redigerbart: boolean;
 }
 
-const ValgAlternativerComponent: React.FC<ValgAlternativComponentProps> = (props: ValgAlternativComponentProps) => {
+const ValgAlternativer: React.FC<ValgAlternativProps> = (props: ValgAlternativProps) => {
   if (props.valg.valgType === ValgType.RADIO) {
     const alternativer = props.valg.valgAlternativer.map((alternativ) => {
       return (
@@ -40,4 +40,4 @@ const ValgAlternativerComponent: React.FC<ValgAlternativComponentProps> = (props
   return <></>;
 };
 
-export default ValgAlternativerComponent;
+export default ValgAlternativer;

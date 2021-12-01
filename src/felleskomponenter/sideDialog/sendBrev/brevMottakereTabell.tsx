@@ -24,7 +24,7 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface MottakereComponentProps {
+interface BrevMottakereTabellProps {
   muligeMottakere: HentMuligeMottakereResDto | undefined;
   formIsValid: boolean;
   valgtMottaker: any;
@@ -42,14 +42,14 @@ interface MottakereComponentProps {
   hentBrevRequest: any;
 }
 
-const MottakereComponent = ({
+const BrevMottakereTabell = ({
   muligeMottakere,
   valgtMottaker,
   behandlingID,
   formValues,
   formIsValid,
   hentBrevRequest,
-}: MottakereComponentProps & PropsFromRedux) => {
+}: BrevMottakereTabellProps & PropsFromRedux) => {
   const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
     const orgnrFraFormValues = valgtMottaker.orgnrSettesAvSaksbehandler
       ? formValues.organisasjonsnummer
@@ -121,12 +121,12 @@ const MottakereComponent = ({
   );
 };
 
-const MottakereComponentForm = reduxForm<{}, MottakereComponentProps & PropsFromRedux>({
+const BrevMottakereTabellForm = reduxForm<{}, BrevMottakereTabellProps & PropsFromRedux>({
   form: KV.Form.SEND_BREV,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: lagYupToReduxformErrorMapper(sendBrevSchema),
-})(MottakereComponent);
+})(BrevMottakereTabell);
 
-export default connector(MottakereComponentForm);
+export default connector(BrevMottakereTabellForm);

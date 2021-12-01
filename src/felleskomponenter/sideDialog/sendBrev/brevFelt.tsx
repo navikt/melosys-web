@@ -2,22 +2,19 @@ import React from "react";
 import * as Skjema from "../../skjema";
 import { Felt, FeltType } from "../../../services/modules/dokumenter-v2";
 import { begrensAntallTegn } from "../../../utils/normalisering";
-import BeskrivelseHjelpetekstComponent from "./beskrivelseHjelpetekst";
+import FeltBeskrivelse from "./feltBeskrivelse";
 
-interface FeltComponentProps {
+interface BrevFeltProps {
   felt: Felt;
   visHjelpetekst: boolean;
 }
-const FeltComponent = (props: FeltComponentProps) => {
+const BrevFelt = (props: BrevFeltProps) => {
   switch (props.felt?.feltType) {
     case FeltType.FRITEKST:
       return (
         <>
           {props.visHjelpetekst && (
-            <BeskrivelseHjelpetekstComponent
-              beskrivelse={props.felt.beskrivelse}
-              hjelpetekst={props.felt.hjelpetekst}
-            />
+            <FeltBeskrivelse beskrivelse={props.felt.beskrivelse} hjelpetekst={props.felt.hjelpetekst} />
           )}
           <Skjema.HTMLEditor feltNavn={`felt.${props.felt.kode}.feltVerdi`} />
         </>
@@ -29,10 +26,7 @@ const FeltComponent = (props: FeltComponentProps) => {
           normalize={begrensAntallTegn(props.felt.tegnBegrensning)}
           label={
             props.visHjelpetekst ? (
-              <BeskrivelseHjelpetekstComponent
-                beskrivelse={props.felt.beskrivelse}
-                hjelpetekst={props.felt.hjelpetekst}
-              />
+              <FeltBeskrivelse beskrivelse={props.felt.beskrivelse} hjelpetekst={props.felt.hjelpetekst} />
             ) : (
               ""
             )
@@ -46,4 +40,4 @@ const FeltComponent = (props: FeltComponentProps) => {
   }
 };
 
-export default FeltComponent;
+export default BrevFelt;
