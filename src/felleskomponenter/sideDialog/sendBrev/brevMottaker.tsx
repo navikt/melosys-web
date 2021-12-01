@@ -112,27 +112,21 @@ const BrevMottaker = ({
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid, type: formValues.type });
     }
     if (mottaker.rolle === ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
+      if (formValues?.arbeidsgiver) {
+        setAdresse({
+          mottakerAdresse:
+            mottaker && mottaker?.adresser
+              ? mottaker.adresser.find(
+                  (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
+                    mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
+                )
+              : undefined,
+        });
+        hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
+      }
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
     }
-  }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid]);
-
-  useEffect(() => {
-    setAdresse(undefined);
-    setMuligeMottakere(undefined);
-    if (formValues?.arbeidsgiver && formValues?.type) {
-      const mottaker = finnMottakerFraValgtMal(formValues.mottaker);
-      setAdresse({
-        mottakerAdresse:
-          mottaker && mottaker?.adresser
-            ? mottaker.adresser.find(
-                (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
-                  mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
-              )
-            : undefined,
-      });
-      hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
-    }
-  }, [formValues?.arbeidsgiver]);
+  }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);
 
   return (
     <>
