@@ -29,7 +29,7 @@ const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
 );
 
 const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK
+  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
 export const OpprettSakTittel = () => (
@@ -47,16 +47,6 @@ const OpprettFagsak = (props) => {
     journalforingSoknadsland: valgteLand,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
   } = journalforingSkjemaVerdier;
-
-  useEffect(() => {
-    settFeltInnhold(
-      "opprettnysak_behandlingstema",
-      valgtSakstype === MKV.Koder.sakstyper.FTRL
-        ? MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
-        : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
-    );
-  }, [valgtSakstype]);
-
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -67,7 +57,7 @@ const OpprettFagsak = (props) => {
       case MKV.Koder.sakstyper.FTRL:
         return MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
       case MKV.Koder.sakstyper.TRYGDEAVTALE:
-        return MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK;
+        return MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
       default:
         return MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER;
     }
@@ -107,7 +97,7 @@ const OpprettFagsak = (props) => {
     MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
+    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
   ].includes(valgtBehandlingstema);
 
   return (

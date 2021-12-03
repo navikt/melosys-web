@@ -93,7 +93,7 @@ export const Arbeidssteder = ({
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
     behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
-  const visRepresentantIUtlandet = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK;
+  const visRepresentantIUtlandet = behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
 
   const arbeidsstederLister = (
     <>
