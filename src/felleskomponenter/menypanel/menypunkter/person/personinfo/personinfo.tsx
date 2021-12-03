@@ -68,7 +68,9 @@ const PersonInfo = ({
           <Nav.Typo.Element>
             <span className="personinfo__sivilstand">{aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}</span>
             {sivilstandFraPDLToggle === "enabled" && (
-              <Mui.Lenkeknapp onClick={() => setVisSivilstandModal(true)}>Vis detaljer</Mui.Lenkeknapp>
+              <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisSivilstandModal(true)}>
+                Vis detaljer
+              </Mui.Lenkeknapp>
             )}
           </Nav.Typo.Element>
         )}
