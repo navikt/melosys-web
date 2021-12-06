@@ -3,7 +3,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import ExpandableList from "../../../../expandablelist";
 import hentPersonstatus from "./hentpersonstatus";
-import "./detaljerModaler.css";
+import "./personstatusmodal.css";
 
 interface PersonstatusLinjeProps {
   personstatus: string;
@@ -14,7 +14,7 @@ interface PersonstatusLinjeProps {
 }
 
 const PersonstatusHeader = () => (
-  <Nav.Row className="personinfo__modal__tabell_header">
+  <Nav.Row className="personstatus_modal__tabell_header">
     <Nav.Column xs="5">Personstatus</Nav.Column>
     <Nav.Column xs="2">Kilde</Nav.Column>
     <Nav.Column xs="2">Register</Nav.Column>
@@ -23,7 +23,7 @@ const PersonstatusHeader = () => (
 );
 
 const PersonstatusRad = (data: PersonstatusLinjeProps) => (
-  <Nav.Row className="personinfo__modal__tabell_rad">
+  <Nav.Row className="personstatus_modal__tabell_rad">
     <Nav.Column xs="5">{data.personstatus}</Nav.Column>
     <Nav.Column xs="2">{data.kilde}</Nav.Column>
     <Nav.Column xs="2">{data.register}</Nav.Column>
@@ -41,12 +41,12 @@ const PersonstatusModal = ({ behandlingID, skalViseModal, lukkModal }: Personsta
   if (behandlingID < 0) return null;
 
   const personstatuser = hentPersonstatus(behandlingID);
-  const status = personstatuser.filter((personstatus) => personstatus.erHistorisk);
-  const statusHistorikk = personstatuser.filter((personstatus) => !personstatus.erHistorisk);
+  const status = personstatuser.filter((personstatus) => !personstatus.erHistorisk);
+  const statusHistorikk = personstatuser.filter((personstatus) => personstatus.erHistorisk);
 
   return (
     <Nav.Modal
-      className="personinfo__modal"
+      className="personstatus_modal"
       contentLabel="Personstatus"
       onRequestClose={lukkModal}
       isOpen={skalViseModal}
@@ -70,7 +70,7 @@ const PersonstatusModal = ({ behandlingID, skalViseModal, lukkModal }: Personsta
         dividers
       />
       <Nav.Typo.Undertittel>Historikk</Nav.Typo.Undertittel>
-      <div className="personinfo__modal__gyldighetsinfo">
+      <div className="personstatus_modal__gyldighetsinfo">
         <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra folkeregisteret kan være mangelfulle.</Nav.Typo.EtikettLiten>
         <Nav.Hjelpetekst>
           Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret. Dersom det er en opplysningstype hvor
