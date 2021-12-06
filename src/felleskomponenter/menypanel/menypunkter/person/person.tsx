@@ -107,7 +107,7 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <PersonInfo person={person} />
+          <PersonInfo behandlingID={behandlingID} person={person} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="statsborgerskapsliste-row">

@@ -11,15 +11,17 @@ import "./personinfo.css";
 import * as Mui from "../../../ui";
 
 interface PersonInfoProps {
+  behandlingID: number;
   person: Person;
 }
 
-const PersonInfo = ({ person: { fnr, foedselsdato, sivilstand, personStatus } }: PersonInfoProps) => {
+const PersonInfo = ({ behandlingID, person: { fnr, foedselsdato, sivilstand, personStatus } }: PersonInfoProps) => {
   const [skalVisePersonstatusModal, setSkalVisePersonstatusModal] = useState(true); // TODO endre til false
 
   return (
     <div className="personinfo">
       <Detaljer.PersonstatusModal
+        behandlingID={behandlingID}
         skalViseModal={skalVisePersonstatusModal}
         lukkModal={() => setSkalVisePersonstatusModal(false)}
       />
