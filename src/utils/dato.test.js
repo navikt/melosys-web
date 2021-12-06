@@ -9,7 +9,7 @@ import {
   datoDiff,
   datoDiffMenneskelig,
   beregnAlder,
-  erGyldigDatoString,
+  erGyldigDatoStringUtenPunktum,
   erGyldigPeriode,
   erLike,
   plussEnDag,
@@ -262,26 +262,26 @@ describe("dato.js:", () => {
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
     });
   });
-  describe("erGyldigDatoString", () => {
+  describe("erGyldigDatoStringUtenPunktum", () => {
     test("dato på 6 bostaver uten punktum gir true", () => {
       const dato = "311020";
-      expect(erGyldigDatoString(dato)).toBe(true);
+      expect(erGyldigDatoStringUtenPunktum(dato)).toBe(true);
     });
     test("dato på 8 bostaver uten punktum gir true", () => {
       const dato = "31102020";
-      expect(erGyldigDatoString(dato)).toBe(true);
+      expect(erGyldigDatoStringUtenPunktum(dato)).toBe(true);
     });
     test("dato på 7 bostaver uten punktum gir false", () => {
       const dato = "3110202";
-      expect(erGyldigDatoString(dato)).toBe(false);
+      expect(erGyldigDatoStringUtenPunktum(dato)).toBe(false);
     });
     test("dato på 6 bostaver med punktum gir false", () => {
       const dato = "31.10.20";
-      expect(erGyldigDatoString(dato)).toBe(false);
+      expect(erGyldigDatoStringUtenPunktum(dato)).toBe(false);
     });
     test("dato på 8 bostaver med punktum gir false", () => {
       const dato = "31.10.2020";
-      expect(erGyldigDatoString(dato)).toBe(false);
+      expect(erGyldigDatoStringUtenPunktum(dato)).toBe(false);
     });
   });
 

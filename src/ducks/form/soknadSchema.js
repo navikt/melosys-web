@@ -24,9 +24,11 @@ const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
-const erTrygdeavtaleSak = (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
-const erFtrlSak = (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
-const erTrygdeavtaleEllerFtrl = (behandlingstema) => erTrygdeavtaleSak(behandlingstema) || erFtrlSak(behandlingstema);
+const erTrygdeavtaleSak = (sakstype) => sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE;
+
+const erFtrlSak = (sakstype) => sakstype === MKV.Koder.sakstyper.FTRL;
+
+const erTrygdeavtaleEllerFtrl = (sakstype) => erTrygdeavtaleSak(sakstype) || erFtrlSak(sakstype);
 
 const erAltinnsøknad = (behandlingsgrunnlagtype) =>
   behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
@@ -116,7 +118,7 @@ const medfolgendeFamilie = object().shape({
       ? string().erFnrEllerDnrEllerFødselsdato(
           lagMelding(
             KV.Menypunkter.Familieforhold.tittel,
-            erTrygdeavtaleEllerFtrl(options.context.behandlingstema)
+            erTrygdeavtaleEllerFtrl(options.context.sakstype)
               ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
               : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
             "F.nr./d-nr. er ugyldig"
