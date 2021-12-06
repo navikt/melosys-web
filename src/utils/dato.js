@@ -98,6 +98,13 @@ function formatterKortDatoTilNorsk(kortDato) {
   return `${dato.format("MMM")} - ${dato.format("YYYY")}`;
 }
 
+function erGyldigDatoString(dato) {
+  if (/^[0-9]+$/.test(dato)) {
+    return Boolean(vaskInputDato(dato));
+  }
+  return false;
+}
+
 function erGyldigPeriode(fom, tom) {
   const inputFormats = ["DD.MM.YYYY", "YYYY-MM-DD"];
   return moment(fom, inputFormats).isSameOrBefore(moment(tom, inputFormats));
@@ -174,6 +181,7 @@ export {
   datoDiffPure,
   datoDiffMenneskelig,
   beregnAlder,
+  erGyldigDatoString,
   erGyldigPeriode,
   erIPeriode,
   erLike,

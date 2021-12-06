@@ -25,6 +25,8 @@ const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
 const erTrygdeavtaleSak = (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
+const erFtrlSak = (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
+const erTrygdeavtaleEllerFtrl = (behandlingstema) => erTrygdeavtaleSak(behandlingstema) || erFtrlSak(behandlingstema);
 
 const erAltinnsøknad = (behandlingsgrunnlagtype) =>
   behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
@@ -108,13 +110,15 @@ const erEtterFomTest = {
     ) >= 0,
 };
 
-const medfolgendeBarn = object().shape({
-  fnr: lazy((value) =>
+const medfolgendeFamilie = object().shape({
+  fnr: lazy((value, options) =>
     value
-      ? string().erFnrEllerDnr(
+      ? string().erFnrEllerDnrEllerFødselsdato(
           lagMelding(
             KV.Menypunkter.Familieforhold.tittel,
-            KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
+            erTrygdeavtaleEllerFtrl(options.context.behandlingstema)
+              ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
+              : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
             "F.nr./d-nr. er ugyldig"
           )
         )
@@ -306,7 +310,8 @@ const soknad = object().when("$behandlingstema", {
     soknadsperiodeFom: soknadsperiodeFomSchema,
     soknadsperiodeTom: soknadsperiodeTomSchema,
     utenlandskIdent: array().of(utenlandskIdent),
-    medfolgendeBarn: array().of(medfolgendeBarn),
+    medfolgendeBarn: array().of(medfolgendeFamilie),
+    medfolgendeEktefelleSamboer: array().of(medfolgendeFamilie),
     foedestedOgLand: foedestedOgLandSchema,
     juridiskArbeidsgiverNorge: object().shape({
       antallAnsatte: number().transform(tomStringTilNull).nullable(),

@@ -9,6 +9,7 @@ import {
   datoDiff,
   datoDiffMenneskelig,
   beregnAlder,
+  erGyldigDatoString,
   erGyldigPeriode,
   erLike,
   plussEnDag,
@@ -259,6 +260,28 @@ describe("dato.js:", () => {
       const foedselsdato = "1978-01-01";
       const forventetAlder = 40;
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
+    });
+  });
+  describe("erGyldigDatoString", () => {
+    test("dato på 6 bostaver uten punktum gir true", () => {
+      const dato = "311020";
+      expect(erGyldigDatoString(dato)).toBe(true);
+    });
+    test("dato på 8 bostaver uten punktum gir true", () => {
+      const dato = "31102020";
+      expect(erGyldigDatoString(dato)).toBe(true);
+    });
+    test("dato på 7 bostaver uten punktum gir false", () => {
+      const dato = "3110202";
+      expect(erGyldigDatoString(dato)).toBe(false);
+    });
+    test("dato på 6 bostaver med punktum gir false", () => {
+      const dato = "31.10.20";
+      expect(erGyldigDatoString(dato)).toBe(false);
+    });
+    test("dato på 8 bostaver med punktum gir false", () => {
+      const dato = "31.10.2020";
+      expect(erGyldigDatoString(dato)).toBe(false);
     });
   });
 
