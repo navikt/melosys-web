@@ -17,7 +17,7 @@ import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
 import { OrganisasjonSelectors } from "../organisasjoner";
 import { utpekingsperioderSelectors } from "../utpekingsperioder";
 
-import { hentFaktaVerdi } from "../../regler/avklartefakta";
+import { hentFaktaVerdi } from "../../domeneUtils/avklartefakta";
 import { BOOLSK_STRING } from "../../constants";
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør

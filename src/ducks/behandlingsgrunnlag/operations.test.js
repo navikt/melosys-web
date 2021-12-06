@@ -44,18 +44,23 @@ describe("Behandlingsgrunnlag operations", () => {
           data: {
             juridiskArbeidsgiverNorge: {},
             personOpplysninger: {},
-            arbeidPaaLand: {},
             foretakUtland: {},
             oppholdUtland: {},
             bosted: {},
             selvstendigArbeid: {},
-            maritimtArbeid: [],
             soeknadsland: {},
             periode: {},
+            arbeidPaaLand: {},
+            maritimtArbeid: [],
             luftfartBaser: [],
+            loennOgGodtgjoerelse: {},
             arbeidsgiversBekreftelse: {},
-            overgangsregelbestemmelser: [],
             arbeidssituasjonOgOevrig: {},
+            utenlandsoppdraget: {},
+            trygdedekning: {},
+            representantIUtlandet: {},
+            overgangsregelbestemmelser: [],
+            ytterligereInformasjon: {},
           },
         },
       },
@@ -87,17 +92,19 @@ describe("Behandlingsgrunnlag operations", () => {
             data: {
               juridiskArbeidsgiverNorge: {},
               personOpplysninger: {},
-              arbeidPaaLand: {},
               foretakUtland: {},
               oppholdUtland: {},
               bosted: {},
               selvstendigArbeid: {},
-              maritimtArbeid: [],
               soeknadsland: {},
               periode: {},
+              arbeidPaaLand: {},
+              maritimtArbeid: [],
               luftfartBaser: [],
+              loennOgGodtgjoerelse: {},
               arbeidsgiversBekreftelse: {},
               arbeidssituasjonOgOevrig: {},
+              utenlandsoppdraget: {},
             },
           }),
         })
@@ -132,17 +139,86 @@ describe("Behandlingsgrunnlag operations", () => {
             data: {
               juridiskArbeidsgiverNorge: {},
               personOpplysninger: {},
-              arbeidPaaLand: {},
               foretakUtland: {},
               oppholdUtland: {},
               bosted: {},
               selvstendigArbeid: {},
-              maritimtArbeid: [],
               soeknadsland: {},
               periode: {},
+              arbeidPaaLand: {},
+              maritimtArbeid: [],
               luftfartBaser: [],
               overgangsregelbestemmelser: [],
-              ytterligereInformasjon: null,
+              ytterligereInformasjon: {},
+            },
+          }),
+        })
+      );
+    });
+
+    it("lagrer FtrlGrunnlagData ved behandlingstema ARBEID_I_UTLANDET", async () => {
+      initialState.behandlinger.data.oppsummering.behandlingstema.kode =
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
+
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+
+      const store = mockStore(initialState);
+
+      await store.dispatch(operations.lagre());
+
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/behandlingsgrunnlag/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              juridiskArbeidsgiverNorge: {},
+              personOpplysninger: {},
+              foretakUtland: {},
+              oppholdUtland: {},
+              bosted: {},
+              selvstendigArbeid: {},
+              soeknadsland: {},
+              periode: {},
+              arbeidPaaLand: {},
+              maritimtArbeid: [],
+              luftfartBaser: [],
+              loennOgGodtgjoerelse: {},
+              arbeidsgiversBekreftelse: {},
+              trygdedekning: {},
+            },
+          }),
+        })
+      );
+    });
+
+    it("lagrer TrygdeavtaleGrunnlagData ved behandlingstema YRKESAKTIV", async () => {
+      initialState.behandlinger.data.oppsummering.behandlingstema.kode =
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
+
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+
+      const store = mockStore(initialState);
+
+      await store.dispatch(operations.lagre());
+
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/behandlingsgrunnlag/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              juridiskArbeidsgiverNorge: {},
+              personOpplysninger: {},
+              foretakUtland: {},
+              oppholdUtland: {},
+              bosted: {},
+              selvstendigArbeid: {},
+              soeknadsland: {},
+              periode: {},
+              loennOgGodtgjoerelse: {},
+              arbeidsgiversBekreftelse: {},
+              representantIUtlandet: {},
             },
           }),
         })

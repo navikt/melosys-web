@@ -2,13 +2,15 @@ import React, { useState } from "react";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../ui";
+
 import { Person } from "../../../../services/api";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { PersonstatusModal } from "./personstatusDetaljer";
 
 import EnkeltDato from "../../../datoOmrade/enkeltDato";
-import * as Detaljer from "./personstatusDetaljer";
 
 import "./personinfo.css";
-import * as Mui from "../../../ui";
 
 interface PersonInfoProps {
   behandlingID: number;
@@ -18,9 +20,11 @@ interface PersonInfoProps {
 const PersonInfo = ({ behandlingID, person: { fnr, foedselsdato, sivilstand, personStatus } }: PersonInfoProps) => {
   const [skalVisePersonstatusModal, setSkalVisePersonstatusModal] = useState(false);
 
+  const pdlToggle = useFeatureToggle("melosys.pdl.aktiv");
+
   return (
     <div className="personinfo">
-      <Detaljer.PersonstatusModal
+      <PersonstatusModal
         behandlingID={behandlingID}
         skalViseModal={skalVisePersonstatusModal}
         lukkModal={() => setSkalVisePersonstatusModal(false)}
@@ -29,7 +33,9 @@ const PersonInfo = ({ behandlingID, person: { fnr, foedselsdato, sivilstand, per
       <div className="personinfo__element">
         <Nav.Typo.EtikettLiten>Personstatus</Nav.Typo.EtikettLiten>
         <Nav.Typo.Element>{KV.objektTilTerm(personStatus)}</Nav.Typo.Element>
-        <Mui.Lenkeknapp onClick={() => setSkalVisePersonstatusModal(true)}>Vis detaljer</Mui.Lenkeknapp>
+        {pdlToggle === "enabled" && (
+          <Mui.Lenkeknapp onClick={() => setSkalVisePersonstatusModal(true)}>Vis detaljer</Mui.Lenkeknapp>
+        )}
       </div>
       <div className="personinfo__element">
         <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>

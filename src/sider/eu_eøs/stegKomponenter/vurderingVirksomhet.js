@@ -5,7 +5,11 @@ import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 import * as MPT from "../../../proptypes";
 
-import { konverterTilStegData, lagAvklartfakta, slettAvklartfakta } from "../../../regler/avklartefakta";
+import {
+  konverterAvklartfaktaTilStegData,
+  lagAvklartfakta,
+  slettAvklartfakta,
+} from "../../../felleskomponenter/stegvelger";
 import * as KV from "../../../kodeverk";
 import { BOOLSK_STRING } from "../../../constants";
 
@@ -20,7 +24,7 @@ const VirksomheterLinje = (props) => {
   const { virksomheten, avklartVirksomhet, redigerbart, oppdaterData, slettData } = props;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
+    oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
 
     const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));

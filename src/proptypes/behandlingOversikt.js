@@ -6,7 +6,10 @@ const BehandligOversiktPropType = PT.shape({
   behandlingID: PT.number,
   behandlingsstatus: Kodeverk,
   behandlingstype: Kodeverk,
-  land: PT.arrayOf(PT.string),
+  land: PT.shape({
+    landkode: PT.arrayOf(PT.string),
+    erUkjenteEllerAlleEosLand: PT.bool,
+  }),
   opprettetDato: PT.string,
   periode: Periode,
 });

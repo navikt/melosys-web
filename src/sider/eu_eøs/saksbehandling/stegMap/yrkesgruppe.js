@@ -2,8 +2,8 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingYrkesgruppe from "../../stegKomponenter/vurderingYrkesgruppe";
 import * as KV from "../../../../kodeverk";
-import { hentFakta } from "../../../../regler/avklartefakta";
-import { hentTilleggBestemmelse } from "../../../../regler/tilleggbestemmelser";
+import { hentFakta } from "../../../../domeneUtils/avklartefakta";
+import { hentTilleggBestemmelse } from "../../../../domeneUtils/tilleggbestemmelser";
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {

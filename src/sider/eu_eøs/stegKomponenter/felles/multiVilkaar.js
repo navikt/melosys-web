@@ -4,7 +4,12 @@ import PT from "prop-types";
 import MKV from "../../../../melosyskodeverk";
 
 import * as Nav from "../../../../navFrontend";
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar, slettVilkar } from "../../../../regler/vilkar";
+import {
+  konverterVilkarTilStegData,
+  lagVilkarbegrunnelse,
+  lagVilkaar,
+  slettVilkar,
+} from "../../../../felleskomponenter/stegvelger";
 
 import * as Mui from "../../../../felleskomponenter/ui";
 
@@ -17,8 +22,8 @@ class MultiVilkaar extends Component {
 
   componentDidMount() {
     const { oppdaterData, vilkaar12, vilkaarKode12, vilkaar16 } = this.props;
-    oppdaterData(konverterTilStegData(vilkaarKode12, vilkaar12));
-    oppdaterData(konverterTilStegData("art16_1", vilkaar16));
+    oppdaterData(konverterVilkarTilStegData(vilkaarKode12, vilkaar12));
+    oppdaterData(konverterVilkarTilStegData("art16_1", vilkaar16));
   }
 
   vilkaarEndret = (event) => {
@@ -42,13 +47,13 @@ class MultiVilkaar extends Component {
 
   begrunnelseEndret = ({ value }, id) => {
     const { oppdaterData } = this.props;
-    oppdaterData(lagBegrunnelse(id, value));
+    oppdaterData(lagVilkarbegrunnelse(id, value));
   };
 
   fritekstEndret = (event) => {
     const { value, id } = event.target;
     const { oppdaterData } = this.props;
-    oppdaterData(lagBegrunnelse(id, null, value));
+    oppdaterData(lagVilkarbegrunnelse(id, null, value));
   };
 
   hentAvslagBegrunnelser = () => (this.props.vilkaar16 ? this.props.vilkaar16.begrunnelseKoder || [] : []);

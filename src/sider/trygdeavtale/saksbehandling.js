@@ -7,12 +7,13 @@ import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
+import Personlinje from "../../felleskomponenter/personlinje";
 import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import { useFeatureToggle } from "../../featuretoggle";
+import { useFeatureToggle, FeatureToggle } from "../../featuretoggle";
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
@@ -20,6 +21,7 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { dokumenterOperations, dokumenterSelectors } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
+import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { menypanelOperations } from "../../ducks/menypanel";
 import { formSelectors } from "../../ducks/form";
@@ -99,6 +101,7 @@ const Saksbehandling = ({
   hentBehandlingsgrunnlag,
   hentBehandlingsresultat,
   hentDokumentOversikt,
+  hentLovvalgsperiode,
   hentFagsaker,
   lagreOgLukk,
   location,
@@ -146,7 +149,6 @@ const Saksbehandling = ({
 
       await hentBehandlingsresultat(behandlingIDFraParam);
 
-      // Sjekk om saken er iferd under oppdatering
       if (behandlingOppfriskes) {
         visOppfriskModal();
         return false;
@@ -154,6 +156,7 @@ const Saksbehandling = ({
 
       await hentBehandlingsgrunnlag(behandlingIDFraParam);
       await hentDokumentOversikt(saksnummer);
+      await hentLovvalgsperiode(behandlingIDFraParam);
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
@@ -192,71 +195,76 @@ const Saksbehandling = ({
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
 
   return (
-    <div className="saksbehandling">
-      <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="7">
-            {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
-            {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
-            {visStegVelger && (
-              <Stegvelger
-                redigerbart={redigerbart}
-                annenBehandlingOppfriskes={annenBehandlingOppfriskes}
-                oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
-                tilForsiden={tilForsiden}
-              />
-            )}
-            <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-          </Nav.Column>
-          <Nav.Column xs="5">
-            <SideOppsummering
-              behandlingstema={behandlingstema}
-              redigerbart={redigerbart}
-              fagsak={fagsak}
-              oppsummering={oppsummering}
-              person={person}
-              arbeidsland={arbeidsland}
-              behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
-              behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-              behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
-              lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
-              lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
-              renderBehandlingsmeny={() => (
-                <Legacybehandlingsmeny
+    <>
+      <FeatureToggle togglename="melosys.design.PERSONLINJE">
+        {(status) => status === "enabled" && <Personlinje />}
+      </FeatureToggle>
+      <div id="main-container" className="main-container">
+        <div className="saksbehandling">
+          <Nav.Container fluid>
+            <Nav.Row>
+              <Nav.Column xs="7">
+                {erHenlagtSak && <HenlagtSak behandlingsresultat={behandlingsresultat} />}
+                {visAvslaattSoknad && <AvslaattSoknad behandlingsresultat={behandlingsresultat} />}
+                {visStegVelger && (
+                  <Stegvelger
+                    redigerbart={redigerbart}
+                    annenBehandlingOppfriskes={annenBehandlingOppfriskes}
+                    oppfriskOgLastInnSaksopplysninger={oppfriskOgLastInnSaksopplysninger}
+                    tilForsiden={tilForsiden}
+                  />
+                )}
+                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+              </Nav.Column>
+              <Nav.Column xs="5">
+                <SideOppsummering
+                  behandlingstema={behandlingstema}
                   redigerbart={redigerbart}
-                  lagreOgLukkHandle={lagreOgLukk}
-                  tilbakeleggeHandle={tilbakeleggOppgave}
-                  oppfriskSaksopplysningerHandle={visOppfriskModal}
-                  visHenleggDialogHandle={visHenleggDialogHandle}
-                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                  apneTidligereBehandlinger={apneTidligereBehandlinger}
-                  visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                  behandlingsstatus={behandlingsstatus}
-                />
-              )}
-              renderBehandlingsstatus={() => (
-                <Behandlingsstatus
-                  behandlingID={behandlingID}
-                  redigerbart={redigerbart}
+                  fagsak={fagsak}
                   oppsummering={oppsummering}
-                  behandlingsstatusMap={behandlingsstatusMap}
+                  person={person}
+                  arbeidsland={arbeidsland}
+                  behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
+                  behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                  behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
+                  lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
+                  lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
+                  renderBehandlingsmeny={() => (
+                    <Legacybehandlingsmeny
+                      redigerbart={redigerbart}
+                      lagreOgLukkHandle={lagreOgLukk}
+                      tilbakeleggeHandle={tilbakeleggOppgave}
+                      oppfriskSaksopplysningerHandle={visOppfriskModal}
+                      visHenleggDialogHandle={visHenleggDialogHandle}
+                      visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                      visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                      apneTidligereBehandlinger={apneTidligereBehandlinger}
+                      visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
+                      behandlingsstatus={behandlingsstatus}
+                    />
+                  )}
+                  renderBehandlingsstatus={() => (
+                    <Behandlingsstatus
+                      behandlingID={behandlingID}
+                      redigerbart={redigerbart}
+                      oppsummering={oppsummering}
+                      behandlingsstatusMap={behandlingsstatusMap}
+                    />
+                  )}
                 />
-              )}
-            />
-            <SideDialog
-              dokumentOversikt={dokumentOversikt}
-              saksnummer={saksnummer}
-              redigerbart={redigerbart}
-              behandlingID={behandlingID}
-              brevBestillingRedigerbartIArtikkel13
-              brevBestillingRedigerbart={redigerbart}
-              dokumenter={dokumenter}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
-    </div>
+                <SideDialog
+                  dokumentOversikt={dokumentOversikt}
+                  saksnummer={saksnummer}
+                  redigerbart={redigerbart}
+                  behandlingID={behandlingID}
+                  dokumenter={dokumenter}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Container>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -287,6 +295,7 @@ Saksbehandling.propTypes = {
   hentBehandlingsgrunnlag: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
+  hentLovvalgsperiode: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
   oppfriskOgLastInnSaksopplysninger: PT.func.isRequired,
@@ -341,6 +350,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentBehandlingsgrunnlag: (bid) => dispatch(behandlingsgrunnlagOperations.hent(bid)),
   hentBehandlingsresultat: (bid) => dispatch(behandlingsresultatOperations.hent(bid)),
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+  hentLovvalgsperiode: (bid) => dispatch(lovvalgsperioderOperations.hent(bid)),
   hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),

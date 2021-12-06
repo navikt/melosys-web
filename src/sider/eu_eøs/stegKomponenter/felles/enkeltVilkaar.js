@@ -5,7 +5,7 @@ import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
 
 import { BOOLSK } from "../../../../constants";
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from "../../../../regler/vilkar";
+import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 const EnkeltVilkaar = (props) => {
   const {
@@ -20,7 +20,7 @@ const EnkeltVilkaar = (props) => {
   } = props;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(vilkaarKode, vilkaar));
+    oppdaterData(konverterVilkarTilStegData(vilkaarKode, vilkaar));
   }, []);
 
   const radioEndringHandler = (event) => {
@@ -28,7 +28,7 @@ const EnkeltVilkaar = (props) => {
   };
 
   const listevalgEndringHandler = (event) => {
-    oppdaterData(lagBegrunnelse(vilkaarKode, event.value));
+    oppdaterData(lagVilkarbegrunnelse(vilkaarKode, event.value));
   };
 
   return (

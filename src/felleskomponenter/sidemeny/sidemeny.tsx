@@ -2,7 +2,7 @@ import { Normaltekst } from "nav-frontend-typografi";
 import * as React from "react";
 import classnames from "classnames";
 
-import bem from "./bemUtils";
+import bem from "../../bemUtils";
 import LinkGroup from "./linkgroup";
 import { Link } from "./types";
 

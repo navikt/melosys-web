@@ -16,6 +16,7 @@ import * as Offshore from "./offshore";
 import * as Skip from "./skip";
 
 import EditerbartElementListe from "../editerbartElementListe";
+import RepresentantIUtlandet from "./representantIUtlandet";
 import { Status } from "../editerbartElement";
 
 import MKV from "../../../../melosyskodeverk";
@@ -76,6 +77,7 @@ type ArbeidsstederProps = PropsFromRedux & {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
+  behandlingstema: string;
 };
 
 export const Arbeidssteder = ({
@@ -86,10 +88,12 @@ export const Arbeidssteder = ({
   erFastArbeidssted,
   erHjemmekontor,
   behandlingsgrunnlagtype,
+  behandlingstema,
   soknadsland: { erUkjenteEllerAlleEosLand },
 }: ArbeidsstederProps) => {
   const erSoknadFraAltinn =
     behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const visRepresentantIUtlandet = behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
 
   const arbeidsstederLister = (
     <>
@@ -167,6 +171,8 @@ export const Arbeidssteder = ({
     </Nav.AlertStripe>
   );
 
+  const arbeidssteder = erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidsstederLister;
+
   return (
     <div className="arbeidssteder">
       <Nav.Typo.Innholdstittel style={{ display: "inline", marginRight: "1em" }}>
@@ -175,7 +181,7 @@ export const Arbeidssteder = ({
       <span>{behandlingsgrunnlagEtikett}</span>
       {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
-        {erUkjenteEllerAlleEosLand ? ukjenteEllerAlleEosLandValgtAlertstripe : arbeidsstederLister}
+        {visRepresentantIUtlandet ? <RepresentantIUtlandet redigerbart={redigerbart} /> : arbeidssteder}
       </div>
     </div>
   );

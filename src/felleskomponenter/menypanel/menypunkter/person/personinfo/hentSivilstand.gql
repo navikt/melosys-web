@@ -1,0 +1,15 @@
+query hentSivilstand($behandlingID: Long!) {
+  hentSaksopplysninger(behandlingID: $behandlingID) {
+    persondata {
+      sivilstand {
+        type
+        relatertVedSivilstand
+        gyldigFraOgMed
+        bekreftelsesdato
+        master
+        kilde
+        erHistorisk
+      }
+    }
+  }
+}

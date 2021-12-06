@@ -86,7 +86,7 @@ export const Person = ({
   visBehandlingsgrunnlagData,
   behandlingID,
 }: PersonProps) => {
-  const pdlAdresserToggle = useFeatureToggle("melosys.vis_pdl_adresser");
+  const pdlAdresserToggle = useFeatureToggle("melosys.pdl.aktiv");
 
   const {
     bostedsadressePerioder,
@@ -107,7 +107,7 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <PersonInfo behandlingID={behandlingID} person={person} />
+          <PersonInfo person={person} behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="statsborgerskapsliste-row">

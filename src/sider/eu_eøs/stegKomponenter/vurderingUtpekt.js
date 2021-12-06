@@ -18,13 +18,15 @@ import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag
 import { flytSelectors } from "../../../ducks/flyt";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 
-import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from "../../../regler/lovvalgsbestemmelser";
-import { konverterLovvalgslandTilStegData, lagLovvalgsland } from "../../../regler/lovvalgsland";
 import {
+  konverterLovvalgsbestemmelseTilStegData,
+  lagLovvalgsbestemmelse,
+  konverterLovvalgslandTilStegData,
+  lagLovvalgsland,
   konverterLovvalgsperiodeTilStegData,
   lagLovvalgsperiode,
   slettLovvalgsperiode,
-} from "../../../regler/lovvalgsperiode";
+} from "../../../felleskomponenter/stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurderingUtpektSchema from "./vurderingUtpektSchema";
 

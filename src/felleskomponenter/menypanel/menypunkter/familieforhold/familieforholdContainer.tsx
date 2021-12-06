@@ -8,6 +8,7 @@ import * as Ikoner from "../../../../resources/images";
 import * as Etiketter from "../../etiketter";
 import * as MedfolgendeFamilie from "./medfolgendeFamilie";
 
+import MKV from "../../../../melosyskodeverk";
 import FamiliemedlemmerFraTPS from "./familiemedlemmer";
 import FamiliemedlemmerFraPDL from "./familiemedlemmerFraPDL";
 import EditerbartElementListe from "../editerbartElementListe";
@@ -15,13 +16,15 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 
 import "./familieforholdContainer.css";
 
+const { ARBEID_I_UTLANDET, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
+
 interface FamilieforholdContainerProps {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
   visBehandlingsgrunnlagData: boolean;
   setMenypanelFeilmelding: (feilmelding: string) => void;
-  visEktefelleSamboerMedPaReisen: boolean;
+  behandlingstema: string;
 }
 
 const FamilieforholdContainer = ({
@@ -30,9 +33,9 @@ const FamilieforholdContainer = ({
   behandlingsgrunnlagEtikett,
   visBehandlingsgrunnlagData,
   setMenypanelFeilmelding,
-  visEktefelleSamboerMedPaReisen,
+  behandlingstema,
 }: FamilieforholdContainerProps) => {
-  const familiemedlemmerFraPDLToggle = useFeatureToggle("melosys.hent_familiemedlemmer_fra_pdl");
+  const familiemedlemmerFraPDLToggle = useFeatureToggle("melosys.pdl.aktiv");
 
   const sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn = (familiemedlemmer: KV.Form.MedfolgendeFamilie[]) =>
     familiemedlemmer.every((familiemedlem) => familiemedlem.fnr && familiemedlem.navn);
@@ -62,7 +65,7 @@ const FamilieforholdContainer = ({
               {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>
-          {visEktefelleSamboerMedPaReisen ? (
+          {behandlingstema === ARBEID_I_UTLANDET || behandlingstema === YRKESAKTIV ? (
             <div>
               <Mui.Undertittel
                 tekst={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}

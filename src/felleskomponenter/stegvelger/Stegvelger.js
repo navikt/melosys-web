@@ -35,8 +35,7 @@ import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 
 import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinger";
-import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from "./StegState";
-import { StegStoreTyper } from "../../regler";
+import { AvklartefaktaStore, VilkaarStore, EnkelDataStore, StegStoreTyper } from "./StegState";
 
 import "./stegvelger.css";
 

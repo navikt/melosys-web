@@ -4,7 +4,7 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingUtpekt from "../../stegKomponenter/vurderingUtpekt";
 
-import { hentLovvalgsbestemmelse } from "../../../../regler/lovvalgsbestemmelser";
+import { hentLovvalgsbestemmelse } from "../../../../domeneUtils/lovvalgsbestemmelser";
 
 class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {

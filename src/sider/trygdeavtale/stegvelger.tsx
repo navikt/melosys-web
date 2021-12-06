@@ -12,36 +12,44 @@ import * as Utils from "../../utils";
 import StegLinje from "../../felleskomponenter/stegLinje";
 import StegFane from "../../felleskomponenter/stegFane";
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
-import { BehandlingsgrunnlagFeilmeldinger } from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger/behandlingsgrunnlagFeilmeldinger";
+import BehandlingsgrunnlagFeilmeldinger from "../../felleskomponenter/behandlingsgrunnlagFeilmeldinger";
 import VurderingInngang from "./stegKomponenter/vurderingInngang";
 import VurderingAvklarVirksomhet from "./stegKomponenter/vurderingAvklarVirksomhet";
 import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
 import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
+import VurderingVedtak from "./stegKomponenter/vurderingVedtak";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
+
+export enum StegStatus {
+  FERDIG = "FERDIG",
+  IKKE_FERDIG = "IKKE_FERDIG",
+}
 
 interface AktueltSteg {
   id: any;
   tittel: string;
   stegPosisjon: number;
   aktivtSteg?: boolean;
+  vedtakSteg?: boolean;
   komponent: any;
   status: string;
   data?: object;
   handlers?: object;
 }
-const DummySteg = () => <div>Dummy</div>;
 
 const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: VurderingInngang },
   AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: VurderingBestemmelse },
   FAMILIE: { tittel: "Familie", komponent: VurderingFamilie },
-  VEDTAK: { tittel: "Vedtak", komponent: DummySteg },
+  VEDTAK: { tittel: "Vedtak", komponent: VurderingVedtak },
 };
 
 const mapStateToProps = (state: RootState) => ({
@@ -54,6 +62,9 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  fattVedtak: (behandlingID: string, data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) =>
+    dispatch(vedtakOperations.fatt(behandlingID, data)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -71,6 +82,7 @@ interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
   skalLagreBehandlingsgrunnlag: boolean;
+  visBehandlingsgrunnlagFeilmeldinger: boolean;
 }
 
 class Stegvelger extends Component<Props, State> {
@@ -78,6 +90,7 @@ class Stegvelger extends Component<Props, State> {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
     skalLagreBehandlingsgrunnlag: false,
+    visBehandlingsgrunnlagFeilmeldinger: false,
   };
 
   componentDidMount() {
@@ -143,6 +156,7 @@ class Stegvelger extends Component<Props, State> {
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
       lagreBehandlingsgrunnlagOgOppdaterStegData: this.lagreBehandlingsgrunnlagOgOppdaterStegData,
+      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -153,9 +167,10 @@ class Stegvelger extends Component<Props, State> {
         stegPosisjon: enkeltSteg.nummer,
         aktivtSteg: this.state.aktivtStegIndex === enkeltSteg.nummer,
         komponent: stegMapElement.komponent,
-        status: enkeltSteg.status === "FERDIG" ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
+        status: enkeltSteg.status === StegStatus.FERDIG ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
         data: { ...data, steg: enkeltSteg },
         handlers,
+        vedtakSteg: enkeltSteg.navn === "VEDTAK",
       };
     });
   };
@@ -171,7 +186,11 @@ class Stegvelger extends Component<Props, State> {
     this.setState({ skalLagreBehandlingsgrunnlag: false });
   };
 
-  harBehandlingsgrunnlagFeilmeldinger = () => !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
+  harBehandlingsgrunnlagFeilmeldinger = () => {
+    const harFeilmeldinger = !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
+    this.setState({ visBehandlingsgrunnlagFeilmeldinger: harFeilmeldinger });
+    return harFeilmeldinger;
+  };
 
   oppdaterAktivtSteg = async (nesteStegIndex: number) => {
     const {
@@ -198,6 +217,19 @@ class Stegvelger extends Component<Props, State> {
     }
   };
 
+  lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
+    const {
+      props: { behandlingID, fattVedtak, lagreAllData },
+      harBehandlingsgrunnlagFeilmeldinger,
+    } = this;
+
+    if (!harBehandlingsgrunnlagFeilmeldinger()) {
+      await lagreAllData();
+      return fattVedtak(behandlingID, data);
+    }
+    return Promise.resolve();
+  };
+
   fortsett = () => {
     this.oppdaterAktivtSteg(this.state.aktivtStegIndex + 1);
   };
@@ -208,8 +240,7 @@ class Stegvelger extends Component<Props, State> {
 
   render() {
     const {
-      state: { aktuelleSteg },
-      harBehandlingsgrunnlagFeilmeldinger,
+      state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger },
       oppdaterAktivtSteg,
     } = this;
 
@@ -225,7 +256,7 @@ class Stegvelger extends Component<Props, State> {
                 ))}
               </div>
             )}
-            {harBehandlingsgrunnlagFeilmeldinger() && <BehandlingsgrunnlagFeilmeldinger />}
+            {visBehandlingsgrunnlagFeilmeldinger && <BehandlingsgrunnlagFeilmeldinger />}
           </div>
         )}
       </TrackVisibility>

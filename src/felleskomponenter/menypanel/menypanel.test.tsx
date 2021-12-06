@@ -36,7 +36,6 @@ const {
   ØVRIGE_SED_UFM,
   TRYGDETID,
   ARBEID_I_UTLANDET,
-  TRYGDEAVTALE_UK,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 describe("MenyPanel", () => {
@@ -252,44 +251,4 @@ describe("MenyPanel", () => {
       expect(activeContent.children().props().behandlingsgrunnlagEtikett).toEqual(<Etiketter.FraSoknad />);
     }
   );
-
-  each([ARBEID_I_UTLANDET, TRYGDEAVTALE_UK]).it(
-    `viser familie med på reisen istedenfor barn med på reisen hvis behandlingstema er %p`,
-    (behandlingstema) => {
-      props.behandlingstema = behandlingstema;
-      const menypanel = shallow(<Menypanel {...props} />);
-
-      const sidemeny = menypanel.find(Sidemeny);
-      sidemeny.props().onClick(0, 1);
-      const activeContent = menypanel.find(Nav.Panel);
-
-      expect(activeContent.children().props().visEktefelleSamboerMedPaReisen).toBe(true);
-    }
-  );
-
-  each([
-    UTSENDT_ARBEIDSTAKER,
-    UTSENDT_SELVSTENDIG,
-    ARBEID_FLERE_LAND,
-    IKKE_YRKESAKTIV,
-    ARBEID_ETT_LAND_ØVRIG,
-    ARBEID_NORGE_BOSATT_ANNET_LAND,
-    REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-    REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-    ANMODNING_OM_UNNTAK_HOVEDREGEL,
-    BESLUTNING_LOVVALG_NORGE,
-    BESLUTNING_LOVVALG_ANNET_LAND,
-    ØVRIGE_SED_MED,
-    ØVRIGE_SED_UFM,
-    TRYGDETID,
-  ]).it(`viser ikke familie med på reisen hvis behandlingstema er %p`, (behandlingstema) => {
-    props.behandlingstema = behandlingstema;
-    const menypanel = shallow(<Menypanel {...props} />);
-
-    const sidemeny = menypanel.find(Sidemeny);
-    sidemeny.props().onClick(0, 1);
-    const activeContent = menypanel.find(Nav.Panel);
-
-    expect(activeContent.children().props().visEktefelleSamboerMedPaReisen).toBe(false);
-  });
 });

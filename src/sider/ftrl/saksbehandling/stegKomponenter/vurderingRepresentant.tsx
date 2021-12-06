@@ -6,6 +6,7 @@ import { RootState } from "AppTypes";
 import { Action } from "redux";
 
 import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
@@ -235,19 +236,10 @@ const VurderingRepresentant = ({
         </Nav.Row>
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={!redigerbart || !formIsValid}
-          className="fane__navigasjonsknapp"
-          onClick={bekreft}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{ onClick: bekreft, disabled: !redigerbart || !formIsValid }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };

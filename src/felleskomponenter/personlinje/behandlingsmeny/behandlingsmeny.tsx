@@ -1,0 +1,139 @@
+import React, { useState } from "react";
+import { AnyAction } from "redux";
+import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { connect, ConnectedProps } from "react-redux";
+import classNames from "classnames";
+
+import * as Ikon from "../../../resources/images";
+import * as KV from "../../../kodeverk";
+import MKV from "../../../melosyskodeverk";
+import LeggBehandlingTilbake from "./leggbehandlingtilbake";
+import AvsluttSak from "./avsluttsak";
+import Handling from "./handling";
+
+import { oppgaverOperations } from "../../../ducks/oppgaver";
+import { navigeringOperations } from "../../../ducks/navigering";
+import { modalerOperations } from "../../../ducks/modaler";
+import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+
+import "./behandlingsmeny.css";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { mapBehandlingstemaToBehandlingskategori } from "../../../kodeverk/utils";
+import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
+
+const mapStateToProps = (state: RootState) => ({
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
+  anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
+});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
+  lagreOgLukkHandle: () => dispatch(navigeringOperations.tilForsiden()),
+  tilbakeleggHandle: (oppgaveID: string, venterPaaDokumentasjon: boolean) =>
+    oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
+  visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
+  visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
+  visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
+  apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
+  visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export const Behandlingsmeny = ({
+  lagreOgLukkHandle,
+  tilbakeleggHandle,
+  visAvslagSoknadDialogHandle,
+  visHenleggDialogHandle,
+  visAvsluttSakSomBortfaltDialogHandle,
+  apneTidligereBehandlinger,
+  visRevurderFagsakDialogHandle,
+  redigerbart,
+  behandlingID,
+  behandlingstema,
+  behandlingstype,
+  behandlingsstatus,
+  anmodningsperioderErSendtUtlandet,
+}: PropsFromRedux) => {
+  const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
+
+  const behandlingskategori = mapBehandlingstemaToBehandlingskategori(behandlingstema);
+
+  const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      toggleBehandlingsmeny();
+    }
+  };
+
+  const behandlingErAvsluttet = [
+    MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+    MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
+  ].includes(behandlingsstatus);
+  const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
+  const behandlingstemaErRegistreringOmUnntakNorskTrygd = [
+    MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+    MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+  ].includes(behandlingstema);
+
+  const skalViseVurderSakenPaaNytt = () => {
+    switch (behandlingskategori) {
+      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+        return anmodningsperioderErSendtUtlandet || (behandlingErAvsluttet && !behandlingstypeErEndretPeriode);
+      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
+        return behandlingErAvsluttet && behandlingstemaErRegistreringOmUnntakNorskTrygd;
+      case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
+        return redigerbart && behandlingErAvsluttet;
+      case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
+      case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
+        return behandlingErAvsluttet;
+      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
+      default:
+        return false;
+    }
+  };
+
+  const knappCls = classNames("behandlingsmeny__knapp", { behandlingsmeny__knapp__aapen: visBehandlingsmeny });
+  const hamburgerCls = classNames("behandlingsmeny__hamburger", {
+    behandlingsmeny__hamburger__aapen: visBehandlingsmeny,
+  });
+
+  return (
+    <div className="behandlingsmeny">
+      <div className={knappCls} role="button" tabIndex={0} onClick={toggleBehandlingsmeny} onKeyPress={handleKeyPress}>
+        <Ikon.Hamburger className={hamburgerCls} />
+      </div>
+      {visBehandlingsmeny && (
+        <div className="behandlingsmeny__meny">
+          <LeggBehandlingTilbake
+            lagreOgLukkHandle={lagreOgLukkHandle}
+            tilbakeleggHandle={tilbakeleggHandle}
+            behandlingID={behandlingID}
+            redigerbart={redigerbart}
+          />
+          <AvsluttSak
+            avslaaSoknad={visAvslagSoknadDialogHandle}
+            henleggSak={visHenleggDialogHandle}
+            avsluttSakSomBortfalt={visAvsluttSakSomBortfaltDialogHandle}
+            behandlingstema={behandlingstema}
+            behandlingstype={behandlingstype}
+            redigerbart={redigerbart}
+          />
+          <div className="behandlingsmeny__meny__handlinger">
+            <Handling ikon={<Ikon.Copy />} tekst="Vis saksoversikt" onClick={apneTidligereBehandlinger} />
+            {skalViseVurderSakenPaaNytt() && (
+              <Handling ikon={<Ikon.Cancel />} tekst="Vurder saken på nytt" onClick={visRevurderFagsakDialogHandle} />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default connector(Behandlingsmeny);

@@ -4,7 +4,6 @@ export const BEHANDLINGS_FORM = "behandlingsform";
 export interface BehandlingsFormData {
   behandlingstema: string;
 }
-export const BREV_BESTILLING = "brevbestilling";
 export const SEND_BREV = "send_brev";
 export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
@@ -45,6 +44,10 @@ export interface ArbeidsstedSkip extends MaritimtArbeid {
   fartsomradeKode?: string;
   flaggLandkode?: string;
   territorialfarvann?: string;
+}
+export interface RepresentantIUtlandet {
+  representantNavn?: string;
+  adresselinjer?: string[];
 }
 export interface MedfolgendeFamilie {
   uuid: string;
@@ -121,4 +124,5 @@ export const Trygdeavtale = {
   AVKLAR_VIRKSOMHET: "trygdeavtale_avklar_virksomhet",
   BESTEMMELSE: "trygdeavtale_bestemmelse",
   FAMILIE: "trygdeavtale_familie",
+  VEDTAK: "trygdeavtale_vedtak",
 };

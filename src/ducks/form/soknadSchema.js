@@ -24,6 +24,8 @@ const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
+const erTrygdeavtaleSak = (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
+
 const erAltinnsøknad = (behandlingsgrunnlagtype) =>
   behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
@@ -228,6 +230,35 @@ const soknad = object().when("$behandlingstema", {
           )
         )
     ),
+    representantIUtlandet: object()
+      .when("$behandlingstema", {
+        is: erTrygdeavtaleSak,
+        then: object()
+          .shape({
+            representantNavn: string()
+              .required(
+                lagMelding(
+                  KV.Menypunkter.Arbeidssteder.tittel,
+                  KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
+                  "Navn kreves"
+                )
+              )
+              .nullable(),
+            adresselinjer: array()
+              .of(
+                string().required(
+                  lagMelding(
+                    KV.Menypunkter.Arbeidssteder.tittel,
+                    KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
+                    "Adresselinje kan ikke være tom. Fjern eller fyll linjen"
+                  )
+                )
+              )
+              .nullable(),
+          })
+          .nullable(),
+      })
+      .nullable(),
     oppgittAdresseGatenavn: string()
       .nullable()
       .when("$skalOppgittAdresseValideres", {

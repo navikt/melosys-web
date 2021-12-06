@@ -11,7 +11,8 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
-import { hentFaktaVerdi, konverterTilStegData } from "../../../regler/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { konverterAvklartfaktaTilStegData } from "../../../felleskomponenter/stegvelger";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import * as Mui from "../../../felleskomponenter/ui";
@@ -47,7 +48,10 @@ export class VurderingEndrePeriode extends React.Component {
     } = this.props;
 
     oppdaterData(
-      konverterTilStegData(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta)
+      konverterAvklartfaktaTilStegData(
+        MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
+        aarsakEndringPeriodeAvklartfakta
+      )
     );
 
     this.hentOpprinneligPeriode(behandlingID);

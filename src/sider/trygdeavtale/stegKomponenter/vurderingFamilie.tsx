@@ -6,12 +6,14 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 
 import { formSelectors } from "../../../ducks/form";
 import { BOOLSK_STRING } from "../../../constants";
+import { StegStatus } from "../stegvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
@@ -51,7 +53,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   initialValues: initializeFamilieFormValues(ownProps.data, ownProps.resultat),
 });
 
-const connector = connect(mapStateToProps, {});
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -150,135 +152,129 @@ const VurderingFamilie = ({
         </div>
       ) : (
         <div>
-          <Nav.Fieldset legend="Barn" className="barn">
-            {tilknyttedeBarn?.map(
-              (barn: Api.Trygdeavtale.FamilieValg) =>
-                finnBarn(barn?.uuid, formValues.barn) && (
-                  <Nav.Row key={barn.uuid} className="barnet">
-                    <Nav.Column xs="8">
-                      <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
-                        barn.fnr
-                      })`}</Nav.Typo.Normaltekst>
-                      <Nav.Row className="familiemedlem_radio">
-                        <Nav.Column xs="2">
-                          <Skjema.Radio
-                            label="Ja"
-                            feltNavn={`barn.${barn.uuid}.innvilget`}
-                            id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
-                            value={BOOLSK_STRING.SANN}
+          {!Utils._isEmpty(tilknyttedeBarn) && (
+            <Nav.Fieldset legend="Barn" className="barn">
+              {tilknyttedeBarn?.map(
+                (barn: Api.Trygdeavtale.FamilieValg) =>
+                  finnBarn(barn?.uuid, formValues.barn) && (
+                    <Nav.Row key={barn.uuid} className="barnet">
+                      <Nav.Column xs="8">
+                        <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${
+                          barn.fnr
+                        })`}</Nav.Typo.Normaltekst>
+                        <Nav.Row className="familiemedlem_radio">
+                          <Nav.Column xs="2">
+                            <Skjema.Radio
+                              label="Ja"
+                              feltNavn={`barn.${barn.uuid}.innvilget`}
+                              id={`${barn.uuid}.${BOOLSK_STRING.SANN}`}
+                              value={BOOLSK_STRING.SANN}
+                              disabled={!redigerbart}
+                            />
+                          </Nav.Column>
+                          <Nav.Column xs="2">
+                            <Skjema.Radio
+                              label="Nei"
+                              feltNavn={`barn.${barn.uuid}.innvilget`}
+                              id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
+                              value={BOOLSK_STRING.USANN}
+                              disabled={!redigerbart}
+                            />
+                          </Nav.Column>
+                        </Nav.Row>
+                        {erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget) && (
+                          <Skjema.Select
+                            label="Begrunnelse:"
+                            feltNavn={`barn.${barn.uuid}.begrunnelse`}
+                            emptyFieldText="Velg..."
+                            emptyFieldDisabled={!redigerbart || !!finnBarn(barn?.uuid, formValues.barn)?.begrunnelse}
+                            name={barn.uuid}
                             disabled={!redigerbart}
-                          />
-                        </Nav.Column>
-                        <Nav.Column xs="2">
-                          <Skjema.Radio
-                            label="Nei"
-                            feltNavn={`barn.${barn.uuid}.innvilget`}
-                            id={`${barn.uuid}.${BOOLSK_STRING.USANN}`}
-                            value={BOOLSK_STRING.USANN}
-                            disabled={!redigerbart}
-                          />
-                        </Nav.Column>
-                      </Nav.Row>
-                      {erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget) && (
-                        <Skjema.Select
-                          label="Begrunnelse:"
-                          feltNavn={`barn.${barn.uuid}.begrunnelse`}
-                          emptyFieldText="Velg..."
-                          emptyFieldDisabled={!redigerbart || !!finnBarn(barn?.uuid, formValues.barn)?.begrunnelse}
-                          name={barn.uuid}
-                          disabled={!redigerbart}
-                        >
-                          {barnBegrunnelseValg?.map((begrunnelse: KTObject) => (
-                            <option key={begrunnelse.kode} value={begrunnelse.kode}>
-                              {begrunnelse.term}
-                            </option>
-                          ))}
-                        </Skjema.Select>
-                      )}
-                    </Nav.Column>
-                  </Nav.Row>
-                )
-            )}
-            {tilknyttedeBarn?.some((barn: Api.Trygdeavtale.FamilieValg) =>
-              erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget)
-            ) && (
-              <div style={{ marginBottom: "2rem" }}>
-                <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
-                <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" disabled={!redigerbart} />
-              </div>
-            )}
-          </Nav.Fieldset>
-
-          <Nav.Fieldset legend="Ektefelle/partner/samboer">
-            {tilknyttetEktefelle && (
-              <div>
-                <Nav.Row className="ektefelle">
-                  <Nav.Column xs="8">
-                    <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.nr: ${
-                      tilknyttetEktefelle.fnr
-                    })`}</Nav.Typo.Normaltekst>
-                    <Nav.Row className="familiemedlem_radio">
-                      <Nav.Column xs="2">
-                        <Skjema.Radio
-                          label="Ja"
-                          feltNavn="ektefelle.innvilget"
-                          id={`${BOOLSK_STRING.SANN}`}
-                          value={BOOLSK_STRING.SANN}
-                          disabled={!redigerbart}
-                        />
-                      </Nav.Column>
-                      <Nav.Column xs="2">
-                        <Skjema.Radio
-                          label="Nei"
-                          feltNavn="ektefelle.innvilget"
-                          id={`${BOOLSK_STRING.USANN}`}
-                          value={BOOLSK_STRING.USANN}
-                          disabled={!redigerbart}
-                        />
+                          >
+                            {barnBegrunnelseValg?.map((begrunnelse: KTObject) => (
+                              <option key={begrunnelse.kode} value={begrunnelse.kode}>
+                                {begrunnelse.term}
+                              </option>
+                            ))}
+                          </Skjema.Select>
+                        )}
                       </Nav.Column>
                     </Nav.Row>
-                    {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
-                      <Skjema.Select
-                        label="Begrunnelse:"
-                        feltNavn="ektefelle.begrunnelse"
-                        emptyFieldText="Velg..."
-                        emptyFieldDisabled={!redigerbart || !!formValues.ektefelle.begrunnelse}
+                  )
+              )}
+              {tilknyttedeBarn?.some((barn: Api.Trygdeavtale.FamilieValg) =>
+                erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget)
+              ) && (
+                <div className="fritekstWrapper" style={{ marginBottom: "2rem" }}>
+                  <Nav.Typo.Element>Fritekst til avsnitt om barn i vedtaksbrev</Nav.Typo.Element>
+                  <Skjema.HTMLEditor feltNavn="barn.fritekst" className="fritekst" disabled={!redigerbart} />
+                </div>
+              )}
+            </Nav.Fieldset>
+          )}
+
+          {tilknyttetEktefelle && (
+            <Nav.Fieldset legend="Ektefelle/partner/samboer" className="ektefelle">
+              <Nav.Row>
+                <Nav.Column xs="8">
+                  <Nav.Typo.Normaltekst>{`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.nr: ${
+                    tilknyttetEktefelle.fnr
+                  })`}</Nav.Typo.Normaltekst>
+                  <Nav.Row className="familiemedlem_radio">
+                    <Nav.Column xs="2">
+                      <Skjema.Radio
+                        label="Ja"
+                        feltNavn="ektefelle.innvilget"
+                        id={`${BOOLSK_STRING.SANN}`}
+                        value={BOOLSK_STRING.SANN}
                         disabled={!redigerbart}
-                      >
-                        {ektefelleBegrunnelseValg?.map((begrunnelse: KTObject) => (
-                          <option key={begrunnelse.kode} value={begrunnelse.kode}>
-                            {begrunnelse.term}
-                          </option>
-                        ))}
-                      </Skjema.Select>
-                    )}
-                  </Nav.Column>
-                </Nav.Row>
-                {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
-                  <div>
-                    <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
-                    <Skjema.HTMLEditor feltNavn="ektefelle.fritekst" className="fritekst" disabled={!redigerbart} />
-                  </div>
-                )}
-              </div>
-            )}
-          </Nav.Fieldset>
+                      />
+                    </Nav.Column>
+                    <Nav.Column xs="2">
+                      <Skjema.Radio
+                        label="Nei"
+                        feltNavn="ektefelle.innvilget"
+                        id={`${BOOLSK_STRING.USANN}`}
+                        value={BOOLSK_STRING.USANN}
+                        disabled={!redigerbart}
+                      />
+                    </Nav.Column>
+                  </Nav.Row>
+                  {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
+                    <Skjema.Select
+                      label="Begrunnelse:"
+                      feltNavn="ektefelle.begrunnelse"
+                      emptyFieldText="Velg..."
+                      emptyFieldDisabled={!redigerbart || !!formValues.ektefelle.begrunnelse}
+                      disabled={!redigerbart}
+                    >
+                      {ektefelleBegrunnelseValg?.map((begrunnelse: KTObject) => (
+                        <option key={begrunnelse.kode} value={begrunnelse.kode}>
+                          {begrunnelse.term}
+                        </option>
+                      ))}
+                    </Skjema.Select>
+                  )}
+                </Nav.Column>
+              </Nav.Row>
+              {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
+                <div className="fritekstWrapper">
+                  <Nav.Typo.Element>Fritekst til avsnitt om ektefelle/samboer i vedtaksbrev</Nav.Typo.Element>
+                  <Skjema.HTMLEditor feltNavn="ektefelle.fritekst" className="fritekst" disabled={!redigerbart} />
+                </div>
+              )}
+            </Nav.Fieldset>
+          )}
         </div>
       )}
 
-      <div className="fane__knapplinje">
-        <Nav.Knapp mini disabled={!redigerbart} className="fane__navigasjonsknapp" onClick={tilbake}>
-          Tilbake
-        </Nav.Knapp>
-        <Nav.Hovedknapp
-          mini
-          disabled={steg.status !== "FERDIG" || !formIsValid || !redigerbart}
-          className="fane__navigasjonsknapp"
-          onClick={fortsett}
-        >
-          Fortsett
-        </Nav.Hovedknapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: fortsett,
+          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
+        }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };
