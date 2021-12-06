@@ -18,6 +18,7 @@ class Artikkel13_2_b_utpek_land extends Steg {
     });
     this.handlers = {
       lagreOgUtpek: this._propsLight.tilgjengeligeHandlers.lagreOgUtpek,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
       byggUtpekingsperioder: this._propsLight.tilgjengeligeHandlers.byggUtpekingsperioder,

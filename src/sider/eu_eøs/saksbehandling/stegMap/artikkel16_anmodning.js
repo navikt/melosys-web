@@ -38,6 +38,7 @@ class Artikkel16Anmodning extends Steg {
     };
     this.handlers = {
       lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers?.lagreOgBestillAnmodningsperioder,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers?.byggAnmodningsperioderHandler,
       oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers?.oppdaterOgLagreBehandlinger,
       lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers?.lagreVilkarHandler,

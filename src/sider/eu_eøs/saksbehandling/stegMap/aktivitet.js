@@ -18,6 +18,7 @@ class Aktivitet extends Steg {
     this.beregnRelevantUI = () => ({});
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this._status = FANE_STATUS.OK;
   }
