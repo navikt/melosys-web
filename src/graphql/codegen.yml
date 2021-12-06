@@ -1,7 +1,7 @@
 schema:
   - http://localhost:8080/graphql:
       headers:
-        Cookie: ""
+        Cookie: "session=_Ct6YiyOg-YThivtv-Dgww..|1638821514|sng9QAbhrvfVsCky-_aRa3hGm9c.; ID_token=eyJraWQiOiJpc3NvIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJaMTIzNDU2IiwiYXVkIjoibWVsb3N5cy1sb2NhbGhvc3QiLCJuYmYiOjE2Mzg3NzgzMTMsImF6cCI6Im1lbG9zeXMtbG9jYWxob3N0IiwiaXNzIjoiaHR0cDpcL1wvaG9zdC5kb2NrZXIuaW50ZXJuYWw6ODA4MlwvaXNzbyIsImV4cCI6MTYzODc4MTkxMywiaWF0IjoxNjM4Nzc4MzEzLCJub25jZSI6IjhiMDM0MWU5YWIwM2I3MDk3YTI5ZTg0MDMzZDFmMzBmIiwianRpIjoiZDI1ZDI0N2QtNjIxNi00ZDU1LWEzNjktMzdhOGQ3YjBkMzYwIiwidGlkIjoiaXNzbyJ9.GlhMfqTmapo1aJDqzmQeaqEpF2YxtenTL4gu16UL6di7bfj2bZMP-yHSkmV89nFRxgkGXkuMB1OJ7DHKzsF0FRVRo77eriYYrTYnfeuDW7ZJrFMlsbC30Jm8FXxRcDVS-TdlXMW-ppvLEoKSnCJm3kgMRZsqaMMJFn5GJc-6Fjzzow8ZoI8xuY9sBCIFwMJspbZJcm-KYUu7ef98XQ47Xc_wmcRWRkS20ObmPxcgH_fxN9ElN-r2XKt3hbc60rFESU89JSTKGmvQmFOFxCnK_eWap0VJZD3zLMcngY_LzhIQqoRZtHzbWkvkB9umUkP4e5aPFYu4dMQOFszHysTpIw; refresh_token=7db26776-d590-4bed-a7dc-4c32a7b89480"
 config:
   scalars:
     # Mapper custom scalars i graphql-skjemaet til typescript-typer.

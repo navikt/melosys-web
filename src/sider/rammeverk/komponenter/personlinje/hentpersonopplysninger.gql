@@ -7,8 +7,9 @@ query hentPersonopplysninger($behandlingID: Long!) {
         etternavn
       }
       kjoenn
-      folkeregisterpersonstatus {
+      folkeregisterpersonstatuser {
         kode
+        erHistorisk
       }
       folkeregisteridentifikator
       statsborgerskap {
