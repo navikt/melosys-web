@@ -1,13 +1,13 @@
 import React, { ComponentProps } from "react";
 
-import * as Nav from "../../../../../navFrontend";
-import * as Ikoner from "../../../../../resources/images";
-import * as Utils from "../../../../../utils";
-import * as Mui from "../../../../ui";
+import * as Nav from "../../../../../../navFrontend";
+import * as Ikoner from "../../../../../../resources/images";
+import * as Utils from "../../../../../../utils";
+import * as Mui from "../../../../../ui";
 
-import bem from "../../../../../bemUtils";
-import { Sivilstand } from "../../../../../graphql";
-import KopierbarTekst from "../../../../kopierbarTekst";
+import bem from "../../../../../../bemUtils";
+import { Sivilstand } from "../../../../../../graphql";
+import KopierbarTekst from "../../../../../kopierbarTekst";
 
 import "./sivilstandModal.css";
 

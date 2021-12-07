@@ -10,7 +10,7 @@ import * as Api from "../../../../services/api";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
-import PersonInfo from "./personinfo";
+import PersonInfo from "./personinfo/personinfo";
 import Adresser from "./adresser";
 import RegisterAdresse from "../../../adresser/registerAdresse";
 import StrukturertAdresse from "../../../adresser/strukturertAdresse";

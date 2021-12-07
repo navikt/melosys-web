@@ -8,9 +8,9 @@ import * as Nav from "../../../../../navFrontend";
 
 import { Person } from "../../../../../services/api";
 import { Sivilstand } from "../../../../../graphql";
-import { HentSivilstandDocument } from "./hentSivilstand.generated";
+import { HentSivilstandDocument } from "./sivilstand/hentSivilstand.generated";
 import Personinfo from "./personinfo";
-import SivilstandModal from "./sivilstandModal";
+import SivilstandModal from "./sivilstand/sivilstandModal";
 
 jest.mock("../../../../../featuretoggle", () => ({
   __esModule: true,
@@ -31,7 +31,7 @@ describe("Personinfo", () => {
     Fikser error i console når test kjører:
     Warning: react-modal: App element is not defined. Please use `Modal.setAppElement(el)` or set `appElement={el}`. This is needed so screen readers don't see main content when modal is opened. It is not recommended, but you can opt-out by setting `ariaHideApp={false}`.
     */
-    props.sivilstandModalAriaHideApp = false;
+    props.modalAriaHideApp = false;
   });
 
   afterAll(() => {

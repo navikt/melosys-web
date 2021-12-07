@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 
-import * as Nav from "../../../../../navFrontend";
+import * as Nav from "../../../../../../navFrontend";
 
 import SivilstandModal, { SivilstandTabell } from "./sivilstandModal";
 
