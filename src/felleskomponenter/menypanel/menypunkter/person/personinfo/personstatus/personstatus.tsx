@@ -41,7 +41,7 @@ const Personstatus = ({ behandlingID }: PersonstatusProps) => {
     ) || [];
 
   return (
-    <div className="personinfo__sivilstand">
+    <div className="personinfo__personstatus">
       <PersonstatusModal
         aktivePersonstatuser={aktivePersonstatuser}
         historiskePersonstatuser={historiskePersonstatuser}
@@ -49,12 +49,14 @@ const Personstatus = ({ behandlingID }: PersonstatusProps) => {
         lukkModal={() => setVisPersonstatusModal(false)}
       />
 
-      <Nav.Typo.EtikettLiten>Sivilstand</Nav.Typo.EtikettLiten>
+      <Nav.Typo.EtikettLiten>Personstatus</Nav.Typo.EtikettLiten>
       {personstatusLoading && personstatusLoadingContent}
       {personstatusError && personstatusErrorContent}
       {personstatusData && (
         <Nav.Typo.Element>
-          <span className="personinfo__sivilstand">{aktivePersonstatuser[0]?.tekst || "Ingen sivilstand funnet"}</span>
+          <span className="personinfo__personstatus">
+            {aktivePersonstatuser[0]?.tekst || "Ingen personstatus funnet"}
+          </span>
           {pdlToggle === "enabled" && (
             <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisPersonstatusModal(true)}>
               Vis detaljer
