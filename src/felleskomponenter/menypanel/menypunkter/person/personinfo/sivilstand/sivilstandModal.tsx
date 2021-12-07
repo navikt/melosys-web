@@ -50,14 +50,14 @@ export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
 
 interface SivilstandModalProps {
   onRequestClose: ComponentProps<typeof Nav.Modal>["onRequestClose"];
-  ariaHideApp?: boolean;
+  sivilstandModalAriaHideApp?: boolean;
   aktiveSivilstander: Sivilstand[];
   historiskeSivilstander: Sivilstand[];
 }
 
 const SivilstandModal = ({
   onRequestClose,
-  ariaHideApp = true,
+  sivilstandModalAriaHideApp = true,
   aktiveSivilstander,
   historiskeSivilstander,
 }: SivilstandModalProps) => {
@@ -70,7 +70,7 @@ const SivilstandModal = ({
       onRequestClose={onRequestClose}
       closeButton
       // @ts-ignore
-      ariaHideApp={ariaHideApp}
+      ariaHideApp={sivilstandModalAriaHideApp}
       className={sivilstandModalCls.block}
       contentClass={sivilstandModalCls.element("content")}
     >

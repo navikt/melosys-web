@@ -13,7 +13,7 @@ describe("SivilstandModal", () => {
   beforeEach(() => {
     props = instance(mockedProps);
     props.onRequestClose = jest.fn();
-    props.ariaHideApp = false;
+    props.sivilstandModalAriaHideApp = false;
     props.aktiveSivilstander = [
       {
         type: "Gift",

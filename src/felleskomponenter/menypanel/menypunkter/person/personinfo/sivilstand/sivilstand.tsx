@@ -11,10 +11,10 @@ import "../personinfo.css";
 
 interface SivilstandProps {
   behandlingID: number;
-  modalAriaHideApp?: boolean;
+  sivilstandModalAriaHideApp?: boolean;
 }
 
-const Sivilstand = ({ behandlingID, modalAriaHideApp }: SivilstandProps) => {
+const Sivilstand = ({ behandlingID, sivilstandModalAriaHideApp }: SivilstandProps) => {
   const pdlToggle = useFeatureToggle("melosys.pdl.aktiv");
 
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
@@ -57,7 +57,7 @@ const Sivilstand = ({ behandlingID, modalAriaHideApp }: SivilstandProps) => {
           aktiveSivilstander={aktiveSivilstander}
           historiskeSivilstander={historiskeSivilstander}
           onRequestClose={() => setVisSivilstandModal(false)}
-          ariaHideApp={modalAriaHideApp}
+          sivilstandModalAriaHideApp={sivilstandModalAriaHideApp}
         />
       )}
     </div>

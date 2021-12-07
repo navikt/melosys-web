@@ -12,10 +12,10 @@ import Personstatus from "./personstatus/personstatus";
 interface PersonInfoProps {
   person: Person;
   behandlingID: number;
-  modalAriaHideApp?: boolean;
+  sivilstandModalAriaHideApp?: boolean;
 }
 
-const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, modalAriaHideApp }: PersonInfoProps) => {
+const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, sivilstandModalAriaHideApp }: PersonInfoProps) => {
   return (
     <div className="personinfo">
       <div className="personinfo__element">
@@ -32,7 +32,7 @@ const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, modalAriaHide
         <Personstatus behandlingID={behandlingID} />
       </div>
       <div className="personinfo__element" aria-live="polite" aria-atomic>
-        <Sivilstand behandlingID={behandlingID} modalAriaHideApp={modalAriaHideApp} />
+        <Sivilstand behandlingID={behandlingID} sivilstandModalAriaHideApp={sivilstandModalAriaHideApp} />
       </div>
     </div>
   );
