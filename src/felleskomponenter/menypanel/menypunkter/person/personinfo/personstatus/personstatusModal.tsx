@@ -2,7 +2,7 @@ import React from "react";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 import { Folkeregisterpersonstatus } from "../../../../../../graphql";
-import "./personstatusmodal.css";
+import "./personstatusModal.css";
 import bem from "../../../../../../bemUtils";
 
 interface PersonstatusTabellProps {

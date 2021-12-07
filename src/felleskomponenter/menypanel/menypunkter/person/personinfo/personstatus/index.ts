@@ -1,3 +1,3 @@
-import PersonstatusModal from "./personstatusmodal";
+import PersonstatusModal from "./personstatusModal";
 
 export { PersonstatusModal };
