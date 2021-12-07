@@ -47,9 +47,11 @@ const PersonstatusModal = ({
   skalViseModal,
   lukkModal,
 }: PersonstatusModalProps) => {
+  const personstatusModalCls = bem("personstatus-modal");
+
   return (
     <Nav.Modal
-      className="personstatus-modal"
+      className={personstatusModalCls.block}
       contentLabel="Personstatus"
       onRequestClose={lukkModal}
       isOpen={skalViseModal}
@@ -59,7 +61,7 @@ const PersonstatusModal = ({
       <PersonstatusTabell personstatuser={aktivePersonstatuser} />
 
       <Nav.Typo.Undertittel>Historikk</Nav.Typo.Undertittel>
-      <div className="personstatus-modal__gyldighetsinfo">
+      <div className={personstatusModalCls.element("gyldighetsinfo")}>
         <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra folkeregisteret kan være mangelfulle.</Nav.Typo.EtikettLiten>
         <Nav.Hjelpetekst>
           Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret. Dersom det er en opplysningstype hvor

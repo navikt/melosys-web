@@ -30,7 +30,7 @@ const hentPersonopplysninger = (behandlingID: number): PersonopplysningerProps =
     .pop();
 
   const gyldigPersonstatus = person.folkeregisterpersonstatuser
-    .filter((folkeregisterpersonstatus) => folkeregisterpersonstatus.erHistorisk)
+    .filter((folkeregisterpersonstatus) => !folkeregisterpersonstatus.erHistorisk)
     .pop();
 
   return {

@@ -32,7 +32,7 @@ const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, sivilstandMod
         <Personstatus behandlingID={behandlingID} />
       </div>
       <div className="personinfo__element" aria-live="polite" aria-atomic>
-        <Sivilstand behandlingID={behandlingID} sivilstandModalAriaHideApp={sivilstandModalAriaHideApp} />
+        <Sivilstand behandlingID={behandlingID} modalAriaHideApp={sivilstandModalAriaHideApp} />
       </div>
     </div>
   );

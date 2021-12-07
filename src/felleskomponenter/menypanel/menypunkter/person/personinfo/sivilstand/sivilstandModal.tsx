@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import React from "react";
 
 import * as Nav from "../../../../../../navFrontend";
 import * as Ikoner from "../../../../../../resources/images";
@@ -49,30 +49,32 @@ export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
 };
 
 interface SivilstandModalProps {
-  onRequestClose: ComponentProps<typeof Nav.Modal>["onRequestClose"];
-  sivilstandModalAriaHideApp?: boolean;
   aktiveSivilstander: Sivilstand[];
   historiskeSivilstander: Sivilstand[];
+  skalViseModal: boolean;
+  lukkModal: () => void;
+  modalAriaHideApp?: boolean;
 }
 
 const SivilstandModal = ({
-  onRequestClose,
-  sivilstandModalAriaHideApp = true,
   aktiveSivilstander,
   historiskeSivilstander,
+  skalViseModal,
+  lukkModal,
+  modalAriaHideApp = true,
 }: SivilstandModalProps) => {
   const sivilstandModalCls = bem("sivilstand-modal");
 
   return (
     <Nav.Modal
-      contentLabel="Sivilstand"
-      isOpen
-      onRequestClose={onRequestClose}
-      closeButton
-      // @ts-ignore
-      ariaHideApp={sivilstandModalAriaHideApp}
       className={sivilstandModalCls.block}
       contentClass={sivilstandModalCls.element("content")}
+      contentLabel="Sivilstand"
+      onRequestClose={lukkModal}
+      isOpen={skalViseModal}
+      closeButton
+      // @ts-ignore
+      ariaHideApp={modalAriaHideApp}
     >
       <Mui.Undertittel tekst="Sivilstand" ikon={Ikoner.Ring} />
       <div className={sivilstandModalCls.element("main-content")}>

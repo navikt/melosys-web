@@ -11,10 +11,10 @@ import "../personinfo.css";
 
 interface SivilstandProps {
   behandlingID: number;
-  sivilstandModalAriaHideApp?: boolean;
+  modalAriaHideApp?: boolean;
 }
 
-const Sivilstand = ({ behandlingID, sivilstandModalAriaHideApp }: SivilstandProps) => {
+const Sivilstand = ({ behandlingID, modalAriaHideApp }: SivilstandProps) => {
   const pdlToggle = useFeatureToggle("melosys.pdl.aktiv");
 
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
@@ -39,6 +39,14 @@ const Sivilstand = ({ behandlingID, sivilstandModalAriaHideApp }: SivilstandProp
 
   return (
     <div className="personinfo__sivilstand">
+      <SivilstandModal
+        aktiveSivilstander={aktiveSivilstander}
+        historiskeSivilstander={historiskeSivilstander}
+        skalViseModal={visSivilstandModal}
+        lukkModal={() => setVisSivilstandModal(false)}
+        modalAriaHideApp={modalAriaHideApp}
+      />
+
       <Nav.Typo.EtikettLiten>Sivilstand</Nav.Typo.EtikettLiten>
       {sivilstandLoading && sivilstandLoadingContent}
       {sivilstandError && sivilstandErrorContent}
@@ -51,14 +59,6 @@ const Sivilstand = ({ behandlingID, sivilstandModalAriaHideApp }: SivilstandProp
             </Mui.Lenkeknapp>
           )}
         </Nav.Typo.Element>
-      )}
-      {visSivilstandModal && (
-        <SivilstandModal
-          aktiveSivilstander={aktiveSivilstander}
-          historiskeSivilstander={historiskeSivilstander}
-          onRequestClose={() => setVisSivilstandModal(false)}
-          sivilstandModalAriaHideApp={sivilstandModalAriaHideApp}
-        />
       )}
     </div>
   );
