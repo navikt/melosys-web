@@ -1,4 +1,3 @@
-import Aktivitet from "./aktivitet";
 import Virksomheter from "./virksomheter";
 import Avslag_12_x_og_16 from "./avslag_12_x_og_16";
 import Bostedsland from "./bostedsland";
@@ -64,7 +63,6 @@ export const stegMap = new Map([
   [STEG.VESENTLIG_VIRKSOMHET, VesentligVirksomhet],
   [STEG.MEDFOLGENDE_BARN, MedfolgendeBarn],
   [STEG.NORMALT_DRIVER_VIRKSOMHET, NormaltDriverVirksomhet],
-  [STEG.AKTIVITET, Aktivitet],
   [STEG.BOSTEDSLAND, Bostedsland],
   [STEG.FORRETNINGSSTED, Forretningssted],
   [STEG.VIRKSOMHETER, Virksomheter],
