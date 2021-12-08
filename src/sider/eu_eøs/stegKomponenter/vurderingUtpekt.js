@@ -6,6 +6,7 @@ import { getFormValues, reduxForm } from "redux-form";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 
@@ -48,6 +49,7 @@ const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.al
 export const VurderingUtpekt = ({
   vurderingBegrunnelser,
   slettData,
+  tilbake,
   oppdaterData,
   redigerbart,
   tilstand: { harAvklaring, lovvalgsbestemmelse, lovvalgsland },
@@ -198,11 +200,16 @@ export const VurderingUtpekt = ({
           </Nav.AlertStripe>
         </Nav.Column>
       </Nav.Row>
-      <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp">
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          className: "fane__navigasjonsknapp",
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </form>
   );
 };
@@ -210,6 +217,7 @@ export const VurderingUtpekt = ({
 VurderingUtpekt.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   tilstand: PT.shape({

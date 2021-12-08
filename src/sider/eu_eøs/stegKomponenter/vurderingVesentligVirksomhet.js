@@ -3,13 +3,23 @@ import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import { arrayTilKonjunksjon } from "../../../utils/streng";
 
 import EnkeltVilkaar from "./felles/enkeltVilkaar";
 
 const VurderingVesentligVirksomhet = (props) => {
-  const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter } = props;
+  const {
+    bekreftOgFortsett,
+    begrunnelser,
+    tilstand,
+    redigerbart,
+    oppdaterData,
+    slettData,
+    valgteVirksomheter,
+    tilbake,
+  } = props;
   const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
 
   useEffect(
@@ -37,16 +47,18 @@ const VurderingVesentligVirksomhet = (props) => {
         labelIkkeOppfylt="Nei"
         oppdaterData={oppdaterData}
       />
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          data-cy-nesteknapp="knapp_steg6"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          className: "fane__navigasjonsknapp",
+          "data-cy-nesteknapp": "knapp_steg6",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
@@ -55,6 +67,7 @@ VurderingVesentligVirksomhet.ID = "VESENTLIG_VIRKSOMHET";
 
 VurderingVesentligVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   tilstand: PT.object,
   valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   begrunnelser: PT.arrayOf(MPT.Kodeverk),

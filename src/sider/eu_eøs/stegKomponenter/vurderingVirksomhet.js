@@ -123,7 +123,7 @@ VirksomheterListe.defaultProps = {
  * @param props
  */
 const VurderingVirksomhet = (props) => {
-  const { bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, slettData } = props;
+  const { bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, slettData, tilbake } = props;
   const { harAvklaring, virksomheter } = tilstand;
 
   useEffect(
@@ -143,16 +143,18 @@ const VurderingVirksomhet = (props) => {
           virksomheterIPerioden={virksomheterIPerioden}
           {...props}
         />
-        <div className="fane__knapplinje">
-          <Nav.Knapp
-            disabled={!(redigerbart && harAvklaring)}
-            className="fane__navigasjonsknapp"
-            data-cy-nesteknapp="knapp_steg3"
-            onClick={bekreftOgFortsett}
-          >
-            Bekreft og fortsett
-          </Nav.Knapp>
-        </div>
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            disabled: !(redigerbart && harAvklaring),
+            className: "fane__navigasjonsknapp",
+            "data-cy-nesteknapp": "knapp_steg3",
+            onClick: bekreftOgFortsett,
+          }}
+          tilbakeKnappProps={{
+            onClick: tilbake,
+            disabled: !redigerbart,
+          }}
+        />
       </div>
     </div>
   );
@@ -162,6 +164,7 @@ VurderingVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   tilstand: PT.shape({
     virksomheter: PT.array,
     harAvklaring: PT.bool,

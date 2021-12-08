@@ -3,12 +3,13 @@ import PT from "prop-types";
 
 import MKV from "../../../melosyskodeverk";
 
-import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
+import * as Mui from "../../../felleskomponenter/ui";
+
 import MultiVilkaar from "./felles/multiVilkaar";
 
 const VurderingArtikkel12_1 = (props) => {
-  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData } = props;
+  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
 
   useEffect(
     () =>
@@ -32,15 +33,14 @@ const VurderingArtikkel12_1 = (props) => {
         begrunnelser12={MKV.KTObjects.begrunnelser.art12_1_begrunnelser}
         vilkaar16={art16_1}
       />
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          className: "fane__navigasjonsknapp",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };
@@ -51,6 +51,7 @@ VurderingArtikkel12_1.propTypes = {
   artikkel: MPT.Kodeverk,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

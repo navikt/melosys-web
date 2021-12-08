@@ -28,6 +28,7 @@ export const VurderingAvslaaUtpeking = ({
   vilSendeAnmodningOmMerInformasjon,
   touchAll,
   formIsValid,
+  tilbake,
 }) => {
   const [avslagPending, setAvslagPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
@@ -112,16 +113,21 @@ export const VurderingAvslaaUtpeking = ({
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
         </Fragment>
       )}
-      <Mui.Knapp
-        mini
-        spinner={avslagPending}
-        autoDisableVedSpinner
-        disabled={!redigerbart}
-        htmlType="submit"
-        type="hoved"
-      >
-        AVSLUTT OG SEND SED
-      </Mui.Knapp>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          mini: true,
+          spinner: avslagPending,
+          autoDisableVedSpinner: true,
+          disabled: !redigerbart,
+          htmlType: "submit",
+          type: "hoved",
+        }}
+        bekreftTekst="AVSLUTT OG SEND SED"
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </form>
   );
 };
@@ -131,6 +137,7 @@ VurderingAvslaaUtpeking.propTypes = {
   behandlingID: PT.number.isRequired,
   handleSubmit: PT.func.isRequired,
   avvisUtpeking: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   fritekst: PT.string,
   nyttLovvalgsland: PT.string,
   begrunnelseUtenlandskMyndighet: PT.string,

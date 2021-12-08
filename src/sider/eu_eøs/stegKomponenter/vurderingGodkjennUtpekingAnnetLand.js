@@ -20,6 +20,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   overskrift,
   behandlingID,
   vurderUtpekingFormValues,
+  tilbake,
 }) => {
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
@@ -93,15 +94,20 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
       )}
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
-          <Mui.Knapp
-            type="hoved"
-            spinner={godkjenningPending}
-            autoDisableVedSpinner
-            disabled={!redigerbart}
-            onClick={hovedknappClickHandler}
-          >
-            Bekreft
-          </Mui.Knapp>
+          <Mui.StegKnapper
+            bekreftKnappProps={{
+              type: "hoved",
+              spinner: godkjenningPending,
+              autoDisableVedSpinner: true,
+              disabled: !redigerbart,
+              onClick: hovedknappClickHandler,
+            }}
+            bekreftTekst="Bekreft"
+            tilbakeKnappProps={{
+              onClick: tilbake,
+              disabled: !redigerbart,
+            }}
+          />
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -114,6 +120,7 @@ const mapStateToProps = (state) => ({
 
 VurderingGodkjennUtpekingAnnetLand.propTypes = {
   lagreOgGodkjennUnntaksperioder: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   overskrift: PT.string.isRequired,
   behandlingID: PT.number.isRequired,

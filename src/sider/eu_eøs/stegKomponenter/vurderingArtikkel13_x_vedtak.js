@@ -31,6 +31,7 @@ import "./vurderingArtikkel13_x_vedtak.css";
 
 export const VurderingArtikkel13_x_vedtak = ({
   redigerbart,
+  tilbake,
   behandlingID,
   lovvalgsperiode,
   harLandSomKreverSED,
@@ -186,9 +187,20 @@ export const VurderingArtikkel13_x_vedtak = ({
           )}
         </Nav.Column>
       </Nav.Row>
-      <Mui.Knapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit" type="hoved">
-        FATT VEDTAK
-      </Mui.Knapp>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          spinner: vedtakPending,
+          autoDisableVedSpinner: true,
+          disabled: !redigerbart,
+          htmlType: "submit",
+          type: "hoved",
+        }}
+        bekreftTekst="FATT VEDTAK"
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </form>
   );
 };
@@ -198,6 +210,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
     overskrift: PT.string.isRequired,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
+  tilbake: PT.func.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: MPT.Periode,
   harLandSomKreverSED: PT.bool.isRequired,

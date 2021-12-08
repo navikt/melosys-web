@@ -53,7 +53,7 @@ Avklaringer.defaultProps = {
 };
 
 const VurderingBostedsland = (props) => {
-  const { bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData } = props;
+  const { bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, tilbake } = props;
 
   useEffect(() => {
     const { bostedslandFakta } = tilstand;
@@ -152,21 +152,24 @@ const VurderingBostedsland = (props) => {
           </Nav.Row>
         )}
       </div>
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          className: "fane__navigasjonsknapp",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
 
 VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   tilstand: PT.object,
   vurdering: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),

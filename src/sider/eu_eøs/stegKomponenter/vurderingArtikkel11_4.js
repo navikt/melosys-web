@@ -5,6 +5,7 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import * as KV from "../../../kodeverk";
 import { arrayTilKonjunksjon } from "../../../utils/streng";
@@ -65,7 +66,15 @@ class VurderingArtikkel11_4 extends Component {
   };
 
   render() {
-    const { bekreftOgFortsett, tilstand, bostedsland, arbeidsland, valgteVirksomheter, redigerbart } = this.props;
+    const {
+      bekreftOgFortsett,
+      tilstand,
+      bostedsland,
+      arbeidsland,
+      valgteVirksomheter,
+      redigerbart,
+      tilbake,
+    } = this.props;
 
     const { harAvklaring, visNISAvsnitt, art11_4_1, art11_4_2, art11_3A, nis } = tilstand;
 
@@ -148,15 +157,17 @@ class VurderingArtikkel11_4 extends Component {
             </Nav.Column>
           </Nav.Row>
         </div>
-        <div className="fane__knapplinje">
-          <Nav.Knapp
-            disabled={!(redigerbart && harAvklaring)}
-            className="fane__navigasjonsknapp"
-            onClick={bekreftOgFortsett}
-          >
-            Bekreft og fortsett
-          </Nav.Knapp>
-        </div>
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            disabled: !(redigerbart && harAvklaring),
+            className: "fane_navigasjonsknapp",
+            onClick: { bekreftOgFortsett },
+          }}
+          tilbakeKnappProps={{
+            onClick: tilbake,
+            disabled: !redigerbart,
+          }}
+        />
       </div>
     );
   }
@@ -172,6 +183,7 @@ VurderingArtikkel11_4.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
 };
 
 VurderingArtikkel11_4.defaultProps = {

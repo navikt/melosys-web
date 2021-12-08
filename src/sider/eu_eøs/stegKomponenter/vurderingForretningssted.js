@@ -5,6 +5,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 import {
@@ -117,7 +118,7 @@ Forretningssteder.propTypes = {
 };
 
 export const VurderingForretningssted = (props) => {
-  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData } = props;
+  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
 
   const { omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring } = tilstand;
 
@@ -227,15 +228,17 @@ export const VurderingForretningssted = (props) => {
           />
         </div>
       )}
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          className: "fane__navigasjonsknapp",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
@@ -253,6 +256,7 @@ VurderingForretningssted.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
 };
 
 VurderingForretningssted.defaultProps = {

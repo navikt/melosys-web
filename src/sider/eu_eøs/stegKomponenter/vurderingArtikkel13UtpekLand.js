@@ -12,6 +12,7 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Hooks from "../../../hooks";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { MottakerinstitusjonvelgerFlervalg } from "../../../felleskomponenter/mottakerinstitusjonvelger";
@@ -47,6 +48,7 @@ export const VurderingArtikkel13UtpekLand = ({
   harLonnetArbeidAnnetLand,
   oppdaterData,
   slettData,
+  tilbake,
   lagreUtpekingsperioder,
   landMedVesentligEllerRegistrertArbeid,
   oppdaterMottakerinstitusjoner,
@@ -218,15 +220,17 @@ export const VurderingArtikkel13UtpekLand = ({
           )}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Hovedknapp
-        onClick={vedKlikkUtpek}
-        spinner={utpekingPending}
-        autoDisableVedSpinner
-        disabled={!redigerbart}
-        type="hoved"
-      >
-        FATT VEDTAK
-      </Nav.Hovedknapp>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: vedKlikkUtpek,
+          spinner: utpekingPending,
+          autoDisableVedSpinner: true,
+          disabled: !redigerbart,
+          type: "hoved",
+        }}
+        bekreftTekst="FATT VEDTAK"
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </div>
   );
 };
@@ -248,6 +252,7 @@ VurderingArtikkel13UtpekLand.propTypes = {
   harLonnetArbeidAnnetLand: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   lagreUtpekingsperioder: PT.func.isRequired,
   endreUtpekingsperiode: PT.func.isRequired,
   byggUtpekingsperioder: PT.func.isRequired,

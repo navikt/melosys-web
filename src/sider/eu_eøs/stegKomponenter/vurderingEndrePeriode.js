@@ -304,14 +304,15 @@ export class VurderingEndrePeriode extends React.Component {
             {vedtakFeilmelding}
           </Nav.AlertStripe>
         )}
-        <Nav.Hovedknapp
-          spinner={endringPending}
-          autoDisableVedSpinner
-          disabled={!redigerbart}
-          onClick={vedKlikkEndrePeriode}
-        >
-          Fatt vedtak
-        </Nav.Hovedknapp>
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            spinner: endringPending,
+            autoDisableVedSpinner: true,
+            disabled: !redigerbart,
+            onClick: vedKlikkEndrePeriode,
+          }}
+          bekreftTekst="Fatt vedtak"
+        />
       </div>
     );
   }

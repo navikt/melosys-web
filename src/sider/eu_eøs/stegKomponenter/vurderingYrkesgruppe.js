@@ -5,6 +5,7 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
 import {
   konverterAvklartfaktaTilStegData,
   lagAvklartfakta,
@@ -26,7 +27,7 @@ const stegetsTilleggbestemmelser = [
 ];
 
 const VurderingYrkesgruppe = (props) => {
-  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData } = props;
+  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
 
   useEffect(() => {
@@ -114,16 +115,18 @@ const VurderingYrkesgruppe = (props) => {
           label="Kontantytelsesmottaker"
         />
       </Nav.Fieldset>
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          data-cy-nesteknapp="knapp_steg1"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          className: "fane__navigasjonsknapp",
+          "data-cy-nesteknapp": "knapp_steg1",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
@@ -141,6 +144,7 @@ VurderingYrkesgruppe.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
 };
 
 export default VurderingYrkesgruppe;
