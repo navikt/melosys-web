@@ -6,7 +6,10 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { get as getValueAtPath } from "lodash";
 
+import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
+import * as KV from "../../kodeverk";
+import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
 import StegLinje from "../../felleskomponenter/stegLinje";
@@ -22,7 +25,6 @@ import VurderingVedtak from "./stegKomponenter/vurderingVedtak";
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
-import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
@@ -42,6 +44,10 @@ interface AktueltSteg {
   status: string;
   data?: object;
   handlers?: object;
+}
+interface KontrollFeil {
+  kode: string;
+  felter: string[];
 }
 
 const stegMap = {
@@ -63,8 +69,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
   lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
-  fattVedtak: (behandlingID: string, data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) =>
-    dispatch(vedtakOperations.fatt(behandlingID, data)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -81,6 +85,7 @@ interface Props extends PropsFromRedux {
 interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
+  valideringFeil: KontrollFeil[];
   skalLagreBehandlingsgrunnlag: boolean;
   visBehandlingsgrunnlagFeilmeldinger: boolean;
 }
@@ -89,6 +94,7 @@ class Stegvelger extends Component<Props, State> {
   state = {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
+    valideringFeil: [],
     skalLagreBehandlingsgrunnlag: false,
     visBehandlingsgrunnlagFeilmeldinger: false,
   };
@@ -107,7 +113,8 @@ class Stegvelger extends Component<Props, State> {
       this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
       this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
+      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer") ||
+      this.harEndringer(soknadValues, prevSoknadValues, "representantIUtlandet")
     ) {
       this.behandlingsGrunnlagSkalEndres();
     }
@@ -157,6 +164,7 @@ class Stegvelger extends Component<Props, State> {
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
       lagreBehandlingsgrunnlagOgOppdaterStegData: this.lagreBehandlingsgrunnlagOgOppdaterStegData,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
+      oppdaterValideringFeil: this.oppdaterValideringFeil,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -192,6 +200,12 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
+  oppdaterValideringFeil = (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdater: boolean) => {
+    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, oppdater, data)
+      .then(() => this.setState({ valideringFeil: [] }))
+      .catch((response) => this.setState({ valideringFeil: response?.body?.feilkoder }));
+  };
+
   oppdaterAktivtSteg = async (nesteStegIndex: number) => {
     const {
       state: { skalLagreBehandlingsgrunnlag, aktuelleSteg },
@@ -219,13 +233,15 @@ class Stegvelger extends Component<Props, State> {
 
   lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
     const {
-      props: { behandlingID, fattVedtak, lagreAllData },
+      props: { behandlingID, lagreAllData },
       harBehandlingsgrunnlagFeilmeldinger,
     } = this;
 
     if (!harBehandlingsgrunnlagFeilmeldinger()) {
       await lagreAllData();
-      return fattVedtak(behandlingID, data);
+      return Api.Saksflyt.Vedtak.fatt(behandlingID, data).catch((response) =>
+        this.setState({ valideringFeil: response?.body?.feilkoder })
+      );
     }
     return Promise.resolve();
   };
@@ -238,11 +254,28 @@ class Stegvelger extends Component<Props, State> {
     this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
   };
 
+  mapFeilmeldinger = (valideringsfeil: KontrollFeil[]) => (
+    <>
+      {valideringsfeil.length === 1 ? (
+        KV.kodeTilTerm(valideringsfeil[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)
+      ) : (
+        <ul className="valideringsfeil__liste">
+          {valideringsfeil.map((feil) => (
+            <li>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+
   render() {
     const {
-      state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger },
+      state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, valideringFeil },
       oppdaterAktivtSteg,
+      mapFeilmeldinger,
     } = this;
+
+    const vedtakStegErAktivt = aktuelleSteg?.find((steg: AktueltSteg) => steg.vedtakSteg && steg.aktivtSteg);
 
     return (
       <TrackVisibility partialVisibility>
@@ -251,6 +284,11 @@ class Stegvelger extends Component<Props, State> {
             {aktuelleSteg && (
               <div>
                 <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
+                {!Utils._isEmpty(valideringFeil) && vedtakStegErAktivt && (
+                  <Nav.AlertStripeFeil className="valideringsfeil">
+                    {mapFeilmeldinger(valideringFeil)}
+                  </Nav.AlertStripeFeil>
+                )}
                 {aktuelleSteg.map((item: AktueltSteg) => (
                   <StegFane key={item.id} faneData={item} />
                 ))}

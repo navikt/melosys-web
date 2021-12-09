@@ -67,6 +67,7 @@ interface Props {
   oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
+  oppdaterValideringFeil: (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdater: boolean) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
@@ -81,7 +82,7 @@ interface Props {
 
 const VurderingVedtak = ({
   behandlingID,
-  data: { bestemmelseValg, lovvalgsperiodeTekst },
+  data: { bestemmelseValg },
   tilbake,
   redigerbart,
   resultat,
@@ -90,6 +91,7 @@ const VurderingVedtak = ({
   formValues,
   formIsValid,
   oppdaterFlyt,
+  oppdaterValideringFeil,
   soknadsland,
   lagreOgFatteVedtak,
   vedtakstype,
@@ -103,7 +105,20 @@ const VurderingVedtak = ({
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
+
+  const kontrollerVedtak = (oppdaterRegisteropplysning: boolean = false) => {
+    oppdaterValideringFeil(
+      {
+        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      },
+      oppdaterRegisteropplysning
+    );
+    setOppdaterFørKontroll(false);
+  };
+  const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
@@ -113,6 +128,15 @@ const VurderingVedtak = ({
     setMuligeMottakere(res);
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
+
+  useEffect(() => {
+    debouncedKontrollerVedtak(oppdaterFørKontroll);
+    return () => debouncedKontrollerVedtak.cancel();
+  }, []);
+
+  useEffect(() => {
+    debouncedKontrollerVedtak(oppdaterFørKontroll);
+  }, [resultat.lovvalgsperiodeTom]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
@@ -283,14 +307,6 @@ const VurderingVedtak = ({
         </Nav.Column>
       </Nav.Row>
 
-      {!Utils._isEmpty(lovvalgsperiodeTekst) && (
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Nav.AlertStripeFeil>{lovvalgsperiodeTekst}</Nav.AlertStripeFeil>
-          </Nav.Column>
-        </Nav.Row>
-      )}
-
       {redigerbart && (
         <>
           <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
@@ -363,7 +379,7 @@ const VurderingVedtak = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,
-          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || visTomEndringFelt,
+          disabled: !redigerbart,
           autoDisableVedSpinner: true,
           spinner: vedtakPending,
         }}

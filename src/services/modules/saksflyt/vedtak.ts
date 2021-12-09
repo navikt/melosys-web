@@ -2,7 +2,14 @@ import { postAsJson } from "../../utils";
 import { API_BASE_URL, SAKSFLYT, VEDTAK } from "../../api-constants";
 import { KopiMottaker } from "../dokumenter-v2";
 
-export type FattVedtakReqDto = FattVedtakEOSReqDto | FattVedtakFTRLReqDto | FattVedtakTrygdeavtaleReqDto;
+export type FattVedtakReqDto =
+  | FattVedtakEOSReqDto
+  | FattVedtakFTRLReqDto
+  | FattVedtakTrygdeavtaleReqDto
+  | {
+      behandlingsresultatTypeKode: string;
+      vedtakstype: string | null;
+    };
 
 export interface FattVedtakEOSReqDto {
   behandlingsresultatTypeKode: string;
@@ -35,3 +42,6 @@ export const fatt = (behandlingID: number, data: FattVedtakReqDto) =>
 
 export const endre = (behandlingID: number, data: EndreVedtakReqDto) =>
   postAsJson(`${API_BASE_URL}${SAKSFLYT}/${VEDTAK}/${behandlingID}/endre`, data);
+
+export const kontroller = (behandlingID: number, oppdater: boolean, data: FattVedtakReqDto) =>
+  postAsJson(`${API_BASE_URL}${SAKSFLYT}/${VEDTAK}/${behandlingID}/kontroll?oppdater=${oppdater}`, data);
