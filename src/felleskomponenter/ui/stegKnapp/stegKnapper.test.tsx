@@ -11,6 +11,7 @@ describe("stegKnapper", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
+    props.bekreftKnappProps = {};
   });
 
   it("viser ikke tilbake-knapp når visTilbakeKnapp = false", () => {
