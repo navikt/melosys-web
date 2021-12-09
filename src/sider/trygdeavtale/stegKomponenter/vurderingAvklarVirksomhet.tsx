@@ -59,8 +59,7 @@ const VurderingAvklarVirksomhet = ({
   virksomheterListe,
 }: PropsFromRedux & Props) => {
   const hjelpetekst =
-    "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold. " +
-    'Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
+    "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Du kan kun velge én virksomhet. Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under «Arbeidsgiver/virksomhet».";
 
   useEffect(() => {
     if (redigerbart && formValues) {
