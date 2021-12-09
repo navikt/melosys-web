@@ -402,14 +402,16 @@ const Saksopplysninger = ({
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp
-                    spinner={registreringPending}
-                    autoDisableVedSpinner
-                    onClick={() => submitRegistrering()}
-                    disabled={!redigerbart}
-                  >
-                    LAGRE
-                  </Nav.Hovedknapp>
+                  <Mui.StegKnapper
+                    bekreftKnappProps={{
+                      spinner: registreringPending,
+                      autoDisableVedSpinner: true,
+                      onClick: () => submitRegistrering(),
+                      disabled: !redigerbart,
+                      htmlType: "submit",
+                    }}
+                    bekreftTekst="LAGRE"
+                  />
                 </Nav.Column>
               </Nav.Row>
             </div>
