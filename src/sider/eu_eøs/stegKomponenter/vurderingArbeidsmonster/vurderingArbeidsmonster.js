@@ -385,7 +385,7 @@ export const VurderingArbeidsmonster = ({
           />
         )}
         <Mui.StegKnapper
-          bekreftKnappProps={{ onclick: bekreftOgFortsett, disabled: !(redigerbart && harAvklaring) }}
+          bekreftKnappProps={{ onClick: bekreftOgFortsett, disabled: !(redigerbart && harAvklaring) }}
           tilbakeKnappProps={{ onClick: tilbake }}
         />
       </div>
