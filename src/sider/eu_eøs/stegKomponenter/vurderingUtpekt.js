@@ -204,6 +204,7 @@ export const VurderingUtpekt = ({
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),
           className: "fane__navigasjonsknapp",
+          htmlType: "submit",
         }}
         tilbakeKnappProps={{
           onClick: tilbake,
