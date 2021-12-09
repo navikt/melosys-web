@@ -22,13 +22,26 @@ const StegKnapper = ({
   className,
 }: StegKnapperProps) => {
   const cls = classNames("stegKnapper", className);
+  const bekreftKnappCls = classNames("stegKnapper__bekreft", bekreftKnappProps.className);
+  const tilbakeKnappCls = classNames("stegKnapper__tilbake", tilbakeKnappProps?.className);
+
   return (
     <div className={cls}>
-      <Nav.Hovedknapp mini className="stegKnapper__bekreft" {...bekreftKnappProps}>
+      <Nav.Hovedknapp
+        mini
+        {...bekreftKnappProps}
+        className={bekreftKnappCls}
+        htmlType={bekreftKnappProps.htmlType || "button"}
+      >
         {bekreftTekst}
       </Nav.Hovedknapp>
       {visTilbakeKnapp && tilbakeKnappProps && (
-        <Nav.Flatknapp mini className="stegKnapper__tilbake" {...tilbakeKnappProps}>
+        <Nav.Flatknapp
+          mini
+          {...tilbakeKnappProps}
+          className={tilbakeKnappCls}
+          htmlType={tilbakeKnappProps.htmlType || "button"}
+        >
           <Ikoner.ArrowLeft />
           <span>Tilbake</span>
         </Nav.Flatknapp>
