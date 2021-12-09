@@ -67,7 +67,6 @@ interface Props {
   fortsett: () => void;
   formValues: FormValuesProps;
   hentFlytOgOppdaterAktuelleSteg: () => void;
-  lagreBehandlingsgrunnlagOgOppdaterStegData: () => void;
   redigerbart: boolean;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
