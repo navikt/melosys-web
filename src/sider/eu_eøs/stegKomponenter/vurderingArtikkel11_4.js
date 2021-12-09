@@ -160,8 +160,8 @@ class VurderingArtikkel11_4 extends Component {
         <Mui.StegKnapper
           bekreftKnappProps={{
             disabled: !(redigerbart && harAvklaring),
-            className: "fane_navigasjonsknapp",
-            onClick: { bekreftOgFortsett },
+            className: "fane__navigasjonsknapp",
+            onClick: bekreftOgFortsett,
           }}
           tilbakeKnappProps={{
             onClick: tilbake,
