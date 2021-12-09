@@ -17,6 +17,7 @@ describe("VurderingArtikkel13_1_UtpekLand", () => {
       behandlingID: 3,
       lovvalgsland: "NO",
       lagreOgUtpek: jest.fn(),
+      tilbake: jest.fn(),
       formIsValid: true,
       touch: jest.fn(),
       form: "Form",

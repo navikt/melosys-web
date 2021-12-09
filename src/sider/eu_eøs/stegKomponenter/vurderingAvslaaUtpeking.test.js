@@ -15,6 +15,7 @@ describe("VurderingAvslaaUtpeking", () => {
       behandlingID: 4,
       handleSubmit: jest.fn(),
       avvisUtpeking: jest.fn(),
+      tilbake: jest.fn(),
       fritekst: "",
       nyttLovvalgsland: "CZ",
       begrunnelseUtenlandskMyndighet: "Begrunnelse",
@@ -53,8 +54,9 @@ describe("VurderingAvslaaUtpeking", () => {
 
   it("viser en knapp for å avslutte behandling", () => {
     const vurderingAvslaaUtpeking = shallow(<VurderingAvslaaUtpeking {...props} />);
-    const avsluttKnapp = vurderingAvslaaUtpeking.find(Mui.Knapp);
+    const stegKnapper = vurderingAvslaaUtpeking.find(Mui.StegKnapper);
 
-    expect(avsluttKnapp).toHaveLength(1);
+    expect(stegKnapper).toHaveLength(1);
+    expect(stegKnapper.props().bekreftKnappProps).toBeDefined();
   });
 });
