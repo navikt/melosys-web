@@ -85,7 +85,6 @@ const BrevMottakereTabell = ({
   };
 
   const mapMottakerRader = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
-    // const valgtMottaker = finnMottakerFraValgtMal(formValues.mottaker);
     if (!valgtMottaker) return [];
     return [
       mapRad(muligeBrevMottakere.hovedMottaker),
