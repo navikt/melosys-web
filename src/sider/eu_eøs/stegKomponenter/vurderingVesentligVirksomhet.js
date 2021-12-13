@@ -50,7 +50,6 @@ const VurderingVesentligVirksomhet = (props) => {
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),
-          className: "fane__navigasjonsknapp",
           "data-cy-nesteknapp": "knapp_steg6",
           onClick: bekreftOgFortsett,
         }}

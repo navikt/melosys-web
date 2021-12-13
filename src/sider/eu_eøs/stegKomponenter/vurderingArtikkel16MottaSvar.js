@@ -243,7 +243,6 @@ export const VurderingArtikkel16MottaSvar = (props) => {
         bekreftKnappProps={{
           disabled: !redigerbart || !formIsValid || !tilstand.harAvklaring,
           onClick: bekreftOgFortsett,
-          className: "fane__navigasjonsknapp",
         }}
         tilbakeKnappProps={{
           disabled: !redigerbart,

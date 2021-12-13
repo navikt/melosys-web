@@ -146,7 +146,6 @@ const VurderingVirksomhet = (props) => {
         <Mui.StegKnapper
           bekreftKnappProps={{
             disabled: !(redigerbart && harAvklaring),
-            className: "fane__navigasjonsknapp",
             "data-cy-nesteknapp": "knapp_steg3",
             onClick: bekreftOgFortsett,
           }}

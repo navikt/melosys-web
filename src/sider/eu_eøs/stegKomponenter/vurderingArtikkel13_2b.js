@@ -101,7 +101,6 @@ const VurderingArtikkel13_2b = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),
-          className: "fane__navigasjonsknapp",
           onClick: bekreftOgFortsett,
         }}
         tilbakeKnappProps={{

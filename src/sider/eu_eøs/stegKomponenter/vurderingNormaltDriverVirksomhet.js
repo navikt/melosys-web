@@ -49,7 +49,6 @@ const NormaltDriverVirksomhet = (props) => {
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !harAvklaring || !redigerbart,
-          className: "fane__navigasjonsknapp",
           "data-cy-nesteknapp": "knapp_steg5",
           onClick: bekreftOgFortsett,
         }}

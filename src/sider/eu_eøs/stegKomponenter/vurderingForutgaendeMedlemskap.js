@@ -34,7 +34,6 @@ const VurderingForutgaendeMedlemskap = (props) => {
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),
-          className: "fane__navigasjonsknapp",
           "data-cy-nesteknapp": "knapp_steg5",
           onClick: bekreftOgFortsett,
         }}

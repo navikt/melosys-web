@@ -152,7 +152,6 @@ class VurderingSokkelSkip extends React.Component {
         <Mui.StegKnapper
           bekreftKnappProps={{
             disabled: !(redigerbart && harAvklaring),
-            className: "fane__navigasjonsknapp",
             onClick: bekreftOgFortsett,
           }}
           tilbakeKnappProps={{
