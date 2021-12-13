@@ -42,7 +42,7 @@ const StegKnapper = ({
           className={tilbakeKnappCls}
           htmlType={tilbakeKnappProps.htmlType || "button"}
         >
-          {tilbakeKnappProps.disabled ? <Ikoner.ArrowLeftDisabled /> : <Ikoner.ArrowLeft />}
+          {tilbakeKnappProps.disabled ? <Ikoner.ArrowLeftWhite /> : <Ikoner.ArrowLeftBlue />}
           <span>Tilbake</span>
         </Nav.Flatknapp>
       )}
