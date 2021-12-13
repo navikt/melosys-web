@@ -105,7 +105,7 @@ class Stegvelger extends Component<Props, State> {
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
-      this.debouncedOppdaterStegEtterMenypanelEndring();
+      this.debouncedOppdaterSteg();
     }
   }
 
@@ -168,7 +168,7 @@ class Stegvelger extends Component<Props, State> {
     });
   };
 
-  oppdaterStegEtterMenypanelEndring = () => {
+  oppdaterSteg = () => {
     const {
       props: { behandlingsgrunnlagFeilmeldinger },
       hentFlytOgOppdaterAktuelleSteg,
@@ -178,7 +178,7 @@ class Stegvelger extends Component<Props, State> {
       hentFlytOgOppdaterAktuelleSteg();
     }
   };
-  debouncedOppdaterStegEtterMenypanelEndring = Utils._debounce(this.oppdaterStegEtterMenypanelEndring, 1250);
+  debouncedOppdaterSteg = Utils._debounce(this.oppdaterSteg, 1250);
 
   harBehandlingsgrunnlagFeilmeldinger = () => {
     const harFeilmeldinger = !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
