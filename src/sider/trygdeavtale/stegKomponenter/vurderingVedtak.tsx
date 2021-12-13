@@ -46,6 +46,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
   initialValues: {
     fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    fritekstInnledning: behandlingsresultatSelectors.InnledningFritekstSelector(state),
     lovvalgsperiodeFom:
       ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
     lovvalgsperiodeTom:
@@ -291,32 +292,29 @@ const VurderingVedtak = ({
         </Nav.Row>
       )}
 
-      {redigerbart && (
-        <>
-          <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
-            Fritekst til innledning
-            <Nav.Hjelpetekst
-              tittel={fritekstInnledningHjelpetekstTittel}
-              className={vurderingVedtakCls.element("hjelpetekst")}
-              type={Nav.PopoverOrientering.Hoyre}
-            >
-              <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.</p>
-              <p>
-                Eksempel:
-                <br />
-                &quot;Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31.
-                desember 2024.&quot;
-              </p>
-              <p>Friteksten kommer her.</p>
-            </Nav.Hjelpetekst>
-          </Nav.Typo.Element>
-          <Skjema.HTMLEditor
-            feltNavn="fritekstInnledning"
-            className={vurderingVedtakCls.element("fritekst_editor")}
-            placeholder="Skriv inn tilleggsinformasjon til innledning..."
-          />
-        </>
-      )}
+      <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
+        Fritekst til innledning
+        <Nav.Hjelpetekst
+          tittel={fritekstInnledningHjelpetekstTittel}
+          className={vurderingVedtakCls.element("hjelpetekst")}
+          type={Nav.PopoverOrientering.Hoyre}
+        >
+          <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat.</p>
+          <p>
+            Eksempel:
+            <br />
+            &quot;Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31.
+            desember 2024.&quot;
+          </p>
+          <p>Friteksten kommer her.</p>
+        </Nav.Hjelpetekst>
+      </Nav.Typo.Element>
+      <Skjema.HTMLEditor
+        feltNavn="fritekstInnledning"
+        className={vurderingVedtakCls.element("fritekst_editor")}
+        placeholder="Skriv inn tilleggsinformasjon til innledning..."
+        disabled={!redigerbart}
+      />
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til begrunnelse{" "}
