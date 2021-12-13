@@ -9,7 +9,6 @@ import "./stegKnapper.css";
 interface StegKnapperProps {
   bekreftKnappProps: ComponentProps<typeof Nav.Hovedknapp>;
   bekreftTekst?: string;
-  visTilbakeKnapp?: boolean;
   tilbakeKnappProps?: ComponentProps<typeof Nav.Flatknapp>;
   className?: string;
 }
@@ -17,7 +16,6 @@ interface StegKnapperProps {
 const StegKnapper = ({
   bekreftKnappProps,
   bekreftTekst = "Bekreft og fortsett",
-  visTilbakeKnapp = true,
   tilbakeKnappProps,
   className,
 }: StegKnapperProps) => {
@@ -35,7 +33,7 @@ const StegKnapper = ({
       >
         {bekreftTekst}
       </Nav.Hovedknapp>
-      {visTilbakeKnapp && tilbakeKnappProps && (
+      {tilbakeKnappProps && (
         <Nav.Flatknapp
           mini
           {...tilbakeKnappProps}

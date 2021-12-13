@@ -142,7 +142,6 @@ export const VurderingInngang = ({
         behandlingstema={behandlingstema}
       />
       <Mui.StegKnapper
-        visTilbakeKnapp={false}
         bekreftKnappProps={{
           disabled: !redigerbart,
           onClick: knappClickHandler,

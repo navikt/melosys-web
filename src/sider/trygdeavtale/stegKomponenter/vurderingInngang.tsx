@@ -174,7 +174,6 @@ const VurderingInngang = ({
           onClick: fortsettHandle,
           disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
         }}
-        visTilbakeKnapp={false}
       />
 
       {visOppfrisk && (
