@@ -193,7 +193,6 @@ export const VurderingArtikkel13_x_vedtak = ({
           autoDisableVedSpinner: true,
           disabled: !redigerbart,
           htmlType: "submit",
-          type: "hoved",
         }}
         bekreftTekst="FATT VEDTAK"
         tilbakeKnappProps={{

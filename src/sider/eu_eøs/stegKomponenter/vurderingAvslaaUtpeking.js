@@ -119,7 +119,6 @@ export const VurderingAvslaaUtpeking = ({
           autoDisableVedSpinner: true,
           disabled: !redigerbart,
           htmlType: "submit",
-          type: "hoved",
         }}
         bekreftTekst="AVSLUTT OG SEND SED"
         tilbakeKnappProps={{

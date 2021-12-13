@@ -226,7 +226,6 @@ export const VurderingArtikkel13UtpekLand = ({
           spinner: utpekingPending,
           autoDisableVedSpinner: true,
           disabled: !redigerbart,
-          type: "hoved",
         }}
         bekreftTekst="FATT VEDTAK"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}

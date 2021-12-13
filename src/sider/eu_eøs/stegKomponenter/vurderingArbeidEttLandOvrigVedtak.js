@@ -373,7 +373,6 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
           autoDisableVedSpinner: true,
           disabled: !redigerbart,
           htmlType: "submit",
-          type: "hoved",
         }}
         bekreftTekst="FATT VEDTAK"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
