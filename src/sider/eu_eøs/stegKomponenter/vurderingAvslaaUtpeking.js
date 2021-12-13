@@ -115,7 +115,6 @@ export const VurderingAvslaaUtpeking = ({
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{
-          mini: true,
           spinner: avslagPending,
           autoDisableVedSpinner: true,
           disabled: !redigerbart,
