@@ -1,3 +1,3 @@
-import HTMLEditor from "./htmleditor";
+import HtmlEditorFelt from "./htmlEditorFelt";
 
-export default HTMLEditor;
+export default HtmlEditorFelt;
