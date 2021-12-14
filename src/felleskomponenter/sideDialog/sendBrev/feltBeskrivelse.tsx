@@ -5,13 +5,13 @@ interface FeltBeskrivelseProps {
   beskrivelse: string;
   hjelpetekst: string | null;
 }
-const FeltBeskrivelse = (felt: FeltBeskrivelseProps) => {
+const FeltBeskrivelse = ({ beskrivelse, hjelpetekst }: FeltBeskrivelseProps) => {
   return (
-    <Nav.Typo.Element className="fritekst_label" tag={felt.hjelpetekst ? "div" : "p"}>
-      {felt.beskrivelse}
-      {felt.hjelpetekst && (
-        <Nav.Hjelpetekst className="hjelpetekst" tittel={felt.hjelpetekst} type={Nav.PopoverOrientering.Venstre}>
-          {felt.hjelpetekst}
+    <Nav.Typo.Element className="fritekst_label" tag={hjelpetekst ? "div" : "p"}>
+      {beskrivelse}
+      {hjelpetekst && (
+        <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Venstre}>
+          {hjelpetekst}
         </Nav.Hjelpetekst>
       )}
     </Nav.Typo.Element>
