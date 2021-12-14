@@ -7,6 +7,7 @@ import MKV from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 import * as VilkarSelectors from "../../../ducks/vilkar/selectors";
 
@@ -32,6 +33,7 @@ const VurderingAvslag12_x_og_16 = ({
   touch,
   formIsValid,
   formValues,
+  tilbake,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
@@ -129,9 +131,19 @@ const VurderingAvslag12_x_og_16 = ({
       </Nav.Row>
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-      <Nav.Hovedknapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} onClick={avslaa}>
-        Fatt vedtak
-      </Nav.Hovedknapp>
+      <Mui.StegKnapper
+        bekreftTekst="Fatt vedtak"
+        bekreftKnappProps={{
+          spinner: vedtakPending,
+          autoDisableVedSpinner: true,
+          disabled: !redigerbart,
+          onClick: avslaa,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
@@ -144,6 +156,7 @@ VurderingAvslag12_x_og_16.propTypes = {
   vilkarBegrunnelser: PT.array.isRequired,
   behandlingID: PT.number.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   redigerbart: PT.bool,
   behandlingstype: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,

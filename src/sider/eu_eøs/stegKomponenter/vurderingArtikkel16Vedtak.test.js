@@ -16,6 +16,7 @@ describe("VurderingArtikkel16Vedtak", () => {
       },
       behandlingID: 1,
       lagreOgFatteVedtak: jest.fn(),
+      tilbake: jest.fn(),
       redigerbart: true,
       vilkarBegrunnelser: [],
       art_12_1_begrunnelser: [],
@@ -59,8 +60,8 @@ describe("VurderingArtikkel16Vedtak", () => {
   it("viser en knapp for å fatte vedtak", () => {
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
-    expect(vurderingArtikkel16Vedtak.find("Hovedknapp")).toHaveLength(1);
-    vurderingArtikkel16Vedtak.find("Hovedknapp").simulate("click");
+    expect(vurderingArtikkel16Vedtak.find("StegKnapper")).toHaveLength(1);
+    vurderingArtikkel16Vedtak.find("StegKnapper").props().bekreftKnappProps.onClick();
     expect(props.lagreOgFatteVedtak).toHaveBeenCalledTimes(1);
   });
 });

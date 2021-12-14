@@ -14,7 +14,9 @@ class Avslag_12_x_og_16 extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => {};
-    this.handlers = {};
+    this.handlers = {
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
+    };
     this.status = FANE_STATUS.OK;
   }
 }

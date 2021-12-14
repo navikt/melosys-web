@@ -14,6 +14,7 @@ describe("VurderingVurderarbeidsland", () => {
     props = {
       begrunnelser: [],
       bekreftOgFortsett: jest.fn(),
+      tilbake: jest.fn(),
       tilstand: {
         harAvklaring: true,
         sokkelEllerSkipListe: [],

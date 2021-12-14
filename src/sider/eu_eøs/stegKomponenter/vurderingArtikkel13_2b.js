@@ -5,6 +5,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV from "../../../melosyskodeverk";
 import EnkeltLandPure from "../../../felleskomponenter/skjema/landvelger/enkeltLandPure";
@@ -24,6 +25,7 @@ const VurderingArtikkel13_2b = ({
   redigerbart,
   tilstand: { omfattesILandFakta, harAvklaring },
   slettData,
+  tilbake,
   oppdaterData,
   bekreftOgFortsett,
 }) => {
@@ -96,15 +98,16 @@ const VurderingArtikkel13_2b = ({
           </Nav.Row>
         )}
       </Nav.Fieldset>
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          disabled: !redigerbart,
+          onClick: tilbake,
+        }}
+      />
     </div>
   );
 };
@@ -117,6 +120,7 @@ VurderingArtikkel13_2b.propTypes = {
   }).isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
 };
 

@@ -16,6 +16,7 @@ class Artikkel16Vedtak extends Steg {
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this._status = FANE_STATUS.OK;
   }
