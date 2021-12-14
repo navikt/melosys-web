@@ -11,6 +11,7 @@ import { VurderingForretningssted, Forretningssteder } from "./vurderingForretni
 describe("VurderingForretningssted", () => {
   const props = {
     bekreftOgFortsett: jest.fn(),
+    tilbake: jest.fn(),
     tilstand: {
       omfattetINorge: {},
       omfattetILand: {},

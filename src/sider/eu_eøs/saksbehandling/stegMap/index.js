@@ -1,14 +1,11 @@
-import Aktivitet from "./aktivitet";
 import Virksomheter from "./virksomheter";
 import Avslag_12_x_og_16 from "./avslag_12_x_og_16";
 import Bostedsland from "./bostedsland";
 import Forretningssted from "./forretningssted";
 import ForutgaendeMedlemskap from "./forutgaende_medlemskap";
-import IkkeYrkesaktiv from "./ikke_yrkesaktiv";
 import Inngang from "./inngang";
 import Yrkesaktivitet from "./yrkesaktivitet";
 import Yrkesgruppe from "./yrkesgruppe";
-import Tjenestemann from "./tjenestemann";
 import ArbeidEttLandOvrigVedtak from "./arbeid_ett_land_ovrig_vedtak";
 import Artikkel12_1 from "./artikkel12_1";
 import Artikkel12_2 from "./artikkel12_2";
@@ -27,7 +24,6 @@ import Artikkel13_4_UtpekLand from "./artikkel13_4_utpekland";
 import Artikkel16Anmodning from "./artikkel16_anmodning";
 import Artikkel16MottaSvar from "./artikkel16_motta_svar";
 import Artikkel16Vedtak from "./artikkel16_vedtak";
-import VirksomhetType from "./virksomhet_type";
 import VesentligVirksomhet from "./vesentlig_virksomhet";
 import MedfolgendeBarn from "./medfolgende_barn";
 import NormaltDriverVirksomhet from "./normalt_driver_virksomhet";
@@ -61,17 +57,13 @@ export const stegMap = new Map([
   [STEG.ARTIKKEL_13_4_VEDTAK, Artikkel13_4_Vedtak],
   [STEG.ARTIKKEL_13_4_UTPEK_LAND, Artikkel13_4_UtpekLand],
   [STEG.YRKESGRUPPE, Yrkesgruppe],
-  [STEG.IKKE_YRKESAKTIV, IkkeYrkesaktiv],
   [STEG.FORUTGAENDE_MEDLEMSKAP, ForutgaendeMedlemskap],
   [STEG.YRKESAKTIVITET, Yrkesaktivitet],
   [STEG.ARBEIDSMONSTER, Arbeidsmonster],
-  [STEG.VIRKSOMHET_TYPE, VirksomhetType],
   [STEG.VESENTLIG_VIRKSOMHET, VesentligVirksomhet],
   [STEG.MEDFOLGENDE_BARN, MedfolgendeBarn],
   [STEG.NORMALT_DRIVER_VIRKSOMHET, NormaltDriverVirksomhet],
-  [STEG.AKTIVITET, Aktivitet],
   [STEG.BOSTEDSLAND, Bostedsland],
-  [STEG.TJENESTEMANN, Tjenestemann],
   [STEG.FORRETNINGSSTED, Forretningssted],
   [STEG.VIRKSOMHETER, Virksomheter],
   [STEG.SOKKEL_SKIP, SokkelSkip],

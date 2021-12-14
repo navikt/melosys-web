@@ -9,6 +9,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 
@@ -140,16 +141,12 @@ export const VurderingInngang = ({
         landkoder={landkoder}
         behandlingstema={behandlingstema}
       />
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!redigerbart}
-          className="fane__navigasjonsknapp"
-          data-cy-nesteknapp="knapp_steg0"
-          onClick={knappClickHandler}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !redigerbart,
+          onClick: knappClickHandler,
+        }}
+      />
     </div>
   );
 };

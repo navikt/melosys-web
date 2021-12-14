@@ -8,6 +8,7 @@ import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../../felleskomponenter/ui";
 
 import LandLinje from "./landlinje";
 import EnkeltAvklartfakta from "../felles/enkeltAvklartfakta";
@@ -171,6 +172,7 @@ export const VurderingArbeidsmonster = ({
   redigerbart,
   oppdaterData,
   slettData,
+  tilbake,
 }) => {
   const {
     marginaltArbeid,
@@ -382,15 +384,10 @@ export const VurderingArbeidsmonster = ({
             onChange={aktivitetINorgeEndretHandler}
           />
         )}
-        <div className="fane__knapplinje">
-          <Nav.Knapp
-            disabled={!(redigerbart && harAvklaring)}
-            className="fane__navigasjonsknapp"
-            onClick={bekreftOgFortsett}
-          >
-            Bekreft og fortsett
-          </Nav.Knapp>
-        </div>
+        <Mui.StegKnapper
+          bekreftKnappProps={{ onClick: bekreftOgFortsett, disabled: !(redigerbart && harAvklaring) }}
+          tilbakeKnappProps={{ onClick: tilbake }}
+        />
       </div>
     </div>
   );
@@ -400,6 +397,7 @@ VurderingArbeidsmonster.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
   tilstand: PT.shape({
     marginaltArbeid: PT.array,
