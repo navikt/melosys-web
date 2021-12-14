@@ -193,7 +193,7 @@ const SendBrev = ({
             </>
           )}
           {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
-            <BrevFelt felt={felt} visHjelpetekst={felt.valg === null} />
+            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} />
           )}
         </Fragment>
       ))}

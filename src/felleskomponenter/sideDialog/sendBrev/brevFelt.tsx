@@ -6,14 +6,14 @@ import FeltBeskrivelse from "./feltBeskrivelse";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
-  visHjelpetekst: boolean;
+  visFeltBeskrivelse: boolean;
 }
-const BrevFelt = ({ felt, visHjelpetekst }: BrevFeltProps) => {
+const BrevFelt = ({ felt, visFeltBeskrivelse }: BrevFeltProps) => {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
         <>
-          {visHjelpetekst && <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />}
+          {visFeltBeskrivelse && <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />}
           <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.feltVerdi`} />
         </>
       );
@@ -23,7 +23,7 @@ const BrevFelt = ({ felt, visHjelpetekst }: BrevFeltProps) => {
           feltNavn={`felt.${felt.kode}.feltVerdi`}
           normalize={begrensAntallTegn(felt.tegnBegrensning)}
           label={
-            visHjelpetekst ? <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} /> : ""
+            visFeltBeskrivelse ? <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} /> : ""
           }
         />
       );
