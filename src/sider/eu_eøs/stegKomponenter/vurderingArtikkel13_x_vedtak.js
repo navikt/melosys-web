@@ -194,7 +194,7 @@ export const VurderingArtikkel13_x_vedtak = ({
           disabled: !redigerbart,
           htmlType: "submit",
         }}
-        bekreftTekst="FATT VEDTAK"
+        bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{
           onClick: tilbake,
           disabled: !redigerbart,

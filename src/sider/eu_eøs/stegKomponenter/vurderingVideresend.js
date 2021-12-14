@@ -120,7 +120,7 @@ export const VurderingVideresend = ({
                 disabled: !redigerbart,
                 htmlType: "submit",
               }}
-              bekreftTekst="VIDERESEND SØKNAD"
+              bekreftTekst="Videresend søknad"
               tilbakeKnappProps={{
                 onClick: tilbake,
                 disabled: !redigerbart,

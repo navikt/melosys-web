@@ -410,7 +410,7 @@ const Saksopplysninger = ({
                       disabled: !redigerbart,
                       htmlType: "submit",
                     }}
-                    bekreftTekst="LAGRE"
+                    bekreftTekst="Lagre"
                   />
                 </Nav.Column>
               </Nav.Row>

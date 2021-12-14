@@ -512,7 +512,7 @@ export const VurderingArtikkel16Vedtak = ({
               disabled: !redigerbart,
               onClick: vedKlikk,
             }}
-            bekreftTekst="FATT VEDTAK"
+            bekreftTekst="Fatt vedtak"
             tilbakeKnappProps={{
               onClick: tilbake,
               disabled: !redigerbart,

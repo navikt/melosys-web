@@ -120,7 +120,7 @@ export const VurderingAvslaaUtpeking = ({
           disabled: !redigerbart,
           htmlType: "submit",
         }}
-        bekreftTekst="AVSLUTT OG SEND SED"
+        bekreftTekst="Avslutt og send SED"
         tilbakeKnappProps={{
           onClick: tilbake,
           disabled: !redigerbart,

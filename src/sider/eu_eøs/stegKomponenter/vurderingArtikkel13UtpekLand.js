@@ -227,7 +227,7 @@ export const VurderingArtikkel13UtpekLand = ({
           autoDisableVedSpinner: true,
           disabled: !redigerbart,
         }}
-        bekreftTekst="FATT VEDTAK"
+        bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
