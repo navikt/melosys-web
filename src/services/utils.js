@@ -29,20 +29,22 @@ const toJson = async (response) => {
   }
 };
 
-export const sendResultatTilDispatch = (dispatch, action, { onDispatch, mapDispatchData }) => (...data) => {
-  const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
+export const sendResultatTilDispatch =
+  (dispatch, action, { onDispatch, mapDispatchData }) =>
+  (...data) => {
+    const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
 
-  const dispatchedAction = dispatch({ type: action, data: dataSomSkalDispatches });
+    const dispatchedAction = dispatch({ type: action, data: dataSomSkalDispatches });
 
-  if (onDispatch && typeof onDispatch === "function") {
-    onDispatch(dispatch, dataSomSkalDispatches);
-  }
-  if (mapDispatchData && typeof mapDispatchData === "function") {
-    return dispatch({ type: action, data: mapDispatchData(dataSomSkalDispatches) });
-  }
+    if (onDispatch && typeof onDispatch === "function") {
+      onDispatch(dispatch, dataSomSkalDispatches);
+    }
+    if (mapDispatchData && typeof mapDispatchData === "function") {
+      return dispatch({ type: action, data: mapDispatchData(dataSomSkalDispatches) });
+    }
 
-  return dispatchedAction;
-};
+    return dispatchedAction;
+  };
 
 export const handterFeil = (dispatch, action, callback) => async (error) => {
   const data = error.response ? await error.response.json() : error.toString();
@@ -179,13 +181,15 @@ const toJsonExtended = async (fetchResponse) => {
       ...err,
       response,
     };
-  } else if (contentType && contentType.startsWith("text")) {
+  }
+  if (contentType && contentType.startsWith("text")) {
     const txt = await fetchResponse.text();
     return {
       text: txt,
       response,
     };
-  } else if (contentType && contentType.startsWith("application/json")) {
+  }
+  if (contentType && contentType.startsWith("application/json")) {
     const res = await fetchResponse.json();
     return {
       ...res,

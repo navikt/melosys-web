@@ -6,7 +6,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 
 import * as Ikon from "../../resources/images";
 
-import hentPersonopplysninger from "./hentpersonopplysninger";
+import useHentPersonopplysninger from "./useHentpersonopplysninger";
 import Behandlingsmeny from "./behandlingsmeny";
 import KopierbarTekst from "../kopierbarTekst";
 
@@ -52,9 +52,10 @@ const Sivilstand = ({ sivilstand }: { sivilstand: string }) => (
 const Separator = () => <div className="personlinje__separator">/</div>;
 
 const Personlinje = ({ behandlingID }: PersonlinjeProps) => {
-  if (behandlingID < 0) return null;
+  const skipHentPersonopplysninger = behandlingID < 0;
+  const personopplysninger = useHentPersonopplysninger(behandlingID, skipHentPersonopplysninger);
 
-  const personopplysninger = hentPersonopplysninger(behandlingID);
+  if (!personopplysninger) return null;
 
   return (
     <div className="personlinje">

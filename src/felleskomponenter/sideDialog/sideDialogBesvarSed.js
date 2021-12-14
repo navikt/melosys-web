@@ -134,7 +134,8 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
   const hentKomponent = () => {
     if (kanViseListe(bucer)) {
       return sorterEtterDato(bucer).map((buc) => <EnkeltBuc key={buc.id} buc={buc} />);
-    } else if (henterData) {
+    }
+    if (henterData) {
       return <HenterOpplysningerSpinner />;
     }
 

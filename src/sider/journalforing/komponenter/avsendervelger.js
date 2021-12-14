@@ -4,7 +4,7 @@ import { getFormValues } from "redux-form";
 import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
 
-import * as Skjema from "../../../felleskomponenter/skjema/";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 

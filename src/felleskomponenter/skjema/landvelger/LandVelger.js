@@ -29,7 +29,7 @@ const LandVelger = (props) => {
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
           {props.landkoder.map((item) => (
-            <option key={item.kode} value={Utils.land.landTekstFormat(item)} />
+            <option key={item.kode} value={Utils.land.landTekstFormat(item)} label={Utils.land.landTekstFormat(item)} />
           ))}
         </datalist>
       </div>

@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PT from "prop-types";
 import moment from "moment/moment";
 import { connect } from "react-redux";
 
 import * as Api from "../services/api";
 import * as Nav from "../navFrontend";
-import * as Mui from "../felleskomponenter/ui";
+import * as Mui from "./ui";
 import * as MPT from "../proptypes";
 
 import { behandlingerOperations } from "../ducks/behandlinger";
@@ -65,31 +65,29 @@ const BehandlingsStatus = ({
 
   return (
     <div className="oppsummering__behandlingsstatus">
-      <Fragment>
-        <Mui.KodeTermSelect
-          koder={endreBehandlingsStatusValg}
-          value={behandlingsstatus}
-          onChange={onChange}
-          label="Endre behandlingsstatus:"
-          redigerbar={redigerbart}
-        />
-        <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>
-          Oppdater
-        </Nav.Hovedknapp>
-        <div role="alert">
-          {statusmelding && (
-            <div>
-              <br />
-              <Nav.AlertStripe type="suksess" className="varsel">
-                {statusmelding}
-              </Nav.AlertStripe>
-            </div>
-          )}
-        </div>
-        <div role="alert" className="oppsummering__behandlingsstatus__feilmelding">
-          {feilmelding && <Nav.AlertStripe type="feil">{feilmelding}</Nav.AlertStripe>}
-        </div>
-      </Fragment>
+      <Mui.KodeTermSelect
+        koder={endreBehandlingsStatusValg}
+        value={behandlingsstatus}
+        onChange={onChange}
+        label="Endre behandlingsstatus:"
+        redigerbar={redigerbart}
+      />
+      <Nav.Hovedknapp disabled={!redigerbart} onClick={sendOppdatering}>
+        Oppdater
+      </Nav.Hovedknapp>
+      <div role="alert">
+        {statusmelding && (
+          <div>
+            <br />
+            <Nav.AlertStripe type="suksess" className="varsel">
+              {statusmelding}
+            </Nav.AlertStripe>
+          </div>
+        )}
+      </div>
+      <div role="alert" className="oppsummering__behandlingsstatus__feilmelding">
+        {feilmelding && <Nav.AlertStripe type="feil">{feilmelding}</Nav.AlertStripe>}
+      </div>
     </div>
   );
 };

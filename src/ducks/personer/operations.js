@@ -8,7 +8,7 @@
  */
 import * as Api from "../../services/api";
 import { doThenDispatch } from "../../services/utils";
-import * as Types from "../personer/types";
+import * as Types from "./types";
 
 export function hent(fnr) {
   return doThenDispatch(() => Api.Personer.hentPerson(fnr), {

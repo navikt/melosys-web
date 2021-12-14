@@ -265,7 +265,7 @@ const SendBrev = ({
         style: "midtstilt",
       },
       {
-        verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(muligMottaker)} /> : <></>,
+        verdi: kanSlettes ? <Ikoner.Bin onClick={() => slettKopiMottaker(muligMottaker)} /> : null,
         style: "slettKnapp",
       },
     ];
@@ -472,10 +472,11 @@ const SendBrev = ({
                 )}
               </Fragment>
             );
-          } else if (felt.feltType === "FRITEKST") {
+          }
+          if (felt.feltType === "FRITEKST") {
             return (
               <Fragment key="fritekst">
-                <Nav.Typo.Element className="fritekst_label">
+                <Nav.Typo.Element key="fritekst" className="fritekst_label">
                   {felt.beskrivelse}
                   {felt.hjelpetekst && (
                     <Nav.Hjelpetekst
@@ -491,7 +492,7 @@ const SendBrev = ({
               </Fragment>
             );
           }
-          return <></>;
+          return null;
         })}
 
       {mottakerErValgt && (

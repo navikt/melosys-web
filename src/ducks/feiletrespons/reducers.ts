@@ -7,7 +7,7 @@ import { vedtakTypes } from "../vedtak";
 import { videresendingTypes } from "../videresending";
 import { anmodningunntakTypes } from "../anmodningunntak";
 
-const initalState: StateSection<Types.Data> = {
+const initialState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,
   data: {},
 };
@@ -16,7 +16,8 @@ const initalState: StateSection<Types.Data> = {
   Vi ønsker å få tak i resultatet fra det siste feilede api-kallet blant typene nedenfor.
   Vi resetter i tillegg state dersom et av api-kallene er vellykket.
 */
-export default function reducer(state = initalState, action: Types.Action): StateSection<Types.Data> {
+// eslint-disable-next-line default-param-last
+export default function reducer(state = initialState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
     case utpekTypes.FEILET:
     case vedtakTypes.FEILET:
@@ -27,7 +28,7 @@ export default function reducer(state = initalState, action: Types.Action): Stat
     case vedtakTypes.OK:
     case videresendingTypes.OK:
     case anmodningunntakTypes.OK:
-      return { ...initalState, status: STATUS.OK };
+      return { ...initialState, status: STATUS.OK };
     default:
       return state;
   }

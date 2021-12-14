@@ -99,7 +99,7 @@ Validering.propTypes = {
   valideringKode: PT.string.isRequired,
 };
 
-export const Valideringsfeil = ({ validering }: { validering: Validering }) => {
+export const Valideringsfeil = ({ validering }: { validering: ValideringType }) => {
   const felter = validering.felter
     .map((felt) => {
       const { menypunkt, entryNr, felt: feltNavn } = mapBehandlingsgrunnlagpathTilMenypunkt(felt);
@@ -133,14 +133,14 @@ Valideringsfeil.propTypes = {
   }).isRequired,
 };
 
-interface Validering {
+interface ValideringType {
   kode: string;
   felter: string[];
 }
 
 interface DialogboksValideringProps {
   avbryt: () => void;
-  valideringer: Validering[];
+  valideringer: ValideringType[];
   feilmeldinger: Feilmelding[];
 }
 

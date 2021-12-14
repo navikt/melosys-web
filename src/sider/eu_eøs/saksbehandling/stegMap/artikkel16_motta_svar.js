@@ -3,7 +3,7 @@ import * as Utils from "../../../../utils";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel16MottaSvar from "../../stegKomponenter/vurderingArtikkel16MottaSvar";
-import vurderingArtikkel16MottaSvarSchema from "../../stegKomponenter//vurderingArtikkel16MottaSvarSchema";
+import vurderingArtikkel16MottaSvarSchema from "../../stegKomponenter/vurderingArtikkel16MottaSvarSchema";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 
 class Artikkel16MottaSvar extends Steg {

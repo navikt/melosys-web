@@ -5,11 +5,11 @@ import * as Skjema from "../../../../skjema";
 
 import "./felter.css";
 
-interface Felter {
+interface FelterProps {
   redigerbart: boolean;
 }
 
-const Felter = ({ redigerbart }: Felter) => (
+const Felter = ({ redigerbart }: FelterProps) => (
   <div className="felter">
     <dl className="person__detaljer">
       <Nav.Row>

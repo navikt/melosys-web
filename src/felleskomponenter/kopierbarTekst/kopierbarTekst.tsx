@@ -38,7 +38,7 @@ const KopierbarTekst = ({ hovertekst, children }: KopierbarTekstProps) => {
       )}
       <span className={containerCls}>
         <CopyToClipboard text={children} onCopy={() => setErKopiert(true)}>
-          <button>
+          <button type="button">
             {children}
             {erKopiert ? (
               <Ikoner.GreenCheckmark className={kopierIkonCls} />

@@ -210,7 +210,7 @@ class ListevelgerFlervalg extends Component {
         </div>
         <datalist id={`dataliste-${fields.name}`}>
           {muligeValg.map((valg) => (
-            <option key={uuid()} value={KV.objektTilTerm(valg)} />
+            <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
           ))}
         </datalist>
       </div>

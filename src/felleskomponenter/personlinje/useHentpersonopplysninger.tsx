@@ -14,8 +14,8 @@ type PersonopplysningerProps = {
   sivilstand: string;
 } | null;
 
-const hentPersonopplysninger = (behandlingID: number): PersonopplysningerProps => {
-  const { data, error } = useHentPersonopplysningerQuery({ variables: { behandlingID } });
+const useHentPersonopplysninger = (behandlingID: number, skip: boolean): PersonopplysningerProps => {
+  const { data, error } = useHentPersonopplysningerQuery({ variables: { behandlingID }, skip });
 
   const person = data?.hentSaksopplysninger.persondata;
   if (error || !person) return null;
@@ -39,4 +39,4 @@ const hentPersonopplysninger = (behandlingID: number): PersonopplysningerProps =
   };
 };
 
-export default hentPersonopplysninger;
+export default useHentPersonopplysninger;

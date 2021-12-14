@@ -112,7 +112,7 @@ export const VedleggListe = ({
       <table className="vedleggvelger-tabell">
         <thead>
           <tr>
-            <th />
+            <th aria-label="Checkbox for å inkludere vedlegg" />
             <th>
               <Nav.Typo.Element>Dokument</Nav.Typo.Element>
             </th>
@@ -122,8 +122,8 @@ export const VedleggListe = ({
             <th>
               <Nav.Typo.Element>Dato</Nav.Typo.Element>
             </th>
-            <th />
-            <th />
+            <th aria-label="Knapp for å åpne vedlegg" />
+            <th aria-label="Knapp for å slette vedlegg" />
           </tr>
         </thead>
         <tbody>

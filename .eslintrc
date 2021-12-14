@@ -11,6 +11,18 @@
     "react/jsx-wrap-multilines": "off",
     "react/jsx-closing-bracket-location": "off",
     "react/jsx-indent": "off",
+    "react/destructuring-assignment": "off",
+    "react/state-in-constructor": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/function-component-definition": "off",
+    "react/jsx-fragments": "off",
+    "react/jsx-no-useless-fragment": [
+      "error",
+      {
+        "allowExpressions": true
+      }
+    ],
+    "react/no-unstable-nested-components": "off",
     "comma-dangle": [
       "error",
       {
@@ -49,6 +61,7 @@
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
     "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api"] }],
+    "import/no-cycle": 0,
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
     "jsx-a11y/aria-role": 2,
@@ -91,7 +104,12 @@
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"]
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "prefer-regex-literals": "off",
+    "lines-between-class-members": "off",
+    "react/sort-comp": "off",
+    "max-classes-per-file": "off",
+    "react-hooks/exhaustive-deps": "off"
   },
   "overrides": [
     {

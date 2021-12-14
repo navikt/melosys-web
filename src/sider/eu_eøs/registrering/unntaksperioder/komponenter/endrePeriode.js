@@ -52,57 +52,55 @@ const EndrePeriode = ({
 
   return (
     <div className="endre_periode">
-      <React.Fragment>
-        <Nav.Column xs="3">
-          <Datovelger
-            label="Startdato"
-            value={Utils.dato.norskStringTilDate(fom)}
-            onChange={fomChange}
-            feil={feilmeldinger.fom?.feilmelding}
-            disabled={!redigerbart}
-          />
-        </Nav.Column>
-        <Nav.Column xs="3" className="sluttdato-datovelger">
-          <Datovelger
-            label="Sluttdato"
-            value={Utils.dato.norskStringTilDate(tom)}
-            onChange={tomChange}
-            feil={feilmeldinger.tom?.feilmelding}
-            disabled={!redigerbart}
-          />
-        </Nav.Column>
-        <Nav.Column xs="12">
-          <Nav.Select
-            bredde="xl"
-            label="Begrunnelse for endret periode"
-            onChange={(e) => oppdaterFelt(e, oppdaterBegrunnelse)}
-            disabled={!redigerbart}
-            feil={feilmeldinger.begrunnelse}
-            value={begrunnelse || "0"}
-          >
-            <option key={uuid()} value="0" disabled>
-              Velg i listen
+      <Nav.Column xs="3">
+        <Datovelger
+          label="Startdato"
+          value={Utils.dato.norskStringTilDate(fom)}
+          onChange={fomChange}
+          feil={feilmeldinger.fom?.feilmelding}
+          disabled={!redigerbart}
+        />
+      </Nav.Column>
+      <Nav.Column xs="3" className="sluttdato-datovelger">
+        <Datovelger
+          label="Sluttdato"
+          value={Utils.dato.norskStringTilDate(tom)}
+          onChange={tomChange}
+          feil={feilmeldinger.tom?.feilmelding}
+          disabled={!redigerbart}
+        />
+      </Nav.Column>
+      <Nav.Column xs="12">
+        <Nav.Select
+          bredde="xl"
+          label="Begrunnelse for endret periode"
+          onChange={(e) => oppdaterFelt(e, oppdaterBegrunnelse)}
+          disabled={!redigerbart}
+          feil={feilmeldinger.begrunnelse}
+          value={begrunnelse || "0"}
+        >
+          <option key={uuid()} value="0" disabled>
+            Velg i listen
+          </option>
+          {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map((kodeobjekt) => (
+            <option key={kodeobjekt.kode} value={kodeobjekt.kode}>
+              {kodeobjekt.term}
             </option>
-            {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map((kodeobjekt) => (
-              <option key={kodeobjekt.kode} value={kodeobjekt.kode}>
-                {kodeobjekt.term}
-              </option>
-            ))}
-          </Nav.Select>
+          ))}
+        </Nav.Select>
+      </Nav.Column>
+      {fritekstPaakrevd() && (
+        <Nav.Column xs="6">
+          <Nav.Textarea
+            label="Skriv inn begrunnelse for endring av periode..."
+            maxLength={255}
+            onChange={(e) => oppdaterFelt(e, oppdaterFritekst)}
+            value={fritekst}
+            feil={feilmeldinger.fritekst}
+            disabled={!redigerbart}
+          />
         </Nav.Column>
-        {fritekstPaakrevd() && (
-          <Nav.Column xs="6">
-            <Nav.Textarea
-              label="Skriv inn begrunnelse for endring av periode..."
-              maxLength={255}
-              onChange={(e) => oppdaterFelt(e, oppdaterFritekst)}
-              value={fritekst}
-              feil={feilmeldinger.fritekst}
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
-        )}
-      </React.Fragment>
+      )}
     </div>
   );
 };

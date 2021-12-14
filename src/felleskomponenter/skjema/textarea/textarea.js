@@ -21,7 +21,8 @@ function getTellerTekst(antallTegn, maxLength, visTellerFra) {
   if (tegnForMange > 0) {
     const text = `Du har skrevet ${tegnForMange} tegn for mye.`;
     return <span>{text}</span>;
-  } else if (tegnIgjen <= tellerFra) {
+  }
+  if (tegnIgjen <= tellerFra) {
     const text = `Du har ${tegnIgjen} tegn igjen.`;
     return <span>{text}</span>;
   }

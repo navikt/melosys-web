@@ -8,7 +8,7 @@ import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 
-import { konverterAvklartfaktaTilStegData, slettAvklartfakta } from "../../felleskomponenter/stegvelger";
+import { konverterAvklartfaktaTilStegData, slettAvklartfakta } from "../stegvelger";
 import { hentFaktaVerdi } from "../../domeneUtils/avklartefakta";
 
 import "./sokkelskipenkelt.css";
@@ -141,7 +141,7 @@ const SokkelSkipEnkelt = (props) => {
               onChange={begrunnelserEndret}
               value={begrunnelseKoder[0]}
             >
-              <option key={null} value={null} />
+              <option key={null} value={null} label="Velg begrunnelse" />
               {begrunnelser.map((enkelt) => (
                 <option key={enkelt.kode} value={enkelt.kode}>
                   {enkelt.term}

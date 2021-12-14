@@ -34,8 +34,7 @@ const hentIkkeSkrivbareVilkaarData = (state) =>
     state.data.find((enkeltVilkaar) => enkeltVilkaar.vilkaar === v)
   ).filter((v) => v != null);
 
-// Reducer
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };

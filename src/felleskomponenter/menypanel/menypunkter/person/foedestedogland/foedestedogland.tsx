@@ -42,20 +42,18 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}
-      ingenDataRender={(apneRedigering) => (
-        <>
-          {redigerbart && (
-            <Mui.Knappelenke
-              onClick={() => {
-                apneRedigering();
-              }}
-              ikon={Ikoner.Add}
-            >
-              Legg til fødested og -land
-            </Mui.Knappelenke>
-          )}
-        </>
-      )}
+      ingenDataRender={(apneRedigering) =>
+        redigerbart ? (
+          <Mui.Knappelenke
+            onClick={() => {
+              apneRedigering();
+            }}
+            ikon={Ikoner.Add}
+          >
+            Legg til fødested og -land
+          </Mui.Knappelenke>
+        ) : null
+      }
     />
   );
 };

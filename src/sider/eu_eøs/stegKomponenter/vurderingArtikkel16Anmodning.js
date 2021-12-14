@@ -214,10 +214,6 @@ class VurderingArtikkel16Anmodning extends Component {
     this.props.lagreVilkarHandler();
   };
 
-  lagreBehandlinger = () => {
-    this.props.oppdaterOgLagreBehandlinger();
-  };
-
   begrunnelseFritekstBrevEndretHandler = (event) => {
     this.setState({ begrunnelseFritekstBrevFeilmelding: undefined });
 

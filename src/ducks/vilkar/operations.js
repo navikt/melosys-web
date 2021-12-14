@@ -11,7 +11,7 @@ import * as Api from "../../services/api";
 import { doThenDispatch } from "../../services/utils";
 
 import * as Types from "./types";
-import * as Actions from "../vilkar/actions";
+import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 import * as Constants from "./constants";
 

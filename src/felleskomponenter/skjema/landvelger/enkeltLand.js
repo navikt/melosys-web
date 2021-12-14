@@ -16,10 +16,10 @@ export class EnkeltLand extends Component {
     error: null,
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     const inputVerdi = this.lagInputVerdi();
     this.setInputVerdi(inputVerdi);
-  };
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.input.value !== this.props.input.value) {

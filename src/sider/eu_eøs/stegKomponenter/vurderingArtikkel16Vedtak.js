@@ -321,7 +321,8 @@ const hentLovvalgsperiode = (anmodningsperiodesvar, anmodningsperiode) => {
       fomDato: anmodningsperiode.fomDato,
       tomDato: anmodningsperiode.tomDato,
     };
-  } else if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+  }
+  if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
     return {
       fomDato: endretPeriode.fom,
       tomDato: endretPeriode.tom,
@@ -567,7 +568,8 @@ const mapStateToProps = (state) => {
         Utils.dato.datoDiffPure(anmodningsperiodeTom, lovvalgsperiodeTom, "days") !== 0 ||
         Utils.dato.datoDiffPure(anmodningsperiodeFom, lovvalgsperiodeFom, "days") !== 0
       );
-    } else if (anmodningsperiodesvartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+    }
+    if (anmodningsperiodesvartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
       return (
         Utils.dato.datoDiffPure(anmodningsperiodesvarTom, lovvalgsperiodeTom, "days") !== 0 ||
         Utils.dato.datoDiffPure(anmodningsperiodesvarFom, lovvalgsperiodeFom, "days") !== 0

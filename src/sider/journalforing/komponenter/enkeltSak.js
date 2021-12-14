@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 
 import * as KV from "../../../kodeverk";
-import * as MPT from "../../../proptypes/";
+import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 
 import EnkeltDato from "../../../felleskomponenter/datoOmrade/enkeltDato";

@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import * as MKV from "@navikt/melosys-kodeverk";
 
-import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Skjema from "..";
 
 const VedtakstypeSkjema = ({ className, redigerbart, feltNavn, label }) => (
   <Skjema.RadioGruppe className={className} feltNavn={feltNavn} label={label}>

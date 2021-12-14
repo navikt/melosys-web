@@ -3,12 +3,13 @@ import { StateSection } from "AppTypes";
 import { STATUS } from "../../services/utils";
 import * as Types from "./types";
 
-const initalState: StateSection<Types.Data> = {
+const initialState: StateSection<Types.Data> = {
   status: STATUS.NOT_STARTED,
   data: {},
 };
 
-export default function reducer(state = initalState, action: Types.Action): StateSection<Types.Data> {
+// eslint-disable-next-line default-param-last
+export default function reducer(state = initialState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
@@ -17,7 +18,7 @@ export default function reducer(state = initalState, action: Types.Action): Stat
     case Types.OK:
       return { ...state, status: STATUS.OK, data: action.data };
     case Types.RESET:
-      return { ...initalState };
+      return { ...initialState };
     default:
       return state;
   }

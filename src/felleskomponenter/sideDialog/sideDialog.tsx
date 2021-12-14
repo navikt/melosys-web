@@ -79,6 +79,7 @@ const SideDialog = ({
               className={classnames({ meny__element: true, "meny__element--aktiv": fane.navn === aktivFane })}
               key={Utils._uuid()}
               onClick={() => setAktivFane(fane.navn)}
+              type="button"
             >
               {fane.tittel}
             </button>

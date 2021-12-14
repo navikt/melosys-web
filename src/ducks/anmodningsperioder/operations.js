@@ -16,7 +16,7 @@ import * as Selectors from "./selectors";
 
 import { behandlingsgrunnlagSelectors } from "../behandlingsgrunnlag";
 import { lovvalgsperioderSelectors } from "../lovvalgsperioder";
-import { anmodningsperioderSelectors } from "../anmodningsperioder";
+import { anmodningsperioderSelectors } from ".";
 import { behandlingerSelectors } from "../behandlinger";
 
 export function hent(behandlingID) {

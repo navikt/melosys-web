@@ -34,7 +34,7 @@ const ListevelgerEnkelt = ({ input, label, meta, muligeValg, placeholder, disabl
       />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map((valg) => (
-          <option key={uuid()} value={KV.objektTilTerm(valg)} />
+          <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
         ))}
       </datalist>
     </div>

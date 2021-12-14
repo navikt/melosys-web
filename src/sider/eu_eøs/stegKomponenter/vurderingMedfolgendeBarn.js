@@ -176,7 +176,8 @@ const VurderingMedfolgendeBarn = ({
           const faktaVerdi = hentFaktaVerdi(medfolgendeBarnEnkeltfakta);
           if (faktaVerdi === BOOLSK_STRING.SANN) {
             return true;
-          } else if (faktaVerdi === BOOLSK_STRING.USANN) {
+          }
+          if (faktaVerdi === BOOLSK_STRING.USANN) {
             return false;
           }
           return null;

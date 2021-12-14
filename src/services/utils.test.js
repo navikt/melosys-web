@@ -56,8 +56,8 @@ describe("services/utils", () => {
       };
       fetch.mockResponse(JSON.stringify(saksbehandler));
 
-      const initalState = {};
-      const store = mockStore(initalState);
+      const initialState = {};
+      const store = mockStore(initialState);
 
       const duckSaksbehandlerTypes = {
         OK: "saksbehandler/OK",

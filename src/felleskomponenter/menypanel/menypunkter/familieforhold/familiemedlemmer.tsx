@@ -27,15 +27,8 @@ interface FamiliemedlemmerEnkeltProps {
 }
 
 export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: FamiliemedlemmerEnkeltProps) {
-  const {
-    sammensattNavn,
-    fnr,
-    relasjonstype,
-    alder,
-    borMedBruker,
-    sivilstandGyldighetsperiodeFom,
-    fnrAnnenForelder,
-  } = familiemedlem;
+  const { sammensattNavn, fnr, relasjonstype, alder, borMedBruker, sivilstandGyldighetsperiodeFom, fnrAnnenForelder } =
+    familiemedlem;
 
   const renderBarnEtikett = () =>
     alder !== null && alder < 18 ? <Etiketter.Under18Aar className="ikon__under18Aar" /> : null;
@@ -137,7 +130,7 @@ export const Familiemedlemmer = ({
 
   const hentRelasjonstypeTerm = (relasjonstype: KTObject) => {
     if (relasjonstype.kode === EKTE) return "Ektefelle";
-    else if (relasjonstype.kode === REPA) return "Partner";
+    if (relasjonstype.kode === REPA) return "Partner";
 
     return relasjonstype.term;
   };

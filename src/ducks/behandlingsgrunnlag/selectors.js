@@ -112,7 +112,7 @@ export const SelvstendigArbeidForetakOrgnumreSelector = createSelector(
 export const SelvstendigNaringsvirksomhetSelector = createSelector(
   SelvstendigArbeidForetakSelector,
   OrganisasjonSelectors.organisasjonerSelector,
-  (selvstendigForetak = [], organisasjoner) =>
+  (selvstendigForetak = [], organisasjoner = []) =>
     organisasjoner.filter((organisasjon) => selvstendigForetak.find((foretak) => foretak.orgnr === organisasjon.orgnr))
 );
 
