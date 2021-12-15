@@ -54,7 +54,7 @@ const Redigerer = ({
     <Nav.Row className="medfolgende-familie__redigerer">
       <Nav.Column xs="5">
         <Skjema.Input
-          label="F.nr./d-nr."
+          label="F.nr./d-nr./fødselsdato"
           feltNavn={`${overordnetFeltNavn}.fnr`}
           disabled={!redigerbart}
           bredde="fullbredde"

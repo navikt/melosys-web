@@ -1,4 +1,4 @@
-import { array, boolean, lazy, mixed, number, object, string } from "yup";
+import { array, boolean, lazy, number, object, string } from "yup";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
@@ -114,18 +114,19 @@ const erEtterFomTest = {
 
 const medfolgendeFamilie = object().shape({
   fnr: lazy((value, options) =>
-    value
-      ? string().erFnrEllerDnrEllerFødselsdato(
-          lagMelding(
-            KV.Menypunkter.Familieforhold.tittel,
-            erTrygdeavtaleEllerFtrl(options.context.sakstype)
-              ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
-              : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
-            "F.nr./d-nr. er ugyldig"
-          )
+    string()
+      .erFnrEllerDnrEllerFødselsdato(
+        lagMelding(
+          KV.Menypunkter.Familieforhold.tittel,
+          erTrygdeavtaleEllerFtrl(options.context.sakstype)
+            ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
+            : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
+          "F.nr./d-nr./dato er ugyldig"
         )
-      : mixed()
+      )
+      .required(MAA_FYLLES_UT)
   ),
+  navn: string().nullable(),
 });
 
 const foedestedOgLandSchema = object()
