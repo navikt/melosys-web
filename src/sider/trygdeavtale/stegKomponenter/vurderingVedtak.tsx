@@ -40,6 +40,7 @@ interface Periode {
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingsgrunnlagStatus: behandlingsgrunnlagSelectors.BehandlingsgrunnlagStatusSelector(state),
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state)[0],
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
@@ -68,6 +69,7 @@ interface Props {
   oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
+  oppdaterValideringFeil: (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdaterRegisteropplysninger: boolean) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
@@ -82,7 +84,8 @@ interface Props {
 
 const VurderingVedtak = ({
   behandlingID,
-  data: { bestemmelseValg, lovvalgsperiodeTekst },
+  behandlingsgrunnlagStatus,
+  data: { bestemmelseValg },
   tilbake,
   redigerbart,
   resultat,
@@ -91,6 +94,7 @@ const VurderingVedtak = ({
   formValues,
   formIsValid,
   oppdaterFlyt,
+  oppdaterValideringFeil,
   soknadsland,
   lagreOgFatteVedtak,
   vedtakstype,
@@ -104,7 +108,33 @@ const VurderingVedtak = ({
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
+  const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
+
+  const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
+      return formValues?.kopiTilArbeidsgiver;
+    }
+    return false;
+  };
+
+  const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
+    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+    fritekstInnledning: formValues?.fritekstInnledning || null,
+    fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
+    fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
+    fritekstBarn: familieFormValues?.barn?.fritekst || null,
+    vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    kopiMottakere: muligeMottakere.kopiMottakere
+      .filter(filterKopiMottakere)
+      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+  });
+
+  const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
+    oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), oppdaterRegisteropplysninger);
+    setOppdaterFørKontroll(false);
+  };
+  const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
@@ -114,6 +144,17 @@ const VurderingVedtak = ({
     setMuligeMottakere(res);
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
+
+  useEffect(() => {
+    debouncedKontrollerVedtak(oppdaterFørKontroll);
+    return () => debouncedKontrollerVedtak.cancel();
+  }, []);
+
+  useEffect(() => {
+    if (behandlingsgrunnlagStatus === "OK") {
+      debouncedKontrollerVedtak(oppdaterFørKontroll);
+    }
+  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
@@ -173,13 +214,6 @@ const VurderingVedtak = ({
     ];
   };
 
-  const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
-      return formValues?.kopiTilArbeidsgiver;
-    }
-    return false;
-  };
-
   const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
       mapMottakerRad(mottakere.hovedMottaker),
@@ -191,17 +225,7 @@ const VurderingVedtak = ({
   const fattVedtak = async () => {
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak({
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      fritekstInnledning: formValues?.fritekstInnledning || null,
-      fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
-      fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
-      fritekstBarn: familieFormValues?.barn?.fritekst || null,
-      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      kopiMottakere: muligeMottakere.kopiMottakere
-        .filter(filterKopiMottakere)
-        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-    });
+    await lagreOgFatteVedtak(lagFattVedtakTrygdeavtaleReqDto());
 
     if (isMounted.current) {
       setVedtakPending(false);
@@ -284,14 +308,6 @@ const VurderingVedtak = ({
         </Nav.Column>
       </Nav.Row>
 
-      {!Utils._isEmpty(lovvalgsperiodeTekst) && (
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Nav.AlertStripeFeil>{lovvalgsperiodeTekst}</Nav.AlertStripeFeil>
-          </Nav.Column>
-        </Nav.Row>
-      )}
-
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til innledning
         <Nav.Hjelpetekst
@@ -361,7 +377,7 @@ const VurderingVedtak = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,
-          disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || visTomEndringFelt,
+          disabled: !redigerbart,
           autoDisableVedSpinner: true,
           spinner: vedtakPending,
         }}

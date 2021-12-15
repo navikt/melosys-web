@@ -52,7 +52,6 @@ export interface StegData {
   barnBegrunnelseValg?: KTObject[];
   ektefelleValg?: FamilieValg;
   ektefelleBegrunnelseValg?: KTObject[];
-  lovvalgsperiodeTekst?: string;
 }
 
 export type FlytResDto = {
