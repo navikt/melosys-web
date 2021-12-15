@@ -1,18 +1,21 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
+import { ColumnWidth } from "nav-frontend-grid";
 
+import { URL_BASENAME } from "../../../constants";
 import { DokumenterV2 } from "../../../services/api";
 import * as KV from "../../../kodeverk";
+import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
 import BrevMottaker from "./brevMottaker";
-import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import ValgAlternativer from "./valgAlternativer";
 import FeltBeskrivelse from "./feltBeskrivelse";
@@ -26,7 +29,6 @@ import { SendBrevFormValues } from "./types";
 import { Felt } from "../../../services/modules/dokumenter-v2";
 
 const mapStateToProps = (state: RootState) => ({
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   formIsValid: formSelectors.SendBrevValidSelector(state),
   formValues: getFormValues(KV.Form.SEND_BREV)(state),
   initialValues: {
@@ -46,6 +48,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
+  visApneINyttVindu: boolean;
+  behandlingID: number;
+  brevTypeSelectWidth?: ColumnWidth;
+  mottakerSelectWidth?: ColumnWidth;
+  mottakerTabellWidth?: ColumnWidth;
+  felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
 }
 
@@ -57,6 +65,11 @@ const SendBrev = ({
   oppdaterBehandling,
   redigerbart,
   resetForm,
+  visApneINyttVindu,
+  brevTypeSelectWidth = "12",
+  mottakerSelectWidth = "12",
+  mottakerTabellWidth = "12",
+  felterWidth = "12",
 }: Props & PropsFromRedux) => {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<DokumenterV2.TilgjengeligeMalerResDto>();
 
@@ -147,6 +160,7 @@ const SendBrev = ({
       .then(() => {
         setBrevSendt(true);
         oppdaterBehandling();
+        resetForm();
       })
       .catch(() => {
         setBrevSendtFeil(true);
@@ -168,54 +182,79 @@ const SendBrev = ({
 
   if (!tilgjengeligeMaler || !formValues) return null;
 
+  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
+
   return (
     <div className="send_brev">
-      <Skjema.Select
-        feltNavn="type"
-        label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
-        disabled={!redigerbart}
-        emptyFieldText="Velg..."
-        emptyFieldDisabled={!!formValues.type}
-        onBlur={overstyrBlurEvent}
-      >
-        {tilgjengeligeMaler.map((mal) => (
-          <option key={mal.type.kode} value={mal.type.kode}>
-            {mal.type.term}
-          </option>
-        ))}
-      </Skjema.Select>
+      {visApneINyttVindu && (
+        <div className="send_brev__apne-nytt-vindu-container">
+          <Nav.Lenker target="_blank" href={nyttvinduHref}>
+            <span>Åpne i nytt vindu</span>
+            <Ikoner.ExternalLink />
+          </Nav.Lenker>
+        </div>
+      )}
+
+      <Nav.Row>
+        <Nav.Column xs={brevTypeSelectWidth}>
+          <Skjema.Select
+            feltNavn="type"
+            label={<Nav.Typo.Element>Type brev</Nav.Typo.Element>}
+            disabled={!redigerbart}
+            emptyFieldText="Velg..."
+            emptyFieldDisabled={!!formValues.type}
+            onBlur={overstyrBlurEvent}
+          >
+            {tilgjengeligeMaler.map((mal) => (
+              <option key={mal.type.kode} value={mal.type.kode}>
+                {mal.type.term}
+              </option>
+            ))}
+          </Skjema.Select>
+        </Nav.Column>
+      </Nav.Row>
 
       {maltypeErValgt && !!formValues.valgtMal && (
-        <BrevMottaker
-          redigerbart={redigerbart}
-          muligeMottakere={muligeMottakere}
-          setMuligeMottakere={setMuligeMottakere}
-          mottakerFeil={mottakerFeil}
-          setMottakerFeil={setMottakerFeil}
-          overstyrBlurEvent={overstyrBlurEvent}
-        />
+        <Nav.Row>
+          <Nav.Column xs={mottakerSelectWidth}>
+            <BrevMottaker
+              redigerbart={redigerbart}
+              muligeMottakere={muligeMottakere}
+              setMuligeMottakere={setMuligeMottakere}
+              mottakerFeil={mottakerFeil}
+              setMottakerFeil={setMottakerFeil}
+              overstyrBlurEvent={overstyrBlurEvent}
+            />
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       {formValues.valgtMal?.felter?.map((felt) => (
-        <Fragment key={`fragment_${felt.kode}`}>
+        <>
           {felt.valg && (
-            <>
-              <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
-              <ValgAlternativer valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
-            </>
+            <Nav.Row>
+              <Nav.Column xs={felterWidth}>
+                <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />
+                <ValgAlternativer valg={felt.valg} feltKode={felt.kode} redigerbart={redigerbart} />
+              </Nav.Column>
+            </Nav.Row>
           )}
           {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
-            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} />
+            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={felterWidth} />
           )}
-        </Fragment>
+        </>
       ))}
 
       {formIsValid && mottakerErValgt && muligeMottakere && (
-        <BrevMottakereTabell
-          muligeMottakere={muligeMottakere}
-          valgtMottaker={finnMottakerFraValgtMal(formValues.mottaker)}
-          hentBrevRequest={hentBrevRequest}
-        />
+        <Nav.Row>
+          <Nav.Column xs={mottakerTabellWidth}>
+            <BrevMottakereTabell
+              muligeMottakere={muligeMottakere}
+              valgtMottaker={finnMottakerFraValgtMal(formValues.mottaker)}
+              hentBrevRequest={hentBrevRequest}
+            />
+          </Nav.Column>
+        </Nav.Row>
       )}
 
       <div>

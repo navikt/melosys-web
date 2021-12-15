@@ -65,6 +65,9 @@ const VurderUtpekingLoadable = loadable(
     fallback: SideLoadingStatus,
   }
 );
+const SendbrevLoadable = loadable(() => import(/* webpackChunkName: "sendbrev" */ "../sider/sendbrev"), {
+  fallback: SideLoadingStatus,
+});
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
@@ -109,6 +112,7 @@ const Routing = () => (
           path={`/${EU_EOS}/vurderutpeking/:snr`}
           render={(props) => <VurderUtpekingLoadable {...props} {...fellesHandlers} />}
         />
+        <Route path="/sendbrev/:behandlingID" render={(props) => <SendbrevLoadable {...props} {...fellesHandlers} />} />
         <Route component={UkjentSideLoadable} />
       </Switch>
     )}

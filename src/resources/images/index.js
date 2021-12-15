@@ -18,6 +18,7 @@ import { ReactComponent as Child } from "./child.svg";
 import { ReactComponent as CoApplicant } from "./co-applicant.svg";
 import { ReactComponent as Copy } from "./copy.svg";
 import { ReactComponent as Eye } from "./eye.svg";
+import { ReactComponent as ExternalLink } from "./external-link.svg";
 import { ReactComponent as Familie } from "./familie.svg";
 import { ReactComponent as Forhandsvis } from "./forhandsvis.svg";
 import { ReactComponent as Ferdig } from "./ikon-steg-ferdig.svg";
@@ -81,6 +82,7 @@ export {
   CoApplicant,
   Copy,
   Eye,
+  ExternalLink,
   Familie,
   Forhandsvis,
   Feil,
