@@ -86,7 +86,7 @@ export const Person = ({
   visBehandlingsgrunnlagData,
   behandlingID,
 }: PersonProps) => {
-  const pdlAdresserToggle = useFeatureToggle("melosys.vis_pdl_adresser");
+  const pdlAdresserToggle = useFeatureToggle("melosys.pdl.aktiv");
 
   const {
     bostedsadressePerioder,

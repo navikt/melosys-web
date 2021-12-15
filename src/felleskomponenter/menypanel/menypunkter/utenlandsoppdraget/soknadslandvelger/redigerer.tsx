@@ -8,7 +8,6 @@ import * as Skjema from "../../../../skjema";
 import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
 
-import { useFeatureToggle } from "../../../../../featuretoggle";
 import MKV from "../../../../../melosyskodeverk";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -23,28 +22,25 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const Redigerer = ({ soknadsland: { erUkjenteEllerAlleEosLand, landkoder }, behandlingstema }: PropsFromRedux) => {
-  const erUkjenteEllerAlleEosLandToggle = useFeatureToggle("melosys.behandlingsmeny.toggle_ukjente_land");
-
   const minstEttLandValgt = landkoder.length > 0;
 
   return (
     <Nav.Fieldset legend="Land">
-      {erUkjenteEllerAlleEosLandToggle === "enabled" &&
-        behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
-          <Skjema.Checkbox
-            feltNavn="soknadsland.erUkjenteEllerAlleEosLand"
-            label={
-              <Nav.Typo.Normaltekst>
-                Flere EØS-land/Sveits. Ikke kjent hvilke.{" "}
-                <Nav.Hjelpetekst>
-                  Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her. Det er ikke mulig
-                  å legge til andre land i tillegg.
-                </Nav.Hjelpetekst>
-              </Nav.Typo.Normaltekst>
-            }
-            disabled={minstEttLandValgt}
-          />
-        )}
+      {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+        <Skjema.Checkbox
+          feltNavn="soknadsland.erUkjenteEllerAlleEosLand"
+          label={
+            <Nav.Typo.Normaltekst>
+              Flere EØS-land/Sveits. Ikke kjent hvilke.{" "}
+              <Nav.Hjelpetekst>
+                Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her. Det er ikke mulig å
+                legge til andre land i tillegg.
+              </Nav.Hjelpetekst>
+            </Nav.Typo.Normaltekst>
+          }
+          disabled={minstEttLandValgt}
+        />
+      )}
       <Skjema.MultiSelect
         label=""
         feltNavn="soknadsland.landkoder"

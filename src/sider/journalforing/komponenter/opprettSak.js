@@ -7,7 +7,7 @@ import * as Skjema from "../../../felleskomponenter/skjema/";
 import * as Nav from "../../../navFrontend";
 import { formSelectors } from "../../../ducks/form";
 import MKV from "../../../melosyskodeverk";
-import { FeatureToggle, useFeatureToggle } from "../../../featuretoggle";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 import "./opprettSak.css";
 
@@ -29,7 +29,7 @@ const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
 );
 
 const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
-  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK
+  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
 );
 
 export const OpprettSakTittel = () => (
@@ -47,16 +47,6 @@ const OpprettFagsak = (props) => {
     journalforingSoknadsland: valgteLand,
     journalforingSoknadslandUkjenteEllerAlleEosLand: ukjentEllerAlleEosLand,
   } = journalforingSkjemaVerdier;
-
-  useEffect(() => {
-    settFeltInnhold(
-      "opprettnysak_behandlingstema",
-      valgtSakstype === MKV.Koder.sakstyper.FTRL
-        ? MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
-        : MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
-    );
-  }, [valgtSakstype]);
-
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -67,7 +57,7 @@ const OpprettFagsak = (props) => {
       case MKV.Koder.sakstyper.FTRL:
         return MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET;
       case MKV.Koder.sakstyper.TRYGDEAVTALE:
-        return MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK;
+        return MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
       default:
         return MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER;
     }
@@ -107,7 +97,7 @@ const OpprettFagsak = (props) => {
     MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-    MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
+    MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
   ].includes(valgtBehandlingstema);
 
   return (
@@ -144,29 +134,24 @@ const OpprettFagsak = (props) => {
             </Nav.Row>
           </Nav.Fieldset>
           <Nav.Fieldset legend="Land:">
-            <FeatureToggle togglename="melosys.UKJENT_ELLER_ALLE_EOS_LAND">
-              {(toggleStatus) =>
-                toggleStatus === "enabled" &&
-                valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
-                  <Nav.Row className="landcheckbox">
-                    <Skjema.Checkbox
-                      feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
-                      disabled={valgteLand.length > 0}
-                      label={
-                        <div>
-                          Flere EØS-land/Sveits. Ikke kjent hvilke
-                          <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}>
-                            Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
-                            <br />
-                            Det er ikke mulig å legge til andre land i tillegg.
-                          </Nav.Hjelpetekst>
-                        </div>
-                      }
-                    />
-                  </Nav.Row>
-                )
-              }
-            </FeatureToggle>
+            {valgtBehandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
+              <Nav.Row className="landcheckbox">
+                <Skjema.Checkbox
+                  feltNavn="journalforingSoknadslandUkjenteEllerAlleEosLand"
+                  disabled={valgteLand.length > 0}
+                  label={
+                    <div>
+                      Flere EØS-land/Sveits. Ikke kjent hvilke
+                      <Nav.Hjelpetekst className="hjelpetekst" type={Nav.PopoverOrientering.Hoyre}>
+                        Når søker ikke vet hvilke land arbeidet/næringen skal utføres i, krysser du av her.
+                        <br />
+                        Det er ikke mulig å legge til andre land i tillegg.
+                      </Nav.Hjelpetekst>
+                    </div>
+                  }
+                />
+              </Nav.Row>
+            )}
             <Nav.Row className="">
               <Nav.Column xs="12">
                 <Skjema.LandVelger

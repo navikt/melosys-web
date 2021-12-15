@@ -21,6 +21,7 @@ describe("VurderingArtikkel13_2b", () => {
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
       bekreftOgFortsett: jest.fn(),
+      tilbake: jest.fn(),
     };
   });
 

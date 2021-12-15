@@ -83,6 +83,7 @@ IngenSokkelSkipEllerHjemmebaser.defaultProps = {
 
 export const VurderingVurderarbeidsland = ({
   bekreftOgFortsett,
+  tilbake,
   tilstand: {
     harAvklaring,
     sokkelEllerSkipListe,
@@ -227,16 +228,17 @@ export const VurderingVurderarbeidsland = ({
     <div className="vurderingVurderArbeidsland">
       <Nav.Typo.Undertittel className="overskrift">Vurder arbeidsland</Nav.Typo.Undertittel>
       {innhold}
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          data-cy-nesteknapp="knapp_steg4"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          "data-cy-nesteknapp": "knapp_steg4",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
@@ -244,6 +246,7 @@ export const VurderingVurderarbeidsland = ({
 VurderingVurderarbeidsland.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool.isRequired,
     sokkelEllerSkipListe: PT.array.isRequired,

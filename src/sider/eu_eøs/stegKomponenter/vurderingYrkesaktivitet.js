@@ -3,11 +3,12 @@ import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
+import * as Mui from "../../../felleskomponenter/ui";
 import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
 
 const VurderingYrkesaktivitet = (props) => {
-  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, erSoknadArbeidFlereLand } = props;
+  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, erSoknadArbeidFlereLand, tilbake } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
 
   useEffect(() => {
@@ -76,22 +77,24 @@ const VurderingYrkesaktivitet = (props) => {
           label={labels[3]}
         />
       </Nav.Fieldset>
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          data-cy-nesteknapp="knapp_steg4"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          "data-cy-nesteknapp": "knapp_steg4",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
 
 VurderingYrkesaktivitet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   tilstand: PT.object,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
