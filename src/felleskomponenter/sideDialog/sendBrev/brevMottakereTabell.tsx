@@ -102,7 +102,7 @@ const BrevMottakereTabell = ({
 
   return (
     <>
-      {muligeMottakere?.kopiMottakere?.length !== 0 && (
+      {muligeMottakere?.kopiMottakere?.length !== 0 && formIsValid && valgtMottaker && (
         <Skjema.Checkbox
           className="kopimottakerSjekkboks"
           feltNavn="kopimottaker"
