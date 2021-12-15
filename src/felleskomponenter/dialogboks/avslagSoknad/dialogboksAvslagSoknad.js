@@ -13,11 +13,10 @@ import Knapperad from "../../knapperad";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
-import { useFeatureToggle } from "../../../featuretoggle/";
 
 import "./dialogboksAvslagSoknad.css";
 import HtmlEditor from "../../htmlEditor";
-import { FeatureToggle } from "../../../featuretoggle";
+import { FeatureToggle, useFeatureToggle } from "../../../featuretoggle";
 
 export const DialogboksAvslagSoknad = (props) => {
   const toggleStatusAvslagManglendeOpplysninger = useFeatureToggle("melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER");
@@ -66,8 +65,8 @@ export const DialogboksAvslagSoknad = (props) => {
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
           <FeatureToggle togglename="melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER">
-            {(toggleStatusAvslagManglendeOpplysninger) =>
-              toggleStatusAvslagManglendeOpplysninger === "enabled" ? (
+            {(toggleStatus) =>
+              toggleStatus === "enabled" ? (
                 <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
               ) : (
                 <Nav.Textarea
