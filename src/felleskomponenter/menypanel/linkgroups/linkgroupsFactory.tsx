@@ -20,7 +20,7 @@ const {
   ØVRIGE_SED_UFM,
   TRYGDETID,
   ARBEID_I_UTLANDET,
-  TRYGDEAVTALE_UK,
+  YRKESAKTIV,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.behandlingsgrunnlagtyper;
@@ -102,7 +102,7 @@ class LinkGroupsFactory {
           )
           .build();
       }
-      case TRYGDEAVTALE_UK: {
+      case YRKESAKTIV: {
         return new LinkgroupsBuilder()
           .addFraRegisterOgSoknad(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(

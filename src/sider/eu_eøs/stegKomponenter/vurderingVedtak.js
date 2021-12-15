@@ -9,6 +9,7 @@ import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
 import * as Hooks from "../../../hooks";
@@ -61,6 +62,7 @@ const VurderingVedtak = ({
   redigerbart,
   behandlingID,
   lagreOgFatteVedtak,
+  tilbake,
   behandlingstype,
   behandlingstema,
   touch,
@@ -184,14 +186,19 @@ const VurderingVedtak = ({
         )}
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp
-              spinner={vedtakPending}
-              autoDisableVedSpinner
-              disabled={!redigerbart || flereSoknadslandEnnTillatt}
-              onClick={fattVedtak}
-            >
-              Fatt vedtak
-            </Nav.Hovedknapp>
+            <Mui.StegKnapper
+              bekreftKnappProps={{
+                spinner: vedtakPending,
+                autoDisableVedSpinner: true,
+                disabled: !redigerbart || flereSoknadslandEnnTillatt,
+                onClick: fattVedtak,
+              }}
+              bekreftTekst="Fatt vedtak"
+              tilbakeKnappProps={{
+                onClick: tilbake,
+                disabled: !redigerbart,
+              }}
+            />
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -201,6 +208,7 @@ const VurderingVedtak = ({
 
 VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   bostedsland: MPT.Kodeverk,

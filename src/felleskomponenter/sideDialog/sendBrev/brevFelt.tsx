@@ -6,35 +6,29 @@ import FeltBeskrivelse from "./feltBeskrivelse";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
-  visHjelpetekst: boolean;
+  visFeltBeskrivelse: boolean;
 }
-const BrevFelt = (props: BrevFeltProps) => {
-  switch (props.felt?.feltType) {
+const BrevFelt = ({ felt, visFeltBeskrivelse }: BrevFeltProps) => {
+  switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
         <>
-          {props.visHjelpetekst && (
-            <FeltBeskrivelse beskrivelse={props.felt.beskrivelse} hjelpetekst={props.felt.hjelpetekst} />
-          )}
-          <Skjema.HTMLEditor feltNavn={`felt.${props.felt.kode}.feltVerdi`} />
+          {visFeltBeskrivelse && <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />}
+          <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.feltVerdi`} />
         </>
       );
     case DokumenterV2.FeltType.TEKST:
       return (
         <Skjema.Input
-          feltNavn={`felt.${props.felt.kode}.feltVerdi`}
-          normalize={begrensAntallTegn(props.felt.tegnBegrensning)}
+          feltNavn={`felt.${felt.kode}.feltVerdi`}
+          normalize={begrensAntallTegn(felt.tegnBegrensning)}
           label={
-            props.visHjelpetekst ? (
-              <FeltBeskrivelse beskrivelse={props.felt.beskrivelse} hjelpetekst={props.felt.hjelpetekst} />
-            ) : (
-              ""
-            )
+            visFeltBeskrivelse ? <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} /> : ""
           }
         />
       );
     case DokumenterV2.FeltType.SJEKKBOKS:
-      return <Skjema.Checkbox feltNavn={`felt.${props.felt.kode}.feltVerdi`} label={props.felt.beskrivelse} />;
+      return <Skjema.Checkbox feltNavn={`felt.${felt.kode}.feltVerdi`} label={felt.beskrivelse} />;
     default:
       return <></>;
   }

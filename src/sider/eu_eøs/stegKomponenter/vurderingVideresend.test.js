@@ -2,7 +2,7 @@ import React from "react";
 import { combineReducers, createStore } from "redux";
 import { reducer as formReducer } from "redux-form";
 
-import * as Nav from "../../../navFrontend";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import { VurderingVideresend } from "./vurderingVideresend";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
@@ -16,6 +16,7 @@ describe("Vurderingvideresend", () => {
       redigerbart: true,
       behandlingID: 4,
       videresendSoknad: jest.fn(),
+      tilbake: jest.fn(),
       bostedsland: { kode: "SE", term: "Sverige" },
       handleSubmit: jest.fn(),
       form: "form",
@@ -50,28 +51,22 @@ describe("Vurderingvideresend", () => {
     expect(vurderingVideresend.find(PdfLenkeListe)).toHaveLength(0);
   });
 
-  describe("viser en hovedknapp", () => {
-    let hovedknapp = null;
-    let form = null;
+  it("setter korrekte props for bekreftKnapp", () => {
+    const store = createStore(combineReducers({ form: formReducer }));
+    const vurderingVideresend = shallow(<VurderingVideresend {...props} store={store} />);
+    const stegKnapper = vurderingVideresend.find(Mui.StegKnapper);
 
-    beforeEach(() => {
-      const store = createStore(combineReducers({ form: formReducer }));
-      const vurderingVideresend = shallow(<VurderingVideresend {...props} store={store} />);
+    expect(stegKnapper).toHaveLength(1);
+    expect(stegKnapper.props().bekreftKnappProps.disabled).toBe(!props.redigerbart);
+  });
 
-      form = vurderingVideresend.find("form");
-      hovedknapp = vurderingVideresend.find(Nav.Hovedknapp);
-    });
+  it("kaller videresendSoknad-prop ved submit av form", () => {
+    const store = createStore(combineReducers({ form: formReducer }));
+    const vurderingVideresend = shallow(<VurderingVideresend {...props} store={store} />);
+    const form = vurderingVideresend.find("form");
 
-    it("har korrekte props", () => {
-      const hovedknappProps = hovedknapp.props();
+    form.simulate("submit");
 
-      expect(hovedknapp).toHaveLength(1);
-      expect(hovedknappProps.disabled).toBe(!props.redigerbart);
-    });
-
-    it("kaller videresendSoknad-prop ved klikk", () => {
-      form.simulate("submit");
-      expect(props.handleSubmit).toHaveBeenCalledTimes(1);
-    });
+    expect(props.handleSubmit).toHaveBeenCalledTimes(1);
   });
 });

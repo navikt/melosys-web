@@ -8,9 +8,9 @@ import * as Nav from "../../../../../navFrontend";
 
 import { Person } from "../../../../../services/api";
 import { Sivilstand } from "../../../../../graphql";
-import { HentSivilstandDocument } from "./hentSivilstand.generated";
+import { HentSivilstandDocument } from "./sivilstand/hentSivilstand.generated";
 import Personinfo from "./personinfo";
-import SivilstandModal from "./sivilstandModal";
+import SivilstandModal from "./sivilstand/sivilstandModal";
 
 jest.mock("../../../../../featuretoggle", () => ({
   __esModule: true,

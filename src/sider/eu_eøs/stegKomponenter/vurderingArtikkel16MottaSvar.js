@@ -6,6 +6,7 @@ import { reduxForm, getFormValues } from "redux-form";
 import MKV from "../../../melosyskodeverk";
 
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
@@ -189,6 +190,7 @@ export const VurderingArtikkel16MottaSvar = (props) => {
     redigerbart,
     bekreftOgFortsett,
     slettData,
+    tilbake,
     tilstand,
     formIsValid,
     oppdaterData,
@@ -237,15 +239,16 @@ export const VurderingArtikkel16MottaSvar = (props) => {
           formIsValid={formIsValid}
         />
       )}
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring}
-          onClick={bekreftOgFortsett}
-          className="fane__navigasjonsknapp"
-        >
-          BEKREFT OG FORTSETT
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !redigerbart || !formIsValid || !tilstand.harAvklaring,
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          disabled: !redigerbart,
+          onClick: tilbake,
+        }}
+      />
     </Fragment>
   );
 };
@@ -260,6 +263,7 @@ VurderingArtikkel16MottaSvar.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   formIsValid: PT.bool,
   hentAnmodningsperiodeSvar: PT.func.isRequired,
   anmodningsperioderSvarStatus: PT.string.isRequired,

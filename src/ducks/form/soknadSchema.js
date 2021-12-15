@@ -24,8 +24,7 @@ const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
-const erTrygdeavtaleSak = (behandlingstema) =>
-  behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK;
+const erTrygdeavtaleSak = (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
 
 const erAltinnsøknad = (behandlingsgrunnlagtype) =>
   behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;

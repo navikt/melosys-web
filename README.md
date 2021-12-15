@@ -22,6 +22,8 @@ sider. Komponenter kan også nøste hverandre.
 ## Utvikling på laptop
 
 ### Bygging
+For å unngå unødvendige endringer i lockfile bør lockfileVersion 1 og npm v6 brukes.
+Når man oppdaterer til node v16 / npm v7 blir dette ikke et problem lenger
 
 Applikasjonen benytter avhengigheter fra GitHub package registry som krever autentisering for å hentes. Det er derfor nødvendig å opprette et personal access token (PAT)
 fra [GitHub developer settings](https://github.com/settings/tokens), og sette dette i `~/.npmrc` på denne måten, gitt at tokenet er satt i en miljøvariabel `NPM_TOKEN`:

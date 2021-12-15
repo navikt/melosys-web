@@ -1,6 +1,7 @@
 import { ReactComponent as AccountCircle } from "./line-version-account-circle.svg";
 import { ReactComponent as Add } from "./add.svg";
-import { ReactComponent as ArrowLeft } from "./arrow-left.svg";
+import { ReactComponent as ArrowLeftBlue } from "./arrow-left-blue.svg";
+import { ReactComponent as ArrowLeftWhite } from "./arrow-left-white.svg";
 import { ReactComponent as AddOne } from "./line-version-add-1.svg";
 import { ReactComponent as Arbeidsgiver } from "./ikon-arbeidsgiver.svg";
 import { ReactComponent as Arbeidsforhold } from "./ikon-arbeidsforhold.svg";
@@ -62,7 +63,8 @@ import { Kjoenn } from "./helpercomponents";
 export {
   AccountCircle,
   Add,
-  ArrowLeft,
+  ArrowLeftBlue,
+  ArrowLeftWhite,
   AddOne,
   Arbeidsgiver,
   Arbeidsforhold,

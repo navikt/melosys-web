@@ -3,6 +3,7 @@ import { mock, instance } from "ts-mockito";
 import { shallow } from "enzyme";
 
 import * as Nav from "../../../navFrontend";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV from "../../../melosyskodeverk";
 
@@ -155,34 +156,34 @@ describe("VurderingInngang", () => {
 
   it("viser knapp for å gå videre i stegvelger", () => {
     const vurderingInngang = shallow(<VurderingInngang {...props} />);
-    const bekreftOgFortsettKnapp = vurderingInngang.find(Nav.Knapp);
+    const stegKnapper = vurderingInngang.find(Mui.StegKnapper);
 
-    expect(bekreftOgFortsettKnapp).toHaveLength(1);
+    expect(stegKnapper).toHaveLength(1);
 
-    const bekreftOgFortsettKnappOnClick = bekreftOgFortsettKnapp.props().onClick;
+    const bekreftKnappOnClick = stegKnapper.props().bekreftKnappProps.onClick;
     const mockedMouseEvent = mock<MouseEvent<HTMLButtonElement>>();
     const mouseEvent = instance(mockedMouseEvent);
-    if (bekreftOgFortsettKnappOnClick) {
-      bekreftOgFortsettKnappOnClick(mouseEvent);
+    if (bekreftKnappOnClick) {
+      bekreftKnappOnClick(mouseEvent);
     }
 
     expect(props.bekreftOgFortsett).toHaveBeenCalledTimes(1);
   });
 
   describe("knapp for å gå videre i stegvelger", () => {
-    it("er ikke disabled dersom redigerbart og harAvklaring er true", () => {
+    it("er ikke disabled dersom redigerbart er true", () => {
       const vurderingInngang = shallow(<VurderingInngang {...props} />);
-      const bekreftOgFortsettKnapp = vurderingInngang.find(Nav.Knapp);
+      const stegKnapper = vurderingInngang.find(Mui.StegKnapper);
 
-      expect(bekreftOgFortsettKnapp.props().disabled).toBe(false);
+      expect(stegKnapper.props().bekreftKnappProps.disabled).toBe(false);
     });
 
     it("er disabled dersom redigerbart er false", () => {
       props.redigerbart = false;
       const vurderingInngang = shallow(<VurderingInngang {...props} />);
-      const bekreftOgFortsettKnapp = vurderingInngang.find(Nav.Knapp);
+      const stegKnapper = vurderingInngang.find(Mui.StegKnapper);
 
-      expect(bekreftOgFortsettKnapp.props().disabled).toBe(true);
+      expect(stegKnapper.props().bekreftKnappProps.disabled).toBe(true);
     });
   });
 });
