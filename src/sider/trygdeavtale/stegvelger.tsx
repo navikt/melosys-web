@@ -109,8 +109,7 @@ class Stegvelger extends Component<Props, State> {
       this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
       this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "representantIUtlandet")
+      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
       this.debouncedOppdaterSteg();
     }
@@ -247,7 +246,7 @@ class Stegvelger extends Component<Props, State> {
       ) : (
         <ul className="valideringsfeil__liste">
           {valideringsfeil.map((feil) => (
-            <li>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+            <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
           ))}
         </ul>
       )}

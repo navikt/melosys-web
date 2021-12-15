@@ -40,6 +40,7 @@ interface Periode {
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingsgrunnlagStatus: behandlingsgrunnlagSelectors.BehandlingsgrunnlagStatusSelector(state),
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandKTSelector(state)[0],
   vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
@@ -83,6 +84,7 @@ interface Props {
 
 const VurderingVedtak = ({
   behandlingID,
+  behandlingsgrunnlagStatus,
   data: { bestemmelseValg },
   tilbake,
   redigerbart,
@@ -136,8 +138,10 @@ const VurderingVedtak = ({
   }, []);
 
   useEffect(() => {
-    debouncedKontrollerVedtak(oppdaterFørKontroll);
-  }, [resultat.lovvalgsperiodeTom]);
+    if (behandlingsgrunnlagStatus === "OK") {
+      debouncedKontrollerVedtak(oppdaterFørKontroll);
+    }
+  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
