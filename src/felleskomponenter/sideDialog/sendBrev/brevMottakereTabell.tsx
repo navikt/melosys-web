@@ -24,7 +24,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
-  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined;
+  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto;
   formIsValid: boolean;
   valgtMottaker: any;
   hentBrevRequest: any;
@@ -92,7 +92,6 @@ const BrevMottakereTabell = ({
   };
 
   const mapMottakerRader = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
-    if (!valgtMottaker) return [];
     return [
       mapRad(muligeBrevMottakere.hovedMottaker),
       ...mapKopiMottakere(muligeBrevMottakere),
@@ -102,7 +101,7 @@ const BrevMottakereTabell = ({
 
   return (
     <>
-      {muligeMottakere?.kopiMottakere?.length !== 0 && formIsValid && valgtMottaker && (
+      {muligeMottakere?.kopiMottakere?.length !== 0 && (
         <Skjema.Checkbox
           className="kopimottakerSjekkboks"
           feltNavn="kopimottaker"
@@ -112,7 +111,7 @@ const BrevMottakereTabell = ({
 
       <MottakerTabell
         className="tabell"
-        rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
+        rader={mapMottakerRader(muligeMottakere)}
         kolonner={[
           { verdi: "Dokumenter", bredde: "48%" },
           { verdi: "Mottaker", bredde: "44%" },

@@ -210,7 +210,7 @@ const SendBrev = ({
         </Fragment>
       ))}
 
-      {mottakerErValgt && (
+      {formIsValid && mottakerErValgt && muligeMottakere && (
         <BrevMottakereTabell
           muligeMottakere={muligeMottakere}
           valgtMottaker={finnMottakerFraValgtMal(formValues.mottaker)}
