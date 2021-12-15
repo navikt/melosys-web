@@ -166,6 +166,9 @@ const SendBrev = ({
         disabled={!redigerbart}
         emptyFieldText="Velg..."
         emptyFieldDisabled={!!formValues.type}
+        onBlur={(event) => {
+          event.preventDefault();
+        }}
       >
         {tilgjengeligeMaler.map((mal) => (
           <option key={mal.type.kode} value={mal.type.kode}>
