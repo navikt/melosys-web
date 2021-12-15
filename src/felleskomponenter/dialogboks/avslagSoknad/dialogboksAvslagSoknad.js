@@ -3,6 +3,7 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
+import useEventTargetValueState from "../../../hooks/useEventTargetValueState";
 
 import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
@@ -12,12 +13,17 @@ import Knapperad from "../../knapperad";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { useFeatureToggle } from "../../../featuretoggle/";
 
 import "./dialogboksAvslagSoknad.css";
 import HtmlEditor from "../../htmlEditor";
+import { FeatureToggle } from "../../../featuretoggle";
 
 export const DialogboksAvslagSoknad = (props) => {
-  const [brevFritekst, setBrevFritekst] = useState("");
+  const toggleStatusAvslagManglendeOpplysninger = useFeatureToggle("melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER");
+
+  const [brevFritekst, setBrevFritekst] =
+    toggleStatusAvslagManglendeOpplysninger === "enabled" ? useState("") : useEventTargetValueState("");
 
   const { ariaHideApp, avbryt, behandlingID, redigerbart, avslaaSoknadHandle } = props;
 
@@ -59,7 +65,20 @@ export const DialogboksAvslagSoknad = (props) => {
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
-          <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
+          <FeatureToggle togglename="melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER">
+            {(toggleStatusAvslagManglendeOpplysninger) =>
+              toggleStatusAvslagManglendeOpplysninger === "enabled" ? (
+                <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
+              ) : (
+                <Nav.Textarea
+                  value={brevFritekst}
+                  onChange={setBrevFritekst}
+                  label="Fritekst til vedtaksbrev"
+                  maxLength={brevFritekstMaxLength}
+                />
+              )
+            }
+          </FeatureToggle>
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
             <Knapperad
