@@ -2,7 +2,7 @@ import React from "react";
 import { Field, WrappedFieldProps } from "redux-form";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import HtmlEditor from "./htmlEditor";
+import HtmlEditor from "../../htmlEditor";
 
 type InnerHtmlEditorComponentProps = {
   [x: string]: any;
@@ -37,8 +37,8 @@ interface HtmleditorProps extends InnerHtmlEditorComponentProps {
   className?: string;
 }
 
-function HtmlEditorFelt({ feltNavn, className = "", ...rest }: HtmleditorProps) {
+function HTMLEditor({ feltNavn, className = "", ...rest }: HtmleditorProps) {
   return <Field name={feltNavn} className={className} component={InnerHTMLEditorComponent} props={rest} />;
 }
 
-export default HtmlEditorFelt;
+export default HTMLEditor;

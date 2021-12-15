@@ -14,7 +14,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksAvslagSoknad.css";
-import HtmlEditor from "../../skjema/htmleditor/htmlEditor";
+import HtmlEditor from "../../htmlEditor";
 
 export const DialogboksAvslagSoknad = (props) => {
   const [brevFritekst, setBrevFritekst] = useState("");
