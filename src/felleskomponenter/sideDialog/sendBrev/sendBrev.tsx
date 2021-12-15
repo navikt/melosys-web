@@ -159,6 +159,10 @@ const SendBrev = ({
     setBrevSendtFeil(false);
   };
 
+  const overstyrBlurEvent = (event: React.FocusEvent) => {
+    event.preventDefault();
+  };
+
   const maltypeErValgt = formValues?.type;
   const mottakerErValgt = formValues?.mottaker;
 
@@ -172,9 +176,7 @@ const SendBrev = ({
         disabled={!redigerbart}
         emptyFieldText="Velg..."
         emptyFieldDisabled={!!formValues.type}
-        onBlur={(event) => {
-          event.preventDefault();
-        }}
+        onBlur={overstyrBlurEvent}
       >
         {tilgjengeligeMaler.map((mal) => (
           <option key={mal.type.kode} value={mal.type.kode}>
@@ -190,6 +192,7 @@ const SendBrev = ({
           setMuligeMottakere={setMuligeMottakere}
           mottakerFeil={mottakerFeil}
           setMottakerFeil={setMottakerFeil}
+          overstyrBlurEvent={overstyrBlurEvent}
         />
       )}
 
