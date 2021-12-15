@@ -1,6 +1,6 @@
 import React from "react";
 
-import Input, { InnerInputComponent, normalizeDecimal, normalizeInt } from "./input";
+import Input, { InnerInputComponent } from "./input";
 
 describe("Input", () => {
   let props = null;
@@ -31,54 +31,11 @@ describe("Input", () => {
     expect(input.props().name).toBe(props.feltNavn);
   });
 
-  describe("feltType prop", () => {
-    each([
-      ["heltall", normalizeInt],
-      ["desimal", normalizeDecimal],
-    ]).it("setter korrekt normaliseringsfunksjon for feltType %p", (feltType, forventetNormaliseringsfunksjon) => {
-      props.feltType = feltType;
-      const input = shallow(<Input {...props} />);
+  it("sender normalizer prop korrekt", () => {
+    props.normalize = () => "test";
+    const input = shallow(<Input {...props} />);
 
-      expect(input.props().normalize).toBe(forventetNormaliseringsfunksjon);
-    });
-  });
-});
-
-describe("normalizeDecimal", () => {
-  it("returnerer null for tom string", () => {
-    expect(normalizeDecimal("", "5")).toBe(null);
-  });
-
-  it("erstatter komma med punktum", () => {
-    expect(normalizeDecimal("5,", "5")).toBe("5.");
-  });
-
-  it("returnerer value hvis value er desimal", () => {
-    expect(normalizeDecimal("5.", "5")).toBe("5.");
-  });
-
-  it("returnerer value hvis value er heltall", () => {
-    expect(normalizeDecimal("5", null)).toBe("5");
-  });
-
-  it("returnerer previousvalue hvis value ikke er heltall eller desimal", () => {
-    expect(normalizeDecimal("5..", null)).toBe(null);
-    expect(normalizeDecimal(".", null)).toBe(null);
-    expect(normalizeDecimal(".5", null)).toBe(null);
-  });
-});
-
-describe("normalizeInt", () => {
-  it("returnerer null for tom string", () => {
-    expect(normalizeInt("", "5")).toBe(null);
-  });
-
-  it("returnerer previousValue hvis value er desimal", () => {
-    expect(normalizeInt("5.", "5")).toBe("5");
-  });
-
-  it("returnerer value hvis value er heltall", () => {
-    expect(normalizeInt("5", null)).toBe("5");
+    expect(input.props().normalize).toBe(props.normalize);
   });
 });
 

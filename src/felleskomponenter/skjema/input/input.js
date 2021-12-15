@@ -56,53 +56,21 @@ InnerInputComponent.defaultProps = {
   onChange: undefined,
 };
 
-export const normalizeInt = (value, previousValue) => {
-  if (value === "") return null;
-
-  const isInt = value.match(/^\d+$/g) !== null;
-  return isInt ? value : previousValue;
-};
-export const normalizeDecimal = (value, previousValue) => {
-  if (value === "") return null;
-
-  const valuePreferDot = value.replace(",", ".");
-  const isIntOrDecimal = valuePreferDot.match(/^\d+([.]\d*)?$/g) !== null;
-
-  return isIntOrDecimal ? valuePreferDot : previousValue;
-};
-
-function Input({ feltNavn, bredde = "fullbredde", feltType = undefined, ...rest }) {
-  const hentNormalizer = () => {
-    switch (feltType) {
-      case "desimal":
-        return normalizeDecimal;
-      case "heltall":
-        return normalizeInt;
-      default:
-        return undefined;
-    }
-  };
-
+function Input({ feltNavn, bredde = "fullbredde", normalize = undefined, ...rest }) {
   return (
-    <Field
-      bredde={bredde}
-      name={feltNavn}
-      normalize={hentNormalizer()}
-      component={InnerInputComponent}
-      props={{ ...rest }}
-    />
+    <Field bredde={bredde} name={feltNavn} normalize={normalize} component={InnerInputComponent} props={{ ...rest }} />
   );
 }
 
 Input.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
-  feltType: PT.oneOf(["desimal", "heltall"]),
+  normalize: PT.func,
 };
 
 Input.defaultProps = {
   bredde: "fullbredde",
-  feltType: undefined,
+  normalize: undefined,
 };
 
 export { InnerInputComponent };
