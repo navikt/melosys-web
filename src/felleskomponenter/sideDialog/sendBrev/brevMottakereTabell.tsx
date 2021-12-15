@@ -102,16 +102,13 @@ const BrevMottakereTabell = ({
 
   return (
     <>
-      <Skjema.Checkbox
-        className="kopimottakerSjekkboks"
-        feltNavn="kopimottaker"
-        label="Send kopi til bruker/brukers fullmektig"
-        disabled={
-          !muligeMottakere ||
-          !muligeMottakere.kopiMottakere ||
-          (muligeMottakere && muligeMottakere.kopiMottakere.length === 0)
-        }
-      />
+      {muligeMottakere?.kopiMottakere?.length !== 0 && (
+        <Skjema.Checkbox
+          className="kopimottakerSjekkboks"
+          feltNavn="kopimottaker"
+          label="Send kopi til bruker/brukers fullmektig"
+        />
+      )}
 
       <MottakerTabell
         className="tabell"
