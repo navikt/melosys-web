@@ -10,6 +10,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Hooks from "../../../hooks";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
@@ -33,6 +34,7 @@ export const VurderingVideresend = ({
   handleSubmit,
   form,
   formValues,
+  tilbake,
 }) => {
   const pdfDokumenter = [
     {
@@ -111,9 +113,19 @@ export const VurderingVideresend = ({
         )}
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp spinner={videresendPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit">
-              VIDERESEND SØKNAD
-            </Nav.Hovedknapp>
+            <Mui.StegKnapper
+              bekreftKnappProps={{
+                spinner: videresendPending,
+                autoDisableVedSpinner: true,
+                disabled: !redigerbart,
+                htmlType: "submit",
+              }}
+              bekreftTekst="Videresend søknad"
+              tilbakeKnappProps={{
+                onClick: tilbake,
+                disabled: !redigerbart,
+              }}
+            />
           </Nav.Column>
         </Nav.Row>
       </form>
@@ -125,6 +137,7 @@ VurderingVideresend.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   videresendSoknad: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   bostedsland: MPT.Kodeverk,
   handleSubmit: PT.func.isRequired,
   form: PT.string.isRequired,

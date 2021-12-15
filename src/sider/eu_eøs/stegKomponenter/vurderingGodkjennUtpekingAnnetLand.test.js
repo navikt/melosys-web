@@ -14,6 +14,7 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
   beforeEach(() => {
     props = {
       lagreOgGodkjennUnntaksperioder: jest.fn(),
+      tilbake: jest.fn(),
       redigerbart: true,
       overskrift: "Godkjenn utpeking",
       behandlingID: 4,
@@ -35,8 +36,8 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
     const fritekstfelt = komponent.find(Nav.Textarea);
     fritekstfelt.props().onChange({ target: { value: "Fritekst her" } });
 
-    const hovedknapp = komponent.find(Mui.Knapp);
-    hovedknapp.props().onClick();
+    const stegKnapper = komponent.find(Mui.StegKnapper);
+    stegKnapper.props().bekreftKnappProps.onClick();
 
     expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenCalledTimes(1);
     expect(props.lagreOgGodkjennUnntaksperioder).toHaveBeenLastCalledWith({
@@ -61,9 +62,9 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
   it("knapp er ikke disabled når redigerbar er true", () => {
     const komponent = shallow(<VurderingGodkjennUtpekingAnnetLand {...props} />);
 
-    const hovedknapp = komponent.find(Mui.Knapp);
+    const stegKnapper = komponent.find(Mui.StegKnapper);
 
-    expect(hovedknapp.props().disabled).toBe(false);
+    expect(stegKnapper.props().bekreftKnappProps.disabled).toBe(false);
   });
 
   it("viser en pdflenkeliste", () => {

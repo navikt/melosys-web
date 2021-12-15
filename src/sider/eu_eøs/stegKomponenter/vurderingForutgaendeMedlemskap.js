@@ -3,11 +3,12 @@ import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import EnkeltVilkaar from "./felles/enkeltVilkaar";
 
 const VurderingForutgaendeMedlemskap = (props) => {
-  const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData } = props;
+  const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, forutgaendeMedlemskap } = tilstand;
 
   useEffect(
@@ -30,16 +31,17 @@ const VurderingForutgaendeMedlemskap = (props) => {
         begrunnelser={begrunnelser}
         oppdaterData={oppdaterData}
       />
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          data-cy-nesteknapp="knapp_steg5"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          "data-cy-nesteknapp": "knapp_steg5",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
@@ -52,6 +54,7 @@ VurderingForutgaendeMedlemskap.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

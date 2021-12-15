@@ -18,6 +18,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
   beforeEach(() => {
     props = {
       bekreftOgFortsett: jest.fn(),
+      tilbake: jest.fn(),
       redigerbart: true,
       oppdaterData: jest.fn(),
       slettData: jest.fn(),

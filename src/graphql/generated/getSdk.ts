@@ -11,7 +11,9 @@ type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Format: YYYY-MM-DD (ISO-8601), example: 2017-11-24 */
   Date: string;
+  /** Custom scalar for Long */
   Long: number;
 };
 
@@ -50,6 +52,10 @@ type Folkeregisterpersonstatus = {
   __typename?: 'Folkeregisterpersonstatus';
   kode: Scalars['String'];
   tekst: Scalars['String'];
+  master: Scalars['String'];
+  kilde?: Maybe<Scalars['String']>;
+  fregGyldighetstidspunkt?: Maybe<Scalars['Date']>;
+  erHistorisk: Scalars['Boolean'];
 };
 
 enum KjoennType {
@@ -94,7 +100,7 @@ type Personopplysninger = {
   bostedsadresser: Array<Bostedsadresse>;
   familiemedlemmer: Array<Familiemedlem>;
   folkeregisteridentifikator?: Maybe<Scalars['String']>;
-  folkeregisterpersonstatus?: Maybe<Folkeregisterpersonstatus>;
+  folkeregisterpersonstatuser: Array<Folkeregisterpersonstatus>;
   kjoenn: KjoennType;
   kontaktadresser: Array<Kontaktadresse>;
   navn: Navn;
