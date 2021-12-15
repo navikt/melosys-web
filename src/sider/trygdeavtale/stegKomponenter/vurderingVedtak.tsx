@@ -111,14 +111,27 @@ const VurderingVedtak = ({
   const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
 
+  const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
+    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
+      return formValues?.kopiTilArbeidsgiver;
+    }
+    return false;
+  };
+
+  const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
+    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+    fritekstInnledning: formValues?.fritekstInnledning || null,
+    fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
+    fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
+    fritekstBarn: familieFormValues?.barn?.fritekst || null,
+    vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    kopiMottakere: muligeMottakere.kopiMottakere
+      .filter(filterKopiMottakere)
+      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+  });
+
   const kontrollerVedtak = (oppdaterRegisteropplysning: boolean = false) => {
-    oppdaterValideringFeil(
-      {
-        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      },
-      oppdaterRegisteropplysning
-    );
+    oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), oppdaterRegisteropplysning);
     setOppdaterFørKontroll(false);
   };
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
@@ -201,13 +214,6 @@ const VurderingVedtak = ({
     ];
   };
 
-  const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
-      return formValues?.kopiTilArbeidsgiver;
-    }
-    return false;
-  };
-
   const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
     return [
       mapMottakerRad(mottakere.hovedMottaker),
@@ -219,17 +225,7 @@ const VurderingVedtak = ({
   const fattVedtak = async () => {
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak({
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      fritekstInnledning: formValues?.fritekstInnledning || null,
-      fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
-      fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
-      fritekstBarn: familieFormValues?.barn?.fritekst || null,
-      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      kopiMottakere: muligeMottakere.kopiMottakere
-        .filter(filterKopiMottakere)
-        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-    });
+    await lagreOgFatteVedtak(lagFattVedtakTrygdeavtaleReqDto());
 
     if (isMounted.current) {
       setVedtakPending(false);
