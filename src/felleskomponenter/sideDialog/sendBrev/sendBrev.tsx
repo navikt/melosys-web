@@ -126,6 +126,12 @@ const SendBrev = ({
     return feltVerdi;
   };
 
+  const hentKopiMottakere = () => {
+    return formValues.kopimottaker
+      ? muligeMottakere?.kopiMottakere.map(DokumenterV2.konverterMuligMottakerTilKopiMottaker)
+      : [];
+  };
+
   const hentBrevRequest = (mottakerRolle: string): DokumenterV2.OpprettBrevReqDto => {
     return {
       produserbardokument: formValues.type || "",
@@ -134,7 +140,7 @@ const SendBrev = ({
       manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
       fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
       fritekst: hentFormVerdi("FRITEKST"),
-      kopiMottakere: muligeMottakere?.kopiMottakere.map(DokumenterV2.konverterMuligMottakerTilKopiMottaker) || [],
+      kopiMottakere: hentKopiMottakere() || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
     };
   };
@@ -167,6 +173,10 @@ const SendBrev = ({
     setBrevSendtFeil(false);
   };
 
+  const overstyrBlurEvent = (event: React.FocusEvent) => {
+    event.preventDefault();
+  };
+
   const maltypeErValgt = formValues?.type;
   const mottakerErValgt = formValues?.mottaker;
 
@@ -193,9 +203,7 @@ const SendBrev = ({
             disabled={!redigerbart}
             emptyFieldText="Velg..."
             emptyFieldDisabled={!!formValues.type}
-            onBlur={(event) => {
-              event.preventDefault();
-            }}
+            onBlur={overstyrBlurEvent}
           >
             {tilgjengeligeMaler.map((mal) => (
               <option key={mal.type.kode} value={mal.type.kode}>
@@ -215,6 +223,7 @@ const SendBrev = ({
               setMuligeMottakere={setMuligeMottakere}
               mottakerFeil={mottakerFeil}
               setMottakerFeil={setMottakerFeil}
+              overstyrBlurEvent={overstyrBlurEvent}
             />
           </Nav.Column>
         </Nav.Row>
@@ -236,7 +245,7 @@ const SendBrev = ({
         </>
       ))}
 
-      {mottakerErValgt && (
+      {formIsValid && mottakerErValgt && muligeMottakere && (
         <Nav.Row>
           <Nav.Column xs={mottakerTabellWidth}>
             <BrevMottakereTabell
