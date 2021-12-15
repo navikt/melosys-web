@@ -39,6 +39,7 @@ interface Props {
   setMuligeMottakere: (muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined) => void;
   setMottakerFeil: (mottakerFeil: string | undefined) => void;
   mottakerFeil: string | undefined;
+  overstyrBlurEvent: (event: React.FocusEvent) => void;
 }
 
 const BrevMottaker = ({
@@ -50,6 +51,7 @@ const BrevMottaker = ({
   orgnrValid,
   setMottakerFeil,
   mottakerFeil,
+  overstyrBlurEvent,
 }: Props & PropsFromRedux) => {
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: DokumenterV2.MottakerAdresse;
@@ -138,6 +140,7 @@ const BrevMottaker = ({
         disabled={!redigerbart || formValues.valgtMal?.muligeMottakere.length === 1}
         emptyFieldText="Velg..."
         emptyFieldDisabled={!!formValues.mottaker}
+        onBlur={overstyrBlurEvent}
       >
         {formValues.valgtMal?.muligeMottakere.map((mottaker) => (
           <option key={mottaker.uuid} value={mottaker.uuid}>

@@ -10,6 +10,7 @@ import { DokumenterV2 } from "../../../services/api";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import * as Ikoner from "../../../resources/images";
 import { SendBrevFormValues } from "./types";
+import * as Skjema from "../../skjema";
 
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
@@ -23,7 +24,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BrevMottakereTabellProps {
-  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto | undefined;
+  muligeMottakere: DokumenterV2.HentMuligeMottakereResDto;
   formIsValid: boolean;
   valgtMottaker: any;
   hentBrevRequest: any;
@@ -84,26 +85,40 @@ const BrevMottakereTabell = ({
     ];
   };
 
+  const mapKopiMottakere = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
+    return formValues?.kopimottaker
+      ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker))
+      : [];
+  };
+
   const mapMottakerRader = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
-    if (!valgtMottaker) return [];
     return [
       mapRad(muligeBrevMottakere.hovedMottaker),
-      ...muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker)),
+      ...mapKopiMottakere(muligeBrevMottakere),
       ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker)),
     ];
   };
 
   return (
-    <MottakerTabell
-      className="tabell"
-      rader={muligeMottakere && formIsValid ? mapMottakerRader(muligeMottakere) : []}
-      kolonner={[
-        { verdi: "Dokumenter", bredde: "44%" },
-        { verdi: "Mottaker", bredde: "40%" },
-        { verdi: "Forhåndsvis", bredde: "8%", style: "normal_font_weight midtstilt" },
-        { verdi: "Slett", bredde: "8%", style: "normal_font_weight midtstilt" },
-      ]}
-    />
+    <>
+      {muligeMottakere?.kopiMottakere?.length !== 0 && (
+        <Skjema.Checkbox
+          className="kopimottakerSjekkboks"
+          feltNavn="kopimottaker"
+          label="Send kopi til bruker/brukers fullmektig"
+        />
+      )}
+
+      <MottakerTabell
+        className="tabell"
+        rader={mapMottakerRader(muligeMottakere)}
+        kolonner={[
+          { verdi: "Dokumenter", bredde: "48%" },
+          { verdi: "Mottaker", bredde: "44%" },
+          { verdi: "Forhåndsvis", bredde: "8%", style: "normal_font_weight midtstilt" },
+        ]}
+      />
+    </>
   );
 };
 

@@ -10,4 +10,5 @@ export interface SendBrevFormValues {
   felt?: {
     [key: string]: any;
   };
+  kopimottaker?: boolean;
 }
