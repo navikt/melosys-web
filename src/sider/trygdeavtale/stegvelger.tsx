@@ -193,8 +193,8 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
-  oppdaterValideringFeil = (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdater: boolean) => {
-    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, oppdater, data)
+  oppdaterValideringFeil = (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdaterRegisteropplysninger: boolean) => {
+    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, oppdaterRegisteropplysninger, data)
       .then(() => this.setState({ valideringFeil: [] }))
       .catch((response) => this.setState({ valideringFeil: response?.body?.feilkoder }));
   };
@@ -218,15 +218,15 @@ class Stegvelger extends Component<Props, State> {
 
   lagreOgFatteVedtak = async (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => {
     const {
-      props: { behandlingID, lagreAllData },
+      props: { behandlingID, lagreAllData, tilForsiden },
       harBehandlingsgrunnlagFeilmeldinger,
     } = this;
 
     if (!harBehandlingsgrunnlagFeilmeldinger()) {
       await lagreAllData();
-      return Api.Saksflyt.Vedtak.fatt(behandlingID, data).catch((response) =>
-        this.setState({ valideringFeil: response?.body?.feilkoder })
-      );
+      return Api.Saksflyt.Vedtak.fatt(behandlingID, data)
+        .then(() => tilForsiden())
+        .catch((response) => this.setState({ valideringFeil: response?.body?.feilkoder }));
     }
     return Promise.resolve();
   };
