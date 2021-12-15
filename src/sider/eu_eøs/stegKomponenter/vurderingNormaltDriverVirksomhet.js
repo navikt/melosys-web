@@ -2,12 +2,22 @@ import React, { useEffect } from "react";
 import PT from "prop-types";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
+import * as Mui from "../../../felleskomponenter/ui";
 import EnkeltVilkaar from "./felles/enkeltVilkaar";
 
 import { arrayTilKonjunksjon } from "../../../utils/streng";
 
 const NormaltDriverVirksomhet = (props) => {
-  const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter } = props;
+  const {
+    bekreftOgFortsett,
+    begrunnelser,
+    tilstand,
+    redigerbart,
+    oppdaterData,
+    slettData,
+    valgteVirksomheter,
+    tilbake,
+  } = props;
 
   useEffect(
     () =>
@@ -36,16 +46,17 @@ const NormaltDriverVirksomhet = (props) => {
         vilkaar={normaltDriverVirksomhet}
         vilkaarKode="normaltDriverVirksomhet"
       />
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!harAvklaring || !redigerbart}
-          className="fane__navigasjonsknapp"
-          data-cy-nesteknapp="knapp_steg5"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !harAvklaring || !redigerbart,
+          "data-cy-nesteknapp": "knapp_steg5",
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </div>
   );
 };
@@ -60,6 +71,7 @@ NormaltDriverVirksomhet.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
+  tilbake: PT.func.isRequired,
 };
 
 NormaltDriverVirksomhet.defaultProps = {

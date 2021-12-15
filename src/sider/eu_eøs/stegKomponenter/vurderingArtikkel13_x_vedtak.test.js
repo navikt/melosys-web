@@ -21,6 +21,7 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
       lovvalgsperiode: {},
       endreLovvalgsPeriode: jest.fn(),
       lagreOgFatteVedtak: jest.fn(),
+      tilbake: jest.fn(),
       formIsValid: true,
       formValues: {},
       form: "form",

@@ -17,6 +17,7 @@ describe("vurderingEndrePeriode", () => {
       endreDatoOgSendLovvalgsperioderHandler: jest.fn(),
       endreVedtak: jest.fn(),
       tilForsiden: jest.fn(),
+      tilbake: jest.fn(),
       redigerbart: true,
       tilstand: {
         aarsakEndringPeriodeAvklartfakta: lagAvklartfakta("a", "b", "c", [], "fritekst"),
@@ -32,17 +33,17 @@ describe("vurderingEndrePeriode", () => {
     expect(component.find("PdfLenkeListe")).toHaveLength(1);
   });
 
-  it("viser en nav hovedknapp", () => {
+  it("viser StegKnapper", () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find("Hovedknapp")).toHaveLength(1);
+    expect(component.find("StegKnapper")).toHaveLength(1);
   });
 
-  describe("knappen", () => {
+  describe("Bekreftelseknappen", () => {
     it("endrer periode når den trykkes", () => {
       const component = shallow(<VurderingEndrePeriode {...props} />);
-      const knapp = component.find("Hovedknapp");
+      const stegKnapper = component.find("StegKnapper");
       component.instance().validerAlt = jest.fn(() => true);
-      knapp.simulate("click");
+      stegKnapper.props().bekreftKnappProps.onClick();
       expect(props.endreDatoOgSendLovvalgsperioderHandler).toHaveBeenCalled();
     });
   });

@@ -23,7 +23,7 @@ export const mapBehandlingstemaToBehandlingskategori = (behandlingstemaKode: str
       return Koder.Behandlingskategori.EØS_VURDER_UTPEKING;
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET:
       return Koder.Behandlingskategori.FTRL_SAKSBEHANDLING;
-    case MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK:
+    case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
       return Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING;
     default:
       throw new Error(`Mangler mapping for ${behandlingstemaKode}`);

@@ -19,7 +19,7 @@ import VurderingBestemmelse from "./stegKomponenter/vurderingBestemmelse";
 import VurderingFamilie from "./stegKomponenter/vurderingFamilie";
 import VurderingVedtak from "./stegKomponenter/vurderingVedtak";
 
-import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
+import { behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { vedtakOperations } from "../../ducks/vedtak";
@@ -60,8 +60,6 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.oppdaterState()),
-  lagreBehandlingsgrunnlag: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   fattVedtak: (behandlingID: string, data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, data)),
@@ -81,7 +79,6 @@ interface Props extends PropsFromRedux {
 interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
-  skalLagreBehandlingsgrunnlag: boolean;
   visBehandlingsgrunnlagFeilmeldinger: boolean;
 }
 
@@ -89,7 +86,6 @@ class Stegvelger extends Component<Props, State> {
   state = {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
-    skalLagreBehandlingsgrunnlag: false,
     visBehandlingsgrunnlagFeilmeldinger: false,
   };
 
@@ -109,7 +105,7 @@ class Stegvelger extends Component<Props, State> {
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
       this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
-      this.behandlingsGrunnlagSkalEndres();
+      this.debouncedOppdaterSteg();
     }
   }
 
@@ -117,8 +113,6 @@ class Stegvelger extends Component<Props, State> {
     Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
-
-  behandlingsGrunnlagSkalEndres = () => this.setState({ skalLagreBehandlingsgrunnlag: true });
 
   harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
     const propsValue = getValueAtPath(propsObject, path);
@@ -155,7 +149,6 @@ class Stegvelger extends Component<Props, State> {
       tilForsiden: this.props.tilForsiden,
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
-      lagreBehandlingsgrunnlagOgOppdaterStegData: this.lagreBehandlingsgrunnlagOgOppdaterStegData,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
     };
 
@@ -175,16 +168,17 @@ class Stegvelger extends Component<Props, State> {
     });
   };
 
-  lagreBehandlingsgrunnlagOgOppdaterStegData = async () => {
+  oppdaterSteg = () => {
     const {
-      props: { lagreBehandlingsgrunnlag },
+      props: { behandlingsgrunnlagFeilmeldinger },
       hentFlytOgOppdaterAktuelleSteg,
     } = this;
 
-    await lagreBehandlingsgrunnlag();
-    hentFlytOgOppdaterAktuelleSteg();
-    this.setState({ skalLagreBehandlingsgrunnlag: false });
+    if (Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)) {
+      hentFlytOgOppdaterAktuelleSteg();
+    }
   };
+  debouncedOppdaterSteg = Utils._debounce(this.oppdaterSteg, 1250);
 
   harBehandlingsgrunnlagFeilmeldinger = () => {
     const harFeilmeldinger = !Utils._isEmpty(this.props.behandlingsgrunnlagFeilmeldinger);
@@ -194,26 +188,18 @@ class Stegvelger extends Component<Props, State> {
 
   oppdaterAktivtSteg = async (nesteStegIndex: number) => {
     const {
-      state: { skalLagreBehandlingsgrunnlag, aktuelleSteg },
-      props: { oppdaterBehandlingsgrunnlag },
+      state: { aktuelleSteg },
       harBehandlingsgrunnlagFeilmeldinger,
-      lagreBehandlingsgrunnlagOgOppdaterStegData,
     } = this;
 
     if (!harBehandlingsgrunnlagFeilmeldinger()) {
-      if (skalLagreBehandlingsgrunnlag) {
-        this.setState({ aktivtStegIndex: nesteStegIndex });
-        await lagreBehandlingsgrunnlagOgOppdaterStegData();
-      } else {
-        await oppdaterBehandlingsgrunnlag();
-        this.setState({
-          aktivtStegIndex: nesteStegIndex,
-          aktuelleSteg: aktuelleSteg.map((steg: AktueltSteg) => ({
-            ...steg,
-            aktivtSteg: steg.stegPosisjon === nesteStegIndex,
-          })),
-        });
-      }
+      this.setState({
+        aktivtStegIndex: nesteStegIndex,
+        aktuelleSteg: aktuelleSteg.map((steg: AktueltSteg) => ({
+          ...steg,
+          aktivtSteg: steg.stegPosisjon === nesteStegIndex,
+        })),
+      });
     }
   };
 

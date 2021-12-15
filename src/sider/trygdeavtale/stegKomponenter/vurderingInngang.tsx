@@ -67,7 +67,6 @@ interface Props {
   fortsett: () => void;
   formValues: FormValuesProps;
   hentFlytOgOppdaterAktuelleSteg: () => void;
-  lagreBehandlingsgrunnlagOgOppdaterStegData: () => void;
   redigerbart: boolean;
   steg: Api.Trygdeavtale.Steg;
   tilForsiden: () => void;
@@ -174,7 +173,6 @@ const VurderingInngang = ({
           onClick: fortsettHandle,
           disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
         }}
-        visTilbakeKnapp={false}
       />
 
       {visOppfrisk && (

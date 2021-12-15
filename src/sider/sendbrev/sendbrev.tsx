@@ -68,8 +68,7 @@ const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }
               brevTypeSelectWidth="5"
               mottakerSelectWidth="5"
               mottakerTabellWidth="5"
-              orgnrInputWidth="2"
-              kontaktpersonInputWidth="3"
+              felterWidth="5"
             />
           </Nav.Panel>
         </Nav.Container>

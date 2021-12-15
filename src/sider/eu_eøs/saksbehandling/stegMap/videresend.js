@@ -16,6 +16,7 @@ class Videresend extends Steg {
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {
       videresendSoknad: this._propsLight.tilgjengeligeHandlers.videresendSoknad,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;
   }

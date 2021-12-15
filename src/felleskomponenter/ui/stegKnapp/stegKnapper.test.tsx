@@ -11,10 +11,11 @@ describe("stegKnapper", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
+    props.bekreftKnappProps = {};
   });
 
-  it("viser ikke tilbake-knapp når visTilbakeKnapp = false", () => {
-    props.visTilbakeKnapp = false;
+  it("viser ikke tilbake-knapp når tilbakeknappProps er undefined", () => {
+    props.tilbakeKnappProps = undefined;
     const stegKnapper = shallow(<StegKnapper {...props} />);
 
     const bekreftKnapp = stegKnapper.find(Nav.Hovedknapp);
@@ -24,9 +25,8 @@ describe("stegKnapper", () => {
     expect(tilbakeKnapp).toHaveLength(0);
   });
 
-  it("viser tilbake-knapp når visTilbakeKnapp = true", () => {
-    props.visTilbakeKnapp = true;
-    props.tilbakeKnappProps = {};
+  it("viser tilbake-knapp når tilbakeknappProps er definert", () => {
+    props.tilbakeKnappProps = { onClick: jest.fn() };
     const stegKnapper = shallow(<StegKnapper {...props} />);
 
     const bekreftKnapp = stegKnapper.find(Nav.Hovedknapp);

@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
 import { mock, instance } from "ts-mockito";
 
-import * as Nav from "../../../../../navFrontend";
+import * as Nav from "../../../../../../navFrontend";
 
 import SivilstandModal, { SivilstandTabell } from "./sivilstandModal";
 
@@ -12,8 +12,8 @@ describe("SivilstandModal", () => {
 
   beforeEach(() => {
     props = instance(mockedProps);
-    props.onRequestClose = jest.fn();
-    props.ariaHideApp = false;
+    props.lukkModal = jest.fn();
+    props.modalAriaHideApp = false;
     props.aktiveSivilstander = [
       {
         type: "Gift",
@@ -43,7 +43,7 @@ describe("SivilstandModal", () => {
 
     const modal = sivilstandModal.find(Nav.Modal);
     expect(modal).toHaveLength(1);
-    expect(modal.props().onRequestClose).toBe(props.onRequestClose);
+    expect(modal.props().onRequestClose).toBe(props.lukkModal);
   });
 
   it("viser tabell for aktiv sivilstand og historiske sivilstander", () => {

@@ -50,6 +50,7 @@ class GodkjennUtpekingNorge extends Steg {
     };
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this._status = FANE_STATUS.OK;
   }

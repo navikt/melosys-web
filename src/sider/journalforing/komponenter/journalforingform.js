@@ -40,7 +40,7 @@ export const JournalforingForm = (props) => {
     (MKVUtils.erSoknad(formValues.opprettnysak_behandlingstema) ||
       [
         MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
-        MKV.Koder.behandlinger.behandlingstema.TRYGDEAVTALE_UK,
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
       ].includes(formValues.opprettnysak_behandlingstema));
 
   return (
