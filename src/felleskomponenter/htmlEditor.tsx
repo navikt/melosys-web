@@ -2,7 +2,7 @@ import { Editor } from "react-draft-wysiwyg";
 import React, { useState } from "react";
 import { ContentState, convertFromHTML, convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import "./skjema/htmlEditor/htmleditor.css";
+import "./htmlEditor.css";
 import * as Nav from "../navFrontend";
 
 const toolbar = {
