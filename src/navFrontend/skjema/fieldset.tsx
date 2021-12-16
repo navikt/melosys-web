@@ -5,8 +5,6 @@ import bem from "../../bemUtils";
 
 import "./fieldset.css";
 
-// Fieldset ble fjernet fra nav-frontend, så vi implementerer den her, slik at vi slipper å refaktorere alle steder som bruker Nav.Fieldset.
-
 interface FieldsetProps extends HTMLAttributes<HTMLFieldSetElement> {
   children: React.ReactNode | React.ReactNode[];
   className?: string;
