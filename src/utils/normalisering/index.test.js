@@ -1,4 +1,4 @@
-import { begrensAntallTegn, normalizeDecimal, normalizeInt } from "./index";
+import { begrensAntallTegn, normalizeDate, normalizeDecimal, normalizeInt } from "./index";
 
 describe("normalizeDecimal", () => {
   it("returnerer null for tom string", () => {
@@ -35,6 +35,29 @@ describe("normalizeInt", () => {
 
   it("returnerer value hvis value er heltall", () => {
     expect(normalizeInt("5", null)).toBe("5");
+  });
+});
+
+describe("normalizeDate", () => {
+  it("returnerer formatert dato for gyldig dato-value", () => {
+    expect(normalizeDate("010101")).toBe("01.01.2001");
+    expect(normalizeDate("01.01.01")).toBe("01.01.2001");
+    expect(normalizeDate("01-01-01")).toBe("01.01.2001");
+    expect(normalizeDate("01/01/01")).toBe("01.01.2001");
+    expect(normalizeDate("01012001")).toBe("01.01.2001");
+    expect(normalizeDate("01.01.2001")).toBe("01.01.2001");
+    expect(normalizeDate("01-01-2001")).toBe("01.01.2001");
+    expect(normalizeDate("01/01/2001")).toBe("01.01.2001");
+  });
+
+  it("returnerer value dersom value ikke er gyldig dato", () => {
+    expect(normalizeDate("010101010101")).toBe("010101010101");
+    expect(normalizeDate("0101010101")).toBe("0101010101");
+    expect(normalizeDate("010101010")).toBe("010101010");
+    expect(normalizeDate("0101010")).toBe("0101010");
+    expect(normalizeDate("01010")).toBe("01010");
+    expect(normalizeDate("0101")).toBe("0101");
+    expect(normalizeDate("")).toBe("");
   });
 });
 
