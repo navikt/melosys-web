@@ -20,7 +20,7 @@ export const BehandlingsgrunnlagSelector = createSelector(
 );
 
 export const BehandlingsgrunnlagtypeSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  (state) => BehandlingsgrunnlagSelector(state),
   (behandlingsgrunnlag) => behandlingsgrunnlag.type
 );
 
@@ -30,7 +30,7 @@ export const BehandlingsgrunnlagDataSelector = createSelector(
 );
 
 export const SisteOpplysningerHentetDatoSelector = createSelector(
-  BehandlingsgrunnlagSelector,
+  (state) => BehandlingsgrunnlagSelector(state),
   (behandlingsgrunnlag) => behandlingsgrunnlag.sisteOpplysningerHentetDato
 );
 

@@ -3,7 +3,7 @@ import { createSelector, Selector } from "reselect";
 import * as Types from "./types";
 
 export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  (state) => state.medlemskapsperioder,
+  (state: RootState) => state.medlemskapsperioder,
   (medlemskapsperioder) => medlemskapsperioder
 );
 

@@ -13,7 +13,7 @@ import MKV from "../../melosyskodeverk";
 import * as Types from "./types";
 
 export const DokumenterSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  (state) => state.dokumenter,
+  (state: RootState) => state.dokumenter,
   (dokumenter) => dokumenter
 );
 

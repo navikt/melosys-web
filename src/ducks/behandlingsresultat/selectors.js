@@ -45,11 +45,11 @@ export const KontrollresultatBegrunnelseKoderSelector = createSelector(
 );
 
 export const UtfallRegistreringUnntakSelector = createSelector(
-  BehandlingsresultatSelector,
+  (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.utfallRegistreringUnntak
 );
 
 export const UtfallUtpekingSelector = createSelector(
-  BehandlingsresultatSelector,
+  (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.utfallUtpeking
 );
