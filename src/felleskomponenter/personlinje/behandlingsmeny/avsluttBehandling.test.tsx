@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 
 import MKV from "../../../melosyskodeverk";
 
-import AvsluttSak from "./avsluttsak";
+import AvsluttBehandling from "./avsluttBehandling";
 import Handling from "./handling";
 
 const {
@@ -15,9 +15,9 @@ const {
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
-const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
+const mockedProps = mock<ComponentProps<typeof AvsluttBehandling>>();
 
-describe("AvsluttSak", () => {
+describe("AvsluttBehandling", () => {
   let props = instance(mockedProps);
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe("AvsluttSak", () => {
     props.behandlingstema = ARBEID_I_UTLANDET;
     props.redigerbart = true;
 
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(3);
@@ -41,7 +41,7 @@ describe("AvsluttSak", () => {
     props.behandlingstema = TRYGDETID;
     props.redigerbart = true;
 
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(1);
@@ -52,7 +52,7 @@ describe("AvsluttSak", () => {
     props.redigerbart = false;
     props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
 
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
 
     expect(avsluttSak.find(".behandlingsmeny__meny__avslutt-sak").isEmptyRender()).toBeTruthy();
   });
@@ -62,7 +62,7 @@ describe("AvsluttSak", () => {
     props.behandlingstema = UTSENDT_ARBEIDSTAKER;
     props.behandlingstype = NY_VURDERING;
 
-    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
 
     const avsluttSakSomBortfalt = avsluttSak.findWhere(
       (n) => n.type() === Handling && n.props().tekst === "Avslutt sak som bortfalt"

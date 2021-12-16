@@ -4,7 +4,7 @@ import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 import Handling from "./handling";
 
-type avsluttSakProps = {
+type avsluttBehandlingProps = {
   avslaaSoknad: () => void;
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
@@ -13,14 +13,14 @@ type avsluttSakProps = {
   redigerbart: boolean;
 };
 
-const AvsluttSak = ({
+const AvsluttBehandling = ({
   avslaaSoknad,
   henleggSak,
   avsluttSakSomBortfalt,
   behandlingstema,
   behandlingstype,
   redigerbart,
-}: avsluttSakProps) => {
+}: avsluttBehandlingProps) => {
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
 
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
@@ -82,7 +82,7 @@ const AvsluttSak = ({
     <Nav.EkspanderbartpanelBase
       ariaTittel="avsluttsak"
       className="behandlingsmeny__meny__avslutt-sak"
-      heading={<div className="title">Avslutt sak</div>}
+      heading={<div className="title">Avslutt behandling</div>}
     >
       {skalViseAvslaaSoknad() && <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />}
       {skalViseHenleggSak() && <Handling tekst="Henlegg sak" onClick={henleggSak} />}
@@ -91,4 +91,4 @@ const AvsluttSak = ({
   );
 };
 
-export default AvsluttSak;
+export default AvsluttBehandling;
