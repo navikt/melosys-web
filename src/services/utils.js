@@ -1,20 +1,11 @@
+import sjekkStatuskode from "./sjekkStatuskode";
+
 export const STATUS = {
   NOT_STARTED: "NOT_STARTED",
   PENDING: "PENDING",
   OK: "OK",
   RELOADING: "RELOADING",
   ERROR: "ERROR",
-};
-
-export const sjekkStatuskode = async (response) => {
-  if (response.status >= 200 && response.status < 300 && response.ok && !response.redirected) {
-    return response;
-  }
-  const error = new Error(response.statusText || response.type);
-  error.response = response;
-  error.body = await response.clone().json();
-  error.status = response.status;
-  throw error;
 };
 
 const toJson = async (response) => {

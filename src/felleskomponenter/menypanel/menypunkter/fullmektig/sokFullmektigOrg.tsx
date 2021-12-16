@@ -4,6 +4,8 @@ import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 
+import { isApiError } from "../../../../services";
+
 interface Feilmelding {
   feilmelding: string;
 }
@@ -23,7 +25,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   const orgFunnetHandler = async (funnetOrgnr: string) => {
     try {
       await onOrgFunnet(funnetOrgnr);
-    } catch (e) {
+    } catch (e: any) {
       setFeilmelding({ feilmelding: e.message });
     }
   };
@@ -43,8 +45,10 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
         await Api.Organisasjoner.hentOrganisasjon(sokOrgnr);
         orgFunnetHandler(sokOrgnr);
       } catch (e) {
-        if (e.response.status === 404) setFeilmelding({ feilmelding: "Kunne ikke finne organisasjon" });
-        else setFeilmelding({ feilmelding: "Ukjent feil ved søk på org.nr." });
+        if (isApiError(e)) {
+          if (e.response.status === 404) setFeilmelding({ feilmelding: "Kunne ikke finne organisasjon" });
+          else setFeilmelding({ feilmelding: "Ukjent feil ved søk på org.nr." });
+        }
       }
     } else {
       setFeilmelding({ feilmelding: "Ugyldig org.nr." });

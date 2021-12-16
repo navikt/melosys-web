@@ -71,7 +71,7 @@ export const normalizeDecimal = (value, previousValue) => {
   return isIntOrDecimal ? valuePreferDot : previousValue;
 };
 
-function Input({ feltNavn, bredde = "fullbredde", feltType = undefined, ...rest }) {
+function Input({ feltNavn, bredde = "fullbredde", feltType = "", ...rest }) {
   const hentNormalizer = () => {
     switch (feltType) {
       case "desimal":
@@ -97,12 +97,12 @@ function Input({ feltNavn, bredde = "fullbredde", feltType = undefined, ...rest 
 Input.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
-  feltType: PT.oneOf(["desimal", "heltall"]),
+  feltType: PT.oneOf(["desimal", "heltall", ""]),
 };
 
 Input.defaultProps = {
   bredde: "fullbredde",
-  feltType: undefined,
+  feltType: "",
 };
 
 export { InnerInputComponent };

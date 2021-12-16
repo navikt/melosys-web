@@ -12,6 +12,7 @@ import * as Ikoner from "../../../../resources/images";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
 import EnkeltFullmektig from "./enkeltFullmektig";
+import { isApiError } from "../../../../services";
 
 import "./fullmektige.css";
 
@@ -93,9 +94,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       setDisableLeggTilFullmektig(false);
       return lagretFullmektig;
     } catch (e) {
-      if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
-      else if (e.status >= 400) throw new Error(e.body.message);
-      else throw e;
+      if (isApiError(e)) {
+        if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
+        else if (e.status >= 400) throw new Error(e.body.message);
+      }
+      throw e;
     }
   };
 
@@ -122,9 +125,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             }
             slettFullmektigLokalt(fullmektig.databaseID);
           } catch (e) {
-            if (e.status >= 500) throw new Error("Teknisk feil ved sletting av fullmektig");
-            else if (e.status >= 400) throw new Error(e.body.message);
-            else throw e;
+            if (isApiError(e)) {
+              if (e.status >= 500) throw new Error("Teknisk feil ved sletting av fullmektig");
+              else if (e.status >= 400) throw new Error(e.body.message);
+              else throw e;
+            }
           }
         };
 
@@ -133,9 +138,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             if (orgnr) await lagreFullmektig(representererKode, orgnr, fullmektig.databaseID);
             settRepresentant(index, representererKode);
           } catch (e) {
-            if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
-            else if (e.status >= 400) throw new Error(e.body.message);
-            else throw e;
+            if (isApiError(e)) {
+              if (e.status >= 500) throw new Error("Teknisk feil ved lagring av fullmektig");
+              else if (e.status >= 400) throw new Error(e.body.message);
+              else throw e;
+            }
           }
         };
 

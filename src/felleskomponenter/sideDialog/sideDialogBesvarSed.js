@@ -77,7 +77,7 @@ EnkeltBucHeading.propTypes = {
 const sorterEtterDato = (liste) => liste.sort((a, b) => new Date(b.opprettetDato) - new Date(a.opprettetDato));
 
 const EnkeltBuc = ({ buc }) => (
-  <Nav.EkspanderbartpanelBase border heading={<EnkeltBucHeading {...buc} />}>
+  <Nav.EkspanderbartpanelBase border tittel={<EnkeltBucHeading {...buc} />}>
     <div className="buc_tabell">
       <Nav.Typo.Element className="tabell_header kolonne__navn">Navn på SED</Nav.Typo.Element>
       <Nav.Typo.Element className="tabell_header kolonne__status">Status</Nav.Typo.Element>

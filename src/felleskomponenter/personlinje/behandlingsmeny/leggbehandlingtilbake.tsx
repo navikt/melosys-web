@@ -23,9 +23,8 @@ const LeggBehandlingTilbake = ({
 
   return (
     <Nav.EkspanderbartpanelBase
-      ariaTittel="leggbehandlingtilbake"
       className="behandlingsmeny__meny__legg-behandling-tilbake"
-      heading={<div className="title">Legg behandling tilbake</div>}
+      tittel={<div className="title">Legg behandling tilbake</div>}
     >
       {redigerbart && <Handling tekst="Til min oppgaveliste" onClick={lagreOgLukkHandle} />}
       <Handling tekst="Til felles oppgaveliste" onClick={tilbakeleggOppgave} disabled={!redigerbart} />

@@ -20,9 +20,8 @@ const Legacybehandlingsmeny = ({
   visRevurderFagsak,
 }) => (
   <Nav.EkspanderbartpanelBase
-    ariaTittel="Behandlingsmeny"
     className="oppsummering__meny"
-    heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}
+    tittel={<div className="behandlingsmeny_title">Behandlingsmeny</div>}
   >
     <div className="meny__innhold">
       {redigerbart && (

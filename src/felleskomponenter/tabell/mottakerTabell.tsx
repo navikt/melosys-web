@@ -5,7 +5,7 @@ import "./mottakerTabell.css";
 
 interface MottakerTabellProps {
   rader: {
-    verdi: string | JSX.Element;
+    verdi: string | JSX.Element | null;
     style?: string;
   }[][];
   kolonner: {

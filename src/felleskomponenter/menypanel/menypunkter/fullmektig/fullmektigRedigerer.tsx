@@ -44,7 +44,7 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
   const rolleChangeHandler: ChangeEventHandler<HTMLInputElement> = async (event) => {
     try {
       await onRolleChange(event.target.value, org.orgnr);
-    } catch (error) {
+    } catch (error: any) {
       setRolleFeilmelding(error.message);
     }
   };

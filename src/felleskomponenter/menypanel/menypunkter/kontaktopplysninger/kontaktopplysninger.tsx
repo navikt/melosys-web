@@ -104,7 +104,7 @@ export const KontaktOpplysninger = ({
 
     try {
       await onInputBlur(event);
-    } catch (error) {
+    } catch (error: any) {
       setLagreFeilmelding(error.message);
     }
   };
@@ -116,7 +116,7 @@ export const KontaktOpplysninger = ({
 
     try {
       await onInputBlur(event);
-    } catch (error) {
+    } catch (error: any) {
       setLagreFeilmelding(error.message);
     }
   };
@@ -126,7 +126,7 @@ export const KontaktOpplysninger = ({
 
     try {
       await onSlettKnappClick(event);
-    } catch (error) {
+    } catch (error: any) {
       setSlettFeilmelding(error.message);
     }
   };

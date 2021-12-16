@@ -3,6 +3,7 @@ import PT from "prop-types";
 import { touch, Field } from "redux-form";
 
 import * as Nav from "../../../navFrontend";
+import * as Utils from "../../../utils";
 
 import "../skjema.css";
 
@@ -71,12 +72,12 @@ const normaliserReduxBoolean = (valg) => {
   return valg;
 };
 
-function Radio({ id = undefined, feltNavn, className = "", ...rest }) {
+function Radio({ id = "", feltNavn, className = "", ...rest }) {
   return (
     <Field
       name={feltNavn}
       className={className}
-      id={id}
+      id={id || Utils._uuid()}
       component={InnerInputComponent}
       props={rest}
       normalize={normaliserReduxBoolean}
@@ -86,7 +87,7 @@ function Radio({ id = undefined, feltNavn, className = "", ...rest }) {
 
 Radio.defaultProps = {
   className: "",
-  id: undefined,
+  id: "",
 };
 
 Radio.propTypes = {

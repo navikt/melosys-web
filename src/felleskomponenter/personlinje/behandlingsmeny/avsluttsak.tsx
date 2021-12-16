@@ -80,9 +80,8 @@ const AvsluttSak = ({
 
   return (
     <Nav.EkspanderbartpanelBase
-      ariaTittel="avsluttsak"
       className="behandlingsmeny__meny__avslutt-sak"
-      heading={<div className="title">Avslutt sak</div>}
+      tittel={<div className="title">Avslutt sak</div>}
     >
       {skalViseAvslaaSoknad() && <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />}
       {skalViseHenleggSak() && <Handling tekst="Henlegg sak" onClick={henleggSak} />}

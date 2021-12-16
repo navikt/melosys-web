@@ -273,7 +273,7 @@ export const SoknadOppgittAdresseSelector = createSelector(
 );
 
 export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
-  SoknadOppgittAdresseSelector,
+  (state) => SoknadOppgittAdresseSelector(state),
   (oppgittadresse) => !Object.values(oppgittadresse).every((felt) => Utils._isNil(felt) || felt === "")
 );
 

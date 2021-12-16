@@ -25,7 +25,7 @@ export const BehandlingsresultatStatusErOkSelector = createSelector(
 );
 
 export const VedtakstypeSelector = createSelector(
-  BehandlingsresultatSelector,
+  (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.vedtakstype
 );
 
@@ -35,7 +35,7 @@ export const BegrunnelseKoderSelector = createSelector(
 );
 
 export const BegrunnelseFritekstSelector = createSelector(
-  BehandlingsresultatSelector,
+  (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.begrunnelseFritekst
 );
 

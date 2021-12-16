@@ -37,6 +37,6 @@ export const AlleAnmodningsperioderSendtUtlandSelector = createSelector(
 );
 
 export const AnmodningsperioderErSendtUtlandetSelector = createSelector(
-  AnmodningsperioderSelector,
+  (state) => AnmodningsperioderSelector(state),
   (anmodningsperioder) => anmodningsperioder.some((anmodningsperiode) => anmodningsperiode.sendtUtland)
 );
