@@ -126,7 +126,12 @@ const medfolgendeFamilie = object().shape({
       )
       .required(MAA_FYLLES_UT)
   ),
-  navn: string().nullable(),
+  navn: string()
+    .when("fnr", {
+      is: (fnr) => Boolean(Utils.dato.vaskInputDato(fnr)),
+      then: string().required(MAA_FYLLES_UT),
+    })
+    .nullable(),
 });
 
 const foedestedOgLandSchema = object()
