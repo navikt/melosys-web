@@ -1,9 +1,9 @@
 import * as Yup from "yup";
 import * as Utils from "../../../../../utils";
 
-const FRITEKST_PAKREVD = { feilmelding: "Begrunnelse for endring av periode er påkrevd" };
-const STARTDATO_PAKREVD = { feilmelding: "Startdato er påkrevd" };
-const SLUTTDATO_PAKREVD = { feilmelding: "Sluttdato er påkrevd" };
+const FRITEKST_PAKREVD = "Begrunnelse for endring av periode er påkrevd";
+const STARTDATO_PAKREVD = "Startdato er påkrevd";
+const SLUTTDATO_PAKREVD = "Sluttdato er påkrevd";
 
 const gyldigPeriodeTest = {
   name: "Gyldig periode",

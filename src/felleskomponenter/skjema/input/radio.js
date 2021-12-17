@@ -26,7 +26,7 @@ function InnerInputComponent({
   const gjeldendeFeltVerdi = input.value;
   const radioButtonVerdi = rest.value;
 
-  const feil = meta.error && meta.touched && !meta.active ? { feilmelding: meta.error } : undefined;
+  const feil = meta.error && meta.touched && !meta.active ? meta.error : undefined;
 
   return (
     <Nav.Radio

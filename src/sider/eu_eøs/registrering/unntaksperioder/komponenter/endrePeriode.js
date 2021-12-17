@@ -57,7 +57,7 @@ const EndrePeriode = ({
           label="Startdato"
           value={Utils.dato.norskStringTilDate(fom)}
           onChange={fomChange}
-          feil={feilmeldinger.fom?.feilmelding}
+          feil={feilmeldinger.fom}
           disabled={!redigerbart}
         />
       </Nav.Column>
@@ -66,7 +66,7 @@ const EndrePeriode = ({
           label="Sluttdato"
           value={Utils.dato.norskStringTilDate(tom)}
           onChange={tomChange}
-          feil={feilmeldinger.tom?.feilmelding}
+          feil={feilmeldinger.tom}
           disabled={!redigerbart}
         />
       </Nav.Column>

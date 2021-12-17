@@ -15,9 +15,9 @@ function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
     meta: { error, touched, active },
   } = rest;
 
-  const feil = error && touched && !active ? { feilmelding: rest.meta.error } : undefined;
+  let feil = error && touched && !active ? rest.meta.error : undefined;
   /* Vi forventer at meta.error er en string eller et objekt */
-  if (feil && Utils._isObject(feil.feilmelding)) feil.feilmelding = feil.feilmelding.melding;
+  if (rest.meta.error && Utils._isObject(rest.meta.error)) feil = rest.meta.error.melding;
 
   const innerBlur = (e) => {
     if (onBlur) onBlur(e);

@@ -111,7 +111,7 @@ class EnkeltLandPure extends Component {
 
     const { inputVerdi } = this.state;
     const { error: landError = "" } = this.state;
-    const feilObjekt = landError ? { feilmelding: `${landError}` } : null;
+    const feilObjekt = landError ? `${landError}` : null;
 
     const cl = classnames({ landliste__linje__input: true, [className]: true });
 

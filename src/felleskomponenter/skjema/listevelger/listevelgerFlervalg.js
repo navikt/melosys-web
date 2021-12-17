@@ -169,7 +169,7 @@ class ListevelgerFlervalg extends Component {
     const { feilmelding } = this.state;
     const feilmeldingTekst = error || feilmelding;
 
-    return feilmeldingTekst ? { feilmelding: feilmeldingTekst } : null;
+    return feilmeldingTekst || null;
   };
 
   render() {

@@ -40,7 +40,7 @@ export class DialogboksHenleggSak extends Component {
   validerBegrunnelse = () => {
     const { erBegrunnelseValgt } = this;
     if (!erBegrunnelseValgt()) {
-      this.setState({ feilmeldingSelect: { feilmelding: "Ingen begrunnelse valgt" } });
+      this.setState({ feilmeldingSelect: "Ingen begrunnelse valgt" });
     }
     return erBegrunnelseValgt();
   };
@@ -49,7 +49,7 @@ export class DialogboksHenleggSak extends Component {
     const { fritekstValgt, fritekstTom } = this;
     const fritekstValideringPassert = !(fritekstValgt() && fritekstTom());
     if (!fritekstValideringPassert) {
-      this.setState({ feilmeldingFritekst: { feilmelding: "Mangler fritekst" } });
+      this.setState({ feilmeldingFritekst: "Mangler fritekst" });
     }
     return fritekstValideringPassert;
   };

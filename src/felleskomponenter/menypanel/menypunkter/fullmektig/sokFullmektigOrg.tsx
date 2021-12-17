@@ -6,10 +6,6 @@ import * as Api from "../../../../services/api";
 
 import { isApiError } from "../../../../services";
 
-interface Feilmelding {
-  feilmelding: string;
-}
-
 interface SokFullmektigOrgProps {
   onOrgFunnet: (orgnr: string) => Promise<any>;
   defaultOrgnr: string | null;
@@ -19,21 +15,21 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   const { onOrgFunnet, defaultOrgnr } = props;
 
   const [orgnr, setOrgnr] = useState(defaultOrgnr || "");
-  const [feilmelding, setFeilmelding] = useState<Feilmelding | undefined>(undefined);
+  const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
   const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
 
   const orgFunnetHandler = async (funnetOrgnr: string) => {
     try {
       await onOrgFunnet(funnetOrgnr);
     } catch (e: any) {
-      setFeilmelding({ feilmelding: e.message });
+      setFeilmelding(e.message);
     }
   };
 
   const sok = async (sokOrgnr: string) => {
     if (!Utils.organisasjon.erOrgnrLengde(sokOrgnr)) {
       if (korrekteLengdeOrgnrOppgittMinstEnGang) {
-        setFeilmelding({ feilmelding: "Org.nr. er 9 siffer" });
+        setFeilmelding("Org.nr. er 9 siffer");
       }
       return;
     }
@@ -46,12 +42,12 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
         orgFunnetHandler(sokOrgnr);
       } catch (e) {
         if (isApiError(e)) {
-          if (e.response.status === 404) setFeilmelding({ feilmelding: "Kunne ikke finne organisasjon" });
-          else setFeilmelding({ feilmelding: "Ukjent feil ved søk på org.nr." });
+          if (e.response.status === 404) setFeilmelding("Kunne ikke finne organisasjon");
+          else setFeilmelding("Ukjent feil ved søk på org.nr.");
         }
       }
     } else {
-      setFeilmelding({ feilmelding: "Ugyldig org.nr." });
+      setFeilmelding("Ugyldig org.nr.");
     }
   };
 

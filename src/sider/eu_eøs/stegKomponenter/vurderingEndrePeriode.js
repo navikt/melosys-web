@@ -105,7 +105,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   validerTomDato = () => {
     const tomDatoGyldig = this.erTomDatoGyldig();
-    if (!tomDatoGyldig) this.setState({ nyTomDatoFeilmelding: { feilmelding: "Ugyldig dato" } });
+    if (!tomDatoGyldig) this.setState({ nyTomDatoFeilmelding: "Ugyldig dato" });
     return tomDatoGyldig;
   };
 
@@ -113,7 +113,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   validerBegrunnelse = () => {
     const begrunnelseGyldig = this.erBegrunnelseGyldig();
-    if (!begrunnelseGyldig) this.setState({ begrunnelseFeilmelding: { feilmelding: "Ugyldig begrunnelse" } });
+    if (!begrunnelseGyldig) this.setState({ begrunnelseFeilmelding: "Ugyldig begrunnelse" });
     return begrunnelseGyldig;
   };
 
@@ -126,7 +126,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   validerPeriode = () => {
     const periodeGyldig = this.erPeriodeGyldig();
-    if (!periodeGyldig) this.setState({ nyTomDatoFeilmelding: { feilmelding: "Ugyldig periode" } });
+    if (!periodeGyldig) this.setState({ nyTomDatoFeilmelding: "Ugyldig periode" });
     return periodeGyldig;
   };
 
@@ -252,7 +252,7 @@ export class VurderingEndrePeriode extends React.Component {
               onChange={vedTomDatoEndring}
               onBlur={lagrePeriodeForForhandsvisning}
               onCalendarClose={lagrePeriodeForForhandsvisning}
-              feil={nyTomDatoFeilmelding?.feilmelding}
+              feil={nyTomDatoFeilmelding}
               disabled={!redigerbart}
             />
           </Nav.Column>

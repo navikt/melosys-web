@@ -174,7 +174,7 @@ class ListevelgerFlervalg extends Component {
     const eksternFeilmelding = this.props.feil;
     const feilmeldingtekst = eksternFeilmelding || internFeilmelding;
 
-    return feilmeldingtekst ? { feilmelding: feilmeldingtekst } : null;
+    return feilmeldingtekst || null;
   };
 
   render() {

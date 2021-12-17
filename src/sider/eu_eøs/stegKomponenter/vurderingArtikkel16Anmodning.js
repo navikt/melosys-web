@@ -39,19 +39,11 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 const uuid = require("uuid/v4");
 
-const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart, feil }) => {
+const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked, redigerbart }) => {
   const { periodeID, periode } = perm;
   const label = `Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`;
 
-  return (
-    <Mui.Checkbox
-      feil={feil}
-      disabled={!redigerbart}
-      onCheck={() => onChange(periodeID)}
-      label={label}
-      checked={checked}
-    />
-  );
+  return <Mui.Checkbox disabled={!redigerbart} onCheck={() => onChange(periodeID)} label={label} checked={checked} />;
 };
 
 TidligereMedlemPeriodeLinje.propTypes = {
@@ -60,11 +52,6 @@ TidligereMedlemPeriodeLinje.propTypes = {
   onChange: PT.func.isRequired,
   perm: MPT.MedlemskapEnkeltPeriode.isRequired,
   redigerbart: PT.bool.isRequired,
-  feil: PT.object,
-};
-
-TidligereMedlemPeriodeLinje.defaultProps = {
-  feil: undefined,
 };
 
 class TidligereMedlemskapPerioder extends Component {
@@ -84,7 +71,7 @@ class TidligereMedlemskapPerioder extends Component {
   };
 
   render() {
-    const { medlemskap, fields, redigerbart, feil } = this.props;
+    const { medlemskap, fields, redigerbart } = this.props;
     const alleValgtePeriodeID = fields.getAll() || [];
     const { onChange } = this;
 
@@ -96,7 +83,6 @@ class TidligereMedlemskapPerioder extends Component {
             const isChecked = alleValgtePeriodeID.includes(perm.periodeID);
             return (
               <TidligereMedlemPeriodeLinje
-                feil={feil}
                 redigerbart={redigerbart}
                 onChange={onChange}
                 checked={isChecked}
@@ -115,27 +101,14 @@ TidligereMedlemskapPerioder.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   fields: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
-  feil: PT.object,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
-};
-
-TidligereMedlemskapPerioder.defaultProps = {
-  feil: undefined,
 };
 
 const TidligereMedlemskap = (props) => (
   <div>
-    <FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} props={props.feil} {...props} />
+    <FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} {...props} />
   </div>
 );
-
-TidligereMedlemskap.propTypes = {
-  feil: PT.object,
-};
-
-TidligereMedlemskap.defaultProps = {
-  feil: undefined,
-};
 
 class VurderingArtikkel16Anmodning extends Component {
   state = {
@@ -248,7 +221,7 @@ class VurderingArtikkel16Anmodning extends Component {
 
   validerUnntakFraBestemmelse = () => {
     const valid = this.props.unntakFraBestemmelse;
-    if (!valid) this.setState({ lovvalgFeilmelding: { feilmelding: "Velg lovvalg" } });
+    if (!valid) this.setState({ lovvalgFeilmelding: "Velg lovvalg" });
     return valid;
   };
 
@@ -261,12 +234,10 @@ class VurderingArtikkel16Anmodning extends Component {
 
   validerFritekst = () => {
     const begrunnelseFritekstBrevValid = this.props.tilstand.art16_1.begrunnelseFritekst;
-    if (!begrunnelseFritekstBrevValid)
-      this.setState({ begrunnelseFritekstBrevFeilmelding: { feilmelding: "Fyll inn fritekst" } });
+    if (!begrunnelseFritekstBrevValid) this.setState({ begrunnelseFritekstBrevFeilmelding: "Fyll inn fritekst" });
 
     const begrunnelseFritekstEngelskValid = this.props.tilstand.art16_1.begrunnelseFritekstEngelsk;
-    if (!begrunnelseFritekstEngelskValid)
-      this.setState({ begrunnelseFritekstSedFeilmelding: { feilmelding: "Fyll inn fritekst" } });
+    if (!begrunnelseFritekstEngelskValid) this.setState({ begrunnelseFritekstSedFeilmelding: "Fyll inn fritekst" });
 
     return begrunnelseFritekstBrevValid && begrunnelseFritekstEngelskValid;
   };

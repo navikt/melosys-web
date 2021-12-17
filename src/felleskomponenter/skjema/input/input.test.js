@@ -120,7 +120,7 @@ describe("InnerInputComponent", () => {
       };
       const innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
-      expect(innerInputComponent.find("Input").props().feil.feilmelding).toBe(props.meta.error);
+      expect(innerInputComponent.find("Input").props().feil).toBe(props.meta.error);
     });
   });
 

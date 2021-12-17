@@ -5,7 +5,7 @@ import { Checkbox as NavCheckbox } from "nav-frontend-skjema";
 import "../skjema.css";
 
 function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, disabled, className }) {
-  const feil = meta.error && meta.touched && !meta.active ? { feilmelding: meta.error } : undefined;
+  const feil = meta.error && meta.touched && !meta.active ? meta.error : undefined;
 
   const onChange = (...args) => {
     if (submitOnChange) {
