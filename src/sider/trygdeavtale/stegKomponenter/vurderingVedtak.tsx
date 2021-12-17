@@ -64,6 +64,14 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface FormValuesProps {
+  lovvalgsperiodeFom?: string;
+  lovvalgsperiodeTom?: string;
+  fritekstInnledning?: string;
+  fritekstBegrunnelse?: string;
+  kopiTilArbeidsgiver?: boolean;
+}
+
 interface Props {
   data: Api.Trygdeavtale.StegData;
   oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
@@ -73,13 +81,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  formValues: {
-    lovvalgsperiodeFom?: string;
-    lovvalgsperiodeTom?: string;
-    fritekstInnledning?: string;
-    fritekstBegrunnelse?: string;
-    kopiTilArbeidsgiver?: boolean;
-  };
+  formValues: FormValuesProps;
 }
 
 const VurderingVedtak = ({
@@ -145,6 +147,16 @@ const VurderingVedtak = ({
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
 
+  const oppdaterFritekster = (values: FormValuesProps) => {
+    if (values && redigerbart && !vedtakPending) {
+      Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
+        innledningFritekst: values.fritekstInnledning,
+        begrunnelseFritekst: values.fritekstBegrunnelse,
+      });
+    }
+  };
+  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
+
   useEffect(() => {
     debouncedKontrollerVedtak(oppdaterFørKontroll);
     return () => debouncedKontrollerVedtak.cancel();
@@ -163,6 +175,10 @@ const VurderingVedtak = ({
       debouncedHentMuligeMottakere.cancel();
     }
   }, [steg]);
+
+  useEffect(() => {
+    debouncedOppdaterFritekster(formValues);
+  }, [formValues?.fritekstInnledning, formValues?.fritekstBegrunnelse]);
 
   const handleLagreTomEndring = async () => {
     if (redigerbart && formValues) {
