@@ -86,14 +86,14 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
 
   const oppgaverFinnes = radioValg.length > 0;
 
-  const filtrerteSakstyper = MKV.KTObjects.sakstyper.filter(
+  const valgbareSakstyper = MKV.KTObjects.sakstyper.filter(
     ({ kode }) =>
       kode === MKV.Koder.sakstyper.EU_EOS ||
       (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
       (trygdeavtaleToggle === "enabled" && kode === MKV.Koder.sakstyper.TRYGDEAVTALE)
   );
 
-  const filtrerteBehandlingstemaer = () => {
+  const hentValgbareBehandlingstema = () => {
     switch (sakstype) {
       case MKV.Koder.sakstyper.FTRL:
         return ftrlBehandlingstemaer;
@@ -147,7 +147,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                       label="Sakstype"
                       onChange={() => change("behandlingstema", undefined)}
                     >
-                      {filtrerteSakstyper.map(({ kode, term }) => (
+                      {valgbareSakstyper.map(({ kode, term }) => (
                         <option key={kode} value={kode}>
                           {term}
                         </option>
@@ -159,7 +159,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                       label="Behandlingstema"
                       onChange={() => change("soknadsinfo.erUkjenteEllerAlleEosLand", false)}
                     >
-                      {filtrerteBehandlingstemaer().map(({ kode, term }) => (
+                      {hentValgbareBehandlingstema().map(({ kode, term }) => (
                         <option key={kode} value={kode}>
                           {term}
                         </option>
