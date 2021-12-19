@@ -50,7 +50,7 @@ describe("Informasjonsmodal", () => {
 
   it("viser melding ved nettverkserror under henting av bostedsadresse", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -99,7 +99,7 @@ describe("Informasjonsmodal", () => {
           erHistorisk: false,
         },
       ];
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -142,7 +142,7 @@ describe("Informasjonsmodal", () => {
 
   it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
