@@ -1,4 +1,4 @@
-import { EkspanderbartpanelBase } from "nav-frontend-ekspanderbartpanel";
+import Ekspanderbartpanel from "nav-frontend-ekspanderbartpanel";
 import Panel from "nav-frontend-paneler";
 import AlertStripe, { AlertStripeAdvarsel, AlertStripeInfo, AlertStripeFeil } from "nav-frontend-alertstriper";
 import EtikettBase from "nav-frontend-etiketter";
@@ -48,7 +48,7 @@ export {
   SelectProps,
   Input,
   Textarea,
-  EkspanderbartpanelBase,
+  Ekspanderbartpanel,
   Panel,
   EtikettBase,
   Hjelpetekst,

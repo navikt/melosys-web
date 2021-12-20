@@ -16,7 +16,7 @@ const Legacybehandlingsmeny = ({
   visAvslagManglendeOpplysninger,
   visAvslagSoknadDialogHandle,
 }) => (
-  <Nav.EkspanderbartpanelBase
+  <Nav.Ekspanderbartpanel
     className="oppsummering__meny"
     tittel={<div className="behandlingsmeny_title">Behandlingsmeny</div>}
   >
@@ -48,7 +48,7 @@ const Legacybehandlingsmeny = ({
         Vis alle behandlinger
       </Nav.Knapp>
     </div>
-  </Nav.EkspanderbartpanelBase>
+  </Nav.Ekspanderbartpanel>
 );
 
 Legacybehandlingsmeny.propTypes = {

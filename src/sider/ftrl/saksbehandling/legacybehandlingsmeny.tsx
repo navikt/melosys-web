@@ -30,7 +30,7 @@ const Legacybehandlingsmeny = ({
   const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
 
   return (
-    <Nav.EkspanderbartpanelBase className="legacybehandlingsmeny" tittel={<div className="title">Behandlingsmeny</div>}>
+    <Nav.Ekspanderbartpanel className="legacybehandlingsmeny" tittel={<div className="title">Behandlingsmeny</div>}>
       <div className="innhold">
         {redigerbart && (
           <Nav.Knapp mini className="element" onClick={lagreOgLukkHandle}>
@@ -66,7 +66,7 @@ const Legacybehandlingsmeny = ({
           </Nav.Knapp>
         )}
       </div>
-    </Nav.EkspanderbartpanelBase>
+    </Nav.Ekspanderbartpanel>
   );
 };
 

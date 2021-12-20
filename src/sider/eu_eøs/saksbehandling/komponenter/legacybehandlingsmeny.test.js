@@ -23,10 +23,10 @@ describe("behandlingsmeny", () => {
     };
   });
 
-  it("viser en NavEkspanderbartPanelBase", () => {
+  it("viser et NavEkspanderbartPanel", () => {
     const behandlingsmeny = shallow(<Legacybehandlingsmeny {...props} />);
 
-    expect(behandlingsmeny.find(Nav.EkspanderbartpanelBase)).toHaveLength(1);
+    expect(behandlingsmeny.find(Nav.Ekspanderbartpanel)).toHaveLength(1);
   });
 
   it("kaller handlere ved klikk på knapper", () => {

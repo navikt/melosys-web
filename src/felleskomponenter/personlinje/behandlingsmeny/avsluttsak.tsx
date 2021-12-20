@@ -79,14 +79,14 @@ const AvsluttSak = ({
   if (!skalViseAvslaaSoknad() && !skalViseHenleggSak() && !skalViseAvsluttSak()) return null;
 
   return (
-    <Nav.EkspanderbartpanelBase
+    <Nav.Ekspanderbartpanel
       className="behandlingsmeny__meny__avslutt-sak"
       tittel={<div className="title">Avslutt sak</div>}
     >
       {skalViseAvslaaSoknad() && <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />}
       {skalViseHenleggSak() && <Handling tekst="Henlegg sak" onClick={henleggSak} />}
       {skalViseAvsluttSak() && <Handling tekst="Avslutt sak som bortfalt" onClick={avsluttSakSomBortfalt} />}
-    </Nav.EkspanderbartpanelBase>
+    </Nav.Ekspanderbartpanel>
   );
 };
 
