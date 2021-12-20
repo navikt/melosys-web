@@ -8,6 +8,7 @@ import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
 
 import "./avsendervelger.css";
+import "./avsendere.css";
 
 export const AvsenderOrganisasjon = ({
   settFeltInnhold,
@@ -54,8 +55,13 @@ export const AvsenderOrganisasjon = ({
 
   return (
     <div className="avsender">
-      <Skjema.Input feltNavn="avsenderID" label="Oppgi avsenders org.nr." onKeyUp={IDFeltTastOppHandler} />
-      <Skjema.Input feltNavn="avsenderNavn" label="Organisasjonsnavn" disabled />
+      <Skjema.Input
+        feltNavn="avsenderID"
+        label="Oppgi avsenders org.nr."
+        onKeyUp={IDFeltTastOppHandler}
+        className="avsendere__input"
+      />
+      <Skjema.Input feltNavn="avsenderNavn" label="Organisasjonsnavn" disabled className="avsendere__input" />
       {children}
     </div>
   );
@@ -87,7 +93,11 @@ export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepre
       settFeltInnhold={settFeltInnhold}
       hentOgVisRepresentant={hentOgVisRepresentant}
     >
-      <Skjema.Select feltNavn="representantRepresenterer" label="Hvem er dette fullmektig for">
+      <Skjema.Select
+        feltNavn="representantRepresenterer"
+        label="Hvem er dette fullmektig for"
+        className="avsendere__input"
+      >
         {MKV.KTObjects.representerer.map(({ kode }) => (
           <option key={kode} value={kode}>
             {representererMap[kode]}
@@ -110,7 +120,12 @@ AvsenderFullmektig.defaultProps = {
 
 export const AvsenderUtenlanskTrygdemyndighet = ({ utenlandskTrygdemyndighetLandkode, fullmektigLandEndret }) => (
   <div className="avsender">
-    <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
+    <Skjema.LandVelger
+      feltNavn="utenlandskTrygdemyndighetLandkode"
+      label="Velg land"
+      onChange={fullmektigLandEndret}
+      className="avsendere__input"
+    />
     {utenlandskTrygdemyndighetLandkode && (
       <Fragment>
         <Nav.Typo.Element>Avsender</Nav.Typo.Element>
@@ -132,6 +147,11 @@ AvsenderUtenlanskTrygdemyndighet.defaultProps = {
 
 export const AvsenderAnnet = () => (
   <div className="avsender">
-    <Skjema.Input feltNavn="avsenderNavn" label="Oppgi avsenders navn" placeholder="Skriv inn..." />
+    <Skjema.Input
+      feltNavn="avsenderNavn"
+      label="Oppgi avsenders navn"
+      placeholder="Skriv inn..."
+      className="avsendere__input"
+    />
   </div>
 );

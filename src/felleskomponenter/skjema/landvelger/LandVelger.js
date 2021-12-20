@@ -16,11 +16,11 @@ import "./landvelger.css";
  * @param props
  */
 const LandVelger = (props) => {
-  const { multiLand } = props;
+  const { multiLand, className = "" } = props;
   const dataListID = lagDatalistID();
 
   return (
-    <div>
+    <div className={className}>
       {multiLand ? (
         <MultiLand {...props} landkoder={props.landkoder} dataListID={dataListID} />
       ) : (
@@ -45,6 +45,7 @@ LandVelger.propTypes = {
   bredde: PT.string,
   placeholder: PT.string,
   landkoder: PT.arrayOf(MPT.Kodeverk),
+  className: PT.string,
 };
 
 LandVelger.defaultProps = {
@@ -54,6 +55,7 @@ LandVelger.defaultProps = {
   bredde: "XL",
   placeholder: undefined,
   landkoder: MKV.KTObjects.landkoder,
+  className: "",
 };
 
 export default LandVelger;
