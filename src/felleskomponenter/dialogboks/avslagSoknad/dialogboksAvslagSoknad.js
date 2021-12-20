@@ -3,7 +3,6 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 
 import MKV from "../../../melosyskodeverk";
-import useEventTargetValueState from "../../../hooks/useEventTargetValueState";
 
 import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
@@ -16,13 +15,10 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksAvslagSoknad.css";
 import HtmlEditor from "../../htmlEditor";
-import { FeatureToggle, useFeatureToggle } from "../../../featuretoggle";
+import { FeatureToggle } from "../../../featuretoggle";
 
 export const DialogboksAvslagSoknad = (props) => {
-  const toggleStatusAvslagManglendeOpplysninger = useFeatureToggle("melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER");
-
-  const [brevFritekst, setBrevFritekst] =
-    toggleStatusAvslagManglendeOpplysninger === "enabled" ? useState("") : useEventTargetValueState("");
+  const [brevFritekst, setBrevFritekst] = useState("");
 
   const { ariaHideApp, avbryt, behandlingID, redigerbart, avslaaSoknadHandle } = props;
 
@@ -71,7 +67,7 @@ export const DialogboksAvslagSoknad = (props) => {
               ) : (
                 <Nav.Textarea
                   value={brevFritekst}
-                  onChange={setBrevFritekst}
+                  onChange={(event) => setBrevFritekst(event.target.value)}
                   label="Fritekst til vedtaksbrev"
                   maxLength={brevFritekstMaxLength}
                 />
