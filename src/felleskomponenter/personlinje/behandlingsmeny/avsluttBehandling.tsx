@@ -85,8 +85,8 @@ const AvsluttBehandling = ({
       heading={<div className="title">Avslutt behandling</div>}
     >
       {skalViseAvslaaSoknad() && <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />}
-      {skalViseHenleggSak() && <Handling tekst="Henlegg sak" onClick={henleggSak} />}
-      {skalViseAvsluttSak() && <Handling tekst="Avslutt sak som bortfalt" onClick={avsluttSakSomBortfalt} />}
+      {skalViseHenleggSak() && <Handling tekst="Behandlingen er henlagt/trukket" onClick={henleggSak} />}
+      {skalViseAvsluttSak() && <Handling tekst="Kan ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
     </Nav.EkspanderbartpanelBase>
   );
 };
