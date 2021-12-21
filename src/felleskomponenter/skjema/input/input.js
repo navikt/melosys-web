@@ -55,7 +55,7 @@ InnerInputComponent.defaultProps = {
   onChange: undefined,
 };
 
-function Input({ feltNavn, bredde = "fullbredde", className = "", normalize = undefined, ...rest }) {
+function Input({ feltNavn, bredde = "fullbredde", className = "", normalize = (value) => value, ...rest }) {
   return (
     <Field
       bredde={bredde}
@@ -78,7 +78,7 @@ Input.propTypes = {
 Input.defaultProps = {
   bredde: "fullbredde",
   className: "",
-  normalize: undefined,
+  normalize: (value) => value,
 };
 
 export { InnerInputComponent };

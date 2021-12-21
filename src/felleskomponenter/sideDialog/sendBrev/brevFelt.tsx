@@ -49,7 +49,7 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
         </Nav.Row>
       );
     default:
-      return <></>;
+      return null;
   }
 };
 

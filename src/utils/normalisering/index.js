@@ -1,4 +1,4 @@
-import * as Utils from "../../utils";
+import * as Utils from "..";
 
 export const normalizeInt = (value, previousValue) => {
   if (value === "") return null;
