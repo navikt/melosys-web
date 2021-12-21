@@ -15,6 +15,7 @@ describe("VurderingUtpekt", () => {
       vurderingBegrunnelser: ["Begrunnelse"],
       slettData: jest.fn(),
       bekreftOgFortsett: jest.fn(),
+      tilbake: jest.fn(),
       redigerbart: true,
       tilstand: {
         harAvklaring: true,

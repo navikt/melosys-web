@@ -18,6 +18,7 @@ class GodkjennUtpekingAnnetLand extends Steg {
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {
       lagreOgGodkjennUnntaksperioder: propsLight.tilgjengeligeHandlers.lagreOgGodkjennUnntaksperioder,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this.status = FANE_STATUS.OK;
   }

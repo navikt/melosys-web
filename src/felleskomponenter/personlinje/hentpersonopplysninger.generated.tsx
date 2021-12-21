@@ -18,9 +18,9 @@ export type HentPersonopplysningerQuery = (
       & { navn: (
         { __typename?: 'Navn' }
         & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
-      ), folkeregisterpersonstatus?: Types.Maybe<(
+      ), folkeregisterpersonstatuser: Array<(
         { __typename?: 'Folkeregisterpersonstatus' }
-        & Pick<Types.Folkeregisterpersonstatus, 'kode'>
+        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
       )>, statsborgerskap: Array<(
         { __typename?: 'Statsborgerskap' }
         & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
@@ -43,8 +43,9 @@ export const HentPersonopplysningerDocument = gql`
         etternavn
       }
       kjoenn
-      folkeregisterpersonstatus {
+      folkeregisterpersonstatuser {
         kode
+        erHistorisk
       }
       folkeregisteridentifikator
       statsborgerskap {

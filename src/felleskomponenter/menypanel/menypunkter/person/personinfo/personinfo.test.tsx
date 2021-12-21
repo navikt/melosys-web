@@ -7,7 +7,7 @@ import { act } from "react-dom/test-utils";
 import * as Nav from "../../../../../navFrontend";
 
 import { Person } from "../../../../../services/api";
-import { HentSivilstandDocument } from "./hentSivilstand.generated";
+import { HentSivilstandDocument } from "./sivilstand/hentSivilstand.generated";
 import Personinfo from "./personinfo";
 
 jest.mock("../../../../../featuretoggle", () => ({

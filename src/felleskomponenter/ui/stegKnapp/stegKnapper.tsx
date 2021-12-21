@@ -9,7 +9,6 @@ import "./stegKnapper.css";
 interface StegKnapperProps {
   bekreftKnappProps: ComponentProps<typeof Nav.Hovedknapp>;
   bekreftTekst?: string;
-  visTilbakeKnapp?: boolean;
   tilbakeKnappProps?: ComponentProps<typeof Nav.Flatknapp>;
   className?: string;
 }
@@ -17,19 +16,31 @@ interface StegKnapperProps {
 const StegKnapper = ({
   bekreftKnappProps,
   bekreftTekst = "Bekreft og fortsett",
-  visTilbakeKnapp = true,
   tilbakeKnappProps,
   className,
 }: StegKnapperProps) => {
   const cls = classNames("stegKnapper", className);
+  const bekreftKnappCls = classNames("stegKnapper__bekreft", bekreftKnappProps.className);
+  const tilbakeKnappCls = classNames("stegKnapper__tilbake", tilbakeKnappProps?.className);
+
   return (
     <div className={cls}>
-      <Nav.Hovedknapp mini className="stegKnapper__bekreft" {...bekreftKnappProps}>
+      <Nav.Hovedknapp
+        mini
+        {...bekreftKnappProps}
+        className={bekreftKnappCls}
+        htmlType={bekreftKnappProps.htmlType || "button"}
+      >
         {bekreftTekst}
       </Nav.Hovedknapp>
-      {visTilbakeKnapp && tilbakeKnappProps && (
-        <Nav.Flatknapp mini className="stegKnapper__tilbake" {...tilbakeKnappProps}>
-          <Ikoner.ArrowLeft />
+      {tilbakeKnappProps && (
+        <Nav.Flatknapp
+          mini
+          {...tilbakeKnappProps}
+          className={tilbakeKnappCls}
+          htmlType={tilbakeKnappProps.htmlType || "button"}
+        >
+          {tilbakeKnappProps.disabled ? <Ikoner.ArrowLeftWhite /> : <Ikoner.ArrowLeftBlue />}
           <span>Tilbake</span>
         </Nav.Flatknapp>
       )}

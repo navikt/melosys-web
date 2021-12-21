@@ -22,6 +22,7 @@ class AvslaaUtpeking extends Steg {
     };
     this.handlers = {
       avvisUtpeking: propsLight.tilgjengeligeHandlers.avvisUtpeking,
+      tilbake: propsLight.tilgjengeligeHandlers.tilbake,
     };
     this._status = FANE_STATUS.OK;
   }

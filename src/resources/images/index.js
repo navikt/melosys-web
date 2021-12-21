@@ -1,6 +1,7 @@
 import { ReactComponent as AccountCircle } from "./line-version-account-circle.svg";
 import { ReactComponent as Add } from "./add.svg";
-import { ReactComponent as ArrowLeft } from "./arrow-left.svg";
+import { ReactComponent as ArrowLeftBlue } from "./arrow-left-blue.svg";
+import { ReactComponent as ArrowLeftWhite } from "./arrow-left-white.svg";
 import { ReactComponent as AddOne } from "./line-version-add-1.svg";
 import { ReactComponent as Arbeidsgiver } from "./ikon-arbeidsgiver.svg";
 import { ReactComponent as Arbeidsforhold } from "./ikon-arbeidsforhold.svg";
@@ -17,6 +18,7 @@ import { ReactComponent as Child } from "./child.svg";
 import { ReactComponent as CoApplicant } from "./co-applicant.svg";
 import { ReactComponent as Copy } from "./copy.svg";
 import { ReactComponent as Eye } from "./eye.svg";
+import { ReactComponent as ExternalLink } from "./external-link.svg";
 import { ReactComponent as Familie } from "./familie.svg";
 import { ReactComponent as Forhandsvis } from "./forhandsvis.svg";
 import { ReactComponent as Ferdig } from "./ikon-steg-ferdig.svg";
@@ -62,7 +64,8 @@ import { Kjoenn } from "./helpercomponents";
 export {
   AccountCircle,
   Add,
-  ArrowLeft,
+  ArrowLeftBlue,
+  ArrowLeftWhite,
   AddOne,
   Arbeidsgiver,
   Arbeidsforhold,
@@ -79,6 +82,7 @@ export {
   CoApplicant,
   Copy,
   Eye,
+  ExternalLink,
   Familie,
   Forhandsvis,
   Feil,

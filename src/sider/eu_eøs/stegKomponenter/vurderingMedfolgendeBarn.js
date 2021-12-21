@@ -5,6 +5,7 @@ import PT from "prop-types";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV from "../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../constants";
@@ -125,6 +126,7 @@ const VurderingMedfolgendeBarn = ({
   oppdaterData,
   slettData,
   tilstand: { harAvklaring },
+  tilbake,
 }) => {
   const medfolgendeBarnMedFritekst = vurderingLovvalgBarnFakta.find((af) => af.begrunnelseFritekst);
   const defaultMedfolgendeBarnFritekst = medfolgendeBarnMedFritekst
@@ -237,15 +239,16 @@ const VurderingMedfolgendeBarn = ({
         />
       )}
       {medfolgendeBarn.length === 0 && <Nav.AlertStripeInfo>Ingen barn oppgitt i søknaden</Nav.AlertStripeInfo>}
-      <div className="fane__knapplinje">
-        <Nav.Knapp
-          disabled={!(redigerbart && harAvklaring)}
-          className="fane__navigasjonsknapp"
-          onClick={bekreftOgFortsett}
-        >
-          Bekreft og fortsett
-        </Nav.Knapp>
-      </div>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !(redigerbart && harAvklaring),
+          onClick: bekreftOgFortsett,
+        }}
+        tilbakeKnappProps={{
+          onClick: tilbake,
+          disabled: !redigerbart,
+        }}
+      />
     </Nav.Container>
   );
 };
@@ -258,6 +261,7 @@ VurderingMedfolgendeBarn.propTypes = {
   redigerbart: PT.bool.isRequired,
   medfolgendeBarn: PT.arrayOf(PT.object).isRequired,
   tilstand: PT.object,
+  tilbake: PT.func.isRequired,
 };
 
 VurderingMedfolgendeBarn.defaultProps = {

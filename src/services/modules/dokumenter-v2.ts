@@ -13,23 +13,41 @@ export type MottakerAdresse = {
   land: string;
 };
 
+export enum ValgType {
+  RADIO = "RADIO",
+  SELECT = "SELECT",
+}
+
+interface ValgAlternativ {
+  kode: string;
+  beskrivelse: string;
+  visFelt: boolean;
+}
+
+export interface Valg {
+  valgType: ValgType;
+  valgAlternativer: ValgAlternativ[];
+}
+
+export enum FeltType {
+  TEKST = "TEKST",
+  FRITEKST = "FRITEKST",
+  SJEKKBOKS = "SJEKKBOKS",
+}
+
+export interface Felt {
+  kode: string;
+  beskrivelse: string;
+  feltType: FeltType;
+  hjelpetekst: string | null;
+  paakrevd: boolean;
+  tegnBegrensning: number | null;
+  valg: null | Valg;
+}
+
 export type TilgjengeligeMaler = {
   type: KTObject;
-  felter:
-    | {
-        kode: string;
-        beskrivelse: string;
-        feltType: string;
-        hjelpetekst: string | null;
-        paakrevd: boolean;
-        valg:
-          | null
-          | {
-              kode: string;
-              beskrivelse: string;
-            }[];
-      }[]
-    | null;
+  felter: Felt[] | null;
   muligeMottakere: {
     uuid: string;
     type: string;
@@ -55,8 +73,11 @@ export type OpprettBrevReqDto = {
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
   manglerFritekst?: string;
+  fritekstTittel?: string;
+  fritekst?: string;
   kontaktpersonNavn?: string | null;
   kopiMottakere: KopiMottaker[];
+  kontaktopplysninger: boolean | null;
 };
 
 export type MuligMottaker = {

@@ -14,6 +14,11 @@ import MKV from "../../melosyskodeverk";
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
+export const BehandlingsgrunnlagStatusSelector = createSelector(
+  (state) => state.behandlingsgrunnlag.status,
+  (status) => status
+);
+
 export const BehandlingsgrunnlagSelector = createSelector(
   (state) => state.behandlingsgrunnlag.data,
   (behandlingsgrunnlag) => behandlingsgrunnlag

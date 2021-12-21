@@ -8,6 +8,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Mui from "../../../felleskomponenter/ui";
 import * as Hooks from "../../../hooks";
 import * as Utils from "../../../utils";
 
@@ -352,6 +353,7 @@ export const VurderingArtikkel16Vedtak = ({
   endreLovvalgsperiode,
   hentLovvalgsperioder,
   lagreLovvalgsperioder,
+  tilbake,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
@@ -504,9 +506,19 @@ export const VurderingArtikkel16Vedtak = ({
       <Nav.Row>
         <Nav.Column xs="7" className="fane__fot">
           {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} className="vedtakstype" />}
-          <Nav.Hovedknapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} onClick={vedKlikk}>
-            FATT VEDTAK
-          </Nav.Hovedknapp>
+          <Mui.StegKnapper
+            bekreftKnappProps={{
+              spinner: vedtakPending,
+              autoDisableVedSpinner: true,
+              disabled: !redigerbart,
+              onClick: vedKlikk,
+            }}
+            bekreftTekst="Fatt vedtak"
+            tilbakeKnappProps={{
+              onClick: tilbake,
+              disabled: !redigerbart,
+            }}
+          />
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -519,6 +531,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   behandlingstype: PT.string.isRequired,
   formIsValid: PT.bool.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
   art_12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,

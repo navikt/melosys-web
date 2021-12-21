@@ -12,6 +12,7 @@ describe("VurderingArtikkel16MottaSvar", () => {
   beforeEach(() => {
     props = {
       bekreftOgFortsett: jest.fn(),
+      tilbake: jest.fn(),
       gyldigeSoknadsland: [],
       soknadsperiode: {
         periode: {
@@ -44,8 +45,9 @@ describe("VurderingArtikkel16MottaSvar", () => {
   it("viser en knapp", () => {
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16MottaSvar {...props} />);
 
-    expect(vurderingArtikkel16Vedtak.find("Knapp")).toHaveLength(1);
-    vurderingArtikkel16Vedtak.find("Knapp").simulate("click");
+    const stegKnapper = vurderingArtikkel16Vedtak.find("StegKnapper");
+    expect(stegKnapper).toHaveLength(1);
+    stegKnapper.props().bekreftKnappProps.onClick();
     expect(props.bekreftOgFortsett).toHaveBeenCalledTimes(1);
   });
 });

@@ -6,6 +6,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
+import * as Mui from "../../../felleskomponenter/ui";
 
 import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
 import {
@@ -68,6 +69,7 @@ class VurderingSokkelSkip extends React.Component {
       oppdaterData,
       slettData,
       maritimtArbeid,
+      tilbake,
     } = this.props;
 
     const {
@@ -147,15 +149,16 @@ class VurderingSokkelSkip extends React.Component {
             label="To sokler / skip i flere land (art. 13)"
           />
         </Nav.Fieldset>
-        <div className="fane__knapplinje">
-          <Nav.Knapp
-            disabled={!(redigerbart && harAvklaring)}
-            className="fane__navigasjonsknapp"
-            onClick={bekreftOgFortsett}
-          >
-            Bekreft og fortsett
-          </Nav.Knapp>
-        </div>
+        <Mui.StegKnapper
+          bekreftKnappProps={{
+            disabled: !(redigerbart && harAvklaring),
+            onClick: bekreftOgFortsett,
+          }}
+          tilbakeKnappProps={{
+            onClick: tilbake,
+            disabled: !redigerbart,
+          }}
+        />
       </div>
     );
     /* eslint-enable max-len */
@@ -170,6 +173,7 @@ VurderingSokkelSkip.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
 };
 
 VurderingSokkelSkip.defaultProps = {

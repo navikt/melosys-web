@@ -109,6 +109,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   lovvalgsbestemmelseSomSkalLagres,
   oppdaterData,
   slettData,
+  tilbake,
   behandlingsgrunnlagFom,
   behandlingsgrunnlagTom,
   soknadsperiode,
@@ -367,9 +368,16 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
           )}
         </Nav.Column>
       </Nav.Row>
-      <Mui.Knapp spinner={vedtakPending} autoDisableVedSpinner disabled={!redigerbart} htmlType="submit" type="hoved">
-        FATT VEDTAK
-      </Mui.Knapp>
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          spinner: vedtakPending,
+          autoDisableVedSpinner: true,
+          disabled: !redigerbart,
+          htmlType: "submit",
+        }}
+        bekreftTekst="Fatt vedtak"
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
     </form>
   );
 };
@@ -392,6 +400,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   lovvalgsbestemmelseSomSkalLagres: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   behandlingsgrunnlagFom: PT.string.isRequired,
   behandlingsgrunnlagTom: PT.string,
   soknadsperiode: PT.shape({

@@ -11,6 +11,7 @@ import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
 import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
 
 import { RegistreringMenypanelForm } from "../../../../felleskomponenter/menypanelForm";
 import RegisterkontrollTreff from "../../../../felleskomponenter/registerkontrollTreff";
@@ -422,14 +423,16 @@ const Saksopplysninger = ({
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp
-                    spinner={registreringPending}
-                    autoDisableVedSpinner
-                    onClick={() => submitRegistrering()}
-                    disabled={!redigerbart}
-                  >
-                    Bekreft og send
-                  </Nav.Hovedknapp>
+                  <Mui.StegKnapper
+                    bekreftKnappProps={{
+                      spinner: registreringPending,
+                      autoDisableVedSpinner: true,
+                      onClick: () => submitRegistrering(),
+                      disabled: !redigerbart,
+                      htmlType: "submit",
+                    }}
+                    bekreftTekst="Bekreft og send"
+                  />
                 </Nav.Column>
               </Nav.Row>
             </div>

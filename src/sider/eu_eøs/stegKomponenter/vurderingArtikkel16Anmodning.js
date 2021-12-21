@@ -282,6 +282,7 @@ class VurderingArtikkel16Anmodning extends Component {
       formValues,
       form,
       fysiskeDokument,
+      tilbake,
     } = this.props;
 
     const {
@@ -528,16 +529,19 @@ class VurderingArtikkel16Anmodning extends Component {
             </Nav.Row>
           )}
           <Nav.Row className="artikkel16__ekstratopp">
-            <Nav.Column xs="6">
-              <Nav.Hovedknapp
-                spinner={anmodningPending}
-                autoDisableVedSpinner
-                disabled={!redigerbart}
-                onClick={validerOgLagreBehandling}
-              >
-                Send brevene
-              </Nav.Hovedknapp>
-            </Nav.Column>
+            <Mui.StegKnapper
+              bekreftTekst="Send brevene"
+              bekreftKnappProps={{
+                spinner: anmodningPending,
+                autoDisableVedSpinner: true,
+                disabled: !redigerbart,
+                onClick: validerOgLagreBehandling,
+              }}
+              tilbakeKnappProps={{
+                onClick: tilbake,
+                disabled: !redigerbart,
+              }}
+            />
           </Nav.Row>
         </div>
       </div>
@@ -558,6 +562,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  tilbake: PT.func.isRequired,
   tilstand: PT.shape({
     muligeBegrunnelseValg: PT.arrayOf(MPT.Kodeverk).isRequired,
     erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,

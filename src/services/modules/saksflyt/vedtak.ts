@@ -35,3 +35,9 @@ export const fatt = (behandlingID: number, data: FattVedtakReqDto) =>
 
 export const endre = (behandlingID: number, data: EndreVedtakReqDto) =>
   postAsJson(`${API_BASE_URL}${SAKSFLYT}/${VEDTAK}/${behandlingID}/endre`, data);
+
+export const kontroller = (behandlingID: number, oppdaterRegisteropplysninger: boolean, data: FattVedtakReqDto) =>
+  postAsJson(
+    `${API_BASE_URL}${SAKSFLYT}/${VEDTAK}/${behandlingID}/kontroller?oppdaterRegisteropplysninger=${oppdaterRegisteropplysninger}`,
+    data
+  );

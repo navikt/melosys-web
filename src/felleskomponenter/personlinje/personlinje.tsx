@@ -22,7 +22,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type PersonlinjeProps = PropsFromRedux & {
-  behandlingID: number;
+  visBehandlingsmeny?: boolean;
 };
 
 const Navn = ({ kjoenn, navn }: { kjoenn: KjoennType; navn: string }) => (
@@ -51,7 +51,7 @@ const Sivilstand = ({ sivilstand }: { sivilstand: string }) => (
 
 const Separator = () => <div className="personlinje__separator">/</div>;
 
-const Personlinje = ({ behandlingID }: PersonlinjeProps) => {
+const Personlinje = ({ behandlingID, visBehandlingsmeny = true }: PersonlinjeProps) => {
   const skipHentPersonopplysninger = behandlingID < 0;
   const personopplysninger = useHentPersonopplysninger(behandlingID, skipHentPersonopplysninger);
 
@@ -73,7 +73,7 @@ const Personlinje = ({ behandlingID }: PersonlinjeProps) => {
       ) : (
         <div className="personlinje__personinfo">Klarte ikke hente personopplysninger</div>
       )}
-      <Behandlingsmeny />
+      {visBehandlingsmeny && <Behandlingsmeny />}
     </div>
   );
 };

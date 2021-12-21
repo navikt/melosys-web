@@ -29,10 +29,14 @@ const useHentPersonopplysninger = (behandlingID: number, skip: boolean): Persono
     .map((sivilstand) => sivilstand.type)
     .pop();
 
+  const gyldigPersonstatus = person.folkeregisterpersonstatuser
+    .filter((folkeregisterpersonstatus) => !folkeregisterpersonstatus.erHistorisk)
+    .pop();
+
   return {
     navn: PersonUtils.tilSammensattNavn(person.navn.fornavn, person.navn.mellomnavn, person.navn.etternavn),
     kjoenn: person.kjoenn,
-    erDoed: person.folkeregisterpersonstatus?.kode === MKV.Koder.personstatuser.DOED,
+    erDoed: gyldigPersonstatus?.kode === MKV.Koder.personstatuser.DOED,
     fnr: person.folkeregisteridentifikator || "",
     statsborgerskap: gyldigeStatsborgerskap || [],
     sivilstand: gyldigSivilstand || "",

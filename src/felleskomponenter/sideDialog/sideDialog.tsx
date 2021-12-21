@@ -6,6 +6,7 @@ import { DokumentOversikt, FysiskDokument } from "Domene";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
+import { useFeatureToggle, Status } from "../../featuretoggle";
 import SideDialogSendBrev from "./sendBrev";
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogDokumenter from "./sideDialogDokumenter";
@@ -33,11 +34,19 @@ export const FaneViser = ({
   dokumentOversikt,
   dokumenter,
 }: FaneViserProps) => {
+  const sendBrevIEgetVinduToggle = useFeatureToggle("melosys.sendBrevIEgetVindu");
+
   switch (navn) {
     case "dokumenter":
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case "brevbestilling":
-      return <SideDialogSendBrev redigerbart={redigerbart} />;
+      return (
+        <SideDialogSendBrev
+          behandlingID={behandlingID}
+          redigerbart={redigerbart}
+          visApneINyttVindu={sendBrevIEgetVinduToggle === Status.enabled}
+        />
+      );
     case "sedbestilling":
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} dokumenter={dokumenter} />;
     case "besvarsed":

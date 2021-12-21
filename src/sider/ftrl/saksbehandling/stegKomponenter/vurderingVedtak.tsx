@@ -47,6 +47,7 @@ const mapStateToProps = (state: RootState) => ({
   formValuesRepresentant: getFormValues(KV.Form.REPRESENTANT)(state) as RepresentantformValues,
   initialValues: {
     fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    fritekstInnledning: behandlingsresultatSelectors.InnledningFritekstSelector(state),
   },
 });
 
@@ -303,28 +304,25 @@ const VurderingVedtak = ({
         </div>
       )}
 
-      {redigerbart && (
-        <>
-          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-            Fritekst til innledning
-            <Nav.Hjelpetekst
-              tittel={fritekstInnledningHjelpetekstTittel}
-              className="hjelpetekst"
-              type={Nav.PopoverOrientering.Hoyre}
-            >
-              <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel:</p>
-              <p>&quot;Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024.</p>
-              <p>Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel.&quot;</p>
-              <p>Friteksten kommer her.</p>
-            </Nav.Hjelpetekst>
-          </Nav.Typo.Element>
-          <Skjema.HTMLEditor
-            feltNavn="fritekstInnledning"
-            className="fritekst_editor"
-            placeholder="Skriv inn tilleggsinformasjon til innledning..."
-          />
-        </>
-      )}
+      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+        Fritekst til innledning
+        <Nav.Hjelpetekst
+          tittel={fritekstInnledningHjelpetekstTittel}
+          className="hjelpetekst"
+          type={Nav.PopoverOrientering.Hoyre}
+        >
+          <p>Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel:</p>
+          <p>&quot;Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024.</p>
+          <p>Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel.&quot;</p>
+          <p>Friteksten kommer her.</p>
+        </Nav.Hjelpetekst>
+      </Nav.Typo.Element>
+      <Skjema.HTMLEditor
+        feltNavn="fritekstInnledning"
+        className="fritekst_editor"
+        placeholder="Skriv inn tilleggsinformasjon til innledning..."
+        disabled={!redigerbart}
+      />
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse{" "}
