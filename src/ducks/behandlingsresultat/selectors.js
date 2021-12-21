@@ -40,7 +40,7 @@ export const BegrunnelseFritekstSelector = createSelector(
 );
 
 export const InnledningFritekstSelector = createSelector(
-  BehandlingsresultatSelector,
+  (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.innledningFritekst
 );
 
