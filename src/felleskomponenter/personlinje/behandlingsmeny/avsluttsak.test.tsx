@@ -7,12 +7,8 @@ import MKV from "../../../melosyskodeverk";
 import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
 
-const {
-  BESLUTNING_LOVVALG_NORGE,
-  ARBEID_I_UTLANDET,
-  TRYGDETID,
-  UTSENDT_ARBEIDSTAKER,
-} = MKV.Koder.behandlinger.behandlingstema;
+const { BESLUTNING_LOVVALG_NORGE, ARBEID_I_UTLANDET, TRYGDETID, UTSENDT_ARBEIDSTAKER } =
+  MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();

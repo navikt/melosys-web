@@ -145,9 +145,8 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
 };
 
 const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
-  const erAnmodningsperiodeSendtUtland = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(
-    reduxState
-  );
+  const erAnmodningsperiodeSendtUtland =
+    anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
   const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
     MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,

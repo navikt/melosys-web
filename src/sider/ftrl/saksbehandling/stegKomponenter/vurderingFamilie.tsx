@@ -47,12 +47,10 @@ const mapStateToProps = (state: RootState) => {
     avklarteMedfolgendeFamilie: oppsummertfaktaSelectors.MedfolgendeFamilieSelector(state),
     medfolgendeBarn,
     medfolgendeEktefelleSamboer,
-    medfolgende_barn_begrunnelser: folketrygdenkodeverkSelectors.Medfolgende_barn_begrunnelser_ftrlBegrunnelserSelector(
-      state
-    ),
-    medfolgende_ektefelle_samboer_begrunnelser: folketrygdenkodeverkSelectors.Medfolgende_ektefelle_samboer_begrunnelser_ftrlBegrunnelserSelector(
-      state
-    ),
+    medfolgende_barn_begrunnelser:
+      folketrygdenkodeverkSelectors.Medfolgende_barn_begrunnelser_ftrlBegrunnelserSelector(state),
+    medfolgende_ektefelle_samboer_begrunnelser:
+      folketrygdenkodeverkSelectors.Medfolgende_ektefelle_samboer_begrunnelser_ftrlBegrunnelserSelector(state),
     formIsValid: formSelectors.VurderFamilieFormValid(state),
     formValues: getFormValues(KV.Form.FAMILIE)(state),
     initialValues: initializeFamilieFormValues(medfolgendeBarn, medfolgendeEktefelleSamboer),

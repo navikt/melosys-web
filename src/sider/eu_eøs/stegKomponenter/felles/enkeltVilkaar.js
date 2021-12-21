@@ -8,16 +8,8 @@ import { BOOLSK } from "../../../../constants";
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 const EnkeltVilkaar = (props) => {
-  const {
-    redigerbart,
-    begrunnelser,
-    tittel,
-    labelOppfylt,
-    labelIkkeOppfylt,
-    vilkaar,
-    vilkaarKode,
-    oppdaterData,
-  } = props;
+  const { redigerbart, begrunnelser, tittel, labelOppfylt, labelIkkeOppfylt, vilkaar, vilkaarKode, oppdaterData } =
+    props;
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode, vilkaar));

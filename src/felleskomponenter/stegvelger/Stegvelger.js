@@ -156,13 +156,8 @@ class Stegvelger extends Component {
   };
 
   hentPerioderStegState = () => {
-    const {
-      lovvalgsbestemmelse,
-      tilleggbestemmelse,
-      unntakfrabestemmelse,
-      lovvalgsperiode,
-      lovvalgsland,
-    } = this.state.stegStores;
+    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse, lovvalgsperiode, lovvalgsland } =
+      this.state.stegStores;
 
     return {
       lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
@@ -674,9 +669,8 @@ const mapStateToProps = (state) => ({
   vurder_representant_valid: formSelectors.VurderRepresentantFormValid(state),
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
-  valgteVirksomheterIkkeNaeringsDrivende: avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(
-    state
-  ),
+  valgteVirksomheterIkkeNaeringsDrivende:
+    avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),

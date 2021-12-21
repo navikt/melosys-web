@@ -116,12 +116,8 @@ export const EnkeltArbeidsforholdNorge = ({
 }) => {
   const organisasjon = findOrganisasjon(element) || {};
 
-  const [
-    kontaktopplysninger,
-    setKontaktopplysninger,
-    slettKontaktOpplysninger,
-    lagreKontaktOpplysninger,
-  ] = useKontaktOpplysninger(saksnummer, organisasjon.orgnr || "");
+  const [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger] =
+    useKontaktOpplysninger(saksnummer, organisasjon.orgnr || "");
 
   const slett = () => {
     fields.remove(indeks);

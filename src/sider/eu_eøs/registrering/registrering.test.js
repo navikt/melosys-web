@@ -5,10 +5,8 @@ import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsum
 
 import MKV from "../../../melosyskodeverk";
 
-const {
-  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-} = MKV.Koder.behandlinger.behandlingstema;
+const { REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING, REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE } =
+  MKV.Koder.behandlinger.behandlingstema;
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING, UNDER_BEHANDLING } = MKV.Koder.behandlinger.behandlingsstatus;
 

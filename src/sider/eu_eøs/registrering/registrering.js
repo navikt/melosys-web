@@ -27,10 +27,8 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./registrering.css";
 
-const {
-  REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
-  REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
-} = MKV.Koder.behandlinger.behandlingstema;
+const { REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING, REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE } =
+  MKV.Koder.behandlinger.behandlingstema;
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
