@@ -13,7 +13,7 @@ const toJson = async (response) => {
     return response;
   }
   try {
-    return await response.json();
+    return await response.clone().json();
   } catch (res) {
     console.error(res); // eslint-disable-line no-console
     return {};
@@ -38,7 +38,7 @@ export const sendResultatTilDispatch =
   };
 
 export const handterFeil = (dispatch, action, callback) => async (error) => {
-  const data = error.response ? await error.response.json() : error.toString();
+  const data = error.response ? await error.response.clone().json() : error.toString();
 
   if (callback && typeof callback === "function") {
     callback(dispatch, data);
@@ -96,7 +96,7 @@ const cachedFetch = async (url, cacheDurationSec) => {
       // --------------------------------------------
       // Return cached content
       console.log("cache hit for ", url); // eslint-disable-line no-console
-      return response.json();
+      return response.clone().json();
     }
     // --------------------------------------------
     // We need to clean up this old key, before fetching fresh data
@@ -167,21 +167,21 @@ const toJsonExtended = async (fetchResponse) => {
     contentType,
   };
   if (!fetchResponse.ok) {
-    const err = await fetchResponse.json();
+    const err = await fetchResponse.clone().json();
     return {
       ...err,
       response,
     };
   }
   if (contentType && contentType.startsWith("text")) {
-    const txt = await fetchResponse.text();
+    const txt = await fetchResponse.clone().text();
     return {
       text: txt,
       response,
     };
   }
   if (contentType && contentType.startsWith("application/json")) {
-    const res = await fetchResponse.json();
+    const res = await fetchResponse.clone().json();
     return {
       ...res,
       response,

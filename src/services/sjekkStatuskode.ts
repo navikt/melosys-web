@@ -21,7 +21,7 @@ const sjekkStatuskode = async (response: Response) => {
   if (response.status >= 200 && response.status < 300 && response.ok && !response.redirected) {
     return response;
   }
-  throw new ApiError(response.statusText || response.type, response, await response.json(), response.status);
+  throw new ApiError(response.statusText || response.type, response, await response.clone().json(), response.status);
 };
 
 export default sjekkStatuskode;
