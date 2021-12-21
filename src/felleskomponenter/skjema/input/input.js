@@ -3,7 +3,7 @@ import PT from "prop-types";
 import { Field } from "redux-form";
 
 import * as Nav from "../../../navFrontend";
-import * as Utils from "../../../utils";
+import * as SkjemaUtils from "../utils";
 
 import "../skjema.css";
 
@@ -12,12 +12,11 @@ import "../skjema.css";
  */
 function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
   const {
-    meta: { error, touched, active },
+    meta,
+    meta: { touched, active },
   } = rest;
 
-  let feil = error && touched && !active ? rest.meta.error : undefined;
-  /* Vi forventer at meta.error er en string eller et objekt */
-  if (rest.meta.error && Utils._isObject(rest.meta.error)) feil = rest.meta.error.melding;
+  const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
   const innerBlur = (e) => {
     if (onBlur) onBlur(e);
@@ -36,7 +35,7 @@ function InnerInputComponent({ input, label, onBlur, onChange, ...rest }) {
     onChange: innerChange,
   };
 
-  return !rest.hidden && <Nav.Input label={label} feil={feil} {...inputProps} />;
+  return !rest.hidden && <Nav.Input label={label} feil={feil || undefined} {...inputProps} />;
 }
 
 InnerInputComponent.propTypes = {
