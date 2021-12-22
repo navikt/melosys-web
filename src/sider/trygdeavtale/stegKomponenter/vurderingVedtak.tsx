@@ -118,6 +118,18 @@ const VurderingVedtak = ({
     return false;
   };
 
+  const getKopiMottakere = () => {
+    const kopimottakere: Api.DokumenterV2.KopiMottaker[] = [];
+    muligeMottakere.kopiMottakere
+      .filter(filterKopiMottakere)
+      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
+      .forEach((mottaker) => kopimottakere.push(mottaker));
+    muligeMottakere.fasteMottakere
+      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
+      .forEach((mottaker) => kopimottakere.push(mottaker));
+    return kopimottakere;
+  };
+
   const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
     fritekstInnledning: formValues?.fritekstInnledning || null,
@@ -125,9 +137,7 @@ const VurderingVedtak = ({
     fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
     fritekstBarn: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    kopiMottakere: muligeMottakere.kopiMottakere
-      .filter(filterKopiMottakere)
-      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    kopiMottakere: getKopiMottakere(),
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
