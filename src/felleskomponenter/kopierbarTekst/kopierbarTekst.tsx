@@ -7,11 +7,12 @@ import * as Ikoner from "../../resources/images";
 import "./kopierbarTekst.css";
 
 interface KopierbarTekstProps {
+  className?: string;
   hovertekst?: string;
   children: string;
 }
 
-const KopierbarTekst = ({ hovertekst, children }: KopierbarTekstProps) => {
+const KopierbarTekst = ({ className, hovertekst, children }: KopierbarTekstProps) => {
   const [visHoverTekst, setVisHoverTekst] = useState(false);
   const [erKopiert, setErKopiert] = useState(false);
 
@@ -27,7 +28,7 @@ const KopierbarTekst = ({ hovertekst, children }: KopierbarTekstProps) => {
 
   return (
     <span
-      className="kopierbar-tekst"
+      className={classNames("kopierbar-tekst", className)}
       onMouseOver={() => setVisHoverTekst(true)}
       onFocus={() => setVisHoverTekst(true)}
       onMouseLeave={() => setVisHoverTekst(false)}

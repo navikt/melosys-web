@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -8,13 +8,15 @@ import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
+import * as Ikoner from "../../resources/images";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import { formatterDatoTilNorsk } from "../../utils/dato";
-import { erSedForesporsel } from "../../melosyskodeverk/utils";
 import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../utils/streng";
 
 import "./oppsummering.css";
+import KopierbarTekst from "../kopierbarTekst";
+import Behandlingsstatuskode from "../behandlingsstatuskode";
 
 interface OppsummeringProps {
   arbeidsland: KTObject[];
@@ -22,10 +24,6 @@ interface OppsummeringProps {
   fagsak: Api.Fagsak;
   oppsummering: Api.Behandlinger.behandling.Oppsummering;
   behandlingstema: string;
-  behandlingsfristLinje: ReactNode;
-  behandlingsstatusLinje: ReactNode;
-  behandlingstemaLinje: ReactNode;
-  behandlingstypeLinje: ReactNode;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
   mottattDato?: string;
@@ -39,10 +37,6 @@ const Oppsummering = (props: OppsummeringProps) => {
     fagsak,
     oppsummering,
     behandlingstema,
-    behandlingsfristLinje,
-    behandlingsstatusLinje,
-    behandlingstemaLinje,
-    behandlingstypeLinje,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
     mottattDato,
@@ -52,7 +46,7 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const { saksnummer, sakstype, registrertDato } = fagsak;
 
-  const { endretDato, endretAvNavn, svarFrist, behandlingstype } = oppsummering;
+  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist } = oppsummering;
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
@@ -62,108 +56,85 @@ const Oppsummering = (props: OppsummeringProps) => {
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
 
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
-  const erFtrl = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.FTRL;
+  const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
+
+  const renderTabell = () => {
+    const col1 = [[erSed ? "Periode fra SED" : "Søknadsperiode", lovvalgsperiode]];
+    if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
+    col1.push(["Land", erSed ? storeForbokstaverForLand(lovvalgsland.term) : landTilSetning(arbeidsland)]);
+
+    const col2 = [
+      ["Søknad mottatt", mottattDato || "-"],
+      ["Beh. opprettet", formatterDatoTilNorsk(registrertDato)],
+    ];
+
+    const rows = [];
+    for (let i = 0; i < 3; i += 1) {
+      rows.push(
+        <Nav.Row>
+          <Nav.Column xs="6">
+            {i < col1.length && <OppsummeringVerdiPar nokkel={col1[i][0]} verdi={col1[i][1]} />}
+          </Nav.Column>
+          <Nav.Column xs="6">
+            {i < 2 ? (
+              <OppsummeringVerdiPar nokkel={col2[i][0]} verdi={col2[i][1]} />
+            ) : (
+              <OppsummeringVerdiPar
+                nokkel="Sist oppdatert"
+                verdi={formatterDatoTilNorsk(endretDato)}
+                ekstrafelt={<span className="kursiv">{`  ${endretAvNavn}`}</span>}
+              />
+            )}
+          </Nav.Column>
+        </Nav.Row>
+      );
+    }
+    return rows;
+  };
 
   return (
     <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
       <dl>
         <Nav.Row>
-          <Nav.Column xs="6">
+          <span className="bold">Saksnummer: </span>
+          <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
+            {saksnummer}
+          </KopierbarTekst>
+        </Nav.Row>
+      </dl>
+
+      <Nav.Panel className="saksinfo">
+        <Nav.Row>
+          <Nav.Column xs="8">
             <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
           </Nav.Column>
-          <Nav.Column xs="6" className="hoyrestill">
-            {behandlingsfristLinje}
-          </Nav.Column>
-        </Nav.Row>
-      </dl>
-
-      <dl>
-        <Nav.Row>
-          <Nav.Column xs="12">{behandlingstypeLinje}</Nav.Column>
-        </Nav.Row>
-      </dl>
-
-      <dl>
-        <Nav.Row>
-          <Nav.Column xs="12">{behandlingstemaLinje}</Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <OppsummeringVerdiPar nokkel="Saksnummer" verdi={saksnummer} />
-          </Nav.Column>
-        </Nav.Row>
-      </dl>
-
-      <dl>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            {behandlingsstatusLinje}
-            <OppsummeringVerdiPar
-              className="svarfrist"
-              nokkel="Svarfrist"
-              verdi={formatterDatoTilNorsk(svarFrist) || "-"}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      </dl>
-
-      <dl>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <OppsummeringVerdiPar nokkel="Behandling opprettet" verdi={formatterDatoTilNorsk(registrertDato)} />
+          <Nav.Column xs="4">
+            <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => console.log("TODO: Vis endringsmodal")}>
+              <span>Endre</span>
+              <Ikoner.BlyantActive />
+            </Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="12">
-            <OppsummeringVerdiPar
-              nokkel="Sist oppdatert"
-              verdi={formatterDatoTilNorsk(endretDato)}
-              ekstrafelt={<span className="kursiv">{`  ${endretAvNavn}`}</span>}
-            />
+          <span className="bold">{KV.objektTilTerm(behandlingstype)}</span>
+        </Nav.Row>
+        <Nav.Row>
+          <span className="bold">{KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema)}</span>
+        </Nav.Row>
+        <Nav.Row>
+          <OppsummeringVerdiPar nokkel="Frist" verdi={formatterDatoTilNorsk(behandlingsfrist)} />
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="2">
+            <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
+          </Nav.Column>
+          <Nav.Column xs="5">
+            <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist) || "-"})`}</span>
           </Nav.Column>
         </Nav.Row>
-      </dl>
+      </Nav.Panel>
 
-      <dl>
-        {erSed ? (
-          !erSedForesporsel(behandlingstema) && (
-            <div>
-              <Nav.Row>
-                <Nav.Column xs="12">
-                  <OppsummeringVerdiPar nokkel="Periode fra SED" verdi={lovvalgsperiode} />
-                </Nav.Column>
-              </Nav.Row>
-              <Nav.Row>
-                <Nav.Column xs="12">
-                  <OppsummeringVerdiPar
-                    nokkel="Lovvalgsland fra SED"
-                    verdi={storeForbokstaverForLand(lovvalgsland.term)}
-                  />
-                </Nav.Column>
-              </Nav.Row>
-            </div>
-          )
-        ) : (
-          <div>
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <OppsummeringVerdiPar nokkel="Søknadsperiode" verdi={lovvalgsperiode} />
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <OppsummeringVerdiPar nokkel="Arbeidsland" verdi={landTilSetning(arbeidsland)} />
-              </Nav.Column>
-            </Nav.Row>
-          </div>
-        )}
-      </dl>
-
-      {erFtrl && (
-        <dl>
-          <OppsummeringVerdiPar nokkel="Søknad mottatt" verdi={mottattDato || "-"} />
-        </dl>
-      )}
+      {renderTabell()}
     </div>
   );
 };
@@ -174,10 +145,6 @@ Oppsummering.propTypes = {
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
   behandlingstema: PT.string.isRequired,
-  behandlingsfristLinje: PT.node.isRequired,
-  behandlingsstatusLinje: PT.node.isRequired,
-  behandlingstemaLinje: PT.node.isRequired,
-  behandlingstypeLinje: PT.node.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   mottattDato: PT.string,
