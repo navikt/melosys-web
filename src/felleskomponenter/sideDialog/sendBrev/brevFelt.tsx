@@ -36,6 +36,9 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
                   ""
                 )
               }
+              placeholder={`Skriv inn ${felt.beskrivelse.toLowerCase()}${
+                felt.tegnBegrensning ? ", maks " + felt.tegnBegrensning + " tegn" : ""
+              }`}
             />
           </Nav.Column>
         </Nav.Row>
