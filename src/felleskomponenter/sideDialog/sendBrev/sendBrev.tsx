@@ -230,7 +230,7 @@ const SendBrev = ({
       )}
 
       {formValues.valgtMal?.felter?.map((felt) => (
-        <>
+        <React.Fragment key={felt.kode}>
           {felt.valg && (
             <Nav.Row>
               <Nav.Column xs={felterWidth}>
@@ -242,7 +242,7 @@ const SendBrev = ({
           {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
             <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={felterWidth} />
           )}
-        </>
+        </React.Fragment>
       ))}
 
       {formIsValid && mottakerErValgt && muligeMottakere && (
