@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEventHandler } from "react";
+import React, { useState, useEffect, ChangeEventHandler, useCallback } from "react";
 
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -8,6 +8,7 @@ import * as Api from "../../../../../services/api";
 import * as Symboler from "../../symboler";
 
 import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
+import { normalizeDate } from "../../../../../utils/normalisering";
 
 import "./redigerer.css";
 
@@ -50,11 +51,22 @@ const Redigerer = ({
     }
   }, []);
 
+  const debounceNormalizeDate = useCallback(
+    Utils._debounce((fnr) => settVerdi("fnr", normalizeDate(fnr)), 800),
+    []
+  );
+
+  useEffect(() => {
+    if (verdier.fnr) {
+      debounceNormalizeDate(verdier.fnr);
+    }
+  }, [verdier?.fnr]);
+
   return (
     <Nav.Row className="medfolgende-familie__redigerer">
       <Nav.Column xs="5">
         <Skjema.Input
-          label="F.nr./d-nr."
+          label="F.nr./d-nr./fødselsdato"
           feltNavn={`${overordnetFeltNavn}.fnr`}
           disabled={!redigerbart}
           bredde="fullbredde"

@@ -29,7 +29,7 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 
 import "./vurderingVedtak.css";
 
-const { INNVILGELSE_UK } = MKV.Koder.brev.produserbaredokumenter;
+const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 
 const vurderingVedtakCls = bem("vurderingVedtak");
 
@@ -138,7 +138,7 @@ const VurderingVedtak = ({
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: INNVILGELSE_UK,
+      produserbartdokument: STORBRITANNIA,
       orgnr: null,
     });
     setMuligeMottakere(res);
@@ -185,7 +185,7 @@ const VurderingVedtak = ({
         sendesTilDokumenterV2: true,
         navn: muligMottaker.dokumentNavn,
         data: {
-          produserbardokument: INNVILGELSE_UK,
+          produserbardokument: STORBRITANNIA,
           mottaker: muligMottaker.rolle,
           kopiMottakere: [],
           innledningFritekst: formValues?.fritekstInnledning || null,

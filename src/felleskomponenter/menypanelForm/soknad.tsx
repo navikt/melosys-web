@@ -19,12 +19,14 @@ import { avklartefaktaSelectors } from "../../ducks/avklartefakta";
 import { vilkarSelectors } from "../../ducks/vilkar";
 import { formSelectors } from "../../ducks/form";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { fagsakSelectors } from "../../ducks/fagsaker";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingsgrunnlagtype: behandlingsgrunnlagSelectors.BehandlingsgrunnlagtypeSelector(state),
+  sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   formValues: getFormValues(KV.Form.SOKNAD)(state),
   initialValues: {
@@ -244,6 +246,7 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
         skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
         behandlingstema: props.behandlingstema,
         behandlingsgrunnlagtype: props.behandlingsgrunnlagtype,
+        sakstype: props.sakstype,
       },
     };
 

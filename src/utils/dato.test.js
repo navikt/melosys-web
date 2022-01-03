@@ -32,8 +32,11 @@ describe("dato.js:", () => {
         { test: "26041979", forvent: "26.04.1979" },
         { test: "22.07.09", forvent: "22.07.2009" },
         { test: "26-04-79", forvent: "26.04.1979" },
+        { test: "26/04/79", forvent: "26.04.1979" },
         { test: "01-01-79", forvent: "01.01.1979" },
         { test: "26-04-1979", forvent: "26.04.1979" },
+        { test: "26.04.1979", forvent: "26.04.1979" },
+        { test: "26/04/1979", forvent: "26.04.1979" },
       ];
 
       tillatteDatoer.forEach((datoTest) => {

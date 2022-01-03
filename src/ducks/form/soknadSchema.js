@@ -1,4 +1,4 @@
-import { array, boolean, lazy, mixed, number, object, string } from "yup";
+import { array, boolean, lazy, number, object, string } from "yup";
 
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
@@ -24,7 +24,11 @@ const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null 
 const erIkkeBeslutningLovvalgAnnetLand = (behandlingstema) =>
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND;
 
-const erTrygdeavtaleSak = (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV;
+const erTrygdeavtaleSak = (sakstype) => sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE;
+
+const erFtrlSak = (sakstype) => sakstype === MKV.Koder.sakstyper.FTRL;
+
+const erTrygdeavtaleEllerFtrl = (sakstype) => erTrygdeavtaleSak(sakstype) || erFtrlSak(sakstype);
 
 const erAltinnsøknad = (behandlingsgrunnlagtype) =>
   behandlingsgrunnlagtype === MKV.Koder.behandlingsgrunnlagtyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
@@ -108,18 +112,26 @@ const erEtterFomTest = {
     ) >= 0,
 };
 
-const medfolgendeBarn = object().shape({
-  fnr: lazy((value) =>
-    value
-      ? string().erFnrEllerDnr(
-          lagMelding(
-            KV.Menypunkter.Familieforhold.tittel,
-            KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
-            "F.nr./d-nr. er ugyldig"
-          )
+const medfolgendeFamilie = object().shape({
+  fnr: lazy((value, options) =>
+    string()
+      .erFnrEllerDnrEllerFødselsdato(
+        lagMelding(
+          KV.Menypunkter.Familieforhold.tittel,
+          erTrygdeavtaleEllerFtrl(options.context.sakstype)
+            ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
+            : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
+          "F.nr./d-nr./dato er ugyldig"
         )
-      : mixed()
+      )
+      .required(MAA_FYLLES_UT)
   ),
+  navn: string()
+    .when("fnr", {
+      is: (fnr) => Boolean(Utils.dato.vaskInputDato(fnr)),
+      then: string().required(MAA_FYLLES_UT),
+    })
+    .nullable(),
 });
 
 const foedestedOgLandSchema = object()
@@ -306,7 +318,8 @@ const soknad = object().when("$behandlingstema", {
     soknadsperiodeFom: soknadsperiodeFomSchema,
     soknadsperiodeTom: soknadsperiodeTomSchema,
     utenlandskIdent: array().of(utenlandskIdent),
-    medfolgendeBarn: array().of(medfolgendeBarn),
+    medfolgendeBarn: array().of(medfolgendeFamilie),
+    medfolgendeEktefelleSamboer: array().of(medfolgendeFamilie),
     foedestedOgLand: foedestedOgLandSchema,
     juridiskArbeidsgiverNorge: object().shape({
       antallAnsatte: number().transform(tomStringTilNull).nullable(),
