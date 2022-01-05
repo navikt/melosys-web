@@ -1,4 +1,4 @@
-# 5. Tydeliggjøre bruk av nav-frontend
+# 1. Tydeliggjøre bruk av nav-frontend
 
 Dato: 2018
 

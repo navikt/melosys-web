@@ -1,4 +1,4 @@
-# 3. Opprette egen nais-app
+# 2. Opprette egen nais-app
 
 Dato: Sommeren 2019
 

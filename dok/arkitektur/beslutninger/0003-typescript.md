@@ -1,4 +1,4 @@
-# 2. Typescript
+# 3. Typescript
 
 Dato: Sommeren 2020
 
