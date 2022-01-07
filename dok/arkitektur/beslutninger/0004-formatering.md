@@ -1,4 +1,4 @@
-# 4. formatering
+# 4. Formatering
 
 Date: 2021-01-01
 

@@ -50,23 +50,10 @@ npm start
 
 Se dokumentasjon [her](./src/graphql/README.md).
 
-## Dokumentering av arkitekturbeslutninger
+## Dokumentasjon
 
-Dato: 2021-12-22
+For å dokumentere arkitekturbeslutninger i prosjektet bruker vi Architecture Decision Records, som [beskrevet av Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).
+Denne dokumentasjonsmetoden ble tatt i bruk desember 2021, og det kan derfor hende at ikke alle tidligere bestemmelser er begrunnet.
 
-### Status
-
-Akseptert
-
-### Kontekst
-
-Vi har behov for å dokumentere arkitekturbeslutninger i dette prosjektet.
-
-### Beslutning
-
-Vi beslutter å bruke Architecture Decision Records, som [beskrevet av Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions). Vi forsøker å legge til beslutninger tilbake i tid.
-
-### Konsekvenser
-
-Se Michael Nygards' artikkel, linket lenger opp. For et lettvektig ADR verktøy, se Nat Pryces' [adr-tools](https://github.com/npryce/adr-tools).
+For et lettvektig ADR verktøy, se Nat Pryces' [adr-tools](https://github.com/npryce/adr-tools).
 
