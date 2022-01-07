@@ -86,6 +86,7 @@ export type MuligMottaker = {
   rolle: string;
   orgnr: string | null;
   aktørId: string | null;
+  institusjonskode: string | null;
 };
 
 export const konverterMuligMottakerTilKopiMottaker = (muligMottaker: MuligMottaker): KopiMottaker => ({
@@ -107,6 +108,7 @@ export const tomHentMuligeMottakereResDto = (): HentMuligeMottakereResDto => ({
     rolle: "",
     orgnr: null,
     aktørId: null,
+    institusjonskode: null,
   },
   kopiMottakere: [],
   fasteMottakere: [],

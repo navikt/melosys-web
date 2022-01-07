@@ -115,7 +115,7 @@ const VurderingVedtak = ({
     if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
       return formValues?.kopiTilArbeidsgiver;
     }
-    return false;
+    return true;
   };
 
   const getKopiMottakere = () => {
@@ -201,6 +201,7 @@ const VurderingVedtak = ({
           innledningFritekst: formValues?.fritekstInnledning || null,
           begrunnelseFritekst: formValues?.fritekstBegrunnelse || null,
           orgNr: muligMottaker?.orgnr || null,
+          institusjonskode: muligMottaker?.institusjonskode || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
         },
