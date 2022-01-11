@@ -8,6 +8,7 @@ type avsluttBehandlingProps = {
   avslaaSoknad: () => void;
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
+  ferdigbehandleSak: () => void;
   behandlingstema: string;
   behandlingstype: string;
   redigerbart: boolean;
@@ -19,6 +20,7 @@ const AvsluttBehandling = ({
   avsluttSakSomBortfalt,
   behandlingstema,
   behandlingstype,
+  ferdigbehandleSak,
   redigerbart,
 }: avsluttBehandlingProps) => {
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
@@ -76,7 +78,22 @@ const AvsluttBehandling = ({
     }
   };
 
-  if (!skalViseAvslaaSoknad() && !skalViseHenleggSak() && !skalViseAvsluttSak()) return null;
+  const skalViseFerdigbehandlet = () => {
+    switch (behandlingskategori) {
+      case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+      case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
+      case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
+      case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
+      case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
+        return redigerbart && behandlingstypeErNyVurdering;
+      case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
+      default:
+        return false;
+    }
+  };
+
+  if (!skalViseAvslaaSoknad() && !skalViseHenleggSak() && !skalViseAvsluttSak() && !skalViseFerdigbehandlet())
+    return null;
 
   return (
     <Nav.EkspanderbartpanelBase
@@ -85,8 +102,9 @@ const AvsluttBehandling = ({
       heading={<div className="title">Avslutt behandling</div>}
     >
       {skalViseAvslaaSoknad() && <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />}
+      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleSak} />}
+      {skalViseAvsluttSak() && <Handling tekst="Skal ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
       {skalViseHenleggSak() && <Handling tekst="Behandlingen er henlagt/trukket" onClick={henleggSak} />}
-      {skalViseAvsluttSak() && <Handling tekst="Kan ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
     </Nav.EkspanderbartpanelBase>
   );
 };

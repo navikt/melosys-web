@@ -11,6 +11,7 @@ const {
   BESLUTNING_LOVVALG_NORGE,
   ARBEID_I_UTLANDET,
   TRYGDETID,
+  YRKESAKTIV,
   UTSENDT_ARBEIDSTAKER,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
@@ -46,6 +47,18 @@ describe("AvsluttBehandling", () => {
 
     expect(handlinger).toHaveLength(1);
     expect(handlinger.props().tekst).toBe("Skal ikke behandles i Melosys");
+  });
+
+  it("viser ferdigBehandlet om tema er yrkesaktiv", () => {
+    props.behandlingstema = YRKESAKTIV;
+    props.redigerbart = true;
+    props.behandlingstype = NY_VURDERING;
+
+    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(4);
+    expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {

@@ -37,6 +37,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
+  visFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleSak()),
   apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
 });
@@ -50,6 +51,7 @@ export const Behandlingsmeny = ({
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
+  visFerdigbehandleSakDialogHandle,
   apneTidligereBehandlinger,
   visRevurderFagsakDialogHandle,
   redigerbart,
@@ -123,6 +125,7 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
+            ferdigbehandleSak={visFerdigbehandleSakDialogHandle}
           />
           <div className="behandlingsmeny__meny__handlinger">
             <Handling ikon={<Ikon.Copy />} tekst="Vis saksoversikt" onClick={apneTidligereBehandlinger} />
