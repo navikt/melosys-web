@@ -94,6 +94,8 @@ const VurderingInngang = ({
 }: PropsFromRedux & Props) => {
   const [initialFomTom, setInitialFomTom] = useState<{ fom?: string; tom?: string }>({});
   const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const skalHenteRegisteropplysninger =
+    formValues?.fom !== initialFomTom?.fom || formValues?.tom !== initialFomTom?.tom;
   const hjelpetekst = "Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet.";
   const Hjelpetekst = () => (
     <Nav.Hjelpetekst className="hjelpetekst" tittel={hjelpetekst} type={Nav.PopoverOrientering.Hoyre}>
@@ -131,8 +133,8 @@ const VurderingInngang = ({
     }
   }, [formValues?.fom, formValues?.tom, formValues?.land, formIsValid]);
 
-  const fortsettHandle = () => {
-    if (formValues.fom !== initialFomTom?.fom || formValues.tom !== initialFomTom?.tom) {
+  const bekreftKnappHandle = () => {
+    if (skalHenteRegisteropplysninger) {
       setInitialFomTom({ fom: formValues.fom, tom: formValues.tom });
       setVisOppfrisk(true);
     } else {
@@ -170,9 +172,10 @@ const VurderingInngang = ({
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: fortsettHandle,
+          onClick: bekreftKnappHandle,
           disabled: steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart,
         }}
+        bekreftTekst={skalHenteRegisteropplysninger ? "Innhent registeropplysninger" : undefined}
       />
 
       {visOppfrisk && (
@@ -185,7 +188,6 @@ const VurderingInngang = ({
           lukk={() => {
             setVisOppfrisk(false);
             visMenypanel();
-            fortsett();
           }}
           tilForsiden={() => {
             setVisOppfrisk(false);
