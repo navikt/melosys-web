@@ -33,8 +33,8 @@ describe("AvsluttBehandling", () => {
 
     expect(handlinger).toHaveLength(3);
     expect(handlinger.at(0).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
-    expect(handlinger.at(1).props().tekst).toBe("Henlegg sak");
-    expect(handlinger.at(2).props().tekst).toBe("Avslutt sak som bortfalt");
+    expect(handlinger.at(1).props().tekst).toBe("Skal ikke behandles i Melosys");
+    expect(handlinger.at(2).props().tekst).toBe("Behandlingen er henlagt/trukket");
   });
 
   it("viser bare avsluttSak om tema er trygdetid", () => {
@@ -45,7 +45,7 @@ describe("AvsluttBehandling", () => {
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(1);
-    expect(handlinger.props().tekst).toBe("Avslutt sak som bortfalt");
+    expect(handlinger.props().tekst).toBe("Skal ikke behandles i Melosys");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {

@@ -14,7 +14,7 @@ export const DialogboksAvsluttSakSomBortfalt = ({ avsluttSakSomBortfalt, avbryt,
   <Nav.Modal
     className="dialogboksAvsluttSakSomBortfalt"
     isOpen
-    contentLabel="Avslå sak som bortfalt"
+    contentLabel="Skal ikke behandles i Melosys"
     onRequestClose={avbryt}
     closeButton={false}
     shouldCloseOnOverlayClick
@@ -23,7 +23,7 @@ export const DialogboksAvsluttSakSomBortfalt = ({ avsluttSakSomBortfalt, avbryt,
     <Nav.Typo.Systemtittel className="overskrift">Avslutt sak som bortfalt</Nav.Typo.Systemtittel>
     <Knapperad
       bekreft={avsluttSakSomBortfalt}
-      bekreftTekst="AVSLUTT SAK"
+      bekreftTekst="BEKREFT"
       avbryt={avbryt}
       avbrytTekst="AVBRYT"
       redigerbart={redigerbart}
