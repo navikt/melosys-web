@@ -12,6 +12,7 @@ import {
   DialogboksOppfriskSak,
   DialogboksHenleggSak,
   DialogboksAvsluttSakSomBortfalt,
+  DialogboksFerdigbehandleSak,
   DialogboksAvslagSoknad,
   DialogboksRevurderFagsak,
   DialogboksValidering,
@@ -34,6 +35,9 @@ const Modals = ({
   visAvsluttSakSomBortfaltDialog,
   skjulAvsluttSakSomBortfaltDialogHandle,
   avsluttSakSomBortfalt,
+  visFerdigbehandleSakDialog,
+  skjulFerdigbehandleSakDialogHandle,
+  ferdigbehandleSak,
   visRevurderFagsak,
   skjulRevurderFagsakDialogHandle,
   revurderFagsak,
@@ -65,6 +69,9 @@ const Modals = ({
         avbryt={skjulAvsluttSakSomBortfaltDialogHandle}
         avsluttSakSomBortfalt={avsluttSakSomBortfalt}
       />
+    )}
+    {visFerdigbehandleSakDialog && (
+      <DialogboksFerdigbehandleSak avbryt={skjulFerdigbehandleSakDialogHandle} ferdigbehandleSak={ferdigbehandleSak} />
     )}
     {visRevurderFagsak && (
       <DialogboksRevurderFagsak
@@ -98,6 +105,9 @@ Modals.propTypes = {
   visAvsluttSakSomBortfaltDialog: PT.bool.isRequired,
   skjulAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   avsluttSakSomBortfalt: PT.func.isRequired,
+  visFerdigbehandleSakDialog: PT.bool.isRequired,
+  skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
+  ferdigbehandleSak: PT.func.isRequired,
   visRevurderFagsak: PT.bool.isRequired,
   skjulRevurderFagsakDialogHandle: PT.func.isRequired,
   revurderFagsak: PT.func.isRequired,
@@ -130,6 +140,7 @@ const mapStateToProps = (state) => ({
   visHenleggDialog: modalerSelectors.ErHenleggSynligSelector(state),
   visAvslagSoknadDialog: modalerSelectors.ErAvslagSoknadSynligSelector(state),
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
+  visFerdigbehandleSakDialog: modalerSelectors.ErFerdigbehandleSakSynligSelector(state),
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
   visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
   valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
@@ -143,6 +154,7 @@ const mapDispatchToProps = (dispatch) => ({
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
+  skjulFerdigbehandleSakDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleSak()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
   skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
 });
