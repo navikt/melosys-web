@@ -243,7 +243,7 @@ const soknad = object().when("$behandlingstema", {
         )
     ),
     representantIUtlandet: object()
-      .when("$behandlingstema", {
+      .when("$sakstype", {
         is: erTrygdeavtaleSak,
         then: object()
           .shape({
