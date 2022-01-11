@@ -4,7 +4,7 @@ import * as Types from "./types";
 const modaler = {
   avslagSoknad: "avslagSoknad",
   avsluttSakSomBortfalt: "avsluttSakSomBortfalt",
-  ferdigBehandleSak: "ferdigbehandleSak",
+  ferdigbehandleNyVurdering: "ferdigbehandleNyVurdering",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
   validering: "validering",

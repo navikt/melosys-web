@@ -150,7 +150,7 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const ferdigbehandleSak = async () => {
+  const ferdigbehandleNyVurdering = async () => {
     await Api.Behandlinger.behandling.ferdigbehandleNyVurdering(behandlingID);
     skjulFerdigbehandleSakDialogHandle();
     tilForsiden();
@@ -174,7 +174,7 @@ const FellesHandlersProviderUnconnected = ({
     henleggHandle,
     avslaaSoknadHandle,
     avsluttSakSomBortfalt,
-    ferdigbehandleSak,
+    ferdigbehandleNyVurdering,
     lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
     oppfriskOgLastInnSaksopplysninger,
     venterPaRevurderFagsak,

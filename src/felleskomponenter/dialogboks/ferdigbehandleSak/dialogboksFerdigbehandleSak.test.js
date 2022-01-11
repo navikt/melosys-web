@@ -12,7 +12,7 @@ describe("DialogboksFerdigbehandleSak", () => {
     props = {
       avbryt: jest.fn(),
       redigerbart: true,
-      ferdigbehandleSak: jest.fn(),
+      ferdigbehandleNyVurdering: jest.fn(),
       ariaHideApp: false,
       behandlingID: 1,
     };
@@ -32,6 +32,6 @@ describe("DialogboksFerdigbehandleSak", () => {
     const { avbryt, bekreft } = knapperad.props();
 
     expect(avbryt).toBe(props.avbryt);
-    expect(bekreft).toBe(props.ferdigbehandleSak);
+    expect(bekreft).toBe(props.ferdigbehandleNyVurdering);
   });
 });

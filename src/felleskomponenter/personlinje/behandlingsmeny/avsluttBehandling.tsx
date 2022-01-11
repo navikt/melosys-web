@@ -8,7 +8,7 @@ type avsluttBehandlingProps = {
   avslaaSoknad: () => void;
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
-  ferdigbehandleSak: () => void;
+  ferdigbehandleNyVurdering: () => void;
   behandlingstema: string;
   behandlingstype: string;
   redigerbart: boolean;
@@ -20,7 +20,7 @@ const AvsluttBehandling = ({
   avsluttSakSomBortfalt,
   behandlingstema,
   behandlingstype,
-  ferdigbehandleSak,
+  ferdigbehandleNyVurdering,
   redigerbart,
 }: avsluttBehandlingProps) => {
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
@@ -101,7 +101,7 @@ const AvsluttBehandling = ({
       heading={<div className="title">Avslutt behandling</div>}
     >
       {skalViseAvslaaSoknad() && <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />}
-      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleSak} />}
+      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleNyVurdering} />}
       {skalViseAvsluttSak() && <Handling tekst="Skal ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
       {skalViseHenleggSak() && <Handling tekst="Behandlingen er henlagt/trukket" onClick={henleggSak} />}
     </Nav.EkspanderbartpanelBase>

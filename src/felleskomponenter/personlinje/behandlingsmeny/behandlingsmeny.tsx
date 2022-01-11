@@ -125,7 +125,7 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
-            ferdigbehandleSak={visFerdigbehandleSakDialogHandle}
+            ferdigbehandleNyVurdering={visFerdigbehandleSakDialogHandle}
           />
           <div className="behandlingsmeny__meny__handlinger">
             <Handling ikon={<Ikon.Copy />} tekst="Vis saksoversikt" onClick={apneTidligereBehandlinger} />

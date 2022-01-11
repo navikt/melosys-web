@@ -37,7 +37,7 @@ const Modals = ({
   avsluttSakSomBortfalt,
   visFerdigbehandleSakDialog,
   skjulFerdigbehandleSakDialogHandle,
-  ferdigbehandleSak,
+  ferdigbehandleNyVurdering,
   visRevurderFagsak,
   skjulRevurderFagsakDialogHandle,
   revurderFagsak,
@@ -71,7 +71,10 @@ const Modals = ({
       />
     )}
     {visFerdigbehandleSakDialog && (
-      <DialogboksFerdigbehandleSak avbryt={skjulFerdigbehandleSakDialogHandle} ferdigbehandleSak={ferdigbehandleSak} />
+      <DialogboksFerdigbehandleSak
+        avbryt={skjulFerdigbehandleSakDialogHandle}
+        ferdigbehandleNyVurdering={ferdigbehandleNyVurdering}
+      />
     )}
     {visRevurderFagsak && (
       <DialogboksRevurderFagsak
@@ -107,7 +110,7 @@ Modals.propTypes = {
   avsluttSakSomBortfalt: PT.func.isRequired,
   visFerdigbehandleSakDialog: PT.bool.isRequired,
   skjulFerdigbehandleSakDialogHandle: PT.func.isRequired,
-  ferdigbehandleSak: PT.func.isRequired,
+  ferdigbehandleNyVurdering: PT.func.isRequired,
   visRevurderFagsak: PT.bool.isRequired,
   skjulRevurderFagsakDialogHandle: PT.func.isRequired,
   revurderFagsak: PT.func.isRequired,

@@ -10,7 +10,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksFerdigbehandleSak.css";
 
-export const DialogboksFerdigbehandleSak = ({ ferdigbehandleSak, avbryt, redigerbart, ariaHideApp }) => (
+export const DialogboksFerdigbehandleSak = ({ ferdigbehandleNyVurdering, avbryt, redigerbart, ariaHideApp }) => (
   <Nav.Modal
     className="dialogboksFerdigbehandleSak"
     isOpen
@@ -22,7 +22,7 @@ export const DialogboksFerdigbehandleSak = ({ ferdigbehandleSak, avbryt, rediger
   >
     <Nav.Typo.Systemtittel className="overskrift">Ferdigbehandlet uten nytt vedtak</Nav.Typo.Systemtittel>
     <Knapperad
-      bekreft={ferdigbehandleSak}
+      bekreft={ferdigbehandleNyVurdering}
       bekreftTekst="BEKREFT"
       avbryt={avbryt}
       avbrytTekst="AVBRYT"
@@ -32,7 +32,7 @@ export const DialogboksFerdigbehandleSak = ({ ferdigbehandleSak, avbryt, rediger
 );
 
 DialogboksFerdigbehandleSak.propTypes = {
-  ferdigbehandleSak: PT.func.isRequired,
+  ferdigbehandleNyVurdering: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
   redigerbart: PT.bool.isRequired,
