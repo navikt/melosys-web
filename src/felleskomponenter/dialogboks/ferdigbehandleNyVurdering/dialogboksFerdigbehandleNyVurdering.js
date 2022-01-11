@@ -8,11 +8,16 @@ import Knapperad from "../../knapperad";
 
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
-import "./dialogboksFerdigbehandleSak.css";
+import "./dialogboksFerdigbehandleNyVurdering.css";
 
-export const DialogboksFerdigbehandleSak = ({ ferdigbehandleNyVurdering, avbryt, redigerbart, ariaHideApp }) => (
+export const DialogboksFerdigbehandleNyVurdering = ({
+  ferdigbehandleNyVurdering,
+  avbryt,
+  redigerbart,
+  ariaHideApp,
+}) => (
   <Nav.Modal
-    className="dialogboksFerdigbehandleSak"
+    className="dialogboksFerdigbehandleNyVurdering"
     isOpen
     contentLabel="Ferdigbehandlet"
     onRequestClose={avbryt}
@@ -31,19 +36,19 @@ export const DialogboksFerdigbehandleSak = ({ ferdigbehandleNyVurdering, avbryt,
   </Nav.Modal>
 );
 
-DialogboksFerdigbehandleSak.propTypes = {
+DialogboksFerdigbehandleNyVurdering.propTypes = {
   ferdigbehandleNyVurdering: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   ariaHideApp: PT.bool,
   redigerbart: PT.bool.isRequired,
 };
 
-DialogboksFerdigbehandleSak.defaultProps = {
+DialogboksFerdigbehandleNyVurdering.defaultProps = {
   ariaHideApp: true,
 };
 
 const mapStateToProps = (state) => ({
-  redigerbart: redigerbartSelectors.ModalFerdigbehandleSakRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.ModalFerdigbehandleNyVurderingRedigerbartSelector(state),
 });
 
-export default connect(mapStateToProps)(DialogboksFerdigbehandleSak);
+export default connect(mapStateToProps)(DialogboksFerdigbehandleNyVurdering);

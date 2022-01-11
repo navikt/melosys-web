@@ -14,7 +14,7 @@ export const AvsluttSakSomBortfaltSelector = createSelector(
   (modaler) => modaler.avsluttSakSomBortfalt
 );
 
-export const FerdigbehandleSakSelector = createSelector(
+export const FerdigbehandleNyVurderingSelector = createSelector(
   ModalerSelector,
   (modaler) => modaler.ferdigbehandleNyVurdering
 );
@@ -24,8 +24,8 @@ export const ErAvsluttSakSomBortfaltSynligSelector = createSelector(
   (avsluttSakSomBortfalt) => avsluttSakSomBortfalt.synlig
 );
 
-export const ErFerdigbehandleSakSynligSelector = createSelector(
-  FerdigbehandleSakSelector,
+export const ErFerdigbehandleNyVurderingSynligSelector = createSelector(
+  FerdigbehandleNyVurderingSelector,
   (ferdigbehandleNyVurdering) => ferdigbehandleNyVurdering.synlig
 );
 

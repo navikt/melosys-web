@@ -132,7 +132,7 @@ describe("Redigerbartselectors", () => {
     );
   });
 
-  describe("ModalFerdigbehandleSakRedigerbartSelector", () => {
+  describe("ModalFerdigbehandleNyVurderingRedigerbartSelector", () => {
     each([
       [true, MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, true],
       [false, MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, false],
@@ -142,7 +142,7 @@ describe("Redigerbartselectors", () => {
       "returnerer %p dersom behandlingsstatus er %p og redigerbart er %p",
       (forventetResultat, behandlingsstatus, redigerbart) => {
         const state = lagState(redigerbart, behandlingsstatus);
-        expect(selectors.ModalFerdigbehandleSakRedigerbartSelector(state)).toBe(forventetResultat);
+        expect(selectors.ModalFerdigbehandleNyVurderingRedigerbartSelector(state)).toBe(forventetResultat);
       }
     );
   });

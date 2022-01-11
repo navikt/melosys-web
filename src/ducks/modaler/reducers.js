@@ -32,7 +32,7 @@ const initialState = {
     [modaler.revurderFagsak]: {
       synlig: false,
     },
-    [modaler.ferdigBehandleSak]: {
+    [modaler.ferdigbehandleNyVurdering]: {
       synlig: false,
     },
   },
@@ -60,7 +60,7 @@ export default function reducer(state = initialState, action) {
       return lagNyState(state, action, modaler.avsluttSakSomBortfalt);
     }
     case Types.OPPDATER_FERDIGBEHANDLE_SAK: {
-      return lagNyState(state, action, modaler.ferdigBehandleSak);
+      return lagNyState(state, action, modaler.ferdigbehandleNyVurdering);
     }
     case Types.OPPDATER_HENLEGG: {
       return lagNyState(state, action, modaler.henlegg);
