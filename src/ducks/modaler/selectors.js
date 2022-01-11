@@ -14,9 +14,16 @@ export const AvsluttSakSomBortfaltSelector = createSelector(
   (modaler) => modaler.avsluttSakSomBortfalt
 );
 
+export const FerdigbehandleSakSelector = createSelector(ModalerSelector, (modaler) => modaler.ferdigbehandleSak);
+
 export const ErAvsluttSakSomBortfaltSynligSelector = createSelector(
   AvsluttSakSomBortfaltSelector,
   (avsluttSakSomBortfalt) => avsluttSakSomBortfalt.synlig
+);
+
+export const ErFerdigbehandleSakSynligSelector = createSelector(
+  FerdigbehandleSakSelector,
+  (ferdigbehandleSak) => ferdigbehandleSak.synlig
 );
 
 export const HenleggSelector = createSelector(ModalerSelector, (modaler) => modaler.henlegg);

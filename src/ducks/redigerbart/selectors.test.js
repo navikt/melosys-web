@@ -1,6 +1,7 @@
 import * as selectors from "./selectors";
 
 import MKV from "../../melosyskodeverk";
+import { ModalFerdigbehandleSakRedigerbartSelector } from "./selectors";
 
 describe("Redigerbartselectors", () => {
   const lagState = (redigerbart, behandlingsstatusKode, behandlingstypeKode) => ({
@@ -128,6 +129,21 @@ describe("Redigerbartselectors", () => {
       (forventetResultat, behandlingsstatus, redigerbart) => {
         const state = lagState(redigerbart, behandlingsstatus);
         expect(selectors.ModalAvsluttSomBortfaltRedigerbartSelector(state)).toBe(forventetResultat);
+      }
+    );
+  });
+
+  describe("ModalFerdigbehandleSakRedigerbartSelector", () => {
+    each([
+      [true, MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, true],
+      [false, MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, false],
+      [true, MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT, true],
+      [true, MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT, false],
+    ]).it(
+      "returnerer %p dersom behandlingsstatus er %p og redigerbart er %p",
+      (forventetResultat, behandlingsstatus, redigerbart) => {
+        const state = lagState(redigerbart, behandlingsstatus);
+        expect(selectors.ModalFerdigbehandleSakRedigerbartSelector(state)).toBe(forventetResultat);
       }
     );
   });

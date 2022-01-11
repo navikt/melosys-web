@@ -54,3 +54,7 @@ export const ModalAvsluttSomBortfaltRedigerbartSelector = createSelector(
   BehandlingsmenyRedigerbartSelector,
   (redigerbart) => redigerbart
 );
+export const ModalFerdigbehandleSakRedigerbartSelector = createSelector(
+  BehandlingsmenyRedigerbartSelector,
+  (redigerbart) => redigerbart
+);
