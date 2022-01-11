@@ -1,7 +1,6 @@
 import * as selectors from "./selectors";
 
 import MKV from "../../melosyskodeverk";
-import { ModalFerdigbehandleSakRedigerbartSelector } from "./selectors";
 
 describe("Redigerbartselectors", () => {
   const lagState = (redigerbart, behandlingsstatusKode, behandlingstypeKode) => ({
