@@ -115,7 +115,16 @@ const VurderingVedtak = ({
     if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
       return formValues?.kopiTilArbeidsgiver;
     }
-    return false;
+    return true;
+  };
+
+  const getKopiMottakere = () => {
+    return [
+      ...muligeMottakere.kopiMottakere
+        .filter(filterKopiMottakere)
+        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+      ...muligeMottakere.fasteMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    ];
   };
 
   const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
@@ -125,9 +134,7 @@ const VurderingVedtak = ({
     fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
     fritekstBarn: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    kopiMottakere: muligeMottakere.kopiMottakere
-      .filter(filterKopiMottakere)
-      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    kopiMottakere: getKopiMottakere(),
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
@@ -191,6 +198,7 @@ const VurderingVedtak = ({
           innledningFritekst: formValues?.fritekstInnledning || null,
           begrunnelseFritekst: formValues?.fritekstBegrunnelse || null,
           orgNr: muligMottaker?.orgnr || null,
+          institusjonId: muligMottaker?.institusjonId || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
         },
