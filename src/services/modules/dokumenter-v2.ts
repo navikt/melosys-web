@@ -64,6 +64,7 @@ export type KopiMottaker = {
   rolle: string;
   orgnr: string | null;
   aktørId: string;
+  institusjonskode: string | null;
 };
 
 export type OpprettBrevReqDto = {
@@ -93,6 +94,7 @@ export const konverterMuligMottakerTilKopiMottaker = (muligMottaker: MuligMottak
   rolle: muligMottaker.rolle,
   orgnr: muligMottaker.orgnr,
   aktørId: muligMottaker.aktørId || "",
+  institusjonskode: muligMottaker.institusjonskode,
 });
 
 export type HentMuligeMottakereResDto = {
