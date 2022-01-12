@@ -64,7 +64,7 @@ export type KopiMottaker = {
   rolle: string;
   orgnr: string | null;
   aktørId: string;
-  institusjonskode: string | null;
+  institusjonId: string | null;
 };
 
 export type OpprettBrevReqDto = {
@@ -87,14 +87,14 @@ export type MuligMottaker = {
   rolle: string;
   orgnr: string | null;
   aktørId: string | null;
-  institusjonskode: string | null;
+  institusjonId: string | null;
 };
 
 export const konverterMuligMottakerTilKopiMottaker = (muligMottaker: MuligMottaker): KopiMottaker => ({
   rolle: muligMottaker.rolle,
   orgnr: muligMottaker.orgnr,
   aktørId: muligMottaker.aktørId || "",
-  institusjonskode: muligMottaker.institusjonskode,
+  institusjonId: muligMottaker.institusjonId,
 });
 
 export type HentMuligeMottakereResDto = {
@@ -110,7 +110,7 @@ export const tomHentMuligeMottakereResDto = (): HentMuligeMottakereResDto => ({
     rolle: "",
     orgnr: null,
     aktørId: null,
-    institusjonskode: null,
+    institusjonId: null,
   },
   kopiMottakere: [],
   fasteMottakere: [],

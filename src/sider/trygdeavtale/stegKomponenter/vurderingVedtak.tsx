@@ -201,7 +201,7 @@ const VurderingVedtak = ({
           innledningFritekst: formValues?.fritekstInnledning || null,
           begrunnelseFritekst: formValues?.fritekstBegrunnelse || null,
           orgNr: muligMottaker?.orgnr || null,
-          institusjonskode: muligMottaker?.institusjonskode || null,
+          institusjonId: muligMottaker?.institusjonId || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
         },
