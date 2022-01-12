@@ -119,15 +119,12 @@ const VurderingVedtak = ({
   };
 
   const getKopiMottakere = () => {
-    const kopimottakere: Api.DokumenterV2.KopiMottaker[] = [];
-    muligeMottakere.kopiMottakere
-      .filter(filterKopiMottakere)
-      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
-      .forEach((mottaker) => kopimottakere.push(mottaker));
-    muligeMottakere.fasteMottakere
-      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
-      .forEach((mottaker) => kopimottakere.push(mottaker));
-    return kopimottakere;
+    return [
+      ...muligeMottakere.kopiMottakere
+        .filter(filterKopiMottakere)
+        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+      ...muligeMottakere.fasteMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    ];
   };
 
   const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
