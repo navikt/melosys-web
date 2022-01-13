@@ -16,10 +16,10 @@ export interface FattVedtakEOSReqDto {
 export interface FattVedtakFTRLReqDto {
   behandlingsresultatTypeKode: string;
   vedtakstype: string | null;
-  fritekstInnledning: string | null;
-  fritekstBegrunnelse: string | null;
-  fritekstEktefelle: string | null;
-  fritekstBarn: string | null;
+  innledningFritekst: string | null;
+  begrunnelseFritekst: string | null;
+  ektefelleFritekst: string | null;
+  barnFritekst: string | null;
   kopiMottakere: KopiMottaker[];
 }
 export type FattVedtakTrygdeavtaleReqDto = FattVedtakFTRLReqDto;
