@@ -12,7 +12,7 @@ import ListeVelger from "./listevelger";
 import LandVelger from "./landvelger";
 import PeriodeForkorter from "./periodeForkorter";
 import Vedtakstype from "./vedtakstype";
-import HTMLEditor from "./htmleditor";
+import HTMLEditor from "./htmlEditor";
 import Datovelger from "./datovelger";
 
 export {
