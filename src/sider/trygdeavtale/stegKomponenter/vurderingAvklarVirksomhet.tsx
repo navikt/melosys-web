@@ -59,7 +59,9 @@ const VurderingAvklarVirksomhet = ({
   virksomheterListe,
 }: PropsFromRedux & Props) => {
   const hjelpetekst =
-    "Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Du kan kun velge én virksomhet. Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under «Arbeidsgiver/virksomhet».";
+    'Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden. Du kan kun velge én virksomhet. Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under "Arbeidsgiver/virksomhet".';
+  const ingenVirksomheterTekst =
+    'Det er ingen virksomhet registret. Du må legge til virksomhet under "Arbeidsgiver/virksomhet"';
 
   useEffect(() => {
     if (redigerbart && formValues) {
@@ -78,11 +80,15 @@ const VurderingAvklarVirksomhet = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Undertittel>
 
-      <Skjema.RadioGruppe feltNavn="virksomhet" label="">
-        {virksomheterListe?.map((virksomhet) => (
-          <Skjema.Radio feltNavn="virksomhet" label={virksomhet.term} key={virksomhet.kode} value={virksomhet.kode} />
-        ))}
-      </Skjema.RadioGruppe>
+      {virksomheterListe?.length !== 0 ? (
+        <Skjema.RadioGruppe feltNavn="virksomhet" label="">
+          {virksomheterListe?.map((virksomhet) => (
+            <Skjema.Radio feltNavn="virksomhet" label={virksomhet.term} key={virksomhet.kode} value={virksomhet.kode} />
+          ))}
+        </Skjema.RadioGruppe>
+      ) : (
+        <Nav.AlertStripeFeil className="alertstripe">{ingenVirksomheterTekst}</Nav.AlertStripeFeil>
+      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
