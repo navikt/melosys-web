@@ -162,7 +162,7 @@ const VurderingVedtak = ({
       });
     }
   };
-  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
+  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 2000), []);
 
   useEffect(() => {
     debouncedKontrollerVedtak(oppdaterFørKontroll);
