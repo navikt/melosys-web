@@ -261,7 +261,7 @@ class Stegvelger extends Component<Props, State> {
   render() {
     const {
       state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, valideringFeil },
-      props: { behandlingstype },
+      props: { behandlingstype, redigerbart },
       oppdaterAktivtSteg,
       mapFeilmeldinger,
     } = this;
@@ -280,7 +280,7 @@ class Stegvelger extends Component<Props, State> {
                 {!Utils._isEmpty(valideringFeil) && vedtakStegErAktivt && (
                   <Nav.AlertStripeFeil className="varselstripe">{mapFeilmeldinger(valideringFeil)}</Nav.AlertStripeFeil>
                 )}
-                {erNyVurdering && inngangStegErAktivt && (
+                {erNyVurdering && redigerbart && inngangStegErAktivt && (
                   <Nav.AlertStripeAdvarsel className="varselstripe">
                     <Nav.Typo.Normaltekst className="varselstripe__overskrift">
                       Ny behandling av sak
