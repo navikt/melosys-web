@@ -155,6 +155,7 @@ const VurderingVedtak = ({
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
+    // TODO: Denne skal erstattes med støtte fra melosys-trygdeavtale for fritekst-state
     if (values && redigerbart && !vedtakPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
         innledningFritekst: values.innledningFritekst,
