@@ -145,7 +145,7 @@ const FellesHandlersProviderUnconnected = ({
   };
 
   const avsluttSakSomBortfalt = async () => {
-    await Api.Fagsaker.fagsak.bortfall(saksnummer, behandlingID);
+    await Api.Fagsaker.fagsak.bortfall(saksnummer);
     skjulAvsluttSakSomBortfaltDialogHandle();
     tilForsiden();
   };
