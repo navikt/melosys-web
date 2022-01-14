@@ -60,6 +60,7 @@ const stegMap = {
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   behandlingsgrunnlagFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
@@ -256,11 +257,14 @@ class Stegvelger extends Component<Props, State> {
   render() {
     const {
       state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, valideringFeil },
+      props: { behandlingstype },
       oppdaterAktivtSteg,
       mapFeilmeldinger,
     } = this;
 
     const vedtakStegErAktivt = aktuelleSteg?.find((steg: AktueltSteg) => steg.vedtakSteg && steg.aktivtSteg);
+    const inngangStegErAktivt = aktuelleSteg?.find((steg: AktueltSteg) => steg.id === "INNGANG" && steg.aktivtSteg);
+    const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
     return (
       <TrackVisibility partialVisibility>
@@ -270,9 +274,18 @@ class Stegvelger extends Component<Props, State> {
               <div>
                 <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
                 {!Utils._isEmpty(valideringFeil) && vedtakStegErAktivt && (
-                  <Nav.AlertStripeFeil className="valideringsfeil">
-                    {mapFeilmeldinger(valideringFeil)}
-                  </Nav.AlertStripeFeil>
+                  <Nav.AlertStripeFeil className="varselstripe">{mapFeilmeldinger(valideringFeil)}</Nav.AlertStripeFeil>
+                )}
+                {erNyVurdering && inngangStegErAktivt && (
+                  <Nav.AlertStripeAdvarsel className="varselstripe">
+                    <Nav.Typo.Normaltekst className="varselstripe__overskrift">
+                      Ny behandling av sak
+                    </Nav.Typo.Normaltekst>
+                    <Nav.Typo.Normaltekst>
+                      Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens
+                      opplysninger og vurder videre behandling.
+                    </Nav.Typo.Normaltekst>
+                  </Nav.AlertStripeAdvarsel>
                 )}
                 {aktuelleSteg.map((item: AktueltSteg) => (
                   <StegFane key={item.id} faneData={item} />
