@@ -1,3 +1,5 @@
+import * as Utils from "../../utils";
+
 export const normalizeInt = (value, previousValue) => {
   if (value === "") return null;
 
@@ -12,6 +14,11 @@ export const normalizeDecimal = (value, previousValue) => {
   const isIntOrDecimal = valuePreferDot.match(/^\d+([.]\d*)?$/g) !== null;
 
   return isIntOrDecimal ? valuePreferDot : previousValue;
+};
+
+export const normalizeDate = (value) => {
+  const vasketDato = Utils.dato.vaskInputDato(value);
+  return vasketDato || value;
 };
 
 export const begrensAntallTegn = (antallTegn) => (value) => {

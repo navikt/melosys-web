@@ -14,7 +14,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.20",
     "@loadable/component": "^5.10.3",
-    "@navikt/melosys-kodeverk": "5.15.102",
+    "@navikt/melosys-kodeverk": "5.15.104",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",
     "date-fns": "^2.20.0",

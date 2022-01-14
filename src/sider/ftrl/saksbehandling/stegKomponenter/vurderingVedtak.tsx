@@ -46,8 +46,8 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.FTRL_VEDTAK)(state),
   formValuesRepresentant: getFormValues(KV.Form.REPRESENTANT)(state) as RepresentantformValues,
   initialValues: {
-    fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    fritekstInnledning: behandlingsresultatSelectors.InnledningFritekstSelector(state),
+    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
   },
 });
 
@@ -56,8 +56,8 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface FormValuesProps {
-  fritekstInnledning?: string;
-  fritekstBegrunnelse?: string;
+  innledningFritekst?: string;
+  begrunnelseFritekst?: string;
 }
 
 interface Props {
@@ -117,8 +117,8 @@ const VurderingVedtak = ({
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
       Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
-        innledningFritekst: values.fritekstInnledning,
-        begrunnelseFritekst: values.fritekstBegrunnelse,
+        innledningFritekst: values.innledningFritekst,
+        begrunnelseFritekst: values.begrunnelseFritekst,
       });
     }
   };
@@ -126,7 +126,7 @@ const VurderingVedtak = ({
 
   useEffect(() => {
     debouncedOppdaterFritekster(formValues);
-  }, [formValues?.fritekstInnledning, formValues?.fritekstBegrunnelse]);
+  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
     return perioder
@@ -166,8 +166,8 @@ const VurderingVedtak = ({
           produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
           mottaker: muligMottaker.rolle,
           kopiMottakere: [],
-          innledningFritekst: formValues?.fritekstInnledning || null,
-          begrunnelseFritekst: formValues?.fritekstBegrunnelse || null,
+          innledningFritekst: formValues?.innledningFritekst || null,
+          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
           ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
@@ -240,10 +240,10 @@ const VurderingVedtak = ({
 
     await lagreOgFatteVedtak({
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
-      fritekstInnledning: formValues?.fritekstInnledning || null,
-      fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
-      fritekstEktefelle: familieFormValues?.ektefelle_samboer?.fritekst || null,
-      fritekstBarn: familieFormValues?.barn?.fritekst || null,
+      innledningFritekst: formValues?.innledningFritekst || null,
+      begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+      ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
+      barnFritekst: familieFormValues?.barn?.fritekst || null,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
     });
@@ -255,9 +255,9 @@ const VurderingVedtak = ({
 
   const soknadslandErEtAvtaleland = avtaleland[soknadsland?.toString()] !== undefined;
 
-  const fritekstInnledningHjelpetekstTittel =
+  const innledningFritekstHjelpetekstTittel =
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: Du er medlem i folketrygden fra 1. september 2022 til 31. desember 2024. Medlemskapet omfatter trygdedekning i folketrygdens helse- og pensjonsdel. Friteksten kommer her.";
-  const fritekstBegrunnelseHjelpetekstTittel =
+  const begrunnelseFritekstHjelpetekstTittel =
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.  Eksempel: Du har opplyst at du arbeider for Equinor ASA i Brasil. Vi har lagt til grunn at du er ansatt i en virksomhet med hovedsete i Norge. Friteksten kommer her.";
 
   return (
@@ -322,7 +322,7 @@ const VurderingVedtak = ({
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til innledning
         <Nav.Hjelpetekst
-          tittel={fritekstInnledningHjelpetekstTittel}
+          tittel={innledningFritekstHjelpetekstTittel}
           className="hjelpetekst"
           type={Nav.PopoverOrientering.Hoyre}
         >
@@ -333,7 +333,7 @@ const VurderingVedtak = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
-        feltNavn="fritekstInnledning"
+        feltNavn="innledningFritekst"
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
@@ -342,7 +342,7 @@ const VurderingVedtak = ({
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse{" "}
         <Nav.Hjelpetekst
-          tittel={fritekstBegrunnelseHjelpetekstTittel}
+          tittel={begrunnelseFritekstHjelpetekstTittel}
           className="hjelpetekst"
           type={Nav.PopoverOrientering.Hoyre}
         >
@@ -353,7 +353,7 @@ const VurderingVedtak = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
-        feltNavn="fritekstBegrunnelse"
+        feltNavn="begrunnelseFritekst"
         className="fritekst_editor"
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}
