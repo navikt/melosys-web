@@ -161,7 +161,7 @@ const VurderingVedtak = ({
     if (behandlingsgrunnlagStatus === "OK") {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
-  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus]);
+  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
