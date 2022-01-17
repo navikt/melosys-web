@@ -194,7 +194,7 @@ const VurderingVedtak = ({
         data: {
           produserbardokument: STORBRITANNIA,
           mottaker: muligMottaker.rolle,
-          kopiMottakere: [],
+          kopiMottakere: getKopiMottakere(),
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
