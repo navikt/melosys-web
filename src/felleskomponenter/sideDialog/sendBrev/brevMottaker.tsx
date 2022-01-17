@@ -17,6 +17,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 import { SendBrevFormValues } from "./types";
+import { TilgjengeligeMalerMuligMottaker } from "../../../services/modules/dokumenter-v2";
 
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
@@ -75,6 +76,29 @@ const BrevMottaker = ({
     "under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. " +
     "\nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
+  const adresseManglerFeilmelding = "Bruker har ingen registrert adresse";
+
+  const settAdresseMedFeilhandtering = (mottaker: TilgjengeligeMalerMuligMottaker) => {
+    var mottakerAdresse;
+    if (mottaker.rolle === ARBEIDSGIVER) {
+      mottakerAdresse =
+        mottaker && mottaker?.adresser?.length
+          ? mottaker.adresser.find(
+              (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
+                mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
+            )
+          : undefined;
+    } else {
+      mottakerAdresse = mottaker?.adresser?.length ? mottaker.adresser[0] : undefined;
+    }
+
+    if (!mottakerAdresse) {
+      setMottakerFeil(adresseManglerFeilmelding);
+    } else {
+      setAdresse({ mottakerAdresse: mottakerAdresse });
+    }
+  };
+
   const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
     DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
       setMuligeMottakere
@@ -106,7 +130,7 @@ const BrevMottaker = ({
     if (mottaker.rolle === BRUKER) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
       else {
-        setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
+        settAdresseMedFeilhandtering(mottaker);
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
@@ -115,15 +139,7 @@ const BrevMottaker = ({
     }
     if (mottaker.rolle === ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
       if (formValues?.arbeidsgiver) {
-        setAdresse({
-          mottakerAdresse:
-            mottaker && mottaker?.adresser
-              ? mottaker.adresser.find(
-                  (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
-                    mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
-                )
-              : undefined,
-        });
+        settAdresseMedFeilhandtering(mottaker);
         hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
       }
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
