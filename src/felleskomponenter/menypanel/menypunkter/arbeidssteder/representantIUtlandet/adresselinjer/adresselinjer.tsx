@@ -41,7 +41,7 @@ const InnerAdresselinjer = (props: InnerAdresselinjerProps) => {
             <Symboler.Slett onClick={() => remove(index)} className={adresselinjerCls.element("slett_symbol")} />
           </Nav.Row>
         ))}
-      {redigerbart && (
+      {redigerbart && felter.length < 4 && (
         <Nav.Row>
           <Nav.Column xs="9" className={adresselinjerCls.element("leggTil_symbol")}>
             <Mui.Knappelenke onClick={leggTilTomtFelt} ikon={Ikoner.Add}>
