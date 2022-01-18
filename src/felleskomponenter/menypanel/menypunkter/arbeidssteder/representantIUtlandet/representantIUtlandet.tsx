@@ -9,7 +9,7 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 
 import { formSelectors } from "../../../../../ducks/form";
-import EditerbartElement from "../../editerbartElement";
+import EditerbartElement, { Status } from "../../editerbartElement";
 import RedigeringUtfort from "./redigeringUtfort";
 import Redigerer from "./redigerer";
 import IngenDataRender from "./ingenDataRender";
@@ -68,6 +68,7 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
           lenketekst="Legg til arbeidssted/representant"
         />
       )}
+      symbolsynlighet={{ [Status.Redigerer]: { pencil: false, bin: true } }}
     />
   );
 };
