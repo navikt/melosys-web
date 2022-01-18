@@ -174,7 +174,7 @@ const VurderingVedtak = ({
     if (behandlingsgrunnlagStatus === "OK") {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
-  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus]);
+  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
@@ -211,7 +211,7 @@ const VurderingVedtak = ({
         data: {
           produserbardokument: STORBRITANNIA,
           mottaker: muligMottaker.rolle,
-          kopiMottakere: [],
+          kopiMottakere: getKopiMottakere(),
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
