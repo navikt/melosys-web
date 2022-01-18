@@ -16,15 +16,7 @@ export const EnkeltArbeidsforholdUtland = ({ redigerbart, overordnetFeltNavn, cl
   useEffect(() => {
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
       API.Kodeverk.hentLandkoderIso2().then((response) => {
-        setAlternativLandsliste(
-          response
-            .sort((a, b) => {
-              if (a.term > b.term) return 1;
-              if (b.term > a.term) return -1;
-              return 0;
-            })
-            .map((item) => ({ ...item, term: Utils.streng.storeForbokstaverForLand(item.term) }))
-        );
+        setAlternativLandsliste(Utils.land.sorterLandOgGjørOmTilStoreForbokstaver(response));
       });
     }
   }, [sakstype]);
