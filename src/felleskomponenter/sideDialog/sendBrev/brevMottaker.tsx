@@ -79,13 +79,13 @@ const BrevMottaker = ({
   const adresseManglerFeilmelding = "Bruker har ingen registrert adresse";
 
   const settAdresseMedFeilhandtering = (mottaker: TilgjengeligeMalerMuligMottaker) => {
-    var mottakerAdresse;
+    let mottakerAdresse;
     if (mottaker.rolle === ARBEIDSGIVER) {
       mottakerAdresse =
         mottaker && mottaker?.adresser?.length
           ? mottaker.adresser.find(
-              (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
-                mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
+              (organisasjonsAdresse: DokumenterV2.MottakerAdresse) =>
+                organisasjonsAdresse.tittel.orgnr === formValues.arbeidsgiver
             )
           : undefined;
     } else {
@@ -95,7 +95,7 @@ const BrevMottaker = ({
     if (!mottakerAdresse) {
       setMottakerFeil(adresseManglerFeilmelding);
     } else {
-      setAdresse({ mottakerAdresse: mottakerAdresse });
+      setAdresse({ mottakerAdresse });
     }
   };
 

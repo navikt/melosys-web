@@ -12,7 +12,7 @@ const TITTEL_MANGLER = { melding: "Fyll inn tittel" };
 const manglerFeltVerdi = (felt) => {
   if (felt && !felt.valg) {
     // htmlEditor har defaultverdi <p></p> når feltet er tomt.
-    return felt["feltVerdi"]?.replace("<p></p>", "").trim();
+    return felt.feltVerdi?.replace("<p></p>", "").trim();
   }
   return felt;
 };
