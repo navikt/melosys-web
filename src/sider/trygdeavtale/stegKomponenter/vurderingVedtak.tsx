@@ -113,12 +113,7 @@ const VurderingVedtak = ({
 
   const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
-      // Kopi til arbeidsgiver skal bare være med om krysset av
       return formValues?.kopiTilArbeidsgiver;
-    }
-    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.MYNDIGHET && muligMottaker?.institusjonId !== null) {
-      // Kopi til utenlandske myndigheter skal ikke være med om bestemmelse 8.2
-      return resultat.bestemmelse !== "UK_ART8_2";
     }
     return true;
   };
