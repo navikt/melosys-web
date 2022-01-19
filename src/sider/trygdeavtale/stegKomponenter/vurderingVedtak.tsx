@@ -46,8 +46,8 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
   formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
   initialValues: {
-    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
+    innledningFritekst: ownProps.resultat.innledningFritekst,
+    begrunnelseFritekst: ownProps.resultat.begrunnelseFritekst,
     lovvalgsperiodeFom:
       ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
     lovvalgsperiodeTom:
@@ -64,14 +64,6 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface FormValuesProps {
-  lovvalgsperiodeFom?: string;
-  lovvalgsperiodeTom?: string;
-  innledningFritekst?: string;
-  begrunnelseFritekst?: string;
-  kopiTilArbeidsgiver?: boolean;
-}
-
 interface Props {
   data: Api.Trygdeavtale.StegData;
   oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
@@ -81,7 +73,13 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  formValues: FormValuesProps;
+  formValues: {
+    lovvalgsperiodeFom?: string;
+    lovvalgsperiodeTom?: string;
+    innledningFritekst?: string;
+    begrunnelseFritekst?: string;
+    kopiTilArbeidsgiver?: boolean;
+  };
 }
 
 const VurderingVedtak = ({
@@ -154,16 +152,10 @@ const VurderingVedtak = ({
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
 
-  const oppdaterFritekster = (values: FormValuesProps) => {
-    // TODO: Denne skal erstattes med støtte fra melosys-trygdeavtale for fritekst-state
-    if (values && redigerbart && !vedtakPending) {
-      Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
-        innledningFritekst: values.innledningFritekst,
-        begrunnelseFritekst: values.begrunnelseFritekst,
-      });
-    }
-  };
-  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 2000), []);
+  const debouncedOppdaterFlyten = useCallback(
+    Utils._debounce((data: Api.Trygdeavtale.Resultat) => oppdaterFlyt({ resultat: data }), 2000),
+    []
+  );
 
   useEffect(() => {
     debouncedKontrollerVedtak(oppdaterFørKontroll);
@@ -185,7 +177,15 @@ const VurderingVedtak = ({
   }, [steg]);
 
   useEffect(() => {
-    debouncedOppdaterFritekster(formValues);
+    if (redigerbart && formValues) {
+      debouncedOppdaterFlyten({
+        ...resultat,
+        innledningFritekst: formValues.innledningFritekst,
+        begrunnelseFritekst: formValues.begrunnelseFritekst,
+      });
+    } else {
+      debouncedOppdaterFlyten.cancel();
+    }
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   const handleLagreTomEndring = async () => {

@@ -24,6 +24,8 @@ export interface Resultat {
   ektefelle?: Familiemedlem | null;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
+  innledningFritekst?: string;
+  begrunnelseFritekst?: string;
 }
 
 export interface Steg {
