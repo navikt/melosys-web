@@ -32,6 +32,7 @@ import { menypanelOperations } from "../../../ducks/menypanel";
 import { folketrygdenkodeverkOperations } from "../../../ducks/folketrygdenkodeverk";
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { vilkarOperations } from "../../../ducks/vilkar";
+import { landkoderOperations, landkoderSelectors } from "../../../ducks/landkoder";
 import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperioder";
 
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
@@ -112,6 +113,7 @@ const Saksbehandling = ({
   hentDokumentOversikt,
   hentFagsaker,
   hentFolketrygdenKodeverk,
+  hentLandkoder,
   hentMedlemskapsperioder,
   hentOppsummertFakta,
   lagreAllData,
@@ -119,6 +121,7 @@ const Saksbehandling = ({
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
   lagreOgLukk,
   lagreVilkar,
+  landkoder,
   location,
   match,
   oppdaterBehandlingsgrunnlag,
@@ -143,7 +146,6 @@ const Saksbehandling = ({
   visRevurderFagsakDialogHandle,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
-  const [landkoder, setLandkoder] = useState([]);
   const [bestemmelser, setBestemmelser] = useState([]);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -194,9 +196,7 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
-    API.Kodeverk.hentLandkoderIso2().then((response) => {
-      setLandkoder(Utils.land.sorterLandOgGjørOmTilStoreForbokstaver(response));
-    });
+    hentLandkoder();
 
     return () => {
       resetFagsakState();
@@ -349,6 +349,7 @@ Saksbehandling.propTypes = {
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
+  hentLandkoder: PT.func.isRequired,
   hentMedlemskapsperioder: PT.func.isRequired,
   hentOppsummertFakta: PT.func.isRequired,
   hentFolketrygdenKodeverk: PT.func.isRequired,
@@ -401,6 +402,7 @@ const mapStateToProps = (state) => ({
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
+  landkoder: landkoderSelectors.LandkoderSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -415,6 +417,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
   hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
   hentFolketrygdenKodeverk: () => dispatch(folketrygdenkodeverkOperations.hentKodeverkForFolketrygden()),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentMedlemskapsperioder: (bid) => dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(bid)),
   hentOppsummertFakta: (bid) => dispatch(oppsummertfaktaOperations.hentOppsummertFakta(bid)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),

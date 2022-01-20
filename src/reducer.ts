@@ -18,6 +18,7 @@ import fagsakerReducer from "./ducks/fagsaker";
 import feiletResponseReducer from "./ducks/feiletrespons";
 import folketrygdenkodeverkReducer from "./ducks/folketrygdenkodeverk";
 import journalforingReducer from "./ducks/journalforing";
+import landkoder from "./ducks/landkoder";
 import lovvalgsperioderReducer from "./ducks/lovvalgsperioder";
 import medlemskapsperioderReducer from "./ducks/medlemskapsperioder";
 import modalerReducer from "./ducks/modaler";
@@ -56,6 +57,7 @@ const createRootReducer = (history: History) =>
     feiletrespons: feiletResponseReducer,
     folketrygdenkodeverk: folketrygdenkodeverkReducer,
     journalforing: journalforingReducer,
+    landkoder: landkoder,
     lovvalgsperioder: lovvalgsperioderReducer,
     medlemskapsperioder: medlemskapsperioderReducer,
     modaler: modalerReducer,
