@@ -22,7 +22,7 @@ const connector = connect(mapStateToProps);
  * prop-type multiLand som er subkomponenter i landvelgeren.
  * @param props
  */
-const LandVelger = (props) => {
+export const LandVelger = (props) => {
   const { multiLand, landkoder, landkoderFraSakstype } = props;
   const dataListID = lagDatalistID();
   const landkodeliste = landkoder || landkoderFraSakstype;

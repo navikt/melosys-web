@@ -1,5 +1,5 @@
 import React from "react";
-import Landvelger from "./LandVelger";
+import { LandVelger } from "./LandVelger";
 
 describe("Landvelger", () => {
   let props = null;
@@ -10,13 +10,14 @@ describe("Landvelger", () => {
       feltNavn: "test",
       multiLand: false,
       label: "test",
+      landkoderFraSakstype: [{ kode: "kode1", term: "term1" }],
     };
   });
 
   describe("Dersom multiland prop er false", () => {
     it("viser enkeltland og ikke multiland", () => {
       props.multiLand = false;
-      const landVelger = shallow(<Landvelger {...props} />);
+      const landVelger = shallow(<LandVelger {...props} />);
       expect(landVelger.find("EnkeltLandWrapper")).toHaveLength(1);
       expect(landVelger.find("MultiLandWrapper")).toHaveLength(0);
     });
@@ -25,27 +26,27 @@ describe("Landvelger", () => {
   describe("Dersom multiland prop er true", () => {
     it("viser multiland og ikke enkeltland", () => {
       props.multiLand = true;
-      const landVelger = shallow(<Landvelger {...props} />);
+      const landVelger = shallow(<LandVelger {...props} />);
       expect(landVelger.find("EnkeltLandWrapper")).toHaveLength(0);
       expect(landVelger.find("MultiLandWrapper")).toHaveLength(1);
     });
   });
 
   it("viser en datalist", () => {
-    const landVelger = shallow(<Landvelger {...props} />);
+    const landVelger = shallow(<LandVelger {...props} />);
     expect(landVelger.find("datalist")).toHaveLength(1);
   });
 
   describe("Dersom landkoder prop", () => {
     it("er satt til tom liste", () => {
       props.landkoder = [];
-      const landVelger = shallow(<Landvelger {...props} />);
+      const landVelger = shallow(<LandVelger {...props} />);
 
       expect(landVelger.find("datalist").children()).toHaveLength(0);
     });
 
     it("ikke er satt", () => {
-      const landVelger = shallow(<Landvelger {...props} />);
+      const landVelger = shallow(<LandVelger {...props} />);
 
       expect(landVelger.find("datalist").children()).not.toHaveLength(0);
     });
