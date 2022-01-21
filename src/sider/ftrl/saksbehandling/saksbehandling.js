@@ -336,6 +336,7 @@ Saksbehandling.propTypes = {
   fagsak: MPT.Fagsak,
   fagsakStatusKode: PT.string.isRequired,
   history: PT.object.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   location: PT.object.isRequired,
   match: PT.object.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,

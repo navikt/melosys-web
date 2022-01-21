@@ -76,7 +76,6 @@ interface Props {
   oppdater: () => void;
   redigerbart: boolean;
   oppdaterData: (avklartefakta: any) => void;
-  alleLandkoder: KTObject[];
   formValues: FormValuesProp;
   tilForsiden: () => void;
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => void;
@@ -87,7 +86,6 @@ export const VurderingStart = ({
   bekreft,
   redigerbart,
   formValues = {},
-  alleLandkoder,
   oppdaterPeriode,
   oppdaterSoeknadslandkoder,
   oppdaterTrygdedekning,
@@ -169,7 +167,6 @@ export const VurderingStart = ({
               }
               feltNavn="land"
               placeholder="Velg..."
-              landkoder={alleLandkoder}
               disabled={!redigerbart}
             />
           </Nav.Column>

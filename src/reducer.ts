@@ -57,7 +57,7 @@ const createRootReducer = (history: History) =>
     feiletrespons: feiletResponseReducer,
     folketrygdenkodeverk: folketrygdenkodeverkReducer,
     journalforing: journalforingReducer,
-    landkoder: landkoder,
+    landkoder,
     lovvalgsperioder: lovvalgsperioderReducer,
     medlemskapsperioder: medlemskapsperioderReducer,
     modaler: modalerReducer,
