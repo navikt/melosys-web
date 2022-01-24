@@ -17,7 +17,6 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 import { SendBrevFormValues } from "./types";
-import { TilgjengeligeMalerMuligMottaker } from "../../../services/modules/dokumenter-v2";
 
 const { BRUKER, ARBEIDSGIVER } = KV.Koder.MottakerRolle;
 
@@ -78,7 +77,7 @@ const BrevMottaker = ({
 
   const adresseManglerFeilmelding = "Bruker har ingen registrert adresse";
 
-  const settAdresseMedFeilhandtering = (mottaker: TilgjengeligeMalerMuligMottaker) => {
+  const settAdresseMedFeilhandtering = (mottaker: DokumenterV2.TilgjengeligeMalerMuligMottaker) => {
     let mottakerAdresse;
     if (mottaker.rolle === ARBEIDSGIVER) {
       mottakerAdresse =
