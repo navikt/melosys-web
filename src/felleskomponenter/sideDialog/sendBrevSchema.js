@@ -14,7 +14,7 @@ const manglerFeltVerdi = (felt) => {
     // htmlEditor har defaultverdi <p></p> når feltet er tomt.
     return felt.feltVerdi?.replace("<p></p>", "").trim();
   }
-  return felt;
+  return !!felt;
 };
 
 const manglerNoenFeltValgt = (felt, valgtMal) => {
