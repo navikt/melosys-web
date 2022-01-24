@@ -137,9 +137,9 @@ const Vurderutpeking = ({
     };
   }, []);
 
-  if (!behandlingID || Utils._isNil(redigerbart)) {
-    return null;
-  }
+  if (Utils._isNil(redigerbart)) return null;
+  if (!behandlingID || behandlingID < 0) return null;
+  if (!behandlingstema) return null;
 
   const behandlingsgrunnlagErKlart = !(
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
