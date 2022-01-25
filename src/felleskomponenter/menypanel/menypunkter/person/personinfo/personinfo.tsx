@@ -23,7 +23,7 @@ const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, sivilstandMod
       </div>
       <div className="personinfo__element">
         <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
-        <Nav.Typo.Element>{fnr}</Nav.Typo.Element>
+        <Nav.Typo.Element>{fnr || ""}</Nav.Typo.Element>
       </div>
       <div className="personinfo__element">
         <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>
