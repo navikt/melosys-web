@@ -120,6 +120,7 @@ export const EnkeltArbeidsforholdNorge = ({
     useKontaktOpplysninger(saksnummer, organisasjon.orgnr || "");
 
   const slett = () => {
+    slettKontaktOpplysninger();
     fields.remove(indeks);
   };
 

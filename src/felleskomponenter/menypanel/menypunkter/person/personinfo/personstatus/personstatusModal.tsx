@@ -64,11 +64,14 @@ const PersonstatusModal = ({
       <div className={personstatusModalCls.element("gyldighetsinfo")}>
         <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra folkeregisteret kan være mangelfulle.</Nav.Typo.EtikettLiten>
         <Nav.Hjelpetekst>
-          Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret. Dersom det er en opplysningstype hvor
-          Folkeregisteret har vedtaksmyndighet, så viser denne datoen når vedtaket gjelder fra. På andre
-          opplysningstyper viser datoen når opplysningen ble gyldig i Folkeregisteret, ikke når den ble gyldig i
-          virkeligheten. For eksempel viser ikke gyldighetsdato for opplysningstypen utflytting når man faktisk flyttet
-          ut av landet. Vær derfor varsom med hvordan du bruker disse opplysningene.
+          <p>Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret.</p>
+          <p>
+            Dersom det er en opplysningstype hvor Folkeregisteret har vedtaksmyndighet, så viser denne datoen når
+            vedtaket gjelder fra. På andre opplysningstyper viser datoen når opplysningen ble gyldig i Folkeregisteret,
+            ikke når den ble gyldig i virkeligheten. For eksempel viser ikke gyldighetsdato for opplysningstypen
+            utflytting når man faktisk flyttet ut av landet.
+          </p>
+          <p>Vær derfor varsom med hvordan du bruker disse opplysningene.</p>
         </Nav.Hjelpetekst>
       </div>
       <PersonstatusTabell personstatuser={historiskePersonstatuser} />

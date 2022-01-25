@@ -339,7 +339,7 @@ class VurderingArtikkel16Anmodning extends Component {
             navn: "Forhåndsvis anmodning til utenlandsk myndighet",
             type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK,
             data: {
-              mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
+              mottaker: MKV.Koder.aktoersroller.TRYGDEMYNDIGHET,
               ytterligereInformasjon: this.props.formValues.fritekstSed,
             },
           },

@@ -243,7 +243,7 @@ const soknad = object().when("$behandlingstema", {
         )
     ),
     representantIUtlandet: object()
-      .when("$behandlingstema", {
+      .when("$sakstype", {
         is: erTrygdeavtaleSak,
         then: object()
           .shape({
@@ -256,17 +256,7 @@ const soknad = object().when("$behandlingstema", {
                 )
               )
               .nullable(),
-            adresselinjer: array()
-              .of(
-                string().required(
-                  lagMelding(
-                    KV.Menypunkter.Arbeidssteder.tittel,
-                    KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
-                    "Adresselinje kan ikke være tom. Fjern eller fyll linjen"
-                  )
-                )
-              )
-              .nullable(),
+            adresselinjer: array().of(string()).nullable(),
           })
           .nullable(),
       })

@@ -46,8 +46,8 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
   formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
   initialValues: {
-    fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    fritekstInnledning: behandlingsresultatSelectors.InnledningFritekstSelector(state),
+    begrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+    innledningFritekst: behandlingsresultatSelectors.InnledningFritekstSelector(state),
     lovvalgsperiodeFom:
       ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
     lovvalgsperiodeTom:
@@ -76,8 +76,8 @@ interface Props {
   formValues: {
     lovvalgsperiodeFom?: string;
     lovvalgsperiodeTom?: string;
-    fritekstInnledning?: string;
-    fritekstBegrunnelse?: string;
+    innledningFritekst?: string;
+    begrunnelseFritekst?: string;
     kopiTilArbeidsgiver?: boolean;
   };
 }
@@ -101,9 +101,9 @@ const VurderingVedtak = ({
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
-  const fritekstInnledningHjelpetekstTittel =
+  const innledningFritekstHjelpetekstTittel =
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: 'Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31. desember 2024.' Friteksten kommer her";
-  const fritekstBegrunnelseHjelpetekstTittel =
+  const begrunnelseFritekstHjelpetekstTittel =
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel: 'Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for er ansatt av Equinor ASA.' Friteksten kommer her.";
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
@@ -115,19 +115,26 @@ const VurderingVedtak = ({
     if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
       return formValues?.kopiTilArbeidsgiver;
     }
-    return false;
+    return true;
+  };
+
+  const getKopiMottakere = () => {
+    return [
+      ...muligeMottakere.kopiMottakere
+        .filter(filterKopiMottakere)
+        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+      ...muligeMottakere.fasteMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    ];
   };
 
   const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-    fritekstInnledning: formValues?.fritekstInnledning || null,
-    fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
-    fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
-    fritekstBarn: familieFormValues?.barn?.fritekst || null,
+    innledningFritekst: formValues?.innledningFritekst || null,
+    begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+    ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
+    barnFritekst: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    kopiMottakere: muligeMottakere.kopiMottakere
-      .filter(filterKopiMottakere)
-      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    kopiMottakere: getKopiMottakere(),
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
@@ -154,7 +161,7 @@ const VurderingVedtak = ({
     if (behandlingsgrunnlagStatus === "OK") {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
-  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus]);
+  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
@@ -187,10 +194,11 @@ const VurderingVedtak = ({
         data: {
           produserbardokument: STORBRITANNIA,
           mottaker: muligMottaker.rolle,
-          kopiMottakere: [],
-          innledningFritekst: formValues?.fritekstInnledning || null,
-          begrunnelseFritekst: formValues?.fritekstBegrunnelse || null,
+          kopiMottakere: getKopiMottakere(),
+          innledningFritekst: formValues?.innledningFritekst || null,
+          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
+          institusjonId: muligMottaker?.institusjonId || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
         },
@@ -311,7 +319,7 @@ const VurderingVedtak = ({
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til innledning
         <Nav.Hjelpetekst
-          tittel={fritekstInnledningHjelpetekstTittel}
+          tittel={innledningFritekstHjelpetekstTittel}
           className={vurderingVedtakCls.element("hjelpetekst")}
           type={Nav.PopoverOrientering.Hoyre}
         >
@@ -326,7 +334,7 @@ const VurderingVedtak = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
-        feltNavn="fritekstInnledning"
+        feltNavn="innledningFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
@@ -335,7 +343,7 @@ const VurderingVedtak = ({
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til begrunnelse{" "}
         <Nav.Hjelpetekst
-          tittel={fritekstBegrunnelseHjelpetekstTittel}
+          tittel={begrunnelseFritekstHjelpetekstTittel}
           className={vurderingVedtakCls.element("hjelpetekst")}
           type={Nav.PopoverOrientering.Hoyre}
         >
@@ -351,7 +359,7 @@ const VurderingVedtak = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
-        feltNavn="fritekstBegrunnelse"
+        feltNavn="begrunnelseFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}
