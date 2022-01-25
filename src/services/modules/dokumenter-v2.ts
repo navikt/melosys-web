@@ -45,19 +45,17 @@ export interface Felt {
   valg: null | Valg;
 }
 
-export type TilgjengeligeMalerMuligMottaker = {
-  uuid: string;
-  type: string;
-  rolle: string;
-  orgnrSettesAvSaksbehandler: boolean;
-  adresser: MottakerAdresse[] | null;
-  feilmelding: string | null;
-};
-
 export type TilgjengeligeMaler = {
   type: KTObject;
   felter: Felt[] | null;
-  muligeMottakere: TilgjengeligeMalerMuligMottaker[];
+  muligeMottakere: {
+    uuid: string;
+    type: string;
+    rolle: string;
+    orgnrSettesAvSaksbehandler: boolean;
+    adresser: MottakerAdresse[] | null;
+    feilmelding: string | null;
+  }[];
   mottakereHjelpetekst: string | null;
 };
 export type TilgjengeligeMalerResDto = TilgjengeligeMaler[];

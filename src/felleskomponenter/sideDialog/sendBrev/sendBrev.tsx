@@ -245,7 +245,7 @@ const SendBrev = ({
         </Fragment>
       ))}
 
-      {formIsValid && mottakerErValgt && muligeMottakere && !mottakerFeil && (
+      {formIsValid && mottakerErValgt && muligeMottakere && (
         <Nav.Row>
           <Nav.Column xs={mottakerTabellWidth}>
             <BrevMottakereTabell

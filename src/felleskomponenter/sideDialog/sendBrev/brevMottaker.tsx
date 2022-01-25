@@ -75,29 +75,6 @@ const BrevMottaker = ({
     "under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger. " +
     "\nHvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
-  const adresseManglerFeilmelding = "Bruker har ingen registrert adresse";
-
-  const settAdresseMedFeilhandtering = (mottaker: DokumenterV2.TilgjengeligeMalerMuligMottaker) => {
-    let mottakerAdresse;
-    if (mottaker.rolle === ARBEIDSGIVER) {
-      mottakerAdresse =
-        mottaker && mottaker?.adresser?.length
-          ? mottaker.adresser.find(
-              (organisasjonsAdresse: DokumenterV2.MottakerAdresse) =>
-                organisasjonsAdresse.tittel.orgnr === formValues.arbeidsgiver
-            )
-          : undefined;
-    } else {
-      mottakerAdresse = mottaker?.adresser?.length ? mottaker.adresser[0] : undefined;
-    }
-
-    if (!mottakerAdresse) {
-      setMottakerFeil(adresseManglerFeilmelding);
-    } else {
-      setAdresse({ mottakerAdresse });
-    }
-  };
-
   const hentMuligeMottakere = (valgtMal: string, orgnr: string | undefined) => {
     DokumenterV2.hentMuligeMottakere(behandlingID, { produserbartdokument: valgtMal, orgnr: orgnr || null }).then(
       setMuligeMottakere
@@ -129,7 +106,7 @@ const BrevMottaker = ({
     if (mottaker.rolle === BRUKER) {
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
       else {
-        settAdresseMedFeilhandtering(mottaker);
+        setAdresse({ mottakerAdresse: mottaker?.adresser ? mottaker.adresser[0] : undefined });
         hentMuligeMottakere(formValues.type, undefined);
       }
     }
@@ -138,7 +115,15 @@ const BrevMottaker = ({
     }
     if (mottaker.rolle === ARBEIDSGIVER && !mottaker.orgnrSettesAvSaksbehandler) {
       if (formValues?.arbeidsgiver) {
-        settAdresseMedFeilhandtering(mottaker);
+        setAdresse({
+          mottakerAdresse:
+            mottaker && mottaker?.adresser
+              ? mottaker.adresser.find(
+                  (mottakerAdresse: DokumenterV2.MottakerAdresse) =>
+                    mottakerAdresse.tittel.orgnr === formValues.arbeidsgiver
+                )
+              : undefined,
+        });
         hentMuligeMottakere(formValues.type, formValues.arbeidsgiver);
       }
       if (mottaker.feilmelding) setMottakerFeil(mottaker.feilmelding);
