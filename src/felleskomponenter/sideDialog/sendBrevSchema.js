@@ -12,9 +12,9 @@ const TITTEL_MANGLER = { melding: "Fyll inn tittel" };
 const manglerFeltVerdi = (felt) => {
   if (felt && !felt.valg) {
     // htmlEditor har defaultverdi <p></p> når feltet er tomt.
-    return felt.feltVerdi?.replace("<p></p>", "").trim();
+    return !felt.feltVerdi?.replace("<p></p>", "").trim();
   }
-  return !!felt;
+  return !felt;
 };
 
 const manglerNoenFeltValgt = (felt, valgtMal) => {
@@ -22,7 +22,7 @@ const manglerNoenFeltValgt = (felt, valgtMal) => {
   if (!valgtMal?.felter) return false;
   if (!felt) return true;
   for (let i = 0; i < valgtMal.felter.length; i += 1) {
-    if (valgtMal.felter[i]?.paakrevd && !manglerFeltVerdi(felt[valgtMal.felter[i]?.kode])) return true;
+    if (valgtMal.felter[i]?.paakrevd && manglerFeltVerdi(felt[valgtMal.felter[i]?.kode])) return true;
   }
   return false;
 };
