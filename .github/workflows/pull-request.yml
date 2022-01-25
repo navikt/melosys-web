@@ -21,7 +21,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: '16.13.1'
+          node-version: '16.13.2'
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
 
