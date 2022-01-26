@@ -4,6 +4,7 @@ import { Action } from "redux";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -54,6 +55,8 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
       ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
   },
   formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
+  erNyVurdering:
+    behandlingerSelectors.BehandlingstypeKodeSelector(state) === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -79,6 +82,7 @@ interface Props {
     innledningFritekst?: string;
     begrunnelseFritekst?: string;
     kopiTilArbeidsgiver?: boolean;
+    nyVurderingBakgrunn?: string;
   };
 }
 
@@ -86,6 +90,7 @@ const VurderingVedtak = ({
   behandlingID,
   behandlingsgrunnlagStatus,
   data: { bestemmelseValg },
+  erNyVurdering,
   tilbake,
   redigerbart,
   resultat,
@@ -135,6 +140,7 @@ const VurderingVedtak = ({
     barnFritekst: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     kopiMottakere: getKopiMottakere(),
+    nyVurderingBakgrunn: formValues?.nyVurderingBakgrunn || null,
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
@@ -315,6 +321,28 @@ const VurderingVedtak = ({
           </Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
+
+      {erNyVurdering && (
+        <Nav.Fieldset legend="Oppgi grunn for nytt vedtak" className={vurderingVedtakCls.element("nyvurdering")}>
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Skjema.Select
+                label=""
+                feltNavn="nyVurderingBakgrunn"
+                disabled={!redigerbart}
+                emptyFieldText="Velg"
+                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
+              >
+                {MKV.KTObjects.begrunnelser.nyVurderingBakgrunner.map((bakgrunn: KTObject) => (
+                  <option key={bakgrunn.kode} value={bakgrunn.kode}>
+                    {bakgrunn.term}
+                  </option>
+                ))}
+              </Skjema.Select>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Fieldset>
+      )}
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til innledning
