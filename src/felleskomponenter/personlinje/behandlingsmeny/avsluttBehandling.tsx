@@ -98,12 +98,12 @@ const AvsluttBehandling = ({
     <Nav.EkspanderbartpanelBase
       ariaTittel="avsluttsak"
       className="behandlingsmeny__meny__avslutt-sak"
-      heading={<div className="title">Avslutt behandling</div>}
+      heading={<div className="title">Avslutt sak</div>}
     >
       {skalViseAvslaaSoknad() && <Handling tekst="Avslå søknad pga. manglende opplysninger" onClick={avslaaSoknad} />}
-      {skalViseFerdigbehandlet() && <Handling tekst="Ferdigbehandlet" onClick={ferdigbehandleNyVurdering} />}
-      {skalViseAvsluttSak() && <Handling tekst="Skal ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
-      {skalViseHenleggSak() && <Handling tekst="Behandlingen er henlagt/trukket" onClick={henleggSak} />}
+      {skalViseFerdigbehandlet() && <Handling tekst="Avslutt behandling" onClick={ferdigbehandleNyVurdering} />}
+      {skalViseAvsluttSak() && <Handling tekst="Kan ikke behandles i Melosys" onClick={avsluttSakSomBortfalt} />}
+      {skalViseHenleggSak() && <Handling tekst="Søknaden er henlagt/trukket" onClick={henleggSak} />}
     </Nav.EkspanderbartpanelBase>
   );
 };
