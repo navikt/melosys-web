@@ -9,7 +9,7 @@ import * as Ikon from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
-import AvsluttBehandling from "./avsluttBehandling";
+import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
 
 import { oppgaverOperations } from "../../../ducks/oppgaver";
@@ -118,7 +118,7 @@ export const Behandlingsmeny = ({
             behandlingID={behandlingID}
             redigerbart={redigerbart}
           />
-          <AvsluttBehandling
+          <AvsluttSak
             avslaaSoknad={visAvslagSoknadDialogHandle}
             henleggSak={visHenleggDialogHandle}
             avsluttSakSomBortfalt={visAvsluttSakSomBortfaltDialogHandle}

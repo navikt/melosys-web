@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 
 import MKV from "../../../melosyskodeverk";
 
-import AvsluttBehandling from "./avsluttBehandling";
+import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
 
 const {
@@ -16,9 +16,9 @@ const {
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
-const mockedProps = mock<ComponentProps<typeof AvsluttBehandling>>();
+const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
 
-describe("AvsluttBehandling", () => {
+describe("AvsluttSak", () => {
   let props = instance(mockedProps);
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe("AvsluttBehandling", () => {
     props.behandlingstema = ARBEID_I_UTLANDET;
     props.redigerbart = true;
 
-    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(3);
@@ -42,7 +42,7 @@ describe("AvsluttBehandling", () => {
     props.behandlingstema = TRYGDETID;
     props.redigerbart = true;
 
-    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(1);
@@ -54,7 +54,7 @@ describe("AvsluttBehandling", () => {
     props.redigerbart = true;
     props.behandlingstype = NY_VURDERING;
 
-    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(4);
@@ -65,7 +65,7 @@ describe("AvsluttBehandling", () => {
     props.redigerbart = false;
     props.behandlingstema = BESLUTNING_LOVVALG_NORGE;
 
-    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
 
     expect(avsluttSak.find(".behandlingsmeny__meny__avslutt-sak").isEmptyRender()).toBeTruthy();
   });
@@ -75,7 +75,7 @@ describe("AvsluttBehandling", () => {
     props.behandlingstema = UTSENDT_ARBEIDSTAKER;
     props.behandlingstype = NY_VURDERING;
 
-    const avsluttSak = shallow(<AvsluttBehandling {...props} />);
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
 
     const avsluttSakSomBortfalt = avsluttSak.findWhere(
       (n) => n.type() === Handling && n.props().tekst === "Avslutt sak som bortfalt"

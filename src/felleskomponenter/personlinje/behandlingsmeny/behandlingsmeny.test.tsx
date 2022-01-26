@@ -6,7 +6,7 @@ import MKV from "../../../melosyskodeverk";
 
 import { Behandlingsmeny } from "./behandlingsmeny";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
-import AvsluttBehandling from "./avsluttBehandling";
+import AvsluttSak from "./avsluttsak";
 import Handling from "./handling";
 
 const { ARBEID_I_UTLANDET } = MKV.Koder.behandlinger.behandlingstema;
@@ -23,7 +23,7 @@ describe("Behandlingsmeny", () => {
     props = instance(mockedProps);
   });
 
-  it("rendrer LeggBehandlingTilbake og AvsluttBehandling med riktige props", () => {
+  it("rendrer LeggBehandlingTilbake og AvsluttSak med riktige props", () => {
     props.behandlingID = "12";
     props.behandlingstema = ARBEID_I_UTLANDET;
     props.behandlingsstatus = AVSLUTTET;
@@ -38,11 +38,11 @@ describe("Behandlingsmeny", () => {
     expect(leggBehandlingTilbake.props().behandlingID).toBe(props.behandlingID);
     expect(leggBehandlingTilbake.props().redigerbart).toBe(props.redigerbart);
 
-    const avsluttBehandling = behandlingsmeny.find(AvsluttBehandling);
-    expect(avsluttBehandling.exists()).toBeTruthy();
-    expect(avsluttBehandling.props().behandlingstema).toBe(props.behandlingstema);
-    expect(avsluttBehandling.props().behandlingstype).toBe(props.behandlingstype);
-    expect(avsluttBehandling.props().redigerbart).toBe(props.redigerbart);
+    const avsluttSak = behandlingsmeny.find(AvsluttSak);
+    expect(avsluttSak.exists()).toBeTruthy();
+    expect(avsluttSak.props().behandlingstema).toBe(props.behandlingstema);
+    expect(avsluttSak.props().behandlingstype).toBe(props.behandlingstype);
+    expect(avsluttSak.props().redigerbart).toBe(props.redigerbart);
 
     const menyHandlinger = behandlingsmeny.find(".behandlingsmeny__meny__handlinger").find(Handling);
     expect(menyHandlinger).toHaveLength(2);

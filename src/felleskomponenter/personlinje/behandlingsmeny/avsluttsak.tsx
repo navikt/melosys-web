@@ -4,7 +4,7 @@ import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 import Handling from "./handling";
 
-type avsluttBehandlingProps = {
+type avsluttSakProps = {
   avslaaSoknad: () => void;
   henleggSak: () => void;
   avsluttSakSomBortfalt: () => void;
@@ -14,7 +14,7 @@ type avsluttBehandlingProps = {
   redigerbart: boolean;
 };
 
-const AvsluttBehandling = ({
+const AvsluttSak = ({
   avslaaSoknad,
   henleggSak,
   avsluttSakSomBortfalt,
@@ -22,7 +22,7 @@ const AvsluttBehandling = ({
   behandlingstype,
   ferdigbehandleNyVurdering,
   redigerbart,
-}: avsluttBehandlingProps) => {
+}: avsluttSakProps) => {
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
 
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
@@ -108,4 +108,4 @@ const AvsluttBehandling = ({
   );
 };
 
-export default AvsluttBehandling;
+export default AvsluttSak;
