@@ -52,6 +52,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
       ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
     lovvalgsperiodeTom:
       ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
+    kopiTilArbeidsgiver: true,
   },
   formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
 });
