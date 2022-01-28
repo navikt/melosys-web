@@ -153,7 +153,7 @@ export const PersonStatus = {
 export const MottakerRolle = {
   BRUKER: "BRUKER",
   ARBEIDSGIVER: "ARBEIDSGIVER",
-  MYNDIGHET: "MYNDIGHET",
+  TRYGDEMYNDIGHET: "TRYGDEMYNDIGHET",
   REPRESENTANT: "REPRESENTANT",
 };
 
