@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -230,7 +230,7 @@ const SendBrev = ({
       )}
 
       {formValues.valgtMal?.felter?.map((felt) => (
-        <>
+        <Fragment key={felt.kode}>
           {felt.valg && (
             <Nav.Row>
               <Nav.Column xs={felterWidth}>
@@ -242,7 +242,7 @@ const SendBrev = ({
           {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
             <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={felterWidth} />
           )}
-        </>
+        </Fragment>
       ))}
 
       {formIsValid && mottakerErValgt && muligeMottakere && (
