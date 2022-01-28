@@ -154,6 +154,7 @@ export const MottakerRolle = {
   BRUKER: "BRUKER",
   ARBEIDSGIVER: "ARBEIDSGIVER",
   MYNDIGHET: "MYNDIGHET",
+  REPRESENTANT: "REPRESENTANT",
 };
 
 export enum StegNavn {

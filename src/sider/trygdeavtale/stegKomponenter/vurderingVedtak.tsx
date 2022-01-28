@@ -112,7 +112,7 @@ const VurderingVedtak = ({
   const isMounted = Hooks.useIsMounted();
 
   const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
+    if ([KV.Koder.MottakerRolle.ARBEIDSGIVER, KV.Koder.MottakerRolle.REPRESENTANT].includes(muligMottaker?.rolle)) {
       return formValues?.kopiTilArbeidsgiver;
     }
     return true;
