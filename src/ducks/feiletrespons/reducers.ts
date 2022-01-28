@@ -16,7 +16,6 @@ const initialState: StateSection<Types.Data> = {
   Vi ønsker å få tak i resultatet fra det siste feilede api-kallet blant typene nedenfor.
   Vi resetter i tillegg state dersom et av api-kallene er vellykket.
 */
-// eslint-disable-next-line default-param-last
 export default function reducer(state = initialState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
     case utpekTypes.FEILET:

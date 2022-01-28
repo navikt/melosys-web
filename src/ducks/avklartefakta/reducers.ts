@@ -37,7 +37,6 @@ const lagAvklartfaktaObjekterMedKode = (
   }));
 };
 
-// eslint-disable-next-line default-param-last
 export default function reducer(state = initialState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
     case Types.PENDING:

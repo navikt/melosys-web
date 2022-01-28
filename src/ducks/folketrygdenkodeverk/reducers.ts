@@ -6,7 +6,6 @@ export const initialState = {
   data: {},
 };
 
-// eslint-disable-next-line default-param-last
 export default function reducer(state = initialState, action: Types.Action) {
   switch (action.type) {
     case Types.PENDING:

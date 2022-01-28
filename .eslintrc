@@ -118,6 +118,12 @@
         "react/require-default-props": "off",
         "react/prop-types": "off"
       }
+    },
+    {
+      "files": ["**/reducers.ts"],
+      "rules": {
+        "default-param-last": "off"
+      }
     }
   ],
   "extends": [
