@@ -7,9 +7,7 @@ import * as Api from "../../../services/api";
 
 import "./pdfdokument.css";
 
-const pdfjsWorker = import("react-pdf/node_modules/pdfjs-dist/build/pdf.worker.entry");
-
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+pdfjs.GlobalWorkerOptions.workerSrc = "pdf.worker.min.js";
 
 const uuid = require("uuid/v4");
 
