@@ -77,7 +77,7 @@ class Informasjon extends Component {
     }
   };
 
-  erGyldigAvsenderID = (verdi) =>
+  static erGyldigAvsenderID = (verdi) =>
     verdi.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     verdi.length === Konstanter.ANTALL_TALL_I_DNR ||
     verdi.length === Konstanter.ANTALL_TALL_I_FNR;

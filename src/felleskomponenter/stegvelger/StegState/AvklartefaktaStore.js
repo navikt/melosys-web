@@ -2,7 +2,7 @@ import StegState from "./StegState";
 import * as Utils from "../../../utils";
 
 class Avklartfakta extends StegState {
-  lagKey = (data) => data.referanse + (data.subjektID || "");
+  static lagKey = (data) => data.referanse + (data.subjektID || "");
 
   slettFelt = (stegID, data) => {
     const { stegStore } = this;
@@ -58,7 +58,7 @@ class Avklartfakta extends StegState {
     return eksisterendeAvklarteSubjekter;
   };
 
-  nyttFelt = () => new Map();
+  static nyttFelt = () => new Map();
 
   hent = () => {
     const avklartefakta = {};

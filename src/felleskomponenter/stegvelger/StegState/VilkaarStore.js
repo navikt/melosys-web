@@ -2,7 +2,7 @@ import StegState from "./StegState";
 import * as Utils from "../../../utils";
 
 class VilkaarStore extends StegState {
-  oppdaterfelt = (eksisterendeData, nyData) => {
+  static oppdaterfelt = (eksisterendeData, nyData) => {
     const fritekst = !Utils._isNil(nyData.fritekst) ? nyData.fritekst : eksisterendeData.fritekst;
     const begrunnelse = nyData.begrunnelse || eksisterendeData.begrunnelse;
     const fritekstEngelsk = nyData.fritekstEngelsk || eksisterendeData.fritekstEngelsk;

@@ -31,7 +31,7 @@ class Bestemmelse extends Steg {
     };
     this.status = FANE_STATUS.OK;
   }
-  finnAvklaring = (bestemmelser, medlemskapsperioder, vilkar) => {
+  static finnAvklaring = (bestemmelser, medlemskapsperioder, vilkar) => {
     const valgteBestemmelseVilkar =
       bestemmelser &&
       bestemmelser.find((bestemmelseVilkar) => bestemmelseVilkar.bestemmelse === medlemskapsperioder.bestemmelse);

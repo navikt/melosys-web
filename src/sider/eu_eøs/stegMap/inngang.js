@@ -40,7 +40,7 @@ class Inngang extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  hentInngangsvilkaar = (propsLight) =>
+  static hentInngangsvilkaar = (propsLight) =>
     propsLight.vilkar?.find((enkelt) => enkelt.vilkaar === MKV.Koder.vilkaar.FO_883_2004_INNGANGSVILKAAR);
 
   harAvklaring = (propsLight) => {
@@ -48,7 +48,7 @@ class Inngang extends Steg {
     return this.oppfyllerInngangsvilkaar(inngangsvilkaar);
   };
 
-  oppfyllerInngangsvilkaar = (inngangsvilkaar) => inngangsvilkaar?.oppfylt;
+  static oppfyllerInngangsvilkaar = (inngangsvilkaar) => inngangsvilkaar?.oppfylt;
 }
 
 export default Inngang;

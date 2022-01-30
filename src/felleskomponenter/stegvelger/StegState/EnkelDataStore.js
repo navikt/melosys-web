@@ -2,7 +2,7 @@ import StegState from "./StegState";
 import * as Utils from "../../../utils";
 
 class EnkelDataStore extends StegState {
-  oppdaterfelt = (eksisterendeData, nyData) => {
+  static oppdaterfelt = (eksisterendeData, nyData) => {
     if (!Utils._isNil(nyData)) {
       return nyData;
     }

@@ -4,9 +4,9 @@ class Generator {
   static MALE = 1;
   static FEMALE = 0;
 
-  generateRandomGender = () => (Math.random() > 0.5 ? Generator.MALE : Generator.FEMALE);
+  static generateRandomGender = () => (Math.random() > 0.5 ? Generator.MALE : Generator.FEMALE);
 
-  generateRandomBirthDate = () => {
+  static generateRandomBirthDate = () => {
     const todaysYear = new Date().getFullYear();
     const startRange = new Date(todaysYear - 100, 1, 1);
     const endRange = new Date(todaysYear, 1, 1);
@@ -19,7 +19,7 @@ class Generator {
     return new Date(randomEpochWithinRange);
   };
 
-  getIndividNumberRange = (birthYear) => {
+  static getIndividNumberRange = (birthYear) => {
     if (birthYear >= 1900 && birthYear <= 1999) {
       return [0, 500];
     }
@@ -43,9 +43,9 @@ class Generator {
     return String(individNumberAdjustedForGender).padStart(3, "0");
   };
 
-  genderOddEven = (randomIndividNumber, gender) => Math.round(randomIndividNumber / 2) * 2 + gender;
+  static genderOddEven = (randomIndividNumber, gender) => Math.round(randomIndividNumber / 2) * 2 + gender;
 
-  getMonthDayYear = (date) =>
+  static getMonthDayYear = (date) =>
     `${String(date.getDate()).padStart(2, "0")}${String(date.getMonth()).padStart(2, "0")}${String(
       date.getFullYear()
     ).substr(2, 2)}`;
@@ -70,7 +70,7 @@ class Generator {
     return `${monthDayYearArray.join("")}${individNumber}`;
   };
 
-  generateControlNumbers = (partialBirthNumber) => {
+  static generateControlNumbers = (partialBirthNumber) => {
     const d1 = partialBirthNumber.charAt(0);
     const d2 = partialBirthNumber.charAt(1);
     const m1 = partialBirthNumber.charAt(2);

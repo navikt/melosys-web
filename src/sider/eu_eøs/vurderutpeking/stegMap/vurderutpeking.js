@@ -64,9 +64,10 @@ class VurderUtpeking extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  utpekingGodkjent = (utpekingVurdering) => utpekingVurdering === MKV.Koder.utfallregistreringunntak.GODKJENT;
+  static utpekingGodkjent = (utpekingVurdering) => utpekingVurdering === MKV.Koder.utfallregistreringunntak.GODKJENT;
 
-  utpekingIkkeGodkjent = (utpekingVurdering) => utpekingVurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT;
+  static utpekingIkkeGodkjent = (utpekingVurdering) =>
+    utpekingVurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT;
 
   harAvklaring = (utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid) => {
     if (this.utpekingGodkjent(utpekingVurdering)) {

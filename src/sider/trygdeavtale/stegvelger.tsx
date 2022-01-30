@@ -104,12 +104,12 @@ class Stegvelger extends Component<Props, State> {
     const prevSoknadValues = prevProps.soknadForm?.values;
 
     if (
-      this.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
       this.debouncedOppdaterSteg();
     }
@@ -120,7 +120,7 @@ class Stegvelger extends Component<Props, State> {
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
     );
 
-  harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
+  static harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
     const propsValue = getValueAtPath(propsObject, path);
     const prevPropsValue = getValueAtPath(prevPropsObject, path);
     return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
@@ -239,7 +239,7 @@ class Stegvelger extends Component<Props, State> {
     this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
   };
 
-  mapFeilmeldinger = (valideringsfeil: KontrollFeil[]) => (
+  static mapFeilmeldinger = (valideringsfeil: KontrollFeil[]) => (
     <>
       {valideringsfeil.length === 1 ? (
         KV.kodeTilTerm(valideringsfeil[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)
@@ -257,7 +257,6 @@ class Stegvelger extends Component<Props, State> {
     const {
       state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, valideringFeil },
       oppdaterAktivtSteg,
-      mapFeilmeldinger,
     } = this;
 
     const vedtakStegErAktivt = aktuelleSteg?.find((steg: AktueltSteg) => steg.vedtakSteg && steg.aktivtSteg);
@@ -271,7 +270,7 @@ class Stegvelger extends Component<Props, State> {
                 <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
                 {!Utils._isEmpty(valideringFeil) && vedtakStegErAktivt && (
                   <Nav.AlertStripeFeil className="valideringsfeil">
-                    {mapFeilmeldinger(valideringFeil)}
+                    {Stegvelger.mapFeilmeldinger(valideringFeil)}
                   </Nav.AlertStripeFeil>
                 )}
                 {aktuelleSteg.map((item: AktueltSteg) => (

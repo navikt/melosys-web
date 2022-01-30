@@ -56,7 +56,7 @@ class StegState {
     return steg[felt];
   };
 
-  nyttFelt = () => ({});
+  static nyttFelt = () => ({});
 }
 
 export default StegState;

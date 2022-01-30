@@ -131,7 +131,7 @@ class Arbeidsmonster extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  hentLandMedVesentligArbeid = (arbeidsland, marginaltArbeid) => {
+  static hentLandMedVesentligArbeid = (arbeidsland, marginaltArbeid) => {
     const erArbeidMarginaltILand = (landkode) =>
       marginaltArbeid.some((ma) => ma.subjektID === landkode && hentFaktaVerdi(ma) === BOOLSK_STRING.SANN);
     return arbeidsland.map((al) => al.kode).filter((kode) => !erArbeidMarginaltILand(kode));

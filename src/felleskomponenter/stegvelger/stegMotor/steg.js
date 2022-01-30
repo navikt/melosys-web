@@ -98,7 +98,7 @@ class Steg {
     return relevantUI.harAvklaring ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET;
   };
 
-  erVedtakSteg = (id) =>
+  static erVedtakSteg = (id) =>
     id === STEG.VEDTAK ||
     id === STEG.ENDRET_PERIODE ||
     id === STEG.AVSLAG_12_X_OG_16 ||
@@ -119,7 +119,8 @@ class Steg {
     id === STEG.ARBEID_ETT_LAND_OVRIG_VEDTAK ||
     id === STEG.VEDTAK_FTRL;
 
-  assertRegel = (regel, avklartefakta, vilkar) => (Utils._isFunction(regel) ? regel(avklartefakta, vilkar) : false);
+  static assertRegel = (regel, avklartefakta, vilkar) =>
+    Utils._isFunction(regel) ? regel(avklartefakta, vilkar) : false;
 }
 
 export default Steg;

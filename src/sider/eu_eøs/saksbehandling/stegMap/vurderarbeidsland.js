@@ -95,7 +95,7 @@ class Vurderarbeidsland extends Steg {
     return harIngenMaritimeArbeidEllerHjemmebaser ? arbeidUtforesIOppgittLand : erSokkelSkipAvklart;
   };
 
-  erSokkelSkipAvklart = (sokkelEllerSkipListe, installasjonArbeidslandListe, maritimtarbeid) => {
+  static erSokkelSkipAvklart = (sokkelEllerSkipListe, installasjonArbeidslandListe, maritimtarbeid) => {
     if (maritimtarbeid.length === 0) {
       return true;
     }
@@ -118,10 +118,10 @@ class Vurderarbeidsland extends Steg {
     });
   };
 
-  erArbeidUtforesIOppgittLandAvklart = (arbeidUtforesIOppgittLandFakta) =>
+  static erArbeidUtforesIOppgittLandAvklart = (arbeidUtforesIOppgittLandFakta) =>
     Boolean(hentFaktaVerdi(arbeidUtforesIOppgittLandFakta));
 
-  harIngenSokkelEllerHjemmebaser = (maritimeArbeid, hjemmebaser) =>
+  static harIngenSokkelEllerHjemmebaser = (maritimeArbeid, hjemmebaser) =>
     maritimeArbeid.length === 0 && hjemmebaser.length === 0;
 }
 

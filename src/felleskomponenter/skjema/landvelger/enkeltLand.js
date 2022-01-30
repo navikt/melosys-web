@@ -62,9 +62,9 @@ export class EnkeltLand extends Component {
     }
   };
 
-  fokusInnHandler = (e) => {
+  static fokusInnHandler(e) {
     e.target.select();
-  };
+  }
 
   inputTastNedHandler = (e) => {
     if (e.keyCode === 13) {

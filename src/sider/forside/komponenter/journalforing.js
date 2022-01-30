@@ -15,7 +15,7 @@ class Journalforing extends Component {
     const redirectURL = await sendSkjema(values.fagomrade);
     history.push(redirectURL);
   };
-  overrideDefaultSubmit = (event) => {
+  static overrideDefaultSubmit = (event) => {
     event.preventDefault();
   };
   render() {

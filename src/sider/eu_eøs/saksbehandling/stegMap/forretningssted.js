@@ -70,12 +70,12 @@ class Forretningssted extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  harLovvalgsbestemmelse = (perioder) => {
+  static harLovvalgsbestemmelse = (perioder) => {
     const lovvalgsbestemmelse = hentLovvalgsbestemmelse(perioder);
     return !Utils._isNil(lovvalgsbestemmelse);
   };
 
-  harOmfattetAvklaring = (propsLight) => {
+  static harOmfattetAvklaring = (propsLight) => {
     const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta);
     const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
 
@@ -91,14 +91,14 @@ class Forretningssted extends Steg {
     return !Utils._isNil(hentFaktaVerdi(omfattetILand));
   };
 
-  omfattetNorgeVurdert = (propsLight) => {
+  static omfattetNorgeVurdert = (propsLight) => {
     const omfattetNorgeAvklarteFakta = hentFakta(
       KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE,
       propsLight.avklartefakta
     );
     return !Utils._isEmpty(omfattetNorgeAvklarteFakta);
   };
-  harAvklartForretningsland = (propsLight) => {
+  static harAvklartForretningsland = (propsLight) => {
     const avklarteForretningsland = hentFaktaListe(
       KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED,
       propsLight.avklartefakta
