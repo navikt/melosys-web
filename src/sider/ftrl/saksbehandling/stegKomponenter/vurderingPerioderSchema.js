@@ -7,12 +7,9 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
 const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
-const erPeriodeTidligereEnnMottattDato = (medlemskapsperiode, mottaksdato) => {
-  return (
-    Utils.dato.erGyldigPeriode(medlemskapsperiode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
-    Utils.dato.erGyldigPeriode(medlemskapsperiode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato))
-  );
-};
+const erPeriodeTidligereEnnMottattDato = (medlemskapsperiode, mottaksdato) =>
+  Utils.dato.erGyldigPeriode(medlemskapsperiode.fomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato)) &&
+  Utils.dato.erGyldigPeriode(medlemskapsperiode.tomDato, Utils.dato.formatterDatoTilNorsk(mottaksdato));
 
 const ugyldigeInnvilgelsesResultater = (medlemskapsperioder, mottaksdato) => {
   if (!medlemskapsperioder) return false;

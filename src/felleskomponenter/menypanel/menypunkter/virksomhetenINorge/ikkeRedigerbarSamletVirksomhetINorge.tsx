@@ -44,30 +44,28 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const IkkeRedigerbarSamletVirksomhetINorge = ({ juridiskArbeidsgiverNorge }: PropsFromRedux) => {
-  return (
-    <div className="ikke-redigerbar-samlet-virksomhet-i-norge">
-      <LabelOgSvar label="Antall ansatte" svar={juridiskArbeidsgiverNorge.antallAnsatte} />
-      <LabelOgSvar label="Antall administrativt ansatte" svar={juridiskArbeidsgiverNorge.antallAdmAnsatte} />
-      <LabelOgSvar label="Antall utsendte arbeidstakere" svar={juridiskArbeidsgiverNorge.antallUtsendte} />
-      <LabelOgSvar
-        label="Andel ansatte rekruttert i Norge"
-        svar={juridiskArbeidsgiverNorge.andelRekruttertINorge}
-        percent
-      />
-      <LabelOgSvar
-        label="Andel omsetning opptjent i Norge"
-        svar={juridiskArbeidsgiverNorge.andelOmsetningINorge}
-        percent
-      />
-      <LabelOgSvar
-        label="Andel oppdragskontrakter inngått i Norge"
-        svar={juridiskArbeidsgiverNorge.andelKontrakterINorge}
-        percent
-      />
-      <LabelOgSvar label="Andel oppdrag utført i Norge" svar={juridiskArbeidsgiverNorge.andelOppdragINorge} percent />
-    </div>
-  );
-};
+const IkkeRedigerbarSamletVirksomhetINorge = ({ juridiskArbeidsgiverNorge }: PropsFromRedux) => (
+  <div className="ikke-redigerbar-samlet-virksomhet-i-norge">
+    <LabelOgSvar label="Antall ansatte" svar={juridiskArbeidsgiverNorge.antallAnsatte} />
+    <LabelOgSvar label="Antall administrativt ansatte" svar={juridiskArbeidsgiverNorge.antallAdmAnsatte} />
+    <LabelOgSvar label="Antall utsendte arbeidstakere" svar={juridiskArbeidsgiverNorge.antallUtsendte} />
+    <LabelOgSvar
+      label="Andel ansatte rekruttert i Norge"
+      svar={juridiskArbeidsgiverNorge.andelRekruttertINorge}
+      percent
+    />
+    <LabelOgSvar
+      label="Andel omsetning opptjent i Norge"
+      svar={juridiskArbeidsgiverNorge.andelOmsetningINorge}
+      percent
+    />
+    <LabelOgSvar
+      label="Andel oppdragskontrakter inngått i Norge"
+      svar={juridiskArbeidsgiverNorge.andelKontrakterINorge}
+      percent
+    />
+    <LabelOgSvar label="Andel oppdrag utført i Norge" svar={juridiskArbeidsgiverNorge.andelOppdragINorge} percent />
+  </div>
+);
 
 export default connector(IkkeRedigerbarSamletVirksomhetINorge);

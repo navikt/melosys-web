@@ -103,11 +103,8 @@ const SendBrev = ({
     return formValues.valgtMal.muligeMottakere.find((muligMottaker) => muligMottaker.uuid === uuid);
   };
 
-  const finnValgAlternativ = (felt: Felt) => {
-    return felt?.valg?.valgAlternativer.find(
-      (alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg
-    );
-  };
+  const finnValgAlternativ = (felt: Felt) =>
+    felt?.valg?.valgAlternativer.find((alternativ) => alternativ.beskrivelse === formValues?.felt?.[felt.kode]?.valg);
 
   const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false): any => {
     const feltFraValgtMal = formValues?.valgtMal?.felter?.find((felt) => felt.kode === feltNavn);
@@ -126,24 +123,21 @@ const SendBrev = ({
     return feltVerdi;
   };
 
-  const hentKopiMottakere = () => {
-    return formValues.kopimottaker
+  const hentKopiMottakere = () =>
+    formValues.kopimottaker
       ? muligeMottakere?.kopiMottakere.map(DokumenterV2.konverterMuligMottakerTilKopiMottaker)
       : [];
-  };
 
-  const hentBrevRequest = (mottakerRolle: string): DokumenterV2.OpprettBrevReqDto => {
-    return {
-      produserbardokument: formValues.type || "",
-      mottaker: mottakerRolle,
-      innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
-      manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
-      fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
-      fritekst: hentFormVerdi("FRITEKST"),
-      kopiMottakere: hentKopiMottakere() || [],
-      kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
-    };
-  };
+  const hentBrevRequest = (mottakerRolle: string): DokumenterV2.OpprettBrevReqDto => ({
+    produserbardokument: formValues.type || "",
+    mottaker: mottakerRolle,
+    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
+    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
+    fritekst: hentFormVerdi("FRITEKST"),
+    kopiMottakere: hentKopiMottakere() || [],
+    kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+  });
 
   const sendBrev = () => {
     const mottaker = finnMottakerFraValgtMal(formValues.mottaker);

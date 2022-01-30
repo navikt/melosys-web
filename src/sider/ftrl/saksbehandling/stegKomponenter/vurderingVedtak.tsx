@@ -135,31 +135,29 @@ const VurderingVedtak = ({
     });
   };
 
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => {
-    return [
-      {
-        sendesTilDokumenterV2: true,
-        navn: ikon ? (
-          <>
-            <Ikoner.Forhandsvis />
-            <span className="sr-only">Forhåndsvis dokument {muligMottaker.dokumentNavn}</span>
-          </>
-        ) : (
-          muligMottaker.dokumentNavn
-        ),
-        data: {
-          produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
-          mottaker: muligMottaker.rolle,
-          kopiMottakere: [],
-          innledningFritekst: formValues?.innledningFritekst || null,
-          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-          orgNr: muligMottaker?.orgnr || null,
-          ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
-          barnFritekst: familieFormValues?.barn?.fritekst || null,
-        },
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker, ikon?: boolean) => [
+    {
+      sendesTilDokumenterV2: true,
+      navn: ikon ? (
+        <>
+          <Ikoner.Forhandsvis />
+          <span className="sr-only">Forhåndsvis dokument {muligMottaker.dokumentNavn}</span>
+        </>
+      ) : (
+        muligMottaker.dokumentNavn
+      ),
+      data: {
+        produserbardokument: INNVILGELSE_FOLKETRYGDLOVEN_2_8,
+        mottaker: muligMottaker.rolle,
+        kopiMottakere: [],
+        innledningFritekst: formValues?.innledningFritekst || null,
+        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+        orgNr: muligMottaker?.orgnr || null,
+        ektefelleFritekst: familieFormValues?.ektefelle_samboer?.fritekst || null,
+        barnFritekst: familieFormValues?.barn?.fritekst || null,
       },
-    ];
-  };
+    },
+  ];
 
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker, kanSlettes: boolean) => {
     const sletteknapp = (
@@ -199,13 +197,11 @@ const VurderingVedtak = ({
     ];
   };
 
-  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return [
-      mapMottakerRad(mottakere.hovedMottaker, false),
-      ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, true)),
-      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, false)),
-    ];
-  };
+  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => [
+    mapMottakerRad(mottakere.hovedMottaker, false),
+    ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, true)),
+    ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker, false)),
+  ];
 
   function getTrygdeavgiftString(sentence: string, boldWord: string) {
     if (!sentence) return null;

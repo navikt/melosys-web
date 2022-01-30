@@ -122,50 +122,48 @@ type LonnOgNaturalytelserType = {
   utlArbTilhoererSammeKonsern: boolean | null;
 };
 
-const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }) => {
-  return (
-    <>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          <BooleanFeltRedigerer
-            tekst="Vil arbeidsgiver i Norge utbetale lønn i utsendingsperioden?"
-            feltNavn="norskArbgUtbetalerLoenn"
-            redigerbart={redigerbart}
-          />
-          <BooleanFeltRedigerer
-            tekst="Vil arbeidstakeren fortsatt være ansatt i utsendingsperioden?"
-            feltNavn="erArbeidstakerAnsattHelePerioden"
-            redigerbart={redigerbart}
-          />
-          <BooleanFeltRedigerer
-            tekst="Vil utenlandsk virksomhet utbetale lønn som ikke blir fakturert arbeidsgiver?"
-            feltNavn="utlArbgUtbetalerLoenn"
-            redigerbart={redigerbart}
-          />
-          <BooleanFeltRedigerer
-            tekst="Vil arbeidstakeren motta naturalytelser betalt av en utenlandsk virksomhet?"
-            feltNavn="mottarNaturalytelser"
-            redigerbart={redigerbart}
-          />
-          <BooleanFeltRedigerer
-            tekst="Tilhører det utenlandske foretaket samme konsern som arbeidsgiver?"
-            feltNavn="utlArbTilhoererSammeKonsern"
-            redigerbart={redigerbart}
-          />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <InntektRedigerer feltNavn="bruttoLoennPerMnd" tittel="Lønn fra Norge" redigerbart={redigerbart} />
-        <InntektRedigerer feltNavn="bruttoLoennUtlandPerMnd" tittel="Lønn fra utlandet" redigerbart={redigerbart} />
-        <InntektRedigerer
-          feltNavn="samletVerdiNaturalytelser"
-          tittel="Naturalytelser fra utlandet"
+const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }) => (
+  <>
+    <Nav.Row>
+      <Nav.Column xs="12">
+        <BooleanFeltRedigerer
+          tekst="Vil arbeidsgiver i Norge utbetale lønn i utsendingsperioden?"
+          feltNavn="norskArbgUtbetalerLoenn"
           redigerbart={redigerbart}
         />
-      </Nav.Row>
-    </>
-  );
-};
+        <BooleanFeltRedigerer
+          tekst="Vil arbeidstakeren fortsatt være ansatt i utsendingsperioden?"
+          feltNavn="erArbeidstakerAnsattHelePerioden"
+          redigerbart={redigerbart}
+        />
+        <BooleanFeltRedigerer
+          tekst="Vil utenlandsk virksomhet utbetale lønn som ikke blir fakturert arbeidsgiver?"
+          feltNavn="utlArbgUtbetalerLoenn"
+          redigerbart={redigerbart}
+        />
+        <BooleanFeltRedigerer
+          tekst="Vil arbeidstakeren motta naturalytelser betalt av en utenlandsk virksomhet?"
+          feltNavn="mottarNaturalytelser"
+          redigerbart={redigerbart}
+        />
+        <BooleanFeltRedigerer
+          tekst="Tilhører det utenlandske foretaket samme konsern som arbeidsgiver?"
+          feltNavn="utlArbTilhoererSammeKonsern"
+          redigerbart={redigerbart}
+        />
+      </Nav.Column>
+    </Nav.Row>
+    <Nav.Row>
+      <InntektRedigerer feltNavn="bruttoLoennPerMnd" tittel="Lønn fra Norge" redigerbart={redigerbart} />
+      <InntektRedigerer feltNavn="bruttoLoennUtlandPerMnd" tittel="Lønn fra utlandet" redigerbart={redigerbart} />
+      <InntektRedigerer
+        feltNavn="samletVerdiNaturalytelser"
+        tittel="Naturalytelser fra utlandet"
+        redigerbart={redigerbart}
+      />
+    </Nav.Row>
+  </>
+);
 
 const LonnOgNaturalytelserRedigeringUtfort = ({
   norskArbgUtbetalerLoenn,

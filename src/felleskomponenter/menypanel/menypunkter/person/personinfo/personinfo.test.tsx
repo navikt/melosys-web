@@ -44,8 +44,8 @@ describe("Personinfo", () => {
     expect(sivilstandModal.contains("Henter sivilstand...")).toBe(true);
   });
 
-  it("viser melding ved nettverkserror under henting av sivilstand", () => {
-    return act(async () => {
+  it("viser melding ved nettverkserror under henting av sivilstand", () =>
+    act(async () => {
       const personinfo = await mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
@@ -72,6 +72,5 @@ describe("Personinfo", () => {
         (n) => n.type() === Nav.AlertStripeFeil && n.contains("Feil ved henting av sivilstand!")
       );
       expect(alertstripe).toHaveLength(1);
-    });
-  });
+    }));
 });

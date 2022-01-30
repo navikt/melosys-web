@@ -118,14 +118,12 @@ const VurderingVedtak = ({
     return true;
   };
 
-  const getKopiMottakere = () => {
-    return [
-      ...muligeMottakere.kopiMottakere
-        .filter(filterKopiMottakere)
-        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-      ...muligeMottakere.fasteMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-    ];
-  };
+  const getKopiMottakere = () => [
+    ...muligeMottakere.kopiMottakere
+      .filter(filterKopiMottakere)
+      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    ...muligeMottakere.fasteMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+  ];
 
   const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
@@ -186,49 +184,43 @@ const VurderingVedtak = ({
     }
   };
 
-  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    return [
-      {
-        sendesTilDokumenterV2: true,
-        navn: muligMottaker.dokumentNavn,
-        data: {
-          produserbardokument: STORBRITANNIA,
-          mottaker: muligMottaker.rolle,
-          kopiMottakere: getKopiMottakere(),
-          innledningFritekst: formValues?.innledningFritekst || null,
-          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-          orgNr: muligMottaker?.orgnr || null,
-          institusjonId: muligMottaker?.institusjonId || null,
-          ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
-          barnFritekst: familieFormValues?.barn?.fritekst || null,
-        },
+  const lagDokumenterData = (muligMottaker: Api.DokumenterV2.MuligMottaker) => [
+    {
+      sendesTilDokumenterV2: true,
+      navn: muligMottaker.dokumentNavn,
+      data: {
+        produserbardokument: STORBRITANNIA,
+        mottaker: muligMottaker.rolle,
+        kopiMottakere: getKopiMottakere(),
+        innledningFritekst: formValues?.innledningFritekst || null,
+        begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+        orgNr: muligMottaker?.orgnr || null,
+        institusjonId: muligMottaker?.institusjonId || null,
+        ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
+        barnFritekst: familieFormValues?.barn?.fritekst || null,
       },
-    ];
-  };
+    },
+  ];
 
-  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    return [
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker)}
-            vedKlikk={() => true}
-            className={vurderingVedtakCls.element("forhåndsvisning")}
-          />
-        ),
-      },
-      { verdi: muligMottaker.mottakerNavn },
-    ];
-  };
+  const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => [
+    {
+      verdi: (
+        <PdfLenkeListe
+          behandlingID={behandlingID}
+          dokumenter={lagDokumenterData(muligMottaker)}
+          vedKlikk={() => true}
+          className={vurderingVedtakCls.element("forhåndsvisning")}
+        />
+      ),
+    },
+    { verdi: muligMottaker.mottakerNavn },
+  ];
 
-  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return [
-      mapMottakerRad(mottakere.hovedMottaker),
-      ...mottakere.kopiMottakere.filter(filterKopiMottakere).map((muligMottaker) => mapMottakerRad(muligMottaker)),
-      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
-    ];
-  };
+  const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => [
+    mapMottakerRad(mottakere.hovedMottaker),
+    ...mottakere.kopiMottakere.filter(filterKopiMottakere).map((muligMottaker) => mapMottakerRad(muligMottaker)),
+    ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
+  ];
 
   const fattVedtak = async () => {
     setVedtakPending(true);

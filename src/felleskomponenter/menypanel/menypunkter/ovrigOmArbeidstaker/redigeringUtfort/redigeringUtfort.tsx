@@ -27,45 +27,43 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const RedigeringUtfort = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
-  return (
-    <div className="ovrig-om-arbeidstaker__redigering-utfort">
-      <LabelOgSvar
-        label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
-        svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending} />}
+export const RedigeringUtfort = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => (
+  <div className="ovrig-om-arbeidstaker__redigering-utfort">
+    <LabelOgSvar
+      label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
+      svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending} />}
+    />
+    {arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending === false && (
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseArbeidSisteMnd}
+        tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
       />
-      {arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending === false && (
-        <Beskrivelse
-          className="beskrivelse"
-          label={Sporsmal.beskrivelseArbeidSisteMnd}
-          tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
-        />
-      )}
-      <LabelOgSvar
-        label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
-        svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden} />}
+    )}
+    <LabelOgSvar
+      label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
+      svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden} />}
+    />
+    {arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden === true && (
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseAnnetArbeid}
+        tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
       />
-      {arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden === true && (
-        <Beskrivelse
-          className="beskrivelse"
-          label={Sporsmal.beskrivelseAnnetArbeid}
-          tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
-        />
-      )}
-      <LabelOgSvar
-        label={Sporsmal.erSkattepliktig}
-        svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.erSkattepliktig} />}
-      />
-      <LabelOgSvar
-        label={Sporsmal.mottarYtelserNorge}
-        svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.mottarYtelserNorge} />}
-      />
-      <LabelOgSvar
-        label={Sporsmal.mottarYtelserUtlandet}
-        svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.mottarYtelserUtlandet} />}
-      />
-    </div>
-  );
-};
+    )}
+    <LabelOgSvar
+      label={Sporsmal.erSkattepliktig}
+      svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.erSkattepliktig} />}
+    />
+    <LabelOgSvar
+      label={Sporsmal.mottarYtelserNorge}
+      svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.mottarYtelserNorge} />}
+    />
+    <LabelOgSvar
+      label={Sporsmal.mottarYtelserUtlandet}
+      svar={<JaNeiSvar svar={arbeidssituasjonOgOevrig.mottarYtelserUtlandet} />}
+    />
+  </div>
+);
 
 export default connector(RedigeringUtfort);

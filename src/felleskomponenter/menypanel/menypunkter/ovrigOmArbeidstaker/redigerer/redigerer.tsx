@@ -27,45 +27,43 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => {
-  return (
-    <div className="ovrig-om-arbeidstaker__redigerer">
-      <LabelOgEditerbartSvar
-        label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending" />}
+export const Redigerer = ({ arbeidssituasjonOgOevrig }: PropsFromRedux) => (
+  <div className="ovrig-om-arbeidstaker__redigerer">
+    <LabelOgEditerbartSvar
+      label={Sporsmal.harLoennetArbeidMinstEnMndFoerUtsending}
+      svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending" />}
+    />
+    {arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending === false && (
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseArbeidSisteMnd}
+        tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
       />
-      {arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending === false && (
-        <Beskrivelse
-          className="beskrivelse"
-          label={Sporsmal.beskrivelseArbeidSisteMnd}
-          tekst={arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd}
-        />
-      )}
-      <LabelOgEditerbartSvar
-        label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden" />}
+    )}
+    <LabelOgEditerbartSvar
+      label={Sporsmal.harAndreArbeidsgivereIUtsendingsperioden}
+      svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden" />}
+    />
+    {arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden === true && (
+      <Beskrivelse
+        className="beskrivelse"
+        label={Sporsmal.beskrivelseAnnetArbeid}
+        tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
       />
-      {arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden === true && (
-        <Beskrivelse
-          className="beskrivelse"
-          label={Sporsmal.beskrivelseAnnetArbeid}
-          tekst={arbeidssituasjonOgOevrig.beskrivelseAnnetArbeid}
-        />
-      )}
-      <LabelOgEditerbartSvar
-        label={Sporsmal.erSkattepliktig}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.erSkattepliktig" />}
-      />
-      <LabelOgEditerbartSvar
-        label={Sporsmal.mottarYtelserNorge}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserNorge" />}
-      />
-      <LabelOgEditerbartSvar
-        label={Sporsmal.mottarYtelserUtlandet}
-        svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserUtlandet" />}
-      />
-    </div>
-  );
-};
+    )}
+    <LabelOgEditerbartSvar
+      label={Sporsmal.erSkattepliktig}
+      svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.erSkattepliktig" />}
+    />
+    <LabelOgEditerbartSvar
+      label={Sporsmal.mottarYtelserNorge}
+      svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserNorge" />}
+    />
+    <LabelOgEditerbartSvar
+      label={Sporsmal.mottarYtelserUtlandet}
+      svar={<RadioknappSvar feltNavn="arbeidssituasjonOgOevrig.mottarYtelserUtlandet" />}
+    />
+  </div>
+);
 
 export default connector(Redigerer);

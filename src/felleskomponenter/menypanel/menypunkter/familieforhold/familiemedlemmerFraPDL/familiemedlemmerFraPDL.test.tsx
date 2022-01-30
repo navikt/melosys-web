@@ -25,8 +25,8 @@ describe("FamiliemedlemmerFraPDL", () => {
     expect(familiemedlemmerFraPDL.contains("Henter familiemedlemmer...")).toBe(true);
   });
 
-  it("viser melding ved nettverkserror", () => {
-    return act(async () => {
+  it("viser melding ved nettverkserror", () =>
+    act(async () => {
       const familiemedlemmerFraPDL = await mount(<FamiliemedlemmerFraPDL {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
@@ -51,6 +51,5 @@ describe("FamiliemedlemmerFraPDL", () => {
 
       const alertstripe = familiemedlemmerFraPDL.find(Nav.AlertStripeFeil);
       expect(alertstripe.contains("Kunne ikke hente familiemedlemmer!")).toBe(true);
-    });
-  });
+    }));
 });

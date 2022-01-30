@@ -48,8 +48,8 @@ describe("Informasjonsmodal", () => {
     expect(informasjonsmodal.find(Nav.NavFrontendSpinner)).toHaveLength(1);
   });
 
-  it("viser melding ved nettverkserror under henting av bostedsadresse", () => {
-    return act(async () => {
+  it("viser melding ved nettverkserror under henting av bostedsadresse", () =>
+    act(async () => {
       const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
@@ -74,11 +74,10 @@ describe("Informasjonsmodal", () => {
 
       const alertstripe = informasjonsmodal.find(Nav.AlertStripeFeil);
       expect(alertstripe.contains("Feil ved henting av bostedsadresse!")).toBe(true);
-    });
-  });
+    }));
 
-  it("viser navn og adresse for annen forelder etter data er hentet", () => {
-    return act(async () => {
+  it("viser navn og adresse for annen forelder etter data er hentet", () =>
+    act(async () => {
       const bostedsadresser: Bostedsadresse[] = [
         {
           coAdressenavn: "coAdressenavn",
@@ -137,11 +136,10 @@ describe("Informasjonsmodal", () => {
       expect(informasjonsmodal.contains("FREG")).toBe(true);
       const strukturertAdresse = informasjonsmodal.find(StrukturertAdresse);
       expect(strukturertAdresse.props().adresse).toEqual(bostedsadresser[0].adresse);
-    });
-  });
+    }));
 
-  it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () => {
-    return act(async () => {
+  it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () =>
+    act(async () => {
       const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
@@ -182,6 +180,5 @@ describe("Informasjonsmodal", () => {
       expect(tabellColumns.at(1).text()).toContain("Ukjent");
       expect(tabellColumns.at(2).text()).toContain("Ukjent");
       expect(tabellColumns.at(3).text()).toContain("Ukjent");
-    });
-  });
+    }));
 });

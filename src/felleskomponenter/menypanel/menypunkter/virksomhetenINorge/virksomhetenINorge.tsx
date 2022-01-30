@@ -35,22 +35,20 @@ interface SporsmalOgSvarProps {
   svar: ReactNode;
 }
 
-const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => {
-  return (
-    <Nav.Row className="sporsmal-og-svar">
-      <fieldset>
-        <Nav.Column xs="7">
-          <legend>
-            <Nav.Typo.Normaltekst>{sporsmal}</Nav.Typo.Normaltekst>
-          </legend>
-        </Nav.Column>
-        <Nav.Column xs="5" className="col">
-          {svar}
-        </Nav.Column>
-      </fieldset>
-    </Nav.Row>
-  );
-};
+const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => (
+  <Nav.Row className="sporsmal-og-svar">
+    <fieldset>
+      <Nav.Column xs="7">
+        <legend>
+          <Nav.Typo.Normaltekst>{sporsmal}</Nav.Typo.Normaltekst>
+        </legend>
+      </Nav.Column>
+      <Nav.Column xs="5" className="col">
+        {svar}
+      </Nav.Column>
+    </fieldset>
+  </Nav.Row>
+);
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 

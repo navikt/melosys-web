@@ -87,7 +87,5 @@ export function separerListeMedBindestrek(liste) {
   if (typeof liste === "string") {
     return liste;
   }
-  return liste.reduce((s, e, i) => {
-    return `${s}${e}${i === liste.length - 1 ? "" : " - "}`;
-  }, "");
+  return liste.reduce((s, e, i) => `${s}${e}${i === liste.length - 1 ? "" : " - "}`, "");
 }

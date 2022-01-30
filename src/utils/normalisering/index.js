@@ -21,6 +21,5 @@ export const normalizeDate = (value) => {
   return vasketDato || value;
 };
 
-export const begrensAntallTegn = (antallTegn) => (value) => {
-  return antallTegn && value.length > antallTegn ? value.substr(0, antallTegn) : value;
-};
+export const begrensAntallTegn = (antallTegn) => (value) =>
+  antallTegn && value.length > antallTegn ? value.substr(0, antallTegn) : value;

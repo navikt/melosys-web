@@ -58,46 +58,39 @@ const BrevMottakereTabell = ({
     ];
   };
 
-  const mapRad = (muligMottaker: DokumenterV2.MuligMottaker) => {
-    return [
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker)}
-            vedKlikk={() => formIsValid}
-            className="forhåndsvisning"
-          />
-        ),
-      },
-      { verdi: muligMottaker.mottakerNavn },
-      {
-        verdi: (
-          <PdfLenkeListe
-            behandlingID={behandlingID}
-            dokumenter={lagDokumenterData(muligMottaker, true)}
-            vedKlikk={() => formIsValid}
-            className="forhåndsvisning"
-          />
-        ),
-        style: "midtstilt",
-      },
-    ];
-  };
+  const mapRad = (muligMottaker: DokumenterV2.MuligMottaker) => [
+    {
+      verdi: (
+        <PdfLenkeListe
+          behandlingID={behandlingID}
+          dokumenter={lagDokumenterData(muligMottaker)}
+          vedKlikk={() => formIsValid}
+          className="forhåndsvisning"
+        />
+      ),
+    },
+    { verdi: muligMottaker.mottakerNavn },
+    {
+      verdi: (
+        <PdfLenkeListe
+          behandlingID={behandlingID}
+          dokumenter={lagDokumenterData(muligMottaker, true)}
+          vedKlikk={() => formIsValid}
+          className="forhåndsvisning"
+        />
+      ),
+      style: "midtstilt",
+    },
+  ];
 
-  const mapKopiMottakere = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
-    return formValues?.kopimottaker
-      ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker))
-      : [];
-  };
+  const mapKopiMottakere = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) =>
+    formValues?.kopimottaker ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapRad(muligMottaker)) : [];
 
-  const mapMottakerRader = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => {
-    return [
-      mapRad(muligeBrevMottakere.hovedMottaker),
-      ...mapKopiMottakere(muligeBrevMottakere),
-      ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker)),
-    ];
-  };
+  const mapMottakerRader = (muligeBrevMottakere: DokumenterV2.HentMuligeMottakereResDto) => [
+    mapRad(muligeBrevMottakere.hovedMottaker),
+    ...mapKopiMottakere(muligeBrevMottakere),
+    ...muligeBrevMottakere.fasteMottakere.map((muligMottaker) => mapRad(muligMottaker)),
+  ];
 
   return (
     <>
