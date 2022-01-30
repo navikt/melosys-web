@@ -126,18 +126,10 @@
       }
     }
   ],
-  "extends": [
-    "react-app",
-    "airbnb",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "prettier",
-    "prettier/@typescript-eslint",
-    "prettier/react"
-  ],
-  "plugins": ["jsx-a11y", "jest", "@typescript-eslint"],
+  "extends": ["react-app", "airbnb", "plugin:@typescript-eslint/eslint-recommended", "prettier"],
+  "plugins": ["jsx-a11y", "jest"],
   "env": {
-    "browser": true,
-    "jest/globals": true
+    "browser": true
   },
   "globals": {
     "shallow": true,
