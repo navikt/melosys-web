@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import ReactHighcharts from "react-highcharts";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
@@ -82,7 +83,7 @@ class Inntekt extends Component {
     const inntektInnhold = harMinstEnInntekt && (
       <div className="inntekt">
         <div className="inntekt__graf">
-          <ReactHighcharts config={grafConfig} />
+          <HighchartsReact highcharts={Highcharts} options={grafConfig} />
           <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
             {this.state.visInntektTabell ? "Skjul tabellen" : "Vis grafen som tabell"}
           </Nav.Knapp>
