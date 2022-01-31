@@ -9,7 +9,7 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 
 import { formSelectors } from "../../../../../ducks/form";
-import EditerbartElement from "../../editerbartElement";
+import EditerbartElement, { Status } from "../../editerbartElement";
 import RedigeringUtfort from "./redigeringUtfort";
 import Redigerer from "./redigerer";
 import IngenDataRender from "./ingenDataRender";
@@ -21,7 +21,8 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  initializeRepresentantNavn: () => dispatch(change(KV.Form.SOKNAD, "representantIUtlandet.representantNavn", "")),
+  initializeRepresentantIUtlandet: (value: KV.Form.RepresentantIUtlandet) =>
+    dispatch(change(KV.Form.SOKNAD, "representantIUtlandet", value)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -35,7 +36,7 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
     redigerbart,
     soknadsland,
     behandlingsgrunnlagFeilmeldinger,
-    initializeRepresentantNavn,
+    initializeRepresentantIUtlandet,
     input: { value, onChange },
   } = props;
 
@@ -44,7 +45,7 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
   const slettRepresentantIUtlandet = () => onChange(null);
 
   const handleApneRedigering = async (apneRedigering: () => void) => {
-    await initializeRepresentantNavn();
+    await initializeRepresentantIUtlandet({ representantNavn: "", adresselinjer: ["", "", ""] });
     apneRedigering();
   };
 
@@ -64,9 +65,10 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
         <IngenDataRender
           redigerbart={redigerbart}
           onClick={() => handleApneRedigering(apneRedigering)}
-          lenketekst="Legg til representant i utlandet"
+          lenketekst="Legg til arbeidssted/representant"
         />
       )}
+      symbolsynlighet={{ [Status.Redigerer]: { pencil: false, bin: true } }}
     />
   );
 };

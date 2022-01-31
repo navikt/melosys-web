@@ -62,7 +62,7 @@ const PersonstatusModal = ({
 
       <Nav.Typo.Undertittel>Historikk</Nav.Typo.Undertittel>
       <div className={personstatusModalCls.element("gyldighetsinfo")}>
-        <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra folkeregisteret kan være mangelfulle.</Nav.Typo.EtikettLiten>
+        <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra Folkeregisteret kan være unøyaktig.</Nav.Typo.EtikettLiten>
         <Nav.Hjelpetekst>
           <p>Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret.</p>
           <p>

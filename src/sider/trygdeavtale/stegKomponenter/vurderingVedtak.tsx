@@ -53,6 +53,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
       ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
     lovvalgsperiodeTom:
       ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
+    kopiTilArbeidsgiver: true,
   },
   formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
   erNyVurdering:
@@ -117,7 +118,7 @@ const VurderingVedtak = ({
   const isMounted = Hooks.useIsMounted();
 
   const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
+    if ([KV.Koder.MottakerRolle.ARBEIDSGIVER, KV.Koder.MottakerRolle.REPRESENTANT].includes(muligMottaker?.rolle)) {
       return formValues?.kopiTilArbeidsgiver;
     }
     return true;
@@ -167,7 +168,7 @@ const VurderingVedtak = ({
     if (behandlingsgrunnlagStatus === "OK" && redigerbart) {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
-  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus]);
+  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
@@ -200,7 +201,7 @@ const VurderingVedtak = ({
         data: {
           produserbardokument: STORBRITANNIA,
           mottaker: muligMottaker.rolle,
-          kopiMottakere: [],
+          kopiMottakere: getKopiMottakere(),
           innledningFritekst: formValues?.innledningFritekst || null,
           begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
