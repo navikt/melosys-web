@@ -15,6 +15,7 @@ import EditerbartElementListe from "../editerbartElementListe";
 import { useFeatureToggle } from "../../../../featuretoggle";
 
 import "./familieforholdContainer.css";
+import { visAldriBinSymbolsynlighet } from "../editerbartElement/editerbartElement";
 
 const { ARBEID_I_UTLANDET, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
@@ -84,6 +85,7 @@ const FamilieforholdContainer = ({
                     hentDefaultElement={() => ({ uuid: Utils._uuid() })}
                     tittelTekst="Barn"
                     tittelUnderstrek={false}
+                    symbolsynlighet={visAldriBinSymbolsynlighet}
                     harData={(elementListe) => elementListe.length !== 0 && elementListe.every((v) => v)}
                     flereRedigeringsknapper={false}
                     onLagreClick={sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn}
