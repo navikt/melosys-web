@@ -43,7 +43,7 @@ DialogboksAvsluttSakSomBortfalt.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  redigerbart: redigerbartSelectors.ModalAvsluttSomBortfaltRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps)(DialogboksAvsluttSakSomBortfalt);

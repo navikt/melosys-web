@@ -48,7 +48,7 @@ DialogboksFerdigbehandleNyVurdering.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  redigerbart: redigerbartSelectors.ModalFerdigbehandleNyVurderingRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps)(DialogboksFerdigbehandleNyVurdering);

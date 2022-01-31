@@ -46,15 +46,3 @@ export const BehandlingsmenyRedigerbartSelector = createSelector(
   (redigerbart, erStatusAnmodningunntakSendt, erEndretPeriode) =>
     erEndretPeriode || erStatusAnmodningunntakSendt || redigerbart
 );
-export const ModalHenleggRedigerbartSelector = createSelector(
-  BehandlingsmenyRedigerbartSelector,
-  (redigerbart) => redigerbart
-);
-export const ModalAvsluttSomBortfaltRedigerbartSelector = createSelector(
-  BehandlingsmenyRedigerbartSelector,
-  (redigerbart) => redigerbart
-);
-export const ModalFerdigbehandleNyVurderingRedigerbartSelector = createSelector(
-  BehandlingsmenyRedigerbartSelector,
-  (redigerbart) => redigerbart
-);
