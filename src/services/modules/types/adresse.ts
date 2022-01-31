@@ -26,6 +26,7 @@ export interface StrukturertAdresse {
   postnummer: string | null;
   poststed: string | null;
   landkode: string | null;
+  coAdressenavn: string | null;
 }
 
 export interface MidlertidigAdresse {
