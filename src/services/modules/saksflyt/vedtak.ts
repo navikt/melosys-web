@@ -21,11 +21,10 @@ export interface FattVedtakFTRLReqDto {
   ektefelleFritekst: string | null;
   barnFritekst: string | null;
   kopiMottakere: KopiMottaker[];
+  revurderBegrunnelse: string | null | undefined;
 }
 
-export type FattVedtakTrygdeavtaleReqDto = FattVedtakFTRLReqDto & {
-  nyVurderingBakgrunn: string | null;
-};
+export type FattVedtakTrygdeavtaleReqDto = FattVedtakFTRLReqDto;
 
 interface EndreVedtakReqDto {
   begrunnelseKode: string;

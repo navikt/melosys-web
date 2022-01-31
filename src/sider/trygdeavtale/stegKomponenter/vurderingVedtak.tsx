@@ -141,7 +141,7 @@ const VurderingVedtak = ({
     barnFritekst: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     kopiMottakere: getKopiMottakere(),
-    nyVurderingBakgrunn: formValues?.nyVurderingBakgrunn || null,
+    revurderBegrunnelse: formValues?.nyVurderingBakgrunn || null,
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
