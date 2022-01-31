@@ -27,7 +27,7 @@ export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) 
           <Nav.Column xs="5">{status.tekst}</Nav.Column>
           <Nav.Column xs="2">{status.kilde}</Nav.Column>
           <Nav.Column xs="2">{status.master}</Nav.Column>
-          <Nav.Column xs="3">{status.fregGyldighetstidspunkt}</Nav.Column>
+          <Nav.Column xs="3">{Utils.dato.formatterDatoTilNorsk(status.fregGyldighetstidspunkt)}</Nav.Column>
         </Nav.Row>
       ))}
     </div>
