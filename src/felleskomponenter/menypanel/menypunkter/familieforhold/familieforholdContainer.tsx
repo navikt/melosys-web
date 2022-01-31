@@ -103,6 +103,7 @@ const FamilieforholdContainer = ({
                     tittelTekst="Ektefelle/partner/samboer"
                     tittelUnderstrek={false}
                     harData={(elementListe) => elementListe.length !== 0 && elementListe.every((v) => v)}
+                    maksAntallElementer={1}
                     flereRedigeringsknapper={false}
                     onLagreClick={sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn}
                   />

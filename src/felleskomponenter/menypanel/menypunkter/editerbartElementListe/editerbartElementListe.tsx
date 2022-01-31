@@ -24,6 +24,7 @@ interface BaseProps {
   hentNavn?: (element: any) => string;
   tittelTekst: string;
   harData: (elementer: any[], element: any) => boolean;
+  maksAntallElementer?: number;
   tittelIkon?: ElementType;
   tittelUnderstrek?: boolean;
   elementUnderstrek?: boolean;
@@ -59,6 +60,7 @@ export const InnerEditerbartElementListe = ({
   hentNavn,
   tittelTekst,
   harData,
+  maksAntallElementer,
   tittelIkon,
   tittelUnderstrek = false,
   elementUnderstrek,
@@ -75,6 +77,8 @@ export const InnerEditerbartElementListe = ({
   const elementer = fields.getAll();
 
   const innerLeggTilTekst = typeof leggTilTekst === "function" ? leggTilTekst(elementer) : leggTilTekst;
+
+  const kanLeggeTilFlereElementer = !maksAntallElementer || fields.length < maksAntallElementer;
 
   const lagreClickHandler = () => {
     if (onLagreClick) {
@@ -120,6 +124,7 @@ export const InnerEditerbartElementListe = ({
           tittelTekst={tittelTekst}
           leggTilTekst={innerLeggTilTekst}
           leggTil={leggTil}
+          kanLeggeTilFlereElementer={kanLeggeTilFlereElementer}
           onBinClick={onBinClick}
           symbolsynlighet={symbolsynlighet}
           onLagreClick={lagreClickHandler}

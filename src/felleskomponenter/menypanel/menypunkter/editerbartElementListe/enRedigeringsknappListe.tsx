@@ -51,6 +51,7 @@ interface EnRedigeringsKnappListeProps<T> {
   tittelTekst: string;
   leggTil: () => void;
   leggTilTekst: string;
+  kanLeggeTilFlereElementer?: boolean;
   onBinClick?: (index: number) => void;
   symbolsynlighet?: SymbolsynlighetConfig;
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
@@ -72,6 +73,7 @@ function EnRedigeringsKnappListe<T>({
   tittelTekst,
   leggTil,
   leggTilTekst,
+  kanLeggeTilFlereElementer = true,
   onBinClick,
   symbolsynlighet,
   onLagreClick,
@@ -148,7 +150,7 @@ function EnRedigeringsKnappListe<T>({
               </div>
             );
           })}
-          {redigerbart && (
+          {redigerbart && kanLeggeTilFlereElementer && (
             <div>
               <Mui.Knappelenke onClick={leggTil} ikon={Ikoner.Add}>
                 {leggTilTekst}
