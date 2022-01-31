@@ -154,12 +154,12 @@ const VurderingVedtak = ({
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
 
   useEffect(() => {
-    debouncedKontrollerVedtak(oppdaterFørKontroll);
+    if (redigerbart) debouncedKontrollerVedtak(oppdaterFørKontroll);
     return () => debouncedKontrollerVedtak.cancel();
   }, []);
 
   useEffect(() => {
-    if (behandlingsgrunnlagStatus === "OK") {
+    if (behandlingsgrunnlagStatus === "OK" && redigerbart) {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
   }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
