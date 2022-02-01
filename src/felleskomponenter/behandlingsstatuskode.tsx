@@ -15,18 +15,18 @@ const getIkon = (status: string) => {
     case MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING:
     case MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT:
     case MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT:
-      return <Ikoner.LockOpen />;
+      return <Ikoner.LockOpenFilled color="#0056B4" />;
     case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL:
     case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART:
     case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_FAGLIG_AVKLARING:
     case MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT:
-      return <Ikoner.Clock />;
+      return <Ikoner.ClockFilled color="#0056B4" />;
     case MKV.Koder.behandlinger.behandlingsstatus.TIDSFRIST_UTLOEPT:
-      return <Ikoner.Clock />;
+      return <Ikoner.ClockFilled color="#D47B00" />;
     case MKV.Koder.behandlinger.behandlingsstatus.IVERKSETTER_VEDTAK:
     case MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING:
     case MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET:
-      return <Ikoner.LockClosed />;
+      return <Ikoner.LockClosedFilled color="#6A6A6A" />;
     default:
       return null;
   }

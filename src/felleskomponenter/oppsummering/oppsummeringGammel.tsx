@@ -11,7 +11,7 @@ import * as Api from "../../services/api";
 
 import EnkeltDato from "../datoOmrade/enkeltDato";
 
-import "./oppsummering.css";
+import "./oppsummeringGammel.css";
 
 interface OppsummeringProps {
   arbeidsland?: KTObject[];

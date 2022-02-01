@@ -62,7 +62,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     const rows: JSX.Element[] = [];
     data.forEach((row) =>
       rows.push(
-        <Nav.Row>
+        <Nav.Row className="datarad" key={`datarad-${row[0]}`}>
           <OppsummeringVerdiPar nokkel={row[0]} verdi={row[1]} ekstrafelt={<span className="kursiv">{row[2]}</span>} />
         </Nav.Row>
       )
@@ -72,18 +72,26 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const tabellToKolonner = (col1: string[][], col2: string[][]) => {
     const rows = [];
-    for (let i = 0; i < 3; i += 1) {
+    for (let i = 0; i < Math.max(col1.length, col2.length); i += 1) {
       rows.push(
-        <Nav.Row>
+        <Nav.Row className="datarad" key={`datarad-${i}`}>
           <Nav.Column xs="6">
-            {i < col1.length && <OppsummeringVerdiPar nokkel={col1[i][0]} verdi={col1[i][1]} />}
+            {i < col1.length && (
+              <OppsummeringVerdiPar
+                nokkel={col1[i][0]}
+                verdi={col1[i][1]}
+                ekstrafelt={<span className="kursiv">{col1[i][2]}</span>}
+              />
+            )}
           </Nav.Column>
           <Nav.Column xs="6">
-            <OppsummeringVerdiPar
-              nokkel={col2[i][0]}
-              verdi={col2[i][1]}
-              ekstrafelt={<span className="kursiv">{col2[i][2]}</span>}
-            />
+            {i < col2.length && (
+              <OppsummeringVerdiPar
+                nokkel={col2[i][0]}
+                verdi={col2[i][1]}
+                ekstrafelt={<span className="kursiv">{col2[i][2]}</span>}
+              />
+            )}
           </Nav.Column>
         </Nav.Row>
       );
@@ -107,14 +115,12 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   return (
     <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
-      <dl>
-        <Nav.Row>
-          <span className="bold">Saksnummer: </span>
-          <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
-            {saksnummer}
-          </KopierbarTekst>
-        </Nav.Row>
-      </dl>
+      <Nav.Row className="datarad">
+        <span className="bold">Saksnummer: </span>
+        <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
+          {saksnummer}
+        </KopierbarTekst>
+      </Nav.Row>
 
       <Nav.Panel className="saksinfo">
         <Nav.Row>
@@ -129,19 +135,23 @@ const Oppsummering = (props: OppsummeringProps) => {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <span className="bold">{KV.objektTilTerm(behandlingstype)}</span>
-        </Nav.Row>
-        <Nav.Row>
-          <span className="bold">{KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema)}</span>
-        </Nav.Row>
-        <Nav.Row>
-          <OppsummeringVerdiPar nokkel="Frist" verdi={formatterDatoTilNorsk(behandlingsfrist)} />
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="2">
-            <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
+          <Nav.Column xs="12">
+            <span className="bold">{KV.objektTilTerm(behandlingstype)}</span>
           </Nav.Column>
-          <Nav.Column xs="5">
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <span className="bold">{KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema)}</span>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <OppsummeringVerdiPar nokkel="Frist" verdi={formatterDatoTilNorsk(behandlingsfrist)} />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12" className="behandlingsstatus">
+            <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
             <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist) || "-"})`}</span>
           </Nav.Column>
         </Nav.Row>

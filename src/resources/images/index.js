@@ -16,6 +16,7 @@ import { ReactComponent as Cancel } from "./cancel.svg";
 import { ReactComponent as CheckList } from "./check-list.svg";
 import { ReactComponent as Child } from "./child.svg";
 import { ReactComponent as Clock } from "./clock.svg";
+import { ReactComponent as ClockFilled } from "./clock-filled.svg";
 import { ReactComponent as CoApplicant } from "./co-applicant.svg";
 import { ReactComponent as Copy } from "./copy.svg";
 import { ReactComponent as Eye } from "./eye.svg";
@@ -41,7 +42,9 @@ import { ReactComponent as Kvinne } from "./ikon-kvinne.svg";
 import { ReactComponent as Kontor } from "./kontor.svg";
 import { ReactComponent as Location } from "./location.svg";
 import { ReactComponent as LockClosed } from "./lock-closed.svg";
+import { ReactComponent as LockClosedFilled } from "./lock-closed-filled.svg";
 import { ReactComponent as LockOpen } from "./lock-open.svg";
+import { ReactComponent as LockOpenFilled } from "./lock-open-filled.svg";
 import { ReactComponent as Man } from "./man.svg";
 import { ReactComponent as Mann } from "./ikon-mann.svg";
 import { ReactComponent as Medlemskap } from "./ikon-medlemsskap.svg";
@@ -83,6 +86,7 @@ export {
   CheckList,
   Child,
   Clock,
+  ClockFilled,
   CoApplicant,
   Copy,
   Eye,
@@ -110,7 +114,9 @@ export {
   Kopier,
   Location,
   LockClosed,
+  LockClosedFilled,
   LockOpen,
+  LockOpenFilled,
   Man,
   Mann,
   Medlemskap,
