@@ -19,13 +19,23 @@ const renderAdressekomponent = (adresse: Adresse) => {
   if (isKontaktAdresse(adresse)) {
     if (adresse.strukturertAdresse)
       return (
-        <StrukturertAdresse adresse={{ ...adresse.strukturertAdresse, landkode: adresse.strukturertAdresse.land }} />
+        <StrukturertAdresse
+          adresse={{
+            ...adresse.strukturertAdresse,
+            landkode: adresse.strukturertAdresse.land,
+            coAdressenavn: adresse.coAdressenavn,
+          }}
+        />
       );
     if (adresse.semistrukturertAdresse) return <SemistrukturertAdresse adresse={adresse.semistrukturertAdresse} />;
     return null;
   }
 
-  return <StrukturertAdresse adresse={{ ...adresse.adresse, landkode: adresse.adresse.land }} />;
+  return (
+    <StrukturertAdresse
+      adresse={{ ...adresse.adresse, landkode: adresse.adresse.land, coAdressenavn: adresse.coAdressenavn }}
+    />
+  );
 };
 
 interface AdresselisteProps {

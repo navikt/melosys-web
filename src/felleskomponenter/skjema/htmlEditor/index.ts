@@ -1,3 +1,3 @@
-import HTMLEditor from "./HTMLEditor-skjema";
+import HTMLEditor from "./htmlEditor";
 
 export default HTMLEditor;

@@ -17,17 +17,37 @@ import EnkeltDato from "../../felleskomponenter/datoOmrade/enkeltDato";
 
 import MKV, { Utils as MKVUtils } from "../../melosyskodeverk";
 import { lagYupToReduxformErrorMapper } from "../../yup";
+import { useFeatureToggle } from "../../featuretoggle";
 import opprettNySakSchema from "./opprettnysakSchema";
 
 import "./opprettnysak.css";
+
+const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
+  .filter(({ kode }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
+  .filter(
+    ({ kode }) =>
+      kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
+      kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
+  );
+
+const ftrlBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
+  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET
+);
+
+const trygdeavtaleBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter(
+  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+);
 
 const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, error }) => {
   const [oppgaver, setOppgaver] = useState([]);
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
-  const { behandlingstema, soknadsinfo } = formValues;
+  const { behandlingstema, soknadsinfo, sakstype } = formValues;
   const { land, erUkjenteEllerAlleEosLand } = soknadsinfo;
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
+
+  const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
+  const trygdeavtaleToggle = useFeatureToggle("melosys.trygdeavtale");
 
   const hentOppgaver = async (brukerID) => {
     if (Utils.person.erGyldigFnr(brukerID) || Utils.person.erGyldigDnr(brukerID)) {
@@ -66,13 +86,25 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
 
   const oppgaverFinnes = radioValg.length > 0;
 
-  const filtrerteBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema
-    .filter(({ kode }) => MKVUtils.erSoknad(kode) || MKVUtils.erSedForesporsel(kode))
-    .filter(
-      ({ kode }) =>
-        kode !== MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND &&
-        kode !== MKV.Koder.behandlinger.behandlingstema.TRYGDETID
-    );
+  const valgbareSakstyper = MKV.KTObjects.sakstyper.filter(
+    ({ kode }) =>
+      kode === MKV.Koder.sakstyper.EU_EOS ||
+      (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
+      (trygdeavtaleToggle === "enabled" && kode === MKV.Koder.sakstyper.TRYGDEAVTALE)
+  );
+
+  const hentValgbareBehandlingstema = () => {
+    switch (sakstype) {
+      case MKV.Koder.sakstyper.FTRL:
+        return ftrlBehandlingstemaer;
+      case MKV.Koder.sakstyper.TRYGDEAVTALE:
+        return trygdeavtaleBehandlingstemaer;
+      case MKV.Koder.sakstyper.EU_EOS:
+        return euEosBehandlingstemaer;
+      default:
+        return [];
+    }
+  };
 
   const settJournalpostID = (oppgaveID) => {
     const { journalpostID } = oppgaver.find((oppgave) => oppgave.oppgaveID === oppgaveID);
@@ -109,14 +141,17 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                     understrek
                   />
                   <div className="innrykk">
-                    <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
-                      {MKV.KTObjects.sakstyper
-                        .filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)
-                        .map(({ kode, term }) => (
-                          <option key={kode} value={kode}>
-                            {term}
-                          </option>
-                        ))}
+                    <Skjema.Select
+                      feltNavn="sakstype"
+                      bredde="fullbredde"
+                      label="Sakstype"
+                      onChange={() => change("behandlingstema", undefined)}
+                    >
+                      {valgbareSakstyper.map(({ kode, term }) => (
+                        <option key={kode} value={kode}>
+                          {term}
+                        </option>
+                      ))}
                     </Skjema.Select>
                     <Skjema.Select
                       feltNavn="behandlingstema"
@@ -124,7 +159,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                       label="Behandlingstema"
                       onChange={() => change("soknadsinfo.erUkjenteEllerAlleEosLand", false)}
                     >
-                      {filtrerteBehandlingstemaer.map(({ kode, term }) => (
+                      {hentValgbareBehandlingstema().map(({ kode, term }) => (
                         <option key={kode} value={kode}>
                           {term}
                         </option>
