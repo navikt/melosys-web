@@ -10,7 +10,7 @@ export interface FattVedtakEOSReqDto {
   fritekst?: string | null;
   fritekstSed?: string | null;
   mottakerinstitusjoner: string[];
-  revurderBegrunnelse: string | null;
+  nyVurderingBakgrunn: string | null;
 }
 
 export interface FattVedtakFTRLReqDto {
@@ -21,7 +21,7 @@ export interface FattVedtakFTRLReqDto {
   ektefelleFritekst: string | null;
   barnFritekst: string | null;
   kopiMottakere: KopiMottaker[];
-  revurderBegrunnelse: string | null | undefined;
+  nyVurderingBakgrunn: string | null | undefined;
 }
 
 export type FattVedtakTrygdeavtaleReqDto = FattVedtakFTRLReqDto;

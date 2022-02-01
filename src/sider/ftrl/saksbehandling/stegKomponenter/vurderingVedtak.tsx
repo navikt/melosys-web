@@ -231,7 +231,7 @@ const VurderingVedtak = ({
       barnFritekst: familieFormValues?.barn?.fritekst || null,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-      revurderBegrunnelse: null,
+      nyVurderingBakgrunn: null,
     });
 
     if (isMounted.current) {
