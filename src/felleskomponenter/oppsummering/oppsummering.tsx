@@ -58,16 +58,19 @@ const Oppsummering = (props: OppsummeringProps) => {
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
 
-  const renderTabell = () => {
-    const col1 = [[erSed ? "Periode fra SED" : "Søknadsperiode", lovvalgsperiode]];
-    if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
-    col1.push(["Land", erSed ? storeForbokstaverForLand(lovvalgsland.term) : landTilSetning(arbeidsland)]);
+  const tabellEnKolonne = (data: string[][]) => {
+    const rows: JSX.Element[] = [];
+    data.forEach((row) =>
+      rows.push(
+        <Nav.Row>
+          <OppsummeringVerdiPar nokkel={row[0]} verdi={row[1]} ekstrafelt={<span className="kursiv">{row[2]}</span>} />
+        </Nav.Row>
+      )
+    );
+    return rows;
+  };
 
-    const col2 = [
-      ["Søknad mottatt", mottattDato || "-"],
-      ["Beh. opprettet", formatterDatoTilNorsk(registrertDato)],
-    ];
-
+  const tabellToKolonner = (col1: string[][], col2: string[][]) => {
     const rows = [];
     for (let i = 0; i < 3; i += 1) {
       rows.push(
@@ -76,20 +79,30 @@ const Oppsummering = (props: OppsummeringProps) => {
             {i < col1.length && <OppsummeringVerdiPar nokkel={col1[i][0]} verdi={col1[i][1]} />}
           </Nav.Column>
           <Nav.Column xs="6">
-            {i < 2 ? (
-              <OppsummeringVerdiPar nokkel={col2[i][0]} verdi={col2[i][1]} />
-            ) : (
-              <OppsummeringVerdiPar
-                nokkel="Sist oppdatert"
-                verdi={formatterDatoTilNorsk(endretDato)}
-                ekstrafelt={<span className="kursiv">{`  ${endretAvNavn}`}</span>}
-              />
-            )}
+            <OppsummeringVerdiPar
+              nokkel={col2[i][0]}
+              verdi={col2[i][1]}
+              ekstrafelt={<span className="kursiv">{col2[i][2]}</span>}
+            />
           </Nav.Column>
         </Nav.Row>
       );
     }
     return rows;
+  };
+
+  const renderTabell = () => {
+    const col1 = [[erSed ? "Periode fra SED" : "Søknadsperiode", lovvalgsperiode]];
+    if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
+    col1.push(["Land", erSed ? storeForbokstaverForLand(lovvalgsland.term) : landTilSetning(arbeidsland)]);
+
+    const col2 = [
+      ["Søknad mottatt", mottattDato || "-"],
+      ["Beh. opprettet", formatterDatoTilNorsk(registrertDato)],
+      ["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
+    ];
+
+    return window.innerWidth < 1440 ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
 
   return (
