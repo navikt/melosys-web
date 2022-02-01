@@ -16,7 +16,6 @@ class Start extends Steg {
     this.tittel = "Start";
     this.komponent = VurderingStart;
     this.samleRelevanteData = (_propsLight) => ({
-      alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.generiskStegRedigerbart,
       annenBehandlingOppfriskes: _propsLight.annenBehandlingOppfriskes,
     });

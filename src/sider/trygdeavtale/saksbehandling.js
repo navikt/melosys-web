@@ -24,6 +24,7 @@ import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { menypanelOperations } from "../../ducks/menypanel";
+import { landkoderOperations } from "../../ducks/landkoder";
 import { formSelectors } from "../../ducks/form";
 
 import Stegvelger from "./stegvelger";
@@ -101,6 +102,7 @@ const Saksbehandling = ({
   hentBehandlingsgrunnlag,
   hentBehandlingsresultat,
   hentDokumentOversikt,
+  hentLandkoder,
   hentLovvalgsperiode,
   hentFagsaker,
   lagreOgLukk,
@@ -171,6 +173,8 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
+    hentLandkoder();
+
     return () => {
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
@@ -295,6 +299,7 @@ Saksbehandling.propTypes = {
   hentBehandlingsgrunnlag: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
+  hentLandkoder: PT.func.isRequired,
   hentLovvalgsperiode: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
@@ -350,6 +355,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentBehandlingsgrunnlag: (bid) => dispatch(behandlingsgrunnlagOperations.hent(bid)),
   hentBehandlingsresultat: (bid) => dispatch(behandlingsresultatOperations.hent(bid)),
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentLovvalgsperiode: (bid) => dispatch(lovvalgsperioderOperations.hent(bid)),
   hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),

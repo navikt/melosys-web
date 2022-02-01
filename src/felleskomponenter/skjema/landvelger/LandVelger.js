@@ -1,9 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
+import { landkoderSelectors } from "../../../ducks/landkoder";
 import EnkeltLand from "./enkeltLand";
 import MultiLand from "./multiLand";
 
@@ -11,24 +12,31 @@ import { lagDatalistID } from "./utils";
 
 import "./landvelger.css";
 
+const mapStateToProps = (state) => ({
+  landkoderFraSakstype: landkoderSelectors.LandkoderSelector(state),
+});
+
+const connector = connect(mapStateToProps);
+
 /** Dette er inngangskomponent for MultiLand eller EnkeltLand. Disse avgjøres via
  * prop-type multiLand som er subkomponenter i landvelgeren.
  * @param props
  */
-const LandVelger = (props) => {
-  const { multiLand } = props;
+export const LandVelger = (props) => {
+  const { multiLand, landkoder, landkoderFraSakstype } = props;
   const dataListID = lagDatalistID();
+  const landkodeliste = landkoder || landkoderFraSakstype;
 
   return (
     <div>
       {multiLand ? (
-        <MultiLand {...props} landkoder={props.landkoder} dataListID={dataListID} />
+        <MultiLand {...props} landkoder={landkodeliste} dataListID={dataListID} />
       ) : (
-        <EnkeltLand {...props} landkoder={props.landkoder} dataListID={dataListID} />
+        <EnkeltLand {...props} landkoder={landkodeliste} dataListID={dataListID} />
       )}
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
-          {props.landkoder.map((item) => (
+          {landkodeliste.map((item) => (
             <option key={item.kode} value={Utils.land.landTekstFormat(item)} />
           ))}
         </datalist>
@@ -45,6 +53,7 @@ LandVelger.propTypes = {
   bredde: PT.string,
   placeholder: PT.string,
   landkoder: PT.arrayOf(MPT.Kodeverk),
+  landkoderFraSakstype: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 LandVelger.defaultProps = {
@@ -53,7 +62,7 @@ LandVelger.defaultProps = {
   label: undefined,
   bredde: "XL",
   placeholder: undefined,
-  landkoder: MKV.KTObjects.landkoder,
+  landkoder: undefined,
 };
 
-export default LandVelger;
+export default connector(LandVelger);
