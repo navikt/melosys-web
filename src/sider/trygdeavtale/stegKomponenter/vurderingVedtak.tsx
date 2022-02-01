@@ -334,7 +334,7 @@ const VurderingVedtak = ({
                 emptyFieldText="Velg"
                 emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
               >
-                {MKV.KTObjects.begrunnelser.nyVurderingBakgrunner.map((bakgrunn: KTObject) => (
+                {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
                   <option key={bakgrunn.kode} value={bakgrunn.kode}>
                     {bakgrunn.term}
                   </option>
