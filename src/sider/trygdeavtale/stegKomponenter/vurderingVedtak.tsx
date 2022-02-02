@@ -84,6 +84,7 @@ interface Props {
     begrunnelseFritekst?: string;
     kopiTilArbeidsgiver?: boolean;
     nyVurderingBakgrunn?: string;
+    nyVurderingBakgrunnFritekst?: string;
   };
 }
 
@@ -116,6 +117,7 @@ const VurderingVedtak = ({
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
+  const FRITEKST = "Fritekst";
 
   const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     if ([KV.Koder.MottakerRolle.ARBEIDSGIVER, KV.Koder.MottakerRolle.REPRESENTANT].includes(muligMottaker?.rolle)) {
@@ -141,7 +143,10 @@ const VurderingVedtak = ({
     barnFritekst: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     kopiMottakere: getKopiMottakere(),
-    nyVurderingBakgrunn: formValues?.nyVurderingBakgrunn || null,
+    nyVurderingBakgrunn:
+      formValues?.nyVurderingBakgrunn === FRITEKST
+        ? formValues?.nyVurderingBakgrunnFritekst
+        : formValues?.nyVurderingBakgrunn,
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
@@ -324,25 +329,33 @@ const VurderingVedtak = ({
       </Nav.Row>
 
       {erNyVurdering && (
-        <Nav.Fieldset legend="Oppgi grunn for nytt vedtak" className={vurderingVedtakCls.element("nyvurdering")}>
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Skjema.Select
-                label=""
-                feltNavn="nyVurderingBakgrunn"
-                disabled={!redigerbart}
-                emptyFieldText="Velg"
-                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
-              >
-                {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
-                  <option key={bakgrunn.kode} value={bakgrunn.kode}>
-                    {bakgrunn.term}
-                  </option>
-                ))}
-              </Skjema.Select>
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Fieldset>
+        <>
+          <Nav.Fieldset legend="Oppgi grunn for nytt vedtak" className={vurderingVedtakCls.element("nyvurdering")}>
+            <Nav.Row>
+              <Nav.Column xs="6">
+                <Skjema.Select
+                  label=""
+                  feltNavn="nyVurderingBakgrunn"
+                  disabled={!redigerbart}
+                  emptyFieldText="Velg"
+                  emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
+                >
+                  {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                    <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                  ))}
+                  <option key={FRITEKST} value={FRITEKST} label={FRITEKST} />
+                </Skjema.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+          {formValues?.nyVurderingBakgrunn === FRITEKST && (
+            <Skjema.Input
+              feltNavn="nyVurderingBakgrunnFritekst"
+              label=""
+              className={vurderingVedtakCls.element("nyvurdering")}
+            />
+          )}
+        </>
       )}
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
