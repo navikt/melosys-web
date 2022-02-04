@@ -25,7 +25,7 @@ describe("VurderingArtikkel16Vedtak", () => {
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
       touch: jest.fn(),
       formValues: {
-        vedtakstypebegrunnelse: MKV.Koder.begrunnelser.nyvurderingbakgrunner.SAKSBEHANDLER_OPPDAGET_FEIL,
+        vedtakstypebegrunnelse: MKV.Koder.begrunnelser.nyvurderingbakgrunner.FEIL_I_BEHANDLING,
         vedtakstype: MKV.Koder.vedtakstyper.KORRIGERINGSVEDTAK,
         vedtaksbrevFritekst: "Test",
       },
