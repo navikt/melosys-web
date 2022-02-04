@@ -213,6 +213,10 @@ const VurderingVedtak = ({
           institusjonId: muligMottaker?.institusjonId || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
+          nyVurderingBakgrunn:
+            formValues?.nyVurderingBakgrunn === FRITEKST
+              ? formValues?.nyVurderingBakgrunnFritekst
+              : formValues?.nyVurderingBakgrunn,
         },
       },
     ];
