@@ -21,6 +21,9 @@ export const KnyttTilSak = (props) => {
   );
   const clsElementskrift = { "border-bottom": "none" };
 
+  const visOpprettNyBehandling = !sakInneholderSEDBehandling;
+  const visUtenOppretteBehandling = sak.sakstype.kode === MKV.Koder.sakstyper.EU_EOS;
+
   if (sisteBehandling.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
     return (
       <div className="panelramme">
@@ -31,10 +34,12 @@ export const KnyttTilSak = (props) => {
           style={clsElementskrift}
         />
         <Skjema.RadioGruppe feltNavn="opprettBehandling" label="Knytt til sak">
-          {!sakInneholderSEDBehandling && (
+          {visOpprettNyBehandling && (
             <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.SANN} label="Opprett ny behandling" />
           )}
-          <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />
+          {visUtenOppretteBehandling && (
+            <Skjema.Radio feltNavn="opprettBehandling" value={BOOLSK.USANN} label="Uten å opprette behandling" />
+          )}
         </Skjema.RadioGruppe>
         {opprettBehandling() && (
           <Skjema.Select
@@ -43,12 +48,9 @@ export const KnyttTilSak = (props) => {
             label="Velg behandlingstype"
             emptyFieldDisabled={false}
           >
-            {behandlingstyper &&
-              behandlingstyper.map((elem) => (
-                <option key={elem.kode} value={elem.kode}>
-                  {elem.term}
-                </option>
-              ))}
+            {behandlingstyper?.map((elem) => (
+              <option key={elem.kode} value={elem.kode} label={elem.term} />
+            ))}
           </Skjema.Select>
         )}
       </div>
