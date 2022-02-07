@@ -13,7 +13,7 @@ import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponente
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import { useFeatureToggle, FeatureToggle } from "../../featuretoggle";
+import { FeatureToggle } from "../../featuretoggle";
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
@@ -128,7 +128,6 @@ const Saksbehandling = ({
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const trygdeavtaleToggle = useFeatureToggle("melosys.trygdeavtale");
   const saksnummer = match?.params?.snr;
 
   const oppdaterBehandlingIDState = () => {
@@ -185,7 +184,6 @@ const Saksbehandling = ({
 
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
-  if (trygdeavtaleToggle === "fetching" || trygdeavtaleToggle === "disabled") return null;
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
