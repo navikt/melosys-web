@@ -10,8 +10,6 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { navigeringOperations } from "../../../ducks/navigering";
 import * as Nav from "../../../navFrontend";
 
-import "./dialogboksEndreBehandlingsfrist.css";
-
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
