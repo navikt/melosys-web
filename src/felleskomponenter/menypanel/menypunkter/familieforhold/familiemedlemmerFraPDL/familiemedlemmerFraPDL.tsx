@@ -12,6 +12,7 @@ import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { Familierelasjonsrolle, Familiemedlem } from "../../../../../graphql";
+import * as StringUtils from "../../../../../utils/streng";
 import Ident from "./ident";
 import Informasjonsmodal from "./informasjonsmodal";
 
@@ -59,7 +60,7 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
             {
               width: "2",
               headerText: "Foreldreansvar",
-              renderContent: (familiemedlem) => familiemedlem.foreldreansvar,
+              renderContent: (familiemedlem) => StringUtils.storeForbokstaver(familiemedlem.foreldreansvar),
             },
             {
               width: "3",
