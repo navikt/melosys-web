@@ -78,7 +78,7 @@ export const InnerEditerbartElementListe = ({
 
   const innerLeggTilTekst = typeof leggTilTekst === "function" ? leggTilTekst(elementer) : leggTilTekst;
 
-  const kanLeggeTilFlereElementer = !maksAntallElementer || fields.length < maksAntallElementer;
+  const kanLeggeTilFlereElementer = !maksAntallElementer || fields?.length < maksAntallElementer;
 
   const lagreClickHandler = () => {
     if (onLagreClick) {
