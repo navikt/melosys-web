@@ -111,7 +111,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         .filter((inst) => inst.kreverMottakerinstitusjon)
         .map((inst) => inst.id),
       vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      revurderBegrunnelse: values.vedtakstypebegrunnelse,
+      nyVurderingBakgrunn: values.vedtakstypebegrunnelse,
     });
 
     // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.

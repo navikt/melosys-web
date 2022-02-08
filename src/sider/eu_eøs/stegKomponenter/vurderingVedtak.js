@@ -111,7 +111,7 @@ const VurderingVedtak = ({
       fritekstSed: formValues.fritekstSed,
       mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
+      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     });
 
     // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.

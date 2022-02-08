@@ -27,7 +27,7 @@ export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) 
           <Nav.Column xs="5">{status.tekst}</Nav.Column>
           <Nav.Column xs="2">{status.kilde}</Nav.Column>
           <Nav.Column xs="2">{status.master}</Nav.Column>
-          <Nav.Column xs="3">{status.fregGyldighetstidspunkt}</Nav.Column>
+          <Nav.Column xs="3">{Utils.dato.formatterDatoTilNorsk(status.fregGyldighetstidspunkt)}</Nav.Column>
         </Nav.Row>
       ))}
     </div>
@@ -62,7 +62,7 @@ const PersonstatusModal = ({
 
       <Nav.Typo.Undertittel>Historikk</Nav.Typo.Undertittel>
       <div className={personstatusModalCls.element("gyldighetsinfo")}>
-        <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra folkeregisteret kan være mangelfulle.</Nav.Typo.EtikettLiten>
+        <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra Folkeregisteret kan være unøyaktig.</Nav.Typo.EtikettLiten>
         <Nav.Hjelpetekst>
           <p>Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret.</p>
           <p>

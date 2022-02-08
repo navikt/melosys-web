@@ -4,6 +4,7 @@ import { Action } from "redux";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -52,8 +53,11 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
       ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
     lovvalgsperiodeTom:
       ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
+    kopiTilArbeidsgiver: true,
   },
   formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
+  erNyVurdering:
+    behandlingerSelectors.BehandlingstypeKodeSelector(state) === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -79,6 +83,8 @@ interface Props {
     innledningFritekst?: string;
     begrunnelseFritekst?: string;
     kopiTilArbeidsgiver?: boolean;
+    nyVurderingBakgrunn?: string;
+    nyVurderingBakgrunnFritekst?: string;
   };
 }
 
@@ -86,6 +92,7 @@ const VurderingVedtak = ({
   behandlingID,
   behandlingsgrunnlagStatus,
   data: { bestemmelseValg },
+  erNyVurdering,
   tilbake,
   redigerbart,
   resultat,
@@ -110,9 +117,10 @@ const VurderingVedtak = ({
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
+  const FRITEKST = "Fritekst";
 
   const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
+    if ([KV.Koder.MottakerRolle.ARBEIDSGIVER, KV.Koder.MottakerRolle.REPRESENTANT].includes(muligMottaker?.rolle)) {
       return formValues?.kopiTilArbeidsgiver;
     }
     return true;
@@ -135,6 +143,10 @@ const VurderingVedtak = ({
     barnFritekst: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     kopiMottakere: getKopiMottakere(),
+    nyVurderingBakgrunn:
+      formValues?.nyVurderingBakgrunn === FRITEKST
+        ? formValues?.nyVurderingBakgrunnFritekst
+        : formValues?.nyVurderingBakgrunn,
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
@@ -158,12 +170,12 @@ const VurderingVedtak = ({
   );
 
   useEffect(() => {
-    debouncedKontrollerVedtak(oppdaterFørKontroll);
+    if (redigerbart) debouncedKontrollerVedtak(oppdaterFørKontroll);
     return () => debouncedKontrollerVedtak.cancel();
   }, []);
 
   useEffect(() => {
-    if (behandlingsgrunnlagStatus === "OK") {
+    if (behandlingsgrunnlagStatus === "OK" && redigerbart) {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
   }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
@@ -332,6 +344,36 @@ const VurderingVedtak = ({
           </Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
+
+      {erNyVurdering && (
+        <>
+          <Nav.Fieldset legend="Oppgi grunn for nytt vedtak" className={vurderingVedtakCls.element("nyvurdering")}>
+            <Nav.Row>
+              <Nav.Column xs="6">
+                <Skjema.Select
+                  label=""
+                  feltNavn="nyVurderingBakgrunn"
+                  disabled={!redigerbart}
+                  emptyFieldText="Velg"
+                  emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
+                >
+                  {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                    <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                  ))}
+                  <option key={FRITEKST} value={FRITEKST} label={FRITEKST} />
+                </Skjema.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+          {formValues?.nyVurderingBakgrunn === FRITEKST && (
+            <Skjema.Input
+              feltNavn="nyVurderingBakgrunnFritekst"
+              label=""
+              className={vurderingVedtakCls.element("nyvurdering")}
+            />
+          )}
+        </>
+      )}
 
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til innledning

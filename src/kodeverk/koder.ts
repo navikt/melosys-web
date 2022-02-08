@@ -153,6 +153,8 @@ export const PersonStatus = {
 export const MottakerRolle = {
   BRUKER: "BRUKER",
   ARBEIDSGIVER: "ARBEIDSGIVER",
+  TRYGDEMYNDIGHET: "TRYGDEMYNDIGHET",
+  REPRESENTANT: "REPRESENTANT",
 };
 
 export enum StegNavn {
