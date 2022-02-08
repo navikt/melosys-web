@@ -12,6 +12,11 @@ const objektTilTermUtenFeilmelding = (KTObjekt) => {
 
 const objektTilTerm = (KTObjekt) => objektTilTermUtenFeilmelding(KTObjekt) || "(mangler informasjon)";
 
+const objektTilKodeUtenFeilmelding = (KTObjekt) => {
+  if (!KTObjekt || !KTObjekt.kode) return null;
+  return Object.keys(KTObjekt).includes("kode") ? KTObjekt.kode : null;
+};
+
 const objektTilKode = (KTObjekt) => {
   if (!KTObjekt || !KTObjekt.kode) {
     throw new Error("Ukjent kode");
@@ -64,6 +69,7 @@ export {
   objektTilTerm,
   objektTilTermUtenFeilmelding,
   objektTilKode,
+  objektTilKodeUtenFeilmelding,
   finnEnkeltKodeFraListe,
   kodeTilTerm,
   kodeTilObjekt,

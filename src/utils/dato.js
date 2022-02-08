@@ -156,12 +156,25 @@ function norskStringTilDate(datostring) {
   return new Date(date[2] || now.getFullYear(), date[1] ? date[1] - 1 : now.getMonth(), date[0] || now.getDate());
 }
 
+// Oversetter en string på iso datoformat (YYYY-MM-DD) til et date-objekt
+function isoStringTilDate(datoString) {
+  return norskStringTilDate(formatterDatoTilNorsk(datoString));
+}
+
 // Oversetter et date-objekt til en string på norsk datoformat
 function dateTilNorskString(dato) {
   if (!dato || !(dato instanceof Date)) return undefined;
   const dag = `0${dato.getDate()}`.slice(-2);
   const maned = `0${dato.getMonth() + 1}`.slice(-2);
   return `${dag}.${maned}.${dato.getFullYear()}`;
+}
+
+// Oversetter et date-objekt til en string på iso datoformat
+function dateTilIsoString(dato) {
+  if (!dato || !(dato instanceof Date)) return undefined;
+  const dag = `0${dato.getDate()}`.slice(-2);
+  const maned = `0${dato.getMonth() + 1}`.slice(-2);
+  return `${dato.getFullYear()}-${maned}-${dag}`;
 }
 
 export {
@@ -179,6 +192,8 @@ export {
   erLike,
   plussEnDag,
   norskStringTilDate,
+  isoStringTilDate,
   dateTilNorskString,
+  dateTilIsoString,
   MAX_AR_FREM_I_TID,
 };

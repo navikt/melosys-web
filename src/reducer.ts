@@ -12,6 +12,7 @@ import behandlingsgrunnlagReducer from "./ducks/behandlingsgrunnlag";
 import behandlingsperioderReducer from "./ducks/behandlingsperioder";
 import behandlingsresultatReducer from "./ducks/behandlingsresultat";
 import behandlingstemaReducer from "./ducks/behandlingstema";
+import behandlingstypeReducer from "./ducks/behandlingstype";
 import behandlingsstatusReducer from "./ducks/behandlingsstatus";
 import dokumenterReducer from "./ducks/dokumenter";
 import fagsakerReducer from "./ducks/fagsaker";
@@ -51,6 +52,7 @@ const createRootReducer = (history: History) =>
     behandlingsperioder: behandlingsperioderReducer,
     behandlingsresultat: behandlingsresultatReducer,
     behandlingstema: behandlingstemaReducer,
+    behandlingstype: behandlingstypeReducer,
     behandlingsstatus: behandlingsstatusReducer,
     dokumenter: dokumenterReducer,
     fagsaker: fagsakerReducer,

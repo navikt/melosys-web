@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -17,6 +17,7 @@ import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../utils/stren
 import "./oppsummering.css";
 import KopierbarTekst from "../kopierbarTekst";
 import Behandlingsstatuskode from "../behandlingsstatuskode";
+import EndreBehandlingModal from "./endreBehandlingModal";
 
 interface OppsummeringProps {
   arbeidsland: KTObject[];
@@ -44,8 +45,9 @@ const Oppsummering = (props: OppsummeringProps) => {
   } = props;
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
-  const { saksnummer, sakstype, registrertDato } = fagsak;
+  const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
+  const { saksnummer, sakstype, registrertDato } = fagsak;
   const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist } = oppsummering;
 
   const landTilSetning = (land: KTObject[]) =>
@@ -115,6 +117,13 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   return (
     <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
+      <EndreBehandlingModal
+        fagsak={fagsak}
+        oppsummering={oppsummering}
+        skalViseModal={skalViseEndreModal}
+        lukkModal={() => setSkalViseEndreModal(false)}
+      />
+
       <Nav.Row className="datarad">
         <span className="bold">Saksnummer: </span>
         <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
@@ -128,7 +137,7 @@ const Oppsummering = (props: OppsummeringProps) => {
             <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => console.log("TODO: Vis endringsmodal")}>
+            <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => setSkalViseEndreModal(true)}>
               <span>Endre</span>
               <Ikoner.BlyantActive />
             </Nav.Knapp>
