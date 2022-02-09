@@ -20,6 +20,8 @@ import { behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
 import Datovelger from "../datovelger";
 import * as Datoutils from "../../utils/dato";
 
+import "./endreBehandlingModal.css";
+
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   muligeBehandlingstyper: behandlingstypeSelectors.MuligeBehandlingstyperSelector(state),
@@ -138,7 +140,13 @@ function EndreBehandlingModal({
       <div className="dialogboks">
         <div>
           <div className="innhold">
-            Sakstype: {KV.objektTilTerm(fagsak.sakstype)}
+            <Mui.KodeTermSelect
+              onChange={() => null}
+              label="Sakstype"
+              value={KV.objektTilTerm(fagsak.sakstype)}
+              koder={[fagsak.sakstype]}
+              redigerbart={false}
+            />
             <Mui.KodeTermSelect
               onChange={velgBehandlingstypeHandle}
               label="Behandlingstype"
@@ -159,16 +167,14 @@ function EndreBehandlingModal({
               koder={muligeBehandlingsstatuser}
             />
           </div>
-          <div>
-            <Knapperad
-              avbryt={lukkModalHandle}
-              avbrytTekst="Avbryt"
-              bekreft={endreBehandlingHandle}
-              bekreftTekst="Ok, oppdater behandlingen"
-              redigerbart
-              bekreftRedigerbart={!!behandlingstema}
-            />
-          </div>
+          <Knapperad
+            avbryt={lukkModalHandle}
+            avbrytTekst="Avbryt"
+            bekreft={endreBehandlingHandle}
+            bekreftTekst="Ok, oppdater behandlingen"
+            redigerbart
+            bekreftRedigerbart={!!behandlingstema}
+          />
         </div>
       </div>
     );
