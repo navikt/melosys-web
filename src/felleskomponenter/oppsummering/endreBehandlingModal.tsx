@@ -1,5 +1,6 @@
 import React, { ChangeEventHandler, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
+import classNames from "classnames";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -88,7 +89,7 @@ function EndreBehandlingModal({
     setBehandlingstype(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstype));
     setBehandlingstema(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingstema));
     setBehandlingsstatus(KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus));
-    setBehandlingsfrist(Datoutils.norskStringTilDate(oppsummering.behandlingsfrist));
+    setBehandlingsfrist(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
     lukkModal();
   };
 
@@ -108,32 +109,17 @@ function EndreBehandlingModal({
         hentBehandlingsgrunnlag(behandlingID);
         const nyLink = Routing.lagUrl(saksnummer, behandlingID, behandlingstema);
         if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
+        setTimeout(lukkModalHandle, 2000);
       })
       .catch(() => {
         setGenerellFeil(
           "Behandling ble ikke endret og oppdatert. Prøv igjen, eller se driftsmeldinger for mer informasjon"
         );
+        setTimeout(lukkModalHandle, 5000);
       });
   };
 
-  const renderBehandlingEndret = () => (
-    <div className="dialogboks">
-      <div className="innhold">
-        <Nav.AlertStripe type="suksess">Behandlingen er oppdatert</Nav.AlertStripe>
-      </div>
-    </div>
-  );
-
-  const renderFeil = () => (
-    <>
-      <div className="innhold">
-        <Nav.AlertStripe type="feil">{generellFeil}</Nav.AlertStripe>
-      </div>
-      <div style={{ float: "right" }}>
-        <Mui.Knapp onClick={lukkModalHandle}>LUKK</Mui.Knapp>
-      </div>
-    </>
-  );
+  const viserAlert = behandlingEndret || generellFeil?.length > 0;
 
   const renderEndreBehandling = () => {
     return (
@@ -181,19 +167,22 @@ function EndreBehandlingModal({
   };
 
   const renderInnhold = () => {
-    if (generellFeil) return renderFeil();
-    else if (behandlingEndret) return renderBehandlingEndret();
+    if (generellFeil) {
+      return <Nav.AlertStripe type="feil">{generellFeil}</Nav.AlertStripe>;
+    } else if (behandlingEndret) {
+      return <Nav.AlertStripe type="suksess">Behandlingen er oppdatert</Nav.AlertStripe>;
+    }
     return renderEndreBehandling();
   };
 
   return (
     <Nav.Modal
-      className="modalEndreBehandling"
+      className={classNames("modalEndreBehandling", { alert: viserAlert })}
       contentLabel="Endre behandling"
       isOpen={skalViseModal}
       onRequestClose={lukkModalHandle}
-      closeButton
-      shouldCloseOnOverlayClick={false}
+      closeButton={!viserAlert}
+      shouldCloseOnOverlayClick={viserAlert}
     >
       {renderInnhold()}
     </Nav.Modal>
