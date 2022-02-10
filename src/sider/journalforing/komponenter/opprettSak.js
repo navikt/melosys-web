@@ -50,7 +50,6 @@ const OpprettFagsak = (props) => {
   const [valgbareSakstyper, setValgbareSakstyper] = useState([]);
   const [valgbareBehandlingstemaer, setValgbareBehandlingstemaer] = useState([]);
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
-  const trygdeavtaleToggle = useFeatureToggle("melosys.trygdeavtale");
 
   const defaultBehandlingstema = (sakstype) => {
     switch (sakstype) {
@@ -87,10 +86,10 @@ const OpprettFagsak = (props) => {
         ({ kode }) =>
           kode === MKV.Koder.sakstyper.EU_EOS ||
           (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
-          (trygdeavtaleToggle === "enabled" && kode === MKV.Koder.sakstyper.TRYGDEAVTALE)
+          kode === MKV.Koder.sakstyper.TRYGDEAVTALE
       )
     );
-  }, [folketrygdenToggle, trygdeavtaleToggle]);
+  }, [folketrygdenToggle]);
 
   const skalViseSoknadsperiodeOgLand = ![
     MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED,

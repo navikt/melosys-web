@@ -47,7 +47,6 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
-  const trygdeavtaleToggle = useFeatureToggle("melosys.trygdeavtale");
 
   const hentOppgaver = async (brukerID) => {
     if (Utils.person.erGyldigFnr(brukerID) || Utils.person.erGyldigDnr(brukerID)) {
@@ -90,7 +89,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
     ({ kode }) =>
       kode === MKV.Koder.sakstyper.EU_EOS ||
       (folketrygdenToggle === "enabled" && kode === MKV.Koder.sakstyper.FTRL) ||
-      (trygdeavtaleToggle === "enabled" && kode === MKV.Koder.sakstyper.TRYGDEAVTALE)
+      kode === MKV.Koder.sakstyper.TRYGDEAVTALE
   );
 
   const hentValgbareBehandlingstema = () => {
