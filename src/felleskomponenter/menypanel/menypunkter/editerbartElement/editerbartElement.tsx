@@ -39,6 +39,12 @@ export const visAlltidBinSymbolsynlighet: SymbolsynlighetConfig = {
   [Status.RedigeringUtfort]: { bin: true, pencil: true },
 };
 
+export const visAldriBinSymbolsynlighet: SymbolsynlighetConfig = {
+  [Status.Redigerer]: { bin: false, pencil: false },
+  [Status.IngenData]: { bin: false, pencil: false },
+  [Status.RedigeringUtfort]: { bin: false, pencil: true },
+};
+
 const EditerbartElement = ({
   redigererRender,
   ingenDataRender,

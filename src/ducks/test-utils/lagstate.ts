@@ -1,6 +1,6 @@
 import { RootState } from "AppTypes";
 
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 /**
  * Genererer default state for redux til testing, samt tillater å sette individuelle states.
@@ -36,6 +36,7 @@ function lagState({
   feiletrespons = { status: STATUS.OK, data: {} },
   folketrygdenkodeverk = { status: STATUS.OK, data: {} },
   journalforing = { status: STATUS.OK, data: {} },
+  landkoder = { status: STATUS.OK, data: [] },
   lovvalgsperioder = { status: STATUS.OK, data: [] },
   medlemskapsperioder = { status: STATUS.OK, data: {} },
   modaler = { status: STATUS.OK, data: {} },
@@ -71,6 +72,7 @@ function lagState({
     feiletrespons,
     folketrygdenkodeverk,
     journalforing,
+    landkoder,
     lovvalgsperioder,
     medlemskapsperioder,
     modaler,

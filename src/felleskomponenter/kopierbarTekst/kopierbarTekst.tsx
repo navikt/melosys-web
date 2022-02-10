@@ -22,7 +22,7 @@ const KopierbarTekst = ({ hovertekst, children }: KopierbarTekstProps) => {
     }, 1000);
   }, [erKopiert]);
 
-  const containerCls = classNames("kopierbar-tekst__container");
+  const containerCls = classNames("kopierbar-tekst__container", { "kopierbar-tekst__container__hover": visHoverTekst });
   const kopierIkonCls = classNames("kopierbar-tekst__kopier-ikon");
 
   return (

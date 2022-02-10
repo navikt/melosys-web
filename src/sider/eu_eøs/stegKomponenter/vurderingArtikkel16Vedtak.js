@@ -408,7 +408,7 @@ export const VurderingArtikkel16Vedtak = ({
       fritekstSed: null,
       mottakerinstitusjoner: null,
       vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
+      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     });
 
     // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.

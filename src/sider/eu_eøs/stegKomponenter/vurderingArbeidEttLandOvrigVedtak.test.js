@@ -68,7 +68,7 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       fritekstSed: "fritekst til SED",
       mottakerinstitusjoner: null,
       vedtakstype: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK,
-      revurderBegrunnelse: "begrunnelse for revurdering",
+      nyVurderingBakgrunn: "begrunnelse for revurdering",
     });
   });
 

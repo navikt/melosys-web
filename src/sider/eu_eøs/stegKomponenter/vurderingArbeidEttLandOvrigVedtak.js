@@ -240,7 +240,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
       fritekstSed: values.fritekstSed,
       mottakerinstitusjoner,
       vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      revurderBegrunnelse: values.vedtakstypebegrunnelse,
+      nyVurderingBakgrunn: values.vedtakstypebegrunnelse,
     });
 
     // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.

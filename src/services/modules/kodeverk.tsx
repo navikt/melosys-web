@@ -6,7 +6,7 @@ const MELOSYS_INTERNT = "melosys-internt";
 
 export const hentFolketrygdenKodeverk = () => getAsJson(`${API_BASE_URL}${KODEVERK}/${MELOSYS_INTERNT}/folketrygden`);
 export const hentNavFellesKodeverk = (kodeverknavn: string) =>
-  cachedGetAsJson(`${API_BASE_URL}${KODEVERK}/${NAV_FELLES}/${kodeverknavn}`);
+  cachedGetAsJson(`${API_BASE_URL}${KODEVERK}/${NAV_FELLES}/${kodeverknavn}`, 3600);
 export function hentLandkoderIso2() {
   return hentNavFellesKodeverk("LANDKODER_ISO2");
 }
