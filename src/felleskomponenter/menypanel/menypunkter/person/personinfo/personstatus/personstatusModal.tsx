@@ -10,7 +10,9 @@ interface PersonstatusTabellProps {
 }
 
 export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) => {
-  if (personstatuser.length < 1) return null;
+  if (personstatuser.length < 1) {
+    return <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>;
+  }
 
   const personstatusTabellCls = bem("personstatus-tabell");
 
