@@ -147,6 +147,14 @@ const SideOppsummering = ({
                             onClick={() => {}}
                           />
                         }
+                        behandlingsresultattypeLinje={
+                          <OppsummeringVerdiParRedigerbar
+                            nokkel="Behandlingsresultat"
+                            verdi={KV.objektTilTerm(oppsummering.behandlingsresultattype)}
+                            redigerbart={false}
+                            onClick={() => {}}
+                          />
+                        }
                       />
                     )}
                   </Nav.Column>
