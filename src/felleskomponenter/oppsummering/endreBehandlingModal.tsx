@@ -4,13 +4,13 @@ import classNames from "classnames";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { KTObject } from "@navikt/melosys-kodeverk";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
 import { behandlingstemaSelectors } from "../../ducks/behandlingstema";
 import { behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { navigeringOperations } from "../../ducks/navigering";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import Knapperad from "../knapperad";
 
 import * as Mui from "../ui";
