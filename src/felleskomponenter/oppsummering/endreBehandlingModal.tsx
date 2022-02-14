@@ -22,6 +22,7 @@ import Datovelger from "../datovelger";
 import * as Datoutils from "../../utils/dato";
 
 import "./endreBehandlingModal.css";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -119,6 +120,11 @@ function EndreBehandlingModal({
       });
   };
 
+  const muligeVerdierPlussValgt = (muligeVerdier: KTObject[], valgtVerdi: KTObject) => {
+    if (muligeVerdier.includes(valgtVerdi)) return muligeVerdier;
+    return muligeVerdier.concat(valgtVerdi);
+  };
+
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
 
   const renderEndreBehandling = () => {
@@ -138,14 +144,14 @@ function EndreBehandlingModal({
               onChange={velgBehandlingstypeHandle}
               label="Behandlingstype"
               value={behandlingstype}
-              koder={muligeBehandlingstyper}
+              koder={muligeVerdierPlussValgt(muligeBehandlingstyper, oppsummering.behandlingstype)}
               disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={velgBehandlingstemaHandle}
               label="Behandlingstema"
               value={behandlingstema}
-              koder={muligeBehandlingstema}
+              koder={muligeVerdierPlussValgt(muligeBehandlingstema, oppsummering.behandlingstema)}
               disableForsteValg
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
@@ -153,7 +159,7 @@ function EndreBehandlingModal({
               onChange={velgBehandlingsstatusHandle}
               label="Behandlingsstatus"
               value={behandlingsstatus}
-              koder={muligeBehandlingsstatuser}
+              koder={muligeVerdierPlussValgt(muligeBehandlingsstatuser, oppsummering.behandlingsstatus)}
               disableForsteValg
             />
           </div>
