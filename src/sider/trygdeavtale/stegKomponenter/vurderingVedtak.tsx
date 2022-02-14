@@ -382,10 +382,11 @@ const VurderingVedtak = ({
             </Nav.Row>
           </Nav.Fieldset>
           {formValues?.nyVurderingBakgrunn === FRITEKST && (
-            <Skjema.Input
+            <Skjema.HTMLEditor
               feltNavn="nyVurderingBakgrunnFritekst"
-              label=""
-              className={vurderingVedtakCls.element("nyvurdering")}
+              className={vurderingVedtakCls.elementWithModifier("nyvurdering", "fritekst")}
+              placeholder="Skriv inn grunn for nytt vedtak..."
+              disabled={!redigerbart}
             />
           )}
         </>
