@@ -25,7 +25,10 @@ export const DialogboksFerdigbehandleNyVurdering = ({
     shouldCloseOnOverlayClick
     ariaHideApp={ariaHideApp}
   >
-    <Nav.Typo.Systemtittel className="overskrift">Ferdigbehandlet uten nytt vedtak</Nav.Typo.Systemtittel>
+    <Nav.Typo.Systemtittel>Ferdigbehandlet</Nav.Typo.Systemtittel>
+    <Nav.Typo.Normaltekst className="normaltekst">
+      Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat/og eller brev.
+    </Nav.Typo.Normaltekst>
     <Knapperad
       bekreft={ferdigbehandleNyVurdering}
       bekreftTekst="BEKREFT"
