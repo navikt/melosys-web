@@ -161,7 +161,7 @@ function EndreBehandlingModal({
             avbryt={lukkModalHandle}
             avbrytTekst="Avbryt"
             bekreft={endreBehandlingHandle}
-            bekreftTekst="Ok, oppdater behandlingen"
+            bekreftTekst="Lagre endringene"
             redigerbart
             bekreftRedigerbart={!!behandlingstema}
           />

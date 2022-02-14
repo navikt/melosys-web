@@ -442,7 +442,7 @@ const mapStateToProps = (state) => ({
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
   ),
   behandlingsgrunnlagMottaksdato: Utils.dato.formatterDatoTilNorsk(
-    behandlingsgrunnlagSelectors.MottaksdatoSelector((state))
+    behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
   ),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
