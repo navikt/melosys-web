@@ -131,6 +131,7 @@ function EndreBehandlingModal({
               label="Sakstype"
               value={KV.objektTilTerm(fagsak.sakstype)}
               koder={[fagsak.sakstype]}
+              disableForsteValg
               redigerbart={false}
             />
             <Mui.KodeTermSelect
@@ -138,12 +139,14 @@ function EndreBehandlingModal({
               label="Behandlingstype"
               value={behandlingstype}
               koder={muligeBehandlingstyper}
+              disableForsteValg
             />
             <Mui.KodeTermSelect
               onChange={velgBehandlingstemaHandle}
               label="Behandlingstema"
               value={behandlingstema}
               koder={muligeBehandlingstema}
+              disableForsteValg
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
             <Mui.KodeTermSelect
@@ -151,6 +154,7 @@ function EndreBehandlingModal({
               label="Behandlingsstatus"
               value={behandlingsstatus}
               koder={muligeBehandlingsstatuser}
+              disableForsteValg
             />
           </div>
           <Knapperad

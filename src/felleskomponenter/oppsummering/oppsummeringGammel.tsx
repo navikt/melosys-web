@@ -64,7 +64,7 @@ const OppsummeringGammel = (props: OppsummeringProps) => {
   const lovvalgslandTilSetning = (landObject: KTObject) =>
     landObject.term ? Utils.streng.arrayTilKonjunksjon(landObject.term) : "Ukjent";
 
-  const cl = classNames(className, "oppsummering");
+  const cl = classNames(className, "oppsummering-gammel");
 
   const kolonneBredder = ["5", "6"] as const;
 

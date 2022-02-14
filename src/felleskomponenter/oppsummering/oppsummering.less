@@ -8,12 +8,60 @@
   .saksinfo {
     margin-top: 12px;
     margin-bottom: 16px;
+    border-radius: 0;
+    border: 1px solid @navGra20;
+    background-color: @navLysGra;
 
     .behandlingsstatus {
       display: flex;
       margin-top: 12px;
+
       span {
         margin-left: 4px;
+      }
+    }
+
+    .endre-knapp {
+      background-color: @white;
+
+      &:hover {
+        background-color: @navBla;
+        stroke: @white;
+        stroke-width: 2px;
+      }
+    }
+  }
+
+  .dl {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
+
+  .hoyrestill {
+    width: auto;
+    float: right;
+  }
+
+  .kursiv {
+    font-style: italic;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .behandlingstype {
+    font-size: 1.125rem;
+  }
+
+  .svarfrist {
+    margin-left: 1rem;
+  }
+
+  .kopier-saksnummer {
+    .kopierbar-tekst__container {
+      button {
+        color: @navMorkGra;
       }
     }
   }
