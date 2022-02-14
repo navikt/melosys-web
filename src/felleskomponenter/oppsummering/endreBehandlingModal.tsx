@@ -10,6 +10,7 @@ import { behandlingstemaSelectors } from "../../ducks/behandlingstema";
 import { behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { navigeringOperations } from "../../ducks/navigering";
+import { KTObject } from "@navikt/melosys-kodeverk";
 import Knapperad from "../knapperad";
 
 import * as Mui from "../ui";
@@ -22,7 +23,6 @@ import Datovelger from "../datovelger";
 import * as Datoutils from "../../utils/dato";
 
 import "./endreBehandlingModal.css";
-import { KTObject } from "@navikt/melosys-kodeverk";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
