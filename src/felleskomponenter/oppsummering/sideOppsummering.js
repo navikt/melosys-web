@@ -118,8 +118,8 @@ const SideOppsummering = ({
                         fagsak={fagsak}
                         oppsummering={oppsummering}
                         behandlingstema={behandlingstema}
-                        lovvalgsperiodeFom={lovvalgsperiodeFom}
-                        lovvalgsperiodeTom={lovvalgsperiodeTom}
+                        behandlingsgrunnlagperiode={`${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`}
+                        lovvalgsperiode={`${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`}
                         mottattDato={behandlingsgrunnlagMottaksdato}
                         behandlingsfristLinje={
                           <OppsummeringVerdiParRedigerbar

@@ -25,8 +25,8 @@ interface OppsummeringProps {
   fagsak: Api.Fagsak;
   oppsummering: Api.Behandlinger.behandling.Oppsummering;
   behandlingstema: string;
-  lovvalgsperiodeFom?: string;
-  lovvalgsperiodeTom?: string;
+  behandlingsgrunnlagperiode: string;
+  lovvalgsperiode: string;
   mottattDato?: string;
   className?: string;
 }
@@ -38,8 +38,8 @@ const Oppsummering = (props: OppsummeringProps) => {
     fagsak,
     oppsummering,
     behandlingstema,
-    lovvalgsperiodeFom,
-    lovvalgsperiodeTom,
+    behandlingsgrunnlagperiode,
+    lovvalgsperiode,
     mottattDato,
     className,
   } = props;
@@ -54,8 +54,6 @@ const Oppsummering = (props: OppsummeringProps) => {
     land && land.length > 0
       ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term)))
       : "Ukjent";
-
-  const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
 
   const erSed = behandlingstype && KV.objektTilKode(behandlingstype) === MKV.Koder.behandlinger.behandlingstyper.SED;
   const erTrygdeavtale = sakstype && KV.objektTilKode(sakstype) === MKV.Koder.sakstyper.TRYGDEAVTALE;
@@ -102,7 +100,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   };
 
   const renderTabell = () => {
-    const col1 = [[erSed ? "Periode fra SED" : "Søknadsperiode", lovvalgsperiode]];
+    const col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
     if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
     col1.push(["Land", erSed ? storeForbokstaverForLand(lovvalgsland.term) : landTilSetning(arbeidsland)]);
 
@@ -177,6 +175,8 @@ Oppsummering.propTypes = {
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
   behandlingstema: PT.string.isRequired,
+  behandlingsgrunnlagperiode: PT.string,
+  lovvalgsperiode: PT.string,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   mottattDato: PT.string,
@@ -185,8 +185,8 @@ Oppsummering.propTypes = {
 Oppsummering.defaultProps = {
   arbeidsland: [],
   lovvalgsland: {},
-  lovvalgsperiodeFom: undefined,
-  lovvalgsperiodeTom: undefined,
+  behandlingsgrunnlagperiode: undefined,
+  lovvalgsperiode: undefined,
   mottattDato: undefined,
   className: undefined,
 };
