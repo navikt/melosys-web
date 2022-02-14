@@ -19,10 +19,12 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
       return (
         <>
           {visFeltBeskrivelse && <FeltBeskrivelse beskrivelse={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} />}
-          <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.feltVerdi`} />
+          <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}.feltVerdi`} className="brevfelt__fritekst" />
         </>
       );
-    case DokumenterV2.FeltType.TEKST:
+    case DokumenterV2.FeltType.TEKST: {
+      const placeholder = `Skriv inn ${felt.beskrivelse.toLowerCase()}`;
+      const placeholderMaksAntallTegn = felt.tegnBegrensning ? `, maks ${felt.tegnBegrensning} tegn` : "";
       return (
         <Nav.Row>
           <Nav.Column xs={width}>
@@ -36,15 +38,21 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
                   ""
                 )
               }
+              placeholder={`${placeholder}${placeholderMaksAntallTegn}`}
             />
           </Nav.Column>
         </Nav.Row>
       );
+    }
     case DokumenterV2.FeltType.SJEKKBOKS:
       return (
         <Nav.Row>
           <Nav.Column xs={width}>
-            <Skjema.Checkbox feltNavn={`felt.${felt.kode}.feltVerdi`} label={felt.beskrivelse} />
+            <Skjema.Checkbox
+              feltNavn={`felt.${felt.kode}.feltVerdi`}
+              label={felt.beskrivelse}
+              className="brevfelt__sjekkboks"
+            />
           </Nav.Column>
         </Nav.Row>
       );

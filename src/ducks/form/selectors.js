@@ -270,6 +270,7 @@ export const SoknadOppgittAdresseSelector = createSelector(
     landkode: soknad.oppgittAdresseLand,
     tilleggsnavn: soknad.oppgittAdresseTilleggsnavn,
     postboks: soknad.oppgittAdressePostboks,
+    coAdressenavn: soknad.coAdressenavn,
   })
 );
 

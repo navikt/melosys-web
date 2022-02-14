@@ -19,9 +19,11 @@ const MottakerAdresse = ({
       )}
 
       {adresselinjer.map((linje) => (
-        <span key={Utils._uuid()}>{linje}, </span>
+        <span key={Utils._uuid()} className="mottaker__adresselinje">
+          {linje},{" "}
+        </span>
       ))}
-      <span>
+      <span className="mottaker__adresselinje">
         {postnr} {poststed}, {land}
       </span>
     </div>

@@ -13,7 +13,7 @@ import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponente
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import { useFeatureToggle, FeatureToggle } from "../../featuretoggle";
+import { FeatureToggle } from "../../featuretoggle";
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../ducks/behandlingsgrunnlag";
@@ -24,6 +24,7 @@ import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
 import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { menypanelOperations } from "../../ducks/menypanel";
+import { landkoderOperations } from "../../ducks/landkoder";
 import { formSelectors } from "../../ducks/form";
 
 import Stegvelger from "./stegvelger";
@@ -101,6 +102,7 @@ const Saksbehandling = ({
   hentBehandlingsgrunnlag,
   hentBehandlingsresultat,
   hentDokumentOversikt,
+  hentLandkoder,
   hentLovvalgsperiode,
   hentFagsaker,
   lagreOgLukk,
@@ -126,7 +128,6 @@ const Saksbehandling = ({
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const trygdeavtaleToggle = useFeatureToggle("melosys.trygdeavtale");
   const saksnummer = match?.params?.snr;
 
   const oppdaterBehandlingIDState = () => {
@@ -171,6 +172,8 @@ const Saksbehandling = ({
 
   useEffect(() => {
     lastInnSaksopplysninger();
+    hentLandkoder();
+
     return () => {
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
@@ -181,7 +184,6 @@ const Saksbehandling = ({
 
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID || behandlingID < 0) return null;
-  if (trygdeavtaleToggle === "fetching" || trygdeavtaleToggle === "disabled") return null;
   if (!saksopplysningerLastet) return null;
 
   const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
@@ -295,6 +297,7 @@ Saksbehandling.propTypes = {
   hentBehandlingsgrunnlag: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentDokumentOversikt: PT.func.isRequired,
+  hentLandkoder: PT.func.isRequired,
   hentLovvalgsperiode: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   lagreOgLukk: PT.func.isRequired,
@@ -350,6 +353,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentBehandlingsgrunnlag: (bid) => dispatch(behandlingsgrunnlagOperations.hent(bid)),
   hentBehandlingsresultat: (bid) => dispatch(behandlingsresultatOperations.hent(bid)),
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   hentLovvalgsperiode: (bid) => dispatch(lovvalgsperioderOperations.hent(bid)),
   hentFagsaker: (saksnummer) => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),

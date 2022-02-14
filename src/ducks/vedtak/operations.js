@@ -67,7 +67,7 @@ export function avslaaSoknad(behandlingID, data) {
     fritekstSed: null,
     mottakerinstitusjoner: [],
     vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    revurderBegrunnelse: null,
+    nyVurderingBakgrunn: null,
   };
 
   return doThenDispatch(

@@ -7,9 +7,20 @@ interface StrukturertAdresseProps {
 }
 
 const StrukturertAdresse = ({
-  adresse: { tilleggsnavn, gatenavn, husnummerEtasjeLeilighet, region, postboks, postnummer, poststed, landkode },
+  adresse: {
+    tilleggsnavn,
+    gatenavn,
+    husnummerEtasjeLeilighet,
+    region,
+    postboks,
+    postnummer,
+    poststed,
+    landkode,
+    coAdressenavn,
+  },
 }: StrukturertAdresseProps) => (
   <address>
+    <div>{coAdressenavn}</div>
     <div>{tilleggsnavn}</div>
     <div>
       {gatenavn} {husnummerEtasjeLeilighet}

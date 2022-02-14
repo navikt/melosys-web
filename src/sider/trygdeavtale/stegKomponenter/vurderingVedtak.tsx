@@ -4,6 +4,7 @@ import { Action } from "redux";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { getFormValues, reduxForm } from "redux-form";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -46,14 +47,17 @@ const mapStateToProps = (state: RootState, ownProps: Props) => ({
   familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
   formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
   initialValues: {
-    fritekstBegrunnelse: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    fritekstInnledning: behandlingsresultatSelectors.InnledningFritekstSelector(state),
+    innledningFritekst: ownProps.resultat.innledningFritekst,
+    begrunnelseFritekst: ownProps.resultat.begrunnelseFritekst,
     lovvalgsperiodeFom:
       ownProps.resultat.lovvalgsperiodeFom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeFom),
     lovvalgsperiodeTom:
       ownProps.resultat.lovvalgsperiodeTom && Utils.dato.formatterDatoTilNorsk(ownProps.resultat.lovvalgsperiodeTom),
+    kopiTilArbeidsgiver: true,
   },
   formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
+  erNyVurdering:
+    behandlingerSelectors.BehandlingstypeKodeSelector(state) === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -76,9 +80,11 @@ interface Props {
   formValues: {
     lovvalgsperiodeFom?: string;
     lovvalgsperiodeTom?: string;
-    fritekstInnledning?: string;
-    fritekstBegrunnelse?: string;
+    innledningFritekst?: string;
+    begrunnelseFritekst?: string;
     kopiTilArbeidsgiver?: boolean;
+    nyVurderingBakgrunn?: string;
+    nyVurderingBakgrunnFritekst?: string;
   };
 }
 
@@ -86,6 +92,7 @@ const VurderingVedtak = ({
   behandlingID,
   behandlingsgrunnlagStatus,
   data: { bestemmelseValg },
+  erNyVurdering,
   tilbake,
   redigerbart,
   resultat,
@@ -101,33 +108,45 @@ const VurderingVedtak = ({
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
-  const fritekstInnledningHjelpetekstTittel =
+  const innledningFritekstHjelpetekstTittel =
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: 'Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31. desember 2024.' Friteksten kommer her";
-  const fritekstBegrunnelseHjelpetekstTittel =
+  const begrunnelseFritekstHjelpetekstTittel =
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel: 'Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for er ansatt av Equinor ASA.' Friteksten kommer her.";
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
   const [oppdaterFørKontroll, setOppdaterFørKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
+  const FRITEKST = "Fritekst";
 
   const filterKopiMottakere = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
-    if (muligMottaker?.rolle === KV.Koder.MottakerRolle.ARBEIDSGIVER) {
+    if ([KV.Koder.MottakerRolle.ARBEIDSGIVER, KV.Koder.MottakerRolle.REPRESENTANT].includes(muligMottaker?.rolle)) {
       return formValues?.kopiTilArbeidsgiver;
     }
-    return false;
+    return true;
+  };
+
+  const getKopiMottakere = () => {
+    return [
+      ...muligeMottakere.kopiMottakere
+        .filter(filterKopiMottakere)
+        .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+      ...muligeMottakere.fasteMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    ];
   };
 
   const lagFattVedtakTrygdeavtaleReqDto = (): Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto => ({
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-    fritekstInnledning: formValues?.fritekstInnledning || null,
-    fritekstBegrunnelse: formValues?.fritekstBegrunnelse || null,
-    fritekstEktefelle: familieFormValues?.ektefelle?.fritekst || null,
-    fritekstBarn: familieFormValues?.barn?.fritekst || null,
+    innledningFritekst: formValues?.innledningFritekst || null,
+    begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+    ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
+    barnFritekst: familieFormValues?.barn?.fritekst || null,
     vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    kopiMottakere: muligeMottakere.kopiMottakere
-      .filter(filterKopiMottakere)
-      .map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    kopiMottakere: getKopiMottakere(),
+    nyVurderingBakgrunn:
+      formValues?.nyVurderingBakgrunn === FRITEKST
+        ? formValues?.nyVurderingBakgrunnFritekst
+        : formValues?.nyVurderingBakgrunn,
   });
 
   const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
@@ -145,16 +164,21 @@ const VurderingVedtak = ({
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
 
+  const debouncedOppdaterFlyten = useCallback(
+    Utils._debounce((data: Api.Trygdeavtale.Resultat) => oppdaterFlyt({ resultat: data }), 2000),
+    []
+  );
+
   useEffect(() => {
-    debouncedKontrollerVedtak(oppdaterFørKontroll);
+    if (redigerbart) debouncedKontrollerVedtak(oppdaterFørKontroll);
     return () => debouncedKontrollerVedtak.cancel();
   }, []);
 
   useEffect(() => {
-    if (behandlingsgrunnlagStatus === "OK") {
+    if (behandlingsgrunnlagStatus === "OK" && redigerbart) {
       debouncedKontrollerVedtak(oppdaterFørKontroll);
     }
-  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus]);
+  }, [resultat.lovvalgsperiodeTom, behandlingsgrunnlagStatus, resultat.bestemmelse]);
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
@@ -162,7 +186,19 @@ const VurderingVedtak = ({
     } else {
       debouncedHentMuligeMottakere.cancel();
     }
-  }, [steg]);
+  }, [steg.status, resultat.bestemmelse]);
+
+  useEffect(() => {
+    if (redigerbart && formValues) {
+      debouncedOppdaterFlyten({
+        ...resultat,
+        innledningFritekst: formValues.innledningFritekst,
+        begrunnelseFritekst: formValues.begrunnelseFritekst,
+      });
+    } else {
+      debouncedOppdaterFlyten.cancel();
+    }
+  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   const handleLagreTomEndring = async () => {
     if (redigerbart && formValues) {
@@ -187,10 +223,11 @@ const VurderingVedtak = ({
         data: {
           produserbardokument: STORBRITANNIA,
           mottaker: muligMottaker.rolle,
-          kopiMottakere: [],
-          innledningFritekst: formValues?.fritekstInnledning || null,
-          begrunnelseFritekst: formValues?.fritekstBegrunnelse || null,
+          kopiMottakere: getKopiMottakere(),
+          innledningFritekst: formValues?.innledningFritekst || null,
+          begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
           orgNr: muligMottaker?.orgnr || null,
+          institusjonId: muligMottaker?.institusjonId || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
         },
@@ -308,10 +345,40 @@ const VurderingVedtak = ({
         </Nav.Column>
       </Nav.Row>
 
+      {erNyVurdering && (
+        <>
+          <Nav.Fieldset legend="Oppgi grunn for nytt vedtak" className={vurderingVedtakCls.element("nyvurdering")}>
+            <Nav.Row>
+              <Nav.Column xs="6">
+                <Skjema.Select
+                  label=""
+                  feltNavn="nyVurderingBakgrunn"
+                  disabled={!redigerbart}
+                  emptyFieldText="Velg"
+                  emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
+                >
+                  {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                    <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                  ))}
+                  <option key={FRITEKST} value={FRITEKST} label={FRITEKST} />
+                </Skjema.Select>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
+          {formValues?.nyVurderingBakgrunn === FRITEKST && (
+            <Skjema.Input
+              feltNavn="nyVurderingBakgrunnFritekst"
+              label=""
+              className={vurderingVedtakCls.element("nyvurdering")}
+            />
+          )}
+        </>
+      )}
+
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til innledning
         <Nav.Hjelpetekst
-          tittel={fritekstInnledningHjelpetekstTittel}
+          tittel={innledningFritekstHjelpetekstTittel}
           className={vurderingVedtakCls.element("hjelpetekst")}
           type={Nav.PopoverOrientering.Hoyre}
         >
@@ -326,7 +393,7 @@ const VurderingVedtak = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
-        feltNavn="fritekstInnledning"
+        feltNavn="innledningFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
         placeholder="Skriv inn tilleggsinformasjon til innledning..."
         disabled={!redigerbart}
@@ -335,7 +402,7 @@ const VurderingVedtak = ({
       <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
         Fritekst til begrunnelse{" "}
         <Nav.Hjelpetekst
-          tittel={fritekstBegrunnelseHjelpetekstTittel}
+          tittel={begrunnelseFritekstHjelpetekstTittel}
           className={vurderingVedtakCls.element("hjelpetekst")}
           type={Nav.PopoverOrientering.Hoyre}
         >
@@ -351,7 +418,7 @@ const VurderingVedtak = ({
         </Nav.Hjelpetekst>
       </Nav.Typo.Element>
       <Skjema.HTMLEditor
-        feltNavn="fritekstBegrunnelse"
+        feltNavn="begrunnelseFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
         placeholder="Skriv inn tilleggsinformasjon til begrunnelse..."
         disabled={!redigerbart}

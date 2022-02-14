@@ -4,7 +4,7 @@ import * as Nav from "../../../../../navFrontend";
 
 import Adresseliste, { Adressetype } from "./adresseliste";
 
-import { useHentAdresserQuery, HentAdresserQuery } from "./hentAdresser";
+import { HentAdresserQuery, useHentAdresserQuery } from "./hentAdresser";
 
 interface AdresserProps {
   data: HentAdresserQuery;
@@ -12,7 +12,6 @@ interface AdresserProps {
 
 export const Adresser = ({ data }: AdresserProps) => {
   const { bostedsadresser, oppholdsadresser, kontaktadresser } = data.hentSaksopplysninger.persondata;
-
   return (
     <div>
       {bostedsadresser.length > 0 && (

@@ -10,18 +10,20 @@ export interface FattVedtakEOSReqDto {
   fritekst?: string | null;
   fritekstSed?: string | null;
   mottakerinstitusjoner: string[];
-  revurderBegrunnelse: string | null;
+  nyVurderingBakgrunn: string | null;
 }
 
 export interface FattVedtakFTRLReqDto {
   behandlingsresultatTypeKode: string;
   vedtakstype: string | null;
-  fritekstInnledning: string | null;
-  fritekstBegrunnelse: string | null;
-  fritekstEktefelle: string | null;
-  fritekstBarn: string | null;
+  innledningFritekst: string | null;
+  begrunnelseFritekst: string | null;
+  ektefelleFritekst: string | null;
+  barnFritekst: string | null;
   kopiMottakere: KopiMottaker[];
+  nyVurderingBakgrunn: string | null | undefined;
 }
+
 export type FattVedtakTrygdeavtaleReqDto = FattVedtakFTRLReqDto;
 
 interface EndreVedtakReqDto {

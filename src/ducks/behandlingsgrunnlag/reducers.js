@@ -237,7 +237,7 @@ export default function reducer(state = initialState, action) {
             ? null
             : {
                 representantNavn: dokument.representantIUtlandet.representantNavn,
-                adresselinjer: dokument.representantIUtlandet.adresselinjer || [],
+                adresselinjer: dokument.representantIUtlandet.adresselinjer?.filter((al) => !Utils._isEmpty(al)) || [],
                 representantLand: dokument.soknadsland.landkoder[0] || null,
               },
           maritimtArbeid,
