@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { RootState } from "AppTypes";
@@ -112,6 +112,8 @@ const VurderingVedtak = ({
     "Teksten du skriver her vil vises etter informasjonen om vedtakets periode og resultat. Eksempel: 'Du er omfattet av norsk trygdelovgivning og medlem i folketrygden fra 1. september 2022 til 31. desember 2024.' Friteksten kommer her";
   const begrunnelseFritekstHjelpetekstTittel =
     "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen. Eksempel: 'Vi har lagt til grunn at du er ansatt av og lønnet av en norsk arbeidsgiver, og sendt ut for å jobbe i Storbritannia i inntil tre år. Vi har gjort vurderingen fordi du har opplyst at du jobber for er ansatt av Equinor ASA.' Friteksten kommer her.";
+  const nyVurderingBakgrunnHjelpetekst =
+    "Velg en innledningstekst til vedtaket. Teksten kommer først i vedtaket og skal forklare hvorfor vi har gjort nytt vedtak. Hvis ingen av standardtekstene passer, velger du fritekst og skriver egen innledning til vedtaket.";
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -347,7 +349,21 @@ const VurderingVedtak = ({
 
       {erNyVurdering && (
         <>
-          <Nav.Fieldset legend="Oppgi grunn for nytt vedtak" className={vurderingVedtakCls.element("nyvurdering")}>
+          <Nav.Fieldset
+            className={vurderingVedtakCls.element("nyvurdering")}
+            legend={
+              <Fragment>
+                Oppgi grunn for nytt vedtak
+                <Nav.Hjelpetekst
+                  className={vurderingVedtakCls.element("hjelpetekst")}
+                  tittel={nyVurderingBakgrunnHjelpetekst}
+                  type={Nav.PopoverOrientering.Hoyre}
+                >
+                  {nyVurderingBakgrunnHjelpetekst}
+                </Nav.Hjelpetekst>
+              </Fragment>
+            }
+          >
             <Nav.Row>
               <Nav.Column xs="6">
                 <Skjema.Select
