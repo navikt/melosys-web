@@ -109,7 +109,7 @@ const Oppsummering = (props: OppsummeringProps) => {
         </Nav.Row>
       </dl>
 
-      {KV.objektTilKode(oppsummering.behandlingsstatus) === "AVSLUTTET" && (
+      {oppsummering.behandlingsstatus && KV.objektTilKode(oppsummering.behandlingsstatus) === "AVSLUTTET" && (
         <dl>
           <Nav.Row>
             <Nav.Column xs="12">{behandlingsresultattypeLinje}</Nav.Column>
