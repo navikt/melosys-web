@@ -121,7 +121,7 @@ function EndreBehandlingModal({
   };
 
   const muligeVerdierPlussValgt = (muligeVerdier: KTObject[], valgtVerdi: KTObject) => {
-    return [valgtVerdi].concat(muligeVerdier.filter((verdi) => verdi.kode != valgtVerdi.kode));
+    return [valgtVerdi].concat(muligeVerdier.filter((verdi) => verdi.kode !== valgtVerdi.kode));
   };
 
   const viserAlert = behandlingEndret || generellFeil?.length > 0;
