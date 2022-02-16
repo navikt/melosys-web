@@ -353,6 +353,7 @@ Saksbehandling.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentBehandlingsgrunnlag: PT.func.isRequired,
+  hentLandkoder: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   resetBehandlingsresultatState: PT.func.isRequired,
   resetVilkarState: PT.func.isRequired,
