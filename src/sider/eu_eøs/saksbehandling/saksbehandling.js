@@ -35,6 +35,7 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 import "./saksbehandling.css";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
 import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiodesvar";
+import { landkoderOperations } from "../../../ducks/landkoder";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
@@ -143,6 +144,7 @@ class Saksbehandling extends Component {
       behandlingOppfriskes,
       hentDokumentOversikt,
       hentAnmodningsperiodesvar,
+      hentLandkoder,
     } = this.props;
 
     try {
@@ -161,6 +163,7 @@ class Saksbehandling extends Component {
 
       await hentBehandlingsgrunnlag(behandlingID);
       await hentDokumentOversikt(snr);
+      await hentLandkoder();
 
       const anmodningsperioderRes = await Api.Anmodningsperioder.hent(behandlingID);
       const anmodningsperiodeID = anmodningsperioderRes.anmodningsperioder[0]?.id;
@@ -456,6 +459,7 @@ const mapDispatchToProps = (dispatch) => ({
   hentBehandlingsresultat: (bid) => dispatch(behandlingsresultatOperations.hent(bid)),
   hentBehandlingsgrunnlag: (bid) => dispatch(behandlingsgrunnlagOperations.hent(bid)),
   hentDokumentOversikt: (saksnummer) => dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetState()),

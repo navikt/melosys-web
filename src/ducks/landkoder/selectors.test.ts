@@ -3,10 +3,10 @@ import each from "jest-each";
 import MKV from "../../melosyskodeverk";
 import * as DucksTestUtils from "../test-utils";
 
-import { LandkoderSelector } from "./selectors";
+import { LandkoderFraSakstypeSelector } from "./selectors";
 import { STATUS } from "../../services";
 
-describe("LandkoderSelector", () => {
+describe("LandkoderFraSakstypeSelector", () => {
   const landkoderFraFellesKodeverk = [
     { kode: "kode 1", term: "term 1" },
     { kode: "kode 2", term: "term 2" },
@@ -27,7 +27,7 @@ describe("LandkoderSelector", () => {
       },
     });
 
-  describe("LandkoderSelector", () => {
+  describe("LandkoderFraSakstypeSelector", () => {
     each([
       [MKV.Koder.sakstyper.FTRL, landkoderFraFellesKodeverk],
       [MKV.Koder.sakstyper.EU_EOS, MKV.KTObjects.landkoder],
@@ -36,7 +36,7 @@ describe("LandkoderSelector", () => {
     ]).it("returnerer rett landkodeliste for sakstype %s", (sakstypeKode, forventetKodeListe) => {
       const state = lagState(sakstypeKode);
 
-      expect(LandkoderSelector(state)).toBe(forventetKodeListe);
+      expect(LandkoderFraSakstypeSelector(state)).toBe(forventetKodeListe);
     });
   });
 });

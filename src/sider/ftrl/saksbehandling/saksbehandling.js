@@ -403,7 +403,7 @@ const mapStateToProps = (state) => ({
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  landkoder: landkoderSelectors.LandkoderSelector(state),
+  landkoder: landkoderSelectors.LandkoderFraSakstypeSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
