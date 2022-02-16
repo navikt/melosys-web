@@ -35,7 +35,7 @@ const getIkon = (status: string) => {
 const Behandlingsstatuskode = ({ behandlingsstatus }: BehandlingsstatuskodeProps) => {
   return (
     <div className="behandlingsstatuskode">
-      {getIkon(behandlingsstatus.kode)}
+      {getIkon(behandlingsstatus?.kode)}
       <span>{KV.objektTilTerm(behandlingsstatus)}</span>
     </div>
   );
