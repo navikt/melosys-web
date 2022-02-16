@@ -43,16 +43,9 @@ describe("Landvelger", () => {
   });
 
   describe("Dersom landkoder prop", () => {
-    it("er satt til en egendefinert liste", () => {
-      props.landkoder = [{ kode: "egenKode", term: "egenTerm" }];
-      const landVelger = shallow(<LandVelger {...props} />);
-
-      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoder.length);
-    });
-
     it("er satt til tom liste", () => {
       props.landkoder = [];
-      const landVelger = shallow(<LandVelger {...props} />);
+      const landVelger = shallow(<LandVelger {...props} visAlleLandkoder />);
 
       expect(landVelger.find("datalist").children()).toHaveLength(0);
     });
