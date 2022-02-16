@@ -14,7 +14,7 @@ import "./landvelger.css";
 
 const mapStateToProps = (state) => ({
   landkoderFraSakstype: landkoderSelectors.LandkoderFraSakstypeSelector(state),
-  landkoder: landkoderSelectors.LandkoderSelector(state),
+  alleLandkoder: landkoderSelectors.LandkoderSelector(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -24,9 +24,9 @@ const connector = connect(mapStateToProps);
  * @param props
  */
 export const LandVelger = (props) => {
-  const { multiLand, landkoder, landkoderFraSakstype, visAlleLandkoder } = props;
+  const { multiLand, landkoder, landkoderFraSakstype, alleLandkoder, visAlleLandkoder } = props;
   const dataListID = lagDatalistID();
-  const landkodeliste = visAlleLandkoder ? landkoder : landkoderFraSakstype;
+  const landkodeliste = landkoder ? landkoder : visAlleLandkoder ? alleLandkoder : landkoderFraSakstype;
 
   return (
     <div>
@@ -54,6 +54,7 @@ LandVelger.propTypes = {
   bredde: PT.string,
   placeholder: PT.string,
   landkoder: PT.arrayOf(MPT.Kodeverk),
+  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   landkoderFraSakstype: PT.arrayOf(MPT.Kodeverk).isRequired,
   visAlleLandkoder: PT.bool,
 };

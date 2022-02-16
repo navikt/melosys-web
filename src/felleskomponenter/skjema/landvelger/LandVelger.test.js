@@ -10,7 +10,8 @@ describe("Landvelger", () => {
       feltNavn: "test",
       multiLand: false,
       label: "test",
-      landkoder: [{ kode: "kode1", term: "term1" }],
+      landkoder: undefined,
+      alleLandkoder: [{ kode: "kode1", term: "term1" }],
       landkoderFraSakstype: [
         { kode: "kode1", term: "term1" },
         { kode: "kode2", term: "term2" },
@@ -46,12 +47,35 @@ describe("Landvelger", () => {
     it("er true", () => {
       const landVelger = shallow(<LandVelger {...props} visAlleLandkoder />);
 
-      expect(landVelger.find("datalist").children()).toHaveLength(1);
+      expect(landVelger.find("datalist").children()).toHaveLength(props.alleLandkoder.length);
     });
+
     it("er undefined", () => {
       const landVelger = shallow(<LandVelger {...props} />);
 
-      expect(landVelger.find("datalist").children()).toHaveLength(3);
+      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoderFraSakstype.length);
+    });
+  });
+
+  describe("Dersom landkoder prop", () => {
+    it("ikke er satt", () => {
+      props.landkoder = undefined;
+      const landVelger = shallow(<LandVelger {...props} />);
+
+      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoderFraSakstype.length);
+    });
+
+    it("er satt til tom liste", () => {
+      props.landkoder = [];
+      const landVelger = shallow(<LandVelger {...props} />);
+      expect(landVelger.find("datalist").children()).toHaveLength(0);
+    });
+
+    it("er satt til en egendefinert liste", () => {
+      props.landkoder = [{ kode: "egenKode", term: "egenTerm" }];
+      const landVelger = shallow(<LandVelger {...props} />);
+
+      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoder.length);
     });
   });
 });
