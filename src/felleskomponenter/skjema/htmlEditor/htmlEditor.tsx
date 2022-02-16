@@ -18,6 +18,8 @@ function InnerHTMLEditorComponent({
     ...rest,
   };
 
+  const feil = rest?.meta?.touched ? rest?.meta?.error : undefined;
+
   return (
     <div className="editor_content" {...inputProps}>
       <HtmlEditor
@@ -27,6 +29,8 @@ function InnerHTMLEditorComponent({
         readOnly={rest?.disabled}
         spellCheck={spellcheck}
         label={rest?.label}
+        feil={feil}
+        disabled={rest?.disabled}
       />
     </div>
   );
