@@ -428,12 +428,14 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      <Skjema.Checkbox
-        feltNavn="kopiTilArbeidsgiver"
-        label="Send kopi til arbeidsgiver/virksomhet"
-        className={vurderingVedtakCls.element("kopiCheckbox")}
-        disabled={!redigerbart}
-      />
+      {redigerbart && (
+        <Skjema.Checkbox
+          feltNavn="kopiTilArbeidsgiver"
+          label="Send kopi til arbeidsgiver/virksomhet"
+          className={vurderingVedtakCls.element("kopiCheckbox")}
+          disabled={!redigerbart}
+        />
+      )}
 
       {redigerbart && (
         <MottakerTabell
