@@ -10,7 +10,7 @@ describe("Landvelger", () => {
       feltNavn: "test",
       multiLand: false,
       label: "test",
-      landkoder: undefined,
+      landkoder: [{ kode: "kode1", term: "term1" }],
       landkoderFraSakstype: [
         { kode: "kode1", term: "term1" },
         { kode: "kode2", term: "term2" },
@@ -42,19 +42,16 @@ describe("Landvelger", () => {
     expect(landVelger.find("datalist")).toHaveLength(1);
   });
 
-  describe("Dersom landkoder prop", () => {
-    it("er satt til tom liste", () => {
-      props.landkoder = [];
+  describe("Dersom visAlleLandkoder prop", () => {
+    it("er true", () => {
       const landVelger = shallow(<LandVelger {...props} visAlleLandkoder />);
 
-      expect(landVelger.find("datalist").children()).toHaveLength(0);
+      expect(landVelger.find("datalist").children()).toHaveLength(1);
     });
-
-    it("ikke er satt", () => {
-      props.landkoder = undefined;
+    it("er undefined", () => {
       const landVelger = shallow(<LandVelger {...props} />);
 
-      expect(landVelger.find("datalist").children()).toHaveLength(props.landkoderFraSakstype.length);
+      expect(landVelger.find("datalist").children()).toHaveLength(3);
     });
   });
 });
