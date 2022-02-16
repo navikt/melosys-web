@@ -230,6 +230,7 @@ class Saksbehandling extends Component {
       arbeidsland,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
+      behandlingsgrunnlagMottaksdato,
       visRevurderFagsakDialogHandle,
       tilForsiden,
       visValideringModalDialogHandle,
@@ -288,6 +289,7 @@ class Saksbehandling extends Component {
                     arbeidsland={arbeidsland}
                     behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                     behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
+                    behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
                     renderBehandlingsmeny={() => (
                       <Legacybehandlingsmeny
                         redigerbart={behandlingsmenyRedigerbart}
@@ -383,6 +385,7 @@ Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
+  behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
@@ -437,6 +440,9 @@ const mapStateToProps = (state) => ({
   ),
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
+  ),
+  behandlingsgrunnlagMottaksdato: Utils.dato.formatterDatoTilNorsk(
+    behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
   ),
   behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
