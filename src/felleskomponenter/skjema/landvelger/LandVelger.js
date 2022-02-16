@@ -26,7 +26,7 @@ const connector = connect(mapStateToProps);
 export const LandVelger = (props) => {
   const { multiLand, landkoder, landkoderFraSakstype, alleLandkoder, visAlleLandkoder } = props;
   const dataListID = lagDatalistID();
-  const landkodeliste = landkoder ? landkoder : visAlleLandkoder ? alleLandkoder : landkoderFraSakstype;
+  const landkodeliste = landkoder || (visAlleLandkoder ? alleLandkoder : landkoderFraSakstype);
 
   return (
     <div>
