@@ -11,9 +11,20 @@ import { JOURNALFORING_HENSIKT } from "../../../constants";
 
 import "./fagsakVelger.css";
 
-const behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper.filter(
-  ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
-);
+const behandlingstyper = (sakstype) => {
+  switch (sakstype) {
+    case MKV.Koder.sakstyper.EU_EOS:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
+        ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
+      );
+    case MKV.Koder.sakstyper.TRYGDEAVTALE:
+      return MKV.KTObjects.behandlinger.behandlingstyper.filter(
+        ({ kode }) => kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING
+      );
+    default:
+      return [];
+  }
+};
 
 const FagsakVelger = (props) => {
   const { fagsakListe, settJournalforingHensikt } = props;
@@ -27,7 +38,7 @@ const FagsakVelger = (props) => {
       {
         value: sak.saksnummer,
         innhold: <EnkeltSak sak={sak} />,
-        footer: <KnyttTilSak sak={sak} behandlingstyper={behandlingstyper} />,
+        footer: <KnyttTilSak sak={sak} behandlingstyper={behandlingstyper(sak.sakstype.kode)} />,
       },
     ],
     []

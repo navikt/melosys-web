@@ -55,6 +55,11 @@ const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+interface FormValuesProps {
+  innledningFritekst?: string;
+  begrunnelseFritekst?: string;
+}
+
 interface Props {
   bekreft: () => void;
   oppdater: () => void;
@@ -62,10 +67,7 @@ interface Props {
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) => void;
   redigerbart: boolean;
   alleLandkoder: KTObject[];
-  formValues: {
-    innledningFritekst?: string;
-    begrunnelseFritekst?: string;
-  };
+  formValues: FormValuesProps;
 }
 
 const VurderingVedtak = ({
@@ -87,6 +89,8 @@ const VurderingVedtak = ({
   vedtakstype,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const isMounted = Hooks.useIsMounted();
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
@@ -110,8 +114,19 @@ const VurderingVedtak = ({
     debouncedHentMuligeMottakere();
   }, [formValuesRepresentant.selvbetalende]);
 
-  const [vedtakPending, setVedtakPending] = useState(false);
-  const isMounted = Hooks.useIsMounted();
+  const oppdaterFritekster = (values: FormValuesProps) => {
+    if (values && redigerbart && !vedtakPending) {
+      Api.Behandlinger.resultat.oppdatererFritekster(behandlingID, {
+        innledningFritekst: values.innledningFritekst,
+        begrunnelseFritekst: values.begrunnelseFritekst,
+      });
+    }
+  };
+  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
+
+  useEffect(() => {
+    debouncedOppdaterFritekster(formValues);
+  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
     return perioder

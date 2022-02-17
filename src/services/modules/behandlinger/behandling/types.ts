@@ -175,3 +175,11 @@ export interface BehandlingResDto {
   };
   oppsummering: Oppsummering;
 }
+
+export interface EndreBehandlingReqDto {
+  sakstype: string;
+  behandlingstype: string;
+  behandlingstema: string;
+  behandlingsstatus: string;
+  behandlingsfrist: string;
+}

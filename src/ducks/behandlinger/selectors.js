@@ -39,6 +39,10 @@ export const BehandlingsstatusKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
   (oppsummering) => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : "")
 );
+export const SisteOpplysningerHentetDatoSelector = createSelector(
+  OppsummeringSelector,
+  (oppsummering) => oppsummering.sisteOpplysningerHentetDato || null
+);
 
 export const SaksopplysningerSelector = createSelector(
   (state) => BehandlingerSelector(state).saksopplysninger || {},
