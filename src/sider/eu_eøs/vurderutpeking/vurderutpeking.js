@@ -28,6 +28,7 @@ import { avklartefaktaSelectors, avklartefaktaOperations } from "../../../ducks/
 import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder";
 import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { behandlingsperioderOperations } from "../../../ducks/behandlingsperioder";
+import { landkoderOperations } from "../../../ducks/landkoder";
 
 import stegMap from "./stegMap";
 import MKV from "../../../melosyskodeverk";
@@ -123,6 +124,7 @@ const Vurderutpeking = ({
   dokumenter,
   vurderUtpekingFormValues,
   behandlingsstatus,
+  hentLandkoder,
 }) => {
   const {
     params: { snr: saksnummer },
@@ -131,6 +133,7 @@ const Vurderutpeking = ({
 
   useEffect(() => {
     lastInnSaksopplysninger(saksnummer, behandlingID);
+    hentLandkoder();
 
     return () => {
       resetSaksopplysninger();
@@ -279,6 +282,7 @@ Vurderutpeking.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   vurderUtpekingFormValues: PT.object,
+  hentLandkoder: PT.func.isRequired,
 };
 
 Vurderutpeking.defaultProps = {
@@ -321,6 +325,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreAnmodningsperioder: () => dispatch(anmodningsperioderOperations.lagre()),
   oppdaterOgLagreBehandlingsperioder: () => dispatch(behandlingsperioderOperations.oppdaterOgLagre()),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  hentLandkoder: () => dispatch(landkoderOperations.hentLandkoder()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Vurderutpeking);

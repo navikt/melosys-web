@@ -73,7 +73,13 @@ const Felter = ({ redigerbart }: Felter) => (
           <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" disabled={!redigerbart} bredde="fullbredde" />
         </Nav.Column>
         <Nav.Column xs="4">
-          <Skjema.LandVelger disabled={!redigerbart} bredde="fullbredde" feltNavn="oppgittAdresseLand" label="Land:" />
+          <Skjema.LandVelger
+            disabled={!redigerbart}
+            bredde="fullbredde"
+            feltNavn="oppgittAdresseLand"
+            label="Land:"
+            visAlleLandkoder
+          />
         </Nav.Column>
       </Nav.Row>
     </dl>
