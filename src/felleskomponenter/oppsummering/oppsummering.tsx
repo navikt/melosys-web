@@ -124,10 +124,14 @@ const Oppsummering = (props: OppsummeringProps) => {
       />
 
       <Nav.Row className="datarad">
-        <span className="bold">Saksnummer: </span>
-        <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
-          {saksnummer}
-        </KopierbarTekst>
+        <dl className="oppsummering_verdi_par">
+          <dt className="nokkel">Saksnummer: </dt>
+          <dd>
+            <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
+              {saksnummer}
+            </KopierbarTekst>
+          </dd>
+        </dl>
       </Nav.Row>
 
       <Nav.Panel className="saksinfo">

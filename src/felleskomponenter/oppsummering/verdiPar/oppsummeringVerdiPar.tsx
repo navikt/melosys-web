@@ -17,7 +17,7 @@ const OppsummeringVerdiPar = (props: OppsummeringVerdiParProps) => {
   return (
     <dl className={classNames("oppsummering_verdi_par", className)}>
       <dt className="nokkel">{nokkel ? `${nokkel}: ` : ""}</dt>
-      <dt>{verdi}</dt>
+      <dd>{verdi}</dd>
       {ekstrafelt}
     </dl>
   );
