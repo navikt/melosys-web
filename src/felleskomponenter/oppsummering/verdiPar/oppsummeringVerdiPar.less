@@ -1,19 +1,14 @@
-@import "src/utils/mixins";
-@import "src/constants";
-
 .oppsummering_verdi_par {
+  margin-block-start: 0;
+  margin-block-end: 0;
+
   .nokkel {
     font-weight: 600;
   }
 
-  &.ikke_redigerbar {
-    cursor: default;
-  }
-
-  .blyant {
-    width: 24px;
-    height: 24px;
-    vertical-align: bottom;
-    margin-left: 0.5rem;
+  dl,
+  dt,
+  dd {
+    display: inline;
   }
 }

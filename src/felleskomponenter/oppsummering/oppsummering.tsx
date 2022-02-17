@@ -76,7 +76,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     for (let i = 0; i < Math.max(col1.length, col2.length); i += 1) {
       rows.push(
         <Nav.Row className="datarad" key={`datarad-${i}`}>
-          <Nav.Column xs="6">
+          <Nav.Column lg="6">
             {i < col1.length && (
               <OppsummeringVerdiPar
                 nokkel={col1[i][0]}
@@ -85,7 +85,7 @@ const Oppsummering = (props: OppsummeringProps) => {
               />
             )}
           </Nav.Column>
-          <Nav.Column xs="6">
+          <Nav.Column lg="6">
             {i < col2.length && (
               <OppsummeringVerdiPar
                 nokkel={col2[i][0]}
