@@ -178,7 +178,8 @@ function EndreBehandlingModal({
   const renderInnhold = () => {
     if (generellFeil) {
       return <Nav.AlertStripe type="feil">{generellFeil}</Nav.AlertStripe>;
-    } else if (behandlingEndret) {
+    }
+    if (behandlingEndret) {
       return <Nav.AlertStripe type="suksess">Behandlingen er oppdatert</Nav.AlertStripe>;
     }
     return renderEndreBehandling();
