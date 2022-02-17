@@ -24,7 +24,6 @@ interface OppsummeringProps {
   lovvalgsland: KTObject;
   fagsak: Api.Fagsak;
   oppsummering: Api.Behandlinger.behandling.Oppsummering;
-  behandlingstema: string;
   behandlingsgrunnlagperiode: string;
   lovvalgsperiode: string;
   mottattDato?: string;
@@ -37,7 +36,6 @@ const Oppsummering = (props: OppsummeringProps) => {
     lovvalgsland,
     fagsak,
     oppsummering,
-    behandlingstema,
     behandlingsgrunnlagperiode,
     lovvalgsperiode,
     mottattDato,
@@ -48,7 +46,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
   const { saksnummer, sakstype, registrertDato } = fagsak;
-  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist } = oppsummering;
+  const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
@@ -148,7 +146,7 @@ const Oppsummering = (props: OppsummeringProps) => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <span className="bold">{KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema)}</span>
+            <span className="bold">{KV.objektTilTerm(behandlingstema)}</span>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -174,7 +172,6 @@ Oppsummering.propTypes = {
   lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
-  behandlingstema: PT.string.isRequired,
   behandlingsgrunnlagperiode: PT.string,
   lovvalgsperiode: PT.string,
   lovvalgsperiodeFom: PT.string,
