@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -42,6 +43,8 @@ const Oppsummering = (props: OppsummeringProps) => {
     className,
   } = props;
   if (!oppsummering || !fagsak?.sakstype) return <div />;
+
+  const isLitenSkjerm = useMediaQuery({ query: "(max-width: 1440px)" });
 
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
@@ -108,7 +111,7 @@ const Oppsummering = (props: OppsummeringProps) => {
       ["Sist oppdatert", formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`],
     ];
 
-    return window.innerWidth < 1440 ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
+    return isLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
 
   return (
