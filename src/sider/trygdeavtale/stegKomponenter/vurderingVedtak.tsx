@@ -186,7 +186,7 @@ const VurderingVedtak = ({
     } else {
       debouncedHentMuligeMottakere.cancel();
     }
-  }, [steg.status, resultat.bestemmelse]);
+  }, [steg.status, resultat.bestemmelse, resultat.virksomhet]);
 
   useEffect(() => {
     if (redigerbart && formValues) {
