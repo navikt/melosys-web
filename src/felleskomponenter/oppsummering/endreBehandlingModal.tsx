@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import classNames from "classnames";
 import { RootState } from "AppTypes";
@@ -94,6 +94,18 @@ function EndreBehandlingModal({
     }
   }, [skalViseModal]);
 
+  const velgBehandlingstypeHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setBehandlingstype(event.target.value);
+    hentMuligeBehandlingstema(behandlingID);
+  };
+  const velgBehandlingstemaHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setBehandlingstema(event.target.value);
+    hentMuligeBehandlingstyper(behandlingID);
+  };
+  const velgBehandlingsstatusHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setBehandlingsstatus(event.target.value);
+  };
+
   const endreBehandlingHandle = () => {
     const req: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
       sakstype: KV.objektTilKode(fagsak.sakstype),
@@ -140,14 +152,14 @@ function EndreBehandlingModal({
               redigerbart={false}
             />
             <Mui.KodeTermSelect
-              onChange={(e) => setBehandlingstype(e.target.value)}
+              onChange={velgBehandlingstypeHandle}
               label="Behandlingstype"
               value={behandlingstype}
               koder={muligeVerdierPlussValgt(muligeBehandlingstyper, oppsummering.behandlingstype)}
               disableForsteValg
             />
             <Mui.KodeTermSelect
-              onChange={(e) => setBehandlingstema(e.target.value)}
+              onChange={velgBehandlingstemaHandle}
               label="Behandlingstema"
               value={behandlingstema}
               koder={muligeVerdierPlussValgt(muligeBehandlingstema, oppsummering.behandlingstema)}
@@ -155,7 +167,7 @@ function EndreBehandlingModal({
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
             <Mui.KodeTermSelect
-              onChange={(e) => setBehandlingsstatus(e.target.value)}
+              onChange={velgBehandlingsstatusHandle}
               label="Behandlingsstatus"
               value={behandlingsstatus}
               koder={muligeVerdierPlussValgt(muligeBehandlingsstatuser, oppsummering.behandlingsstatus)}
