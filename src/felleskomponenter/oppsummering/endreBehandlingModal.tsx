@@ -94,18 +94,6 @@ function EndreBehandlingModal({
     }
   }, [skalViseModal]);
 
-  const velgBehandlingstypeHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setBehandlingstype(event.target.value);
-    hentMuligeBehandlingstema(behandlingID);
-  };
-  const velgBehandlingstemaHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setBehandlingstema(event.target.value);
-    hentMuligeBehandlingstyper(behandlingID);
-  };
-  const velgBehandlingsstatusHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setBehandlingsstatus(event.target.value);
-  };
-
   const endreBehandlingHandle = () => {
     const req: Api.Behandlinger.behandling.EndreBehandlingReqDto = {
       sakstype: KV.objektTilKode(fagsak.sakstype),
@@ -152,14 +140,14 @@ function EndreBehandlingModal({
               redigerbart={false}
             />
             <Mui.KodeTermSelect
-              onChange={velgBehandlingstypeHandle}
+              onChange={(e) => setBehandlingstype(e.target.value)}
               label="Behandlingstype"
               value={behandlingstype}
               koder={muligeVerdierPlussValgt(muligeBehandlingstyper, oppsummering.behandlingstype)}
               disableForsteValg
             />
             <Mui.KodeTermSelect
-              onChange={velgBehandlingstemaHandle}
+              onChange={(e) => setBehandlingstema(e.target.value)}
               label="Behandlingstema"
               value={behandlingstema}
               koder={muligeVerdierPlussValgt(muligeBehandlingstema, oppsummering.behandlingstema)}
@@ -167,7 +155,7 @@ function EndreBehandlingModal({
             />
             <Datovelger onChange={setBehandlingsfrist} label="Frist" value={behandlingsfrist} />
             <Mui.KodeTermSelect
-              onChange={velgBehandlingsstatusHandle}
+              onChange={(e) => setBehandlingsstatus(e.target.value)}
               label="Behandlingsstatus"
               value={behandlingsstatus}
               koder={muligeVerdierPlussValgt(muligeBehandlingsstatuser, oppsummering.behandlingsstatus)}
