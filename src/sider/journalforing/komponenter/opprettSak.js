@@ -18,7 +18,6 @@ const euEosBehandlingstemaer = MKV.KTObjects.behandlinger.behandlingstema.filter
     kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_ETT_LAND_ØVRIG ||
     kode === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV ||
     kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND ||
-    kode === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
     kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_MED ||
     kode === MKV.Koder.behandlinger.behandlingstema.ØVRIGE_SED_UFM ||
     kode === MKV.Koder.behandlinger.behandlingstema.TRYGDETID
