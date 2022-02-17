@@ -14,6 +14,7 @@ describe("Registrering", () => {
   let props = null;
 
   beforeEach(() => {
+    React.useState = jest.fn().mockReturnValue([true, {}]);
     props = {
       Saksopplysninger: () => <span />,
       hentAvklartefakta: jest.fn(),

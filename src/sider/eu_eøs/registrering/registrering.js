@@ -153,6 +153,7 @@ export const Registrering = (props) => {
   };
 
   if (Utils._isNil(redigerbart)) return null;
+  if (!saksopplysningerErHentet) return null;
 
   const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
   const visRevurderFagsak =
@@ -169,17 +170,15 @@ export const Registrering = (props) => {
           <Nav.Container fluid>
             <Nav.Row>
               <Nav.Column xs="7">
-                {saksopplysningerErHentet && (
-                  <Saksopplysninger
-                    redigerbart={redigerbart}
-                    behandlingID={behandlingID}
-                    saksnummer={saksnummer}
-                    sed={sed}
-                    vurderingBegrunnelser={vurderingBegrunnelser}
-                    tilForsiden={tilForsiden}
-                    startOgVisOppfriskModal={startOgVisOppfriskModal}
-                  />
-                )}
+                <Saksopplysninger
+                  redigerbart={redigerbart}
+                  behandlingID={behandlingID}
+                  saksnummer={saksnummer}
+                  sed={sed}
+                  vurderingBegrunnelser={vurderingBegrunnelser}
+                  tilForsiden={tilForsiden}
+                  startOgVisOppfriskModal={startOgVisOppfriskModal}
+                />
               </Nav.Column>
               <Nav.Column xs="5">
                 <SideOppsummering

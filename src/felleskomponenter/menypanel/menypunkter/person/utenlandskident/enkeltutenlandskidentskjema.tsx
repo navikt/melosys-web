@@ -31,6 +31,7 @@ const EnkeltUtenlandskIdentSkjema = ({ overordnetFeltNavn, slett, redigerbart }:
           feltNavn={`${overordnetFeltNavn}.landkode`}
           label="Land"
           bredde="fullbredde"
+          visAlleLandkoder
         />
       </Nav.Column>
     </Nav.Row>

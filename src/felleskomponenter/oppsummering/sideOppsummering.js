@@ -17,10 +17,8 @@ import "./sideOppsummering.css";
 import { behandlingstemaOperations } from "../../ducks/behandlingstema";
 import { behandlingsstatusOperations } from "../../ducks/behandlingsstatus";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
-import { FeatureToggle } from "../../featuretoggle";
+import { FeatureToggle, useFeatureToggle } from "../../featuretoggle";
 import OppsummeringGammel from "./oppsummeringGammel";
-import OppsummeringVerdiParRedigerbar from "./verdiPar/oppsummeringVerdiParRedigerbar";
-import { formatterDatoTilNorsk } from "../../utils/dato";
 import { behandlingstypeOperations } from "../../ducks/behandlingstype";
 
 const SideOppsummering = ({
@@ -53,8 +51,10 @@ const SideOppsummering = ({
   const tittel = KV.kodeTilTerm(behandlingstema, MKV.KTObjects.behandlinger.behandlingstema) || "";
   const behandlingsstatus = renderBehandlingsstatus();
 
+  const nyttDesignToggle = useFeatureToggle("melosys.oversikt.NYTT_DESIGN");
+
   useEffect(() => {
-    if (behandlingID > 0) {
+    if (behandlingID > 0 && nyttDesignToggle === "disabled") {
       hentMuligeBehandlingstyper(behandlingID);
 
       hentMuligeBehandlingstema(behandlingID)
@@ -117,40 +117,9 @@ const SideOppsummering = ({
                         lovvalgsland={lovvalgsland}
                         fagsak={fagsak}
                         oppsummering={oppsummering}
-                        behandlingstema={behandlingstema}
                         behandlingsgrunnlagperiode={`${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`}
                         lovvalgsperiode={`${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`}
                         mottattDato={behandlingsgrunnlagMottaksdato}
-                        behandlingsfristLinje={
-                          <OppsummeringVerdiParRedigerbar
-                            nokkel="Frist"
-                            verdi={formatterDatoTilNorsk(oppsummering.behandlingsfrist)}
-                            onClick={() => setVisEndreBehandlingsfrist(true)}
-                          />
-                        }
-                        behandlingsstatusLinje={
-                          <OppsummeringVerdiParRedigerbar
-                            nokkel="Status"
-                            verdi={KV.objektTilTerm(oppsummering.behandlingsstatus)}
-                            redigerbart={kanEndreBehandlingsstatus}
-                            onClick={() => setVisEndreBehandlingsstatus(true)}
-                          />
-                        }
-                        behandlingstemaLinje={
-                          <OppsummeringVerdiParRedigerbar
-                            verdi={tittel}
-                            redigerbart={kanEndreBehandlingstema}
-                            onClick={() => setVisEndreBehandlingstema(true)}
-                          />
-                        }
-                        behandlingstypeLinje={
-                          // TODO: Placeholderverdier inntil MELOSYS-4387
-                          <OppsummeringVerdiParRedigerbar
-                            verdi={KV.objektTilTerm(oppsummering.behandlingstype)}
-                            redigerbart={false}
-                            onClick={() => {}}
-                          />
-                        }
                       />
                     )}
                   </Nav.Column>
