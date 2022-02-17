@@ -59,7 +59,7 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_AVSLUTT_SAK_SOM_BORTFALT: {
       return lagNyState(state, action, modaler.avsluttSakSomBortfalt);
     }
-    case Types.OPPDATER_FERDIGBEHANDLE_SAK: {
+    case Types.OPPDATER_FERDIGBEHANDLE_NY_VURDERING: {
       return lagNyState(state, action, modaler.ferdigbehandleNyVurdering);
     }
     case Types.OPPDATER_HENLEGG: {

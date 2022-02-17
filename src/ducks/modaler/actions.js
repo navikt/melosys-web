@@ -11,7 +11,7 @@ export const oppdaterAvsluttSakSomBortfalt = (data) => ({
 });
 
 export const oppdaterFerdigbehandleNyVurdering = (data) => ({
-  type: Types.OPPDATER_FERDIGBEHANDLE_SAK,
+  type: Types.OPPDATER_FERDIGBEHANDLE_NY_VURDERING,
   data,
 });
 

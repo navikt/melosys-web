@@ -27,7 +27,7 @@ export const DialogboksFerdigbehandleNyVurdering = ({
   >
     <Nav.Typo.Systemtittel>Ferdigbehandlet</Nav.Typo.Systemtittel>
     <Nav.Typo.Normaltekst className="normaltekst">
-      Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat/og eller brev.
+      Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.
     </Nav.Typo.Normaltekst>
     <Knapperad
       bekreft={ferdigbehandleNyVurdering}
