@@ -21,6 +21,7 @@ import { FeatureToggle } from "../../featuretoggle";
 import OppsummeringGammel from "./oppsummeringGammel";
 import OppsummeringVerdiParRedigerbar from "./verdiPar/oppsummeringVerdiParRedigerbar";
 import { formatterDatoTilNorsk } from "../../utils/dato";
+import { behandlingstypeOperations } from "../../ducks/behandlingstype";
 
 const SideOppsummering = ({
   arbeidsland,
@@ -39,6 +40,7 @@ const SideOppsummering = ({
   behandlingsgrunnlagMottaksdato,
   periodeLabel,
   hentMuligeBehandlingstema,
+  hentMuligeBehandlingstyper,
   hentMuligeBehandlingsstatuser,
   behandlingID,
 }) => {
@@ -55,6 +57,8 @@ const SideOppsummering = ({
 
   useEffect(() => {
     if (behandlingID > 0) {
+      hentMuligeBehandlingstyper(behandlingID);
+
       hentMuligeBehandlingstema(behandlingID)
         .then((response) =>
           setKanEndreBehandlingstema(
@@ -114,8 +118,8 @@ const SideOppsummering = ({
                         fagsak={fagsak}
                         oppsummering={oppsummering}
                         behandlingstema={behandlingstema}
-                        lovvalgsperiodeFom={lovvalgsperiodeFom}
-                        lovvalgsperiodeTom={lovvalgsperiodeTom}
+                        behandlingsgrunnlagperiode={`${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`}
+                        lovvalgsperiode={`${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`}
                         mottattDato={behandlingsgrunnlagMottaksdato}
                         behandlingsfristLinje={
                           <OppsummeringVerdiParRedigerbar
@@ -259,6 +263,7 @@ SideOppsummering.propTypes = {
   behandlingsgrunnlagMottaksdato: PT.string,
   periodeLabel: PT.string,
   hentMuligeBehandlingstema: PT.func.isRequired,
+  hentMuligeBehandlingstyper: PT.func.isRequired,
   hentMuligeBehandlingsstatuser: PT.func.isRequired,
   behandlingID: PT.number.isRequired,
 };
@@ -285,6 +290,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   hentMuligeBehandlingstema: (behandlingID) =>
     dispatch(behandlingstemaOperations.hentMuligeBehandlingstema(behandlingID)),
+  hentMuligeBehandlingstyper: (behandlingID) =>
+    dispatch(behandlingstypeOperations.hentMuligeBehandlingstyper(behandlingID)),
   hentMuligeBehandlingsstatuser: (behandlingID) =>
     dispatch(behandlingsstatusOperations.hentMuligeBehandlingsstatuser(behandlingID)),
 });

@@ -230,6 +230,10 @@ const VurderingVedtak = ({
           institusjonId: muligMottaker?.institusjonId || null,
           ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
           barnFritekst: familieFormValues?.barn?.fritekst || null,
+          nyVurderingBakgrunn:
+            formValues?.nyVurderingBakgrunn === FRITEKST
+              ? formValues?.nyVurderingBakgrunnFritekst
+              : formValues?.nyVurderingBakgrunn,
         },
       },
     ];
@@ -424,12 +428,14 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      <Skjema.Checkbox
-        feltNavn="kopiTilArbeidsgiver"
-        label="Send kopi til arbeidsgiver/virksomhet"
-        className={vurderingVedtakCls.element("kopiCheckbox")}
-        disabled={!redigerbart}
-      />
+      {redigerbart && (
+        <Skjema.Checkbox
+          feltNavn="kopiTilArbeidsgiver"
+          label="Send kopi til arbeidsgiver/virksomhet"
+          className={vurderingVedtakCls.element("kopiCheckbox")}
+          disabled={!redigerbart}
+        />
+      )}
 
       {redigerbart && (
         <MottakerTabell
