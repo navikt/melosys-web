@@ -26,7 +26,6 @@ interface OppsummeringProps {
   behandlingsstatusLinje: ReactNode;
   behandlingstemaLinje: ReactNode;
   behandlingstypeLinje: ReactNode;
-  behandlingsresultattypeLinje: ReactNode;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
   mottattDato?: string;
@@ -44,7 +43,6 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsstatusLinje,
     behandlingstemaLinje,
     behandlingstypeLinje,
-    behandlingsresultattypeLinje,
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
     mottattDato,
@@ -108,14 +106,6 @@ const Oppsummering = (props: OppsummeringProps) => {
           </Nav.Column>
         </Nav.Row>
       </dl>
-
-      {oppsummering.behandlingsstatus && KV.objektTilKode(oppsummering.behandlingsstatus) === "AVSLUTTET" && (
-        <dl>
-          <Nav.Row>
-            <Nav.Column xs="12">{behandlingsresultattypeLinje}</Nav.Column>
-          </Nav.Row>
-        </dl>
-      )}
 
       <dl>
         <Nav.Row>
