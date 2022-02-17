@@ -10,7 +10,7 @@ import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 
-export function hentMuligeBehandlingstyper(behandlingID: string) {
+export function hentMuligeBehandlingstyper(behandlingID: number) {
   return doThenDispatch(
     () => Api.Behandlinger.type.hentMuligeBehandlingstyper(behandlingID),
     {
