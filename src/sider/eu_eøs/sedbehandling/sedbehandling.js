@@ -175,6 +175,10 @@ const SedBehandling = ({
     return Api.Behandlinger.status.oppdaterStatus(behandlingID, behandlingsstatus);
   };
 
+  if (Utils._isNil(redigerbart)) return null;
+  if (!behandlingID) return null;
+  if (!behandlingstema) return null;
+
   return (
     <>
       <FeatureToggle togglename="melosys.design.PERSONLINJE">
