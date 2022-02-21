@@ -75,7 +75,7 @@ const SideOppsummering = ({
         )
         .catch(() => setKanEndreBehandlingsstatus(false));
     }
-  }, [behandlingID]);
+  }, [behandlingID, nyttDesignToggle]);
 
   const renderBehandlingsstatusLinje = (
     <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">
