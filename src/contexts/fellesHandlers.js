@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { stringify } from "qs";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
+import { apolloClient } from "../graphql";
 
 import * as Utils from "../utils";
 import * as Api from "../services/api";
@@ -57,10 +58,15 @@ const FellesHandlersProviderUnconnected = ({
   const [venterPaRevurderFagsak, setVenterPaRevurderFagsak] = useState(false);
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
+  const oppfriskGraphQLSaksopplysninger = async () => {
+    return apolloClient.refetchQueries({ include: "active" });
+  };
+
   const lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger = async () => {
     await leggTilBehandlingOppfriskes(behandlingID);
     await lagreBehandlingsgrunnlag();
     await oppfriskSaksopplysninger(behandlingID);
+    await oppfriskGraphQLSaksopplysninger();
     await fjernBehandlingOppfriskes();
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
