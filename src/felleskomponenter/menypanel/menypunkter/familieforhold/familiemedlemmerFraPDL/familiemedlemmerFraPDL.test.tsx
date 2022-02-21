@@ -46,7 +46,7 @@ describe("FamiliemedlemmerFraPDL", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       familiemedlemmerFraPDL.update();
 
       const alertstripe = familiemedlemmerFraPDL.find(Nav.AlertStripeFeil);
@@ -103,7 +103,7 @@ describe("FamiliemedlemmerFraPDL", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       familiemedlemmerFraPDL.update();
 
       const familiemedlemGrupper = familiemedlemmerFraPDL.find(FamiliemedlemGruppe);
