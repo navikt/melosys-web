@@ -1,9 +1,6 @@
 import React from "react";
 
 import * as Nav from "../../../../../navFrontend";
-import * as KV from "../../../../../kodeverk";
-
-import MKV from "../../../../../melosyskodeverk";
 
 import { UtenlandskIdent } from "./types";
 
@@ -17,6 +14,9 @@ const UtfyltUtenlandskIdent = ({ utenlandskeIdenter }: UtfyltUtenlandskIdentProp
       <Nav.Column xs="6">
         <Nav.Typo.Normaltekst>ID-nummer</Nav.Typo.Normaltekst>
       </Nav.Column>
+      <Nav.Column xs="6">
+        <Nav.Typo.Normaltekst>Land</Nav.Typo.Normaltekst>
+      </Nav.Column>
     </Nav.Row>
     <Nav.Row>
       {utenlandskeIdenter.map(({ ident, landkode }, indeks) => (
@@ -25,11 +25,7 @@ const UtfyltUtenlandskIdent = ({ utenlandskeIdenter }: UtfyltUtenlandskIdentProp
           <Nav.Column xs="6">
             <Nav.Typo.Element>{ident}</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="6">
-            {landkode && (
-              <Nav.Typo.Normaltekst>{KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}</Nav.Typo.Normaltekst>
-            )}
-          </Nav.Column>
+          <Nav.Column xs="6">{landkode && <Nav.Typo.Element>{landkode}</Nav.Typo.Element>}</Nav.Column>
         </div>
       ))}
     </Nav.Row>
