@@ -42,7 +42,9 @@ const Doed = ({ erDoed }: { erDoed: boolean }) =>
   ) : null;
 
 const Statsborgerskap = ({ statsborgerskap }: { statsborgerskap: string[] }) => (
-  <div className="personlinje__statsborgerskap">{StringUtils.separerListeMedBindestrek(statsborgerskap)}</div>
+  <div className="personlinje__statsborgerskap">
+    {StringUtils.separerListeMedBindestrek([...new Set(statsborgerskap)])}
+  </div>
 );
 
 const Sivilstand = ({ sivilstand }: { sivilstand: string }) => (
