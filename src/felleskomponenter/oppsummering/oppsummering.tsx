@@ -44,7 +44,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   } = props;
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
-  const isLitenSkjerm = useMediaQuery("(max-width: 1440px)");
+  const isLitenSkjerm = useMediaQuery({ maxWidth: 1440 });
 
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
