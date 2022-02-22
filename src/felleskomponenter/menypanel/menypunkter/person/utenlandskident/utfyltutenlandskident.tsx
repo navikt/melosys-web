@@ -1,14 +1,23 @@
 import React from "react";
 
-import * as Nav from "../../../../../navFrontend";
+import { RootState } from "AppTypes";
+import { connect, ConnectedProps } from "react-redux";
 
 import { UtenlandskIdent } from "./types";
+import { landkoderSelectors } from "../../../../../ducks/landkoder";
+import * as Nav from "../../../../../navFrontend";
+import * as KV from "../../../../../kodeverk";
 
-interface UtfyltUtenlandskIdentProps {
+const mapStateToProps = (state: RootState) => ({
+  landkoder: landkoderSelectors.LandkoderSelector(state),
+});
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type UtfyltUtenlandskIdentProps = PropsFromRedux & {
   utenlandskeIdenter: UtenlandskIdent[];
-}
+};
 
-const UtfyltUtenlandskIdent = ({ utenlandskeIdenter }: UtfyltUtenlandskIdentProps) => (
+const UtfyltUtenlandskIdent = ({ utenlandskeIdenter, landkoder }: UtfyltUtenlandskIdentProps) => (
   <>
     <Nav.Row>
       <Nav.Column xs="6">
@@ -25,11 +34,13 @@ const UtfyltUtenlandskIdent = ({ utenlandskeIdenter }: UtfyltUtenlandskIdentProp
           <Nav.Column xs="6">
             <Nav.Typo.Element>{ident}</Nav.Typo.Element>
           </Nav.Column>
-          <Nav.Column xs="6">{landkode && <Nav.Typo.Element>{landkode}</Nav.Typo.Element>}</Nav.Column>
+          <Nav.Column xs="6">
+            {landkode && <Nav.Typo.Element>{KV.kodeTilTerm(landkode, landkoder)}</Nav.Typo.Element>}
+          </Nav.Column>
         </div>
       ))}
     </Nav.Row>
   </>
 );
 
-export default UtfyltUtenlandskIdent;
+export default connector(UtfyltUtenlandskIdent);
