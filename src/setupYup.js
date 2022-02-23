@@ -79,6 +79,13 @@ addMethod(string, "erIkkeBlank", function (message) {
   });
 });
 
+addMethod(string, "erIkkeBlankHtml", function (message) {
+  return this.test("er ikke blank html", message, function (value) {
+    if (Utils._isEmpty(value)) return false;
+    return Boolean(value.replace("<p></p>", "").replace("\n", "").trim());
+  });
+});
+
 addMethod(string, "erNummer", function (message) {
   return this.test("er et nummer", message, function (value) {
     const { path } = this;
