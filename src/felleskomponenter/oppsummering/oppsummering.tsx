@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useMediaQuery } from "react-responsive";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -19,6 +18,7 @@ import "./oppsummering.css";
 import KopierbarTekst from "../kopierbarTekst";
 import Behandlingsstatuskode from "../behandlingsstatuskode";
 import EndreBehandlingModal from "./endreBehandlingModal";
+import { useMediaQuery } from "../../utils/mediaQuery";
 
 interface OppsummeringProps {
   arbeidsland: KTObject[];
@@ -44,7 +44,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   } = props;
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
-  const isLitenSkjerm = useMediaQuery({ query: "(max-width: 1440px)" });
+  const isLitenSkjerm = useMediaQuery({ maxWidth: 1440 });
 
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
