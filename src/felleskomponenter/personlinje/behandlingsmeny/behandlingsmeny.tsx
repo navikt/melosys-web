@@ -88,7 +88,6 @@ export const Behandlingsmeny = ({
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
         return behandlingErAvsluttet && behandlingstemaErRegistreringOmUnntakNorskTrygd;
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-        return redigerbart && behandlingErAvsluttet;
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
         return behandlingErAvsluttet;
