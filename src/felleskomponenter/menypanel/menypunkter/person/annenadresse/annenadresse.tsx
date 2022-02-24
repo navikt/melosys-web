@@ -10,7 +10,7 @@ import * as Mui from "../../../../ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 
-import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
+import EditerbartElement, { Status, visAlltidBinSymbolsynlighet } from "../../editerbartElement";
 import UtfyltAdresse from "./utfyltadresse";
 import Felter from "./felter";
 
@@ -52,7 +52,7 @@ const AnnenAdresse = ({
   oppgittAdresseHarVerdier,
   resetOppgittAdresse,
 }: AnnenAdresseProps) => {
-  const [isStatusRedigering, setIsStatusRedigering] = useState(false);
+  const [status, setStatus] = useState(Status.IngenData);
   const cls = classNames(className);
 
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
@@ -63,8 +63,8 @@ const AnnenAdresse = ({
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
-        statusChangeCallback={setIsStatusRedigering}
-        symbolsynlighet={isStatusRedigering ? visAlltidBinSymbolsynlighet : undefined}
+        statusChangeCallback={setStatus}
+        symbolsynlighet={status === Status.Redigerer ? visAlltidBinSymbolsynlighet : undefined}
         redigererRender={() => <Felter redigerbart={redigerbart} />}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
         ingenDataRender={(apneRedigering) => (

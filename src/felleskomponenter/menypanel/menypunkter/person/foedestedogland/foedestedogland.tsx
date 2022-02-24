@@ -10,7 +10,7 @@ import * as Utils from "../../../../../utils";
 
 import { formSelectors } from "../../../../../ducks/form";
 
-import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
+import EditerbartElement, { Status, visAlltidBinSymbolsynlighet } from "../../editerbartElement";
 import Enkeltfoedestedoglandskjema from "./enkeltfoedestedoglandskjema";
 import Utfyltfoedestedogland from "./utfyltfoedestedogland";
 
@@ -23,7 +23,7 @@ const connector = connect(mapStateToProps);
 type InnerFoedestedProps = WrappedFieldProps & { redigerbart: boolean } & ConnectedProps<typeof connector>;
 
 const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
-  const [isStatusRedigering, setIsStatusRedigering] = useState(false);
+  const [status, setStatus] = useState(Status.IngenData);
   const {
     redigerbart,
     behandlingsgrunnlagFeilmeldinger,
@@ -39,8 +39,8 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
-      statusChangeCallback={setIsStatusRedigering}
-      symbolsynlighet={isStatusRedigering ? visAlltidBinSymbolsynlighet : undefined}
+      statusChangeCallback={setStatus}
+      symbolsynlighet={status === Status.Redigerer ? visAlltidBinSymbolsynlighet : undefined}
       onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}

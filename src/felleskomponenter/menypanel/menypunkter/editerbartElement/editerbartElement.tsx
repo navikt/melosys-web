@@ -25,7 +25,7 @@ interface EditerbartElementProps {
   className?: string;
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
   symbolsynlighet?: SymbolsynlighetConfig;
-  statusChangeCallback?: (isStatusRedigering: boolean) => void;
+  statusChangeCallback?: (newStatus: Status) => void;
 }
 
 const defaultSymbolsynlighet: SymbolsynlighetConfig = {
@@ -83,9 +83,7 @@ const EditerbartElement = ({
   }, []);
 
   useEffect(() => {
-    if (statusChangeCallback) {
-      statusChangeCallback(status === Status.Redigerer);
-    }
+    if (statusChangeCallback) statusChangeCallback(status);
   }, [status]);
 
   const hentAktivtInnhold = () => {
