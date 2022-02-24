@@ -80,7 +80,7 @@ const EditerbartElement = ({
     if (!harData) {
       setStatus(hentNesteStatus());
     }
-  }, [harData]);
+  }, []);
 
   useEffect(() => {
     if (statusChangeCallback) {
