@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Field, WrappedFieldProps } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
@@ -10,7 +10,7 @@ import * as Utils from "../../../../../utils";
 
 import { formSelectors } from "../../../../../ducks/form";
 
-import EditerbartElement from "../../editerbartElement";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../../editerbartElement";
 import Enkeltfoedestedoglandskjema from "./enkeltfoedestedoglandskjema";
 import Utfyltfoedestedogland from "./utfyltfoedestedogland";
 
@@ -23,6 +23,7 @@ const connector = connect(mapStateToProps);
 type InnerFoedestedProps = WrappedFieldProps & { redigerbart: boolean } & ConnectedProps<typeof connector>;
 
 const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
+  const [isStatusRedigering, setIsStatusRedigering] = useState(false);
   const {
     redigerbart,
     behandlingsgrunnlagFeilmeldinger,
@@ -38,6 +39,8 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
+      statusChangeCallback={setIsStatusRedigering}
+      symbolsynlighet={isStatusRedigering ? visAlltidBinSymbolsynlighet : undefined}
       onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
@@ -45,12 +48,7 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       ingenDataRender={(apneRedigering) => (
         <>
           {redigerbart && (
-            <Mui.Knappelenke
-              onClick={() => {
-                apneRedigering();
-              }}
-              ikon={Ikoner.Add}
-            >
+            <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
               Legg til fødested og -land
             </Mui.Knappelenke>
           )}

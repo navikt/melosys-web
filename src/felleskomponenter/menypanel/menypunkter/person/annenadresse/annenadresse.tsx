@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -52,10 +52,11 @@ const AnnenAdresse = ({
   oppgittAdresseHarVerdier,
   resetOppgittAdresse,
 }: AnnenAdresseProps) => {
+  const [isStatusRedigering, setIsStatusRedigering] = useState(false);
   const cls = classNames(className);
 
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
-
+  console.log(oppgittAdresseHarVerdier);
   return (
     <div className={cls}>
       <EditerbartElement
@@ -63,7 +64,8 @@ const AnnenAdresse = ({
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
-        symbolsynlighet={oppgittAdresseHarVerdier ? visAlltidBinSymbolsynlighet : undefined}
+        statusChangeCallback={setIsStatusRedigering}
+        symbolsynlighet={isStatusRedigering ? visAlltidBinSymbolsynlighet : undefined}
         redigererRender={() => <Felter redigerbart={redigerbart} />}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
         ingenDataRender={(apneRedigering) => (
