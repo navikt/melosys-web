@@ -56,7 +56,6 @@ const AnnenAdresse = ({
   const cls = classNames(className);
 
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
-  console.log(oppgittAdresseHarVerdier);
   return (
     <div className={cls}>
       <EditerbartElement
