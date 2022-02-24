@@ -125,10 +125,13 @@ const Saksbehandling = ({
   visHenleggDialogHandle,
   visOppfriskModal,
   visRevurderFagsakDialogHandle,
+  vedtakForm,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.snr;
+  const vedtakLovvalgsperiodeTom =
+    !vedtakForm?.registeredFields?.lovvalgsperiodeTom && vedtakForm?.values?.lovvalgsperiodeTom;
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -195,7 +198,6 @@ const Saksbehandling = ({
     Object.keys(soknadForm).length === 0 || Object.keys(behandlingsgrunnlag).length === 0
   );
   const visStegVelger = !erHenlagtSak && !erAvslaattSoknad && behandlingsgrunnlagErKlart;
-
   return (
     <>
       <FeatureToggle togglename="melosys.design.PERSONLINJE">
@@ -230,7 +232,7 @@ const Saksbehandling = ({
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                   behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
                   lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
-                  lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
+                  lovvalgsperiodeTom={vedtakLovvalgsperiodeTom || behandlingsgrunnlagPeriodeTom}
                   renderBehandlingsmeny={() => (
                     <Legacybehandlingsmeny
                       redigerbart={redigerbart}
@@ -314,6 +316,7 @@ Saksbehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
+  vedtakForm: PT.object.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -346,6 +349,7 @@ const mapStateToProps = (state) => ({
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  vedtakForm: formSelectors.TrygdeavtaleVedtakFormSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
