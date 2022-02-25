@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -10,11 +10,11 @@ import * as Mui from "../../../../ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 
-import EditerbartElement, { Status, visAlltidBinSymbolsynlighet } from "../../editerbartElement";
+import EditerbartElement, { ikkeVisBinIngenDataSymbolsynlighet } from "../../editerbartElement";
 import UtfyltAdresse from "./utfyltadresse";
 import Felter from "./felter";
 
-import { formSelectors, formOperations } from "../../../../../ducks/form";
+import { formOperations, formSelectors } from "../../../../../ducks/form";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresse: formSelectors.SoknadOppgittAdresseSelector(state),
@@ -52,7 +52,6 @@ const AnnenAdresse = ({
   oppgittAdresseHarVerdier,
   resetOppgittAdresse,
 }: AnnenAdresseProps) => {
-  const [status, setStatus] = useState(Status.IngenData);
   const cls = classNames(className);
 
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
@@ -63,8 +62,7 @@ const AnnenAdresse = ({
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
-        statusChangeCallback={setStatus}
-        symbolsynlighet={status === Status.Redigerer ? visAlltidBinSymbolsynlighet : undefined}
+        symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
         redigererRender={() => <Felter redigerbart={redigerbart} />}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
         ingenDataRender={(apneRedigering) => (

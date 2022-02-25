@@ -25,7 +25,6 @@ interface EditerbartElementProps {
   className?: string;
   onLagreClick?: (e: MouseEvent) => boolean | Promise<boolean>;
   symbolsynlighet?: SymbolsynlighetConfig;
-  statusChangeCallback?: (newStatus: Status) => void;
 }
 
 const defaultSymbolsynlighet: SymbolsynlighetConfig = {
@@ -46,6 +45,12 @@ export const visAldriBinSymbolsynlighet: SymbolsynlighetConfig = {
   [Status.RedigeringUtfort]: { bin: false, pencil: true },
 };
 
+export const ikkeVisBinIngenDataSymbolsynlighet: SymbolsynlighetConfig = {
+  [Status.Redigerer]: { bin: true, pencil: false },
+  [Status.IngenData]: { bin: false, pencil: false },
+  [Status.RedigeringUtfort]: { bin: true, pencil: true },
+};
+
 const EditerbartElement = ({
   redigererRender,
   ingenDataRender,
@@ -62,7 +67,6 @@ const EditerbartElement = ({
   className,
   onLagreClick,
   symbolsynlighet = {},
-  statusChangeCallback,
 }: EditerbartElementProps) => {
   const hentNesteStatus = (): Status => {
     if (harData) {
@@ -81,10 +85,6 @@ const EditerbartElement = ({
       setStatus(hentNesteStatus());
     }
   }, []);
-
-  useEffect(() => {
-    if (statusChangeCallback) statusChangeCallback(status);
-  }, [status]);
 
   const hentAktivtInnhold = () => {
     if (status === Status.RedigeringUtfort) return redigeringUtfortRender();

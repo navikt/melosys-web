@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Field, WrappedFieldProps } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
@@ -10,7 +10,7 @@ import * as Utils from "../../../../../utils";
 
 import { formSelectors } from "../../../../../ducks/form";
 
-import EditerbartElement, { Status, visAlltidBinSymbolsynlighet } from "../../editerbartElement";
+import EditerbartElement, { ikkeVisBinIngenDataSymbolsynlighet } from "../../editerbartElement";
 import Enkeltfoedestedoglandskjema from "./enkeltfoedestedoglandskjema";
 import Utfyltfoedestedogland from "./utfyltfoedestedogland";
 
@@ -23,7 +23,6 @@ const connector = connect(mapStateToProps);
 type InnerFoedestedProps = WrappedFieldProps & { redigerbart: boolean } & ConnectedProps<typeof connector>;
 
 const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
-  const [status, setStatus] = useState(Status.IngenData);
   const {
     redigerbart,
     behandlingsgrunnlagFeilmeldinger,
@@ -39,8 +38,7 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
-      statusChangeCallback={setStatus}
-      symbolsynlighet={status === Status.Redigerer ? visAlltidBinSymbolsynlighet : undefined}
+      symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
       onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
