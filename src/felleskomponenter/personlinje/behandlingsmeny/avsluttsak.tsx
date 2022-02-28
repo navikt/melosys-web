@@ -3,6 +3,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 import Handling from "./handling";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 type avsluttSakProps = {
   avslaaSoknad: () => void;
@@ -29,10 +30,14 @@ const AvsluttSak = ({
   const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
 
+  const avsluttUtenEndringToggle = useFeatureToggle("melosys.behandling.AVSLUTTE_UTEN_ENDRING");
+
   const skalViseAvslaaSoknad = () => {
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
-        return redigerbart;
+        return (
+          (redigerbart && avsluttUtenEndringToggle === "enabled") || (redigerbart && !behandlingstypeErNyVurdering)
+        ); // TODO: Sjekk på redigerbart alene er nok ved fjerning av toggle
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
         return redigerbart && !behandlingstemaErTrygdetid;
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
@@ -66,6 +71,9 @@ const AvsluttSak = ({
   const skalViseAvsluttSak = () => {
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
+        return (
+          (redigerbart && avsluttUtenEndringToggle === "enabled") || (redigerbart && !behandlingstypeErNyVurdering)
+        ); // TODO: Denne linjen kan fjernes ved fjerning av toggle
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
@@ -84,7 +92,7 @@ const AvsluttSak = ({
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
-        return redigerbart && behandlingstypeErNyVurdering;
+        return redigerbart && behandlingstypeErNyVurdering && avsluttUtenEndringToggle === "enabled";
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
       default:
         return false;
