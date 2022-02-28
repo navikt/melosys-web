@@ -196,7 +196,7 @@ export const Person = ({
         <>
           <Nav.Row>
             <Nav.Column className="etikett__container">
-              <span>{behandlingsgrunnlagEtikett}</span>
+              {behandlingsgrunnlagEtikett}
               {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>

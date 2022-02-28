@@ -67,7 +67,7 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       informasjonsmodal.update();
 
       const alertstripe = informasjonsmodal.find(Nav.AlertStripeFeil);
@@ -125,7 +125,7 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       informasjonsmodal.update();
 
       expect(informasjonsmodal.contains("LILLA MAGER HEST")).toBe(true);
@@ -166,7 +166,7 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       informasjonsmodal.update();
 
       const tabellRow = informasjonsmodal.find(".informasjonsmodal__tabell-row").hostNodes();

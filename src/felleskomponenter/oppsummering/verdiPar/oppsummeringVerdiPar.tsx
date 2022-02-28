@@ -15,11 +15,11 @@ const OppsummeringVerdiPar = (props: OppsummeringVerdiParProps) => {
   const { className, nokkel, verdi, ekstrafelt } = props;
 
   return (
-    <span className={classNames("oppsummering_verdi_par", className)}>
-      <span className="nokkel">{nokkel ? `${nokkel}: ` : ""}</span>
-      <span>{verdi}</span>
+    <dl className={classNames("oppsummering_verdi_par", className)}>
+      <dt className="nokkel">{nokkel ? `${nokkel}: ` : ""}</dt>
+      <dd>{verdi}</dd>
       {ekstrafelt}
-    </span>
+    </dl>
   );
 };
 

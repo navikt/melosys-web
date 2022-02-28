@@ -26,6 +26,7 @@ const Enkeltfoedestedoglandskjema = ({ redigerbart }: EnkeltFoedestedOgLandSkjem
           feltNavn="foedestedOgLand.foedeland"
           label="Fødeland"
           bredde="fullbredde"
+          visAlleLandkoder
         />
       </Nav.Column>
     </Nav.Row>

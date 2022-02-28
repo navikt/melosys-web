@@ -65,7 +65,7 @@ describe("Personinfo", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       personinfo.update();
 
       const alertstripe = personinfo.findWhere(
@@ -122,7 +122,7 @@ describe("Personinfo", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       personinfo.update();
 
       expect(personinfo.text()).toContain("Gift");
@@ -176,7 +176,7 @@ describe("Personinfo", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 15));
       personinfo.update();
 
       const visMerSivilstandKnapp = personinfo.find(".personinfo__vis-detaljer-button").hostNodes();

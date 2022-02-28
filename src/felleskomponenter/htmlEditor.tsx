@@ -2,6 +2,7 @@ import { Editor } from "react-draft-wysiwyg";
 import React, { useState } from "react";
 import { ContentState, convertFromHTML, convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import classNames from "classnames";
 import "./htmlEditor.css";
 import * as Nav from "../navFrontend";
 
@@ -26,19 +27,24 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
   };
 
   return (
-    <>
+    <div className="htmlEditor">
       {rest?.label ? <Nav.Typo.Element className="editor_label">{rest?.label}</Nav.Typo.Element> : ""}
       <Editor
         editorState={currentEditorState}
         toolbar={toolbar}
-        wrapperClassName="wrapper"
+        wrapperClassName={classNames("wrapper", { "wrapper-disabled": rest?.disabled, "wrapper-feil": rest?.feil })}
         editorClassName="editor"
         onEditorStateChange={onEditorStateChange}
         stripPastedStyles
         ariaLabel={rest?.label}
         {...rest}
       />
-    </>
+      {rest?.feil && (
+        <div role="alert" aria-live="assertive" className="feilmelding">
+          {rest.feil?.melding}
+        </div>
+      )}
+    </div>
   );
 }
 
