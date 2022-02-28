@@ -30,7 +30,7 @@ export const henlegg = (saksnummer: string, body: HenleggReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg`, body);
 
 export const bortfall = (saksnummer: string) =>
-  putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/avsluttsaksombortfalt`);
+  putAsText(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-som-bortfalt`);
 
 interface Vedlegg {
   journalpostID: string;

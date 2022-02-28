@@ -1,9 +1,10 @@
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services/";
 import * as Types from "./types";
 
 const modaler = {
   avslagSoknad: "avslagSoknad",
   avsluttSakSomBortfalt: "avsluttSakSomBortfalt",
+  ferdigbehandleNyVurdering: "ferdigbehandleNyVurdering",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
   validering: "validering",
@@ -31,6 +32,9 @@ const initialState = {
     [modaler.revurderFagsak]: {
       synlig: false,
     },
+    [modaler.ferdigbehandleNyVurdering]: {
+      synlig: false,
+    },
   },
   status: STATUS.NOT_STARTED,
 };
@@ -54,6 +58,9 @@ export default function reducer(state = initialState, action) {
     }
     case Types.OPPDATER_AVSLUTT_SAK_SOM_BORTFALT: {
       return lagNyState(state, action, modaler.avsluttSakSomBortfalt);
+    }
+    case Types.OPPDATER_FERDIGBEHANDLE_NY_VURDERING: {
+      return lagNyState(state, action, modaler.ferdigbehandleNyVurdering);
     }
     case Types.OPPDATER_HENLEGG: {
       return lagNyState(state, action, modaler.henlegg);
