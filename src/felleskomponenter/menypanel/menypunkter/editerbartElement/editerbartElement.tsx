@@ -80,12 +80,6 @@ const EditerbartElement = ({
 
   const [status, setStatus] = useState(hentNesteStatus());
 
-  useEffect(() => {
-    if (!harData) {
-      setStatus(hentNesteStatus());
-    }
-  }, []);
-
   const hentAktivtInnhold = () => {
     if (status === Status.RedigeringUtfort) return redigeringUtfortRender();
     else if (status === Status.Redigerer) return redigererRender();
