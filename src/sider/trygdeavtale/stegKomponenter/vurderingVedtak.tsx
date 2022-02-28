@@ -41,7 +41,7 @@ interface Periode {
 }
 
 const setNyVurderingBakgrunnFelt = (begrunnelseFraResultat: string | undefined, erNyVurdering: boolean) => {
-  if (!erNyVurdering) {
+  if (!erNyVurdering || !begrunnelseFraResultat) {
     return [null, null];
   }
   if (KV.finnEnkeltKodeFraListe(begrunnelseFraResultat, MKV.KTObjects.begrunnelser.nyvurderingbakgrunner)) {
