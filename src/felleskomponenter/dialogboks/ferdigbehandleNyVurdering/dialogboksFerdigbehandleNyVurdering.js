@@ -19,7 +19,7 @@ export const DialogboksFerdigbehandleNyVurdering = ({
   <Nav.Modal
     className="dialogboksFerdigbehandleNyVurdering"
     isOpen
-    contentLabel="Avslutt behandling"
+    contentLabel="Ferdigbehandlet"
     onRequestClose={avbryt}
     closeButton={false}
     shouldCloseOnOverlayClick

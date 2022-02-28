@@ -18,6 +18,11 @@ const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
 
+jest.mock("../../../featuretoggle", () => ({
+  __esModule: true,
+  useFeatureToggle: () => "enabled",
+}));
+
 describe("AvsluttSak", () => {
   let props = instance(mockedProps);
 
@@ -58,7 +63,7 @@ describe("AvsluttSak", () => {
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(4);
-    expect(handlinger.at(1).props().tekst).toBe("Avslutt behandling");
+    expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {
