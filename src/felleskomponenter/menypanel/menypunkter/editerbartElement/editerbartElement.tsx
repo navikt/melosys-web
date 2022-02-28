@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType, useEffect } from "react";
+import React, { ElementType, MouseEvent, MouseEventHandler, ReactNode, useState } from "react";
 import classnames from "classnames";
 
 import * as Nav from "../../../../navFrontend";
