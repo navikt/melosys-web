@@ -21,7 +21,7 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { dokumenterOperations, dokumenterSelectors } from "../../ducks/dokumenter";
 import { fagsakOperations, fagsakSelectors } from "../../ducks/fagsaker";
-import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { menypanelOperations } from "../../ducks/menypanel";
 import { landkoderOperations } from "../../ducks/landkoder";
@@ -125,13 +125,11 @@ const Saksbehandling = ({
   visHenleggDialogHandle,
   visOppfriskModal,
   visRevurderFagsakDialogHandle,
-  vedtakForm,
+  lovvalgsperiodeTom,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.snr;
-  const vedtakLovvalgsperiodeTom =
-    !vedtakForm?.registeredFields?.lovvalgsperiodeTom && vedtakForm?.values?.lovvalgsperiodeTom;
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -232,7 +230,7 @@ const Saksbehandling = ({
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
                   behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
                   lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
-                  lovvalgsperiodeTom={vedtakLovvalgsperiodeTom || behandlingsgrunnlagPeriodeTom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom || behandlingsgrunnlagPeriodeTom}
                   renderBehandlingsmeny={() => (
                     <Legacybehandlingsmeny
                       redigerbart={redigerbart}
@@ -316,7 +314,7 @@ Saksbehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
-  vedtakForm: PT.object.isRequired,
+  lovvalgsperiodeTom: PT.string.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -349,7 +347,7 @@ const mapStateToProps = (state) => ({
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  vedtakForm: formSelectors.TrygdeavtaleVedtakFormSelector(state),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
 });
 
 const mapDispatchToProps = (dispatch) => ({

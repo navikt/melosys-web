@@ -28,6 +28,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
+import { lovvalgsperioderOperations } from "../../ducks/lovvalgsperioder";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -45,6 +46,7 @@ interface AktueltSteg {
   data?: object;
   handlers?: object;
 }
+
 interface KontrollFeil {
   kode: string;
   felter: string[];
@@ -68,6 +70,8 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  endreLovvalgsperiode: (fomdato?: string, tomdato?: string) =>
+    dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -138,9 +142,10 @@ class Stegvelger extends Component<Props, State> {
   };
 
   oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto) => {
-    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
-    );
+    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) => {
+      this.props.endreLovvalgsperiode(response.resultat.lovvalgsperiodeFom, response.resultat.lovvalgsperiodeTom);
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) });
+    });
   };
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 100);
 
