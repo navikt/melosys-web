@@ -10,7 +10,7 @@ import * as Utils from "../../../../../utils";
 
 import { formSelectors } from "../../../../../ducks/form";
 
-import EditerbartElement from "../../editerbartElement";
+import EditerbartElement, { ikkeVisBinIngenDataSymbolsynlighet } from "../../editerbartElement";
 import Enkeltfoedestedoglandskjema from "./enkeltfoedestedoglandskjema";
 import Utfyltfoedestedogland from "./utfyltfoedestedogland";
 
@@ -38,6 +38,7 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
+      symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
       onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
@@ -45,12 +46,7 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       ingenDataRender={(apneRedigering) => (
         <>
           {redigerbart && (
-            <Mui.Knappelenke
-              onClick={() => {
-                apneRedigering();
-              }}
-              ikon={Ikoner.Add}
-            >
+            <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
               Legg til fødested og -land
             </Mui.Knappelenke>
           )}
