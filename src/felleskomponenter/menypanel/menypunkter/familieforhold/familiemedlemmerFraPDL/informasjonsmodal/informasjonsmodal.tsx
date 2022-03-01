@@ -7,6 +7,7 @@ import { useHentBostedsadresseForPersonQuery } from "./hentBostedsadresseForPers
 import { StrukturertAdresse } from "../../../../../adresser";
 
 import "./informasjonsmodal.css";
+import bem from "../../../../../../bemUtils";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -43,9 +44,12 @@ const Informasjonsmodal = ({
   const aktiveBostedsadresser =
     data?.hentPersonopplysninger.bostedsadresser.filter((bostedsadresse) => !bostedsadresse.erHistorisk) || [];
 
-  const mainContent = (
-    <div>
-      <Nav.Row className="informasjonsmodal__tabell-header">
+  const informasjonsmodalCls = bem("informasjonsmodal");
+  const informasjonsmodalTabellCls = bem("informasjonsmodal__tabell");
+
+  const InformasjonsmodalTabell = () => (
+    <div className={informasjonsmodalTabellCls.block}>
+      <Nav.Row className={informasjonsmodalTabellCls.element("header")}>
         <Nav.Column xs="3">Navn forelder</Nav.Column>
         <Nav.Column xs="3">Adresse</Nav.Column>
         <Nav.Column xs="3">Register</Nav.Column>
@@ -53,7 +57,7 @@ const Informasjonsmodal = ({
       </Nav.Row>
       {aktiveBostedsadresser.length > 0 ? (
         aktiveBostedsadresser.map((bostedsadresse) => (
-          <Nav.Row className="informasjonsmodal__tabell-row" key={Utils._uuid()}>
+          <Nav.Row className={informasjonsmodalTabellCls.element("row")} key={Utils._uuid()}>
             <Nav.Column xs="3">{navn}</Nav.Column>
             <Nav.Column xs="3">
               <StrukturertAdresse adresse={bostedsadresse.adresse} />
@@ -63,7 +67,7 @@ const Informasjonsmodal = ({
           </Nav.Row>
         ))
       ) : (
-        <Nav.Row className="informasjonsmodal__tabell-row">
+        <Nav.Row className={informasjonsmodalTabellCls.element("row")}>
           <Nav.Column xs="3">{navn}</Nav.Column>
           <Nav.Column xs="3">Ukjent</Nav.Column>
           <Nav.Column xs="3">Ukjent</Nav.Column>
@@ -72,10 +76,9 @@ const Informasjonsmodal = ({
       )}
     </div>
   );
-
   return (
     <Nav.Modal
-      contentClass="informasjonsmodal"
+      className={informasjonsmodalCls.block}
       contentLabel={contentLabel}
       isOpen
       shouldCloseOnOverlayClick
@@ -84,10 +87,12 @@ const Informasjonsmodal = ({
       // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
-      <Nav.Typo.Element>Barn: {barnNavn}</Nav.Typo.Element>
+      <Nav.Typo.Innholdstittel className={informasjonsmodalCls.element("tittel")}>
+        Barn: {barnNavn}
+      </Nav.Typo.Innholdstittel>
       {loading && loadingContent}
       {error && errorContent}
-      {!loading && !error && data && mainContent}
+      {!loading && !error && data && <InformasjonsmodalTabell />}
     </Nav.Modal>
   );
 };
