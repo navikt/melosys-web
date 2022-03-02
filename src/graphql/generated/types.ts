@@ -105,7 +105,6 @@ export type Personopplysninger = {
   oppholdsadresser: Array<Oppholdsadresse>;
   sivilstand: Array<Sivilstand>;
   statsborgerskap: Array<Statsborgerskap>;
-  foedsel: Foedsel;
 };
 
 export type Query = {
@@ -174,7 +173,3 @@ export type StrukturertAdresseformat = {
   region?: Maybe<Scalars['String']>;
   land: Scalars['String'];
 };
-
-export type Foedsel = {
-  foedselsdato?: Maybe<Scalars['Date']>;
-}
