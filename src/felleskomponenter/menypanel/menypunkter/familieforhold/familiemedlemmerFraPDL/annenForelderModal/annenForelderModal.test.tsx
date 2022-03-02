@@ -169,7 +169,7 @@ describe("Informasjonsmodal", () => {
       await new Promise((resolve) => setTimeout(resolve, 15));
       informasjonsmodal.update();
 
-      const tabellRow = informasjonsmodal.find(".informasjonsmodal__tabell-row").hostNodes();
+      const tabellRow = informasjonsmodal.find(".annen-forelder-modal__tabell__row").hostNodes();
       expect(tabellRow).toHaveLength(1);
       const tabellColumns = tabellRow.find(Nav.Column);
       expect(tabellColumns.first().text()).toContain("LILLA MAGER HEST");
