@@ -17,8 +17,6 @@ import Felter from "./felter";
 import { formOperations, formSelectors } from "../../../../../ducks/form";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 
-import "./annenadresse.css";
-
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresse: formSelectors.SoknadOppgittAdresseSelector(state),
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
