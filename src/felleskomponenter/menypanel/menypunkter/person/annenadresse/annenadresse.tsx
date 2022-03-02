@@ -17,6 +17,8 @@ import Felter from "./felter";
 import { formOperations, formSelectors } from "../../../../../ducks/form";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 
+import "./annenadresse.css";
+
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresse: formSelectors.SoknadOppgittAdresseSelector(state),
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
@@ -73,7 +75,7 @@ const AnnenAdresse = ({
         ingenDataRender={(apneRedigering) =>
           redigerbartOgToggleDisabled && (
             <>
-              <Nav.Typo.Normaltekst style={{ marginBottom: "1em" }}>
+              <Nav.Typo.Normaltekst className="annenadresse__infotekst">
                 Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes
                 adresse fra register.
               </Nav.Typo.Normaltekst>
