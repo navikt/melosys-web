@@ -7,7 +7,7 @@ import { act } from "react-dom/test-utils";
 import * as Nav from "../../../../../../navFrontend";
 
 import MKV from "../../../../../../melosyskodeverk";
-import Informasjonsmodal from "./informasjonsmodal";
+import AnnenForelderModal from "./annenForelderModal";
 import { HentBostedsadresseForPersonDocument } from "./hentBostedsadresseForPerson.generated";
 import { Bostedsadresse } from "../../../../../../graphql";
 import { StrukturertAdresse } from "../../../../../adresser";
@@ -15,7 +15,7 @@ import { StrukturertAdresse } from "../../../../../adresser";
 const { NO } = MKV.Koder.landkoder;
 
 describe("Informasjonsmodal", () => {
-  const mockedProps = mock<ComponentProps<typeof Informasjonsmodal>>();
+  const mockedProps = mock<ComponentProps<typeof AnnenForelderModal>>();
   let props = instance(mockedProps);
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe("Informasjonsmodal", () => {
   });
 
   it("viser en Modal", () => {
-    const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+    const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
       wrappingComponent: MockedProvider,
     });
 
@@ -40,7 +40,7 @@ describe("Informasjonsmodal", () => {
   });
 
   it("viser melding ved henting av bostedsadresse", () => {
-    const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+    const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
       wrappingComponent: MockedProvider,
     });
 
@@ -50,7 +50,7 @@ describe("Informasjonsmodal", () => {
 
   it("viser melding ved nettverkserror under henting av bostedsadresse", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -97,7 +97,7 @@ describe("Informasjonsmodal", () => {
           erHistorisk: false,
         },
       ];
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -138,7 +138,7 @@ describe("Informasjonsmodal", () => {
 
   it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [

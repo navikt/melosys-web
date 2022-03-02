@@ -14,7 +14,7 @@ import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { Familierelasjonsrolle, Familiemedlem } from "../../../../../graphql";
 import * as StringUtils from "../../../../../utils/streng";
 import Ident from "./ident";
-import Informasjonsmodal from "./informasjonsmodal";
+import AnnenForelderModal from "./annenForelderModal";
 
 import "./familiemedlemmerFraPDL.css";
 
@@ -121,7 +121,7 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
         </Nav.Typo.EtikettLiten>
       )}
       {barnValgtForMerInformasjon && barnValgtForMerInformasjon.fnrAnnenForelder && (
-        <Informasjonsmodal
+        <AnnenForelderModal
           contentLabel="Informasjon om annen forelder"
           onRequestClose={() => setBarnValgtForMerInformasjon(null)}
           barnNavn={barnValgtForMerInformasjon.navn}
