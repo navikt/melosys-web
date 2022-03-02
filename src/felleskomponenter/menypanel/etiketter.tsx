@@ -7,6 +7,8 @@ import "./etiketter.css";
 type NavEtikettBaseProps = ComponentProps<typeof Nav.EtikettBase>;
 type EtikettProps = Omit<NavEtikettBaseProps, "type">;
 
+const graa = "etikett_graa";
+
 export const FraRegister = (props: EtikettProps) => (
   <Nav.EtikettBase {...props} type="info">
     Fra register
@@ -38,7 +40,7 @@ export const ArbeidsgiversDel = (props: EtikettProps) => (
 );
 
 export const Under18Aar = (props: EtikettProps) => (
-  <Nav.EtikettBase {...props} type="info">
+  <Nav.EtikettBase {...props} type="info" className={graa}>
     Under 18 år
   </Nav.EtikettBase>
 );
