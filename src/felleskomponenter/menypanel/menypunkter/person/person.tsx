@@ -97,7 +97,6 @@ export const Person = ({
   if (Object.keys(person).length === 0) {
     return null;
   }
-
   return (
     <div className="person">
       <Nav.Row>
