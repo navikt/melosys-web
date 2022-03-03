@@ -18,21 +18,21 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
+
 import MottakerTabell from "../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
-
 import { lagYupToReduxformErrorMapper } from "../../../yup";
-import { StegStatus } from "../stegvelger";
+import { KontrollFeil, StegStatus } from "../stegvelger";
 import bem from "../../../bemUtils";
-import vurdering_vedtak from "./vurderingVedtakSchema";
 
+import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
-import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
-const FRITEKST = "Fritekst";
+export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
 
@@ -76,6 +76,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
       nyVurderingBakgrunn: initialNyVurderingBakgrunn,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
     },
+    formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
   };
@@ -102,6 +103,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
+  valideringFeil: KontrollFeil[];
   formValues: {
     lovvalgsperiodeFom?: string;
     lovvalgsperiodeTom?: string;
@@ -131,6 +133,8 @@ const VurderingVedtak = ({
   lagreOgFatteVedtak,
   vedtakstype,
   hentLovvalgsperiode,
+  formIsValid,
+  valideringFeil,
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
@@ -499,7 +503,8 @@ const VurderingVedtak = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,
-          disabled: !redigerbart,
+          disabled:
+            steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || !Utils._isEmpty(valideringFeil),
           autoDisableVedSpinner: true,
           spinner: vedtakPending,
         }}
