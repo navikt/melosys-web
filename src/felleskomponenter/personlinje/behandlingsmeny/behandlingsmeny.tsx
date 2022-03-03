@@ -15,7 +15,7 @@ import Handling from "./handling";
 import { oppgaverOperations } from "../../../ducks/oppgaver";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { modalerOperations } from "../../../ducks/modaler";
-import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
 
 import "./behandlingsmeny.css";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -38,7 +38,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
   visFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleNyVurdering()),
-  apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
 });
 
@@ -52,7 +51,6 @@ export const Behandlingsmeny = ({
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
   visFerdigbehandleNyVurderingDialogHandle,
-  apneTidligereBehandlinger,
   visRevurderFagsakDialogHandle,
   redigerbart,
   behandlingID,
@@ -126,12 +124,11 @@ export const Behandlingsmeny = ({
             redigerbart={redigerbart}
             ferdigbehandleNyVurdering={visFerdigbehandleNyVurderingDialogHandle}
           />
-          <div className="behandlingsmeny__meny__handlinger">
-            <Handling ikon={<Ikon.Copy />} tekst="Vis saksoversikt" onClick={apneTidligereBehandlinger} />
-            {skalViseVurderSakenPaaNytt() && (
+          {skalViseVurderSakenPaaNytt() && (
+            <div className="behandlingsmeny__meny__handlinger">
               <Handling ikon={<Ikon.Cancel />} tekst="Vurder saken på nytt" onClick={visRevurderFagsakDialogHandle} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>
