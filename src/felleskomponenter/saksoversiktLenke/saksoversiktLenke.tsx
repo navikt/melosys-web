@@ -33,15 +33,11 @@ const SaksoversiktLenke = ({ behandlingID, hentSaksoversikt }: PropsFromRedux) =
   return (
     <div className="saksoversiktLenke">
       <Nav.Panel>
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => hentSaksoversikt(fnr)}
-          onKeyPress={(event) => event.key === "Enter" && hentSaksoversikt(fnr)}
-        >
-          <Ikon.Copy className="ikon" />
-          Vis saksoversikt
-        </div>
+        Vis saksoversikt:
+        <Nav.Lenker href="#" onClick={() => hentSaksoversikt(fnr)}>
+          <Ikon.ExternalLink className="ikon" />
+          Åpnes i nytt vindu
+        </Nav.Lenker>
       </Nav.Panel>
     </div>
   );
