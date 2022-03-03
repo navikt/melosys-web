@@ -95,7 +95,10 @@ interface Props {
   oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto, callback?: () => void) => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
-  oppdaterValideringFeil: (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdaterRegisteropplysninger: boolean) => void;
+  oppdaterValideringFeil: (
+    data: Api.Saksflyt.Vedtak.FattVedtakReqDto,
+    skalRegisteropplysningerOppdateres: boolean
+  ) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
@@ -175,8 +178,8 @@ const VurderingVedtak = ({
     nyVurderingBakgrunn: getNyVurderingBakgrunn(),
   });
 
-  const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
-    oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), oppdaterRegisteropplysninger);
+  const kontrollerVedtak = (skalRegisteropplysningerOppdateres: boolean = false) => {
+    oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), skalRegisteropplysningerOppdateres);
     setOppdaterFørKontroll(false);
   };
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);

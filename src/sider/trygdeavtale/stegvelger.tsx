@@ -200,8 +200,11 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
-  oppdaterValideringFeil = (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdaterRegisteropplysninger: boolean) => {
-    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, oppdaterRegisteropplysninger, data)
+  oppdaterValideringFeil = (
+    data: Api.Saksflyt.Vedtak.FattVedtakReqDto,
+    skalRegisteropplysningerOppdateres: boolean
+  ) => {
+    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, skalRegisteropplysningerOppdateres, data)
       .then(() => this.setState({ valideringFeil: [] }))
       .catch((response) => this.setState({ valideringFeil: response?.body?.feilkoder }));
   };
