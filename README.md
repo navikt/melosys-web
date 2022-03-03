@@ -32,6 +32,8 @@ fra [GitHub developer settings](https://github.com/settings/tokens), og sette de
 //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 ```
 
+Merk at PAT må iallefall ha tilgangene repo og read:packages.
+
 (Det er også mulig å sette innholdet av tokenet rett i `~/.npmrc`.)
 
 I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kjøre `npm login`:
@@ -40,11 +42,23 @@ I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kj
 npm login --scope=@OWNER --registry=https://npm.pkg.github.com
 ```
 
+Bruk github-brukernavnet ditt, og PAT som passord.
+
 ### Kjøring
 ```
 npm install
 npm start
 ```
+Dette starter applikasjonen med proxyinnstillinger rettet mot [melosys-web-mock](https://github.com/navikt/melosys-web-mock).
+
+### Kjøring mot kjørende API
+
+Dersom du heller ønsker å koble mot din kjørende [melosys-api](https://github.com/navikt/melosys-api#lokal-utvikling), kan du bruke følgende script for å sette proxyinnstillinger mot [melosys-docker-compose](https://github.com/navikt/melosys-docker-compose#frontendutvikling):
+```
+npm install
+npm start:localnginx
+```
+Dersom du ikke allerede har en token lagret i cookies på localhost, vil det ikke være mulig å få kontakt med APIet. En workaround for å få token er å først starte [docker-compose](https://github.com/navikt/melosys-docker-compose#frontendutvikling) for frontendutvikling. Logg så inn på porten som kjører frontend-containeren. Du vil da få cookies som vil være tilgjengelig på alle portene som kjører under localhost.
 
 ## Genering av graphql-kode
 

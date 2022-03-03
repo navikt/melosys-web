@@ -11,11 +11,17 @@ const {
   BESLUTNING_LOVVALG_NORGE,
   ARBEID_I_UTLANDET,
   TRYGDETID,
+  YRKESAKTIV,
   UTSENDT_ARBEIDSTAKER,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
+
+jest.mock("../../../featuretoggle", () => ({
+  __esModule: true,
+  useFeatureToggle: () => "enabled",
+}));
 
 describe("AvsluttSak", () => {
   let props = instance(mockedProps);
@@ -33,8 +39,8 @@ describe("AvsluttSak", () => {
 
     expect(handlinger).toHaveLength(3);
     expect(handlinger.at(0).props().tekst).toBe("Avslå søknad pga. manglende opplysninger");
-    expect(handlinger.at(1).props().tekst).toBe("Henlegg sak");
-    expect(handlinger.at(2).props().tekst).toBe("Avslutt sak som bortfalt");
+    expect(handlinger.at(1).props().tekst).toBe("Kan ikke behandles i Melosys");
+    expect(handlinger.at(2).props().tekst).toBe("Søknaden er henlagt/trukket");
   });
 
   it("viser bare avsluttSak om tema er trygdetid", () => {
@@ -45,7 +51,19 @@ describe("AvsluttSak", () => {
     const handlinger = avsluttSak.find(Handling);
 
     expect(handlinger).toHaveLength(1);
-    expect(handlinger.props().tekst).toBe("Avslutt sak som bortfalt");
+    expect(handlinger.props().tekst).toBe("Kan ikke behandles i Melosys");
+  });
+
+  it("viser ferdigBehandlet om tema er yrkesaktiv", () => {
+    props.behandlingstema = YRKESAKTIV;
+    props.redigerbart = true;
+    props.behandlingstype = NY_VURDERING;
+
+    const avsluttSak = shallow(<AvsluttSak {...props} />);
+    const handlinger = avsluttSak.find(Handling);
+
+    expect(handlinger).toHaveLength(4);
+    expect(handlinger.at(1).props().tekst).toBe("Ferdigbehandlet");
   });
 
   it("returerer null om EØS_VURDER_UTPEKING og ikke redigerbart", () => {

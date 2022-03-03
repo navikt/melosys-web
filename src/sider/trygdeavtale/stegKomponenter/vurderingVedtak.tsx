@@ -29,6 +29,7 @@ import bem from "../../../bemUtils";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 
 import "./vurderingVedtak.css";
+import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 const FRITEKST = "Fritekst";
@@ -41,7 +42,7 @@ interface Periode {
 }
 
 const setNyVurderingBakgrunnFelt = (begrunnelseFraResultat: string | undefined, erNyVurdering: boolean) => {
-  if (!erNyVurdering) {
+  if (!erNyVurdering || !begrunnelseFraResultat) {
     return [null, null];
   }
   if (KV.finnEnkeltKodeFraListe(begrunnelseFraResultat, MKV.KTObjects.begrunnelser.nyvurderingbakgrunner)) {
@@ -82,6 +83,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  hentLovvalgsperiode: (behandlingID: string) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -90,7 +92,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   data: Api.Trygdeavtale.StegData;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto, callback?: () => void) => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
   oppdaterValideringFeil: (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdaterRegisteropplysninger: boolean) => void;
@@ -125,6 +127,7 @@ const VurderingVedtak = ({
   soknadsland,
   lagreOgFatteVedtak,
   vedtakstype,
+  hentLovvalgsperiode,
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
@@ -186,7 +189,6 @@ const VurderingVedtak = ({
     setMuligeMottakere(res);
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
-
   const debouncedOppdaterFlyten = useCallback(
     Utils._debounce((data: Api.Trygdeavtale.Resultat) => oppdaterFlyt({ resultat: data }), 2000),
     []
@@ -233,13 +235,16 @@ const VurderingVedtak = ({
     if (redigerbart && formValues) {
       const isoFom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom);
       const isoTom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom);
-      oppdaterFlyt({
-        resultat: {
-          ...resultat,
-          lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
-          lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
+      oppdaterFlyt(
+        {
+          resultat: {
+            ...resultat,
+            lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
+            lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
+          },
         },
-      });
+        () => hentLovvalgsperiode(behandlingID)
+      );
       setVisTomEndringFelt(false);
     }
   };
