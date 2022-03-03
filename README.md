@@ -32,6 +32,8 @@ fra [GitHub developer settings](https://github.com/settings/tokens), og sette de
 //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 ```
 
+Merk at PAT må iallefall ha tilgangene repo og read:packages.
+
 (Det er også mulig å sette innholdet av tokenet rett i `~/.npmrc`.)
 
 I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kjøre `npm login`:
@@ -39,6 +41,8 @@ I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kj
 ```
 npm login --scope=@OWNER --registry=https://npm.pkg.github.com
 ```
+
+Bruk github-brukernavnet ditt, og PAT som passord.
 
 ### Kjøring
 ```
