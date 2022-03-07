@@ -11,6 +11,7 @@ import Personlinje from "../../felleskomponenter/personlinje";
 import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
+import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import Behandlingsstatus from "../../felleskomponenter/behandlingsstatus";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import { FeatureToggle } from "../../featuretoggle";
@@ -254,6 +255,7 @@ const Saksbehandling = ({
                     />
                   )}
                 />
+                <SaksoversiktLenke />
                 <SideDialog
                   dokumentOversikt={dokumentOversikt}
                   saksnummer={saksnummer}
