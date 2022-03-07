@@ -1,4 +1,4 @@
-import { STATUS } from "../../services/";
+import { STATUS } from "../../services";
 import * as Types from "./types";
 
 const modaler = {

@@ -105,7 +105,9 @@ describe("FamiliemedlemmerFraPDL", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 15);
+      });
       familiemedlemmerFraPDL.update();
 
       const familiemedlemGrupper = familiemedlemmerFraPDL.find(FamiliemedlemGruppe);
