@@ -94,7 +94,6 @@ export const Person = ({
   if (Object.keys(person).length === 0) {
     return null;
   }
-
   return (
     <div className="person">
       <Nav.Row>
@@ -193,7 +192,7 @@ export const Person = ({
         <>
           <Nav.Row>
             <Nav.Column className="etikett__container">
-              <span>{behandlingsgrunnlagEtikett}</span>
+              {behandlingsgrunnlagEtikett}
               {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>

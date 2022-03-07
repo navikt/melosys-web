@@ -164,7 +164,7 @@ DialogboksHenleggSak.defaultProps = {
 
 const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  redigerbart: redigerbartSelectors.ModalHenleggRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps, null)(DialogboksHenleggSak);

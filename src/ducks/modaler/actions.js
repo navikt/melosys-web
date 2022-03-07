@@ -10,6 +10,11 @@ export const oppdaterAvsluttSakSomBortfalt = (data) => ({
   data,
 });
 
+export const oppdaterFerdigbehandleNyVurdering = (data) => ({
+  type: Types.OPPDATER_FERDIGBEHANDLE_NY_VURDERING,
+  data,
+});
+
 export const oppdaterAvslagSoknad = (data) => ({
   type: Types.OPPDATER_AVSLAG_SOKNAD,
   data,

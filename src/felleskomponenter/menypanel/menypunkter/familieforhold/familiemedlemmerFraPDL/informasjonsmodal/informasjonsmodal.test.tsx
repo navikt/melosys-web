@@ -68,7 +68,7 @@ describe("Informasjonsmodal", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 0);
+        setTimeout(resolve, 15);
       });
       informasjonsmodal.update();
 
@@ -128,7 +128,7 @@ describe("Informasjonsmodal", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 0);
+        setTimeout(resolve, 15);
       });
       informasjonsmodal.update();
 
@@ -171,7 +171,7 @@ describe("Informasjonsmodal", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 0);
+        setTimeout(resolve, 15);
       });
       informasjonsmodal.update();
 

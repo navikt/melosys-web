@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MouseEventHandler, MouseEvent, ElementType, useEffect } from "react";
+import React, { ElementType, MouseEvent, MouseEventHandler, ReactNode, useState } from "react";
 import classnames from "classnames";
 
 import * as Nav from "../../../../navFrontend";
@@ -45,6 +45,12 @@ export const visAldriBinSymbolsynlighet: SymbolsynlighetConfig = {
   [Status.RedigeringUtfort]: { bin: false, pencil: true },
 };
 
+export const ikkeVisBinIngenDataSymbolsynlighet: SymbolsynlighetConfig = {
+  [Status.Redigerer]: { bin: true, pencil: false },
+  [Status.IngenData]: { bin: false, pencil: false },
+  [Status.RedigeringUtfort]: { bin: true, pencil: true },
+};
+
 const EditerbartElement = ({
   redigererRender,
   ingenDataRender,
@@ -74,12 +80,6 @@ const EditerbartElement = ({
   };
 
   const [status, setStatus] = useState(hentNesteStatus());
-
-  useEffect(() => {
-    if (!harData) {
-      setStatus(hentNesteStatus());
-    }
-  }, [harData]);
 
   const hentAktivtInnhold = () => {
     if (status === Status.RedigeringUtfort) return redigeringUtfortRender();
@@ -121,7 +121,10 @@ const EditerbartElement = ({
       tittelIkon={tittelIkon}
       tittel={tittel}
       tittelUnderstrek={tittelUnderstrek}
-      onBinClick={onBinClick}
+      onBinClick={(e) => {
+        setStatus(Status.IngenData);
+        onBinClick(e);
+      }}
       onPencilClick={() => setStatus(Status.Redigerer)}
       symbolsynlighet={{ ...defaultSymbolsynlighet, ...symbolsynlighet }[status] || { pencil: true, bin: true }}
     />

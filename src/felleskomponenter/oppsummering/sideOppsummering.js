@@ -73,7 +73,7 @@ const SideOppsummering = ({
         )
         .catch(() => setKanEndreBehandlingsstatus(false));
     }
-  }, [behandlingID]);
+  }, [behandlingID, nyttDesignToggle]);
 
   if (!oppsummering) return <div />;
 

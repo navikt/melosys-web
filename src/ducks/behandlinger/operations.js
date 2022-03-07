@@ -25,10 +25,10 @@ export function resetBehandlingerState() {
   return Actions.resetBenadlingerState();
 }
 
-export function apneTidligereBehandlinger() {
+export function apneTidligereBehandlinger(fnr) {
   return (dispatch, getState) => {
     const person = Selectors.PersonSelector(getState());
-    sessionStorage.setItem("sokefrase", person.fnr);
+    sessionStorage.setItem("sokefrase", fnr || person.fnr);
     Routing.nyFane("sok");
   };
 }

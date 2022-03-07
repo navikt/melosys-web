@@ -26,6 +26,7 @@ export interface Resultat {
   lovvalgsperiodeTom?: string;
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
+  nyVurderingBakgrunn?: string;
 }
 
 export interface Steg {

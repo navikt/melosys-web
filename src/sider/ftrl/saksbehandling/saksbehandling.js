@@ -13,6 +13,7 @@ import * as API from "../../../services/api";
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./legacybehandlingsmeny";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
@@ -304,6 +305,7 @@ const Saksbehandling = ({
                     />
                   )}
                 />
+                <SaksoversiktLenke />
                 <SideDialog
                   behandlingID={behandlingID}
                   saksnummer={saksnummer}

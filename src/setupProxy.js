@@ -6,5 +6,12 @@ module.exports = function setupProxy(app) {
       target: `http://localhost:${process.env.REACT_APP_LOCAL_API_PORT}/`,
     })
   );
-  app.use(createProxyMiddleware("/flyt", { target: "http://localhost:8088/" }));
+  app.use(
+    createProxyMiddleware("/trygdeavtale-flyt", {
+      target: "http://localhost:8088/",
+      pathRewrite: {
+        "^/trygdeavtale-flyt": "/flyt",
+      },
+    })
+  );
 };

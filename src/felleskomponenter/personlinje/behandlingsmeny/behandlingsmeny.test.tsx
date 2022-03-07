@@ -45,8 +45,7 @@ describe("Behandlingsmeny", () => {
     expect(avsluttSak.props().redigerbart).toBe(props.redigerbart);
 
     const menyHandlinger = behandlingsmeny.find(".behandlingsmeny__meny__handlinger").find(Handling);
-    expect(menyHandlinger).toHaveLength(2);
-    expect(menyHandlinger.at(0).props().tekst).toBe("Vis saksoversikt");
-    expect(menyHandlinger.at(1).props().tekst).toBe("Vurder saken på nytt");
+    expect(menyHandlinger).toHaveLength(1);
+    expect(menyHandlinger.at(0).props().tekst).toBe("Vurder saken på nytt");
   });
 });

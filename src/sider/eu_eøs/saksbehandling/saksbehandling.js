@@ -14,6 +14,7 @@ import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 import { FeatureToggle } from "../../../featuretoggle";
@@ -31,11 +32,11 @@ import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from "../../../ducks/behandlingsperioder";
 import { formSelectors } from "../../../ducks/form";
 import { datalastingOperations } from "../../../ducks/datalasting";
-
-import "./saksbehandling.css";
 import { dokumenterOperations, dokumenterSelectors } from "../../../ducks/dokumenter";
 import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiodesvar";
 import { landkoderOperations } from "../../../ducks/landkoder";
+
+import "./saksbehandling.css";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
@@ -318,6 +319,7 @@ class Saksbehandling extends Component {
                       />
                     )}
                   />
+                  <SaksoversiktLenke />
                   <SideDialog
                     behandlingID={behandlingID}
                     saksnummer={saksnummer}

@@ -1,0 +1,3 @@
+import DialogboksFerdigbehandleNyVurdering from "./dialogboksFerdigbehandleNyVurdering";
+
+export default DialogboksFerdigbehandleNyVurdering;

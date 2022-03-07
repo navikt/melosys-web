@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, MouseEvent } from "react";
 import { mount } from "enzyme";
 import { mock, instance } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
@@ -7,8 +7,10 @@ import { act } from "react-dom/test-utils";
 import * as Nav from "../../../../../navFrontend";
 
 import { Person } from "../../../../../services/api";
+import { Sivilstand } from "../../../../../graphql";
 import { HentSivilstandDocument } from "./sivilstand/hentSivilstand.generated";
 import Personinfo from "./personinfo";
+import SivilstandModal from "./sivilstand/sivilstandModal";
 
 jest.mock("../../../../../featuretoggle", () => ({
   __esModule: true,
@@ -64,7 +66,7 @@ describe("Personinfo", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 0);
+        setTimeout(resolve, 15);
       });
       personinfo.update();
 
@@ -72,6 +74,123 @@ describe("Personinfo", () => {
         (n) => n.type() === Nav.AlertStripeFeil && n.contains("Feil ved henting av sivilstand!")
       );
       expect(alertstripe).toHaveLength(1);
+    });
+  });
+
+  it("viser dagens sivilstand etter sivilstand er hentet", () => {
+    return act(async () => {
+      const sivilstand: Sivilstand[] = [
+        {
+          type: "Gift",
+          relatertVedSivilstand: "123",
+          bekreftelsesdato: "2009-10-09",
+          gyldigFraOgMed: "2009-10-10",
+          master: "PDL",
+          kilde: "FREG",
+          erHistorisk: false,
+        },
+        {
+          type: "Ugift",
+          relatertVedSivilstand: "321",
+          bekreftelsesdato: "2008-01-01",
+          gyldigFraOgMed: "2008-01-02",
+          master: "PDL",
+          kilde: "FREG",
+          erHistorisk: true,
+        },
+      ];
+      const personinfo = mount(<Personinfo {...props} />, {
+        wrappingComponent: MockedProvider,
+        wrappingComponentProps: {
+          mocks: [
+            {
+              request: {
+                query: HentSivilstandDocument,
+                variables: {
+                  behandlingID: 1,
+                },
+              },
+              result: {
+                data: {
+                  hentSaksopplysninger: {
+                    persondata: {
+                      sivilstand,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 15));
+      personinfo.update();
+
+      expect(personinfo.text()).toContain("Gift");
+    });
+  });
+
+  it("sender sivilstand-data til sivilstandModal etter dataen er hentet", () => {
+    return act(async () => {
+      const sivilstand: Sivilstand[] = [
+        {
+          type: "Gift",
+          relatertVedSivilstand: "123",
+          bekreftelsesdato: "2009-10-09",
+          gyldigFraOgMed: "2009-10-10",
+          master: "PDL",
+          kilde: "FREG",
+          erHistorisk: false,
+        },
+        {
+          type: "Ugift",
+          relatertVedSivilstand: "321",
+          bekreftelsesdato: "2008-01-01",
+          gyldigFraOgMed: "2008-01-02",
+          master: "PDL",
+          kilde: "FREG",
+          erHistorisk: true,
+        },
+      ];
+      const personinfo = mount(<Personinfo {...props} />, {
+        wrappingComponent: MockedProvider,
+        wrappingComponentProps: {
+          mocks: [
+            {
+              request: {
+                query: HentSivilstandDocument,
+                variables: {
+                  behandlingID: 1,
+                },
+              },
+              result: {
+                data: {
+                  hentSaksopplysninger: {
+                    persondata: {
+                      sivilstand,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 15));
+      personinfo.update();
+
+      const visMerSivilstandKnapp = personinfo.find(".personinfo__vis-detaljer-button").hostNodes();
+      expect(visMerSivilstandKnapp).toHaveLength(1);
+      const mouseEvent = instance(mock<MouseEvent<HTMLButtonElement>>());
+      visMerSivilstandKnapp.props().onClick?.(mouseEvent);
+
+      personinfo.update();
+      const sivilstandModal = personinfo.find(SivilstandModal);
+      expect(sivilstandModal).toHaveLength(1);
+      expect(sivilstandModal.props().aktiveSivilstander).toEqual([sivilstand[0]]);
+      expect(sivilstandModal.props().historiskeSivilstander).toEqual([sivilstand[1]]);
     });
   });
 });

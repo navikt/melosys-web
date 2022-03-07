@@ -15,7 +15,7 @@ import Handling from "./handling";
 import { oppgaverOperations } from "../../../ducks/oppgaver";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { modalerOperations } from "../../../ducks/modaler";
-import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
 
 import "./behandlingsmeny.css";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyActio
   visAvslagSoknadDialogHandle: () => dispatch(modalerOperations.visAvslagSoknad()),
   visHenleggDialogHandle: () => dispatch(modalerOperations.visHenlegg()),
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
-  apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
+  visFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleNyVurdering()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
 });
 
@@ -50,7 +50,7 @@ export const Behandlingsmeny = ({
   visAvslagSoknadDialogHandle,
   visHenleggDialogHandle,
   visAvsluttSakSomBortfaltDialogHandle,
-  apneTidligereBehandlinger,
+  visFerdigbehandleNyVurderingDialogHandle,
   visRevurderFagsakDialogHandle,
   redigerbart,
   behandlingID,
@@ -88,7 +88,6 @@ export const Behandlingsmeny = ({
       case KV.Koder.Behandlingskategori.EØS_REGISTRERING:
         return behandlingErAvsluttet && behandlingstemaErRegistreringOmUnntakNorskTrygd;
       case KV.Koder.Behandlingskategori.EØS_VURDER_UTPEKING:
-        return redigerbart && behandlingErAvsluttet;
       case KV.Koder.Behandlingskategori.FTRL_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.TRYGDEAVTALE_SAKSBEHANDLING:
         return behandlingErAvsluttet;
@@ -123,13 +122,13 @@ export const Behandlingsmeny = ({
             behandlingstema={behandlingstema}
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
+            ferdigbehandleNyVurdering={visFerdigbehandleNyVurderingDialogHandle}
           />
-          <div className="behandlingsmeny__meny__handlinger">
-            <Handling ikon={<Ikon.Copy />} tekst="Vis saksoversikt" onClick={apneTidligereBehandlinger} />
-            {skalViseVurderSakenPaaNytt() && (
+          {skalViseVurderSakenPaaNytt() && (
+            <div className="behandlingsmeny__meny__handlinger">
               <Handling ikon={<Ikon.Cancel />} tekst="Vurder saken på nytt" onClick={visRevurderFagsakDialogHandle} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>

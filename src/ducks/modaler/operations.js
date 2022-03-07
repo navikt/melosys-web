@@ -8,6 +8,11 @@ export const visAvsluttSakSomBortfalt = () => (dispatch) =>
 export const skjulAvsluttSakSomBortfalt = () => (dispatch) =>
   dispatch(Actions.oppdaterAvsluttSakSomBortfalt({ synlig: false }));
 
+export const visFerdigbehandleNyVurdering = () => (dispatch) =>
+  dispatch(Actions.oppdaterFerdigbehandleNyVurdering({ synlig: true }));
+export const skjulFerdigbehandleNyVurdering = () => (dispatch) =>
+  dispatch(Actions.oppdaterFerdigbehandleNyVurdering({ synlig: false }));
+
 export const visAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: true }));
 export const skjulAvslagSoknad = () => (dispatch) => dispatch(Actions.oppdaterAvslagSoknad({ synlig: false }));
 

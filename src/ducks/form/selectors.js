@@ -400,3 +400,8 @@ export const TrygdeavtaleVedtakFormValidSelector = createSelector(
   (state) => TrygdeavtaleVedtakFormSelector(state).syncErrors || {},
   (errors) => Utils._isEmpty(errors)
 );
+
+export const TrygdeavtaleVedtakFormPeriodeValidSelector = createSelector(
+  (state) => TrygdeavtaleVedtakFormSelector(state).syncErrors || {},
+  (errors) => Utils._isEmpty(errors.lovvalgsperiodeFom) && Utils._isEmpty(errors.lovvalgsperiodeTom)
+);
