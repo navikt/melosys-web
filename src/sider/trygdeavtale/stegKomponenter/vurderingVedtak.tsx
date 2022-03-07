@@ -94,6 +94,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface Props {
   data: Api.Trygdeavtale.StegData;
   oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto, callback?: () => void) => void;
+  hentFlytOgOppdaterAktuelleSteg: () => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
   oppdaterValideringFeil: (
@@ -120,6 +121,7 @@ const VurderingVedtak = ({
   behandlingsgrunnlagStatus,
   data: { bestemmelseValg },
   erNyVurdering,
+  hentFlytOgOppdaterAktuelleSteg,
   tilbake,
   redigerbart,
   resultat,
@@ -185,6 +187,7 @@ const VurderingVedtak = ({
   const kontrollerVedtak = (skalRegisteropplysningerOppdateres: boolean = false) => {
     oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), skalRegisteropplysningerOppdateres);
     setOppdaterFørKontroll(false);
+    hentFlytOgOppdaterAktuelleSteg();
   };
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
