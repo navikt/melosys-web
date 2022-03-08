@@ -118,8 +118,11 @@ class Stegvelger extends Component<Props, State> {
 
     if (prevProps.behandlingID && prevProps.behandlingID !== this.props.behandlingID) {
       this.hentFlytOgOppdaterAktuelleSteg();
+      this.resetAktivtStegIndex();
     }
   }
+
+  resetAktivtStegIndex = () => this.setState({ aktivtStegIndex: 0 });
 
   hentFlytOgOppdaterAktuelleSteg = () =>
     Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
