@@ -503,6 +503,12 @@ const VurderingVedtak = ({
         />
       )}
 
+      {redigerbart && erNyVurdering && (
+        <Nav.AlertStripeAdvarsel className={vurderingVedtakCls.element("alertstripe")}>
+          Ny periode erstatter eksisterende periode i MEDL
+        </Nav.AlertStripeAdvarsel>
+      )}
+
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,
