@@ -30,6 +30,7 @@ import bem from "../../../bemUtils";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
+import { formatterDatoTilNorsk } from "../../../utils/dato";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -376,7 +377,7 @@ const VurderingVedtak = ({
                 </Nav.Hovedknapp>
               </span>
             ) : (
-              formValues?.lovvalgsperiodeTom
+              formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom, false)
             )}
             {!visTomEndringFelt && <EndreTom />}
           </Nav.Typo.Normaltekst>
