@@ -10,6 +10,7 @@ import { Sivilstand } from "../../../../../../graphql";
 import KopierbarTekst from "../../../../../kopierbarTekst";
 
 import "./sivilstandModal.css";
+import { Gyldighetshistorikk } from "../../historikk/gyldighetshistorikk";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -56,6 +57,17 @@ interface SivilstandModalProps {
   modalAriaHideApp?: boolean;
 }
 
+const HistoriskeSivilstander = ({ sivilstander }: SivilstandTabellProps) => {
+  if (sivilstander.length <= 0)
+    return (
+      <>
+        <Gyldighetshistorikk />
+        <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
+      </>
+    );
+  return <SivilstandTabell sivilstander={sivilstander} />;
+};
+
 const SivilstandModal = ({
   aktiveSivilstander,
   historiskeSivilstander,
@@ -79,12 +91,8 @@ const SivilstandModal = ({
       <Mui.Undertittel tekst="Sivilstand" ikon={Ikoner.Ring} />
       <div className={sivilstandModalCls.element("main-content")}>
         {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
-        {historiskeSivilstander.length > 0 && (
-          <>
-            <Nav.Typo.Element>Historikk</Nav.Typo.Element>
-            <SivilstandTabell sivilstander={historiskeSivilstander} />
-          </>
-        )}
+        <Nav.Typo.Element>Historikk</Nav.Typo.Element>
+        <HistoriskeSivilstander sivilstander={historiskeSivilstander} />
       </div>
     </Nav.Modal>
   );
