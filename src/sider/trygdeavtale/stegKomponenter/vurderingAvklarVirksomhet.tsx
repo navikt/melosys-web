@@ -83,7 +83,13 @@ const VurderingAvklarVirksomhet = ({
       {virksomheterListe?.length !== 0 ? (
         <Skjema.RadioGruppe feltNavn="virksomhet" label="">
           {virksomheterListe?.map((virksomhet) => (
-            <Skjema.Radio feltNavn="virksomhet" label={virksomhet.term} key={virksomhet.kode} value={virksomhet.kode} />
+            <Skjema.Radio
+              feltNavn="virksomhet"
+              label={virksomhet.term}
+              key={virksomhet.kode}
+              value={virksomhet.kode}
+              disabled={!redigerbart}
+            />
           ))}
         </Skjema.RadioGruppe>
       ) : (
