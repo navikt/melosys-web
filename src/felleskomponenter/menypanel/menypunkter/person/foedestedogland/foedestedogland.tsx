@@ -39,7 +39,7 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
       symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
-      onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger.foedestedOgLand)}
+      onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger?.foedestedOgLand)}
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}

@@ -376,7 +376,7 @@ const VurderingVedtak = ({
                 </Nav.Hovedknapp>
               </span>
             ) : (
-              formValues?.lovvalgsperiodeTom
+              Utils.dato.formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom)
             )}
             {!visTomEndringFelt && <EndreTom />}
           </Nav.Typo.Normaltekst>
