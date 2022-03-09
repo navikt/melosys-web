@@ -21,6 +21,9 @@ export const DialogboksAvsluttSakSomBortfalt = ({ avsluttSakSomBortfalt, avbryt,
     ariaHideApp={ariaHideApp}
   >
     <Nav.Typo.Systemtittel className="overskrift">Avslutt sak som bortfalt</Nav.Typo.Systemtittel>
+    <Nav.Typo.Normaltekst className="normaltekst">
+      Er du sikker på at saken ikke kan behandles i Melosys? Vurder om du må opprette sak i annet system.
+    </Nav.Typo.Normaltekst>
     <Knapperad
       bekreft={avsluttSakSomBortfalt}
       bekreftTekst="BEKREFT"
