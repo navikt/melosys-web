@@ -2,7 +2,7 @@ import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel11_4 from "../../stegKomponenter/vurderingArtikkel11_4";
-import { erVilkarOppfylt, hentVilkar } from "../../../../domeneUtils/vilkar";
+import { erVilkarOppfylt, hentVilkar } from "../../../../domeneUtils";
 
 class Artikkel11_4 extends Steg {
   constructor(propsLight, stegPosisjon) {

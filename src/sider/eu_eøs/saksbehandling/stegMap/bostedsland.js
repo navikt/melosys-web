@@ -4,7 +4,7 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingBostedsland from "../../stegKomponenter/vurderingBostedsland";
 
-import { hentFakta, hentFaktaVerdi } from "../../../../domeneUtils/avklartefakta";
+import { hentFakta, hentFaktaVerdi } from "../../../../domeneUtils";
 import SokkelSkip from "./sokkel_skip";
 import * as Utils from "../../../../utils";
 

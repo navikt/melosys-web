@@ -4,7 +4,7 @@ import VurderingVurderarbeidsland from "../../stegKomponenter/vurderingVurderarb
 
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
-import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../domeneUtils/avklartefakta";
+import { hentFakta, hentFaktaListe, hentFaktaVerdi } from "../../../../domeneUtils";
 
 class Vurderarbeidsland extends Steg {
   constructor(propsLight, stegPosisjon) {

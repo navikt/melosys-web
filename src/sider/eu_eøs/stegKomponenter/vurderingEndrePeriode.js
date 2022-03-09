@@ -11,7 +11,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils";
 import { konverterAvklartfaktaTilStegData } from "../../../felleskomponenter/stegvelger";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
