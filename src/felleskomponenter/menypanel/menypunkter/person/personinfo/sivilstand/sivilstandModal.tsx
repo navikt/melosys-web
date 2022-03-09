@@ -57,18 +57,6 @@ interface SivilstandModalProps {
   modalAriaHideApp?: boolean;
 }
 
-const HistoriskeSivilstander = ({ sivilstander }: SivilstandTabellProps) => (
-  <>
-    <Nav.Typo.Element>Historikk</Nav.Typo.Element>
-    <GyldighetshistorikkInfo />
-    {sivilstander.length > 0 ? (
-      <SivilstandTabell sivilstander={sivilstander} />
-    ) : (
-      <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
-    )}
-  </>
-);
-
 const SivilstandModal = ({
   aktiveSivilstander,
   historiskeSivilstander,
@@ -92,7 +80,13 @@ const SivilstandModal = ({
       <Mui.Undertittel tekst="Sivilstand" ikon={Ikoner.Ring} />
       <div className={sivilstandModalCls.element("main-content")}>
         {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
-        <HistoriskeSivilstander sivilstander={historiskeSivilstander} />
+        <Nav.Typo.Element>Historikk</Nav.Typo.Element>
+        <GyldighetshistorikkInfo />
+        {historiskeSivilstander.length > 0 ? (
+          <SivilstandTabell sivilstander={historiskeSivilstander} />
+        ) : (
+          <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
+        )}
       </div>
     </Nav.Modal>
   );
