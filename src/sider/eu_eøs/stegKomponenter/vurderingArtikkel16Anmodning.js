@@ -487,7 +487,7 @@ class VurderingArtikkel16Anmodning extends Component {
                     onChange={begrunnelseFritekstBrevEndretHandler}
                     value={begrunnelseFritekstBrev}
                     feil={begrunnelseFritekstBrevFeilmelding}
-                    maxLength={255}
+                    maxLength={1500}
                     bredde="fullbredde"
                   />
                   {redigerbart && (
