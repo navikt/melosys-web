@@ -2,8 +2,9 @@ import React from "react";
 import * as Nav from "../../../../../../navFrontend";
 import * as Utils from "../../../../../../utils";
 import { Folkeregisterpersonstatus } from "../../../../../../graphql";
-import "./personstatusModal.css";
+import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 import bem from "../../../../../../bemUtils";
+import "./personstatusModal.css";
 
 interface PersonstatusTabellProps {
   personstatuser: Folkeregisterpersonstatus[];
@@ -67,19 +68,7 @@ const PersonstatusModal = ({
       <PersonstatusTabell personstatuser={aktivePersonstatuser} />
 
       <Nav.Typo.Undertittel>Historikk</Nav.Typo.Undertittel>
-      <div className={personstatusModalCls.element("gyldighetsinfo")}>
-        <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra Folkeregisteret kan være unøyaktig.</Nav.Typo.EtikettLiten>
-        <Nav.Hjelpetekst>
-          <p>Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret.</p>
-          <p>
-            Dersom det er en opplysningstype hvor Folkeregisteret har vedtaksmyndighet, så viser denne datoen når
-            vedtaket gjelder fra. På andre opplysningstyper viser datoen når opplysningen ble gyldig i Folkeregisteret,
-            ikke når den ble gyldig i virkeligheten. For eksempel viser ikke gyldighetsdato for opplysningstypen
-            utflytting når man faktisk flyttet ut av landet.
-          </p>
-          <p>Vær derfor varsom med hvordan du bruker disse opplysningene.</p>
-        </Nav.Hjelpetekst>
-      </div>
+      <GyldighetshistorikkInfo />
       <PersonstatusTabell personstatuser={historiskePersonstatuser} />
     </Nav.Modal>
   );

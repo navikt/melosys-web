@@ -1,9 +1,9 @@
 import React from "react";
 import * as Nav from "../../../../../navFrontend";
-import "./gyldighetshistorikk.css";
+import "./gyldighetshistorikkInfo.css";
 
-export const Gyldighetshistorikk = () => (
-  <div className="gyldighetshistorikk">
+export const GyldighetshistorikkInfo = () => (
+  <div className="gyldighetshistorikk-info">
     <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra Folkeregisteret kan være unøyaktig.</Nav.Typo.EtikettLiten>
     <Nav.Hjelpetekst>
       <p>Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret.</p>
