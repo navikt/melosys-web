@@ -396,7 +396,7 @@ const VurderingVedtak = ({
             className={vurderingVedtakCls.element("nyvurdering")}
             legend={
               <Fragment>
-                Oppgi grunn for nytt vedtak
+                Oppgi grunn for nytt vedtak (Obligatorisk)
                 <Nav.Hjelpetekst
                   className={vurderingVedtakCls.element("hjelpetekst")}
                   tittel={nyVurderingBakgrunnHjelpetekst}
