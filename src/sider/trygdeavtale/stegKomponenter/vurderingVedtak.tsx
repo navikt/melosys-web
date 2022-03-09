@@ -504,9 +504,9 @@ const VurderingVedtak = ({
       )}
 
       {redigerbart && erNyVurdering && (
-        <Nav.AlertStripeAdvarsel className={vurderingVedtakCls.element("alertstripe")}>
-          Ny periode erstatter eksisterende periode i MEDL
-        </Nav.AlertStripeAdvarsel>
+        <Nav.AlertStripeInfo className={vurderingVedtakCls.element("alertstripe")}>
+          {KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}
+        </Nav.AlertStripeInfo>
       )}
 
       <Mui.StegKnapper

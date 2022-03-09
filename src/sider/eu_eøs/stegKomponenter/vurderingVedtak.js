@@ -184,6 +184,9 @@ const VurderingVedtak = ({
         {flereSoknadslandEnnTillatt && (
           <Nav.AlertStripe type="feil">Det er kun tillat med ett arbeidsland i vedtaket.</Nav.AlertStripe>
         )}
+        {erNyVurdering && redigerbart && (
+          <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
+        )}
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
             <Mui.StegKnapper

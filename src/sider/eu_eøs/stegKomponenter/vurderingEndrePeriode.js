@@ -304,6 +304,7 @@ export class VurderingEndrePeriode extends React.Component {
             {vedtakFeilmelding}
           </Nav.AlertStripe>
         )}
+        {redigerbart && <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>}
         <Mui.StegKnapper
           bekreftKnappProps={{
             spinner: endringPending,
