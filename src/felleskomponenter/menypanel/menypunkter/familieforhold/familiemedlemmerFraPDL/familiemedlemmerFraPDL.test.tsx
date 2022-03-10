@@ -106,7 +106,7 @@ describe("FamiliemedlemmerFraPDL", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 15);
+        setTimeout(resolve, 20);
       });
       familiemedlemmerFraPDL.update();
 

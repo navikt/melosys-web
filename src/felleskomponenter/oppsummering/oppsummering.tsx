@@ -165,7 +165,7 @@ const Oppsummering = (props: OppsummeringProps) => {
         <Nav.Row>
           <Nav.Column xs="12" className="behandlingsstatus">
             <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
-            <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist) || "-"})`}</span>
+            {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
           </Nav.Column>
         </Nav.Row>
       </Nav.Panel>

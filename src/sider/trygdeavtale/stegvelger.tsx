@@ -46,7 +46,7 @@ interface AktueltSteg {
   handlers?: object;
 }
 
-interface KontrollFeil {
+export interface KontrollFeil {
   kode: string;
   felter: string[];
 }
@@ -115,10 +115,6 @@ class Stegvelger extends Component<Props, State> {
     ) {
       this.debouncedOppdaterSteg();
     }
-
-    if (prevProps.behandlingID && prevProps.behandlingID !== this.props.behandlingID) {
-      this.hentFlytOgOppdaterAktuelleSteg();
-    }
   }
 
   hentFlytOgOppdaterAktuelleSteg = () =>
@@ -152,6 +148,7 @@ class Stegvelger extends Component<Props, State> {
       resultat: response.resultat,
       redigerbart: this.props.redigerbart,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
+      valideringFeil: this.state.valideringFeil,
     };
 
     const handlers = {
