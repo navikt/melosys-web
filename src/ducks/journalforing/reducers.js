@@ -8,12 +8,12 @@
 import { STATUS } from "../../services/utils";
 import * as Types from "./types";
 
-const initalState = {
+const initialState = {
   status: STATUS.NOT_STARTED,
   data: {},
 };
 
-export default function reducer(state = initalState, action) {
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
@@ -22,7 +22,7 @@ export default function reducer(state = initalState, action) {
     case Types.OK:
       return { ...state, status: STATUS.OK, data: action.data };
     case Types.RESET:
-      return { ...initalState };
+      return { ...initialState };
     default:
       return state;
   }

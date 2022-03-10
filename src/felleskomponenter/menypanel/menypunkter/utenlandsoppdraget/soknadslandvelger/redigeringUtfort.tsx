@@ -15,9 +15,8 @@ import "./redigeringUtfort.css";
 
 const mapStateToProps = (state: RootState) => ({
   soknadsland: behandlingsgrunnlagSelectors.SoknadslandkoderSelector(state),
-  soknadslandErUkjenteEllerAlleEosLand: behandlingsgrunnlagSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(
-    state
-  ),
+  soknadslandErUkjenteEllerAlleEosLand:
+    behandlingsgrunnlagSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(state),
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;

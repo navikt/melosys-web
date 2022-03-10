@@ -50,7 +50,7 @@ describe("SelectWrappedComponent", () => {
     props.meta.error = "err";
     const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
 
-    expect(selectWrappedComponent.find(Nav.Select).props().feil).toEqual({ feilmelding: props.meta.error });
+    expect(selectWrappedComponent.find(Nav.Select).props().feil).toEqual(props.meta.error);
   });
 
   it("setter ikke feil-prop dersom meta.error prop ikke finnes", () => {

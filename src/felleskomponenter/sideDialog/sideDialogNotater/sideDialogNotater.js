@@ -1,15 +1,15 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useCallback } from "react";
 import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Mui from "../../ui";
 import * as Utils from "../../../utils";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
 
 import MKV from "../../../melosyskodeverk";
 import Notat from "./notat";
-import Knapperad from "../../../felleskomponenter/knapperad";
+import Knapperad from "../../knapperad";
 
 import "./sideDialogNotater.css";
 
@@ -34,14 +34,14 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   const [nyttNotatTekst, setNyttNotatTekst] = useState("");
   const [nyttNotatFeilmelding, setNyttNotatFeilmelding] = useState("");
 
-  const hentNotater = async () => {
+  const hentNotater = useCallback(async () => {
     const hentedeNotater = await Api.Fagsaker.notater.hent(saksnummer);
     setNotater(hentedeNotater);
-  };
+  }, [saksnummer]);
 
   useEffect(() => {
     hentNotater();
-  }, [saksnummer]);
+  }, [hentNotater]);
 
   const maksTekstLengde = 500;
   const disableLagreKnapp = nyttNotatTekst.length > maksTekstLengde;

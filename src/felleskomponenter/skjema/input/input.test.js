@@ -69,15 +69,21 @@ describe("InnerInputComponent", () => {
   });
 
   describe("viser feilmelding", () => {
-    it("dersom meta.error inneholder feilmelding, meta.touched er true og meta.activ er false", () => {
+    it("dersom meta.error inneholder feilmelding, meta.touched er true og meta.active er false", () => {
       props.meta = {
         error: "feilmelding",
         touched: true,
         active: false,
       };
-      const innerInputComponent = shallow(<InnerInputComponent {...props} />);
+      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
-      expect(innerInputComponent.find("Input").props().feil.feilmelding).toBe(props.meta.error);
+      expect(innerInputComponent.find("Input").props().feil).toBe(props.meta.error);
+
+      props.meta.error = { melding: "feilmelding" };
+
+      innerInputComponent = shallow(<InnerInputComponent {...props} />);
+
+      expect(innerInputComponent.find("Input").props().feil).toBe(props.meta.error.melding);
     });
   });
 
@@ -88,7 +94,13 @@ describe("InnerInputComponent", () => {
         touched: true,
         active: false,
       };
-      const innerInputComponent = shallow(<InnerInputComponent {...props} />);
+      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
+
+      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
+
+      props.meta.error = { melding: "" };
+
+      innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
       expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
     });
@@ -99,7 +111,14 @@ describe("InnerInputComponent", () => {
         touched: false,
         active: false,
       };
-      const innerInputComponent = shallow(<InnerInputComponent {...props} />);
+
+      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
+
+      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
+
+      props.meta.error = { melding: "feilmelding" };
+
+      innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
       expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
     });
@@ -110,7 +129,13 @@ describe("InnerInputComponent", () => {
         touched: true,
         active: true,
       };
-      const innerInputComponent = shallow(<InnerInputComponent {...props} />);
+      let innerInputComponent = shallow(<InnerInputComponent {...props} />);
+
+      expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
+
+      props.meta.error = { melding: "feilmelding" };
+
+      innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
       expect(innerInputComponent.find("Input").props().feil).toBeUndefined();
     });

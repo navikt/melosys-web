@@ -10,7 +10,7 @@ import { RootState, StateSection } from "AppTypes";
 import * as Types from "./types";
 
 export const BehandlingsstatusSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  (state) => state.behandlingsstatus,
+  (state: RootState) => state.behandlingsstatus,
   (behandlingsstatus) => behandlingsstatus
 );
 

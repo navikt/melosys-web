@@ -16,7 +16,7 @@ const GyldigPeriode = ({ periode: { fom, tom }, erHistorisk }: GyldigPeriodeProp
 
   if (erHistorisk) {
     if (fomNorsk || tomNorsk) return <>{`${fomNorsk} - ${tomNorsk}`}</>;
-    return <></>;
+    return null;
   }
   return <>{fomNorsk}</>;
 };

@@ -10,13 +10,8 @@ class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const {
-      lovvalgsperioder,
-      vurderUtpekingValid,
-      behandlingstema,
-      saksopplysninger,
-      vurder_utpeking_skjema,
-    } = propsLight;
+    const { lovvalgsperioder, vurderUtpekingValid, behandlingstema, saksopplysninger, vurder_utpeking_skjema } =
+      propsLight;
 
     const redigerbart = propsLight.generiskStegRedigerbart;
 
@@ -76,7 +71,8 @@ class VurderUtpeking extends Steg {
   harAvklaring = (utpekingVurdering, lovvalgsbestemmelse, vurderUtpekingValid) => {
     if (this.utpekingGodkjent(utpekingVurdering)) {
       return Boolean(lovvalgsbestemmelse && vurderUtpekingValid);
-    } else if (this.utpekingIkkeGodkjent(utpekingVurdering)) {
+    }
+    if (this.utpekingIkkeGodkjent(utpekingVurdering)) {
       return Boolean(vurderUtpekingValid);
     }
     return false;

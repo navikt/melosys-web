@@ -13,7 +13,7 @@ interface MultiSelectProps<T> {
   values: string[];
   onChange(selectedOptions: readonly T[]): void;
   options: T[];
-  feil?: { feilmelding: string };
+  feil?: string;
   redigerbart?: boolean;
   className?: string;
 }
@@ -81,7 +81,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
         value={options.filter((option) => values.indexOf(option.value) >= 0)}
       />
       <div role="alert" aria-live="assertive">
-        {feil && <div className="skjemaelement__feilmelding">{feil.feilmelding}</div>}
+        {feil && <div className="skjemaelement__feilmelding">{feil}</div>}
       </div>
     </div>
   );

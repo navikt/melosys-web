@@ -1,7 +1,9 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import PT from "prop-types";
 import { getFormValues, change, clearFields } from "redux-form";
 import { connect } from "react-redux";
+import classNames from "classnames";
+import bem from "../bemUtils";
 
 import * as Skjema from "./skjema";
 import * as Api from "../services/api";
@@ -45,23 +47,25 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
   const { bruker = {} } = formValues;
   const { sammensattNavn = "" } = bruker;
 
+  const cls = bem("brukernavnskjema");
+
   return (
-    <div className={className}>
+    <div className={classNames(cls.block, className)}>
       <Skjema.Input
         onBlur={hentBrukerMedID}
-        className="fetTekst"
+        className={cls.element("fetTekst")}
         label="Brukers f.nr eller d.nr"
         feltNavn="brukerID"
         onChange={onChange}
       />
       {sammensattNavn && (
-        <Fragment>
+        <div className={cls.element("navn")}>
           <Nav.Typo.Element>Brukers fulle navn</Nav.Typo.Element>
           <Nav.Typo.Normaltekst>
             {brukerSpinner && <Nav.NavFrontendSpinner />}
             {sammensattNavn}
           </Nav.Typo.Normaltekst>
-        </Fragment>
+        </div>
       )}
     </div>
   );

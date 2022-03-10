@@ -13,7 +13,7 @@ class Inntekt extends Component {
 
   toggleInntektTabellHandler = (e) => {
     e.preventDefault();
-    this.setState({ visInntektTabell: !this.state.visInntektTabell });
+    this.setState((prevState) => ({ visInntektTabell: !prevState.visInntektTabell }));
   };
 
   render() {

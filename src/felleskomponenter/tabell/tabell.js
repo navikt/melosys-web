@@ -58,7 +58,7 @@ function Tabell(props) {
   const sideNav = new Array(totaltSider).fill(undefined).map((item, index) => {
     const classname = classnames({ paginering__nav: true, "paginering__nav--aktiv": index === aktivSide });
     return (
-      <button key={uuid()} className={classname} onClick={() => tilSideHandler(index)}>
+      <button key={uuid()} className={classname} onClick={() => tilSideHandler(index)} type="button">
         {index + 1}
       </button>
     );

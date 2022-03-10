@@ -14,8 +14,7 @@ export const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-// Reducer
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };

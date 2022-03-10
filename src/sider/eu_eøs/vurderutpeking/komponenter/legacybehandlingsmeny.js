@@ -18,10 +18,9 @@ const Legacybehandlingsmeny = ({
   visRevurderFagsakDialogHandle,
   visRevurderFagsak,
 }) => (
-  <Nav.EkspanderbartpanelBase
-    ariaTittel="Behandlingsmeny"
+  <Nav.Ekspanderbartpanel
     className="oppsummering__meny"
-    heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}
+    tittel={<div className="behandlingsmeny_title">Behandlingsmeny</div>}
   >
     <div className="meny__innhold">
       {redigerbart && (
@@ -56,7 +55,7 @@ const Legacybehandlingsmeny = ({
         </Nav.Knapp>
       )}
     </div>
-  </Nav.EkspanderbartpanelBase>
+  </Nav.Ekspanderbartpanel>
 );
 
 Legacybehandlingsmeny.propTypes = {

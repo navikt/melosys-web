@@ -19,7 +19,11 @@ const Sivilstand = ({ behandlingID, modalAriaHideApp }: SivilstandProps) => {
 
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
 
-  const { data: sivilstandData, loading: sivilstandLoading, error: sivilstandError } = useHentSivilstandQuery({
+  const {
+    data: sivilstandData,
+    loading: sivilstandLoading,
+    error: sivilstandError,
+  } = useHentSivilstandQuery({
     variables: { behandlingID },
   });
 

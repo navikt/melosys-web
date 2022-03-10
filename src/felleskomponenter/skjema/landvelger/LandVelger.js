@@ -24,12 +24,12 @@ const connector = connect(mapStateToProps);
  * @param props
  */
 export const LandVelger = (props) => {
-  const { multiLand, landkoder, landkoderFraSakstype, alleLandkoder, visAlleLandkoder } = props;
+  const { multiLand, className = "", landkoder, landkoderFraSakstype, alleLandkoder, visAlleLandkoder } = props;
   const dataListID = lagDatalistID();
   const landkodeliste = landkoder || (visAlleLandkoder ? alleLandkoder : landkoderFraSakstype);
 
   return (
-    <div>
+    <div className={className}>
       {multiLand ? (
         <MultiLand {...props} landkoder={landkodeliste} dataListID={dataListID} />
       ) : (
@@ -38,7 +38,9 @@ export const LandVelger = (props) => {
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
           {landkodeliste.map((item) => (
-            <option key={item.kode} value={Utils.land.landTekstFormat(item)} />
+            <option key={item.kode} value={Utils.land.landTekstFormat(item)}>
+              {Utils.land.landTekstFormat(item)}
+            </option>
           ))}
         </datalist>
       </div>
@@ -57,6 +59,7 @@ LandVelger.propTypes = {
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   landkoderFraSakstype: PT.arrayOf(MPT.Kodeverk).isRequired,
   visAlleLandkoder: PT.bool,
+  className: PT.string,
 };
 
 LandVelger.defaultProps = {
@@ -67,6 +70,7 @@ LandVelger.defaultProps = {
   placeholder: undefined,
   landkoder: undefined,
   visAlleLandkoder: false,
+  className: "",
 };
 
 export default connector(LandVelger);

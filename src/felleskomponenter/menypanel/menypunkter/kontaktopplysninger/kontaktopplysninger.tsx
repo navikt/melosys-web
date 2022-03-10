@@ -18,10 +18,6 @@ import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 
 import "./kontaktopplysninger.css";
 
-export interface Feilmelding {
-  feilmelding: string;
-}
-
 interface KontaktOpplysningerProps {
   onChange: (kontaktopplysning: Types.KontaktOpplysning) => void;
   kontaktopplysninger: Types.KontaktOpplysning;
@@ -40,7 +36,7 @@ export const KontaktOpplysninger = ({
   const [sokeResultat, setSokeResultat] = useState<Api.Organisasjon | null>(null);
   const [lagreFeilmelding, setLagreFeilmelding] = useState("");
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
-  const [orgnrFeilmelding, setOrgnrFeilmelding] = useState<Feilmelding | undefined>(undefined);
+  const [orgnrFeilmelding, setOrgnrFeilmelding] = useState<string | undefined>(undefined);
   const [renderedWithKontaktorgnrOnce, setRenderedWithKontaktorgnrOnce] = useState(false);
 
   const finnOrganisasjon = async (kontaktorgnr: string) => {
@@ -57,14 +53,14 @@ export const KontaktOpplysninger = ({
     const org = await finnOrganisasjon(kontaktorgnr);
 
     if (org) setSokeResultat(org);
-    else setOrgnrFeilmelding({ feilmelding: "Kunne ikke finne organisasjon" });
+    else setOrgnrFeilmelding("Kunne ikke finne organisasjon");
 
     return org;
   };
 
   const validerOrgnr = (kontaktorgnr: string) => {
     if (!Utils.organisasjon.erOrgnrGyldig(kontaktorgnr)) {
-      setOrgnrFeilmelding({ feilmelding: "Ugyldig orgnr" });
+      setOrgnrFeilmelding("Ugyldig orgnr");
       return false;
     }
     return true;
@@ -104,7 +100,7 @@ export const KontaktOpplysninger = ({
 
     try {
       await onInputBlur(event);
-    } catch (error) {
+    } catch (error: any) {
       setLagreFeilmelding(error.message);
     }
   };
@@ -116,7 +112,7 @@ export const KontaktOpplysninger = ({
 
     try {
       await onInputBlur(event);
-    } catch (error) {
+    } catch (error: any) {
       setLagreFeilmelding(error.message);
     }
   };
@@ -126,7 +122,7 @@ export const KontaktOpplysninger = ({
 
     try {
       await onSlettKnappClick(event);
-    } catch (error) {
+    } catch (error: any) {
       setSlettFeilmelding(error.message);
     }
   };

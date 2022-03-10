@@ -8,14 +8,11 @@ interface IngenDataRenderProps {
   lenketekst: string;
 }
 
-const IngenDataRender = ({ redigerbart, onClick, lenketekst }: IngenDataRenderProps) => (
-  <>
-    {redigerbart && (
-      <Mui.Knappelenke onClick={onClick} ikon={Ikoner.Add}>
-        {lenketekst}
-      </Mui.Knappelenke>
-    )}
-  </>
-);
+const IngenDataRender = ({ redigerbart, onClick, lenketekst }: IngenDataRenderProps) =>
+  redigerbart ? (
+    <Mui.Knappelenke onClick={onClick} ikon={Ikoner.Add}>
+      {lenketekst}
+    </Mui.Knappelenke>
+  ) : null;
 
 export default IngenDataRender;

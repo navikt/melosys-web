@@ -4,9 +4,7 @@ import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 
-interface Feilmelding {
-  feilmelding: string;
-}
+import { isApiError } from "../../../../services";
 
 interface SokFullmektigOrgProps {
   onOrgFunnet: (orgnr: string) => Promise<any>;
@@ -17,21 +15,21 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   const { onOrgFunnet, defaultOrgnr } = props;
 
   const [orgnr, setOrgnr] = useState(defaultOrgnr || "");
-  const [feilmelding, setFeilmelding] = useState<Feilmelding | undefined>(undefined);
+  const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
   const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
 
   const orgFunnetHandler = async (funnetOrgnr: string) => {
     try {
       await onOrgFunnet(funnetOrgnr);
-    } catch (e) {
-      setFeilmelding({ feilmelding: e.message });
+    } catch (e: any) {
+      setFeilmelding(e.message);
     }
   };
 
   const sok = async (sokOrgnr: string) => {
     if (!Utils.organisasjon.erOrgnrLengde(sokOrgnr)) {
       if (korrekteLengdeOrgnrOppgittMinstEnGang) {
-        setFeilmelding({ feilmelding: "Org.nr. er 9 siffer" });
+        setFeilmelding("Org.nr. er 9 siffer");
       }
       return;
     }
@@ -43,11 +41,13 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
         await Api.Organisasjoner.hentOrganisasjon(sokOrgnr);
         orgFunnetHandler(sokOrgnr);
       } catch (e) {
-        if (e.response.status === 404) setFeilmelding({ feilmelding: "Kunne ikke finne organisasjon" });
-        else setFeilmelding({ feilmelding: "Ukjent feil ved søk på org.nr." });
+        if (isApiError(e)) {
+          if (e.response.status === 404) setFeilmelding("Kunne ikke finne organisasjon");
+          else setFeilmelding("Ukjent feil ved søk på org.nr.");
+        }
       }
     } else {
-      setFeilmelding({ feilmelding: "Ugyldig org.nr." });
+      setFeilmelding("Ugyldig org.nr.");
     }
   };
 

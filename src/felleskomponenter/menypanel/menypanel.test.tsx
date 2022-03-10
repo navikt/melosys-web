@@ -11,12 +11,8 @@ import MKV from "../../melosyskodeverk";
 import { Menypanel } from "./menypanel";
 import Sidemeny from "../sidemeny";
 
-const {
-  SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-  SØKNAD_A1_YRKESAKTIVE_EØS,
-  SED,
-  SØKNAD_FOLKETRYGDEN,
-} = MKV.Koder.behandlingsgrunnlagtyper;
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS, SED, SØKNAD_FOLKETRYGDEN } =
+  MKV.Koder.behandlingsgrunnlagtyper;
 
 const { behandlingstyper } = MKV.Koder.behandlinger;
 

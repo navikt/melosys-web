@@ -92,7 +92,7 @@ export const Behandling = ({
 const BehandlngForm = reduxForm<KV.Form.BehandlingsFormData, BehandlingProps>({
   form: KV.Form.BEHANDLINGS_FORM,
   destroyOnUnmount: false,
-  onSubmit: (form) => oppgaverOperations.sendBehandlingsOppgave(form),
+  onSubmit: (values: KV.Form.BehandlingsFormData) => oppgaverOperations.sendBehandlingsOppgave(values),
 })(Behandling);
 
 export default withRouter(connector(BehandlngForm));

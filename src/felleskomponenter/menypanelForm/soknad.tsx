@@ -34,26 +34,26 @@ const mapStateToProps = (state: RootState) => ({
     medfolgendeBarn: behandlingsgrunnlagSelectors.MedfolgendeBarnSelector(state),
     foedestedOgLand: behandlingsgrunnlagSelectors.PersonOpplysningerSelector(state).foedestedOgLand,
     medfolgendeEktefelleSamboer: behandlingsgrunnlagSelectors.MedfolgendeEktefelleSamboerSelector(state),
-    arbeidsgiverBekrefterUtsendelse: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
-      .arbeidsgiverBekrefterUtsendelse,
-    arbeidstakerAnsattUnderUtsendelsen: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
-      .arbeidstakerAnsattUnderUtsendelsen,
-    erstatterArbeidstakerenUtsendte: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
-      .erstatterArbeidstakerenUtsendte,
-    arbeidstakerTidligereUtsendt24Mnd: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
-      .arbeidstakerTidligereUtsendt24Mnd,
-    arbeidsgiverBetalerArbeidsgiveravgift: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
-      .arbeidsgiverBetalerArbeidsgiveravgift,
-    trygdeavgiftTrukketGjennomSkatt: behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state)
-      .trygdeavgiftTrukketGjennomSkatt,
+    arbeidsgiverBekrefterUtsendelse:
+      behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse,
+    arbeidstakerAnsattUnderUtsendelsen:
+      behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen,
+    erstatterArbeidstakerenUtsendte:
+      behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte,
+    arbeidstakerTidligereUtsendt24Mnd:
+      behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd,
+    arbeidsgiverBetalerArbeidsgiveravgift:
+      behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift,
+    trygdeavgiftTrukketGjennomSkatt:
+      behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt,
     trygdeavgiftTrukketGjennomSkattDato: Utils.dato.formatterDatoTilNorsk(
       behandlingsgrunnlagSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato
     ),
     oppgittAdresseTilleggsnavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).tilleggsnavn,
     oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
     oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
-    oppgittAdresseHusnummerEtasjeLeilighet: behandlingsgrunnlagSelectors.BostedAdresseSelector(state)
-      .husnummerEtasjeLeilighet,
+    oppgittAdresseHusnummerEtasjeLeilighet:
+      behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummerEtasjeLeilighet,
     oppgittAdressePostboks: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postboks,
     oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).poststed,
@@ -85,8 +85,8 @@ const mapStateToProps = (state: RootState) => ({
           behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelRekruttertINorge
         ).toString() || null,
       ekstraArbeidsgivere: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
-      erOffentligVirksomhet: behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state)
-        .erOffentligVirksomhet,
+      erOffentligVirksomhet:
+        behandlingsgrunnlagSelectors.JuridiskArbeidsgiverNorgeSelector(state).erOffentligVirksomhet,
     },
     loennOgGodtgjoerelse: {
       ...behandlingsgrunnlagSelectors.LonnOgGodtgjorelseSelector(state),
@@ -101,28 +101,28 @@ const mapStateToProps = (state: RootState) => ({
       ),
     },
     arbeidssituasjonOgOevrig: {
-      harLoennetArbeidMinstEnMndFoerUtsending: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
-        .harLoennetArbeidMinstEnMndFoerUtsending,
-      beskrivelseArbeidSisteMnd: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
-        .beskrivelseArbeidSisteMnd,
-      harAndreArbeidsgivereIUtsendingsperioden: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
-        .harAndreArbeidsgivereIUtsendingsperioden,
-      beskrivelseAnnetArbeid: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state)
-        .beskrivelseAnnetArbeid,
+      harLoennetArbeidMinstEnMndFoerUtsending:
+        behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).harLoennetArbeidMinstEnMndFoerUtsending,
+      beskrivelseArbeidSisteMnd:
+        behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).beskrivelseArbeidSisteMnd,
+      harAndreArbeidsgivereIUtsendingsperioden:
+        behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).harAndreArbeidsgivereIUtsendingsperioden,
+      beskrivelseAnnetArbeid:
+        behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).beskrivelseAnnetArbeid,
       erSkattepliktig: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).erSkattepliktig,
       mottarYtelserNorge: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserNorge,
       mottarYtelserUtlandet: behandlingsgrunnlagSelectors.ArbeidssituasjonOgOevrigSelector(state).mottarYtelserUtlandet,
     },
     utenlandsoppdraget: {
-      erUtsendelseForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
-        .erUtsendelseForOppdragIUtlandet,
-      erAnsattForOppdragIUtlandet: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
-        .erAnsattForOppdragIUtlandet,
-      erFortsattAnsattEtterOppdraget: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
-        .erFortsattAnsattEtterOppdraget,
+      erUtsendelseForOppdragIUtlandet:
+        behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erUtsendelseForOppdragIUtlandet,
+      erAnsattForOppdragIUtlandet:
+        behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erAnsattForOppdragIUtlandet,
+      erFortsattAnsattEtterOppdraget:
+        behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erFortsattAnsattEtterOppdraget,
       erDrattPaaEgetInitiativ: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erDrattPaaEgetInitiativ,
-      erErstatningTidligereUtsendte: behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state)
-        .erErstatningTidligereUtsendte,
+      erErstatningTidligereUtsendte:
+        behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).erErstatningTidligereUtsendte,
       samletUtsendingsperiode: {
         fom: Utils.dato.formatterDatoTilNorsk(
           behandlingsgrunnlagSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.fom
@@ -157,9 +157,8 @@ const mapStateToProps = (state: RootState) => ({
       erUkjenteEllerAlleEosLand: behandlingsgrunnlagSelectors.SoknadslandErUkjenteEllerAlleEosLandSelector(state),
     },
     arbeidsforholdUtland: behandlingsgrunnlagSelectors.ArbeidsforholdUtlandSelector(state),
-    selvstendigNaeringsvirksomhetUtland: behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(
-      state
-    ),
+    selvstendigNaeringsvirksomhetUtland:
+      behandlingsgrunnlagSelectors.SelvstendigNaeringsvirksomhetUtlandSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),

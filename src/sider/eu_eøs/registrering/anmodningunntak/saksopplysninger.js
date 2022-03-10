@@ -190,7 +190,8 @@ const Saksopplysninger = ({
 
     if (varighet <= 0) {
       return "Ugyldig periode";
-    } else if (varighet > 5) {
+    }
+    if (varighet > 5) {
       return "Perioden overstiger 5 år";
     }
     return null;

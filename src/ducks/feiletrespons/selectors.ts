@@ -5,7 +5,7 @@ import * as DucksUtils from "../utils";
 import * as Types from "./types";
 
 const FeiletresponsSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  (state) => state.feiletrespons,
+  (state: RootState) => state.feiletrespons,
   (feiletrespons) => feiletrespons
 );
 

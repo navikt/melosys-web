@@ -3,7 +3,7 @@ import React from "react";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
-import * as Mui from "../../../../felleskomponenter/ui";
+import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
 import EnkeltDato from "../../../datoOmrade/enkeltDato";

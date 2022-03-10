@@ -18,7 +18,11 @@ const Personstatus = ({ behandlingID }: PersonstatusProps) => {
 
   const [visPersonstatusModal, setVisPersonstatusModal] = useState(false);
 
-  const { data: personstatusData, loading: personstatusLoading, error: personstatusError } = useHentPersonstatusQuery({
+  const {
+    data: personstatusData,
+    loading: personstatusLoading,
+    error: personstatusError,
+  } = useHentPersonstatusQuery({
     variables: { behandlingID },
   });
 

@@ -1,6 +1,6 @@
 import * as Utils from "./utils";
-import { saksbehandlerOperations, saksbehandlerTypes } from "./ducks/saksbehandler/";
-import { oppgaverOperations } from "./ducks/oppgaver/";
+import { saksbehandlerOperations, saksbehandlerTypes } from "./ducks/saksbehandler";
+import { oppgaverOperations } from "./ducks/oppgaver";
 
 export default async function loadInitialData(store) {
   let res;

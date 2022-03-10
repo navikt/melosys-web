@@ -8,7 +8,7 @@
 import { STATUS } from "../../services/utils";
 import * as Types from "./types";
 
-const initalState = {
+const initialState = {
   status: STATUS.NOT_STARTED,
   // Med data: [] får data type never[] når fila konsumeres i ts. Dette gjør den vanskelig å jobbe med.
   // TODO: Fjern denne disable-linjen når dette skrives om til .ts, og sørg for at data har en type.
@@ -24,7 +24,7 @@ const flettOrganisasjoner = (nyeOrganisasjoner, eksisterendeOrganisasjoner) => {
   return [...eksisterendeOrganisasjoner, ...kunNye];
 };
 
-export default function reducer(state = initalState, action) {
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };

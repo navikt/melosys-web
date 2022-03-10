@@ -42,8 +42,6 @@ const SideOppsummering = ({
   hentMuligeBehandlingsstatuser,
   behandlingID,
 }) => {
-  if (!oppsummering) return <div />;
-
   const [visEndreBehandlingstema, setVisEndreBehandlingstema] = useState(false);
   const [visEndreBehandlingsstatus, setVisEndreBehandlingsstatus] = useState(false);
   const [visEndreBehandlingsfrist, setVisEndreBehandlingsfrist] = useState(false);
@@ -76,6 +74,8 @@ const SideOppsummering = ({
         .catch(() => setKanEndreBehandlingsstatus(false));
     }
   }, [behandlingID, nyttDesignToggle]);
+
+  if (!oppsummering) return <div />;
 
   const renderBehandlingsstatusLinje = (
     <FeatureToggle togglename="melosys.oversikt.ENDRING_AV_BEHANDLINGSSTATUS">

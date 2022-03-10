@@ -53,7 +53,7 @@ class CustomRadioPanel extends Component {
   }
 
   toggleOutline() {
-    this.setState({ hasFocus: !this.state.hasFocus });
+    this.setState((prevState) => ({ hasFocus: !prevState.hasFocus }));
   }
 
   render() {

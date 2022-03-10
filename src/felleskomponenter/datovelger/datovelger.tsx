@@ -5,6 +5,8 @@ import classNames from "classnames";
 import "react-datepicker/dist/react-datepicker.css";
 import "./datovelger.css";
 
+import { _uuid } from "../../utils";
+
 registerLocale("nb", nb);
 
 interface DatovelgerProps {
@@ -53,10 +55,17 @@ const Datovelger = ({
     }
   };
 
+  const datovelgerID = _uuid();
+
   return (
     <div className="datovelger">
-      {label && <label className="datovelger__label">{label}</label>}
+      {label && (
+        <label className="datovelger__label" htmlFor={datovelgerID}>
+          {label}
+        </label>
+      )}
       <DatePicker
+        id={datovelgerID}
         className={classNames("datovelger__input", `input--${bredde?.toLowerCase()}`, {
           datovelger__input_disabled: disabled,
           datovelger__input_feil: feil,

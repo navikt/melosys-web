@@ -111,7 +111,7 @@ const InntektRedigeringUtfort = ({ tittel, verdi }: InntektRedigeringUtfortProps
   </Nav.Column>
 );
 
-type LonnOgNaturalytelser = {
+type LonnOgNaturalytelserType = {
   norskArbgUtbetalerLoenn: boolean | null;
   erArbeidstakerAnsattHelePerioden: boolean | null;
   utlArbgUtbetalerLoenn: boolean | null;
@@ -176,7 +176,7 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
   mottarNaturalytelser,
   samletVerdiNaturalytelser,
   utlArbTilhoererSammeKonsern,
-}: LonnOgNaturalytelser) => (
+}: LonnOgNaturalytelserType) => (
   <>
     <Nav.Row>
       <Nav.Column xs="12">
@@ -212,7 +212,7 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
 
 const symbolsynlighet = { [Status.RedigeringUtfort]: { bin: false, pencil: true } };
 
-type LonnOgNaturalytelserProps = LonnOgNaturalytelser & { lagreHandler: () => boolean; redigerbart: boolean };
+type LonnOgNaturalytelserProps = LonnOgNaturalytelserType & { lagreHandler: () => boolean; redigerbart: boolean };
 
 const LonnOgNaturalytelser = ({ redigerbart, lagreHandler, ...lonnOgNaturalytelser }: LonnOgNaturalytelserProps) => (
   <EditerbartElement
@@ -227,7 +227,7 @@ const LonnOgNaturalytelser = ({ redigerbart, lagreHandler, ...lonnOgNaturalytels
   />
 );
 
-type ArbeidsgiveravgiftOgTrygdeavgift = {
+type ArbeidsgiveravgiftOgTrygdeavgiftType = {
   erArbeidsgiveravgiftHelePerioden: boolean | null;
   erTrukketTrygdeavgift: boolean | null;
 };
@@ -252,7 +252,7 @@ const ArbeidsgiveravgiftOgTrygdeavgiftRedigerer = ({ redigerbart }: { redigerbar
 const ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort = ({
   erArbeidsgiveravgiftHelePerioden,
   erTrukketTrygdeavgift,
-}: ArbeidsgiveravgiftOgTrygdeavgift) => (
+}: ArbeidsgiveravgiftOgTrygdeavgiftType) => (
   <Nav.Row>
     <Nav.Column xs="12">
       <BooleanFeltRedigeringUtfort
@@ -267,7 +267,7 @@ const ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort = ({
   </Nav.Row>
 );
 
-type ArbeidsgiveravgiftOgTrygdeavgiftProps = ArbeidsgiveravgiftOgTrygdeavgift & {
+type ArbeidsgiveravgiftOgTrygdeavgiftProps = ArbeidsgiveravgiftOgTrygdeavgiftType & {
   lagreHandler: () => boolean;
   redigerbart: boolean;
 };
@@ -292,11 +292,13 @@ const ArbeidsgiveravgiftOgTrygdeavgift = ({
 );
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
-const lonnOgGodtgjorelseSelector = (state: RootState): LonnOgNaturalytelser & ArbeidsgiveravgiftOgTrygdeavgift =>
+const lonnOgGodtgjorelseSelector = (
+  state: RootState
+): LonnOgNaturalytelserType & ArbeidsgiveravgiftOgTrygdeavgiftType =>
   soknadFormValueSelector(state, "loennOgGodtgjoerelse");
 
-const lonnOgNaturalytelserSelector = (state: RootState): LonnOgNaturalytelser => lonnOgGodtgjorelseSelector(state);
-const arbeidsgiveravgiftOgTrygdeavgiftSelector = (state: RootState): ArbeidsgiveravgiftOgTrygdeavgift =>
+const lonnOgNaturalytelserSelector = (state: RootState): LonnOgNaturalytelserType => lonnOgGodtgjorelseSelector(state);
+const arbeidsgiveravgiftOgTrygdeavgiftSelector = (state: RootState): ArbeidsgiveravgiftOgTrygdeavgiftType =>
   lonnOgGodtgjorelseSelector(state);
 
 const mapStateToProps = (state: RootState) => ({

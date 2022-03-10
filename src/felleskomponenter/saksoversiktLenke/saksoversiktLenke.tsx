@@ -9,7 +9,7 @@ import * as Nav from "../../navFrontend";
 
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { useFeatureToggle } from "../../featuretoggle";
-import hentPersonopplysninger from "../personlinje/hentpersonopplysninger";
+import useHentPersonopplysninger from "../personlinje/useHentpersonopplysninger";
 import "./saksoversiktLenke.css";
 
 const mapStateToProps = (state: RootState) => ({
@@ -26,7 +26,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const SaksoversiktLenke = ({ behandlingID, hentSaksoversikt }: PropsFromRedux) => {
   const pdlToggle = useFeatureToggle("melosys.pdl.aktiv");
-  const personopplysninger = hentPersonopplysninger(behandlingID);
+  const personopplysninger = useHentPersonopplysninger(behandlingID, false);
 
   const fnr = pdlToggle === "enabled" ? personopplysninger?.fnr : undefined;
 

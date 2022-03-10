@@ -107,10 +107,7 @@ function MultiLand(props) {
   const { meta, errorConfig } = props;
   const skjemaError = SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig);
 
-  const feilObjekt =
-    skjemaError || internError
-      ? { feilmelding: `${(skjemaError && skjemaError.feilmelding) || ""} ${internError}` }
-      : null;
+  const feilObjekt = skjemaError || internError ? `${skjemaError || ""} ${internError}` : null;
   const valgteLand = props.fields.getAll() || [];
   const dynamiskFeltTittel = props.label || dynamiskTittel();
 
@@ -150,7 +147,6 @@ MultiLand.propTypes = {
   dataListID: PT.string.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
-  feil: PT.object,
   fields: PT.object.isRequired,
   meta: PT.object.isRequired,
   disabled: PT.bool,
@@ -160,7 +156,6 @@ MultiLand.propTypes = {
 
 MultiLand.defaultProps = {
   label: "",
-  feil: {},
   disabled: false,
   bredde: "XL",
   errorConfig: {},

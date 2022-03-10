@@ -42,11 +42,12 @@ const Oppsummering = (props: OppsummeringProps) => {
     mottattDato,
     className,
   } = props;
-  if (!oppsummering || !fagsak?.sakstype) return <div />;
 
   const isLitenSkjerm = useMediaQuery({ maxWidth: 1440 });
 
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
+
+  if (!oppsummering || !fagsak?.sakstype) return <div />;
 
   const { saksnummer, sakstype, registrertDato } = fagsak;
   const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;

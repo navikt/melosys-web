@@ -48,7 +48,7 @@ const StegIkon = (props) => {
   /* eslint-disable react/no-danger */
   return (
     <li className={cl}>
-      <button onClick={onClick} className="stegIkon__knapp">
+      <button onClick={onClick} className="stegIkon__knapp" type="button">
         <Ikon className={knappKlasser} aria-disabled={!tilgjengelig} />
         <div className="stegIkon__tittel" dangerouslySetInnerHTML={{ __html: tittel }} />
       </button>
