@@ -115,10 +115,6 @@ class Stegvelger extends Component<Props, State> {
     ) {
       this.debouncedOppdaterSteg();
     }
-
-    if (prevProps.behandlingID && prevProps.behandlingID !== this.props.behandlingID) {
-      this.hentFlytOgOppdaterAktuelleSteg();
-    }
   }
 
   hentFlytOgOppdaterAktuelleSteg = () =>
