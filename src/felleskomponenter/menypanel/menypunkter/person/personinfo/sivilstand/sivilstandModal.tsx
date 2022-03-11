@@ -1,13 +1,13 @@
 import React from "react";
 
 import * as Nav from "../../../../../../navFrontend";
-import * as Ikoner from "../../../../../../resources/images";
 import * as Utils from "../../../../../../utils";
 import * as Mui from "../../../../../ui";
 
 import bem from "../../../../../../bemUtils";
-import { Sivilstand } from "../../../../../../graphql";
 import KopierbarTekst from "../../../../../kopierbarTekst";
+import { Sivilstand } from "../../../../../../graphql";
+import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 
 import "./sivilstandModal.css";
 
@@ -76,14 +76,15 @@ const SivilstandModal = ({
       // @ts-ignore
       ariaHideApp={modalAriaHideApp}
     >
-      <Mui.Undertittel tekst="Sivilstand" ikon={Ikoner.Ring} />
+      <Mui.Undertittel tekst="Sivilstand" />
       <div className={sivilstandModalCls.element("main-content")}>
         {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
-        {historiskeSivilstander.length > 0 && (
-          <>
-            <Nav.Typo.Element>Historikk</Nav.Typo.Element>
-            <SivilstandTabell sivilstander={historiskeSivilstander} />
-          </>
+        <Nav.Typo.Element>Historikk</Nav.Typo.Element>
+        <GyldighetshistorikkInfo />
+        {historiskeSivilstander.length > 0 ? (
+          <SivilstandTabell sivilstander={historiskeSivilstander} />
+        ) : (
+          <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
         )}
       </div>
     </Nav.Modal>
