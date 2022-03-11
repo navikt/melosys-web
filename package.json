@@ -12,7 +12,7 @@
   "private": true,
   "readme": "README.md",
   "dependencies": {
-    "@apollo/client": "^3.5.6",
+    "@apollo/client": "^3.5.9",
     "@loadable/component": "^5.10.3",
     "@navikt/fnrvalidator": "^1.1.4",
     "@navikt/melosys-kodeverk": "5.15.109",
