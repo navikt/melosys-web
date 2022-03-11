@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { connect } from "react-redux";
 import { stringify } from "qs";
 import { withRouter } from "react-router-dom";
@@ -162,32 +162,59 @@ const FellesHandlersProviderUnconnected = ({
     tilForsiden();
   };
 
-  const fellesHandlers = {
-    lagreOgLukk,
-    tilbakeleggOppgave,
-    visHenleggDialogHandle,
-    visAvsluttSakSomBortfaltDialogHandle,
-    visFerdigbehandleNyVurderingDialogHandle,
-    visAvslagSoknadDialogHandle,
-    visOppfriskModal: visOppfriskDialogHandle,
-    skjulOppfriskModalOgNavigerTilForside,
-    apneTidligereBehandlinger,
-    tilForsiden,
-    tilOpprettNySak,
-    visRevurderFagsakDialogHandle,
-    visValideringModalDialogHandle,
-    revurderFagsak,
-    henleggHandle,
-    avslaaSoknadHandle,
-    avsluttSakSomBortfalt,
-    ferdigbehandleNyVurdering,
-    lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
-    oppfriskOgLastInnSaksopplysninger,
-    venterPaRevurderFagsak,
-    behandlingOppfriskes,
-    annenBehandlingOppfriskes,
-    startOgVisOppfriskModal,
-  };
+  const fellesHandlers = useMemo(
+    () => ({
+      lagreOgLukk,
+      tilbakeleggOppgave,
+      visHenleggDialogHandle,
+      visAvsluttSakSomBortfaltDialogHandle,
+      visFerdigbehandleNyVurderingDialogHandle,
+      visAvslagSoknadDialogHandle,
+      visOppfriskModal: visOppfriskDialogHandle,
+      skjulOppfriskModalOgNavigerTilForside,
+      apneTidligereBehandlinger,
+      tilForsiden,
+      tilOpprettNySak,
+      visRevurderFagsakDialogHandle,
+      visValideringModalDialogHandle,
+      revurderFagsak,
+      henleggHandle,
+      avslaaSoknadHandle,
+      avsluttSakSomBortfalt,
+      ferdigbehandleNyVurdering,
+      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      oppfriskOgLastInnSaksopplysninger,
+      venterPaRevurderFagsak,
+      behandlingOppfriskes,
+      annenBehandlingOppfriskes,
+      startOgVisOppfriskModal,
+    }),
+    [
+      lagreOgLukk,
+      tilbakeleggOppgave,
+      visHenleggDialogHandle,
+      visAvsluttSakSomBortfaltDialogHandle,
+      visFerdigbehandleNyVurderingDialogHandle,
+      visAvslagSoknadDialogHandle,
+      visOppfriskDialogHandle,
+      skjulOppfriskModalOgNavigerTilForside,
+      apneTidligereBehandlinger,
+      tilForsiden,
+      tilOpprettNySak,
+      visRevurderFagsakDialogHandle,
+      visValideringModalDialogHandle,
+      revurderFagsak,
+      henleggHandle,
+      avslaaSoknadHandle,
+      avsluttSakSomBortfalt,
+      lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      oppfriskOgLastInnSaksopplysninger,
+      venterPaRevurderFagsak,
+      behandlingOppfriskes,
+      annenBehandlingOppfriskes,
+      startOgVisOppfriskModal,
+    ]
+  );
 
   return <FellesHandlersContext.Provider value={fellesHandlers}>{children}</FellesHandlersContext.Provider>;
 };

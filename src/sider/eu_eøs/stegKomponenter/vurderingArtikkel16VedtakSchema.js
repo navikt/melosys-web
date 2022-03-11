@@ -8,13 +8,8 @@ import MKV from "../../../melosyskodeverk";
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
 
-const {
-  TIDLIGERE_ENN_OPPRINNELIG_FOM,
-  SENERE_ENN_OPPRINNELIG_TOM,
-  TIDLIGERE_ENN_FOM,
-  SENERE_ENN_TOM,
-  MAA_FYLLES_UT,
-} = KV.Feilmeldinger;
+const { TIDLIGERE_ENN_OPPRINNELIG_FOM, SENERE_ENN_OPPRINNELIG_TOM, TIDLIGERE_ENN_FOM, SENERE_ENN_TOM, MAA_FYLLES_UT } =
+  KV.Feilmeldinger;
 
 const erEtterOpprinneligFomTest = {
   name: "erEtterOpprinneligFom",

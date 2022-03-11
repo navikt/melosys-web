@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import PT from "prop-types";
@@ -70,106 +70,104 @@ const BehandlingOppgave = ({ sak }) => {
           ikon={Ikoner.IkonSak}
           tittel={tittel}
           undertittel={
-            <Fragment>
-              <div className="behandlingOppgave__info">
-                <Nav.Row className="uthevetRad">
-                  <dl className="behandlingOppgave__meta">
-                    <Nav.Column xs="12" md={kolonneBredder[0]}>
-                      <dt className="behandlingOppgave__meta__term">Behandlingstema:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        {KV.objektTilTerm(behandlingstema) || "(ukjent)"}
-                      </dd>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[2]}>
-                      <dt className="behandlingOppgave__meta__term">Frist:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        <EnkeltDato dato={aktivTil} />
-                      </dd>
-                    </Nav.Column>
-                  </dl>
-                </Nav.Row>
+            <div className="behandlingOppgave__info">
+              <Nav.Row className="uthevetRad">
+                <dl className="behandlingOppgave__meta">
+                  <Nav.Column xs="12" md={kolonneBredder[0]}>
+                    <dt className="behandlingOppgave__meta__term">Behandlingstema:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[1]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      {KV.objektTilTerm(behandlingstema) || "(ukjent)"}
+                    </dd>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[2]}>
+                    <dt className="behandlingOppgave__meta__term">Frist:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[3]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      <EnkeltDato dato={aktivTil} />
+                    </dd>
+                  </Nav.Column>
+                </dl>
+              </Nav.Row>
 
-                <Nav.Row className="uthevetRad">
-                  <dl className="behandlingOppgave__meta">
-                    <Nav.Column xs="12" md={kolonneBredder[0]}>
-                      <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        {KV.objektTilTerm(behandlingsstatus) || "(ukjent)"}
-                      </dd>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[2]}>
-                      <dt className="behandlingOppgave__meta__term">Svarfrist:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        <EnkeltDato dato={svarFrist} />
-                      </dd>
-                    </Nav.Column>
-                  </dl>
-                </Nav.Row>
+              <Nav.Row className="uthevetRad">
+                <dl className="behandlingOppgave__meta">
+                  <Nav.Column xs="12" md={kolonneBredder[0]}>
+                    <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[1]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      {KV.objektTilTerm(behandlingsstatus) || "(ukjent)"}
+                    </dd>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[2]}>
+                    <dt className="behandlingOppgave__meta__term">Svarfrist:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[3]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      <EnkeltDato dato={svarFrist} />
+                    </dd>
+                  </Nav.Column>
+                </dl>
+              </Nav.Row>
 
-                <Nav.Row>
-                  <dl className="behandlingOppgave__meta">
-                    <Nav.Column xs="12" md={kolonneBredder[0]}>
-                      <dt className="behandlingOppgave__meta__term">Behandlingstype:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        {KV.objektTilTerm(behandlingstype) || "(ukjent)"}
-                      </dd>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[2]}>
-                      <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        {oppdateringStatus || formatterDatoTilNorsk(endretDato)}
-                      </dd>
-                    </Nav.Column>
-                  </dl>
-                </Nav.Row>
+              <Nav.Row>
+                <dl className="behandlingOppgave__meta">
+                  <Nav.Column xs="12" md={kolonneBredder[0]}>
+                    <dt className="behandlingOppgave__meta__term">Behandlingstype:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[1]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      {KV.objektTilTerm(behandlingstype) || "(ukjent)"}
+                    </dd>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[2]}>
+                    <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[3]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      {oppdateringStatus || formatterDatoTilNorsk(endretDato)}
+                    </dd>
+                  </Nav.Column>
+                </dl>
+              </Nav.Row>
 
-                <Nav.Row>
-                  <dl className="behandlingOppgave__meta">
-                    <Nav.Column xs="12" md={kolonneBredder[0]}>
-                      <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        {fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}
-                      </dd>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[2]}>
-                      <dt className="behandlingOppgave__meta__term">Opprettelsesdato:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[3]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        {<EnkeltDato dato={registrertDato} /> || "(ukjent)"}
-                      </dd>
-                    </Nav.Column>
-                  </dl>
-                </Nav.Row>
+              <Nav.Row>
+                <dl className="behandlingOppgave__meta">
+                  <Nav.Column xs="12" md={kolonneBredder[0]}>
+                    <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[1]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      {fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}
+                    </dd>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[2]}>
+                    <dt className="behandlingOppgave__meta__term">Opprettelsesdato:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[3]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      {<EnkeltDato dato={registrertDato} /> || "(ukjent)"}
+                    </dd>
+                  </Nav.Column>
+                </dl>
+              </Nav.Row>
 
-                <Nav.Row>
-                  <dl className="behandlingOppgave__meta">
-                    <Nav.Column xs="12" md={kolonneBredder[0]}>
-                      <dt className="behandlingOppgave__meta__term">Land:</dt>
-                    </Nav.Column>
-                    <Nav.Column xs="12" md={kolonneBredder[1]}>
-                      <dd className="behandlingOppgave__meta__detalj">
-                        <Soknadsland land={land} />
-                      </dd>
-                    </Nav.Column>
-                  </dl>
-                </Nav.Row>
-              </div>
-            </Fragment>
+              <Nav.Row>
+                <dl className="behandlingOppgave__meta">
+                  <Nav.Column xs="12" md={kolonneBredder[0]}>
+                    <dt className="behandlingOppgave__meta__term">Land:</dt>
+                  </Nav.Column>
+                  <Nav.Column xs="12" md={kolonneBredder[1]}>
+                    <dd className="behandlingOppgave__meta__detalj">
+                      <Soknadsland land={land} />
+                    </dd>
+                  </Nav.Column>
+                </dl>
+              </Nav.Row>
+            </div>
           }
         />
       </Nav.Panel>

@@ -16,10 +16,10 @@ export class EnkeltLand extends Component {
     error: null,
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     const inputVerdi = this.lagInputVerdi();
     this.setInputVerdi(inputVerdi);
-  };
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.input.value !== this.props.input.value) {
@@ -141,10 +141,7 @@ export class EnkeltLand extends Component {
     const skjemaError = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
     const { error: internError = "" } = this.state;
-    const feilObjekt =
-      skjemaError || internError
-        ? { feilmelding: `${(skjemaError && skjemaError.feilmelding) || ""} ${internError || ""}` }
-        : null;
+    const feilObjekt = skjemaError || internError ? `${skjemaError || ""} ${internError || ""}` : null;
 
     return (
       <div>

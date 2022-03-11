@@ -8,6 +8,7 @@ import EnkeltDato from "../../../../datoOmrade/enkeltDato";
 import "./personinfo.css";
 import Sivilstand from "./sivilstand/sivilstand";
 import Personstatus from "./personstatus/personstatus";
+import useHentPersonopplysninger from "../../../../personlinje/useHentpersonopplysninger";
 
 interface PersonInfoProps {
   person: Person;
@@ -16,6 +17,8 @@ interface PersonInfoProps {
 }
 
 const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, sivilstandModalAriaHideApp }: PersonInfoProps) => {
+  const personopplysninger = useHentPersonopplysninger(behandlingID, false);
+
   return (
     <div className="personinfo">
       <div className="personinfo__element">
@@ -23,7 +26,7 @@ const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, sivilstandMod
       </div>
       <div className="personinfo__element">
         <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
-        <Nav.Typo.Element>{fnr}</Nav.Typo.Element>
+        <Nav.Typo.Element>{fnr || personopplysninger?.fnr}</Nav.Typo.Element>
       </div>
       <div className="personinfo__element">
         <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>

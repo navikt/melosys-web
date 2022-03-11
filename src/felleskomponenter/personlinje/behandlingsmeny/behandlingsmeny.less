@@ -46,15 +46,21 @@
     }
     &__avslutt-sak {
       border-radius: 0;
-      border-left: 1px solid @navMorkGra;
-      border-right: 1px solid @navMorkGra;
+      border: 1px solid @navMorkGra;
+      border-top: 0;
     }
     &__handlinger {
       background-color: #fff;
-      border-radius: 0 0 3px 3px;
-      border: 1px solid @navMorkGra;
       padding: 1rem;
+      border: 1px solid @navMorkGra;
+      border-top: 0;
     }
+
+    > :last-child {
+      border-bottom: 1px solid @navMorkGra;
+      border-radius: 0 0 3px 3px;
+    }
+
     .ekspanderbartPanel--apen .ekspanderbartPanel__hode {
       padding-bottom: 0;
     }

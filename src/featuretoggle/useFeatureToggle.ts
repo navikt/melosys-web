@@ -15,7 +15,8 @@ const useFeatureToggle = (toggleName: string, deps: unknown[] = []): Status => {
 
   if (!toggleFetched) {
     return Status.fetching;
-  } else if (toggles[toggleName]) {
+  }
+  if (toggles[toggleName]) {
     return Status.enabled;
   }
   return Status.disabled;

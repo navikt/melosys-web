@@ -13,6 +13,7 @@ import * as KV from "../../../../kodeverk";
 
 import { behandlingerOperations, behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { isApiError } from "../../../../services";
 
 import ExpandableList from "../../../expandablelist";
 import KopierbarTekst from "../../../kopierbarTekst";
@@ -27,15 +28,8 @@ interface FamiliemedlemmerEnkeltProps {
 }
 
 export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: FamiliemedlemmerEnkeltProps) {
-  const {
-    sammensattNavn,
-    fnr,
-    relasjonstype,
-    alder,
-    borMedBruker,
-    sivilstandGyldighetsperiodeFom,
-    fnrAnnenForelder,
-  } = familiemedlem;
+  const { sammensattNavn, fnr, relasjonstype, alder, borMedBruker, sivilstandGyldighetsperiodeFom, fnrAnnenForelder } =
+    familiemedlem;
 
   const renderBarnEtikett = () =>
     alder !== null && alder < 18 ? <Etiketter.Under18Aar className="ikon__under18Aar" /> : null;
@@ -128,8 +122,10 @@ export const Familiemedlemmer = ({
       oppdaterBehandling();
       setHarOppfrisket(true);
     } catch (e) {
-      if (e.status >= 500) setMenypanelFeilmelding("Ikke svar fra TPS. Prøv igjen senere.");
-      else if (e.status >= 400) setMenypanelFeilmelding(e.body.message);
+      if (isApiError(e)) {
+        if (e.status >= 500) setMenypanelFeilmelding("Ikke svar fra TPS. Prøv igjen senere.");
+        else if (e.status >= 400) setMenypanelFeilmelding(e.body.message);
+      }
     }
   };
 
@@ -137,7 +133,7 @@ export const Familiemedlemmer = ({
 
   const hentRelasjonstypeTerm = (relasjonstype: KTObject) => {
     if (relasjonstype.kode === EKTE) return "Ektefelle";
-    else if (relasjonstype.kode === REPA) return "Partner";
+    if (relasjonstype.kode === REPA) return "Partner";
 
     return relasjonstype.term;
   };

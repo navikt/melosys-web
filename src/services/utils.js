@@ -1,3 +1,5 @@
+import sjekkStatuskode from "./sjekkStatuskode";
+
 export const STATUS = {
   NOT_STARTED: "NOT_STARTED",
   PENDING: "PENDING",
@@ -6,46 +8,37 @@ export const STATUS = {
   ERROR: "ERROR",
 };
 
-export const sjekkStatuskode = async (response) => {
-  if (response.status >= 200 && response.status < 300 && response.ok && !response.redirected) {
-    return response;
-  }
-  const error = new Error(response.statusText || response.type);
-  error.response = response;
-  error.body = await response.clone().json();
-  error.status = response.status;
-  throw error;
-};
-
 const toJson = async (response) => {
   if (response.status === 204) {
     return response;
   }
   try {
-    return await response.json();
+    return await response.clone().json();
   } catch (res) {
     console.error(res); // eslint-disable-line no-console
     return {};
   }
 };
 
-export const sendResultatTilDispatch = (dispatch, action, { onDispatch, mapDispatchData }) => (...data) => {
-  const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
+export const sendResultatTilDispatch =
+  (dispatch, action, { onDispatch, mapDispatchData }) =>
+  (...data) => {
+    const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
 
-  const dispatchedAction = dispatch({ type: action, data: dataSomSkalDispatches });
+    const dispatchedAction = dispatch({ type: action, data: dataSomSkalDispatches });
 
-  if (onDispatch && typeof onDispatch === "function") {
-    onDispatch(dispatch, dataSomSkalDispatches);
-  }
-  if (mapDispatchData && typeof mapDispatchData === "function") {
-    return dispatch({ type: action, data: mapDispatchData(dataSomSkalDispatches) });
-  }
+    if (onDispatch && typeof onDispatch === "function") {
+      onDispatch(dispatch, dataSomSkalDispatches);
+    }
+    if (mapDispatchData && typeof mapDispatchData === "function") {
+      return dispatch({ type: action, data: mapDispatchData(dataSomSkalDispatches) });
+    }
 
-  return dispatchedAction;
-};
+    return dispatchedAction;
+  };
 
 export const handterFeil = (dispatch, action, callback) => async (error) => {
-  const data = error.response ? await error.response.json() : error.toString();
+  const data = error.response ? await error.response.clone().json() : error.toString();
 
   if (callback && typeof callback === "function") {
     callback(dispatch, data);
@@ -103,7 +96,7 @@ const cachedFetch = async (url, cacheDurationSec) => {
       // --------------------------------------------
       // Return cached content
       console.log("cache hit for ", url); // eslint-disable-line no-console
-      return response.json();
+      return response.clone().json();
     }
     // --------------------------------------------
     // We need to clean up this old key, before fetching fresh data
@@ -174,19 +167,21 @@ const toJsonExtended = async (fetchResponse) => {
     contentType,
   };
   if (!fetchResponse.ok) {
-    const err = await fetchResponse.json();
+    const err = await fetchResponse.clone().json();
     return {
       ...err,
       response,
     };
-  } else if (contentType && contentType.startsWith("text")) {
-    const txt = await fetchResponse.text();
+  }
+  if (contentType && contentType.startsWith("text")) {
+    const txt = await fetchResponse.clone().text();
     return {
       text: txt,
       response,
     };
-  } else if (contentType && contentType.startsWith("application/json")) {
-    const res = await fetchResponse.json();
+  }
+  if (contentType && contentType.startsWith("application/json")) {
+    const res = await fetchResponse.clone().json();
     return {
       ...res,
       response,

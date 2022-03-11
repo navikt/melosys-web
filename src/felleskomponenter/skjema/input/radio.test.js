@@ -101,7 +101,7 @@ describe("InnerInputComponent", () => {
       }
     );
 
-    each([["error", true, false, { feilmelding: "error" }]]).it(
+    each([["error", true, false, "error"]]).it(
       "gitt props meta.error = %p, meta.touched = %p, meta.active = %p, sett feil = %p",
       (metaError, metaTouched, metaActive, expectedError) => {
         props.meta.error = metaError;
@@ -109,7 +109,7 @@ describe("InnerInputComponent", () => {
         props.meta.active = metaActive;
         const innerInputComponent = shallow(<InnerInputComponent {...props} />);
 
-        expect(innerInputComponent.props().feil.feilmelding).toBe(expectedError.feilmelding);
+        expect(innerInputComponent.props().feil).toBe(expectedError);
       }
     );
   });

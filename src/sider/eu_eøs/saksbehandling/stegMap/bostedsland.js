@@ -97,7 +97,8 @@ class Bostedsland extends Steg {
 
     if (bosattINorge === true) {
       return true;
-    } else if (!begrunnelserPaaKrevd || begrunnelserErOppgitt) {
+    }
+    if (!begrunnelserPaaKrevd || begrunnelserErOppgitt) {
       return true;
     }
 

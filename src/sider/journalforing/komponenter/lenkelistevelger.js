@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import { connect } from "react-redux";
 import { change, formValueSelector } from "redux-form";
 import PT from "prop-types";
-import * as Skjema from "../../../felleskomponenter/skjema/";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Utils from "../../../utils";
 import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";

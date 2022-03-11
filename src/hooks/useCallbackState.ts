@@ -15,7 +15,7 @@ export const useCallbackState = <StateType>(
     if (deps.every((dep) => !Utils._isEmpty(dep))) {
       try {
         setState(callback());
-      } catch (e) {
+      } catch (e: any) {
         if (errorHandler) errorHandler(e);
       }
     }

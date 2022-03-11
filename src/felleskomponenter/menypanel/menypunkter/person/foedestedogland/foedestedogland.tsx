@@ -39,19 +39,17 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       redigerbart={redigerbart}
       onBinClick={slettFoedestedOgLand}
       symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
-      onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger)}
+      onLagreClick={() => Utils._isEmpty(behandlingsgrunnlagFeilmeldinger?.foedestedOgLand)}
       harData={value.foedested && value.foedeland}
       redigererRender={() => <Enkeltfoedestedoglandskjema redigerbart={redigerbart} />}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}
-      ingenDataRender={(apneRedigering) => (
-        <>
-          {redigerbart && (
-            <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
-              Legg til fødested og -land
-            </Mui.Knappelenke>
-          )}
-        </>
-      )}
+      ingenDataRender={(apneRedigering) =>
+        redigerbart ? (
+          <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
+            Legg til fødested og -land
+          </Mui.Knappelenke>
+        ) : null
+      }
     />
   );
 };

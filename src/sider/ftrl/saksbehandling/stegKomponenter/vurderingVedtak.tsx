@@ -208,7 +208,7 @@ const VurderingVedtak = ({
         style: "midtstilt",
       },
       {
-        verdi: kanSlettes ? sletteknapp : <></>,
+        verdi: kanSlettes ? sletteknapp : null,
         style: "slettKnapp",
       },
     ];

@@ -29,7 +29,7 @@ describe("FamiliemedlemmerFraPDL", () => {
 
   it("viser melding ved nettverkserror", () => {
     return act(async () => {
-      const familiemedlemmerFraPDL = mount(<FamiliemedlemmerFraPDL {...props} />, {
+      const familiemedlemmerFraPDL = await mount(<FamiliemedlemmerFraPDL {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -46,7 +46,9 @@ describe("FamiliemedlemmerFraPDL", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
       familiemedlemmerFraPDL.update();
 
       const alertstripe = familiemedlemmerFraPDL.find(Nav.AlertStripeFeil);
@@ -103,7 +105,9 @@ describe("FamiliemedlemmerFraPDL", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
       familiemedlemmerFraPDL.update();
 
       const familiemedlemGrupper = familiemedlemmerFraPDL.find(FamiliemedlemGruppe);

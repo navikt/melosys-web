@@ -3,6 +3,8 @@ import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 
+import { isApiError } from "../../../../services";
+
 import finnKontaktopplysninger from "./finnKontaktopplysninger";
 import { KontaktOpplysning } from "./types";
 
@@ -34,8 +36,10 @@ const useKontaktopplysninger = (
       setKontaktopplysninger({});
       return res;
     } catch (e) {
-      if (e.status >= 500) throw new Error("Teknisk feil ved sletting av kontaktopplysninger");
-      else if (e.status >= 400) throw new Error(e.body.message);
+      if (isApiError(e)) {
+        if (e.status >= 500) throw new Error("Teknisk feil ved sletting av kontaktopplysninger");
+        else if (e.status >= 400) throw new Error(e.body.message);
+      }
       throw e;
     }
   };
@@ -53,8 +57,10 @@ const useKontaktopplysninger = (
     try {
       return await Api.Fagsaker.kontaktopplysninger.send(saksnummer, orgnr, data);
     } catch (e) {
-      if (e.status >= 500) throw new Error("Teknisk feil ved lagring av kontaktopplysninger");
-      else if (e.status >= 400) throw new Error(e.body.message);
+      if (isApiError(e)) {
+        if (e.status >= 500) throw new Error("Teknisk feil ved lagring av kontaktopplysninger");
+        else if (e.status >= 400) throw new Error(e.body.message);
+      }
       throw e;
     }
   };

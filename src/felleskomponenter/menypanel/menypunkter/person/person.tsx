@@ -88,16 +88,12 @@ export const Person = ({
 }: PersonProps) => {
   const pdlAdresserToggle = useFeatureToggle("melosys.pdl.aktiv");
 
-  const {
-    bostedsadressePerioder,
-    postadressePerioder,
-    midlertidigAdressePerioder,
-  } = personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
+  const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } =
+    personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
 
   if (Object.keys(person).length === 0) {
     return null;
   }
-
   return (
     <div className="person">
       <Nav.Row>

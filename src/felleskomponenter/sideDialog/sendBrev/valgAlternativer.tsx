@@ -24,7 +24,8 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart }: ValgAlternativProps) 
         ))}
       </>
     );
-  } else if (valg.valgType === DokumenterV2.ValgType.SELECT) {
+  }
+  if (valg.valgType === DokumenterV2.ValgType.SELECT) {
     return (
       <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label="" emptyFieldText="Velg...">
         {valg.valgAlternativer.map((alternativ) => (
@@ -35,7 +36,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart }: ValgAlternativProps) 
       </Skjema.Select>
     );
   }
-  return <></>;
+  return null;
 };
 
 export default ValgAlternativer;

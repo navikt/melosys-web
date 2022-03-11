@@ -34,9 +34,8 @@ export const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, b
     (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
   );
 
-  const inngangsvilkaarErOverstyrtAvSaksbehandler = inngangsvilkaarBegrunnelseKoder.includes(
-    OVERSTYRT_AV_SAKSBEHANDLER
-  );
+  const inngangsvilkaarErOverstyrtAvSaksbehandler =
+    inngangsvilkaarBegrunnelseKoder.includes(OVERSTYRT_AV_SAKSBEHANDLER);
 
   const inngangsvilkaarErOverstyrtEllerIkkeOppfylt =
     inngangsvilkaarErOverstyrtAvSaksbehandler || !oppfyllerInngangsvilkar;

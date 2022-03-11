@@ -11,6 +11,7 @@ import * as Api from "../../../services/api";
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
 import { FeatureToggle } from "../../../featuretoggle";
@@ -228,6 +229,7 @@ const SedBehandling = ({
                     />
                   )}
                 />
+                <SaksoversiktLenke />
                 <SideDialog
                   behandlingID={behandlingID}
                   saksnummer={saksnummer}

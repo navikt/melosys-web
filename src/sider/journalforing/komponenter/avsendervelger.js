@@ -4,7 +4,7 @@ import { getFormValues } from "redux-form";
 import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
 
-import * as Skjema from "../../../felleskomponenter/skjema/";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 
@@ -53,8 +53,18 @@ const AvsenderVelger = ({
   return (
     <div className={className}>
       <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
-        <Skjema.Radio feltNavn="avsenderType" label="Bruker" value={MKV.Koder.avsendertyper.PERSON} />
-        <Skjema.Radio feltNavn="avsenderType" label="Fullmektig" value={KV.AvsenderTyper.FULLMEKTIG} />
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Bruker"
+          value={MKV.Koder.avsendertyper.PERSON}
+          className="avsendervelger__radio"
+        />
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Fullmektig"
+          value={KV.AvsenderTyper.FULLMEKTIG}
+          className="avsendervelger__radio"
+        />
         {formValues.avsenderType === KV.AvsenderTyper.FULLMEKTIG && (
           <AvsenderFullmektig
             avsenderID={formValues.avsenderID}
@@ -62,7 +72,12 @@ const AvsenderVelger = ({
             hentOgVisRepresentant={hentOgVisRepresentant}
           />
         )}
-        <Skjema.Radio feltNavn="avsenderType" label="Arbeidsgiver" value={KV.AvsenderTyper.ARBEIDSGIVER} />
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Arbeidsgiver"
+          value={KV.AvsenderTyper.ARBEIDSGIVER}
+          className="avsendervelger__radio"
+        />
         {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && (
           <AvsenderOrganisasjon
             avsenderID={formValues.avsenderID}
@@ -75,6 +90,7 @@ const AvsenderVelger = ({
           feltNavn="avsenderType"
           label="Arbeidsgiver som er fullmektig"
           value={KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG}
+          className="avsendervelger__radio"
         />
         {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG && (
           <AvsenderOrganisasjon
@@ -88,6 +104,7 @@ const AvsenderVelger = ({
           feltNavn="avsenderType"
           label="Utenlandsk trygdemyndighet"
           value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
+          className="avsendervelger__radio"
         />
         {formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && (
           <AvsenderUtenlanskTrygdemyndighet

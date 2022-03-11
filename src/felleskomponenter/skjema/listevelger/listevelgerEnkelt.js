@@ -12,7 +12,7 @@ const uuid = require("uuid/v4");
  * inn sin egen verdi.
  */
 const ListevelgerEnkelt = ({ input, label, meta, muligeValg, placeholder, disabled, ...rest }) => {
-  const feil = meta.invalid && meta.touched ? { feilmelding: meta.error.melding } : null;
+  const feil = meta.invalid && meta.touched ? meta.error.melding : null;
   const inputProps = {
     ...input,
     ...rest,
@@ -34,7 +34,7 @@ const ListevelgerEnkelt = ({ input, label, meta, muligeValg, placeholder, disabl
       />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map((valg) => (
-          <option key={uuid()} value={KV.objektTilTerm(valg)} />
+          <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
         ))}
       </datalist>
     </div>

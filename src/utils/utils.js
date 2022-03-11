@@ -12,7 +12,11 @@ export function buildinfo() {
     byggVersjon,
   };
 }
-export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+export const delay = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
 /**
  * parser et funksjonsargument som funksjon.
  * @param value

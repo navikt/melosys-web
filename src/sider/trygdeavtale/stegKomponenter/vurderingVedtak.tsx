@@ -18,20 +18,21 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 
 import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { formSelectors } from "../../../ducks/form";
+
 import MottakerTabell from "../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
-
 import { lagYupToReduxformErrorMapper } from "../../../yup";
-import { StegStatus } from "../stegvelger";
+import { KontrollFeil, StegStatus } from "../stegvelger";
 import bem from "../../../bemUtils";
-import vurdering_vedtak from "./vurderingVedtakSchema";
 
+import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
-const FRITEKST = "Fritekst";
+export const FRITEKST = "Fritekst";
 
 const vurderingVedtakCls = bem("vurderingVedtak");
 
@@ -75,6 +76,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
       nyVurderingBakgrunn: initialNyVurderingBakgrunn,
       nyVurderingBakgrunnFritekst: initialNyVurderingBakgrunnFritekst,
     },
+    formIsValid: formSelectors.TrygdeavtaleVedtakFormValidSelector(state),
     periodeIsValid: formSelectors.TrygdeavtaleVedtakFormPeriodeValidSelector(state),
     erNyVurdering,
   };
@@ -82,6 +84,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterPeriode: (periode: Periode) => dispatch(behandlingsgrunnlagOperations.oppdaterPeriode(periode)),
+  hentLovvalgsperiode: (behandlingID: string) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -90,13 +93,18 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   data: Api.Trygdeavtale.StegData;
-  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto) => void;
+  oppdaterFlyt: (data: Api.Trygdeavtale.FlytReqDto, callback?: () => void) => void;
+  hentFlytOgOppdaterAktuelleSteg: () => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
-  oppdaterValideringFeil: (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdaterRegisteropplysninger: boolean) => void;
+  oppdaterValideringFeil: (
+    data: Api.Saksflyt.Vedtak.FattVedtakReqDto,
+    skalRegisteropplysningerOppdateres: boolean
+  ) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
+  valideringFeil: KontrollFeil[];
   formValues: {
     lovvalgsperiodeFom?: string;
     lovvalgsperiodeTom?: string;
@@ -113,6 +121,7 @@ const VurderingVedtak = ({
   behandlingsgrunnlagStatus,
   data: { bestemmelseValg },
   erNyVurdering,
+  hentFlytOgOppdaterAktuelleSteg,
   tilbake,
   redigerbart,
   resultat,
@@ -125,6 +134,9 @@ const VurderingVedtak = ({
   soknadsland,
   lagreOgFatteVedtak,
   vedtakstype,
+  hentLovvalgsperiode,
+  formIsValid,
+  valideringFeil,
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
@@ -172,9 +184,10 @@ const VurderingVedtak = ({
     nyVurderingBakgrunn: getNyVurderingBakgrunn(),
   });
 
-  const kontrollerVedtak = (oppdaterRegisteropplysninger: boolean = false) => {
-    oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), oppdaterRegisteropplysninger);
+  const kontrollerVedtak = (skalRegisteropplysningerOppdateres: boolean = false) => {
+    oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), skalRegisteropplysningerOppdateres);
     setOppdaterFørKontroll(false);
+    hentFlytOgOppdaterAktuelleSteg();
   };
   const debouncedKontrollerVedtak = useCallback(Utils._debounce(kontrollerVedtak, 500), []);
 
@@ -186,7 +199,6 @@ const VurderingVedtak = ({
     setMuligeMottakere(res);
   };
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
-
   const debouncedOppdaterFlyten = useCallback(
     Utils._debounce((data: Api.Trygdeavtale.Resultat) => oppdaterFlyt({ resultat: data }), 2000),
     []
@@ -233,13 +245,16 @@ const VurderingVedtak = ({
     if (redigerbart && formValues) {
       const isoFom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom);
       const isoTom = Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom);
-      oppdaterFlyt({
-        resultat: {
-          ...resultat,
-          lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
-          lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
+      oppdaterFlyt(
+        {
+          resultat: {
+            ...resultat,
+            lovvalgsperiodeFom: isoFom === "Invalid date" ? undefined : isoFom,
+            lovvalgsperiodeTom: isoTom === "Invalid date" ? undefined : isoTom,
+          },
         },
-      });
+        () => hentLovvalgsperiode(behandlingID)
+      );
       setVisTomEndringFelt(false);
     }
   };
@@ -322,6 +337,9 @@ const VurderingVedtak = ({
       </div>
     );
 
+  const stegErGyldig =
+    steg.status === StegStatus.FERDIG && formIsValid && redigerbart && Utils._isEmpty(valideringFeil);
+
   return (
     <div className={vurderingVedtakCls.block}>
       <Nav.Typo.Undertittel className={vurderingVedtakCls.element("undertittel")}>
@@ -361,7 +379,7 @@ const VurderingVedtak = ({
                 </Nav.Hovedknapp>
               </span>
             ) : (
-              formValues?.lovvalgsperiodeTom
+              Utils.dato.formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom)
             )}
             {!visTomEndringFelt && <EndreTom />}
           </Nav.Typo.Normaltekst>
@@ -381,7 +399,7 @@ const VurderingVedtak = ({
             className={vurderingVedtakCls.element("nyvurdering")}
             legend={
               <Fragment>
-                Oppgi grunn for nytt vedtak
+                Oppgi grunn for nytt vedtak (Obligatorisk)
                 <Nav.Hjelpetekst
                   className={vurderingVedtakCls.element("hjelpetekst")}
                   tittel={nyVurderingBakgrunnHjelpetekst}
@@ -480,7 +498,7 @@ const VurderingVedtak = ({
 
       {redigerbart && (
         <MottakerTabell
-          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
+          rader={stegErGyldig && muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
             { verdi: "Dokumenter", bredde: "60%" },
             { verdi: "Mottaker", bredde: "40%" },
@@ -491,7 +509,7 @@ const VurderingVedtak = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,
-          disabled: !redigerbart,
+          disabled: !stegErGyldig,
           autoDisableVedSpinner: true,
           spinner: vedtakPending,
         }}

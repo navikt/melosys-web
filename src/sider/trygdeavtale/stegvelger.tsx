@@ -45,7 +45,8 @@ interface AktueltSteg {
   data?: object;
   handlers?: object;
 }
-interface KontrollFeil {
+
+export interface KontrollFeil {
   kode: string;
   felter: string[];
 }
@@ -114,10 +115,6 @@ class Stegvelger extends Component<Props, State> {
     ) {
       this.debouncedOppdaterSteg();
     }
-
-    if (prevProps.behandlingID && prevProps.behandlingID !== this.props.behandlingID) {
-      this.hentFlytOgOppdaterAktuelleSteg();
-    }
   }
 
   hentFlytOgOppdaterAktuelleSteg = () =>
@@ -137,10 +134,11 @@ class Stegvelger extends Component<Props, State> {
     );
   };
 
-  oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto) => {
-    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
-    );
+  oppdaterFlyt = (request: Api.Trygdeavtale.FlytReqDto, callBack?: () => void) => {
+    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, request).then((response) => {
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) });
+      if (callBack) callBack();
+    });
   };
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 100);
 
@@ -150,6 +148,7 @@ class Stegvelger extends Component<Props, State> {
       resultat: response.resultat,
       redigerbart: this.props.redigerbart,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
+      valideringFeil: this.state.valideringFeil,
     };
 
     const handlers = {
@@ -198,8 +197,11 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
-  oppdaterValideringFeil = (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, oppdaterRegisteropplysninger: boolean) => {
-    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, oppdaterRegisteropplysninger, data)
+  oppdaterValideringFeil = (
+    data: Api.Saksflyt.Vedtak.FattVedtakReqDto,
+    skalRegisteropplysningerOppdateres: boolean
+  ) => {
+    Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, skalRegisteropplysningerOppdateres, data)
       .then(() => this.setState({ valideringFeil: [] }))
       .catch((response) => this.setState({ valideringFeil: response?.body?.feilkoder }));
   };

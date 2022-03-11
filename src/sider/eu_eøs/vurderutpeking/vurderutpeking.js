@@ -11,6 +11,7 @@ import * as KV from "../../../kodeverk";
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -157,7 +158,6 @@ const Vurderutpeking = ({
     : undefined;
 
   const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
-  const visRevurderFagsak = behandlingErAvsluttet;
 
   return (
     <>
@@ -214,7 +214,7 @@ const Vurderutpeking = ({
                       visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                       visAvslagManglendeOpplysninger
                       visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                      visRevurderFagsak={visRevurderFagsak}
+                      visRevurderFagsak={behandlingErAvsluttet}
                     />
                   )}
                   renderBehandlingsstatus={() => (
@@ -226,6 +226,7 @@ const Vurderutpeking = ({
                     />
                   )}
                 />
+                <SaksoversiktLenke />
                 <SideDialog
                   behandlingID={behandlingID}
                   saksnummer={saksnummer}

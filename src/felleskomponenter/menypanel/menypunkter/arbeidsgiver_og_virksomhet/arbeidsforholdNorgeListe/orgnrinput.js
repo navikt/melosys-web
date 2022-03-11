@@ -56,7 +56,7 @@ const Orgnrinput = ({
     leggTilOrg(e.target.value);
   };
 
-  const feilmelding = !hasFocus && feil ? { feilmelding: feil } : undefined;
+  const feilmelding = !hasFocus && feil ? feil : undefined;
 
   return (
     <div>

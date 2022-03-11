@@ -42,11 +42,12 @@ const Oppsummering = (props: OppsummeringProps) => {
     mottattDato,
     className,
   } = props;
-  if (!oppsummering || !fagsak?.sakstype) return <div />;
 
   const isLitenSkjerm = useMediaQuery({ maxWidth: 1440 });
 
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
+
+  if (!oppsummering || !fagsak?.sakstype) return <div />;
 
   const { saksnummer, sakstype, registrertDato } = fagsak;
   const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;
@@ -164,7 +165,7 @@ const Oppsummering = (props: OppsummeringProps) => {
         <Nav.Row>
           <Nav.Column xs="12" className="behandlingsstatus">
             <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
-            <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist) || "-"})`}</span>
+            {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
           </Nav.Column>
         </Nav.Row>
       </Nav.Panel>

@@ -19,8 +19,9 @@ RegistreringStateProvider.defaultProps = {
   children: null,
 };
 
-export const RegistreringStateProviderWrapper = (mapStateToProps, mapDispatchToProps) => (component) => (props) => (
-  <RegistreringStateProvider initialState={registreringInitialState} reducer={registreringReducer}>
-    {RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(component)(props)}
-  </RegistreringStateProvider>
-);
+export const RegistreringStateProviderWrapper = (mapStateToProps, mapDispatchToProps) => (component) => (props) =>
+  (
+    <RegistreringStateProvider initialState={registreringInitialState} reducer={registreringReducer}>
+      {RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(component)(props)}
+    </RegistreringStateProvider>
+  );

@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Skjema from "..";
 
 import VedtakstypebegrunnelseSkjema from "./vedtakstypebegrunnelseskjema";
 

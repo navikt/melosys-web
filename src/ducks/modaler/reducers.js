@@ -1,4 +1,4 @@
-import { STATUS } from "../../services/";
+import { STATUS } from "../../services";
 import * as Types from "./types";
 
 const modaler = {
@@ -51,7 +51,7 @@ const lagNyState = (state, action, stateNavn) => ({
   },
 });
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Types.OPPDATER_AVSLAG_SOKNAD: {
       return lagNyState(state, action, modaler.avslagSoknad);

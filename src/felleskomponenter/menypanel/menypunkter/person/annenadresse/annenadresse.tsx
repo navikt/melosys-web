@@ -15,6 +15,9 @@ import UtfyltAdresse from "./utfyltadresse";
 import Felter from "./felter";
 
 import { formOperations, formSelectors } from "../../../../../ducks/form";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+
+import "./annenadresse.css";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresse: formSelectors.SoknadOppgittAdresseSelector(state),
@@ -54,33 +57,38 @@ const AnnenAdresse = ({
 }: AnnenAdresseProps) => {
   const cls = classNames(className);
 
+  const fjernAnnenAdresseToggle = useFeatureToggle("melosys.web.fjern_annen_adresse");
+  const redigerbartOgToggleDisabled = redigerbart && fjernAnnenAdresseToggle !== "enabled";
+
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
-  return (
+  return (fjernAnnenAdresseToggle === "enabled" && oppgittAdresseHarVerdier) ||
+    fjernAnnenAdresseToggle !== "enabled" ? (
     <div className={cls}>
       <EditerbartElement
-        redigerbart={redigerbart}
+        redigerbart={redigerbartOgToggleDisabled}
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
         symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
-        redigererRender={() => <Felter redigerbart={redigerbart} />}
+        redigererRender={() => <Felter redigerbart={redigerbartOgToggleDisabled} />}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
-        ingenDataRender={(apneRedigering) => (
-          <>
-            <Nav.Typo.Normaltekst style={{ marginBottom: "1em" }}>
-              Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes adresse
-              fra register.
-            </Nav.Typo.Normaltekst>
-            {redigerbart && (
+        ingenDataRender={(apneRedigering) =>
+          redigerbartOgToggleDisabled && (
+            <>
+              <Nav.Typo.Normaltekst className="annenadresse__infotekst">
+                Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes
+                adresse fra register.
+              </Nav.Typo.Normaltekst>
+
               <Mui.Knappelenke onClick={apneRedigering} ikon={Ikoner.Add}>
                 Legg til adresse
               </Mui.Knappelenke>
-            )}
-          </>
-        )}
+            </>
+          )
+        }
       />
     </div>
-  );
+  ) : null;
 };
 
 export default connector(AnnenAdresse);

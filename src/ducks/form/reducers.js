@@ -6,8 +6,7 @@ import * as Types from "./types";
  * action types som sendes inn sammen med dataene.
  */
 
-// Reducer
-export default function reducer(state = {}, action) {
+export default function reducer(state = {}, action = {}) {
   switch (action.type) {
     case Types.OPPDATER_ALLE_SKJEMA_VALIDERINGER: {
       return { ...state, regler: action.data };

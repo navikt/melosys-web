@@ -32,12 +32,8 @@ const EnkeltFullmektig = ({
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
 
-  const [
-    kontaktopplysninger,
-    setKontaktopplysninger,
-    slettKontaktOpplysninger,
-    lagreKontaktOpplysninger,
-  ] = useKontaktOpplysninger(saksnummer, fullmektig.orgnr || "");
+  const [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger] =
+    useKontaktOpplysninger(saksnummer, fullmektig.orgnr || "");
 
   const hentOrgFraApi = async (orgnr: string) => {
     try {
@@ -57,7 +53,7 @@ const EnkeltFullmektig = ({
   const slettHandler = async (event: MouseEvent) => {
     try {
       await slett(event);
-    } catch (error) {
+    } catch (error: any) {
       setSlettFeilmelding(error.message);
     }
   };

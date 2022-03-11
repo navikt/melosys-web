@@ -13,7 +13,7 @@ const Lenkeknapp = ({ onClick, children, className }: LenkeknappProps) => {
   const cls = classNames("lenkeknapp", className);
 
   return (
-    <button onClick={onClick} className={cls}>
+    <button onClick={onClick} className={cls} type="button">
       {children}
     </button>
   );

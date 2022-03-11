@@ -27,17 +27,20 @@ export const OppsummeringSelector = createSelector(
   (state) => BehandlingerSelector(state).oppsummering || {},
   (oppsummering) => oppsummering
 );
-export const BehandlingstypeKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
-  oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : ""
+export const BehandlingstypeKodeSelector = createSelector(
+  (state) => OppsummeringSelector(state),
+  (oppsummering) => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : "")
 );
-export const BehandlingstemaKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
-  oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : ""
+export const BehandlingstemaKodeSelector = createSelector(
+  (state) => OppsummeringSelector(state),
+  (oppsummering) => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : "")
 );
-export const BehandlingsstatusKodeSelector = createSelector(OppsummeringSelector, (oppsummering) =>
-  oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : ""
+export const BehandlingsstatusKodeSelector = createSelector(
+  (state) => OppsummeringSelector(state),
+  (oppsummering) => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : "")
 );
 export const SisteOpplysningerHentetDatoSelector = createSelector(
-  OppsummeringSelector,
+  (state) => OppsummeringSelector(state),
   (oppsummering) => oppsummering.sisteOpplysningerHentetDato || null
 );
 

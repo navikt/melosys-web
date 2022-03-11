@@ -71,7 +71,8 @@ const EditerbartElement = ({
   const hentNesteStatus = (): Status => {
     if (harData) {
       return Status.RedigeringUtfort;
-    } else if (ingenDataRender) {
+    }
+    if (ingenDataRender) {
       return Status.IngenData;
     }
 
@@ -82,12 +83,12 @@ const EditerbartElement = ({
 
   const hentAktivtInnhold = () => {
     if (status === Status.RedigeringUtfort) return redigeringUtfortRender();
-    else if (status === Status.Redigerer) return redigererRender();
-    else if (status === Status.IngenData && ingenDataRender) {
+    if (status === Status.Redigerer) return redigererRender();
+    if (status === Status.IngenData && ingenDataRender) {
       return ingenDataRender(() => setStatus(Status.Redigerer));
     }
 
-    return <></>;
+    return null;
   };
 
   const skalRendreLagreKnapp =

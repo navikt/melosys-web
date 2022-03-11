@@ -1,4 +1,4 @@
-import * as Types from "../journalforing/types";
+import * as Types from "./types";
 
 /**
  * Actions

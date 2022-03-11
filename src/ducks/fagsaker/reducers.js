@@ -20,7 +20,7 @@ export const initialState = {
  * @param action Object Bestående av type (action type) og data.
  * @returns {{data: {}, status: string}}
  */
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };

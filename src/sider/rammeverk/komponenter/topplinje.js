@@ -4,12 +4,12 @@ import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 
 import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
-import * as MPT from "../../../proptypes/";
+import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils/utils";
 import * as Nav from "../../../navFrontend";
 
-import { saksbehandlerSelectors } from "../../../ducks/saksbehandler/";
-import { oppgaverOperations } from "../../../ducks/oppgaver/";
+import { saksbehandlerSelectors } from "../../../ducks/saksbehandler";
+import { oppgaverOperations } from "../../../ducks/oppgaver";
 
 import "./topplinje.css";
 
@@ -41,7 +41,7 @@ const Topplinje = (props) => {
         <Nav.Typo.Systemtittel>Hopp til hovedinnhold</Nav.Typo.Systemtittel>
       </a>
       <div className="topplinje__brand">
-        <button onClick={tilForsidenHandler} className="topplinje__brandKnapp">
+        <button onClick={tilForsidenHandler} className="topplinje__brandKnapp" type="button">
           <NavLogo className="brand__logo" alt="To personer på NAV kontor" />
         </button>
         <div className="brand__skillelinje" />

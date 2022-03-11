@@ -14,7 +14,7 @@ import { StrukturertAdresse } from "../../../../../adresser";
 
 const { NO } = MKV.Koder.landkoder;
 
-describe("Informasjonsmodal", () => {
+describe("annenForelderModal", () => {
   const mockedProps = mock<ComponentProps<typeof AnnenForelderModal>>();
   let props = instance(mockedProps);
 
@@ -28,11 +28,11 @@ describe("Informasjonsmodal", () => {
   });
 
   it("viser en Modal", () => {
-    const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
+    const annenForelderModal = mount(<AnnenForelderModal {...props} />, {
       wrappingComponent: MockedProvider,
     });
 
-    const modal = informasjonsmodal.find(Nav.Modal);
+    const modal = annenForelderModal.find(Nav.Modal);
     expect(modal).toHaveLength(1);
     expect(modal.props().onRequestClose).toBe(props.onRequestClose);
     expect(modal.props().contentLabel).toBe(props.contentLabel);
@@ -40,17 +40,17 @@ describe("Informasjonsmodal", () => {
   });
 
   it("viser melding ved henting av bostedsadresse", () => {
-    const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
+    const annenForelderModal = mount(<AnnenForelderModal {...props} />, {
       wrappingComponent: MockedProvider,
     });
 
-    expect(informasjonsmodal.contains("Henter bostedsadresse til annen forelder...")).toBe(true);
-    expect(informasjonsmodal.find(Nav.NavFrontendSpinner)).toHaveLength(1);
+    expect(annenForelderModal.contains("Henter bostedsadresse til annen forelder...")).toBe(true);
+    expect(annenForelderModal.find(Nav.NavFrontendSpinner)).toHaveLength(1);
   });
 
   it("viser melding ved nettverkserror under henting av bostedsadresse", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
+      const annenForelderModal = await mount(<AnnenForelderModal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -67,10 +67,12 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
-      informasjonsmodal.update();
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
+      annenForelderModal.update();
 
-      const alertstripe = informasjonsmodal.find(Nav.AlertStripeFeil);
+      const alertstripe = annenForelderModal.find(Nav.AlertStripeFeil);
       expect(alertstripe.contains("Feil ved henting av bostedsadresse!")).toBe(true);
     });
   });
@@ -97,7 +99,7 @@ describe("Informasjonsmodal", () => {
           erHistorisk: false,
         },
       ];
-      const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
+      const annenForelderModal = await mount(<AnnenForelderModal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -125,20 +127,22 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
-      informasjonsmodal.update();
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
+      annenForelderModal.update();
 
-      expect(informasjonsmodal.contains("LILLA MAGER HEST")).toBe(true);
-      expect(informasjonsmodal.contains("PDL")).toBe(true);
-      expect(informasjonsmodal.contains("FREG")).toBe(true);
-      const strukturertAdresse = informasjonsmodal.find(StrukturertAdresse);
+      expect(annenForelderModal.contains("LILLA MAGER HEST")).toBe(true);
+      expect(annenForelderModal.contains("PDL")).toBe(true);
+      expect(annenForelderModal.contains("FREG")).toBe(true);
+      const strukturertAdresse = annenForelderModal.find(StrukturertAdresse);
       expect(strukturertAdresse.props().adresse).toEqual(bostedsadresser[0].adresse);
     });
   });
 
   it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<AnnenForelderModal {...props} />, {
+      const annenForelderModal = await mount(<AnnenForelderModal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -166,10 +170,12 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
-      informasjonsmodal.update();
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
+      annenForelderModal.update();
 
-      const tabellRow = informasjonsmodal.find(".annen-forelder-modal__tabell__row").hostNodes();
+      const tabellRow = annenForelderModal.find(".annen-forelder-modal__tabell__row").hostNodes();
       expect(tabellRow).toHaveLength(1);
       const tabellColumns = tabellRow.find(Nav.Column);
       expect(tabellColumns.first().text()).toContain("LILLA MAGER HEST");

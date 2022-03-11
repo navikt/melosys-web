@@ -86,7 +86,7 @@ const SideDialogDokumenter = ({ dokumentOversikt }: SideDialogDokumenterProps) =
     <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
       <thead>
         <tr>
-          <th />
+          <th aria-label="Mottaksretning" />
           <th>Dokument</th>
           <th>Avsender/mottaker</th>
           <th>Dato</th>
