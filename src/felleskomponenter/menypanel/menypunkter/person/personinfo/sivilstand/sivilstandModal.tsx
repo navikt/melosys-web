@@ -1,7 +1,6 @@
 import React from "react";
 
 import * as Nav from "../../../../../../navFrontend";
-import * as Ikoner from "../../../../../../resources/images";
 import * as Utils from "../../../../../../utils";
 import * as Mui from "../../../../../ui";
 
@@ -77,7 +76,7 @@ const SivilstandModal = ({
       // @ts-ignore
       ariaHideApp={modalAriaHideApp}
     >
-      <Mui.Undertittel tekst="Sivilstand" ikon={Ikoner.Ring} />
+      <Mui.Undertittel tekst="Sivilstand" />
       <div className={sivilstandModalCls.element("main-content")}>
         {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
         <Nav.Typo.Element>Historikk</Nav.Typo.Element>
