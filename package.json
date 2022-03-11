@@ -14,7 +14,7 @@
   "dependencies": {
     "@apollo/client": "^3.5.6",
     "@loadable/component": "^5.10.3",
-    "@navikt/fnrvalidator": "^1.1.4",
+    "@navikt/fnrvalidator": "^1.2.0",
     "@navikt/melosys-kodeverk": "5.15.109",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.6.1",
