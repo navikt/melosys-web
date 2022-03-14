@@ -78,7 +78,7 @@
     "nav-frontend-typografi": "^4.0.1",
     "nav-frontend-typografi-style": "^2.0.1",
     "objectpath": "^2.0.0",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.8.1",
     "qs": "^6.9.1",
     "react": "^16.14.0",
     "react-beforeunload": "^2.5.2",
