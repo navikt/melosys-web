@@ -15,7 +15,7 @@ type PersonopplysningerProps = {
 } | null;
 
 const useHentPersonopplysninger = (behandlingID: number, skip: boolean): PersonopplysningerProps => {
-  const { data, error } = useHentPersonopplysningerQuery({ variables: { behandlingID }, skip });
+  const { data, error } = useHentPersonopplysningerQuery({ variables: { behandlingID, historikk: false }, skip });
 
   const person = data?.hentSaksopplysninger.persondata;
   if (error || !person) return null;

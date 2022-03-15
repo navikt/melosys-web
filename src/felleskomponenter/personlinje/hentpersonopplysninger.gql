@@ -1,7 +1,7 @@
-query hentPersonopplysninger($behandlingID: Long!) {
+query hentPersonopplysninger($behandlingID: Long!, $historikk: Boolean) {
   hentSaksopplysninger(behandlingID: $behandlingID) {
     persondata {
-      navn {
+      navn(historikk: $historikk) {
         fornavn
         mellomnavn
         etternavn

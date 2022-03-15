@@ -5,6 +5,7 @@ import * as Apollo from '@apollo/client';
 const defaultOptions =  {}
 export type HentPersonopplysningerQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
+  historikk?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
 
@@ -34,10 +35,10 @@ export type HentPersonopplysningerQuery = (
 
 
 export const HentPersonopplysningerDocument = gql`
-    query hentPersonopplysninger($behandlingID: Long!) {
+    query hentPersonopplysninger($behandlingID: Long!, $historikk: Boolean) {
   hentSaksopplysninger(behandlingID: $behandlingID) {
     persondata {
-      navn {
+      navn(historikk: $historikk) {
         fornavn
         mellomnavn
         etternavn
@@ -74,6 +75,7 @@ export const HentPersonopplysningerDocument = gql`
  * const { data, loading, error } = useHentPersonopplysningerQuery({
  *   variables: {
  *      behandlingID: // value for 'behandlingID'
+ *      historikk: // value for 'historikk'
  *   },
  * });
  */

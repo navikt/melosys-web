@@ -107,6 +107,11 @@ export type Personopplysninger = {
   statsborgerskap: Array<Statsborgerskap>;
 };
 
+
+export type PersonopplysningerNavnArgs = {
+  historikk?: Maybe<Scalars['Boolean']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   hentSaksopplysninger: Saksopplysninger;
@@ -116,6 +121,7 @@ export type Query = {
 
 export type QueryHentSaksopplysningerArgs = {
   behandlingID: Scalars['Long'];
+  historikk?: Maybe<Scalars['Boolean']>;
 };
 
 
