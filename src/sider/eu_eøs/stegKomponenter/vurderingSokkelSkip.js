@@ -61,16 +61,8 @@ class VurderingSokkelSkip extends React.Component {
   render() {
     // Merknad fra møte 12.12.18: Vi må huske å gå innom “vurdering antall land”
     // dersom man har valgt “to sokler / skip i flere land” siden vi går inn i artikkel 13.
-    const {
-      bekreftOgFortsett,
-      tilstand,
-      begrunnelser,
-      redigerbart,
-      oppdaterData,
-      slettData,
-      maritimtArbeid,
-      tilbake,
-    } = this.props;
+    const { bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, maritimtArbeid, tilbake } =
+      this.props;
 
     const {
       sokkelEllerSkipListe,

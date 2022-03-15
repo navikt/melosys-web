@@ -66,15 +66,8 @@ class VurderingArtikkel11_4 extends Component {
   };
 
   render() {
-    const {
-      bekreftOgFortsett,
-      tilstand,
-      bostedsland,
-      arbeidsland,
-      valgteVirksomheter,
-      redigerbart,
-      tilbake,
-    } = this.props;
+    const { bekreftOgFortsett, tilstand, bostedsland, arbeidsland, valgteVirksomheter, redigerbart, tilbake } =
+      this.props;
 
     const { harAvklaring, visNISAvsnitt, art11_4_1, art11_4_2, art11_3A, nis } = tilstand;
 

@@ -10,13 +10,8 @@ class VurderUtpeking extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const {
-      lovvalgsperioder,
-      vurderUtpekingValid,
-      behandlingstema,
-      saksopplysninger,
-      vurder_utpeking_skjema,
-    } = propsLight;
+    const { lovvalgsperioder, vurderUtpekingValid, behandlingstema, saksopplysninger, vurder_utpeking_skjema } =
+      propsLight;
 
     const redigerbart = propsLight.generiskStegRedigerbart;
 
