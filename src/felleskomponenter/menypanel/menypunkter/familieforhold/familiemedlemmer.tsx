@@ -28,15 +28,8 @@ interface FamiliemedlemmerEnkeltProps {
 }
 
 export function FamiliemedlemmerEnkelt({ familiemedlem, erBarn }: FamiliemedlemmerEnkeltProps) {
-  const {
-    sammensattNavn,
-    fnr,
-    relasjonstype,
-    alder,
-    borMedBruker,
-    sivilstandGyldighetsperiodeFom,
-    fnrAnnenForelder,
-  } = familiemedlem;
+  const { sammensattNavn, fnr, relasjonstype, alder, borMedBruker, sivilstandGyldighetsperiodeFom, fnrAnnenForelder } =
+    familiemedlem;
 
   const renderBarnEtikett = () =>
     alder !== null && alder < 18 ? <Etiketter.Under18Aar className="ikon__under18Aar" /> : null;

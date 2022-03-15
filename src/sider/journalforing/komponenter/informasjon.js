@@ -160,14 +160,8 @@ class Informasjon extends Component {
   };
 
   render() {
-    const {
-      journalpostID,
-      dokumentID,
-      vedlegg,
-      settFeltInnhold,
-      hentOgVisRepresentant,
-      journalforingSkjemaVerdier,
-    } = this.props;
+    const { journalpostID, dokumentID, vedlegg, settFeltInnhold, hentOgVisRepresentant, journalforingSkjemaVerdier } =
+      this.props;
     const {
       hoveddokument: { tittel: hoveddokumentTittel },
       vedlegg: skjemaVedlegg,

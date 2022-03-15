@@ -15,8 +15,8 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     oppgittAdresseTilleggsnavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).tilleggsnavn,
     oppgittAdresseGatenavn: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).gatenavn,
-    oppgittAdresseHusnummerEtasjeLeilighet: behandlingsgrunnlagSelectors.BostedAdresseSelector(state)
-      .husnummerEtasjeLeilighet,
+    oppgittAdresseHusnummerEtasjeLeilighet:
+      behandlingsgrunnlagSelectors.BostedAdresseSelector(state).husnummerEtasjeLeilighet,
     oppgittAdresseRegion: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).region,
     oppgittAdressePostboks: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postboks,
     oppgittAdressePostnummer: behandlingsgrunnlagSelectors.BostedAdresseSelector(state).postnummer,

@@ -32,12 +32,8 @@ const EnkeltFullmektig = ({
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
 
-  const [
-    kontaktopplysninger,
-    setKontaktopplysninger,
-    slettKontaktOpplysninger,
-    lagreKontaktOpplysninger,
-  ] = useKontaktOpplysninger(saksnummer, fullmektig.orgnr || "");
+  const [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger] =
+    useKontaktOpplysninger(saksnummer, fullmektig.orgnr || "");
 
   const hentOrgFraApi = async (orgnr: string) => {
     try {
