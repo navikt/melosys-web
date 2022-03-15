@@ -44,7 +44,8 @@ describe("Personer operations", () => {
 
       await store.dispatch(operations.hent(12));
 
-      expect(store.getActions()).toEqual(expectedActions);
+      expect(store.getActions()[0]).toEqual(expectedActions[0]);
+      expect(store.getActions()[1].type).toEqual(expectedActions[1].type);
     });
   });
 });

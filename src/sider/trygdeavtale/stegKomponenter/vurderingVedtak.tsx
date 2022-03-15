@@ -337,6 +337,9 @@ const VurderingVedtak = ({
       </div>
     );
 
+  const stegErGyldig =
+    steg.status === StegStatus.FERDIG && formIsValid && redigerbart && Utils._isEmpty(valideringFeil);
+
   return (
     <div className={vurderingVedtakCls.block}>
       <Nav.Typo.Undertittel className={vurderingVedtakCls.element("undertittel")}>
@@ -376,7 +379,7 @@ const VurderingVedtak = ({
                 </Nav.Hovedknapp>
               </span>
             ) : (
-              formValues?.lovvalgsperiodeTom
+              Utils.dato.formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom)
             )}
             {!visTomEndringFelt && <EndreTom />}
           </Nav.Typo.Normaltekst>
@@ -396,7 +399,7 @@ const VurderingVedtak = ({
             className={vurderingVedtakCls.element("nyvurdering")}
             legend={
               <Fragment>
-                Oppgi grunn for nytt vedtak
+                Oppgi grunn for nytt vedtak (Obligatorisk)
                 <Nav.Hjelpetekst
                   className={vurderingVedtakCls.element("hjelpetekst")}
                   tittel={nyVurderingBakgrunnHjelpetekst}
@@ -495,7 +498,7 @@ const VurderingVedtak = ({
 
       {redigerbart && (
         <MottakerTabell
-          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
+          rader={stegErGyldig && muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
             { verdi: "Dokumenter", bredde: "60%" },
             { verdi: "Mottaker", bredde: "40%" },
@@ -512,8 +515,7 @@ const VurderingVedtak = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,
-          disabled:
-            steg.status !== StegStatus.FERDIG || !formIsValid || !redigerbart || !Utils._isEmpty(valideringFeil),
+          disabled: !stegErGyldig,
           autoDisableVedSpinner: true,
           spinner: vedtakPending,
         }}

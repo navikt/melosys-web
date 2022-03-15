@@ -9,12 +9,12 @@ describe("Skjema utils", () => {
 
     it("returnerer feilmelding-objekt for string-error", () => {
       const meta = { error: "Manglende felt" };
-      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta)).toEqual({ feilmelding: meta.error });
+      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta)).toEqual(meta.error);
     });
 
     it("returnerer feilmelding-objekt for objekt-error", () => {
       const meta = { error: { melding: "Manglende felt" } };
-      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta)).toEqual({ feilmelding: meta.error.melding });
+      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta)).toEqual(meta.error.melding);
     });
 
     each(["submitFailed", "touched", "active"]).it("config %p kan tillate feilmelding å vises", (property) => {
@@ -24,7 +24,7 @@ describe("Skjema utils", () => {
       };
       const errorConfig = { [property]: true };
 
-      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig)).toEqual({ feilmelding: meta.error.melding });
+      expect(SkjemaUtils.mapReduxFormFeilTilNavFeil(meta, errorConfig)).toEqual(meta.error.melding);
     });
 
     each(["submitFailed", "touched", "active"]).it("config %p kan hindre feilmelding i å vises", (property) => {

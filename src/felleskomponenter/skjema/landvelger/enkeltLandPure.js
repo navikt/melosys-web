@@ -19,15 +19,15 @@ class EnkeltLandPure extends Component {
     error: null,
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.oppdaterInputVerdi();
-  };
+  }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate(prevProps) {
     if (prevProps.value !== this.props.value || prevProps.landkoder !== this.props.landkoder) {
       this.oppdaterInputVerdi();
     }
-  };
+  }
 
   setInputVerdi = (verdi) => {
     this.setState({ inputVerdi: verdi });
@@ -111,7 +111,7 @@ class EnkeltLandPure extends Component {
 
     const { inputVerdi } = this.state;
     const { error: landError = "" } = this.state;
-    const feilObjekt = landError ? { feilmelding: `${landError}` } : null;
+    const feilObjekt = landError ? `${landError}` : null;
 
     const cl = classnames({ landliste__linje__input: true, [className]: true });
 
@@ -135,7 +135,11 @@ class EnkeltLandPure extends Component {
         <div className="landliste__dataliste">
           <datalist id={dataListID}>
             {MKV.KTObjects.landkoder.map((item) => (
-              <option key={item.kode} value={Utils.land.landTekstFormat(item)} />
+              <option
+                key={item.kode}
+                value={Utils.land.landTekstFormat(item)}
+                label={Utils.land.landTekstFormat(item)}
+              />
             ))}
           </datalist>
         </div>

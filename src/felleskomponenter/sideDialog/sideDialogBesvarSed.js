@@ -77,7 +77,7 @@ EnkeltBucHeading.propTypes = {
 const sorterEtterDato = (liste) => liste.sort((a, b) => new Date(b.opprettetDato) - new Date(a.opprettetDato));
 
 const EnkeltBuc = ({ buc }) => (
-  <Nav.EkspanderbartpanelBase border heading={<EnkeltBucHeading {...buc} />}>
+  <Nav.Ekspanderbartpanel border tittel={<EnkeltBucHeading {...buc} />}>
     <div className="buc_tabell">
       <Nav.Typo.Element className="tabell_header kolonne__navn">Navn på SED</Nav.Typo.Element>
       <Nav.Typo.Element className="tabell_header kolonne__status">Status</Nav.Typo.Element>
@@ -85,7 +85,7 @@ const EnkeltBuc = ({ buc }) => (
         <EnkeltSed key={sed.sedId} sed={sed} />
       ))}
     </div>
-  </Nav.EkspanderbartpanelBase>
+  </Nav.Ekspanderbartpanel>
 );
 
 EnkeltBuc.propTypes = {
@@ -134,7 +134,8 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
   const hentKomponent = () => {
     if (kanViseListe(bucer)) {
       return sorterEtterDato(bucer).map((buc) => <EnkeltBuc key={buc.id} buc={buc} />);
-    } else if (henterData) {
+    }
+    if (henterData) {
       return <HenterOpplysningerSpinner />;
     }
 

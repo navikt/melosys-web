@@ -6,6 +6,7 @@ import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
 import "../skjema.css";
+import "./radio-gruppe.css";
 
 const RadioGruppeWrappedComponent = ({ feltNavn, legend, label, children, meta }) => {
   const { error, touched, active } = meta;
@@ -14,11 +15,11 @@ const RadioGruppeWrappedComponent = ({ feltNavn, legend, label, children, meta }
   const errorMessage = skalViseError ? <div>{skjemaError}</div> : null;
 
   return (
-    <Nav.Fieldset legend={legend || label}>
-      <div className={classNames({ "skjema__feilomrade--harFeil": skalViseError })}>
+    <Nav.Fieldset legend={legend || label} className="radio-gruppe">
+      <div className={classNames({ "radio-gruppe__skjema-feilomrade--harFeil": skalViseError })}>
         <label className="skjemaelement__label" htmlFor={feltNavn}>
           {children}
-          <div role="alert" aria-live="assertive" className="skjemaelement__feilmelding">
+          <div role="alert" aria-live="assertive" className="radio-gruppe__skjemaelement-feilmelding">
             {errorMessage}
           </div>
         </label>

@@ -1,5 +1,5 @@
 import React from "react";
-import * as Ikon from "./";
+import * as Ikon from ".";
 import { KjoennType } from "../../graphql";
 
 type KjoennProps = {

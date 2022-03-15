@@ -56,7 +56,7 @@ Dette starter applikasjonen med proxyinnstillinger rettet mot [melosys-web-mock]
 Dersom du heller ønsker å koble mot din kjørende [melosys-api](https://github.com/navikt/melosys-api#lokal-utvikling), kan du bruke følgende script for å sette proxyinnstillinger mot [melosys-docker-compose](https://github.com/navikt/melosys-docker-compose#frontendutvikling):
 ```
 npm install
-npm start:localnginx
+npm run start:nginxlocal
 ```
 Dersom du ikke allerede har en token lagret i cookies på localhost, vil det ikke være mulig å få kontakt med APIet. En workaround for å få token er å først starte [docker-compose](https://github.com/navikt/melosys-docker-compose#frontendutvikling) for frontendutvikling. Logg så inn på porten som kjører frontend-containeren. Du vil da få cookies som vil være tilgjengelig på alle portene som kjører under localhost.
 

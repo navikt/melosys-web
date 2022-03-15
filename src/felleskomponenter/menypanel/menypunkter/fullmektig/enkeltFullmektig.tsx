@@ -57,7 +57,7 @@ const EnkeltFullmektig = ({
   const slettHandler = async (event: MouseEvent) => {
     try {
       await slett(event);
-    } catch (error) {
+    } catch (error: any) {
       setSlettFeilmelding(error.message);
     }
   };

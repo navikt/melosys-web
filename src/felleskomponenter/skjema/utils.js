@@ -20,5 +20,5 @@ export const mapReduxFormFeilTilNavFeil = (meta, errorConfig) => {
   /* Støtter objekter med key "melding" som feilmeldinger */
   const feilmelding = Utils._isObject(error) ? error.melding : error;
 
-  return { feilmelding };
+  return feilmelding;
 };

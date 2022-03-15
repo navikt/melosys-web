@@ -6,6 +6,8 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import { BOOLSK } from "../../../constants";
 
+import "./sendForvaltningsMelding.css";
+
 const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
   const avsenderErFullmelktig =
     avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG || avsenderType === KV.AvsenderTyper.FULLMEKTIG;
@@ -28,11 +30,13 @@ const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
           feltNavn="ikkeSendForvaltingsmelding"
           label="Ja, melding skal sendes automatisk"
           value={BOOLSK.USANN}
+          className="sendForvaltningsmelding__radio"
         />
         <Skjema.Radio
           feltNavn="ikkeSendForvaltingsmelding"
           label="Nei, jeg vil sende melding senere eller behandle saken innen kort tid"
           value={BOOLSK.SANN}
+          className="sendForvaltningsmelding__radio"
         />
         {avsenderErFullmelktig && (
           <Fragment>

@@ -17,6 +17,7 @@ function lagState({
       state: "",
       search: "",
       hash: "",
+      query: {},
     },
     action: "PUSH",
   },

@@ -5,7 +5,7 @@ import * as Types from "./types";
 import { SakstypeKodeSelector } from "../fagsaker/selectors";
 
 export const LandkoderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  (state) => state.landkoder,
+  (state: RootState) => state.landkoder,
   (landkoder) => landkoder.data || []
 );
 

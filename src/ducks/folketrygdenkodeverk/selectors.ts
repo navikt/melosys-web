@@ -3,7 +3,7 @@ import { RootState, StateSection } from "AppTypes";
 import * as Types from "./types";
 
 export const FolketrygdenkodeverkSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  (state) => state.folketrygdenkodeverk,
+  (state: RootState) => state.folketrygdenkodeverk,
   (folketrygdenkodeverk) => folketrygdenkodeverk
 );
 

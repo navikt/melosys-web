@@ -10,7 +10,7 @@
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import * as Actions from "../journalforing/actions";
+import * as Actions from "./actions";
 
 export function hent(journalpostID) {
   return doThenDispatch(() => Api.Journalforing.hent(journalpostID), {

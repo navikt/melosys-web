@@ -14,7 +14,7 @@ class Arbeidsavtaler extends Component {
 
   toggleInntektTabellHandler = (e) => {
     e.preventDefault();
-    this.setState({ visHistoriskeArbeidsavtaler: !this.state.visHistoriskeArbeidsavtaler });
+    this.setState((prevState) => ({ visHistoriskeArbeidsavtaler: !prevState.visHistoriskeArbeidsavtaler }));
   };
 
   render() {

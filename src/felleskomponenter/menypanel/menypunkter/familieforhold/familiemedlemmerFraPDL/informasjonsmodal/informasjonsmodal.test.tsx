@@ -50,7 +50,7 @@ describe("Informasjonsmodal", () => {
 
   it("viser melding ved nettverkserror under henting av bostedsadresse", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -67,7 +67,9 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
       informasjonsmodal.update();
 
       const alertstripe = informasjonsmodal.find(Nav.AlertStripeFeil);
@@ -97,7 +99,7 @@ describe("Informasjonsmodal", () => {
           erHistorisk: false,
         },
       ];
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -125,7 +127,9 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
       informasjonsmodal.update();
 
       expect(informasjonsmodal.contains("LILLA MAGER HEST")).toBe(true);
@@ -138,7 +142,7 @@ describe("Informasjonsmodal", () => {
 
   it("viser navn, men ikke adresse, register eller kilde dersom ingen bostedsadresse funnet", () => {
     return act(async () => {
-      const informasjonsmodal = mount(<Informasjonsmodal {...props} />, {
+      const informasjonsmodal = await mount(<Informasjonsmodal {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -166,7 +170,9 @@ describe("Informasjonsmodal", () => {
         },
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
       informasjonsmodal.update();
 
       const tabellRow = informasjonsmodal.find(".informasjonsmodal__tabell-row").hostNodes();

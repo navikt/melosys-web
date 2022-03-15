@@ -84,7 +84,8 @@ const sjekkSkalSendeSed = (formValues) => {
 
   if (art11_5_ErValgt(formValues)) {
     return kreverMottakerinstitusjon;
-  } else if (art11_3B_ErValgt(formValues)) {
+  }
+  if (art11_3B_ErValgt(formValues)) {
     return true;
   }
 

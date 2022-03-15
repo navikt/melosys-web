@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode, MouseEventHandler } from "react";
+import React, { ReactNode, MouseEventHandler } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../index";
@@ -51,16 +51,14 @@ const PeriodeForkorter = ({
         </Nav.Column>
       </Nav.Row>
       {forkortPeriode && (
-        <Fragment>
-          <Nav.Row>
-            <Nav.Column xs="3">
-              <Skjema.Datovelger label={fomLabel} feltNavn={fomFeltNavn} disabled={!redigerbart || !fomRedigerbar} />
-            </Nav.Column>
-            <Nav.Column xs="3">
-              <Skjema.Datovelger label={tomLabel} feltNavn={tomFeltNavn} disabled={!redigerbart} />
-            </Nav.Column>
-          </Nav.Row>
-        </Fragment>
+        <Nav.Row>
+          <Nav.Column xs="3">
+            <Skjema.Datovelger label={fomLabel} feltNavn={fomFeltNavn} disabled={!redigerbart || !fomRedigerbar} />
+          </Nav.Column>
+          <Nav.Column xs="3">
+            <Skjema.Datovelger label={tomLabel} feltNavn={tomFeltNavn} disabled={!redigerbart} />
+          </Nav.Column>
+        </Nav.Row>
       )}
     </div>
   );

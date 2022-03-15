@@ -25,7 +25,7 @@ kodeTermSelect.propTypes = {
   value: PT.any.isRequired,
   onChange: PT.func.isRequired,
   label: PT.string.isRequired,
-  feil: PT.object,
+  feil: PT.string,
   disableForsteValg: PT.bool,
   redigerbart: PT.bool,
   onBlur: PT.func,

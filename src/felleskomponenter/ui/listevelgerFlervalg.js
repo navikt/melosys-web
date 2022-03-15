@@ -174,7 +174,7 @@ class ListevelgerFlervalg extends Component {
     const eksternFeilmelding = this.props.feil;
     const feilmeldingtekst = eksternFeilmelding || internFeilmelding;
 
-    return feilmeldingtekst ? { feilmelding: feilmeldingtekst } : null;
+    return feilmeldingtekst || null;
   };
 
   render() {
@@ -218,7 +218,7 @@ class ListevelgerFlervalg extends Component {
         </div>
         <datalist id={datalistID}>
           {muligeValg.map((valg) => (
-            <option key={uuid()} value={KV.objektTilTerm(valg)} />
+            <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
           ))}
         </datalist>
       </div>

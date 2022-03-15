@@ -12,7 +12,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 import { BOOLSK } from "../../../constants";
 import { journalforingSelectors } from "../../../ducks/journalforing";
-import Informasjon from "../komponenter/informasjon";
+import Informasjon from "./informasjon";
 import FagsakVelger from "./fagsakVelger";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
 import Fotknapper from "./fotknapper";

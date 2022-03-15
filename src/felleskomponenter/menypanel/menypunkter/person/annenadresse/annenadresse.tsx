@@ -88,9 +88,7 @@ const AnnenAdresse = ({
         }
       />
     </div>
-  ) : (
-    <></>
-  );
+  ) : null;
 };
 
 export default connector(AnnenAdresse);

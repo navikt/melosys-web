@@ -1,7 +1,7 @@
 import React from "react";
 
 import * as Nav from "../../../navFrontend";
-import * as Mui from "../";
+import * as Mui from "..";
 
 import Element from "./element";
 

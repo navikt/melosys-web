@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PT from "prop-types";
 
-import * as Skjema from "../../../felleskomponenter/skjema/";
+import * as Skjema from "../../../felleskomponenter/skjema";
 
 import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
@@ -49,12 +49,10 @@ const FagsakVelger = (props) => {
     footer: <OpprettSak />,
   });
   return (
-    <Fragment>
-      <div className="eksisterendeSaker">
-        <Skjema.CustomRadioPanelGruppe feltNavn="saksnummer" radios={radioValg} notify={notifier} />
-        {fagsakListe.length === 0 && "Ingen eksisterende saker funnet."}
-      </div>
-    </Fragment>
+    <div className="eksisterendeSaker">
+      <Skjema.CustomRadioPanelGruppe feltNavn="saksnummer" radios={radioValg} notify={notifier} />
+      {fagsakListe.length === 0 && "Ingen eksisterende saker funnet."}
+    </div>
   );
 };
 

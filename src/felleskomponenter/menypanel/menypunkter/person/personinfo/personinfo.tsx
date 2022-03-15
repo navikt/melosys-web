@@ -8,7 +8,7 @@ import EnkeltDato from "../../../../datoOmrade/enkeltDato";
 import "./personinfo.css";
 import Sivilstand from "./sivilstand/sivilstand";
 import Personstatus from "./personstatus/personstatus";
-import hentPersonopplysninger from "../../../../personlinje/hentpersonopplysninger";
+import useHentPersonopplysninger from "../../../../personlinje/useHentpersonopplysninger";
 
 interface PersonInfoProps {
   person: Person;
@@ -17,7 +17,7 @@ interface PersonInfoProps {
 }
 
 const PersonInfo = ({ person: { fnr, foedselsdato }, behandlingID, sivilstandModalAriaHideApp }: PersonInfoProps) => {
-  const personopplysninger = hentPersonopplysninger(behandlingID);
+  const personopplysninger = useHentPersonopplysninger(behandlingID, false);
 
   return (
     <div className="personinfo">

@@ -54,21 +54,19 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
         </div>
       )}
       redigeringUtfortRender={() => <UtfyltUtenlandskIdent utenlandskeIdenter={felter} />}
-      ingenDataRender={(apneRedigering) => (
-        <>
-          {redigerbart && (
-            <Mui.Knappelenke
-              onClick={() => {
-                apneRedigering();
-                leggTilTomtFelt();
-              }}
-              ikon={Ikoner.Add}
-            >
-              Legg til ID-nummer
-            </Mui.Knappelenke>
-          )}
-        </>
-      )}
+      ingenDataRender={(apneRedigering) =>
+        redigerbart ? (
+          <Mui.Knappelenke
+            onClick={() => {
+              apneRedigering();
+              leggTilTomtFelt();
+            }}
+            ikon={Ikoner.Add}
+          >
+            Legg til ID-nummer
+          </Mui.Knappelenke>
+        ) : null
+      }
     />
   );
 };

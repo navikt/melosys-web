@@ -4,9 +4,9 @@ import { change } from "redux-form";
 import PT from "prop-types";
 
 import * as Utils from "../../../utils";
-import * as Skjema from "../../../felleskomponenter/skjema/";
+import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes/";
+import * as MPT from "../../../proptypes";
 import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
@@ -180,13 +180,9 @@ class Informasjon extends Component {
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
-        <Mui.Undertittel
-          tekst="Informasjon om bruker"
-          ikon={Ikoner.AccountCircle}
-          className="undertittel oversteUndertittel"
-        />
+        <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
         <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
-        <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
+        <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
         {visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}
 
         <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />

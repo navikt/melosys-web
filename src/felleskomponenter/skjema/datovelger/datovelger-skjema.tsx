@@ -29,7 +29,7 @@ function InnerDatovelgerComponent({
     meta: { touched, active },
   } = rest;
 
-  const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(rest.meta)?.feilmelding : undefined;
+  const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(rest.meta) : undefined;
 
   const onDatoChange = (nyDato: Date) => {
     input.onChange(Utils.dateTilNorskString(nyDato));

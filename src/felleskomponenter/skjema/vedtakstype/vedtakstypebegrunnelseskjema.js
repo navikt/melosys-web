@@ -2,7 +2,7 @@ import React from "react";
 import PT from "prop-types";
 import * as MKV from "@navikt/melosys-kodeverk";
 
-import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Skjema from "..";
 
 const VedtakstypebegrunnelseSkjema = ({ className, redigerbart, feltNavn, label }) => (
   <Skjema.Select feltNavn={feltNavn} label={label} className={className} disabled={!redigerbart}>

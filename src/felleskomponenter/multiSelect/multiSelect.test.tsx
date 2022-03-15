@@ -42,7 +42,7 @@ describe("MultiSelect", () => {
 
   it("Feilmelding vises", () => {
     const feilmelding = "Feil!";
-    const multiSelect = shallow(<MultiSelect {...props} feil={{ feilmelding }} />);
+    const multiSelect = shallow(<MultiSelect {...props} feil={feilmelding} />);
 
     const feilContainer = multiSelect.find(".skjemaelement__feilmelding");
     expect(feilContainer).toBeDefined();

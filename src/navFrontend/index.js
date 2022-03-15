@@ -1,10 +1,9 @@
-import { EkspanderbartpanelBase } from "nav-frontend-ekspanderbartpanel";
-import { Panel } from "nav-frontend-paneler";
+import Ekspanderbartpanel from "nav-frontend-ekspanderbartpanel";
+import Panel from "nav-frontend-paneler";
 import AlertStripe, { AlertStripeAdvarsel, AlertStripeInfo, AlertStripeFeil } from "nav-frontend-alertstriper";
 import EtikettBase from "nav-frontend-etiketter";
 import { Container, Row, Column } from "nav-frontend-grid";
 import Hjelpetekst from "nav-frontend-hjelpetekst";
-import * as Typo from "nav-frontend-typografi";
 import { Knapp, Hovedknapp, Flatknapp } from "nav-frontend-knapper";
 import Lesmerpanel from "nav-frontend-lesmerpanel";
 import Icons from "nav-frontend-ikoner-assets";
@@ -17,6 +16,8 @@ import Chevron from "nav-frontend-chevron";
 import { LenkepanelBase } from "nav-frontend-lenkepanel";
 import { PopoverOrientering } from "nav-frontend-popover";
 import { Xknapp } from "nav-frontend-ikonknapper";
+
+// Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import {
   Checkbox,
   Radio,
@@ -28,6 +29,7 @@ import {
   Input,
   Textarea,
 } from "./skjema";
+import * as Typo from "./typografi";
 
 export {
   AlertStripeAdvarsel,
@@ -46,7 +48,7 @@ export {
   SelectProps,
   Input,
   Textarea,
-  EkspanderbartpanelBase,
+  Ekspanderbartpanel,
   Panel,
   EtikettBase,
   Hjelpetekst,

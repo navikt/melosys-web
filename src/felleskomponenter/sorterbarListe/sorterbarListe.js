@@ -40,6 +40,7 @@ const SorterbarListe = ({
               label="Nyeste først"
               value="descending"
               defaultChecked={defaultChecked === "nyeste"}
+              className="radio"
             />
             <Nav.Radio
               name={uniqueName}
