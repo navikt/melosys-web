@@ -12,7 +12,7 @@ import { BOOLSK_STRING } from "../../../constants";
 
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils";
 import {
   konverterAvklartfaktaTilStegData,
   lagAvklartfakta,

@@ -506,6 +506,12 @@ const VurderingVedtak = ({
         />
       )}
 
+      {redigerbart && erNyVurdering && (
+        <Nav.AlertStripeInfo className={vurderingVedtakCls.element("alertstripe")}>
+          {KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}
+        </Nav.AlertStripeInfo>
+      )}
+
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,

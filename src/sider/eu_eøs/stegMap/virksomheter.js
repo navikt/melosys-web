@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from "../../../felleskomponenter/stegvelger";
 import VurderingVirksomhet from "../stegKomponenter/vurderingVirksomhet";
 import * as KV from "../../../kodeverk";
 
-import { hentFaktaListe } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaListe } from "../../../domeneUtils";
 
 class Virksomheter extends Steg {
   constructor(propsLight, stegPosisjon) {

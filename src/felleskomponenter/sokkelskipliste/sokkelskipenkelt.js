@@ -9,7 +9,7 @@ import * as KV from "../../kodeverk";
 import * as MPT from "../../proptypes";
 
 import { konverterAvklartfaktaTilStegData, slettAvklartfakta } from "../stegvelger";
-import { hentFaktaVerdi } from "../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../domeneUtils";
 
 import "./sokkelskipenkelt.css";
 

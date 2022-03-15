@@ -15,8 +15,7 @@ import {
   lagVilkaar,
   slettVilkar,
 } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
-import { finnTilleggBestemmelse } from "../../../domeneUtils/tilleggbestemmelser";
+import { hentFaktaVerdi, finnTilleggBestemmelse } from "../../../domeneUtils";
 import { BOOLSK } from "../../../constants";
 
 const stegetsTilleggbestemmelser = [

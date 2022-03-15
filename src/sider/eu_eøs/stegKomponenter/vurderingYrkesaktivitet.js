@@ -5,7 +5,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils";
 
 const VurderingYrkesaktivitet = (props) => {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, erSoknadArbeidFlereLand, tilbake } = props;

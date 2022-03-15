@@ -14,7 +14,7 @@ import {
   lagAvklartfakta,
   konverterAvklartfaktaTilStegData,
 } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils";
 
 const radioValg = {
   NORGE: "NORGE",

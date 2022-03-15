@@ -8,7 +8,7 @@ import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi, finnLovvalgsbestemmelse } from "../../../domeneUtils";
 import {
   lagAvklartfakta,
   konverterAvklartfaktaTilStegData,
@@ -22,7 +22,6 @@ import EnkeltAvklartfakta from "./felles/enkeltAvklartfakta";
 import { BOOLSK_STRING } from "../../../constants";
 
 import "./vurderingForretningssted.css";
-import { finnLovvalgsbestemmelse } from "../../../domeneUtils/lovvalgsbestemmelser";
 
 const Forretningsstedet = (props) => {
   const { forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart } = props;

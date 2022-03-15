@@ -11,7 +11,7 @@ import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils";
 import { konverterAvklartfaktaTilStegData } from "../../../felleskomponenter/stegvelger";
 
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
@@ -304,6 +304,7 @@ export class VurderingEndrePeriode extends React.Component {
             {vedtakFeilmelding}
           </Nav.AlertStripe>
         )}
+        {redigerbart && <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>}
         <Mui.StegKnapper
           bekreftKnappProps={{
             spinner: endringPending,

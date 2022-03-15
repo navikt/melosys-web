@@ -368,6 +368,9 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
           )}
         </Nav.Column>
       </Nav.Row>
+      {erNyVurdering && redigerbart && (
+        <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
+      )}
       <Mui.StegKnapper
         bekreftKnappProps={{
           spinner: vedtakPending,

@@ -16,7 +16,7 @@ import {
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
 } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils";
 
 import { formSelectors } from "../../../ducks/form";
 

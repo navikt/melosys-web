@@ -8,7 +8,7 @@ import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Utils from "../../../utils";
 import * as Mui from "../../../felleskomponenter/ui";
-import { hentFaktaVerdi } from "../../../domeneUtils/avklartefakta";
+import { hentFaktaVerdi } from "../../../domeneUtils";
 import {
   konverterAvklartfaktaTilStegData,
   lagAvklartfakta,

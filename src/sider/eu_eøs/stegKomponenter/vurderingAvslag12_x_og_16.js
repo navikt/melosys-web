@@ -131,6 +131,9 @@ const VurderingAvslag12_x_og_16 = ({
       </Nav.Row>
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+      {erNyVurdering && redigerbart && (
+        <Nav.AlertStripeInfo>{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.AlertStripeInfo>
+      )}
       <Mui.StegKnapper
         bekreftTekst="Fatt vedtak"
         bekreftKnappProps={{

@@ -75,6 +75,10 @@ export const SedStatus = {
   AVBRUTT: "AVBRUTT",
 };
 
+export const AlertstripeTekst = {
+  NY_VURDERING_MEDL_TEKST: "Ny periode erstatter eksisterende periode i MEDL",
+};
+
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */
