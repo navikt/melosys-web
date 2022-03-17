@@ -15,7 +15,6 @@ import UtfyltAdresse from "./utfyltadresse";
 import Felter from "./felter";
 
 import { formOperations, formSelectors } from "../../../../../ducks/form";
-import { useFeatureToggle } from "../../../../../featuretoggle";
 
 import "./annenadresse.css";
 
