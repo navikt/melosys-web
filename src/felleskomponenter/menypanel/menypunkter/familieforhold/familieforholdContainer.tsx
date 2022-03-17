@@ -53,7 +53,7 @@ const FamilieforholdContainer = ({
         <>
           <Nav.Row>
             <Nav.Column xs="12" className="etikett-container">
-              <span>{behandlingsgrunnlagEtikett}</span>
+              {behandlingsgrunnlagEtikett}
               {visArbeidsforholdRolleEtiketter && <Etiketter.ArbeidstakersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>
