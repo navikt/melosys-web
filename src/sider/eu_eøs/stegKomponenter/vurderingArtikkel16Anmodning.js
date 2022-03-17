@@ -222,10 +222,13 @@ class VurderingArtikkel16Anmodning extends Component {
 
   validerArbeidsgivere = () => {
     if (this.props.arbeidsgivereIPerioden?.length === 1) {
-      this.setState({sendBrevFeilmelding: undefined})
+      this.setState({ sendBrevFeilmelding: undefined });
       return true;
     }
-    this.setState({sendBrevFeilmelding: "Ingen eller flere enn én norsk eller utenlandsk virksomhet oppgitt for avslag eller art 16.1"})
+    this.setState({
+      sendBrevFeilmelding:
+        "Ingen eller flere enn én norsk eller utenlandsk virksomhet oppgitt for avslag eller art 16.1",
+    });
     return false;
   };
 
@@ -540,7 +543,11 @@ class VurderingArtikkel16Anmodning extends Component {
               </Nav.Column>
             </Nav.Row>
           )}
-          {sendBrevFeilmelding && <Nav.AlertStripe type="advarsel" className="varsel">{sendBrevFeilmelding}</Nav.AlertStripe>}
+          {sendBrevFeilmelding && (
+            <Nav.AlertStripe type="advarsel" className="varsel">
+              {sendBrevFeilmelding}
+            </Nav.AlertStripe>
+          )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Mui.StegKnapper
               bekreftTekst="Send brevene"
