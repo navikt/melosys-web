@@ -57,23 +57,19 @@ const AnnenAdresse = ({
 }: AnnenAdresseProps) => {
   const cls = classNames(className);
 
-  const fjernAnnenAdresseToggle = useFeatureToggle("melosys.web.fjern_annen_adresse");
-  const redigerbartOgToggleDisabled = redigerbart && fjernAnnenAdresseToggle !== "enabled";
-
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
-  return (fjernAnnenAdresseToggle === "enabled" && oppgittAdresseHarVerdier) ||
-    fjernAnnenAdresseToggle !== "enabled" ? (
+  return oppgittAdresseHarVerdier ? (
     <div className={cls}>
       <EditerbartElement
-        redigerbart={redigerbartOgToggleDisabled}
+        redigerbart={redigerbart}
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         onBinClick={resetOppgittAdresse}
         symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
-        redigererRender={() => <Felter redigerbart={redigerbartOgToggleDisabled} />}
+        redigererRender={() => <Felter redigerbart={redigerbart} />}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
         ingenDataRender={(apneRedigering) =>
-          redigerbartOgToggleDisabled && (
+          redigerbart && (
             <>
               <Nav.Typo.Normaltekst className="annenadresse__infotekst">
                 Her kan du legge til en adresse som vil bli brukt som bostedsadresse i A1 og SED. I brev benyttes
