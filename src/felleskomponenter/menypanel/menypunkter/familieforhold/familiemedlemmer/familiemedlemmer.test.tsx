@@ -6,13 +6,13 @@ import { act } from "react-dom/test-utils";
 
 import * as Nav from "../../../../../navFrontend";
 
-import { FamiliemedlemmerFraPDL } from "./familiemedlemmerFraPDL";
+import { Familiemedlemmer } from "./familiemedlemmer";
 import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { HentFamiliemedlemmerDocument } from "./hentFamiliemedlemmer.generated";
 import { Familiemedlem as FamiliemedlemType, Familierelasjonsrolle } from "../../../../../graphql";
 
-describe("FamiliemedlemmerFraPDL", () => {
-  const mockedProps = mock<ComponentProps<typeof FamiliemedlemmerFraPDL>>();
+describe("Familiemedlemmer", () => {
+  const mockedProps = mock<ComponentProps<typeof Familiemedlemmer>>();
   const props = instance(mockedProps);
 
   beforeEach(() => {
@@ -20,16 +20,16 @@ describe("FamiliemedlemmerFraPDL", () => {
   });
 
   it("viser melding ved loading", () => {
-    const familiemedlemmerFraPDL = mount(<FamiliemedlemmerFraPDL {...props} />, {
+    const familiemedlemmer = mount(<Familiemedlemmer {...props} />, {
       wrappingComponent: MockedProvider,
     });
 
-    expect(familiemedlemmerFraPDL.contains("Henter familiemedlemmer...")).toBe(true);
+    expect(familiemedlemmer.contains("Henter familiemedlemmer...")).toBe(true);
   });
 
   it("viser melding ved nettverkserror", () => {
     return act(async () => {
-      const familiemedlemmerFraPDL = await mount(<FamiliemedlemmerFraPDL {...props} />, {
+      const familiemedlemmer = await mount(<Familiemedlemmer {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -49,16 +49,16 @@ describe("FamiliemedlemmerFraPDL", () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 20);
       });
-      familiemedlemmerFraPDL.update();
+      familiemedlemmer.update();
 
-      const alertstripe = familiemedlemmerFraPDL.find(Nav.AlertStripeFeil);
+      const alertstripe = familiemedlemmer.find(Nav.AlertStripeFeil);
       expect(alertstripe.contains("Kunne ikke hente familiemedlemmer!")).toBe(true);
     });
   });
 
   it("viser FamiliemedlemGrupper for barn og ektefelle/partner", () => {
     return act(async () => {
-      const familiemedlemmer: FamiliemedlemType[] = [
+      const persondata: FamiliemedlemType[] = [
         {
           navn: "barn",
           ident: "barneident",
@@ -80,7 +80,7 @@ describe("FamiliemedlemmerFraPDL", () => {
           sivilstandGyldighetsperiodeFom: "",
         },
       ];
-      const familiemedlemmerFraPDL = mount(<FamiliemedlemmerFraPDL {...props} />, {
+      const familiemedlemmer = mount(<Familiemedlemmer {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -95,7 +95,7 @@ describe("FamiliemedlemmerFraPDL", () => {
                 data: {
                   hentSaksopplysninger: {
                     persondata: {
-                      familiemedlemmer,
+                      persondata,
                     },
                   },
                 },
@@ -108,12 +108,12 @@ describe("FamiliemedlemmerFraPDL", () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 20);
       });
-      familiemedlemmerFraPDL.update();
+      familiemedlemmer.update();
 
-      const familiemedlemGrupper = familiemedlemmerFraPDL.find(FamiliemedlemGruppe);
+      const familiemedlemGrupper = familiemedlemmer.find(FamiliemedlemGruppe);
       expect(familiemedlemGrupper).toHaveLength(2);
-      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual([familiemedlemmer[0]]);
-      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual([familiemedlemmer[1]]);
+      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual([persondata[0]]);
+      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual([persondata[1]]);
     });
   });
 });

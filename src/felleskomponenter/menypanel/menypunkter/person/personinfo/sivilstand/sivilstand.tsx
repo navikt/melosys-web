@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../ui";
-
-import { useFeatureToggle } from "../../../../../../featuretoggle";
 import SivilstandModal from "./sivilstandModal";
 import { useHentSivilstandQuery } from "./hentSivilstand.generated";
 
@@ -15,8 +13,6 @@ interface SivilstandProps {
 }
 
 const Sivilstand = ({ behandlingID, modalAriaHideApp }: SivilstandProps) => {
-  const pdlToggle = useFeatureToggle("melosys.pdl.aktiv");
-
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
 
   const {
@@ -57,11 +53,9 @@ const Sivilstand = ({ behandlingID, modalAriaHideApp }: SivilstandProps) => {
       {sivilstandData && (
         <Nav.Typo.Element>
           <span className="personinfo__sivilstand">{aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}</span>
-          {pdlToggle === "enabled" && (
-            <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisSivilstandModal(true)}>
-              Vis detaljer
-            </Mui.Lenkeknapp>
-          )}
+          <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisSivilstandModal(true)}>
+            Vis detaljer
+          </Mui.Lenkeknapp>
         </Nav.Typo.Element>
       )}
     </div>

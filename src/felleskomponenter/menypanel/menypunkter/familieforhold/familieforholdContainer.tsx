@@ -9,10 +9,8 @@ import * as Etiketter from "../../etiketter";
 import * as MedfolgendeFamilie from "./medfolgendeFamilie";
 
 import MKV from "../../../../melosyskodeverk";
-import FamiliemedlemmerFraTPS from "./familiemedlemmer";
-import FamiliemedlemmerFraPDL from "./familiemedlemmerFraPDL";
+import Familiemedlemmer from "./familiemedlemmer";
 import EditerbartElementListe from "../editerbartElementListe";
-import { useFeatureToggle } from "../../../../featuretoggle";
 
 import "./familieforholdContainer.css";
 import { visAldriBinSymbolsynlighet } from "../editerbartElement/editerbartElement";
@@ -24,7 +22,6 @@ interface FamilieforholdContainerProps {
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingsgrunnlagEtikett: ReactNode;
   visBehandlingsgrunnlagData: boolean;
-  setMenypanelFeilmelding: (feilmelding: string) => void;
   behandlingstema: string;
 }
 
@@ -33,11 +30,8 @@ const FamilieforholdContainer = ({
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
   visBehandlingsgrunnlagData,
-  setMenypanelFeilmelding,
   behandlingstema,
 }: FamilieforholdContainerProps) => {
-  const familiemedlemmerFraPDLToggle = useFeatureToggle("melosys.pdl.aktiv");
-
   const sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn = (familiemedlemmer: KV.Form.MedfolgendeFamilie[]) =>
     familiemedlemmer.every((familiemedlem) => familiemedlem.fnr && familiemedlem.navn);
 
@@ -52,10 +46,7 @@ const FamilieforholdContainer = ({
       </Nav.Row>
       <Nav.Row className="familiemedlemmer-row">
         <Nav.Column xs="12">
-          {familiemedlemmerFraPDLToggle === "enabled" && <FamiliemedlemmerFraPDL />}
-          {familiemedlemmerFraPDLToggle === "disabled" && (
-            <FamiliemedlemmerFraTPS setMenypanelFeilmelding={setMenypanelFeilmelding} />
-          )}
+          <Familiemedlemmer />
         </Nav.Column>
       </Nav.Row>
       {visBehandlingsgrunnlagData && (
