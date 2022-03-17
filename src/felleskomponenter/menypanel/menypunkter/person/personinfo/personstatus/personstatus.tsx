@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../ui";
 
-import { useFeatureToggle } from "../../../../../../featuretoggle";
-
 import "../personinfo.css";
 import { useHentPersonstatusQuery } from "./hentPersonstatus.generated";
 import { PersonstatusModal } from "./index";
@@ -14,8 +12,6 @@ interface PersonstatusProps {
 }
 
 const Personstatus = ({ behandlingID }: PersonstatusProps) => {
-  const pdlToggle = useFeatureToggle("melosys.pdl.aktiv");
-
   const [visPersonstatusModal, setVisPersonstatusModal] = useState(false);
 
   const {
@@ -61,11 +57,9 @@ const Personstatus = ({ behandlingID }: PersonstatusProps) => {
           <span className="personinfo__personstatus">
             {aktivePersonstatuser[0]?.tekst || "Ingen personstatus funnet"}
           </span>
-          {pdlToggle === "enabled" && (
-            <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisPersonstatusModal(true)}>
-              Vis detaljer
-            </Mui.Lenkeknapp>
-          )}
+          <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisPersonstatusModal(true)}>
+            Vis detaljer
+          </Mui.Lenkeknapp>
         </Nav.Typo.Element>
       )}
     </div>
