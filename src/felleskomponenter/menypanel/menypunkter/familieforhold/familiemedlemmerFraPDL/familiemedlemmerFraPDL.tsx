@@ -14,7 +14,7 @@ import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { Familierelasjonsrolle, Familiemedlem } from "../../../../../graphql";
 import * as StringUtils from "../../../../../utils/streng";
 import Ident from "./ident";
-import Informasjonsmodal from "./informasjonsmodal";
+import AnnenForelderModal from "./annenForelderModal";
 
 import "./familiemedlemmerFraPDL.css";
 
@@ -23,8 +23,6 @@ const mapStateToProps = (state: RootState) => ({
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
-
-const Over18Etikett = () => <Nav.EtikettBase type="info">&gt;18 år</Nav.EtikettBase>;
 
 export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
   const [barnValgtForMerInformasjon, setBarnValgtForMerInformasjon] = useState<Familiemedlem | null>(null);
@@ -79,14 +77,14 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
               width: "2",
               headerText: "",
               renderContent: (familiemedlem) =>
-                familiemedlem.alder && familiemedlem.alder >= 18 ? <Over18Etikett /> : "",
+                familiemedlem.alder && familiemedlem.alder < 18 ? <Etiketter.Under18Aar /> : "",
             },
           ]}
         />
       ) : (
-        <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
+        <Nav.Typo.Normaltekst className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
           Ingen barn registrert.
-        </Nav.Typo.EtikettLiten>
+        </Nav.Typo.Normaltekst>
       )}
       <Mui.Undertittel
         className="familiemedlemmerFraPDL__undertittel familiemedlemmerFraPDL__ektefelle-partner-undertittel"
@@ -116,12 +114,12 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
           ]}
         />
       ) : (
-        <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
+        <Nav.Typo.Normaltekst className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
           Ingen ektefelle/partner registrert.
-        </Nav.Typo.EtikettLiten>
+        </Nav.Typo.Normaltekst>
       )}
       {barnValgtForMerInformasjon && barnValgtForMerInformasjon.fnrAnnenForelder && (
-        <Informasjonsmodal
+        <AnnenForelderModal
           contentLabel="Informasjon om annen forelder"
           onRequestClose={() => setBarnValgtForMerInformasjon(null)}
           barnNavn={barnValgtForMerInformasjon.navn}
