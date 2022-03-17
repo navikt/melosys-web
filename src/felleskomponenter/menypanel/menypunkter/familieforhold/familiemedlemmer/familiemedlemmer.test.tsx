@@ -57,30 +57,31 @@ describe("Familiemedlemmer", () => {
   });
 
   it("viser FamiliemedlemGrupper for barn og ektefelle/partner", () => {
+    const familiemedlems: FamiliemedlemType[] = [
+      {
+        navn: "barn",
+        ident: "barneident",
+        relasjonsrolle: Familierelasjonsrolle.Barn,
+        alder: 12,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: "",
+        sivilstandGyldighetsperiodeFom: "",
+      },
+      {
+        navn: "ektefelle",
+        ident: "ektefelleident",
+        relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
+        alder: 30,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: "",
+        sivilstandGyldighetsperiodeFom: "",
+      },
+    ];
+
     return act(async () => {
-      const persondata: FamiliemedlemType[] = [
-        {
-          navn: "barn",
-          ident: "barneident",
-          relasjonsrolle: Familierelasjonsrolle.Barn,
-          alder: 12,
-          foreldreansvar: "",
-          fnrAnnenForelder: "",
-          sivilstand: "",
-          sivilstandGyldighetsperiodeFom: "",
-        },
-        {
-          navn: "ektefelle",
-          ident: "ektefelleident",
-          relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
-          alder: 30,
-          foreldreansvar: "",
-          fnrAnnenForelder: "",
-          sivilstand: "",
-          sivilstandGyldighetsperiodeFom: "",
-        },
-      ];
-      const familiemedlemmer = mount(<Familiemedlemmer {...props} />, {
+      const familiemedlemmer = await mount(<Familiemedlemmer {...props} />, {
         wrappingComponent: MockedProvider,
         wrappingComponentProps: {
           mocks: [
@@ -95,7 +96,7 @@ describe("Familiemedlemmer", () => {
                 data: {
                   hentSaksopplysninger: {
                     persondata: {
-                      persondata,
+                      familiemedlemmer: familiemedlems,
                     },
                   },
                 },
@@ -112,8 +113,8 @@ describe("Familiemedlemmer", () => {
 
       const familiemedlemGrupper = familiemedlemmer.find(FamiliemedlemGruppe);
       expect(familiemedlemGrupper).toHaveLength(2);
-      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual([persondata[0]]);
-      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual([persondata[1]]);
+      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual([familiemedlems[0]]);
+      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual([familiemedlems[1]]);
     });
   });
 });
