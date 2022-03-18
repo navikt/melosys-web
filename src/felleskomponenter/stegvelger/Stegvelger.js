@@ -16,11 +16,11 @@ import StegFane from "../stegFane";
 import StegMotor from "./stegMotor";
 
 import { anmodningunntakOperations } from "../../ducks/anmodningunntak";
-import { anmodningsperioderSelectors, anmodningsperioderOperations } from "../../ducks/anmodningsperioder";
-import { anmodningsperiodesvarSelectors, anmodningsperiodesvarOperations } from "../../ducks/anmodningsperiodesvar";
+import { anmodningsperioderOperations, anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
+import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from "../../ducks/anmodningsperiodesvar";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../ducks/avklartefakta";
-import { behandlingsperioderSelectors, behandlingsperioderOperations } from "../../ducks/behandlingsperioder";
+import { behandlingsperioderOperations, behandlingsperioderSelectors } from "../../ducks/behandlingsperioder";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { flytSelectors } from "../../ducks/flyt";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
@@ -36,10 +36,10 @@ import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 
 import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinger";
-import { AvklartefaktaStore, VilkaarStore, EnkelDataStore, StegStoreTyper } from "./StegState";
+import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 
 import "./stegvelger.css";
-import { feiletresponsSelectors, feiletresponsOperations } from "../../ducks/feiletrespons";
+import { feiletresponsSelectors } from "../../ducks/feiletrespons";
 import Valideringsfeil, { ValideringBody } from "../dialogboks/validering/Valideringsfeil";
 
 class Stegvelger extends Component {
@@ -90,7 +90,6 @@ class Stegvelger extends Component {
   }
 
   componentWillUnmount() {
-    this.props.resetFeiletresponsState();
     this.aktiv = false;
   }
 
@@ -652,7 +651,6 @@ Stegvelger.propTypes = {
       innhold: PT.string.isRequired,
     })
   ),
-  resetFeiletresponsState: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -767,7 +765,6 @@ const mapDispatchToProps = (dispatch) => ({
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
   bestillAnmodningsperioder: (behandlingID, bestilling) =>
     dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
-  resetFeiletresponsState: () => dispatch(feiletresponsOperations.resetFeiletresponsState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

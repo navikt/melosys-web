@@ -39,6 +39,7 @@ import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperiode
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { stegMap } from "./stegMap";
 import "./saksbehandling.css";
+import { feiletresponsOperations } from "../../../ducks/feiletrespons";
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -145,6 +146,7 @@ const Saksbehandling = ({
   visHenleggDialogHandle,
   visOppfriskModal,
   visRevurderFagsakDialogHandle,
+  resetFeiletresponsState,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [bestemmelser, setBestemmelser] = useState([]);
@@ -206,6 +208,7 @@ const Saksbehandling = ({
       resetMedlemskapsperiodeState();
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
+      resetFeiletresponsState();
       skjulMenypanel();
     };
   }, []);
@@ -377,6 +380,7 @@ Saksbehandling.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
+  resetFeiletresponsState: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -434,6 +438,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
+  resetFeiletresponsState: () => dispatch(feiletresponsOperations.resetFeiletresponsState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

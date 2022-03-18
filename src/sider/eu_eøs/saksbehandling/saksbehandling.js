@@ -37,6 +37,7 @@ import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiod
 import { landkoderOperations } from "../../../ducks/landkoder";
 
 import "./saksbehandling.css";
+import { feiletresponsOperations } from "../../../ducks/feiletrespons";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
@@ -115,6 +116,7 @@ class Saksbehandling extends Component {
     this.props.resetVilkarState();
     this.props.resetBehandlingsgrunnlagState();
     this.props.resetBehandlingsPerioderState();
+    this.props.resetFeiletresponsState();
   }
 
   setSaksopplysningerLastet(lastet) {
@@ -400,6 +402,7 @@ Saksbehandling.propTypes = {
   dokumenter: PT.array.isRequired,
   behandlingsstatus: PT.string.isRequired,
   hentAnmodningsperiodesvar: PT.func.isRequired,
+  resetFeiletresponsState: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -479,6 +482,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
+  resetFeiletresponsState: () => dispatch(feiletresponsOperations.resetFeiletresponsState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
