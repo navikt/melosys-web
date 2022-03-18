@@ -1,6 +1,6 @@
 import { ErrorResponse } from "melosys-api";
 
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 export const hentFeilkoder = (res: ErrorResponse | undefined, reduxStatus: string) => {
   if (res && res.feilkoder && reduxStatus === STATUS.ERROR) {
@@ -32,7 +32,3 @@ export const hentFeilmelding = (
   }
   return [];
 };
-
-export const harFeilkode = (data: any) => data.feilkoder && data.feilkoder.length > 0;
-
-export const harFeilmelding = (data: any) => data.message;
