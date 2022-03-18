@@ -123,7 +123,6 @@ Saksopplysninger.propTypes = {
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
-  visValideringModalDialogHandle: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
 };

@@ -237,7 +237,6 @@ class Saksbehandling extends Component {
       behandlingsgrunnlagMottaksdato,
       visRevurderFagsakDialogHandle,
       tilForsiden,
-      visValideringModalDialogHandle,
       startOgVisOppfriskModal,
       dokumentOversikt,
       dokumenter,
@@ -277,7 +276,6 @@ class Saksbehandling extends Component {
                     oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                     lagreAllData={this.props.lagreAllData}
                     tilForsiden={tilForsiden}
-                    visValideringModalDialogHandle={visValideringModalDialogHandle}
                     startOgVisOppfriskModal={startOgVisOppfriskModal}
                   />
                 </Nav.Column>
@@ -394,7 +392,6 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
-  visValideringModalDialogHandle: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,

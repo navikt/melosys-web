@@ -9,4 +9,14 @@ export interface Data {
   data?: ErrorResponse;
 }
 
-export type Action = utpekTypes.Action | vedtakTypes.Action | videresendingTypes.Action | anmodningunntakTypes.Action;
+export const RESET = "feiletresponse/RESET";
+export interface ResetAction {
+  type: typeof RESET;
+}
+
+export type Action =
+  | utpekTypes.Action
+  | vedtakTypes.Action
+  | videresendingTypes.Action
+  | anmodningunntakTypes.Action
+  | ResetAction;

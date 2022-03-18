@@ -1,3 +1,3 @@
-import DialogboksValidering from "./dialogboksValidering";
+import FeilmeldingDialog from "./feilmeldingDialog";
 
-export default DialogboksValidering;
+export default FeilmeldingDialog;

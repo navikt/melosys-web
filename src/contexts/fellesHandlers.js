@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { stringify } from "qs";
 import { withRouter } from "react-router-dom";
@@ -48,7 +48,6 @@ const FellesHandlersProviderUnconnected = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visFerdigbehandleNyVurderingDialogHandle,
   visRevurderFagsakDialogHandle,
-  visValideringModalDialogHandle,
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
@@ -176,7 +175,6 @@ const FellesHandlersProviderUnconnected = ({
       tilForsiden,
       tilOpprettNySak,
       visRevurderFagsakDialogHandle,
-      visValideringModalDialogHandle,
       revurderFagsak,
       henleggHandle,
       avslaaSoknadHandle,
@@ -202,7 +200,6 @@ const FellesHandlersProviderUnconnected = ({
       tilForsiden,
       tilOpprettNySak,
       visRevurderFagsakDialogHandle,
-      visValideringModalDialogHandle,
       revurderFagsak,
       henleggHandle,
       avslaaSoknadHandle,
@@ -243,7 +240,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visFerdigbehandleNyVurderingDialogHandle: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
-  visValideringModalDialogHandle: PT.func.isRequired,
   leggTilBehandlingOppfriskes: PT.func.isRequired,
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
@@ -291,7 +287,6 @@ const mapDispatchToProps = (dispatch) => ({
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
   visFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleNyVurdering()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
-  visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
   resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),

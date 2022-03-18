@@ -7,6 +7,7 @@ import TrackVisibility from "react-on-screen";
 
 import MKV from "../../melosyskodeverk";
 
+import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
@@ -38,6 +39,8 @@ import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinge
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore, StegStoreTyper } from "./StegState";
 
 import "./stegvelger.css";
+import { feiletresponsSelectors, feiletresponsOperations } from "../../ducks/feiletrespons";
+import Valideringsfeil, { ValideringBody } from "../dialogboks/validering/Valideringsfeil";
 
 class Stegvelger extends Component {
   state = {
@@ -87,6 +90,7 @@ class Stegvelger extends Component {
   }
 
   componentWillUnmount() {
+    this.props.resetFeiletresponsState();
     this.aktiv = false;
   }
 
@@ -507,6 +511,29 @@ class Stegvelger extends Component {
     return stegNummer >= maksSteg;
   }
 
+  renderVarsler = () => {
+    const { valideringerFeilkoder, valideringerFeilmeldinger } = this.props;
+    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilkoder) {
+      return valideringerFeilkoder.map((validering) => {
+        return (
+          <Nav.AlertStripe className="varsel" type="feil">
+            <Valideringsfeil validering={validering} />
+          </Nav.AlertStripe>
+        );
+      });
+    }
+    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilmeldinger) {
+      return valideringerFeilmeldinger.map((feilmelding) => {
+        return (
+          <Nav.AlertStripe className="varsel" type="feil">
+            <ValideringBody tittel={feilmelding.tittel} innhold={feilmelding.innhold} />
+          </Nav.AlertStripe>
+        );
+      });
+    }
+    return null;
+  };
+
   render() {
     const { visBehandlingsgrunnlagFeilmeldinger } = this.state;
 
@@ -515,6 +542,7 @@ class Stegvelger extends Component {
         {({ isVisible }) => (
           <div className="stegvelger panelSeksjon">
             <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
+            {this.renderVarsler()}
             {this.state.aktuelleSteg.map((item) => (
               <StegFane key={item.id} faneData={item} />
             ))}
@@ -612,6 +640,19 @@ Stegvelger.propTypes = {
   vurder_familie_valid: PT.bool.isRequired,
   vurder_representant_valid: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
+  valideringerFeilkoder: PT.arrayOf(
+    PT.shape({
+      kode: PT.string.isRequired,
+      felter: PT.arrayOf(PT.string).isRequired,
+    })
+  ),
+  valideringerFeilmeldinger: PT.arrayOf(
+    PT.shape({
+      tittel: PT.string.isRequired,
+      innhold: PT.string.isRequired,
+    })
+  ),
+  resetFeiletresponsState: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -641,6 +682,8 @@ Stegvelger.defaultProps = {
   lagreAnmodningsperioderHandler: () => {},
   oppdaterOgLagreBehandlingerHandler: () => {},
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
+  valideringerFeilkoder: [],
+  valideringerFeilmeldinger: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -692,6 +735,8 @@ const mapStateToProps = (state) => ({
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+  valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
+  valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
 });
 
 /* eslint no-alert:off */
@@ -722,6 +767,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
   bestillAnmodningsperioder: (behandlingID, bestilling) =>
     dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
+  resetFeiletresponsState: () => dispatch(feiletresponsOperations.resetFeiletresponsState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
