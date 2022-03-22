@@ -4,7 +4,6 @@ import DialogboksFerdigbehandleNyVurdering from "./ferdigbehandleNyVurdering";
 import DialogboksHenleggSak from "./henlegg";
 import DialogboksOppfriskSak from "./oppfrisk";
 import DialogboksRevurderFagsak from "./revurderFagsak";
-import FeilmeldingDialog from "./validering";
 
 export {
   DialogboksAvslagSoknad,
@@ -13,5 +12,4 @@ export {
   DialogboksHenleggSak,
   DialogboksOppfriskSak,
   DialogboksRevurderFagsak,
-  FeilmeldingDialog,
 };

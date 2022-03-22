@@ -6,15 +6,16 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 
 import MKV from "../../../melosyskodeverk";
+import { Feilmelding } from "../../../@types";
 
-export const ValideringBody = ({ tittel, innhold }: Feilmelding) => (
+export const Feilbeskrivelse = ({ tittel, innhold }: Feilmelding) => (
   <div className="validering">
     <Nav.Typo.Element className="valideringKode">{tittel}</Nav.Typo.Element>
     <Nav.Tekstomrade>{innhold}</Nav.Tekstomrade>
   </div>
 );
 
-export interface ValideringType {
+interface ValideringType {
   kode: string;
   felter: string[];
 }
@@ -36,7 +37,7 @@ export default ({ validering }: { validering: ValideringType }) => {
 
   return (
     <Fragment>
-      <ValideringBody tittel={tittel} innhold={innhold} />
+      <Feilbeskrivelse tittel={tittel} innhold={innhold} />
       {felter.length > 0 && (
         <Fragment>
           Sjekk følgende felt(er):
@@ -46,11 +47,6 @@ export default ({ validering }: { validering: ValideringType }) => {
     </Fragment>
   );
 };
-
-interface Feilmelding {
-  tittel: string;
-  innhold: string;
-}
 
 const hentFeilmelding = (valideringKode: string) => {
   let feilmelding = feilmeldingMap.get(valideringKode);
