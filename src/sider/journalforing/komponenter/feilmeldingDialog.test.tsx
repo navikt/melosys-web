@@ -6,7 +6,7 @@ import * as Nav from "../../../navFrontend";
 import FeilmeldingDialog from "./feilmeldingDialog";
 
 describe("FeilmeldingDialog", () => {
-  let props: ComponentProps<typeof FeilmeldingDialog> = {
+  const props: ComponentProps<typeof FeilmeldingDialog> = {
     avbryt: jest.fn(),
     feilmeldinger: [],
   };
