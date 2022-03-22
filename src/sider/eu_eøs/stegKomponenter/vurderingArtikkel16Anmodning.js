@@ -226,8 +226,7 @@ class VurderingArtikkel16Anmodning extends Component {
       return true;
     }
     this.setState({
-      sendBrevFeilmelding:
-        "Ingen eller flere enn én norsk eller utenlandsk virksomhet oppgitt for avslag eller art 16.1",
+      sendBrevFeilmelding: MKV.Terms.begrunnelser.kontroll_begrunnelser.IKKE_KUN_EN_VIRKSOMHET,
     });
     return false;
   };
