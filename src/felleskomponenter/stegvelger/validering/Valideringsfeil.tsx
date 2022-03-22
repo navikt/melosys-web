@@ -9,8 +9,8 @@ import MKV from "../../../melosyskodeverk";
 import { Feilmelding } from "../../../@types";
 
 export const Feilbeskrivelse = ({ tittel, innhold }: Feilmelding) => (
-  <div className="validering">
-    <Nav.Typo.Element className="valideringKode">{tittel}</Nav.Typo.Element>
+  <div className="feilbeskrivelse">
+    <Nav.Typo.Element>{tittel}</Nav.Typo.Element>
     <Nav.Tekstomrade>{innhold}</Nav.Tekstomrade>
   </div>
 );

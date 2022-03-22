@@ -510,25 +510,25 @@ class Stegvelger extends Component {
     return stegNummer >= maksSteg;
   }
 
-  renderVarsler = () => {
+  mapFeilmeldinger = () => {
     const { valideringerFeilkoder, valideringerFeilmeldinger } = this.props;
-    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilkoder) {
-      return valideringerFeilkoder.map((validering) => {
-        return (
-          <Nav.AlertStripe className="varsel" type="feil">
+    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilkoder?.length) {
+      return (
+        <Nav.AlertStripe className="varsel" type="feil">
+          {valideringerFeilkoder.map((validering) => (
             <Valideringsfeil validering={validering} />
-          </Nav.AlertStripe>
-        );
-      });
+          ))}
+        </Nav.AlertStripe>
+      );
     }
-    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilmeldinger) {
-      return valideringerFeilmeldinger.map((feilmelding) => {
-        return (
-          <Nav.AlertStripe className="varsel" type="feil">
+    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilmeldinger?.length) {
+      return (
+        <Nav.AlertStripe className="varsel" type="feil">
+          {valideringerFeilmeldinger.map((feilmelding) => (
             <Feilbeskrivelse tittel={feilmelding.tittel} innhold={feilmelding.innhold} />
-          </Nav.AlertStripe>
-        );
-      });
+          ))}
+        </Nav.AlertStripe>
+      );
     }
     return null;
   };
@@ -541,7 +541,7 @@ class Stegvelger extends Component {
         {({ isVisible }) => (
           <div className="stegvelger panelSeksjon">
             <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
-            {this.renderVarsler()}
+            {this.mapFeilmeldinger()}
             {this.state.aktuelleSteg.map((item) => (
               <StegFane key={item.id} faneData={item} />
             ))}
