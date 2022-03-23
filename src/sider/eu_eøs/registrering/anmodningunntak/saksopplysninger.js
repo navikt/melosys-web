@@ -29,13 +29,7 @@ import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
 const uuid = require("uuid/v4");
 
-const LinkForhandsvisningSed = ({
-  redigerbart,
-  behandlingID,
-  anmodningsperiodeSvarType,
-  vedKlikk,
-  fritekst = null,
-}) => {
+const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
   let pdfDokument = [];
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
     pdfDokument = [{ navn: "Forhåndsvis SED A011", type: EKV.Koder.sedtyper.A011, erSed: true, data: { fritekst } }];
