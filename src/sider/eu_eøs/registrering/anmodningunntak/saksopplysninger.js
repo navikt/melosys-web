@@ -29,7 +29,13 @@ import PdfLenkeListe from "../../../../felleskomponenter/pdfLenkeListe";
 
 const uuid = require("uuid/v4");
 
-const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
+const LinkForhandsvisningSed = ({
+  redigerbart,
+  behandlingID,
+  anmodningsperiodeSvarType,
+  vedKlikk,
+  fritekst = null,
+}) => {
   let pdfDokument = [];
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
     pdfDokument = [{ navn: "Forhåndsvis SED A011", type: EKV.Koder.sedtyper.A011, erSed: true, data: { fritekst } }];
@@ -48,7 +54,11 @@ LinkForhandsvisningSed.propTypes = {
   behandlingID: PT.number.isRequired,
   anmodningsperiodeSvarType: PT.string.isRequired,
   vedKlikk: PT.func.isRequired,
-  fritekst: PT.string.isRequired,
+  fritekst: PT.string,
+};
+
+LinkForhandsvisningSed.defaultProps = {
+  fritekst: null,
 };
 
 const Saksopplysninger = ({
@@ -286,23 +296,25 @@ const Saksopplysninger = ({
     </Nav.Row>
   );
 
+  const renderYtterligereInformasjonRow = () => (
+    <Nav.Row>
+      <Nav.Column xs="6">
+        <Nav.Textarea
+          disabled={!redigerbart}
+          label="Ytterligere informasjon til SED (valgfri)"
+          onChange={ytterligereInfoTextAreaOnChange}
+          value={ytterligereInfoFritekst}
+          maxLength={500}
+          bredde="fullbredde"
+        />
+      </Nav.Column>
+    </Nav.Row>
+  );
+
   const renderInputfelter = (utfall) => {
     switch (utfall) {
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
-        return (
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Nav.Textarea
-                disabled={!redigerbart}
-                label="Ytterligere informasjon til SED (valgfri)"
-                onChange={ytterligereInfoTextAreaOnChange}
-                value={ytterligereInfoFritekst}
-                maxLength={500}
-                bredde="fullbredde"
-              />
-            </Nav.Column>
-          </Nav.Row>
-        );
+        return renderYtterligereInformasjonRow();
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
         return (
           <Fragment>
@@ -331,10 +343,16 @@ const Saksopplysninger = ({
               </Nav.Column>
             </Nav.Row>
             {renderBegrunnelseFritekstRow()}
+            {renderYtterligereInformasjonRow()}
           </Fragment>
         );
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
-        return renderBegrunnelseFritekstRow();
+        return (
+          <Fragment>
+            {renderBegrunnelseFritekstRow()}
+            {renderYtterligereInformasjonRow()}
+          </Fragment>
+        );
       default:
         return null;
     }
@@ -417,7 +435,7 @@ const Saksopplysninger = ({
                   behandlingID={behandlingID}
                   anmodningsperiodeSvarType={anmodningsperiodeSvarType}
                   vedKlikk={oppdaterAnmodningsperiodeSvar}
-                  fritekst={erGodkjent() ? ytterligereInfoFritekst : begrunnelseFritekst}
+                  fritekst={ytterligereInfoFritekst}
                 />
               </Nav.Row>
               {durationWarningMessage && visPeriodeVarselStripe()}
