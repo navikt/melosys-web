@@ -1,17 +1,14 @@
 import React from "react";
 import classNames from "classnames";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
 import * as KV from "../../../../../kodeverk";
 
-import EditerbartElement, { ikkeVisBinIngenDataSymbolsynlighet } from "../../editerbartElement";
+import EditerbartElement from "../../editerbartElement";
 import UtfyltAdresse from "./utfyltadresse";
-import Felter from "./felter";
 
-import { formOperations, formSelectors } from "../../../../../ducks/form";
+import { formSelectors } from "../../../../../ducks/form";
 
 import "./annenadresse.css";
 
@@ -20,35 +17,14 @@ const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  resetOppgittAdresse: () =>
-    dispatch(
-      formOperations.reset(KV.Form.SOKNAD, [
-        "oppgittAdresseTilleggsnavn",
-        "oppgittAdresseGatenavn",
-        "oppgittAdresseHusnummerEtasjeLeilighet",
-        "oppgittAdressePostboks",
-        "oppgittAdressePostnummer",
-        "oppgittAdressePoststed",
-        "oppgittAdresseRegion",
-        "oppgittAdresseLand",
-      ])
-    ),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type AnnenAdresseProps = PropsFromRedux & {
   className?: string;
 };
 
-const AnnenAdresse = ({
-  className,
-  oppgittAdresse,
-  oppgittAdresseHarVerdier,
-  resetOppgittAdresse,
-}: AnnenAdresseProps) => {
+const AnnenAdresse = ({ className, oppgittAdresse, oppgittAdresseHarVerdier }: AnnenAdresseProps) => {
   const cls = classNames(className);
 
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
@@ -58,9 +34,7 @@ const AnnenAdresse = ({
         redigerbart={false}
         harData={oppgittAdresseHarVerdier}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
-        onBinClick={resetOppgittAdresse}
-        symbolsynlighet={ikkeVisBinIngenDataSymbolsynlighet}
-        redigererRender={() => <Felter redigerbart={false} />}
+        redigererRender={() => null}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
       />
     </div>
