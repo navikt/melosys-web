@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PT from "prop-types";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
@@ -7,6 +7,7 @@ import * as MPT from "../../proptypes";
 import * as Api from "../../services/api";
 
 import Oppsummering from "./oppsummering";
+import EndreBehandlingModal from "./endreBehandlingModal";
 
 import "./sideOppsummering.css";
 
@@ -33,10 +34,19 @@ const SideOppsummering = ({
   behandlingsgrunnlagPeriodeTom,
   behandlingsgrunnlagMottaksdato,
 }: SideOppsummeringProps) => {
+  const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
+
   if (!oppsummering) return <div />;
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
+      <EndreBehandlingModal
+        fagsak={fagsak}
+        oppsummering={oppsummering}
+        skalViseModal={skalViseEndreModal}
+        lukkModal={() => setSkalViseEndreModal(false)}
+      />
+
       <Nav.Panel className="saksbehandling__soknadSammendrag">
         <Nav.Row>
           <Nav.Column xs="12">
@@ -48,6 +58,7 @@ const SideOppsummering = ({
               lovvalgsperiode={`${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`}
               behandlingsgrunnlagperiode={`${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`}
               mottattDato={behandlingsgrunnlagMottaksdato}
+              visEndreModal={() => setSkalViseEndreModal(true)}
             />
           </Nav.Column>
         </Nav.Row>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -17,7 +17,6 @@ import { arrayTilKonjunksjon, storeForbokstaverForLand } from "../../utils/stren
 import "./oppsummering.css";
 import KopierbarTekst from "../kopierbarTekst";
 import Behandlingsstatuskode from "../behandlingsstatuskode";
-import EndreBehandlingModal from "./endreBehandlingModal";
 import { useMediaQuery } from "../../utils/mediaQuery";
 
 interface OppsummeringProps {
@@ -28,6 +27,7 @@ interface OppsummeringProps {
   behandlingsgrunnlagperiode: string;
   lovvalgsperiode: string;
   mottattDato?: string;
+  visEndreModal: () => void;
   className?: string;
 }
 
@@ -40,12 +40,11 @@ const Oppsummering = (props: OppsummeringProps) => {
     behandlingsgrunnlagperiode,
     lovvalgsperiode,
     mottattDato,
+    visEndreModal,
     className,
   } = props;
 
   const isLitenSkjerm = useMediaQuery({ maxWidth: 1440 });
-
-  const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
   if (!oppsummering || !fagsak?.sakstype) return <div />;
 
@@ -117,13 +116,6 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   return (
     <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
-      <EndreBehandlingModal
-        fagsak={fagsak}
-        oppsummering={oppsummering}
-        skalViseModal={skalViseEndreModal}
-        lukkModal={() => setSkalViseEndreModal(false)}
-      />
-
       <Nav.Row className="datarad">
         <dl className="oppsummering_verdi_par">
           <dt className="nokkel">Saksnummer: </dt>
@@ -141,7 +133,7 @@ const Oppsummering = (props: OppsummeringProps) => {
             <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => setSkalViseEndreModal(true)}>
+            <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={visEndreModal}>
               <span>Endre</span>
               <Ikoner.BlyantActive />
             </Nav.Knapp>
