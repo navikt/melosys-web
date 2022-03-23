@@ -6,15 +6,11 @@ import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as MPT from "../../../proptypes";
-import * as Api from "../../../services/api";
 
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
-import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
-import { FeatureToggle } from "../../../featuretoggle";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -25,110 +21,12 @@ import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./sedbehandling.css";
 
-const behandlingsstatusMap = {
-  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-      term: MKV.Terms.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.ANMODNING_UNNTAK_SENDT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVSLUTTET,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-};
-
 const SedBehandling = ({
   match,
   behandlingstema,
   redigerbart,
   fagsak,
   oppsummering,
-  person,
   oppholdsland,
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
@@ -138,12 +36,6 @@ const SedBehandling = ({
   lastInnSaksopplysninger,
   resetSaksopplysninger,
   hentBehandlingsgrunnlag,
-  lagreOgLukk,
-  tilbakeleggOppgave,
-  visHenleggDialogHandle,
-  visAvsluttSakSomBortfaltDialogHandle,
-  visAvslagSoknadDialogHandle,
-  apneTidligereBehandlinger,
   dokumentOversikt,
   dokumenter,
 }) => {
@@ -161,7 +53,6 @@ const SedBehandling = ({
   }, []);
 
   const behandlingstemaErIkkeYrkesaktiv = behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
-  const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
 
   useEffect(() => {
     if (behandlingstemaErIkkeYrkesaktiv) {
@@ -169,22 +60,13 @@ const SedBehandling = ({
     }
   }, [behandlingstema]);
 
-  const oppdaterStatus = (_, behandlingsstatus) => {
-    if (behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET) {
-      return Api.Fagsaker.fagsak.avslutt(saksnummer);
-    }
-    return Api.Behandlinger.status.oppdaterStatus(behandlingID, behandlingsstatus);
-  };
-
   if (Utils._isNil(redigerbart)) return null;
   if (!behandlingID) return null;
   if (!behandlingstema) return null;
 
   return (
     <>
-      <FeatureToggle togglename="melosys.design.PERSONLINJE">
-        {(status) => status === "enabled" && <Personlinje />}
-      </FeatureToggle>
+      <Personlinje />
       <div id="main-container" className="main-container">
         <div className="sedbehandling">
           <Nav.Container fluid>
@@ -192,42 +74,17 @@ const SedBehandling = ({
               <Nav.Column xs="7" />
               <Nav.Column xs="5">
                 <SideOppsummering
-                  behandlingstema={behandlingstema}
-                  redigerbart={redigerbart}
-                  fagsak={fagsak}
                   oppsummering={oppsummering}
-                  person={person}
+                  fagsak={fagsak}
                   oppholdsland={behandlingstemaErIkkeYrkesaktiv ? oppholdsland : []}
+                  lovvalgsperiodeFom={lovvalgsperiodeFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom}
                   behandlingsgrunnlagPeriodeFom={
                     behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeFom : undefined
                   }
                   behandlingsgrunnlagPeriodeTom={
                     behandlingstemaErIkkeYrkesaktiv ? behandlingsgrunnlagPeriodeTom : undefined
                   }
-                  lovvalgsperiodeFom={lovvalgsperiodeFom}
-                  lovvalgsperiodeTom={lovvalgsperiodeTom}
-                  renderBehandlingsmeny={() => (
-                    <Legacybehandlingsmeny
-                      redigerbart={redigerbart}
-                      lagreOgLukkHandle={lagreOgLukk}
-                      tilbakeleggeHandle={tilbakeleggOppgave}
-                      visHenleggDialogHandle={visHenleggDialogHandle}
-                      apneTidligereBehandlinger={apneTidligereBehandlinger}
-                      visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                      visHenleggSak={!behandlingstemaErTrygdetid}
-                      visAvslagManglendeOpplysninger={!behandlingstemaErTrygdetid}
-                      visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                    />
-                  )}
-                  renderBehandlingsstatus={() => (
-                    <Behandlingsstatus
-                      behandlingID={behandlingID}
-                      redigerbart={redigerbart}
-                      oppsummering={oppsummering}
-                      behandlingsstatusMap={behandlingsstatusMap}
-                      oppdaterStatus={oppdaterStatus}
-                    />
-                  )}
                 />
                 <SaksoversiktLenke />
                 <SideDialog
@@ -252,7 +109,6 @@ SedBehandling.propTypes = {
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,
@@ -262,13 +118,7 @@ SedBehandling.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   hentBehandlingsgrunnlag: PT.func.isRequired,
-  lagreOgLukk: PT.func.isRequired,
-  tilbakeleggOppgave: PT.func.isRequired,
-  visHenleggDialogHandle: PT.func.isRequired,
-  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  visAvslagSoknadDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
-  apneTidligereBehandlinger: PT.func.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
 };
@@ -286,7 +136,6 @@ SedBehandling.defaultProps = {
 const mapStateToProps = (state) => ({
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  person: behandlingerSelectors.PersonSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   oppholdsland: behandlingsgrunnlagSelectors.OppholdsLandKTSelector(state),

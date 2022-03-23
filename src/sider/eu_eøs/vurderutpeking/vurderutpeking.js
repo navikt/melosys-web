@@ -12,20 +12,17 @@ import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
-import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
-import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
-import { FeatureToggle } from "../../../featuretoggle";
 
 import { formSelectors } from "../../../ducks/form";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { datalastingOperations } from "../../../ducks/datalasting";
-import { behandlingsgrunnlagSelectors, behandlingsgrunnlagOperations } from "../../../ducks/behandlingsgrunnlag";
+import { behandlingsgrunnlagOperations, behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { vilkarOperations } from "../../../ducks/vilkar";
-import { avklartefaktaSelectors, avklartefaktaOperations } from "../../../ducks/avklartefakta";
+import { avklartefaktaOperations, avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 import { anmodningsperioderOperations } from "../../../ducks/anmodningsperioder";
 import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { behandlingsperioderOperations } from "../../../ducks/behandlingsperioder";
@@ -36,46 +33,6 @@ import MKV from "../../../melosyskodeverk";
 import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 import "./vurderutpeking.css";
-
-const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
-
-const behandlingsstatusMap = {
-  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
-};
 
 const hentForsteSteg = (behandlingstema) => {
   switch (behandlingstema) {
@@ -95,20 +52,11 @@ const Vurderutpeking = ({
   redigerbart,
   fagsak,
   oppsummering,
-  person,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
   arbeidsland,
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
-  behandlingsmenyRedigerbart,
-  lagreOgLukk,
-  tilbakeleggOppgave,
-  visHenleggDialogHandle,
-  apneTidligereBehandlinger,
-  visAvsluttSakSomBortfaltDialogHandle,
-  visAvslagSoknadDialogHandle,
-  visRevurderFagsakDialogHandle,
   resetSaksopplysninger,
   oppdaterBehandlingsgrunnlag,
   lagreVilkar,
@@ -124,7 +72,6 @@ const Vurderutpeking = ({
   dokumentOversikt,
   dokumenter,
   vurderUtpekingFormValues,
-  behandlingsstatus,
   hentLandkoder,
 }) => {
   const {
@@ -157,13 +104,9 @@ const Vurderutpeking = ({
     ? KV.kodeTilObjekt(lovvalgslandFraForm, MKV.KTObjects.landkoder)
     : undefined;
 
-  const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
-
   return (
     <>
-      <FeatureToggle togglename="melosys.design.PERSONLINJE">
-        {(status) => status === "enabled" && <Personlinje />}
-      </FeatureToggle>
+      <Personlinje />
       <div id="main-container" className="main-container">
         <div className="vurderutpeking">
           <Nav.Container fluid>
@@ -190,41 +133,14 @@ const Vurderutpeking = ({
               </Nav.Column>
               <Nav.Column xs="5">
                 <SideOppsummering
-                  behandlingstema={behandlingstema}
-                  redigerbart={redigerbart}
-                  fagsak={fagsak}
                   oppsummering={oppsummering}
-                  person={person}
-                  lovvalgsperiodeFom={lovvalgsperiodeFom}
-                  lovvalgsperiodeTom={lovvalgsperiodeTom}
+                  fagsak={fagsak}
                   arbeidsland={arbeidsland}
                   lovvalgsland={lovvalgslandKTOBject}
+                  lovvalgsperiodeFom={lovvalgsperiodeFom}
+                  lovvalgsperiodeTom={lovvalgsperiodeTom}
                   behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                  periodeLabel="Periode fra SED"
-                  renderBehandlingsmeny={() => (
-                    <Legacybehandlingsmeny
-                      redigerbart={behandlingsmenyRedigerbart}
-                      lagreOgLukkHandle={lagreOgLukk}
-                      tilbakeleggeHandle={tilbakeleggOppgave}
-                      visHenleggDialogHandle={visHenleggDialogHandle}
-                      apneTidligereBehandlinger={apneTidligereBehandlinger}
-                      visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                      visHenleggSak
-                      visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                      visAvslagManglendeOpplysninger
-                      visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                      visRevurderFagsak={behandlingErAvsluttet}
-                    />
-                  )}
-                  renderBehandlingsstatus={() => (
-                    <Behandlingsstatus
-                      behandlingID={behandlingID}
-                      redigerbart={redigerbart}
-                      oppsummering={oppsummering}
-                      behandlingsstatusMap={behandlingsstatusMap}
-                    />
-                  )}
                 />
                 <SaksoversiktLenke />
                 <SideDialog
@@ -248,26 +164,15 @@ Vurderutpeking.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
-  behandlingsstatus: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
-  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string.isRequired,
   lovvalgsperiodeTom: PT.string.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
-  behandlingsmenyRedigerbart: PT.bool.isRequired,
-  lagreOgLukk: PT.func.isRequired,
-  tilbakeleggOppgave: PT.func.isRequired,
-  visHenleggDialogHandle: PT.func.isRequired,
-  apneTidligereBehandlinger: PT.func.isRequired,
-  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  visAvslagSoknadDialogHandle: PT.func.isRequired,
-  visOppfriskModal: PT.func.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
-  visRevurderFagsakDialogHandle: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   oppdaterBehandlingsgrunnlag: PT.func.isRequired,
@@ -293,11 +198,9 @@ Vurderutpeking.defaultProps = {
 
 const mapStateToProps = (state) => ({
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  person: behandlingerSelectors.PersonSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
@@ -307,7 +210,6 @@ const mapStateToProps = (state) => ({
   behandlingsgrunnlagPeriodeTom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).tom
   ),
-  behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   behandlingsgrunnlag: behandlingsgrunnlagSelectors.BehandlingsgrunnlagDataSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),

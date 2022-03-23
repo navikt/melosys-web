@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -48,7 +48,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
-  visApneINyttVindu: boolean;
   behandlingID: number;
   brevTypeSelectWidth?: ColumnWidth;
   mottakerSelectWidth?: ColumnWidth;
@@ -65,7 +64,6 @@ const SendBrev = ({
   oppdaterBehandling,
   redigerbart,
   resetForm,
-  visApneINyttVindu,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
@@ -186,14 +184,12 @@ const SendBrev = ({
 
   return (
     <div className="send_brev">
-      {visApneINyttVindu && (
-        <div className="send_brev__apne-nytt-vindu-container">
-          <Nav.Lenker target="_blank" href={nyttvinduHref}>
-            <span>Åpne i nytt vindu</span>
-            <Ikoner.ExternalLink />
-          </Nav.Lenker>
-        </div>
-      )}
+      <div className="send_brev__apne-nytt-vindu-container">
+        <Nav.Lenker target="_blank" href={nyttvinduHref}>
+          <span>Åpne i nytt vindu</span>
+          <Ikoner.ExternalLink />
+        </Nav.Lenker>
+      </div>
 
       <Nav.Row>
         <Nav.Column xs={brevTypeSelectWidth}>
