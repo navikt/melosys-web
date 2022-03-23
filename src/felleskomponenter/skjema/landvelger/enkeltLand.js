@@ -10,7 +10,7 @@ import * as SkjemaUtils from "../utils";
 
 import "./landvelger.css";
 
-export class EnkeltLand extends Component {
+export class InnerEnkeltLand extends Component {
   state = {
     inputVerdi: "",
     error: null,
@@ -36,8 +36,7 @@ export class EnkeltLand extends Component {
     const { value } = this.props.input;
     const { landkoder } = this.props;
     const landkodeObjekt = value && KV.kodeTilObjekt(value, landkoder);
-    const inputVerdi = landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : "";
-    return inputVerdi;
+    return landkodeObjekt ? Utils.land.landTekstFormat(landkodeObjekt) : "";
   };
 
   reduxOppdaterLand = (landkode) => {
@@ -164,7 +163,7 @@ export class EnkeltLand extends Component {
   }
 }
 
-EnkeltLand.propTypes = {
+InnerEnkeltLand.propTypes = {
   dataListID: PT.string.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   meta: PT.object.isRequired,
@@ -177,7 +176,7 @@ EnkeltLand.propTypes = {
   placeholder: PT.string,
 };
 
-EnkeltLand.defaultProps = {
+InnerEnkeltLand.defaultProps = {
   label: "",
   feil: "",
   disabled: false,
@@ -186,10 +185,10 @@ EnkeltLand.defaultProps = {
   placeholder: undefined,
 };
 
-const EnkeltLandWrapper = (props) => <Field name={props.feltNavn} component={EnkeltLand} props={props} />;
+const EnkeltLand = ({ feltNavn, ...rest }) => <Field name={feltNavn} component={InnerEnkeltLand} props={{ ...rest }} />;
 
-EnkeltLandWrapper.propTypes = {
+EnkeltLand.propTypes = {
   feltNavn: PT.string.isRequired,
 };
 
-export default EnkeltLandWrapper;
+export default EnkeltLand;

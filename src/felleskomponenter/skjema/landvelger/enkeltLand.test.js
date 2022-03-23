@@ -1,5 +1,5 @@
 import React from "react";
-import { EnkeltLand } from "./enkeltLand";
+import { InnerEnkeltLand } from "./enkeltLand";
 
 describe("EnkeltLand", () => {
   let props = null;
@@ -24,7 +24,7 @@ describe("EnkeltLand", () => {
     props.dataListID = "999";
     props.label = "label";
 
-    const enkeltLand = shallow(<EnkeltLand {...props} />);
+    const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
     const input = enkeltLand.find("Input");
     expect(input).toHaveLength(1);
 
@@ -34,7 +34,7 @@ describe("EnkeltLand", () => {
   });
 
   it("sender value prop til NAV Input korrekt når tekst endres", () => {
-    const enkeltLand = shallow(<EnkeltLand {...props} />);
+    const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
     const event = { target: { value: "test" } };
 
     enkeltLand.find("Input").simulate("change", event);
@@ -45,7 +45,7 @@ describe("EnkeltLand", () => {
   describe("ved fokus flyttet fra input", () => {
     it("hvis tekst er skrevet inn men landkoder prop mangler, lag feilmelding", () => {
       props.landkoder = [];
-      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
       const input = enkeltLand.find("Input");
 
       input.simulate("change", { target: { value: "test" } });
@@ -59,7 +59,7 @@ describe("EnkeltLand", () => {
         { kode: "NO", term: "Norge" },
         { kode: "SE", term: "Sverige" },
       ];
-      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
       const input = enkeltLand.find("Input");
 
       input.simulate("change", { target: { value: "NO" } });
@@ -70,7 +70,7 @@ describe("EnkeltLand", () => {
     });
 
     it("hvis tekst ikke er skrevet inn, ikke vis feilmelding", () => {
-      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
       const input = enkeltLand.find("Input");
 
       input.simulate("blur");
@@ -81,7 +81,7 @@ describe("EnkeltLand", () => {
 
   describe("ved tastetrykk", () => {
     it("dersom tasten er Enter, kall preventDefault", () => {
-      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const enkeltLand = shallow(<InnerEnkeltLand {...props} />);
       const input = enkeltLand.find("Input");
 
       const event = { keyCode: 13, preventDefault: jest.fn() };
