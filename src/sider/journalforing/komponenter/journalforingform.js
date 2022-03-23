@@ -169,7 +169,6 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  touchOnChange: true,
   validate: (values, props) => {
     const options = {
       context: {

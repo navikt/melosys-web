@@ -101,6 +101,7 @@ export class InnerEnkeltLand extends Component {
     if (!inputVerdi) {
       this.reduxFjernLand();
       this.tomFeilmelding();
+      this.props.input.onBlur();
       return;
     }
 
@@ -111,6 +112,8 @@ export class InnerEnkeltLand extends Component {
     } else {
       this.setState({ error: "Finner ikke landet du har skrevet inn." });
     }
+
+    this.props.input.onBlur();
   };
 
   inputEndringHandler = (e) => {

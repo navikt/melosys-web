@@ -14,7 +14,7 @@ describe("EnkeltLand", () => {
       meta: {},
       label: "",
       feil: undefined,
-      input: { onChange: () => null },
+      input: { onChange: () => null, onBlur: () => null },
       disabled: false,
     };
   });
