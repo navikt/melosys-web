@@ -5,6 +5,7 @@ import { DokumentOversikt, FysiskDokument } from "Domene";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
+
 import SideDialogSendBrev from "./sendBrev";
 import SideDialogOpprettNyBuc from "./sideDialogOpprettNyBuc";
 import SideDialogDokumenter from "./sideDialogDokumenter";
@@ -36,7 +37,7 @@ export const FaneViser = ({
     case "dokumenter":
       return <SideDialogDokumenter dokumentOversikt={dokumentOversikt} />;
     case "brevbestilling":
-      return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} />;
+      return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} visApneINyttVindu />;
     case "sedbestilling":
       return <SideDialogOpprettNyBuc behandlingID={behandlingID} dokumenter={dokumenter} />;
     case "besvarsed":
