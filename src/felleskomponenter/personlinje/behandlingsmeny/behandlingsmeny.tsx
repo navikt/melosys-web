@@ -75,7 +75,9 @@ export const Behandlingsmeny = ({
     MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
     MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
   ].includes(behandlingsstatus);
+
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
+
   const behandlingstemaErRegistreringOmUnntakNorskTrygd = [
     MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
     MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
