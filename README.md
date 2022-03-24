@@ -70,4 +70,3 @@ For å dokumentere arkitekturbeslutninger i prosjektet bruker vi Architecture De
 Denne dokumentasjonsmetoden ble tatt i bruk desember 2021, og det kan derfor hende at ikke alle tidligere bestemmelser er begrunnet.
 
 For et lettvektig ADR verktøy, se Nat Pryces' [adr-tools](https://github.com/npryce/adr-tools).
-
