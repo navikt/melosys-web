@@ -14,7 +14,6 @@ import { behandlingsgrunnlagOperations } from "../ducks/behandlingsgrunnlag";
 import { oppgaverOperations } from "../ducks/oppgaver";
 import { vedtakOperations } from "../ducks/vedtak";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
-import { behandlingerOperations } from "../ducks/behandlinger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
 import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";

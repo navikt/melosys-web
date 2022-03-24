@@ -9,7 +9,6 @@
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import * as Routing from "../../routing";
 import * as Actions from "./actions";
 import * as Selectors from "./selectors";
 
@@ -23,13 +22,6 @@ export function hentBehandling(behandlingID) {
 
 export function resetBehandlingerState() {
   return Actions.resetBenadlingerState();
-}
-
-export function apneTidligereBehandlinger(fnr) {
-  return (dispatch, getState) => {
-    sessionStorage.setItem("sokefrase", fnr);
-    Routing.nyFane("sok");
-  };
 }
 
 export function oppdaterBehandling() {
