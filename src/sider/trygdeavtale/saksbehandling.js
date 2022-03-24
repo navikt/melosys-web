@@ -10,7 +10,7 @@ import * as Utils from "../../utils";
 import Personlinje from "../../felleskomponenter/personlinje";
 import SideDialog from "../../felleskomponenter/sideDialog/sideDialog";
 import { AvslaattSoknad, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
-import SideOppsummering from "../../felleskomponenter/oppsummering/sideOppsummering";
+import Oppsummering from "../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 
@@ -162,15 +162,15 @@ const Saksbehandling = ({
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
-                <SideOppsummering
+                <Oppsummering
                   oppsummering={oppsummering}
                   fagsak={fagsak}
                   arbeidsland={arbeidsland}
+                  mottattDato={behandlingsgrunnlagMottaksdato}
                   lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom || behandlingsgrunnlagPeriodeTom}
                   behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                  behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
                 />
                 <SaksoversiktLenke />
                 <SideDialog

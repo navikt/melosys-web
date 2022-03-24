@@ -12,7 +12,7 @@ import * as API from "../../../services/api";
 
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import Stegvelger, { STEG } from "../../../felleskomponenter/stegvelger";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -202,17 +202,17 @@ const Saksbehandling = ({
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
               <Nav.Column xs="5">
-                <SideOppsummering
+                <Oppsummering
                   oppsummering={oppsummering}
                   fagsak={fagsak}
                   arbeidsland={
                     landkoder && landkoder.filter((landkodeObjekt) => arbeidsland.includes(landkodeObjekt.kode))
                   }
+                  mottattDato={behandlingsgrunnlagMottaksdato}
                   lovvalgsperiodeFom={behandlingsgrunnlagPeriodeFom}
                   lovvalgsperiodeTom={behandlingsgrunnlagPeriodeTom}
                   behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                   behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                  behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
                 />
                 <SaksoversiktLenke />
                 <SideDialog

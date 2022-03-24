@@ -11,7 +11,7 @@ import * as Api from "../../../services/api";
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
-import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
@@ -202,15 +202,15 @@ class Saksbehandling extends Component {
                   />
                 </Nav.Column>
                 <Nav.Column xs="5">
-                  <SideOppsummering
+                  <Oppsummering
                     oppsummering={oppsummering}
                     fagsak={fagsak}
                     arbeidsland={arbeidsland}
+                    mottattDato={behandlingsgrunnlagMottaksdato}
                     lovvalgsperiodeFom={lovvalgsperiodeFom}
                     lovvalgsperiodeTom={lovvalgsperiodeTom}
                     behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                     behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                    behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
                   />
                   <SaksoversiktLenke />
                   <SideDialog

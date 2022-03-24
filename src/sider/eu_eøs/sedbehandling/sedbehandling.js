@@ -9,7 +9,7 @@ import * as MPT from "../../../proptypes";
 
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
@@ -73,7 +73,7 @@ const SedBehandling = ({
             <Nav.Row>
               <Nav.Column xs="7" />
               <Nav.Column xs="5">
-                <SideOppsummering
+                <Oppsummering
                   oppsummering={oppsummering}
                   fagsak={fagsak}
                   oppholdsland={behandlingstemaErIkkeYrkesaktiv ? oppholdsland : []}

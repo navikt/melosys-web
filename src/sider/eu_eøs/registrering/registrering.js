@@ -9,7 +9,7 @@ import * as MPT from "../../../proptypes";
 
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
-import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -96,7 +96,7 @@ export const Registrering = (props) => {
                 />
               </Nav.Column>
               <Nav.Column xs="5">
-                <SideOppsummering
+                <Oppsummering
                   oppsummering={oppsummering}
                   fagsak={fagsak}
                   lovvalgsland={lovvalgsland}

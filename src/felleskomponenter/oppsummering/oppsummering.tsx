@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -18,31 +18,36 @@ import "./oppsummering.css";
 import KopierbarTekst from "../kopierbarTekst";
 import Behandlingsstatuskode from "../behandlingsstatuskode";
 import { useMediaQuery } from "../../utils/mediaQuery";
+import EndreBehandlingModal from "./endreBehandlingModal";
 
 interface OppsummeringProps {
+  oppsummering: Api.Behandlinger.behandling.Oppsummering;
+  fagsak: Api.Fagsak;
   arbeidsland: KTObject[];
   lovvalgsland: KTObject;
-  fagsak: Api.Fagsak;
-  oppsummering: Api.Behandlinger.behandling.Oppsummering;
-  behandlingsgrunnlagperiode: string;
-  lovvalgsperiode: string;
-  mottattDato?: string;
-  visEndreModal: () => void;
+  mottattDato: string;
+  lovvalgsperiodeFom: string;
+  lovvalgsperiodeTom: string;
+  behandlingsgrunnlagPeriodeFom: string;
+  behandlingsgrunnlagPeriodeTom: string;
   className?: string;
 }
 
 const Oppsummering = (props: OppsummeringProps) => {
   const {
+    oppsummering,
+    fagsak,
     arbeidsland,
     lovvalgsland,
-    fagsak,
-    oppsummering,
-    behandlingsgrunnlagperiode,
-    lovvalgsperiode,
     mottattDato,
-    visEndreModal,
+    lovvalgsperiodeFom,
+    lovvalgsperiodeTom,
+    behandlingsgrunnlagPeriodeFom,
+    behandlingsgrunnlagPeriodeTom,
     className,
   } = props;
+
+  const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
 
   const isLitenSkjerm = useMediaQuery({ maxWidth: 1440 });
 
@@ -50,6 +55,8 @@ const Oppsummering = (props: OppsummeringProps) => {
 
   const { saksnummer, sakstype, registrertDato } = fagsak;
   const { endretDato, endretAvNavn, svarFrist, behandlingstype, behandlingsfrist, behandlingstema } = oppsummering;
+  const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
+  const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
 
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
@@ -64,7 +71,7 @@ const Oppsummering = (props: OppsummeringProps) => {
     data.forEach((row) =>
       rows.push(
         <Nav.Row className="datarad" key={`datarad-${row[0]}`}>
-          <OppsummeringVerdiPar nokkel={row[0]} verdi={row[1]} ekstrafelt={<span className="kursiv">{row[2]}</span>} />
+          <OppsummeringVerdiPar nokkel={row[0]} verdi={row[1]} ekstrafelt={<span className="italic">{row[2]}</span>} />
         </Nav.Row>
       )
     );
@@ -115,55 +122,70 @@ const Oppsummering = (props: OppsummeringProps) => {
   };
 
   return (
-    <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
-      <Nav.Row className="datarad">
-        <dl className="oppsummering_verdi_par">
-          <dt className="nokkel">Saksnummer: </dt>
-          <dd>
-            <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
-              {saksnummer}
-            </KopierbarTekst>
-          </dd>
-        </dl>
-      </Nav.Row>
+    <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
+      <EndreBehandlingModal
+        fagsak={fagsak}
+        oppsummering={oppsummering}
+        skalViseModal={skalViseEndreModal}
+        lukkModal={() => setSkalViseEndreModal(false)}
+      />
 
-      <Nav.Panel className="saksinfo">
-        <Nav.Row>
-          <Nav.Column xs="8">
-            <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
-          </Nav.Column>
-          <Nav.Column xs="4">
-            <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={visEndreModal}>
-              <span>Endre</span>
-              <Ikoner.BlyantActive />
-            </Nav.Knapp>
-          </Nav.Column>
-        </Nav.Row>
+      <Nav.Panel className="saksbehandling__soknad-sammendrag">
         <Nav.Row>
           <Nav.Column xs="12">
-            <span className="bold">{KV.objektTilTerm(behandlingstype)}</span>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <span className="bold">{KV.objektTilTerm(behandlingstema)}</span>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <OppsummeringVerdiPar nokkel="Frist" verdi={formatterDatoTilNorsk(behandlingsfrist)} />
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12" className="behandlingsstatus">
-            <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
-            {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+            <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
+              <Nav.Row className="datarad">
+                <dl className="oppsummering_verdi_par">
+                  <dt className="nokkel">Saksnummer:</dt>
+                  <dd>
+                    <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
+                      {saksnummer}
+                    </KopierbarTekst>
+                  </dd>
+                </dl>
+              </Nav.Row>
+
+              <Nav.Panel className="saksinfo">
+                <Nav.Row>
+                  <Nav.Column xs="8">
+                    <Nav.Typo.Undertittel>{KV.objektTilTerm(sakstype)}</Nav.Typo.Undertittel>
+                  </Nav.Column>
+                  <Nav.Column xs="4">
+                    <Nav.Knapp className="hoyrestill endre-knapp" mini onClick={() => setSkalViseEndreModal(true)}>
+                      <span>Endre</span>
+                      <Ikoner.BlyantActive />
+                    </Nav.Knapp>
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="12">
+                    <span className="bold">{KV.objektTilTerm(behandlingstype)}</span>
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="12">
+                    <span className="bold">{KV.objektTilTerm(behandlingstema)}</span>
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="12">
+                    <OppsummeringVerdiPar nokkel="Frist" verdi={formatterDatoTilNorsk(behandlingsfrist)} />
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="12" className="behandlingsstatus">
+                    <Behandlingsstatuskode behandlingsstatus={oppsummering.behandlingsstatus} />
+                    {svarFrist && <span>{`(Svarfrist: ${formatterDatoTilNorsk(svarFrist)})`}</span>}
+                  </Nav.Column>
+                </Nav.Row>
+              </Nav.Panel>
+
+              {renderTabell()}
+            </div>
           </Nav.Column>
         </Nav.Row>
       </Nav.Panel>
-
-      {renderTabell()}
-    </div>
+    </section>
   );
 };
 
