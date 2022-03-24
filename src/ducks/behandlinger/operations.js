@@ -27,8 +27,7 @@ export function resetBehandlingerState() {
 
 export function apneTidligereBehandlinger(fnr) {
   return (dispatch, getState) => {
-    const person = Selectors.PersonSelector(getState());
-    sessionStorage.setItem("sokefrase", fnr || person.fnr);
+    sessionStorage.setItem("sokefrase", fnr);
     Routing.nyFane("sok");
   };
 }
