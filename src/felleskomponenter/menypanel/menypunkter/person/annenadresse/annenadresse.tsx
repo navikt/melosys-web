@@ -32,7 +32,7 @@ const AnnenAdresse = ({ className, oppgittAdresse, oppgittAdresseHarVerdier }: A
     <div className={cls}>
       <EditerbartElement
         redigerbart={false}
-        harData={oppgittAdresseHarVerdier}
+        harData={true}
         tittel={KV.Menypunkter.Person.undertitler.annenAdresse}
         redigererRender={() => null}
         redigeringUtfortRender={() => <UtfyltAdresse adresse={oppgittAdresse} />}
