@@ -27,7 +27,7 @@ const SedBehandling = ({
   redigerbart,
   fagsak,
   oppsummering,
-  oppholdsland,
+  lovvalgsland,
   behandlingsgrunnlagPeriodeFom,
   behandlingsgrunnlagPeriodeTom,
   lovvalgsperiodeFom,
@@ -76,7 +76,7 @@ const SedBehandling = ({
                 <Oppsummering
                   oppsummering={oppsummering}
                   fagsak={fagsak}
-                  oppholdsland={behandlingstemaErIkkeYrkesaktiv ? oppholdsland : []}
+                  lovvalgsland={behandlingstemaErIkkeYrkesaktiv ? lovvalgsland : null}
                   lovvalgsperiodeFom={lovvalgsperiodeFom}
                   lovvalgsperiodeTom={lovvalgsperiodeTom}
                   behandlingsgrunnlagPeriodeFom={
@@ -109,7 +109,7 @@ SedBehandling.propTypes = {
   redigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  oppholdsland: PT.arrayOf(MPT.Kodeverk),
+  lovvalgsland: MPT.Kodeverk.isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string,
   behandlingsgrunnlagPeriodeTom: PT.string,
   lovvalgsperiodeFom: PT.string,
@@ -126,7 +126,6 @@ SedBehandling.propTypes = {
 SedBehandling.defaultProps = {
   fagsak: undefined,
   oppsummering: undefined,
-  oppholdsland: [],
   behandlingsgrunnlagPeriodeFom: undefined,
   behandlingsgrunnlagPeriodeTom: undefined,
   lovvalgsperiodeFom: undefined,
@@ -138,7 +137,7 @@ const mapStateToProps = (state) => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-  oppholdsland: behandlingsgrunnlagSelectors.OppholdsLandKTSelector(state),
+  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
   behandlingsgrunnlagPeriodeFom: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.PeriodeSelector(state).fom
   ),
