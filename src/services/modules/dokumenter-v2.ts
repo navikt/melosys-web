@@ -10,6 +10,7 @@ export type MottakerAdresse = {
   adresselinjer: string[];
   postnr: string;
   poststed: string;
+  region: string;
   land: string;
 };
 

@@ -116,6 +116,7 @@ class VurderingArtikkel16Anmodning extends Component {
     begrunnelserFeilmelding: undefined,
     begrunnelseFritekstBrevFeilmelding: undefined,
     begrunnelseFritekstSedFeilmelding: undefined,
+    sendBrevFeilmelding: undefined,
     anmodningPending: false,
     valgteVedlegg: [],
   };
@@ -219,6 +220,17 @@ class VurderingArtikkel16Anmodning extends Component {
     this.lagreVilkar();
   };
 
+  validerArbeidsgivere = () => {
+    if (this.props.arbeidsgivereIPerioden?.length === 1) {
+      this.setState({ sendBrevFeilmelding: undefined });
+      return true;
+    }
+    this.setState({
+      sendBrevFeilmelding: MKV.Terms.begrunnelser.kontroll_begrunnelser.IKKE_KUN_EN_VIRKSOMHET,
+    });
+    return false;
+  };
+
   validerUnntakFraBestemmelse = () => {
     const valid = this.props.unntakFraBestemmelse;
     if (!valid) this.setState({ lovvalgFeilmelding: "Velg lovvalg" });
@@ -246,6 +258,7 @@ class VurderingArtikkel16Anmodning extends Component {
     const { begrunnelseKoder } = this.props.tilstand.art16_1;
     const { touch, formIsValid } = this.props;
 
+    const arbeidsgivereValid = this.validerArbeidsgivere();
     const lovvalgValid = this.validerUnntakFraBestemmelse();
     const begrunnelserValid = this.validerBegrunnelser();
     const fritekstValid = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN)
@@ -253,7 +266,7 @@ class VurderingArtikkel16Anmodning extends Component {
       : true;
     touch("mottakerinstitusjon");
 
-    return lovvalgValid && begrunnelserValid && fritekstValid && formIsValid;
+    return arbeidsgivereValid && lovvalgValid && begrunnelserValid && fritekstValid && formIsValid;
   };
 
   validerOgLagreBehandling = async () => {
@@ -301,6 +314,7 @@ class VurderingArtikkel16Anmodning extends Component {
       begrunnelseFritekstBrevFeilmelding,
       begrunnelseFritekstSedFeilmelding,
       lovvalgFeilmelding,
+      sendBrevFeilmelding,
       anmodningPending,
       valgteVedlegg,
     } = this.state;
@@ -528,6 +542,11 @@ class VurderingArtikkel16Anmodning extends Component {
               </Nav.Column>
             </Nav.Row>
           )}
+          {sendBrevFeilmelding && (
+            <Nav.AlertStripe type="advarsel" className="varsel">
+              {sendBrevFeilmelding}
+            </Nav.AlertStripe>
+          )}
           <Nav.Row className="artikkel16__ekstratopp">
             <Mui.StegKnapper
               bekreftTekst="Send brevene"
@@ -551,6 +570,7 @@ class VurderingArtikkel16Anmodning extends Component {
 
 VurderingArtikkel16Anmodning.propTypes = {
   anmodningsperiode: PT.object,
+  arbeidsgivereIPerioden: PT.arrayOf(MPT.Virksomhet).isRequired,
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -585,6 +605,7 @@ VurderingArtikkel16Anmodning.defaultProps = {
 const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
+  arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),

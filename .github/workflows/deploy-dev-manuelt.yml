@@ -1,13 +1,10 @@
 name: Build and deploy
 
 on:
-  push:
-    branches:
-      - 'master'
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Miljø (dev, q1 eller prod)'
+        description: 'Miljø (dev eller q1)'
         required: true
         default: 'dev'
 
@@ -41,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Login to Github Package Registry
         env:
@@ -49,7 +46,7 @@ jobs:
         run: docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
 
       - name: Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -99,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: Deploy redis
         uses: nais/deploy/actions/deploy@v1
         env:
@@ -133,11 +130,11 @@ jobs:
     name: Deploy til dev
     needs: build
     # always() er nødvendig for å kunne kjøre denne jobben selv om build-job er skipped, https://github.com/actions/runner/issues/491
-    if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped') && (github.event.inputs.environment == 'dev' || (github.event_name == 'push' && github.ref == 'refs/heads/master'))
+    if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped') && (github.event.inputs.environment == 'dev')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: Deploy redis
         uses: nais/deploy/actions/deploy@v1
         env:
@@ -163,53 +160,5 @@ jobs:
           SLACK_USERNAME: Github Actions
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ':clap: melosys-web ble deployet til dev :rocket:'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
-
-  # Deploy til prod manuelt
-  deploy_prod:
-    name: Deploy til prod
-    needs: build
-    # always() er nødvendig for å kunne kjøre denne jobben selv om build-job er skipped, https://github.com/actions/runner/issues/491
-    if: always() && (needs.build.result == 'success' || needs.build.result == 'skipped') && github.event.inputs.environment == 'prod'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Deploy redis
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-fss
-          RESOURCE: nais/redis.yaml
-          VAR: APP_NAME=melosys-web-redis
-      - name: Deploy
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-fss
-          RESOURCE: nais/nais.yaml
-          VARS: nais/vars-prod.json
-      - name: get commit message
-        run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
-          echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV
-      - name: Slack Notification (deploy success)
-        if: success()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_COLOR: good
-          SLACK_USERNAME: Github Actions
-          SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: ':clap: melosys-web ble deployet til prod :rocket:'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
-      - name: Slack Notification (deploy failure)
-        if: failure()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_COLOR: danger
-          SLACK_USERNAME: Github Actions
-          SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: ':crying_cat_face: melosys-web kunne ikke deployes til prod!'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
