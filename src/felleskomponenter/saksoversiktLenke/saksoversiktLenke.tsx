@@ -22,7 +22,7 @@ const SaksoversiktLenke = ({ behandlingID }: PropsFromRedux) => {
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
 
   const hentSaksoversikt = (fnr: string | undefined) => {
-    if (!fnr) throw new Error("Mangler personopplysninger mangler fnr");
+    if (!fnr) throw new Error("Personopplysninger mangler fnr");
 
     sessionStorage.setItem("sokefrase", fnr);
     Routing.nyFane("sok");
