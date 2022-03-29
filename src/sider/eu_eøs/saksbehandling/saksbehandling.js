@@ -37,7 +37,7 @@ import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiod
 import { landkoderOperations } from "../../../ducks/landkoder";
 
 import "./saksbehandling.css";
-import { feiletresponsOperations } from "../../../ducks/feiletrespons";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 
@@ -482,7 +482,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
-  resetFeiletresponsState: () => dispatch(feiletresponsOperations.resetFeiletresponsState()),
+  resetFeiletresponsState: () => dispatch(feiletResponsOperations.resetFeiletResponsState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

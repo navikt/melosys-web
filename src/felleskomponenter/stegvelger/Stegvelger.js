@@ -39,7 +39,7 @@ import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinge
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 
 import "./stegvelger.css";
-import { feiletresponsSelectors } from "../../ducks/feiletrespons";
+import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import Valideringsfeil, { Feilbeskrivelse } from "./validering/Valideringsfeil";
 
 class Stegvelger extends Component {
@@ -514,20 +514,20 @@ class Stegvelger extends Component {
     const { valideringerFeilkoder, valideringerFeilmeldinger } = this.props;
     if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilkoder?.length) {
       return (
-        <Nav.AlertStripe className="varsel" type="feil">
+        <Nav.AlertStripeFeil className="varsel">
           {valideringerFeilkoder.map((validering) => (
-            <Valideringsfeil validering={validering} />
+            <Valideringsfeil feilkode={validering} />
           ))}
-        </Nav.AlertStripe>
+        </Nav.AlertStripeFeil>
       );
     }
     if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilmeldinger?.length) {
       return (
-        <Nav.AlertStripe className="varsel" type="feil">
+        <Nav.AlertStripeFeil className="varsel">
           {valideringerFeilmeldinger.map((feilmelding) => (
             <Feilbeskrivelse tittel={feilmelding.tittel} innhold={feilmelding.innhold} />
           ))}
-        </Nav.AlertStripe>
+        </Nav.AlertStripeFeil>
       );
     }
     return null;
@@ -733,8 +733,8 @@ const mapStateToProps = (state) => ({
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
-  valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
-  valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
+  valideringerFeilkoder: feiletResponsSelectors.FeilkoderSelector(state),
+  valideringerFeilmeldinger: feiletResponsSelectors.FeilmeldingSelector(state),
 });
 
 /* eslint no-alert:off */

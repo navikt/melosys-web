@@ -4,18 +4,18 @@ import { RootState, StateSection } from "AppTypes";
 import * as DucksUtils from "../utils";
 import * as Types from "./types";
 
-const FeiletresponsSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
-  (state: RootState) => state.feiletrespons,
-  (feiletrespons) => feiletrespons
+const FeiletResponsSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
+  (state: RootState) => state.feiletRespons,
+  (feiletRespons) => feiletRespons
 );
 
-const ReduxStatusSelector = createSelector(FeiletresponsSelector, (feiletrespons) => feiletrespons.status);
+const ReduxStatusSelector = createSelector(FeiletResponsSelector, (feiletRespons) => feiletRespons.status);
 
-const FeiletResponsDataSelector = createSelector(FeiletresponsSelector, (feiletrespons) => feiletrespons.data);
+const FeiletResponsDataSelector = createSelector(FeiletResponsSelector, (feiletRespons) => feiletRespons.data);
 
 const HttpResponsDataSelector = createSelector(
   FeiletResponsDataSelector,
-  (feiletresponsData) => feiletresponsData.data
+  (feiletResponsData) => feiletResponsData.data
 );
 
 const HttpStatusSelector = createSelector(

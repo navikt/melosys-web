@@ -16,7 +16,7 @@ import behandlingstypeReducer from "./ducks/behandlingstype";
 import behandlingsstatusReducer from "./ducks/behandlingsstatus";
 import dokumenterReducer from "./ducks/dokumenter";
 import fagsakerReducer from "./ducks/fagsaker";
-import feiletResponseReducer from "./ducks/feiletrespons";
+import feiletResponseReducer from "./ducks/feiletRespons";
 import folketrygdenkodeverkReducer from "./ducks/folketrygdenkodeverk";
 import journalforingReducer from "./ducks/journalforing";
 import landkoderReducer from "./ducks/landkoder";
@@ -56,7 +56,7 @@ const createRootReducer = (history: History) =>
     behandlingsstatus: behandlingsstatusReducer,
     dokumenter: dokumenterReducer,
     fagsaker: fagsakerReducer,
-    feiletrespons: feiletResponseReducer,
+    feiletRespons: feiletResponseReducer,
     folketrygdenkodeverk: folketrygdenkodeverkReducer,
     journalforing: journalforingReducer,
     landkoder: landkoderReducer,

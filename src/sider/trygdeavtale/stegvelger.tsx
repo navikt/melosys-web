@@ -28,6 +28,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
+import { Feilkode } from "../../@types";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -44,11 +45,6 @@ interface AktueltSteg {
   status: string;
   data?: object;
   handlers?: object;
-}
-
-export interface KontrollFeil {
-  kode: string;
-  felter: string[];
 }
 
 const stegMap = {
@@ -85,7 +81,7 @@ interface Props extends PropsFromRedux {
 interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
-  valideringFeil: KontrollFeil[];
+  valideringFeil: Feilkode[];
   visBehandlingsgrunnlagFeilmeldinger: boolean;
 }
 
@@ -246,7 +242,7 @@ class Stegvelger extends Component<Props, State> {
     this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
   };
 
-  mapFeilmeldinger = (valideringsfeil: KontrollFeil[]) => (
+  mapFeilmeldinger = (valideringsfeil: Feilkode[]) => (
     <>
       {valideringsfeil.length === 1 ? (
         KV.kodeTilTerm(valideringsfeil[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)

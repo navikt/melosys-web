@@ -6,7 +6,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 
 import MKV from "../../../melosyskodeverk";
-import { Feilmelding } from "../../../@types";
+import { Feilkode, Feilmelding } from "../../../@types";
 
 export const Feilbeskrivelse = ({ tittel, innhold }: Feilmelding) => (
   <div className="feilbeskrivelse">
@@ -15,14 +15,9 @@ export const Feilbeskrivelse = ({ tittel, innhold }: Feilmelding) => (
   </div>
 );
 
-interface ValideringType {
-  kode: string;
-  felter: string[];
-}
-
-export default ({ validering }: { validering: ValideringType }) => {
-  const { tittel, innhold } = hentFeilmelding(validering.kode);
-  const felter = validering.felter
+export default ({ feilkode }: { feilkode: Feilkode }) => {
+  const { tittel, innhold } = hentFeilmelding(feilkode.kode);
+  const felter = feilkode.felter
     .map((felt) => {
       const { menypunkt, entryNr, felt: feltNavn } = mapBehandlingsgrunnlagpathTilMenypunkt(felt);
 

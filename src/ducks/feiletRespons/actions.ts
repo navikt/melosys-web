@@ -1,5 +1,5 @@
 import * as Types from "./types";
 
-export function resetFeiletresponsState() {
+export function resetFeiletResponsState() {
   return { type: Types.RESET };
 }

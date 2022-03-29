@@ -39,7 +39,7 @@ import { medlemskapsperioderOperations } from "../../../ducks/medlemskapsperiode
 import { AvslaattSoknad, HenlagtSak } from "../../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { stegMap } from "./stegMap";
 import "./saksbehandling.css";
-import { feiletresponsOperations } from "../../../ducks/feiletrespons";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -438,7 +438,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
-  resetFeiletresponsState: () => dispatch(feiletresponsOperations.resetFeiletresponsState()),
+  resetFeiletresponsState: () => dispatch(feiletResponsOperations.resetFeiletResponsState()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
