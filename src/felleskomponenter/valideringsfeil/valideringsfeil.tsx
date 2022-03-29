@@ -4,11 +4,12 @@ import { Feilkode } from "../../@types";
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
+import * as Utils from "../../utils";
 
 import "./valideringsfeil.css";
 
 export default ({ feilkoder }: { feilkoder: Feilkode[] }) => {
-  if (!feilkoder.length) {
+  if (Utils._isEmpty(feilkoder)) {
     return null;
   }
   return (
