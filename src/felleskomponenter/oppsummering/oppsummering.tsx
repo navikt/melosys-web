@@ -58,6 +58,8 @@ const Oppsummering = (props: OppsummeringProps) => {
   const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
   const behandlingsgrunnlagperiode = `${behandlingsgrunnlagPeriodeFom} - ${behandlingsgrunnlagPeriodeTom}`;
 
+  const landStorBokstav = (land: KTObject) => (land ? storeForbokstaverForLand(land.term) : "Ukjent");
+
   const landTilSetning = (land: KTObject[]) =>
     land && land.length > 0
       ? arrayTilKonjunksjon(land.map((enkeltLand) => storeForbokstaverForLand(enkeltLand.term)))
@@ -110,7 +112,7 @@ const Oppsummering = (props: OppsummeringProps) => {
   const renderTabell = () => {
     const col1 = [erSed ? ["Periode fra SED", lovvalgsperiode] : ["Søknadsperiode", behandlingsgrunnlagperiode]];
     if (erTrygdeavtale) col1.push(["Lovvalgsperiode", lovvalgsperiode]);
-    col1.push(["Land", erSed ? storeForbokstaverForLand(lovvalgsland?.term) : landTilSetning(arbeidsland)]);
+    col1.push(["Land", erSed ? landStorBokstav(lovvalgsland) : landTilSetning(arbeidsland)]);
 
     const col2 = [
       ["Søknad mottatt", mottattDato || "-"],
