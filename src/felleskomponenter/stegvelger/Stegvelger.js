@@ -40,7 +40,7 @@ import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from
 
 import "./stegvelger.css";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
-import Valideringsfeil, { Feilbeskrivelse } from "./validering/Valideringsfeil";
+import Valideringsfeil from "../valideringsfeil/valideringsfeil";
 
 class Stegvelger extends Component {
   state = {
@@ -512,20 +512,17 @@ class Stegvelger extends Component {
 
   mapFeilmeldinger = () => {
     const { valideringerFeilkoder, valideringerFeilmeldinger } = this.props;
-    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilkoder?.length) {
-      return (
-        <Nav.AlertStripeFeil className="varsel">
-          {valideringerFeilkoder.map((validering) => (
-            <Valideringsfeil feilkode={validering} />
-          ))}
-        </Nav.AlertStripeFeil>
-      );
+    if (this.erSisteSteg(this.state.aktivtStegNummer)) {
+      return <Valideringsfeil feilkoder={valideringerFeilkoder} />;
     }
     if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilmeldinger?.length) {
       return (
         <Nav.AlertStripeFeil className="varsel">
           {valideringerFeilmeldinger.map((feilmelding) => (
-            <Feilbeskrivelse tittel={feilmelding.tittel} innhold={feilmelding.innhold} />
+            <div className="feilbeskrivelse">
+              <Nav.Typo.Element>{feilmelding.tittel}</Nav.Typo.Element>
+              <Nav.Tekstomrade>{feilmelding.innhold}</Nav.Tekstomrade>
+            </div>
           ))}
         </Nav.AlertStripeFeil>
       );

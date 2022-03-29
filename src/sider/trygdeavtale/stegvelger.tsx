@@ -8,7 +8,6 @@ import { get as getValueAtPath } from "lodash";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
-import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
@@ -29,6 +28,7 @@ import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
 import { Feilkode } from "../../@types";
+import Valideringsfeil from "../../felleskomponenter/valideringsfeil/valideringsfeil";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -242,26 +242,11 @@ class Stegvelger extends Component<Props, State> {
     this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
   };
 
-  mapFeilmeldinger = (valideringsfeil: Feilkode[]) => (
-    <>
-      {valideringsfeil.length === 1 ? (
-        KV.kodeTilTerm(valideringsfeil[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)
-      ) : (
-        <ul className="valideringsfeil__liste">
-          {valideringsfeil.map((feil) => (
-            <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
-
   render() {
     const {
       state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, valideringFeil },
       props: { behandlingstype, redigerbart },
       oppdaterAktivtSteg,
-      mapFeilmeldinger,
     } = this;
 
     const vedtakStegErAktivt = aktuelleSteg?.find((steg: AktueltSteg) => steg.vedtakSteg && steg.aktivtSteg);
@@ -275,9 +260,7 @@ class Stegvelger extends Component<Props, State> {
             {aktuelleSteg && (
               <div>
                 <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-                {!Utils._isEmpty(valideringFeil) && vedtakStegErAktivt && (
-                  <Nav.AlertStripeFeil className="varselstripe">{mapFeilmeldinger(valideringFeil)}</Nav.AlertStripeFeil>
-                )}
+                {vedtakStegErAktivt && <Valideringsfeil feilkoder={valideringFeil} />}
                 {erNyVurdering && redigerbart && inngangStegErAktivt && (
                   <Nav.AlertStripeAdvarsel className="varselstripe">
                     <Nav.Typo.Normaltekst className="varselstripe__overskrift">
