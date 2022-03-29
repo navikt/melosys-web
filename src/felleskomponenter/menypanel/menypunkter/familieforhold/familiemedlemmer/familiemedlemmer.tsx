@@ -40,7 +40,8 @@ export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
 
   const ektefellePartner =
     data?.hentSaksopplysninger.persondata.familiemedlemmer.filter(
-      (fm) => fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand
+      (fm) =>
+        fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand && fm.erHistorisk != null && !fm.erHistorisk
     ) || [];
 
   const familiemedlemmerClassName = bem("familiemedlemmer");

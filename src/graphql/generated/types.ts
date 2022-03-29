@@ -36,6 +36,7 @@ export type Familiemedlem = {
   foreldreansvar?: Maybe<Scalars['String']>;
   fnrAnnenForelder?: Maybe<Scalars['String']>;
   sivilstand?: Maybe<Scalars['String']>;
+  erHistorisk?: Maybe<Scalars['Boolean']>;
   sivilstandGyldighetsperiodeFom?: Maybe<Scalars['Date']>;
 };
 

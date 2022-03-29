@@ -65,8 +65,9 @@ describe("Familiemedlemmer", () => {
         alder: 12,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "",
-        sivilstandGyldighetsperiodeFom: "",
+        sivilstand: null,
+        erHistorisk: null,
+        sivilstandGyldighetsperiodeFom: null,
       },
       {
         navn: "ektefelle",
@@ -75,7 +76,8 @@ describe("Familiemedlemmer", () => {
         alder: 30,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "",
+        sivilstand: "Gift",
+        erHistorisk: false,
         sivilstandGyldighetsperiodeFom: "",
       },
     ];
@@ -115,6 +117,96 @@ describe("Familiemedlemmer", () => {
       expect(familiemedlemGrupper).toHaveLength(2);
       expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual([familiemedlems[0]]);
       expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual([familiemedlems[1]]);
+    });
+  });
+
+  it("viser bare et barn og et ektefelle som er gift i dag med erHistorikk false", () => {
+    const ektefeller: FamiliemedlemType[] = [
+      {
+        navn: "barn",
+        ident: "barneident",
+        relasjonsrolle: Familierelasjonsrolle.Barn,
+        alder: 12,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: null,
+        erHistorisk: null,
+        sivilstandGyldighetsperiodeFom: null,
+      },
+      {
+        navn: "tidligere-ektefelle",
+        ident: "tidligere-ektefelleident",
+        relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
+        alder: 32,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: "Separert",
+        erHistorisk: true,
+        sivilstandGyldighetsperiodeFom: "",
+      },
+      {
+        navn: "nåværende-ektefelle",
+        ident: "ektefelleident",
+        relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
+        alder: 30,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: "Gift",
+        erHistorisk: false,
+        sivilstandGyldighetsperiodeFom: "",
+      },
+      {
+        navn: "gammel-ektefelle",
+        ident: "gammel-ektefelleident",
+        relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
+        alder: 44,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: "Ugift",
+        erHistorisk: true,
+        sivilstandGyldighetsperiodeFom: "",
+      },
+    ];
+
+    return act(async () => {
+      const familiemedlemmer = await mount(<Familiemedlemmer {...props} />, {
+        wrappingComponent: MockedProvider,
+        wrappingComponentProps: {
+          mocks: [
+            {
+              request: {
+                query: HentFamiliemedlemmerDocument,
+                variables: {
+                  behandlingID: 1,
+                },
+              },
+              result: {
+                data: {
+                  hentSaksopplysninger: {
+                    persondata: {
+                      familiemedlemmer: ektefeller,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
+      familiemedlemmer.update();
+
+      const familiemedlemGrupper = familiemedlemmer.find(FamiliemedlemGruppe);
+      expect(familiemedlemGrupper).toHaveLength(2);
+
+      const barnet = [ektefeller[0]];
+      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual(barnet);
+
+      const nåværendeEktefelle = [ektefeller[2]];
+      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual(nåværendeEktefelle);
     });
   });
 });

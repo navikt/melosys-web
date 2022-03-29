@@ -16,7 +16,7 @@ export type HentFamiliemedlemmerQuery = (
       { __typename?: 'Personopplysninger' }
       & { familiemedlemmer: Array<(
         { __typename?: 'Familiemedlem' }
-        & Pick<Types.Familiemedlem, 'navn' | 'ident' | 'relasjonsrolle' | 'alder' | 'foreldreansvar' | 'fnrAnnenForelder' | 'sivilstand' | 'sivilstandGyldighetsperiodeFom'>
+        & Pick<Types.Familiemedlem, 'navn' | 'ident' | 'relasjonsrolle' | 'alder' | 'foreldreansvar' | 'fnrAnnenForelder' | 'sivilstand' | 'erHistorisk' | 'sivilstandGyldighetsperiodeFom'>
       )> }
     ) }
   ) }
@@ -35,6 +35,7 @@ export const HentFamiliemedlemmerDocument = gql`
         foreldreansvar
         fnrAnnenForelder
         sivilstand
+        erHistorisk
         sivilstandGyldighetsperiodeFom
       }
     }
