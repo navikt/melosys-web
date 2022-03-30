@@ -69,7 +69,6 @@ class LinksBuilder implements ILinksBuilder {
           redigerbart={this.contentProps.redigerbart}
           behandlingsgrunnlagEtikett={this.contentProps.behandlingsgrunnlagEtikett}
           visBehandlingsgrunnlagData={this.contentProps.visBehandlingsgrunnlagData}
-          setMenypanelFeilmelding={this.contentProps.setMenypanelFeilmelding}
           behandlingstema={this.contentProps.behandlingstema}
         />
       ),

@@ -1,48 +1,21 @@
 import React, { ReactNode } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
-
-import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
-import * as Utils from "../../../../utils";
 import * as Etiketter from "../../etiketter";
-import * as Api from "../../../../services/api";
 import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 
 import PersonInfo from "./personinfo";
 import Adresser from "./adresser";
-import RegisterAdresse from "../../../adresser/registerAdresse";
-import StrukturertAdresse from "../../../adresser/strukturertAdresse";
-import UstrukturertAdresse from "../../../adresser/ustrukturertAdresse";
-import EnkeltDato from "../../../datoOmrade/enkeltDato";
 import AnnenAdresse from "./annenadresse";
 import UtenlandskIdent from "./utenlandskident";
-import ExpandableList from "../../../expandablelist";
 import Statsborgerskapsliste from "./statsborgerskapsliste";
-import { useFeatureToggle } from "../../../../featuretoggle";
 import FoedestedOgLand from "./foedestedogland";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 import "./person.css";
-
-interface AdresseRadProps {
-  periode: Api.Periode;
-  adresseNode: ReactNode;
-}
-
-export const AdresseRad = ({ periode: { fom, tom }, adresseNode }: AdresseRadProps) => (
-  <Nav.Row className="adresse__rad">
-    <Nav.Column xs="5">{adresseNode}</Nav.Column>
-    <Nav.Column xs="3">
-      <EnkeltDato dato={fom} />
-    </Nav.Column>
-    <Nav.Column xs="3">
-      <EnkeltDato dato={tom} />
-    </Nav.Column>
-  </Nav.Row>
-);
 
 interface AdresseHeaderProps {
   adresseTittel: string;
@@ -80,17 +53,11 @@ type PersonProps = PropsFromRedux & {
 export const Person = ({
   redigerbart,
   person,
-  personhistorikk,
   visArbeidsforholdRolleEtiketter,
   behandlingsgrunnlagEtikett,
   visBehandlingsgrunnlagData,
   behandlingID,
 }: PersonProps) => {
-  const pdlAdresserToggle = useFeatureToggle("melosys.pdl.aktiv");
-
-  const { bostedsadressePerioder, postadressePerioder, midlertidigAdressePerioder } =
-    personhistorikk as Api.Behandlinger.behandling.Personhistorikk;
-
   if (Object.keys(person).length === 0) {
     return null;
   }
@@ -106,88 +73,20 @@ export const Person = ({
           <PersonInfo person={person} behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row className="statsborgerskapsliste-row">
+      <Nav.Row className="persontabell-row">
         <Nav.Column xs="12">
-          <Mui.Undertittel ikon={Ikoner.Globe} tekst="Statsborgerskap" className="statsborgerskapsliste-row__tittel" />
+          <Mui.Undertittel ikon={Ikoner.Globe} tekst="Statsborgerskap" className="persontabell-row__tittel" />
           <Statsborgerskapsliste behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
+      <Nav.Row className="persontabell-row">
         <Nav.Column xs="12">
-          <Mui.Undertittel ikon={Ikoner.Location} tekst="Adresser" />
+          <Mui.Undertittel ikon={Ikoner.Location} tekst="Adresser" className="persontabell-row__tittel" />
+        </Nav.Column>
+        <Nav.Column xs="12">
+          <Adresser behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
-
-      {pdlAdresserToggle === "enabled" ? (
-        <Adresser behandlingID={behandlingID} />
-      ) : (
-        <Nav.Row className="registrerteAdresser">
-          <Nav.Column xs="12">
-            {bostedsadressePerioder.length > 0 && (
-              <ExpandableList
-                header={<AdresseHeader adresseTittel="Bostedsadresse" />}
-                elements={bostedsadressePerioder}
-                idFromElement={() => Utils._uuid()}
-                renderElement={(element) => (
-                  <AdresseRad
-                    adresseNode={<RegisterAdresse adresse={element.bostedsadresse} />}
-                    periode={element.periode}
-                  />
-                )}
-                amountOfItemsCollapsed={1}
-                btnTextCollapsed="Åpne historikk"
-                btnTextExpanded="Lukk historikk"
-                chevron
-                dividers
-              />
-            )}
-            {postadressePerioder.length > 0 && (
-              <ExpandableList
-                header={<AdresseHeader adresseTittel="Postadresse" />}
-                elements={postadressePerioder}
-                idFromElement={() => Utils._uuid()}
-                renderElement={(element) => (
-                  <AdresseRad
-                    adresseNode={<UstrukturertAdresse adresse={element.postadresse} />}
-                    periode={element.periode}
-                  />
-                )}
-                amountOfItemsCollapsed={1}
-                btnTextCollapsed="Åpne historikk"
-                btnTextExpanded="Lukk historikk"
-                chevron
-                dividers
-              />
-            )}
-            {midlertidigAdressePerioder.length > 0 && (
-              <ExpandableList
-                header={<AdresseHeader adresseTittel="Midlertidig adresse" />}
-                elements={midlertidigAdressePerioder}
-                idFromElement={() => Utils._uuid()}
-                renderElement={(element) => {
-                  const {
-                    midlertidigAdresse: { adressetype, strukturertAdresse, ustrukturertAdresse },
-                    periode,
-                  } = element;
-                  let adresseNode = null;
-
-                  if (adressetype === KV.Koder.AdresseType.STRUKTURERT)
-                    adresseNode = <StrukturertAdresse adresse={strukturertAdresse} />;
-                  else if (adressetype === KV.Koder.AdresseType.USTRUKTURERT)
-                    adresseNode = <UstrukturertAdresse adresse={ustrukturertAdresse} />;
-
-                  return <AdresseRad adresseNode={adresseNode} periode={periode} />;
-                }}
-                amountOfItemsCollapsed={1}
-                btnTextCollapsed="Åpne historikk"
-                btnTextExpanded="Lukk historikk"
-                chevron
-                dividers
-              />
-            )}
-          </Nav.Column>
-        </Nav.Row>
-      )}
       {visBehandlingsgrunnlagData && (
         <>
           <Nav.Row>
@@ -198,7 +97,7 @@ export const Person = ({
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="9">
-              <AnnenAdresse redigerbart={redigerbart} className="oppgittAdresse" />
+              <AnnenAdresse className="oppgittAdresse" />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>

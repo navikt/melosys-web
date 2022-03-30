@@ -14,7 +14,6 @@ import { behandlingsgrunnlagOperations } from "../ducks/behandlingsgrunnlag";
 import { oppgaverOperations } from "../ducks/oppgaver";
 import { vedtakOperations } from "../ducks/vedtak";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
-import { behandlingerOperations } from "../ducks/behandlinger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
 import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";
@@ -35,7 +34,6 @@ const FellesHandlersProviderUnconnected = ({
   lagreBehandlingsgrunnlag,
   saksnummer,
   sakstype,
-  apneTidligereBehandlinger,
   avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
@@ -171,7 +169,6 @@ const FellesHandlersProviderUnconnected = ({
       visAvslagSoknadDialogHandle,
       visOppfriskModal: visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
-      apneTidligereBehandlinger,
       tilForsiden,
       tilOpprettNySak,
       visRevurderFagsakDialogHandle,
@@ -196,7 +193,6 @@ const FellesHandlersProviderUnconnected = ({
       visAvslagSoknadDialogHandle,
       visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
-      apneTidligereBehandlinger,
       tilForsiden,
       tilOpprettNySak,
       visRevurderFagsakDialogHandle,
@@ -227,7 +223,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   lagreBehandlingsgrunnlag: PT.func.isRequired,
   saksnummer: PT.string,
   sakstype: PT.string,
-  apneTidligereBehandlinger: PT.func.isRequired,
   avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
@@ -275,7 +270,6 @@ const mapDispatchToProps = (dispatch) => ({
   oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
-  apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),

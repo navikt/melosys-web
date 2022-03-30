@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
+import classnames from "classnames";
 
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../ui";
 import * as Etiketter from "../../../etiketter";
+import * as StringUtils from "../../../../../utils/streng";
 
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import { Familierelasjonsrolle, Familiemedlem } from "../../../../../graphql";
-import * as StringUtils from "../../../../../utils/streng";
+import FamiliemedlemGruppe from "./familiemedlemGruppe";
 import Ident from "./ident";
-import Informasjonsmodal from "./informasjonsmodal";
+import bem from "../../../../../bemUtils";
+import AnnenForelderModal from "./annenForelderModal";
 
-import "./familiemedlemmerFraPDL.css";
+import "./familiemedlemmer.css";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -24,9 +26,7 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const Over18Etikett = () => <Nav.EtikettBase type="info">&gt;18 år</Nav.EtikettBase>;
-
-export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
+export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
   const [barnValgtForMerInformasjon, setBarnValgtForMerInformasjon] = useState<Familiemedlem | null>(null);
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
@@ -43,10 +43,12 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
       (fm) => fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand
     ) || [];
 
+  const familiemedlemmerClassName = bem("familiemedlemmer");
+
   return (
-    <div className="familiemedlemmerFraPDL">
-      <Etiketter.FraRegister className="familiemedlemmerFraPDL__fra-register-etikett" />
-      <Mui.Undertittel className="familiemedlemmerFraPDL__undertittel" ikon={Ikoner.Child} tekst="Barn" />
+    <div className={familiemedlemmerClassName.block}>
+      <Etiketter.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
+      <Mui.Undertittel className={familiemedlemmerClassName.element("undertittel")} ikon={Ikoner.Child} tekst="Barn" />
       {barn.length > 0 ? (
         <FamiliemedlemGruppe
           familiemedlemmer={barn}
@@ -79,21 +81,26 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
               width: "2",
               headerText: "",
               renderContent: (familiemedlem) =>
-                familiemedlem.alder && familiemedlem.alder >= 18 ? <Over18Etikett /> : "",
+                familiemedlem.alder && familiemedlem.alder < 18 ? <Etiketter.Under18Aar /> : "",
             },
           ]}
         />
       ) : (
-        <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
+        <Nav.Typo.Normaltekst
+          className={familiemedlemmerClassName.element("ingen-familiemedlemmer-registrert-etikett")}
+        >
           Ingen barn registrert.
-        </Nav.Typo.EtikettLiten>
+        </Nav.Typo.Normaltekst>
       )}
       <Mui.Undertittel
-        className="familiemedlemmerFraPDL__undertittel familiemedlemmerFraPDL__ektefelle-partner-undertittel"
+        className={classnames(
+          familiemedlemmerClassName.element("undertittel"),
+          familiemedlemmerClassName.element("ektefelle-partner-undertittel")
+        )}
         ikon={Ikoner.CoApplicant}
         tekst="Ektefelle/partner"
       />
-      <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__samboer-etikett">
+      <Nav.Typo.EtikettLiten className={familiemedlemmerClassName.element("samboer-etikett")}>
         Samboer registreres ikke som relasjon i PDL
       </Nav.Typo.EtikettLiten>
       {ektefellePartner.length > 0 ? (
@@ -116,12 +123,14 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
           ]}
         />
       ) : (
-        <Nav.Typo.EtikettLiten className="familiemedlemmerFraPDL__ingen-familiemedlemmer-registrert-etikett">
+        <Nav.Typo.Normaltekst
+          className={familiemedlemmerClassName.element("ingen-familiemedlemmer-registrert-etikett")}
+        >
           Ingen ektefelle/partner registrert.
-        </Nav.Typo.EtikettLiten>
+        </Nav.Typo.Normaltekst>
       )}
       {barnValgtForMerInformasjon && barnValgtForMerInformasjon.fnrAnnenForelder && (
-        <Informasjonsmodal
+        <AnnenForelderModal
           contentLabel="Informasjon om annen forelder"
           onRequestClose={() => setBarnValgtForMerInformasjon(null)}
           barnNavn={barnValgtForMerInformasjon.navn}
@@ -132,4 +141,4 @@ export const FamiliemedlemmerFraPDL = ({ behandlingID }: PropsFromRedux) => {
   );
 };
 
-export default connector(FamiliemedlemmerFraPDL);
+export default connector(Familiemedlemmer);

@@ -6,7 +6,8 @@ import * as Utils from "../../../../../../utils";
 import { useHentBostedsadresseForPersonQuery } from "./hentBostedsadresseForPerson.generated";
 import { StrukturertAdresse } from "../../../../../adresser";
 
-import "./informasjonsmodal.css";
+import "./annenForelderModal.css";
+import bem from "../../../../../../bemUtils";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
 
@@ -18,7 +19,7 @@ interface InformasjonsmodalProps {
   ariaHideApp?: boolean;
 }
 
-const Informasjonsmodal = ({
+const AnnenForelderModal = ({
   onRequestClose,
   contentLabel,
   barnNavn,
@@ -43,9 +44,12 @@ const Informasjonsmodal = ({
   const aktiveBostedsadresser =
     data?.hentPersonopplysninger.bostedsadresser.filter((bostedsadresse) => !bostedsadresse.erHistorisk) || [];
 
-  const mainContent = (
-    <div>
-      <Nav.Row className="informasjonsmodal__tabell-header">
+  const annenForelderModalClassName = bem("annen-forelder-modal");
+  const annenForelderTabellClassName = bem(annenForelderModalClassName.element("tabell"));
+
+  const AnnenForelderTabell = () => (
+    <div className={annenForelderTabellClassName.block}>
+      <Nav.Row className={annenForelderTabellClassName.element("header")}>
         <Nav.Column xs="3">Navn forelder</Nav.Column>
         <Nav.Column xs="3">Adresse</Nav.Column>
         <Nav.Column xs="3">Register</Nav.Column>
@@ -53,7 +57,7 @@ const Informasjonsmodal = ({
       </Nav.Row>
       {aktiveBostedsadresser.length > 0 ? (
         aktiveBostedsadresser.map((bostedsadresse) => (
-          <Nav.Row className="informasjonsmodal__tabell-row" key={Utils._uuid()}>
+          <Nav.Row className={annenForelderTabellClassName.element("row")} key={Utils._uuid()}>
             <Nav.Column xs="3">{navn}</Nav.Column>
             <Nav.Column xs="3">
               <StrukturertAdresse adresse={bostedsadresse.adresse} />
@@ -63,7 +67,7 @@ const Informasjonsmodal = ({
           </Nav.Row>
         ))
       ) : (
-        <Nav.Row className="informasjonsmodal__tabell-row">
+        <Nav.Row className={annenForelderTabellClassName.element("row")}>
           <Nav.Column xs="3">{navn}</Nav.Column>
           <Nav.Column xs="3">Ukjent</Nav.Column>
           <Nav.Column xs="3">Ukjent</Nav.Column>
@@ -75,7 +79,7 @@ const Informasjonsmodal = ({
 
   return (
     <Nav.Modal
-      contentClass="informasjonsmodal"
+      className={annenForelderModalClassName.block}
       contentLabel={contentLabel}
       isOpen
       shouldCloseOnOverlayClick
@@ -84,12 +88,14 @@ const Informasjonsmodal = ({
       // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
-      <Nav.Typo.Element>Barn: {barnNavn}</Nav.Typo.Element>
+      <Nav.Typo.Innholdstittel className={annenForelderModalClassName.element("tittel")}>
+        Barn: {barnNavn}
+      </Nav.Typo.Innholdstittel>
       {loading && loadingContent}
       {error && errorContent}
-      {!loading && !error && data && mainContent}
+      {!loading && !error && data && <AnnenForelderTabell />}
     </Nav.Modal>
   );
 };
 
-export default Informasjonsmodal;
+export default AnnenForelderModal;

@@ -7,27 +7,27 @@ const MottakerAdresse = ({
   adresselinjer,
   postnr,
   poststed,
+  region,
   land,
   className,
-}: DokumenterV2.MottakerAdresse & { className: string }) => {
-  return (
-    <div className={className}>
-      {!tittel?.orgnr && (
-        <div>
-          <b>{tittel.mottakerNavn}</b>
-        </div>
-      )}
+}: DokumenterV2.MottakerAdresse & { className: string }) => (
+  <div className={className}>
+    {!tittel?.orgnr && (
+      <div>
+        <b>{tittel.mottakerNavn}</b>
+      </div>
+    )}
 
-      {adresselinjer.map((linje) => (
-        <span key={Utils._uuid()} className="mottaker__adresselinje">
-          {linje},{" "}
-        </span>
-      ))}
-      <span className="mottaker__adresselinje">
-        {postnr} {poststed}, {land}
+    {adresselinjer.map((linje) => (
+      <span key={Utils._uuid()} className="mottaker__adresselinje">
+        {`${linje}, `}
       </span>
-    </div>
-  );
-};
+    ))}
+    <span className="mottaker__adresselinje">
+      {postnr} {poststed}
+      {region && `, ${region}`}, {land}
+    </span>
+  </div>
+);
 
 export default MottakerAdresse;
