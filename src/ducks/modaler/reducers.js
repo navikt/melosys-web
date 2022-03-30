@@ -7,7 +7,6 @@ const modaler = {
   ferdigbehandleNyVurdering: "ferdigbehandleNyVurdering",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
-  validering: "validering",
   revurderFagsak: "revurderFagsak",
 };
 
@@ -25,9 +24,6 @@ const initialState = {
     [modaler.oppfrisk]: {
       synlig: false,
       behandlingUnderOppfriskning: null,
-    },
-    [modaler.validering]: {
-      synlig: false,
     },
     [modaler.revurderFagsak]: {
       synlig: false,
@@ -67,9 +63,6 @@ export default function reducer(state = initialState, action = {}) {
     }
     case Types.OPPDATER_OPPFRISK: {
       return lagNyState(state, action, modaler.oppfrisk);
-    }
-    case Types.OPPDATER_VALIDERING: {
-      return lagNyState(state, action, modaler.validering);
     }
     case Types.OPPDATER_REVURDER_FAGSAK: {
       return lagNyState(state, action, modaler.revurderFagsak);

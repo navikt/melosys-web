@@ -32,6 +32,7 @@ import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiod
 import { landkoderOperations } from "../../../ducks/landkoder";
 
 import "./saksbehandling.css";
+import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 
 class Saksbehandling extends Component {
   state = {
@@ -56,6 +57,7 @@ class Saksbehandling extends Component {
     this.props.resetVilkarState();
     this.props.resetBehandlingsgrunnlagState();
     this.props.resetBehandlingsPerioderState();
+    this.props.resetFeiletrespons();
   }
 
   setSaksopplysningerLastet(lastet) {
@@ -166,7 +168,6 @@ class Saksbehandling extends Component {
       behandlingsgrunnlagPeriodeTom,
       behandlingsgrunnlagMottaksdato,
       tilForsiden,
-      visValideringModalDialogHandle,
       startOgVisOppfriskModal,
       dokumentOversikt,
       dokumenter,
@@ -197,7 +198,6 @@ class Saksbehandling extends Component {
                     oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                     lagreAllData={this.props.lagreAllData}
                     tilForsiden={tilForsiden}
-                    visValideringModalDialogHandle={visValideringModalDialogHandle}
                     startOgVisOppfriskModal={startOgVisOppfriskModal}
                   />
                 </Nav.Column>
@@ -276,7 +276,6 @@ Saksbehandling.propTypes = {
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   behandlingsgrunnlagMottaksdato: PT.string.isRequired,
   tilForsiden: PT.func.isRequired,
-  visValideringModalDialogHandle: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
@@ -284,6 +283,7 @@ Saksbehandling.propTypes = {
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
   hentAnmodningsperiodesvar: PT.func.isRequired,
+  resetFeiletrespons: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -358,6 +358,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
   hentAnmodningsperiodesvar: (anmodningsperiodeID) =>
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
+  resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

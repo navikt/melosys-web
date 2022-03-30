@@ -10,7 +10,6 @@
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import * as DucksUtils from "../utils";
 import MKV from "../../melosyskodeverk";
 
 import { modalerOperations } from "../modaler";
@@ -26,13 +25,7 @@ export function fatt(behandlingID, body) {
     },
     {
       success: (dispatch) => {
-        dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
-      },
-      error: (dispatch, data) => {
-        if (DucksUtils.harFeilkode(data)) {
-          dispatch(modalerOperations.visValidering());
-        }
       },
     }
   );
@@ -48,13 +41,7 @@ export function endre(behandlingID, body) {
     },
     {
       success: (dispatch) => {
-        dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
-      },
-      error: (dispatch, data) => {
-        if (DucksUtils.harFeilkode(data) && DucksUtils.harFeilmelding(data)) {
-          dispatch(modalerOperations.visValidering());
-        }
       },
     }
   );
@@ -81,11 +68,6 @@ export function avslaaSoknad(behandlingID, data) {
       success: (dispatch) => {
         dispatch(modalerOperations.skjulAvslagSoknad());
         dispatch(navigeringOperations.tilForsiden());
-      },
-      error: (dispatch, errorData) => {
-        if (DucksUtils.harFeilkode(errorData)) {
-          dispatch(modalerOperations.visValidering());
-        }
       },
     }
   );

@@ -6,16 +6,14 @@ import * as Nav from "../navFrontend";
 
 import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
-import { feiletresponsSelectors } from "../ducks/feiletrespons";
 
 import {
-  DialogboksOppfriskSak,
-  DialogboksHenleggSak,
+  DialogboksAvslagSoknad,
   DialogboksAvsluttSakSomBortfalt,
   DialogboksFerdigbehandleNyVurdering,
-  DialogboksAvslagSoknad,
+  DialogboksHenleggSak,
+  DialogboksOppfriskSak,
   DialogboksRevurderFagsak,
-  DialogboksValidering,
 } from "../felleskomponenter/dialogboks";
 
 Nav.Modal.setAppElement(document.getElementById("root"));
@@ -42,10 +40,6 @@ const Modals = ({
   skjulRevurderFagsakDialogHandle,
   revurderFagsak,
   venterPaRevurderFagsak,
-  visValideringModal,
-  skjulValideringModalDialogHandle,
-  valideringerFeilkoder,
-  valideringerFeilmeldinger,
   behandlingOppfriskes,
   annenBehandlingOppfriskes,
 }) => (
@@ -83,13 +77,6 @@ const Modals = ({
         spinner={venterPaRevurderFagsak}
       />
     )}
-    {visValideringModal && (
-      <DialogboksValidering
-        avbryt={skjulValideringModalDialogHandle}
-        valideringer={valideringerFeilkoder}
-        feilmeldinger={valideringerFeilmeldinger}
-      />
-    )}
   </Fragment>
 );
 
@@ -115,27 +102,8 @@ Modals.propTypes = {
   skjulRevurderFagsakDialogHandle: PT.func.isRequired,
   revurderFagsak: PT.func.isRequired,
   venterPaRevurderFagsak: PT.bool.isRequired,
-  visValideringModal: PT.bool.isRequired,
-  skjulValideringModalDialogHandle: PT.func.isRequired,
   behandlingOppfriskes: PT.bool.isRequired,
   annenBehandlingOppfriskes: PT.bool.isRequired,
-  valideringerFeilkoder: PT.arrayOf(
-    PT.shape({
-      kode: PT.string.isRequired,
-      felter: PT.arrayOf(PT.string).isRequired,
-    })
-  ),
-  valideringerFeilmeldinger: PT.arrayOf(
-    PT.shape({
-      tittel: PT.string.isRequired,
-      innhold: PT.string.isRequired,
-    })
-  ),
-};
-
-Modals.defaultProps = {
-  valideringerFeilkoder: [],
-  valideringerFeilmeldinger: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -145,9 +113,6 @@ const mapStateToProps = (state) => ({
   visAvsluttSakSomBortfaltDialog: modalerSelectors.ErAvsluttSakSomBortfaltSynligSelector(state),
   visFerdigbehandleNyVurderingDialog: modalerSelectors.ErFerdigbehandleNyVurderingSynligSelector(state),
   visRevurderFagsak: modalerSelectors.ErRevurderFagsakSynligSelector(state),
-  visValideringModal: modalerSelectors.ErValideringSynligSelector(state),
-  valideringerFeilkoder: feiletresponsSelectors.FeilkoderSelector(state),
-  valideringerFeilmeldinger: feiletresponsSelectors.FeilmeldingSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -159,7 +124,6 @@ const mapDispatchToProps = (dispatch) => ({
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
   skjulFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.skjulFerdigbehandleNyVurdering()),
   skjulRevurderFagsakDialogHandle: () => dispatch(modalerOperations.skjulRevurderFagsak()),
-  skjulValideringModalDialogHandle: () => dispatch(modalerOperations.skjulValidering()),
 });
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);

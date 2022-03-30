@@ -1,6 +1,6 @@
 import { StateSection } from "AppTypes";
 
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 import * as Types from "./types";
 import { utpekTypes } from "../utpek";
 import { vedtakTypes } from "../vedtak";
@@ -18,6 +18,8 @@ const initialState: StateSection<Types.Data> = {
 */
 export default function reducer(state = initialState, action: Types.Action): StateSection<Types.Data> {
   switch (action.type) {
+    case Types.RESET:
+      return initialState;
     case utpekTypes.FEILET:
     case vedtakTypes.FEILET:
     case videresendingTypes.FEILET:
