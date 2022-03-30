@@ -6,8 +6,6 @@ import PT from "prop-types";
 import TrackVisibility from "react-on-screen";
 
 import MKV from "../../melosyskodeverk";
-
-import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
@@ -34,13 +32,12 @@ import { utpekingsperioderOperations, utpekingsperioderSelectors } from "../../d
 import { videresendingOperations } from "../../ducks/videresending";
 import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
-
-import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinger";
-import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
-
-import "./stegvelger.css";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
-import Valideringsfeil from "../valideringsfeil/valideringsfeil";
+import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinger";
+import { Valideringsfeil } from "../valideringsfeil";
+
+import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
+import "./stegvelger.css";
 
 class Stegvelger extends Component {
   state = {
@@ -511,21 +508,8 @@ class Stegvelger extends Component {
   }
 
   mapFeilmeldinger = () => {
-    const { valideringerFeilkoder, valideringerFeilmeldinger } = this.props;
     if (this.erSisteSteg(this.state.aktivtStegNummer)) {
-      return <Valideringsfeil feilkoder={valideringerFeilkoder} />;
-    }
-    if (this.erSisteSteg(this.state.aktivtStegNummer) && valideringerFeilmeldinger?.length) {
-      return (
-        <Nav.AlertStripeFeil className="varsel">
-          {valideringerFeilmeldinger.map((feilmelding) => (
-            <div className="feilbeskrivelse">
-              <Nav.Typo.Element>{feilmelding.tittel}</Nav.Typo.Element>
-              <Nav.Tekstomrade>{feilmelding.innhold}</Nav.Tekstomrade>
-            </div>
-          ))}
-        </Nav.AlertStripeFeil>
-      );
+      return <Valideringsfeil feilkoder={this.props.valideringerFeilkoder} />;
     }
     return null;
   };
@@ -642,12 +626,6 @@ Stegvelger.propTypes = {
       felter: PT.arrayOf(PT.string).isRequired,
     })
   ),
-  valideringerFeilmeldinger: PT.arrayOf(
-    PT.shape({
-      tittel: PT.string.isRequired,
-      innhold: PT.string.isRequired,
-    })
-  ),
 };
 
 Stegvelger.defaultProps = {
@@ -678,7 +656,6 @@ Stegvelger.defaultProps = {
   oppdaterOgLagreBehandlingerHandler: () => {},
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
   valideringerFeilkoder: [],
-  valideringerFeilmeldinger: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -731,7 +708,6 @@ const mapStateToProps = (state) => ({
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
   valideringerFeilkoder: feiletResponsSelectors.FeilkoderSelector(state),
-  valideringerFeilmeldinger: feiletResponsSelectors.FeilmeldingSelector(state),
 });
 
 /* eslint no-alert:off */

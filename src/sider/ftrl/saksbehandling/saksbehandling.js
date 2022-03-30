@@ -82,7 +82,7 @@ const Saksbehandling = ({
   startOgVisOppfriskModal,
   tilForsiden,
   visOppfriskModal,
-  resetFeiletresponsState,
+  resetFeiletrespons,
 }) => {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [bestemmelser, setBestemmelser] = useState([]);
@@ -144,7 +144,7 @@ const Saksbehandling = ({
       resetMedlemskapsperiodeState();
       resetBehandlingerState();
       resetBehandlingsgrunnlagState();
-      resetFeiletresponsState();
+      resetFeiletrespons();
       skjulMenypanel();
     };
   }, []);
@@ -279,7 +279,7 @@ Saksbehandling.propTypes = {
   skjulMenypanel: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
-  resetFeiletresponsState: PT.func.isRequired,
+  resetFeiletrespons: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -334,7 +334,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsgrunnlagState: () => dispatch(behandlingsgrunnlagOperations.resetState()),
   skjulMenypanel: () => dispatch(menypanelOperations.skjulMenypanel()),
-  resetFeiletresponsState: () => dispatch(feiletResponsOperations.resetFeiletResponsState()),
+  resetFeiletrespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

@@ -13,16 +13,18 @@ export default ({ feilkoder }: { feilkoder: Feilkode[] }) => {
     return null;
   }
   return (
-    <Nav.AlertStripeFeil className="varselstripe">
-      {feilkoder.length === 1 ? (
-        KV.kodeTilTerm(feilkoder[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)
-      ) : (
-        <ul className="feilkoder__liste">
-          {feilkoder.map((feil) => (
-            <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
-          ))}
-        </ul>
-      )}
-    </Nav.AlertStripeFeil>
+    <div className="valideringsfeil">
+      <Nav.AlertStripeFeil className="varselstripe">
+        {feilkoder.length === 1 ? (
+          KV.kodeTilTerm(feilkoder[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)
+        ) : (
+          <ul className="feilkoder__liste">
+            {feilkoder.map((feil) => (
+              <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+            ))}
+          </ul>
+        )}
+      </Nav.AlertStripeFeil>
+    </div>
   );
 };

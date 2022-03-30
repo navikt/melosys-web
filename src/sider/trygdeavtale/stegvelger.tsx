@@ -28,7 +28,7 @@ import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
 import { Feilkode } from "../../@types";
-import Valideringsfeil from "../../felleskomponenter/valideringsfeil/valideringsfeil";
+import { Valideringsfeil } from "../../felleskomponenter/valideringsfeil";
 
 export enum StegStatus {
   FERDIG = "FERDIG",

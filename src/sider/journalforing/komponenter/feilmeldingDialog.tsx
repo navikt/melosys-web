@@ -1,10 +1,14 @@
 import React, { KeyboardEvent } from "react";
-import { Feilmelding } from "../../../@types";
 
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
 import "./feilmeldingDialog.css";
+
+interface Feilmelding {
+  tittel: string;
+  innhold: string;
+}
 
 interface FeilmeldingDialogProps {
   avbryt: () => void;
