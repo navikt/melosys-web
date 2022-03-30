@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import PT from "prop-types";
 import { withRouter } from "react-router-dom";
 
-import MKV from "../../../melosyskodeverk";
-
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
@@ -13,11 +11,8 @@ import * as Api from "../../../services/api";
 import Personlinje from "../../../felleskomponenter/personlinje";
 import SideDialog from "../../../felleskomponenter/sideDialog/sideDialog";
 import { Saksopplysninger } from "./komponenter/saksopplysninger";
-import SideOppsummering from "../../../felleskomponenter/oppsummering/sideOppsummering";
+import Oppsummering from "../../../felleskomponenter/oppsummering/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
-import Behandlingsstatus from "../../../felleskomponenter/behandlingsstatus";
-import Legacybehandlingsmeny from "./komponenter/legacybehandlingsmeny";
-import { FeatureToggle } from "../../../featuretoggle";
 
 import { fagsakOperations, fagsakSelectors } from "../../../ducks/fagsaker";
 import { behandlingsresultatOperations } from "../../../ducks/behandlingsresultat";
@@ -37,60 +32,6 @@ import { anmodningsperiodesvarOperations } from "../../../ducks/anmodningsperiod
 import { landkoderOperations } from "../../../ducks/landkoder";
 
 import "./saksbehandling.css";
-
-const { AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
-
-const behandlingsstatusMap = {
-  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-      term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL,
-    },
-    {
-      kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-      term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
-    },
-  ],
-  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
-};
 
 class Saksbehandling extends Component {
   state = {
@@ -213,35 +154,22 @@ class Saksbehandling extends Component {
 
   render() {
     const {
-      anmodningsperioderErSendtUtlandet,
       redigerbart,
-      behandlingsmenyRedigerbart,
       match,
-      lagreOgLukk,
-      tilbakeleggOppgave,
-      behandlingstype,
-      behandlingstema,
       fagsak,
       oppsummering,
-      person,
       lovvalgsperiodeFom,
       lovvalgsperiodeTom,
-      visHenleggDialogHandle,
-      visAvsluttSakSomBortfaltDialogHandle,
-      visAvslagSoknadDialogHandle,
       visOppfriskModal,
-      apneTidligereBehandlinger,
       arbeidsland,
       behandlingsgrunnlagPeriodeFom,
       behandlingsgrunnlagPeriodeTom,
       behandlingsgrunnlagMottaksdato,
-      visRevurderFagsakDialogHandle,
       tilForsiden,
       visValideringModalDialogHandle,
       startOgVisOppfriskModal,
       dokumentOversikt,
       dokumenter,
-      behandlingsstatus,
     } = this.props;
     const {
       params: { snr: saksnummer },
@@ -251,17 +179,9 @@ class Saksbehandling extends Component {
     if (Utils._isNil(redigerbart)) return null;
     if (!saksopplysningerLastet) return null;
 
-    const behandlingErAvsluttet = [AVSLUTTET, MIDLERTIDIG_LOVVALGSBESLUTNING].includes(behandlingsstatus);
-    const visRevurderFagsak =
-      anmodningsperioderErSendtUtlandet ||
-      (behandlingErAvsluttet && behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE);
-    const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-
     return (
       <>
-        <FeatureToggle togglename="melosys.design.PERSONLINJE">
-          {(status) => status === "enabled" && <Personlinje />}
-        </FeatureToggle>
+        <Personlinje />
         <div id="main-container" className="main-container">
           <div className="saksbehandling">
             <Nav.Container fluid>
@@ -282,42 +202,15 @@ class Saksbehandling extends Component {
                   />
                 </Nav.Column>
                 <Nav.Column xs="5">
-                  <SideOppsummering
-                    behandlingstema={behandlingstema}
-                    redigerbart={redigerbart}
-                    fagsak={fagsak}
+                  <Oppsummering
                     oppsummering={oppsummering}
-                    person={person}
+                    fagsak={fagsak}
+                    arbeidsland={arbeidsland}
+                    mottattDato={behandlingsgrunnlagMottaksdato}
                     lovvalgsperiodeFom={lovvalgsperiodeFom}
                     lovvalgsperiodeTom={lovvalgsperiodeTom}
-                    arbeidsland={arbeidsland}
                     behandlingsgrunnlagPeriodeFom={behandlingsgrunnlagPeriodeFom}
                     behandlingsgrunnlagPeriodeTom={behandlingsgrunnlagPeriodeTom}
-                    behandlingsgrunnlagMottaksdato={behandlingsgrunnlagMottaksdato}
-                    renderBehandlingsmeny={() => (
-                      <Legacybehandlingsmeny
-                        redigerbart={behandlingsmenyRedigerbart}
-                        lagreOgLukkHandle={lagreOgLukk}
-                        tilbakeleggeHandle={tilbakeleggOppgave}
-                        visHenleggDialogHandle={visHenleggDialogHandle}
-                        apneTidligereBehandlinger={apneTidligereBehandlinger}
-                        visAvsluttSakSomBortfalt={!behandlingstypeErNyVurdering}
-                        visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
-                        visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
-                        visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
-                        visAvslagManglendeOpplysninger={!behandlingstypeErNyVurdering}
-                        visRevurderFagsakDialogHandle={visRevurderFagsakDialogHandle}
-                        visRevurderFagsak={visRevurderFagsak}
-                      />
-                    )}
-                    renderBehandlingsstatus={() => (
-                      <Behandlingsstatus
-                        behandlingID={behandlingID}
-                        redigerbart={redigerbart}
-                        oppsummering={oppsummering}
-                        behandlingsstatusMap={behandlingsstatusMap}
-                      />
-                    )}
                   />
                   <SaksoversiktLenke />
                   <SideDialog
@@ -372,27 +265,16 @@ Saksbehandling.propTypes = {
   oppdaterBehandlingerState: PT.func.isRequired,
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
-  behandlingsmenyRedigerbart: PT.bool.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   lagreAllData: PT.func.isRequired,
-  lagreOgLukk: PT.func.isRequired,
-  tilbakeleggOppgave: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
-  visHenleggDialogHandle: PT.func.isRequired,
-  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
-  visAvslagSoknadDialogHandle: PT.func.isRequired,
-  apneTidligereBehandlinger: PT.func.isRequired,
-  behandlingstype: PT.string.isRequired,
-  behandlingstema: PT.string.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   behandlingsgrunnlagPeriodeFom: PT.string.isRequired,
   behandlingsgrunnlagPeriodeTom: PT.string.isRequired,
   behandlingsgrunnlagMottaksdato: PT.string.isRequired,
-  visRevurderFagsakDialogHandle: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   visValideringModalDialogHandle: PT.func.isRequired,
   visOppfriskModal: PT.func.isRequired,
@@ -401,7 +283,6 @@ Saksbehandling.propTypes = {
   hentDokumentOversikt: PT.func.isRequired,
   dokumentOversikt: PT.array.isRequired,
   dokumenter: PT.array.isRequired,
-  behandlingsstatus: PT.string.isRequired,
   hentAnmodningsperiodesvar: PT.func.isRequired,
 };
 
@@ -426,9 +307,6 @@ const mapStateToProps = (state) => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  person: behandlingerSelectors.PersonSelector(state),
-  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeFomSelector(state)),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeTomSelector(state)),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
@@ -450,10 +328,8 @@ const mapStateToProps = (state) => ({
   behandlingsgrunnlagMottaksdato: Utils.dato.formatterDatoTilNorsk(
     behandlingsgrunnlagSelectors.MottaksdatoSelector(state)
   ),
-  behandlingsmenyRedigerbart: redigerbartSelectors.BehandlingsmenyRedigerbartSelector(state),
   dokumenter: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   dokumentOversikt: dokumenterSelectors.DokumentOversiktSelector(state),
-  behandlingsstatus: behandlingerSelectors.BehandlingsstatusKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
