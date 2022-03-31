@@ -1,26 +1,42 @@
-import React, { useEffect, useState } from "react";
-import PT from "prop-types";
-import { connect } from "react-redux";
+import React, { useEffect, useState, ChangeEvent } from "react";
+import { connect, ConnectedProps } from "react-redux";
+
+import { RootState } from "AppTypes";
 
 import MKV from "../../../melosyskodeverk";
-
 import * as Nav from "../../../navFrontend";
+
 import * as Ikon from "../../../resources/images";
-
 import PdfLenkeListe from "../../pdfLenkeListe";
+
 import Knapperad from "../../knapperad";
-
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import "./dialogboksAvslagSoknad.css";
 import { DokumenterV2 } from "../../../services/api";
 import { FeatureToggle } from "../../../featuretoggle";
 import HtmlEditor from "../../htmlEditor";
+import { TilgjengeligeMalerMottaker } from "../../../services/modules/dokumenter-v2";
 
-export const DialogboksAvslagSoknad = (props) => {
+const mapStateToProps = (state: RootState) => ({
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+});
+
+const connector = connect(mapStateToProps);
+
+interface DialogboksAvslagSoknadProps {
+  avslaaSoknadHandle: (data: { fritekst?: string }) => void;
+  avbryt: () => void;
+  ariaHideApp: boolean;
+}
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & PropsFromRedux) => {
   const [brevFritekst, setBrevFritekst] = useState("");
-  const [brukerMottaker, setBrukerMottaker] = useState({});
+  const [brukerMottaker, setBrukerMottaker] = useState<TilgjengeligeMalerMottaker | null>();
 
   const { ariaHideApp, avbryt, behandlingID, redigerbart, avslaaSoknadHandle } = props;
 
@@ -65,6 +81,7 @@ export const DialogboksAvslagSoknad = (props) => {
       onRequestClose={avbryt}
       closeButton={false}
       shouldCloseOnOverlayClick
+      // @ts-ignore
       ariaHideApp={ariaHideApp}
     >
       <div className="avslagsoknadcontainer">
@@ -81,7 +98,7 @@ export const DialogboksAvslagSoknad = (props) => {
               ) : (
                 <Nav.Textarea
                   value={brevFritekst}
-                  onChange={(event) => setBrevFritekst(event.target.value)}
+                  onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setBrevFritekst(event.target.value)}
                   label="Fritekst til vedtaksbrev"
                   maxLength={brevFritekstMaxLength}
                 />
@@ -105,21 +122,4 @@ export const DialogboksAvslagSoknad = (props) => {
   );
 };
 
-DialogboksAvslagSoknad.propTypes = {
-  avslaaSoknadHandle: PT.func.isRequired,
-  avbryt: PT.func.isRequired,
-  ariaHideApp: PT.bool,
-  behandlingID: PT.number.isRequired,
-  redigerbart: PT.bool.isRequired,
-};
-
-DialogboksAvslagSoknad.defaultProps = {
-  ariaHideApp: true,
-};
-
-const mapStateToProps = (state) => ({
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-});
-
-export default connect(mapStateToProps)(DialogboksAvslagSoknad);
+export default connector(DialogboksAvslagSoknad);
