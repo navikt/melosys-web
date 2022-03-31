@@ -16,9 +16,10 @@ interface PersonstatusProps {
         >
       >
     | undefined;
+  modalAriaHideApp?: boolean;
 }
 
-const Personstatus = ({ status }: PersonstatusProps) => {
+const Personstatus = ({ status, modalAriaHideApp }: PersonstatusProps) => {
   const [visPersonstatusModal, setVisPersonstatusModal] = useState(false);
 
   const aktivePersonstatuser = status?.filter((s) => !s.erHistorisk) || [];
@@ -31,6 +32,7 @@ const Personstatus = ({ status }: PersonstatusProps) => {
         historiskePersonstatuser={historiskePersonstatuser}
         skalViseModal={visPersonstatusModal}
         lukkModal={() => setVisPersonstatusModal(false)}
+        modalAriaHideApp={modalAriaHideApp}
       />
 
       <Nav.Typo.EtikettLiten>Personstatus</Nav.Typo.EtikettLiten>
@@ -39,7 +41,7 @@ const Personstatus = ({ status }: PersonstatusProps) => {
           <span className="personinfo__personstatus">
             {aktivePersonstatuser[0]?.tekst || "Ingen personstatus funnet"}
           </span>
-          <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisPersonstatusModal(true)}>
+          <Mui.Lenkeknapp className="personstatus__vis-detaljer-button" onClick={() => setVisPersonstatusModal(true)}>
             Vis detaljer
           </Mui.Lenkeknapp>
         </Nav.Typo.Element>

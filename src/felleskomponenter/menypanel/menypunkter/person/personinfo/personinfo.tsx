@@ -7,18 +7,17 @@ import Sivilstand from "./sivilstand/sivilstand";
 import Personstatus from "./personstatus/personstatus";
 import useHentPersonopplysninger from "../../../../personlinje/useHentpersonopplysninger";
 
-import { Person } from "../../../../../services/api";
 import { useHentPersoninfoQuery } from "./hentPersoninfo.generated";
 
 import "./personinfo.css";
 
 interface PersonInfoProps {
-  person: Person;
+  fnr: string;
   behandlingID: number;
-  sivilstandModalAriaHideApp?: boolean;
+  modalAriaHideApp?: boolean;
 }
 
-const PersonInfo = ({ person: { fnr }, behandlingID, sivilstandModalAriaHideApp }: PersonInfoProps) => {
+const PersonInfo = ({ fnr, behandlingID, modalAriaHideApp }: PersonInfoProps) => {
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
   const {
     data: personinfoData,
@@ -57,7 +56,7 @@ const PersonInfo = ({ person: { fnr }, behandlingID, sivilstandModalAriaHideApp 
       <div className={personinfoClassName.element("element")} aria-live="polite" aria-atomic>
         <Sivilstand
           sivilstand={personinfoData?.hentSaksopplysninger.persondata.sivilstand}
-          modalAriaHideApp={sivilstandModalAriaHideApp}
+          modalAriaHideApp={modalAriaHideApp}
         />
       </div>
     </div>

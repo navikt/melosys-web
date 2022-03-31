@@ -70,7 +70,7 @@ export const Person = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <PersonInfo person={person} behandlingID={behandlingID} />
+          <PersonInfo fnr={person.fnr} behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="persontabell-row">

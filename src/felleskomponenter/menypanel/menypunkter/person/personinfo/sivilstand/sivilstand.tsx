@@ -39,7 +39,7 @@ const Sivilstand = ({ sivilstand, modalAriaHideApp }: SivilstandProps) => {
       {sivilstand && (
         <Nav.Typo.Element>
           <span className="personinfo__sivilstand">{aktiveSivilstander[0]?.type || "Ingen sivilstand funnet"}</span>
-          <Mui.Lenkeknapp className="personinfo__vis-detaljer-button" onClick={() => setVisSivilstandModal(true)}>
+          <Mui.Lenkeknapp className="sivilstand__vis-detaljer-button" onClick={() => setVisSivilstandModal(true)}>
             Vis detaljer
           </Mui.Lenkeknapp>
         </Nav.Typo.Element>
