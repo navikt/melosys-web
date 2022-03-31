@@ -1,9 +1,6 @@
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
-import * as DucksUtils from "../utils";
-
-import { modalerOperations } from "../modaler";
 import { behandlingerSelectors } from "../behandlinger";
 import { navigeringOperations } from "../navigering";
 
@@ -17,13 +14,7 @@ export function utpek(saksnummer, body) {
     },
     {
       success: (dispatch) => {
-        dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
-      },
-      error: (dispatch, data) => {
-        if (DucksUtils.harFeilkode(data)) {
-          dispatch(modalerOperations.visValidering());
-        }
       },
     }
   );

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { stringify } from "qs";
 import { withRouter } from "react-router-dom";
@@ -14,7 +14,6 @@ import { behandlingsgrunnlagOperations } from "../ducks/behandlingsgrunnlag";
 import { oppgaverOperations } from "../ducks/oppgaver";
 import { vedtakOperations } from "../ducks/vedtak";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
-import { behandlingerOperations } from "../ducks/behandlinger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
 import { lovvalgsperioderOperations } from "../ducks/lovvalgsperioder";
@@ -35,7 +34,6 @@ const FellesHandlersProviderUnconnected = ({
   lagreBehandlingsgrunnlag,
   saksnummer,
   sakstype,
-  apneTidligereBehandlinger,
   avslaaSoknad,
   skjulOppfriskDialogHandle,
   skjulHenleggDialogHandle,
@@ -48,7 +46,6 @@ const FellesHandlersProviderUnconnected = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visFerdigbehandleNyVurderingDialogHandle,
   visRevurderFagsakDialogHandle,
-  visValideringModalDialogHandle,
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
   behandlingUnderOppfriskning,
@@ -172,11 +169,9 @@ const FellesHandlersProviderUnconnected = ({
       visAvslagSoknadDialogHandle,
       visOppfriskModal: visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
-      apneTidligereBehandlinger,
       tilForsiden,
       tilOpprettNySak,
       visRevurderFagsakDialogHandle,
-      visValideringModalDialogHandle,
       revurderFagsak,
       henleggHandle,
       avslaaSoknadHandle,
@@ -198,11 +193,9 @@ const FellesHandlersProviderUnconnected = ({
       visAvslagSoknadDialogHandle,
       visOppfriskDialogHandle,
       skjulOppfriskModalOgNavigerTilForside,
-      apneTidligereBehandlinger,
       tilForsiden,
       tilOpprettNySak,
       visRevurderFagsakDialogHandle,
-      visValideringModalDialogHandle,
       revurderFagsak,
       henleggHandle,
       avslaaSoknadHandle,
@@ -230,7 +223,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   lagreBehandlingsgrunnlag: PT.func.isRequired,
   saksnummer: PT.string,
   sakstype: PT.string,
-  apneTidligereBehandlinger: PT.func.isRequired,
   avslaaSoknad: PT.func.isRequired,
   skjulOppfriskDialogHandle: PT.func.isRequired,
   skjulHenleggDialogHandle: PT.func.isRequired,
@@ -243,7 +235,6 @@ FellesHandlersProviderUnconnected.propTypes = {
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   visFerdigbehandleNyVurderingDialogHandle: PT.func.isRequired,
   visRevurderFagsakDialogHandle: PT.func.isRequired,
-  visValideringModalDialogHandle: PT.func.isRequired,
   leggTilBehandlingOppfriskes: PT.func.isRequired,
   fjernBehandlingOppfriskes: PT.func.isRequired,
   behandlingUnderOppfriskning: PT.number,
@@ -279,7 +270,6 @@ const mapDispatchToProps = (dispatch) => ({
   oppfriskSaksopplysninger: (behandlingID) => saksopplysningerOperations.oppfrisk(behandlingID),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
-  apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
   skjulHenleggDialogHandle: () => dispatch(modalerOperations.skjulHenlegg()),
   skjulAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.skjulAvsluttSakSomBortfalt()),
@@ -291,7 +281,6 @@ const mapDispatchToProps = (dispatch) => ({
   visAvsluttSakSomBortfaltDialogHandle: () => dispatch(modalerOperations.visAvsluttSakSomBortfalt()),
   visFerdigbehandleNyVurderingDialogHandle: () => dispatch(modalerOperations.visFerdigbehandleNyVurdering()),
   visRevurderFagsakDialogHandle: () => dispatch(modalerOperations.visRevurderFagsak()),
-  visValideringModalDialogHandle: () => dispatch(modalerOperations.visValidering()),
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
   resetLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   resetAnmodningsperioder: () => dispatch(anmodningsperioderOperations.resetAnmodningsperioderState()),

@@ -13,11 +13,6 @@ const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
 const mockedProps = mock<ComponentProps<typeof AvsluttSak>>();
 
-jest.mock("../../../featuretoggle", () => ({
-  __esModule: true,
-  useFeatureToggle: () => "enabled",
-}));
-
 describe("AvsluttSak", () => {
   let props = instance(mockedProps);
 

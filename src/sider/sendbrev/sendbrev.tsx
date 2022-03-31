@@ -11,7 +11,6 @@ import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
 
-import { useFeatureToggle } from "../../featuretoggle";
 import Personlinje from "../../felleskomponenter/personlinje";
 import { SendBrev } from "../../felleskomponenter/sideDialog";
 import { behandlingerOperations } from "../../ducks/behandlinger";
@@ -38,7 +37,6 @@ interface RouteParams {
 type SendbrevProps = RouteComponentProps<RouteParams> & PropsFromRedux;
 
 const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }: SendbrevProps) => {
-  const personlinjeToggle = useFeatureToggle("melosys.design.PERSONLINJE");
   const behandlingID = Utils._toInteger(match.params.behandlingID);
 
   useEffect(() => {
@@ -57,7 +55,7 @@ const Sendbrev = ({ match, redigerbart, hentBehandling, sendBrevFormIsPristine }
 
   return (
     <>
-      {personlinjeToggle && <Personlinje visBehandlingsmeny={false} />}
+      <Personlinje visBehandlingsmeny={false} />
       <div id="main-container" className="main-container">
         <Nav.Container fluid className="sendbrev">
           <Nav.Panel>

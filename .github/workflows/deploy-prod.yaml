@@ -1,0 +1,57 @@
+name: deploy-prod
+on:
+  release:
+    types: [published]
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: get release tag
+        run: |
+          APPLICATION=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
+          IMAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/$APPLICATION:$GITHUB_SHA
+          echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
+          echo $IMAGE
+      - name: Deploy redis
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: nais/redis.yaml
+          VAR: APP_NAME=melosys-web-redis
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: nais/nais.yaml
+          VARS: nais/vars-prod.json
+      - name: post-production
+        uses: navikt/digihot-deploy/actions/post-production@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: get commit message
+        run: | # Må hentes med et script fordi workflow_dispatch ikke har github.event.head_commit
+          echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV
+      - name: Slack Notification (deploy success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: good
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':clap: melosys-web ble deployet til prod :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
+      - name: Slack Notification (deploy failure)
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: danger
+          SLACK_USERNAME: Github Actions
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ':crying_cat_face: melosys-web kunne ikke deployes til prod!'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
+

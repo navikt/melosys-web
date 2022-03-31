@@ -97,7 +97,7 @@ export const Person = ({
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="9">
-              <AnnenAdresse redigerbart={redigerbart} className="oppgittAdresse" />
+              <AnnenAdresse className="oppgittAdresse" />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
