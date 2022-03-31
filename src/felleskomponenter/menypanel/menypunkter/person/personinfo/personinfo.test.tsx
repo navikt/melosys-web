@@ -129,7 +129,7 @@ describe("Personinfo", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 20);
+        setTimeout(resolve, 30);
       });
       personinfo.update();
 
@@ -148,7 +148,7 @@ describe("Personinfo", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 20);
+        setTimeout(resolve, 30);
       });
       personinfo.update();
 
