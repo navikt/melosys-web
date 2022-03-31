@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect } from "react-redux";
 
@@ -14,13 +14,26 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./dialogboksAvslagSoknad.css";
-import HtmlEditor from "../../htmlEditor";
+import { DokumenterV2 } from "../../../services/api";
 import { FeatureToggle } from "../../../featuretoggle";
+import HtmlEditor from "../../htmlEditor";
 
 export const DialogboksAvslagSoknad = (props) => {
   const [brevFritekst, setBrevFritekst] = useState("");
+  const [brukerMottaker, setBrukerMottaker] = useState({});
 
   const { ariaHideApp, avbryt, behandlingID, redigerbart, avslaaSoknadHandle } = props;
+
+  useEffect(() => {
+    DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
+      const mangelbrevBrukerMal = response.find(
+        (mal) => mal.type?.kode === MKV.Koder.brev.produserbaredokumenter.MANGELBREV_BRUKER
+      );
+      setBrukerMottaker(
+        mangelbrevBrukerMal?.muligeMottakere?.find((mottaker) => mottaker.rolle === MKV.Koder.aktoersroller.BRUKER)
+      );
+    });
+  }, []);
 
   const pdfDokumenter = [
     {
@@ -40,9 +53,9 @@ export const DialogboksAvslagSoknad = (props) => {
     };
     avslaaSoknadHandle(data);
   };
-
   const brevFritekstMaxLength = 500;
-  const bekreftRedigerbart = brevFritekst.length <= brevFritekstMaxLength;
+  const mottakerFeil = brukerMottaker?.feilmelding;
+  const bekreftRedigerbart = !mottakerFeil && brevFritekst.length <= brevFritekstMaxLength;
 
   return (
     <Nav.Modal
@@ -60,6 +73,7 @@ export const DialogboksAvslagSoknad = (props) => {
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
+          {mottakerFeil && <Nav.AlertStripeFeil>{mottakerFeil}</Nav.AlertStripeFeil>}
           <FeatureToggle togglename="melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER">
             {(toggleStatus) =>
               toggleStatus === "enabled" ? (
