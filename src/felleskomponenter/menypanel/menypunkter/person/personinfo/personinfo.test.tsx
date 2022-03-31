@@ -7,15 +7,9 @@ import { act } from "react-dom/test-utils";
 import * as Nav from "../../../../../navFrontend";
 
 import { Person } from "../../../../../services/api";
-import { Sivilstand } from "../../../../../graphql";
-import { HentSivilstandDocument } from "./sivilstand/hentSivilstand.generated";
 import Personinfo from "./personinfo";
 import SivilstandModal from "./sivilstand/sivilstandModal";
-
-jest.mock("../../../../../featuretoggle", () => ({
-  __esModule: true,
-  useFeatureToggle: () => "enabled",
-}));
+import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
 
 describe("Personinfo", () => {
   const mockedProps = mock<ComponentProps<typeof Personinfo>>();
@@ -38,15 +32,59 @@ describe("Personinfo", () => {
     jest.resetModules();
   });
 
-  it("viser melding ved henting av sivilstand", () => {
-    const sivilstandModal = mount(<Personinfo {...props} />, {
+  const sivilstand = [
+    {
+      type: "Gift",
+      relatertVedSivilstand: "123",
+      bekreftelsesdato: "2009-10-09",
+      gyldigFraOgMed: "2009-10-10",
+      master: "PDL",
+      kilde: "FREG",
+      erHistorisk: false,
+    },
+    {
+      type: "Ugift",
+      relatertVedSivilstand: "321",
+      bekreftelsesdato: "2008-01-01",
+      gyldigFraOgMed: "2008-01-02",
+      master: "PDL",
+      kilde: "FREG",
+      erHistorisk: true,
+    },
+  ];
+  const requestResultMock = {
+    mocks: [
+      {
+        request: {
+          query: HentPersoninfoDocument,
+          variables: {
+            behandlingID: 1,
+          },
+        },
+        result: {
+          data: {
+            hentSaksopplysninger: {
+              persondata: {
+                folkeregisterpersonstatuser: null,
+                foedsel: [{ foedselsaar: 1995, foedselsdato: "1995-23-09" }],
+                sivilstand,
+              },
+            },
+          },
+        },
+      },
+    ],
+  };
+
+  it("viser melding ved henting av personinfo", () => {
+    const personinfo = mount(<Personinfo {...props} />, {
       wrappingComponent: MockedProvider,
     });
 
-    expect(sivilstandModal.contains("Henter sivilstand...")).toBe(true);
+    expect(personinfo.contains("Henter personinfo...")).toBe(true);
   });
 
-  it("viser melding ved nettverkserror under henting av sivilstand", () => {
+  it("viser melding ved nettverkserror under henting av personinfo", () => {
     return act(async () => {
       const personinfo = await mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
@@ -54,7 +92,7 @@ describe("Personinfo", () => {
           mocks: [
             {
               request: {
-                query: HentSivilstandDocument,
+                query: HentPersoninfoDocument,
                 variables: {
                   behandlingID: 1,
                 },
@@ -71,7 +109,7 @@ describe("Personinfo", () => {
       personinfo.update();
 
       const alertstripe = personinfo.findWhere(
-        (n) => n.type() === Nav.AlertStripeFeil && n.contains("Feil ved henting av sivilstand!")
+        (n) => n.type() === Nav.AlertStripeFeil && n.contains("Feil ved henting av personinfo!")
       );
       expect(alertstripe).toHaveLength(1);
     });
@@ -79,49 +117,9 @@ describe("Personinfo", () => {
 
   it("viser dagens sivilstand etter sivilstand er hentet", () => {
     return act(async () => {
-      const sivilstand: Sivilstand[] = [
-        {
-          type: "Gift",
-          relatertVedSivilstand: "123",
-          bekreftelsesdato: "2009-10-09",
-          gyldigFraOgMed: "2009-10-10",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: false,
-        },
-        {
-          type: "Ugift",
-          relatertVedSivilstand: "321",
-          bekreftelsesdato: "2008-01-01",
-          gyldigFraOgMed: "2008-01-02",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: true,
-        },
-      ];
       const personinfo = mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
-        wrappingComponentProps: {
-          mocks: [
-            {
-              request: {
-                query: HentSivilstandDocument,
-                variables: {
-                  behandlingID: 1,
-                },
-              },
-              result: {
-                data: {
-                  hentSaksopplysninger: {
-                    persondata: {
-                      sivilstand,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        wrappingComponentProps: requestResultMock,
       });
 
       await new Promise((resolve) => {
@@ -135,49 +133,9 @@ describe("Personinfo", () => {
 
   it("sender sivilstand-data til sivilstandModal etter dataen er hentet", () => {
     return act(async () => {
-      const sivilstand: Sivilstand[] = [
-        {
-          type: "Gift",
-          relatertVedSivilstand: "123",
-          bekreftelsesdato: "2009-10-09",
-          gyldigFraOgMed: "2009-10-10",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: false,
-        },
-        {
-          type: "Ugift",
-          relatertVedSivilstand: "321",
-          bekreftelsesdato: "2008-01-01",
-          gyldigFraOgMed: "2008-01-02",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: true,
-        },
-      ];
       const personinfo = mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
-        wrappingComponentProps: {
-          mocks: [
-            {
-              request: {
-                query: HentSivilstandDocument,
-                variables: {
-                  behandlingID: 1,
-                },
-              },
-              result: {
-                data: {
-                  hentSaksopplysninger: {
-                    persondata: {
-                      sivilstand,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        wrappingComponentProps: requestResultMock,
       });
 
       await new Promise((resolve) => {
