@@ -50,7 +50,11 @@ const PersonInfo = ({ fnr, behandlingID, modalAriaHideApp }: PersonInfoProps) =>
       <div className={personinfoClassName.element("element")}>
         <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>
         <Nav.Typo.Element>
-          <EnkeltDato dato={personinfoData?.hentSaksopplysninger.persondata.foedsel.foedselsdato} />
+          {personinfoData?.hentSaksopplysninger.persondata.foedsel.foedselsdato ? (
+            <EnkeltDato dato={personinfoData?.hentSaksopplysninger.persondata.foedsel.foedselsdato} />
+          ) : (
+            personinfoData?.hentSaksopplysninger.persondata.foedsel.foedselsaar
+          )}
         </Nav.Typo.Element>
       </div>
       <div className={personinfoClassName.element("element")} aria-live="polite" aria-atomic>
