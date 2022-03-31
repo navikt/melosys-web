@@ -33,15 +33,33 @@ const PersonInfo = ({ fnr, behandlingID, modalAriaHideApp }: PersonInfoProps) =>
       <Nav.NavFrontendSpinner />
     </>
   );
-
   const personinfoErrorContent = <Nav.AlertStripeFeil>Feil ved henting av personinfo!</Nav.AlertStripeFeil>;
+
+  const Fødselsdato = () => {
+    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
+    if (!foedsel) return null;
+    return (
+      <>
+        {foedsel.foedselsdato ? (
+          <Nav.Typo.Element>
+            <EnkeltDato dato={foedsel.foedselsdato} />
+          </Nav.Typo.Element>
+        ) : (
+          foedsel.foedselsaar
+        )}
+      </>
+    );
+  };
 
   return (
     <div className={personinfoClassName.block}>
       {personinfoLoading && personinfoLoadingContent}
       {personinfoError && personinfoErrorContent}
       <div className={personinfoClassName.element("element")}>
-        <Personstatus status={personinfoData?.hentSaksopplysninger.persondata.folkeregisterpersonstatuser} />
+        <Personstatus
+          status={personinfoData?.hentSaksopplysninger.persondata.folkeregisterpersonstatuser}
+          modalAriaHideApp={modalAriaHideApp}
+        />
       </div>
       <div className={personinfoClassName.element("element")}>
         <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
@@ -49,13 +67,7 @@ const PersonInfo = ({ fnr, behandlingID, modalAriaHideApp }: PersonInfoProps) =>
       </div>
       <div className={personinfoClassName.element("element")}>
         <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>
-        <Nav.Typo.Element>
-          {personinfoData?.hentSaksopplysninger.persondata.foedsel.foedselsdato ? (
-            <EnkeltDato dato={personinfoData?.hentSaksopplysninger.persondata.foedsel.foedselsdato} />
-          ) : (
-            personinfoData?.hentSaksopplysninger.persondata.foedsel.foedselsaar
-          )}
-        </Nav.Typo.Element>
+        <Fødselsdato />
       </div>
       <div className={personinfoClassName.element("element")} aria-live="polite" aria-atomic>
         <Sivilstand
