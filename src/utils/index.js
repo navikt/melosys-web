@@ -31,6 +31,7 @@ import * as testhelpers from "./testhelpers";
 import * as person from "./person";
 import * as land from "./land";
 import * as organisasjon from "./organisasjon";
+import * as feilmelding from "./feilmelding";
 
 import {
   buildinfo,
@@ -63,6 +64,7 @@ export {
   person,
   land,
   organisasjon,
+  feilmelding,
   capitalize as _capitalize,
   isUndefined as _isUndefined,
   isEqual as _isEqual,
