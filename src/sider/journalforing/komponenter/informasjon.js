@@ -11,8 +11,12 @@ import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as KV from "../../../kodeverk";
+
 import AvsenderVelger from "./avsendervelger";
 import LenkeListeVelger from "./lenkelistevelger";
+import DokumentetJournalføresPå from "./dokumentetJournalføresPå";
+import { FeatureToggle } from "../../../featuretoggle";
 
 import { PersonSelectors } from "../../../ducks/personer";
 import { OrganisasjonSelectors } from "../../../ducks/organisasjoner";
@@ -64,12 +68,20 @@ class Informasjon extends Component {
   };
 
   oppdaterFelter = async (props, tvingOppdatering) => {
-    const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID } = props.journalforingSkjemaVerdier;
-    const { brukerID = "", avsenderID = "" } = this.props.journalforingSkjemaVerdier;
-    const { hentOgVisBruker, hentOgVisAvsender } = this.props;
+    const {
+      brukerID: gammelBrukerID,
+      avsenderID: gammelAvsenderID,
+      virksomhetOrgnr: gammelVirksomhetOrgnr,
+    } = props.journalforingSkjemaVerdier;
+    const { brukerID = "", avsenderID = "", virksomhetOrgnr = "" } = this.props.journalforingSkjemaVerdier;
+    const { hentOgVisBruker, hentOgVisVirksomhet, hentOgVisAvsender } = this.props;
 
     if (gammelBrukerID !== brukerID || tvingOppdatering) {
       await hentOgVisBruker(brukerID);
+    }
+
+    if (gammelVirksomhetOrgnr !== virksomhetOrgnr || tvingOppdatering) {
+      await hentOgVisVirksomhet(virksomhetOrgnr);
     }
 
     if (gammelAvsenderID !== avsenderID || tvingOppdatering) {
@@ -89,6 +101,15 @@ class Informasjon extends Component {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("avsenderID", brukerID);
     settFeltInnhold("avsenderNavn", brukerNavn);
+  };
+
+  kopierVirksomhetTilAvsender = (
+    virksomhetOrgnr = this.props.journalforingSkjemaVerdier.virksomhetOrgnr,
+    virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn
+  ) => {
+    const { settFeltInnhold } = this.props;
+    settFeltInnhold("avsenderID", virksomhetOrgnr);
+    settFeltInnhold("avsenderNavn", virksomhetNavn);
   };
 
   tomAvsender = () => {
@@ -118,6 +139,16 @@ class Informasjon extends Component {
     }
   };
 
+  sjekkVirksomhet = async (verdi) => {
+    const { settFeltInnhold, hentOgVisVirksomhet } = this.props;
+
+    if (Utils.organisasjon.erOrgnrGyldig(verdi)) {
+      await this.spinner("virksomhetNavn");
+      await hentOgVisVirksomhet(verdi);
+    } else {
+      settFeltInnhold("virksomhetNavn", "");
+    }
+  };
   sjekkAvsender = async (verdi) => {
     const { erGyldigAvsenderID } = this;
     const { settFeltInnhold, hentOgVisAvsender } = this.props;
@@ -129,13 +160,17 @@ class Informasjon extends Component {
       await settFeltInnhold("avsenderNavn", "");
     }
   };
-  IDFeltTastOppHandler = async (event) => {
-    const { id: opprinneligFeltID, value } = event.target;
 
-    if (opprinneligFeltID === "brukerID") {
+  IDFeltTastOppHandler = async (event) => {
+    const { navn: feltNavn, value } = event.target;
+
+    if (feltNavn === "brukerID") {
       await this.sjekkBruker(value);
     }
-    if (opprinneligFeltID === "avsenderID") {
+    if (feltNavn === "virksomhetOrgnr") {
+      await this.sjekkVirksomhet(value);
+    }
+    if (feltNavn === "avsenderID") {
       await this.sjekkAvsender(value);
     }
   };
@@ -165,33 +200,78 @@ class Informasjon extends Component {
     const {
       hoveddokument: { tittel: hoveddokumentTittel },
       vedlegg: skjemaVedlegg,
+      brukerNavn,
+      virksomhetNavn,
+      journalføresPå,
     } = journalforingSkjemaVerdier;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
+      spinner: { virksomhetNavn: visVirksomhetSpinner },
       spinner: { avsenderNavn: visAvsenderSpinner },
     } = this.state;
 
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
+
+    const InformasjonOmBrukerEllerVirksomhet =
+      journalføresPå === KV.Koder.JournalføringRolle.VIRKSOMHET ? (
+        <>
+          <Mui.Undertittel tekst="Informasjon om virksomhet" ikon={Ikoner.AccountCircle} className="undertittel" />
+          <Skjema.Input feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" onKeyUp={this.IDFeltTastOppHandler} />
+          {!Utils._isEmpty(virksomhetNavn) && (
+            <span>
+              <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst style={{ display: "inline-block" }}>{virksomhetNavn}</Nav.Typo.Normaltekst>
+            </span>
+          )}
+          {visVirksomhetSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}
+        </>
+      ) : (
+        <>
+          <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
+          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+          {!Utils._isEmpty(brukerNavn) && (
+            <span>
+              <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
+              <Nav.Typo.Normaltekst style={{ display: "inline-block" }}>{brukerNavn}</Nav.Typo.Normaltekst>
+            </span>
+          )}
+          {visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}
+        </>
+      );
+
     return (
       <div className="informasjon">
-        <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-        <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
-        <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
-        {visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}
+        <FeatureToggle togglename="melosys.behandle_alle_saker">
+          {(toggle) =>
+            toggle === "enabled" ? (
+              <>
+                <DokumentetJournalføresPå />
+                {InformasjonOmBrukerEllerVirksomhet}
+              </>
+            ) : (
+              <>
+                <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
+                <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+                <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
+                {visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}
+              </>
+            )
+          }
+        </FeatureToggle>
 
         <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
         <AvsenderVelger
           className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+          kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
           tomAvsender={this.tomAvsender}
           settFeltInnhold={settFeltInnhold}
           visAvsenderSpinner={visAvsenderSpinner}
           hentOgVisRepresentant={hentOgVisRepresentant}
         />
+
         <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
-
         <Skjema.Datovelger label="Mottatt dato" feltNavn="mottattDato" bredde="S" />
-
         <Nav.Fieldset legend="Hoveddokument:">
           <LenkeListeVelger
             feltNavn="hoveddokument.tittel"
@@ -234,6 +314,7 @@ class Informasjon extends Component {
 Informasjon.propTypes = {
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
+  hentOgVisVirksomhet: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   journalpostID: PT.string,

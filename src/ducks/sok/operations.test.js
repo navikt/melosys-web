@@ -35,6 +35,7 @@ describe("sok operations", () => {
           body: JSON.stringify({
             ident: fnr,
             saksnummer: null,
+            orgnr: null,
           }),
         })
       );
@@ -57,6 +58,30 @@ describe("sok operations", () => {
           body: JSON.stringify({
             ident: null,
             saksnummer,
+            orgnr: null,
+          }),
+        })
+      );
+      expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
+    });
+
+    it("søker etter fagsaker med orgnr", async () => {
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: [] }];
+
+      const store = mockStore(initialState);
+
+      const orgnr = "111111111";
+
+      await store.dispatch(operations.sok(orgnr));
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/fagsaker/sok",
+        expect.objectContaining({
+          body: JSON.stringify({
+            ident: null,
+            saksnummer: null,
+            orgnr,
           }),
         })
       );

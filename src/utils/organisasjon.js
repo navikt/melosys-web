@@ -1,4 +1,4 @@
-const erOrgnrLengde = (verdi) => RegExp(/^\d{9,9}$/).test(verdi);
+const erOrgnrLengde = (verdi) => RegExp(/^\d{9}$/).test(verdi);
 
 /** Beregning av orgnr bygger på mod11.
  * @link https://no.wikipedia.org/wiki/MOD11
@@ -6,7 +6,7 @@ const erOrgnrLengde = (verdi) => RegExp(/^\d{9,9}$/).test(verdi);
  * @returns {boolean}
  */
 const erOrgnrGyldig = (verdi) => {
-  if (!verdi) {
+  if (!verdi || !erOrgnrLengde(verdi)) {
     return false;
   }
   const vekt = [2, 3, 4, 5, 6, 7, 2, 3];

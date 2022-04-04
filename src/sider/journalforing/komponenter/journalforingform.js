@@ -30,6 +30,7 @@ export const JournalforingForm = (props) => {
     vedlegg,
     hentOgVisAvsender,
     hentOgVisBruker,
+    hentOgVisVirksomhet,
     fagsakListe,
     hentOgVisRepresentant,
     formValues,
@@ -47,7 +48,8 @@ export const JournalforingForm = (props) => {
       [
         MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-      ].includes(formValues.opprettnysak_behandlingstema));
+      ].includes(formValues.opprettnysak_behandlingstema)) &&
+    formValues.journalføresPå === KV.Koder.JournalføringRolle.BRUKER;
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -57,10 +59,11 @@ export const JournalforingForm = (props) => {
         vedlegg={vedlegg}
         hentOgVisAvsender={hentOgVisAvsender}
         hentOgVisBruker={hentOgVisBruker}
+        hentOgVisVirksomhet={hentOgVisVirksomhet}
         hentOgVisRepresentant={hentOgVisRepresentant}
       />
       <Mui.Undertittel
-        tekst="Knytt til brukers eksisterende sak eller opprett ny sak"
+        tekst="Knytt til eksisterende sak eller opprett ny sak"
         ikon={Ikoner.CheckList}
         className="undertittel oversteUndertittel"
       />
@@ -92,6 +95,7 @@ JournalforingForm.propTypes = {
   vedlegg: PT.array.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
   hentOgVisBruker: PT.func.isRequired,
+  hentOgVisVirksomhet: PT.func.isRequired,
   fagsakListe: PT.array.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
@@ -121,7 +125,7 @@ const mapStateToProps = (state) => {
   return {
     erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
     formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-    formErrors: formSelectors.JournalforingFormSelector(state).syncErrors,
+    formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
     submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,
     initialValues: {
       avsenderType:
@@ -130,6 +134,7 @@ const mapStateToProps = (state) => {
           : avsenderType,
       behandlingstype: null,
       saksnummer: "",
+      journalføresPå: KV.Koder.JournalføringRolle.BRUKER,
       brukerID: journalforingSelectors.BrukerIDSelector(state),
       erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
       avsenderID: journalforingSelectors.AvsenderIDSelector(state),
@@ -172,7 +177,6 @@ const form = {
   validate: (values, props) => {
     const options = {
       context: {
-        brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
       },
     };

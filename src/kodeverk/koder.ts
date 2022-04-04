@@ -161,6 +161,11 @@ export const MottakerRolle = {
   REPRESENTANT: "REPRESENTANT",
 };
 
+export const JournalføringRolle = {
+  BRUKER: "Bruker",
+  VIRKSOMHET: "Virsomhet",
+};
+
 export enum StegNavn {
   INNGANG = "INNGANG",
   AVKLAR_VIRKSOMHET = "AVKLAR_VIRKSOMHET",
