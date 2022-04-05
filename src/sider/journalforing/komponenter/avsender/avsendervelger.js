@@ -9,7 +9,7 @@ import * as KV from "../../../../kodeverk";
 import { journalforingSelectors } from "../../../../ducks/journalforing";
 import { AvsenderOrganisasjon, AvsenderUtenlandskTrygdemyndighet, AvsenderFullmektig } from "./index";
 
-import "./avsendervelger.css";
+import "./avsender.css";
 
 const AvsenderVelger = ({
   className,
