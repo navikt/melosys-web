@@ -71,7 +71,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
   };
   const brevFritekstMaxLength = 500;
   const mottakerFeil = brukerMottaker?.feilmelding;
-  const bekreftRedigerbart = !mottakerFeil && brevFritekst.length <= brevFritekstMaxLength;
+  const bekreftRedigerbart = redigerbart && !mottakerFeil && brevFritekst.length <= brevFritekstMaxLength;
 
   return (
     <Nav.Modal
@@ -105,7 +105,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
               )
             }
           </FeatureToggle>
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+          {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
             <Knapperad
               avbryt={avbryt}

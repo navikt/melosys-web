@@ -1,9 +1,9 @@
 import React from "react";
 
-import * as Nav from "../../../navFrontend";
-
-import Knapperad from "../../knapperad";
 import { shallow } from "enzyme";
+
+import * as Nav from "../../../navFrontend";
+import Knapperad from "../../knapperad";
 import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
 
 describe("DialogboksAvslagSoknad", () => {
