@@ -230,9 +230,9 @@ class Stegvelger extends Component {
   };
 
   avvisUtpekingHandler = (data) => {
-    const { avvisUtpeking } = this.props;
+    const { behandlingID, avvisUtpeking } = this.props;
 
-    return avvisUtpeking(data);
+    return avvisUtpeking(behandlingID, data);
   };
 
   avvisUtpeking = async (data) => {
@@ -734,7 +734,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
   lagreBehandlingsgrunnlagHandler: () => dispatch(behandlingsgrunnlagOperations.lagre()),
   utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
-  avvisUtpeking: (body) => dispatch(utpekOperations.avvis(body)),
+  avvisUtpeking: (behandlingID, body) => dispatch(utpekOperations.avvis(behandlingID, body)),
   lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
   bestillAnmodningsperioder: (behandlingID, bestilling) =>
     dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
