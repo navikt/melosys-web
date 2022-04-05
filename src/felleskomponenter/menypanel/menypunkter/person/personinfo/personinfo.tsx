@@ -62,7 +62,7 @@ const PersonInfo = ({ behandlingID, modalAriaHideApp }: PersonInfoProps) => {
       </div>
       <div className={personinfoClassName.element("element")}>
         <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
-        <Nav.Typo.Element>{personopplysninger?.fnr}</Nav.Typo.Element>
+        <Nav.Typo.Element>{personopplysninger?.fnr || "-"}</Nav.Typo.Element>
       </div>
       <div className={personinfoClassName.element("element")}>
         <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>
