@@ -260,7 +260,7 @@ class Stegvelger extends Component<Props, State> {
             {aktuelleSteg && (
               <div>
                 <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-                {vedtakStegErAktivt && <Valideringsfeil feilkoder={valideringFeil} />}
+                {vedtakStegErAktivt && <Valideringsfeil feilmeldinger={valideringFeil} />}
                 {erNyVurdering && redigerbart && inngangStegErAktivt && (
                   <Nav.AlertStripeAdvarsel className="varselstripe">
                     <Nav.Typo.Normaltekst className="varselstripe__overskrift">

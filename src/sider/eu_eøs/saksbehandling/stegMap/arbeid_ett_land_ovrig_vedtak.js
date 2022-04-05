@@ -32,6 +32,7 @@ class ArbeidEttLandOvrigVedtak extends Steg {
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
       informertMyndighetFakta,
+      harValideringFeil: _propsLight.harValideringFeil,
     });
     this.beregnRelevantUI = () => ({});
     this.handlers = {
@@ -41,6 +42,7 @@ class ArbeidEttLandOvrigVedtak extends Steg {
       byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      kontrollerVedtak: this._propsLight.tilgjengeligeHandlers.kontrollerVedtak,
     };
     this._status = FANE_STATUS.OK;
   }

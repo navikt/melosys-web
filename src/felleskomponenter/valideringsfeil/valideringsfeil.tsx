@@ -8,23 +8,30 @@ import * as Utils from "../../utils";
 
 import "./valideringsfeil.css";
 
-export default ({ feilkoder }: { feilkoder: Feilkode[] }) => {
-  if (Utils._isEmpty(feilkoder)) {
+export default ({ feilmeldinger }: { feilmeldinger: Feilkode[] | string }) => {
+  if (Utils._isEmpty(feilmeldinger)) {
     return null;
   }
+
+  const renderInnhold = () => {
+    if (typeof feilmeldinger === "string") {
+      return feilmeldinger;
+    }
+    if (feilmeldinger.length === 1) {
+      return KV.kodeTilTerm(feilmeldinger[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
+    }
+    return (
+      <ul className="feilkoder__liste">
+        {feilmeldinger.map((feil) => (
+          <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div className="valideringsfeil">
-      <Nav.AlertStripeFeil className="varselstripe">
-        {feilkoder.length === 1 ? (
-          KV.kodeTilTerm(feilkoder[0].kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)
-        ) : (
-          <ul className="feilkoder__liste">
-            {feilkoder.map((feil) => (
-              <li key={feil.kode}>{KV.kodeTilTerm(feil.kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser)}</li>
-            ))}
-          </ul>
-        )}
-      </Nav.AlertStripeFeil>
+      <Nav.AlertStripeFeil className="varselstripe">{renderInnhold()}</Nav.AlertStripeFeil>
     </div>
   );
 };

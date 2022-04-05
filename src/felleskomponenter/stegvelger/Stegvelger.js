@@ -360,6 +360,7 @@ class Stegvelger extends Component {
       tilbake: this.tilbake,
       oppdater: this.oppdater,
       lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: this.props.lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger,
+      kontrollerVedtak: this.kontrollerVedtak,
     };
 
     const { props } = this;
@@ -420,6 +421,7 @@ class Stegvelger extends Component {
       vurder_familie_valid: props.vurder_familie_valid,
       vurder_representant_valid: props.vurder_representant_valid,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
+      harValideringFeil: !Utils._isEmpty(props.valideringFeil),
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -507,9 +509,17 @@ class Stegvelger extends Component {
     return stegNummer >= maksSteg;
   }
 
+  erVedtakSteg(stegNummer) {
+    return this.state.aktuelleSteg[stegNummer]?.vedtakSteg;
+  }
+
+  kontrollerVedtak = (data, skalRegisteropplysningerOppdateres) => {
+    return this.props.kontrollerVedtak(this.props.behandlingID, skalRegisteropplysningerOppdateres, data);
+  };
+
   mapFeilmeldinger = () => {
-    if (this.erSisteSteg(this.state.aktivtStegNummer)) {
-      return <Valideringsfeil feilkoder={this.props.valideringerFeilkoder} />;
+    if (this.erVedtakSteg(this.state.aktivtStegNummer)) {
+      return <Valideringsfeil feilmeldinger={this.props.valideringFeil} />;
     }
     return null;
   };
@@ -550,6 +560,7 @@ Stegvelger.propTypes = {
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
   fattVedtak: PT.func.isRequired,
+  kontrollerVedtak: PT.func.isRequired,
   endreVedtak: PT.func.isRequired,
   lagreBehandlingsgrunnlagHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
@@ -620,12 +631,15 @@ Stegvelger.propTypes = {
   vurder_familie_valid: PT.bool.isRequired,
   vurder_representant_valid: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
-  valideringerFeilkoder: PT.arrayOf(
-    PT.shape({
-      kode: PT.string.isRequired,
-      felter: PT.arrayOf(PT.string).isRequired,
-    })
-  ),
+  valideringFeil: PT.oneOfType([
+    PT.arrayOf(
+      PT.shape({
+        kode: PT.string.isRequired,
+        felter: PT.arrayOf(PT.string).isRequired,
+      })
+    ),
+    PT.string,
+  ]),
 };
 
 Stegvelger.defaultProps = {
@@ -655,7 +669,7 @@ Stegvelger.defaultProps = {
   lagreAnmodningsperioderHandler: () => {},
   oppdaterOgLagreBehandlingerHandler: () => {},
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
-  valideringerFeilkoder: [],
+  valideringFeil: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -707,13 +721,15 @@ const mapStateToProps = (state) => ({
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
-  valideringerFeilkoder: feiletResponsSelectors.FeilkoderSelector(state),
+  valideringFeil: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 /* eslint no-alert:off */
 const mapDispatchToProps = (dispatch) => ({
   hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
+  kontrollerVedtak: (behandlingID, skalRegisteropplysningerOppdateres, body) =>
+    dispatch(vedtakOperations.kontroller(behandlingID, skalRegisteropplysningerOppdateres, body)),
   endreVedtak: (behandlingID, body) => dispatch(vedtakOperations.endre(behandlingID, body)),
   videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
   hentAvklartefakta: (behandlingID) => dispatch(avklartefaktaOperations.hent(behandlingID)),

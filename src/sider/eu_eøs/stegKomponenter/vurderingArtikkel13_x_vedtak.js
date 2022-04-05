@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { reduxForm, isValid, getFormValues } from "redux-form";
+import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
@@ -18,7 +18,7 @@ import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsgrunnlagSelectors } from "../../../ducks/behandlingsgrunnlag";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
@@ -46,8 +46,12 @@ export const VurderingArtikkel13_x_vedtak = ({
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
   soknadsperiode,
+  kontrollerVedtak,
+  harValideringFeil,
+  aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
+  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -96,6 +100,31 @@ export const VurderingArtikkel13_x_vedtak = ({
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
   const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
+  const lagFattVedtakEOSReqDto = () => {
+    return {
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
+      fritekst: formValues.vedtaksbrevFritekst,
+      fritekstSed: formValues.fritekstSed,
+      mottakerinstitusjoner: formValues.mottakerinstitusjoner
+        .filter((inst) => inst.kreverMottakerinstitusjon)
+        .map((inst) => inst.id),
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+    };
+  };
+
+  useEffect(() => {
+    async function kontroller() {
+      if (aktivtSteg && formIsValid) {
+        setVedtakPending(true);
+        await kontrollerVedtak(lagFattVedtakEOSReqDto(), oppdaterFoerKontroll);
+        setOppdaterFoerKontroll(false);
+        setVedtakPending(false);
+      }
+    }
+    kontroller();
+  }, [aktivtSteg, formIsValid]);
+
   const fattVedtak = async (values, dispatch, props) => {
     setVedtakPending(true);
 
@@ -103,22 +132,15 @@ export const VurderingArtikkel13_x_vedtak = ({
       await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
     }
 
-    await props.lagreOgFatteVedtak({
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
-      fritekst: values.vedtaksbrevFritekst,
-      fritekstSed: values.fritekstSed,
-      mottakerinstitusjoner: values.mottakerinstitusjoner
-        .filter((inst) => inst.kreverMottakerinstitusjon)
-        .map((inst) => inst.id),
-      vedtakstype: values.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      nyVurderingBakgrunn: values.vedtakstypebegrunnelse,
-    });
+    await props.lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
 
     // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
     if (isMounted.current) {
       setVedtakPending(false);
     }
   };
+
+  const stegErGyldig = redigerbart && formIsValid && !harValideringFeil;
 
   return (
     <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArtikkel13_x_vedtak">
@@ -182,7 +204,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
-          {redigerbart && (
+          {stegErGyldig && (
             <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
           )}
         </Nav.Column>
@@ -194,7 +216,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         bekreftKnappProps={{
           spinner: vedtakPending,
           autoDisableVedSpinner: true,
-          disabled: !redigerbart,
+          disabled: !stegErGyldig,
           htmlType: "submit",
         }}
         bekreftTekst="Fatt vedtak"
@@ -230,11 +252,15 @@ VurderingArtikkel13_x_vedtak.propTypes = {
     fom: PT.string.isRequired,
     tom: PT.string.isRequired,
   }).isRequired,
+  kontrollerVedtak: PT.func.isRequired,
+  harValideringFeil: PT.bool.isRequired,
+  aktivtSteg: PT.bool,
 };
 
 VurderingArtikkel13_x_vedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
+  aktivtSteg: false,
 };
 
 const mapStateToProps = (state) => {

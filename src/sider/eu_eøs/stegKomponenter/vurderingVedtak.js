@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -72,8 +72,12 @@ const VurderingVedtak = ({
   visAntallManederUtland,
   pdfDokumenter,
   erArtikkel11_4,
+  kontrollerVedtak,
+  harValideringFeil,
+  aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
+  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -100,19 +104,35 @@ const VurderingVedtak = ({
     return formIsValid;
   };
 
+  const lagFattVedtakEOSReqDto = () => {
+    return {
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      fritekst: formValues.vedtaksbrevFritekst,
+      fritekstSed: formValues.fritekstSed,
+      mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
+      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+    };
+  };
+
+  useEffect(() => {
+    async function kontroller() {
+      if (aktivtSteg && formIsValid) {
+        setVedtakPending(true);
+        await kontrollerVedtak(lagFattVedtakEOSReqDto(), oppdaterFoerKontroll);
+        setOppdaterFoerKontroll(false);
+        setVedtakPending(false);
+      }
+    }
+    kontroller();
+  }, [aktivtSteg, formIsValid]);
+
   const fattVedtak = async () => {
     if (!validerForm()) return;
 
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak({
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      fritekst: formValues.vedtaksbrevFritekst,
-      fritekstSed: formValues.fritekstSed,
-      mottakerinstitusjoner: erSoknadEllerNyVurdering ? [formValues.mottakerinstitusjon] : [],
-      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-    });
+    await lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
 
     // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
     if (isMounted.current) {
@@ -122,6 +142,8 @@ const VurderingVedtak = ({
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
+
+  const stegErGyldig = redigerbart && formIsValid && !harValideringFeil && !flereSoknadslandEnnTillatt;
 
   return (
     <div className="vedtak">
@@ -178,7 +200,7 @@ const VurderingVedtak = ({
         )}
         <Nav.Row>
           <Nav.Column xs="6">
-            {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+            {stegErGyldig && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           </Nav.Column>
         </Nav.Row>
         {flereSoknadslandEnnTillatt && (
@@ -193,7 +215,7 @@ const VurderingVedtak = ({
               bekreftKnappProps={{
                 spinner: vedtakPending,
                 autoDisableVedSpinner: true,
-                disabled: !redigerbart || flereSoknadslandEnnTillatt,
+                disabled: !stegErGyldig,
                 onClick: fattVedtak,
               }}
               bekreftTekst="Fatt vedtak"
@@ -227,6 +249,9 @@ VurderingVedtak.propTypes = {
   visAntallManederUtland: PT.bool,
   pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
   erArtikkel11_4: PT.bool.isRequired,
+  kontrollerVedtak: PT.func.isRequired,
+  harValideringFeil: PT.bool.isRequired,
+  aktivtSteg: PT.bool,
 };
 
 VurderingVedtak.defaultProps = {
@@ -234,6 +259,7 @@ VurderingVedtak.defaultProps = {
   formValues: {},
   visAntallManederUtland: true,
   bostedsland: {},
+  aktivtSteg: false,
 };
 
 const mapStateToProps = (state) => ({
