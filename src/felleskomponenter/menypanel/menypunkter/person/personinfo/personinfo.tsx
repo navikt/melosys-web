@@ -12,12 +12,11 @@ import { useHentPersoninfoQuery } from "./hentPersoninfo.generated";
 import "./personinfo.css";
 
 interface PersonInfoProps {
-  fnr: string;
   behandlingID: number;
   modalAriaHideApp?: boolean;
 }
 
-const PersonInfo = ({ fnr, behandlingID, modalAriaHideApp }: PersonInfoProps) => {
+const PersonInfo = ({ behandlingID, modalAriaHideApp }: PersonInfoProps) => {
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
   const {
     data: personinfoData,
@@ -63,7 +62,7 @@ const PersonInfo = ({ fnr, behandlingID, modalAriaHideApp }: PersonInfoProps) =>
       </div>
       <div className={personinfoClassName.element("element")}>
         <Nav.Typo.EtikettLiten>Fødselsnummer</Nav.Typo.EtikettLiten>
-        <Nav.Typo.Element>{fnr || personopplysninger?.fnr}</Nav.Typo.Element>
+        <Nav.Typo.Element>{personopplysninger?.fnr}</Nav.Typo.Element>
       </div>
       <div className={personinfoClassName.element("element")}>
         <Nav.Typo.EtikettLiten>Fødselsdato</Nav.Typo.EtikettLiten>

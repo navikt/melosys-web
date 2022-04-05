@@ -54,7 +54,6 @@ type Foedsel = {
   foedselsdato?: Maybe<Scalars['Date']>;
   foedeland?: Maybe<Scalars['String']>;
   foedested?: Maybe<Scalars['String']>;
-  foedekommune?: Maybe<Scalars['String']>;
 };
 
 type Folkeregisterpersonstatus = {
