@@ -95,7 +95,7 @@ JournalforingForm.propTypes = {
   fagsakListe: PT.array.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
-  formErrors: PT.object.isRequired,
+  formErrors: PT.object,
   submitFailed: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
@@ -107,6 +107,7 @@ JournalforingForm.propTypes = {
 
 JournalforingForm.defaultProps = {
   formValues: {},
+  formErrors: {},
   hoveddokumentID: "",
 };
 

@@ -1,36 +1,40 @@
 import Checkbox from "./input/checkbox";
+import Datavisning from "./datavisning";
+import Datovelger from "./datovelger";
+import HTMLEditor from "./htmlEditor";
 import Input from "./input/input";
+import LandVelger from "./landvelger";
+import ListeVelger from "./listevelger";
+import MultiSelect from "./input/multiselect";
+import PeriodeForkorter from "./periodeForkorter";
 import Radio from "./input/radio";
 import RadioGruppe from "./input/radio-gruppe";
 import Select from "./input/select";
-import MultiSelect from "./input/multiselect";
 import Textarea from "./textarea/textarea";
-import { Fieldset } from "../../navFrontend";
-import * as Validering from "./validering";
-import CustomRadioPanelGruppe, { CustomRadioPanelElement } from "./customRadioPanelGruppe";
-import ListeVelger from "./listevelger";
-import LandVelger from "./landvelger";
-import PeriodeForkorter from "./periodeForkorter";
 import Vedtakstype from "./vedtakstype";
-import HTMLEditor from "./htmlEditor";
-import Datovelger from "./datovelger";
+
+import CustomRadioPanelGruppe, { CustomRadioPanelElement } from "./customRadioPanelGruppe";
+import { Fieldset } from "../../navFrontend";
+
+import * as Validering from "./validering";
 
 export {
   Checkbox,
+  Datavisning,
+  Datovelger,
+  HTMLEditor,
   Input,
+  LandVelger,
+  ListeVelger,
+  MultiSelect,
+  PeriodeForkorter,
   Radio,
   RadioGruppe,
   Select,
-  MultiSelect,
   Textarea,
-  Validering,
-  Fieldset,
+  Vedtakstype,
   CustomRadioPanelGruppe,
   CustomRadioPanelElement,
-  ListeVelger,
-  LandVelger,
-  PeriodeForkorter,
-  Vedtakstype,
-  HTMLEditor,
-  Datovelger,
+  Fieldset,
+  Validering,
 };

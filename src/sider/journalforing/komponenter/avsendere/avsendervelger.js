@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { getFormValues } from "redux-form";
 import PT from "prop-types";
-import MKV from "../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as KV from "../../../kodeverk";
-import { journalforingSelectors } from "../../../ducks/journalforing";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as KV from "../../../../kodeverk";
+import { journalforingSelectors } from "../../../../ducks/journalforing";
+import { AvsenderOrganisasjon, AvsenderUtenlandskTrygdemyndighet, AvsenderFullmektig } from "./index";
 
-import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from "./avsendere";
 import "./avsendervelger.css";
 
 const AvsenderVelger = ({
@@ -107,7 +107,7 @@ const AvsenderVelger = ({
           className="avsendervelger__radio"
         />
         {formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && (
-          <AvsenderUtenlanskTrygdemyndighet
+          <AvsenderUtenlandskTrygdemyndighet
             utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
             fullmektigLandEndret={fullmektigLandEndret}
           />
