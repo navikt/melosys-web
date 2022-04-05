@@ -6,7 +6,6 @@ import PT from "prop-types";
 import TrackVisibility from "react-on-screen";
 
 import MKV from "../../melosyskodeverk";
-
 import * as MPT from "../../proptypes";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
@@ -15,11 +14,11 @@ import StegFane from "../stegFane";
 import StegMotor from "./stegMotor";
 
 import { anmodningunntakOperations } from "../../ducks/anmodningunntak";
-import { anmodningsperioderSelectors, anmodningsperioderOperations } from "../../ducks/anmodningsperioder";
-import { anmodningsperiodesvarSelectors, anmodningsperiodesvarOperations } from "../../ducks/anmodningsperiodesvar";
+import { anmodningsperioderOperations, anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
+import { anmodningsperiodesvarOperations, anmodningsperiodesvarSelectors } from "../../ducks/anmodningsperiodesvar";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { avklartefaktaOperations, avklartefaktaSelectors } from "../../ducks/avklartefakta";
-import { behandlingsperioderSelectors, behandlingsperioderOperations } from "../../ducks/behandlingsperioder";
+import { behandlingsperioderOperations, behandlingsperioderSelectors } from "../../ducks/behandlingsperioder";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { flytSelectors } from "../../ducks/flyt";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
@@ -33,10 +32,11 @@ import { utpekingsperioderOperations, utpekingsperioderSelectors } from "../../d
 import { videresendingOperations } from "../../ducks/videresending";
 import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
-
+import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinger";
-import { AvklartefaktaStore, VilkaarStore, EnkelDataStore, StegStoreTyper } from "./StegState";
+import { Valideringsfeil } from "../valideringsfeil";
 
+import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 
 class Stegvelger extends Component {
@@ -507,6 +507,13 @@ class Stegvelger extends Component {
     return stegNummer >= maksSteg;
   }
 
+  mapFeilmeldinger = () => {
+    if (this.erSisteSteg(this.state.aktivtStegNummer)) {
+      return <Valideringsfeil feilkoder={this.props.valideringerFeilkoder} />;
+    }
+    return null;
+  };
+
   render() {
     const { visBehandlingsgrunnlagFeilmeldinger } = this.state;
 
@@ -515,6 +522,7 @@ class Stegvelger extends Component {
         {({ isVisible }) => (
           <div className="stegvelger panelSeksjon">
             <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
+            {this.mapFeilmeldinger()}
             {this.state.aktuelleSteg.map((item) => (
               <StegFane key={item.id} faneData={item} />
             ))}
@@ -612,6 +620,12 @@ Stegvelger.propTypes = {
   vurder_familie_valid: PT.bool.isRequired,
   vurder_representant_valid: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
+  valideringerFeilkoder: PT.arrayOf(
+    PT.shape({
+      kode: PT.string.isRequired,
+      felter: PT.arrayOf(PT.string).isRequired,
+    })
+  ),
 };
 
 Stegvelger.defaultProps = {
@@ -641,6 +655,7 @@ Stegvelger.defaultProps = {
   lagreAnmodningsperioderHandler: () => {},
   oppdaterOgLagreBehandlingerHandler: () => {},
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
+  valideringerFeilkoder: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -692,6 +707,7 @@ const mapStateToProps = (state) => ({
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
+  valideringerFeilkoder: feiletResponsSelectors.FeilkoderSelector(state),
 });
 
 /* eslint no-alert:off */

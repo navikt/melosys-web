@@ -5,9 +5,7 @@ import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 import * as Actions from "./actions";
-import { modalerOperations } from "../modaler";
 import { navigeringOperations } from "../navigering";
-import * as DucksUtils from "../utils";
 
 export function send(
   saksnummer: string,
@@ -22,13 +20,7 @@ export function send(
     },
     {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
-        dispatch(modalerOperations.skjulValidering());
         dispatch(navigeringOperations.tilForsiden());
-      },
-      error: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>, data: any) => {
-        if (DucksUtils.harFeilmelding(data)) {
-          dispatch(modalerOperations.visValidering());
-        }
       },
     }
   );

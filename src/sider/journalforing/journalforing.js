@@ -17,23 +17,22 @@ import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
 import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
-import { DialogboksValidering } from "../../felleskomponenter/dialogboks";
+import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { PersonOperations } from "../../ducks/personer";
 import * as MPT from "../../proptypes";
-import { sokOperations, sokSelectors } from "../../ducks/sok";
 
+import { sokOperations, sokSelectors } from "../../ducks/sok";
 import "./journalforing.css";
 
 class Journalforing extends Component {
   state = {
     valgtDokumentID: -1,
-    visDialogboksValidering: false,
-    dialogboksValideringFeilmeldinger: [],
-    dialogboksValideringValideringer: [],
+    visFeilmeldingDialog: false,
+    feilmeldinger: [],
   };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
@@ -143,26 +142,19 @@ class Journalforing extends Component {
 
   resetFeilmeldinger = () => {
     this.setState({
-      dialogboksValideringFeilmeldinger: [],
-      dialogboksValideringValideringer: [],
+      feilmeldinger: [],
     });
   };
 
-  skjulDialogboksValideringOgResetFeilmeldinger = () => {
-    this.setState({ visDialogboksValidering: false });
+  skjulFeilmeldingDialogOgResetFeilmeldinger = () => {
+    this.setState({ visFeilmeldingDialog: false });
     this.resetFeilmeldinger();
   };
 
   sjekkErrorOgVisFeilmelding = (error) => {
-    if (error.body.feilkoder?.length > 0) {
-      this.setState({
-        dialogboksValideringValideringer: error.body.feilkoder,
-      });
-    }
-
     if (error.status >= 500) {
       this.setState({
-        dialogboksValideringFeilmeldinger: [
+        feilmeldinger: [
           {
             tittel: "Teknisk feil",
             innhold:
@@ -172,7 +164,7 @@ class Journalforing extends Component {
       });
     } else if (error.status >= 400) {
       this.setState({
-        dialogboksValideringFeilmeldinger: [
+        feilmeldinger: [
           {
             tittel: "Feil",
             innhold: error.body.message,
@@ -181,7 +173,7 @@ class Journalforing extends Component {
       });
     }
 
-    this.setState({ visDialogboksValidering: true });
+    this.setState({ visFeilmeldingDialog: true });
   };
 
   /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
@@ -223,7 +215,7 @@ class Journalforing extends Component {
 
     try {
       await Api.Journalforing.tilordne(journalforingData);
-      this.setState({ visDialogboksValidering: false });
+      this.setState({ visFeilmeldingDialog: false });
       return tilForsiden();
     } catch (error) {
       this.sjekkErrorOgVisFeilmelding(error);
@@ -283,7 +275,7 @@ class Journalforing extends Component {
 
     try {
       await Api.Journalforing.opprett(journalforingData);
-      this.setState({ visDialogboksValidering: false });
+      this.setState({ visFeilmeldingDialog: false });
       return tilForsiden();
     } catch (error) {
       this.sjekkErrorOgVisFeilmelding(error);
@@ -414,7 +406,7 @@ class Journalforing extends Component {
 
     try {
       await Api.Journalforing.sed(data);
-      this.setState({ visDialogboksValidering: false });
+      this.setState({ visFeilmeldingDialog: false });
       return tilForsiden();
     } catch (error) {
       this.sjekkErrorOgVisFeilmelding(error);
@@ -450,7 +442,7 @@ class Journalforing extends Component {
       settFeltInnhold,
     } = this.props;
 
-    const { visDialogboksValidering, dialogboksValideringFeilmeldinger, dialogboksValideringValideringer } = this.state;
+    const { visFeilmeldingDialog, feilmeldinger } = this.state;
 
     const { knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant } = this;
     const { journalpostID } = this.props.match.params;
@@ -537,12 +529,8 @@ class Journalforing extends Component {
             </Nav.Row>
           </Nav.Container>
         </div>
-        {visDialogboksValidering && (
-          <DialogboksValidering
-            avbryt={this.skjulDialogboksValideringOgResetFeilmeldinger}
-            feilmeldinger={dialogboksValideringFeilmeldinger}
-            valideringer={dialogboksValideringValideringer}
-          />
+        {visFeilmeldingDialog && (
+          <FeilmeldingDialog avbryt={this.skjulFeilmeldingDialogOgResetFeilmeldinger} feilmeldinger={feilmeldinger} />
         )}
       </>
     );

@@ -6,16 +6,10 @@ import { act } from "react-dom/test-utils";
 
 import * as Nav from "../../../../../navFrontend";
 
-import { Person } from "../../../../../services/api";
-import { Sivilstand } from "../../../../../graphql";
-import { HentSivilstandDocument } from "./sivilstand/hentSivilstand.generated";
+import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
 import Personinfo from "./personinfo";
 import SivilstandModal from "./sivilstand/sivilstandModal";
-
-jest.mock("../../../../../featuretoggle", () => ({
-  __esModule: true,
-  useFeatureToggle: () => "enabled",
-}));
+import PersonstatusModal from "./personstatus/personstatusModal";
 
 describe("Personinfo", () => {
   const mockedProps = mock<ComponentProps<typeof Personinfo>>();
@@ -24,29 +18,97 @@ describe("Personinfo", () => {
   beforeEach(() => {
     props = instance(mockedProps);
     props.behandlingID = 1;
-    props.person = instance(mock<Person>());
-    props.person.fnr = "12345678910";
-    props.person.foedselsdato = "2004-01-01";
     /*
     Fikser error i console når test kjører:
     Warning: react-modal: App element is not defined. Please use `Modal.setAppElement(el)` or set `appElement={el}`. This is needed so screen readers don't see main content when modal is opened. It is not recommended, but you can opt-out by setting `ariaHideApp={false}`.
     */
-    props.sivilstandModalAriaHideApp = false;
+    props.modalAriaHideApp = false;
   });
 
   afterAll(() => {
     jest.resetModules();
   });
 
-  it("viser melding ved henting av sivilstand", () => {
-    const sivilstandModal = mount(<Personinfo {...props} />, {
+  const personstatus = [
+    {
+      kode: "BOSATT",
+      tekst: "Bosatt etter folkeregisterloven",
+      master: "PDL",
+      kilde: "folkeregisteret",
+      fregGyldighetstidspunkt: "2021-01-01",
+      erHistorisk: false,
+    },
+    {
+      kode: "IKKE_BOSATT",
+      tekst: "Bosatt utenfor Norge",
+      master: "PDL",
+      kilde: "folkeregisteret",
+      fregGyldighetstidspunkt: "2001-01-01",
+      erHistorisk: true,
+    },
+    {
+      kode: "BOSATT",
+      tekst: "Bosatt etter folkeregisterloven",
+      master: "PDL",
+      kilde: "folkeregisteret",
+      fregGyldighetstidspunkt: "2000-03-25",
+      erHistorisk: true,
+    },
+  ];
+
+  const sivilstand = [
+    {
+      type: "Gift",
+      relatertVedSivilstand: "123",
+      bekreftelsesdato: "2009-10-09",
+      gyldigFraOgMed: "2009-10-10",
+      master: "PDL",
+      kilde: "FREG",
+      erHistorisk: false,
+    },
+    {
+      type: "Ugift",
+      relatertVedSivilstand: "321",
+      bekreftelsesdato: "2008-01-01",
+      gyldigFraOgMed: "2008-01-02",
+      master: "PDL",
+      kilde: "FREG",
+      erHistorisk: true,
+    },
+  ];
+  const requestResultMock = {
+    mocks: [
+      {
+        request: {
+          query: HentPersoninfoDocument,
+          variables: {
+            behandlingID: 1,
+          },
+        },
+        result: {
+          data: {
+            hentSaksopplysninger: {
+              persondata: {
+                folkeregisterpersonstatuser: personstatus,
+                foedsel: [{ foedselsaar: 1995, foedselsdato: "1995-23-09" }],
+                sivilstand,
+              },
+            },
+          },
+        },
+      },
+    ],
+  };
+
+  it("viser melding ved henting av personinfo", () => {
+    const personinfo = mount(<Personinfo {...props} />, {
       wrappingComponent: MockedProvider,
     });
 
-    expect(sivilstandModal.contains("Henter sivilstand...")).toBe(true);
+    expect(personinfo.contains("Henter personinfo...")).toBe(true);
   });
 
-  it("viser melding ved nettverkserror under henting av sivilstand", () => {
+  it("viser melding ved nettverkserror under henting av personinfo", () => {
     return act(async () => {
       const personinfo = await mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
@@ -54,7 +116,7 @@ describe("Personinfo", () => {
           mocks: [
             {
               request: {
-                query: HentSivilstandDocument,
+                query: HentPersoninfoDocument,
                 variables: {
                   behandlingID: 1,
                 },
@@ -66,12 +128,12 @@ describe("Personinfo", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 20);
+        setTimeout(resolve, 30);
       });
       personinfo.update();
 
       const alertstripe = personinfo.findWhere(
-        (n) => n.type() === Nav.AlertStripeFeil && n.contains("Feil ved henting av sivilstand!")
+        (n) => n.type() === Nav.AlertStripeFeil && n.contains("Feil ved henting av personinfo!")
       );
       expect(alertstripe).toHaveLength(1);
     });
@@ -79,53 +141,13 @@ describe("Personinfo", () => {
 
   it("viser dagens sivilstand etter sivilstand er hentet", () => {
     return act(async () => {
-      const sivilstand: Sivilstand[] = [
-        {
-          type: "Gift",
-          relatertVedSivilstand: "123",
-          bekreftelsesdato: "2009-10-09",
-          gyldigFraOgMed: "2009-10-10",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: false,
-        },
-        {
-          type: "Ugift",
-          relatertVedSivilstand: "321",
-          bekreftelsesdato: "2008-01-01",
-          gyldigFraOgMed: "2008-01-02",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: true,
-        },
-      ];
       const personinfo = mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
-        wrappingComponentProps: {
-          mocks: [
-            {
-              request: {
-                query: HentSivilstandDocument,
-                variables: {
-                  behandlingID: 1,
-                },
-              },
-              result: {
-                data: {
-                  hentSaksopplysninger: {
-                    persondata: {
-                      sivilstand,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        wrappingComponentProps: requestResultMock,
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 20);
+        setTimeout(resolve, 30);
       });
       personinfo.update();
 
@@ -135,57 +157,17 @@ describe("Personinfo", () => {
 
   it("sender sivilstand-data til sivilstandModal etter dataen er hentet", () => {
     return act(async () => {
-      const sivilstand: Sivilstand[] = [
-        {
-          type: "Gift",
-          relatertVedSivilstand: "123",
-          bekreftelsesdato: "2009-10-09",
-          gyldigFraOgMed: "2009-10-10",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: false,
-        },
-        {
-          type: "Ugift",
-          relatertVedSivilstand: "321",
-          bekreftelsesdato: "2008-01-01",
-          gyldigFraOgMed: "2008-01-02",
-          master: "PDL",
-          kilde: "FREG",
-          erHistorisk: true,
-        },
-      ];
       const personinfo = mount(<Personinfo {...props} />, {
         wrappingComponent: MockedProvider,
-        wrappingComponentProps: {
-          mocks: [
-            {
-              request: {
-                query: HentSivilstandDocument,
-                variables: {
-                  behandlingID: 1,
-                },
-              },
-              result: {
-                data: {
-                  hentSaksopplysninger: {
-                    persondata: {
-                      sivilstand,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        wrappingComponentProps: requestResultMock,
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 20);
+        setTimeout(resolve, 30);
       });
       personinfo.update();
 
-      const visMerSivilstandKnapp = personinfo.find(".personinfo__vis-detaljer-button").hostNodes();
+      const visMerSivilstandKnapp = personinfo.find(".sivilstand__vis-detaljer-button").hostNodes();
       expect(visMerSivilstandKnapp).toHaveLength(1);
       const mouseEvent = instance(mock<MouseEvent<HTMLButtonElement>>());
       visMerSivilstandKnapp.props().onClick?.(mouseEvent);
@@ -195,6 +177,31 @@ describe("Personinfo", () => {
       expect(sivilstandModal).toHaveLength(1);
       expect(sivilstandModal.props().aktiveSivilstander).toEqual([sivilstand[0]]);
       expect(sivilstandModal.props().historiskeSivilstander).toEqual([sivilstand[1]]);
+    });
+  });
+
+  it("sender personstatus-data til personstatusModal etter dataen er hentet", () => {
+    return act(async () => {
+      const personinfo = mount(<Personinfo {...props} />, {
+        wrappingComponent: MockedProvider,
+        wrappingComponentProps: requestResultMock,
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 30);
+      });
+      personinfo.update();
+
+      const visMerPersonstatusKnapp = personinfo.find(".personstatus__vis-detaljer-button").hostNodes();
+      expect(visMerPersonstatusKnapp).toHaveLength(1);
+      const mouseEvent = instance(mock<MouseEvent<HTMLButtonElement>>());
+      visMerPersonstatusKnapp.props().onClick?.(mouseEvent);
+
+      personinfo.update();
+      const personstatusModal = personinfo.find(PersonstatusModal);
+      expect(personstatusModal).toHaveLength(1);
+      expect(personstatusModal.props().aktivePersonstatuser).toEqual([personstatus[0]]);
+      expect(personstatusModal.props().historiskePersonstatuser).toEqual([personstatus[1], personstatus[2]]);
     });
   });
 });

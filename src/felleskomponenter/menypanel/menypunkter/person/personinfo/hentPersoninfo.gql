@@ -1,0 +1,27 @@
+query hentPersoninfo($behandlingID: Long!) {
+  hentSaksopplysninger(behandlingID: $behandlingID) {
+    persondata {
+      folkeregisterpersonstatuser {
+        kode
+        tekst
+        master
+        kilde
+        fregGyldighetstidspunkt
+        erHistorisk
+      }
+      foedsel {
+        foedselsaar
+        foedselsdato
+      }
+      sivilstand {
+        type
+        relatertVedSivilstand
+        gyldigFraOgMed
+        bekreftelsesdato
+        master
+        kilde
+        erHistorisk
+      }
+    }
+  }
+}

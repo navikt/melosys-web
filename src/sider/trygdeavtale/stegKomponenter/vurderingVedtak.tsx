@@ -25,11 +25,12 @@ import { formSelectors } from "../../../ducks/form";
 import MottakerTabell from "../../../felleskomponenter/tabell/mottakerTabell";
 import PdfLenkeListe from "../../../felleskomponenter/pdfLenkeListe";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
-import { KontrollFeil, StegStatus } from "../stegvelger";
+import { StegStatus } from "../stegvelger";
 import bem from "../../../bemUtils";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
+import { Feilkode } from "../../../@types";
 
 const { STORBRITANNIA } = MKV.Koder.brev.produserbaredokumenter;
 export const FRITEKST = "Fritekst";
@@ -104,7 +105,7 @@ interface Props {
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  valideringFeil: KontrollFeil[];
+  valideringFeil: Feilkode[];
   formValues: {
     lovvalgsperiodeFom?: string;
     lovvalgsperiodeTom?: string;

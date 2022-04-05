@@ -25,11 +25,6 @@ export const oppdaterOppfrisk = (data) => ({
   data,
 });
 
-export const oppdaterValidering = (data) => ({
-  type: Types.OPPDATER_VALIDERING,
-  data,
-});
-
 export const oppdaterRevurderFagsak = (data) => ({
   type: Types.OPPDATER_REVURDER_FAGSAK,
   data,

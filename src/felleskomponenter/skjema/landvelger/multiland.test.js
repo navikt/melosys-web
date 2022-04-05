@@ -1,5 +1,5 @@
 import React from "react";
-import { MultiLand } from "./multiLand";
+import { InnerMultiLand } from "./multiLand";
 
 describe.skip("EnkeltLand", () => {
   let props = null;
@@ -24,7 +24,7 @@ describe.skip("EnkeltLand", () => {
     props.datalistID = "999";
     props.label = "label";
 
-    const multiland = shallow(<MultiLand {...props} />);
+    const multiland = shallow(<InnerMultiLand {...props} />);
     const input = multiland.find("Input");
     expect(input).toHaveLength(1);
 
@@ -35,7 +35,7 @@ describe.skip("EnkeltLand", () => {
 
   describe("ved fokus flyttet fra input", () => {
     it("hvis tekst ikke er skrevet inn, ikke vis feilmelding", () => {
-      const multiland = shallow(<MultiLand {...props} />);
+      const multiland = shallow(<InnerMultiLand {...props} />);
       const input = multiland.find("Input");
 
       input.simulate("blur");
@@ -45,7 +45,7 @@ describe.skip("EnkeltLand", () => {
 
     it("hvis tekst er skrevet inn og landkoder prop er oppgitt: tøm feilmelding, tøm tekst-input", () => {
       props.fields.getAll = () => ["NO", "SE"];
-      const multiland = shallow(<MultiLand {...props} />);
+      const multiland = shallow(<InnerMultiLand {...props} />);
       const input = multiland.find("Input");
 
       input.simulate("change", { target: { value: "NO" } });
@@ -56,7 +56,7 @@ describe.skip("EnkeltLand", () => {
     });
 
     it("hvis tekst ikke er skrevet inn, ikke vis feilmelding", () => {
-      const multiland = shallow(<MultiLand {...props} />);
+      const multiland = shallow(<InnerMultiLand {...props} />);
       const input = multiland.find("Input");
 
       input.simulate("blur");
@@ -67,7 +67,7 @@ describe.skip("EnkeltLand", () => {
 
   describe("ved tastetrykk", () => {
     it("dersom tasten er enter, kaller preventdefault", () => {
-      const multiLand = shallow(<MultiLand {...props} />);
+      const multiLand = shallow(<InnerMultiLand {...props} />);
       const input = multiLand.find("Input");
 
       const event = { keyCode: 13, preventDefault: jest.fn() };
