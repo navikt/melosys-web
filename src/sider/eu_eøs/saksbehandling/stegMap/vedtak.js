@@ -90,12 +90,14 @@ class Vedtak extends Steg {
         redigerbart: _propsLight.generiskStegRedigerbart,
         visAntallManederUtland: false,
         pdfDokumenter,
+        harFeilmeldinger: _propsLight.harFeilmeldinger,
       };
     };
     this.beregnRelevantUI = () => ({});
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
+      kontrollerVedtak: propsLight.tilgjengeligeHandlers.kontrollerVedtak,
     };
     this.status = FANE_STATUS.OK;
   }

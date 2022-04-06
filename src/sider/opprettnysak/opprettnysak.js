@@ -43,7 +43,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
   const [oppgaverForsoktHentetFraEksisterendePerson, setOppgaverForsoktHentetFraEksisterendePerson] = useState(false);
 
   const { behandlingstema, soknadsinfo, sakstype } = formValues;
-  const { land, erUkjenteEllerAlleEosLand } = soknadsinfo;
+  const { landkoder, erUkjenteEllerAlleEosLand } = soknadsinfo;
   const soknadErValgt = MKVUtils.erSoknad(behandlingstema);
 
   const folketrygdenToggle = useFeatureToggle("melosys.folketrygden.mvp");
@@ -178,7 +178,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                           </Nav.Row>
                           <Skjema.LandVelger
                             multiLand
-                            feltNavn="land"
+                            feltNavn="landkoder"
                             label="Land"
                             errorConfig={{ submitFailed: true }}
                             disabled={erLandvelgerDisabled}
@@ -186,7 +186,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                           {behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND && (
                             <Skjema.Checkbox
                               feltNavn="erUkjenteEllerAlleEosLand"
-                              disabled={land.length > 0}
+                              disabled={landkoder.length > 0}
                               label={
                                 <div>
                                   Flere EØS-land/Sveits. Ikke kjent hvilke
@@ -267,7 +267,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     skalTilordnes: false,
     behandlingstema: undefined,
-    soknadsinfo: { land: [], erUkjenteEllerAlleEosLand: false },
+    soknadsinfo: { landkoder: [], erUkjenteEllerAlleEosLand: false },
   },
 });
 
@@ -283,7 +283,7 @@ const opprettNySak = async (values, dispatch, props) => {
       tom,
     },
     land: {
-      landkoder: soknadErValgt ? values.soknadsinfo.land : [],
+      landkoder: soknadErValgt ? values.soknadsinfo.landkoder : [],
       erUkjenteEllerAlleEosLand: soknadErValgt ? values.soknadsinfo.erUkjenteEllerAlleEosLand : false,
     },
   };

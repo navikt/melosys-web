@@ -48,6 +48,14 @@ enum Familierelasjonsrolle {
   RelatertVedSivilstand = 'RELATERT_VED_SIVILSTAND'
 }
 
+type Foedsel = {
+  __typename?: 'Foedsel';
+  foedselsaar: Scalars['Int'];
+  foedselsdato?: Maybe<Scalars['Date']>;
+  foedeland?: Maybe<Scalars['String']>;
+  foedested?: Maybe<Scalars['String']>;
+};
+
 type Folkeregisterpersonstatus = {
   __typename?: 'Folkeregisterpersonstatus';
   kode: Scalars['String'];
@@ -99,6 +107,7 @@ type Personopplysninger = {
   __typename?: 'Personopplysninger';
   bostedsadresser: Array<Bostedsadresse>;
   familiemedlemmer: Array<Familiemedlem>;
+  foedsel: Foedsel;
   folkeregisteridentifikator?: Maybe<Scalars['String']>;
   folkeregisterpersonstatuser: Array<Folkeregisterpersonstatus>;
   kjoenn: KjoennType;
