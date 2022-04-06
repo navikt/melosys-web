@@ -68,6 +68,12 @@ interface Props {
   redigerbart: boolean;
   alleLandkoder: KTObject[];
   formValues: FormValuesProps;
+  kontrollerVedtak: (
+    data: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto,
+    skalRegisteropplysningerOppdateres: boolean
+  ) => Promise<void>;
+  harFeilmeldinger: boolean;
+  aktivtSteg: boolean;
 }
 
 const VurderingVedtak = ({
@@ -87,10 +93,15 @@ const VurderingVedtak = ({
   familieFormValues,
   lagreOgFatteVedtak,
   vedtakstype,
+  kontrollerVedtak,
+  harFeilmeldinger,
+  aktivtSteg,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
+  const stegErGyldig = redigerbart && !harFeilmeldinger;
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
@@ -112,6 +123,7 @@ const VurderingVedtak = ({
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 2000), []);
   useEffect(() => {
     debouncedHentMuligeMottakere();
+    return debouncedHentMuligeMottakere.cancel();
   }, [formValuesRepresentant.selvbetalende]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
@@ -126,6 +138,7 @@ const VurderingVedtak = ({
 
   useEffect(() => {
     debouncedOppdaterFritekster(formValues);
+    return debouncedOppdaterFritekster.cancel();
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   function mapPeriodeRader(perioder: Medlemskapsperiode[] | undefined) {
@@ -235,10 +248,8 @@ const VurderingVedtak = ({
     );
   }
 
-  const fattVedtak = async () => {
-    setVedtakPending(true);
-
-    await lagreOgFatteVedtak({
+  const lagFattVedtakFTRLReqDto = () => {
+    return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
@@ -247,7 +258,25 @@ const VurderingVedtak = ({
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
       nyVurderingBakgrunn: null,
-    });
+    };
+  };
+
+  useEffect(() => {
+    async function kontroller() {
+      if (aktivtSteg) {
+        setVedtakPending(true);
+        await kontrollerVedtak(lagFattVedtakFTRLReqDto(), oppdaterFoerKontroll);
+        setOppdaterFoerKontroll(false);
+        setVedtakPending(false);
+      }
+    }
+    kontroller();
+  }, [aktivtSteg]);
+
+  const fattVedtak = async () => {
+    setVedtakPending(true);
+
+    await lagreOgFatteVedtak(lagFattVedtakFTRLReqDto());
 
     if (isMounted.current) {
       setVedtakPending(false);
@@ -360,7 +389,7 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      {redigerbart && (
+      {stegErGyldig && (
         <MottakerTabell
           rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
@@ -375,7 +404,7 @@ const VurderingVedtak = ({
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtak,
-          disabled: !redigerbart,
+          disabled: !stegErGyldig,
           autoDisableVedSpinner: true,
           spinner: vedtakPending,
         }}

@@ -9,7 +9,7 @@ import "./stegFane.css";
 // Stegfanen er komponenten som vises for hvert steg
 const StegFane = (props) => {
   const { faneData } = props;
-  const componentProps = { ...faneData.data, ...faneData.handlers };
+  const componentProps = { ...faneData.data, ...faneData.handlers, aktivtSteg: faneData.aktivtSteg };
   const stegFaneKlasse = classnames({
     stegFane: true,
     [`steg${faneData.stegPosisjon}`]: true,
