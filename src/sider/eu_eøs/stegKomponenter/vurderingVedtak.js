@@ -73,7 +73,7 @@ const VurderingVedtak = ({
   pdfDokumenter,
   erArtikkel11_4,
   kontrollerVedtak,
-  harValideringFeil,
+  harFeilmeldinger,
   aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -143,7 +143,7 @@ const VurderingVedtak = ({
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalget);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
-  const stegErGyldig = redigerbart && formIsValid && !harValideringFeil && !flereSoknadslandEnnTillatt;
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
 
   return (
     <div className="vedtak">
@@ -250,7 +250,7 @@ VurderingVedtak.propTypes = {
   pdfDokumenter: MPT.DokumentMetadataListe.isRequired,
   erArtikkel11_4: PT.bool.isRequired,
   kontrollerVedtak: PT.func.isRequired,
-  harValideringFeil: PT.bool.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };
 

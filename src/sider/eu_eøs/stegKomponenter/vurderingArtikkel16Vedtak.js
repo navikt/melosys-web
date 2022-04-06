@@ -359,7 +359,7 @@ export const VurderingArtikkel16Vedtak = ({
   lagreLovvalgsperioder,
   tilbake,
   kontrollerVedtak,
-  harValideringFeil,
+  harFeilmeldinger,
   aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -527,7 +527,7 @@ export const VurderingArtikkel16Vedtak = ({
   const stegErGyldig =
     redigerbart &&
     formIsValid &&
-    (!harValideringFeil || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG);
+    (!harFeilmeldinger || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG);
   const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType, stegErGyldig);
 
   return (
@@ -577,7 +577,7 @@ VurderingArtikkel16Vedtak.propTypes = {
   anmodningsperiode: PT.object,
   hentLovvalgsperioder: PT.func.isRequired,
   kontrollerVedtak: PT.func.isRequired,
-  harValideringFeil: PT.bool.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };
 

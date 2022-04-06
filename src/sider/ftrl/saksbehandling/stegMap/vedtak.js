@@ -18,7 +18,7 @@ class Vedtak extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.redigerbart,
-      harValideringFeil: _propsLight.harValideringFeil,
+      harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = (_propsLight) => ({ harAvklaring });
     this.handlers = {

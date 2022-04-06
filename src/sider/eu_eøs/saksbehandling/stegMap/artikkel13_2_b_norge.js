@@ -11,7 +11,7 @@ class Artikkel13_2_b_norge extends Steg {
     this.komponent = VurderingArtikkel13_x_vedtak;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
-      harValideringFeil: _propsLight.harValideringFeil,
+      harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = (_propsLight) => ({
       overskrift: "Omfattet av norsk lovgivning etter artikkel 13 nr. 2 bokstav b",

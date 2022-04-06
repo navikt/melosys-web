@@ -34,7 +34,7 @@ import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import BehandlingsgrunnlagFeilmeldinger from "../behandlingsgrunnlagFeilmeldinger";
-import { Valideringsfeil } from "../valideringsfeil";
+import { Feilmeldinger } from "../feilmeldinger";
 
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
@@ -421,7 +421,7 @@ class Stegvelger extends Component {
       vurder_familie_valid: props.vurder_familie_valid,
       vurder_representant_valid: props.vurder_representant_valid,
       annenBehandlingOppfriskes: props.annenBehandlingOppfriskes,
-      harValideringFeil: !Utils._isEmpty(props.valideringFeil),
+      harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger),
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -519,7 +519,7 @@ class Stegvelger extends Component {
 
   mapFeilmeldinger = () => {
     if (this.erVedtakSteg(this.state.aktivtStegNummer)) {
-      return <Valideringsfeil feilmeldinger={this.props.valideringFeil} />;
+      return <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />;
     }
     return null;
   };
@@ -631,7 +631,7 @@ Stegvelger.propTypes = {
   vurder_familie_valid: PT.bool.isRequired,
   vurder_representant_valid: PT.bool.isRequired,
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: PT.func,
-  valideringFeil: PT.oneOfType([
+  feilmeldinger: PT.oneOfType([
     PT.arrayOf(
       PT.shape({
         kode: PT.string.isRequired,
@@ -669,7 +669,7 @@ Stegvelger.defaultProps = {
   lagreAnmodningsperioderHandler: () => {},
   oppdaterOgLagreBehandlingerHandler: () => {},
   lagreBehandlingsgrunnlagOgOppfriskSaksopplysninger: () => {},
-  valideringFeil: [],
+  feilmeldinger: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -721,7 +721,7 @@ const mapStateToProps = (state) => ({
   lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
   medlemskapsperioder: medlemskapsperioderSelectors.MedlemskapsperioderDataSelector(state),
   soknadsperiode: behandlingsgrunnlagSelectors.PeriodeSelector(state),
-  valideringFeil: feiletResponsSelectors.FeilmeldingerSelector(state),
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 
 /* eslint no-alert:off */

@@ -90,7 +90,7 @@ class Vedtak extends Steg {
         redigerbart: _propsLight.generiskStegRedigerbart,
         visAntallManederUtland: false,
         pdfDokumenter,
-        harValideringFeil: _propsLight.harValideringFeil,
+        harFeilmeldinger: _propsLight.harFeilmeldinger,
       };
     };
     this.beregnRelevantUI = () => ({});

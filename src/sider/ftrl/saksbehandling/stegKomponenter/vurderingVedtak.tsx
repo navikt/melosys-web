@@ -72,7 +72,7 @@ interface Props {
     data: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto,
     skalRegisteropplysningerOppdateres: boolean
   ) => Promise<void>;
-  harValideringFeil: boolean;
+  harFeilmeldinger: boolean;
   aktivtSteg: boolean;
 }
 
@@ -94,14 +94,14 @@ const VurderingVedtak = ({
   lagreOgFatteVedtak,
   vedtakstype,
   kontrollerVedtak,
-  harValideringFeil,
+  harFeilmeldinger,
   aktivtSteg,
 }: Props & PropsFromRedux) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const [vedtakPending, setVedtakPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
-  const stegErGyldig = redigerbart && !harValideringFeil;
+  const stegErGyldig = redigerbart && !harFeilmeldinger;
 
   const hentMuligeMottakere = async () => {
     const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {

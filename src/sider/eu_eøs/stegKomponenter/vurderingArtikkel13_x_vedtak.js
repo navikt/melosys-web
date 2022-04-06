@@ -47,7 +47,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   behandlingstype,
   soknadsperiode,
   kontrollerVedtak,
-  harValideringFeil,
+  harFeilmeldinger,
   aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -140,7 +140,7 @@ export const VurderingArtikkel13_x_vedtak = ({
     }
   };
 
-  const stegErGyldig = redigerbart && formIsValid && !harValideringFeil;
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
 
   return (
     <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArtikkel13_x_vedtak">
@@ -253,7 +253,7 @@ VurderingArtikkel13_x_vedtak.propTypes = {
     tom: PT.string.isRequired,
   }).isRequired,
   kontrollerVedtak: PT.func.isRequired,
-  harValideringFeil: PT.bool.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };
 

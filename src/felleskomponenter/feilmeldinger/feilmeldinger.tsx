@@ -6,7 +6,7 @@ import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
-import "./valideringsfeil.css";
+import "./feilmelding.css";
 
 export default ({ feilmeldinger }: { feilmeldinger: Feilkode[] | string }) => {
   if (Utils._isEmpty(feilmeldinger)) {
@@ -30,7 +30,7 @@ export default ({ feilmeldinger }: { feilmeldinger: Feilkode[] | string }) => {
   };
 
   return (
-    <div className="valideringsfeil">
+    <div className="feilmelding">
       <Nav.AlertStripeFeil className="varselstripe">{renderInnhold()}</Nav.AlertStripeFeil>
     </div>
   );

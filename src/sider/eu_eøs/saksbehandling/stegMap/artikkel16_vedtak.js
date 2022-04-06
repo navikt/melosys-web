@@ -12,7 +12,7 @@ class Artikkel16Vedtak extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
       harValgtNorskArbeidsgiver: _propsLight.harValgtNorskArbeidsgiver,
-      harValideringFeil: _propsLight.harValideringFeil,
+      harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {

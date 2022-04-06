@@ -32,7 +32,7 @@ class ArbeidEttLandOvrigVedtak extends Steg {
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
       informertMyndighetFakta,
-      harValideringFeil: _propsLight.harValideringFeil,
+      harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = () => ({});
     this.handlers = {

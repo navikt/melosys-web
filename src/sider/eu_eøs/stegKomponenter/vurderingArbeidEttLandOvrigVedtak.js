@@ -115,7 +115,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
   soknadsperiode,
   informertMyndighetFakta,
   kontrollerVedtak,
-  harValideringFeil,
+  harFeilmeldinger,
   aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -269,7 +269,7 @@ export const VurderingArbeidEttLandOvrigVedtak = ({
     }
   };
 
-  const stegErGyldig = redigerbart && formIsValid && !harValideringFeil;
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
 
   return (
     <form onSubmit={handleSubmit(fattVedtak)} className="vurderingArbeidEttLandOvrigVedtak">
@@ -434,7 +434,7 @@ VurderingArbeidEttLandOvrigVedtak.propTypes = {
   }).isRequired,
   informertMyndighetFakta: MPT.Avklartefakta,
   kontrollerVedtak: PT.func.isRequired,
-  harValideringFeil: PT.bool.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
   aktivtSteg: PT.bool,
 };
 
