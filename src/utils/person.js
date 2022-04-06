@@ -42,7 +42,10 @@ const erGyldigFnr = (verdi) => {
  */
 const erGyldigDnr = (verdi) => erGyldigFnr(verdi);
 
+// Validering av fnr og dnr er lik, trenger derfor bare sjekke om gyldig fnr
+const erGyldigFnrEllerDnr = (verdi) => erGyldigFnr(verdi);
+
 const tilSammensattNavn = (fornavn, mellomnavn, etternavn) =>
   `${fornavn}${mellomnavn ? ` ${mellomnavn}` : ""} ${etternavn}`;
 
-export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr, tilSammensattNavn };
+export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr, erGyldigFnrEllerDnr, tilSammensattNavn };

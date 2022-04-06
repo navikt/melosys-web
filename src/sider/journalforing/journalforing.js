@@ -11,7 +11,7 @@ import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
-import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from "../../constants";
+import { JOURNALFORING_HENSIKT } from "../../constants";
 
 import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
@@ -317,41 +317,33 @@ class Journalforing extends Component {
       return;
     }
 
-    if (value.length === ANTALL_TALL_I_ORGNR) {
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
       settFeltInnhold("avsenderNavn", "");
-      const response = await sokOrgnr(value);
-      if (!response || !response.data) {
+      const navn = Utils.organisasjon.erOrgnrGyldig(value)
+        ? await sokOrgnr(value)?.data?.navn
+        : await sokFnrDnr(value)?.data?.sammensattNavn;
+      if (!navn) {
         return false;
       }
-      const { navn = "" } = response.data;
       settFeltInnhold("avsenderNavn", navn);
-    }
-
-    if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
-      settFeltInnhold("avsenderNavn", "");
-      const response = await sokFnrDnr(value);
-      if (!response || !response.data) {
-        return false;
-      }
-      const { sammensattNavn = "" } = response.data;
-      settFeltInnhold("avsenderNavn", sammensattNavn);
     }
   };
 
   hentOgVisRepresentant = async (value) => {
-    const { sokOrgnr, settFeltInnhold } = this.props;
+    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
 
     if (!value) {
       return;
     }
 
-    if (value.length === ANTALL_TALL_I_ORGNR) {
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
       settFeltInnhold("representantNavn", "");
-      const response = await sokOrgnr(value);
-      if (!response.data) {
+      const navn = Utils.organisasjon.erOrgnrGyldig(value)
+        ? await sokOrgnr(value)?.data?.navn
+        : await sokFnrDnr(value)?.data?.sammensattNavn;
+      if (!navn) {
         return false;
       }
-      const { navn = "" } = response.data;
       settFeltInnhold("representantNavn", navn);
     }
   };

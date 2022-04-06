@@ -1,5 +1,4 @@
 import Checkbox from "./input/checkbox";
-import Datavisning from "./datavisning";
 import Datovelger from "./datovelger";
 import HTMLEditor from "./htmlEditor";
 import Input from "./input/input";
@@ -20,7 +19,6 @@ import * as Validering from "./validering";
 
 export {
   Checkbox,
-  Datavisning,
   Datovelger,
   HTMLEditor,
   Input,

@@ -3,6 +3,8 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as Nav from "../../../../navFrontend";
 
 import MKV from "../../../../melosyskodeverk";
 import { AvsenderOrganisasjon } from "./index";
@@ -20,6 +22,9 @@ const AvsenderFullmektig = ({ avsenderID = "", settFeltInnhold, hentOgVisReprese
     [MKV.Koder.representerer.BEGGE]: "Både arbeidsgiver og arbeidstaker",
   };
 
+  const erOrgnr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
+  const erFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
+
   return (
     <AvsenderOrganisasjon
       avsenderID={avsenderID}
@@ -27,17 +32,20 @@ const AvsenderFullmektig = ({ avsenderID = "", settFeltInnhold, hentOgVisReprese
       settFeltInnhold={settFeltInnhold}
       hentOgVisRepresentant={hentOgVisRepresentant}
     >
-      <Skjema.Select
-        feltNavn="representantRepresenterer"
-        label="Hvem er dette fullmektig for"
-        className="avsender__input"
-      >
-        {MKV.KTObjects.representerer.map((representerer: KTObject) => (
-          <option key={representerer.kode} value={representerer.kode}>
-            {representererMap[representerer.kode]}
-          </option>
-        ))}
-      </Skjema.Select>
+      {erOrgnr && (
+        <Skjema.Select
+          feltNavn="representantRepresenterer"
+          label="Hvem er dette fullmektig for"
+          className="avsender__input"
+        >
+          {MKV.KTObjects.representerer.map((representerer: KTObject) => (
+            <option key={representerer.kode} value={representerer.kode}>
+              {representererMap[representerer.kode]}
+            </option>
+          ))}
+        </Skjema.Select>
+      )}
+      {erFnrEllerDnr && <Nav.Typo.Normaltekst>Fullmektig representerer bruker</Nav.Typo.Normaltekst>}
     </AvsenderOrganisasjon>
   );
 };

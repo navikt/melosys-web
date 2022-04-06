@@ -11,6 +11,7 @@ const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisas
 const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette fnr eller dnr." };
 const SKRIV_INN_NAVN_PA_AVSENDER = { melding: "Skriv inn navn på avsender" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig orgnr." };
+const SKRIV_INN_GYLDIG_ORGNR_FNR_DNR = { melding: "Skriv inn gyldig org.nr./f.nr./d-nr." };
 const VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN = {
   melding: "Velg dokumenttittel fra listen eller skriv din egen.",
 };
@@ -62,7 +63,7 @@ const journalforing = object().shape({
     then: string()
       .nullable()
       .erNummer(SKRIV_INN_KUN_NUMMER)
-      .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
+      .erFnrEllerDnrEllerOrgnr(SKRIV_INN_GYLDIG_ORGNR_FNR_DNR)
       .when("avsenderNavn", {
         is: "",
         then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR),
