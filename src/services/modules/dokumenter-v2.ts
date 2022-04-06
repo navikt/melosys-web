@@ -34,6 +34,7 @@ export enum FeltType {
   TEKST = "TEKST",
   FRITEKST = "FRITEKST",
   SJEKKBOKS = "SJEKKBOKS",
+  VEDLEGG = "VEDLEGG",
 }
 
 export interface Felt {

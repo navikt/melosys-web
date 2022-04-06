@@ -7,13 +7,24 @@ import * as Skjema from "../../skjema";
 import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
 import FeltBeskrivelse from "./feltBeskrivelse";
+import VedleggVelger from "../../vedleggvelger";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
   visFeltBeskrivelse: boolean;
   width: ColumnWidth;
+  valgteVedlegg?: any;
+  setValgteVedlegg?: any;
+  fysiskeDokument?: any;
 }
-const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
+const BrevFelt = ({
+  felt,
+  visFeltBeskrivelse,
+  width,
+  valgteVedlegg,
+  setValgteVedlegg,
+  fysiskeDokument,
+}: BrevFeltProps) => {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
@@ -53,6 +64,15 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width }: BrevFeltProps) => {
               label={felt.beskrivelse}
               className="brevfelt__sjekkboks"
             />
+          </Nav.Column>
+        </Nav.Row>
+      );
+    case DokumenterV2.FeltType.VEDLEGG:
+      return (
+        <Nav.Row>
+          <Nav.Column xs={width}>
+            <Nav.Typo.Element className="fritekst_label">{felt.beskrivelse}</Nav.Typo.Element>
+            <VedleggVelger valgteVedlegg={valgteVedlegg} dokumenter={fysiskeDokument} onChange={setValgteVedlegg} />
           </Nav.Column>
         </Nav.Row>
       );
