@@ -66,8 +66,6 @@ describe("Familiemedlemmer", () => {
         foreldreansvar: "",
         fnrAnnenForelder: "",
         sivilstand: null,
-        erHistorisk: null,
-        sivilstandGyldighetsperiodeFom: null,
       },
       {
         navn: "ektefelle",
@@ -76,9 +74,11 @@ describe("Familiemedlemmer", () => {
         alder: 30,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "Gift",
-        erHistorisk: false,
-        sivilstandGyldighetsperiodeFom: "",
+        sivilstand: {
+          type: "Gift",
+          erHistorisk: false,
+          gyldigFraOgMed: "",
+        },
       },
     ];
 
@@ -130,8 +130,6 @@ describe("Familiemedlemmer", () => {
         foreldreansvar: "",
         fnrAnnenForelder: "",
         sivilstand: null,
-        erHistorisk: null,
-        sivilstandGyldighetsperiodeFom: null,
       },
       {
         navn: "tidligere-ektefelle",
@@ -140,9 +138,11 @@ describe("Familiemedlemmer", () => {
         alder: 32,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "Separert",
-        erHistorisk: true,
-        sivilstandGyldighetsperiodeFom: "",
+        sivilstand: {
+          type: "Separert",
+          erHistorisk: true,
+          gyldigFraOgMed: "",
+        },
       },
       {
         navn: "nåværende-ektefelle",
@@ -151,9 +151,11 @@ describe("Familiemedlemmer", () => {
         alder: 30,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "Gift",
-        erHistorisk: false,
-        sivilstandGyldighetsperiodeFom: "",
+        sivilstand: {
+          type: "Gift",
+          erHistorisk: false,
+          gyldigFraOgMed: "",
+        },
       },
       {
         navn: "gammel-ektefelle",
@@ -162,9 +164,11 @@ describe("Familiemedlemmer", () => {
         alder: 44,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "Ugift",
-        erHistorisk: true,
-        sivilstandGyldighetsperiodeFom: "",
+        sivilstand: {
+          type: "Ugift",
+          erHistorisk: true,
+          gyldigFraOgMed: "",
+        },
       },
     ];
 

@@ -35,9 +35,7 @@ export type Familiemedlem = {
   alder?: Maybe<Scalars['Int']>;
   foreldreansvar?: Maybe<Scalars['String']>;
   fnrAnnenForelder?: Maybe<Scalars['String']>;
-  sivilstand?: Maybe<Scalars['String']>;
-  erHistorisk?: Maybe<Scalars['Boolean']>;
-  sivilstandGyldighetsperiodeFom?: Maybe<Scalars['Date']>;
+  sivilstand?: Maybe<Sivilstand>;
 };
 
 export enum Familierelasjonsrolle {
@@ -156,7 +154,7 @@ export type Sivilstand = {
   relatertVedSivilstand?: Maybe<Scalars['String']>;
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   bekreftelsesdato?: Maybe<Scalars['Date']>;
-  master: Scalars['String'];
+  master?: Maybe<Scalars['String']>;
   kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
 };
