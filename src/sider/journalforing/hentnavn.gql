@@ -1,0 +1,9 @@
+query hentNavn($ident: String!) {
+  hentPersonopplysninger(ident: $ident) {
+    navn {
+      fornavn
+      mellomnavn
+      etternavn
+    }
+  }
+}
