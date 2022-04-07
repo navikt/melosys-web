@@ -46,10 +46,7 @@ const tilSammensattNavn = (fornavn, mellomnavn, etternavn) =>
   `${fornavn}${mellomnavn ? ` ${mellomnavn}` : ""} ${etternavn}`;
 
 const tilSammensattNavnFraObjekt = (navn) => {
-  if (!navn.fornavn || !navn.etternavn) {
-    return "";
-  }
-  return tilSammensattNavn(navn.fornavn, navn?.mellomnavn, navn.etternavn);
+  return tilSammensattNavn(navn.fornavn || "", navn.mellomnavn, navn.etternavn || "");
 };
 
 export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr, tilSammensattNavn, tilSammensattNavnFraObjekt };

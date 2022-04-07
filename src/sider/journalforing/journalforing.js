@@ -294,7 +294,9 @@ class Journalforing extends Component {
 
     const { settFeltInnhold, hentFagsakListe } = this.props;
     settFeltInnhold("brukerNavn", "");
-    const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: brukerID } });
+    const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: brukerID } }).catch(() => {
+      return false;
+    });
     if (!response || !response.data || !response.data.hentPersonopplysninger) {
       return false;
     }
@@ -330,7 +332,9 @@ class Journalforing extends Component {
 
     if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
       settFeltInnhold("avsenderNavn", "");
-      const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: value } });
+      const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: value } }).catch(() => {
+        return false;
+      });
       if (!response || !response.data || !response.data.hentPersonopplysninger) {
         return false;
       }
