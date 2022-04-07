@@ -283,6 +283,12 @@ class Journalforing extends Component {
     }
   };
 
+  sokFnrDnr = async (ident) => {
+    return apolloClient.query({ query: HentNavnDocument, variables: { ident } }).catch(() => {
+      return false;
+    });
+  };
+
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
    * Derfor, sjekk dette før vi evt henter navn.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
@@ -294,9 +300,7 @@ class Journalforing extends Component {
 
     const { settFeltInnhold, hentFagsakListe } = this.props;
     settFeltInnhold("brukerNavn", "");
-    const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: brukerID } }).catch(() => {
-      return false;
-    });
+    const response = await this.sokFnrDnr(brukerID);
     if (!response || !response.data || !response.data.hentPersonopplysninger) {
       return false;
     }
@@ -332,9 +336,7 @@ class Journalforing extends Component {
 
     if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
       settFeltInnhold("avsenderNavn", "");
-      const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: value } }).catch(() => {
-        return false;
-      });
+      const response = await this.sokFnrDnr(value);
       if (!response || !response.data || !response.data.hentPersonopplysninger) {
         return false;
       }
