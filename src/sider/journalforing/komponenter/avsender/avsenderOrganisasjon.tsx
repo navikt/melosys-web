@@ -81,7 +81,7 @@ export const AvsenderOrganisasjon = ({
       />
       <div className="avsender__navn">
         <Nav.Typo.Element>Navn: </Nav.Typo.Element>
-        <Nav.Typo.Normaltekst>{avsenderNavn}</Nav.Typo.Normaltekst>
+        <Nav.Typo.Normaltekst>{avsenderNavn || ""}</Nav.Typo.Normaltekst>
       </div>
       {children}
     </div>

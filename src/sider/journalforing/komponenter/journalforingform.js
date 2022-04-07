@@ -122,7 +122,7 @@ const mapStateToProps = (state) => {
   return {
     erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
     formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-    formErrors: formSelectors.JournalforingFormSelector(state).syncErrors,
+    formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
     submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,
     initialValues: {
       avsenderType:

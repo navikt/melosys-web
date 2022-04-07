@@ -19,10 +19,11 @@ import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
 import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
+import { apolloClient } from "../../graphql";
+import { HentNavnDocument } from "./hentnavn.generated";
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import { PersonOperations } from "../../ducks/personer";
 import * as MPT from "../../proptypes";
 
 import { sokOperations, sokSelectors } from "../../ducks/sok";
@@ -282,8 +283,26 @@ class Journalforing extends Component {
     }
   };
 
+  sokFnrDnr = async (ident) => {
+    return apolloClient.query({ query: HentNavnDocument, variables: { ident } }).catch(() => {
+      return false;
+    });
+  };
+
+  sokOrgnrFnrDnr = async (ident) => {
+    if (Utils.organisasjon.erOrgnrGyldig(ident)) {
+      const response = await this.props.sokOrgnr(ident);
+      return response?.data?.navn;
+    }
+    if (Utils.person.erGyldigFnrEllerDnr(ident)) {
+      const response = await this.sokFnrDnr(ident);
+      return Utils.person.tilSammensattNavnFraObjekt(response?.data?.hentPersonopplysninger?.navn);
+    }
+    return false;
+  };
+
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
-   * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
+   * Derfor, sjekk dette før vi evt henter navn.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisBruker = async (brukerID) => {
@@ -291,13 +310,13 @@ class Journalforing extends Component {
       return;
     }
 
-    const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
+    const { settFeltInnhold, hentFagsakListe } = this.props;
     settFeltInnhold("brukerNavn", "");
-    const response = await sokFnrDnr(brukerID);
-    if (!response || !response.data) {
+    const response = await this.sokFnrDnr(brukerID);
+    if (!response || !response.data || !response.data.hentPersonopplysninger) {
       return false;
     }
-    const { sammensattNavn = "" } = response.data;
+    const sammensattNavn = Utils.person.tilSammensattNavnFraObjekt(response.data.hentPersonopplysninger.navn);
     if (!sammensattNavn) {
       return false;
     }
@@ -311,7 +330,7 @@ class Journalforing extends Component {
    * @param value {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisAvsender = async (value) => {
-    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
+    const { settFeltInnhold } = this.props;
 
     if (!value) {
       return;
@@ -319,9 +338,7 @@ class Journalforing extends Component {
 
     if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
       settFeltInnhold("avsenderNavn", "");
-      const navn = Utils.organisasjon.erOrgnrGyldig(value)
-        ? await sokOrgnr(value)?.data?.navn
-        : await sokFnrDnr(value)?.data?.sammensattNavn;
+      const navn = await this.sokOrgnrFnrDnr(value);
       if (!navn) {
         return false;
       }
@@ -330,7 +347,7 @@ class Journalforing extends Component {
   };
 
   hentOgVisRepresentant = async (value) => {
-    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
+    const { settFeltInnhold } = this.props;
 
     if (!value) {
       return;
@@ -338,9 +355,7 @@ class Journalforing extends Component {
 
     if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
       settFeltInnhold("representantNavn", "");
-      const navn = Utils.organisasjon.erOrgnrGyldig(value)
-        ? await sokOrgnr(value)?.data?.navn
-        : await sokFnrDnr(value)?.data?.sammensattNavn;
+      const navn = await this.sokOrgnrFnrDnr(value);
       if (!navn) {
         return false;
       }
@@ -540,7 +555,6 @@ Journalforing.propTypes = {
   journalforing: MPT.Journalforing,
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   fagsakListe: PT.array,
-  sokFnrDnr: PT.func.isRequired,
   sokOrgnr: PT.func.isRequired,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
@@ -579,7 +593,6 @@ const mapDispatchToProps = (dispatch) => ({
   settFeilFelt: (...feltNavn) => setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn),
   settJournalforingHensikt: (journalforingHensikt) =>
     dispatch(change(KV.Form.JOURNALFORING, "journalforingHensikt", journalforingHensikt)),
-  sokFnrDnr: (fnr) => dispatch(PersonOperations.hent(fnr)),
   sokOrgnr: (orgnr) => dispatch(OrganisasjonOperations.hent(orgnr)),
   touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),

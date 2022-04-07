@@ -11,6 +11,7 @@ class Artikkel13_2_b_norge extends Steg {
     this.komponent = VurderingArtikkel13_x_vedtak;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
+      harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = (_propsLight) => ({
       overskrift: "Omfattet av norsk lovgivning etter artikkel 13 nr. 2 bokstav b",
@@ -20,6 +21,7 @@ class Artikkel13_2_b_norge extends Steg {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
       byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      kontrollerVedtak: this._propsLight.tilgjengeligeHandlers.kontrollerVedtak,
     };
     this._status = FANE_STATUS.OK;
   }

@@ -1,6 +1,6 @@
-import React, { Fragment, useCallback, useState, useEffect } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { reduxForm, isValid, getFormValues } from "redux-form";
+import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
 
@@ -21,7 +21,7 @@ import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat
 import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { vilkarSelectors } from "../../../ducks/vilkar";
-import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
@@ -80,6 +80,7 @@ export const Innvilgelse = ({
   onPeriodeForkorterUncheck,
   formValues,
   vedKlikkForhandsvis,
+  stegErGyldig,
 }) => {
   const pdfDokumenter = [
     {
@@ -134,7 +135,7 @@ export const Innvilgelse = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && (
+          {stegErGyldig && (
             <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
           )}
         </Nav.Column>
@@ -153,6 +154,7 @@ Innvilgelse.propTypes = {
   onPeriodeForkorterUncheck: PT.func.isRequired,
   formValues: PT.object.isRequired,
   vedKlikkForhandsvis: PT.func.isRequired,
+  stegErGyldig: PT.bool.isRequired,
 };
 
 Innvilgelse.defaultProps = {
@@ -170,6 +172,7 @@ export const DelvisInnvilgelse = ({
   onPeriodeForkorterUncheck,
   formValues,
   vedKlikkForhandsvis,
+  stegErGyldig,
 }) => {
   const pdfDokumenter = [
     {
@@ -228,7 +231,7 @@ export const DelvisInnvilgelse = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && (
+          {stegErGyldig && (
             <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />
           )}
         </Nav.Column>
@@ -248,6 +251,7 @@ DelvisInnvilgelse.propTypes = {
   onPeriodeForkorterUncheck: PT.func.isRequired,
   formValues: PT.object.isRequired,
   vedKlikkForhandsvis: PT.func.isRequired,
+  stegErGyldig: PT.bool.isRequired,
 };
 
 DelvisInnvilgelse.defaultProps = {
@@ -354,8 +358,12 @@ export const VurderingArtikkel16Vedtak = ({
   hentLovvalgsperioder,
   lagreLovvalgsperioder,
   tilbake,
+  kontrollerVedtak,
+  harFeilmeldinger,
+  aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
+  const [oppdaterFoerKontroll, setOppdaterFoerKontroll] = useState(true);
   const isMounted = Hooks.useIsMounted();
 
   useEffect(() => {
@@ -393,6 +401,29 @@ export const VurderingArtikkel16Vedtak = ({
     return true;
   };
 
+  const lagFattVedtakEOSReqDto = () => {
+    return {
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: formValues.vedtaksbrevFritekst,
+      fritekstSed: null,
+      mottakerinstitusjoner: null,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+    };
+  };
+
+  useEffect(() => {
+    async function kontroller() {
+      if (aktivtSteg && formIsValid) {
+        setVedtakPending(true);
+        await kontrollerVedtak(lagFattVedtakEOSReqDto(), oppdaterFoerKontroll);
+        setOppdaterFoerKontroll(false);
+        setVedtakPending(false);
+      }
+    }
+    kontroller();
+  }, [aktivtSteg, formIsValid]);
+
   const vedKlikk = async () => {
     if (!validerForm()) return;
 
@@ -402,14 +433,7 @@ export const VurderingArtikkel16Vedtak = ({
 
     setVedtakPending(true);
 
-    await lagreOgFatteVedtak({
-      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-      fritekst: formValues.vedtaksbrevFritekst,
-      fritekstSed: null,
-      mottakerinstitusjoner: null,
-      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-    });
+    await lagreOgFatteVedtak(lagFattVedtakEOSReqDto());
 
     // Vedtak-operation navigerer til forside, og komponenten kan derfor være unmountet.
     if (isMounted.current) {
@@ -445,7 +469,7 @@ export const VurderingArtikkel16Vedtak = ({
   const gjeldendePeriode = hentLovvalgsperiode(anmodningsperiodesvar, anmodningsperiode);
   const gjenopprettUforkortetPeriode = () => endreLovvalgsperiode(gjeldendePeriode.fomDato, gjeldendePeriode.tomDato);
 
-  const finnVedtakInnhold = (svarType) => {
+  const finnVedtakInnhold = (svarType, stegErGyldig) => {
     switch (svarType) {
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
         return (
@@ -462,6 +486,7 @@ export const VurderingArtikkel16Vedtak = ({
             onPeriodeForkorterUncheck={gjenopprettUforkortetPeriode}
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
+            stegErGyldig={stegErGyldig}
           />
         );
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
@@ -480,6 +505,7 @@ export const VurderingArtikkel16Vedtak = ({
             onPeriodeForkorterUncheck={gjenopprettUforkortetPeriode}
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
+            stegErGyldig={stegErGyldig}
           />
         );
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
@@ -498,7 +524,11 @@ export const VurderingArtikkel16Vedtak = ({
     }
   };
 
-  const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType);
+  const stegErGyldig =
+    redigerbart &&
+    formIsValid &&
+    (!harFeilmeldinger || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG);
+  const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType, stegErGyldig);
 
   return (
     <Fragment>
@@ -513,7 +543,7 @@ export const VurderingArtikkel16Vedtak = ({
             bekreftKnappProps={{
               spinner: vedtakPending,
               autoDisableVedSpinner: true,
-              disabled: !redigerbart,
+              disabled: !stegErGyldig,
               onClick: vedKlikk,
             }}
             bekreftTekst="Fatt vedtak"
@@ -546,12 +576,16 @@ VurderingArtikkel16Vedtak.propTypes = {
   lagreLovvalgsperioder: PT.func.isRequired,
   anmodningsperiode: PT.object,
   hentLovvalgsperioder: PT.func.isRequired,
+  kontrollerVedtak: PT.func.isRequired,
+  harFeilmeldinger: PT.bool.isRequired,
+  aktivtSteg: PT.bool,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   formValues: {},
   anmodningsperiodesvar: {},
   anmodningsperiode: {},
+  aktivtSteg: false,
 };
 
 const VurderingArtikkel16VedtakForm = reduxForm({
