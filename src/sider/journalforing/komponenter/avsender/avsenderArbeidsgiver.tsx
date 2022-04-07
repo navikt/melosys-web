@@ -19,22 +19,22 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type AvsenderOrgnisasjonProps = PropsFromRedux & {
-  settFeltInnhold: (a: string, b: string) => void;
-  hentOgVisRepresentant: (a: string) => void;
+type AvsenderArbeidsgiverProps = PropsFromRedux & {
+  settFeltInnhold: (felt: string, innhold: string) => void;
+  hentOgVisRepresentant: (ident: string) => void;
   avsenderID?: string;
   avsenderType: string;
   children?: ReactNode;
 };
 
-export const AvsenderOrganisasjon = ({
+export const AvsenderArbeidsgiver = ({
   settFeltInnhold,
   hentOgVisRepresentant,
   avsenderID = "",
   avsenderType,
   children,
   avsenderNavn,
-}: AvsenderOrgnisasjonProps) => {
+}: AvsenderArbeidsgiverProps) => {
   useEffect(() => {
     if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG) {
       settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
@@ -88,4 +88,4 @@ export const AvsenderOrganisasjon = ({
   );
 };
 
-export default connector(AvsenderOrganisasjon);
+export default connector(AvsenderArbeidsgiver);

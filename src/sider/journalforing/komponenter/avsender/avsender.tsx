@@ -1,25 +1,53 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import { getFormValues } from "redux-form";
-import PT from "prop-types";
+import { RootState } from "AppTypes";
+
 import MKV from "../../../../melosyskodeverk";
 
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 import { journalforingSelectors } from "../../../../ducks/journalforing";
-import { AvsenderOrganisasjon, AvsenderUtenlandskTrygdemyndighet, AvsenderFullmektig } from "./index";
+import { AvsenderArbeidsgiver, AvsenderUtenlandskTrygdemyndighet, AvsenderFullmektig } from "./index";
 
 import "./avsender.css";
 
-const AvsenderVelger = ({
+const mapStateToProps = (state: RootState) => ({
+  formValues: getFormValues(KV.Form.JOURNALFORING)(state),
+  journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
+  journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
+});
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type FormValuesProps = {
+  avsenderID?: string;
+  avsenderType?: string;
+  utenlandskTrygdemyndighetLandkode?: string;
+};
+
+type AvsenderProps = PropsFromRedux & {
+  className: string;
+  kopierBrukerTilAvsender: () => void;
+  tomAvsender: () => void;
+  formValues: FormValuesProps;
+  settFeltInnhold: (felt: string, innhold: string) => void;
+  visAvsenderSpinner: boolean;
+  hentOgVisRepresentant: (ident: string) => void;
+  journalforingAvsenderID: string;
+  journalforingAvsenderNavn: string;
+};
+
+const Avsender = ({
   className,
   kopierBrukerTilAvsender,
   tomAvsender,
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-}) => {
-  const avsenderTypeEndret = (avsenderType) => {
+}: AvsenderProps) => {
+  const avsenderTypeEndret = (avsenderType: string) => {
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
@@ -79,7 +107,7 @@ const AvsenderVelger = ({
           className="avsendervelger__radio"
         />
         {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && (
-          <AvsenderOrganisasjon
+          <AvsenderArbeidsgiver
             avsenderID={formValues.avsenderID}
             avsenderType={formValues.avsenderType}
             settFeltInnhold={settFeltInnhold}
@@ -93,7 +121,7 @@ const AvsenderVelger = ({
           className="avsendervelger__radio"
         />
         {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG && (
-          <AvsenderOrganisasjon
+          <AvsenderArbeidsgiver
             avsenderID={formValues.avsenderID}
             avsenderType={formValues.avsenderType}
             settFeltInnhold={settFeltInnhold}
@@ -112,48 +140,9 @@ const AvsenderVelger = ({
             fullmektigLandEndret={fullmektigLandEndret}
           />
         )}
-        {/* TODO: Legges inn igjen i SPRINT-41 (etter endringer er avklart hos fag)
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Annet"
-          value="ANNET"
-        />
-        {
-          formValues.avsenderType === 'ANNET' &&
-          <Fragment>
-            <AvsenderAnnet />
-          </Fragment>
-        }
-        */}
       </Skjema.RadioGruppe>
     </div>
   );
 };
 
-AvsenderVelger.propTypes = {
-  className: PT.string,
-  kopierBrukerTilAvsender: PT.func.isRequired,
-  tomAvsender: PT.func.isRequired,
-  formValues: PT.object,
-  settFeltInnhold: PT.func.isRequired,
-  visAvsenderSpinner: PT.bool,
-  hentOgVisRepresentant: PT.func.isRequired,
-  journalforingAvsenderID: PT.string,
-  journalforingAvsenderNavn: PT.string,
-};
-
-AvsenderVelger.defaultProps = {
-  className: undefined,
-  formValues: {},
-  journalforingAvsenderID: undefined,
-  journalforingAvsenderNavn: undefined,
-  visAvsenderSpinner: false,
-};
-
-const mapStateToProps = (state) => ({
-  formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-  journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
-  journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-});
-
-export default connect(mapStateToProps)(AvsenderVelger);
+export default connect(mapStateToProps)(Avsender);

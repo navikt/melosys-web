@@ -336,8 +336,8 @@ class Journalforing extends Component {
       return;
     }
 
+    settFeltInnhold("avsenderNavn", "");
     if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
-      settFeltInnhold("avsenderNavn", "");
       const navn = await this.sokOrgnrFnrDnr(value);
       if (!navn) {
         return false;
@@ -353,8 +353,8 @@ class Journalforing extends Component {
       return;
     }
 
+    settFeltInnhold("representantNavn", "");
     if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
-      settFeltInnhold("representantNavn", "");
       const navn = await this.sokOrgnrFnrDnr(value);
       if (!navn) {
         return false;

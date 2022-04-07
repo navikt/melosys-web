@@ -7,12 +7,12 @@ import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 
 import MKV from "../../../../melosyskodeverk";
-import { AvsenderOrganisasjon } from "./index";
+import { AvsenderArbeidsgiver } from "./index";
 
 type AvsenderFullmektigProps = {
   avsenderID?: string;
-  settFeltInnhold: () => void;
-  hentOgVisRepresentant: () => void;
+  settFeltInnhold: (felt: string, innhold: string) => void;
+  hentOgVisRepresentant: (ident: string) => void;
 };
 
 const AvsenderFullmektig = ({ avsenderID = "", settFeltInnhold, hentOgVisRepresentant }: AvsenderFullmektigProps) => {
@@ -26,7 +26,7 @@ const AvsenderFullmektig = ({ avsenderID = "", settFeltInnhold, hentOgVisReprese
   const erFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
 
   return (
-    <AvsenderOrganisasjon
+    <AvsenderArbeidsgiver
       avsenderID={avsenderID}
       avsenderType={KV.AvsenderTyper.FULLMEKTIG}
       settFeltInnhold={settFeltInnhold}
@@ -46,7 +46,7 @@ const AvsenderFullmektig = ({ avsenderID = "", settFeltInnhold, hentOgVisReprese
         </Skjema.Select>
       )}
       {erFnrEllerDnr && <Nav.Typo.Normaltekst>Fullmektig representerer bruker</Nav.Typo.Normaltekst>}
-    </AvsenderOrganisasjon>
+    </AvsenderArbeidsgiver>
   );
 };
 
