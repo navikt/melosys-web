@@ -1,30 +1,41 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 
 import { RootState } from "AppTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 
 import MKV from "../../../melosyskodeverk";
+
 import * as Nav from "../../../navFrontend";
-
 import * as Ikon from "../../../resources/images";
-import PdfLenkeListe from "../../pdfLenkeListe";
 
+import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
-
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import "./dialogboksAvslagSoknad.css";
-import { DokumenterV2 } from "../../../services/api";
 import { FeatureToggle } from "../../../featuretoggle";
 import HtmlEditor from "../../htmlEditor";
-import { TilgjengeligeMalerMottaker } from "../../../services/modules/dokumenter-v2";
+import { vedtakOperations } from "../../../ducks/vedtak";
+import { FattVedtakReqDto } from "../../../services/modules/saksflyt/vedtak";
+import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
+import { Feilmeldinger } from "../../feilmeldinger";
+import * as Utils from "../../../utils";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+});
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  kontrollerVedtak: (behandlingID: number, skalRegisteropplysningerOppdateres: boolean, body: FattVedtakReqDto) =>
+    dispatch(vedtakOperations.kontroller(behandlingID, skalRegisteropplysningerOppdateres, body)),
 });
 
-const connector = connect(mapStateToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 interface DialogboksAvslagSoknadProps {
   avslaaSoknadHandle: (data: { fritekst?: string }) => void;
@@ -36,19 +47,31 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & PropsFromRedux) => {
   const [brevFritekst, setBrevFritekst] = useState("");
-  const [brukerMottaker, setBrukerMottaker] = useState<TilgjengeligeMalerMottaker | null>();
+  const [vedtakPending, setVedtakPending] = useState(true);
 
-  const { ariaHideApp, avbryt, behandlingID, redigerbart, avslaaSoknadHandle } = props;
+  const {
+    ariaHideApp,
+    avbryt,
+    behandlingID,
+    redigerbart,
+    avslaaSoknadHandle,
+    vedtakstype,
+    kontrollerVedtak,
+    feilmeldinger,
+  } = props;
 
   useEffect(() => {
-    DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
-      const mangelbrevBrukerMal = response.find(
-        (mal) => mal.type?.kode === MKV.Koder.brev.produserbaredokumenter.MANGELBREV_BRUKER
-      );
-      setBrukerMottaker(
-        mangelbrevBrukerMal?.muligeMottakere?.find((mottaker) => mottaker.rolle === MKV.Koder.aktoersroller.BRUKER)
-      );
-    });
+    (async () => {
+      await kontrollerVedtak(behandlingID, false, {
+        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
+        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        fritekst: null,
+        fritekstSed: null,
+        mottakerinstitusjoner: [],
+        nyVurderingBakgrunn: null,
+      });
+      setVedtakPending(false);
+    })();
   }, []);
 
   const pdfDokumenter = [
@@ -70,8 +93,8 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
     avslaaSoknadHandle(data);
   };
   const brevFritekstMaxLength = 500;
-  const mottakerFeil = brukerMottaker?.feilmelding;
-  const bekreftRedigerbart = redigerbart && !mottakerFeil && brevFritekst.length <= brevFritekstMaxLength;
+  const bekreftRedigerbart =
+    redigerbart && Utils._isEmpty(feilmeldinger) && brevFritekst.length <= brevFritekstMaxLength && !vedtakPending;
 
   return (
     <Nav.Modal
@@ -90,7 +113,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
           <Nav.Typo.Systemtittel className="overskrift">
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
-          {mottakerFeil && <Nav.AlertStripeFeil>{mottakerFeil}</Nav.AlertStripeFeil>}
+          <Feilmeldinger feilmeldinger={feilmeldinger} />
           <FeatureToggle togglename="melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER">
             {(toggleStatus) =>
               toggleStatus === "enabled" ? (
