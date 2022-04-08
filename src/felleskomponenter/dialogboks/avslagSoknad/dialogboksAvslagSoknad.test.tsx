@@ -14,6 +14,9 @@ describe("DialogboksAvslagSoknad", () => {
     redigerbart: true,
     behandlingID: 1,
     dispatch: jest.fn(),
+    vedtakstype: null,
+    feilmeldinger: [],
+    kontrollerVedtak: jest.fn(),
   };
 
   it("viser en Nav Modal", () => {
