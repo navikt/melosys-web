@@ -12,6 +12,7 @@ type avsluttSakProps = {
   behandlingstema: string;
   behandlingstype: string;
   redigerbart: boolean;
+  behandlingsstatus: string;
 };
 
 const AvsluttSak = ({
@@ -22,12 +23,16 @@ const AvsluttSak = ({
   behandlingstype,
   ferdigbehandleNyVurdering,
   redigerbart,
+  behandlingsstatus,
 }: avsluttSakProps) => {
   const behandlingskategori = KV.Utils.mapBehandlingstemaToBehandlingskategori(behandlingstema);
 
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
+  const behandlingstypeErUnntakNorskTrygdØvrigEllerUtstasjonering =
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
+    MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
 
   const skalViseAvslaaSoknad = () => {
     switch (behandlingskategori) {
@@ -64,6 +69,12 @@ const AvsluttSak = ({
   };
 
   const skalViseAvsluttSak = () => {
+    if (
+      behandlingstypeErUnntakNorskTrygdØvrigEllerUtstasjonering &&
+      behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT
+    ) {
+      return true;
+    }
     switch (behandlingskategori) {
       case KV.Koder.Behandlingskategori.EØS_SAKSBEHANDLING:
       case KV.Koder.Behandlingskategori.EØS_SED_BEHANDLING:
