@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Miljø (dev eller q1)'
+        description: 'Miljø (dev, q1 eller prod)'
         required: true
         default: 'dev'
 
