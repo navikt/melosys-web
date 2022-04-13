@@ -2,6 +2,7 @@ import { StrukturertAdresse } from "../services/api";
 
 export const BEHANDLINGS_FORM = "behandlingsform";
 export interface BehandlingsFormData {
+  sakstype: string;
   behandlingstema: string;
 }
 export const SEND_BREV = "send_brev";
