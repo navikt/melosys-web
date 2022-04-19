@@ -30,7 +30,7 @@ const AvsluttSak = ({
   const behandlingstemaErTrygdetid = behandlingstema === MKV.Koder.behandlinger.behandlingstema.TRYGDETID;
   const behandlingstypeErNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
-  const behandlingstypeErUnntakNorskTrygdØvrigEllerUtstasjonering =
+  const behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering =
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
     MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
 
@@ -70,7 +70,7 @@ const AvsluttSak = ({
 
   const skalViseAvsluttSak = () => {
     if (
-      behandlingstypeErUnntakNorskTrygdØvrigEllerUtstasjonering &&
+      behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering &&
       behandlingsstatus === MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT
     ) {
       return true;
