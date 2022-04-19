@@ -12,6 +12,7 @@ query hentFamiliemedlemmer($behandlingID: Long!) {
           type
           gyldigFraOgMed
           erHistorisk
+          master
         }
       }
     }

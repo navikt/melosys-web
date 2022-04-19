@@ -19,7 +19,7 @@ export type HentFamiliemedlemmerQuery = (
         & Pick<Types.Familiemedlem, 'navn' | 'ident' | 'relasjonsrolle' | 'alder' | 'foreldreansvar' | 'fnrAnnenForelder'>
         & { sivilstand?: Types.Maybe<(
           { __typename?: 'Sivilstand' }
-          & Pick<Types.Sivilstand, 'type' | 'gyldigFraOgMed' | 'erHistorisk'>
+          & Pick<Types.Sivilstand, 'type' | 'gyldigFraOgMed' | 'erHistorisk' | 'master'>
         )> }
       )> }
     ) }
@@ -42,6 +42,7 @@ export const HentFamiliemedlemmerDocument = gql`
           type
           gyldigFraOgMed
           erHistorisk
+          master
         }
       }
     }

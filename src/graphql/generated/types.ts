@@ -154,7 +154,7 @@ export type Sivilstand = {
   relatertVedSivilstand?: Maybe<Scalars['String']>;
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   bekreftelsesdato?: Maybe<Scalars['Date']>;
-  master?: Maybe<Scalars['String']>;
+  master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
 };
