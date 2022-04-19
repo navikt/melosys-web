@@ -8,8 +8,12 @@ query hentFamiliemedlemmer($behandlingID: Long!) {
         alder
         foreldreansvar
         fnrAnnenForelder
-        sivilstand
-        sivilstandGyldighetsperiodeFom
+        sivilstand {
+          type
+          gyldigFraOgMed
+          erHistorisk
+          master
+        }
       }
     }
   }

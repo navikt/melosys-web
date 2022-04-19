@@ -7,7 +7,6 @@ export interface Familiemedlem {
   alder: number | null;
   borMedBruker: boolean;
   sivilstand: KTObject | null;
-  sivilstandGyldighetsperiodeFom: string | null;
   fnrAnnenForelder: string | null;
 }
 
