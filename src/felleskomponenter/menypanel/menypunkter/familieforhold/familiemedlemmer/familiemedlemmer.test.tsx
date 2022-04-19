@@ -78,6 +78,7 @@ describe("Familiemedlemmer", () => {
           type: "Gift",
           erHistorisk: false,
           gyldigFraOgMed: "",
+          master: "",
         },
       },
     ];
@@ -142,6 +143,7 @@ describe("Familiemedlemmer", () => {
           type: "Separert",
           erHistorisk: true,
           gyldigFraOgMed: "",
+          master: "",
         },
       },
       {
@@ -155,6 +157,7 @@ describe("Familiemedlemmer", () => {
           type: "Gift",
           erHistorisk: false,
           gyldigFraOgMed: "",
+          master: "",
         },
       },
       {
@@ -168,6 +171,7 @@ describe("Familiemedlemmer", () => {
           type: "Ugift",
           erHistorisk: true,
           gyldigFraOgMed: "",
+          master: "",
         },
       },
     ];
