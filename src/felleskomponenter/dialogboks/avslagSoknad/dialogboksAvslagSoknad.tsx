@@ -9,6 +9,8 @@ import MKV from "../../../melosyskodeverk";
 
 import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
+import * as Utils from "../../../utils";
+import * as Api from "../../../services/api";
 
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
@@ -19,10 +21,8 @@ import "./dialogboksAvslagSoknad.css";
 import { FeatureToggle } from "../../../featuretoggle";
 import HtmlEditor from "../../htmlEditor";
 import { vedtakOperations } from "../../../ducks/vedtak";
-import { FattVedtakReqDto } from "../../../services/modules/saksflyt/vedtak";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../feilmeldinger";
-import * as Utils from "../../../utils";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
@@ -31,8 +31,11 @@ const mapStateToProps = (state: RootState) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
 });
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  kontrollerVedtak: (behandlingID: number, skalRegisteropplysningerOppdateres: boolean, body: FattVedtakReqDto) =>
-    dispatch(vedtakOperations.kontroller(behandlingID, skalRegisteropplysningerOppdateres, body)),
+  kontrollerVedtak: (
+    behandlingID: number,
+    skalRegisteropplysningerOppdateres: boolean,
+    body: Api.Saksflyt.Vedtak.FattVedtakReqDto
+  ) => dispatch(vedtakOperations.kontroller(behandlingID, skalRegisteropplysningerOppdateres, body)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
