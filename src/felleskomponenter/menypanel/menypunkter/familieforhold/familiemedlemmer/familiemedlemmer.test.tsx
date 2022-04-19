@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, MouseEvent } from "react";
 import { mock, instance } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { mount } from "enzyme";
@@ -109,6 +109,9 @@ describe("Familiemedlemmer", () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 20);
       });
+      familiemedlemmer.update();
+      const mouseEvent = instance(mock<MouseEvent<HTMLButtonElement>>());
+      familiemedlemmer.find(Nav.Hovedknapp).props().onClick?.(mouseEvent);
       familiemedlemmer.update();
 
       const familiemedlemGrupper = familiemedlemmer.find(FamiliemedlemGruppe);
