@@ -1,22 +1,20 @@
 import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { reduxForm, InjectedFormProps, getFormValues } from "redux-form";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { getFormValues, InjectedFormProps, reduxForm } from "redux-form";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
-
 import { RootState } from "AppTypes";
 
 import MKV from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
-
 import * as Api from "../../../services/api";
-
 import { oppgaverOperations } from "../../../ducks/oppgaver";
-
 import { useAsyncCallbackState } from "../../../hooks";
 import "./behandling.css";
+
+const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -27,7 +25,7 @@ const compareTerm = (a: KTObject, b: KTObject) => {
 
 const mapStateToProps = (state: RootState) => ({
   initialValues: {
-    sakstype: MKV.Koder.sakstyper.EU_EOS,
+    sakstype: EU_EOS,
     behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
   formValues: getFormValues(KV.Form.BEHANDLINGS_FORM)(state) as KV.Form.BehandlingsFormData,
@@ -50,7 +48,7 @@ export const Behandling = ({
     if (formValues?.sakstype) {
       change(
         "behandlingstema",
-        formValues.sakstype === MKV.Koder.sakstyper.EU_EOS
+        formValues.sakstype === EU_EOS
           ? initialValues.behandlingstema
           : MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
       );
@@ -77,7 +75,7 @@ export const Behandling = ({
   const plukkbareBehandlingstemaerTrygdeavtale = [MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV];
 
   const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => {
-    return formValues?.sakstype === MKV.Koder.sakstyper.EU_EOS
+    return formValues?.sakstype === EU_EOS
       ? !ikkePlukkbareBehandlingstemaerEOS.includes(behandlingtemaKTObject.kode)
       : plukkbareBehandlingstemaerTrygdeavtale.includes(behandlingtemaKTObject.kode);
   };
@@ -90,12 +88,8 @@ export const Behandling = ({
         <Nav.Row>
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
-              <option key={MKV.Koder.sakstyper.EU_EOS} value={MKV.Koder.sakstyper.EU_EOS}>
-                {MKV.Terms.sakstyper.EU_EOS}
-              </option>
-              <option key={MKV.Koder.sakstyper.TRYGDEAVTALE} value={MKV.Koder.sakstyper.TRYGDEAVTALE}>
-                {MKV.Terms.sakstyper.TRYGDEAVTALE}
-              </option>
+              <option key={EU_EOS} value={EU_EOS} label={MKV.Terms.sakstyper.EU_EOS} />
+              <option key={TRYGDEAVTALE} value={TRYGDEAVTALE} label={MKV.Terms.sakstyper.TRYGDEAVTALE} />
             </Skjema.Select>
           </Nav.Column>
           <Nav.Column xs="12">
