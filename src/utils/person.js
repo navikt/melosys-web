@@ -1,10 +1,10 @@
 const erFnrLengde = (verdi) => {
-  const regex = RegExp(/^\d{11,11}$/);
+  const regex = RegExp(/^\d{11}$/);
   return regex.test(verdi);
 };
 
 const erDnrLengde = (verdi) => {
-  const regex = RegExp(/^\d{11,11}$/);
+  const regex = RegExp(/^\d{11}$/);
   return regex.test(verdi);
 };
 
@@ -45,4 +45,8 @@ const erGyldigDnr = (verdi) => erGyldigFnr(verdi);
 const tilSammensattNavn = (fornavn, mellomnavn, etternavn) =>
   `${fornavn}${mellomnavn ? ` ${mellomnavn}` : ""} ${etternavn}`;
 
-export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr, tilSammensattNavn };
+const tilSammensattNavnFraObjekt = (navn) => {
+  return tilSammensattNavn(navn.fornavn || "", navn.mellomnavn, navn.etternavn || "");
+};
+
+export { erFnrLengde, erDnrLengde, erGyldigFnr, erGyldigDnr, tilSammensattNavn, tilSammensattNavnFraObjekt };

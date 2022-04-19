@@ -12,11 +12,13 @@ class Artikkel16Vedtak extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
       harValgtNorskArbeidsgiver: _propsLight.harValgtNorskArbeidsgiver,
+      harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
+      kontrollerVedtak: this._propsLight.tilgjengeligeHandlers.kontrollerVedtak,
     };
     this._status = FANE_STATUS.OK;
   }
