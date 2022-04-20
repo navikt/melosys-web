@@ -86,7 +86,7 @@ describe("AvsluttSak", () => {
     expect(avsluttSakSomBortfalt).toHaveLength(0);
   });
 
-  it(`viser 'Kan ikke behandles i Melosys' dersmn behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
+  it(`viser 'Kan ikke behandles i Melosys' dersomn behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
     props.behandlingsstatus = VURDER_DOKUMENT;
     props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE;
 
@@ -97,7 +97,7 @@ describe("AvsluttSak", () => {
     expect(handlinger.at(0).props().tekst).toBe("Kan ikke behandles i Melosys");
   });
 
-  it(`viser 'Kan ikke behandles i Melosys' dersmn behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
+  it(`viser 'Kan ikke behandles i Melosys' dersomn behandlingstema er ${REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING} og behandlingsstatus er ${VURDER_DOKUMENT}`, () => {
     props.behandlingsstatus = VURDER_DOKUMENT;
     props.behandlingstema = REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
 

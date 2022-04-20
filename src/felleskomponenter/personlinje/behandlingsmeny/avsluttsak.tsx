@@ -32,7 +32,7 @@ const AvsluttSak = ({
   const behandlingstypeErEndretPeriode = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE;
   const behandlingstemaErUnntakNorskTrygdØvrigEllerUtstasjonering =
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE ||
-    MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING;
 
   const skalViseAvslaaSoknad = () => {
     switch (behandlingskategori) {
