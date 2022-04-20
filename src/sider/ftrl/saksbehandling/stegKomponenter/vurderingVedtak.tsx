@@ -270,6 +270,7 @@ const VurderingVedtak = ({
         setVedtakPending(false);
       }
     }
+
     kontroller();
   }, [aktivtSteg]);
 

@@ -517,13 +517,6 @@ class Stegvelger extends Component {
     return this.props.kontrollerVedtak(this.props.behandlingID, skalRegisteropplysningerOppdateres, data);
   };
 
-  mapFeilmeldinger = () => {
-    if (this.erVedtakSteg(this.state.aktivtStegNummer)) {
-      return <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />;
-    }
-    return null;
-  };
-
   render() {
     const { visBehandlingsgrunnlagFeilmeldinger } = this.state;
 
@@ -532,7 +525,9 @@ class Stegvelger extends Component {
         {({ isVisible }) => (
           <div className="stegvelger panelSeksjon">
             <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
-            {this.mapFeilmeldinger()}
+            {this.erVedtakSteg(this.state.aktivtStegNummer) && (
+              <Feilmeldinger feilmeldinger={this.props.feilmeldinger} />
+            )}
             {this.state.aktuelleSteg.map((item) => (
               <StegFane key={item.id} faneData={item} />
             ))}
