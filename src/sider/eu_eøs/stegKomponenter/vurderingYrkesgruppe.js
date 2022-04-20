@@ -8,15 +8,14 @@ import * as KV from "../../../kodeverk";
 import * as Mui from "../../../felleskomponenter/ui";
 import {
   konverterAvklartfaktaTilStegData,
-  lagAvklartfakta,
   konverterTilleggBestemmelseTilStegData,
+  lagAvklartfakta,
   lagTilleggBestemmelse,
-  slettTilleggBestemmelse,
   lagVilkaar,
+  slettTilleggBestemmelse,
   slettVilkar,
 } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi, finnTilleggBestemmelse } from "../../../domeneUtils";
-import { BOOLSK } from "../../../constants";
+import { finnTilleggBestemmelse, hentFaktaVerdi } from "../../../domeneUtils";
 
 const stegetsTilleggbestemmelser = [
   {
@@ -34,10 +33,9 @@ const VurderingYrkesgruppe = (props) => {
 
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggbestemmelser);
     if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));
-    const cleanup = () => {
+    return () => {
       slettData();
     };
-    return cleanup;
   }, []);
 
   const radioEndret = (event) => {
@@ -99,7 +97,7 @@ const VurderingYrkesgruppe = (props) => {
         />
         <Nav.Radio
           name="yrkesgruppe"
-          disabled={BOOLSK.SANN}
+          disabled
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
           value={KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
           onChange={radioEndret}
@@ -107,7 +105,7 @@ const VurderingYrkesgruppe = (props) => {
         />
         <Nav.Radio
           name="yrkesgruppe"
-          disabled={BOOLSK.SANN}
+          disabled
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
           value={KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
           onChange={radioEndret}

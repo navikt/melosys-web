@@ -11,7 +11,6 @@ import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
-import { BOOLSK } from "../../../constants";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 import { formSelectors } from "../../../ducks/form";
 import Informasjon from "./informasjon";
@@ -148,7 +147,7 @@ const mapStateToProps = (state) => {
       journalforingSoknadsland: [],
       journalforingSoknadslandUkjenteEllerAlleEosLand: false,
       sakstype: MKV.Koder.sakstyper.EU_EOS,
-      opprettBehandling: BOOLSK.USANN,
+      opprettBehandling: false,
       opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
       ingenVurdering: false,
       ikkeSendForvaltingsmelding: false,

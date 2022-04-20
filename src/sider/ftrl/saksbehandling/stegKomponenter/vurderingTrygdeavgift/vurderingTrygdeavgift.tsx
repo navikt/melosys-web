@@ -20,7 +20,6 @@ import { folketrygdenkodeverkSelectors } from "../../../../../ducks/folketrygden
 import { lagYupToReduxformErrorMapper } from "../../../../../yup";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import { OppdaterAvgiftsberegning } from "../../../../../services/modules/trygdeavgift";
-import { BOOLSK } from "../../../../../constants";
 import { VurderingTrygdeavgiftVirksomhetTyper } from "../../../../../kodeverk/koder";
 import { LonnsforholdErNorgeEllerDelt, LonnsforholdErUtlandetEllerDelt } from "../selectors";
 
@@ -191,7 +190,7 @@ const VurderingTrygdeavgift = ({
       ? "avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge"
       : "avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland";
     changeField(`${fieldBase}.særligAvgiftsgruppe`, erSærligAvgiftsgruppe ? "TRUE" : null);
-    changeField(`${fieldBase}.betalerArbeidsgiverAvgift`, erNorskVirksomhet ? BOOLSK.SANN : BOOLSK.USANN);
+    changeField(`${fieldBase}.betalerArbeidsgiverAvgift`, erNorskVirksomhet);
     changeField(`${fieldBase}.erSkattepliktig`, undefined);
     changeField("avgiftsberegning", {});
   }
@@ -199,11 +198,11 @@ const VurderingTrygdeavgift = ({
   useEffect(() => {
     const særligAvgiftsgruppe = formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe;
     if (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.MISJONÆR) {
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", BOOLSK.USANN);
+      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", false);
     }
     if (særligAvgiftsgruppe === MKV.Koder.saerligeavgiftsgrupper.ARBEIDSTAKER_MALAYSIA) {
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", BOOLSK.SANN);
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig", BOOLSK.USANN);
+      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.betalerArbeidsgiverAvgift", true);
+      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagNorge.erSkattepliktig", false);
     }
   }, [formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagNorge?.særligAvgiftsgruppe]);
 
@@ -214,7 +213,7 @@ const VurderingTrygdeavgift = ({
         særligAvgiftsgruppe
       )
     ) {
-      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig", BOOLSK.USANN);
+      changeField("avgiftsgrunnlag.trygdeavgiftsgrunnlagUtland.erSkattepliktig", false);
     }
   }, [formValues?.avgiftsgrunnlag?.trygdeavgiftsgrunnlagUtland?.særligAvgiftsgruppe]);
 
