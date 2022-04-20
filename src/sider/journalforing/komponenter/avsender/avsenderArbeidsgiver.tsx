@@ -80,7 +80,7 @@ export const AvsenderArbeidsgiver = ({
         className="avsender__input"
       />
       <div className="avsender__navn">
-        <Nav.Typo.Element>Navn: </Nav.Typo.Element>
+        <Nav.Typo.Element className="avsender__navn__label">Navn: </Nav.Typo.Element>
         <Nav.Typo.Normaltekst>{avsenderNavn || ""}</Nav.Typo.Normaltekst>
       </div>
       {children}

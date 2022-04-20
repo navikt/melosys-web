@@ -27,7 +27,7 @@ type FormValuesProps = {
   utenlandskTrygdemyndighetLandkode?: string;
 };
 
-type AvsenderProps = PropsFromRedux & {
+type AvsenderVelgerProps = PropsFromRedux & {
   className: string;
   kopierBrukerTilAvsender: () => void;
   tomAvsender: () => void;
@@ -39,14 +39,14 @@ type AvsenderProps = PropsFromRedux & {
   journalforingAvsenderNavn: string;
 };
 
-const Avsender = ({
+const AvsenderVelger = ({
   className,
   kopierBrukerTilAvsender,
   tomAvsender,
   formValues,
   settFeltInnhold,
   hentOgVisRepresentant,
-}: AvsenderProps) => {
+}: AvsenderVelgerProps) => {
   const avsenderTypeEndret = (avsenderType: string) => {
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
@@ -145,4 +145,4 @@ const Avsender = ({
   );
 };
 
-export default connect(mapStateToProps)(Avsender);
+export default connect(mapStateToProps)(AvsenderVelger);
