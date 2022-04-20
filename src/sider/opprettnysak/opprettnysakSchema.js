@@ -16,22 +16,18 @@ const VELG_EN_OPPGAVE = { melding: "Velg en oppgave" };
 const MANGLER_JOURNALPOST = { melding: "Den valgte oppgaven har ingen journalpost" };
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 
-const land = object().shape({
-  landkoder: array()
-    .of(string())
-    .when("journalforingSoknadslandUkjenteEllerAlleEosLand", {
-      is: false,
-      then: array().of(string()).required({ _error: VELG_LAND }).min(1, { _error: VELG_LAND }),
-    }),
-  journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
-});
-
 const soknadsinfo = object().shape({
   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: lazy((value) =>
     !value ? string().ensure() : string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT)
   ),
-  land,
+  landkoder: array()
+    .of(string())
+    .when("erUkjenteEllerAlleEosLand", {
+      is: false,
+      then: array().of(string()).min(1, { _error: VELG_LAND }),
+    }),
+  erUkjenteEllerAlleEosLand: boolean(),
 });
 
 const opprettnysak = object().shape({

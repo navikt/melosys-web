@@ -68,7 +68,7 @@ const journalforing = object().shape({
         then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR),
       }),
   }),
-  avsenderNavn: string().required(SKRIV_INN_NAVN_PA_AVSENDER),
+  avsenderNavn: string().required(SKRIV_INN_NAVN_PA_AVSENDER).nullable(),
   hoveddokument: object().shape({
     tittel: string().required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
   }),

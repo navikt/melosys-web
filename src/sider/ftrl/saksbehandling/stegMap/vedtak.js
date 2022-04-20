@@ -18,6 +18,7 @@ class Vedtak extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       alleLandkoder: _propsLight.landkoder,
       redigerbart: _propsLight.redigerbart,
+      harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = (_propsLight) => ({ harAvklaring });
     this.handlers = {
@@ -25,6 +26,7 @@ class Vedtak extends Steg {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdater: propsLight.tilgjengeligeHandlers.oppdater,
       lagreOgFatteVedtak: propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      kontrollerVedtak: propsLight.tilgjengeligeHandlers.kontrollerVedtak,
     };
     this.status = FANE_STATUS.OK;
   }

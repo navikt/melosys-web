@@ -24,8 +24,8 @@ describe("Landvelger", () => {
     it("viser enkeltland og ikke multiland", () => {
       props.multiLand = false;
       const landVelger = shallow(<LandVelger {...props} />);
-      expect(landVelger.find("EnkeltLandWrapper")).toHaveLength(1);
-      expect(landVelger.find("MultiLandWrapper")).toHaveLength(0);
+      expect(landVelger.find("EnkeltLand")).toHaveLength(1);
+      expect(landVelger.find("MultiLand")).toHaveLength(0);
     });
   });
 
@@ -33,8 +33,8 @@ describe("Landvelger", () => {
     it("viser multiland og ikke enkeltland", () => {
       props.multiLand = true;
       const landVelger = shallow(<LandVelger {...props} />);
-      expect(landVelger.find("EnkeltLandWrapper")).toHaveLength(0);
-      expect(landVelger.find("MultiLandWrapper")).toHaveLength(1);
+      expect(landVelger.find("EnkeltLand")).toHaveLength(0);
+      expect(landVelger.find("MultiLand")).toHaveLength(1);
     });
   });
 

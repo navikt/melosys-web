@@ -221,7 +221,7 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   validerArbeidsgivere = () => {
-    if (this.props.arbeidsgivereIPerioden?.length === 1) {
+    if (this.props.valgteVirksomheter.length === 1) {
       this.setState({ sendBrevFeilmelding: undefined });
       return true;
     }
@@ -594,12 +594,14 @@ VurderingArtikkel16Anmodning.propTypes = {
   formValues: PT.object,
   form: PT.string.isRequired,
   fysiskeDokument: PT.arrayOf(PT.object).isRequired,
+  valgteVirksomheter: PT.array,
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
   unntakFraBestemmelse: "",
   anmodningsperiode: {},
   formValues: {},
+  valgteVirksomheter: [],
 };
 
 const mapStateToProps = (state) => ({
@@ -610,6 +612,7 @@ const mapStateToProps = (state) => ({
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
   fysiskeDokument: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
+  valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   initialValues: {

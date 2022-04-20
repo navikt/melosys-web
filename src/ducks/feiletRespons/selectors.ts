@@ -18,4 +18,8 @@ const HttpResponsDataSelector = createSelector(
   (feiletResponsData) => feiletResponsData.data
 );
 
-export const FeilkoderSelector = createSelector(HttpResponsDataSelector, ReduxStatusSelector, DucksUtils.hentFeilkoder);
+export const FeilmeldingerSelector = createSelector(
+  HttpResponsDataSelector,
+  ReduxStatusSelector,
+  DucksUtils.hentFeilmeldinger
+);

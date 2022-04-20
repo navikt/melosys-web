@@ -1,21 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { reduxForm, InjectedFormProps } from "redux-form";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { getFormValues, InjectedFormProps, reduxForm } from "redux-form";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { RootState } from "AppTypes";
 
 import MKV from "../../../melosyskodeverk";
-
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Api from "../../../services/api";
-
 import { oppgaverOperations } from "../../../ducks/oppgaver";
-
 import { useAsyncCallbackState } from "../../../hooks";
-
 import "./behandling.css";
+
+const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -24,10 +23,12 @@ const compareTerm = (a: KTObject, b: KTObject) => {
   return a.term.localeCompare(b.term);
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = (state: RootState) => ({
   initialValues: {
+    sakstype: EU_EOS,
     behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
   },
+  formValues: getFormValues(KV.Form.BEHANDLINGS_FORM)(state) as KV.Form.BehandlingsFormData,
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -37,8 +38,22 @@ type BehandlingProps = PropsFromRedux & RouteComponentProps;
 export const Behandling = ({
   handleSubmit,
   history,
+  formValues,
+  change,
+  initialValues,
 }: InjectedFormProps<KV.Form.BehandlingsFormData, BehandlingProps> & BehandlingProps) => {
   const [statistikk] = useAsyncCallbackState(Api.Statistikk.hent, { aapneBehandlinger: {} }, []);
+
+  useEffect(() => {
+    if (formValues?.sakstype) {
+      change(
+        "behandlingstema",
+        formValues.sakstype === EU_EOS
+          ? initialValues.behandlingstema
+          : MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+      );
+    }
+  }, [formValues?.sakstype]);
 
   const submitOgVideresend = async (form: any) => {
     const redirectURL = await handleSubmit(form);
@@ -52,20 +67,31 @@ export const Behandling = ({
     return true;
   };
 
-  const ikkePlukkbareBehandlingstemaer = [
+  const ikkePlukkbareBehandlingstemaerEOS = [
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
     MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
   ];
-  const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) =>
-    !ikkePlukkbareBehandlingstemaer.includes(behandlingtemaKTObject.kode);
+  const plukkbareBehandlingstemaerTrygdeavtale = [MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV];
+
+  const behandlingstemaErPlukkbart = (behandlingtemaKTObject: KTObject) => {
+    return formValues?.sakstype === EU_EOS
+      ? !ikkePlukkbareBehandlingstemaerEOS.includes(behandlingtemaKTObject.kode)
+      : plukkbareBehandlingstemaerTrygdeavtale.includes(behandlingtemaKTObject.kode);
+  };
 
   return (
     <Nav.Panel className="forside__sidepanel sidepanel__behandling">
       <Nav.Typo.Systemtittel>Behandle sak</Nav.Typo.Systemtittel>
-      <p>Velg behandlingstema for å få tildelt en sak.</p>
+      <p>Velg sakstype og behandlingstema for å få tildelt en sak.</p>
       <form className="behandling__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>
+          <Nav.Column xs="12">
+            <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
+              <option key={EU_EOS} value={EU_EOS} label={MKV.Terms.sakstyper.EU_EOS} />
+              <option key={TRYGDEAVTALE} value={TRYGDEAVTALE} label={MKV.Terms.sakstyper.TRYGDEAVTALE} />
+            </Skjema.Select>
+          </Nav.Column>
           <Nav.Column xs="12">
             <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
               {MKV.KTObjects.behandlinger.behandlingstema
@@ -73,7 +99,6 @@ export const Behandling = ({
                 .sort(compareTerm)
                 .map(({ kode, term }: KTObject) => {
                   const antallAapneBehandlinger = statistikk.aapneBehandlinger[kode] || 0;
-
                   return (
                     <option key={kode} value={kode}>
                       {term}&nbsp;&nbsp;({antallAapneBehandlinger})
@@ -89,10 +114,10 @@ export const Behandling = ({
   );
 };
 
-const BehandlngForm = reduxForm<KV.Form.BehandlingsFormData, BehandlingProps>({
+const BehandlingForm = reduxForm<KV.Form.BehandlingsFormData, BehandlingProps>({
   form: KV.Form.BEHANDLINGS_FORM,
   destroyOnUnmount: false,
   onSubmit: (values: KV.Form.BehandlingsFormData) => oppgaverOperations.sendBehandlingsOppgave(values),
 })(Behandling);
 
-export default withRouter(connector(BehandlngForm));
+export default withRouter(connector(BehandlingForm));

@@ -28,7 +28,7 @@ MultiLandEnkelt.propTypes = {
   slettLandHandler: PT.func.isRequired,
 };
 
-function MultiLand(props) {
+function InnerMultiLand(props) {
   const [inputVerdi, setInputVerdi] = useState("");
   const [internError, setInternError] = useState("");
 
@@ -143,7 +143,7 @@ function MultiLand(props) {
   );
 }
 
-MultiLand.propTypes = {
+InnerMultiLand.propTypes = {
   dataListID: PT.string.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
@@ -154,19 +154,20 @@ MultiLand.propTypes = {
   errorConfig: PT.object,
 };
 
-MultiLand.defaultProps = {
+InnerMultiLand.defaultProps = {
   label: "",
   disabled: false,
   bredde: "XL",
   errorConfig: {},
 };
 
-export { MultiLand };
+const MultiLand = ({ feltNavn, ...rest }) => (
+  <FieldArray name={feltNavn} component={InnerMultiLand} props={{ ...rest }} />
+);
 
-const MultiLandWrapper = (props) => <FieldArray name={props.feltNavn} component={MultiLand} props={props} />;
-
-MultiLandWrapper.propTypes = {
+MultiLand.propTypes = {
   feltNavn: PT.string.isRequired,
 };
 
-export default MultiLandWrapper;
+export { InnerMultiLand };
+export default MultiLand;

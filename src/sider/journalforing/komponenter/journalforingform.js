@@ -7,17 +7,21 @@ import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Utils from "../../../utils";
 import * as Skjema from "../../../felleskomponenter/skjema";
+import * as Nav from "../../../navFrontend";
 import * as Mui from "../../../felleskomponenter/ui";
 
 import MKV, { Utils as MKVUtils } from "../../../melosyskodeverk";
 import { BOOLSK } from "../../../constants";
 import { journalforingSelectors } from "../../../ducks/journalforing";
+import { formSelectors } from "../../../ducks/form";
 import Informasjon from "./informasjon";
 import FagsakVelger from "./fagsakVelger";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
 import Fotknapper from "./fotknapper";
+
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import JournalforingSchema from "./journalforingSchema";
+import "./journalforingform.css";
 
 export const JournalforingForm = (props) => {
   const {
@@ -29,6 +33,8 @@ export const JournalforingForm = (props) => {
     fagsakListe,
     hentOgVisRepresentant,
     formValues,
+    formErrors,
+    submitFailed,
     settFeltInnhold,
     settJournalforingHensikt,
     avbrytJournalforing,
@@ -44,7 +50,7 @@ export const JournalforingForm = (props) => {
       ].includes(formValues.opprettnysak_behandlingstema));
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="journalforingform">
       <Informasjon
         journalpostID={journalpostID}
         dokumentID={hoveddokumentID}
@@ -69,6 +75,11 @@ export const JournalforingForm = (props) => {
           <SendForvaltningsMelding avsenderType={formValues.avsenderType} settFeltInnhold={settFeltInnhold} />
         </Fragment>
       )}
+      {submitFailed && !Utils._isEmpty(formErrors) && (
+        <Nav.AlertStripeFeil className="feilmelding">
+          {Utils.feilmelding.syncErrorsTilFeilmelding(formErrors)}
+        </Nav.AlertStripeFeil>
+      )}
       <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
       <Fotknapper kanSubmittes={kanSubmittes} avbrytJournalforing={avbrytJournalforing} />
     </form>
@@ -84,6 +95,8 @@ JournalforingForm.propTypes = {
   fagsakListe: PT.array.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
+  formErrors: PT.object.isRequired,
+  submitFailed: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   settJournalforingHensikt: PT.func.isRequired,
   submitJournalforing: PT.func.isRequired,
@@ -108,6 +121,8 @@ const mapStateToProps = (state) => {
   return {
     erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
     formValues: getFormValues(KV.Form.JOURNALFORING)(state),
+    formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
+    submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,
     initialValues: {
       avsenderType:
         journalforingSelectors.ErAvsenderPreutfyltSelector(state) && avsenderType === MKV.Koder.avsendertyper.PERSON
@@ -154,7 +169,6 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  touchOnChange: true,
   validate: (values, props) => {
     const options = {
       context: {

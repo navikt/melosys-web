@@ -46,6 +46,7 @@ interface PersonstatusModalProps {
   historiskePersonstatuser: Folkeregisterpersonstatus[];
   skalViseModal: boolean;
   lukkModal: () => void;
+  modalAriaHideApp?: boolean;
 }
 
 const PersonstatusModal = ({
@@ -53,6 +54,7 @@ const PersonstatusModal = ({
   historiskePersonstatuser,
   skalViseModal,
   lukkModal,
+  modalAriaHideApp = true,
 }: PersonstatusModalProps) => {
   const personstatusModalCls = bem("personstatus-modal");
 
@@ -63,6 +65,8 @@ const PersonstatusModal = ({
       onRequestClose={lukkModal}
       isOpen={skalViseModal}
       closeButton
+      // @ts-ignore
+      ariaHideApp={modalAriaHideApp}
     >
       <Nav.Typo.Innholdstittel>Personstatus</Nav.Typo.Innholdstittel>
       <PersonstatusTabell personstatuser={aktivePersonstatuser} />
