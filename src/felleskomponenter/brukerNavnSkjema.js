@@ -9,9 +9,9 @@ import { hentSammensattNavn } from "../graphql/navn";
 import * as Skjema from "./skjema";
 import * as Nav from "../navFrontend";
 
-import "./brukernavnskjema.css";
+import "./brukerNavnSkjema.css";
 
-export const Brukernavnskjema = ({
+export const BrukerNavnSkjema = ({
   formValues,
   settFormBrukerNavn,
   className,
@@ -53,7 +53,7 @@ export const Brukernavnskjema = ({
 
   const sammensattNavn = formValues.brukerNavn || "";
 
-  const cls = bem("brukernavnskjema");
+  const cls = bem("brukerNavnSkjema");
 
   return (
     <div className={classNames(cls.block, className)}>
@@ -77,7 +77,7 @@ export const Brukernavnskjema = ({
   );
 };
 
-Brukernavnskjema.propTypes = {
+BrukerNavnSkjema.propTypes = {
   form: PT.string.isRequired,
   formValues: PT.object,
   settFormBrukerNavn: PT.func.isRequired,
@@ -87,7 +87,7 @@ Brukernavnskjema.propTypes = {
   onHentBruker: PT.func,
 };
 
-Brukernavnskjema.defaultProps = {
+BrukerNavnSkjema.defaultProps = {
   formValues: {},
   className: undefined,
   onChange: undefined,
@@ -103,4 +103,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   resetFelter: (felter) => dispatch(clearFields(ownProps.form, true, true, felter)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Brukernavnskjema);
+export default connect(mapStateToProps, mapDispatchToProps)(BrukerNavnSkjema);

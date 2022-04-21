@@ -2,7 +2,7 @@ import React from "react";
 
 import * as Skjema from "./skjema";
 
-import { Brukernavnskjema } from "./brukernavnskjema";
+import { BrukerNavnSkjema } from "./brukerNavnSkjema";
 
 describe("brukernavnskjema", () => {
   let props = null;
@@ -19,7 +19,7 @@ describe("brukernavnskjema", () => {
   });
 
   it("viser en skjema.input", () => {
-    const brukernavnskjema = shallow(<Brukernavnskjema {...props} />);
+    const brukernavnskjema = shallow(<BrukerNavnSkjema {...props} />);
 
     expect(brukernavnskjema.find(Skjema.Input)).toHaveLength(1);
   });
