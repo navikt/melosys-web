@@ -11,6 +11,7 @@ import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
+import * as MPT from "../../proptypes";
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from "../../constants";
 
 import Sticky from "../../felleskomponenter/sticky";
@@ -19,14 +20,12 @@ import JournalforingSED from "./komponenter/journalforingsed";
 import JournalforingForm from "./komponenter/journalforingform";
 import FeilmeldingDialog from "./komponenter/feilmeldingDialog";
 
-import { apolloClient } from "../../graphql";
-import { HentNavnDocument } from "./hentnavn.generated";
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
-import * as MPT from "../../proptypes";
-
+import { hentSammensattNavn } from "../../graphql/navn";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
+
 import "./journalforing.css";
 
 class Journalforing extends Component {
@@ -283,12 +282,6 @@ class Journalforing extends Component {
     }
   };
 
-  sokFnrDnr = async (ident) => {
-    return apolloClient.query({ query: HentNavnDocument, variables: { ident } }).catch(() => {
-      return false;
-    });
-  };
-
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
    * Derfor, sjekk dette før vi evt henter navn.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
@@ -300,12 +293,8 @@ class Journalforing extends Component {
 
     const { settFeltInnhold, hentFagsakListe } = this.props;
     settFeltInnhold("brukerNavn", "");
-    const response = await this.sokFnrDnr(brukerID);
-    if (!response || !response.data || !response.data.hentPersonopplysninger) {
-      return false;
-    }
-    const sammensattNavn = Utils.person.tilSammensattNavnFraObjekt(response.data.hentPersonopplysninger.navn);
-    if (!sammensattNavn) {
+    const sammensattNavn = await hentSammensattNavn(brukerID);
+    if (Utils._isEmpty(sammensattNavn)) {
       return false;
     }
     settFeltInnhold("brukerNavn", sammensattNavn);
@@ -336,11 +325,10 @@ class Journalforing extends Component {
 
     if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
       settFeltInnhold("avsenderNavn", "");
-      const response = await this.sokFnrDnr(value);
-      if (!response || !response.data || !response.data.hentPersonopplysninger) {
+      const sammensattNavn = await hentSammensattNavn(value);
+      if (Utils._isEmpty(sammensattNavn)) {
         return false;
       }
-      const sammensattNavn = Utils.person.tilSammensattNavnFraObjekt(response.data.hentPersonopplysninger.navn);
       settFeltInnhold("avsenderNavn", sammensattNavn);
     }
   };

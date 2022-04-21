@@ -4,14 +4,21 @@ import { getFormValues, change, clearFields } from "redux-form";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import bem from "../bemUtils";
+import { hentSammensattNavn } from "../graphql/navn";
 
 import * as Skjema from "./skjema";
-import * as Api from "../services/api";
 import * as Nav from "../navFrontend";
 
-import "./brukernavnskjema.css";
+import "./brukerNavnSkjema.css";
 
-export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChange, onHentBruker, resetFelter }) => {
+export const BrukerNavnSkjema = ({
+  formValues,
+  settFormBrukerNavn,
+  className,
+  onChange,
+  onHentBruker,
+  resetFelter,
+}) => {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
   const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
 
@@ -20,10 +27,10 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
 
     if (fnrdnr) {
       try {
-        const brukerRespons = await Api.Personer.hentPerson(fnrdnr);
-        settFormBruker(brukerRespons);
+        const navn = await hentSammensattNavn(fnrdnr);
+        settFormBrukerNavn(navn);
       } catch (e) {
-        settFormBruker("");
+        settFormBrukerNavn("");
       }
     }
 
@@ -44,10 +51,9 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
     }
   }, [formValues.brukerID]);
 
-  const { bruker = {} } = formValues;
-  const { sammensattNavn = "" } = bruker;
+  const sammensattNavn = formValues.brukerNavn || "";
 
-  const cls = bem("brukernavnskjema");
+  const cls = bem("brukerNavnSkjema");
 
   return (
     <div className={classNames(cls.block, className)}>
@@ -71,17 +77,17 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
   );
 };
 
-Brukernavnskjema.propTypes = {
+BrukerNavnSkjema.propTypes = {
   form: PT.string.isRequired,
   formValues: PT.object,
-  settFormBruker: PT.func.isRequired,
+  settFormBrukerNavn: PT.func.isRequired,
   className: PT.string,
   onChange: PT.func,
   resetFelter: PT.func.isRequired,
   onHentBruker: PT.func,
 };
 
-Brukernavnskjema.defaultProps = {
+BrukerNavnSkjema.defaultProps = {
   formValues: {},
   className: undefined,
   onChange: undefined,
@@ -93,8 +99,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  settFormBruker: (brukerNavn) => dispatch(change(ownProps.form, "bruker", brukerNavn)),
+  settFormBrukerNavn: (brukerNavn) => dispatch(change(ownProps.form, "brukerNavn", brukerNavn)),
   resetFelter: (felter) => dispatch(clearFields(ownProps.form, true, true, felter)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Brukernavnskjema);
+export default connect(mapStateToProps, mapDispatchToProps)(BrukerNavnSkjema);
