@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { mount } from "enzyme";
 import { act } from "react-dom/test-utils";

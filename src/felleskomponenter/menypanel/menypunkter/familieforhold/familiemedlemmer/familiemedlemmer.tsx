@@ -50,7 +50,9 @@ export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
 
   return (
     <div className={familiemedlemmerClassName.block}>
-      <Etiketter.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
+      <Nav.Row>
+        <Etiketter.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
+      </Nav.Row>
       <Mui.Undertittel className={familiemedlemmerClassName.element("undertittel")} ikon={Ikoner.Child} tekst="Barn" />
       {barn.length > 0 ? (
         <FamiliemedlemGruppe
