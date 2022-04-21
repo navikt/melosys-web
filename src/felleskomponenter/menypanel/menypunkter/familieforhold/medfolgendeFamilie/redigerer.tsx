@@ -4,11 +4,12 @@ import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Skjema from "../../../../skjema";
 import * as Utils from "../../../../../utils";
-import * as Api from "../../../../../services/api";
 import * as Symboler from "../../symboler";
 
 import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
 import { normalizeDate } from "../../../../../utils/normalisering";
+import { apolloClient } from "../../../../../graphql";
+import { HentNavnDocument } from "../../../../../sider/journalforing/hentnavn.generated";
 
 import "./redigerer.css";
 
@@ -28,8 +29,11 @@ const Redigerer = ({
       setDisableNavnInput(true);
 
       try {
-        const person = await Api.Personer.hentPerson(idNummer);
-        settVerdi("navn", person.sammensattNavn);
+        const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: idNummer } });
+        const sammensattNavn = response?.data?.hentPersonopplysninger?.navn
+          ? Utils.person.tilSammensattNavnFraObjekt(response.data.hentPersonopplysninger.navn)
+          : "";
+        settVerdi("navn", sammensattNavn);
       } catch (e) {
         setDisableNavnInput(false);
       }
