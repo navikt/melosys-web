@@ -4,14 +4,23 @@ import { getFormValues, change, clearFields } from "redux-form";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import bem from "../bemUtils";
+import { apolloClient } from "../graphql";
+import { HentNavnDocument } from "../sider/journalforing/hentnavn.generated";
 
 import * as Skjema from "./skjema";
-import * as Api from "../services/api";
 import * as Nav from "../navFrontend";
+import * as Utils from "../utils";
 
 import "./brukernavnskjema.css";
 
-export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChange, onHentBruker, resetFelter }) => {
+export const Brukernavnskjema = ({
+  formValues,
+  settFormBrukerNavn,
+  className,
+  onChange,
+  onHentBruker,
+  resetFelter,
+}) => {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
   const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
 
@@ -20,10 +29,14 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
 
     if (fnrdnr) {
       try {
-        const brukerRespons = await Api.Personer.hentPerson(fnrdnr);
-        settFormBruker(brukerRespons);
+        const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: fnrdnr } });
+        if (response?.data?.hentPersonopplysninger?.navn) {
+          settFormBrukerNavn(Utils.person.tilSammensattNavnFraObjekt(response.data.hentPersonopplysninger.navn));
+        } else {
+          settFormBrukerNavn("");
+        }
       } catch (e) {
-        settFormBruker("");
+        settFormBrukerNavn("");
       }
     }
 
@@ -44,8 +57,7 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
     }
   }, [formValues.brukerID]);
 
-  const { bruker = {} } = formValues;
-  const { sammensattNavn = "" } = bruker;
+  const sammensattNavn = formValues.brukerNavn || "";
 
   const cls = bem("brukernavnskjema");
 
@@ -74,7 +86,7 @@ export const Brukernavnskjema = ({ formValues, settFormBruker, className, onChan
 Brukernavnskjema.propTypes = {
   form: PT.string.isRequired,
   formValues: PT.object,
-  settFormBruker: PT.func.isRequired,
+  settFormBrukerNavn: PT.func.isRequired,
   className: PT.string,
   onChange: PT.func,
   resetFelter: PT.func.isRequired,
@@ -93,7 +105,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  settFormBruker: (brukerNavn) => dispatch(change(ownProps.form, "bruker", brukerNavn)),
+  settFormBrukerNavn: (brukerNavn) => dispatch(change(ownProps.form, "brukerNavn", brukerNavn)),
   resetFelter: (felter) => dispatch(clearFields(ownProps.form, true, true, felter)),
 });
 

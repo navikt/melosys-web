@@ -42,8 +42,10 @@ const erGyldigFnr = (verdi) => {
  */
 const erGyldigDnr = (verdi) => erGyldigFnr(verdi);
 
-const tilSammensattNavn = (fornavn, mellomnavn, etternavn) =>
-  `${fornavn}${mellomnavn ? ` ${mellomnavn}` : ""} ${etternavn}`;
+const tilSammensattNavn = (fornavn, mellomnavn, etternavn) => {
+  const mellomnavnEllerTomStreng = mellomnavn ? ` ${mellomnavn}` : "";
+  return `${fornavn}${mellomnavnEllerTomStreng} ${etternavn}`.trim();
+};
 
 const tilSammensattNavnFraObjekt = (navn) => {
   return tilSammensattNavn(navn.fornavn || "", navn.mellomnavn, navn.etternavn || "");
