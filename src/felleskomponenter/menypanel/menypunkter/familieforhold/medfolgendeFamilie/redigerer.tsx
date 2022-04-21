@@ -8,8 +8,7 @@ import * as Symboler from "../../symboler";
 
 import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
 import { normalizeDate } from "../../../../../utils/normalisering";
-import { apolloClient } from "../../../../../graphql";
-import { HentNavnDocument } from "../../../../../sider/journalforing/hentnavn.generated";
+import { hentSammensattNavn } from "../../../../../graphql/navn";
 
 import "./redigerer.css";
 
@@ -29,10 +28,7 @@ const Redigerer = ({
       setDisableNavnInput(true);
 
       try {
-        const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: idNummer } });
-        const sammensattNavn = response?.data?.hentPersonopplysninger?.navn
-          ? Utils.person.tilSammensattNavnFraObjekt(response.data.hentPersonopplysninger.navn)
-          : "";
+        const sammensattNavn = await hentSammensattNavn(idNummer);
         settVerdi("navn", sammensattNavn);
       } catch (e) {
         setDisableNavnInput(false);

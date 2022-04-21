@@ -4,12 +4,10 @@ import { getFormValues, change, clearFields } from "redux-form";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import bem from "../bemUtils";
-import { apolloClient } from "../graphql";
-import { HentNavnDocument } from "../sider/journalforing/hentnavn.generated";
+import { hentSammensattNavn } from "../graphql/navn";
 
 import * as Skjema from "./skjema";
 import * as Nav from "../navFrontend";
-import * as Utils from "../utils";
 
 import "./brukernavnskjema.css";
 
@@ -29,12 +27,8 @@ export const Brukernavnskjema = ({
 
     if (fnrdnr) {
       try {
-        const response = await apolloClient.query({ query: HentNavnDocument, variables: { ident: fnrdnr } });
-        if (response?.data?.hentPersonopplysninger?.navn) {
-          settFormBrukerNavn(Utils.person.tilSammensattNavnFraObjekt(response.data.hentPersonopplysninger.navn));
-        } else {
-          settFormBrukerNavn("");
-        }
+        const navn = await hentSammensattNavn(fnrdnr);
+        settFormBrukerNavn(navn);
       } catch (e) {
         settFormBrukerNavn("");
       }
