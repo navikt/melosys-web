@@ -263,7 +263,7 @@ const soknad = object().when("$behandlingstema", {
       .nullable(),
     oppgittAdresseGatenavn: string()
       .nullable()
-      .when("$skalOppgittAdresseValideres", {
+      .when("$skalOppgittAdresseGateadresseValideres", {
         is: true,
         then: string()
           .nullable()
