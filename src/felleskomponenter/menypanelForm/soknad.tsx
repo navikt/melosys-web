@@ -7,6 +7,7 @@ import { ThunkDispatch } from "redux-thunk";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import soknadSchema from "../../ducks/form/soknadSchema";
+import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 
@@ -243,6 +244,9 @@ const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
     const settings = {
       context: {
         skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
+        skalOppgittAdresseGateadresseValideres:
+          props.oppgittAdresseHarVerdier &&
+          props.behandlingstema !== MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
         behandlingstema: props.behandlingstema,
         behandlingsgrunnlagtype: props.behandlingsgrunnlagtype,
         sakstype: props.sakstype,
