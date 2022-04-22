@@ -35,8 +35,7 @@ export type Familiemedlem = {
   alder?: Maybe<Scalars['Int']>;
   foreldreansvar?: Maybe<Scalars['String']>;
   fnrAnnenForelder?: Maybe<Scalars['String']>;
-  sivilstand?: Maybe<Scalars['String']>;
-  sivilstandGyldighetsperiodeFom?: Maybe<Scalars['Date']>;
+  sivilstand?: Maybe<Sivilstand>;
 };
 
 export enum Familierelasjonsrolle {
@@ -45,6 +44,14 @@ export enum Familierelasjonsrolle {
   Mor = 'MOR',
   RelatertVedSivilstand = 'RELATERT_VED_SIVILSTAND'
 }
+
+export type Foedsel = {
+  __typename?: 'Foedsel';
+  foedselsaar: Scalars['Int'];
+  foedselsdato?: Maybe<Scalars['Date']>;
+  foedeland?: Maybe<Scalars['String']>;
+  foedested?: Maybe<Scalars['String']>;
+};
 
 export type Folkeregisterpersonstatus = {
   __typename?: 'Folkeregisterpersonstatus';
@@ -97,6 +104,7 @@ export type Personopplysninger = {
   __typename?: 'Personopplysninger';
   bostedsadresser: Array<Bostedsadresse>;
   familiemedlemmer: Array<Familiemedlem>;
+  foedsel: Foedsel;
   folkeregisteridentifikator?: Maybe<Scalars['String']>;
   folkeregisterpersonstatuser: Array<Folkeregisterpersonstatus>;
   kjoenn: KjoennType;

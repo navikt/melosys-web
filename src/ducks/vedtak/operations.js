@@ -47,6 +47,14 @@ export function endre(behandlingID, body) {
   );
 }
 
+export function kontroller(behandlingID, skalRegisteropplysningerOppdateres, data) {
+  return doThenDispatch(() => Api.Saksflyt.Vedtak.kontroller(behandlingID, skalRegisteropplysningerOppdateres, data), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function avslaaSoknad(behandlingID, data) {
   const body = {
     behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,

@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { mount } from "enzyme";
 import { act } from "react-dom/test-utils";
@@ -65,8 +65,7 @@ describe("Familiemedlemmer", () => {
         alder: 12,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "",
-        sivilstandGyldighetsperiodeFom: "",
+        sivilstand: null,
       },
       {
         navn: "ektefelle",
@@ -75,8 +74,12 @@ describe("Familiemedlemmer", () => {
         alder: 30,
         foreldreansvar: "",
         fnrAnnenForelder: "",
-        sivilstand: "",
-        sivilstandGyldighetsperiodeFom: "",
+        sivilstand: {
+          type: "Gift",
+          erHistorisk: false,
+          gyldigFraOgMed: "",
+          master: "",
+        },
       },
     ];
 
@@ -115,6 +118,103 @@ describe("Familiemedlemmer", () => {
       expect(familiemedlemGrupper).toHaveLength(2);
       expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual([familiemedlems[0]]);
       expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual([familiemedlems[1]]);
+    });
+  });
+
+  it("viser bare et barn og et ektefelle som er gift i dag med erHistorikk false", () => {
+    const ektefeller: FamiliemedlemType[] = [
+      {
+        navn: "barn",
+        ident: "barneident",
+        relasjonsrolle: Familierelasjonsrolle.Barn,
+        alder: 12,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: null,
+      },
+      {
+        navn: "tidligere-ektefelle",
+        ident: "tidligere-ektefelleident",
+        relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
+        alder: 32,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: {
+          type: "Separert",
+          erHistorisk: true,
+          gyldigFraOgMed: "",
+          master: "",
+        },
+      },
+      {
+        navn: "nåværende-ektefelle",
+        ident: "ektefelleident",
+        relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
+        alder: 30,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: {
+          type: "Gift",
+          erHistorisk: false,
+          gyldigFraOgMed: "",
+          master: "",
+        },
+      },
+      {
+        navn: "gammel-ektefelle",
+        ident: "gammel-ektefelleident",
+        relasjonsrolle: Familierelasjonsrolle.RelatertVedSivilstand,
+        alder: 44,
+        foreldreansvar: "",
+        fnrAnnenForelder: "",
+        sivilstand: {
+          type: "Ugift",
+          erHistorisk: true,
+          gyldigFraOgMed: "",
+          master: "",
+        },
+      },
+    ];
+
+    return act(async () => {
+      const familiemedlemmer = await mount(<Familiemedlemmer {...props} />, {
+        wrappingComponent: MockedProvider,
+        wrappingComponentProps: {
+          mocks: [
+            {
+              request: {
+                query: HentFamiliemedlemmerDocument,
+                variables: {
+                  behandlingID: 1,
+                },
+              },
+              result: {
+                data: {
+                  hentSaksopplysninger: {
+                    persondata: {
+                      familiemedlemmer: ektefeller,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
+      familiemedlemmer.update();
+
+      const familiemedlemGrupper = familiemedlemmer.find(FamiliemedlemGruppe);
+      expect(familiemedlemGrupper).toHaveLength(2);
+
+      const barnet = [ektefeller[0]];
+      expect(familiemedlemGrupper.first().props().familiemedlemmer).toEqual(barnet);
+
+      const nåværendeEktefelle = [ektefeller[2]];
+      expect(familiemedlemGrupper.last().props().familiemedlemmer).toEqual(nåværendeEktefelle);
     });
   });
 });

@@ -11,7 +11,7 @@ import * as KV from "../../kodeverk";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 
-import Brukernavnskjema from "../../felleskomponenter/brukernavnskjema";
+import BrukerNavnSkjema from "../../felleskomponenter/brukerNavnSkjema";
 import Knapperad from "../../felleskomponenter/knapperad";
 import EnkeltDato from "../../felleskomponenter/datoOmrade/enkeltDato";
 
@@ -132,7 +132,7 @@ const OpprettNySak = ({ form, formValues, tilForsiden, handleSubmit, change, err
                     className="undertittel"
                     understrek
                   />
-                  <Brukernavnskjema className="brukernavnskjema innrykk" form={form} onHentBruker={hentOppgaver} />
+                  <BrukerNavnSkjema className="brukerNavnSkjema innrykk" form={form} onHentBruker={hentOppgaver} />
                   <Mui.Undertittel
                     tekst="Informasjon om sak"
                     ikon={Ikoner.Filenew}

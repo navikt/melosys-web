@@ -2,36 +2,36 @@ import { shallow } from "enzyme";
 import React from "react";
 
 import MKV from "../../melosyskodeverk";
-import Valideringsfeil from "./valideringsfeil";
+import Feilmeldinger from "./feilmeldinger";
 
-describe("Valideringsfeil", () => {
+describe("Feilmeldinger", () => {
   it("Viser ingenting dersom det ikke finnes en mapping for feilkode", () => {
-    const valideringsfeil = shallow(<Valideringsfeil feilkoder={[{ kode: "tilfeldigString", felter: [] }]} />);
-    const varsel = valideringsfeil.find(".varselstripe");
+    const feilmeldinger = shallow(<Feilmeldinger feilmeldinger={[{ kode: "tilfeldigString", felter: [] }]} />);
+    const varsel = feilmeldinger.find(".varselstripe");
 
     expect(varsel.children().length).toBe(0);
   });
 
   it("Viser feilmelding fra kodeverk dersom mapping for feilkode finnes", () => {
-    const valideringsfeil = shallow(
-      <Valideringsfeil
-        feilkoder={[{ kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [] }]}
+    const feilmeldinger = shallow(
+      <Feilmeldinger
+        feilmeldinger={[{ kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [] }]}
       />
     );
-    const varsel = valideringsfeil.find(".varselstripe");
+    const varsel = feilmeldinger.find(".varselstripe");
 
     expect(varsel.children().length).toBe(1);
   });
   it("Viser punktliste med feilmeldinger dersom mer enn en feilkode sendes inn", () => {
-    const valideringsfeil = shallow(
-      <Valideringsfeil
-        feilkoder={[
+    const feilmeldinger = shallow(
+      <Feilmeldinger
+        feilmeldinger={[
           { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [] },
           { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [] },
         ]}
       />
     );
-    const ul = valideringsfeil.find("ul");
+    const ul = feilmeldinger.find("ul");
 
     expect(ul.children().length).toBe(2);
   });

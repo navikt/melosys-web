@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
@@ -14,6 +14,7 @@ import EditerbartElementListe from "../editerbartElementListe";
 
 import "./familieforholdContainer.css";
 import { visAldriBinSymbolsynlighet } from "../editerbartElement/editerbartElement";
+import VisFamilieMedlemmerFraRegisterKnapp from "./familiemedlemmer/visFamilieMedlemmerFraRegisterKnapp";
 
 const { ARBEID_I_UTLANDET, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
@@ -32,6 +33,7 @@ const FamilieforholdContainer = ({
   visBehandlingsgrunnlagData,
   behandlingstema,
 }: FamilieforholdContainerProps) => {
+  const [visFamilieforholdFraRegister, setVisFamilieforholdFraRegister] = useState(false);
   const sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn = (familiemedlemmer: KV.Form.MedfolgendeFamilie[]) =>
     familiemedlemmer.every((familiemedlem) => familiemedlem.fnr && familiemedlem.navn);
 
@@ -46,7 +48,11 @@ const FamilieforholdContainer = ({
       </Nav.Row>
       <Nav.Row className="familiemedlemmer-row">
         <Nav.Column xs="12">
-          <Familiemedlemmer />
+          {visFamilieforholdFraRegister ? (
+            <Familiemedlemmer />
+          ) : (
+            <VisFamilieMedlemmerFraRegisterKnapp onClick={setVisFamilieforholdFraRegister} />
+          )}
         </Nav.Column>
       </Nav.Row>
       {visBehandlingsgrunnlagData && (

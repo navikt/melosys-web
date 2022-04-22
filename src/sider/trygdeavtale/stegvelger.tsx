@@ -28,7 +28,7 @@ import { formSelectors } from "../../ducks/form";
 
 import "./stegvelger.css";
 import { Feilkode } from "../../@types";
-import { Valideringsfeil } from "../../felleskomponenter/valideringsfeil";
+import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -81,7 +81,7 @@ interface Props extends PropsFromRedux {
 interface State {
   aktivtStegIndex: number;
   aktuelleSteg: AktueltSteg[];
-  valideringFeil: Feilkode[];
+  feilmeldinger: Feilkode[];
   visBehandlingsgrunnlagFeilmeldinger: boolean;
 }
 
@@ -89,7 +89,7 @@ class Stegvelger extends Component<Props, State> {
   state = {
     aktivtStegIndex: 0,
     aktuelleSteg: [],
-    valideringFeil: [],
+    feilmeldinger: [],
     visBehandlingsgrunnlagFeilmeldinger: false,
   };
 
@@ -144,7 +144,7 @@ class Stegvelger extends Component<Props, State> {
       resultat: response.resultat,
       redigerbart: this.props.redigerbart,
       annenBehandlingOppfriskes: this.props.annenBehandlingOppfriskes,
-      valideringFeil: this.state.valideringFeil,
+      feilmeldinger: this.state.feilmeldinger,
     };
 
     const handlers = {
@@ -156,7 +156,7 @@ class Stegvelger extends Component<Props, State> {
       oppfriskOgLastInnSaksopplysninger: this.props.oppfriskOgLastInnSaksopplysninger,
       hentFlytOgOppdaterAktuelleSteg: this.hentFlytOgOppdaterAktuelleSteg,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
-      oppdaterValideringFeil: this.oppdaterValideringFeil,
+      oppdaterFeilmeldinger: this.oppdaterFeilmeldinger,
     };
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
@@ -193,13 +193,10 @@ class Stegvelger extends Component<Props, State> {
     return harFeilmeldinger;
   };
 
-  oppdaterValideringFeil = (
-    data: Api.Saksflyt.Vedtak.FattVedtakReqDto,
-    skalRegisteropplysningerOppdateres: boolean
-  ) => {
+  oppdaterFeilmeldinger = (data: Api.Saksflyt.Vedtak.FattVedtakReqDto, skalRegisteropplysningerOppdateres: boolean) => {
     Api.Saksflyt.Vedtak.kontroller(this.props.behandlingID, skalRegisteropplysningerOppdateres, data)
-      .then(() => this.setState({ valideringFeil: [] }))
-      .catch((response) => this.setState({ valideringFeil: response?.body?.feilkoder }));
+      .then(() => this.setState({ feilmeldinger: [] }))
+      .catch((response) => this.setState({ feilmeldinger: response?.body?.feilkoder }));
   };
 
   oppdaterAktivtSteg = async (nesteStegIndex: number) => {
@@ -229,7 +226,7 @@ class Stegvelger extends Component<Props, State> {
       await lagreAllData();
       return Api.Saksflyt.Vedtak.fatt(behandlingID, data)
         .then(() => tilForsiden())
-        .catch((response) => this.setState({ valideringFeil: response?.body?.feilkoder }));
+        .catch((response) => this.setState({ feilmeldinger: response?.body?.feilkoder }));
     }
     return Promise.resolve();
   };
@@ -244,7 +241,7 @@ class Stegvelger extends Component<Props, State> {
 
   render() {
     const {
-      state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, valideringFeil },
+      state: { aktuelleSteg, visBehandlingsgrunnlagFeilmeldinger, feilmeldinger },
       props: { behandlingstype, redigerbart },
       oppdaterAktivtSteg,
     } = this;
@@ -260,7 +257,7 @@ class Stegvelger extends Component<Props, State> {
             {aktuelleSteg && (
               <div>
                 <StegLinje steg={aktuelleSteg} stegKlikk={oppdaterAktivtSteg} />
-                {vedtakStegErAktivt && <Valideringsfeil feilkoder={valideringFeil} />}
+                {vedtakStegErAktivt && <Feilmeldinger feilmeldinger={feilmeldinger} />}
                 {erNyVurdering && redigerbart && inngangStegErAktivt && (
                   <Nav.AlertStripeAdvarsel className="varselstripe">
                     <Nav.Typo.Normaltekst className="varselstripe__overskrift">
