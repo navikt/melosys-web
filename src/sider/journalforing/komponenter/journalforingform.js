@@ -119,49 +119,42 @@ const toVedleggMedProps = (vedlegg) =>
     acc[`tittel_${index}`] = d.tittel;
     return acc;
   }, {});
-const mapStateToProps = (state) => {
-  const avsenderType = journalforingSelectors.AvsenderTypeSelector(state);
-
-  return {
-    erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
-    formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-    formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
-    submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,
-    initialValues: {
-      avsenderType:
-        journalforingSelectors.ErAvsenderPreutfyltSelector(state) && avsenderType === MKV.Koder.avsendertyper.PERSON
-          ? MKV.Koder.avsendertyper.PERSON
-          : avsenderType,
-      behandlingstype: null,
-      saksnummer: "",
-      journalføresPå: KV.Koder.JournalføringRolle.BRUKER,
-      brukerID: journalforingSelectors.BrukerIDSelector(state),
-      erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
-      avsenderID: journalforingSelectors.AvsenderIDSelector(state),
-      avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-      arbeidsgiverID: null,
-      representantID: null,
-      representantRepresenterer: null,
-      mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
-      hoveddokument: {
-        tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",
-        logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
-      },
-      vedlegg: {
-        pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-      },
-      journalforingSoknadsland: [],
-      journalforingSoknadslandUkjenteEllerAlleEosLand: false,
-      sakstype: MKV.Koder.sakstyper.EU_EOS,
-      opprettBehandling: BOOLSK.USANN,
-      opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-      ingenVurdering: false,
-      ikkeSendForvaltingsmelding: false,
-      skalTilordnes: false,
-      submittable: false,
+const mapStateToProps = (state) => ({
+  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
+  formValues: getFormValues(KV.Form.JOURNALFORING)(state),
+  formErrors: formSelectors.JournalforingFormSelector(state).syncErrors || {},
+  submitFailed: formSelectors.JournalforingFormSelector(state).submitFailed,
+  initialValues: {
+    avsenderType: journalforingSelectors.AvsenderTypeSelector(state),
+    behandlingstype: null,
+    saksnummer: "",
+    journalføresPå: KV.Koder.JournalføringRolle.BRUKER,
+    brukerID: journalforingSelectors.BrukerIDSelector(state),
+    erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
+    avsenderID: journalforingSelectors.AvsenderIDSelector(state),
+    avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
+    arbeidsgiverID: null,
+    representantID: null,
+    representantRepresenterer: null,
+    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
+    hoveddokument: {
+      tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",
+      logiskeVedlegg: journalforingSelectors.JournalforingLogiskeVedleggSelector(state),
     },
-  };
-};
+    vedlegg: {
+      pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
+    },
+    journalforingSoknadsland: [],
+    journalforingSoknadslandUkjenteEllerAlleEosLand: false,
+    sakstype: MKV.Koder.sakstyper.EU_EOS,
+    opprettBehandling: BOOLSK.USANN,
+    opprettnysak_behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    ingenVurdering: false,
+    ikkeSendForvaltingsmelding: false,
+    skalTilordnes: false,
+    submittable: false,
+  },
+});
 
 const mapDispatchToProps = (dispatch) => ({
   settJournalforingHensikt: (journalforingHensikt) =>
