@@ -8,12 +8,13 @@ import { change } from "redux-form";
 import * as Ikoner from "../../../resources/images";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
+
 import Komponent from "./komponent";
 import { formSelectors } from "../../../ducks/form";
+import { journalforingSelectors } from "../../../ducks/journalforing";
 import { BOOLSK } from "../../../constants";
 
 import "./dokumentetJournalføresPå.css";
-import { journalforingSelectors } from "../../../ducks/journalforing";
 
 const { BRUKER, VIRKSOMHET } = KV.Koder.JournalføringRolle;
 
@@ -43,6 +44,9 @@ const DokumentetJournalføresPå = ({ journalføresPå, oppdaterFelt, defaultBru
       oppdaterFelt("brukerID", null);
       oppdaterFelt("brukerNavn", null);
     }
+    oppdaterFelt("avsenderID", null);
+    oppdaterFelt("avsenderNavn", null);
+    oppdaterFelt("avsenderType", null);
   };
   return (
     <Komponent
