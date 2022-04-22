@@ -25,7 +25,7 @@ export const AvsenderOrganisasjon = ({
       settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.ARBEIDSGIVER);
     }
     return () => {
-      settFeltInnhold("representantRepresenterer", "");
+      settFeltInnhold("representantRepresenterer", null);
     };
   }, []);
 
@@ -34,7 +34,7 @@ export const AvsenderOrganisasjon = ({
       settFeltInnhold("representantID", avsenderID);
     }
     return () => {
-      settFeltInnhold("representantID", "");
+      settFeltInnhold("representantID", null);
     };
   }, [avsenderID]);
 
@@ -45,7 +45,7 @@ export const AvsenderOrganisasjon = ({
       // TODO await this.spinner('representantNavn');
       await hentOgVisRepresentant(verdi);
     } else {
-      await settFeltInnhold("representantNavn", "");
+      await settFeltInnhold("representantNavn", null);
     }
   };
 
@@ -79,7 +79,7 @@ AvsenderOrganisasjon.propTypes = {
 };
 
 AvsenderOrganisasjon.defaultProps = {
-  avsenderID: "",
+  avsenderID: null,
   children: null,
 };
 
@@ -128,7 +128,7 @@ AvsenderFullmektig.propTypes = {
 };
 
 AvsenderFullmektig.defaultProps = {
-  avsenderID: "",
+  avsenderID: null,
 };
 
 export const AvsenderUtenlanskTrygdemyndighet = ({ utenlandskTrygdemyndighetLandkode, fullmektigLandEndret }) => (

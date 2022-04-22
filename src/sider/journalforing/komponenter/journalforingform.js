@@ -140,8 +140,8 @@ const mapStateToProps = (state) => {
       avsenderID: journalforingSelectors.AvsenderIDSelector(state),
       avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
       arbeidsgiverID: null,
-      representantID: "",
-      representantRepresenterer: "",
+      representantID: null,
+      representantRepresenterer: null,
       mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
       hoveddokument: {
         tittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state) || "Uten tittel",

@@ -51,47 +51,54 @@ const journalforing = object().shape({
   brukerID: string()
     .when("journalføresPå", {
       is: BRUKER,
-      then: string().erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR),
+      then: string().erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).nullable(),
     })
     .when(["journalføresPå", "brukerNavn"], {
       is: (journalføresPå, navn) => journalføresPå === BRUKER && Utils._isEmpty(navn),
-      then: string().harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
-    }),
+      then: string().harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR).nullable(),
+    })
+    .nullable(),
   brukerNavn: string().nullable(),
   virksomhetOrgnr: string()
     .when("journalføresPå", {
       is: VIRKSOMHET,
-      then: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR),
+      then: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .when(["journalføresPå", "virksomhetNavn"], {
       is: (journalføresPå, navn) => journalføresPå === VIRKSOMHET && Utils._isEmpty(navn),
-      then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR),
-    }),
+      then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
+    })
+    .nullable(),
   virksomhetNavn: string().nullable(),
-  avsenderID: string().when(["avsenderType", "$erAvsenderPreutfylt", "journalføresPå"], {
-    is: organisasjonOgIkkePreutfyltAvsenderForBruker,
-    then: string()
-      .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
-      .when("avsenderNavn", {
-        is: Utils._isEmpty,
-        then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR),
-      }),
-  }),
+  avsenderID: string()
+    .when(["avsenderType", "$erAvsenderPreutfylt", "journalføresPå"], {
+      is: organisasjonOgIkkePreutfyltAvsenderForBruker,
+      then: string()
+        .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
+        .when("avsenderNavn", {
+          is: Utils._isEmpty,
+          then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
+        })
+        .nullable(),
+    })
+    .nullable(),
   avsenderNavn: string().required(SKRIV_INN_NAVN_PA_AVSENDER).nullable(),
   hoveddokument: object().shape({
     tittel: string().required(VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN),
   }),
   representantID: lazy((value) =>
-    value === ""
-      ? string()
+    Utils._isEmpty(value)
+      ? string().nullable()
       : string()
           .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
           .when("representantNavn", {
-            is: "",
+            is: Utils._isEmpty,
             then: string()
               .harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
-              .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
+              .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR)
+              .nullable(),
           })
+          .nullable()
   ),
   saksnummer: string().when("journalforingHensikt", {
     is: Konstanter.JOURNALFORING_HENSIKT.KNYTT,
@@ -120,10 +127,12 @@ const journalforing = object().shape({
     is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
     then: string().required(VELG_ETT_LAND),
   }),
-  representantRepresenterer: string().when("avsenderType", {
-    is: KV.AvsenderTyper.FULLMEKTIG,
-    then: string().required(VELG_REPRESENTERER),
-  }),
+  representantRepresenterer: string()
+    .when("avsenderType", {
+      is: KV.AvsenderTyper.FULLMEKTIG,
+      then: string().required(VELG_REPRESENTERER).nullable(),
+    })
+    .nullable(),
   avsenderType: string().when("$erAvsenderPreutfylt", {
     is: false,
     then: string().ensure().required(VELG_EN_AVSENDER),
@@ -132,7 +141,7 @@ const journalforing = object().shape({
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
-  representantNavn: string(),
+  representantNavn: string().nullable(),
   opprettnysak_behandlingstema: string(),
   journalforingSoknadslandUkjenteEllerAlleEosLand: boolean(),
 });

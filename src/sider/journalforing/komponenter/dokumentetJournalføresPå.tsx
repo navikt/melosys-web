@@ -23,7 +23,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  oppdaterFelt: (felt: string, verdi: string | boolean) => dispatch(change(KV.Form.JOURNALFORING, felt, verdi)),
+  oppdaterFelt: (felt: string, verdi: string | boolean | null) => dispatch(change(KV.Form.JOURNALFORING, felt, verdi)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -36,12 +36,12 @@ const DokumentetJournalføresPå = ({ journalføresPå, oppdaterFelt, defaultBru
     if (value === BRUKER) {
       oppdaterFelt("ikkeSendForvaltingsmelding", BOOLSK.USANN);
       oppdaterFelt("brukerID", defaultBrukerID);
-      oppdaterFelt("virksomhetOrgnr", "");
-      oppdaterFelt("virksomhetNavn", "");
+      oppdaterFelt("virksomhetOrgnr", null);
+      oppdaterFelt("virksomhetNavn", null);
     } else {
       oppdaterFelt("ikkeSendForvaltingsmelding", BOOLSK.SANN);
-      oppdaterFelt("brukerID", "");
-      oppdaterFelt("brukerNavn", "");
+      oppdaterFelt("brukerID", null);
+      oppdaterFelt("brukerNavn", null);
     }
   };
   return (

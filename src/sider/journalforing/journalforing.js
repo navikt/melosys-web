@@ -82,7 +82,6 @@ class Journalforing extends Component {
       journalforing: { hoveddokument = {} },
     } = this.props;
     const {
-      journalføresPå,
       brukerID,
       virksomhetOrgnr,
       avsenderID,
@@ -101,14 +100,13 @@ class Journalforing extends Component {
 
     const { dokumentID } = hoveddokument;
     const vedlegg = [...this.mapFysiskeVedleggsTitlerTilVedlegg(vedleggSkjema.pdf)];
-    const journalføresPåBruker = journalføresPå === KV.Koder.JournalføringRolle.BRUKER;
 
     // Data for /tilordne i.e KNYTT
     let journalPostData = {
       avsenderID,
       avsenderNavn,
-      brukerID: journalføresPåBruker ? brukerID : null,
-      virksomhetOrgnr: !journalføresPåBruker ? virksomhetOrgnr : null,
+      brukerID,
+      virksomhetOrgnr,
       hoveddokument: {
         dokumentID,
         tittel,
@@ -297,7 +295,7 @@ class Journalforing extends Component {
     }
 
     const { settFeltInnhold, hentFagsakListeForFnr } = this.props;
-    settFeltInnhold("brukerNavn", "");
+    settFeltInnhold("brukerNavn", null);
     const sammensattNavn = await hentSammensattNavn(brukerID);
     if (Utils._isEmpty(sammensattNavn)) {
       return false;
@@ -313,13 +311,10 @@ class Journalforing extends Component {
     }
 
     const { sokOrgnr, settFeltInnhold, hentFagsakListeForOrgnr } = this.props;
-    settFeltInnhold("virksomhetNavn", "");
+    settFeltInnhold("virksomhetNavn", null);
     const response = await sokOrgnr(virksomhetOrgnr);
-    if (!response || !response.data) {
-      return false;
-    }
-    const { navn = "" } = response.data;
-    if (!navn) {
+    const navn = response?.data?.navn;
+    if (Utils._isEmpty(navn)) {
       return false;
     }
     settFeltInnhold("virksomhetNavn", navn);
@@ -339,17 +334,17 @@ class Journalforing extends Component {
     }
 
     if (value.length === ANTALL_TALL_I_ORGNR) {
-      settFeltInnhold("avsenderNavn", "");
+      settFeltInnhold("avsenderNavn", null);
       const response = await sokOrgnr(value);
-      if (!response || !response.data) {
+      const navn = response?.data?.navn;
+      if (Utils._isEmpty(navn)) {
         return false;
       }
-      const { navn = "" } = response.data;
       settFeltInnhold("avsenderNavn", navn);
     }
 
     if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
-      settFeltInnhold("avsenderNavn", "");
+      settFeltInnhold("avsenderNavn", null);
       const sammensattNavn = await hentSammensattNavn(value);
       if (Utils._isEmpty(sammensattNavn)) {
         return false;
@@ -366,12 +361,12 @@ class Journalforing extends Component {
     }
 
     if (value.length === ANTALL_TALL_I_ORGNR) {
-      settFeltInnhold("representantNavn", "");
+      settFeltInnhold("representantNavn", null);
       const response = await sokOrgnr(value);
-      if (!response.data) {
+      const navn = response?.data?.navn;
+      if (Utils._isEmpty(navn)) {
         return false;
       }
-      const { navn = "" } = response.data;
       settFeltInnhold("representantNavn", navn);
     }
   };
@@ -384,7 +379,7 @@ class Journalforing extends Component {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("journalforingPeriodeFraOgMed", "");
     settFeltInnhold("journalforingPeriodeTilOgMed", "");
-    settFeltInnhold("representantID", "");
+    settFeltInnhold("representantID", null);
     settFeltInnhold("journalforingSoknadsland", []);
     settFeltInnhold("journalforingSoknadslandUkjenteEllerAlleEosLand", false);
   };
@@ -457,7 +452,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn = "" },
+      journalforing: { vedlegg = [], hoveddokument = {}, behandlingsInformasjon, avsenderID, avsenderNavn },
       fagsakListe,
       settFeltInnhold,
     } = this.props;

@@ -73,7 +73,7 @@ class Informasjon extends Component {
       avsenderID: gammelAvsenderID,
       virksomhetOrgnr: gammelVirksomhetOrgnr,
     } = props.journalforingSkjemaVerdier;
-    const { brukerID = "", avsenderID = "", virksomhetOrgnr = "" } = this.props.journalforingSkjemaVerdier;
+    const { brukerID, avsenderID, virksomhetOrgnr } = this.props.journalforingSkjemaVerdier;
     const { hentOgVisBruker, hentOgVisVirksomhet, hentOgVisAvsender } = this.props;
 
     if (gammelBrukerID !== brukerID || tvingOppdatering) {
@@ -114,8 +114,8 @@ class Informasjon extends Component {
 
   tomAvsender = () => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold("avsenderID", "");
-    settFeltInnhold("avsenderNavn", "");
+    settFeltInnhold("avsenderID", null);
+    settFeltInnhold("avsenderNavn", null);
   };
 
   sjekkBruker = async (verdi) => {
@@ -132,7 +132,7 @@ class Informasjon extends Component {
         kopierBrukerTilAvsender(brukerID, sammensattNavn);
       }
     } else {
-      settFeltInnhold("brukerNavn", "");
+      settFeltInnhold("brukerNavn", null);
       if (erBrukerAvsender) {
         tomAvsender();
       }
@@ -157,7 +157,7 @@ class Informasjon extends Component {
       await this.spinner("avsenderNavn");
       await hentOgVisAvsender(verdi);
     } else {
-      await settFeltInnhold("avsenderNavn", "");
+      await settFeltInnhold("avsenderNavn", null);
     }
   };
 

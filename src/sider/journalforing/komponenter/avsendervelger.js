@@ -49,7 +49,7 @@ const AvsenderVelger = ({
   }, [formValues.avsenderType]);
 
   const fullmektigLandEndret = (landkode = "") => {
-    const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : "";
+    const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : null;
 
     settFeltInnhold("avsenderID", landkode);
     settFeltInnhold("avsenderNavn", avsenderNavn);
@@ -102,6 +102,7 @@ const AvsenderVelger = ({
                 avsenderType={formValues.avsenderType}
                 settFeltInnhold={settFeltInnhold}
                 hentOgVisRepresentant={hentOgVisRepresentant}
+                journalføresPåVirksomhet={journalføresPåVirksomhet}
               />
             )}
             <Skjema.Radio
@@ -116,6 +117,7 @@ const AvsenderVelger = ({
                 avsenderType={formValues.avsenderType}
                 settFeltInnhold={settFeltInnhold}
                 hentOgVisRepresentant={hentOgVisRepresentant}
+                journalføresPåVirksomhet={journalføresPåVirksomhet}
               />
             )}
             <Skjema.Radio
