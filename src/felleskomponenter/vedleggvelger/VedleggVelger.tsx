@@ -7,7 +7,7 @@ import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import * as Utils from "../../utils";
 
-import PdfLink, { lagPdfUrl } from "../pdfLink";
+import PdfLink from "../pdfLink";
 
 import "./VedleggVelger.css";
 
@@ -36,8 +36,6 @@ export const EnkeltVedlegg = ({
     }
   };
 
-  const apnePdf = () => window.open(lagPdfUrl(vedlegg.journalpostID, vedlegg.dokumentID), "_blank");
-
   const cls = classNames({
     "enkeltvedlegg--border-bottom": !redigerer,
   });
@@ -60,9 +58,6 @@ export const EnkeltVedlegg = ({
       <td>
         <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
       </td>
-      <td>
-        <Mui.Knapp ikon={Ikoner.Eye} onClick={apnePdf} />
-      </td>
       <td>{!redigerer && <Mui.Knapp type="flat" ikon={Ikoner.Bin} onClick={slettVedlegg} />}</td>
     </tr>
   );
@@ -72,21 +67,19 @@ interface VedleggListeProps {
   valgteVedlegg: FysiskDokument[];
   alleVedlegg: FysiskDokument[];
   redigerer: boolean;
-  onAvbryt: () => void;
-  onLeggTil: (markerteVedlegg: string[]) => void;
   onSlettVedlegg: (vedleggID: string) => void;
+  markerteVedlegg: string[];
+  setMarkerteVedlegg: (markerteVedlegg: string[]) => void;
 }
 
 export const VedleggListe = ({
   valgteVedlegg,
   alleVedlegg,
   redigerer,
-  onAvbryt,
-  onLeggTil,
   onSlettVedlegg,
+  markerteVedlegg,
+  setMarkerteVedlegg,
 }: VedleggListeProps) => {
-  const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>(valgteVedlegg.map(({ id }) => id));
-
   const markerVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg, vedleggID]);
   const fjernVedlegg = (vedleggID: string) => setMarkerteVedlegg([...markerteVedlegg.filter((id) => id !== vedleggID)]);
   const vedleggErMarkert = (vedleggID: string) => markerteVedlegg.includes(vedleggID);
@@ -96,25 +89,16 @@ export const VedleggListe = ({
     onSlettVedlegg(vedleggID);
   };
 
-  const leggTilMarkerteVedleggHandler = () => {
-    onLeggTil(markerteVedlegg);
-  };
-
-  const avbrytHandler = () => {
-    setMarkerteVedlegg(valgteVedlegg.map(({ id }) => id));
-    onAvbryt();
-  };
-
   const hentGjeldendeVedlegg = () => (redigerer ? alleVedlegg : valgteVedlegg);
 
   return (
-    <Nav.Row className="vedleggliste">
+    <Nav.Row>
       <table className="vedleggvelger-tabell">
         <thead>
           <tr>
             <th aria-label="Checkbox for å inkludere vedlegg" />
             <th>
-              <Nav.Typo.Element>Dokument</Nav.Typo.Element>
+              <Nav.Typo.Element aria-label="Lenke for å åpne vedlegg">Dokument</Nav.Typo.Element>
             </th>
             <th>
               <Nav.Typo.Element>Avsender/Mottaker</Nav.Typo.Element>
@@ -122,7 +106,6 @@ export const VedleggListe = ({
             <th>
               <Nav.Typo.Element>Dato</Nav.Typo.Element>
             </th>
-            <th aria-label="Knapp for å åpne vedlegg" />
             <th aria-label="Knapp for å slette vedlegg" />
           </tr>
         </thead>
@@ -140,21 +123,6 @@ export const VedleggListe = ({
           ))}
         </tbody>
       </table>
-      {redigerer && (
-        <>
-          <Mui.Knapp
-            noTextTransform
-            className="legg-til-markerte-vedlegg-knapp"
-            onClick={leggTilMarkerteVedleggHandler}
-            ikon={Ikoner.AddOne}
-          >
-            Lagre markerte vedlegg
-          </Mui.Knapp>
-          <Mui.Knapp noTextTransform className="avbryt-knapp" onClick={avbrytHandler}>
-            Avbryt
-          </Mui.Knapp>
-        </>
-      )}
     </Nav.Row>
   );
 };
@@ -168,6 +136,7 @@ interface VedleggVelgerProps {
 
 const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: VedleggVelgerProps) => {
   const [redigerer, setRedigerer] = useState<boolean>(false);
+  const [markerteVedlegg, setMarkerteVedlegg] = useState<string[]>(valgteVedlegg.map(({ id }) => id));
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
 
@@ -178,9 +147,14 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
     toggleRedigerer();
   };
 
-  const onLeggTilHandler = (markerteVedlegg: string[]) => {
+  const onLeggTilHandler = () => {
     toggleRedigerer();
     onChange(dokumenter.filter((v) => markerteVedlegg.includes(v.id)));
+  };
+
+  const avbrytHandler = () => {
+    setMarkerteVedlegg(valgteVedlegg.map(({ id }) => id));
+    onAvbrytHandler();
   };
 
   const onSlettVedleggHandler = (vedleggID: string) => {
@@ -194,14 +168,14 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
       {skalViseVedleggListe && (
         <VedleggListe
           redigerer={redigerer}
-          onAvbryt={onAvbrytHandler}
-          onLeggTil={onLeggTilHandler}
           onSlettVedlegg={onSlettVedleggHandler}
           valgteVedlegg={valgteVedlegg}
           alleVedlegg={dokumenter}
+          markerteVedlegg={markerteVedlegg}
+          setMarkerteVedlegg={setMarkerteVedlegg}
         />
       )}
-      {!redigerer && (
+      {!redigerer ? (
         <Mui.Knapp
           noTextTransform
           className="legg-til-vedlegg-knapp"
@@ -210,6 +184,21 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, className }: Vedle
         >
           {valgteVedlegg.length === 0 ? "Legg til vedlegg" : "Legg til andre vedlegg"}
         </Mui.Knapp>
+      ) : (
+        <>
+          <Mui.Knapp
+            noTextTransform
+            className="legg-til-markerte-vedlegg-knapp"
+            onClick={onLeggTilHandler}
+            ikon={Ikoner.AddOne}
+          >
+            Lagre markerte vedlegg
+          </Mui.Knapp>
+          &nbsp;
+          <Mui.Knapp noTextTransform className="avbryt-knapp" onClick={avbrytHandler}>
+            Avbryt
+          </Mui.Knapp>
+        </>
       )}
     </Nav.Row>
   );

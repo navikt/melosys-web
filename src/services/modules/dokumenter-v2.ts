@@ -83,6 +83,10 @@ export type OpprettBrevReqDto = {
   kontaktpersonNavn?: string | null;
   kopiMottakere: KopiMottaker[];
   kontaktopplysninger: boolean | null;
+  saksvedlegg: {
+    dokumentID: string;
+    journalpostID: string;
+  }[];
 };
 
 export type MuligMottaker = {

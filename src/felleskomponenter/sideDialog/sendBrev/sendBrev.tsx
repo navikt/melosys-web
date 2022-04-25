@@ -5,8 +5,9 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
 import { AlertStripeFeil, AlertStripeSuksess } from "nav-frontend-alertstriper";
-import { ColumnWidth } from "nav-frontend-grid";
+import { FysiskDokument } from "Domene";
 
+import { ColumnWidth } from "nav-frontend-grid";
 import { URL_BASENAME } from "../../../constants";
 import { DokumenterV2 } from "../../../services/api";
 import * as KV from "../../../kodeverk";
@@ -19,8 +20,8 @@ import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import ValgAlternativer from "./valgAlternativer";
 import FeltBeskrivelse from "./feltBeskrivelse";
-import { formSelectors } from "../../../ducks/form";
 
+import { formSelectors } from "../../../ducks/form";
 import sendBrevSchema from "../sendBrevSchema";
 import "./sendBrev.css";
 import BrevFelt from "./brevFelt";
@@ -80,7 +81,7 @@ const SendBrev = ({
   const [brevSendtFeil, setBrevSendtFeil] = useState(false);
   const [muligeMottakere, setMuligeMottakere] = useState<DokumenterV2.HentMuligeMottakereResDto>();
   const [mottakerFeil, setMottakerFeil] = useState<string>();
-  const [valgteVedlegg, setValgteVedlegg] = useState(fysiskeDokument);
+  const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
 
   useEffect(() => {
     DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
@@ -146,6 +147,9 @@ const SendBrev = ({
       fritekst: hentFormVerdi("FRITEKST"),
       kopiMottakere: hentKopiMottakere() || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+      saksvedlegg: valgteVedlegg.map((vedlegg) => {
+        return { dokumentID: vedlegg.id, journalpostID: vedlegg.journalpostID };
+      }),
     };
   };
 
