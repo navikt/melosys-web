@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -28,7 +28,6 @@ import BrevFelt from "./brevFelt";
 import BrevMottakereTabell from "./brevMottakereTabell";
 import { SendBrevFormValues } from "./types";
 import { Felt } from "../../../services/modules/dokumenter-v2";
-import { dokumenterSelectors } from "../../../ducks/dokumenter";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -36,7 +35,6 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     felt: {},
   },
-  fysiskeDokument: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
@@ -58,6 +56,7 @@ interface Props {
   mottakerTabellWidth?: ColumnWidth;
   felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
+  dokumenter: FysiskDokument[];
 }
 
 const SendBrev = ({
@@ -69,7 +68,7 @@ const SendBrev = ({
   redigerbart,
   resetForm,
   visApneINyttVindu,
-  fysiskeDokument,
+  dokumenter,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
@@ -148,7 +147,7 @@ const SendBrev = ({
       kopiMottakere: hentKopiMottakere() || [],
       kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
       saksvedlegg: valgteVedlegg.map((vedlegg) => {
-        return { dokumentID: vedlegg.id, journalpostID: vedlegg.journalpostID };
+        return { dokumentID: vedlegg.dokumentID, journalpostID: vedlegg.journalpostID };
       }),
     };
   };
@@ -253,7 +252,7 @@ const SendBrev = ({
               visFeltBeskrivelse={felt.valg === null}
               width={felterWidth}
               valgteVedlegg={valgteVedlegg}
-              fysiskeDokument={fysiskeDokument}
+              dokumenter={dokumenter}
               setValgteVedlegg={setValgteVedlegg}
             />
           )}

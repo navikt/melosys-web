@@ -15,16 +15,9 @@ interface BrevFeltProps {
   width: ColumnWidth;
   valgteVedlegg?: any;
   setValgteVedlegg?: any;
-  fysiskeDokument?: any;
+  dokumenter?: any;
 }
-const BrevFelt = ({
-  felt,
-  visFeltBeskrivelse,
-  width,
-  valgteVedlegg,
-  setValgteVedlegg,
-  fysiskeDokument,
-}: BrevFeltProps) => {
+const BrevFelt = ({ felt, visFeltBeskrivelse, width, valgteVedlegg, setValgteVedlegg, dokumenter }: BrevFeltProps) => {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
@@ -72,7 +65,7 @@ const BrevFelt = ({
         <Nav.Row>
           <Nav.Column xs={width}>
             <Nav.Typo.Element className="fritekst_label">{felt.beskrivelse}</Nav.Typo.Element>
-            <VedleggVelger valgteVedlegg={valgteVedlegg} dokumenter={fysiskeDokument} onChange={setValgteVedlegg} />
+            <VedleggVelger valgteVedlegg={valgteVedlegg} dokumenter={dokumenter} onChange={setValgteVedlegg} />
           </Nav.Column>
         </Nav.Row>
       );
