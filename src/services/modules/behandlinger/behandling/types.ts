@@ -1,6 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import { RegisterAdresse, MidlertidigAdresse, UstrukturertAdresse, Periode, Organisasjon } from "../../types";
+import { Periode, Organisasjon } from "../../types";
 
 export interface Oppsummering {
   saksnummer: string;
@@ -85,42 +85,6 @@ export interface Medlemsperiode {
   kilde: KTObject;
 }
 
-interface Familiemedlem {
-  fnr: string;
-  sammensattNavn: string;
-  relasjonstype: KTObject;
-  alder: number | null;
-  borMedBruker: boolean;
-  sivilstand: KTObject | null;
-  fnrAnnenForelder: string | null;
-}
-
-interface Person {
-  personStatus: KTObject;
-  sammensattNavn: string;
-  kjoenn: KTObject;
-  fnr: string;
-  foedselsdato: string;
-  sivilstand: KTObject;
-  statsborgerskap: KTObject;
-  familiemedlemmer: Familiemedlem[];
-}
-
-export interface Personhistorikk {
-  bostedsadressePerioder: {
-    bostedsadresse: RegisterAdresse;
-    periode: Periode;
-  }[];
-  postadressePerioder: {
-    postadresse: UstrukturertAdresse;
-    periode: Periode;
-  }[];
-  midlertidigAdressePerioder: {
-    midlertidigAdresse: MidlertidigAdresse;
-    periode: Periode;
-  }[];
-}
-
 interface Sed {
   rinaSaksnummer: string;
   rinaDokumentID: string;
@@ -187,8 +151,6 @@ export interface BehandlingResDto {
     medlemskap: {
       medlemsperiode: Medlemsperiode[];
     };
-    person: Person;
-    personhistorikk: Personhistorikk;
     sakOgBehandling: {
       eosBarnetrygd: boolean;
     };

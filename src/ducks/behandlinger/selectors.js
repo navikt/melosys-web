@@ -52,18 +52,6 @@ export const SakOgBehandlingSelector = createSelector(
   (state) => SaksopplysningerSelector(state).sakOgBehandling || {},
   (sakOgBehandling) => sakOgBehandling
 );
-export const PersonSelector = createSelector(
-  (state) => SaksopplysningerSelector(state).person || {},
-  (person) => person
-);
-export const PersonhistorikkSelector = createSelector(
-  (state) => SaksopplysningerSelector(state).personhistorikk || {},
-  (personhistorikk) => personhistorikk
-);
-export const FamiliemedlemmerSelector = createSelector(
-  (state) => PersonSelector(state).familiemedlemmer || [],
-  (familiemedlemmer) => familiemedlemmer
-);
 
 export const SEDSelector = createSelector(
   (state) => SaksopplysningerSelector(state).sed || {},
@@ -211,23 +199,14 @@ export const InntektSelector = createSelector(
   (inntekt) => inntekt
 );
 
-// {inntekt:[{opplysningspliktigID: "973063804", beloep: 30000, aarMaaned: "2017-12"}]}
-export const InntekterPrAarMaanedSelector = createSelector(
-  (state) => SaksopplysningerSelector(state).inntekt || {},
-  (inntekt) => {
-    if (!inntekt) return [];
-    const { arbeidsInntektMaanedListe } = inntekt;
-    if (!arbeidsInntektMaanedListe) return [];
+export const InntekterPrAarMaanedSelector = createSelector(InntektSelector, (inntekt) => {
+  if (!inntekt) return [];
+  const { arbeidsInntektMaanedListe } = inntekt;
+  if (!arbeidsInntektMaanedListe) return [];
 
-    const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
-    return summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
-  }
-);
-
-export const BekreftelserSelector = createSelector(
-  (state) => (state.behandlinger.data ? {} : {}),
-  (bekreftelser) => bekreftelser
-);
+  const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
+  return summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
+});
 
 export const MedlemskapSelector = createSelector(
   (state) =>
