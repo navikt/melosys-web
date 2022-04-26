@@ -49,7 +49,7 @@ describe("VedleggVelger", () => {
 
     const vedleggVelger = shallow(<VedleggVelger {...props} />);
     const vedleggListe = vedleggVelger.find(VedleggListe);
-    const markerteVedlegg = vedleggListe.props().markerteVedlegg;
+    const { markerteVedlegg } = vedleggListe.props();
     expect(markerteVedlegg.length === 1);
     expect(markerteVedlegg.find((str) => str === "ID2"));
   });
