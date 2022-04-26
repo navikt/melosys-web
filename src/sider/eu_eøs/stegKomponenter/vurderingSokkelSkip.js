@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
+import MKV from "@navikt/melosys-kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
@@ -61,8 +62,17 @@ class VurderingSokkelSkip extends React.Component {
   render() {
     // Merknad fra møte 12.12.18: Vi må huske å gå innom “vurdering antall land”
     // dersom man har valgt “to sokler / skip i flere land” siden vi går inn i artikkel 13.
-    const { bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, maritimtArbeid, tilbake } =
-      this.props;
+    const {
+      bekreftOgFortsett,
+      behandlingstema,
+      tilstand,
+      begrunnelser,
+      redigerbart,
+      oppdaterData,
+      slettData,
+      maritimtArbeid,
+      tilbake,
+    } = this.props;
 
     const {
       sokkelEllerSkipListe,
@@ -110,7 +120,9 @@ class VurderingSokkelSkip extends React.Component {
         <Nav.Fieldset legend="Hvordan arbeider søkeren:">
           <Nav.Radio
             name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
-            disabled={!redigerbart}
+            disabled={
+              !redigerbart || behandlingstema?.kode === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
+            }
             onChange={konklusjonEndretHandler}
             checked={fakta === VurderingSokkelSkipTyper.SOKKEL_NORSK}
             value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
@@ -159,6 +171,7 @@ class VurderingSokkelSkip extends React.Component {
 
 VurderingSokkelSkip.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
+  behandlingstema: MPT.Behandlingsresultat.isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   maritimtArbeid: PT.array,
   tilstand: PT.object,
