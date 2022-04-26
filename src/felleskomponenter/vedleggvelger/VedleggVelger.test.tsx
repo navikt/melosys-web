@@ -1,18 +1,21 @@
 import React, { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 import { shallow } from "enzyme";
 
 import * as Mui from "../ui";
 
-import VedleggVelger, { VedleggListe, EnkeltVedlegg } from "./VedleggVelger";
+import VedleggVelger, { VedleggListe } from "./VedleggVelger";
 
-describe("VedleggListe", () => {
-  const mockedProps = mock<ComponentProps<typeof VedleggListe>>();
-  const props = instance(mockedProps);
+describe("VedleggVelger", () => {
+  const mockedProps = mock<ComponentProps<typeof VedleggVelger>>();
+  let props = instance(mockedProps);
+
+  beforeEach(() => {
+    props = instance(mockedProps);
+  });
 
   it("markerer valgte vedlegg ved mount", () => {
-    props.redigerer = true;
-    props.alleVedlegg = [
+    props.dokumenter = [
       {
         journalpostID: "",
         dokumentID: "",
@@ -44,20 +47,11 @@ describe("VedleggListe", () => {
       },
     ];
 
-    const vedleggListe = shallow(<VedleggListe {...props} />);
-    const enkeltVedlegg = vedleggListe.find(EnkeltVedlegg);
-
-    expect(enkeltVedlegg.first().props().vedleggErMarkert).toBe(false);
-    expect(enkeltVedlegg.last().props().vedleggErMarkert).toBe(true);
-  });
-});
-
-describe("VedleggVelger", () => {
-  const mockedProps = mock<ComponentProps<typeof VedleggVelger>>();
-  let props = instance(mockedProps);
-
-  beforeEach(() => {
-    props = instance(mockedProps);
+    const vedleggVelger = shallow(<VedleggVelger {...props} />);
+    const vedleggListe = vedleggVelger.find(VedleggListe);
+    const markerteVedlegg = vedleggListe.props().markerteVedlegg;
+    expect(markerteVedlegg.length === 1);
+    expect(markerteVedlegg.find((str) => str === "ID2"));
   });
 
   it("rendrer en knapp med tekst 'Legg til vedlegg' når ingen vedlegg er markert", () => {
