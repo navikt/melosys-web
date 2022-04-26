@@ -125,6 +125,7 @@ export const Behandlingsmeny = ({
             behandlingstype={behandlingstype}
             redigerbart={redigerbart}
             ferdigbehandleNyVurdering={visFerdigbehandleNyVurderingDialogHandle}
+            behandlingsstatus={behandlingsstatus}
           />
           {skalViseVurderSakenPaaNytt() && (
             <div className="behandlingsmeny__meny__handlinger">

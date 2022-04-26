@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import PT from "prop-types";
+import React, { ChangeEvent, useEffect } from "react";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
@@ -7,19 +6,40 @@ import * as Mui from "../../../felleskomponenter/ui";
 import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../domeneUtils";
 
-const VurderingYrkesaktivitet = (props) => {
-  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, erSoknadArbeidFlereLand, tilbake } = props;
+interface VurderingYrkesaktivitetProps {
+  bekreftOgFortsett: () => void;
+  tilbake: () => void;
+  tilstand?: {
+    skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende?: boolean;
+    harAvklaring?: boolean;
+    yrkesaktivitet?: any;
+  };
+  redigerbart: boolean;
+  oppdaterData: (data: any) => void;
+  slettData: () => void;
+  erSoknadArbeidFlereLand: boolean;
+}
+
+const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
+  const {
+    bekreftOgFortsett,
+    tilstand = {},
+    redigerbart,
+    oppdaterData,
+    slettData,
+    erSoknadArbeidFlereLand,
+    tilbake,
+  } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
 
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
-    const cleanup = () => {
+    return () => {
       slettData();
     };
-    return cleanup;
   }, []);
 
-  const radioEndret = (event) => {
+  const radioEndret = (event: ChangeEvent<HTMLInputElement>) => {
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET, null, event.target.value));
   };
 
@@ -38,6 +58,7 @@ const VurderingYrkesaktivitet = (props) => {
       ];
 
   const fakta = hentFaktaVerdi(yrkesaktivitet);
+  // @ts-ignore
   return (
     <div>
       <Nav.Typo.Undertittel>Hva slags type yrkesaktivitet skal søkeren utøve?</Nav.Typo.Undertittel>
@@ -80,6 +101,7 @@ const VurderingYrkesaktivitet = (props) => {
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),
+          // @ts-ignore
           "data-cy-nesteknapp": "knapp_steg4",
           onClick: bekreftOgFortsett,
         }}
@@ -90,20 +112,6 @@ const VurderingYrkesaktivitet = (props) => {
       />
     </div>
   );
-};
-
-VurderingYrkesaktivitet.propTypes = {
-  bekreftOgFortsett: PT.func.isRequired,
-  tilbake: PT.func.isRequired,
-  tilstand: PT.object,
-  redigerbart: PT.bool.isRequired,
-  oppdaterData: PT.func.isRequired,
-  slettData: PT.func.isRequired,
-  erSoknadArbeidFlereLand: PT.bool.isRequired,
-};
-
-VurderingYrkesaktivitet.defaultProps = {
-  tilstand: {},
 };
 
 export default VurderingYrkesaktivitet;

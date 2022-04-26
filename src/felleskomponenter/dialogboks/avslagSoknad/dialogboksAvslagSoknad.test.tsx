@@ -1,22 +1,23 @@
 import React from "react";
 
-import * as Nav from "../../../navFrontend";
+import { shallow } from "enzyme";
 
-import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
+import * as Nav from "../../../navFrontend";
 import Knapperad from "../../knapperad";
+import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
 
 describe("DialogboksAvslagSoknad", () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      avbryt: jest.fn(),
-      redigerbart: true,
-      avslaaSoknadHandle: jest.fn(),
-      ariaHideApp: false,
-      behandlingID: 1,
-    };
-  });
+  const props = {
+    avbryt: jest.fn(),
+    avslaaSoknadHandle: jest.fn(),
+    ariaHideApp: false,
+    redigerbart: true,
+    behandlingID: 1,
+    dispatch: jest.fn(),
+    vedtakstype: null,
+    feilmeldinger: [],
+    kontrollerVedtak: jest.fn(),
+  };
 
   it("viser en Nav Modal", () => {
     const dialogboks = shallow(<DialogboksAvslagSoknad {...props} />);

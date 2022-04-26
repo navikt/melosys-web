@@ -36,7 +36,7 @@ const opprettnysak = object().shape({
     .erIkkeBlank(SKRIV_INN_FNR_ELLER_DNR)
     .erNummer(SKRIV_INN_KUN_NUMMER)
     .erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR)
-    .when("bruker", {
+    .when("brukerNavn", {
       is: undefined,
       then: string().harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
     }),
@@ -50,8 +50,8 @@ const opprettnysak = object().shape({
     .siblingIs("journalpostID", (journalpostID) => !Utils._isEmpty(journalpostID), MANGLER_JOURNALPOST)
     .required(VELG_EN_OPPGAVE),
 
-  /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
-  bruker: mixed(),
+  /* Følgene felter viser ingen feilmeldinger til brukerNavn, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
+  brukerNavn: mixed(),
 });
 
 export default opprettnysak;

@@ -40,14 +40,19 @@ export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
 
   const ektefellePartner =
     data?.hentSaksopplysninger.persondata.familiemedlemmer.filter(
-      (fm) => fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand
+      (fm) =>
+        fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand &&
+        fm.sivilstand != null &&
+        !fm.sivilstand.erHistorisk
     ) || [];
 
   const familiemedlemmerClassName = bem("familiemedlemmer");
 
   return (
     <div className={familiemedlemmerClassName.block}>
-      <Etiketter.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
+      <Nav.Row>
+        <Etiketter.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
+      </Nav.Row>
       <Mui.Undertittel className={familiemedlemmerClassName.element("undertittel")} ikon={Ikoner.Child} tekst="Barn" />
       {barn.length > 0 ? (
         <FamiliemedlemGruppe
@@ -117,9 +122,9 @@ export const Familiemedlemmer = ({ behandlingID }: PropsFromRedux) => {
               width: "3",
               headerText: "Fra og med",
               renderContent: (familiemedlem) =>
-                Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstandGyldighetsperiodeFom),
+                Utils.dato.formatterDatoTilNorsk(familiemedlem.sivilstand?.gyldigFraOgMed),
             },
-            { width: "3", headerText: "Relasjon", renderContent: (familiemedlem) => familiemedlem.sivilstand },
+            { width: "3", headerText: "Relasjon", renderContent: (familiemedlem) => familiemedlem.sivilstand?.type },
           ]}
         />
       ) : (

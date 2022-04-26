@@ -35,8 +35,7 @@ export type Familiemedlem = {
   alder?: Maybe<Scalars['Int']>;
   foreldreansvar?: Maybe<Scalars['String']>;
   fnrAnnenForelder?: Maybe<Scalars['String']>;
-  sivilstand?: Maybe<Scalars['String']>;
-  sivilstandGyldighetsperiodeFom?: Maybe<Scalars['Date']>;
+  sivilstand?: Maybe<Sivilstand>;
 };
 
 export enum Familierelasjonsrolle {

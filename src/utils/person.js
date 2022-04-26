@@ -45,11 +45,13 @@ const erGyldigDnr = (verdi) => erGyldigFnr(verdi);
 // Validering av fnr og dnr er lik, trenger derfor bare sjekke om gyldig fnr
 const erGyldigFnrEllerDnr = (verdi) => erGyldigFnr(verdi);
 
-const tilSammensattNavn = (fornavn, mellomnavn, etternavn) =>
-  `${fornavn}${mellomnavn ? ` ${mellomnavn}` : ""} ${etternavn}`;
+const tilSammensattNavn = (fornavn, mellomnavn, etternavn) => {
+  const mellomnavnEllerTomStreng = mellomnavn ? ` ${mellomnavn}` : "";
+  return `${fornavn}${mellomnavnEllerTomStreng} ${etternavn}`.trim();
+};
 
 const tilSammensattNavnFraObjekt = (navn) => {
-  if (!navn) return null;
+  if (!navn) return "";
   return tilSammensattNavn(navn.fornavn || "", navn.mellomnavn, navn.etternavn || "");
 };
 
