@@ -17,9 +17,9 @@ type AvsenderFullmektigProps = {
 
 const AvsenderFullmektig = ({ avsenderID = "", settFeltInnhold, hentOgVisRepresentant }: AvsenderFullmektigProps) => {
   const representererMap: { [key: string]: string } = {
+    [MKV.Koder.representerer.BRUKER]: "Bruker",
     [MKV.Koder.representerer.ARBEIDSGIVER]: "Arbeidsgiver",
-    [MKV.Koder.representerer.BRUKER]: "Arbeidstaker",
-    [MKV.Koder.representerer.BEGGE]: "Både arbeidsgiver og arbeidstaker",
+    [MKV.Koder.representerer.BEGGE]: "Både bruker og arbeidsgiver",
   };
 
   const erOrgnr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
@@ -35,7 +35,7 @@ const AvsenderFullmektig = ({ avsenderID = "", settFeltInnhold, hentOgVisReprese
       {erOrgnr && (
         <Skjema.Select
           feltNavn="representantRepresenterer"
-          label="Hvem er dette fullmektig for"
+          label="Hvem representerer fullmektig?"
           className="avsender__input"
         >
           {MKV.KTObjects.representerer.map((representerer: KTObject) => (

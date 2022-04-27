@@ -4,7 +4,7 @@ import { formValueSelector } from "redux-form";
 import { RootState } from "AppTypes";
 
 import * as Skjema from "../../../../felleskomponenter/skjema";
-import * as Konstanter from "../../../../constants";
+import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 
@@ -53,11 +53,8 @@ export const AvsenderArbeidsgiver = ({
     };
   }, [avsenderID]);
 
-  const erGyldigOrgnummer = (verdi: string) => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
-
   const sjekkArbeidsgiver = async (verdi: string) => {
-    if (erGyldigOrgnummer(verdi)) {
-      // TODO await this.spinner('representantNavn');
+    if (Utils.organisasjon.erOrgnrGyldig(verdi)) {
       await hentOgVisRepresentant(verdi);
     } else {
       await settFeltInnhold("representantNavn", "");
