@@ -6,7 +6,7 @@ const erOrgnrLengde = (verdi) => RegExp(/^\d{9,9}$/).test(verdi);
  * @returns {boolean}
  */
 const erOrgnrGyldig = (verdi) => {
-  if (!verdi) {
+  if (!verdi || !erOrgnrLengde(verdi)) {
     return false;
   }
   const vekt = [2, 3, 4, 5, 6, 7, 2, 3];

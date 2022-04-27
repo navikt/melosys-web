@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactNode, useEffect } from "react";
+import React, { ChangeEvent, ReactNode } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { formValueSelector } from "redux-form";
 import { RootState } from "AppTypes";
@@ -7,8 +7,6 @@ import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
-
-import MKV from "../../../../melosyskodeverk";
 
 const journalforingFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.JOURNALFORING);
 
@@ -22,37 +20,15 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type AvsenderArbeidsgiverProps = PropsFromRedux & {
   settFeltInnhold: (felt: string, innhold: string) => void;
   hentOgVisRepresentant: (ident: string) => void;
-  avsenderID?: string;
-  avsenderType: string;
   children?: ReactNode;
 };
 
 export const AvsenderArbeidsgiver = ({
   settFeltInnhold,
   hentOgVisRepresentant,
-  avsenderID = "",
-  avsenderType,
   children,
   avsenderNavn,
 }: AvsenderArbeidsgiverProps) => {
-  useEffect(() => {
-    if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG) {
-      settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
-    }
-    return () => {
-      settFeltInnhold("representantRepresenterer", "");
-    };
-  }, []);
-
-  useEffect(() => {
-    if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG || avsenderType === KV.AvsenderTyper.FULLMEKTIG) {
-      settFeltInnhold("representantID", avsenderID);
-    }
-    return () => {
-      settFeltInnhold("representantID", "");
-    };
-  }, [avsenderID]);
-
   const sjekkArbeidsgiver = async (verdi: string) => {
     if (Utils.organisasjon.erOrgnrGyldig(verdi)) {
       await hentOgVisRepresentant(verdi);
@@ -72,7 +48,7 @@ export const AvsenderArbeidsgiver = ({
     <div className="avsender">
       <Skjema.Input
         feltNavn="avsenderID"
-        label="Fullmektigs org.nr. eller f.nr./d-nr."
+        label="Oppgi avsenders org.nr"
         onKeyUp={IDFeltTastOppHandler}
         className="avsender__input"
       />

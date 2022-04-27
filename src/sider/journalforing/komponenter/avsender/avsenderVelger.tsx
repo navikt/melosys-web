@@ -56,7 +56,6 @@ const AvsenderVelger = ({
       case KV.AvsenderTyper.ANNET:
       case KV.AvsenderTyper.FULLMEKTIG:
       case KV.AvsenderTyper.ARBEIDSGIVER:
-      case KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG:
       case MKV.Koder.avsendertyper.ORGANISASJON:
       case MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET: {
         tomAvsender();
@@ -107,26 +106,7 @@ const AvsenderVelger = ({
           className="avsendervelger__radio"
         />
         {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && (
-          <AvsenderArbeidsgiver
-            avsenderID={formValues.avsenderID}
-            avsenderType={formValues.avsenderType}
-            settFeltInnhold={settFeltInnhold}
-            hentOgVisRepresentant={hentOgVisRepresentant}
-          />
-        )}
-        <Skjema.Radio
-          feltNavn="avsenderType"
-          label="Arbeidsgiver som er fullmektig"
-          value={KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG}
-          className="avsendervelger__radio"
-        />
-        {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG && (
-          <AvsenderArbeidsgiver
-            avsenderID={formValues.avsenderID}
-            avsenderType={formValues.avsenderType}
-            settFeltInnhold={settFeltInnhold}
-            hentOgVisRepresentant={hentOgVisRepresentant}
-          />
+          <AvsenderArbeidsgiver settFeltInnhold={settFeltInnhold} hentOgVisRepresentant={hentOgVisRepresentant} />
         )}
         <Skjema.Radio
           feltNavn="avsenderType"
