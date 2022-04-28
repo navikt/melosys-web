@@ -28,11 +28,7 @@ export const JournalforingForm = (props) => {
     journalpostID,
     hoveddokumentID,
     vedlegg,
-    hentOgVisAvsender,
-    hentOgVisBruker,
-    hentOgVisVirksomhet,
     fagsakListe,
-    hentOgVisRepresentant,
     formValues,
     formErrors,
     submitFailed,
@@ -53,15 +49,7 @@ export const JournalforingForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
-      <Informasjon
-        journalpostID={journalpostID}
-        dokumentID={hoveddokumentID}
-        vedlegg={vedlegg}
-        hentOgVisAvsender={hentOgVisAvsender}
-        hentOgVisBruker={hentOgVisBruker}
-        hentOgVisVirksomhet={hentOgVisVirksomhet}
-        hentOgVisRepresentant={hentOgVisRepresentant}
-      />
+      <Informasjon journalpostID={journalpostID} dokumentID={hoveddokumentID} vedlegg={vedlegg} />
       <Mui.Undertittel
         tekst="Knytt til eksisterende sak eller opprett ny sak"
         ikon={Ikoner.CheckList}
@@ -93,11 +81,7 @@ JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,
   hoveddokumentID: PT.string,
   vedlegg: PT.array.isRequired,
-  hentOgVisAvsender: PT.func.isRequired,
-  hentOgVisBruker: PT.func.isRequired,
-  hentOgVisVirksomhet: PT.func.isRequired,
   fagsakListe: PT.array.isRequired,
-  hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
   formErrors: PT.object.isRequired,
   submitFailed: PT.bool.isRequired,

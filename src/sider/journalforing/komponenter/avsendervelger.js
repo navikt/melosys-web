@@ -146,7 +146,6 @@ AvsenderVelger.propTypes = {
   tomAvsender: PT.func.isRequired,
   formValues: PT.object,
   settFeltInnhold: PT.func.isRequired,
-  visAvsenderSpinner: PT.bool,
   hentOgVisRepresentant: PT.func.isRequired,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
@@ -157,7 +156,6 @@ AvsenderVelger.defaultProps = {
   formValues: {},
   journalforingAvsenderID: undefined,
   journalforingAvsenderNavn: undefined,
-  visAvsenderSpinner: false,
 };
 
 const mapStateToProps = (state) => ({

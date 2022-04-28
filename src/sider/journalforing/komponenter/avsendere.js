@@ -42,7 +42,6 @@ export const AvsenderOrganisasjon = ({
 
   const sjekkArbeidsgiver = async (verdi) => {
     if (erGyldigOrgnummer(verdi)) {
-      // TODO await this.spinner('representantNavn');
       await hentOgVisRepresentant(verdi);
     } else {
       await settFeltInnhold("representantNavn", null);
