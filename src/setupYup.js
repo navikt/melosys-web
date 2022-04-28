@@ -103,7 +103,7 @@ addMethod(string, "erNummerTolerererEttMellomrom", function (message) {
   return this.test("er et nummer", message, function (value) {
     const { path } = this;
 
-    if (new RegExp(/^\d+$/).test(value.replace(" ", ""))) return true;
+    if (new RegExp(/^\d+$/).test(value?.replace(" ", ""))) return true;
 
     throw this.createError({
       path,
@@ -136,8 +136,8 @@ addMethod(string, "erOrgnr", function (message) {
 addMethod(string, "erFnrEllerDnrEllerOrgnrTolererEttMellomrom", function (message) {
   return this.test("er et Fnr, Dnr eller Orgnr", message, function (value) {
     return (
-      Utils.person.erGyldigFnr(value.replace(" ", "")) ||
-      Utils.person.erGyldigDnr(value.replace(" ", "")) ||
+      Utils.person.erGyldigFnr(value?.replace(" ", "")) ||
+      Utils.person.erGyldigDnr(value?.replace(" ", "")) ||
       Utils.organisasjon.erOrgnrGyldig(value)
     );
   });
@@ -176,7 +176,7 @@ addMethod(string, "harIkkeFnrEllerDnrLengde", function (message) {
 addMethod(string, "harIkkeOrgnrFnrEllerDnrLengdeTolerererEttMellomrom", function (message) {
   return this.test("er orgnr, fnr eller dnr lengde", message, function (value) {
     const { path, createError } = this;
-    const valueMinusMellomrom = value.replace(" ", "");
+    const valueMinusMellomrom = value?.replace(" ", "");
 
     if (
       Utils.organisasjon.erOrgnrLengde(value) ||

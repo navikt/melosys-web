@@ -40,9 +40,9 @@ const AvsenderFullmektig = ({
     const { value } = event.target;
     if (Utils.organisasjon.erOrgnrGyldig(value)) {
       await hentOgVisRepresentant(value);
-    } else if (Utils.person.erGyldigFnrEllerDnr(value.replace(" ", ""))) {
+    } else if (Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
       await hentOgVisRepresentant(value.replace(" ", ""));
-      await settFeltInnhold("representantRepresenterer", "Bruker");
+      await settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
     } else {
       await settFeltInnhold("representantNavn", "");
       await settFeltInnhold("representantRepresenterer", "");

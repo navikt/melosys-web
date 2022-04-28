@@ -89,7 +89,7 @@ const journalforing = object().shape({
     value === ""
       ? string()
       : string()
-          .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
+          .erFnrEllerDnrEllerOrgnrTolererEttMellomrom(SKRIV_INN_GYLDIG_ORGNR_FNR_DNR)
           .when("representantNavn", {
             is: "",
             then: string()

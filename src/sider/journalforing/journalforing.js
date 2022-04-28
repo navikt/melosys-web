@@ -295,7 +295,7 @@ class Journalforing extends Component {
       const response = await this.props.sokOrgnr(ident);
       return response?.data?.navn;
     }
-    if (Utils.person.erGyldigFnrEllerDnr(ident.replace(" ", ""))) {
+    if (Utils.person.erGyldigFnrEllerDnr(ident?.replace(" ", ""))) {
       const response = await this.sokFnrDnr(ident.replace(" ", ""));
       return Utils.person.tilSammensattNavnFraObjekt(response?.data?.hentPersonopplysninger?.navn);
     }
@@ -334,7 +334,7 @@ class Journalforing extends Component {
     }
 
     settFeltInnhold("avsenderNavn", "");
-    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value.replace(" ", ""))) {
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
       const navn = await this.sokOrgnrFnrDnr(value);
       if (!navn) {
         return false;
