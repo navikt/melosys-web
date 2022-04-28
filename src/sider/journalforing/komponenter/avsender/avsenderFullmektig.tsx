@@ -86,27 +86,6 @@ const AvsenderFullmektig = ({
         <Nav.Typo.Normaltekst>Fullmektig representerer bruker</Nav.Typo.Normaltekst>
       )}
     </div>
-    // <AvsenderArbeidsgiver
-    //   avsenderID={avsenderID}
-    //   avsenderType={KV.AvsenderTyper.FULLMEKTIG}
-    //   settFeltInnhold={settFeltInnhold}
-    //   hentOgVisRepresentant={hentOgVisRepresentant}
-    // >
-    //   {erOrgnr && (
-    //     <Skjema.Select
-    //       feltNavn="representantRepresenterer"
-    //       label="Hvem representerer fullmektig?"
-    //       className="avsender__input"
-    //     >
-    //       {MKV.KTObjects.representerer.map((representerer: KTObject) => (
-    //         <option key={representerer.kode} value={representerer.kode}>
-    //           {representererMap[representerer.kode]}
-    //         </option>
-    //       ))}
-    //     </Skjema.Select>
-    //   )}
-    //   {erFnrEllerDnr && <Nav.Typo.Normaltekst>Fullmektig representerer bruker</Nav.Typo.Normaltekst>}
-    // </AvsenderArbeidsgiver>
   );
 };
 
