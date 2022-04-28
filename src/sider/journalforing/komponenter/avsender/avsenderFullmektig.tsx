@@ -36,18 +36,16 @@ const AvsenderFullmektig = ({
     settFeltInnhold("representantID", avsenderID);
   }, [avsenderID]);
 
-  const sjekkFullmektig = async (verdi: string) => {
-    if (Utils.organisasjon.erOrgnrGyldig(verdi) || Utils.person.erGyldigFnrEllerDnr(verdi.replace(" ", ""))) {
-      await hentOgVisRepresentant(verdi.replace(" ", ""));
+  const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
+    const { value } = event.target;
+    if (Utils.organisasjon.erOrgnrGyldig(value)) {
+      await hentOgVisRepresentant(value);
+    } else if (Utils.person.erGyldigFnrEllerDnr(value.replace(" ", ""))) {
+      await hentOgVisRepresentant(value.replace(" ", ""));
+      await settFeltInnhold("representantRepresenterer", "Bruker");
     } else {
       await settFeltInnhold("representantNavn", "");
-    }
-  };
-
-  const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
-    const { id: opprinneligFeltID, value } = event.target;
-    if (opprinneligFeltID === "representantID") {
-      await sjekkFullmektig(value);
+      await settFeltInnhold("representantRepresenterer", "");
     }
   };
 
