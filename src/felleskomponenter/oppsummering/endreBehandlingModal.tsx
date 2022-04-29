@@ -5,13 +5,14 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { behandlingsgrunnlagOperations } from "../../ducks/behandlingsgrunnlag";
 import { behandlingstemaOperations, behandlingstemaSelectors } from "../../ducks/behandlingstema";
 import { behandlingstypeOperations, behandlingstypeSelectors } from "../../ducks/behandlingstype";
 import { navigeringOperations } from "../../ducks/navigering";
 import Knapperad from "../knapperad";
-
 import * as Mui from "../ui";
 import * as KV from "../../kodeverk";
 import * as Api from "../../services/api";
@@ -19,8 +20,8 @@ import * as Nav from "../../navFrontend";
 import * as Routing from "../../routing";
 import { behandlingsstatusOperations, behandlingsstatusSelectors } from "../../ducks/behandlingsstatus";
 import Datovelger from "../datovelger";
-import * as Datoutils from "../../utils/dato";
 
+import * as Datoutils from "../../utils/dato";
 import "./endreBehandlingModal.css";
 
 const mapStateToProps = (state: RootState) => ({
@@ -45,12 +46,13 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type EndreBehandlingModalProps = PropsFromRedux & {
-  fagsak: Api.Fagsak;
-  oppsummering: Api.Behandlinger.behandling.Oppsummering;
-  skalViseModal: boolean;
-  lukkModal: () => void;
-};
+type EndreBehandlingModalProps = PropsFromRedux &
+  RouteComponentProps & {
+    fagsak: Api.Fagsak;
+    oppsummering: Api.Behandlinger.behandling.Oppsummering;
+    skalViseModal: boolean;
+    lukkModal: () => void;
+  };
 
 function EndreBehandlingModal({
   skalViseModal,
@@ -67,6 +69,7 @@ function EndreBehandlingModal({
   hentMuligeBehandlingstema,
   hentMuligeBehandlingsstatuser,
   tilAnnenSide,
+  location,
 }: EndreBehandlingModalProps) {
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
@@ -77,8 +80,6 @@ function EndreBehandlingModal({
     KV.objektTilKodeUtenFeilmelding(oppsummering.behandlingsstatus)
   );
   const [behandlingsfrist, setBehandlingsfrist] = useState(Datoutils.isoStringTilDate(oppsummering.behandlingsfrist));
-
-  const link = Routing.lagUrl(fagsak.saksnummer, behandlingID, behandlingstema);
 
   useEffect(() => {
     if (skalViseModal) {
@@ -109,7 +110,7 @@ function EndreBehandlingModal({
         hentBehandling(behandlingID);
         hentBehandlingsgrunnlag(behandlingID);
         const nyLink = Routing.lagUrl(fagsak.saksnummer, behandlingID, behandlingstema);
-        if (nyLink && nyLink !== link) tilAnnenSide(nyLink);
+        if (nyLink && nyLink !== location.pathname + location.search) tilAnnenSide(nyLink);
         setTimeout(lukkModal, 2000);
       })
       .catch(() => {
@@ -198,4 +199,4 @@ function EndreBehandlingModal({
   );
 }
 
-export default connector(EndreBehandlingModal);
+export default withRouter(connector(EndreBehandlingModal));
