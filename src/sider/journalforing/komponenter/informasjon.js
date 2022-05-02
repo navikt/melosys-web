@@ -12,6 +12,7 @@ import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as KV from "../../../kodeverk";
 import { VIRKSOMHET } from "./journalforingform";
 
 import AvsenderVelger from "./avsendervelger";
@@ -97,7 +98,7 @@ class Informasjon extends Component {
   hentOgVisVirksomhet = async (virksomhetOrgnr) => {
     const { kopierVirksomhetTilAvsender, tomAvsender } = this;
     const { sokOrgnr, settFeltInnhold, hentFagsakListe, journalforingSkjemaVerdier } = this.props;
-    const virksomhetErAvsender = journalforingSkjemaVerdier.avsenderType === MKV.Koder.avsendertyper.PERSON;
+    const virksomhetErAvsender = journalforingSkjemaVerdier.avsenderType === KV.AvsenderTyper.VIRKSOMHET;
 
     settFeltInnhold("virksomhetNavn", null);
     if (virksomhetErAvsender) {
