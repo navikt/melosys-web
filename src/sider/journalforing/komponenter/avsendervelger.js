@@ -7,6 +7,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import { journalforingSelectors } from "../../../ducks/journalforing";
+import { VIRKSOMHET } from "./journalforingform";
 
 import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from "./avsendere";
 import "./avsendervelger.css";
@@ -54,7 +55,7 @@ const AvsenderVelger = ({
     settFeltInnhold("avsenderID", landkode);
     settFeltInnhold("avsenderNavn", avsenderNavn);
   };
-  const journalføresPåVirksomhet = formValues.journalføresPå === KV.Koder.JournalføringRolle.VIRKSOMHET;
+  const journalføresPåVirksomhet = formValues.journalforingGjelder === VIRKSOMHET;
 
   return (
     <div className={className}>

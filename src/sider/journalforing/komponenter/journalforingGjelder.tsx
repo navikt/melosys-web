@@ -12,14 +12,13 @@ import * as Nav from "../../../navFrontend";
 import Komponent from "./komponent";
 import { formSelectors } from "../../../ducks/form";
 import { journalforingSelectors } from "../../../ducks/journalforing";
+import { BRUKER, VIRKSOMHET } from "./journalforingform";
 import { BOOLSK } from "../../../constants";
 
-import "./dokumentetJournalføresPå.css";
-
-const { BRUKER, VIRKSOMHET } = KV.Koder.JournalføringRolle;
+import "./journalforingGjelder.css";
 
 const mapStateToProps = (state: RootState) => ({
-  journalføresPå: formSelectors.JournalforingFormSelector(state).values?.journalføresPå,
+  journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
   defaultBrukerID: journalforingSelectors.BrukerIDSelector(state),
 });
 
@@ -31,9 +30,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const DokumentetJournalføresPå = ({ journalføresPå, oppdaterFelt, defaultBrukerID }: PropsFromRedux) => {
+const JournalforingGjelder = ({ journalforingGjelder, oppdaterFelt, defaultBrukerID }: PropsFromRedux) => {
   const handleClick = (event: SyntheticEvent<EventTarget>, value: string) => {
-    oppdaterFelt("journalføresPå", value);
+    oppdaterFelt("journalforingGjelder", value);
     if (value === BRUKER) {
       oppdaterFelt("ikkeSendForvaltingsmelding", BOOLSK.USANN);
       oppdaterFelt("brukerID", defaultBrukerID);
@@ -54,19 +53,19 @@ const DokumentetJournalføresPå = ({ journalføresPå, oppdaterFelt, defaultBru
       tittel="Hvem skal dokumentet journalføres på?"
       innhold={
         <Nav.RadioPanelGruppe
-          name="journalføresPå"
+          name="journalforingGjelder"
           legend=""
           radios={[
             { label: BRUKER, value: BRUKER, id: BRUKER },
             { label: VIRKSOMHET, value: VIRKSOMHET, id: VIRKSOMHET },
           ]}
-          checked={journalføresPå}
+          checked={journalforingGjelder}
           onChange={handleClick}
-          className="dokumentetJournalføresPå"
+          className="journalforingGjelder"
         />
       }
     />
   );
 };
 
-export default connector(DokumentetJournalføresPå);
+export default connector(JournalforingGjelder);

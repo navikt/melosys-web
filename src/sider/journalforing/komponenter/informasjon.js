@@ -12,11 +12,11 @@ import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
-import * as KV from "../../../kodeverk";
+import { VIRKSOMHET } from "./journalforingform";
 
 import AvsenderVelger from "./avsendervelger";
 import LenkeListeVelger from "./lenkelistevelger";
-import DokumentetJournalføresPå from "./dokumentetJournalføresPå";
+import JournalforingGjelder from "./journalforingGjelder";
 import { FeatureToggle } from "../../../featuretoggle";
 import { hentSammensattNavn } from "../../../graphql/navn";
 
@@ -224,14 +224,14 @@ class Informasjon extends Component {
       vedlegg: skjemaVedlegg,
       brukerNavn,
       virksomhetNavn,
-      journalføresPå,
+      journalforingGjelder,
     } = journalforingSkjemaVerdier;
     const { hentOgVisRepresentant } = this;
 
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
 
     const InformasjonOmBrukerEllerVirksomhet =
-      journalføresPå === KV.Koder.JournalføringRolle.VIRKSOMHET ? (
+      journalforingGjelder === VIRKSOMHET ? (
         <>
           <Mui.Undertittel tekst="Informasjon om virksomhet" ikon={Ikoner.AccountCircle} className="undertittel" />
           <Skjema.Input feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" onKeyUp={this.IDFeltTastOppHandler} />
@@ -261,7 +261,7 @@ class Informasjon extends Component {
           {(toggle) =>
             toggle === "enabled" ? (
               <>
-                <DokumentetJournalføresPå />
+                <JournalforingGjelder />
                 {InformasjonOmBrukerEllerVirksomhet}
               </>
             ) : (

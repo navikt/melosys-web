@@ -1,9 +1,8 @@
 import React from "react";
 
 import MKV from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
 
-import { JournalforingForm } from "./journalforingform";
+import { JournalforingForm, BRUKER, VIRKSOMHET } from "./journalforingform";
 import SendForvaltningsMelding from "./sendForvaltningsMelding";
 
 const {
@@ -34,7 +33,7 @@ describe("JournalforingForm", () => {
       formValues: {
         saksnummer: "-1",
         avsenderType: "",
-        journalføresPå: KV.Koder.JournalføringRolle.BRUKER,
+        journalforingGjelder: BRUKER,
       },
       formErrors: {},
       settFeltInnhold: jest.fn(),
@@ -65,7 +64,7 @@ describe("JournalforingForm", () => {
   });
 
   test("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", () => {
-    props.formValues.journalføresPå = KV.Koder.JournalføringRolle.VIRKSOMHET;
+    props.formValues.journalforingGjelder = VIRKSOMHET;
     const journalforingform = shallow(<JournalforingForm {...props} />);
     const sendForvaltningsMelding = journalforingform.find(SendForvaltningsMelding);
 

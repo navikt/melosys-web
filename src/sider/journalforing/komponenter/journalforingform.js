@@ -23,6 +23,9 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import JournalforingSchema from "./journalforingSchema";
 import "./journalforingform.css";
 
+export const BRUKER = "Bruker";
+export const VIRKSOMHET = "Virsomhet";
+
 export const JournalforingForm = (props) => {
   const {
     journalpostID,
@@ -45,7 +48,7 @@ export const JournalforingForm = (props) => {
         MKV.Koder.behandlinger.behandlingstema.ARBEID_I_UTLANDET,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
       ].includes(formValues.opprettnysak_behandlingstema)) &&
-    formValues.journalføresPå === KV.Koder.JournalføringRolle.BRUKER;
+    formValues.journalforingGjelder === BRUKER;
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -112,7 +115,7 @@ const mapStateToProps = (state) => ({
     avsenderType: journalforingSelectors.AvsenderTypeSelector(state),
     behandlingstype: null,
     saksnummer: "",
-    journalføresPå: KV.Koder.JournalføringRolle.BRUKER,
+    journalforingGjelder: BRUKER,
     brukerID: journalforingSelectors.BrukerIDSelector(state),
     erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
     avsenderID: journalforingSelectors.AvsenderIDSelector(state),
