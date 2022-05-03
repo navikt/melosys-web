@@ -25,8 +25,6 @@ import { formSelectors } from "../../ducks/form";
 import { OrganisasjonOperations } from "../../ducks/organisasjoner";
 import { hentSammensattNavn } from "../../graphql/navn";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
-import { apolloClient } from "../../graphql";
-import { HentNavnDocument } from "../../graphql/navn/hentnavn.generated";
 
 import "./journalforing.css";
 
@@ -284,20 +282,16 @@ class Journalforing extends Component {
     }
   };
 
-  sokFnrDnr = async (ident) => {
-    return apolloClient.query({ query: HentNavnDocument, variables: { ident } }).catch(() => {
-      return false;
-    });
-  };
-
   sokOrgnrFnrDnr = async (ident) => {
     if (Utils.organisasjon.erOrgnrGyldig(ident)) {
       const response = await this.props.sokOrgnr(ident);
       return response?.data?.navn;
     }
     if (Utils.person.erGyldigFnrEllerDnr(ident?.replace(" ", ""))) {
-      const response = await this.sokFnrDnr(ident.replace(" ", ""));
-      return Utils.person.tilSammensattNavnFraObjekt(response?.data?.hentPersonopplysninger?.navn);
+      const sammensattNavn = await hentSammensattNavn(ident.replace(" ", ""));
+      if (!Utils._isEmpty(sammensattNavn)) {
+        return sammensattNavn;
+      }
     }
     return false;
   };

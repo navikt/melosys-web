@@ -29,18 +29,12 @@ export const AvsenderArbeidsgiver = ({
   children,
   avsenderNavn,
 }: AvsenderArbeidsgiverProps) => {
-  const sjekkArbeidsgiver = async (verdi: string) => {
-    if (Utils.organisasjon.erOrgnrGyldig(verdi)) {
-      await hentOgVisRepresentant(verdi);
+  const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
+    const { value } = event.target;
+    if (Utils.organisasjon.erOrgnrGyldig(value)) {
+      await hentOgVisRepresentant(value);
     } else {
       await settFeltInnhold("representantNavn", "");
-    }
-  };
-
-  const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
-    const { id: opprinneligFeltID, value } = event.target;
-    if (opprinneligFeltID === "representantID") {
-      await sjekkArbeidsgiver(value);
     }
   };
 
