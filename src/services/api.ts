@@ -11,7 +11,6 @@ import * as Journalforing from "./modules/journalforing";
 import * as Kodeverk from "./modules/kodeverk";
 import * as Lovvalgsperioder from "./modules/lovvalgsperioder";
 import * as Medlemskapsperioder from "./modules/medlemskapsperioder";
-import * as Personer from "./modules/personer";
 import * as Representant from "./modules/representant";
 import * as Organisasjoner from "./modules/organisasjoner";
 import * as Saksopplysninger from "./modules/saksopplysninger";
@@ -33,8 +32,6 @@ import {
   MidlertidigAdresse,
   StrukturertAdresse,
   Periode,
-  Person,
-  Familiemedlem,
   Organisasjon,
 } from "./modules/types";
 
@@ -54,7 +51,6 @@ export {
   Medlemskapsperioder,
   Oppgaver,
   Organisasjoner,
-  Personer,
   Registrering,
   Representant,
   Saksbehandler,
@@ -76,7 +72,5 @@ export type {
   MidlertidigAdresse,
   StrukturertAdresse,
   Periode,
-  Person,
-  Familiemedlem,
   Organisasjon,
 };

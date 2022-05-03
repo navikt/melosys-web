@@ -11,11 +11,9 @@ import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
+
 import AvsenderVelger from "./avsendervelger";
 import LenkeListeVelger from "./lenkelistevelger";
-
-import { PersonSelectors } from "../../../ducks/personer";
-import { OrganisasjonSelectors } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
@@ -250,8 +248,6 @@ Informasjon.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  person: PersonSelectors.personerSelector(state),
-  organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
