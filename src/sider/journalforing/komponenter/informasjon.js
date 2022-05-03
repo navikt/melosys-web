@@ -21,9 +21,8 @@ import JournalforingGjelder from "./journalforingGjelder";
 import { FeatureToggle } from "../../../featuretoggle";
 import { hentSammensattNavn } from "../../../graphql/navn";
 
-import { PersonSelectors } from "../../../ducks/personer";
 import { sokOperations } from "../../../ducks/sok";
-import { OrganisasjonOperations, OrganisasjonSelectors } from "../../../ducks/organisasjoner";
+import { OrganisasjonOperations } from "../../../ducks/organisasjoner";
 import { formSelectors } from "../../../ducks/form";
 
 import "./informasjon.css";
@@ -344,8 +343,6 @@ Informasjon.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  person: PersonSelectors.personerSelector(state),
-  organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 

@@ -18,7 +18,6 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import "./person.css";
 
 const mapStateToProps = (state: RootState) => ({
-  personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 const connector = connect(mapStateToProps);

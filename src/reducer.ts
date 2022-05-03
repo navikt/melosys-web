@@ -26,7 +26,6 @@ import modalerReducer from "./ducks/modaler";
 import oppgaverReducer from "./ducks/oppgaver";
 import oppsummertfaktaReducer from "./ducks/oppsummertfakta";
 import organisasjonerReducer from "./ducks/organisasjoner";
-import personerReducer from "./ducks/personer";
 import saksbehandlerReducer from "./ducks/saksbehandler";
 import saksopplysningerReducer from "./ducks/saksopplysninger";
 import sokReducer from "./ducks/sok";
@@ -66,7 +65,6 @@ const createRootReducer = (history: History) =>
     oppgaver: oppgaverReducer,
     oppsummertfakta: oppsummertfaktaReducer,
     organisasjoner: organisasjonerReducer,
-    personer: personerReducer,
     saksbehandler: saksbehandlerReducer,
     saksopplysninger: saksopplysningerReducer,
     sok: sokReducer,
