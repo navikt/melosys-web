@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 
 import { RootState } from "AppTypes";
@@ -18,7 +18,6 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import "./dialogboksAvslagSoknad.css";
-import { FeatureToggle } from "../../../featuretoggle";
 import HtmlEditor from "../../htmlEditor";
 import { vedtakOperations } from "../../../ducks/vedtak";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
@@ -117,20 +116,7 @@ export const DialogboksAvslagSoknad = (props: DialogboksAvslagSoknadProps & Prop
             Avslå søknaden på grunn av manglende opplysninger
           </Nav.Typo.Systemtittel>
           <Feilmeldinger feilmeldinger={feilmeldinger} />
-          <FeatureToggle togglename="melosys.brev.AVSLAG_MANGLENDE_OPPLYSNINGER">
-            {(toggleStatus) =>
-              toggleStatus === "enabled" ? (
-                <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
-              ) : (
-                <Nav.Textarea
-                  value={brevFritekst}
-                  onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setBrevFritekst(event.target.value)}
-                  label="Fritekst til vedtaksbrev"
-                  maxLength={brevFritekstMaxLength}
-                />
-              )
-            }
-          </FeatureToggle>
+          <HtmlEditor value={brevFritekst} onChange={setBrevFritekst} label="Fritekst til vedtaksbrev" />
           {bekreftRedigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           <div className="knapperadcontainer">
             <Knapperad
