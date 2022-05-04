@@ -7,12 +7,14 @@ import * as Api from "../../../../services/api";
 
 import MKV from "../../../../melosyskodeverk";
 
-import { useAsyncCallbackState } from "../../../../hooks";
+import {useAsyncCallbackState} from "../../../../hooks";
 
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
-import { KontaktOpplysning } from "../kontaktopplysninger";
+import {KontaktOpplysning} from "../kontaktopplysninger";
 
 import "./fullmektigRedigeringUtfort.css";
+import {HentBostedsadresseForPersonQuery} from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
+import StrukturertAdresse from "../../../adresser/strukturertAdresse";
 
 const hentRepresentererTekst = (representererKode: string) => {
   switch (representererKode) {
@@ -31,13 +33,17 @@ interface FullmektigRedigeringUtfortProps {
   org: Partial<Api.Organisasjon>;
   representererKode: string | null;
   kontaktopplysninger: KontaktOpplysning;
+  person: HentBostedsadresseForPersonQuery["hentPersonopplysninger"] | null;
+  fullmektig: Api.Fagsaker.aktoer.Aktoer;
 }
 
 const FullmektigRedigeringUtfort = ({
-  org,
-  representererKode,
-  kontaktopplysninger,
-}: FullmektigRedigeringUtfortProps) => {
+                                      org,
+                                      representererKode,
+                                      kontaktopplysninger,
+                                      person,
+                                      fullmektig,
+                                    }: FullmektigRedigeringUtfortProps) => {
   const [kontaktopplysningerOrg] = useAsyncCallbackState<Partial<Api.Organisasjon>>(
     () => Api.Organisasjoner.hentOrganisasjon(kontaktopplysninger.kontaktorgnr || ""),
     {},
@@ -62,7 +68,7 @@ const FullmektigRedigeringUtfort = ({
               {!Utils._isEmpty(kontaktopplysningerOrg) && (
                 <>
                   <Nav.Column xs="3">
-                    <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false} />
+                    <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false}/>
                   </Nav.Column>
                   <Nav.Column xs="5">
                     <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
@@ -88,21 +94,45 @@ const FullmektigRedigeringUtfort = ({
       </>
     );
 
+  const orgEllerFnrContent =
+    org.orgnr ? (
+      <Nav.Column xs="4">
+        <Nav.Typo.Normaltekst style={{marginTop: "0.5em"}}>Organisasjonsnummer:</Nav.Typo.Normaltekst>
+        <Nav.Typo.Element>{org.orgnr}</Nav.Typo.Element>
+      </Nav.Column>
+    ) : (
+      <Nav.Column xs="4">
+        <Nav.Typo.Normaltekst style={{marginTop: "0.5em"}}>Fødselsnr./d-nr:</Nav.Typo.Normaltekst>
+        <Nav.Typo.Element>{fullmektig.personIdent}</Nav.Typo.Element>
+      </Nav.Column>
+    );
+
   return (
     <div className="fullmektig__redigering__utfort">
       <Nav.Row>
         <Nav.Column xs="3">
-          {org && <OrganisasjonsAdresse organisasjon={org} visNavn={false} visTittel={false} />}
+          {org.orgnr && <OrganisasjonsAdresse organisasjon={org} visNavn={false} visTittel={false}/>}
+          {person?.navn && (
+            <div style={{marginTop: "0.5em"}}>
+              {Utils.person.tilSammensattNavnFraObjekt(person.navn)}
+              {!Utils._isEmpty(person.bostedsadresser) &&
+                <StrukturertAdresse
+                  adresse={{
+                    ...person.bostedsadresser[0]?.adresse,
+                    landkode: person.bostedsadresser[0]?.adresse.land,
+                    coAdressenavn: person.bostedsadresser[0]?.coAdressenavn,
+                  }}
+                />
+              }
+            </div>
+          )}
         </Nav.Column>
-        <Nav.Column xs="4">
-          <Nav.Typo.Normaltekst style={{ marginTop: "0.5em" }}>Organisasjonsnummer:</Nav.Typo.Normaltekst>
-          <Nav.Typo.Element>{org.orgnr}</Nav.Typo.Element>
-        </Nav.Column>
+        {orgEllerFnrContent}
         <Nav.Column xs="5">
-          <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Hvem er dette fullmektig for?</Nav.Typo.Element>
+          <Nav.Typo.Element style={{marginTop: "0.5em"}}>Hvem er dette fullmektig for?</Nav.Typo.Element>
           {representererKode && (
             <span>
-              <Ikoner.GreenCheckmark className="checkmark" />
+              <Ikoner.GreenCheckmark className="checkmark"/>
               <Nav.Typo.Normaltekst className="representerer__tekst">
                 {hentRepresentererTekst(representererKode)}
               </Nav.Typo.Normaltekst>
@@ -110,7 +140,7 @@ const FullmektigRedigeringUtfort = ({
           )}
         </Nav.Column>
       </Nav.Row>
-      {kontantopplysningerContent}
+      {org.orgnr && kontantopplysningerContent}
     </div>
   );
 };
