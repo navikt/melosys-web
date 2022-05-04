@@ -1,17 +1,17 @@
-import React, {ChangeEventHandler, FocusEventHandler, MouseEventHandler, useState} from "react";
+import React, { ChangeEventHandler, FocusEventHandler, MouseEventHandler, useState } from "react";
 
 import MKV from "../../../../melosyskodeverk";
 
 import * as Nav from "../../../../navFrontend";
 
-import {Organisasjon} from "../../../../services/api";
+import { Organisasjon } from "../../../../services/api";
 
-import Kontaktopplysninger, {KontaktOpplysning} from "../kontaktopplysninger";
+import Kontaktopplysninger, { KontaktOpplysning } from "../kontaktopplysninger";
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 import SokFullmektigOrg from "./sokFullmektigOrg";
 
 import "./fullmektigRedigerer.css";
-import {HentBostedsadresseForPersonQuery} from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
+import { HentBostedsadresseForPersonQuery } from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
 import StrukturertAdresse from "../../../adresser/strukturertAdresse";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
@@ -62,11 +62,14 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
   return (
     <Nav.Row className="fullmektig__redigerer">
       <Nav.Column xs="6">
-        <SokFullmektigOrg onIdentFunnet={onIdentFunnet} defaultIdent={fullmektig.orgnr || fullmektig.personIdent || ""}/>
+        <SokFullmektigOrg
+          onIdentFunnet={onIdentFunnet}
+          defaultIdent={fullmektig.orgnr || fullmektig.personIdent || ""}
+        />
         {person && (
           <div>
             {Utils.person.tilSammensattNavnFraObjekt(person.navn)}
-            {!Utils._isEmpty(person.bostedsadresser) &&
+            {!Utils._isEmpty(person.bostedsadresser) && (
               <StrukturertAdresse
                 adresse={{
                   ...person.bostedsadresser[0]?.adresse,
@@ -74,12 +77,12 @@ function FullmektigRedigerer(props: FullmektigRedigererProps) {
                   coAdressenavn: person.bostedsadresser[0]?.coAdressenavn,
                 }}
               />
-            }
+            )}
           </div>
         )}
         {org.orgnr && (
           <>
-            <OrganisasjonsAdresse organisasjon={org} className="adresse" visNavn={false} visTittel={false}/>
+            <OrganisasjonsAdresse organisasjon={org} className="adresse" visNavn={false} visTittel={false} />
             <Nav.Fieldset legend="Hvem er dette fullmektig for?" className="radioknapper">
               <Nav.Radio
                 onChange={rolleChangeHandler}

@@ -67,7 +67,7 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
     );
   };
 
-  const lagreFullmektig = (representererKode: string | null, orgnr: string, personIdent:string, databaseID?: number) =>
+  const lagreFullmektig = (representererKode: string | null, orgnr: string, personIdent: string, databaseID?: number) =>
     Api.Fagsaker.aktoer.send(saksnummer, {
       databaseID: databaseID || null,
       aktoerID: null,
@@ -88,7 +88,11 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
       return { ...fullmektig };
     });
 
-  const lagreNyFullmektigOgOppdaterLokalt = async (orgnr: string, personIdent: string, representererKode: string | null) => {
+  const lagreNyFullmektigOgOppdaterLokalt = async (
+    orgnr: string,
+    personIdent: string,
+    representererKode: string | null
+  ) => {
     try {
       const lagretFullmektig = await lagreFullmektig(representererKode, orgnr, personIdent);
 
@@ -157,7 +161,13 @@ const Fullmektige = ({ redigerbart, saksnummer }: FullmektigeProps) => {
             fullmektig={fullmektig}
             slett={slettFullmektig}
             onRolleChange={onRollechange}
-            onIdentFunnet={(orgnr, personIdent) => lagreNyFullmektigOgOppdaterLokalt(orgnr, personIdent, personIdent ? MKV.Koder.representerer.BRUKER : fullmektig.representererKode)}
+            onIdentFunnet={(orgnr, personIdent) =>
+              lagreNyFullmektigOgOppdaterLokalt(
+                orgnr,
+                personIdent,
+                personIdent ? MKV.Koder.representerer.BRUKER : fullmektig.representererKode
+              )
+            }
             saksnummer={saksnummer}
           />
         );

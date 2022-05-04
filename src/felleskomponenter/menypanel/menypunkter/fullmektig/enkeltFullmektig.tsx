@@ -1,4 +1,4 @@
-import React, {MouseEvent, useEffect, useState} from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import classNames from "classnames";
 
 import * as Api from "../../../../services/api";
@@ -7,9 +7,12 @@ import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import FullmektigRedigerer from "./fullmektigRedigerer";
 import FullmektigRedigeringUtfort from "./fullmektigRedigeringUtfort";
-import EditerbartElement, {visAlltidBinSymbolsynlighet} from "../editerbartElement";
-import {useKontaktOpplysninger} from "../kontaktopplysninger";
-import {HentBostedsadresseForPersonQuery, useHentBostedsadresseForPersonLazyQuery} from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
+import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../editerbartElement";
+import { useKontaktOpplysninger } from "../kontaktopplysninger";
+import {
+  HentBostedsadresseForPersonQuery,
+  useHentBostedsadresseForPersonLazyQuery,
+} from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
 
 interface EnkeltFullmektigProps {
   className?: string;
@@ -34,7 +37,7 @@ const EnkeltFullmektig = ({
   const [person, settPerson] = useState<HentBostedsadresseForPersonQuery["hentPersonopplysninger"] | null>(null);
   const [orgForsoktHentet, setOrgForsoktHentet] = useState(false);
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
-  const [hentBostedsadresseForPerson] = useHentBostedsadresseForPersonLazyQuery()
+  const [hentBostedsadresseForPerson] = useHentBostedsadresseForPersonLazyQuery();
 
   const [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger] =
     useKontaktOpplysninger(saksnummer, fullmektig.orgnr || "");
@@ -63,7 +66,7 @@ const EnkeltFullmektig = ({
 
   useEffect(() => {
     if (fullmektig.orgnr) hentOrgFraApi(fullmektig.orgnr);
-    if (fullmektig.personIdent) hentPersonFraApi(fullmektig.personIdent)
+    if (fullmektig.personIdent) hentPersonFraApi(fullmektig.personIdent);
   }, [fullmektig.orgnr, fullmektig.personIdent]);
 
   const slettHandler = async (event: MouseEvent) => {
@@ -76,7 +79,7 @@ const EnkeltFullmektig = ({
 
   if (fullmektig.orgnr ? !orgForsoktHentet : false) return null;
 
-  const navn = person?.navn ? Utils.person.tilSammensattNavnFraObjekt(person?.navn) : ""
+  const navn = person?.navn ? Utils.person.tilSammensattNavnFraObjekt(person?.navn) : "";
   const tittel = `Fullmektig: ${org.navn || navn || ""}`;
 
   const cls = classNames(className);
@@ -87,7 +90,10 @@ const EnkeltFullmektig = ({
       <EditerbartElement
         className={cls}
         redigerbart={redigerbart}
-        harData={Boolean(fullmektig.representererKode && fullmektig.orgnr) || Boolean(fullmektig.representererKode && fullmektig.personIdent)}
+        harData={
+          Boolean(fullmektig.representererKode && fullmektig.orgnr) ||
+          Boolean(fullmektig.representererKode && fullmektig.personIdent)
+        }
         tittel={tittel}
         tittelUnderstrek
         understrek

@@ -1,11 +1,11 @@
-import React, {ChangeEventHandler, useState} from "react";
+import React, { ChangeEventHandler, useState } from "react";
 
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 
-import {isApiError} from "../../../../services";
-import {useHentBostedsadresseForPersonLazyQuery} from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
+import { isApiError } from "../../../../services";
+import { useHentBostedsadresseForPersonLazyQuery } from "../familieforhold/familiemedlemmer/annenForelderModal/hentBostedsadresseForPerson.generated";
 
 interface SokFullmektigOrgProps {
   onIdentFunnet: (orgnr: string, personIdent: string) => Promise<any>;
@@ -13,13 +13,13 @@ interface SokFullmektigOrgProps {
 }
 
 function SokFullmektigOrg(props: SokFullmektigOrgProps) {
-  const {onIdentFunnet, defaultIdent} = props;
+  const { onIdentFunnet, defaultIdent } = props;
 
   const [ident, setIdent] = useState(defaultIdent || "");
   const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
   const [korrekteLengdeOrgnrOppgittMinstEnGang, setKorrekteLengdeOrgnrOppgittMinstEnGang] = useState(false);
   const [korrekteLengdeFnrDnrOppgittMinstEnGang, setKorrekteLengdeFnrDnrOppgittMinstEnGang] = useState(false);
-  const [hentBostedsadresseForPerson] = useHentBostedsadresseForPersonLazyQuery()
+  const [hentBostedsadresseForPerson] = useHentBostedsadresseForPersonLazyQuery();
 
   const identFunnetHandler = async (funnetOrgnr: string, funnetPersonIdent: string) => {
     try {
@@ -30,8 +30,8 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
   };
 
   const erFnrEllerDnrLengde = (sokIdent: string) => {
-    return !Utils.person.erFnrLengde(sokIdent) || !Utils.person.erDnrLengde(sokIdent)
-  }
+    return !Utils.person.erFnrLengde(sokIdent) || !Utils.person.erDnrLengde(sokIdent);
+  };
 
   const sok = async (sokIdent: string) => {
     if (!Utils.organisasjon.erOrgnrLengde(sokIdent)) {
@@ -81,7 +81,7 @@ function SokFullmektigOrg(props: SokFullmektigOrgProps) {
     } else {
       setFeilmelding("Ugyldig f-nr eller d-nr");
     }
-  }
+  };
 
   const vedEndretInput: ChangeEventHandler<HTMLInputElement> = (event) => {
     setIdent(event.target.value);
