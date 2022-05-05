@@ -81,7 +81,7 @@
     "prop-types": "^15.8.1",
     "qs": "^6.10.3",
     "react": "^16.14.0",
-    "react-beforeunload": "^2.5.2",
+    "react-beforeunload": "^2.5.3",
     "react-collapse": "^5.0.0",
     "react-copy-to-clipboard": "^5.0.2",
     "react-datepicker": "^3.7.0",
