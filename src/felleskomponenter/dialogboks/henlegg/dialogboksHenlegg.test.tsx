@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ComponentProps } from "react";
 
 import * as Nav from "../../../navFrontend";
 
@@ -6,21 +6,19 @@ import { DialogboksHenleggSak } from "./dialogboksHenlegg";
 import Knapperad from "../../knapperad";
 import { KodeTermSelect } from "../../ui/kodeTermSelect";
 import PdfLenkeListe from "../../pdfLenkeListe";
+import { shallow } from "enzyme";
+import { mock } from "ts-mockito";
 
 describe("Dialogbokshenlegg", () => {
-  let props = null;
-
-  const avbryt = jest.fn();
-  const henleggHandle = jest.fn();
+  const props = mock<ComponentProps<typeof DialogboksHenleggSak>>();
 
   beforeEach(() => {
-    props = {
-      avbryt,
-      behandlingID: 1,
-      redigerbart: true,
-      henleggHandle,
-      ariaHideApp: false,
-    };
+    props.behandlingID = 1;
+    props.redigerbart = true;
+    props.ariaHideApp = false;
+    props.avbryt = jest.fn();
+    props.henleggHandle = jest.fn();
+    props.dispatch = jest.fn();
   });
 
   it("viser en Nav Modal", () => {

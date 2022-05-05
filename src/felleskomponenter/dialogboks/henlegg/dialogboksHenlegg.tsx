@@ -29,7 +29,7 @@ type DialogboksHenleggSakProps = PropsFromRedux & {
   ariaHideApp?: boolean;
 };
 
-const DialogboksHenleggSak = ({
+export const DialogboksHenleggSak = ({
   henleggHandle,
   avbryt,
   behandlingID,
