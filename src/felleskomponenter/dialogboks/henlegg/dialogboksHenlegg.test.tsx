@@ -1,6 +1,6 @@
 import React, { ComponentProps } from "react";
 import { shallow } from "enzyme";
-import { mock } from "ts-mockito";
+import { instance, mock } from "ts-mockito";
 
 import * as Nav from "../../../navFrontend";
 
@@ -10,7 +10,8 @@ import { DialogboksHenleggSak } from "./dialogboksHenlegg";
 import { KodeTermSelect } from "../../ui/kodeTermSelect";
 
 describe("Dialogbokshenlegg", () => {
-  const props = mock<ComponentProps<typeof DialogboksHenleggSak>>();
+  const mockedProps = mock<ComponentProps<typeof DialogboksHenleggSak>>();
+  const props = instance(mockedProps);
 
   beforeEach(() => {
     props.behandlingID = 1;

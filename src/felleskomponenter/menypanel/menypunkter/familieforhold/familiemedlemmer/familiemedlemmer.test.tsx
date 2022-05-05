@@ -203,7 +203,7 @@ describe("Familiemedlemmer", () => {
       });
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 20);
+        setTimeout(resolve, 30);
       });
       familiemedlemmer.update();
 
