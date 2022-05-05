@@ -8,6 +8,7 @@ import * as Mui from "../../ui";
 import MKV from "../../../melosyskodeverk";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
+import HtmlEditor from "../../htmlEditor";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -48,7 +49,7 @@ export const DialogboksHenleggSak = ({
 
   const erBegrunnelseValgt = begrunnelseKode !== "";
   const erFritekstValgt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
-  const erFritekstTom = fritekst === "";
+  const erFritekstTom = fritekst.replace("<p></p>", "").trim() === "";
 
   const handleForhandsvisBrev = async () => {
     const begrunnelsePassertValidering = validerBegrunnelse();
@@ -71,8 +72,8 @@ export const DialogboksHenleggSak = ({
     return fritekstValideringPassert;
   };
 
-  const fritekstOnchange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setFritekst(event.target.value);
+  const fritekstOnchange = (tekst: string) => {
+    setFritekst(tekst);
     setFeilmeldingFritekst(null);
   };
 
@@ -124,7 +125,7 @@ export const DialogboksHenleggSak = ({
           redigerbart={redigerbart}
         />
         {erFritekstValgt && (
-          <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={fritekstOnchange} value={fritekst} />
+          <HtmlEditor feil={feilmeldingFritekst} value={fritekst} onChange={fritekstOnchange} label="Fritekst" />
         )}
         {redigerbart && (
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={handleForhandsvisBrev} />
