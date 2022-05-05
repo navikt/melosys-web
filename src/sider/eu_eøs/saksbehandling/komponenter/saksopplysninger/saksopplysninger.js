@@ -104,7 +104,6 @@ Saksopplysninger.propTypes = {
   behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
-  alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   fagsakStatusKode: PT.string.isRequired,
@@ -129,7 +128,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   redigerbart: null,
-  alleRelevantePersoner: [],
   behandlingsgrunnlag: {},
   vurdering: {},
   syncErrors: {},

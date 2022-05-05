@@ -26,7 +26,7 @@ describe("FeiletresponsSelectors", () => {
 
       const forventetResultat = state.feiletRespons.data.data && state.feiletRespons.data.data.feilkoder;
 
-      expect(selectors.FeilkoderSelector(state)).toBe(forventetResultat);
+      expect(selectors.FeilmeldingerSelector(state)).toBe(forventetResultat);
     });
 
     it("returnerer tom array ved status OK", () => {
@@ -53,24 +53,25 @@ describe("FeiletresponsSelectors", () => {
         status: STATUS.OK,
       };
 
-      expect(selectors.FeilkoderSelector(state)).toEqual([]);
+      expect(selectors.FeilmeldingerSelector(state)).toEqual([]);
     });
 
-    it("returnerer tom array ved feilkoder undefined", () => {
+    it("returnerer string med error message ved feilkoder undefined", () => {
       const mockedState = mock<RootState>();
       const state = instance(mockedState);
+      const MESSAGE = "Kan ikke fatte vedtak";
       state.feiletRespons = {
         data: {
           data: {
             error: "Valideringsfeil",
             status: 404,
-            message: "Valideringsfeil",
+            message: MESSAGE,
           },
         },
         status: STATUS.ERROR,
       };
 
-      expect(selectors.FeilkoderSelector(state)).toEqual([]);
+      expect(selectors.FeilmeldingerSelector(state)).toEqual(MESSAGE);
     });
 
     it("returnerer tom array ved data undefined", () => {
@@ -81,7 +82,7 @@ describe("FeiletresponsSelectors", () => {
         status: STATUS.ERROR,
       };
 
-      expect(selectors.FeilkoderSelector(state)).toEqual([]);
+      expect(selectors.FeilmeldingerSelector(state)).toEqual([]);
     });
   });
 });

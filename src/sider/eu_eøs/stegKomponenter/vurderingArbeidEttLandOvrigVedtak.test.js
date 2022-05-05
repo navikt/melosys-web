@@ -38,22 +38,19 @@ describe("VurderingArbeidEttLandOvrigVedtak", () => {
       behandlingsgrunnlagFom: "",
       behandlingsgrunnlagTom: "",
       soknadsperiode: { tom: "", fom: "" },
+      harFeilmeldinger: false,
+      kontrollerVedtak: jest.fn(),
     };
   });
 
   test("lagreOgFatteVedtak kalles ved submit av form", () => {
+    props.formValues.forkortLovvalgsperiode = false;
+    props.formValues.vedtaksbrevFritekst = "vedtaksbrevfritekst";
+    props.formValues.fritekstSed = "fritekst til SED";
+    props.formValues.vedtakstypebegrunnelse = "begrunnelse for revurdering";
+    props.formValues.vedtakstype = MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK;
     props.handleSubmit = (onSubmitCallback) => () => {
-      onSubmitCallback(
-        {
-          forkortLovvalgsperiode: false,
-          vedtaksbrevFritekst: "vedtaksbrevfritekst",
-          fritekstSed: "fritekst til SED",
-          vedtakstypebegrunnelse: "begrunnelse for revurdering",
-          vedtakstype: MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK,
-        },
-        () => {},
-        props
-      );
+      onSubmitCallback({}, () => {}, props);
     };
 
     const vurderingArbeidEttLandOvrigVedtak = shallow(<VurderingArbeidEttLandOvrigVedtak {...props} />);

@@ -98,14 +98,14 @@ interface Props {
   hentFlytOgOppdaterAktuelleSteg: () => void;
   tilbake: () => void;
   lagreOgFatteVedtak: (data: Api.Saksflyt.Vedtak.FattVedtakTrygdeavtaleReqDto) => void;
-  oppdaterValideringFeil: (
+  oppdaterFeilmeldinger: (
     data: Api.Saksflyt.Vedtak.FattVedtakReqDto,
     skalRegisteropplysningerOppdateres: boolean
   ) => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
   steg: Api.Trygdeavtale.Steg;
-  valideringFeil: Feilkode[];
+  feilmeldinger: Feilkode[];
   formValues: {
     lovvalgsperiodeFom?: string;
     lovvalgsperiodeTom?: string;
@@ -131,13 +131,13 @@ const VurderingVedtak = ({
   formValues,
   periodeIsValid,
   oppdaterFlyt,
-  oppdaterValideringFeil,
+  oppdaterFeilmeldinger,
   soknadsland,
   lagreOgFatteVedtak,
   vedtakstype,
   hentLovvalgsperiode,
   formIsValid,
-  valideringFeil,
+  feilmeldinger,
 }: Props & PropsFromRedux) => {
   const periodeHjelpetekst =
     "Perioden som vises her er søknadsperiode. Hvis sluttdato for oppholdet ikke er oppgitt i søknaden, og/eller du vil endre sluttdato for vedtaket, trykk på Endre og skriv inn sluttdato.";
@@ -180,13 +180,15 @@ const VurderingVedtak = ({
     begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
     ektefelleFritekst: familieFormValues?.ektefelle?.fritekst || null,
     barnFritekst: familieFormValues?.barn?.fritekst || null,
-    vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    vedtakstype: erNyVurdering
+      ? MKV.Koder.vedtakstyper.ENDRINGSVEDTAK
+      : vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
     kopiMottakere: getKopiMottakere(),
     nyVurderingBakgrunn: getNyVurderingBakgrunn(),
   });
 
   const kontrollerVedtak = (skalRegisteropplysningerOppdateres: boolean = false) => {
-    oppdaterValideringFeil(lagFattVedtakTrygdeavtaleReqDto(), skalRegisteropplysningerOppdateres);
+    oppdaterFeilmeldinger(lagFattVedtakTrygdeavtaleReqDto(), skalRegisteropplysningerOppdateres);
     setOppdaterFørKontroll(false);
     hentFlytOgOppdaterAktuelleSteg();
   };
@@ -338,8 +340,7 @@ const VurderingVedtak = ({
       </div>
     );
 
-  const stegErGyldig =
-    steg.status === StegStatus.FERDIG && formIsValid && redigerbart && Utils._isEmpty(valideringFeil);
+  const stegErGyldig = steg.status === StegStatus.FERDIG && formIsValid && redigerbart && Utils._isEmpty(feilmeldinger);
 
   return (
     <div className={vurderingVedtakCls.block}>
@@ -497,9 +498,9 @@ const VurderingVedtak = ({
         />
       )}
 
-      {redigerbart && (
+      {stegErGyldig && (
         <MottakerTabell
-          rader={stegErGyldig && muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
+          rader={muligeMottakere ? mapMottakerRader(muligeMottakere) : []}
           kolonner={[
             { verdi: "Dokumenter", bredde: "60%" },
             { verdi: "Mottaker", bredde: "40%" },

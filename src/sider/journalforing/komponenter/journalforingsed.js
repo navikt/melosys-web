@@ -9,7 +9,7 @@ import * as KV from "../../../kodeverk";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
 
-import Brukernavnskjema from "../../../felleskomponenter/brukernavnskjema";
+import BrukerNavnSkjema from "../../../felleskomponenter/brukerNavnSkjema";
 import Fotknapper from "./fotknapper";
 
 import { journalforingSelectors } from "../../../ducks/journalforing";
@@ -38,7 +38,7 @@ const JournalforingSED = ({
     />
     <Nav.Row>
       <Nav.Column xs="6">
-        <Brukernavnskjema form={form} />
+        <BrukerNavnSkjema form={form} />
       </Nav.Column>
     </Nav.Row>
     <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" understrek />

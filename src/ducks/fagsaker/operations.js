@@ -15,7 +15,7 @@ import * as Types from "./types";
 /**
  * Henter registerinformasjon som allerede er importert backend i forbindelse
  * med saken. Kallet får altså kun lagret fagsak fra backend og ikke nødvendigvis oppdatert
- * registerdata fra TPS, Aa-reg etc. Dette er det backend som er ansvarlig for,.
+ * registerdata fra PDL, Aa-reg etc. Dette er det backend som er ansvarlig for,.
  *
  * @param snr String Saksnummeret
  * @returns {*}

@@ -37,7 +37,7 @@ const OppfriskVenter = ({ tilForsiden }) => (
     <Nav.NavFrontendSpinner className="spinner" />
     <Nav.Typo.Systemtittel className="overskrift">Oppdaterer registeropplysninger</Nav.Typo.Systemtittel>
     <Nav.Typo.Normaltekst className="tekst">
-      Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc.
+      Vent mens registeropplysningene hentes på nytt fra PDL, Aa-register, Medl etc.
     </Nav.Typo.Normaltekst>
     <div className="knapperadcontainer">
       <Nav.Knapp onClick={tilForsiden}>Til forsiden</Nav.Knapp>
