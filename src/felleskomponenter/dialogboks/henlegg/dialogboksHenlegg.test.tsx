@@ -1,13 +1,13 @@
 import React, { ComponentProps } from "react";
+import { shallow } from "enzyme";
+import { mock } from "ts-mockito";
 
 import * as Nav from "../../../navFrontend";
 
-import { DialogboksHenleggSak } from "./dialogboksHenlegg";
 import Knapperad from "../../knapperad";
-import { KodeTermSelect } from "../../ui/kodeTermSelect";
 import PdfLenkeListe from "../../pdfLenkeListe";
-import { shallow } from "enzyme";
-import { mock } from "ts-mockito";
+import { DialogboksHenleggSak } from "./dialogboksHenlegg";
+import { KodeTermSelect } from "../../ui/kodeTermSelect";
 
 describe("Dialogbokshenlegg", () => {
   const props = mock<ComponentProps<typeof DialogboksHenleggSak>>();
