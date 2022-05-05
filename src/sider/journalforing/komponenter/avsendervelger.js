@@ -7,7 +7,6 @@ import MKV from "../../../melosyskodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import { journalforingSelectors } from "../../../ducks/journalforing";
-import { VIRKSOMHET } from "./journalforingform";
 
 import { AvsenderOrganisasjon, AvsenderUtenlanskTrygdemyndighet, AvsenderFullmektig } from "./avsendere";
 import "./avsendervelger.css";
@@ -15,7 +14,6 @@ import "./avsendervelger.css";
 const AvsenderVelger = ({
   className,
   kopierBrukerTilAvsender,
-  kopierVirksomhetTilAvsender,
   tomAvsender,
   formValues,
   settFeltInnhold,
@@ -25,10 +23,6 @@ const AvsenderVelger = ({
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
-        break;
-      }
-      case KV.AvsenderTyper.VIRKSOMHET: {
-        kopierVirksomhetTilAvsender();
         break;
       }
       case KV.AvsenderTyper.ANNET:
@@ -55,26 +49,16 @@ const AvsenderVelger = ({
     settFeltInnhold("avsenderID", landkode);
     settFeltInnhold("avsenderNavn", avsenderNavn);
   };
-  const journalføresPåVirksomhet = formValues.journalforingGjelder === VIRKSOMHET;
 
   return (
     <div className={className}>
       <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
-        {journalføresPåVirksomhet ? (
-          <Skjema.Radio
-            feltNavn="avsenderType"
-            label="Virksomhet"
-            value={KV.AvsenderTyper.VIRKSOMHET}
-            className="avsendervelger__radio"
-          />
-        ) : (
-          <Skjema.Radio
-            feltNavn="avsenderType"
-            label="Bruker"
-            value={MKV.Koder.avsendertyper.PERSON}
-            className="avsendervelger__radio"
-          />
-        )}
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Bruker"
+          value={MKV.Koder.avsendertyper.PERSON}
+          className="avsendervelger__radio"
+        />
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Fullmektig"
@@ -84,57 +68,63 @@ const AvsenderVelger = ({
         {formValues.avsenderType === KV.AvsenderTyper.FULLMEKTIG && (
           <AvsenderFullmektig
             avsenderID={formValues.avsenderID}
-            journalføresPåVirksomhet={journalføresPåVirksomhet}
             settFeltInnhold={settFeltInnhold}
             hentOgVisRepresentant={hentOgVisRepresentant}
           />
         )}
-        {!journalføresPåVirksomhet && (
-          <>
-            <Skjema.Radio
-              feltNavn="avsenderType"
-              label="Arbeidsgiver"
-              value={KV.AvsenderTyper.ARBEIDSGIVER}
-              className="avsendervelger__radio"
-            />
-            {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && (
-              <AvsenderOrganisasjon
-                avsenderID={formValues.avsenderID}
-                avsenderType={formValues.avsenderType}
-                settFeltInnhold={settFeltInnhold}
-                hentOgVisRepresentant={hentOgVisRepresentant}
-                journalføresPåVirksomhet={journalføresPåVirksomhet}
-              />
-            )}
-            <Skjema.Radio
-              feltNavn="avsenderType"
-              label="Arbeidsgiver som er fullmektig"
-              value={KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG}
-              className="avsendervelger__radio"
-            />
-            {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG && (
-              <AvsenderOrganisasjon
-                avsenderID={formValues.avsenderID}
-                avsenderType={formValues.avsenderType}
-                settFeltInnhold={settFeltInnhold}
-                hentOgVisRepresentant={hentOgVisRepresentant}
-                journalføresPåVirksomhet={journalføresPåVirksomhet}
-              />
-            )}
-            <Skjema.Radio
-              feltNavn="avsenderType"
-              label="Utenlandsk trygdemyndighet"
-              value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
-              className="avsendervelger__radio"
-            />
-            {formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && (
-              <AvsenderUtenlanskTrygdemyndighet
-                utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
-                fullmektigLandEndret={fullmektigLandEndret}
-              />
-            )}
-          </>
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Arbeidsgiver"
+          value={KV.AvsenderTyper.ARBEIDSGIVER}
+          className="avsendervelger__radio"
+        />
+        {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && (
+          <AvsenderOrganisasjon
+            avsenderID={formValues.avsenderID}
+            avsenderType={formValues.avsenderType}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
         )}
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Arbeidsgiver som er fullmektig"
+          value={KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG}
+          className="avsendervelger__radio"
+        />
+        {formValues.avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG && (
+          <AvsenderOrganisasjon
+            avsenderID={formValues.avsenderID}
+            avsenderType={formValues.avsenderType}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
+        )}
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Utenlandsk trygdemyndighet"
+          value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
+          className="avsendervelger__radio"
+        />
+        {formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET && (
+          <AvsenderUtenlanskTrygdemyndighet
+            utenlandskTrygdemyndighetLandkode={formValues.utenlandskTrygdemyndighetLandkode}
+            fullmektigLandEndret={fullmektigLandEndret}
+          />
+        )}
+        {/* TODO: Legges inn igjen i SPRINT-41 (etter endringer er avklart hos fag)
+        <Skjema.Radio
+          feltNavn="avsenderType"
+          label="Annet"
+          value="ANNET"
+        />
+        {
+          formValues.avsenderType === 'ANNET' &&
+          <Fragment>
+            <AvsenderAnnet />
+          </Fragment>
+        }
+        */}
       </Skjema.RadioGruppe>
     </div>
   );
@@ -143,10 +133,10 @@ const AvsenderVelger = ({
 AvsenderVelger.propTypes = {
   className: PT.string,
   kopierBrukerTilAvsender: PT.func.isRequired,
-  kopierVirksomhetTilAvsender: PT.func.isRequired,
   tomAvsender: PT.func.isRequired,
   formValues: PT.object,
   settFeltInnhold: PT.func.isRequired,
+  visAvsenderSpinner: PT.bool,
   hentOgVisRepresentant: PT.func.isRequired,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
@@ -157,6 +147,7 @@ AvsenderVelger.defaultProps = {
   formValues: {},
   journalforingAvsenderID: undefined,
   journalforingAvsenderNavn: undefined,
+  visAvsenderSpinner: false,
 };
 
 const mapStateToProps = (state) => ({

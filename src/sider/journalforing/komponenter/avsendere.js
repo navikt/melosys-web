@@ -13,7 +13,6 @@ import "./avsendere.css";
 export const AvsenderOrganisasjon = ({
   settFeltInnhold,
   hentOgVisRepresentant,
-  journalføresPåVirksomhet,
   avsenderID,
   avsenderType,
   children,
@@ -21,8 +20,6 @@ export const AvsenderOrganisasjon = ({
   useEffect(() => {
     if (avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG) {
       settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
-    } else if (journalføresPåVirksomhet) {
-      settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.ARBEIDSGIVER);
     }
     return () => {
       settFeltInnhold("representantRepresenterer", null);
@@ -71,7 +68,6 @@ export const AvsenderOrganisasjon = ({
 AvsenderOrganisasjon.propTypes = {
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
-  journalføresPåVirksomhet: PT.bool.isRequired,
   avsenderID: PT.string,
   avsenderType: PT.string.isRequired,
   children: PT.node,
@@ -82,12 +78,7 @@ AvsenderOrganisasjon.defaultProps = {
   children: null,
 };
 
-export const AvsenderFullmektig = ({
-  avsenderID,
-  journalføresPåVirksomhet,
-  settFeltInnhold,
-  hentOgVisRepresentant,
-}) => {
+export const AvsenderFullmektig = ({ avsenderID, settFeltInnhold, hentOgVisRepresentant }) => {
   const representererMap = {
     [MKV.Koder.representerer.ARBEIDSGIVER]: "Arbeidsgiver",
     [MKV.Koder.representerer.BRUKER]: "Arbeidstaker",
@@ -98,30 +89,26 @@ export const AvsenderFullmektig = ({
     <AvsenderOrganisasjon
       avsenderID={avsenderID}
       avsenderType={KV.AvsenderTyper.FULLMEKTIG}
-      journalføresPåVirksomhet={journalføresPåVirksomhet}
       settFeltInnhold={settFeltInnhold}
       hentOgVisRepresentant={hentOgVisRepresentant}
     >
-      {!journalføresPåVirksomhet && (
-        <Skjema.Select
-          feltNavn="representantRepresenterer"
-          label="Hvem er dette fullmektig for"
-          className="avsendere__input"
-        >
-          {MKV.KTObjects.representerer.map(({ kode }) => (
-            <option key={kode} value={kode}>
-              {representererMap[kode]}
-            </option>
-          ))}
-        </Skjema.Select>
-      )}
+      <Skjema.Select
+        feltNavn="representantRepresenterer"
+        label="Hvem er dette fullmektig for"
+        className="avsendere__input"
+      >
+        {MKV.KTObjects.representerer.map(({ kode }) => (
+          <option key={kode} value={kode}>
+            {representererMap[kode]}
+          </option>
+        ))}
+      </Skjema.Select>
     </AvsenderOrganisasjon>
   );
 };
 
 AvsenderFullmektig.propTypes = {
   avsenderID: PT.string,
-  journalføresPåVirksomhet: PT.bool.isRequired,
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
 };
@@ -156,3 +143,14 @@ AvsenderUtenlanskTrygdemyndighet.propTypes = {
 AvsenderUtenlanskTrygdemyndighet.defaultProps = {
   utenlandskTrygdemyndighetLandkode: "",
 };
+
+export const AvsenderAnnet = () => (
+  <div className="avsender">
+    <Skjema.Input
+      feltNavn="avsenderNavn"
+      label="Oppgi avsenders navn"
+      placeholder="Skriv inn..."
+      className="avsendere__input"
+    />
+  </div>
+);

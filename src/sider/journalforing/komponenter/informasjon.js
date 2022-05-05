@@ -115,9 +115,7 @@ class Informasjon extends Component {
     }
     settFeltInnhold("virksomhetNavn", navn);
     await hentFagsakListe(virksomhetOrgnr);
-    if (virksomhetErAvsender) {
-      kopierVirksomhetTilAvsender(virksomhetOrgnr, navn);
-    }
+    kopierVirksomhetTilAvsender(virksomhetOrgnr, navn);
   };
 
   hentOgVisAvsender = async (value) => {
@@ -201,6 +199,7 @@ class Informasjon extends Component {
     virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn
   ) => {
     const { settFeltInnhold } = this.props;
+    settFeltInnhold("avsenderType", KV.AvsenderTyper.VIRKSOMHET);
     settFeltInnhold("avsenderID", virksomhetOrgnr);
     settFeltInnhold("avsenderNavn", virksomhetNavn);
   };
@@ -234,7 +233,7 @@ class Informasjon extends Component {
       journalforingGjelder === VIRKSOMHET ? (
         <>
           <Mui.Undertittel tekst="Informasjon om virksomhet" ikon={Ikoner.AccountCircle} className="undertittel" />
-          <Skjema.Input feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" onKeyUp={this.IDFeltTastOppHandler} />
+          <Skjema.Input feltNavn="virksomhetOrgnr" label="Organisasjonsnummer:" />
           {!Utils._isEmpty(virksomhetNavn) && (
             <span>
               <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
@@ -245,7 +244,7 @@ class Informasjon extends Component {
       ) : (
         <>
           <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
           {!Utils._isEmpty(brukerNavn) && (
             <span>
               <Nav.Typo.Element style={{ display: "inline-block", marginRight: "0.5rem" }}>Navn:</Nav.Typo.Element>
@@ -267,7 +266,7 @@ class Informasjon extends Component {
             ) : (
               <>
                 <Mui.Undertittel tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel" />
-                <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+                <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" />
                 <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled className="brukers-navn" />
               </>
             )
@@ -275,14 +274,17 @@ class Informasjon extends Component {
         </FeatureToggle>
 
         <Mui.Undertittel tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
-        <AvsenderVelger
-          className="avsenderVelger"
-          kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
-          kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
-          tomAvsender={this.tomAvsender}
-          settFeltInnhold={settFeltInnhold}
-          hentOgVisRepresentant={hentOgVisRepresentant}
-        />
+        {journalforingGjelder === VIRKSOMHET ? (
+          <Nav.Typo.Normaltekst>Virksomhet er avsender</Nav.Typo.Normaltekst>
+        ) : (
+          <AvsenderVelger
+            className="avsenderVelger"
+            kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+            tomAvsender={this.tomAvsender}
+            settFeltInnhold={settFeltInnhold}
+            hentOgVisRepresentant={hentOgVisRepresentant}
+          />
+        )}
 
         <Mui.Undertittel tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
         <Skjema.Datovelger label="Mottatt dato" feltNavn="mottattDato" bredde="S" />
