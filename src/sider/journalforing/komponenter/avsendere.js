@@ -46,10 +46,7 @@ export const AvsenderOrganisasjon = ({
   };
 
   const IDFeltTastOppHandler = async (event) => {
-    const { id: opprinneligFeltID, value } = event.target;
-    if (opprinneligFeltID === "representantID") {
-      await sjekkArbeidsgiver(value);
-    }
+    await sjekkArbeidsgiver(event.target.value);
   };
 
   return (
