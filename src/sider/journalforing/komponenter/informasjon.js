@@ -15,7 +15,7 @@ import * as Mui from "../../../felleskomponenter/ui";
 import * as KV from "../../../kodeverk";
 import { VIRKSOMHET } from "./journalforingform";
 
-import AvsenderVelger from "./avsendervelger";
+import AvsenderVelger from "./avsender";
 import LenkeListeVelger from "./lenkelistevelger";
 import JournalforingGjelder from "./journalforingGjelder";
 import { FeatureToggle } from "../../../featuretoggle";

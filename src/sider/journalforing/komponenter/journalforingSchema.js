@@ -9,8 +9,10 @@ import { BRUKER, VIRKSOMHET } from "./journalforingform";
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
 const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette fnr eller dnr." };
+const FANT_INGEN_NAVN_PA_ORGNR_FNR_ELLER_DNR = { melding: "Fant ingen navn på oppgitt org.nr., f.nr. eller d-nr." };
 const SKRIV_INN_NAVN_PA_AVSENDER = { melding: "Skriv inn navn på avsender" };
 const SKRIV_INN_GYLDIG_ORGNR = { melding: "Skriv inn gyldig orgnr." };
+const SKRIV_INN_GYLDIG_ORGNR_FNR_DNR = { melding: "Du må skrive et gyldig org.nr. eller f.nr./d-nr." };
 const VELG_DOKUMENTTITTEL_FRA_LISTEN_ELLER_SKRIV_DIN_EGEN = {
   melding: "Velg dokumenttittel fra listen eller skriv din egen.",
 };
@@ -36,14 +38,12 @@ const kreverPeriode = (journalforingHensikt, behandlingstema) =>
 const kreverLand = (journalforingHensikt, behandlingstema, ukjentEllerAlleEosLand) =>
   !ukjentEllerAlleEosLand && kreverPeriode(journalforingHensikt, behandlingstema);
 
-const organisasjonOgIkkePreutfyltAvsenderForBruker = (avsenderType, erAvsenderPreutfylt, journalforingGjelder) => {
-  const organisasjonAliasTyper = [
-    KV.AvsenderTyper.FULLMEKTIG,
-    KV.AvsenderTyper.ARBEIDSGIVER,
-    KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG,
-    KV.AvsenderTyper.VIRKSOMHET,
-  ];
-  return organisasjonAliasTyper.includes(avsenderType) && (!erAvsenderPreutfylt || journalforingGjelder === VIRKSOMHET);
+const arbeidsgiverOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
+  return avsenderType === KV.AvsenderTyper.ARBEIDSGIVER && !erAvsenderPreutfylt;
+};
+
+const fullmektigOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => {
+  return avsenderType === KV.AvsenderTyper.FULLMEKTIG && !erAvsenderPreutfylt;
 };
 
 const journalforing = object().shape({
@@ -71,15 +71,29 @@ const journalforing = object().shape({
     .nullable(),
   virksomhetNavn: string().nullable(),
   avsenderID: string()
-    .when(["avsenderType", "$erAvsenderPreutfylt", "journalforingGjelder"], {
-      is: organisasjonOgIkkePreutfyltAvsenderForBruker,
+    .when(["avsenderType", "$arbeidsgiverOgIkkePreutfyltAvsender"], {
+      is: arbeidsgiverOgIkkePreutfyltAvsender,
       then: string()
+        .nullable()
+        .erNummer(SKRIV_INN_KUN_NUMMER)
         .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
         .when("avsenderNavn", {
           is: Utils._isEmpty,
           then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
-        })
-        .nullable(),
+        }),
+    })
+    .when(["avsenderType", "$fullmektigOgIkkePreutfyltAvsender"], {
+      is: fullmektigOgIkkePreutfyltAvsender,
+      then: string()
+        .nullable()
+        .erNummerTolerererEttMellomrom(SKRIV_INN_KUN_NUMMER)
+        .erFnrEllerDnrEllerOrgnrTolererEttMellomrom(SKRIV_INN_GYLDIG_ORGNR_FNR_DNR)
+        .when("avsenderNavn", {
+          is: Utils._isEmpty,
+          then: string()
+            .harIkkeOrgnrFnrEllerDnrLengdeTolerererEttMellomrom(FANT_INGEN_NAVN_PA_ORGNR_FNR_ELLER_DNR)
+            .nullable(),
+        }),
     })
     .nullable(),
   avsenderNavn: string().required(SKRIV_INN_NAVN_PA_AVSENDER).nullable(),
@@ -90,7 +104,7 @@ const journalforing = object().shape({
     Utils._isEmpty(value)
       ? string().nullable()
       : string()
-          .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
+          .erFnrEllerDnrEllerOrgnrTolererEttMellomrom(SKRIV_INN_GYLDIG_ORGNR_FNR_DNR)
           .when("representantNavn", {
             is: Utils._isEmpty,
             then: string()
