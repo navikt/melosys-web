@@ -98,7 +98,7 @@ export const VedleggListe = ({
           <tr>
             <th aria-label="Checkbox for å inkludere vedlegg" />
             <th>
-              <Nav.Typo.Element aria-label="Lenke for å åpne vedlegg">Dokument</Nav.Typo.Element>
+              <Nav.Typo.Element aria-label="Forhåndsvis vedlegg i ny fane">Dokument</Nav.Typo.Element>
             </th>
             <th>
               <Nav.Typo.Element>Avsender/Mottaker</Nav.Typo.Element>

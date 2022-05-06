@@ -28,6 +28,7 @@ import BrevFelt from "./brevFelt";
 import BrevMottakereTabell from "./brevMottakereTabell";
 import { SendBrevFormValues } from "./types";
 import { Felt } from "../../../services/modules/dokumenter-v2";
+import BrevVedlegg from "./brevVedlegg";
 
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
@@ -190,6 +191,7 @@ const SendBrev = ({
   if (!tilgjengeligeMaler || !formValues) return null;
 
   const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}`;
+  const vedleggFelt = formValues?.valgtMal?.felter?.find((felt) => felt.kode === DokumenterV2.FeltType.VEDLEGG);
 
   return (
     <div className="send_brev">
@@ -247,14 +249,7 @@ const SendBrev = ({
             </Nav.Row>
           )}
           {(felt.valg === null || finnValgAlternativ(felt)?.visFelt) && (
-            <BrevFelt
-              felt={felt}
-              visFeltBeskrivelse={felt.valg === null}
-              width={felterWidth}
-              valgteVedlegg={valgteVedlegg}
-              dokumenter={dokumenter}
-              setValgteVedlegg={setValgteVedlegg}
-            />
+            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={felterWidth} />
           )}
         </Fragment>
       ))}
@@ -269,6 +264,16 @@ const SendBrev = ({
             />
           </Nav.Column>
         </Nav.Row>
+      )}
+
+      {vedleggFelt && (
+        <BrevVedlegg
+          felt={vedleggFelt}
+          width={felterWidth}
+          dokumenter={dokumenter}
+          valgteVedlegg={valgteVedlegg}
+          setValgteVedlegg={setValgteVedlegg}
+        />
       )}
 
       <div>
