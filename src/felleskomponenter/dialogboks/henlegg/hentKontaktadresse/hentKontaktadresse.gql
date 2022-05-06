@@ -1,0 +1,9 @@
+query hentKontaktadresse($behandlingID: Long!) {
+  hentSaksopplysninger(behandlingID: $behandlingID) {
+    persondata {
+      kontaktadresser {
+        erHistorisk
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useState } from "react";
+import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 
@@ -9,9 +9,11 @@ import MKV from "../../../melosyskodeverk";
 import PdfLenkeListe from "../../pdfLenkeListe";
 import Knapperad from "../../knapperad";
 import HtmlEditor from "../../htmlEditor";
+import bem from "../../../bemUtils";
 
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
+import { useValiderHarBrukerRegistrertAdresse } from "./hentKontaktadresse";
 
 import "./dialogboksHenlegg.css";
 
@@ -38,24 +40,20 @@ export const DialogboksHenleggSak = ({
   ariaHideApp = false,
 }: DialogboksHenleggSakProps) => {
   const [begrunnelseKode, setBegrunnelseKode] = useState<string>("");
+  const [feilmelding, setFeilmelding] = useState<string | null>(null);
   const [feilmeldingSelect, setFeilmeldingSelect] = useState<string | null>(null);
   const [feilmeldingFritekst, setFeilmeldingFritekst] = useState<string | null>(null);
   const [fritekst, setFritekst] = useState<string>("");
 
-  const velgBegrunnelseHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setBegrunnelseKode(event.target.value);
-    setFeilmeldingSelect(null);
-  };
+  const feilmeldingFraRegistrertAdresseValidering = useValiderHarBrukerRegistrertAdresse(behandlingID);
+
+  useEffect(() => {
+    setFeilmelding(feilmeldingFraRegistrertAdresseValidering);
+  }, [feilmeldingFraRegistrertAdresseValidering]);
 
   const erBegrunnelseValgt = begrunnelseKode !== "";
   const erFritekstValgt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
   const erFritekstTom = fritekst.replace("<p></p>", "").trim() === "";
-
-  const handleForhandsvisBrev = async () => {
-    const begrunnelsePassertValidering = validerBegrunnelse();
-    const fritekstPassertValidering = validerFritekst();
-    return begrunnelsePassertValidering && fritekstPassertValidering;
-  };
 
   const validerBegrunnelse = () => {
     if (!erBegrunnelseValgt) {
@@ -77,9 +75,19 @@ export const DialogboksHenleggSak = ({
     setFeilmeldingFritekst(null);
   };
 
-  const vedKlikkHenlegg = () => {
-    if (!(validerBegrunnelse() && validerFritekst())) return;
+  const velgBegrunnelseHandle: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setBegrunnelseKode(event.target.value);
+    setFeilmeldingSelect(null);
+  };
 
+  const handleForhandsvisBrev = async () => {
+    const begrunnelsePassertValidering = validerBegrunnelse();
+    const fritekstPassertValidering = validerFritekst();
+    return begrunnelsePassertValidering && fritekstPassertValidering;
+  };
+
+  const handleHenlegg = () => {
+    if (!(validerBegrunnelse() && validerFritekst())) return;
     henleggHandle({
       begrunnelseKode,
       fritekst,
@@ -102,9 +110,11 @@ export const DialogboksHenleggSak = ({
     },
   ];
 
+  const dialogboksHenleggClassName = bem("dialogboks-henlegg");
+
   return (
     <Nav.Modal
-      className="dialogboksHenlegg"
+      className={dialogboksHenleggClassName.block}
       isOpen
       contentLabel="Henlegg sak"
       onRequestClose={avbryt}
@@ -114,7 +124,14 @@ export const DialogboksHenleggSak = ({
       ariaHideApp={ariaHideApp}
     >
       <div>
-        <Nav.Typo.Systemtittel className="overskrift">Henlegg saken</Nav.Typo.Systemtittel>
+        <Nav.Typo.Systemtittel className={dialogboksHenleggClassName.element("overskrift")}>
+          Henlegg saken
+        </Nav.Typo.Systemtittel>
+        {feilmelding && (
+          <Nav.AlertStripeFeil className={dialogboksHenleggClassName.element("feilmelding")}>
+            {feilmelding}
+          </Nav.AlertStripeFeil>
+        )}
         <Mui.KodeTermSelect
           feil={feilmeldingSelect}
           onChange={velgBegrunnelseHandle}
@@ -125,15 +142,21 @@ export const DialogboksHenleggSak = ({
           redigerbart={redigerbart}
         />
         {erFritekstValgt && (
-          <HtmlEditor feil={feilmeldingFritekst} value={fritekst} onChange={fritekstOnchange} label="Fritekst" />
+          <HtmlEditor
+            className={dialogboksHenleggClassName.element("fritekst")}
+            feil={feilmeldingFritekst}
+            value={fritekst}
+            onChange={fritekstOnchange}
+            label="Fritekst"
+          />
         )}
-        {redigerbart && (
+        {redigerbart && !feilmelding && (
           <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={handleForhandsvisBrev} />
         )}
         <Knapperad
-          bekreft={vedKlikkHenlegg}
+          bekreft={handleHenlegg}
           bekreftTekst="HENLEGG SAKEN"
-          bekreftRedigerbart={erBegrunnelseValgt}
+          bekreftRedigerbart={erBegrunnelseValgt && !feilmelding}
           avbryt={avbryt}
           avbrytTekst="AVBRYT"
           redigerbart={redigerbart}
