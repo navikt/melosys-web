@@ -12,7 +12,7 @@ import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import * as Api from "../../services/api";
 import * as MPT from "../../proptypes";
-import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from "../../constants";
+import { JOURNALFORING_HENSIKT } from "../../constants";
 
 import Sticky from "../../felleskomponenter/sticky";
 import PDFDokument from "./komponenter/pdfdokument";
@@ -282,6 +282,20 @@ class Journalforing extends Component {
     }
   };
 
+  sokOrgnrFnrDnr = async (ident) => {
+    if (Utils.organisasjon.erOrgnrGyldig(ident)) {
+      const response = await this.props.sokOrgnr(ident);
+      return response?.data?.navn;
+    }
+    if (Utils.person.erGyldigFnrEllerDnr(ident?.replace(" ", ""))) {
+      const sammensattNavn = await hentSammensattNavn(ident.replace(" ", ""));
+      if (!Utils._isEmpty(sammensattNavn)) {
+        return sammensattNavn;
+      }
+    }
+    return false;
+  };
+
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
    * Derfor, sjekk dette før vi evt henter navn.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
@@ -307,46 +321,35 @@ class Journalforing extends Component {
    * @param value {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisAvsender = async (value) => {
-    const { sokOrgnr, settFeltInnhold } = this.props;
+    const { settFeltInnhold } = this.props;
 
     if (!value) {
       return;
     }
 
-    if (value.length === ANTALL_TALL_I_ORGNR) {
-      settFeltInnhold("avsenderNavn", "");
-      const response = await sokOrgnr(value);
-      if (!response || !response.data) {
+    settFeltInnhold("avsenderNavn", "");
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
+      const navn = await this.sokOrgnrFnrDnr(value);
+      if (!navn) {
         return false;
       }
-      const { navn = "" } = response.data;
       settFeltInnhold("avsenderNavn", navn);
-    }
-
-    if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
-      settFeltInnhold("avsenderNavn", "");
-      const sammensattNavn = await hentSammensattNavn(value);
-      if (Utils._isEmpty(sammensattNavn)) {
-        return false;
-      }
-      settFeltInnhold("avsenderNavn", sammensattNavn);
     }
   };
 
   hentOgVisRepresentant = async (value) => {
-    const { sokOrgnr, settFeltInnhold } = this.props;
+    const { settFeltInnhold } = this.props;
 
     if (!value) {
       return;
     }
 
-    if (value.length === ANTALL_TALL_I_ORGNR) {
-      settFeltInnhold("representantNavn", "");
-      const response = await sokOrgnr(value);
-      if (!response.data) {
+    settFeltInnhold("representantNavn", "");
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
+      const navn = await this.sokOrgnrFnrDnr(value);
+      if (!navn) {
         return false;
       }
-      const { navn = "" } = response.data;
       settFeltInnhold("representantNavn", navn);
     }
   };
