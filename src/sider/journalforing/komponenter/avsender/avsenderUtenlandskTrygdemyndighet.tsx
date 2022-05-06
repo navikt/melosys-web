@@ -12,7 +12,7 @@ type AvsenderUtenlandskTrygdemyndighetProps = {
 };
 
 const AvsenderUtenlandskTrygdemyndighet = ({
-  utenlandskTrygdemyndighetLandkode = "",
+  utenlandskTrygdemyndighetLandkode,
   fullmektigLandEndret,
 }: AvsenderUtenlandskTrygdemyndighetProps) => (
   <div className="avsender">

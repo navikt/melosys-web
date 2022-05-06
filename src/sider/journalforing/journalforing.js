@@ -136,8 +136,6 @@ class Journalforing extends Component {
   organisasjonAliaser = [
     KV.AvsenderTyper.FULLMEKTIG,
     KV.AvsenderTyper.ARBEIDSGIVER,
-    KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG,
-    KV.AvsenderTyper.VIRKSOMHET,
     MKV.Koder.avsendertyper.ORGANISASJON,
   ];
 

@@ -8,11 +8,9 @@ import * as Utils from "../../../utils";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as MPT from "../../../proptypes";
-import * as Konstanter from "../../../constants";
 import * as Api from "../../../services/api";
 import * as Ikoner from "../../../resources/images";
 import * as Mui from "../../../felleskomponenter/ui";
-import * as KV from "../../../kodeverk";
 import { VIRKSOMHET } from "./journalforingform";
 
 import AvsenderVelger from "./avsender";
@@ -69,6 +67,17 @@ class Informasjon extends Component {
     this.setState({ [stateNavn]: verdi });
   };
 
+  sokOrgnrFnrDnr = async (value) => {
+    if (Utils.organisasjon.erOrgnrGyldig(value)) {
+      const response = await this.props.sokOrgnr(value);
+      return response?.data?.navn;
+    }
+    if (Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
+      return hentSammensattNavn(value.replace(" ", ""));
+    }
+    return null;
+  };
+
   hentOgVisBruker = async (brukerID) => {
     const { kopierBrukerTilAvsender, tomAvsender } = this;
     const { settFeltInnhold, hentFagsakListe, journalforingSkjemaVerdier } = this.props;
@@ -97,10 +106,10 @@ class Informasjon extends Component {
   hentOgVisVirksomhet = async (virksomhetOrgnr) => {
     const { kopierVirksomhetTilAvsender, tomAvsender } = this;
     const { sokOrgnr, settFeltInnhold, hentFagsakListe, journalforingSkjemaVerdier } = this.props;
-    const virksomhetErAvsender = journalforingSkjemaVerdier.avsenderType === KV.AvsenderTyper.VIRKSOMHET;
+    const journalfoeringGjelderVirksomhet = journalforingSkjemaVerdier.journalforingGjelder === VIRKSOMHET;
 
     settFeltInnhold("virksomhetNavn", null);
-    if (virksomhetErAvsender) {
+    if (journalfoeringGjelderVirksomhet) {
       tomAvsender();
     }
 
@@ -119,33 +128,24 @@ class Informasjon extends Component {
   };
 
   hentOgVisAvsender = async (value) => {
-    const { sokOrgnr, settFeltInnhold } = this.props;
+    const { settFeltInnhold } = this.props;
     settFeltInnhold("avsenderNavn", null);
 
     if (!value) {
       return;
     }
 
-    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
-      const response = await sokOrgnr(value);
-      const navn = response?.data?.navn;
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
+      const navn = await this.sokOrgnrFnrDnr(value);
       if (Utils._isEmpty(navn)) {
         return;
       }
       settFeltInnhold("avsenderNavn", navn);
     }
-
-    if (Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value)) {
-      const sammensattNavn = await hentSammensattNavn(value);
-      if (Utils._isEmpty(sammensattNavn)) {
-        return;
-      }
-      settFeltInnhold("avsenderNavn", sammensattNavn);
-    }
   };
 
   hentOgVisRepresentant = async (value) => {
-    const { sokOrgnr, settFeltInnhold } = this.props;
+    const { settFeltInnhold } = this.props;
 
     settFeltInnhold("representantNavn", null);
 
@@ -153,9 +153,8 @@ class Informasjon extends Component {
       return;
     }
 
-    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
-      const response = await sokOrgnr(value);
-      const navn = response?.data?.navn;
+    if (Utils.organisasjon.erOrgnrGyldig(value) || Utils.person.erGyldigFnrEllerDnr(value)) {
+      const navn = await this.sokOrgnrFnrDnr(value);
       if (Utils._isEmpty(navn)) {
         return;
       }
@@ -199,7 +198,7 @@ class Informasjon extends Component {
     virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn
   ) => {
     const { settFeltInnhold } = this.props;
-    settFeltInnhold("avsenderType", KV.AvsenderTyper.VIRKSOMHET);
+    settFeltInnhold("avsenderType", MKV.Koder.avsendertyper.ORGANISASJON);
     settFeltInnhold("avsenderID", virksomhetOrgnr);
     settFeltInnhold("avsenderNavn", virksomhetNavn);
   };

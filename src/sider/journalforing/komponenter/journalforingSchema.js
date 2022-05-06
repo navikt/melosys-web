@@ -6,6 +6,7 @@ import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
 import { BRUKER, VIRKSOMHET } from "./journalforingform";
 
+const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer." };
 const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: "Skriv inn gyldig fnr eller dnr." };
 const FANT_INGEN_NAVN_PA_ORGNR = { melding: "Fant ingen navn på dette organisasjonsnummeret." };
 const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: "Fant ingen navn på dette fnr eller dnr." };
@@ -71,7 +72,7 @@ const journalforing = object().shape({
     .nullable(),
   virksomhetNavn: string().nullable(),
   avsenderID: string()
-    .when(["avsenderType", "$arbeidsgiverOgIkkePreutfyltAvsender"], {
+    .when(["avsenderType", "$erAvsenderPreutfylt"], {
       is: arbeidsgiverOgIkkePreutfyltAvsender,
       then: string()
         .nullable()
@@ -82,7 +83,7 @@ const journalforing = object().shape({
           then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
         }),
     })
-    .when(["avsenderType", "$fullmektigOgIkkePreutfyltAvsender"], {
+    .when(["avsenderType", "$erAvsenderPreutfylt"], {
       is: fullmektigOgIkkePreutfyltAvsender,
       then: string()
         .nullable()
@@ -94,6 +95,10 @@ const journalforing = object().shape({
             .harIkkeOrgnrFnrEllerDnrLengdeTolerererEttMellomrom(FANT_INGEN_NAVN_PA_ORGNR_FNR_ELLER_DNR)
             .nullable(),
         }),
+    })
+    .when("journalforingGjelder", {
+      is: VIRKSOMHET,
+      then: string().required().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .nullable(),
   avsenderNavn: string().required(SKRIV_INN_NAVN_PA_AVSENDER).nullable(),

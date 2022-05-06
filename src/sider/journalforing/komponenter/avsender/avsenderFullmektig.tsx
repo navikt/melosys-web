@@ -22,30 +22,30 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type AvsenderFullmektigProps = PropsFromRedux & {
   avsenderID?: string;
-  settFeltInnhold: (felt: string, innhold: string) => void;
+  settFeltInnhold: (felt: string, innhold: string | null) => void;
   hentOgVisRepresentant: (ident: string) => void;
 };
 
 const AvsenderFullmektig = ({
-  avsenderID = "",
+  avsenderID,
   settFeltInnhold,
   hentOgVisRepresentant,
   avsenderNavn,
 }: AvsenderFullmektigProps) => {
   useEffect(() => {
-    settFeltInnhold("representantID", avsenderID);
+    settFeltInnhold("representantID", avsenderID || null);
   }, [avsenderID]);
 
   const IDFeltTastOppHandler = async (event: ChangeEvent<HTMLFormElement>) => {
     const { value } = event.target;
     if (Utils.organisasjon.erOrgnrGyldig(value)) {
-      await hentOgVisRepresentant(value);
+      hentOgVisRepresentant(value);
     } else if (Utils.person.erGyldigFnrEllerDnr(value?.replace(" ", ""))) {
-      await hentOgVisRepresentant(value.replace(" ", ""));
-      await settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
+      hentOgVisRepresentant(value.replace(" ", ""));
+      settFeltInnhold("representantRepresenterer", MKV.Koder.representerer.BRUKER);
     } else {
-      await settFeltInnhold("representantNavn", "");
-      await settFeltInnhold("representantRepresenterer", "");
+      settFeltInnhold("representantNavn", null);
+      settFeltInnhold("representantRepresenterer", null);
     }
   };
 

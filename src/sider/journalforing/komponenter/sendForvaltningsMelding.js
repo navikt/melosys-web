@@ -9,8 +9,7 @@ import { BOOLSK } from "../../../constants";
 import "./sendForvaltningsMelding.css";
 
 const SendForvaltningsMelding = ({ avsenderType, settFeltInnhold }) => {
-  const avsenderErFullmelktig =
-    avsenderType === KV.AvsenderTyper.ARBEIDSGIVER_FULLMEKTIG || avsenderType === KV.AvsenderTyper.FULLMEKTIG;
+  const avsenderErFullmelktig = avsenderType === KV.AvsenderTyper.FULLMEKTIG;
 
   useEffect(
     () => () => {
